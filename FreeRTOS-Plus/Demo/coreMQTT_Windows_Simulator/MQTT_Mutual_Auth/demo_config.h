@@ -144,16 +144,80 @@
  */
 
 /**
+ * @brief Configuration that indicates if the demo connection is made to the AWS IoT Core MQTT broker.
+ *
+ * If username/password based authentication is used, the demo will use appropriate TLS ALPN and
+ * SNI configurations as required for the Custom Authentication feature of AWS IoT.
+ * For more information, refer to the following documentation:
+ * https://docs.aws.amazon.com/iot/latest/developerguide/custom-auth.html#custom-auth-mqtt
+ *
+ * #define democonfigUSE_AWS_IOT_CORE_BROKER    ( 1 )
+ */
+
+/**
+ * @brief The username value for authenticating client to the MQTT broker when
+ * username/password based client authentication is used.
+ *
+ * For AWS IoT MQTT broker, refer to the AWS IoT documentation below for
+ * details regarding client authentication with a username and password.
+ * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
+ * An authorizer setup needs to be done, as mentioned in the above link, to use
+ * username/password based client authentication.
+ *
+ * #define democonfigCLIENT_USERNAME    "...insert here..."
+ */
+
+/**
+ * @brief The password value for authenticating client to the MQTT broker when
+ * username/password based client authentication is used.
+ *
+ * For AWS IoT MQTT broker, refer to the AWS IoT documentation below for
+ * details regarding client authentication with a username and password.
+ * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
+ * An authorizer setup needs to be done, as mentioned in the above link, to use
+ * username/password based client authentication.
+ *
+ * #define democonfigCLIENT_PASSWORD    "...insert here..."
+ */
+
+/**
+ * @brief The name of the operating system that the application is running on.
+ * The current value is given as an example. Please update for your specific
+ * operating system.
+ */
+#define democonfigOS_NAME                   "FreeRTOS"
+
+/**
+ * @brief The version of the operating system that the application is running
+ * on. The current value is given as an example. Please update for your specific
+ * operating system version.
+ */
+#define democonfigOS_VERSION                tskKERNEL_VERSION_NUMBER
+
+/**
+ * @brief The name of the hardware platform the application is running on. The
+ * current value is given as an example. Please update for your specific
+ * hardware platform.
+ */
+#define democonfigHARDWARE_PLATFORM_NAME    "WinSim"
+
+/**
+ * @brief The name of the MQTT library used and its version, following an "@"
+ * symbol.
+ */
+#define democonfigMQTT_LIB                  "core-mqtt@1.0.0"
+
+/**
  * @brief Set the stack size of the main demo task.
  *
  * In the Windows port, this stack only holds a structure. The actual
  * stack is created by an operating system thread.
  */
-#define democonfigDEMO_STACKSIZE         configMINIMAL_STACK_SIZE
+#define democonfigDEMO_STACKSIZE            configMINIMAL_STACK_SIZE
 
 /**
  * @brief Size of the network buffer for MQTT packets.
  */
-#define democonfigNETWORK_BUFFER_SIZE    ( 1024U )
+#define democonfigNETWORK_BUFFER_SIZE       ( 1024U )
 
 #endif /* DEMO_CONFIG_H */

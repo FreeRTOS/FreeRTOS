@@ -402,7 +402,7 @@ static MQTTFixedBuffer_t xBuffer =
 /*-----------------------------------------------------------*/
 
 /**
- * @brief Create the task that demonstrates the MQTT API over a plaintext TCP
+ * @brief Create the task that demonstrates the coreMQTT API over a plaintext TCP
  * connection.
  */
 void vStartSimpleMQTTDemo( void )

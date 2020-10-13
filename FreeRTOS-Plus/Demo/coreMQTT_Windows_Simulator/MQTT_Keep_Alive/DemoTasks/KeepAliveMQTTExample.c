@@ -506,7 +506,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         /**************************** Disconnect. *****************************/
 
-        /* Send an MQTT disconnect packet over the already connected TCP socket.
+        /* Send an MQTT disconnect packet over the connected TCP socket.
          * There is no corresponding response for the disconnect packet. After
          * sending the disconnect, the client must close the network connection. */
         LogInfo( ( "Disconnecting the MQTT connection with %s.",

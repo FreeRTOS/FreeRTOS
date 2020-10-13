@@ -1,4 +1,5 @@
 /*
+ * FreeRTOS Kernel V10.3.0
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -17,70 +18,48 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * http://www.FreeRTOS.org
+ * http://aws.amazon.com/freertos
  */
-
-/**
- * @file freertos_sockets_wrapper.h
- * @brief FreeRTOS Sockets connect and disconnect function wrapper.
- */
-
-#ifndef FREERTOS_SOCKETS_WRAPPER_H_
-#define FREERTOS_SOCKETS_WRAPPER_H_
-
-/* FreeRTOS+TCP includes. */
-#include "FreeRTOS_IP.h"
-#include "FreeRTOS_Sockets.h"
-#include "FreeRTOS_DNS.h"
+#ifndef CORE_MQTT_CONFIG_H
+#define CORE_MQTT_CONFIG_H
 
 /**************************************************/
 /******* DO NOT CHANGE the following order ********/
 /**************************************************/
 
-/* Logging related header files are required to be included in the following order:
+/* Include logging header files and define logging macros in the following order:
  * 1. Include the header file "logging_levels.h".
- * 2. Define LIBRARY_LOG_NAME and  LIBRARY_LOG_LEVEL.
- * 3. Include the header file "logging_stack.h".
+ * 2. Define the LIBRARY_LOG_NAME and LIBRARY_LOG_LEVEL macros depending on
+ * the logging configuration for MQTT.
+ * 3. Include the header file "logging_stack.h", if logging is enabled for MQTT.
  */
 
-/* Include header that defines log levels. */
 #include "logging_levels.h"
 
-/* Logging configuration for the Sockets. */
+/* Logging configuration for the MQTT library. */
 #ifndef LIBRARY_LOG_NAME
-    #define LIBRARY_LOG_NAME     "Sockets"
+    #define LIBRARY_LOG_NAME    "MQTT"
 #endif
+
 #ifndef LIBRARY_LOG_LEVEL
     #define LIBRARY_LOG_LEVEL    LOG_ERROR
 #endif
 
 #include "logging_stack.h"
-
 /************ End of logging configuration ****************/
 
 /**
- * @brief Establish a connection to server.
+ * @brief The maximum number of MQTT PUBLISH messages that may be pending
+ * acknowledgement at any time.
  *
- * @param[out] pTcpSocket The output parameter to return the created socket descriptor.
- * @param[in] pHostName Server hostname to connect to.
- * @param[in] pServerInfo Server port to connect to.
- * @param[in] receiveTimeoutMs Timeout (in milliseconds) for transport receive.
- * @param[in] sendTimeoutMs Timeout (in milliseconds) for transport send.
- *
- * @note A timeout of 0 means infinite timeout.
- *
- * @return Non-zero value on error, 0 on success.
+ * QoS 1 and 2 MQTT PUBLISHes require acknowledgment from the server before
+ * they can be completed. While they are awaiting the acknowledgment, the
+ * client must maintain information about their state. The value of this
+ * macro sets the limit on how many simultaneous PUBLISH states an MQTT
+ * context maintains.
  */
-BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
-                            const char * pHostName,
-                            uint16_t port,
-                            uint32_t receiveTimeoutMs,
-                            uint32_t sendTimeoutMs );
+#define MQTT_STATE_ARRAY_MAX_COUNT    10U
 
-/**
- * @brief End connection to server.
- *
- * @param[in] tcpSocket The socket descriptor.
- */
-void Sockets_Disconnect( Socket_t tcpSocket );
-
-#endif /* ifndef FREERTOS_SOCKETS_WRAPPER_H_ */
+#endif /* ifndef CORE_MQTT_CONFIG_H */

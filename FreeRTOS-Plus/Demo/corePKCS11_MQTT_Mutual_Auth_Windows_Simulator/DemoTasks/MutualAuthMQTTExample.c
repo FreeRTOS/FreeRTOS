@@ -21,7 +21,6 @@
  *
  * http://www.FreeRTOS.org
  * http://aws.amazon.com/freertos
- *
  */
 
 /*
@@ -34,10 +33,9 @@
  * memory. It uses QoS1 for sending to and receiving messages from the broker.
  *
  * A mutually authenticated TLS connection is used to connect to the
- * MQTT message broker in this example. Define democonfigMQTT_BROKER_ENDPOINT,
- * democonfigROOT_CA_PEM, democonfigCLIENT_CERTIFICATE_PEM,
- * and democonfigCLIENT_PRIVATE_KEY_PEM in demo_config.h to establish a
- * mutually authenticated connection.
+ * MQTT message broker in this example. Define democonfigMQTT_BROKER_ENDPOINT and
+ * democonfigROOT_CA_PEM in demo_config.h to establish a mutually authenticated
+ * connection.
  */
 
 /* Standard includes. */
@@ -54,11 +52,8 @@
 /* MQTT library includes. */
 #include "core_mqtt.h"
 
-/* Retry utilities include. */
-#include "retry_utils.h"
-
 /* Transport interface implementation include header for TLS. */
-#include "tls_freertos.h"
+#include "tls_freertos_pkcs11.h"
 
 /*-----------------------------------------------------------*/
 
@@ -69,29 +64,6 @@
 #ifndef democonfigROOT_CA_PEM
     #error "Please define Root CA certificate of the MQTT broker(democonfigROOT_CA_PEM) in demo_config.h."
 #endif
-
-/* If no username is defined, then a client certificate/key is required. */
-#ifndef democonfigCLIENT_USERNAME
-    #ifndef democonfigCLIENT_CERTIFICATE_PEM
-        #error "Please define client certificate(democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h."
-    #endif
-    #ifndef democonfigCLIENT_PRIVATE_KEY_PEM
-        #error "Please define client private key(democonfigCLIENT_PRIVATE_KEY_PEM) in demo_config.h."
-    #endif
-#else
-
-/* If a username is defined, a client password also would need to be defined for
- * client authentication. */
-    #ifndef democonfigCLIENT_PASSWORD
-        #error "Please define client password(democonfigCLIENT_PASSWORD) in demo_config.h for client authentication based on username/password."
-    #endif
-
-/* AWS IoT MQTT broker port needs to be 443 for client authentication based on
- * username/password. */
-    #if defined( democonfigUSE_AWS_IOT_CORE_BROKER ) && democonfigMQTT_BROKER_PORT != 443
-        #error "Broker port(democonfigMQTT_BROKER_PORT) should be defined as 443 in demo_config.h for client authentication based on username/password in AWS IoT Core."
-    #endif
-#endif /* ifndef democonfigCLIENT_USERNAME */
 
 /*-----------------------------------------------------------*/
 
@@ -135,11 +107,6 @@
 #define mqttexampleTOPIC                                  democonfigCLIENT_IDENTIFIER "/example/topic"
 
 /**
- * @brief The number of topic filters to subscribe.
- */
-#define mqttexampleTOPIC_COUNT                            ( 1 )
-
-/**
  * @brief The MQTT message published in this example.
  */
 #define mqttexampleMESSAGE                                "Hello World!"
@@ -181,72 +148,14 @@
 #define mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS         ( 200U )
 
 /**
- * @brief ALPN (Application-Layer Protocol Negotiation) protocol name for AWS IoT MQTT.
- *
- * This will be used if democonfigMQTT_BROKER_PORT is configured as 443 for the AWS IoT MQTT broker.
- * Please see more details about the ALPN protocol for AWS IoT MQTT endpoint
- * in the link below.
- * https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/
- */
-#define AWS_IOT_MQTT_ALPN                                 "\x0ex-amzn-mqtt-ca"
-
-/**
- * @brief This is the ALPN (Application-Layer Protocol Negotiation) string
- * required by AWS IoT for password-based authentication using TCP port 443.
- */
-#define AWS_IOT_CUSTOM_AUTH_ALPN                          "\x04mqtt"
-
-/**
- * Provide default values for undefined configuration settings.
- */
-#ifndef democonfigOS_NAME
-    #define democonfigOS_NAME    "FreeRTOS"
-#endif
-
-#ifndef democonfigOS_VERSION
-    #define democonfigOS_VERSION    tskKERNEL_VERSION_NUMBER
-#endif
-
-#ifndef democonfigHARDWARE_PLATFORM_NAME
-    #define democonfigHARDWARE_PLATFORM_NAME    "WinSim"
-#endif
-
-#ifndef democonfigMQTT_LIB
-    #define democonfigMQTT_LIB    "core-mqtt@1.0.0"
-#endif
-
-/**
- * @brief The MQTT metrics string expected by AWS IoT.
- */
-#define AWS_IOT_METRICS_STRING                                 \
-    "?SDK=" democonfigOS_NAME "&Version=" democonfigOS_VERSION \
-    "&Platform=" democonfigHARDWARE_PLATFORM_NAME "&MQTTLib=" democonfigMQTT_LIB
-
-/**
- * @brief The length of the MQTT metrics string expected by AWS IoT.
- */
-#define AWS_IOT_METRICS_STRING_LENGTH    ( ( uint16_t ) ( sizeof( AWS_IOT_METRICS_STRING ) - 1 ) )
-
-#ifdef democonfigCLIENT_USERNAME
-
-/**
- * @brief Append the username with the metrics string if #democonfigCLIENT_USERNAME is defined.
- *
- * This is to support both metrics reporting and username/password based client
- * authentication by AWS IoT.
- */
-    #define CLIENT_USERNAME_WITH_METRICS    democonfigCLIENT_USERNAME AWS_IOT_METRICS_STRING
-#endif
-
-/**
  * @brief Milliseconds per second.
  */
-#define MILLISECONDS_PER_SECOND    ( 1000U )
+#define _MILLISECONDS_PER_SECOND                          ( 1000U )
 
 /**
  * @brief Milliseconds per FreeRTOS tick.
  */
-#define MILLISECONDS_PER_TICK      ( MILLISECONDS_PER_SECOND / configTICK_RATE_HZ )
+#define _MILLISECONDS_PER_TICK                            ( _MILLISECONDS_PER_SECOND / configTICK_RATE_HZ )
 
 /*-----------------------------------------------------------*/
 
@@ -259,45 +168,21 @@
 static void prvMQTTDemoTask( void * pvParameters );
 
 /**
- * @brief Connect to MQTT broker with reconnection retries.
- *
- * If connection fails, retry is attempted after a timeout.
- * Timeout value will exponentially increase until maximum
- * timeout value is reached or the number of attempts are exhausted.
- *
- * @param[out] pxNetworkContext The parameter to return the created network context.
- *
- * @return The status of the final connection attempt.
- */
-static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredentials_t * pxNetworkCredentials,
-                                                                  NetworkContext_t * pNetworkContext );
-
-/**
  * @brief Sends an MQTT Connect packet over the already connected TLS over TCP connection.
  *
  * @param[in, out] pxMQTTContext MQTT context pointer.
- * @param[in] xNetworkContext Network context.
+ * @param[in] xNetworkContext network context.
  */
 static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
                                                NetworkContext_t * pxNetworkContext );
 
 /**
- * @brief Function to update variable #xTopicFilterContext with status
- * information from Subscribe ACK. Called by the event callback after processing
- * an incoming SUBACK packet.
- *
- * @param[in] Server response to the subscription request.
- */
-static void prvUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo );
-
-/**
  * @brief Subscribes to the topic as specified in mqttexampleTOPIC at the top of
- * this file. In the case of a Subscribe ACK failure, then subscription is
- * retried using an exponential backoff strategy with jitter.
+ * this file.
  *
  * @param[in] pxMQTTContext MQTT context pointer.
  */
-static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext );
+static void prvMQTTSubscribeToTopic( MQTTContext_t * pxMQTTContext );
 
 /**
  * @brief Publishes a message mqttexampleMESSAGE on mqttexampleTOPIC topic.
@@ -353,11 +238,19 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
                               MQTTPacketInfo_t * pxPacketInfo,
                               MQTTDeserializedInfo_t * pxDeserializedInfo );
 
+/**
+ * @brief TLS connect to endpoint democonfigMQTT_BROKER_ENDPOINT.
+ *
+ * @param[in] pxNetworkCredentials Network credentials to establish a TLS connection
+ * with democonfigMQTT_BROKER_ENDPOINT.
+ * @param[in] pxNetworkCredentials Network context.
+ */
+static void prvTLSConnect( NetworkCredentials_t * pxNetworkCredentials,
+                           NetworkContext_t * pxNetworkContext );
+
 /*-----------------------------------------------------------*/
 
-/**
- * @brief Static buffer used to hold MQTT messages being sent and received.
- */
+/* @brief Static buffer used to hold MQTT messages being sent and received. */
 static uint8_t ucSharedBuffer[ democonfigNETWORK_BUFFER_SIZE ];
 
 /**
@@ -387,25 +280,6 @@ static uint16_t usSubscribePacketIdentifier;
  */
 static uint16_t usUnsubscribePacketIdentifier;
 
-/**
- * @brief A pair containing a topic filter and its SUBACK status.
- */
-typedef struct topicFilterContext
-{
-    const char * pcTopicFilter;
-    MQTTSubAckStatus_t xSubAckStatus;
-} topicFilterContext_t;
-
-/**
- * @brief An array containing the context of a SUBACK; the SUBACK status
- * of a filter is updated when the event callback processes a SUBACK.
- */
-static topicFilterContext_t xTopicFilterContext[ mqttexampleTOPIC_COUNT ] =
-{
-    { mqttexampleTOPIC, MQTTSubAckFailure }
-};
-
-
 /** @brief Static buffer used to hold MQTT messages being sent and received. */
 static MQTTFixedBuffer_t xBuffer =
 {
@@ -419,7 +293,7 @@ static MQTTFixedBuffer_t xBuffer =
  * @brief Create the task that demonstrates the MQTT API Demo over a
  * mutually authenticated network connection with MQTT broker.
  */
-void vStartSimpleMQTTDemo( void )
+void vStartPKCSMutualAuthDemo( void )
 {
     /* This example uses a single application task, which in turn is used to
      * connect, subscribe, publish, unsubscribe and disconnect from the MQTT
@@ -447,13 +321,12 @@ void vStartSimpleMQTTDemo( void )
  */
 static void prvMQTTDemoTask( void * pvParameters )
 {
-    uint32_t ulPublishCount = 0U, ulTopicCount = 0U;
+    uint32_t ulPublishCount = 0U;
     const uint32_t ulMaxPublishCount = 5UL;
     NetworkContext_t xNetworkContext = { 0 };
     NetworkCredentials_t xNetworkCredentials = { 0 };
     MQTTContext_t xMQTTContext = { 0 };
     MQTTStatus_t xMQTTStatus;
-    TlsTransportStatus_t xNetworkStatus;
 
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
@@ -468,15 +341,13 @@ static void prvMQTTDemoTask( void * pvParameters )
     {
         /****************************** Connect. ******************************/
 
-        /* Attempt to establish TLS session with MQTT broker. If connection fails,
-         * retry after a timeout. Timeout value will be exponentially increased
-         * until  the maximum number of attempts are reached or the maximum timeout
-         * value is reached. The function returns a failure status if the TCP
-         * connection cannot be established to the broker after the configured
-         * number of attempts. */
-        xNetworkStatus = prvConnectToServerWithBackoffRetries( &xNetworkCredentials,
-                                                               &xNetworkContext );
-        configASSERT( xNetworkStatus == TLS_TRANSPORT_SUCCESS );
+        /* Establish a TLS connection with the MQTT broker. This example connects
+         * to the MQTT broker as specified by democonfigMQTT_BROKER_ENDPOINT and
+         * democonfigMQTT_BROKER_PORT in the demo_config.h file. */
+        LogInfo( ( "Creating a TLS connection to %s:%u.\r\n",
+                   democonfigMQTT_BROKER_ENDPOINT,
+                   democonfigMQTT_BROKER_PORT ) );
+        prvTLSConnect( &xNetworkCredentials, &xNetworkContext );
 
         /* Sends an MQTT Connect packet over the already established TLS connection,
          * and waits for connection acknowledgment (CONNACK) packet. */
@@ -485,12 +356,29 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         /**************************** Subscribe. ******************************/
 
-        /* If server rejected the subscription request, attempt to resubscribe to
-         * topic. Attempts are made according to the exponential backoff retry
-         * strategy implemented in retryUtils. */
-        prvMQTTSubscribeWithBackoffRetries( &xMQTTContext );
+        /* The client is now connected to the broker. Subscribe to the topic
+         * as specified in mqttexampleTOPIC at the top of this file by sending a
+         * subscribe packet then waiting for a subscribe acknowledgment (SUBACK).
+         * The function #prvMQTTSubscribeToTopic will not wait to receive a SUBACK,
+         * but the function #MQTT_ProcessLoop will attempt to receive the SUBACK
+         * from network and if a SUBACK is received, application will be notified
+         * through the callback registered (#prvEventCallback for this application).
+         * This demo uses QoS1 in Subscribe, therefore, the Publish messages
+         * received from the broker will have QoS1. */
+        LogInfo( ( "Attempt to subscribe to the MQTT topic %s.\r\n", mqttexampleTOPIC ) );
+        prvMQTTSubscribeToTopic( &xMQTTContext );
 
-        /****************** Publish and Keep Alive Loop. **********************/
+        /* Process incoming packet from the broker. After sending the subscribe, the
+         * client may receive a publish before it receives a subscribe ack. Therefore,
+         * call generic incoming packet processing function. Since this demo is
+         * subscribing to the topic to which no one is publishing, probability of
+         * receiving Publish message before subscribe ack is zero; but application
+         * must be ready to receive any packet.  This demo uses the generic packet
+         * processing function everywhere to highlight this fact. */
+        xMQTTStatus = MQTT_ProcessLoop( &xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
+        configASSERT( xMQTTStatus == MQTTSuccess );
+
+        /******************* Publish and Keep Alive Loop. *********************/
         /* Publish messages with QoS1, send and process Keep alive messages. */
         for( ulPublishCount = 0; ulPublishCount < ulMaxPublishCount; ulPublishCount++ )
         {
@@ -498,8 +386,7 @@ static void prvMQTTDemoTask( void * pvParameters )
             prvMQTTPublishToTopic( &xMQTTContext );
 
             /* Process incoming publish echo, since application subscribed to the
-             * same topic, the broker will send publish message back to the
-             * application. */
+             * same topic, the broker will send publish message back to the application. */
             LogInfo( ( "Attempt to receive publish message from broker.\r\n" ) );
             xMQTTStatus = MQTT_ProcessLoop( &xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
             configASSERT( xMQTTStatus == MQTTSuccess );
@@ -517,12 +404,11 @@ static void prvMQTTDemoTask( void * pvParameters )
         xMQTTStatus = MQTT_ProcessLoop( &xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
         configASSERT( xMQTTStatus == MQTTSuccess );
 
-        /**************************** Disconnect. *****************************/
+        /**************************** Disconnect. ******************************/
 
-        /* Send an MQTT Disconnect packet over the already connected TLS over
-         * TCP connection. There is no corresponding response for the disconnect
-         * packet. After sending disconnect, client must close the network
-         * connection. */
+        /* Send an MQTT Disconnect packet over the already connected TLS over TCP
+         * connection. There is no corresponding response for the disconnect packet.
+         * After sending disconnect, client must close the network connection. */
         LogInfo( ( "Disconnecting the MQTT connection with %s.\r\n",
                    democonfigMQTT_BROKER_ENDPOINT ) );
         xMQTTStatus = MQTT_Disconnect( &xMQTTContext );
@@ -530,13 +416,6 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         /* Close the network connection.  */
         TLS_FreeRTOS_Disconnect( &xNetworkContext );
-
-        /* Reset SUBACK status for each topic filter after completion of
-         * subscription request cycle. */
-        for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
-        {
-            xTopicFilterContext[ ulTopicCount ].xSubAckStatus = MQTTSubAckFailure;
-        }
 
         /* Wait for some time between two iterations to ensure that we do not
          * bombard the broker. */
@@ -550,84 +429,28 @@ static void prvMQTTDemoTask( void * pvParameters )
 }
 /*-----------------------------------------------------------*/
 
-static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredentials_t * pxNetworkCredentials,
-                                                                  NetworkContext_t * pxNetworkContext )
+static void prvTLSConnect( NetworkCredentials_t * pxNetworkCredentials,
+                           NetworkContext_t * pxNetworkContext )
 {
-    TlsTransportStatus_t xNetworkStatus;
-    RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
-    RetryUtilsParams_t xReconnectParams;
-
-    /* ALPN protocols must be a NULL-terminated list of strings. Therefore,
-     * the first entry will contain the actual ALPN protocol string while the
-     * second entry must remain NULL. */
-    char * pcAlpnProtocols[] = { NULL, NULL };
+    BaseType_t xNetworkStatus;
 
     /* Set the credentials for establishing a TLS connection. */
     pxNetworkCredentials->pRootCa = ( const unsigned char * ) democonfigROOT_CA_PEM;
     pxNetworkCredentials->rootCaSize = sizeof( democonfigROOT_CA_PEM );
-    #ifdef democonfigCLIENT_CERTIFICATE_PEM
-        pxNetworkCredentials->pClientCert = ( const unsigned char * ) democonfigCLIENT_CERTIFICATE_PEM;
-        pxNetworkCredentials->clientCertSize = sizeof( democonfigCLIENT_CERTIFICATE_PEM );
-        pxNetworkCredentials->pPrivateKey = ( const unsigned char * ) democonfigCLIENT_PRIVATE_KEY_PEM;
-        pxNetworkCredentials->privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
-    #endif
-    #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
-        pxNetworkCredentials->disableSni = pdFALSE;
-        /* The ALPN string changes depending on whether username/password authentication is used. */
-        #ifdef democonfigCLIENT_USERNAME
-            pcAlpnProtocols[ 0 ] = AWS_IOT_CUSTOM_AUTH_ALPN;
-        #else
-            pcAlpnProtocols[ 0 ] = AWS_IOT_MQTT_ALPN;
-        #endif
-        pxNetworkCredentials->pAlpnProtos = pcAlpnProtocols;
-    #else /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
 
-        /* When using a local Mosquitto server setup, SNI needs to be disabled for
-         * an MQTT broker that only has an IP address but no hostname. However,
-         * SNI should be enabled whenever possible. */
-        pxNetworkCredentials->disableSni = pdTRUE;
-    #endif /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
-    /* Initialize reconnect attempts and interval. */
-    RetryUtils_ParamsReset( &xReconnectParams );
-    xReconnectParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
-
-    /* Attempt to connect to MQTT broker. If connection fails, retry after
-     * a timeout. Timeout value will exponentially increase till maximum
-     * attempts are reached.
-     */
-    do
-    {
-        /* Establish a TLS session with the MQTT broker. This example connects to
-         * the MQTT broker as specified in democonfigMQTT_BROKER_ENDPOINT and
-         * democonfigMQTT_BROKER_PORT at the top of this file. */
-        LogInfo( ( "Creating a TLS connection to %s:%u.\r\n",
-                   democonfigMQTT_BROKER_ENDPOINT,
-                   democonfigMQTT_BROKER_PORT ) );
-        /* Attempt to create a mutually authenticated TLS connection. */
-        xNetworkStatus = TLS_FreeRTOS_Connect( pxNetworkContext,
-                                               democonfigMQTT_BROKER_ENDPOINT,
-                                               democonfigMQTT_BROKER_PORT,
-                                               pxNetworkCredentials,
-                                               mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS,
-                                               mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS );
-
-        if( xNetworkStatus != TLS_TRANSPORT_SUCCESS )
-        {
-            LogWarn( ( "Connection to the broker failed. Retrying connection with backoff and jitter." ) );
-            xRetryUtilsStatus = RetryUtils_BackoffAndSleep( &xReconnectParams );
-        }
-
-        if( xRetryUtilsStatus == RetryUtilsRetriesExhausted )
-        {
-            LogError( ( "Connection to the broker failed, all attempts exhausted." ) );
-            xNetworkStatus = TLS_TRANSPORT_CONNECT_FAILURE;
-        }
-    } while( ( xNetworkStatus != TLS_TRANSPORT_SUCCESS ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
-
-    return xNetworkStatus;
+    /* Attempt to create a mutually authenticated TLS connection. */
+    xNetworkStatus = TLS_FreeRTOS_Connect( pxNetworkContext,
+                                           democonfigMQTT_BROKER_ENDPOINT,
+                                           democonfigMQTT_BROKER_PORT,
+                                           pxNetworkCredentials,
+                                           mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS,
+                                           mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS );
+    configASSERT( xNetworkStatus == TLS_TRANSPORT_SUCCESS );
+    LogInfo( ( "A mutually authenticated TLS connection established with %s:%u.\r\n",
+               democonfigMQTT_BROKER_ENDPOINT,
+               democonfigMQTT_BROKER_PORT ) );
 }
 /*-----------------------------------------------------------*/
-
 static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
                                                NetworkContext_t * pxNetworkContext )
 {
@@ -651,7 +474,7 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     configASSERT( xResult == MQTTSuccess );
 
     /* Some fields are not used in this demo so start with everything at 0. */
-    ( void ) memset( ( void * ) &xConnectInfo, 0x00, sizeof( xConnectInfo ) );
+    memset( ( void * ) &xConnectInfo, 0x00, sizeof( xConnectInfo ) );
 
     /* Start with a clean session i.e. direct the MQTT broker to discard any
      * previous session data. Also, establishing a connection with clean session
@@ -669,29 +492,6 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
      * the keep-alive period, the MQTT library will send PINGREQ packets. */
     xConnectInfo.keepAliveSeconds = mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS;
 
-    /* Append metrics when connecting to the AWS IoT Core broker. */
-    #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
-        #ifdef democonfigCLIENT_USERNAME
-            xConnectInfo.pUserName = CLIENT_USERNAME_WITH_METRICS;
-            xConnectInfo.userNameLength = ( uint16_t ) strlen( CLIENT_USERNAME_WITH_METRICS );
-            xConnectInfo.pPassword = democonfigCLIENT_PASSWORD;
-            xConnectInfo.passwordLength = ( uint16_t ) strlen( democonfigCLIENT_PASSWORD );
-        #else
-            xConnectInfo.pUserName = AWS_IOT_METRICS_STRING;
-            xConnectInfo.userNameLength = AWS_IOT_METRICS_STRING_LENGTH;
-            /* Password for authentication is not used. */
-            xConnectInfo.pPassword = NULL;
-            xConnectInfo.passwordLength = 0U;
-        #endif
-    #else /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
-        #ifdef democonfigCLIENT_USERNAME
-            xConnectInfo.pUserName = democonfigCLIENT_USERNAME;
-            xConnectInfo.userNameLength = ( uint16_t ) strlen( democonfigCLIENT_USERNAME );
-            xConnectInfo.pPassword = democonfigCLIENT_PASSWORD;
-            xConnectInfo.passwordLength = ( uint16_t ) strlen( democonfigCLIENT_PASSWORD );
-        #endif /* ifdef democonfigCLIENT_USERNAME */
-    #endif /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
-
     /* Send MQTT CONNECT packet to broker. LWT is not used in this demo, so it
      * is passed as NULL. */
     xResult = MQTT_Connect( pxMQTTContext,
@@ -706,40 +506,18 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
 }
 /*-----------------------------------------------------------*/
 
-static void prvUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo )
+static void prvMQTTSubscribeToTopic( MQTTContext_t * pxMQTTContext )
 {
-    MQTTStatus_t xResult = MQTTSuccess;
-    uint8_t * pucPayload = NULL;
-    size_t ulSize = 0;
-    uint32_t ulTopicCount = 0U;
+    MQTTStatus_t xResult;
+    MQTTSubscribeInfo_t xMQTTSubscription[ 1 ];
 
-    xResult = MQTT_GetSubAckStatusCodes( pxPacketInfo, &pucPayload, &ulSize );
+    /***
+     * For readability, error handling in this function is restricted to the use of
+     * asserts().
+     ***/
 
-    /* MQTT_GetSubAckStatusCodes always returns success if called with packet info
-     * from the event callback and non-NULL parameters. */
-    configASSERT( xResult == MQTTSuccess );
-
-    for( ulTopicCount = 0; ulTopicCount < ulSize; ulTopicCount++ )
-    {
-        xTopicFilterContext[ ulTopicCount ].xSubAckStatus = pucPayload[ ulTopicCount ];
-    }
-}
-/*-----------------------------------------------------------*/
-
-static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
-{
-    MQTTStatus_t xResult = MQTTSuccess;
-    RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
-    RetryUtilsParams_t xRetryParams;
-    MQTTSubscribeInfo_t xMQTTSubscription[ mqttexampleTOPIC_COUNT ];
-    bool xFailedSubscribeToTopic = false;
-    uint32_t ulTopicCount = 0U;
-
-    /* Some fields not used by this demo so start with everything at 0. */
+    /* Some fields are not used by this demo so start with everything at 0. */
     ( void ) memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
-
-    /* Get a unique packet id. */
-    usSubscribePacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
 
     /* Subscribe to the mqttexampleTOPIC topic filter. This example subscribes to
      * only one topic and uses QoS1. */
@@ -747,56 +525,16 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
     xMQTTSubscription[ 0 ].pTopicFilter = mqttexampleTOPIC;
     xMQTTSubscription[ 0 ].topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
 
-    /* Initialize retry attempts and interval. */
-    RetryUtils_ParamsReset( &xRetryParams );
-    xRetryParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
+    /* Get a unique packet id. */
+    usSubscribePacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
 
-    do
-    {
-        /* The client is now connected to the broker. Subscribe to the topic
-         * as specified in mqttexampleTOPIC at the top of this file by sending a
-         * subscribe packet then waiting for a subscribe acknowledgment (SUBACK).
-         * This client will then publish to the same topic it subscribed to, so it
-         * will expect all the messages it sends to the broker to be sent back to it
-         * from the broker. This demo uses QOS0 in Subscribe, therefore, the Publish
-         * messages received from the broker will have QOS0. */
-        LogInfo( ( "Attempt to subscribe to the MQTT topic %s.\r\n", mqttexampleTOPIC ) );
-        xResult = MQTT_Subscribe( pxMQTTContext,
-                                  xMQTTSubscription,
-                                  sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
-                                  usSubscribePacketIdentifier );
-        configASSERT( xResult == MQTTSuccess );
+    /* Send SUBSCRIBE packet. */
+    xResult = MQTT_Subscribe( pxMQTTContext,
+                              xMQTTSubscription,
+                              sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
+                              usSubscribePacketIdentifier );
 
-        LogInfo( ( "SUBSCRIBE sent for topic %s to broker.\n\n", mqttexampleTOPIC ) );
-
-        /* Process incoming packet from the broker. After sending the subscribe, the
-         * client may receive a publish before it receives a subscribe ack. Therefore,
-         * call generic incoming packet processing function. Since this demo is
-         * subscribing to the topic to which no one is publishing, probability of
-         * receiving Publish message before subscribe ack is zero; but application
-         * must be ready to receive any packet.  This demo uses the generic packet
-         * processing function everywhere to highlight this fact. */
-        xResult = MQTT_ProcessLoop( pxMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
-        configASSERT( xResult == MQTTSuccess );
-
-        /* Check if recent subscription request has been rejected. #xTopicFilterContext is updated
-         * in the event callback to reflect the status of the SUBACK sent by the broker. It represents
-         * either the QoS level granted by the server upon subscription, or acknowledgement of
-         * server rejection of the subscription request. */
-        for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
-        {
-            if( xTopicFilterContext[ ulTopicCount ].xSubAckStatus == MQTTSubAckFailure )
-            {
-                LogWarn( ( "Server rejected subscription request. Attempting to re-subscribe to topic %s.",
-                           xTopicFilterContext[ ulTopicCount ].pcTopicFilter ) );
-                xFailedSubscribeToTopic = true;
-                xRetryUtilsStatus = RetryUtils_BackoffAndSleep( &xRetryParams );
-                break;
-            }
-        }
-
-        configASSERT( xRetryUtilsStatus != RetryUtilsRetriesExhausted );
-    } while( ( xFailedSubscribeToTopic == true ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
+    configASSERT( xResult == MQTTSuccess );
 }
 /*-----------------------------------------------------------*/
 
@@ -804,6 +542,7 @@ static void prvMQTTPublishToTopic( MQTTContext_t * pxMQTTContext )
 {
     MQTTStatus_t xResult;
     MQTTPublishInfo_t xMQTTPublishInfo;
+
 
     /***
      * For readability, error handling in this function is restricted to the use of
@@ -813,7 +552,7 @@ static void prvMQTTPublishToTopic( MQTTContext_t * pxMQTTContext )
     /* Some fields are not used by this demo so start with everything at 0. */
     ( void ) memset( ( void * ) &xMQTTPublishInfo, 0x00, sizeof( xMQTTPublishInfo ) );
 
-    /* This demo uses QoS1. */
+    /* This demo uses QoS1 */
     xMQTTPublishInfo.qos = MQTTQoS1;
     xMQTTPublishInfo.retain = false;
     xMQTTPublishInfo.pTopicName = mqttexampleTOPIC;
@@ -834,22 +573,19 @@ static void prvMQTTPublishToTopic( MQTTContext_t * pxMQTTContext )
 static void prvMQTTUnsubscribeFromTopic( MQTTContext_t * pxMQTTContext )
 {
     MQTTStatus_t xResult;
-    MQTTSubscribeInfo_t xMQTTSubscription[ mqttexampleTOPIC_COUNT ];
+    MQTTSubscribeInfo_t xMQTTSubscription[ 1 ];
 
-    /* Some fields not used by this demo so start with everything at 0. */
-    ( void ) memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
+    /* Some fields are not used by this demo so start with everything at 0. */
+    memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
 
-    /* Get a unique packet id. */
-    usSubscribePacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
-
-    /* Subscribe to the mqttexampleTOPIC topic filter. This example subscribes to
-     * only one topic and uses QoS1. */
-    xMQTTSubscription[ 0 ].qos = MQTTQoS1;
+    /* Unsubscribe to the mqttexampleTOPIC topic filter. */
     xMQTTSubscription[ 0 ].pTopicFilter = mqttexampleTOPIC;
     xMQTTSubscription[ 0 ].topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
 
-    /* Get next unique packet identifier. */
+    /* Get next unique packet identifier */
     usUnsubscribePacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
+    /* Make sure the packet id obtained is valid. */
+    configASSERT( usUnsubscribePacketIdentifier != 0 );
 
     /* Send UNSUBSCRIBE packet. */
     xResult = MQTT_Unsubscribe( pxMQTTContext,
@@ -864,8 +600,6 @@ static void prvMQTTUnsubscribeFromTopic( MQTTContext_t * pxMQTTContext )
 static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
                                     uint16_t usPacketId )
 {
-    uint32_t ulTopicCount = 0U;
-
     switch( pxIncomingPacket->type )
     {
         case MQTT_PACKET_TYPE_PUBACK:
@@ -875,23 +609,7 @@ static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
             break;
 
         case MQTT_PACKET_TYPE_SUBACK:
-
-            /* A SUBACK from the broker, containing the server response to our subscription request, has been received.
-             * It contains the status code indicating server approval/rejection for the subscription to the single topic
-             * requested. The SUBACK will be parsed to obtain the status code, and this status code will be stored in global
-             * variable #xTopicFilterContext. */
-            prvUpdateSubAckStatus( pxIncomingPacket );
-
-            for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
-            {
-                if( xTopicFilterContext[ ulTopicCount ].xSubAckStatus != MQTTSubAckFailure )
-                {
-                    LogInfo( ( "Subscribed to the topic %s with maximum QoS %u.\r\n",
-                               xTopicFilterContext[ ulTopicCount ].pcTopicFilter,
-                               xTopicFilterContext[ ulTopicCount ].xSubAckStatus ) );
-                }
-            }
-
+            LogInfo( ( "Subscribed to the topic %s.\r\n", mqttexampleTOPIC ) );
             /* Make sure ACK packet identifier matches with Request packet identifier. */
             configASSERT( usSubscribePacketIdentifier == usPacketId );
             break;
@@ -971,7 +689,7 @@ static uint32_t prvGetTimeMs( void )
     xTickCount = xTaskGetTickCount();
 
     /* Convert the ticks to milliseconds. */
-    ulTimeMs = ( uint32_t ) xTickCount * MILLISECONDS_PER_TICK;
+    ulTimeMs = ( uint32_t ) xTickCount * _MILLISECONDS_PER_TICK;
 
     /* Reduce ulGlobalEntryTimeMs from obtained time so as to always return the
      * elapsed time in the application. */

@@ -60,7 +60,7 @@
  * must be unique; so edit as required to ensure that no two clients connecting to
  * the same broker use the same client identifier.
  *
- * #define democonfigCLIENT_IDENTIFIER    "insert here."
+ * #define democonfigCLIENT_IDENTIFIER    "...insert here..."
  */
 
 

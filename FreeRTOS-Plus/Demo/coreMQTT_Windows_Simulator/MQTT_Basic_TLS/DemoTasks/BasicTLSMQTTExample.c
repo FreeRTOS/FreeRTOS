@@ -159,12 +159,12 @@
 /**
  * @brief Milliseconds per second.
  */
-#define _MILLISECONDS_PER_SECOND                          ( 1000U )
+#define MILLISECONDS_PER_SECOND                           ( 1000U )
 
 /**
  * @brief Milliseconds per FreeRTOS tick.
  */
-#define _MILLISECONDS_PER_TICK                            ( _MILLISECONDS_PER_SECOND / configTICK_RATE_HZ )
+#define MILLISECONDS_PER_TICK                             ( MILLISECONDS_PER_SECOND / configTICK_RATE_HZ )
 
 /*-----------------------------------------------------------*/
 
@@ -485,7 +485,10 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
     /* Set the credentials for establishing a TLS connection. */
     pxNetworkCredentials->pRootCa = ( const unsigned char * ) democonfigROOT_CA_PEM;
     pxNetworkCredentials->rootCaSize = sizeof( democonfigROOT_CA_PEM );
-    /* Disable SNI when using a local server. */
+
+    /* When using a local Mosquitto server setup, SNI needs to be disabled for
+     * an MQTT broker that only has an IP address but no hostname. However,
+     * SNI should be enabled whenever possible. */
     pxNetworkCredentials->disableSni = true;
     /* Initialize reconnect attempts and interval. */
     RetryUtils_ParamsReset( &xReconnectParams );
@@ -551,7 +554,7 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     configASSERT( xResult == MQTTSuccess );
 
     /* Some fields are not used in this demo so start with everything at 0. */
-    memset( ( void * ) &xConnectInfo, 0x00, sizeof( xConnectInfo ) );
+    ( void ) memset( ( void * ) &xConnectInfo, 0x00, sizeof( xConnectInfo ) );
 
     /* Start with a clean session i.e. direct the MQTT broker to discard any
      * previous session data. Also, establishing a connection with clean session
@@ -867,7 +870,7 @@ static uint32_t prvGetTimeMs( void )
     xTickCount = xTaskGetTickCount();
 
     /* Convert the ticks to milliseconds. */
-    ulTimeMs = ( uint32_t ) xTickCount * _MILLISECONDS_PER_TICK;
+    ulTimeMs = ( uint32_t ) xTickCount * MILLISECONDS_PER_TICK;
 
     /* Reduce ulGlobalEntryTimeMs from obtained time so as to always return the
      * elapsed time in the application. */

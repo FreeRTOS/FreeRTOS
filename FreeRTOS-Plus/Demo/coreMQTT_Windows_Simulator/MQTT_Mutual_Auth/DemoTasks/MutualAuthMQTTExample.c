@@ -579,12 +579,10 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
     #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
         pxNetworkCredentials->disableSni = pdFALSE;
         /* The ALPN string changes depending on whether username/password authentication is used. */
-        #ifdef CLIENT_USERNAME
+        #ifdef democonfigCLIENT_USERNAME
             pxNetworkCredentials->pAlpnProtos = AWS_IOT_CUSTOM_AUTH_ALPN;
-            pxNetworkCredentials->alpnProtosLen = AWS_IOT_CUSTOM_AUTH_ALPN_LENGTH;
         #else
             pxNetworkCredentials->pAlpnProtos = AWS_IOT_MQTT_ALPN;
-            pxNetworkCredentials->alpnProtosLen = AWS_IOT_MQTT_ALPN_LENGTH;
         #endif
     #else
 
@@ -675,7 +673,7 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
      * the keep-alive period, the MQTT library will send PINGREQ packets. */
     xConnectInfo.keepAliveSeconds = mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS;
 
-    /* Use the username and password for authentication, if they are defined. */
+    /* Append metrics when connecting to the AWS IoT Core broker. */
     #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
         #ifdef democonfigCLIENT_USERNAME
             xConnectInfo.pUserName = CLIENT_USERNAME_WITH_METRICS;
@@ -683,11 +681,11 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
             xConnectInfo.pPassword = democonfigCLIENT_PASSWORD;
             xConnectInfo.passwordLength = ( uint16_t ) strlen( democonfigCLIENT_PASSWORD );
         #else
-            connectInfo.pUserName = AWS_IOT_METRICS_STRING;
-            connectInfo.userNameLength = AWS_IOT_METRICS_STRING_LENGTH;
+            xConnectInfo.pUserName = AWS_IOT_METRICS_STRING;
+            xConnectInfo.userNameLength = AWS_IOT_METRICS_STRING_LENGTH;
             /* Password for authentication is not used. */
-            connectInfo.pPassword = NULL;
-            connectInfo.passwordLength = 0U;
+            xConnectInfo.pPassword = NULL;
+            xConnectInfo.passwordLength = 0U;
         #endif /* ifdef democonfigCLIENT_USERNAME */
     #else /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
         #ifdef democonfigCLIENT_USERNAME

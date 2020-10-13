@@ -716,7 +716,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
         /* Check if the recent subscription request has been rejected. #xTopicFilterContext 
          * is updated in the event callback to reflect the status of the SUBACK
          * sent by the broker. It represents either the QoS level granted by the
-         * server upon subscription, or acknowledgement of server rejection of the
+         * server upon subscription or acknowledgement of server rejection of the
          * subscription request. */
         for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
         {

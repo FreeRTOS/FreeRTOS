@@ -185,14 +185,14 @@
  * The current value is given as an example. Please update for your specific
  * operating system.
  */
-#define democonfigOS_NAME                   "Windows"
+#define democonfigOS_NAME                   "FreeRTOS"
 
 /**
  * @brief The version of the operating system that the application is running
  * on. The current value is given as an example. Please update for your specific
  * operating system version.
  */
-#define democonfigOS_VERSION                "10"
+#define democonfigOS_VERSION                "10.3.0"
 
 /**
  * @brief The name of the hardware platform the application is running on. The

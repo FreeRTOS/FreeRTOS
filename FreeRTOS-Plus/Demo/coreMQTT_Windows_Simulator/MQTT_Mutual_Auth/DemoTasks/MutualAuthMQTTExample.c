@@ -210,11 +210,11 @@
  * Provide default values for undefined configuration settings.
  */
 #ifndef democonfigOS_NAME
-    #define democonfigOS_NAME    "Windows"
+    #define democonfigOS_NAME    "FreeRTOS"
 #endif
 
 #ifndef democonfigOS_VERSION
-    #define democonfigOS_VERSION    "10"
+    #define democonfigOS_VERSION    "10.3.0"
 #endif
 
 #ifndef democonfigHARDWARE_PLATFORM_NAME

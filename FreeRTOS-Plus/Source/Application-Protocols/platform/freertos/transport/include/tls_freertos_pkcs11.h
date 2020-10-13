@@ -109,15 +109,14 @@ struct NetworkContext
 typedef struct NetworkCredentials
 {
     /**
-     * @brief Set this to a non-NULL value to use ALPN.
-     *
-     * This string must be NULL-terminated.
+     * @brief To use ALPN, set this to a NULL-terminated list of supported
+     * protocols in decreasing order of preference.
      *
      * See [this link]
      * (https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/)
      * for more information.
      */
-    const char * pAlpnProtos;
+    const char ** pAlpnProtos;
 
     /**
      * @brief Disable server name indication (SNI) for a TLS session.
@@ -125,11 +124,11 @@ typedef struct NetworkCredentials
     BaseType_t disableSni;
 
     const unsigned char * pRootCa;   /**< @brief String representing a trusted server root certificate. */
-    size_t rootCaSize;               /**< @brief Size associated with #IotNetworkCredentials.pRootCa. */
+    size_t rootCaSize;               /**< @brief Size associated with #NetworkCredentials.pRootCa. */
     const unsigned char * pUserName; /**< @brief String representing the username for MQTT. */
-    size_t userNameSize;             /**< @brief Size associated with #IotNetworkCredentials.pUserName. */
+    size_t userNameSize;             /**< @brief Size associated with #NetworkCredentials.pUserName. */
     const unsigned char * pPassword; /**< @brief String representing the password for MQTT. */
-    size_t passwordSize;             /**< @brief Size associated with #IotNetworkCredentials.pPassword. */
+    size_t passwordSize;             /**< @brief Size associated with #NetworkCredentials.pPassword. */
 } NetworkCredentials_t;
 
 /**

@@ -353,7 +353,7 @@ static void prvMQTTDemoTask( void * pvParameters )
         /****************************** Connect. ******************************/
 
         /* Attempt to connect to the MQTT broker. If connection fails, retry after
-         * a timeout. The timeout value will be exponentially increase until the
+         * a timeout. The timeout value will exponentially increase until the
          * maximum number of attempts are reached or the maximum timeout value is
          * reached. The function below returns a failure status if the TCP connection
          * cannot be established to the broker after the configured number of attempts. */

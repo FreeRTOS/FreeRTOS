@@ -489,7 +489,7 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
     /* When using a local Mosquitto server setup, SNI needs to be disabled for
      * an MQTT broker that only has an IP address but no hostname. However,
      * SNI should be enabled whenever possible. */
-    pxNetworkCredentials->disableSni = true;
+    pxNetworkCredentials->disableSni = pdTRUE;
     /* Initialize reconnect attempts and interval. */
     RetryUtils_ParamsReset( &xReconnectParams );
     xReconnectParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;

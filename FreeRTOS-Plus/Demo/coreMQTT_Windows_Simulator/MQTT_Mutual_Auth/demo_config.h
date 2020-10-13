@@ -192,14 +192,14 @@
  * on. The current value is given as an example. Please update for your specific
  * operating system version.
  */
-#define democonfigOS_VERSION                "10.3.0"
+#define democonfigOS_VERSION                tskKERNEL_VERSION_NUMBER
 
 /**
  * @brief The name of the hardware platform the application is running on. The
  * current value is given as an example. Please update for your specific
  * hardware platform.
  */
-#define democonfigHARDWARE_PLATFORM_NAME    "PC"
+#define democonfigHARDWARE_PLATFORM_NAME    "WinSim"
 
 /**
  * @brief The name of the MQTT library used and its version, following an "@"

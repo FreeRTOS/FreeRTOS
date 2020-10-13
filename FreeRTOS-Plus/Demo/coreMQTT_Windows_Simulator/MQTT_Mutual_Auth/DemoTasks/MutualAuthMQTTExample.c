@@ -214,11 +214,11 @@
 #endif
 
 #ifndef democonfigOS_VERSION
-    #define democonfigOS_VERSION    "10.3.0"
+    #define democonfigOS_VERSION    tskKERNEL_VERSION_NUMBER
 #endif
 
 #ifndef democonfigHARDWARE_PLATFORM_NAME
-    #define democonfigHARDWARE_PLATFORM_NAME    "PC"
+    #define democonfigHARDWARE_PLATFORM_NAME    "WinSim"
 #endif
 
 #ifndef democonfigMQTT_LIB

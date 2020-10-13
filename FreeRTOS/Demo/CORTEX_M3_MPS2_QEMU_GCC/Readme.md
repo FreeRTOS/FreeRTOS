@@ -36,5 +36,5 @@ run: (make sure you build the debug version)
 arm-none-eabi-gdb -q /path/to/executable/mps2_demo 
 ```
 ## Demo
-This Demo implemets the blinky program, the user should expect to the the word 
+This Demo implemets the blinky program, the user should expect the the word 
 "blinking" to be repeatedly prited on the screen

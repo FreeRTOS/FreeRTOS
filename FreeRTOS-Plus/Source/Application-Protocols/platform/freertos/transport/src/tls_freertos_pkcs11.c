@@ -86,18 +86,6 @@ static const char * pNoLowLevelMbedTlsCodeStr = "<No-Low-Level-Code>";
 /*-----------------------------------------------------------*/
 
 /**
- * @brief mbed TLS entropy context for generation of random numbers.
- */
-static mbedtls_entropy_context entropyContext;
-
-/**
- * @brief mbed TLS CTR DRBG context for generation of random numbers.
- */
-static mbedtls_ctr_drbg_context ctrDrgbContext;
-
-/*-----------------------------------------------------------*/
-
-/**
  * @brief Initialize the mbed TLS structures in a network connection.
  *
  * @param[in] pSslContext The SSL context to initialize.
@@ -867,10 +855,6 @@ void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
 
     /* Free mbed TLS contexts. */
     sslContextFree( &( pNetworkContext->sslContext ) );
-
-    /* Free the contexts for random number generation. */
-    mbedtls_ctr_drbg_free( &ctrDrgbContext );
-    mbedtls_entropy_free( &entropyContext );
 
     /* Clear the mutex functions for mbed TLS thread safety. */
     mbedtls_threading_free_alt();

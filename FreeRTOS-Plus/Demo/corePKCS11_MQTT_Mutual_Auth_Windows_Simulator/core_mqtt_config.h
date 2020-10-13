@@ -21,11 +21,9 @@
  *
  * http://www.FreeRTOS.org
  * http://aws.amazon.com/freertos
- *
- * 1 tab == 4 spaces!
  */
-#ifndef CORE_MQTT_CONFIG_H_
-#define CORE_MQTT_CONFIG_H_
+#ifndef CORE_MQTT_CONFIG_H
+#define CORE_MQTT_CONFIG_H
 
 /**************************************************/
 /******* DO NOT CHANGE the following order ********/
@@ -46,7 +44,7 @@
 #endif
 
 #ifndef LIBRARY_LOG_LEVEL
-    #define LIBRARY_LOG_LEVEL    LOG_NONE
+    #define LIBRARY_LOG_LEVEL    LOG_ERROR
 #endif
 
 #include "logging_stack.h"
@@ -64,4 +62,4 @@
  */
 #define MQTT_STATE_ARRAY_MAX_COUNT    10U
 
-#endif /* ifndef CORE_MQTT_CONFIG_H_ */
+#endif /* ifndef CORE_MQTT_CONFIG_H */

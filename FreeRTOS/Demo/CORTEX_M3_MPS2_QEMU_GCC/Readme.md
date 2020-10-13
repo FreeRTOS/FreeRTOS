@@ -26,12 +26,15 @@ $ qemu-system-arm -machine mps2-an385 -monitor null -semihosting \
 ```
 
 ## How to start debugging (gdb)
-Append the -s and -S switches to the previous command (qemu-system-arm)
--s: allow gdb to be attached to the process remotely at port 1234
--S: start the program in the paused state
+<P>
+Append the -s and -S switches to the previous command (qemu-system-arm)<br>
+-s: allow gdb to be attached to the process remotely at port 1234 <br>
+-S: start the program in the paused state <br>
 
 run: (make sure you build the debug version)
 ```
 arm-none-eabi-gdb -q /path/to/executable/mps2_demo 
 ```
-
+## Demo
+This Demo implemets the blinky program, the user should expect to the the word 
+"blinking" to be repeatedly prited on the screen

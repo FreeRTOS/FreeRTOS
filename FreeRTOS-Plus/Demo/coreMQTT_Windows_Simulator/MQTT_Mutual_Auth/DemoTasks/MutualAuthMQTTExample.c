@@ -275,7 +275,7 @@ static void prvMQTTDemoTask( void * pvParameters );
  * Timeout value will exponentially increase until maximum
  * timeout value is reached or the number of attempts are exhausted.
  *
- * @param[out] pxNetworkContext The output parameter to return the created network context.
+ * @param[out] pxNetworkContext The parameter to return the created network context.
  *
  * @return The status of the final connection attempt.
  */

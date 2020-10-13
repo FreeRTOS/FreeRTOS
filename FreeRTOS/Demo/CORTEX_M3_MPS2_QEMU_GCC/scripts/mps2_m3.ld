@@ -1,7 +1,7 @@
 MEMORY
 {
     RAM (xrw)  : ORIGIN = 0x00000000,  LENGTH = 4M
-    FLASH (rx) : ORIGIN = 0x8000000,   LENGTH = 512K
+/*    FLASH (rx) : ORIGIN = 0x4000000,   LENGTH = 512K */
 }
 
 _Min_Heap_Size = 0x200 ;        /* Required amount of heap. */
@@ -15,7 +15,6 @@ SECTIONS
         . = ALIGN(4);
         KEEP(*(.isr_vector))
         *(.text*)
-        *(.rodata*)
         KEEP (*(.init))
         KEEP (*(.fini))
         . = ALIGN(4);
@@ -28,6 +27,7 @@ SECTIONS
         . = ALIGN(4);
         _sdata = .;
         *(.data*)
+        *(.rodata*)
         KEEP(*(.eh_frame))
         . = ALIGN(4);
         _edata = .;
@@ -44,14 +44,17 @@ SECTIONS
         _ebss = .;
         __bss_end__ = _ebss;
     } >RAM
-         ._user_heap_stack :
-       {
-           . = ALIGN(8);
-           PROVIDE ( end = . );
-           PROVIDE ( _end = . );
-           . = . + _Min_Heap_Size;
-           . = . + _Min_Stack_Size;
-           . = ALIGN(8);
+
+    ._user_heap_stack :
+    {
+        . = ALIGN(8);
+        PROVIDE ( end = . );
+        PROVIDE ( _end = . );
+        _heap_bottom = .;
+        . = . + _Min_Heap_Size;
+        _heap_top = .;
+        . = . + _Min_Stack_Size;
+        . = ALIGN(8);
        } >RAM
 
 	.ARM.extab :
@@ -59,7 +62,7 @@ SECTIONS
 		. = ALIGN(4);
 		*(.ARM.extab* .gnu.linkonce.armextab.*)
 		. = ALIGN(4);
-	} >FLASH
+	} >RAM
 
 	.ARM :
 	{
@@ -68,6 +71,6 @@ SECTIONS
 		*(.ARM.exidx*)
 		__exidx_end = .;
 		. = ALIGN(4);
-	} >FLASH
+	} >RAM
 }
 

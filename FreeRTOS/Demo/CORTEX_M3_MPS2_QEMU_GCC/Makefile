@@ -11,7 +11,7 @@ FREERTOS_PLUS_DIR_REL := ../../../FreeRTOS-Plus
 FREERTOS_PLUS_DIR := $(abspath $(FREERTOS_PLUS_DIR_REL))
 
 
-SOURCE_FILES := main.c init/startup.c main_blinky.c
+SOURCE_FILES := main.c init/startup.c main_blinky.c syscall.c
 SOURCE_FILES += $(KERNEL_DIR)/portable/GCC/ARM_CM3/port.c
 SOURCE_FILES += $(KERNEL_DIR)/tasks.c
 SOURCE_FILES += $(KERNEL_DIR)/list.c
@@ -22,18 +22,17 @@ OBJ_FILES := $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.o)
 
 DEFINES := -DprojCOVERAGE_TEST -DQEMU_SOC_MPS2
 
-CFLAGS = 
-LDFLAGS = -T ./scripts/mps2_m3.ld -specs=nano.specs -specs=nosys.specs #-l:libc_nano.a 
-
-# --gc-sections -Map=$(@:.elf=.map)
-
+LDFLAGS = -l:libc_nano.a
+LDFLAGS += -T ./scripts/mps2_m3.ld
+#LDFLAGS += -Wl,--gc-sections,-Map=$(@:.elf=.map)
+#LD_FLAGS += -specs=nano.specs -specs=nosys.specs 
+CFLAGS =
 ifeq ($(DEBUG), 1)
     CFLAGS += -ggdb -O0
 endif
 
-CFLAGS += -mthumb -mcpu=cortex-m3 -Wno-builtin-declaration-mismatch -Werror 
-# -mfloat-abi=soft 
-
+CFLAGS += -nostartfiles -mthumb -mcpu=cortex-m3 -Wno-builtin-declaration-mismatch -Werror
+# -mfloat-abi=soft
 
 INCLUDE_DIRS := -I.
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/portable/Compiler/GCC/
@@ -57,8 +56,6 @@ ${BUILD_DIR}/%.o : %.c Makefile
 
 $(BUILD_DIR)/$(BIN) : $(OBJ_FILES)
 	$(CC)  -ffunction-sections -fdata-sections  $(CFLAGS) $(LDFLAGS)   $+ -o $(@)
-
-
 
 clean:
 	-rm -rf build

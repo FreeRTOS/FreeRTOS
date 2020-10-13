@@ -30,6 +30,7 @@ void* memset(uint32_t *dst, int num, size_t len)
     }
     return dst;
 }
+
 void memcpy(void *dest, void *src, size_t n)
 {
    // Typecast src and dest addresses to (char *)
@@ -37,9 +38,10 @@ void memcpy(void *dest, void *src, size_t n)
    char *cdest = (char *)dest;
 
    // Copy contents of src[] to dest[]
-   for (int i=0; i<n; i++)
+   for (int i = 0; i < n; i++)
        cdest[i] = csrc[i];
 }
+
 __attribute__((naked)) void Reset_Handler(void) {
     // set stack pointer
     __asm volatile ("ldr r0, =_estack");
@@ -115,21 +117,16 @@ const uint32_t isr_vector[] __attribute__((section(".isr_vector"))) = {
     (uint32_t)&xPortPendSVHandler, // PendSV handler
     (uint32_t)&xPortSysTickHandler, // SysTick_Handler
 };
-extern int Main();
-int main()
-{
-	Main();
-	return 0;
-}
 
-void _start2(void) {
+extern int main();
+extern void uart_init();
+void _start(void) {
     // Enable the UART
-    //uart_init();
-
+    
+    uart_init();
     //__libc_init_array();
     // Now that we have a basic system up and running we can call main
-    extern int Main();
-    Main(0, 0);
+    main(0, 0);
 
     // Finished
     exit(0);

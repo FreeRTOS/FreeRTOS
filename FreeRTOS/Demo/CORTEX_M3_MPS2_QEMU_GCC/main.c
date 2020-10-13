@@ -9,7 +9,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 void main_blinky( void );
 
-int Main ()
+int main ()
 {
     main_blinky();
     while (1);

@@ -70,12 +70,14 @@
  */
 typedef struct SSLContext
 {
-    mbedtls_ssl_config config;            /**< @brief SSL connection configuration. */
-    mbedtls_ssl_context context;          /**< @brief SSL connection context */
-    mbedtls_x509_crt_profile certProfile; /**< @brief Certificate security profile for this connection. */
-    mbedtls_x509_crt rootCa;              /**< @brief Root CA certificate context. */
-    mbedtls_x509_crt clientCert;          /**< @brief Client certificate context. */
-    mbedtls_pk_context privKey;           /**< @brief Client private key context. */
+    mbedtls_ssl_config config;               /**< @brief SSL connection configuration. */
+    mbedtls_ssl_context context;             /**< @brief SSL connection context */
+    mbedtls_x509_crt_profile certProfile;    /**< @brief Certificate security profile for this connection. */
+    mbedtls_x509_crt rootCa;                 /**< @brief Root CA certificate context. */
+    mbedtls_x509_crt clientCert;             /**< @brief Client certificate context. */
+    mbedtls_pk_context privKey;              /**< @brief Client private key context. */
+    mbedtls_entropy_context entropyContext;  /**< @brief Entropy context for random number generation. */
+    mbedtls_ctr_drbg_context ctrDrgbContext; /**< @brief CTR DRBG context for random number generation. */
 } SSLContext_t;
 
 /**
@@ -94,31 +96,26 @@ struct NetworkContext
 typedef struct NetworkCredentials
 {
     /**
-     * @brief Set this to a non-NULL value to use ALPN.
-     *
-     * This string must be NULL-terminated.
+     * @brief To use ALPN, set this to a NULL-terminated list of supported
+     * protocols in decreasing order of preference.
      *
      * See [this link]
      * (https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/)
      * for more information.
      */
-    const char * pAlpnProtos;
+    const char ** pAlpnProtos;
 
     /**
      * @brief Disable server name indication (SNI) for a TLS session.
      */
     BaseType_t disableSni;
 
-    const unsigned char * pRootCa;     /**< @brief String representing a trusted server root certificate. */
-    size_t rootCaSize;                 /**< @brief Size associated with #IotNetworkCredentials.pRootCa. */
-    const unsigned char * pClientCert; /**< @brief String representing the client certificate. */
-    size_t clientCertSize;             /**< @brief Size associated with #IotNetworkCredentials.pClientCert. */
-    const unsigned char * pPrivateKey; /**< @brief String representing the client certificate's private key. */
-    size_t privateKeySize;             /**< @brief Size associated with #IotNetworkCredentials.pPrivateKey. */
-    const unsigned char * pUserName;   /**< @brief String representing the username for MQTT. */
-    size_t userNameSize;               /**< @brief Size associated with #IotNetworkCredentials.pUserName. */
-    const unsigned char * pPassword;   /**< @brief String representing the password for MQTT. */
-    size_t passwordSize;               /**< @brief Size associated with #IotNetworkCredentials.pPassword. */
+    const uint8_t * pRootCa;     /**< @brief String representing a trusted server root certificate. */
+    size_t rootCaSize;           /**< @brief Size associated with #NetworkCredentials.pRootCa. */
+    const uint8_t * pClientCert; /**< @brief String representing the client certificate. */
+    size_t clientCertSize;       /**< @brief Size associated with #NetworkCredentials.pClientCert. */
+    const uint8_t * pPrivateKey; /**< @brief String representing the client certificate's private key. */
+    size_t privateKeySize;       /**< @brief Size associated with #NetworkCredentials.pPrivateKey. */
 } NetworkCredentials_t;
 
 /**

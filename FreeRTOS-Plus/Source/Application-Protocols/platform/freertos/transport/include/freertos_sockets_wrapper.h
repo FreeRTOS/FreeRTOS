@@ -30,6 +30,7 @@
 /* FreeRTOS+TCP includes. */
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
+#include "FreeRTOS_DNS.h"
 
 /**************************************************/
 /******* DO NOT CHANGE the following order ********/

@@ -580,9 +580,9 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
         pxNetworkCredentials->disableSni = pdFALSE;
         /* The ALPN string changes depending on whether username/password authentication is used. */
         #ifdef democonfigCLIENT_USERNAME
-            pxNetworkCredentials->pAlpnProtos = AWS_IOT_CUSTOM_AUTH_ALPN;
+            pxNetworkCredentials->pAlpnProtos = &AWS_IOT_CUSTOM_AUTH_ALPN;
         #else
-            pxNetworkCredentials->pAlpnProtos = AWS_IOT_MQTT_ALPN;
+            pxNetworkCredentials->pAlpnProtos = &AWS_IOT_MQTT_ALPN;
         #endif
     #else
 
@@ -686,8 +686,8 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
             /* Password for authentication is not used. */
             xConnectInfo.pPassword = NULL;
             xConnectInfo.passwordLength = 0U;
-        #endif /* ifdef democonfigCLIENT_USERNAME */
-    #else /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
+        #endif
+    #else  /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
         #ifdef democonfigCLIENT_USERNAME
             xConnectInfo.pUserName = democonfigCLIENT_USERNAME;
             xConnectInfo.userNameLength = ( uint16_t ) strlen( democonfigCLIENT_USERNAME );

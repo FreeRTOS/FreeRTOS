@@ -128,7 +128,7 @@
  *
  *     // If pRetryParams->maxRetryAttempts is set to 0, try forever.
  *     if( ( pRetryParams->attemptsDone < pRetryParams->maxRetryAttempts ) ||
- *         ( 0 == pRetryParams->maxRetryAttempts ) )
+ *         ( 0U == pRetryParams->maxRetryAttempts ) )
  *     {
  *         // Choose a random value for back-off time between 0 and the max jitter value.
  *         backOffDelay = rand() % pRetryParams->nextJitterMax;

@@ -6,6 +6,7 @@
 
 static void prvQueueReceiveTask( void *pvParameters );
 static void prvQueueSendTask( void *pvParameters );
+extern int _write(int file, char *ptr, int len);
 
 #define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
@@ -30,7 +31,12 @@ void main_blinky( void )
 					mainQUEUE_RECEIVE_TASK_PRIORITY, 	/* The priority assigned to the task. */
 					NULL );								/* The task handle is not required, so NULL is passed. */
 
-		xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+		xTaskCreate( prvQueueSendTask,
+		            "TX",
+		            configMINIMAL_STACK_SIZE,
+		            NULL,
+		            mainQUEUE_SEND_TASK_PRIORITY,
+		            NULL );
 
 		/* Start the tasks and timer running. */
 		vTaskStartScheduler();
@@ -89,9 +95,8 @@ const uint32_t ulExpectedValue = 100UL;
 		is it the expected value?  If it is, toggle the LED. */
 		if( ulReceivedValue == ulExpectedValue )
 		{
-			//vParTestToggleLED( mainTASK_LED );
-			printf("%s\n", "blinking");
-
+			_write(1, "blinking\n", 9);
+            vTaskDelay(1000);
 			ulReceivedValue = 0U;
 			ulRxEvents++;
 		}

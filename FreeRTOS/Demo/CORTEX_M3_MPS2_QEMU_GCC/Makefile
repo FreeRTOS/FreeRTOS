@@ -22,17 +22,15 @@ OBJ_FILES := $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.o)
 
 DEFINES := -DprojCOVERAGE_TEST -DQEMU_SOC_MPS2
 
-LDFLAGS = -l:libc_nano.a
-LDFLAGS += -T ./scripts/mps2_m3.ld
-#LDFLAGS += -Wl,--gc-sections,-Map=$(@:.elf=.map)
-#LD_FLAGS += -specs=nano.specs -specs=nosys.specs 
-CFLAGS =
+LDFLAGS = -T ./scripts/mps2_m3.ld
+
+CFLAGS = -nostartfiles -mthumb -mcpu=cortex-m3
+CFLAGS += -Wno-builtin-declaration-mismatch -Werror
 ifeq ($(DEBUG), 1)
     CFLAGS += -ggdb -O0
+else
+CFLAGS += -O3
 endif
-
-CFLAGS += -nostartfiles -mthumb -mcpu=cortex-m3 -Wno-builtin-declaration-mismatch -Werror
-# -mfloat-abi=soft
 
 INCLUDE_DIRS := -I.
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/portable/Compiler/GCC/

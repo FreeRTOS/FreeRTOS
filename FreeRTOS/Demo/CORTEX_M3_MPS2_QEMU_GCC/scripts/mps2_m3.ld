@@ -1,7 +1,6 @@
 MEMORY
 {
     RAM (xrw)  : ORIGIN = 0x00000000,  LENGTH = 4M
-/*    FLASH (rx) : ORIGIN = 0x4000000,   LENGTH = 512K */
 }
 
 _Min_Heap_Size = 0x200 ;        /* Required amount of heap. */

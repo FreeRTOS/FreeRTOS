@@ -12,7 +12,6 @@ void main_blinky( void );
 int main ()
 {
     main_blinky();
-    while (1);
     return 0;
 }
 

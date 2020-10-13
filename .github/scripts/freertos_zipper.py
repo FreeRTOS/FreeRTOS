@@ -104,9 +104,10 @@ def download_git_tree(git_link, root_dir, dir_name, ref='master', commit_id='HEA
     '''
     Download HEAD from Git Master. Place into working files dir
     '''
-    rc = subprocess.run(['git', '-C', root_dir, 'clone', '--recurse-submodules','-b', ref, git_link, dir_name]).returncode
+    rc = subprocess.run(['git', '-C', root_dir, 'clone', '-b', ref, git_link, dir_name]).returncode
     rc += subprocess.run(['git', '-C', os.path.join(root_dir, dir_name), 'checkout', '-f', commit_id]).returncode    
     rc += subprocess.run(['git', '-C', os.path.join(root_dir, dir_name), 'clean', '-fd']).returncode    
+    rc += subprocess.run(['git', '-C', os.path.join(root_dir, dir_name), 'submodule', 'update', '--init', '--recursive']).returncode    
 
     return os.path.join(root_dir, dir_name) if rc == 0 else None
 

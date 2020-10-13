@@ -4,9 +4,8 @@ on:
   workflow_dispatch:
     inputs:
       commit_id:
-        description: 'Commit ID (Defaults to master@HEAD)'
+        description: 'Commit ID'
         required: true
-        default: 'HEAD'
       version_number:
         description: 'Version Number (Ex. 10.4.1)'
         required: true
@@ -36,8 +35,7 @@ jobs:
       # Packaging     
       - name: Packaging 
         run: python tools/.github/scripts/freertos_zipper.py --freertos-commit ${{ github.event.inputs.commit_id }} --zip-version ${{ github.event.inputs.version_number }} 
-        #run: echo hello > FreeRTOSv${{ github.event.inputs.version_number }}.zip
-        
+                  
       # Create release endpoint
       - name: Create Release
         id:   create_release
@@ -50,7 +48,7 @@ jobs:
             draft:        false
             prerelease:   false
             commitish:    ${{ github.event.inputs.commit_id }}
-           
+                      
       # Upload release assets the recently created endpoint
       - name: Upload Release
         uses: actions/upload-release-asset@v1

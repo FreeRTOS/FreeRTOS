@@ -21,6 +21,7 @@
  *
  * http://www.FreeRTOS.org
  * http://aws.amazon.com/freertos
+ *
  */
 
 /*
@@ -172,7 +173,7 @@ static void prvMQTTDemoTask( void * pvParameters );
  * Timeout value will exponentially increase until maximum
  * timeout value is reached or the number of attempts are exhausted.
  *
- * @param pxNetworkContext The output parameter to return the created network context.
+ * @param[out] pxNetworkContext The parameter to return the created network context.
  *
  * @return The status of the final connection attempt.
  */
@@ -181,8 +182,8 @@ static PlaintextTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkC
 /**
  * @brief Sends an MQTT Connect packet over the already connected TCP socket.
  *
- * @param pxMQTTContext MQTT context pointer.
- * @param pxNetworkContext Network context.
+ * @param[in, out] pxMQTTContext MQTT context pointer.
+ * @param[in] pxNetworkContext Network context.
  *
  */
 static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
@@ -193,7 +194,7 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
  * information from Subscribe ACK. Called by the event callback after processing
  * an incoming SUBACK packet.
  *
- * @param Server response to the subscription request.
+ * @param[in] Server response to the subscription request.
  */
 static void prvUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo );
 
@@ -202,14 +203,14 @@ static void prvUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo );
  * this file. In the case of a Subscribe ACK failure, then subscription is
  * retried using an exponential backoff strategy with jitter.
  *
- * @param pxMQTTContext MQTT context pointer.
+ * @param[in] pxMQTTContext MQTT context pointer.
  */
 static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext );
 
 /**
  * @brief Publishes a message mqttexampleMESSAGE on mqttexampleTOPIC topic.
  *
- * @param pxMQTTContext MQTT context pointer.
+ * @param[in] pxMQTTContext MQTT context pointer.
  */
 static void prvMQTTPublishToTopic( MQTTContext_t * pxMQTTContext );
 
@@ -217,7 +218,7 @@ static void prvMQTTPublishToTopic( MQTTContext_t * pxMQTTContext );
  * @brief Unsubscribes from the previously subscribed topic as specified
  * in mqttexampleTOPIC.
  *
- * @param pxMQTTContext MQTT context pointer.
+ * @param[in] pxMQTTContext MQTT context pointer.
  */
 static void prvMQTTUnsubscribeFromTopic( MQTTContext_t * pxMQTTContext );
 
@@ -230,11 +231,11 @@ static uint32_t prvGetTimeMs( void );
 
 /**
  * @brief Process a response or ack to an MQTT request (PING, SUBSCRIBE
- * or UNSUBSCRIBE). This function processes PINGRESP, SUBACK, UNSUBACK
+ * or UNSUBSCRIBE). This function processes PINGRESP, SUBACK, and UNSUBACK.
  *
- * @param pxIncomingPacket is a pointer to structure containing deserialized
+ * @param[in] pxIncomingPacket is a pointer to structure containing deserialized
  * MQTT response.
- * @param usPacketId is the packet identifier from the ack received.
+ * @param[in] usPacketId is the packet identifier from the ack received.
  */
 static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
                                     uint16_t usPacketId );
@@ -242,7 +243,7 @@ static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
 /**
  * @brief Process incoming Publish message.
  *
- * @param pxPublishInfo is a pointer to structure containing deserialized
+ * @param[in] pxPublishInfo is a pointer to structure containing deserialized
  * Publish message.
  */
 static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo );
@@ -251,9 +252,9 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo );
  * @brief The application callback function for getting the incoming publish
  * and incoming acks reported from the MQTT library.
  *
- * @param pxMQTTContext MQTT context pointer.
- * @param pxPacketInfo Packet Info pointer for the incoming packet.
- * @param pxDeserializedInfo Deserialized information from the incoming packet.
+ * @param[in] pxMQTTContext MQTT context pointer.
+ * @param[in] pxPacketInfo Packet Info pointer for the incoming packet.
+ * @param[in] pxDeserializedInfo Deserialized information from the incoming packet.
  */
 static void prvEventCallback( MQTTContext_t * pxMQTTContext,
                               MQTTPacketInfo_t * pxPacketInfo,
@@ -367,7 +368,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         /**************************** Subscribe. ******************************/
 
-        /* If server rejected the subscription request, attempt to resubscribe to 
+        /* If server rejected the subscription request, attempt to resubscribe to
          * the topic. Attempts are made according to the exponential backoff retry
          * strategy declared in retry_utils.h. */
         prvMQTTSubscribeWithBackoffRetries( &xMQTTContext );
@@ -383,7 +384,7 @@ static void prvMQTTDemoTask( void * pvParameters )
              * to the same topic, the broker will send the same publish message
              * back to the application. */
             LogInfo( ( "Attempt to receive publish message from broker." ) );
-            xMQTTStatus = MQTT_ProcessLoop( &xMQTTContext, 
+            xMQTTStatus = MQTT_ProcessLoop( &xMQTTContext,
                                             mqttexamplePROCESS_LOOP_TIMEOUT_MS );
             configASSERT( xMQTTStatus == MQTTSuccess );
 
@@ -397,7 +398,7 @@ static void prvMQTTDemoTask( void * pvParameters )
         prvMQTTUnsubscribeFromTopic( &xMQTTContext );
 
         /* Process the incoming packet from the broker. */
-        xMQTTStatus = MQTT_ProcessLoop( &xMQTTContext, 
+        xMQTTStatus = MQTT_ProcessLoop( &xMQTTContext,
                                         mqttexamplePROCESS_LOOP_TIMEOUT_MS );
         configASSERT( xMQTTStatus == MQTTSuccess );
 
@@ -406,7 +407,7 @@ static void prvMQTTDemoTask( void * pvParameters )
         /* Send an MQTT Disconnect packet over the connected TCP socket.
          * There is no corresponding response for a disconnect packet. After
          * sending the disconnect, the client must close the network connection. */
-        LogInfo( ( "Disconnecting the MQTT connection with %s.", 
+        LogInfo( ( "Disconnecting the MQTT connection with %s.",
                    democonfigMQTT_BROKER_ENDPOINT ) );
         xMQTTStatus = MQTT_Disconnect( &xMQTTContext );
         configASSERT( xMQTTStatus == MQTTSuccess );

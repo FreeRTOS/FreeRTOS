@@ -191,20 +191,10 @@
 #define AWS_IOT_MQTT_ALPN                                 "\x0ex-amzn-mqtt-ca"
 
 /**
- * @brief Length of ALPN protocol name.
- */
-#define AWS_IOT_MQTT_ALPN_LENGTH                          ( ( uint16_t ) ( sizeof( AWS_IOT_MQTT_ALPN ) - 1 ) )
-
-/**
  * @brief This is the ALPN (Application-Layer Protocol Negotiation) string
  * required by AWS IoT for password-based authentication using TCP port 443.
  */
 #define AWS_IOT_CUSTOM_AUTH_ALPN                          "\x04mqtt"
-
-/**
- * @brief Length of password ALPN.
- */
-#define AWS_IOT_CUSTOM_AUTH_ALPN_LENGTH                   ( ( uint16_t ) ( sizeof( AWS_IOT_CUSTOM_AUTH_ALPN ) - 1 ) )
 
 /**
  * Provide default values for undefined configuration settings.
@@ -275,7 +265,7 @@ static void prvMQTTDemoTask( void * pvParameters );
  * Timeout value will exponentially increase until maximum
  * timeout value is reached or the number of attempts are exhausted.
  *
- * @param[out] pxNetworkContext The output parameter to return the created network context.
+ * @param[out] pxNetworkContext The parameter to return the created network context.
  *
  * @return The status of the final connection attempt.
  */
@@ -567,6 +557,11 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
     RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
     RetryUtilsParams_t xReconnectParams;
 
+    /* ALPN protocols must be a NULL-terminated list of strings. Therefore,
+     * the first entry will contain the actual ALPN protocol string while the
+     * second entry must remain NULL. */
+    char * pcAlpnProtocols[] = { NULL, NULL };
+
     /* Set the credentials for establishing a TLS connection. */
     pxNetworkCredentials->pRootCa = ( const unsigned char * ) democonfigROOT_CA_PEM;
     pxNetworkCredentials->rootCaSize = sizeof( democonfigROOT_CA_PEM );
@@ -580,11 +575,12 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
         pxNetworkCredentials->disableSni = pdFALSE;
         /* The ALPN string changes depending on whether username/password authentication is used. */
         #ifdef democonfigCLIENT_USERNAME
-            pxNetworkCredentials->pAlpnProtos = AWS_IOT_CUSTOM_AUTH_ALPN;
+            pcAlpnProtocols[ 0 ] = AWS_IOT_CUSTOM_AUTH_ALPN;
         #else
-            pxNetworkCredentials->pAlpnProtos = AWS_IOT_MQTT_ALPN;
+            pcAlpnProtocols[ 0 ] = AWS_IOT_MQTT_ALPN;
         #endif
-    #else
+        pxNetworkCredentials->pAlpnProtos = pcAlpnProtocols;
+    #else /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
 
         /* When using a local Mosquitto server setup, SNI needs to be disabled for
          * an MQTT broker that only has an IP address but no hostname. However,
@@ -686,7 +682,7 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
             /* Password for authentication is not used. */
             xConnectInfo.pPassword = NULL;
             xConnectInfo.passwordLength = 0U;
-        #endif /* ifdef democonfigCLIENT_USERNAME */
+        #endif
     #else /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
         #ifdef democonfigCLIENT_USERNAME
             xConnectInfo.pUserName = democonfigCLIENT_USERNAME;

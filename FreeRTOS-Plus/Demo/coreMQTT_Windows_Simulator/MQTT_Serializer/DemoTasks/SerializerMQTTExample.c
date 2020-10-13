@@ -179,16 +179,14 @@ static Socket_t prvCreateTCPConnectionToBroker( void );
  * Timeout value will exponentially increase until maximum
  * timeout value is reached or the number of attempts are exhausted.
  *
- * @param xMQTTSocket is a TCP socket that is connected to an MQTT broker.
- *
  * @return The socket of the final connection attempt.
  */
-static Socket_t prvConnectToServerWithBackoffRetries();
+static Socket_t prvConnectToServerWithBackoffRetries( void );
 
 /**
  * @brief Sends an MQTT Connect packet over the already connected TCP socket.
  *
- * @param xMQTTSocket is a TCP socket that is connected to an MQTT broker.
+ * @param[in, out] xMQTTSocket is a TCP socket that is connected to an MQTT broker.
  *
  */
 static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket );
@@ -197,7 +195,7 @@ static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket );
  * @brief Performs a graceful shutdown and close of the socket passed in as its
  * parameter.
  *
- * @param xMQTTSocket is a TCP socket that is connected to an MQTT broker to which
+ * @param[in, out] xMQTTSocket is a TCP socket that is connected to an MQTT broker to which
  * an MQTT connection has been established.
  */
 static void prvGracefulShutDown( Socket_t xSocket );
@@ -206,7 +204,7 @@ static void prvGracefulShutDown( Socket_t xSocket );
  * @brief Subscribes to the topic as specified in mqttexampleTOPIC at the top of
  * this file.
  *
- * @param xMQTTSocket is a TCP socket that is connected to an MQTT broker to which
+ * @param[in] xMQTTSocket is a TCP socket that is connected to an MQTT broker to which
  * an MQTT connection has been established.
  */
 static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket );
@@ -216,7 +214,7 @@ static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket );
  * this file. In the case of a Subscribe ACK failure, then subscription is
  * retried using an exponential backoff strategy with jitter.
  *
- * @param xMQTTSocket is a TCP socket that is connected to an MQTT broker to which
+ * @param[in] xMQTTSocket is a TCP socket that is connected to an MQTT broker to which
  * an MQTT connection has been established.
  */
 static void prvMQTTSubscribeWithBackoffRetries( Socket_t xMQTTSocket );
@@ -226,14 +224,14 @@ static void prvMQTTSubscribeWithBackoffRetries( Socket_t xMQTTSocket );
  * information from Subscribe ACK. Called by the event callback after processing
  * an incoming SUBACK packet.
  *
- * @param Server response to the subscription request.
+ * @param[in] Server response to the subscription request.
  */
 static void prvMQTTUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo );
 
 /**
- * @brief  Publishes a message mqttexampleMESSAGE on mqttexampleTOPIC topic.
+ * @brief Publishes a message mqttexampleMESSAGE on mqttexampleTOPIC topic.
  *
- * @param xMQTTSocket is a TCP socket that is connected to an MQTT broker to which
+ * @param[in] xMQTTSocket is a TCP socket that is connected to an MQTT broker to which
  * an MQTT connection has been established.
  */
 static void prvMQTTPublishToTopic( Socket_t xMQTTSocket );
@@ -242,7 +240,7 @@ static void prvMQTTPublishToTopic( Socket_t xMQTTSocket );
  * @brief Unsubscribes from the previously subscribed topic as specified
  * in mqttexampleTOPIC.
  *
- * @param xMQTTSocket is a TCP socket that is connected to an MQTT broker to which
+ * @param[in] xMQTTSocket is a TCP socket that is connected to an MQTT broker to which
  * an MQTT connection has been established.
  */
 static void prvMQTTUnsubscribeFromTopic( Socket_t xMQTTSocket );
@@ -251,7 +249,7 @@ static void prvMQTTUnsubscribeFromTopic( Socket_t xMQTTSocket );
  * @brief Send MQTT Ping Request to the broker.
  * Ping request is used to keep connection to the broker alive.
  *
- * @param xMQTTSocket is a TCP socket that is connected to an MQTT broker to which
+ * @param[in] xMQTTSocket is a TCP socket that is connected to an MQTT broker to which
  * an MQTT connection has been established.
  */
 static void prvMQTTKeepAlive( Socket_t xMQTTSocket );
@@ -259,7 +257,7 @@ static void prvMQTTKeepAlive( Socket_t xMQTTSocket );
 /**
  * @brief Disconnect From the MQTT broker.
  *
- * @param xMQTTSocket is a TCP socket that is connected to an MQTT broker to which
+ * @param[in] xMQTTSocket is a TCP socket that is connected to an MQTT broker to which
  * an MQTT connection has been established.
  */
 static void prvMQTTDisconnect( Socket_t xMQTTSocket );
@@ -268,9 +266,9 @@ static void prvMQTTDisconnect( Socket_t xMQTTSocket );
  * @brief Process a response or ack to an MQTT request (PING, SUBSCRIBE
  * or UNSUBSCRIBE). This function processes PING_RESP, SUB_ACK, UNSUB_ACK
  *
- * @param pxIncomingPacket is a pointer to structure containing deserialized
+ * @param[in] pxIncomingPacket is a pointer to structure containing deserialized
  * MQTT response.
- * @param usPacketId is the packet identifier from the ack received.
+ * @param[in] usPacketId is the packet identifier from the ack received.
  */
 static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
                                     uint16_t usPacketId );
@@ -278,7 +276,7 @@ static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
 /**
  * @brief Process incoming Publish message.
  *
- * @param pxPublishInfo is a pointer to structure containing deserialized
+ * @param[in] pxPublishInfo is a pointer to structure containing deserialized
  * Publish message.
  */
 static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo );
@@ -287,7 +285,7 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo );
  * @brief Receive and validate MQTT packet from the broker, determine the type
  * of the packet and processes the packet based on the type.
  *
- * @param xMQTTSocket is a TCP socket that is connected to an MQTT broker to which
+ * @param[in] xMQTTSocket is a TCP socket that is connected to an MQTT broker to which
  * an MQTT connection has been established.
  */
 static void prvMQTTProcessIncomingPacket( Socket_t xMQTTSocket );

@@ -70,11 +70,11 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
         /* Connection parameters. */
         serverAddress.sin_family = FREERTOS_AF_INET;
         serverAddress.sin_port = FreeRTOS_htons( port );
-        serverAddress.sin_addr = FreeRTOS_gethostbyname( pHostName );
+        serverAddress.sin_addr = ( uint32_t ) FreeRTOS_gethostbyname( pHostName );
         serverAddress.sin_len = ( uint8_t ) sizeof( serverAddress );
 
         /* Check for errors from DNS lookup. */
-        if( serverAddress.sin_addr == 0 )
+        if( serverAddress.sin_addr == 0U )
         {
             LogError( ( "Failed to connect to server: DNS resolution failed: Hostname=%s.",
                         pHostName ) );
@@ -124,7 +124,7 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
     {
         if( tcpSocket != FREERTOS_INVALID_SOCKET )
         {
-            FreeRTOS_closesocket( tcpSocket );
+            ( void ) FreeRTOS_closesocket( tcpSocket );
         }
     }
     else

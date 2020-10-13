@@ -484,8 +484,8 @@ static void prvMQTTDemoTask( void * pvParameters )
             LogInfo( ( "Publish to the MQTT topic %s.", mqttexampleTOPIC ) );
             prvMQTTPublishToTopic( &xMQTTContext );
 
-            /* Process incoming publish echo, since the application subscribed to
-             * the same topic the broker will send the same publish message back
+            /* Process the incoming publish echo. Since the application subscribed to
+             * the same topic, the broker will send the same publish message back
              * to the application. */
             LogInfo( ( "Attempt to receive publish message from broker." ) );
             xMQTTStatus = MQTT_ReceiveLoop( &xMQTTContext, mqttexampleRECEIVE_LOOP_TIMEOUT_MS );

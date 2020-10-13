@@ -22,8 +22,8 @@
  * http://www.FreeRTOS.org
  * http://aws.amazon.com/freertos
  */
-#ifndef CORE_MQTT_CONFIG_H_
-#define CORE_MQTT_CONFIG_H_
+#ifndef CORE_MQTT_CONFIG_H
+#define CORE_MQTT_CONFIG_H
 
 /**************************************************/
 /******* DO NOT CHANGE the following order ********/

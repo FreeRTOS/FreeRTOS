@@ -38,10 +38,6 @@
  * received. Each task has a queue to hold received publish messages,
  * and the command task pushes incoming publishes to the queue of each task
  * that is subscribed to the incoming topic.
- *
- * !!! NOTE !!!
- * This MQTT demo does not authenticate the server nor the client.
- * Hence, this demo should not be used as production ready code.
  */
 
 /* Standard includes. */
@@ -1649,8 +1645,12 @@ void prvPublishTask( void * pvParameters )
     /* Clear this task's notifications. */
     xTaskNotifyStateClear( NULL );
 
-    /* Notify main task this task can be deleted. */
+    /* Notify main task this task has completed. */
     xTaskNotify( xMainTask, mqttexamplePUBLISHER_TASK_COMPLETE_BIT, eSetBits );
+
+    /* Delete this task. */
+    LogInfo( ( "Deleting Publisher task." ) );
+    vTaskDelete( NULL );
 }
 
 /*-----------------------------------------------------------*/
@@ -1755,8 +1755,12 @@ void prvSubscribeTask( void * pvParameters )
     /* Ensure command was added to queue. */
     configASSERT( xCommandAdded == pdTRUE );
 
-    /* Notify main task this task can be deleted. */
+    /* Notify main task this task has completed. */
     xTaskNotify( xMainTask, mqttexampleSUBSCRIBE_TASK_COMPLETE_BIT, eSetBits );
+
+    /* Delete this task. */
+    LogInfo( ( "Deleting Subscriber task." ) );
+    vTaskDelete( NULL );
 }
 
 /*-----------------------------------------------------------*/
@@ -1844,8 +1848,6 @@ static void prvMQTTDemoTask( void * pvParameters )
         }
 
         configASSERT( ( ulNotification & mqttexampleSUBSCRIBE_TASK_COMPLETE_BIT ) == mqttexampleSUBSCRIBE_TASK_COMPLETE_BIT );
-        vTaskDelete( xSubscribeTask );
-        LogInfo( ( "Subscribe task Deleted." ) );
 
         /* Wait for publishing task to exit before cleaning up. */
         while( ( ulNotification & mqttexamplePUBLISHER_TASK_COMPLETE_BIT ) != mqttexamplePUBLISHER_TASK_COMPLETE_BIT )
@@ -1855,8 +1857,6 @@ static void prvMQTTDemoTask( void * pvParameters )
         }
 
         configASSERT( ( ulNotification & mqttexamplePUBLISHER_TASK_COMPLETE_BIT ) == mqttexamplePUBLISHER_TASK_COMPLETE_BIT );
-        vTaskDelete( xPublisherTask );
-        LogInfo( ( "Publish task Deleted." ) );
 
         /* Reset queues. */
         xQueueReset( xCommandQueue );

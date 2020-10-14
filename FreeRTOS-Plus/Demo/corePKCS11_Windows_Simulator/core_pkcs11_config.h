@@ -29,8 +29,8 @@
  */
 
 
-#ifndef _core_pkcs11_CONFIG_H_
-#define _core_pkcs11_CONFIG_H_
+#ifndef _CORE_PKCS11_CONFIG_H_
+#define _CORE_PKCS11_CONFIG_H_
 
 #include "FreeRTOS.h"
 
@@ -170,4 +170,4 @@
 */
 #define pkcs11configLABEL_ROOT_CERTIFICATE                 "Root Cert"
 
-#endif /* _AWS_PKCS11_CONFIG_H_ include guard. */
+#endif /* _CORE_PKCS11_CONFIG_H_ */

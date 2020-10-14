@@ -1,37 +1,58 @@
+/*
+ * FreeRTOS Kernel V10.4.1
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://www.gihub.com/FreeRTOS
+ *
+ */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <sys/types.h>
 
-//#define UART0_ADDR 0x40011000
-
-#define UART0_ADDR 0x40004000
-#define UART0 ((UART_t *)(0x40004000))
-
-#define UART_DR(baseaddr) (*(unsigned int *)(baseaddr))
-static char *heap_end = 0;
-extern unsigned long _heap_bottom;
-extern unsigned long _heap_top;
-extern unsigned long g_ulBase;
-
-typedef struct _UART_t {
+typedef struct UART_t {
     volatile uint32_t DATA;
     volatile uint32_t STATE;
     volatile uint32_t CTRL;
     volatile uint32_t INTSTATUS;
     volatile uint32_t BAUDDIV;
 } UART_t;
-#define UART_STATE_TXFULL (1 << 0)
 
+#define UART0_ADDR ((UART_t *)(0x40004000))
+#define UART_DR(baseaddr) (*(unsigned int *)(baseaddr))
+
+#define UART_STATE_TXFULL (1 << 0)
 #define UART_CTRL_TX_EN (1 << 0)
 #define UART_CTRL_RX_EN (1 << 1)
 
+static char *heap_end = 0;
+extern unsigned long _heap_bottom;
+extern unsigned long _heap_top;
+extern unsigned long g_ulBase;
 
 void uart_init()
 {
-    UART0->BAUDDIV = 16;
-    UART0->CTRL = UART_CTRL_TX_EN;
+    UART0_ADDR->BAUDDIV = 16;
+    UART0_ADDR->CTRL = UART_CTRL_TX_EN;
 }
 
 int _close(int file){
@@ -46,7 +67,7 @@ int _isatty(int file){
     return 1;
 }
 
-int _lseek(int file, int ptr, int dir){
+int _lseek(int file, int buf, int dir){
     return 0;
 }
 
@@ -54,26 +75,15 @@ int _open(const char *name, int flags, int mode){
     return -1;
 }
 
-int _read(int file, char *ptr, int len){
-//    int todo;
-//    char ch;
-//    for (todo = 0; todo < len; todo++, ptr++){
-//        while(UART_FR(UART0_ADDR) & UART_FR_RXFE)
-//        ;
-//        *ptr = UART_DR(UART0_ADDR); //获取字符
-//        UART_DR(UART0_ADDR) = *ptr; //回显
-//        if(UART_FR(UART0_ADDR) & UART_FR_RXFE){
-//             break;
-//        }
-//    }
-     return len;
+int _read(int file, char *buf, int len){
+     return -1;
 }
 
-int _write(int file, char *ptr, int len){
+int _write(int file, char *buf, int len){
     int todo;
  
     for (todo = 0; todo < len; todo++){
-        UART_DR(UART0_ADDR) = *ptr++;
+        UART_DR(UART0_ADDR) = *buf++;
     }
     return len;
 }

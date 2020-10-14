@@ -7,9 +7,11 @@
 4. Linux OS (tested on Ubuntu 18.04)
 
 ## How to build
-Navigate with the command line to FreeRTOS/Demo/CORTEX_M3_MPS2_QEMU_GCC
+Navigate with the command line to FreeRTOS/Demo/CORTEX\_M3\_MPS2\_QEMU\_GCC
 For a realease build run:
+
 ```
+$ export PATH=/path/to/arm/toolchain:$PATH
 $ make
 ```
 and for a versions with debugging symbols and no optimizations activated, run:
@@ -22,7 +24,8 @@ run:
 ```
 $ qemu-system-arm -machine mps2-an385 -monitor null -semihosting \
         --semihosting-config enable=on,target=native \
-        -kernel /path/to/executable/mps2_demo -serial stdio -nographic
+        -kernel ./build/RTOSDemo.axf \
+        -serial stdio -nographic
 ```
 
 ## How to start debugging (gdb)
@@ -33,12 +36,12 @@ Append the -s and -S switches to the previous command (qemu-system-arm)<br>
 
 run: (make sure you build the debug version)
 ```
-$ arm-none-eabi-gdb -q /path/to/executable/mps2_demo 
+$ arm-none-eabi-gdb -q ./build/RTOSDemo.axf
 
 (gdb) target remote :1234
 (gdb) break main
 (gdb) c
 ```
 ## Demo
-This Demo implemets the blinky program, the user should expect the word 
+This Demo implemets the blinky demo, the user should expect the word 
 "blinking" to be repeatedly prited on the screen

@@ -1,5 +1,5 @@
 CC = arm-none-eabi-gcc
-BIN := mps2_demo
+BIN := RTOSDemo.axf
 
 BUILD_DIR := build
 

@@ -1,3 +1,29 @@
+/*
+ * FreeRTOS Kernel V10.4.1
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://www.gihub.com/FreeRTOS
+ *
+ */
+
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -52,12 +78,8 @@ const uint32_t isr_vector[] __attribute__((section(".isr_vector"))) = {
 extern int main();
 extern void uart_init();
 void _start(void) {
-    // Enable the UART
     uart_init();
-    // Now that we have a basic system up and running we can call main
     main(0, 0);
-
-    // Finished
     exit(0);
 }
 
@@ -71,20 +93,7 @@ __attribute__((naked)) void exit(int status) {
         ".notclean:\n"
         "movs r0, #0x18\n" // SYS_EXIT
         "bkpt 0xab\n"
+        "end: b end\n"
         );
-    for (;;) {
-    }
-}
-#ifndef NDEBUG
-void __assert_func(const char *file, int line, const char *func, const char *expr) {
-    (void)func;
-    //printf("Assertion '%s' failed, at file %s:%d\n", expr, file, line);
-    exit(1);
-}
-#endif
-
-// The following are needed for tinytest
-int setvbuf(FILE *stream, char *buf, int mode, size_t size) {
-    return 0;
 }
 

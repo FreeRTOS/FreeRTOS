@@ -20,8 +20,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef SHADOW_CONFIG_H_
-#define SHADOW_CONFIG_H_
+#ifndef SHADOW_CONFIG_H
+#define SHADOW_CONFIG_H
 
 /**************************************************/
 /******* DO NOT CHANGE the following order ********/
@@ -48,4 +48,4 @@
 
 /************ End of logging configuration ****************/
 
-#endif /* ifndef SHADOW_CONFIG_H_ */
+#endif /* ifndef SHADOW_CONFIG_H */

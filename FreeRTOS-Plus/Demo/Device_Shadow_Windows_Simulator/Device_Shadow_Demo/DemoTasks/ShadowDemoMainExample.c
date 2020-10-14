@@ -163,6 +163,8 @@
  */
 #define THING_NAME_LENGTH    ( ( uint16_t ) ( sizeof( THING_NAME ) - 1 ) )
 
+
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -173,7 +175,7 @@ static uint32_t ulCurrentPowerOnState = 0;
 /**
  * @brief The flag to indicate the device current power on state changed.
  */
-static bool stateChanged = false;
+static bool stateChanged = pdFALSE;
 
 /**
  * @brief When we send an update to the device shadow, and if we care about
@@ -185,12 +187,12 @@ static uint32_t ulClientToken = 0U;
 /**
  * @brief The return status of prvUpdateDeltaHandler callback function.
  */
-static int32_t lUpdateDeltaReturn = EXIT_SUCCESS;
+static BaseType_t xUpdateDeltaReturn = pdPASS;
 
 /**
  * @brief The return status of prvUpdateAcceptedHandler callback function.
  */
-static int32_t lUpdateAcceptedReturn = EXIT_SUCCESS;
+static BaseType_t xUpdateAcceptedReturn = pdPASS;
 
 /*-----------------------------------------------------------*/
 
@@ -356,7 +358,7 @@ static void prvUpdateDeltaHandler( MQTTPublishInfo_t * pxPublishInfo )
     else
     {
         LogError( ( "No powerOn in json document!!" ) );
-        lUpdateDeltaReturn = EXIT_FAILURE;
+        xUpdateDeltaReturn = pdFAIL;
     }
 }
 
@@ -444,7 +446,7 @@ static void prvUpdateAcceptedHandler( MQTTPublishInfo_t * pxPublishInfo )
     else
     {
         LogError( ( "No clientToken in json document!!" ) );
-        lUpdateAcceptedReturn = EXIT_FAILURE;
+        xUpdateAcceptedReturn = pdFAIL;
     }
 }
 
@@ -532,8 +534,8 @@ void vStartShadowDemo( void )
     /* This example uses a single application task, which in turn is used to
      * connect, subscribe, publish, unsubscribe and disconnect from the MQTT
      * broker. */
-    xTaskCreate( prvShadowDemoTask,          /* Function that implements the task. */
-                 "ShadowDemo",               /* Text name for the task - only used for debugging. */
+    xTaskCreate( prvShadowDemoTask,        /* Function that implements the task. */
+                 "ShadowDemo",             /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
                  NULL,                     /* Task parameter - not used in this case. */
                  tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
@@ -561,17 +563,17 @@ void vStartShadowDemo( void )
  * loops to process incoming messages. Those are not the focus of this demo
  * and therefor, are placed in a separate file shadow_demo_helpers.c.
  */
-void prvShadowDemoTask(void * pvParameters )
+void prvShadowDemoTask( void * pvParameters )
 {
-    int returnStatus = EXIT_SUCCESS;
+    BaseType_t demoStatus = pdPASS;
 
     /* A buffer containing the update document. It has static duration to prevent
      * it from being placed on the call stack. */
     static char pcUpdateDocument[ SHADOW_REPORTED_JSON_LENGTH + 1 ] = { 0 };
 
-    returnStatus = xEstablishMqttSession( prvEventCallback );
+    demoStatus = xEstablishMqttSession( prvEventCallback );
 
-    if( returnStatus == EXIT_FAILURE )
+    if( pdFAIL == demoStatus )
     {
         /* Log error to indicate connection failure. */
         LogError( ( "Failed to connect to MQTT broker." ) );
@@ -579,28 +581,28 @@ void prvShadowDemoTask(void * pvParameters )
     else
     {
         /* First of all, try to delete any Shadow document in the cloud. */
-        returnStatus = lPublishToTopic( SHADOW_TOPIC_STRING_DELETE( THING_NAME ),
-                                       SHADOW_TOPIC_LENGTH_DELETE( THING_NAME_LENGTH ),
-                                       pcUpdateDocument,
-                                       0U );
+        demoStatus = xPublishToTopic( SHADOW_TOPIC_STRING_DELETE( THING_NAME ),
+                                      SHADOW_TOPIC_LENGTH_DELETE( THING_NAME_LENGTH ),
+                                      pcUpdateDocument,
+                                      0U );
 
         /* Then try to subscribe shadow topics. */
-        if( returnStatus == EXIT_SUCCESS )
+        if( demoStatus == pdPASS )
         {
-            returnStatus = lSubscribeToTopic( SHADOW_TOPIC_STRING_UPDATE_DELTA( THING_NAME ),
-                                             SHADOW_TOPIC_LENGTH_UPDATE_DELTA( THING_NAME_LENGTH ) );
+            demoStatus = xSubscribeToTopic( SHADOW_TOPIC_STRING_UPDATE_DELTA( THING_NAME ),
+                                            SHADOW_TOPIC_LENGTH_UPDATE_DELTA( THING_NAME_LENGTH ) );
         }
 
-        if( returnStatus == EXIT_SUCCESS )
+        if( demoStatus == pdPASS )
         {
-            returnStatus = lSubscribeToTopic( SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( THING_NAME ),
-                                             SHADOW_TOPIC_LENGTH_UPDATE_ACCEPTED( THING_NAME_LENGTH ) );
+            demoStatus = xSubscribeToTopic( SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( THING_NAME ),
+                                            SHADOW_TOPIC_LENGTH_UPDATE_ACCEPTED( THING_NAME_LENGTH ) );
         }
 
-        if( returnStatus == EXIT_SUCCESS )
+        if( demoStatus == pdPASS )
         {
-            returnStatus = lSubscribeToTopic( SHADOW_TOPIC_STRING_UPDATE_REJECTED( THING_NAME ),
-                                             SHADOW_TOPIC_LENGTH_UPDATE_REJECTED( THING_NAME_LENGTH ) );
+            demoStatus = xSubscribeToTopic( SHADOW_TOPIC_STRING_UPDATE_REJECTED( THING_NAME ),
+                                            SHADOW_TOPIC_LENGTH_UPDATE_REJECTED( THING_NAME_LENGTH ) );
         }
 
         /* This demo uses a constant #THING_NAME known at compile time therefore we can use macros to
@@ -634,7 +636,7 @@ void prvShadowDemoTask(void * pvParameters )
          * the device itself. But for the purpose of making this demo self-contained,
          * we publish one here so that we can receive a delta message later.
          */
-        if( returnStatus == EXIT_SUCCESS )
+        if( demoStatus == pdPASS )
         {
             /* Desired power on state . */
             LogInfo( ( "Send desired power state with 1." ) );
@@ -649,13 +651,13 @@ void prvShadowDemoTask(void * pvParameters )
                       ( int ) 1,
                       ( long unsigned ) ( xTaskGetTickCount() % 1000000 ) );
 
-            returnStatus = lPublishToTopic( SHADOW_TOPIC_STRING_UPDATE( THING_NAME ),
-                                           SHADOW_TOPIC_LENGTH_UPDATE( THING_NAME_LENGTH ),
-                                           pcUpdateDocument,
-                                           ( SHADOW_DESIRED_JSON_LENGTH + 1 ) );
+            demoStatus = xPublishToTopic( SHADOW_TOPIC_STRING_UPDATE( THING_NAME ),
+                                          SHADOW_TOPIC_LENGTH_UPDATE( THING_NAME_LENGTH ),
+                                          pcUpdateDocument,
+                                          ( SHADOW_DESIRED_JSON_LENGTH + 1 ) );
         }
 
-        if( returnStatus == EXIT_SUCCESS )
+        if( demoStatus == pdPASS )
         {
             /* Note that PublishToTopic already called MQTT_ProcessLoop,
              * therefore responses may have been received and the prvEventCallback
@@ -681,10 +683,10 @@ void prvShadowDemoTask(void * pvParameters )
                           ( int ) ulCurrentPowerOnState,
                           ( long unsigned ) ulClientToken );
 
-                returnStatus = lPublishToTopic( SHADOW_TOPIC_STRING_UPDATE( THING_NAME ),
-                                               SHADOW_TOPIC_LENGTH_UPDATE( THING_NAME_LENGTH ),
-                                               pcUpdateDocument,
-                                               ( SHADOW_DESIRED_JSON_LENGTH + 1 ) );
+                demoStatus = xPublishToTopic( SHADOW_TOPIC_STRING_UPDATE( THING_NAME ),
+                                              SHADOW_TOPIC_LENGTH_UPDATE( THING_NAME_LENGTH ),
+                                              pcUpdateDocument,
+                                              ( SHADOW_DESIRED_JSON_LENGTH + 1 ) );
             }
             else
             {
@@ -692,38 +694,38 @@ void prvShadowDemoTask(void * pvParameters )
             }
         }
 
-        if( returnStatus == EXIT_SUCCESS )
+        if( demoStatus == pdPASS )
         {
             LogInfo( ( "Start to unsubscribe shadow topics and disconnect from MQTT. \r\n" ) );
 
-            returnStatus = lUnsubscribeFromTopic( SHADOW_TOPIC_STRING_UPDATE_DELTA( THING_NAME ),
-                                                 SHADOW_TOPIC_LENGTH_UPDATE_DELTA( THING_NAME_LENGTH ) );
+            demoStatus = xUnsubscribeFromTopic( SHADOW_TOPIC_STRING_UPDATE_DELTA( THING_NAME ),
+                                                SHADOW_TOPIC_LENGTH_UPDATE_DELTA( THING_NAME_LENGTH ) );
 
-            if( returnStatus != EXIT_SUCCESS )
+            if( demoStatus != pdPASS )
             {
                 LogError( ( "Failed to unsubscribe the topic %s",
                             SHADOW_TOPIC_STRING_UPDATE_DELTA( THING_NAME ) ) );
             }
         }
 
-        if( returnStatus == EXIT_SUCCESS )
+        if( demoStatus == pdPASS )
         {
-            returnStatus = lUnsubscribeFromTopic( SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( THING_NAME ),
-                                                 SHADOW_TOPIC_LENGTH_UPDATE_ACCEPTED( THING_NAME_LENGTH ) );
+            demoStatus = xUnsubscribeFromTopic( SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( THING_NAME ),
+                                                SHADOW_TOPIC_LENGTH_UPDATE_ACCEPTED( THING_NAME_LENGTH ) );
 
-            if( returnStatus != EXIT_SUCCESS )
+            if( demoStatus != pdPASS )
             {
                 LogError( ( "Failed to unsubscribe the topic %s",
                             SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( THING_NAME ) ) );
             }
         }
 
-        if( returnStatus == EXIT_SUCCESS )
+        if( demoStatus == pdPASS )
         {
-            returnStatus = lUnsubscribeFromTopic( SHADOW_TOPIC_STRING_UPDATE_REJECTED( THING_NAME ),
-                                                 SHADOW_TOPIC_LENGTH_UPDATE_REJECTED( THING_NAME_LENGTH ) );
+            demoStatus = xUnsubscribeFromTopic( SHADOW_TOPIC_STRING_UPDATE_REJECTED( THING_NAME ),
+                                                SHADOW_TOPIC_LENGTH_UPDATE_REJECTED( THING_NAME_LENGTH ) );
 
-            if( returnStatus != EXIT_SUCCESS )
+            if( demoStatus != pdPASS )
             {
                 LogError( ( "Failed to unsubscribe the topic %s",
                             SHADOW_TOPIC_STRING_UPDATE_REJECTED( THING_NAME ) ) );
@@ -731,26 +733,23 @@ void prvShadowDemoTask(void * pvParameters )
         }
 
         /* The MQTT session is always disconnected, even there were prior failures. */
-        returnStatus = lDisconnectMqttSession();
+        demoStatus = xDisconnectMqttSession();
 
         /* This demo performs only Device Shadow operations. If matching the Shadow
          * MQTT topic fails or there are failure in parsing the received JSON document,
          * then this demo was not successful. */
-        if( ( lUpdateAcceptedReturn != EXIT_SUCCESS ) || ( lUpdateDeltaReturn != EXIT_SUCCESS ) )
+        if( ( xUpdateAcceptedReturn != pdPASS ) || ( xUpdateDeltaReturn != pdPASS ) )
         {
             LogError( ( "Callback function failed." ) );
         }
 
-        if( returnStatus == EXIT_SUCCESS )
+        if( demoStatus == pdPASS )
         {
-            LogInfo( ( "Shadow Demo is functional." ) );
+            LogInfo( ( "Demo completed successfully." ) );
         }
         else
         {
             LogError( ( "Shadow Demo failed." ) );
         }
-        
     }
 }
-
-/*-----------------------------------------------------------*/

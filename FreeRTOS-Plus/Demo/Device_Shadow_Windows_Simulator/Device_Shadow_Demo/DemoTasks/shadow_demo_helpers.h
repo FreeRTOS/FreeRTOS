@@ -20,14 +20,16 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef SHADOW_DEMO_HELPERS_H_
-#define SHADOW_DEMO_HELPERS_H_
+#ifndef SHADOW_DEMO_HELPERS_H
+#define SHADOW_DEMO_HELPERS_H
 
 /* MQTT API header. */
 #include "core_mqtt.h"
 
 /* Transport interface implementation include header for TLS. */
 #include "tls_freertos.h"
+
+/*-----------------------------------------------------------*/
 
 /**
  * @brief Establish a MQTT connection.
@@ -37,7 +39,7 @@
  *
  * @return The status of the final connection attempt.
  */
-TlsTransportStatus_t xEstablishMqttSession( MQTTEventCallback_t eventCallback );
+BaseType_t xEstablishMqttSession( MQTTEventCallback_t eventCallback );
 
 /**
  * @brief Handle the incoming packet if it's not related to the device shadow.
@@ -51,10 +53,10 @@ void vHandleOtherIncomingPacket( MQTTPacketInfo_t * pxPacketInfo,
 /**
  * @brief Close the MQTT connection.
  *
- * @return EXIT_SUCCESS if DISCONNECT was successfully sent;
- * EXIT_FAILURE otherwise.
+ * @return pdPASS if DISCONNECT was successfully sent;
+ * pdFAIL otherwise.
  */
-int32_t lDisconnectMqttSession( void );
+BaseType_t xDisconnectMqttSession( void );
 
 /**
  * @brief Subscribe to a MQTT topic filter.
@@ -63,11 +65,11 @@ int32_t lDisconnectMqttSession( void );
  * @param[in] usTopicFilterLength Indicates the length of the shadow
  * topic buffer.
  *
- * @return EXIT_SUCCESS if SUBSCRIBE was successfully sent;
- * EXIT_FAILURE otherwise.
+ * @return pdPASS if SUBSCRIBE was successfully sent;
+ * pdFAIL otherwise.
  */
-int32_t lSubscribeToTopic( const char * pcTopicFilter,
-                          uint16_t usTopicFilterLength );
+BaseType_t xSubscribeToTopic( const char * pcTopicFilter,
+                              uint16_t usTopicFilterLength );
 
 /**
  * @brief Sends an MQTT UNSUBSCRIBE to unsubscribe from the shadow
@@ -77,11 +79,11 @@ int32_t lSubscribeToTopic( const char * pcTopicFilter,
  * @param[in] usTopicFilterLength Indicates the length of the shadow
  * topic buffer.
  *
- * @return EXIT_SUCCESS if UNSUBSCRIBE was successfully sent;
- * EXIT_FAILURE otherwise.
+ * @return pdPASS if UNSUBSCRIBE was successfully sent;
+ * pdFAIL otherwise.
  */
-int32_t lUnsubscribeFromTopic( const char * pcTopicFilter,
-                              uint16_t usTopicFilterLength );
+BaseType_t xUnsubscribeFromTopic( const char * pcTopicFilter,
+                                  uint16_t usTopicFilterLength );
 
 /**
  * @brief Publish a message to a MQTT topic.
@@ -91,12 +93,12 @@ int32_t lUnsubscribeFromTopic( const char * pcTopicFilter,
  * @param[in] pcPayload Points to the payload.
  * @param[in] payloadLength The length of the payload.
  *
- * @return EXIT_SUCCESS if PUBLISH was successfully sent;
- * EXIT_FAILURE otherwise.
+ * @return pdPASS if PUBLISH was successfully sent;
+ * pdFAIL otherwise.
  */
-int32_t lPublishToTopic( const char * pcTopicFilter,
-                        int32_t topicFilterLength,
-                        const char * pcPayload,
-                        size_t payloadLength );
+BaseType_t xPublishToTopic( const char * pcTopicFilter,
+                            int32_t topicFilterLength,
+                            const char * pcPayload,
+                            size_t payloadLength );
 
-#endif /* ifndef SHADOW_DEMO_HELPERS_H_ */
+#endif /* ifndef SHADOW_DEMO_HELPERS_H */

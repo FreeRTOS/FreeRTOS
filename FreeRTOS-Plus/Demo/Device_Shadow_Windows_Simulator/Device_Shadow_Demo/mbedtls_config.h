@@ -46,8 +46,8 @@
 
 /* This file configures mbed TLS for FreeRTOS. */
 
-#ifndef MBEDTLS_CONFIG_H_
-#define MBEDTLS_CONFIG_H_
+#ifndef MBEDTLS_CONFIG_H
+#define SHADOW_CONFIG_H
 
 /* FreeRTOS include. */
 #include "FreeRTOS.h"
@@ -148,4 +148,4 @@ int mbedtls_platform_entropy_poll( void * data,
 
 #include "mbedtls/check_config.h"
 
-#endif /* ifndef MBEDTLS_CONFIG_H_ */
+#endif /* ifndef SHADOW_CONFIG_H */

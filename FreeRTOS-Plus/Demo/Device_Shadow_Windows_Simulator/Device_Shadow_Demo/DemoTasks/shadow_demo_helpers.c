@@ -72,16 +72,6 @@
     #define democonfigMQTT_BROKER_ENDPOINT    clientcredentialMQTT_BROKER_ENDPOINT
 #endif
 
-#ifndef democonfigCLIENT_IDENTIFIER
-
-/**
- * @brief The MQTT client identifier used in this example.  Each client identifier
- * must be unique so edit as required to ensure no two clients connecting to the
- * same broker use the same client identifier.
- */
-    #define democonfigCLIENT_IDENTIFIER    clientcredentialIOT_THING_NAME
-#endif
-
 #ifndef democonfigMQTT_BROKER_PORT
 
 /**
@@ -148,6 +138,28 @@
  * @brief Milliseconds per FreeRTOS tick.
  */
 #define MILLISECONDS_PER_TICK                        ( MILLISECONDS_PER_SECOND / configTICK_RATE_HZ )
+
+/**
+ * @brief The MQTT metrics string expected by AWS IoT.
+ */
+#define AWS_IOT_METRICS_STRING                                 \
+    "?SDK=" democonfigOS_NAME "&Version=" democonfigOS_VERSION \
+    "&Platform=" democonfigHARDWARE_PLATFORM_NAME "&MQTTLib=" democonfigMQTT_LIB
+
+/**
+ * @brief The length of the MQTT metrics string expected by AWS IoT.
+ */
+#define AWS_IOT_METRICS_STRING_LENGTH    ( ( uint16_t ) ( sizeof( AWS_IOT_METRICS_STRING ) - 1 ) )
+
+/**
+ * @brief ALPN (Application-Layer Protocol Negotiation) protocol name for AWS IoT MQTT.
+ *
+ * This will be used if democonfigMQTT_BROKER_PORT is configured as 443 for the AWS IoT MQTT broker.
+ * Please see more details about the ALPN protocol for AWS IoT MQTT endpoint
+ * in the link below.
+ * https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/
+ */
+#define AWS_IOT_MQTT_ALPN                "\x0ex-amzn-mqtt-ca"
 
 /*-----------------------------------------------------------*/
 
@@ -249,10 +261,10 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext
  * @param[out] pucIndex The output parameter to return the index at which an
  * outgoing publish message can be stored.
  *
- * @return EXIT_FAILURE if no more publishes can be stored;
- * EXIT_SUCCESS if an index to store the next outgoing publish is obtained.
+ * @return pdFAIL if no more publishes can be stored;
+ * pdTRUE if an index to store the next outgoing publish is obtained.
  */
-static int prvGetNextFreeIndexForOutgoingPublishes( uint8_t * pucIndex );
+static BaseType_t prvGetNextFreeIndexForOutgoingPublishes( uint8_t * pucIndex );
 
 /**
  * @brief Function to clean up an outgoing publish at given index from the
@@ -283,7 +295,7 @@ static void vCleanupOutgoingPublishWithPacketID( uint16_t usPacketId );
  *
  * @param[in] pxMqttContext MQTT context pointer.
  */
-static int handlePublishResend( MQTTContext_t * pxMqttContext );
+static BaseType_t xHandlePublishResend( MQTTContext_t * pxMqttContext );
 
 /**
  * @brief The timer query function provided to the MQTT context.
@@ -300,7 +312,12 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext
     RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
     RetryUtilsParams_t xReconnectParams = { 0 };
     NetworkCredentials_t xNetworkCredentials = { 0 };
-    
+
+    /* ALPN protocols must be a NULL-terminated list of strings. Therefore,
+     * the first entry will contain the actual ALPN protocol string while the
+     * second entry must remain NULL. */
+    char * pcAlpnProtocols[] = { NULL, NULL };
+
     /* Set the credentials for establishing a TLS connection. */
     xNetworkCredentials.pRootCa = ( const unsigned char * ) democonfigROOT_CA_PEM;
     xNetworkCredentials.rootCaSize = sizeof( democonfigROOT_CA_PEM );
@@ -310,21 +327,15 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext
         xNetworkCredentials.pPrivateKey = ( const unsigned char * ) democonfigCLIENT_PRIVATE_KEY_PEM;
         xNetworkCredentials.privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
     #endif
-    #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
-        xNetworkCredentials.disableSni = pdFALSE;
-        /* The ALPN string changes depending on whether username/password authentication is used. */
-        #ifdef democonfigCLIENT_USERNAME
-            xNetworkCredentials.pAlpnProtos = AWS_IOT_CUSTOM_AUTH_ALPN;
-        #else
-            xNetworkCredentials.pAlpnProtos = AWS_IOT_MQTT_ALPN;
-        #endif
-    #else
 
-        /* When using a local Mosquitto server setup, SNI needs to be disabled for
-         * an MQTT broker that only has an IP address but no hostname. However,
-         * SNI should be enabled whenever possible. */
-        xNetworkCredentials.disableSni = pdTRUE;
-    #endif /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
+    xNetworkCredentials.disableSni = pdFALSE;
+/* The ALPN string changes depending on whether username/password authentication is used. */
+    #ifdef democonfigCLIENT_USERNAME
+        pcAlpnProtocols[ 0 ] = AWS_IOT_CUSTOM_AUTH_ALPN;
+    #else
+        pcAlpnProtocols[ 0 ] = AWS_IOT_MQTT_ALPN;
+    #endif
+    xNetworkCredentials.pAlpnProtos = pcAlpnProtocols;
 
     /* Initialize reconnect attempts and interval. */
     RetryUtils_ParamsReset( &xReconnectParams );
@@ -367,9 +378,9 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext
 
 /*-----------------------------------------------------------*/
 
-static int prvGetNextFreeIndexForOutgoingPublishes( uint8_t * pucIndex )
+static BaseType_t prvGetNextFreeIndexForOutgoingPublishes( uint8_t * pucIndex )
 {
-    int returnStatus = EXIT_FAILURE;
+    BaseType_t returnStatus = pdFAIL;
     uint8_t ucIndex = 0;
 
     assert( outgoingPublishPackets != NULL );
@@ -381,7 +392,7 @@ static int prvGetNextFreeIndexForOutgoingPublishes( uint8_t * pucIndex )
          * Check if the the ucIndex has a free slot. */
         if( outgoingPublishPackets[ ucIndex ].packetId == MQTT_PACKET_ID_INVALID )
         {
-            returnStatus = EXIT_SUCCESS;
+            returnStatus = pdPASS;
             break;
         }
     }
@@ -480,10 +491,10 @@ void vHandleOtherIncomingPacket( MQTTPacketInfo_t * pxPacketInfo,
 
 /*-----------------------------------------------------------*/
 
-static int handlePublishResend( MQTTContext_t * pxMqttContext )
+static BaseType_t xHandlePublishResend( MQTTContext_t * pxMqttContext )
 {
-    int returnStatus = EXIT_SUCCESS;
-    MQTTStatus_t eMqttStatus = MQTTSuccess;
+    BaseType_t returnStatus = pdTRUE;
+    MQTTStatus_t xMQTTStatus = MQTTSuccess;
     uint8_t ucIndex = 0U;
 
     assert( outgoingPublishPackets != NULL );
@@ -499,17 +510,17 @@ static int handlePublishResend( MQTTContext_t * pxMqttContext )
 
             LogInfo( ( "Sending duplicate PUBLISH with packet id %u.",
                        outgoingPublishPackets[ ucIndex ].packetId ) );
-            eMqttStatus = MQTT_Publish( pxMqttContext,
+            xMQTTStatus = MQTT_Publish( pxMqttContext,
                                         &outgoingPublishPackets[ ucIndex ].pubInfo,
                                         outgoingPublishPackets[ ucIndex ].packetId );
 
-            if( eMqttStatus != MQTTSuccess )
+            if( xMQTTStatus != MQTTSuccess )
             {
                 LogError( ( "Sending duplicate PUBLISH for packet id %u "
                             " failed with status %u.",
                             outgoingPublishPackets[ ucIndex ].packetId,
-                            eMqttStatus ) );
-                returnStatus = EXIT_FAILURE;
+                            xMQTTStatus ) );
+                returnStatus = pdFAIL;
                 break;
             }
             else
@@ -525,10 +536,10 @@ static int handlePublishResend( MQTTContext_t * pxMqttContext )
 
 /*-----------------------------------------------------------*/
 
-TlsTransportStatus_t xEstablishMqttSession( MQTTEventCallback_t eventCallback )
+BaseType_t xEstablishMqttSession( MQTTEventCallback_t eventCallback )
 {
-    TlsTransportStatus_t returnStatus = EXIT_SUCCESS;
-    MQTTStatus_t eMqttStatus;
+    BaseType_t returnStatus = pdTRUE;
+    MQTTStatus_t xMQTTStatus;
     MQTTConnectInfo_t xConnectInfo;
     TransportInterface_t xTransport;
     MQTTContext_t * pxMqttContext = &mqttContext;
@@ -542,15 +553,14 @@ TlsTransportStatus_t xEstablishMqttSession( MQTTEventCallback_t eventCallback )
     ( void ) memset( pxMqttContext, 0U, sizeof( MQTTContext_t ) );
     ( void ) memset( pxNetworkContext, 0U, sizeof( NetworkContext_t ) );
 
-    returnStatus = prvConnectToServerWithBackoffRetries( pxNetworkContext );
-
-    if( returnStatus != EXIT_SUCCESS )
+    if( prvConnectToServerWithBackoffRetries( pxNetworkContext ) != TLS_TRANSPORT_SUCCESS )
     {
         /* Log error to indicate connection failure after all
          * reconnect attempts are over. */
         LogError( ( "Failed to connect to MQTT broker %.*s.",
                     strlen( democonfigMQTT_BROKER_ENDPOINT ),
                     democonfigMQTT_BROKER_ENDPOINT ) );
+        returnStatus = pdFAIL;
     }
     else
     {
@@ -560,16 +570,16 @@ TlsTransportStatus_t xEstablishMqttSession( MQTTEventCallback_t eventCallback )
         xTransport.recv = TLS_FreeRTOS_recv;
 
         /* Initialize MQTT library. */
-        eMqttStatus = MQTT_Init( pxMqttContext,
+        xMQTTStatus = MQTT_Init( pxMqttContext,
                                  &xTransport,
                                  prvGetTimeMs,
                                  eventCallback,
                                  &xBuffer );
 
-        if( eMqttStatus != MQTTSuccess )
+        if( xMQTTStatus != MQTTSuccess )
         {
-            returnStatus = EXIT_FAILURE;
-            LogError( ( "MQTT init failed with status %u.", eMqttStatus ) );
+            returnStatus = pdFAIL;
+            LogError( ( "MQTT init failed with status %u.", xMQTTStatus ) );
         }
         else
         {
@@ -598,40 +608,31 @@ TlsTransportStatus_t xEstablishMqttSession( MQTTEventCallback_t eventCallback )
              * PINGREQ Packet. */
             xConnectInfo.keepAliveSeconds = mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS;
 
-            /* Append metrics when connecting to the AWS IoT Core broker. */
-            #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
-                #ifdef democonfigCLIENT_USERNAME
-                    xConnectInfo.pUserName = CLIENT_USERNAME_WITH_METRICS;
-                    xConnectInfo.userNameLength = ( uint16_t ) strlen( CLIENT_USERNAME_WITH_METRICS );
-                    xConnectInfo.pPassword = democonfigCLIENT_PASSWORD;
-                    xConnectInfo.passwordLength = ( uint16_t ) strlen( democonfigCLIENT_PASSWORD );
-                #else
-                    xConnectInfo.pUserName = AWS_IOT_METRICS_STRING;
-                    xConnectInfo.userNameLength = AWS_IOT_METRICS_STRING_LENGTH;
-                    /* Password for authentication is not used. */
-                    xConnectInfo.pPassword = NULL;
-                    xConnectInfo.passwordLength = 0U;
-                #endif /* ifdef democonfigCLIENT_USERNAME */
-            #else /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
-                #ifdef democonfigCLIENT_USERNAME
-                    xConnectInfo.pUserName = democonfigCLIENT_USERNAME;
-                    xConnectInfo.userNameLength = ( uint16_t ) strlen( democonfigCLIENT_USERNAME );
-                    xConnectInfo.pPassword = democonfigCLIENT_PASSWORD;
-                    xConnectInfo.passwordLength = ( uint16_t ) strlen( democonfigCLIENT_PASSWORD );
-                #endif /* ifdef democonfigCLIENT_USERNAME */
-            #endif /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
+/* Append metrics when connecting to the AWS IoT Core broker. */
+            #ifdef democonfigCLIENT_USERNAME
+                xConnectInfo.pUserName = CLIENT_USERNAME_WITH_METRICS;
+                xConnectInfo.userNameLength = ( uint16_t ) strlen( CLIENT_USERNAME_WITH_METRICS );
+                xConnectInfo.pPassword = democonfigCLIENT_PASSWORD;
+                xConnectInfo.passwordLength = ( uint16_t ) strlen( democonfigCLIENT_PASSWORD );
+            #else
+                xConnectInfo.pUserName = AWS_IOT_METRICS_STRING;
+                xConnectInfo.userNameLength = AWS_IOT_METRICS_STRING_LENGTH;
+                /* Password for authentication is not used. */
+                xConnectInfo.pPassword = NULL;
+                xConnectInfo.passwordLength = 0U;
+            #endif /* ifdef democonfigCLIENT_USERNAME */
 
             /* Send MQTT CONNECT packet to broker. */
-            eMqttStatus = MQTT_Connect( pxMqttContext,
+            xMQTTStatus = MQTT_Connect( pxMqttContext,
                                         &xConnectInfo,
                                         NULL,
                                         mqttexampleCONNACK_RECV_TIMEOUT_MS,
                                         &sessionPresent );
 
-            if( eMqttStatus != MQTTSuccess )
+            if( xMQTTStatus != MQTTSuccess )
             {
-                returnStatus = EXIT_FAILURE;
-                LogError( ( "Connection with MQTT broker failed with status %u.", eMqttStatus ) );
+                returnStatus = pdFAIL;
+                LogError( ( "Connection with MQTT broker failed with status %u.", xMQTTStatus ) );
             }
             else
             {
@@ -639,7 +640,7 @@ TlsTransportStatus_t xEstablishMqttSession( MQTTEventCallback_t eventCallback )
             }
         }
 
-        if( returnStatus == EXIT_SUCCESS )
+        if( returnStatus == pdFAIL )
         {
             /* Keep a flag for indicating if MQTT session is established. This
              * flag will mark that an MQTT DISCONNECT has to be sent at the end
@@ -647,7 +648,7 @@ TlsTransportStatus_t xEstablishMqttSession( MQTTEventCallback_t eventCallback )
             mqttSessionEstablished = true;
         }
 
-        if( returnStatus == EXIT_SUCCESS )
+        if( returnStatus == pdFAIL )
         {
             /* Check if session is present and if there are any outgoing publishes
              * that need to resend. This is only valid if the broker is
@@ -658,7 +659,7 @@ TlsTransportStatus_t xEstablishMqttSession( MQTTEventCallback_t eventCallback )
                            "Resending unacked publishes." ) );
 
                 /* Handle all the resend of publish messages. */
-                returnStatus = handlePublishResend( &mqttContext );
+                returnStatus = xHandlePublishResend( &mqttContext );
             }
             else
             {
@@ -677,10 +678,10 @@ TlsTransportStatus_t xEstablishMqttSession( MQTTEventCallback_t eventCallback )
 
 /*-----------------------------------------------------------*/
 
-int32_t lDisconnectMqttSession( void )
+BaseType_t xDisconnectMqttSession( void )
 {
-    MQTTStatus_t eMqttStatus = MQTTSuccess;
-    int returnStatus = EXIT_SUCCESS;
+    MQTTStatus_t xMQTTStatus = MQTTSuccess;
+    BaseType_t returnStatus = pdTRUE;
     TlsTransportStatus_t xNetworkStatus;
     MQTTContext_t * pxMqttContext = &mqttContext;
     NetworkContext_t * pxNetworkContext = &networkContext;
@@ -691,13 +692,13 @@ int32_t lDisconnectMqttSession( void )
     if( mqttSessionEstablished == true )
     {
         /* Send DISCONNECT. */
-        eMqttStatus = MQTT_Disconnect( pxMqttContext );
+        xMQTTStatus = MQTT_Disconnect( pxMqttContext );
 
-        if( eMqttStatus != MQTTSuccess )
+        if( xMQTTStatus != MQTTSuccess )
         {
             LogError( ( "Sending MQTT DISCONNECT failed with status=%u.",
-                        eMqttStatus ) );
-            returnStatus = EXIT_FAILURE;
+                        xMQTTStatus ) );
+            returnStatus = pdFAIL;
         }
     }
 
@@ -709,11 +710,11 @@ int32_t lDisconnectMqttSession( void )
 
 /*-----------------------------------------------------------*/
 
-int32_t lSubscribeToTopic( const char * pcTopicFilter,
-                          uint16_t usTopicFilterLength )
+BaseType_t xSubscribeToTopic( const char * pcTopicFilter,
+                              uint16_t usTopicFilterLength )
 {
-    int returnStatus = EXIT_SUCCESS;
-    MQTTStatus_t eMqttStatus;
+    BaseType_t returnStatus = pdTRUE;
+    MQTTStatus_t xMQTTStatus;
     MQTTContext_t * pxMqttContext = &mqttContext;
     MQTTSubscribeInfo_t pSubscriptionList[ mqttexampleTOPIC_COUNT ];
 
@@ -733,16 +734,16 @@ int32_t lSubscribeToTopic( const char * pcTopicFilter,
     globalSubscribePacketIdentifier = MQTT_GetPacketId( pxMqttContext );
 
     /* Send SUBSCRIBE packet. */
-    eMqttStatus = MQTT_Subscribe( pxMqttContext,
+    xMQTTStatus = MQTT_Subscribe( pxMqttContext,
                                   pSubscriptionList,
                                   sizeof( pSubscriptionList ) / sizeof( MQTTSubscribeInfo_t ),
                                   globalSubscribePacketIdentifier );
 
-    if( eMqttStatus != MQTTSuccess )
+    if( xMQTTStatus != MQTTSuccess )
     {
         LogError( ( "Failed to send SUBSCRIBE packet to broker with error = %u.",
-                    eMqttStatus ) );
-        returnStatus = EXIT_FAILURE;
+                    xMQTTStatus ) );
+        returnStatus = pdFAIL;
     }
     else
     {
@@ -757,13 +758,13 @@ int32_t lSubscribeToTopic( const char * pcTopicFilter,
          * of receiving publish message before subscribe ack is zero; but application
          * must be ready to receive any packet. This demo uses MQTT_ProcessLoop to
          * receive packet from network. */
-        eMqttStatus = MQTT_ProcessLoop( pxMqttContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
+        xMQTTStatus = MQTT_ProcessLoop( pxMqttContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
 
-        if( eMqttStatus != MQTTSuccess )
+        if( xMQTTStatus != MQTTSuccess )
         {
-            returnStatus = EXIT_FAILURE;
+            returnStatus = pdFAIL;
             LogError( ( "MQTT_ProcessLoop returned with status = %u.",
-                        eMqttStatus ) );
+                        xMQTTStatus ) );
         }
     }
 
@@ -772,11 +773,11 @@ int32_t lSubscribeToTopic( const char * pcTopicFilter,
 
 /*-----------------------------------------------------------*/
 
-int32_t lUnsubscribeFromTopic( const char * pcTopicFilter,
-                              uint16_t usTopicFilterLength )
+BaseType_t xUnsubscribeFromTopic( const char * pcTopicFilter,
+                                  uint16_t usTopicFilterLength )
 {
-    int returnStatus = EXIT_SUCCESS;
-    MQTTStatus_t eMqttStatus;
+    BaseType_t returnStatus = pdTRUE;
+    MQTTStatus_t xMQTTStatus;
     MQTTContext_t * pxMqttContext = &mqttContext;
     MQTTSubscribeInfo_t pSubscriptionList[ 1 ];
 
@@ -796,16 +797,16 @@ int32_t lUnsubscribeFromTopic( const char * pcTopicFilter,
     globalUnsubscribePacketIdentifier = MQTT_GetPacketId( pxMqttContext );
 
     /* Send UNSUBSCRIBE packet. */
-    eMqttStatus = MQTT_Unsubscribe( pxMqttContext,
+    xMQTTStatus = MQTT_Unsubscribe( pxMqttContext,
                                     pSubscriptionList,
                                     sizeof( pSubscriptionList ) / sizeof( MQTTSubscribeInfo_t ),
                                     globalUnsubscribePacketIdentifier );
 
-    if( eMqttStatus != MQTTSuccess )
+    if( xMQTTStatus != MQTTSuccess )
     {
         LogError( ( "Failed to send UNSUBSCRIBE packet to broker with error = %u.",
-                    eMqttStatus ) );
-        returnStatus = EXIT_FAILURE;
+                    xMQTTStatus ) );
+        returnStatus = pdFAIL;
     }
     else
     {
@@ -820,13 +821,13 @@ int32_t lUnsubscribeFromTopic( const char * pcTopicFilter,
          * of receiving publish message before subscribe ack is zero; but application
          * must be ready to receive any packet. This demo uses MQTT_ProcessLoop to
          * receive packet from network. */
-        eMqttStatus = MQTT_ProcessLoop( pxMqttContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
+        xMQTTStatus = MQTT_ProcessLoop( pxMqttContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
 
-        if( eMqttStatus != MQTTSuccess )
+        if( xMQTTStatus != MQTTSuccess )
         {
-            returnStatus = EXIT_FAILURE;
+            returnStatus = pdFAIL;
             LogError( ( "MQTT_ProcessLoop returned with status = %u.",
-                        eMqttStatus ) );
+                        xMQTTStatus ) );
         }
     }
 
@@ -835,13 +836,13 @@ int32_t lUnsubscribeFromTopic( const char * pcTopicFilter,
 
 /*-----------------------------------------------------------*/
 
-int32_t lPublishToTopic( const char * pcTopicFilter,
-                        int32_t topicFilterLength,
-                        const char * pcPayload,
-                        size_t payloadLength )
+BaseType_t xPublishToTopic( const char * pcTopicFilter,
+                            int32_t topicFilterLength,
+                            const char * pcPayload,
+                            size_t payloadLength )
 {
-    int returnStatus = EXIT_SUCCESS;
-    MQTTStatus_t eMqttStatus = MQTTSuccess;
+    BaseType_t returnStatus = pdPASS;
+    MQTTStatus_t xMQTTStatus = MQTTSuccess;
     uint8_t ucPublishIndex = MAX_OUTGOING_PUBLISHES;
     MQTTContext_t * pxMqttContext = &mqttContext;
 
@@ -855,7 +856,7 @@ int32_t lPublishToTopic( const char * pcTopicFilter,
      * receiving a PUBACK. */
     returnStatus = prvGetNextFreeIndexForOutgoingPublishes( &ucPublishIndex );
 
-    if( returnStatus == EXIT_FAILURE )
+    if( returnStatus == pdFAIL )
     {
         LogError( ( "Unable to find a free spot for outgoing PUBLISH message.\n\n" ) );
     }
@@ -873,16 +874,16 @@ int32_t lPublishToTopic( const char * pcTopicFilter,
         outgoingPublishPackets[ ucPublishIndex ].packetId = MQTT_GetPacketId( pxMqttContext );
 
         /* Send PUBLISH packet. */
-        eMqttStatus = MQTT_Publish( pxMqttContext,
+        xMQTTStatus = MQTT_Publish( pxMqttContext,
                                     &outgoingPublishPackets[ ucPublishIndex ].pubInfo,
                                     outgoingPublishPackets[ ucPublishIndex ].packetId );
 
-        if( eMqttStatus != MQTTSuccess )
+        if( xMQTTStatus != MQTTSuccess )
         {
             LogError( ( "Failed to send PUBLISH packet to broker with error = %u.",
-                        eMqttStatus ) );
+                        xMQTTStatus ) );
             vCleanupOutgoingPublishAt( ucPublishIndex );
-            returnStatus = EXIT_FAILURE;
+            returnStatus = pdFAIL;
         }
         else
         {
@@ -897,12 +898,13 @@ int32_t lPublishToTopic( const char * pcTopicFilter,
              * sends ping request to broker if MQTT_KEEP_ALIVE_INTERVAL_SECONDS
              * has expired since the last MQTT packet sent and receive
              * ping responses. */
-            eMqttStatus = MQTT_ProcessLoop( &mqttContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
+            xMQTTStatus = MQTT_ProcessLoop( &mqttContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
 
-            if( eMqttStatus != MQTTSuccess )
+            if( xMQTTStatus != MQTTSuccess )
             {
                 LogWarn( ( "MQTT_ProcessLoop returned with status = %u.",
-                           eMqttStatus ) );
+                           xMQTTStatus ) );
+                returnStatus = pdFAIL;
             }
         }
     }

@@ -55,13 +55,19 @@
 
 /************ End of logging configuration ****************/
 
+#ifndef democonfigCLIENT_IDENTIFIER
 /**
  * @brief The MQTT client identifier used in this example.  Each client identifier
- * must be unique; so edit as required to ensure that no two clients connecting to
- * the same broker use the same client identifier.
+ * must be unique so edit as required to ensure no two clients connecting to the
+ * same broker use the same client identifier.
  *
- * #define democonfigCLIENT_IDENTIFIER    "insert here."
+ * @note Appending __TIME__ to the client id string will reduce the possibility of a
+ * client id collision in the broker. Note that the appended time is the compilation
+ * time. This client id can cause collision, if more than one instance of the same
+ * binary is used at the same time to connect to the broker.
  */
+    #define democonfigCLIENT_IDENTIFIER    "testClient"__TIME__
+#endif
 
 /**
  * @brief Endpoint of the MQTT broker to connect to.
@@ -141,17 +147,6 @@
  * "-----END RSA PRIVATE KEY-----\n"
  *
  * #define democonfigCLIENT_PRIVATE_KEY_PEM    "...insert here..."
- */
-
-/**
- * @brief Configuration that indicates if the demo connection is made to the AWS IoT Core MQTT broker.
- *
- * If username/password based authentication is used, the demo will use appropriate TLS ALPN and
- * SNI configurations as required for the Custom Authentication feature of AWS IoT.
- * For more information, refer to the following documentation:
- * https://docs.aws.amazon.com/iot/latest/developerguide/custom-auth.html#custom-auth-mqtt
- *
- * #define democonfigUSE_AWS_IOT_CORE_BROKER    ( 1 )
  */
 
 /**

@@ -46,8 +46,8 @@
 
 /* This file configures mbed TLS for FreeRTOS. */
 
-#ifndef MBEDTLS_CONFIG_H
-#define MBEDTLS_CONFIG_H
+#ifndef MBEDTLS_CONFIG_H_
+#define MBEDTLS_CONFIG_H_
 
 /* FreeRTOS include. */
 #include "FreeRTOS.h"
@@ -106,12 +106,15 @@
 #define MBEDTLS_ECDSA_C
 #define MBEDTLS_ECP_C
 #define MBEDTLS_ENTROPY_C
+#define MBEDTLS_ENTROPY_HARDWARE_ALT
+
 #define MBEDTLS_GCM_C
 #define MBEDTLS_MD_C
 #define MBEDTLS_OID_C
 #define MBEDTLS_PEM_PARSE_C
 #define MBEDTLS_PK_C
 #define MBEDTLS_PK_PARSE_C
+#define MBEDTLS_PK_WRITE_C
 #define MBEDTLS_PKCS1_V15
 #define MBEDTLS_PLATFORM_C
 #define MBEDTLS_RSA_C
@@ -148,4 +151,4 @@ int mbedtls_platform_entropy_poll( void * data,
 
 #include "mbedtls/check_config.h"
 
-#endif /* ifndef MBEDTLS_CONFIG_H */
+#endif /* ifndef MBEDTLS_CONFIG_H_ */

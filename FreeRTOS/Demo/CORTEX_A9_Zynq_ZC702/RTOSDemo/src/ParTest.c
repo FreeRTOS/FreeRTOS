@@ -44,7 +44,7 @@
 #define partstNUM_LEDS			( 1 )
 #define partstDIRECTION_OUTPUT	( 1 )
 #define partstOUTPUT_ENABLED	( 1 )
-#define partstLED_OUTPUT		( 10 )
+#define partstLED_OUTPUT		( 10 ) /* Change to 47 for MicroZed. */
 
 /*-----------------------------------------------------------*/
 

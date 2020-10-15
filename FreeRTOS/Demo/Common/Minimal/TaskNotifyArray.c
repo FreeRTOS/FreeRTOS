@@ -195,7 +195,7 @@ static void prvSingleTaskTests( void )
 const TickType_t xTicksToWait = pdMS_TO_TICKS( 100UL );
 BaseType_t xReturned;
 uint32_t ulNotifiedValue, ulLoop, ulNotifyingValue, ulPreviousValue, ulExpectedValue;
-TickType_t xTimeOnEntering;
+TickType_t xTimeOnEntering, xTimeNow, xTimeDifference;
 const uint32_t ulFirstNotifiedConst = 100001UL, ulSecondNotifiedValueConst = 5555UL, ulMaxLoops = 5UL;
 const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 UBaseType_t uxIndexToTest, uxOtherIndexes;
@@ -221,7 +221,9 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 		( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 
 		/* Should have blocked for the entire block time. */
-		configASSERT( ( xTaskGetTickCount() - xTimeOnEntering ) >= xTicksToWait );
+		xTimeNow = xTaskGetTickCount();
+		xTimeDifference = xTimeNow - xTimeOnEntering;
+		configASSERT( xTimeDifference >= xTicksToWait );
 		configASSERT( xReturned == pdFAIL );
 		configASSERT( ulNotifiedValue == 0UL );
 		( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
@@ -268,7 +270,9 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 		and so not time out. */
 		xTimeOnEntering = xTaskGetTickCount();
 		xReturned = xTaskNotifyWaitIndexed( uxIndexToTest, notifyUINT32_MAX, 0, &ulNotifiedValue, xTicksToWait );
-		configASSERT( ( xTaskGetTickCount() - xTimeOnEntering ) < xTicksToWait );
+		xTimeNow = xTaskGetTickCount();
+		xTimeDifference = xTimeNow - xTimeOnEntering;
+		configASSERT( xTimeDifference < xTicksToWait );
 
 		/* The task should have been notified, and the notified value should
 		be equal to ulFirstNotifiedConst. */
@@ -992,7 +996,7 @@ const TickType_t xTimerPeriod = pdMS_TO_TICKS( 100 ), xMargin = pdMS_TO_TICKS( 5
 UBaseType_t uxIndex, uxIndexToNotify;
 uint32_t ulReceivedValue;
 BaseType_t xReturned;
-TickType_t xTimeBeforeBlocking;
+TickType_t xTimeBeforeBlocking, xTimeNow, xTimeDifference;
 
 	/* Set all notify values within the array of tasks notifications to zero
 	ready for the next test. */
@@ -1028,13 +1032,16 @@ TickType_t xTimeBeforeBlocking;
 		xReturned = xTaskNotifyWaitIndexed( uxIndex, 0, 0, &ulReceivedValue, xTimerPeriod + xMargin );
 
 		/* The notification will have been sent to task notification at index
-		uxIndexToNotify in this task by the timer callback after xTimerPeriodTicks.  
-		The notification should not have woken this task, so xReturned should 
+		uxIndexToNotify in this task by the timer callback after xTimerPeriodTicks.
+		The notification should not have woken this task, so xReturned should
 		be false and at least xTimerPeriod + xMargin ticks should have passed. */
 		configASSERT( xReturned == pdFALSE );
-		configASSERT( ( xTaskGetTickCount() - xTimeBeforeBlocking ) >= ( xTimerPeriod + xMargin ) );
+		xTimeNow = xTaskGetTickCount();
+		xTimeDifference = xTimeNow - xTimeBeforeBlocking;
+		configASSERT( xTimeDifference >= ( xTimerPeriod + xMargin ) );
 		( void ) xReturned; /* Remove compiler warnings if configASSERT() is not defined. */
 		( void ) xTimeBeforeBlocking;
+		( void ) xTimeDifference;
 
 		/* Only the notification at index position uxIndexToNotify should be
 		set.  Calling this function will clear it again. */

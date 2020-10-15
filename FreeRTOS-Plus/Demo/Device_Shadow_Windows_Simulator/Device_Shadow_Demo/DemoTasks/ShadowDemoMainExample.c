@@ -48,7 +48,6 @@
  */
 
 /* Standard includes. */
-#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -251,8 +250,8 @@ static void prvUpdateDeltaHandler( MQTTPublishInfo_t * pxPublishInfo )
     uint32_t ulOutValueLength = 0U;
     JSONStatus_t result = JSONSuccess;
 
-    assert( pxPublishInfo != NULL );
-    assert( pxPublishInfo->pPayload != NULL );
+    configASSERT( pxPublishInfo != NULL );
+    configASSERT( pxPublishInfo->pPayload != NULL );
 
     LogInfo( ( "/update/delta json payload:%s.", ( const char * ) pxPublishInfo->pPayload ) );
 
@@ -371,8 +370,8 @@ static void prvUpdateAcceptedHandler( MQTTPublishInfo_t * pxPublishInfo )
     uint32_t ulReceivedToken = 0U;
     JSONStatus_t result = JSONSuccess;
 
-    assert( pxPublishInfo != NULL );
-    assert( pxPublishInfo->pPayload != NULL );
+    configASSERT( pxPublishInfo != NULL );
+    configASSERT( pxPublishInfo->pPayload != NULL );
 
     LogInfo( ( "/update/accepted json payload:%s.", ( const char * ) pxPublishInfo->pPayload ) );
 
@@ -468,9 +467,9 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
 
     ( void ) pxMqttContext;
 
-    assert( pxDeserializedInfo != NULL );
-    assert( pxMqttContext != NULL );
-    assert( pxPacketInfo != NULL );
+    configASSERT( pxDeserializedInfo != NULL );
+    configASSERT( pxMqttContext != NULL );
+    configASSERT( pxPacketInfo != NULL );
 
     usPacketIdentifier = pxDeserializedInfo->packetIdentifier;
 
@@ -479,7 +478,7 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
      * out the lower bits to check if the packet is publish. */
     if( ( pxPacketInfo->type & 0xF0U ) == MQTT_PACKET_TYPE_PUBLISH )
     {
-        assert( pxDeserializedInfo->pPublishInfo != NULL );
+        configASSERT( pxDeserializedInfo->pPublishInfo != NULL );
         LogInfo( ( "pPublishInfo->pTopicName:%s.", pxDeserializedInfo->pPublishInfo->pTopicName ) );
 
         /* Let the Device Shadow library tell us whether this is a device shadow message. */

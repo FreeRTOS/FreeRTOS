@@ -61,7 +61,7 @@
 /* JSON library includes. */
 #include "core_json.h"
 
-/* shadow demo helpers header. */
+/* Shadow demo helpers header. */
 #include "shadow_demo_helpers.h"
 
 /* Demo Specific configs. */

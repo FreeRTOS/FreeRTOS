@@ -382,8 +382,8 @@ static BaseType_t prvGetNextFreeIndexForOutgoingPublishes( uint8_t * pucIndex )
     BaseType_t returnStatus = pdFAIL;
     uint8_t ucIndex = 0;
 
-    configASSERT ( outgoingPublishPackets != NULL );
-    configASSERT ( pucIndex != NULL );
+    configASSERT( outgoingPublishPackets != NULL );
+    configASSERT( pucIndex != NULL );
 
     for( ucIndex = 0; ucIndex < MAX_OUTGOING_PUBLISHES; ucIndex++ )
     {
@@ -405,8 +405,8 @@ static BaseType_t prvGetNextFreeIndexForOutgoingPublishes( uint8_t * pucIndex )
 
 static void vCleanupOutgoingPublishAt( uint8_t ucIndex )
 {
-    configASSERT ( outgoingPublishPackets != NULL );
-    configASSERT ( ucIndex < MAX_OUTGOING_PUBLISHES );
+    configASSERT( outgoingPublishPackets != NULL );
+    configASSERT( ucIndex < MAX_OUTGOING_PUBLISHES );
 
     /* Clear the outgoing publish packet. */
     ( void ) memset( &( outgoingPublishPackets[ ucIndex ] ),
@@ -418,7 +418,7 @@ static void vCleanupOutgoingPublishAt( uint8_t ucIndex )
 
 static void vCleanupOutgoingPublishes( void )
 {
-    configASSERT ( outgoingPublishPackets != NULL );
+    configASSERT( outgoingPublishPackets != NULL );
 
     /* Clean up all the outgoing publish packets. */
     ( void ) memset( outgoingPublishPackets, 0x00, sizeof( outgoingPublishPackets ) );
@@ -430,8 +430,8 @@ static void vCleanupOutgoingPublishWithPacketID( uint16_t usPacketId )
 {
     uint8_t ucIndex = 0;
 
-    configASSERT ( outgoingPublishPackets != NULL );
-    configASSERT ( usPacketId != MQTT_PACKET_ID_INVALID );
+    configASSERT( outgoingPublishPackets != NULL );
+    configASSERT( usPacketId != MQTT_PACKET_ID_INVALID );
 
     /* Clean up all the saved outgoing publishes. */
     for( ; ucIndex < MAX_OUTGOING_PUBLISHES; ucIndex++ )
@@ -457,13 +457,13 @@ void vHandleOtherIncomingPacket( MQTTPacketInfo_t * pxPacketInfo,
         case MQTT_PACKET_TYPE_SUBACK:
             LogInfo( ( "MQTT_PACKET_TYPE_SUBACK.\n\n" ) );
             /* Make sure ACK packet identifier matches with Request packet identifier. */
-            configASSERT ( globalSubscribePacketIdentifier == usPacketIdentifier );
+            configASSERT( globalSubscribePacketIdentifier == usPacketIdentifier );
             break;
 
         case MQTT_PACKET_TYPE_UNSUBACK:
             LogInfo( ( "MQTT_PACKET_TYPE_UNSUBACK.\n\n" ) );
             /* Make sure ACK packet identifier matches with Request packet identifier. */
-            configASSERT ( globalUnsubscribePacketIdentifier == usPacketIdentifier );
+            configASSERT( globalUnsubscribePacketIdentifier == usPacketIdentifier );
             break;
 
         case MQTT_PACKET_TYPE_PINGRESP:
@@ -496,7 +496,7 @@ static BaseType_t xHandlePublishResend( MQTTContext_t * pxMqttContext )
     MQTTStatus_t xMQTTStatus = MQTTSuccess;
     uint8_t ucIndex = 0U;
 
-    configASSERT ( outgoingPublishPackets != NULL );
+    configASSERT( outgoingPublishPackets != NULL );
 
     /* Resend all the QoS1 publishes still in the array. These are the
      * publishes that hasn't received a PUBACK. When a PUBACK is
@@ -545,8 +545,8 @@ BaseType_t xEstablishMqttSession( MQTTEventCallback_t eventCallback )
     NetworkContext_t * pxNetworkContext = &networkContext;
     bool sessionPresent = false;
 
-    configASSERT ( pxMqttContext != NULL );
-    configASSERT ( pxNetworkContext != NULL );
+    configASSERT( pxMqttContext != NULL );
+    configASSERT( pxNetworkContext != NULL );
 
     /* Initialize the mqtt context and network context. */
     ( void ) memset( pxMqttContext, 0U, sizeof( MQTTContext_t ) );
@@ -685,8 +685,8 @@ BaseType_t xDisconnectMqttSession( void )
     MQTTContext_t * pxMqttContext = &mqttContext;
     NetworkContext_t * pxNetworkContext = &networkContext;
 
-    configASSERT ( pxMqttContext != NULL );
-    configASSERT ( pxNetworkContext != NULL );
+    configASSERT( pxMqttContext != NULL );
+    configASSERT( pxNetworkContext != NULL );
 
     if( mqttSessionEstablished == true )
     {
@@ -717,9 +717,9 @@ BaseType_t xSubscribeToTopic( const char * pcTopicFilter,
     MQTTContext_t * pxMqttContext = &mqttContext;
     MQTTSubscribeInfo_t pSubscriptionList[ mqttexampleTOPIC_COUNT ];
 
-    configASSERT ( pxMqttContext != NULL );
-    configASSERT ( pcTopicFilter != NULL );
-    configASSERT ( usTopicFilterLength > 0 );
+    configASSERT( pxMqttContext != NULL );
+    configASSERT( pcTopicFilter != NULL );
+    configASSERT( usTopicFilterLength > 0 );
 
     /* Start with everything at 0. */
     ( void ) memset( ( void * ) pSubscriptionList, 0x00, sizeof( pSubscriptionList ) );
@@ -780,9 +780,9 @@ BaseType_t xUnsubscribeFromTopic( const char * pcTopicFilter,
     MQTTContext_t * pxMqttContext = &mqttContext;
     MQTTSubscribeInfo_t pSubscriptionList[ 1 ];
 
-    configASSERT ( pxMqttContext != NULL );
-    configASSERT ( pcTopicFilter != NULL );
-    configASSERT ( usTopicFilterLength > 0 );
+    configASSERT( pxMqttContext != NULL );
+    configASSERT( pcTopicFilter != NULL );
+    configASSERT( usTopicFilterLength > 0 );
 
     /* Start with everything at 0. */
     ( void ) memset( ( void * ) pSubscriptionList, 0x00, sizeof( pSubscriptionList ) );
@@ -845,9 +845,9 @@ BaseType_t xPublishToTopic( const char * pcTopicFilter,
     uint8_t ucPublishIndex = MAX_OUTGOING_PUBLISHES;
     MQTTContext_t * pxMqttContext = &mqttContext;
 
-    configASSERT ( pxMqttContext != NULL );
-    configASSERT ( pcTopicFilter != NULL );
-    configASSERT ( topicFilterLength > 0 );
+    configASSERT( pxMqttContext != NULL );
+    configASSERT( pcTopicFilter != NULL );
+    configASSERT( topicFilterLength > 0 );
 
     /* Get the next free index for the outgoing publish. All QoS1 outgoing
      * publishes are stored until a PUBACK is received. These messages are

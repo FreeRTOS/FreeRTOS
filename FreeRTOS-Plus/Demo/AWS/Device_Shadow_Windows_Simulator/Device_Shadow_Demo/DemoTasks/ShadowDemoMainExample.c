@@ -55,7 +55,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-/* SHADOW API header. */
+/* Shadow API header. */
 #include "shadow.h"
 
 /* JSON library includes. */

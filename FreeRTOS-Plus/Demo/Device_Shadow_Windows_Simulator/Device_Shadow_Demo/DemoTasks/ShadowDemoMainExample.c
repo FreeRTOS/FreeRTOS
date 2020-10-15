@@ -751,4 +751,8 @@ void prvShadowDemoTask( void * pvParameters )
             LogError( ( "Shadow Demo failed." ) );
         }
     }
+
+    /* Delete this task. */
+    LogInfo( ( "Deleting Shadow Demo task." ) );
+    vTaskDelete( NULL );
 }

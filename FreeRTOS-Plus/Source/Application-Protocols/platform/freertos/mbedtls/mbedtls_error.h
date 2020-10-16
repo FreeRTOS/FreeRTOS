@@ -18,7 +18,6 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 /**
@@ -26,10 +25,14 @@
  * @brief Stringification utilities for high-level and low-level codes of mbed TLS.
  */
 
+#ifndef MBEDTLS_ERROR_H_
+    #define MBEDTLS_ERROR_H_
 
-#ifdef __cplusplus
-    extern "C" {
-#endif
+    #include <stdint.h>
+
+    #ifdef __cplusplus
+        extern "C" {
+    #endif
 
 /**
  * @brief Translate an mbed TLS high level code into its string representation.
@@ -40,7 +43,7 @@
  *
  * @warning The string returned by this function must never be modified.
  */
-const char * mbedtls_strerror_highlevel( int errnum );
+    const char * mbedtls_strerror_highlevel( int32_t errnum );
 
 /**
  * @brief Translate an mbed TLS low level code into its string representation,
@@ -51,8 +54,10 @@ const char * mbedtls_strerror_highlevel( int errnum );
  *
  * @warning The string returned by this function must never be modified.
  */
-const char * mbedtls_strerror_lowlevel( int errnum );
+    const char * mbedtls_strerror_lowlevel( int32_t errnum );
 
-#ifdef __cplusplus
-    }
-#endif
+    #ifdef __cplusplus
+}
+    #endif
+
+#endif /* ifndef MBEDTLS_ERROR_H_ */

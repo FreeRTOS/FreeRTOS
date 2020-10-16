@@ -230,10 +230,10 @@
     <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\xtea.c" />
     <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls_utils\mbedtls_error.c" />
     <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls_utils\mbedtls_utils.c" />
-    <ClCompile Include="..\..\Source\corePKCS11\source\iot_pkcs11.c" />
-    <ClCompile Include="..\..\Source\corePKCS11\source\iot_pki_utils.c" />
-    <ClCompile Include="..\..\Source\corePKCS11\source\portable\mbedtls\iot_pkcs11_mbedtls.c" />
-    <ClCompile Include="..\..\Source\corePKCS11\source\portable\windows\iot_pkcs11_pal.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\core_pkcs11.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\core_pki_utils.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\mbedtls\core_pkcs11_mbedtls.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\windows\core_pkcs11_pal.c" />
     <ClCompile Include="examples\demo_helpers.c" />
     <ClCompile Include="examples\management_and_rng.c" />
     <ClCompile Include="examples\objects.c" />
@@ -333,9 +333,9 @@
     <ClInclude Include="..\..\Source\corePKCS11\3rdparty\pkcs11\pkcs11.h" />
     <ClInclude Include="..\..\Source\corePKCS11\3rdparty\pkcs11\pkcs11f.h" />
     <ClInclude Include="..\..\Source\corePKCS11\3rdparty\pkcs11\pkcs11t.h" />
-    <ClInclude Include="..\..\Source\corePKCS11\source\include\iot_pkcs11.h" />
-    <ClInclude Include="..\..\Source\corePKCS11\source\include\iot_pkcs11_pal.h" />
-    <ClInclude Include="..\..\Source\corePKCS11\source\include\iot_pki_utils.h" />
+    <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11.h" />
+    <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11_pal.h" />
+    <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pki_utils.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\portable\mbedtls\threading_alt.h" />
     <ClInclude Include="..\Common\Logging\logging_levels.h" />
     <ClInclude Include="..\Common\Logging\logging_stack.h" />

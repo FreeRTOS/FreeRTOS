@@ -48,10 +48,10 @@
 #include "mbedtls_error.h"
 
 /* PKCS #11 includes. */
-#include "iot_pkcs11_config.h"
-#include "iot_pkcs11.h"
+#include "core_pkcs11_config.h"
+#include "core_pkcs11.h"
 #include "pkcs11.h"
-#include "iot_pki_utils.h"
+#include "core_pki_utils.h"
 
 /*-----------------------------------------------------------*/
 

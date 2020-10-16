@@ -834,7 +834,7 @@ static MQTTStatus_t prvMQTTConnect( MQTTContext_t * pxMQTTContext,
             {
                 pxResendSubscriptions[ j ].pTopicFilter = pxSubscriptions[ i ].pcSubscriptionFilter;
                 pxResendSubscriptions[ j ].topicFilterLength = pxSubscriptions[ i ].usFilterLength;
-                pxResendSubscriptions[ j ].qos = MQTTQoS0;
+                pxResendSubscriptions[ j ].qos = MQTTQoS1;
                 j++;
             }
         }
@@ -1700,9 +1700,9 @@ void prvSubscribeTask( void * pvParameters )
     uint32_t ulWaitCounter = 0;
 
     /* The QoS does not affect when subscribe operations are marked completed
-     * as it does for publishes. Since the QoS does not impact this demo, we
-     * will use QoS 0, as it is the simplest. */
-    xSubscribeInfo.qos = MQTTQoS0;
+     * as it does for publishes. However, we still use QoS 1 here so that the
+     * broker will resend publishes if there is a network disconnect. */
+    xSubscribeInfo.qos = MQTTQoS1;
     xSubscribeInfo.pTopicFilter = mqttexampleSUBSCRIBE_TOPIC_FILTER;
     xSubscribeInfo.topicFilterLength = ( uint16_t ) strlen( xSubscribeInfo.pTopicFilter );
     LogInfo( ( "Topic filter: %.*s", xSubscribeInfo.topicFilterLength, xSubscribeInfo.pTopicFilter ) );

@@ -253,8 +253,9 @@
 /**
  * @brief The maximum number of loop iterations to wait before declaring failure.
  *
- * Each `while` loop that waits for a task notification will wait for
- * `mqttexampleDEMO_TICKS_TO_WAIT * this amount of ticks before exiting.
+ * Each `while` loop waiting for a task notification will wait for a total
+ * number of ticks equal to `mqttexampleDEMO_TICKS_TO_WAIT` * this number of
+ * iterations before the loop exits.
  *
  * @note This value should not be too small, as the reason for a long loop
  * may be a loss of network connection.
@@ -1592,7 +1593,8 @@ void prvPublishTask( void * pvParameters )
 
             if( ++ulWaitCounter > mqttexampleMAX_WAIT_ITERATIONS )
             {
-                LogError( ( "Loop exceeded maximum wait time." ) );
+                LogError( ( "Synchronous publish loop iteration %d"
+                            " exceeded maximum wait time.", ( i + 1 ) ) );
                 break;
             }
         }
@@ -1659,7 +1661,8 @@ void prvPublishTask( void * pvParameters )
 
             if( ++ulWaitCounter > mqttexampleMAX_WAIT_ITERATIONS )
             {
-                LogError( ( "Loop exceeded maximum wait time." ) );
+                LogError( ( "Loop free iteration %d exceeded maximum"
+                            " wait time.", ( i + 1 ) ) );
                 break;
             }
         }
@@ -1732,7 +1735,7 @@ void prvSubscribeTask( void * pvParameters )
 
         if( ++ulWaitCounter > mqttexampleMAX_WAIT_ITERATIONS )
         {
-            LogError( ( "Loop exceeded maximum wait time." ) );
+            LogError( ( "Subscribe Loop exceeded maximum wait time." ) );
             break;
         }
     }
@@ -1768,10 +1771,14 @@ void prvSubscribeTask( void * pvParameters )
             break;
         }
 
-        /* Break if we have been stuck in this loop for too long. */
+        /* Break if we have been stuck in this loop for too long. The total wait
+         * here will be ( (loop delay + queue check delay) * `mqttexampleMAX_WAIT_ITERATIONS` ).
+         * For example, with a 1000 ms queue delay, a 400 ms loop delay, and a
+         * maximum iteration of 20, this will wait 28 seconds after receiving
+         * the last publish. */
         if( ++ulWaitCounter > mqttexampleMAX_WAIT_ITERATIONS )
         {
-            LogError( ( "Loop exceeded maximum wait time." ) );
+            LogError( ( "Publish receive loop exceeded maximum wait time." ) );
             break;
         }
 
@@ -1803,7 +1810,7 @@ void prvSubscribeTask( void * pvParameters )
 
         if( ++ulWaitCounter > mqttexampleMAX_WAIT_ITERATIONS )
         {
-            LogError( ( "Loop exceeded maximum wait time." ) );
+            LogError( ( "Unsubscribe loop exceeded maximum wait time." ) );
             break;
         }
     }
@@ -1913,7 +1920,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
             if( ++ulWaitCounter > mqttexampleMAX_WAIT_ITERATIONS )
             {
-                LogError( ( "Loop exceeded maximum wait time." ) );
+                LogError( ( "Subscribe task exceeded maximum wait time." ) );
                 break;
             }
         }
@@ -1929,7 +1936,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
             if( ++ulWaitCounter > mqttexampleMAX_WAIT_ITERATIONS )
             {
-                LogError( ( "Loop exceeded maximum wait time." ) );
+                LogError( ( "Publish task exceeded maximum wait time." ) );
                 break;
             }
         }

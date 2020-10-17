@@ -232,7 +232,7 @@ static void prvUpdateDeltaHandler( MQTTPublishInfo_t * pxPublishInfo );
 static void prvUpdateAcceptedHandler( MQTTPublishInfo_t * pxPublishInfo );
 
 /**
- * @brief The task used to demonstrate the MQTT API.
+ * @brief The task used to demonstrate the Shadow API.
  *
  * @param[in] pvParameters Parameters as passed at the time of task creation. Not
  * used in this example.
@@ -307,7 +307,7 @@ static void prvUpdateDeltaHandler( MQTTPublishInfo_t * pxPublishInfo )
 
     LogInfo( ( "version:%d, ulCurrentVersion:%d \r\n", ulVersion, ulCurrentVersion ) );
 
-    /* When the version is much newer than the on we retained, that means the powerOn
+    /* When the version is much newer than the one we retained, that means the powerOn
      * state is valid for us. */
     if( ulVersion > ulCurrentVersion )
     {
@@ -426,7 +426,7 @@ static void prvUpdateAcceptedHandler( MQTTPublishInfo_t * pxPublishInfo )
         /* Convert the code to an unsigned integer value. */
         ulReceivedToken = ( uint32_t ) strtoul( pcOutValue, NULL, 10 );
 
-        LogInfo( ( "receivedToken:%d, clientToken:%u \r\n", ulReceivedToken, ulClientToken ) );
+        LogInfo( ( "receivedToken:%u, clientToken:%u \r\n", ulReceivedToken, ulClientToken ) );
 
         /* If the clientToken in this update/accepted message matches the one we
          * published before, it means the device shadow has accepted our latest
@@ -530,9 +530,9 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
  */
 void vStartShadowDemo( void )
 {
-    /* This example uses a single application task, which in turn is used to
-     * connect, subscribe, publish, unsubscribe and disconnect from the MQTT
-     * broker. */
+    /* This example uses a single application task, which shows that how to
+     * use Device Shadow library to get shadow topics and validate shadow topics
+     * via MQTT APIs communicating with the MQTT broker. */
     xTaskCreate( prvShadowDemoTask,        /* Function that implements the task. */
                  "ShadowDemo",             /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */

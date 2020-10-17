@@ -105,7 +105,7 @@
  * @brief Keep alive time reported to the broker while establishing an MQTT connection.
  *
  * It is the responsibility of the Client to ensure that the interval between
- * Control Packets being sent does not exceed the this Keep Alive value. In the
+ * Control Packets being sent does not exceed this Keep Alive value. In the
  * absence of sending any other Control Packets, the Client MUST send a
  * PINGREQ Packet.
  */
@@ -499,7 +499,7 @@ static BaseType_t xHandlePublishResend( MQTTContext_t * pxMqttContext )
     configASSERT( outgoingPublishPackets != NULL );
 
     /* Resend all the QoS1 publishes still in the array. These are the
-     * publishes that hasn't received a PUBACK. When a PUBACK is
+     * publishes that haven't received a PUBACK. When a PUBACK is
      * received, the publish is removed from the array. */
     for( ucIndex = 0U; ucIndex < MAX_OUTGOING_PUBLISHES; ucIndex++ )
     {
@@ -602,7 +602,7 @@ BaseType_t xEstablishMqttSession( MQTTEventCallback_t eventCallback )
             /* The maximum time interval in seconds which is allowed to elapse
              * between two Control Packets.
              * It is the responsibility of the Client to ensure that the interval between
-             * Control Packets being sent does not exceed the this Keep Alive value. In the
+             * Control Packets being sent does not exceed this Keep Alive value. In the
              * absence of sending any other Control Packets, the Client MUST send a
              * PINGREQ Packet. */
             xConnectInfo.keepAliveSeconds = mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS;
@@ -813,13 +813,7 @@ BaseType_t xUnsubscribeFromTopic( const char * pcTopicFilter,
                    usTopicFilterLength,
                    pcTopicFilter ) );
 
-        /* Process incoming packet from the broker. Acknowledgment for subscription
-         * ( SUBACK ) will be received here. However after sending the subscribe, the
-         * client may receive a publish before it receives a subscribe ack. Since this
-         * demo is subscribing to the topic to which no one is publishing, probability
-         * of receiving publish message before subscribe ack is zero; but application
-         * must be ready to receive any packet. This demo uses MQTT_ProcessLoop to
-         * receive packet from network. */
+        /* Process the incoming packet from the broker. */
         xMQTTStatus = MQTT_ProcessLoop( pxMqttContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
 
         if( xMQTTStatus != MQTTSuccess )

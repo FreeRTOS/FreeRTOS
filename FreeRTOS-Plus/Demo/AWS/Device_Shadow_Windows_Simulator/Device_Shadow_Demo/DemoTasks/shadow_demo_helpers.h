@@ -34,7 +34,7 @@
 /**
  * @brief Establish a MQTT connection.
  *
- * @param[in] appCallback The callback function used to receive incoming
+ * @param[in] eventCallback The callback function used to receive incoming
  * publishes and incoming acks from MQTT library.
  *
  * @return The status of the final connection attempt.
@@ -63,7 +63,7 @@ BaseType_t xDisconnectMqttSession( void );
  *
  * @param[in] pcTopicFilter Pointer to the shadow topic buffer.
  * @param[in] usTopicFilterLength Indicates the length of the shadow
- * topic buffer.
+ * topic filter.
  *
  * @return pdPASS if SUBSCRIBE was successfully sent;
  * pdFAIL otherwise.
@@ -77,7 +77,7 @@ BaseType_t xSubscribeToTopic( const char * pcTopicFilter,
  *
  * @param[in] pcTopicFilter Pointer to the shadow topic buffer.
  * @param[in] usTopicFilterLength Indicates the length of the shadow
- * topic buffer.
+ * topic filter.
  *
  * @return pdPASS if UNSUBSCRIBE was successfully sent;
  * pdFAIL otherwise.

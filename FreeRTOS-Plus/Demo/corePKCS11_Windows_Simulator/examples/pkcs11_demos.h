@@ -46,7 +46,7 @@ void vPKCS11ObjectDemo( void );
  * PKCS #11 can be used to sign a message, and verify the integrity of a message
  * using private and public keys.
  *
- * This demo will also cover the "iot_pkcs11.h" functions, and how they can be
+ * This demo will also cover the "core_pkcs11.h" functions, and how they can be
  * used to make the PKCS #11 flow easier to use.
  *
  * Warning: This demo depends on the objects created in the objects demo.

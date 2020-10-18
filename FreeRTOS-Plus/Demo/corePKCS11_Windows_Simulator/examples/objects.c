@@ -30,8 +30,8 @@
 #include "stdio.h"
 
 /* PKCS #11 includes. */
-#include "iot_pkcs11_config.h"
-#include "iot_pkcs11.h"
+#include "core_pkcs11_config.h"
+#include "core_pkcs11.h"
 #include "pkcs11.h"
 
 /* mbed TLS includes. */
@@ -150,7 +150,7 @@ static void prvObjectImporting( void )
     CK_BYTE xSubject[] = "TestSubject";
 
 
-    /* The PKCS11_CertificateTemplate_t is a custom struct defined in "iot_pkcs11.h"
+    /* The PKCS11_CertificateTemplate_t is a custom struct defined in "core_pkcs11.h"
      * in order to make it easier to import a certificate. This struct will be
      * populated with the parameters necessary to import the certificate into the
      * Cryptoki library.

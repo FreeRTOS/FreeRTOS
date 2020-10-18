@@ -182,16 +182,16 @@
     <ClCompile Include="..\coreMQTT_Windows_Simulator\Common\demo_logging.c">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\source\iot_pkcs11.c">
+    <ClCompile Include="..\..\Source\corePKCS11\source\core_pkcs11.c">
       <Filter>corePKCS11</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\source\iot_pki_utils.c">
+    <ClCompile Include="..\..\Source\corePKCS11\source\core_pki_utils.c">
       <Filter>corePKCS11</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\source\portable\mbedtls\iot_pkcs11_mbedtls.c">
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\mbedtls\core_pkcs11_mbedtls.c">
       <Filter>corePKCS11</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\source\portable\windows\iot_pkcs11_pal.c">
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\windows\core_pkcs11_pal.c">
       <Filter>corePKCS11</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\aes.c">
@@ -560,13 +560,13 @@
     <ClInclude Include="core_mqtt_config.h">
       <Filter>coreMQTT</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\source\include\iot_pkcs11.h">
+    <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11.h">
       <Filter>corePKCS11\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\source\include\iot_pkcs11_pal.h">
+    <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11_pal.h">
       <Filter>corePKCS11\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\source\include\iot_pki_utils.h">
+    <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pki_utils.h">
       <Filter>corePKCS11\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\common.h">

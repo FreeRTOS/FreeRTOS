@@ -713,6 +713,9 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
         xResult = MQTT_ProcessLoop( pxMQTTContext, mqttexampleRECEIVE_LOOP_TIMEOUT_MS );
         configASSERT( xResult == MQTTSuccess );
 
+        /* Reset flag before checking suback responses. */
+        xFailedSubscribeToTopic = false;
+
         /* Check if the recent subscription request has been rejected. #xTopicFilterContext 
          * is updated in the event callback to reflect the status of the SUBACK
          * sent by the broker. It represents either the QoS level granted by the

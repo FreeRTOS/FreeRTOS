@@ -25,13 +25,13 @@
 
 
 /**
- * @file iot_pkcs11_config.h
+ * @file core_pkcs11_config.h
  * @brief PCKS#11 config options.
  */
 
 
-#ifndef _IOT_PKCS11_CONFIG_H_
-#define _IOT_PKCS11_CONFIG_H_
+#ifndef _CORE_PKCS11_CONFIG_H_
+#define _CORE_PKCS11_CONFIG_H_
 
 #include "FreeRTOS.h"
 
@@ -59,12 +59,12 @@
 #include "logging_stack.h"
 
 /**
- * @brief Malloc API used by iot_pkcs11.h
+ * @brief Malloc API used by core_pkcs11.h
  */
 #define PKCS11_MALLOC                                      pvPortMalloc
 
 /**
- * @brief Free API used by iot_pkcs11.h
+ * @brief Free API used by core_pkcs11.h
  */
 #define PKCS11_FREE                                        vPortFree
 
@@ -180,4 +180,4 @@
  */
 #define pkcs11configLABEL_ROOT_CERTIFICATE                 ( "Root Cert" )
 
-#endif /* _AWS_PKCS11_CONFIG_H_ include guard. */
+#endif /* _CORE_PKCS11_CONFIG_H_ include guard. */

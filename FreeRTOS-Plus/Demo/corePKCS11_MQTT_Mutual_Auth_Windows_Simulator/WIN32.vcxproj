@@ -165,10 +165,10 @@
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c" />
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\Application-Protocols\coreMQTT\source\core_mqtt.c" />
     <ClCompile Include="..\..\Source\Application-Protocols\platform\freertos\transport\src\tls_freertos_pkcs11.c" />
-    <ClCompile Include="..\..\Source\corePKCS11\source\iot_pkcs11.c" />
-    <ClCompile Include="..\..\Source\corePKCS11\source\iot_pki_utils.c" />
-    <ClCompile Include="..\..\Source\corePKCS11\source\portable\mbedtls\iot_pkcs11_mbedtls.c" />
-    <ClCompile Include="..\..\Source\corePKCS11\source\portable\windows\iot_pkcs11_pal.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\core_pkcs11.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\core_pki_utils.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\mbedtls\core_pkcs11_mbedtls.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\windows\core_pkcs11_pal.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\aes.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\aesni.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\arc4.c" />
@@ -292,9 +292,9 @@
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_serializer.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_state.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt.h" />
-    <ClInclude Include="..\..\Source\corePKCS11\source\include\iot_pkcs11.h" />
-    <ClInclude Include="..\..\Source\corePKCS11\source\include\iot_pkcs11_pal.h" />
-    <ClInclude Include="..\..\Source\corePKCS11\source\include\iot_pki_utils.h" />
+    <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11.h" />
+    <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11_pal.h" />
+    <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pki_utils.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\aes.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\aesni.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\arc4.h" />

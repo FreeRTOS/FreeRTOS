@@ -2,13 +2,13 @@
 
 ## Requirements
 1. GNU Arm Embedded Toolchain download [here](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads)
-3. qemu-arm-system downlaod [here](https://www.qemu.org/download)
+3. qemu-arm-system download [here](https://www.qemu.org/download)
 2. Make (tested on version 3.82)
 4. Linux OS (tested on Ubuntu 18.04)
 
 ## How to build
 Navigate with the command line to FreeRTOS/Demo/CORTEX\_M3\_MPS2\_QEMU\_GCC
-For a realease build run:
+For a release build run:
 
 ```
 $ export PATH=/path/to/arm/toolchain:$PATH
@@ -43,5 +43,5 @@ $ arm-none-eabi-gdb -q ./build/RTOSDemo.axf
 (gdb) c
 ```
 ## Demo
-This Demo implemets the blinky demo, the user should expect the word 
-"blinking" to be repeatedly prited on the screen
+This Demo implements the blinky demo, the user should expect the word 
+"blinking" to be repeatedly printed on the screen.

@@ -35,7 +35,7 @@ static void prvQueueSendTask( void *pvParameters );
 extern int _write(int file, char *ptr, int len);
 
 #define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
+#define mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define mainQUEUE_LENGTH					( 1 )
 #define mainQUEUE_SEND_FREQUENCY_MS			( 200 / portTICK_PERIOD_MS )
 /* The queue used by both tasks. */
@@ -122,7 +122,7 @@ const uint32_t ulExpectedValue = 100UL;
 		if( ulReceivedValue == ulExpectedValue )
 		{
 			_write(1, "blinking\n", 9);
-            vTaskDelay(1000);
+			vTaskDelay(1000);
 			ulReceivedValue = 0U;
 			ulRxEvents++;
 		}

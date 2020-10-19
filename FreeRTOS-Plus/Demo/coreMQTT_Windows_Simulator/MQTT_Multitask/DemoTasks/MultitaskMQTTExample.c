@@ -1667,7 +1667,7 @@ void prvPublishTask( void * pvParameters )
             }
         }
 
-        configASSERT( ( ulNotification & ( 1U < i ) ) == ( 1U << i ) );
+        configASSERT( ( ulNotification & ( 1U << i ) ) == ( 1U << i ) );
 
         vPortFree( pxContexts[ i ] );
         vPortFree( topicBuffers[ i ] );

@@ -402,6 +402,27 @@ static void setOptionalConfigurations( SSLContext_t * pSslContext,
                         mbedtlsLowLevelCodeOrDefault( mbedtlsError ) ) );
         }
     }
+
+    /* Set Maximum Fragment Length if enabled. */
+    #ifdef MBEDTLS_SSL_MAX_FRAGMENT_LENGTH
+    if( 0 == mbedtlsError )
+    {
+        /* Enable the max fragment extension. 4096 bytes is currently the largest fragment size permitted.
+         * See RFC 8449 https://tools.ietf.org/html/rfc8449 for more information.
+         *
+         * Smaller values can be found in "mbedtls/include/ssl.h".
+         */
+        mbedtlsError = mbedtls_ssl_conf_max_frag_len( &( pSslContext->config ), MBEDTLS_SSL_MAX_FRAG_LEN_4096 );
+
+        if( mbedtlsError != 0 )
+        {
+            LogError( ( "Failed to maximum fragment length extension: mbedTLSError= %s : %s.",
+                        mbedtlsHighLevelCodeOrDefault( mbedtlsError ),
+                        mbedtlsLowLevelCodeOrDefault( mbedtlsError ) ) );
+        }
+    }
+    #endif
+
 }
 /*-----------------------------------------------------------*/
 

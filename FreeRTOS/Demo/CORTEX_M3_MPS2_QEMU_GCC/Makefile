@@ -26,10 +26,11 @@ LDFLAGS = -T ./scripts/mps2_m3.ld
 
 CFLAGS = -nostartfiles -mthumb -mcpu=cortex-m3
 CFLAGS += -Wno-builtin-declaration-mismatch -Werror
+
 ifeq ($(DEBUG), 1)
-    CFLAGS += -ggdb -O0
+    CFLAGS += -ggdb -Og
 else
-CFLAGS += -O3
+    CFLAGS += -O3 -fstrict-aliasing -Wstrict-aliasing
 endif
 
 INCLUDE_DIRS := -I.
@@ -53,7 +54,7 @@ ${BUILD_DIR}/%.o : %.c Makefile
 	$(CC) $(CFLAGS) -MMD -c $< -o $@
 
 $(BUILD_DIR)/$(BIN) : $(OBJ_FILES)
-	$(CC)  -ffunction-sections -fdata-sections  $(CFLAGS) $(LDFLAGS)   $+ -o $(@)
+	$(CC) -ffunction-sections -fdata-sections $(CFLAGS) $(LDFLAGS) $+ -o $(@)
 
 clean:
 	-rm -rf build

@@ -149,6 +149,7 @@
     <ClCompile Include="..\..\..\FreeRTOS\Source\stream_buffer.c" />
     <ClCompile Include="..\..\..\FreeRTOS\Source\tasks.c" />
     <ClCompile Include="..\..\..\FreeRTOS\Source\timers.c" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Logging\logging.h" />
     <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Logging\logging_levels.h" />
     <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Logging\logging_stack.h" />
     <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\aes.c" />

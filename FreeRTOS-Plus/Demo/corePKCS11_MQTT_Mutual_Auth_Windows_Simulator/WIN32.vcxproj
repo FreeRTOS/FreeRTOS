@@ -283,6 +283,7 @@
     <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\IPTraceMacroDefaults.h" />
     <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\NetworkBufferManagement.h" />
     <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\NetworkInterface.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Logging\logging.h" />
     <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Logging\logging_levels.h" />
     <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Logging\logging_stack.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\mbedtls\mbedtls_error.h" />

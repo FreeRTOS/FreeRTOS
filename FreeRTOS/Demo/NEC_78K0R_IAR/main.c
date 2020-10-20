@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS Kernel V10.4.1
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -150,11 +150,11 @@ short main( void )
 
 	/* Create the RegTest tasks as described at the top of this file. */
 	xTaskCreate( vRegTest1, "Reg1", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
-	xTaskCreate( vRegTest2, "Reg2", configMINIMAL_STACK_SIZE, NULL, 0, NULL );	
-	
+	xTaskCreate( vRegTest2, "Reg2", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
+
 	/* Create the button push task as described at the top of this file. */
-	xTaskCreate( vButtonTask, "Button", configMINIMAL_STACK_SIZE, NULL, mainBUTTON_PRIORITY, NULL );		
-	
+	xTaskCreate( vButtonTask, "Button", configMINIMAL_STACK_SIZE, NULL, mainBUTTON_PRIORITY, NULL );
+
 	/* Create the 'check' task as described at the top of this file. */
 	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, ( void* )mainCHECK_PARAMETER_VALUE, mainCHECK_TASK_PRIORITY, NULL );
 
@@ -167,7 +167,7 @@ short main( void )
 		vCreateBlockTimeTasks();
 	}
 	#endif
-	
+
 	/* Finally start the scheduler running. */
 	vTaskStartScheduler();
 
@@ -218,24 +218,24 @@ TickType_t xToggleRate = mainNO_ERROR_TOGGLE_PERIOD, xLastWakeTime;
 			{
 				xToggleRate = mainERROR_TOGGLE_PERIOD;
 			}
-		
+
 			if( xAreSemaphoreTasksStillRunning() != pdTRUE)
 			{
 				xToggleRate = mainERROR_TOGGLE_PERIOD;
 			}
-			
+
 			if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 			{
 				xToggleRate = mainERROR_TOGGLE_PERIOD;
-			}	
-		
+			}
+
 			if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 			{
 				xToggleRate = mainERROR_TOGGLE_PERIOD;
-			}			
+			}
 		}
 		#endif
-		
+
 		/* Toggle the LED.  The toggle rate will depend on whether or not an
 		error has been found in any tasks. */
 		mainLED_0 = !mainLED_0;
@@ -281,24 +281,24 @@ unsigned char ucResetFlag = RESF;
 		   X1  and X2  pin in crystal resonator mode
 		   High speed oszillation frequency 10MHz < fMX <= 20MHz */
 		CMC   = 0x41;
-		
+
 		/* Set oscillation stabilization time. */
 		OSTS  = 0x07;
-		
+
 		/* Set speed mode: fMX > 10MHz for Flash memory high speed operation. */
 		OSMC  = 0x01;
-		
+
 		/* Start up X1 oscillator operation
 		   Internal high-speed oscillator operating. */
 		MSTOP = 0;
-		
+
 		/* Check oscillation stabilization time status. */
 		while(OSTC < 0x07)
 		{
 			/* Wait until X1 clock stabilization time. */
 			portNOP();
 		}
-		
+
 		/* Switch CPU clock to X1 oscillator. */
 		MCM0 = 1;
 		while(MCS != 1)
@@ -309,10 +309,10 @@ unsigned char ucResetFlag = RESF;
 
 		/* Stop the internal high-speed oscillator operation. */
 		HIOSTOP = 1;
-		
+
 		/* Stop the XT1 oscillator operation. */
 		XTSTOP  = 1;
-		
+
 		/* Operating frequency f = fx
 		   Change clock generator setting, if necessary. */
 		CKC &= 0xF8;
@@ -320,31 +320,31 @@ unsigned char ucResetFlag = RESF;
 		/* From here onwards the X1 oscillator is supplied to the CPU. */
 	}
 	#endif
-	
+
 	/* LED port initialization - set port register. */
 	P7  = 0x80;
-	
+
 	/* Set port mode register. */
 	PM7 = 0x3F;
-	
+
 	/* Switch pin initialization - enable pull-up resistor. */
 	PU12_bit.no0  = 1;
 
 	/* INTP0 is used by the button on the target board. */
-	
+
 	/* INTP0 disable. */
-	PMK0 = 1;			
-	
+	PMK0 = 1;
+
 	/* INTP0 IF clear. */
-	PIF0 = 0;			
+	PIF0 = 0;
 	EGN0_bit.no0  = 1;
-	
+
 	/* INTP0 priority low. */
 	PPR10 = 0;
 	PPR00 = 1;
-	
+
 	/* Enable ext. INTP0 interrupt */
-	PMK0  = 0;	
+	PMK0  = 0;
 
 	return pdTRUE;
 }
@@ -362,8 +362,11 @@ void vRegTestError( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( void )
+void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName )
 {
+	( void ) xTask;
+	( void ) pcTaskName;
+
 	/* This will get called if an overflow is detected in the stack of a task.
 	Inspect pxCurrentTCB to see which was the offending task. */
 	for( ;; );

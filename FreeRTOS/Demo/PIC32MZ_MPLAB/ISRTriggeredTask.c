@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS Kernel V10.4.1
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -55,7 +55,7 @@
 #include "semphr.h"
 
 /* Standard demo includes. */
-#include "ParTest.h"
+#include "partest.h"
 
 /*-----------------------------------------------------------*/
 

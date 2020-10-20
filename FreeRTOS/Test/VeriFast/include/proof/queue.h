@@ -305,7 +305,6 @@ ensures
         }
         drop_drop(1, j, elements);
         nth_drop2(elements, i);
-        open buffer(buffer + (i+1) * M, (N-1-i), M, _);
     }
 }
 

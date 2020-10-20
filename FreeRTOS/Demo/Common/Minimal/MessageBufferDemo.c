@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS Kernel V10.4.1
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -192,6 +192,17 @@ UBaseType_t uxOriginalPriority;
 	/* In case configASSERT() is not define. */
 	( void ) xExpectedSpace;
 	( void ) xNextLength;
+
+	/* Try sending more bytes than possible, first using the FromISR version, then
+	with an infinite block time to ensure this task does not lock up. */
+	xReturned = xMessageBufferSendFromISR( xMessageBuffer, ( void * ) pucData, mbMESSAGE_BUFFER_LENGTH_BYTES + sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ), NULL );
+	configASSERT( xReturned == ( size_t ) 0 );
+	/* In case configASSERT() is not defined. */
+	( void ) xReturned;
+	xReturned = xMessageBufferSend( xMessageBuffer, ( void * ) pucData, mbMESSAGE_BUFFER_LENGTH_BYTES + sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ), portMAX_DELAY );
+	configASSERT( xReturned == ( size_t ) 0 );
+	/* In case configASSERT() is not defined. */
+	( void ) xReturned;
 
 	/* The buffer is 50 bytes long.  When an item is added to the buffer an
 	additional 4 bytes are added to hold the item's size.  That means adding

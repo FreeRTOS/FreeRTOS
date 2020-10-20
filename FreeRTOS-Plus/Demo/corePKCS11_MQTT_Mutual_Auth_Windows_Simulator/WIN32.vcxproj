@@ -164,6 +164,7 @@
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c" />
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c" />
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\Application-Protocols\coreMQTT\source\core_mqtt.c" />
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\Logging\logging.c" />
     <ClCompile Include="..\..\Source\Application-Protocols\platform\freertos\transport\src\tls_freertos_pkcs11.c" />
     <ClCompile Include="..\..\Source\corePKCS11\source\core_pkcs11.c" />
     <ClCompile Include="..\..\Source\corePKCS11\source\core_pki_utils.c" />
@@ -255,7 +256,6 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509_crt.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509_csr.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\xtea.c" />
-    <ClCompile Include="..\coreMQTT_Windows_Simulator\Common\demo_logging.c" />
     <ClCompile Include="DemoTasks\MutualAuthMQTTExample.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>

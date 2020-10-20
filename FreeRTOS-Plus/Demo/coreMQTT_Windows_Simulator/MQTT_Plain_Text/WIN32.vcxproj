@@ -163,7 +163,7 @@
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c" />
-    <ClCompile Include="..\Common\demo_logging.c" />
+    <ClCompile Include="..\..\..\..\..\FreeRTOS-Plus\Source\logging.c" />
     <ClCompile Include="..\Common\main.c" />
     <ClCompile Include="DemoTasks\PlainTextMQTTExample.c" />
   </ItemGroup>

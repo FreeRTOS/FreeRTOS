@@ -106,7 +106,7 @@
     <ClCompile Include="..\..\..\..\FreeRTOS\Source\stream_buffer.c">
       <Filter>FreeRTOS\Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\FreeRTOS-Plus\Source\logging.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\Logging\logging.c" />
     <ClCompile Include="..\Common\main.c" />
     <ClCompile Include="DemoTasks\KeepAliveMQTTExample.c">
       <Filter>DemoTasks</Filter>

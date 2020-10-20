@@ -373,7 +373,7 @@
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\xtea.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\FreeRTOS-Plus\Source\logging.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\Logging\logging.c" />
     <ClCompile Include="..\Common\main.c" />
     <ClCompile Include="DemoTasks\BasicTLSMQTTExample.c">
       <Filter>DemoTasks</Filter>

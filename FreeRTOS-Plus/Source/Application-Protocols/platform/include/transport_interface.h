@@ -90,7 +90,7 @@
  * <br><br>
  * <b>Example code:</b>
  * @code{c}
- * int32_t myNetworkRecvImplementation( const NetworkContext_t * pNetworkContext,
+ * int32_t myNetworkRecvImplementation( NetworkContext_t * pNetworkContext,
  *                                      void * pBuffer,
  *                                      size_t bytesToRecv )
  * {
@@ -122,7 +122,7 @@
  * <br><br>
  * <b>Example code:</b>
  * @code{c}
- * int32_t myNetworkSendImplementation( const NetworkContext_t * pNetworkContext,
+ * int32_t myNetworkSendImplementation( NetworkContext_t * pNetworkContext,
  *                                      const void * pBuffer,
  *                                      size_t bytesToSend )
  * {

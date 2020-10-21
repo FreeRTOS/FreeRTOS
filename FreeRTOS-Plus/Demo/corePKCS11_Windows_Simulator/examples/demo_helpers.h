@@ -25,7 +25,7 @@
 #ifndef _DEMO_HELPER_FUNCTIONS_
 #define _DEMO_HELPER_FUNCTIONS_
 
-#include "iot_pkcs11.h"
+#include "core_pkcs11.h"
 #include "threading_alt.h"
 #include "mbedtls/pk.h"
 

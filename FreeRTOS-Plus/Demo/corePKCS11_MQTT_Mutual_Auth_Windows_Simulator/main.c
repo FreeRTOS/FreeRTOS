@@ -49,7 +49,7 @@
 #include "demo_config.h"
 
 /* Demo logging includes. */
-#include "demo_logging.h"
+#include "logging.h"
 
 /*
  * Prototypes for the demos that can be started from this project.  Note the

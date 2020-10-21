@@ -46,7 +46,7 @@
 #include "FreeRTOS_Sockets.h"
 
 /* Demo logging includes. */
-#include "demo_logging.h"
+#include "logging.h"
 
 /* Demo Specific configs. */
 #include "demo_config.h"

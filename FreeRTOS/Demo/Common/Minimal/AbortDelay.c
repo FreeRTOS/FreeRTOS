@@ -294,23 +294,29 @@ BaseType_t xReturned;
 static void prvTestAbortingTaskDelayUntil( void )
 {
 TickType_t xTimeAtStart, xLastBlockTime;
+BaseType_t xReturned;
 
 	/* Note the time before the delay so the length of the delay is known. */
 	xTimeAtStart = xTaskGetTickCount();
 
 	/* Take a copy of the time as it is updated in the call to
-	vTaskDelayUntil() but its original value is needed to determine the actual
+	xTaskDelayUntil() but its original value is needed to determine the actual
 	time spend in the Blocked state. */
 	xLastBlockTime = xTimeAtStart;
 
 	/* This first delay should just time out. */
-	vTaskDelayUntil( &xLastBlockTime, xMaxBlockTime );
+	xReturned = xTaskDelayUntil( &xLastBlockTime, xMaxBlockTime );
 	prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
+	configASSERT( xReturned == pdTRUE );
+	/* Remove compiler warning about value being set but not used in the case
+	configASSERT() is not defined. */
+	( void ) xReturned;
 
 	/* This second delay should be aborted by the primary task half way
 	through.  Again take a copy of the time as it is updated in the call to
 	vTaskDelayUntil() buts its original value is needed to determine the amount
-	of time actually spent in the Blocked state. */
+	of time actually spent in the Blocked state.  This uses vTaskDelayUntil()
+	in place of xTaskDelayUntil() for test coverage. */
 	xTimeAtStart = xTaskGetTickCount();
 	xLastBlockTime = xTimeAtStart;
 	vTaskDelayUntil( &xLastBlockTime, xMaxBlockTime );
@@ -319,8 +325,12 @@ TickType_t xTimeAtStart, xLastBlockTime;
 	/* As with the other tests, the third block period should not time out. */
 	xTimeAtStart = xTaskGetTickCount();
 	xLastBlockTime = xTimeAtStart;
-	vTaskDelayUntil( &xLastBlockTime, xMaxBlockTime );
+	xReturned = xTaskDelayUntil( &xLastBlockTime, xMaxBlockTime );
 	prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
+	configASSERT( xReturned == pdTRUE );
+	/* Remove compiler warning about value being set but not used in the case
+	configASSERT() is not defined. */
+	( void ) xReturned;
 }
 /*-----------------------------------------------------------*/
 

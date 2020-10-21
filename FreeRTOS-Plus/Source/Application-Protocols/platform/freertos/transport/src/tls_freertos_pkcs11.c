@@ -48,10 +48,10 @@
 #include "mbedtls_error.h"
 
 /* PKCS #11 includes. */
-#include "iot_pkcs11_config.h"
-#include "iot_pkcs11.h"
+#include "core_pkcs11_config.h"
+#include "core_pkcs11.h"
 #include "pkcs11.h"
-#include "iot_pki_utils.h"
+#include "core_pki_utils.h"
 
 /*-----------------------------------------------------------*/
 
@@ -82,18 +82,6 @@ static const char * pNoLowLevelMbedTlsCodeStr = "<No-Low-Level-Code>";
 #define mbedtlsLowLevelCodeOrDefault( mbedTlsCode )        \
     ( mbedtls_strerror_lowlevel( mbedTlsCode ) != NULL ) ? \
     mbedtls_strerror_lowlevel( mbedTlsCode ) : pNoLowLevelMbedTlsCodeStr
-
-/*-----------------------------------------------------------*/
-
-/**
- * @brief mbed TLS entropy context for generation of random numbers.
- */
-static mbedtls_entropy_context entropyContext;
-
-/**
- * @brief mbed TLS CTR DRBG context for generation of random numbers.
- */
-static mbedtls_ctr_drbg_context ctrDrgbContext;
 
 /*-----------------------------------------------------------*/
 
@@ -143,9 +131,9 @@ static TlsTransportStatus_t initMbedtls( void );
  *
  * @return Zero on success.
  */
-static int generateRandomBytes( void * pvCtx,
-                                unsigned char * pucRandom,
-                                size_t xRandomLength );
+static int32_t generateRandomBytes( void * pvCtx,
+                                    unsigned char * pucRandom,
+                                    size_t xRandomLength );
 
 /**
  * @brief Helper for reading the specified certificate object, if present,
@@ -187,16 +175,16 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx );
  *
  * @return Zero on success.
  */
-static int privateKeySigningCallback( void * pvContext,
-                                      mbedtls_md_type_t xMdAlg,
-                                      const unsigned char * pucHash,
-                                      size_t xHashLen,
-                                      unsigned char * pucSig,
-                                      size_t * pxSigLen,
-                                      int ( * piRng )( void *,
-                                                       unsigned char *,
-                                                       size_t ),
-                                      void * pvRng );
+static int32_t privateKeySigningCallback( void * pvContext,
+                                          mbedtls_md_type_t xMdAlg,
+                                          const unsigned char * pucHash,
+                                          size_t xHashLen,
+                                          unsigned char * pucSig,
+                                          size_t * pxSigLen,
+                                          int32_t ( * piRng )( void *,
+                                                               unsigned char *,
+                                                               size_t ),
+                                          void * pvRng );
 
 
 /*-----------------------------------------------------------*/
@@ -234,7 +222,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
                                       const NetworkCredentials_t * pNetworkCredentials )
 {
     TlsTransportStatus_t returnStatus = TLS_TRANSPORT_SUCCESS;
-    int mbedtlsError = 0;
+    int32_t mbedtlsError = 0;
     CK_RV xResult = CKR_OK;
 
     configASSERT( pNetworkContext != NULL );
@@ -331,9 +319,9 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
             }
             else
             {
-                mbedtls_ssl_conf_own_cert( &( pNetworkContext->sslContext.config ),
-                                           &( pNetworkContext->sslContext.clientCert ),
-                                           &( pNetworkContext->sslContext.privKey ) );
+                ( void ) mbedtls_ssl_conf_own_cert( &( pNetworkContext->sslContext.config ),
+                                                    &( pNetworkContext->sslContext.clientCert ),
+                                                    &( pNetworkContext->sslContext.privKey ) );
             }
         }
     }
@@ -343,7 +331,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
         /* Include an application protocol list in the TLS ClientHello
          * message. */
         mbedtlsError = mbedtls_ssl_conf_alpn_protocols( &( pNetworkContext->sslContext.config ),
-                                                        ( const char ** ) &( pNetworkCredentials->pAlpnProtos ) );
+                                                        pNetworkCredentials->pAlpnProtos );
 
         if( mbedtlsError != 0 )
         {
@@ -372,8 +360,14 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
         else
         {
             /* Set the underlying IO for the TLS connection. */
+
+            /* MISRA Rule 11.2 flags the following line for casting the second
+             * parameter to void *. This rule is suppressed because
+             * #mbedtls_ssl_set_bio requires the second parameter as void *.
+             */
+            /* coverity[misra_c_2012_rule_11_2_violation] */
             mbedtls_ssl_set_bio( &( pNetworkContext->sslContext.context ),
-                                 pNetworkContext->tcpSocket,
+                                 ( void * ) pNetworkContext->tcpSocket,
                                  mbedtls_platform_send,
                                  mbedtls_platform_recv,
                                  NULL );
@@ -398,6 +392,27 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
             }
         }
     }
+
+    /* Set Maximum Fragment Length if enabled. */
+    #ifdef MBEDTLS_SSL_MAX_FRAGMENT_LENGTH
+    if( returnStatus == TLS_TRANSPORT_SUCCESS )
+    {
+        /* Enable the max fragment extension. 4096 bytes is currently the largest fragment size permitted.
+         * See RFC 8449 https://tools.ietf.org/html/rfc8449 for more information.
+         *
+         * Smaller values can be found in "mbedtls/include/ssl.h".
+         */
+        mbedtlsError = mbedtls_ssl_conf_max_frag_len( &( pNetworkContext->sslContext.config ), MBEDTLS_SSL_MAX_FRAG_LEN_4096 );
+
+        if( mbedtlsError != 0 )
+        {
+            LogError( ( "Failed to maximum fragment length extension: mbedTLSError= %s : %s.",
+                        mbedtlsHighLevelCodeOrDefault( mbedtlsError ),
+                        mbedtlsLowLevelCodeOrDefault( mbedtlsError ) ) );
+            returnStatus = TLS_TRANSPORT_INTERNAL_ERROR;
+        }
+    }
+    #endif
 
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
@@ -453,9 +468,9 @@ static TlsTransportStatus_t initMbedtls( void )
 
 /*-----------------------------------------------------------*/
 
-static int generateRandomBytes( void * pvCtx,
-                                unsigned char * pucRandom,
-                                size_t xRandomLength )
+static int32_t generateRandomBytes( void * pvCtx,
+                                    unsigned char * pucRandom,
+                                    size_t xRandomLength )
 {
     /* Must cast from void pointer to conform to mbed TLS API. */
     SSLContext_t * pxCtx = ( SSLContext_t * ) pvCtx;
@@ -657,19 +672,19 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx )
 
 /*-----------------------------------------------------------*/
 
-static int privateKeySigningCallback( void * pvContext,
-                                      mbedtls_md_type_t xMdAlg,
-                                      const unsigned char * pucHash,
-                                      size_t xHashLen,
-                                      unsigned char * pucSig,
-                                      size_t * pxSigLen,
-                                      int ( * piRng )( void *,
-                                                       unsigned char *,
-                                                       size_t ),
-                                      void * pvRng )
+static int32_t privateKeySigningCallback( void * pvContext,
+                                          mbedtls_md_type_t xMdAlg,
+                                          const unsigned char * pucHash,
+                                          size_t xHashLen,
+                                          unsigned char * pucSig,
+                                          size_t * pxSigLen,
+                                          int32_t ( * piRng )( void *,
+                                                               unsigned char *,
+                                                               size_t ),
+                                          void * pvRng )
 {
     CK_RV xResult = CKR_OK;
-    int lFinalResult = 0;
+    int32_t lFinalResult = 0;
     SSLContext_t * pxTLSContext = ( SSLContext_t * ) pvContext;
     CK_MECHANISM xMech = { 0 };
     CK_BYTE xToBeSigned[ 256 ];
@@ -778,6 +793,10 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
         LogError( ( "pRootCa cannot be NULL." ) );
         returnStatus = TLS_TRANSPORT_INVALID_PARAMETER;
     }
+    else
+    {
+        /* Empty else for MISRA 15.7 compliance. */
+    }
 
     /* Establish a TCP connection with the server. */
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
@@ -812,9 +831,10 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     /* Clean up on failure. */
     if( returnStatus != TLS_TRANSPORT_SUCCESS )
     {
-        if( pNetworkContext->tcpSocket != FREERTOS_INVALID_SOCKET )
+        if( ( pNetworkContext != NULL ) &&
+            ( pNetworkContext->tcpSocket != FREERTOS_INVALID_SOCKET ) )
         {
-            FreeRTOS_closesocket( pNetworkContext->tcpSocket );
+            ( void ) FreeRTOS_closesocket( pNetworkContext->tcpSocket );
         }
     }
     else
@@ -867,10 +887,6 @@ void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
 
     /* Free mbed TLS contexts. */
     sslContextFree( &( pNetworkContext->sslContext ) );
-
-    /* Free the contexts for random number generation. */
-    mbedtls_ctr_drbg_free( &ctrDrgbContext );
-    mbedtls_entropy_free( &entropyContext );
 
     /* Clear the mutex functions for mbed TLS thread safety. */
     mbedtls_threading_free_alt();

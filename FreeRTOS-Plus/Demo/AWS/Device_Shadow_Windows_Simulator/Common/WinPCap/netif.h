@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.4.1
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.3.0
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -25,24 +25,28 @@
  * 1 tab == 4 spaces!
  */
 
-#ifndef DEMO_LOGGING_H
-#define DEMO_LOGGING_H
+#ifndef NET_IF_H
+#define NET_IF_H
 
 /*
- * Initialise a logging system that can be used from FreeRTOS tasks and Win32
- * threads.  Do not call printf() directly while the scheduler is running.
- *
- * Set xLogToStdout, xLogToFile and xLogToUDP to either pdTRUE or pdFALSE to
- * lot to stdout, a disk file and a UDP port respectively.
- *
- * If xLogToUDP is pdTRUE then ulRemoteIPAddress and usRemotePort must be set
- * to the IP address and port number to which UDP log messages will be sent.
+ * Send uip_len bytes from uip_buf to the network interface selected by the 
+ * configNETWORK_INTERFACE_TO_USE constant (defined in FreeRTOSConfig.h). 
  */
-void vLoggingInit(	BaseType_t xLogToStdout,
-					BaseType_t xLogToFile,
-					BaseType_t xLogToUDP,
-					uint32_t ulRemoteIPAddress,
-					uint16_t usRemotePort );
+void vNetifTx( void );
 
-#endif /* DEMO_LOGGING_H */
+/*
+ * Receive bytes from the network interface selected by the 
+ * configNETWORK_INTERFACE_TO_USE constant (defined in FreeRTOSConfig.h).  The
+ * bytes are placed in uip_buf.  The number of bytes copied into uip_buf is
+ * returned.
+ */
+UBaseType_t uxNetifRx( void );
 
+/*
+ * Prepare a packet capture session.  This will print out all the network 
+ * interfaces available, and the one actually used is set by the 
+ * configNETWORK_INTERFACE_TO_USE constant that is defined in 
+ * FreeRTOSConfig.h. */
+BaseType_t xNetifInit( void );
+
+#endif /* NET_IF_H */

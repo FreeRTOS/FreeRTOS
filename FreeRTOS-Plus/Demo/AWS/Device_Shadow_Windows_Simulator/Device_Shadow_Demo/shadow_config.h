@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.4.1
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * AWS IoT Device SDK for Embedded C V202009.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -18,31 +18,34 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
- *
- * 1 tab == 4 spaces!
  */
 
-#ifndef DEMO_LOGGING_H
-#define DEMO_LOGGING_H
+#ifndef SHADOW_CONFIG_H
+#define SHADOW_CONFIG_H
 
-/*
- * Initialise a logging system that can be used from FreeRTOS tasks and Win32
- * threads.  Do not call printf() directly while the scheduler is running.
- *
- * Set xLogToStdout, xLogToFile and xLogToUDP to either pdTRUE or pdFALSE to
- * lot to stdout, a disk file and a UDP port respectively.
- *
- * If xLogToUDP is pdTRUE then ulRemoteIPAddress and usRemotePort must be set
- * to the IP address and port number to which UDP log messages will be sent.
+/**************************************************/
+/******* DO NOT CHANGE the following order ********/
+/**************************************************/
+
+/* Logging related header files are required to be included in the following order:
+ * 1. Include the header file "logging_levels.h".
+ * 2. Define LIBRARY_LOG_NAME and  LIBRARY_LOG_LEVEL.
+ * 3. Include the header file "logging_stack.h".
  */
-void vLoggingInit(	BaseType_t xLogToStdout,
-					BaseType_t xLogToFile,
-					BaseType_t xLogToUDP,
-					uint32_t ulRemoteIPAddress,
-					uint16_t usRemotePort );
 
-#endif /* DEMO_LOGGING_H */
+/* Include header that defines log levels. */
+#include "logging_levels.h"
 
+/* Configure name and log level for the Shadow library. */
+#ifndef LIBRARY_LOG_NAME
+    #define LIBRARY_LOG_NAME     "SHADOW"
+#endif
+#ifndef LIBRARY_LOG_LEVEL
+    #define LIBRARY_LOG_LEVEL    LOG_INFO
+#endif
+
+#include "logging_stack.h"
+
+/************ End of logging configuration ****************/
+
+#endif /* ifndef SHADOW_CONFIG_H */

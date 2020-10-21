@@ -47,6 +47,9 @@
 
 /************ End of logging configuration ****************/
 
+/* FreeRTOS+TCP include. */
+#include "FreeRTOS_Sockets.h"
+
 /* Transport interface include. */
 #include "transport_interface.h"
 

@@ -573,7 +573,7 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
         pxNetworkCredentials->pAlpnProtos = pcAlpnProtocols;
     #endif /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
 
-    pxNetworkCredentials->disableSni = pdDISABLE_SNI;
+    pxNetworkCredentials->disableSni = democonfigDISABLE_SNI;
     /* Set the credentials for establishing a TLS connection. */
     pxNetworkCredentials->pRootCa = ( const unsigned char * ) democonfigROOT_CA_PEM;
     pxNetworkCredentials->rootCaSize = sizeof( democonfigROOT_CA_PEM );

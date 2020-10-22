@@ -2,6 +2,8 @@ Instructions below are for setting up a local Mosquitto broker that supports
 TLS mutual authentication for use with this MQTT demo.
 1. Generate certificates with OpenSSL.
     a. Download and install [Git For Windows](https://git-scm.com/download/win).
+       Most of you may already have this installed. Git For Windows provides an
+       OpenSSL binary for generating certificates.
     b. Open PowerShell and enter the following commands to generate TLS certificates:
       i.    cd "C:\Program Files\Git\usr\bin" # If Git is installed elsewhere, update the path.
       ii.   mkdir $home\Documents\certs

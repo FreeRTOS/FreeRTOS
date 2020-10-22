@@ -76,6 +76,9 @@
  * Settings/Custom Endpoint, or using the describe-endpoint REST API (with
  * AWS CLI command line tool).
  *
+ * @note If you would like to setup an MQTT broker for running this demo,
+ * please see `mqtt_broker_setup.txt`.
+ *
  * #define democonfigMQTT_BROKER_ENDPOINT    "...insert here..."
  */
 

@@ -50,6 +50,7 @@
 /* Standard includes. */
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 /* Kernel includes. */
 #include "FreeRTOS.h"
@@ -565,6 +566,9 @@ void vStartShadowDemo( void )
 void prvShadowDemoTask( void * pvParameters )
 {
     BaseType_t demoStatus = pdPASS;
+
+    /* Remove compiler warnings about unused parameters. */
+    ( void ) pvParameters;
 
     /* A buffer containing the update document. It has static duration to prevent
      * it from being placed on the call stack. */

@@ -42,7 +42,7 @@ TLS mutual authentication for use with this MQTT demo.
    communicate through Windows Firewall for avoiding unwanted network traffic
    to your machine.
 9. After verifying that a Mosquitto broker is running successfully, update
-   the config democonfigMQTT_BROKER_ENDPOINT to the local IP address of your
+   the config `democonfigMQTT_BROKER_ENDPOINT` to the local IP address of your
    Windows host machine. Please note that "localhost" or address "127.0.0.1"
    will not work as this example is running on a Windows Simulator and not on a
    Windows host natively. Also note that, if the Windows host is using a

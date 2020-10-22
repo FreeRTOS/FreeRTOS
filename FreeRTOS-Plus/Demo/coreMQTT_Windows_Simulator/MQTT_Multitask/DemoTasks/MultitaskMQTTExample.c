@@ -145,7 +145,7 @@
 /**
  * @brief Timeout for MQTT_ProcessLoop function in milliseconds.
  */
-#define mqttexamplePROCESS_LOOP_TIMEOUT_MS           ( 200U )
+#define mqttexamplePROCESS_LOOP_TIMEOUT_MS           ( 20U )
 
 /**
  * @brief The maximum time interval in seconds which is allowed to elapse
@@ -643,6 +643,11 @@ static uint32_t prvGetTimeMs( void );
 static MQTTContext_t globalMqttContext;
 
 /**
+ * @brief Global Network context.
+ */
+static NetworkContext_t xNetworkContext;
+
+/**
  * @brief List of operations that are awaiting an ack from the broker.
  */
 static AckInfo_t pxPendingAcks[ mqttexamplePENDING_ACKS_MAX_SIZE ];
@@ -666,11 +671,6 @@ static CommandContext_t xResubscribeContext;
  * @brief Queue for main task to handle MQTT operations.
  */
 static QueueHandle_t xCommandQueue;
-
-/**
- * @brief Response queue for prvPublishTask.
- */
-static QueueHandle_t xPublisherResponseQueue;
 
 /**
  * @brief Response queue for prvSubscribeTask.
@@ -700,7 +700,7 @@ static TaskHandle_t xSubscribeTask;
 /**
  * @brief The network buffer must remain valid for the lifetime of the MQTT context.
  */
-static uint8_t buffer[ mqttexampleNETWORK_BUFFER_SIZE ];
+static uint8_t pcNetworkBuffer[ mqttexampleNETWORK_BUFFER_SIZE ];
 
 /**
  * @brief Global entry time into the application to use as a reference timestamp
@@ -736,7 +736,7 @@ static MQTTStatus_t prvMQTTInit( MQTTContext_t * pxMQTTContext,
     MQTTFixedBuffer_t xNetworkBuffer;
 
     /* Fill the values for network buffer. */
-    xNetworkBuffer.pBuffer = buffer;
+    xNetworkBuffer.pBuffer = pcNetworkBuffer;
     xNetworkBuffer.size = mqttexampleNETWORK_BUFFER_SIZE;
 
     /* Fill in Transport Interface send and receive function pointers. */
@@ -749,7 +749,7 @@ static MQTTStatus_t prvMQTTInit( MQTTContext_t * pxMQTTContext,
         xTransport.recv = Plaintext_FreeRTOS_recv;
     #endif
 
-        /* Initialize MQTT library. */
+    /* Initialize MQTT library. */
     return MQTT_Init( pxMQTTContext, &xTransport, prvGetTimeMs, prvEventCallback, &xNetworkBuffer );
 }
 
@@ -805,6 +805,7 @@ static MQTTStatus_t prvMQTTConnect( MQTTContext_t * pxMQTTContext,
 static void prvResumeSession( bool xSessionPresent )
 {
     MQTTStatus_t xResult;
+
     /* Resend publishes if session is present. NOTE: It's possible that some
      * of the operations that were in progress during the network interruption
      * were subscribes. In that case, we would want to mark those operations
@@ -835,6 +836,7 @@ static void prvResumeSession( bool xSessionPresent )
             packetId = MQTT_PublishToResend( &globalMqttContext, &cursor );
         }
     }
+
     /* If we wanted to resume a session but none existed with the broker, we
      * should mark all in progress operations as errors so that the tasks that
      * created them can try again. Also, we will resubscribe to the filters in
@@ -933,7 +935,7 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
         /* Establish a TCP connection with the MQTT broker. This example connects to
          * the MQTT broker as specified in democonfigMQTT_BROKER_ENDPOINT and
          * democonfigMQTT_BROKER_PORT at the top of this file. */
-        LogInfo( ( "Create a TCP connection to %s:%d.",
+        LogInfo( ( "Creating a TCP connection to %s:%d.",
                    democonfigMQTT_BROKER_ENDPOINT,
                    democonfigMQTT_BROKER_PORT ) );
 
@@ -944,14 +946,14 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
                                                    &xNetworkCredentials,
                                                    mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS,
                                                    mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS );
-            xConnected = ( xNetworkStatus == TLS_TRANSPORT_SUCCESS );
+            xConnected = ( xNetworkStatus == TLS_TRANSPORT_SUCCESS ) ? true : false;
         #else
             xNetworkStatus = Plaintext_FreeRTOS_Connect( pxNetworkContext,
                                                          democonfigMQTT_BROKER_ENDPOINT,
                                                          democonfigMQTT_BROKER_PORT,
                                                          mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS,
                                                          mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS );
-            xConnected = ( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS );
+            xConnected = ( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS ) ? true : false;
         #endif /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
 
         if( !xConnected )
@@ -970,7 +972,7 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
     if( xConnected )
     {
         ( void ) FreeRTOS_setsockopt( pxNetworkContext->tcpSocket,
-                                      0,                                            /* Level - Unused. */
+                                      0, /* Level - Unused. */
                                       FREERTOS_SO_WAKEUP_CALLBACK,
                                       ( void * ) prvMQTTClientSocketWakeupCallback,
                                       sizeof( &( prvMQTTClientSocketWakeupCallback ) ) );
@@ -984,6 +986,13 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
 static BaseType_t prvSocketDisconnect( NetworkContext_t * pxNetworkContext )
 {
     BaseType_t xDisconnected = pdFAIL;
+
+    /* Set the wakeup callback to NULL since the socket will disconnect. */
+    ( void ) FreeRTOS_setsockopt( pxNetworkContext->tcpSocket,
+                                  0, /* Level - Unused. */
+                                  FREERTOS_SO_WAKEUP_CALLBACK,
+                                  ( void * ) NULL,
+                                  sizeof( void * ) );
 
     #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
         TLS_FreeRTOS_Disconnect( pxNetworkContext );
@@ -1221,8 +1230,10 @@ static MQTTStatus_t prvProcessCommand( Command_t * pxCommand )
     switch( pxCommand->xCommandType )
     {
         case PROCESSLOOP:
+
+            /* The process loop will run at the end of every command, so we don't
+             * need to call it again here. */
             LogDebug( ( "Running Process Loop." ) );
-            xStatus = MQTT_ProcessLoop( &globalMqttContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
             break;
 
         case PUBLISH:
@@ -1291,19 +1302,13 @@ static MQTTStatus_t prvProcessCommand( Command_t * pxCommand )
                 pxCommand->pxCmdContext->xReturnStatus = xStatus;
             }
 
-           ( void ) FreeRTOS_setsockopt( globalMqttContext.transportInterface.pNetworkContext->tcpSocket,
-                                         0,                             /* Level - Unused. */
-                                         FREERTOS_SO_WAKEUP_CALLBACK,
-                                         ( void * ) NULL,
-                                         sizeof( void* ) );
-
             break;
 
         case RECONNECT:
             /* Reconnect TCP. */
-            xNetworkResult = prvSocketDisconnect( globalMqttContext.transportInterface.pNetworkContext );
+            xNetworkResult = prvSocketDisconnect( &xNetworkContext );
             configASSERT( xNetworkResult == pdPASS );
-            xNetworkResult = prvSocketConnect( globalMqttContext.transportInterface.pNetworkContext );
+            xNetworkResult = prvSocketConnect( &xNetworkContext );
             configASSERT( xNetworkResult == pdPASS );
             /* MQTT Connect with a persistent session. */
             xStatus = prvMQTTConnect( &globalMqttContext, false );
@@ -1346,7 +1351,7 @@ static MQTTStatus_t prvProcessCommand( Command_t * pxCommand )
      * the MQTT connection still exists. */
     if( ( xStatus == MQTTSuccess ) && ( globalMqttContext.connectStatus == MQTTConnected ) )
     {
-        xStatus = MQTT_ProcessLoop( &globalMqttContext, 0 );
+        xStatus = MQTT_ProcessLoop( &globalMqttContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
     }
 
     return xStatus;
@@ -1580,11 +1585,6 @@ static void prvCommandLoop( void )
         /* Keep a count of processed operations, for debug logs. */
         lNumProcessed++;
 
-        if( pxCommand->xCommandType != PROCESSLOOP )
-        {
-            lNumProcessed--;
-        }
-
         /* Delay after sending a subscribe. This is to so that the broker
          * creates a subscription for us before processing our next publish,
          * which should be immediately after this. */
@@ -1601,7 +1601,7 @@ static void prvCommandLoop( void )
             break;
         }
 
-        LogDebug( ( "Processed %d non-Process Loop operations.", lNumProcessed ) );
+        LogDebug( ( "Processed %d operations.", lNumProcessed ) );
     }
 
     /* Make sure we exited the loop due to receiving a terminate command and not
@@ -1721,6 +1721,7 @@ void prvPublishTask( void * pvParameters )
         xCommandAdded = prvAddCommandToQueue( &xCommand );
         /* Ensure command was added to queue. */
         configASSERT( xCommandAdded == pdTRUE );
+        /* Short delay so we do not bombard the broker with publishes. */
         LogInfo( ( "Publish operation queued. Sleeping for %d ms.\n", mqttexamplePUBLISH_DELAY_ASYNC_MS ) );
         vTaskDelay( pdMS_TO_TICKS( mqttexamplePUBLISH_DELAY_ASYNC_MS ) );
     }
@@ -1848,7 +1849,8 @@ void prvSubscribeTask( void * pvParameters )
             ulWaitCounter = 0;
         }
 
-        /* Break if all publishes have been received. */
+        /* Since this is an infinite loop, we want to break if all publishes have
+         * been received. */
         if( usNumReceived >= mqttexamplePUBLISH_COUNT )
         {
             break;
@@ -1865,6 +1867,7 @@ void prvSubscribeTask( void * pvParameters )
             break;
         }
 
+        /* Delay a bit to give more time for publish messages to be received. */
         LogInfo( ( "No messages queued, received %u publishes, sleeping for %d ms\n",
                    usNumReceived,
                    mqttexampleSUBSCRIBE_TASK_DELAY_MS ) );
@@ -1920,11 +1923,9 @@ void prvSubscribeTask( void * pvParameters )
 
 static void prvMQTTDemoTask( void * pvParameters )
 {
-    NetworkContext_t xNetworkContext = { 0 };
     BaseType_t xNetworkStatus = pdFAIL;
     BaseType_t xResult = pdFALSE;
     uint32_t ulNotification = 0;
-    Command_t xCommand;
     MQTTStatus_t xMQTTStatus;
     uint32_t ulWaitCounter = 0;
 
@@ -1936,14 +1937,12 @@ static void prvMQTTDemoTask( void * pvParameters )
     xCommandQueue = xQueueCreate( mqttexampleCOMMAND_QUEUE_SIZE, sizeof( Command_t ) );
     /* Create response queues for each task. */
     xSubscriberResponseQueue = xQueueCreate( mqttexamplePUBLISH_QUEUE_SIZE, sizeof( PublishElement_t ) );
-    /* Publish task doesn't receive anything in this demo, so it doesn't need a large queue. */
-    xPublisherResponseQueue = xQueueCreate( 1, sizeof( PublishElement_t ) );
 
     /* In this demo, send publishes on non-subscribed topics to this queue.
      * Note that this value is not meant to be changed after `prvCommandLoop` has
      * been called, since access to this variable is not protected by thread
      * synchronization primitives. */
-    xDefaultResponseQueue = xPublisherResponseQueue;
+    xDefaultResponseQueue = xQueueCreate( 1, sizeof( PublishElement_t ) );
 
     /* Connect to the broker. We connect here with the "clean session" flag set
      * to true in order to clear any prior state in the broker. We will disconnect
@@ -1970,11 +1969,6 @@ static void prvMQTTDemoTask( void * pvParameters )
         /* Clear the lists of subscriptions and pending acknowledgments. */
         memset( pxPendingAcks, 0x00, mqttexamplePENDING_ACKS_MAX_SIZE * sizeof( AckInfo_t ) );
         memset( pxSubscriptions, 0x00, mqttexampleSUBSCRIPTIONS_MAX_COUNT * sizeof( SubscriptionElement_t ) );
-
-        /* Create initial process loop command. */
-        prvCreateCommand( PROCESSLOOP, NULL, NULL, &xCommand );
-        xResult = prvAddCommandToQueue( &xCommand );
-        configASSERT( xResult == pdTRUE );
 
         LogInfo( ( "Creating a TCP connection to %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
         /* Connect to the broker. */
@@ -2030,8 +2024,11 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         /* Reset queues. */
         xQueueReset( xCommandQueue );
-        xQueueReset( xPublisherResponseQueue );
+        xQueueReset( xDefaultResponseQueue );
         xQueueReset( xSubscriberResponseQueue );
+
+        /* Clear task notifications. */
+        ulNotification = ulTaskNotifyValueClear( NULL, ~( 0U ) );
 
         LogInfo( ( "Disconnecting TCP connection." ) );
         xNetworkStatus = prvSocketDisconnect( &xNetworkContext );

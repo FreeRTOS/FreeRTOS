@@ -92,7 +92,7 @@
 /* Compile time error for some undefined configs, and provide default values
  * for others. */
 #ifndef democonfigMQTT_BROKER_ENDPOINT
-    #error "Please define democonfigMQTT_BROKER_ENDPOINT."
+    #error "Please define democonfigMQTT_BROKER_ENDPOINT in demo_config.h."
 #endif
 
 #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
@@ -372,18 +372,34 @@ typedef struct publishElement
 /*-----------------------------------------------------------*/
 
 /**
+ * @brief Initializes an MQTT context, including transport interface and
+ * network buffer.
+ *
+ * @param[in] pxMQTTContext MQTT Context to initialize.
+ * @param[in] pxNetworkContext Network context.
+ *
+ * @return `MQTTSuccess` if the initialization succeeds, else `MQTTBadParameter`.
+ */
+static MQTTStatus_t prvMQTTInit( MQTTContext_t * pxMQTTContext,
+                                 NetworkContext_t * pxNetworkContext );
+
+/**
  * @brief Sends an MQTT Connect packet over the already connected TCP socket.
  *
  * @param[in] pxMQTTContext MQTT context pointer.
- * @param[in] xNetworkContext Network context.
  * @param[in] xCleanSession If a clean session should be established.
  *
  * @return `MQTTSuccess` if connection succeeds, else appropriate error code
  * from MQTT_Connect.
  */
 static MQTTStatus_t prvMQTTConnect( MQTTContext_t * pxMQTTContext,
-                                    NetworkContext_t * pxNetworkContext,
                                     bool xCleanSession );
+
+/**
+ * @brief Resume a session by resending publishes if a session is present in
+ * the broker, or reestablish subscriptions if not.
+ */
+static void prvResumeSession( bool xSessionPresent );
 
 /**
  * @brief Form a TCP connection to a server.
@@ -392,7 +408,7 @@ static MQTTStatus_t prvMQTTConnect( MQTTContext_t * pxMQTTContext,
  *
  * @return `pdPASS` if connection succeeds, else `pdFAIL`.
  */
-static BaseType_t prvConnectNetwork( NetworkContext_t * pxNetworkContext );
+static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext );
 
 /**
  * @brief Disconnect a TCP connection.
@@ -401,7 +417,15 @@ static BaseType_t prvConnectNetwork( NetworkContext_t * pxNetworkContext );
  *
  * @return `pdPASS` if disconnect succeeds, else `pdFAIL`.
  */
-static BaseType_t prvDisconnectNetwork( NetworkContext_t * pxNetworkContext );
+static BaseType_t prvSocketDisconnect( NetworkContext_t * pxNetworkContext );
+
+/**
+ * @brief Callback for adding a process loop call to a command queue, when data
+ * is available on a socket.
+ *
+ * @param[in] pxSocket Socket with data, unused.
+ */
+static void prvMQTTClientSocketWakeupCallback( Socket_t pxSocket );
 
 /**
  * @brief Initialize context for a command.
@@ -552,7 +576,7 @@ static void prvEventCallback( MQTTContext_t * pMqttContext,
  * function, and will re-add a process loop command every time one is processed.
  * This demo will exit the loop after receiving an unsubscribe operation.
  */
-static void prvCommandLoop();
+static void prvCommandLoop( void );
 
 /**
  * @brief Common callback for commands in this demo.
@@ -705,13 +729,9 @@ void vStartSimpleMQTTDemo( void )
 }
 /*-----------------------------------------------------------*/
 
-static MQTTStatus_t prvMQTTConnect( MQTTContext_t * pxMQTTContext,
-                                    NetworkContext_t * pxNetworkContext,
-                                    bool xCleanSession )
+static MQTTStatus_t prvMQTTInit( MQTTContext_t * pxMQTTContext,
+                                 NetworkContext_t * pxNetworkContext )
 {
-    MQTTStatus_t xResult;
-    MQTTConnectInfo_t xConnectInfo;
-    bool xSessionPresent = false;
     TransportInterface_t xTransport;
     MQTTFixedBuffer_t xNetworkBuffer;
 
@@ -729,12 +749,16 @@ static MQTTStatus_t prvMQTTConnect( MQTTContext_t * pxMQTTContext,
         xTransport.recv = Plaintext_FreeRTOS_recv;
     #endif
 
-    if( xCleanSession )
-    {
         /* Initialize MQTT library. */
-        xResult = MQTT_Init( pxMQTTContext, &xTransport, prvGetTimeMs, prvEventCallback, &xNetworkBuffer );
-        configASSERT( xResult == MQTTSuccess );
-    }
+    return MQTT_Init( pxMQTTContext, &xTransport, prvGetTimeMs, prvEventCallback, &xNetworkBuffer );
+}
+
+static MQTTStatus_t prvMQTTConnect( MQTTContext_t * pxMQTTContext,
+                                    bool xCleanSession )
+{
+    MQTTStatus_t xResult;
+    MQTTConnectInfo_t xConnectInfo;
+    bool xSessionPresent = false;
 
     /* Many fields are not used in this demo so start with everything at 0. */
     memset( &xConnectInfo, 0x00, sizeof( xConnectInfo ) );
@@ -751,13 +775,14 @@ static MQTTStatus_t prvMQTTConnect( MQTTContext_t * pxMQTTContext,
     xConnectInfo.pClientIdentifier = democonfigCLIENT_IDENTIFIER;
     xConnectInfo.clientIdentifierLength = ( uint16_t ) strlen( democonfigCLIENT_IDENTIFIER );
 
-    /* Set MQTT keep-alive period. It is the responsibility of the application to ensure
-     * that the interval between Control Packets being sent does not exceed the Keep Alive value.
-     * In the absence of sending any other Control Packets, the Client MUST send a PINGREQ Packet. */
+    /* Set MQTT keep-alive period. It is the responsibility of the application
+     * to ensure that the interval between Control Packets being sent does not
+     * exceed the Keep Alive value. In the absence of sending any other Control
+     * Packets, the Client MUST send a PINGREQ Packet. */
     xConnectInfo.keepAliveSeconds = mqttexampleKEEP_ALIVE_INTERVAL_SECONDS;
 
-    /* Send MQTT CONNECT packet to broker. LWT is not used in this demo, so it
-     * is passed as NULL. */
+    /* Send MQTT CONNECT packet to broker. MQTT's Last Will and Testament feature
+     * is not used in this demo, so it is passed as NULL. */
     xResult = MQTT_Connect( pxMQTTContext,
                             &xConnectInfo,
                             NULL,
@@ -765,8 +790,21 @@ static MQTTStatus_t prvMQTTConnect( MQTTContext_t * pxMQTTContext,
                             &xSessionPresent );
 
     LogInfo( ( "Session present: %d", xSessionPresent ) );
-    configASSERT( xResult == MQTTSuccess );
 
+    /* Resume a session if desired. */
+    if( ( xResult == MQTTSuccess ) && !xCleanSession )
+    {
+        prvResumeSession( xSessionPresent );
+    }
+
+    return xResult;
+}
+
+/*-----------------------------------------------------------*/
+
+static void prvResumeSession( bool xSessionPresent )
+{
+    MQTTStatus_t xResult;
     /* Resend publishes if session is present. NOTE: It's possible that some
      * of the operations that were in progress during the network interruption
      * were subscribes. In that case, we would want to mark those operations
@@ -797,12 +835,11 @@ static MQTTStatus_t prvMQTTConnect( MQTTContext_t * pxMQTTContext,
             packetId = MQTT_PublishToResend( &globalMqttContext, &cursor );
         }
     }
-
     /* If we wanted to resume a session but none existed with the broker, we
      * should mark all in progress operations as errors so that the tasks that
      * created them can try again. Also, we will resubscribe to the filters in
      * the subscription list, so tasks do not unexpectedly lose their subscriptions. */
-    if( !xCleanSession && !xSessionPresent )
+    else
     {
         int32_t i = 0, j = 0;
         Command_t xNewCommand;
@@ -856,13 +893,11 @@ static MQTTStatus_t prvMQTTConnect( MQTTContext_t * pxMQTTContext,
             configASSERT( xCommandAdded == pdTRUE );
         }
     }
-
-    return xResult;
 }
 
 /*-----------------------------------------------------------*/
 
-static BaseType_t prvConnectNetwork( NetworkContext_t * pxNetworkContext )
+static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
 {
     bool xConnected = false;
     RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
@@ -884,7 +919,8 @@ static BaseType_t prvConnectNetwork( NetworkContext_t * pxNetworkContext )
         PlaintextTransportStatus_t xNetworkStatus = PLAINTEXT_TRANSPORT_CONNECT_FAILURE;
     #endif /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
 
-    /* Initialize reconnect attempts and interval. */
+    /* We will use a retry mechanism with an exponential backoff mechanism and
+     * jitter. We initialize reconnect attempts and interval here. */
     xReconnectParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
     RetryUtils_ParamsReset( &xReconnectParams );
 
@@ -930,12 +966,22 @@ static BaseType_t prvConnectNetwork( NetworkContext_t * pxNetworkContext )
         }
     } while( ( xConnected != true ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
 
+    /* Set the socket wakeup callback. */
+    if( xConnected )
+    {
+        ( void ) FreeRTOS_setsockopt( pxNetworkContext->tcpSocket,
+                                      0,                                            /* Level - Unused. */
+                                      FREERTOS_SO_WAKEUP_CALLBACK,
+                                      ( void * ) prvMQTTClientSocketWakeupCallback,
+                                      sizeof( &( prvMQTTClientSocketWakeupCallback ) ) );
+    }
+
     return ( xConnected ) ? pdPASS : pdFAIL;
 }
 
 /*-----------------------------------------------------------*/
 
-static BaseType_t prvDisconnectNetwork( NetworkContext_t * pxNetworkContext )
+static BaseType_t prvSocketDisconnect( NetworkContext_t * pxNetworkContext )
 {
     BaseType_t xDisconnected = pdFAIL;
 
@@ -948,6 +994,29 @@ static BaseType_t prvDisconnectNetwork( NetworkContext_t * pxNetworkContext )
         xDisconnected = ( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS ) ? pdPASS : pdFAIL;
     #endif
     return xDisconnected;
+}
+
+/*-----------------------------------------------------------*/
+
+static void prvMQTTClientSocketWakeupCallback( Socket_t pxSocket )
+{
+    BaseType_t xResult;
+    Command_t xCommand;
+
+    /* Just to avoid compiler warnings.  The socket is not used but the function
+     * prototype cannot be changed because this is a callback function. */
+    ( void ) pxSocket;
+
+    configASSERT( xCommandQueue );
+
+    /* A socket used by the MQTT task may need attention.  Send an event
+     * to the MQTT task to make sure the task is not blocked on xCommandQueue. */
+    if( uxQueueMessagesWaiting( xCommandQueue ) == ( UBaseType_t ) 0 )
+    {
+        prvCreateCommand( PROCESSLOOP, NULL, NULL, &xCommand );
+        xResult = prvAddCommandToQueue( &xCommand );
+        configASSERT( xResult == pdTRUE );
+    }
 }
 
 /*-----------------------------------------------------------*/
@@ -1222,16 +1291,22 @@ static MQTTStatus_t prvProcessCommand( Command_t * pxCommand )
                 pxCommand->pxCmdContext->xReturnStatus = xStatus;
             }
 
+           ( void ) FreeRTOS_setsockopt( globalMqttContext.transportInterface.pNetworkContext->tcpSocket,
+                                         0,                             /* Level - Unused. */
+                                         FREERTOS_SO_WAKEUP_CALLBACK,
+                                         ( void * ) NULL,
+                                         sizeof( void* ) );
+
             break;
 
         case RECONNECT:
             /* Reconnect TCP. */
-            xNetworkResult = prvDisconnectNetwork( globalMqttContext.transportInterface.pNetworkContext );
+            xNetworkResult = prvSocketDisconnect( globalMqttContext.transportInterface.pNetworkContext );
             configASSERT( xNetworkResult == pdPASS );
-            xNetworkResult = prvConnectNetwork( globalMqttContext.transportInterface.pNetworkContext );
+            xNetworkResult = prvSocketConnect( globalMqttContext.transportInterface.pNetworkContext );
             configASSERT( xNetworkResult == pdPASS );
             /* MQTT Connect with a persistent session. */
-            xStatus = prvMQTTConnect( &globalMqttContext, globalMqttContext.transportInterface.pNetworkContext, false );
+            xStatus = prvMQTTConnect( &globalMqttContext, false );
             break;
 
         case TERMINATE:
@@ -1265,6 +1340,13 @@ static MQTTStatus_t prvProcessCommand( Command_t * pxCommand )
         {
             pxCommand->vCallback( pxCommand->pxCmdContext );
         }
+    }
+
+    /* Run a single iteration of the process loop if there were no errors and
+     * the MQTT connection still exists. */
+    if( ( xStatus == MQTTSuccess ) && ( globalMqttContext.connectStatus == MQTTConnected ) )
+    {
+        xStatus = MQTT_ProcessLoop( &globalMqttContext, 0 );
     }
 
     return xStatus;
@@ -1460,7 +1542,7 @@ static void prvEventCallback( MQTTContext_t * pMqttContext,
 
 /*-----------------------------------------------------------*/
 
-static void prvCommandLoop()
+static void prvCommandLoop( void )
 {
     Command_t xCommand;
     Command_t xNewCommand;
@@ -1470,10 +1552,16 @@ static void prvCommandLoop()
     bool xTerminateReceived = false;
     BaseType_t xCommandAdded = pdTRUE;
 
-    /* Loop while the queue is not empty. If a process loop command exists in the
-     * queue, then it should never become empty as it will be re-added. */
-    while( xQueueReceive( xCommandQueue, &xCommand, mqttexampleDEMO_TICKS_TO_WAIT ) != pdFALSE )
+    /* Loop until we receive a terminate command. */
+    for( ; ; )
     {
+        /* If there is no command in the queue, try again. */
+        if( xQueueReceive( xCommandQueue, &xCommand, mqttexampleDEMO_TICKS_TO_WAIT ) == pdFALSE )
+        {
+            LogInfo( ( "No commands in the queue. Trying again." ) );
+            continue;
+        }
+
         pxCommand = &xCommand;
 
         xStatus = prvProcessCommand( pxCommand );
@@ -1489,15 +1577,11 @@ static void prvCommandLoop()
             configASSERT( xCommandAdded == pdTRUE );
         }
 
+        /* Keep a count of processed operations, for debug logs. */
         lNumProcessed++;
 
-        if( pxCommand->xCommandType == PROCESSLOOP )
+        if( pxCommand->xCommandType != PROCESSLOOP )
         {
-            /* Add process loop back to end of queue. */
-            prvCreateCommand( PROCESSLOOP, NULL, NULL, &xNewCommand );
-            xCommandAdded = prvAddCommandToQueue( &xNewCommand );
-            /* Ensure the command was re-added. */
-            configASSERT( xCommandAdded == pdTRUE );
             lNumProcessed--;
         }
 
@@ -1576,7 +1660,6 @@ void prvPublishTask( void * pvParameters )
         xPublishInfo.topicNameLength = ( uint16_t ) strlen( topicBuf );
 
         prvInitializeCommandContext( &xContext );
-        xContext.pxResponseQueue = xPublisherResponseQueue;
         xContext.xTaskToNotify = xTaskGetCurrentTaskHandle();
         xContext.ulNotificationBit = 1 << i;
         xContext.pxPublishInfo = &xPublishInfo;
@@ -1612,7 +1695,6 @@ void prvPublishTask( void * pvParameters )
     {
         pxContexts[ i ] = ( CommandContext_t * ) pvPortMalloc( sizeof( CommandContext_t ) );
         prvInitializeCommandContext( pxContexts[ i ] );
-        pxContexts[ i ]->pxResponseQueue = xPublisherResponseQueue;
         pxContexts[ i ]->xTaskToNotify = xTaskGetCurrentTaskHandle();
 
         /* Set the notification bit to be the publish number. This prevents this demo
@@ -1747,7 +1829,7 @@ void prvSubscribeTask( void * pvParameters )
     LogInfo( ( "Operation wait complete.\n" ) );
     ulWaitCounter = 0;
 
-    while( 1 )
+    for( ; ; )
     {
         /* It is possible that there is nothing to receive from the queue, and
          * this is expected, as there are delays between each publish. For this
@@ -1868,17 +1950,19 @@ static void prvMQTTDemoTask( void * pvParameters )
      * and later form a persistent session, so that it may be resumed if the
      * network suddenly disconnects. */
     LogInfo( ( "Creating a TCP connection to %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
-    xNetworkStatus = prvConnectNetwork( &xNetworkContext );
+    xNetworkStatus = prvSocketConnect( &xNetworkContext );
     configASSERT( xNetworkStatus == pdPASS );
-    LogInfo( ( "Clearing broker state." ) );
-    xMQTTStatus = prvMQTTConnect( &globalMqttContext, &xNetworkContext, true );
+    LogInfo( ( "Creating a clean session to clear any broker state information." ) );
+    xMQTTStatus = prvMQTTInit( &globalMqttContext, &xNetworkContext );
+    configASSERT( xMQTTStatus == MQTTSuccess );
+    xMQTTStatus = prvMQTTConnect( &globalMqttContext, true );
     configASSERT( xMQTTStatus == MQTTSuccess );
 
     /* Disconnect. */
     xMQTTStatus = MQTT_Disconnect( &globalMqttContext );
     configASSERT( xMQTTStatus == MQTTSuccess );
     LogInfo( ( "Disconnecting TCP connection." ) );
-    xNetworkStatus = prvDisconnectNetwork( &xNetworkContext );
+    xNetworkStatus = prvSocketDisconnect( &xNetworkContext );
     configASSERT( xNetworkStatus == pdPASS );
 
     for( ; ; )
@@ -1887,17 +1971,17 @@ static void prvMQTTDemoTask( void * pvParameters )
         memset( pxPendingAcks, 0x00, mqttexamplePENDING_ACKS_MAX_SIZE * sizeof( AckInfo_t ) );
         memset( pxSubscriptions, 0x00, mqttexampleSUBSCRIPTIONS_MAX_COUNT * sizeof( SubscriptionElement_t ) );
 
-        /* Create inital process loop command. */
+        /* Create initial process loop command. */
         prvCreateCommand( PROCESSLOOP, NULL, NULL, &xCommand );
         xResult = prvAddCommandToQueue( &xCommand );
         configASSERT( xResult == pdTRUE );
 
         LogInfo( ( "Creating a TCP connection to %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
         /* Connect to the broker. */
-        xNetworkStatus = prvConnectNetwork( &xNetworkContext );
+        xNetworkStatus = prvSocketConnect( &xNetworkContext );
         configASSERT( xNetworkStatus == pdPASS );
         /* Form an MQTT connection with a persistent session. */
-        xMQTTStatus = prvMQTTConnect( &globalMqttContext, &xNetworkContext, false );
+        xMQTTStatus = prvMQTTConnect( &globalMqttContext, false );
         configASSERT( xMQTTStatus == MQTTSuccess );
         configASSERT( globalMqttContext.connectStatus == MQTTConnected );
 
@@ -1950,7 +2034,7 @@ static void prvMQTTDemoTask( void * pvParameters )
         xQueueReset( xSubscriberResponseQueue );
 
         LogInfo( ( "Disconnecting TCP connection." ) );
-        xNetworkStatus = prvDisconnectNetwork( &xNetworkContext );
+        xNetworkStatus = prvSocketDisconnect( &xNetworkContext );
         configASSERT( xNetworkStatus == pdPASS );
 
         LogInfo( ( "prvMQTTDemoTask() completed an iteration successfully. Total free heap is %u.\r\n", xPortGetFreeHeapSize() ) );

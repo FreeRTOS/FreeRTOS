@@ -43,7 +43,7 @@ In core integrity check error: hash = C66491A040D5B9686BAA7A75A280290D91B49...
 
 Do not worry about this result, an error is expected at this point. This means that the first test included in the POST failed. Once FIPS Ready has failed POST, it enters an error state and never allows subsequent cryptographic operations until the device is restarted and the tests can complete successfully. 
 
-The in-core integrity check requires a pre-calclated hash value to be stored in the fips_test.c source file. Remember that you did not yet set this pre-calculated value durling the build process. Because the hash does not match the stored value is the reason why this first run will fail.
+The in-core integrity check requires a pre-calculated hash value to be stored in the fips_test.c source file. Remember that you did not yet set this pre-calculated value during the build process. Because the hash does not match the stored value is the reason why this first run will fail.
 
 # Update Pre-calculated hash value
 

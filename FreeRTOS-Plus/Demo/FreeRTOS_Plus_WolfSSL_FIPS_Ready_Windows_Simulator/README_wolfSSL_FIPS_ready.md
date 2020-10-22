@@ -17,7 +17,10 @@ FIPS 140-2 enforces cryptographic modules to follow best practices, including:
 2. Include a default entry point
 3. Perform a Power On Self Test (POST)
 
-wolfSSL FIPS Ready fulfils these requirements. The third requirement means that the POST should run automatically whenever the application using the FIPS code starts up. For wolfSSL FIPS Ready, the POST consits of two tests: 
+wolfSSL FIPS Ready fulfils these requirements. The third requirement means that the POST should run automatically whenever the application using the FIPS code starts up. 
+
+# Power On Self Test (POST)
+For wolfSSL FIPS Ready, the POST consits of two tests: 
 
 - In-Core Integrity Check (HMAC-SHA256 over cryptographic algorithm object files)
 - Known Answer Tests (KATs)
@@ -25,6 +28,9 @@ wolfSSL FIPS Ready fulfils these requirements. The third requirement means that 
 The in-core integrity check performs an HMAC-SHA256 operation over the object files included in the FIPS-compliant algorithm boundary. The cryptographic boundary is the FIPS-specific code and its related static data in the memory of the program. In the integrity check process, the calculated hash value is compared with the expexted pre-calculated value in the memory. Failure of this check means that compiled boundary code was modified after it was compiled. If either the integrity check or KAT fails, the module enters an error state.
 
 The KAT (Known Answer Tests) run algorithm test cases using pre-computed NIST test vectors, thus verifying that the algorithms are working successfully. The KAT code and test vectors are inside the cryptographic boundary and are also checked as part of the in-core integrity check.
+
+In this demo, **POST runs automatically whenever the application starts up**. When the test finish successfully, the tasks start and cryptographic operations are allowed to work. However, when you build and **run this demo for the first time, POST will fail**. Also you see an error message in the application console. In that case, please follow the instruction in the "Update Pre-calculated hash value" section later. 
+
 
 # How to build and run the Demo application
 

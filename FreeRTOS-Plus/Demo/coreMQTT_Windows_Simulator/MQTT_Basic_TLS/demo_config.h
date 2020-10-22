@@ -70,12 +70,6 @@
  * This demo application can be run with any MQTT broker, that supports server
  * authentication.
  *
- * For AWS IoT MQTT broker, this is the Thing's REST API Endpoint.
- *
- * @note Your AWS IoT Core endpoint can be found in the AWS IoT console under
- * Settings/Custom Endpoint, or using the describe-endpoint REST API (with
- * AWS CLI command line tool).
- *
  * @note If you would like to setup an MQTT broker for running this demo,
  * please see `mqtt_broker_setup.txt`.
  *
@@ -97,11 +91,6 @@
 
 /**
  * @brief Server's root CA certificate.
- *
- * For AWS IoT MQTT broker, this certificate is used to identify the AWS IoT
- * server and is publicly available. Refer to the AWS documentation available
- * in the link below.
- * https://docs.aws.amazon.com/iot/latest/developerguide/server-authentication.html#server-authentication-certs
  *
  * @note This certificate should be PEM-encoded.
  *

@@ -19,6 +19,7 @@ TLS mutual authentication for use with this MQTT demo.
     cafile C:\Users\%Substitute Windows username%\Documents\certs\ca.crt
     certfile C:\Users\%Substitute Windows username%\Documents\certs\server.crt
     keyfile C:\Users\%Substitute Windows username%\Documents\certs\server.key
+    require_certificate true
     tls_version tlsv1.2
 6. Start the Mosquitto service.
    More details about running Mosquitto as a Windows service can be found at

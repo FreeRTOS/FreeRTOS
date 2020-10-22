@@ -1,5 +1,5 @@
 /*
-* FreeRTOS
+ * FreeRTOS
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -23,12 +23,12 @@
  * http://www.FreeRTOS.org
  */
 
- /**
-  * @file main.c
-  * @brief Implements the main function.
-  */
+/**
+ * @file main.c
+ * @brief Implements the main function.
+ */
 
-  /* FreeRTOS include. */
+/* FreeRTOS include. */
 #include <FreeRTOS.h>
 #include "task.h"
 
@@ -46,11 +46,11 @@
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
 #include "FreeRTOS_DHCP.h"
-#include "demo_logging.h"
+#include "logging.h"
 #include "errhandlingapi.h"
-//#include "iot_system_init.h"
+/*#include "iot_system_init.h" */
 
-//#include "aws_dev_mode_key_provisioning.h"
+/*#include "aws_dev_mode_key_provisioning.h" */
 
 /* Unity includes. */
 #include "unity.h"
@@ -64,8 +64,8 @@
 
 #define TEST_RUNNER_TASK_STACK_SIZE    10000
 #define FIRST_EXCEPTION_HANDLER        1
- /* Windows-NT VectoredHandler callback function. */
-static LONG CALLBACK prvExceptionHandler(_In_ PEXCEPTION_POINTERS ExceptionInfo);
+/* Windows-NT VectoredHandler callback function. */
+static LONG CALLBACK prvExceptionHandler( _In_ PEXCEPTION_POINTERS ExceptionInfo );
 jmp_buf xMark; /* Address for long jump to jump to. */
 
 /*-----------------------------------------------------------*/
@@ -78,7 +78,7 @@ static BaseType_t xTraceRunning = pdTRUE;
  * to and from a real network connection on the host PC.  See the
  * configNETWORK_INTERFACE_TO_USE definition for information on how to configure
  * the real network connection to use. */
-const uint8_t ucMACAddress[6] =
+const uint8_t ucMACAddress[ 6 ] =
 {
     configMAC_ADDR0,
     configMAC_ADDR1,
@@ -93,28 +93,28 @@ const uint8_t ucMACAddress[6] =
  * 1 but a DHCP server could not be contacted.  See the online documentation for
  * more information.  In both cases the node can be discovered using
  * "ping RTOSDemo". */
-static const uint8_t ucIPAddress[4] =
+static const uint8_t ucIPAddress[ 4 ] =
 {
     configIP_ADDR0,
     configIP_ADDR1,
     configIP_ADDR2,
     configIP_ADDR3
 };
-static const uint8_t ucNetMask[4] =
+static const uint8_t ucNetMask[ 4 ] =
 {
     configNET_MASK0,
     configNET_MASK1,
     configNET_MASK2,
     configNET_MASK3
 };
-static const uint8_t ucGatewayAddress[4] =
+static const uint8_t ucGatewayAddress[ 4 ] =
 {
     configGATEWAY_ADDR0,
     configGATEWAY_ADDR1,
     configGATEWAY_ADDR2,
     configGATEWAY_ADDR3
 };
-static const uint8_t ucDNSServerAddress[4] =
+static const uint8_t ucDNSServerAddress[ 4 ] =
 {
     configDNS_SERVER_ADDR0,
     configDNS_SERVER_ADDR1,
@@ -126,10 +126,10 @@ static const uint8_t ucDNSServerAddress[4] =
 static UBaseType_t ulNextRand;
 
 /*-----------------------------------------------------------*/
-int main(void)
+int main( void )
 {
     /* Register the Windows VEH for exceptions. */
-    AddVectoredExceptionHandler(FIRST_EXCEPTION_HANDLER, prvExceptionHandler);
+    AddVectoredExceptionHandler( FIRST_EXCEPTION_HANDLER, prvExceptionHandler );
 
     /* Initialize logging for libraries that depend on it. */
     vLoggingInit(
@@ -137,7 +137,7 @@ int main(void)
         pdFALSE,
         pdFALSE,
         0,
-        0);
+        0 );
 
     /* Initialize the network interface.
      *
@@ -146,13 +146,13 @@ int main(void)
      * vApplicationIPNetworkEventHook() below).  The address values passed in here
      * are used if ipconfigUSE_DHCP is set to 0, or if ipconfigUSE_DHCP is set to 1
      * but a DHCP server cannot be contacted. */
-    FreeRTOS_printf(("FreeRTOS_IPInit\n"));
+    FreeRTOS_printf( ( "FreeRTOS_IPInit\n" ) );
     FreeRTOS_IPInit(
         ucIPAddress,
         ucNetMask,
         ucGatewayAddress,
         ucDNSServerAddress,
-        ucMACAddress);
+        ucMACAddress );
 
     vTaskStartScheduler();
 
@@ -160,18 +160,18 @@ int main(void)
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationIPNetworkEventHook(eIPCallbackEvent_t eNetworkEvent)
+void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
 {
     static BaseType_t xTasksAlreadyCreated = pdFALSE;
 
     /* If the network has just come up...*/
-    if ((eNetworkEvent == eNetworkUp) && (xTasksAlreadyCreated == pdFALSE))
+    if( ( eNetworkEvent == eNetworkUp ) && ( xTasksAlreadyCreated == pdFALSE ) )
     {
-        xTaskCreate(TEST_RUNNER_RunTests_task,
-            "TestRunner",
-            TEST_RUNNER_TASK_STACK_SIZE,
-            NULL,
-            tskIDLE_PRIORITY, NULL);
+        xTaskCreate( TEST_RUNNER_RunTests_task,
+                     "TestRunner",
+                     TEST_RUNNER_TASK_STACK_SIZE,
+                     NULL,
+                     tskIDLE_PRIORITY, NULL );
 
         xTasksAlreadyCreated = pdTRUE;
     }
@@ -179,7 +179,7 @@ void vApplicationIPNetworkEventHook(eIPCallbackEvent_t eNetworkEvent)
 
 /*-----------------------------------------------------------*/
 
-static LONG CALLBACK prvExceptionHandler(_In_ PEXCEPTION_POINTERS ExceptionInfo)
+static LONG CALLBACK prvExceptionHandler( _In_ PEXCEPTION_POINTERS ExceptionInfo )
 {
     /* Remove warning about unused parameter */
     ( void ) ExceptionInfo;
@@ -195,48 +195,48 @@ static LONG CALLBACK prvExceptionHandler(_In_ PEXCEPTION_POINTERS ExceptionInfo)
     ( ipconfigUSE_NBNS != 0 ) ||    \
     ( ipconfigDHCP_REGISTER_HOSTNAME == 1 ) )
 
-const char* pcApplicationHostnameHook(void)
-{
-    /* This function will be called during the DHCP: the machine will be registered
-     * with an IP address plus this name. */
-    return mainHOST_NAME;
-}
+    const char * pcApplicationHostnameHook( void )
+    {
+        /* This function will be called during the DHCP: the machine will be registered
+         * with an IP address plus this name. */
+        return mainHOST_NAME;
+    }
 
 #endif /* if ( ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 ) || ( ipconfigDHCP_REGISTER_HOSTNAME == 1 ) ) */
 /*-----------------------------------------------------------*/
 
 #if ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 )
 
-BaseType_t xApplicationDNSQueryHook(const char* pcName)
-{
-    BaseType_t xReturn;
+    BaseType_t xApplicationDNSQueryHook( const char * pcName )
+    {
+        BaseType_t xReturn;
 
-    /* Determine if a name lookup is for this node.  Two names are given
-     * to this node: that returned by pcApplicationHostnameHook() and that set
-     * by mainDEVICE_NICK_NAME. */
-    if (_stricmp(pcName, pcApplicationHostnameHook()) == 0)
-    {
-        xReturn = pdPASS;
-    }
-    else if (_stricmp(pcName, mainDEVICE_NICK_NAME) == 0)
-    {
-        xReturn = pdPASS;
-    }
-    else
-    {
-        xReturn = pdFAIL;
-    }
+        /* Determine if a name lookup is for this node.  Two names are given
+         * to this node: that returned by pcApplicationHostnameHook() and that set
+         * by mainDEVICE_NICK_NAME. */
+        if( _stricmp( pcName, pcApplicationHostnameHook() ) == 0 )
+        {
+            xReturn = pdPASS;
+        }
+        else if( _stricmp( pcName, mainDEVICE_NICK_NAME ) == 0 )
+        {
+            xReturn = pdPASS;
+        }
+        else
+        {
+            xReturn = pdFAIL;
+        }
 
-    return xReturn;
-}
+        return xReturn;
+    }
 
 #endif /* if ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 ) */
 /*-----------------------------------------------------------*/
 
-void vApplicationIdleHook(void)
+void vApplicationIdleHook( void )
 {
     const uint32_t ulMSToSleep = 1;
-    const TickType_t xKitHitCheckPeriod = pdMS_TO_TICKS(1000UL);
+    const TickType_t xKitHitCheckPeriod = pdMS_TO_TICKS( 1000UL );
     static TickType_t xTimeNow, xLastTimeCheck = 0;
 
     /* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
@@ -249,19 +249,17 @@ void vApplicationIdleHook(void)
      * because it is the responsibility of the idle task to clean up memory
      * allocated by the kernel to any task that has since deleted itself. */
 
-     /* _kbhit() is a Windows system function, and system functions can cause
-      * crashes if they somehow block the FreeRTOS thread.  The call to _kbhit()
-      * can be removed if it causes problems.  Limiting the frequency of calls to
-      * _kbhit() should minimize the potential for issues. */
+    /* _kbhit() is a Windows system function, and system functions can cause
+     * crashes if they somehow block the FreeRTOS thread.  The call to _kbhit()
+     * can be removed if it causes problems.  Limiting the frequency of calls to
+     * _kbhit() should minimize the potential for issues. */
     xTimeNow = xTaskGetTickCount();
 
-    if ((xTimeNow - xLastTimeCheck) > xKitHitCheckPeriod)
+    if( ( xTimeNow - xLastTimeCheck ) > xKitHitCheckPeriod )
     {
-        
-
         /* Uncomment the print line to get confirmation that tests are still
          * running if you suspect a previous run resulted in a crash. */
-         /* configPRINTF( ( "Running...\n" ) ); /**/
+        /* configPRINTF( ( "Running...\n" ) ); /**/
         xLastTimeCheck = xTimeNow;
     }
 
@@ -269,42 +267,42 @@ void vApplicationIdleHook(void)
      * cycle of the idle task if configUSE_IDLE_HOOK is set to 1 in
      * FreeRTOSConfig.h.  It must *NOT* attempt to block.  In this case the
      * idle task just sleeps to lower the CPU usage. */
-    Sleep(ulMSToSleep);
+    Sleep( ulMSToSleep );
 }
 /*-----------------------------------------------------------*/
 
-void vAssertCalled(const char* pcFile,
-    uint32_t ulLine)
+void vAssertCalled( const char * pcFile,
+                    uint32_t ulLine )
 {
     const uint32_t ulLongSleep = 1000UL;
     volatile uint32_t ulBlockVariable = 0UL;
-    volatile char* pcFileName = (volatile char*)pcFile;
+    volatile char * pcFileName = ( volatile char * ) pcFile;
     volatile uint32_t ulLineNumber = ulLine;
 
-    (void)pcFileName;
-    (void)ulLineNumber;
+    ( void ) pcFileName;
+    ( void ) ulLineNumber;
 
-    printf("vAssertCalled %s, %ld\n", pcFile, (long)ulLine);
-    fflush(stdout);
+    printf( "vAssertCalled %s, %ld\n", pcFile, ( long ) ulLine );
+    fflush( stdout );
 
     /* Setting ulBlockVariable to a non-zero value in the debugger will allow
      * this function to be exited. */
     taskDISABLE_INTERRUPTS();
     {
-        while (ulBlockVariable == 0UL)
+        while( ulBlockVariable == 0UL )
         {
-            Sleep(ulLongSleep);
+            Sleep( ulLongSleep );
         }
     }
     taskENABLE_INTERRUPTS();
 }
 /*-----------------------------------------------------------*/
 
-void getUserCmd(char* pucUserCmd)
+void getUserCmd( char * pucUserCmd )
 {
     char cTmp;
 
-    scanf("%c%c", pucUserCmd, &cTmp);
+    scanf( "%c%c", pucUserCmd, &cTmp );
 }
 /*-----------------------------------------------------------*/
 
@@ -314,11 +312,11 @@ UBaseType_t uxRand( void )
 
     /* Utility function to generate a pseudo random number. */
 
-    ulNextRand = (ulMultiplier * ulNextRand) + ulIncrement;
-    return((int)(ulNextRand) & 0x7fffUL);
+    ulNextRand = ( ulMultiplier * ulNextRand ) + ulIncrement;
+    return( ( int ) ( ulNextRand ) & 0x7fffUL );
 }
 
-BaseType_t xApplicationGetRandomNumber( uint32_t* pulNumber )
+BaseType_t xApplicationGetRandomNumber( uint32_t * pulNumber )
 {
     *pulNumber = uxRand();
 
@@ -331,15 +329,15 @@ BaseType_t xApplicationGetRandomNumber( uint32_t* pulNumber )
  * THAT RETURNS A PSEUDO RANDOM NUMBER SO IS NOT INTENDED FOR USE IN PRODUCTION
  * SYSTEMS.
  */
-extern uint32_t ulApplicationGetNextSequenceNumber(uint32_t ulSourceAddress,
-    uint16_t usSourcePort,
-    uint32_t ulDestinationAddress,
-    uint16_t usDestinationPort)
+extern uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
+                                                    uint16_t usSourcePort,
+                                                    uint32_t ulDestinationAddress,
+                                                    uint16_t usDestinationPort )
 {
-    (void)ulSourceAddress;
-    (void)usSourcePort;
-    (void)ulDestinationAddress;
-    (void)usDestinationPort;
+    ( void ) ulSourceAddress;
+    ( void ) usSourcePort;
+    ( void ) ulDestinationAddress;
+    ( void ) usDestinationPort;
 
     return uxRand();
 }

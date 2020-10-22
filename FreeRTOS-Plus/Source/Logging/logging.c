@@ -52,7 +52,7 @@
 #include "FreeRTOS_Stream_Buffer.h"
 
 /* Demo includes. */
-#include "demo_logging.h"
+#include "logging.h"
 
 /*-----------------------------------------------------------*/
 

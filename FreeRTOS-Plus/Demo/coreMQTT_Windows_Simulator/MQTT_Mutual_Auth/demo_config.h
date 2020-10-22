@@ -144,6 +144,15 @@
  */
 
 /**
+ * @brief An option to disable Server Name Indication.
+ *
+ * @note When using a local Mosquitto server setup, SNI needs to be disabled
+ * for an MQTT broker that only has an IP address but no hostname. However,
+ * SNI should be enabled whenever possible.
+ */
+#define democonfigDISABLE_SNI    ( pdFALSE )
+
+/**
  * @brief Configuration that indicates if the demo connection is made to the AWS IoT Core MQTT broker.
  *
  * If username/password based authentication is used, the demo will use appropriate TLS ALPN and

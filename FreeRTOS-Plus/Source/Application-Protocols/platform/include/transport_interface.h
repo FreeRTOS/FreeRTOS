@@ -90,7 +90,7 @@
  * <br><br>
  * <b>Example code:</b>
  * @code{c}
- * int32_t myNetworkRecvImplementation( const NetworkContext_t * pNetworkContext,
+ * int32_t myNetworkRecvImplementation( NetworkContext_t * pNetworkContext,
  *                                      void * pBuffer,
  *                                      size_t bytesToRecv )
  * {
@@ -122,7 +122,7 @@
  * <br><br>
  * <b>Example code:</b>
  * @code{c}
- * int32_t myNetworkSendImplementation( const NetworkContext_t * pNetworkContext,
+ * int32_t myNetworkSendImplementation( NetworkContext_t * pNetworkContext,
  *                                      const void * pBuffer,
  *                                      size_t bytesToSend )
  * {
@@ -165,7 +165,7 @@ typedef struct NetworkContext NetworkContext_t;
  * @return The number of bytes received or a negative error code.
  */
 /* @[define_transportrecv] */
-typedef int32_t ( * TransportRecv_t )( const NetworkContext_t * pNetworkContext,
+typedef int32_t ( * TransportRecv_t )( NetworkContext_t * pNetworkContext,
                                        void * pBuffer,
                                        size_t bytesToRecv );
 /* @[define_transportrecv] */
@@ -181,7 +181,7 @@ typedef int32_t ( * TransportRecv_t )( const NetworkContext_t * pNetworkContext,
  * @return The number of bytes sent or a negative error code.
  */
 /* @[define_transportsend] */
-typedef int32_t ( * TransportSend_t )( const NetworkContext_t * pNetworkContext,
+typedef int32_t ( * TransportSend_t )( NetworkContext_t * pNetworkContext,
                                        const void * pBuffer,
                                        size_t bytesToSend );
 /* @[define_transportsend] */

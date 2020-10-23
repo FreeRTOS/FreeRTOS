@@ -108,12 +108,29 @@
     #ifndef democonfigROOT_CA_PEM
         #error "Please define Root CA certificate of the MQTT broker(democonfigROOT_CA_PEM) in demo_config.h."
     #endif
-    #ifndef democonfigCLIENT_CERTIFICATE_PEM
-        #error "Please define client certificate(democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h."
-    #endif
-    #ifndef democonfigCLIENT_PRIVATE_KEY_PEM
-        #error "Please define client private key(democonfigCLIENT_PRIVATE_KEY_PEM) in demo_config.h."
-    #endif
+
+/* If no username is defined, then a client certificate/key is required. */
+    #ifndef democonfigCLIENT_USERNAME
+        #ifndef democonfigCLIENT_CERTIFICATE_PEM
+            #error "Please define client certificate(democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h."
+        #endif
+        #ifndef democonfigCLIENT_PRIVATE_KEY_PEM
+            #error "Please define client private key(democonfigCLIENT_PRIVATE_KEY_PEM) in demo_config.h."
+        #endif
+    #else
+
+/* If a username is defined, a client password also would need to be defined for
+ * client authentication. */
+        #ifndef democonfigCLIENT_PASSWORD
+            #error "Please define client password(democonfigCLIENT_PASSWORD) in demo_config.h for client authentication based on username/password."
+        #endif
+
+/* AWS IoT MQTT broker port needs to be 443 for client authentication based on
+ * username/password. */
+        #if defined( democonfigUSE_AWS_IOT_CORE_BROKER ) && democonfigMQTT_BROKER_PORT != 443
+            #error "Broker port(democonfigMQTT_BROKER_PORT) should be defined as 443 in demo_config.h for client authentication based on username/password in AWS IoT Core."
+        #endif
+    #endif /* ifndef democonfigCLIENT_USERNAME */
 
     #ifndef democonfigMQTT_BROKER_PORT
         #define democonfigMQTT_BROKER_PORT    ( 8883 )
@@ -129,6 +146,64 @@
  */
 #ifndef mqttexampleNETWORK_BUFFER_SIZE
     #define mqttexampleNETWORK_BUFFER_SIZE    ( 1024U )
+#endif
+
+/**
+ * @brief ALPN (Application-Layer Protocol Negotiation) protocol name for AWS IoT MQTT.
+ *
+ * This will be used if democonfigMQTT_BROKER_PORT is configured as 443 for the AWS IoT MQTT broker.
+ * Please see more details about the ALPN protocol for AWS IoT MQTT endpoint
+ * in the link below.
+ * https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/
+ */
+#define AWS_IOT_MQTT_ALPN           "\x0ex-amzn-mqtt-ca"
+
+/**
+ * @brief This is the ALPN (Application-Layer Protocol Negotiation) string
+ * required by AWS IoT for password-based authentication using TCP port 443.
+ */
+#define AWS_IOT_CUSTOM_AUTH_ALPN    "\x04mqtt"
+
+/**
+ * Provide default values for undefined configuration settings.
+ */
+#ifndef democonfigOS_NAME
+    #define democonfigOS_NAME    "FreeRTOS"
+#endif
+
+#ifndef democonfigOS_VERSION
+    #define democonfigOS_VERSION    tskKERNEL_VERSION_NUMBER
+#endif
+
+#ifndef democonfigHARDWARE_PLATFORM_NAME
+    #define democonfigHARDWARE_PLATFORM_NAME    "WinSim"
+#endif
+
+#ifndef democonfigMQTT_LIB
+    #define democonfigMQTT_LIB    "core-mqtt@1.0.0"
+#endif
+
+/**
+ * @brief The MQTT metrics string expected by AWS IoT.
+ */
+#define AWS_IOT_METRICS_STRING                                 \
+    "?SDK=" democonfigOS_NAME "&Version=" democonfigOS_VERSION \
+    "&Platform=" democonfigHARDWARE_PLATFORM_NAME "&MQTTLib=" democonfigMQTT_LIB
+
+/**
+ * @brief The length of the MQTT metrics string expected by AWS IoT.
+ */
+#define AWS_IOT_METRICS_STRING_LENGTH    ( ( uint16_t ) ( sizeof( AWS_IOT_METRICS_STRING ) - 1 ) )
+
+#ifdef democonfigCLIENT_USERNAME
+
+/**
+ * @brief Append the username with the metrics string if #democonfigCLIENT_USERNAME is defined.
+ *
+ * This is to support both metrics reporting and username/password based client
+ * authentication by AWS IoT.
+ */
+    #define CLIENT_USERNAME_WITH_METRICS    democonfigCLIENT_USERNAME AWS_IOT_METRICS_STRING
 #endif
 
 /**
@@ -837,6 +912,29 @@ static MQTTStatus_t prvMQTTConnect( MQTTContext_t * pxMQTTContext,
      * Packets, the Client MUST send a PINGREQ Packet. */
     xConnectInfo.keepAliveSeconds = mqttexampleKEEP_ALIVE_INTERVAL_SECONDS;
 
+    /* Append metrics when connecting to the AWS IoT Core broker. */
+    #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
+        #ifdef democonfigCLIENT_USERNAME
+            xConnectInfo.pUserName = CLIENT_USERNAME_WITH_METRICS;
+            xConnectInfo.userNameLength = ( uint16_t ) strlen( CLIENT_USERNAME_WITH_METRICS );
+            xConnectInfo.pPassword = democonfigCLIENT_PASSWORD;
+            xConnectInfo.passwordLength = ( uint16_t ) strlen( democonfigCLIENT_PASSWORD );
+        #else
+            xConnectInfo.pUserName = AWS_IOT_METRICS_STRING;
+            xConnectInfo.userNameLength = AWS_IOT_METRICS_STRING_LENGTH;
+            /* Password for authentication is not used. */
+            xConnectInfo.pPassword = NULL;
+            xConnectInfo.passwordLength = 0U;
+        #endif
+    #else /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
+        #ifdef democonfigCLIENT_USERNAME
+            xConnectInfo.pUserName = democonfigCLIENT_USERNAME;
+            xConnectInfo.userNameLength = ( uint16_t ) strlen( democonfigCLIENT_USERNAME );
+            xConnectInfo.pPassword = democonfigCLIENT_PASSWORD;
+            xConnectInfo.passwordLength = ( uint16_t ) strlen( democonfigCLIENT_PASSWORD );
+        #endif /* ifdef democonfigCLIENT_USERNAME */
+    #endif /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
+
     /* Send MQTT CONNECT packet to broker. MQTT's Last Will and Testament feature
      * is not used in this demo, so it is passed as NULL. */
     xResult = MQTT_Connect( pxMQTTContext,
@@ -973,13 +1071,31 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
         TlsTransportStatus_t xNetworkStatus = TLS_TRANSPORT_CONNECT_FAILURE;
         NetworkCredentials_t xNetworkCredentials = { 0 };
 
+        #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
+
+            /* ALPN protocols must be a NULL-terminated list of strings. Therefore,
+             * the first entry will contain the actual ALPN protocol string while the
+             * second entry must remain NULL. */
+            char * pcAlpnProtocols[] = { NULL, NULL };
+
+            /* The ALPN string changes depending on whether username/password authentication is used. */
+            #ifdef democonfigCLIENT_USERNAME
+                pcAlpnProtocols[ 0 ] = AWS_IOT_CUSTOM_AUTH_ALPN;
+            #else
+                pcAlpnProtocols[ 0 ] = AWS_IOT_MQTT_ALPN;
+            #endif
+            xNetworkCredentials.pAlpnProtos = pcAlpnProtocols;
+        #endif /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
+
         /* Set the credentials for establishing a TLS connection. */
         xNetworkCredentials.pRootCa = ( const unsigned char * ) democonfigROOT_CA_PEM;
         xNetworkCredentials.rootCaSize = sizeof( democonfigROOT_CA_PEM );
-        xNetworkCredentials.pClientCert = ( const unsigned char * ) democonfigCLIENT_CERTIFICATE_PEM;
-        xNetworkCredentials.clientCertSize = sizeof( democonfigCLIENT_CERTIFICATE_PEM );
-        xNetworkCredentials.pPrivateKey = ( const unsigned char * ) democonfigCLIENT_PRIVATE_KEY_PEM;
-        xNetworkCredentials.privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
+        #ifdef democonfigCLIENT_CERTIFICATE_PEM
+            xNetworkCredentials.pClientCert = ( const unsigned char * ) democonfigCLIENT_CERTIFICATE_PEM;
+            xNetworkCredentials.clientCertSize = sizeof( democonfigCLIENT_CERTIFICATE_PEM );
+            xNetworkCredentials.pPrivateKey = ( const unsigned char * ) democonfigCLIENT_PRIVATE_KEY_PEM;
+            xNetworkCredentials.privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
+        #endif
         xNetworkCredentials.disableSni = democonfigDISABLE_SNI;
     #else /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
         PlaintextTransportStatus_t xNetworkStatus = PLAINTEXT_TRANSPORT_CONNECT_FAILURE;
@@ -1010,7 +1126,7 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
                                                    mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS,
                                                    mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS );
             xConnected = ( xNetworkStatus == TLS_TRANSPORT_SUCCESS ) ? pdPASS : pdFAIL;
-        #else  /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
+        #else /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
             LogInfo( ( "Creating a TCP connection to %s:%d.",
                        democonfigMQTT_BROKER_ENDPOINT,
                        democonfigMQTT_BROKER_PORT ) );
@@ -1702,6 +1818,8 @@ static bool prvNotificationWaitLoop( uint32_t * pulNotification,
 {
     uint32_t ulWaitCounter = 0U;
     bool ret = true;
+
+    configASSERT( pulNotification != NULL );
 
     while( ( *pulNotification & ulExpectedBits ) != ulExpectedBits )
     {

@@ -102,6 +102,9 @@
  *
  * @note This certificate should be PEM-encoded.
  *
+ * @note If you would like to setup an MQTT broker for running this demo,
+ * please see `mqtt_broker_setup.txt`.
+ *
  * Must include the PEM header and footer:
  * "-----BEGIN CERTIFICATE-----\n"\
  * "...base64 data...\n"\

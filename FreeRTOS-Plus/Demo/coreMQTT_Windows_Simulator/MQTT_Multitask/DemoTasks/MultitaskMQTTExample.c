@@ -606,6 +606,20 @@ static void prvCommandLoop( void );
 static void prvCommandCallback( CommandContext_t * pxContext );
 
 /**
+ * @brief Wait for a task notification in a loop.
+ *
+ * @param[in] pulNotification pointer holding notification value.
+ * @param[in] ulExpectedBits Bits to wait for.
+ * @param[in] xClearBits If bits should be cleared.
+ *
+ * @return `true` if notification received without exceeding the timeout,
+ * else `false`.
+ */
+static bool prvNotificationWaitLoop( uint32_t * pulNotification,
+                                     uint32_t ulExpectedBits,
+                                     bool xClearBits );
+
+/**
  * @brief A task used to create publish operations, waiting for each to complete
  * before creating the next one.
  *
@@ -1667,6 +1681,33 @@ static void prvCommandCallback( CommandContext_t * pxContext )
 
 /*-----------------------------------------------------------*/
 
+static bool prvNotificationWaitLoop( uint32_t * pulNotification,
+                                     uint32_t ulExpectedBits,
+                                     bool xClearBits )
+{
+    uint32_t ulWaitCounter = 0U;
+    bool ret = true;
+
+    while( ( *pulNotification & ulExpectedBits ) != ulExpectedBits )
+    {
+        xTaskNotifyWait( 0,
+                         ( xClearBits ) ? ulExpectedBits : 0,
+                         pulNotification,
+                         mqttexampleDEMO_TICKS_TO_WAIT );
+
+        if( ++ulWaitCounter > mqttexampleMAX_WAIT_ITERATIONS )
+        {
+            LogError( ( "Loop exceeded maximum wait time.\n" ) );
+            ret = false;
+            break;
+        }
+    }
+
+    return ret;
+}
+
+/*-----------------------------------------------------------*/
+
 void prvSyncPublishTask( void * pvParameters )
 {
     ( void ) pvParameters;
@@ -1677,7 +1718,6 @@ void prvSyncPublishTask( void * pvParameters )
     CommandContext_t xContext;
     uint32_t ulNotification = 0U;
     BaseType_t xCommandAdded = pdTRUE;
-    uint32_t ulWaitCounter = 0;
 
     /* We use QoS 1 so that the operation won't be counted as complete until we
      * receive the publish acknowledgment. */
@@ -1702,19 +1742,12 @@ void prvSyncPublishTask( void * pvParameters )
         xCommandAdded = prvAddCommandToQueue( &xCommand );
         /* Ensure command was added to queue. */
         configASSERT( xCommandAdded == pdTRUE );
-        ulWaitCounter = 0;
+        LogInfo( ( "Waiting for publish %d to complete.", i + 1 ) );
 
-        while( ( ulNotification & ( 1U << i ) ) != ( 1U << i ) )
+        if( prvNotificationWaitLoop( &ulNotification, ( 1U << i ), true ) != true )
         {
-            LogInfo( ( "Waiting for publish %d to complete.", i + 1 ) );
-            xTaskNotifyWait( 0, ( 1U << i ), &ulNotification, mqttexampleDEMO_TICKS_TO_WAIT );
-
-            if( ++ulWaitCounter > mqttexampleMAX_WAIT_ITERATIONS )
-            {
-                LogError( ( "Synchronous publish loop iteration %d"
-                            " exceeded maximum wait time.\n", ( i + 1 ) ) );
-                break;
-            }
+            LogError( ( "Synchronous publish loop iteration %d"
+                        " exceeded maximum wait time.\n", ( i + 1 ) ) );
         }
 
         configASSERT( ( ulNotification & ( 1U << i ) ) == ( 1U << i ) );
@@ -1723,7 +1756,7 @@ void prvSyncPublishTask( void * pvParameters )
         vTaskDelay( pdMS_TO_TICKS( mqttexamplePUBLISH_DELAY_SYNC_MS ) );
     }
 
-    LogInfo( ( "Finished publishing\n" ) );
+    LogInfo( ( "Finished sync publishes.\n" ) );
 
     /* Clear this task's notifications. */
     xTaskNotifyStateClear( NULL );
@@ -1733,9 +1766,11 @@ void prvSyncPublishTask( void * pvParameters )
     xTaskNotify( xMainTask, mqttexamplePUBLISHER_SYNC_COMPLETE_BIT, eSetBits );
 
     /* Delete this task. */
-    LogInfo( ( "Deleting Publisher task." ) );
+    LogInfo( ( "Deleting Sync Publisher task." ) );
     vTaskDelete( NULL );
 }
+
+/*-----------------------------------------------------------*/
 
 void prvAsyncPublishTask( void * pvParameters )
 {
@@ -1798,12 +1833,7 @@ void prvAsyncPublishTask( void * pvParameters )
     /* Receive all task notifications. We may receive notifications in a
      * different order, so we have two loops. If all notifications have been
      * received, we can break early. */
-    for( int i = 0; ( i < mqttexamplePUBLISH_COUNT / 2 ) &&
-         ( ( ulExpectedNotifications & ulNotification ) != ulExpectedNotifications ); i++ )
-    {
-        LogInfo( ( "Waiting for task notification %d.", i + 1 ) );
-        xTaskNotifyWait( 0, 0, &ulNotification, mqttexampleDEMO_TICKS_TO_WAIT );
-    }
+    ( void ) prvNotificationWaitLoop( &ulNotification, ulExpectedNotifications, false );
 
     for( int i = 0; i < mqttexamplePUBLISH_COUNT / 2; i++ )
     {
@@ -1870,23 +1900,13 @@ void prvSubscribeTask( void * pvParameters )
      * Since this demo uses multiple tasks, we do not retry failed subscriptions, as the
      * server has likely already processed our first publish, and so this demo will not
      * complete successfully. */
-    while( ( ulNotification & mqttexampleSUBSCRIBE_COMPLETE_BIT ) != mqttexampleSUBSCRIBE_COMPLETE_BIT )
-    {
-        LogInfo( ( "Waiting for subscribe operation to complete." ) );
-        xTaskNotifyWait( 0, mqttexampleSUBSCRIBE_COMPLETE_BIT, &ulNotification, mqttexampleDEMO_TICKS_TO_WAIT );
-
-        if( ++ulWaitCounter > mqttexampleMAX_WAIT_ITERATIONS )
-        {
-            LogError( ( "Subscribe Loop exceeded maximum wait time.\n" ) );
-            break;
-        }
-    }
+    LogInfo( ( "Waiting for subscribe operation to complete." ) );
+    ( void ) prvNotificationWaitLoop( &ulNotification, mqttexampleSUBSCRIBE_COMPLETE_BIT, true );
 
     configASSERT( ( ulNotification & mqttexampleSUBSCRIBE_COMPLETE_BIT ) == mqttexampleSUBSCRIBE_COMPLETE_BIT );
     configASSERT( xContext.xReturnStatus == MQTTSuccess );
 
     LogInfo( ( "Operation wait complete.\n" ) );
-    ulWaitCounter = 0;
 
     for( ; ; )
     {
@@ -1929,8 +1949,9 @@ void prvSubscribeTask( void * pvParameters )
         }
 
         /* Delay a bit to give more time for publish messages to be received. */
-        LogInfo( ( "No messages queued, received %u publishes, sleeping for %d ms\n",
+        LogInfo( ( "No messages queued, received %u publish%s, sleeping for %d ms\n",
                    usNumReceived,
+                   ( usNumReceived == 1 ) ? "" : "es",
                    mqttexampleSUBSCRIBE_TASK_DELAY_MS ) );
         vTaskDelay( pdMS_TO_TICKS( mqttexampleSUBSCRIBE_TASK_DELAY_MS ) );
     }
@@ -1947,20 +1968,9 @@ void prvSubscribeTask( void * pvParameters )
     xCommandAdded = prvAddCommandToQueue( &xCommand );
     /* Ensure command was added to queue. */
     configASSERT( xCommandAdded == pdTRUE );
-    LogInfo( ( "Starting wait on operation\n" ) );
-    ulWaitCounter = 0;
 
-    while( ( ulNotification & mqttexampleUNSUBSCRIBE_COMPLETE_BIT ) != mqttexampleUNSUBSCRIBE_COMPLETE_BIT )
-    {
-        LogInfo( ( "Waiting for unsubscribe operation to complete." ) );
-        xTaskNotifyWait( 0, mqttexampleUNSUBSCRIBE_COMPLETE_BIT, &ulNotification, mqttexampleDEMO_TICKS_TO_WAIT );
-
-        if( ++ulWaitCounter > mqttexampleMAX_WAIT_ITERATIONS )
-        {
-            LogError( ( "Unsubscribe loop exceeded maximum wait time.\n" ) );
-            break;
-        }
-    }
+    LogInfo( ( "Waiting for unsubscribe operation to complete." ) );
+    ( void ) prvNotificationWaitLoop( &ulNotification, mqttexampleUNSUBSCRIBE_COMPLETE_BIT, true );
 
     configASSERT( ( ulNotification & mqttexampleUNSUBSCRIBE_COMPLETE_BIT ) == mqttexampleUNSUBSCRIBE_COMPLETE_BIT );
     LogInfo( ( "Operation wait complete.\n" ) );
@@ -1988,7 +1998,6 @@ static void prvMQTTDemoTask( void * pvParameters )
     BaseType_t xResult = pdFALSE;
     uint32_t ulNotification = 0;
     MQTTStatus_t xMQTTStatus;
-    uint32_t ulWaitCounter = 0;
     uint32_t ulExpectedNotifications = mqttexamplePUBLISHER_SYNC_COMPLETE_BIT |
                                        mqttexampleSUBSCRIBE_TASK_COMPLETE_BIT |
                                        mqttexamplePUBLISHER_ASYNC_COMPLETE_BIT;
@@ -2044,26 +2053,17 @@ static void prvMQTTDemoTask( void * pvParameters )
          * This must be less than or equal to the priority of the main task. */
         xResult = xTaskCreate( prvSubscribeTask, "Subscriber", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY + 1, &xSubscribeTask );
         configASSERT( xResult == pdPASS );
-        xResult = xTaskCreate( prvSyncPublishTask, "Publisher", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY, &xSyncPublisherTask );
+        xResult = xTaskCreate( prvSyncPublishTask, "SyncPublisher", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY, &xSyncPublisherTask );
         configASSERT( xResult == pdPASS );
         xResult = xTaskCreate( prvAsyncPublishTask, "AsyncPublisher", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY, &xAsyncPublisherTask );
         configASSERT( xResult == pdPASS );
 
         LogInfo( ( "Running command loop" ) );
         prvCommandLoop();
-        ulWaitCounter = 0;
 
         /* Delete created queues. Wait for tasks to exit before cleaning up. */
-        while( ( ulNotification & ulExpectedNotifications ) != ulExpectedNotifications )
-        {
-            xTaskNotifyWait( 0, 0, &ulNotification, mqttexampleDEMO_TICKS_TO_WAIT );
-
-            if( ++ulWaitCounter > mqttexampleMAX_WAIT_ITERATIONS )
-            {
-                LogError( ( "Task exit wait exceeded maximum wait time.\n" ) );
-                break;
-            }
-        }
+        LogInfo( ( "Waiting for tasks to exit." ) );
+        ( void ) prvNotificationWaitLoop( &ulNotification, ulExpectedNotifications, false );
 
         configASSERT( ( ulNotification & ulExpectedNotifications ) == ulExpectedNotifications );
 

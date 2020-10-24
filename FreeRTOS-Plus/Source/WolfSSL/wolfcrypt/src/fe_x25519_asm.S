@@ -16540,3 +16540,7 @@ _fe_ge_sub_avx2:
 .size	fe_ge_sub_avx2,.-fe_ge_sub_avx2
 #endif /* __APPLE__ */
 #endif /* HAVE_INTEL_AVX2 */
+
+#if defined(__linux__) && defined(__ELF__)
+.section	.note.GNU-stack,"",%progbits
+#endif

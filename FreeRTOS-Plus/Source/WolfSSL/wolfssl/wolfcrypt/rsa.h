@@ -23,7 +23,13 @@
     \file wolfssl/wolfcrypt/rsa.h
 */
 
+/*
 
+DESCRIPTION
+This library provides the interface to the RSA.
+RSA keys can be used to encrypt, decrypt, sign and verify data.
+
+*/
 #ifndef WOLF_CRYPT_RSA_H
 #define WOLF_CRYPT_RSA_H
 
@@ -280,8 +286,9 @@ WOLFSSL_API int  wc_RsaPublicKeyDecode(const byte* input, word32* inOutIdx,
                                                                RsaKey*, word32);
 WOLFSSL_API int  wc_RsaPublicKeyDecodeRaw(const byte* n, word32 nSz,
                                         const byte* e, word32 eSz, RsaKey* key);
-WOLFSSL_API int wc_RsaKeyToDer(RsaKey*, byte* output, word32 inLen);
-
+#ifdef WOLFSSL_KEY_GEN
+    WOLFSSL_API int wc_RsaKeyToDer(RsaKey*, byte* output, word32 inLen);
+#endif
 
 #ifdef WC_RSA_BLINDING
     WOLFSSL_API int wc_RsaSetRNG(RsaKey* key, WC_RNG* rng);

@@ -1,4 +1,4 @@
-/**
+ /**
   ******************************************************************************
   * @file    stm32h7xx_hal_sd_ex.h
   * @author  MCD Application Team
@@ -56,17 +56,17 @@ typedef enum
 /** 
   * @}
   */
-  
+
 /** 
   * @}
-  */  
+  */
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 /** @defgroup SDEx_Exported_Functions SDEx Exported Functions
   * @{
   */
-  
+
 /** @defgroup SDEx_Exported_Functions_Group1 MultiBuffer functions
   * @{
   */
@@ -83,11 +83,11 @@ void HAL_SDEx_Write_DMADoubleBuf1CpltCallback(SD_HandleTypeDef *hsd);
 /**
   * @}
   */
-  
+
 /**
   * @}
   */
-  
+
 /* Private types -------------------------------------------------------------*/
 /* Private defines -----------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -95,7 +95,7 @@ void HAL_SDEx_Write_DMADoubleBuf1CpltCallback(SD_HandleTypeDef *hsd);
 /* Private macros ------------------------------------------------------------*/
 /* Private functions prototypes ----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
-  
+
 /**
   * @}
   */
@@ -108,6 +108,6 @@ void HAL_SDEx_Write_DMADoubleBuf1CpltCallback(SD_HandleTypeDef *hsd);
 #endif
 
 
-#endif /* stm32h7xx_HAL_SD_EX_H */ 
+#endif /* stm32h7xx_HAL_SD_EX_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

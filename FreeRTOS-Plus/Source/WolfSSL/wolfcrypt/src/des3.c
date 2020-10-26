@@ -345,7 +345,7 @@
         return 0;
     }
 
-    static void Des3Crypt(Des3* des, byte* out, const byte* in, word32 sz,
+    static int Des3Crypt(Des3* des, byte* out, const byte* in, word32 sz,
                    int dir)
     {
         if (des == NULL || out == NULL || in == NULL)
@@ -460,18 +460,17 @@
             CRYP_Cmd(DISABLE);
         }
     #endif /* WOLFSSL_STM32_CUBEMX */
+        return 0;
     }
 
     int wc_Des3_CbcEncrypt(Des3* des, byte* out, const byte* in, word32 sz)
     {
-        Des3Crypt(des, out, in, sz, DES_ENCRYPTION);
-        return 0;
+        return Des3Crypt(des, out, in, sz, DES_ENCRYPTION);
     }
 
     int wc_Des3_CbcDecrypt(Des3* des, byte* out, const byte* in, word32 sz)
     {
-        Des3Crypt(des, out, in, sz, DES_DECRYPTION);
-        return 0;
+        return Des3Crypt(des, out, in, sz, DES_DECRYPTION);
     }
 
 #elif defined(HAVE_COLDFIRE_SEC)
@@ -1171,7 +1170,7 @@
 #ifdef NEED_SOFT_DES
 
     /* permuted choice table (key) */
-    static const byte pc1[] = {
+    static const FLASH_QUALIFIER byte pc1[] = {
            57, 49, 41, 33, 25, 17,  9,
             1, 58, 50, 42, 34, 26, 18,
            10,  2, 59, 51, 43, 35, 27,
@@ -1184,12 +1183,12 @@
     };
 
     /* number left rotations of pc1 */
-    static const byte totrot[] = {
+    static const FLASH_QUALIFIER byte totrot[] = {
            1,2,4,6,8,10,12,14,15,17,19,21,23,25,27,28
     };
 
     /* permuted choice key (table) */
-    static const byte pc2[] = {
+    static const FLASH_QUALIFIER byte pc2[] = {
            14, 17, 11, 24,  1,  5,
             3, 28, 15,  6, 21, 10,
            23, 19, 12,  4, 26,  8,
@@ -1203,11 +1202,11 @@
     /* End of DES-defined tables */
 
     /* bit 0 is left-most in byte */
-    static const int bytebit[] = {
+    static const FLASH_QUALIFIER int bytebit[] = {
         0200,0100,040,020,010,04,02,01
     };
 
-    static const word32 Spbox[8][64] = {
+    static const FLASH_QUALIFIER word32 Spbox[8][64] = {
     {   0x01010400,0x00000000,0x00010000,0x01010404,
         0x01010004,0x00010404,0x00000004,0x00010000,
         0x00000400,0x01010400,0x01010404,0x00000400,

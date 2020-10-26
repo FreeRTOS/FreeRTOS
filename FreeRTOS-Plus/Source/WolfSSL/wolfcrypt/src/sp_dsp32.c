@@ -43,7 +43,8 @@
 #include "hexagon_protos.h"
 #include "hexagon_types.h"
 
-#if (defined(WOLFSSL_SP_CACHE_RESISTANT) || defined(WOLFSSL_SP_SMALL)) &&              (defined(WOLFSSL_HAVE_SP_ECC) || !defined(WOLFSSL_RSA_PUBLIC_ONLY))
+#if (!defined(WC_NO_CACHE_RESISTANT) || defined(WOLFSSL_SP_SMALL)) && \
+             (defined(WOLFSSL_HAVE_SP_ECC) || !defined(WOLFSSL_RSA_PUBLIC_ONLY))
 /* Mask for address to obfuscate which of the two address will be used. */
 static const size_t addr_mask[2] = { 0, (size_t)-1 };
 #endif
@@ -1995,7 +1996,7 @@ static int sp_256_ecc_mulmod_10(sp_point* r, const sp_point* g, const sp_digit* 
     return err;
 }
 
-#elif defined(WOLFSSL_SP_CACHE_RESISTANT)
+#elif !defined(WC_NO_CACHE_RESISTANT)
 /* Multiply the point by the scalar and return the result.
  * If map is true then convert result to affine co-ordinates.
  *

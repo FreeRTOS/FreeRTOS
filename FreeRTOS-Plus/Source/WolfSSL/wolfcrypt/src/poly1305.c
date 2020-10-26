@@ -18,11 +18,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
-
 /*
- * Based off the public domain implementations by Andrew Moon
- * and Daniel J. Bernstein
- */
+
+DESCRIPTION
+This library contains implementation for the Poly1305 authenticator.
+
+Based off the public domain implementations by Andrew Moon
+and Daniel J. Bernstein
+
+*/
 
 
 #ifdef HAVE_CONFIG_H
@@ -228,10 +232,10 @@ extern void poly1305_final_avx2(Poly1305* ctx, byte* mac);
     }
 
     static void U32TO8(byte *p, word32 v) {
-        p[0] = (v      ) & 0xff;
-        p[1] = (v >>  8) & 0xff;
-        p[2] = (v >> 16) & 0xff;
-        p[3] = (v >> 24) & 0xff;
+        p[0] = (byte)((v      ) & 0xff);
+        p[1] = (byte)((v >>  8) & 0xff);
+        p[2] = (byte)((v >> 16) & 0xff);
+        p[3] = (byte)((v >> 24) & 0xff);
     }
 #endif
 
@@ -254,7 +258,11 @@ static WC_INLINE void u32tole64(const word32 inLe32, byte outLe64[8])
 
 
 #if !defined(WOLFSSL_ARMASM) || !defined(__aarch64__)
-void poly1305_blocks(Poly1305* ctx, const unsigned char *m,
+/*
+This local function operates on a message with a given number of bytes
+with a given ctx pointer to a Poly1305 structure.
+*/
+static void poly1305_blocks(Poly1305* ctx, const unsigned char *m,
                      size_t bytes)
 {
 #ifdef USE_INTEL_SPEEDUP
@@ -378,7 +386,11 @@ void poly1305_blocks(Poly1305* ctx, const unsigned char *m,
 #endif /* end of 64 bit cpu blocks or 32 bit cpu */
 }
 
-void poly1305_block(Poly1305* ctx, const unsigned char *m)
+/*
+This local function is used for the last call when a message with a given
+number of bytes is less than the block size.
+*/
+static void poly1305_block(Poly1305* ctx, const unsigned char *m)
 {
 #ifdef USE_INTEL_SPEEDUP
     /* No call to poly1305_block when AVX2, AVX2 does 4 blocks at a time. */
@@ -494,7 +506,7 @@ int wc_Poly1305Final(Poly1305* ctx, byte* mac)
 
 #endif
 
-    if (ctx == NULL)
+    if (ctx == NULL || mac == NULL)
         return BAD_FUNC_ARG;
 
 #ifdef USE_INTEL_SPEEDUP
@@ -663,6 +675,13 @@ int wc_Poly1305Update(Poly1305* ctx, const byte* m, word32 bytes)
 {
     size_t i;
 
+    if (ctx == NULL || (m == NULL && bytes > 0))
+        return BAD_FUNC_ARG;
+
+    if (bytes == 0) {
+        /* valid, but do nothing */
+        return 0;
+    }
 #ifdef CHACHA_AEAD_TEST
     word32 k;
     printf("Raw input to poly:\n");
@@ -673,8 +692,7 @@ int wc_Poly1305Update(Poly1305* ctx, const byte* m, word32 bytes)
     }
     printf("\n");
 #endif
-
-    if (ctx == NULL)
+    if (ctx == NULL || (m == NULL && bytes > 0))
         return BAD_FUNC_ARG;
 
 #ifdef USE_INTEL_SPEEDUP

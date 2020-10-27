@@ -19,3 +19,5 @@ If applicable, please attach screenshot.
 **Browser**
 - Browser: [e.g. Chrome]
 - Version: [e.g. 80.0.3987.132]
+
+<!-- For general inquiries, please post in [FreeRTOS forum](https://forums.freertos.org) for community support. -->

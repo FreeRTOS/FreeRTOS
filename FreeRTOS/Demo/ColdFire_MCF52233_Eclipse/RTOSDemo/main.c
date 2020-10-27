@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.0.1
+ * FreeRTOS Kernel V10.4.1
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -285,7 +285,7 @@ static const unsigned long _cfm[6] = {
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
+void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
 {
 	/* This will get called if a stack overflow is detected during the context
 	switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack

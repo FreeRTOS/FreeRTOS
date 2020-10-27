@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS Kernel V10.4.1
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -69,7 +69,17 @@ the Blocked state so it can read the bytes. */
 
 /* The size of the stack allocated to the tasks that run as part of this demo/
 test.  The stack size is over generous in most cases. */
-#define sbSTACK_SIZE				( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
+#ifndef configSTREAM_BUFFER_SENDER_TASK_STACK_SIZE
+	#define sbSTACK_SIZE			( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
+#else
+	#define sbSTACK_SIZE			configSTREAM_BUFFER_SENDER_TASK_STACK_SIZE
+#endif
+
+#ifndef configSTREAM_BUFFER_SMALLER_TASK_STACK_SIZE
+	#define sbSMALLER_STACK_SIZE	sbSTACK_SIZE
+#else
+	#define sbSMALLER_STACK_SIZE	configSTREAM_BUFFER_SMALLER_TASK_STACK_SIZE
+#endif
 
 /*-----------------------------------------------------------*/
 
@@ -114,6 +124,12 @@ static void prvInterruptTriggerLevelTest( void *pvParameters );
 	static void prvSenderTask( void *pvParameters );
 
 	static StaticStreamBuffer_t xStaticStreamBuffers[ sbNUMBER_OF_ECHO_CLIENTS ];
+
+	/* The +1 is to make the test logic easier as the function that calculates the
+	free space will return one less than the actual free space - adding a 1 to the
+	actual length makes it appear to the tests as if the free space is returned as
+	it might logically be expected.  Returning 1 less than the actual free space is
+	fine as it can never result in an overrun. */
 	static uint8_t ucBufferStorage[ sbNUMBER_OF_SENDER_TASKS ][ sbSTREAM_BUFFER_LENGTH_BYTES + 1 ];
 	static uint32_t ulSenderLoopCounters[ sbNUMBER_OF_SENDER_TASKS ] = { 0 };
 #endif /* configSUPPORT_STATIC_ALLOCATION */
@@ -148,7 +164,7 @@ static volatile StreamBufferHandle_t xInterruptStreamBuffer = NULL;
 
 /* The data sent from the tick interrupt to the task that tests the trigger
 level functionality. */
-static const char *pcDataSentFromInterrupt = "12345678";
+static const char *pcDataSentFromInterrupt = "0123456789";
 
 /* Data that is longer than the buffer that is sent to the buffers as a stream
 of bytes.  Parts of which are written to the stream buffer to test writing
@@ -171,8 +187,8 @@ StreamBufferHandle_t xStreamBuffer;
 	/* The echo servers sets up the stream buffers before creating the echo
 	client tasks.  One set of tasks has the server as the higher priority, and
 	the other has the client as the higher priority. */
-	xTaskCreate( prvEchoServer, "1StrEchoServer", sbSTACK_SIZE, NULL, sbHIGHER_PRIORITY, NULL );
-	xTaskCreate( prvEchoServer, "2StrEchoServer", sbSTACK_SIZE, NULL, sbLOWER_PRIORITY, NULL );
+	xTaskCreate( prvEchoServer, "1StrEchoServer", sbSMALLER_STACK_SIZE, NULL, sbHIGHER_PRIORITY, NULL );
+	xTaskCreate( prvEchoServer, "2StrEchoServer", sbSMALLER_STACK_SIZE, NULL, sbLOWER_PRIORITY, NULL );
 
 	/* The non blocking tasks run continuously and will interleave with each
 	other, so must be created at the lowest priority.  The stream buffer they
@@ -192,8 +208,8 @@ StreamBufferHandle_t xStreamBuffer;
 		/* The sender tasks set up the stream buffers before creating the
 		receiver tasks.  Priorities must be 0 and 1 as the priority is used to
 		index into the xStaticStreamBuffers and ucBufferStorage arrays. */
-		xTaskCreate( prvSenderTask, "Str1Sender", sbSTACK_SIZE, NULL, sbHIGHER_PRIORITY, NULL );
-		xTaskCreate( prvSenderTask, "Str2Sender", sbSTACK_SIZE, NULL, sbLOWER_PRIORITY, NULL );
+		xTaskCreate( prvSenderTask, "Str1Sender", sbSMALLER_STACK_SIZE, NULL, sbHIGHER_PRIORITY, NULL );
+		xTaskCreate( prvSenderTask, "Str2Sender", sbSMALLER_STACK_SIZE, NULL, sbLOWER_PRIORITY, NULL );
 	}
 	#endif /* configSUPPORT_STATIC_ALLOCATION */
 }
@@ -211,8 +227,9 @@ static void prvCheckExpectedState( BaseType_t xState )
 
 static void prvSingleTaskTests( StreamBufferHandle_t xStreamBuffer )
 {
-size_t xReturned, xItem, xExpectedSpace;
+size_t xReturned, xItem, xExpected, xExpectedSpaces, xExpectedBytes;
 const size_t xMax6ByteMessages = sbSTREAM_BUFFER_LENGTH_BYTES / 6;
+const size_t xTrueSize = ( sizeof( ucBufferStorage ) / sbNUMBER_OF_SENDER_TASKS );
 const size_t x6ByteLength = 6, x17ByteLength = 17, xFullBufferSize = sbSTREAM_BUFFER_LENGTH_BYTES * ( size_t ) 2;
 uint8_t *pucFullBuffer, *pucData, *pucReadData;
 TickType_t xTimeBeforeCall, xTimeAfterCall;
@@ -232,14 +249,122 @@ UBaseType_t uxOriginalPriority;
 	pucReadData = pucData + x17ByteLength;
 
 	/* Nothing has been added or removed yet, so expect the free space to be
-	exactly as created. */
-	xExpectedSpace = xStreamBufferSpacesAvailable( xStreamBuffer );
-	prvCheckExpectedState( xExpectedSpace == sbSTREAM_BUFFER_LENGTH_BYTES );
+	exactly as created.  Head and tail are both at 0. */
+	xExpectedSpaces = sbSTREAM_BUFFER_LENGTH_BYTES;
+	xExpectedBytes = 0;
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedSpaces );
+	xExpected = xStreamBufferBytesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedBytes );
 	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdTRUE );
+	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdFALSE );
+
+	/* Add a single item - number of bytes available should go up by one and spaces
+	available down by one.  Head is in front of tail. */
+	xExpectedSpaces--;
+	xExpectedBytes++;
+	xReturned = xStreamBufferSend( xStreamBuffer, ( void * ) pucData, sizeof( *pucData ), ( TickType_t ) 0 );
+	prvCheckExpectedState( xReturned == sizeof( *pucData ) );
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedSpaces );
+	xExpected = xStreamBufferBytesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedBytes );
+	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdFALSE );
+	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdFALSE );
+
+	/* Now fill the buffer by adding another 29 bytes.  Head is 30 tail is at 0. */
+	xExpectedSpaces -= 29;
+	xExpectedBytes += 29;
+	xReturned = xStreamBufferSend( xStreamBuffer, ( void * ) pucData, ( sbSTREAM_BUFFER_LENGTH_BYTES - 1 ), ( TickType_t ) 0 );
+	prvCheckExpectedState( xReturned == ( sbSTREAM_BUFFER_LENGTH_BYTES - 1 ) );
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedSpaces );
+	xExpected = xStreamBufferBytesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedBytes );
+	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdFALSE );
+	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdTRUE );
+
+	/* Should not be able to add another byte now. */
+	xReturned = xStreamBufferSend( xStreamBuffer, ( void * ) pucData, sizeof( *pucData ), ( TickType_t ) 0 );
+	prvCheckExpectedState( xReturned == ( size_t ) 0 );
+
+	/* Remove a byte so the tail pointer moves off 0.  Head pointer remains at the
+	end of the buffer. */
+	xExpectedSpaces += 1;
+	xExpectedBytes -= 1;
+	xReturned = xStreamBufferReceive( xStreamBuffer, ( void * ) pucData, sizeof( *pucData ), ( TickType_t ) 0 );
+	prvCheckExpectedState( xReturned == sizeof( *pucData ) );
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedSpaces );
+	xExpected = xStreamBufferBytesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedBytes );
+	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdFALSE );
+	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdFALSE );
+
+	/* Should be able to add another byte to fill the buffer again now. */
+	xExpectedSpaces -= 1;
+	xExpectedBytes += 1;
+	xReturned = xStreamBufferSend( xStreamBuffer, ( void * ) pucData, sizeof( *pucData ), ( TickType_t ) 0 );
+	prvCheckExpectedState( xReturned == sizeof( *pucData ) );
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedSpaces );
+	xExpected = xStreamBufferBytesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedBytes );
+	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdFALSE );
+	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdTRUE );
+
+	/* Now the head pointer is behind the tail pointer.  Read another 29 bytes so
+	the tail pointer moves to the end of the buffer. */
+	xExpectedSpaces += 29;
+	xExpectedBytes -= 29;
+	xReturned = xStreamBufferReceive( xStreamBuffer, ( void * ) pucData, ( size_t ) 29, ( TickType_t ) 0 );
+	prvCheckExpectedState( xReturned == ( size_t ) 29 );
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedSpaces );
+	xExpected = xStreamBufferBytesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedBytes );
+	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdFALSE );
+	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdFALSE );
+
+	/* Read out one more byte to wrap the tail back around to the start, to get back
+	to where we started. */
+	xExpectedSpaces += 1;
+	xExpectedBytes -= 1;
+	xReturned = xStreamBufferReceive( xStreamBuffer, ( void * ) pucData, sizeof( *pucData ), ( TickType_t ) 0 );
+	prvCheckExpectedState( xReturned == sizeof( *pucData ) );
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedSpaces );
+	xExpected = xStreamBufferBytesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedBytes );
+	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdTRUE );
+	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdFALSE );
+
+	/* Try filling the message buffer in one write, blocking indefinitely.  Expect to
+	have written one byte less. */
+	xReturned = xStreamBufferSend( xStreamBuffer, ( void * ) pucData, xTrueSize, portMAX_DELAY );
+	xExpectedSpaces = ( size_t ) 0;
+	prvCheckExpectedState( xReturned ==  ( xTrueSize - ( size_t ) 1 ) );
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedSpaces );
+	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdFALSE );
+	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdTRUE );
+
+	/* Empty the buffer again ready for the rest of the tests.  Again block
+	indefinitely to ensure reading more than there can possible be won't lock this
+	task up, so expect to actually receive one byte less than requested. */
+	xReturned = xStreamBufferReceive( xStreamBuffer, ( void * ) pucData, xTrueSize, portMAX_DELAY );
+	prvCheckExpectedState( xReturned == ( xTrueSize - ( size_t ) 1 ) );
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == sbSTREAM_BUFFER_LENGTH_BYTES );
+	xExpected = xStreamBufferBytesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == ( size_t ) 0 );
+	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdTRUE );
+	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdFALSE );
 
 
 	/* The buffer is 30 bytes long.  6 5 byte messages should fit before the
 	buffer is completely full. */
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
 	for( xItem = 0; xItem < xMax6ByteMessages; xItem++ )
 	{
 		prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdFALSE );
@@ -260,16 +385,15 @@ UBaseType_t uxOriginalPriority;
 
 		/* The space in the buffer will have reduced by the amount of user data
 		written into the buffer. */
-		xExpectedSpace -= x6ByteLength;
+		xExpected -= x6ByteLength;
 		xReturned = xStreamBufferSpacesAvailable( xStreamBuffer );
-		prvCheckExpectedState( xReturned == xExpectedSpace );
+		prvCheckExpectedState( xReturned == xExpected );
 		xReturned = xStreamBufferBytesAvailable( xStreamBuffer );
 		/* +1 as it is zero indexed. */
 		prvCheckExpectedState( xReturned == ( ( xItem + 1 ) * x6ByteLength ) );
 	}
 
-	/* Now the buffer should be full, and attempting to add anything will should
-	fail. */
+	/* Now the buffer should be full, and attempting to add anything should fail. */
 	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdTRUE );
 	xReturned = xStreamBufferSend( xStreamBuffer, ( void * ) pucData, sizeof( pucData[ 0 ] ), sbDONT_BLOCK );
 	prvCheckExpectedState( xReturned == 0 );
@@ -311,17 +435,17 @@ UBaseType_t uxOriginalPriority;
 
 		/* The space in the buffer will have increased by the amount of user
 		data removed from the buffer. */
-		xExpectedSpace += x6ByteLength;
+		xExpected += x6ByteLength;
 		xReturned = xStreamBufferSpacesAvailable( xStreamBuffer );
-		prvCheckExpectedState( xReturned == xExpectedSpace );
+		prvCheckExpectedState( xReturned == xExpected );
 		xReturned = xStreamBufferBytesAvailable( xStreamBuffer );
-		prvCheckExpectedState( xReturned == ( sbSTREAM_BUFFER_LENGTH_BYTES - xExpectedSpace ) );
+		prvCheckExpectedState( xReturned == ( sbSTREAM_BUFFER_LENGTH_BYTES - xExpected ) );
 	}
 
 	/* The buffer should be empty again. */
 	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdTRUE );
-	xExpectedSpace = xStreamBufferSpacesAvailable( xStreamBuffer );
-	prvCheckExpectedState( xExpectedSpace == sbSTREAM_BUFFER_LENGTH_BYTES );
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == sbSTREAM_BUFFER_LENGTH_BYTES );
 
 	/* Reading with a timeout should also fail after the appropriate time.  The
 	priority is temporarily boosted in this part of the test to keep the
@@ -338,7 +462,7 @@ UBaseType_t uxOriginalPriority;
 
 	/* In the next loop 17 bytes are written to then read out on each
 	iteration.  As 30 is not divisible by 17 the data will wrap around. */
-	xExpectedSpace = sbSTREAM_BUFFER_LENGTH_BYTES - x17ByteLength;
+	xExpected = sbSTREAM_BUFFER_LENGTH_BYTES - x17ByteLength;
 
 	for( xItem = 0; xItem < 100; xItem++ )
 	{
@@ -352,7 +476,7 @@ UBaseType_t uxOriginalPriority;
 		/* The space in the buffer will have reduced by the amount of user data
 		written into the buffer. */
 		xReturned = xStreamBufferSpacesAvailable( xStreamBuffer );
-		prvCheckExpectedState( xReturned == xExpectedSpace );
+		prvCheckExpectedState( xReturned == xExpected );
 		xReturned = xStreamBufferBytesAvailable( xStreamBuffer );
 		prvCheckExpectedState( xReturned == x17ByteLength );
 		prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdFALSE );
@@ -420,12 +544,8 @@ UBaseType_t uxOriginalPriority;
 
 	/* Try writing more bytes than there is space. */
 	vTaskPrioritySet( NULL, configMAX_PRIORITIES - 1 );
-	xTimeBeforeCall = xTaskGetTickCount();
 	xReturned = xStreamBufferSend( xStreamBuffer, ( const void * ) pc54ByteString, sbSTREAM_BUFFER_LENGTH_BYTES * ( size_t ) 2, xMinimalBlockTime );
-	xTimeAfterCall = xTaskGetTickCount();
 	vTaskPrioritySet( NULL, uxOriginalPriority );
-	prvCheckExpectedState( ( xTimeAfterCall - xTimeBeforeCall ) >= xMinimalBlockTime );
-	prvCheckExpectedState( ( xTimeAfterCall - xTimeBeforeCall ) < ( xMinimalBlockTime + xAllowableMargin ) );
 	prvCheckExpectedState( xReturned == sbSTREAM_BUFFER_LENGTH_BYTES );
 	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdTRUE );
 	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdFALSE );
@@ -599,11 +719,11 @@ BaseType_t xNonBlockingReceiveError = pdFALSE;
 			/* Here prvSingleTaskTests() performs various tests on a stream buffer
 			that was created statically. */
 			prvSingleTaskTests( xStreamBuffer );
-			xTaskCreate( prvReceiverTask, "StrReceiver", sbSTACK_SIZE,  ( void * ) xStreamBuffer, sbHIGHER_PRIORITY, NULL );
+			xTaskCreate( prvReceiverTask, "StrReceiver", sbSMALLER_STACK_SIZE,  ( void * ) xStreamBuffer, sbHIGHER_PRIORITY, NULL );
 		}
 		else
 		{
-			xTaskCreate( prvReceiverTask, "StrReceiver", sbSTACK_SIZE,  ( void * ) xStreamBuffer, sbLOWER_PRIORITY, NULL );
+			xTaskCreate( prvReceiverTask, "StrReceiver", sbSMALLER_STACK_SIZE,  ( void * ) xStreamBuffer, sbLOWER_PRIORITY, NULL );
 		}
 
 		for( ;; )
@@ -770,7 +890,6 @@ EchoStreamBuffers_t *pxStreamBuffers = ( EchoStreamBuffers_t * ) pvParameters;
 		/* This stream buffer is just created and deleted to ensure no memory
 		leaks. */
 		xTempStreamBuffer = xStreamBufferCreate( sbSTREAM_BUFFER_LENGTH_BYTES, sbTRIGGER_LEVEL_1 );
-		prvSingleTaskTests( xTempStreamBuffer );
 		vStreamBufferDelete( xTempStreamBuffer );
 
 		/* The following are tests for a stream buffer of size one. */
@@ -856,14 +975,14 @@ const TickType_t xTicksToBlock = pdMS_TO_TICKS( 350UL );
 	priority then the client task is created at the higher priority. */
 	if( uxTaskPriorityGet( NULL ) == sbLOWER_PRIORITY )
 	{
-		xTaskCreate( prvEchoClient, "EchoClient", sbSTACK_SIZE,  ( void * ) &xStreamBuffers, sbHIGHER_PRIORITY, NULL );
+		xTaskCreate( prvEchoClient, "EchoClient", sbSMALLER_STACK_SIZE,  ( void * ) &xStreamBuffers, sbHIGHER_PRIORITY, NULL );
 	}
 	else
 	{
 		/* Here prvSingleTaskTests() performs various tests on a stream buffer
 		that was created dynamically. */
 		prvSingleTaskTests( xStreamBuffers.xEchoClientBuffer );
-		xTaskCreate( prvEchoClient, "EchoClient", sbSTACK_SIZE, ( void * ) &xStreamBuffers, sbLOWER_PRIORITY, NULL );
+		xTaskCreate( prvEchoClient, "EchoClient", sbSMALLER_STACK_SIZE, ( void * ) &xStreamBuffers, sbLOWER_PRIORITY, NULL );
 	}
 
 	for( ;; )
@@ -914,14 +1033,14 @@ static void prvInterruptTriggerLevelTest( void *pvParameters )
 {
 StreamBufferHandle_t xStreamBuffer;
 size_t xTriggerLevel = 1, xBytesReceived;
-const size_t xStreamBufferSizeBytes = ( size_t ) 8, xMaxTriggerLevel = ( size_t ) 6, xMinTriggerLevel = ( size_t ) 1;
-const TickType_t xReadBlockTime = 4, xCycleBlockTime = pdMS_TO_TICKS( 100 );
-uint8_t ucRxData[ 8 ];
+const size_t xStreamBufferSizeBytes = ( size_t ) 9, xMaxTriggerLevel = ( size_t ) 7, xMinTriggerLevel = ( size_t ) 2;
+const TickType_t xReadBlockTime = 5, xCycleBlockTime = pdMS_TO_TICKS( 100 );
+uint8_t ucRxData[ 9 ];
 BaseType_t xErrorDetected = pdFALSE;
 #ifndef configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN
-    const size_t xAllowableMargin = ( size_t ) 0;
+	const size_t xAllowableMargin = ( size_t ) 0;
 #else
-    const size_t xAllowableMargin = ( size_t ) configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN;
+	const size_t xAllowableMargin = ( size_t ) configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN;
 #endif
 
 	/* Remove compiler warning about unused parameter. */
@@ -931,6 +1050,12 @@ BaseType_t xErrorDetected = pdFALSE;
 	{
 		for( xTriggerLevel = xMinTriggerLevel; xTriggerLevel < xMaxTriggerLevel; xTriggerLevel++ )
 		{
+			/* This test is very time sensitive so delay at the beginning to ensure
+			the rest of the system is up and running before starting.  Delay between
+			each loop to ensure the interrupt that sends to the stream buffer
+			detects it needs to start sending from the start of the strin again.. */
+			vTaskDelay( xCycleBlockTime );
+
 			/* Create the stream buffer that will be used from inside the tick
 			interrupt. */
 			memset( ucRxData, 0x00, sizeof( ucRxData ) );
@@ -963,9 +1088,27 @@ BaseType_t xErrorDetected = pdFALSE;
 			{
 				/* Trigger level was greater than the block time so expect to
 				time out having received xReadBlockTime bytes. */
-				if( ( xReadBlockTime - xBytesReceived ) > xAllowableMargin )
+				if( xBytesReceived > xReadBlockTime )
 				{
-					xErrorDetected = pdTRUE;
+					/* Received more bytes than expected.  That could happen if
+					this task unblocked at the right time, but an interrupt
+					added another byte to the stream buffer before this task was
+					able to run. */
+					if( ( xBytesReceived - xReadBlockTime ) > xAllowableMargin )
+					{
+						xErrorDetected = pdTRUE;
+					}
+				}
+				else if( xReadBlockTime != xBytesReceived )
+				{
+					/* It is possible the interrupt placed an item in the stream
+					buffer before this task called xStreamBufferReceive(), but
+					if that is the case then xBytesReceived will only every be
+					0 as the interrupt will only have executed once. */
+					if( xBytesReceived != 1 )
+					{
+						xErrorDetected = pdTRUE;
+					}
 				}
 			}
 			else if( xTriggerLevel < xReadBlockTime )
@@ -973,19 +1116,43 @@ BaseType_t xErrorDetected = pdFALSE;
 				/* Trigger level was less than the block time so we expect to
 				have received the trigger level number of bytes - could be more
 				though depending on other activity between the task being
-				unblocked and the task reading the number of bytes received. */
-				if( ( xBytesReceived - xTriggerLevel ) > xAllowableMargin )
+				unblocked and the task reading the number of bytes received.  It
+				could also be less if the interrupt already put something in the
+				stream buffer before this task attempted to read it - in which
+				case the task would have returned the available bytes immediately
+				without ever blocking - in that case the bytes received will
+				only ever be 1 as the interrupt would not have executed more
+				than one in that time unless this task has too low a priority. */
+				if( xBytesReceived < xTriggerLevel )
+				{
+					if( xBytesReceived != 1 )
+					{
+						xErrorDetected = pdTRUE;
+					}
+				}
+				else if( ( xBytesReceived - xTriggerLevel ) > xAllowableMargin )
 				{
 					xErrorDetected = pdTRUE;
 				}
 			}
 			else
 			{
-				/* The trigger level equaled the block time, so expect to
-				receive no greater than the block time, but one or two less is
-				ok due to variations in how far through the time slice the
-				functions get executed. */
-				if( ( xBytesReceived - xReadBlockTime ) > xAllowableMargin )
+				/* The trigger level equalled the block time, so expect to
+				receive no greater than the block time.  It could also be less
+				if the interrupt already put something in the stream buffer
+				before this task attempted to read it - in which case the task
+				would have returned the available bytes immediately without ever
+				blocking - in that case the bytes received would only ever be 1
+				because the interrupt is not going to execute twice in that time
+				unless this task is running a too low a priority. */
+				if( xBytesReceived < xReadBlockTime )
+				{
+					if( xBytesReceived != 1 )
+					{
+						xErrorDetected = pdTRUE;
+					}
+				}
+				else if( ( xBytesReceived - xReadBlockTime ) > xAllowableMargin )
 				{
 					xErrorDetected = pdTRUE;
 				}
@@ -1010,7 +1177,6 @@ BaseType_t xErrorDetected = pdFALSE;
 
 			/* Tidy up ready for the next loop. */
 			vStreamBufferDelete( xStreamBuffer );
-			vTaskDelay( xCycleBlockTime );
 		}
 	}
 }

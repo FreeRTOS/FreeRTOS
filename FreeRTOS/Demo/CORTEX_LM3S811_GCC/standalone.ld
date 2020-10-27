@@ -37,7 +37,7 @@ SECTIONS
     .text :
     {
         KEEP(*(.isr_vector))
-        *(.text)
+        *(.text*)
         *(.rodata*)
         _etext = .;
     } > FLASH

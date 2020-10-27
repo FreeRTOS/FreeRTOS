@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS Kernel V10.4.1
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -129,7 +129,11 @@ void vStartMessageBufferTasks( configSTACK_DEPTH_TYPE xStackSize  )
 {
 MessageBufferHandle_t xMessageBuffer;
 
+#ifndef configMESSAGE_BUFFER_BLOCK_TASK_STACK_SIZE
 	xBlockingStackSize = ( xStackSize + ( xStackSize >> 1U ) );
+#else
+	xBlockingStackSize = configMESSAGE_BUFFER_BLOCK_TASK_STACK_SIZE;
+#endif
 
 	/* The echo servers sets up the message buffers before creating the echo
 	client tasks.  One set of tasks has the server as the higher priority, and
@@ -188,6 +192,17 @@ UBaseType_t uxOriginalPriority;
 	/* In case configASSERT() is not define. */
 	( void ) xExpectedSpace;
 	( void ) xNextLength;
+
+	/* Try sending more bytes than possible, first using the FromISR version, then
+	with an infinite block time to ensure this task does not lock up. */
+	xReturned = xMessageBufferSendFromISR( xMessageBuffer, ( void * ) pucData, mbMESSAGE_BUFFER_LENGTH_BYTES + sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ), NULL );
+	configASSERT( xReturned == ( size_t ) 0 );
+	/* In case configASSERT() is not defined. */
+	( void ) xReturned;
+	xReturned = xMessageBufferSend( xMessageBuffer, ( void * ) pucData, mbMESSAGE_BUFFER_LENGTH_BYTES + sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ), portMAX_DELAY );
+	configASSERT( xReturned == ( size_t ) 0 );
+	/* In case configASSERT() is not defined. */
+	( void ) xReturned;
 
 	/* The buffer is 50 bytes long.  When an item is added to the buffer an
 	additional 4 bytes are added to hold the item's size.  That means adding
@@ -543,6 +558,7 @@ char cRxString[ 12 ];
 	char cTxString[ 12 ]; /* Large enough to hold a 32 number in ASCII. */
 	const TickType_t xTicksToWait = mbRX_TX_BLOCK_TIME, xShortDelay = pdMS_TO_TICKS( 50 );
 	StaticMessageBuffer_t xStaticMessageBuffer;
+	size_t xBytesSent;
 
 
 	/* The task's priority is used as an index into the loop counters used to
@@ -583,7 +599,11 @@ char cRxString[ 12 ];
 			then overflows. */
 			memset( cTxString, 0x00, sizeof( cTxString ) );
 			sprintf( cTxString, "%d", ( int ) iDataToSend );
-			xMessageBufferSend( xMessageBuffer, ( void * ) cTxString, strlen( cTxString ), xTicksToWait );
+
+			do
+			{
+				xBytesSent = xMessageBufferSend( xMessageBuffer, ( void * ) cTxString, strlen( cTxString ), xTicksToWait );
+			} while ( xBytesSent == 0 ); /* Buffer may become full when receiver is running at the idle priority. */
 
 			iDataToSend++;
 

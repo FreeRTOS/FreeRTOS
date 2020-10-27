@@ -23,46 +23,47 @@
 #include "proof/queue.h"
 
 /* It may seem that the read of `pxQueue->uxMessagesWaiting` is required to be
-contained in a critical region to be thread-safe. However, it is impossible for
-this read to be involved in a data race due to the atomicity mechanism used by
-tasks and ISRs: masking and enabling interrupts. If we assume (1) a
-uniprocessor system and (2) that higher priority ISRs never call queue API
-functions then masking interrupts ensures *strong isolation* meaning critical
-regions protected by interrupt masking/enabling are isolated from other
-critical regions and code outside of critical regions. */
+ * contained in a critical region to be thread-safe. However, it is impossible for
+ * this read to be involved in a data race due to the atomicity mechanism used by
+ * tasks and ISRs: masking and enabling interrupts. If we assume (1) a
+ * uniprocessor system and (2) that higher priority ISRs never call queue API
+ * functions then masking interrupts ensures *strong isolation* meaning critical
+ * regions protected by interrupt masking/enabling are isolated from other
+ * critical regions and code outside of critical regions. */
 
 UBaseType_t uxQueueMessagesWaitingFromISR( const QueueHandle_t xQueue )
 /*@requires queue(xQueue, ?Storage, ?N, ?M, ?W, ?R, ?K, ?is_locked, ?abs);@*/
 /*@ensures queue(xQueue, Storage, N, M, W, R, K, is_locked, abs) &*& result == K;@*/
 {
-UBaseType_t uxReturn;
+    UBaseType_t uxReturn;
+
 #ifdef VERIFAST /*< const pointer declaration */
-Queue_t * pxQueue = xQueue;
+    Queue_t * pxQueue = xQueue;
 #else
-Queue_t * const pxQueue = xQueue;
+    Queue_t * const pxQueue = xQueue;
 #endif
 
-	configASSERT( pxQueue );
-	uxReturn = pxQueue->uxMessagesWaiting;
+    configASSERT( pxQueue );
+    uxReturn = pxQueue->uxMessagesWaiting;
 
-	return uxReturn;
+    return uxReturn;
 }
 
 UBaseType_t uxQueueMessagesWaiting( const QueueHandle_t xQueue )
 /*@requires [1/2]queuehandle(xQueue, ?N, ?M, ?is_isr) &*& is_isr == false;@*/
 /*@ensures [1/2]queuehandle(xQueue, N, M, is_isr);@*/
 {
-UBaseType_t uxReturn;
+    UBaseType_t uxReturn;
 
-	configASSERT( xQueue );
+    configASSERT( xQueue );
 
-	taskENTER_CRITICAL();
-	{
-		/*@assert queue(xQueue, ?Storage, N, M, ?W, ?R, ?K, ?is_locked, ?abs);@*/
-		uxReturn = ( ( Queue_t * ) xQueue )->uxMessagesWaiting;
-		/*@close queue(xQueue, Storage, N, M, W, R, K, is_locked, abs);@*/
-	}
-	taskEXIT_CRITICAL();
+    taskENTER_CRITICAL();
+    {
+        /*@assert queue(xQueue, ?Storage, N, M, ?W, ?R, ?K, ?is_locked, ?abs);@*/
+        uxReturn = ( ( Queue_t * ) xQueue )->uxMessagesWaiting;
+        /*@close queue(xQueue, Storage, N, M, W, R, K, is_locked, abs);@*/
+    }
+    taskEXIT_CRITICAL();
 
-	return uxReturn;
+    return uxReturn;
 } /*lint !e818 Pointer cannot be declared const as xQueue is a typedef not pointer. */

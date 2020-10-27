@@ -1,8 +1,8 @@
 /* fp_sqr_comba_3.i
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,12 +16,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
 
+
 #ifdef TFM_SQR3
-void fp_sqr_comba3(fp_int *A, fp_int *B)
+int fp_sqr_comba3(fp_int *A, fp_int *B)
 {
    fp_digit *a, b[6], c0, c1, c2;
 #ifdef TFM_ISO
@@ -62,8 +63,10 @@ void fp_sqr_comba3(fp_int *A, fp_int *B)
 
    B->used = 6;
    B->sign = FP_ZPOS;
-   memcpy(B->dp, b, 6 * sizeof(fp_digit));
+   XMEMCPY(B->dp, b, 6 * sizeof(fp_digit));
    fp_clamp(B);
+
+   return FP_OKAY;
 }
 #endif
 

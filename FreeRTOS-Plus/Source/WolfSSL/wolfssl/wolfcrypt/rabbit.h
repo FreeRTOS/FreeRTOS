@@ -1,8 +1,8 @@
 /* rabbit.h
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+
+/*!
+    \file wolfssl/wolfcrypt/rabbit.h
+*/
+
 
 #ifndef WOLF_CRYPT_RABBIT_H
 #define WOLF_CRYPT_RABBIT_H
@@ -48,12 +53,16 @@ typedef struct RabbitCtx {
 typedef struct Rabbit {
     RabbitCtx masterCtx;
     RabbitCtx workCtx;
+#ifdef XSTREAM_ALIGN
+    void*  heap;  /* heap hint, currently XMALLOC only used with aligning */
+#endif
 } Rabbit;
 
 
 WOLFSSL_API int wc_RabbitProcess(Rabbit*, byte*, const byte*, word32);
 WOLFSSL_API int wc_RabbitSetKey(Rabbit*, const byte* key, const byte* iv);
 
+WOLFSSL_LOCAL int wc_Rabbit_SetHeap(Rabbit* ctx, void* heap);
 
 #ifdef __cplusplus
     } /* extern "C" */

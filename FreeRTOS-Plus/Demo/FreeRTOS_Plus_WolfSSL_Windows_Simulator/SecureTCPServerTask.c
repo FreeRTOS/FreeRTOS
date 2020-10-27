@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.4.0
+ * FreeRTOS Kernel V10.4.1
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -224,8 +224,8 @@ int32_t iReturn;
     are called. */
     wolfSSL_Init();
 
-    /* Attempt to create a context that uses the TLS 1.2 server protocol. */
-    xWolfSSL_ServerContext = wolfSSL_CTX_new( wolfTLSv1_2_server_method() );
+    /* Attempt to create a context that uses the TLS 1.3 server protocol. */
+    xWolfSSL_ServerContext = wolfSSL_CTX_new( wolfTLSv1_3_server_method() );
 
     if( xWolfSSL_ServerContext != NULL )
     {

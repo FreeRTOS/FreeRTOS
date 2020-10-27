@@ -185,8 +185,11 @@ struct WOLFSSL_EVP_MD_CTX {
         Hmac hmac;
     #endif
     } hash;
-    int macType;
+    enum wc_HashType macType;
     WOLFSSL_EVP_PKEY_CTX *pctx;
+#ifndef NO_HMAC
+    unsigned int isHMAC;
+#endif
 };
 
 
@@ -350,8 +353,12 @@ struct WOLFSSL_EVP_CIPHER_CTX {
     defined(HAVE_AESGCM) || defined (WOLFSSL_AES_XTS)
 #define HAVE_WOLFSSL_EVP_CIPHER_CTX_IV
     int    ivSz;
+#ifdef HAVE_AESGCM
+    byte*   gcmDecryptBuffer;
+    int     gcmDecryptBufferLen;
     ALIGN16 unsigned char authTag[AES_BLOCK_SIZE];
     int     authTagSz;
+#endif
 #endif
 };
 
@@ -514,6 +521,7 @@ WOLFSSL_API int wolfSSL_EVP_PKEY_assign_EC_KEY(WOLFSSL_EVP_PKEY* pkey,
 WOLFSSL_API int wolfSSL_EVP_PKEY_assign_DSA(EVP_PKEY* pkey, WOLFSSL_DSA* key);
 WOLFSSL_API int wolfSSL_EVP_PKEY_assign_DH(EVP_PKEY* pkey, WOLFSSL_DH* key);
 WOLFSSL_API WOLFSSL_RSA* wolfSSL_EVP_PKEY_get0_RSA(struct WOLFSSL_EVP_PKEY *pkey);
+WOLFSSL_API WOLFSSL_DSA* wolfSSL_EVP_PKEY_get0_DSA(struct WOLFSSL_EVP_PKEY *pkey);
 WOLFSSL_API WOLFSSL_RSA* wolfSSL_EVP_PKEY_get1_RSA(WOLFSSL_EVP_PKEY*);
 WOLFSSL_API WOLFSSL_DSA* wolfSSL_EVP_PKEY_get1_DSA(WOLFSSL_EVP_PKEY*);
 WOLFSSL_API WOLFSSL_EC_KEY *wolfSSL_EVP_PKEY_get0_EC_KEY(WOLFSSL_EVP_PKEY *pkey);

@@ -18,8 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+/*
 
+DESCRIPTION
+This library contains implementation for the ChaCha20 stream cipher and
+the Poly1305 authenticator, both as as combined-mode,
+or Authenticated Encryption with Additional Data (AEAD) algorithm.
 
+*/
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
@@ -141,7 +147,7 @@ int wc_ChaCha20Poly1305_Init(ChaChaPoly_Aead* aead,
     /* setup aead context */
     XMEMSET(aead, 0, sizeof(ChaChaPoly_Aead));
     XMEMSET(authKey, 0, sizeof(authKey));
-    aead->isEncrypt = isEncrypt;
+    aead->isEncrypt = (byte)isEncrypt;
 
     /* Initialize the ChaCha20 context (key and iv) */
     ret = wc_Chacha_SetKey(&aead->chacha, inKey,
@@ -189,6 +195,8 @@ int wc_ChaCha20Poly1305_UpdateAad(ChaChaPoly_Aead* aead,
         aead->state != CHACHA20_POLY1305_STATE_AAD) {
         return BAD_STATE_E;
     }
+    if (inAADLen > CHACHA20_POLY1305_MAX - aead->aadLen)
+        return CHACHA_POLY_OVERFLOW;
 
     if (inAAD && inAADLen > 0) {
         ret = wc_Poly1305Update(&aead->poly, inAAD, inAADLen);
@@ -215,6 +223,8 @@ int wc_ChaCha20Poly1305_UpdateData(ChaChaPoly_Aead* aead,
         aead->state != CHACHA20_POLY1305_STATE_DATA) {
         return BAD_STATE_E;
     }
+    if (dataLen > CHACHA20_POLY1305_MAX - aead->dataLen)
+        return CHACHA_POLY_OVERFLOW;
 
     /* Pad the AAD */
     if (aead->state == CHACHA20_POLY1305_STATE_AAD) {
@@ -261,7 +271,7 @@ int wc_ChaCha20Poly1305_Final(ChaChaPoly_Aead* aead,
         ret = wc_Poly1305_Pad(&aead->poly, aead->aadLen);
     }
 
-    /* Pad the ciphertext to 16 bytes */
+    /* Pad the plaintext/ciphertext to 16 bytes */
     if (ret == 0) {
         ret = wc_Poly1305_Pad(&aead->poly, aead->dataLen);
     }

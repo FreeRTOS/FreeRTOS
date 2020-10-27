@@ -80,6 +80,8 @@ WOLFSSL_API int wolfSSL_DSA_do_verify(const unsigned char* d,
                                       unsigned char* sig,
                                       WOLFSSL_DSA* dsa, int *dsacheck);
 
+WOLFSSL_API int wolfSSL_DSA_bits(const WOLFSSL_DSA *d);
+
 WOLFSSL_API WOLFSSL_DSA_SIG* wolfSSL_DSA_SIG_new(void);
 WOLFSSL_API void wolfSSL_DSA_SIG_free(WOLFSSL_DSA_SIG *sig);
 WOLFSSL_API WOLFSSL_DSA_SIG* wolfSSL_DSA_do_sign_ex(const unsigned char* digest,

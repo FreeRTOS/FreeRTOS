@@ -129,7 +129,7 @@ void fe_init(void)
 
 #if defined(HAVE_CURVE25519) && !defined(CURVE25519_SMALL) && \
     !defined(FREESCALE_LTC_ECC)
-int curve25519(byte* q, byte* n, byte* p)
+int curve25519(byte* q, const byte* n, const byte* p)
 {
 #if 0
   unsigned char e[32];

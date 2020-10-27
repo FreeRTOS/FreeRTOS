@@ -18,9 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+/*
 
+DESCRIPTION
+This module implements the arithmetic-shift right, left, byte swapping, XOR,
+masking and clearing memory logic.
 
-
+*/
 #ifndef WOLF_CRYPT_MISC_H
 #define WOLF_CRYPT_MISC_H
 

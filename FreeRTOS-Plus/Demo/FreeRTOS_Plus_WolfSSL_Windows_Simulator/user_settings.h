@@ -26,6 +26,10 @@
  *
  *
  *----------------------------------------------------------------------------*/
+  #define WOLFSSL_TLS13
+  #define HAVE_FFDHE_2048
+  #define WC_RSA_PSS
+  #define HAVE_HKDF
 
   
   #define HAVE_AESGCM

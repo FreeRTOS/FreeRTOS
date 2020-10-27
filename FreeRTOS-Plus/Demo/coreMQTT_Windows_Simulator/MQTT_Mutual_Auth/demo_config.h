@@ -75,6 +75,9 @@
  * Settings/Custom Endpoint, or using the describe-endpoint REST API (with
  * AWS CLI command line tool).
  *
+ * @note If you would like to setup an MQTT broker for running this demo,
+ * please see `mqtt_broker_setup.txt`.
+ *
  * #define democonfigMQTT_BROKER_ENDPOINT    "...insert here..."
  */
 
@@ -142,6 +145,15 @@
  *
  * #define democonfigCLIENT_PRIVATE_KEY_PEM    "...insert here..."
  */
+
+/**
+ * @brief An option to disable Server Name Indication.
+ *
+ * @note When using a local Mosquitto server setup, SNI needs to be disabled
+ * for an MQTT broker that only has an IP address but no hostname. However,
+ * SNI should be enabled whenever possible.
+ */
+#define democonfigDISABLE_SNI    ( pdFALSE )
 
 /**
  * @brief Configuration that indicates if the demo connection is made to the AWS IoT Core MQTT broker.

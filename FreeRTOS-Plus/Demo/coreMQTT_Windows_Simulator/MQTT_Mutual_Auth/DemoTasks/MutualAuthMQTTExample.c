@@ -557,11 +557,23 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
     RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
     RetryUtilsParams_t xReconnectParams;
 
-    /* ALPN protocols must be a NULL-terminated list of strings. Therefore,
-     * the first entry will contain the actual ALPN protocol string while the
-     * second entry must remain NULL. */
-    char * pcAlpnProtocols[] = { NULL, NULL };
+    #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
 
+        /* ALPN protocols must be a NULL-terminated list of strings. Therefore,
+         * the first entry will contain the actual ALPN protocol string while the
+         * second entry must remain NULL. */
+        char * pcAlpnProtocols[] = { NULL, NULL };
+
+        /* The ALPN string changes depending on whether username/password authentication is used. */
+        #ifdef democonfigCLIENT_USERNAME
+            pcAlpnProtocols[ 0 ] = AWS_IOT_CUSTOM_AUTH_ALPN;
+        #else
+            pcAlpnProtocols[ 0 ] = AWS_IOT_MQTT_ALPN;
+        #endif
+        pxNetworkCredentials->pAlpnProtos = pcAlpnProtocols;
+    #endif /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
+
+    pxNetworkCredentials->disableSni = democonfigDISABLE_SNI;
     /* Set the credentials for establishing a TLS connection. */
     pxNetworkCredentials->pRootCa = ( const unsigned char * ) democonfigROOT_CA_PEM;
     pxNetworkCredentials->rootCaSize = sizeof( democonfigROOT_CA_PEM );
@@ -571,22 +583,6 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
         pxNetworkCredentials->pPrivateKey = ( const unsigned char * ) democonfigCLIENT_PRIVATE_KEY_PEM;
         pxNetworkCredentials->privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
     #endif
-    #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
-        pxNetworkCredentials->disableSni = pdFALSE;
-        /* The ALPN string changes depending on whether username/password authentication is used. */
-        #ifdef democonfigCLIENT_USERNAME
-            pcAlpnProtocols[ 0 ] = AWS_IOT_CUSTOM_AUTH_ALPN;
-        #else
-            pcAlpnProtocols[ 0 ] = AWS_IOT_MQTT_ALPN;
-        #endif
-        pxNetworkCredentials->pAlpnProtos = pcAlpnProtocols;
-    #else /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
-
-        /* When using a local Mosquitto server setup, SNI needs to be disabled for
-         * an MQTT broker that only has an IP address but no hostname. However,
-         * SNI should be enabled whenever possible. */
-        pxNetworkCredentials->disableSni = pdTRUE;
-    #endif /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
     /* Initialize reconnect attempts and interval. */
     RetryUtils_ParamsReset( &xReconnectParams );
     xReconnectParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;

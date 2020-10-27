@@ -485,11 +485,7 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
     /* Set the credentials for establishing a TLS connection. */
     pxNetworkCredentials->pRootCa = ( const unsigned char * ) democonfigROOT_CA_PEM;
     pxNetworkCredentials->rootCaSize = sizeof( democonfigROOT_CA_PEM );
-
-    /* When using a local Mosquitto server setup, SNI needs to be disabled for
-     * an MQTT broker that only has an IP address but no hostname. However,
-     * SNI should be enabled whenever possible. */
-    pxNetworkCredentials->disableSni = pdTRUE;
+    pxNetworkCredentials->disableSni = democonfigDISABLE_SNI;
     /* Initialize reconnect attempts and interval. */
     RetryUtils_ParamsReset( &xReconnectParams );
     xReconnectParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;

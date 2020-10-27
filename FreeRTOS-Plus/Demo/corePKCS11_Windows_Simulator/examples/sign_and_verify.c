@@ -30,10 +30,10 @@
 #include "stdio.h"
 
 /* PKCS #11 includes. */
-#include "iot_pkcs11_config.h"
-#include "iot_pkcs11.h"
+#include "core_pkcs11_config.h"
+#include "core_pkcs11.h"
 #include "pkcs11.h"
-#include "iot_pki_utils.h"
+#include "core_pki_utils.h"
 
 /* Demo includes. */
 #include "demo_helpers.h"
@@ -106,7 +106,7 @@ void vPKCS11SignVerifyDemo( void )
     configASSERT( pxFunctionList->C_InitToken != NULL );
     configASSERT( pxFunctionList->C_GetTokenInfo != NULL );
 
-    /* Instead of using the vStart helper, we will  use the "iot_pkcs11.h" 
+    /* Instead of using the vStart helper, we will  use the "core_pkcs11.h" 
      * functions that help wrap around some common PKCS #11 use cases. 
      *
      * This function will:

@@ -70,11 +70,8 @@
  * This demo application can be run with any MQTT broker, that supports server
  * authentication.
  *
- * For AWS IoT MQTT broker, this is the Thing's REST API Endpoint.
- *
- * @note Your AWS IoT Core endpoint can be found in the AWS IoT console under
- * Settings/Custom Endpoint, or using the describe-endpoint REST API (with
- * AWS CLI command line tool).
+ * @note If you would like to setup an MQTT broker for running this demo,
+ * please see `mqtt_broker_setup.txt`.
  *
  * #define democonfigMQTT_BROKER_ENDPOINT    "...insert here..."
  */
@@ -95,11 +92,6 @@
 /**
  * @brief Server's root CA certificate.
  *
- * For AWS IoT MQTT broker, this certificate is used to identify the AWS IoT
- * server and is publicly available. Refer to the AWS documentation available
- * in the link below.
- * https://docs.aws.amazon.com/iot/latest/developerguide/server-authentication.html#server-authentication-certs
- *
  * @note This certificate should be PEM-encoded.
  *
  * Must include the PEM header and footer:
@@ -110,6 +102,14 @@
  * #define democonfigROOT_CA_PEM    "...insert here..."
  */
 
+/**
+ * @brief An option to disable Server Name Indication.
+ *
+ * @note When using a local Mosquitto server setup, SNI needs to be disabled
+ * for an MQTT broker that only has an IP address but no hostname. However,
+ * SNI should be enabled whenever possible.
+ */
+#define democonfigDISABLE_SNI            ( pdFALSE )
 
 /**
  * @brief Set the stack size of the main demo task.

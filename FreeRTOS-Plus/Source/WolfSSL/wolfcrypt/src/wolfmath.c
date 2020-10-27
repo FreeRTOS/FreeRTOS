@@ -146,7 +146,7 @@ int mp_rand(mp_int* a, int digits, WC_RNG* rng)
     if (rng == NULL) {
         ret = MISSING_RNG_E;
     }
-    else if (a == NULL) {
+    else if (a == NULL || digits == 0) {
         ret = BAD_FUNC_ARG;
     }
 

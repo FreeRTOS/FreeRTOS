@@ -1,10 +1,10 @@
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\avr\bin\avrproc.dll" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\avr\bin\avrproc.dll" 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\avr\bin\avratmelice.dll" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\avr\bin\avratmelice.dll" 
 
-"C:\Users\m17336\Documents\FreeRTOS\FreeRTOS\Demo\AVR_Dx_IAR\Debug\Exe\RTOSDemo.d90" 
+"C:\Users\m50673\Desktop\freeRTOS\bugfix\pr\FreeRTOS\FreeRTOS\Demo\AVR_Dx_IAR\Debug\Exe\RTOSDemo.d90" 
 
---plugin "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\avr/bin/avrlibsupportbat.dll" 
+--plugin="C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\avr/bin/avrlibsupportbat.dll" 
 
 
 

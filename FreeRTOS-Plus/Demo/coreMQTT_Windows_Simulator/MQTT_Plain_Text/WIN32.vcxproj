@@ -196,8 +196,8 @@
     <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\Logging\logging_stack.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\include\freertos_sockets_wrapper.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\include\plaintext_freertos.h" />
-    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\platform\include\retry_utils.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_serializer.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_state.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt.h" />

@@ -328,12 +328,9 @@ static int32_t setCredentials( SSLContext_t * pSslContext,
     mbedtls_ssl_conf_cert_profile( &( pSslContext->config ),
                                    &( pSslContext->certProfile ) );
 
-    if( pNetworkCredentials->pRootCa != NULL )
-    {
-        mbedtlsError = setRootCa( pSslContext,
-                                  pNetworkCredentials->pRootCa,
-                                  pNetworkCredentials->rootCaSize );
-    }
+    mbedtlsError = setRootCa( pSslContext,
+                              pNetworkCredentials->pRootCa,
+                              pNetworkCredentials->rootCaSize );
 
     if( ( pNetworkCredentials->pClientCert != NULL ) &&
         ( pNetworkCredentials->pPrivateKey != NULL ) )
@@ -405,8 +402,7 @@ static void setOptionalConfigurations( SSLContext_t * pSslContext,
 
     /* Set Maximum Fragment Length if enabled. */
     #ifdef MBEDTLS_SSL_MAX_FRAGMENT_LENGTH
-    if( 0 == mbedtlsError )
-    {
+
         /* Enable the max fragment extension. 4096 bytes is currently the largest fragment size permitted.
          * See RFC 8449 https://tools.ietf.org/html/rfc8449 for more information.
          *
@@ -420,9 +416,7 @@ static void setOptionalConfigurations( SSLContext_t * pSslContext,
                         mbedtlsHighLevelCodeOrDefault( mbedtlsError ),
                         mbedtlsLowLevelCodeOrDefault( mbedtlsError ) ) );
         }
-    }
-    #endif
-
+    #endif /* ifdef MBEDTLS_SSL_MAX_FRAGMENT_LENGTH */
 }
 /*-----------------------------------------------------------*/
 
@@ -672,12 +666,14 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     /* Clean up on failure. */
     if( returnStatus != TLS_TRANSPORT_SUCCESS )
     {
-        sslContextFree( &( pNetworkContext->sslContext ) );
-
-        if( ( pNetworkContext != NULL ) &&
-            ( pNetworkContext->tcpSocket != FREERTOS_INVALID_SOCKET ) )
+        if( pNetworkContext != NULL )
         {
-            ( void ) FreeRTOS_closesocket( pNetworkContext->tcpSocket );
+            sslContextFree( &( pNetworkContext->sslContext ) );
+
+            if( pNetworkContext->tcpSocket != FREERTOS_INVALID_SOCKET )
+            {
+                ( void ) FreeRTOS_closesocket( pNetworkContext->tcpSocket );
+            }
         }
     }
     else
@@ -695,40 +691,43 @@ void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
 {
     BaseType_t tlsStatus = 0;
 
-    /* Attempting to terminate TLS connection. */
-    tlsStatus = ( BaseType_t ) mbedtls_ssl_close_notify( &( pNetworkContext->sslContext.context ) );
-
-    /* Ignore the WANT_READ and WANT_WRITE return values. */
-    if( ( tlsStatus != ( BaseType_t ) MBEDTLS_ERR_SSL_WANT_READ ) &&
-        ( tlsStatus != ( BaseType_t ) MBEDTLS_ERR_SSL_WANT_WRITE ) )
+    if( pNetworkContext != NULL )
     {
-        if( tlsStatus == 0 )
+        /* Attempting to terminate TLS connection. */
+        tlsStatus = ( BaseType_t ) mbedtls_ssl_close_notify( &( pNetworkContext->sslContext.context ) );
+
+        /* Ignore the WANT_READ and WANT_WRITE return values. */
+        if( ( tlsStatus != ( BaseType_t ) MBEDTLS_ERR_SSL_WANT_READ ) &&
+            ( tlsStatus != ( BaseType_t ) MBEDTLS_ERR_SSL_WANT_WRITE ) )
         {
-            LogInfo( ( "(Network connection %p) TLS close-notify sent.",
-                       pNetworkContext ) );
+            if( tlsStatus == 0 )
+            {
+                LogInfo( ( "(Network connection %p) TLS close-notify sent.",
+                           pNetworkContext ) );
+            }
+            else
+            {
+                LogError( ( "(Network connection %p) Failed to send TLS close-notify: mbedTLSError= %s : %s.",
+                            pNetworkContext,
+                            mbedtlsHighLevelCodeOrDefault( tlsStatus ),
+                            mbedtlsLowLevelCodeOrDefault( tlsStatus ) ) );
+            }
         }
         else
         {
-            LogError( ( "(Network connection %p) Failed to send TLS close-notify: mbedTLSError= %s : %s.",
-                        pNetworkContext,
-                        mbedtlsHighLevelCodeOrDefault( tlsStatus ),
-                        mbedtlsLowLevelCodeOrDefault( tlsStatus ) ) );
+            /* WANT_READ and WANT_WRITE can be ignored. Logging for debugging purposes. */
+            LogInfo( ( "(Network connection %p) TLS close-notify sent; ",
+                       "received %s as the TLS status can be ignored for close-notify."
+                       ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ? "WANT_READ" : "WANT_WRITE",
+                       pNetworkContext ) );
         }
-    }
-    else
-    {
-        /* WANT_READ and WANT_WRITE can be ignored. Logging for debugging purposes. */
-        LogInfo( ( "(Network connection %p) TLS close-notify sent; ",
-                   "received %s as the TLS status can be ignored for close-notify."
-                   ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ? "WANT_READ" : "WANT_WRITE",
-                   pNetworkContext ) );
-    }
 
-    /* Call socket shutdown function to close connection. */
-    Sockets_Disconnect( pNetworkContext->tcpSocket );
+        /* Call socket shutdown function to close connection. */
+        Sockets_Disconnect( pNetworkContext->tcpSocket );
 
-    /* Free mbed TLS contexts. */
-    sslContextFree( &( pNetworkContext->sslContext ) );
+        /* Free mbed TLS contexts. */
+        sslContextFree( &( pNetworkContext->sslContext ) );
+    }
 
     /* Clear the mutex functions for mbed TLS thread safety. */
     mbedtls_threading_free_alt();

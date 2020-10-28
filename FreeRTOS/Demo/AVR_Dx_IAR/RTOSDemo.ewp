@@ -2258,22 +2258,7 @@
             <group>
                 <name>MemMang</name>
                 <file>
-                    <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_1.h</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_2.h</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_3.h</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_4.h</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_5.h</name>
+                    <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_1.c</name>
                 </file>
             </group>
         </group>
@@ -2345,9 +2330,9 @@
         <name>$PROJ_DIR$\main_minimal.c</name>
     </file>
     <file>
-        <name>$PROJ_DIR$\regtest.c</name>
+        <name>$PROJ_DIR$\RegTest.c</name>
     </file>
     <file>
-        <name>$PROJ_DIR$\regtest.h</name>
+        <name>$PROJ_DIR$\RegTest.h</name>
     </file>
 </project>

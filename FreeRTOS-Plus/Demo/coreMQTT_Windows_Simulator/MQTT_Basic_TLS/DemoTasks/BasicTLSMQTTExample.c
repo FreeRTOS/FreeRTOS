@@ -778,7 +778,11 @@ static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
             break;
 
         case MQTT_PACKET_TYPE_PINGRESP:
-            LogInfo( ( "Ping Response successfully received.\r\n" ) );
+
+            /* Nothing to be done from application as library handles
+             * PINGRESP with the use of MQTT_ProcessLoop API function. */
+            LogWarn( ( "PINGRESP should not be handled by the application "
+                       "callback when using MQTT_ProcessLoop.\n" ) );
             break;
 
         case MQTT_PACKET_TYPE_PUBREC:

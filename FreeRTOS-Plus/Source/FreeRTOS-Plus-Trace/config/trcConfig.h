@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v4.3.11
+ * Trace Recorder Library for Tracealyzer v4.4.0
  * Percepio AB, www.percepio.com
  *
  * trcConfig.h
@@ -121,7 +121,8 @@ extern "C" {
  * TRC_FREERTOS_VERSION_10_2_1				If using FreeRTOS v10.2.1
  * TRC_FREERTOS_VERSION_10_3_0				If using FreeRTOS v10.3.0
  * TRC_FREERTOS_VERSION_10_3_1				If using FreeRTOS v10.3.1
- * TRC_FREERTOS_VERSION_10_4_0				If using FreeRTOS v10.4.0 or later
+ * TRC_FREERTOS_VERSION_10_4_0				If using FreeRTOS v10.4.0
+ * TRC_FREERTOS_VERSION_10_4_1				If using FreeRTOS v10.4.1 or later
  *****************************************************************************/
 #define TRC_CFG_FREERTOS_VERSION FREERTOS_VERSION_NOT_SET
 

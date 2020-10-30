@@ -132,11 +132,6 @@
 #define mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS     ( pdMS_TO_TICKS( 5000U ) )
 
 /**
- * @brief Timeout for MQTT_ReceiveLoop in milliseconds.
- */
-#define mqttexampleRECEIVE_LOOP_TIMEOUT_MS           ( 500U )
-
-/**
  * @brief Keep alive time reported to the broker while establishing an MQTT connection.
  *
  * It is the responsibility of the client to ensure that the interval between
@@ -166,7 +161,7 @@
 /**
  * @brief Time to wait between each cycle of the demo implemented by prvMQTTDemoTask().
  */
-#define mqttexampleMAX_RECEIVE_LOOP_ITERATIONS       ( 10U )
+#define mqttexampleMAX_RECEIVE_LOOP_ITERATIONS       ( 5U )
 
 /**
  * @brief Transport timeout in milliseconds for transport send and receive.
@@ -362,22 +357,22 @@ static StaticTimer_t xKeepAliveTimerBuffer;
 /**
  * @brief A flag indicating whether a PUBACK from the broker was received.
  */
-static BaseType_t xReceivedPubAck;
+static BaseType_t xReceivedPubAck = pdFALSE;
 
 /**
  * @brief A flag indicating whether a SUBACK from the broker was received.
  */
-static BaseType_t xReceivedSubAck;
+static BaseType_t xReceivedSubAck = pdFALSE;
 
 /**
  * @brief A flag indicating whether an UNSUBACK from the broker was received.
  */
-static BaseType_t xReceivedUnsubAck;
+static BaseType_t xReceivedUnsubAck = pdFALSE;
 
 /**
  * @brief The number of iterations to call #MQTT_ReceiveLoop before failing.
  */
-static uint32_t ulReceiveLoopIterations;
+static uint32_t ulReceiveLoopIterations = 0;
 
 /**
  * @brief Static buffer used to hold an MQTT PINGREQ packet for keep-alive mechanism.
@@ -489,7 +484,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
             vTaskDelay( mqttexampleRECEIVE_LOOP_ITERATION_DELAY );
 
-            xMQTTStatus = MQTT_ReceiveLoop( &xMQTTContext, 0 );
+            xMQTTStatus = MQTT_ReceiveLoop( &xMQTTContext, 0U );
             configASSERT( xMQTTStatus == MQTTSuccess );
         }
 
@@ -509,7 +504,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
             vTaskDelay( mqttexampleRECEIVE_LOOP_ITERATION_DELAY );
 
-            xMQTTStatus = MQTT_ReceiveLoop( &xMQTTContext, 0 );
+            xMQTTStatus = MQTT_ReceiveLoop( &xMQTTContext, 0U );
             configASSERT( xMQTTStatus == MQTTSuccess );
         }
 
@@ -717,7 +712,9 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
 
         LogInfo( ( "SUBSCRIBE sent for topic %s to broker.\n\n", mqttexampleTOPIC ) );
 
+        /* When a SUBSCRIBE packet has been sent, the keep-alive timer can be reset. */
         xTimerStatus = xTimerReset( xKeepAliveTimer, 0 );
+        configASSERT( xTimerStatus == pdPASS );
 
         /* Process incoming packet from the broker. After sending the subscribe, the
          * client may receive a publish before it receives a subscribe ack. Therefore,
@@ -733,17 +730,13 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
 
             vTaskDelay( mqttexampleRECEIVE_LOOP_ITERATION_DELAY );
 
-            xResult = MQTT_ReceiveLoop( pxMQTTContext, 0 );
+            xResult = MQTT_ReceiveLoop( pxMQTTContext, 0U );
             configASSERT( xResult == MQTTSuccess );
         }
 
         /* Reset in case another attempt to subscribe is needed. */
         ulReceiveLoopIterations = 0U;
         xReceivedSubAck = pdTRUE;
-
-        /* When an SUBSCRIBE packet has been sent, the keep-alive timer can be reset. */
-        xTimerStatus = xTimerReset( xKeepAliveTimer, 0 );
-        configASSERT( xTimerStatus == pdPASS );
 
         /* Reset flag before checking suback responses. */
         xFailedSubscribeToTopic = false;
@@ -916,7 +909,7 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo )
     }
     else
     {
-        LogInfo( ( "Incoming Publish Topic Name: %.*s does not match subscribed topic.",
+        LogInfo( ( "Incoming Publish Topic Name: %.*s does not match subscribed topic.\r\n",
                    pxPublishInfo->topicNameLength,
                    pxPublishInfo->pTopicName ) );
     }

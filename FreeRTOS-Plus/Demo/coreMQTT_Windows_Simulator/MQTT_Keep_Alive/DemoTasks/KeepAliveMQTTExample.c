@@ -490,7 +490,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         /* Reset after loop. */
         ulReceiveLoopIterations = 0U;
-        xReceivedPubAck = pdTRUE;
+        xReceivedPubAck = pdFALSE;
 
         /******************** Unsubscribe from the topic. *********************/
         LogInfo( ( "Unsubscribe from the MQTT topic %s.", mqttexampleTOPIC ) );
@@ -510,7 +510,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         /* Reset after loop. */
         ulReceiveLoopIterations = 0U;
-        xReceivedUnsubAck = pdTRUE;
+        xReceivedUnsubAck = pdFALSE;
 
         /**************************** Disconnect. *****************************/
 
@@ -736,7 +736,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
 
         /* Reset in case another attempt to subscribe is needed. */
         ulReceiveLoopIterations = 0U;
-        xReceivedSubAck = pdTRUE;
+        xReceivedSubAck = pdFALSE;
 
         /* Reset flag before checking suback responses. */
         xFailedSubscribeToTopic = false;

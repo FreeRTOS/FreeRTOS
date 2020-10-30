@@ -158,9 +158,10 @@
 /**
  * @brief The amount of time to wait before calling #MQTT_ReceiveLoop.
  *
- * @note This delay is explicitly chosen so that the keep-alive timer callback is invoked.
+ * @note This delay is deliberately chosen so that the keep-alive timer callback
+ * is invoked if an expected control packet is not received within 2 iterations.
  */
-#define mqttexampleRECEIVE_LOOP_ITERATION_DELAY      ( mqttexampleKEEP_ALIVE_DELAY )
+#define mqttexampleRECEIVE_LOOP_ITERATION_DELAY      ( pdMS_TO_TICKS( ( ( mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS / 8 ) * 1000 ) ) )
 
 /**
  * @brief Time to wait between each cycle of the demo implemented by prvMQTTDemoTask().
@@ -486,10 +487,10 @@ static void prvMQTTDemoTask( void * pvParameters )
             ulReceiveLoopIterations += 1U;
             configASSERT( ulReceiveLoopIterations <= mqttexampleMAX_RECEIVE_LOOP_ITERATIONS );
 
+            vTaskDelay( mqttexampleRECEIVE_LOOP_ITERATION_DELAY );
+
             xMQTTStatus = MQTT_ReceiveLoop( &xMQTTContext, 0 );
             configASSERT( xMQTTStatus == MQTTSuccess );
-
-            vTaskDelay( mqttexampleRECEIVE_LOOP_ITERATION_DELAY );
         }
 
         /* Reset after loop. */
@@ -506,10 +507,10 @@ static void prvMQTTDemoTask( void * pvParameters )
             ulReceiveLoopIterations += 1U;
             configASSERT( ulReceiveLoopIterations <= mqttexampleMAX_RECEIVE_LOOP_ITERATIONS );
 
+            vTaskDelay( mqttexampleRECEIVE_LOOP_ITERATION_DELAY );
+
             xMQTTStatus = MQTT_ReceiveLoop( &xMQTTContext, 0 );
             configASSERT( xMQTTStatus == MQTTSuccess );
-
-            vTaskDelay( mqttexampleRECEIVE_LOOP_ITERATION_DELAY );
         }
 
         /* Reset after loop. */
@@ -730,10 +731,10 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
             ulReceiveLoopIterations += 1U;
             configASSERT( ulReceiveLoopIterations <= mqttexampleMAX_RECEIVE_LOOP_ITERATIONS );
 
+            vTaskDelay( mqttexampleRECEIVE_LOOP_ITERATION_DELAY );
+
             xResult = MQTT_ReceiveLoop( pxMQTTContext, 0 );
             configASSERT( xResult == MQTTSuccess );
-
-            vTaskDelay( mqttexampleRECEIVE_LOOP_ITERATION_DELAY );
         }
 
         /* Reset in case another attempt to subscribe is needed. */

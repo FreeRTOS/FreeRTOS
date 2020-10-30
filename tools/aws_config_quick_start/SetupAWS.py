@@ -232,4 +232,4 @@ if __name__ == "__main__":
     else:
         print("Command does not exist")
 
-    sys.exit(1)
+    sys.exit(0)

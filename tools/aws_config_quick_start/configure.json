@@ -1,4 +1,4 @@
 {
     "FreeRTOS_source_dir": "../..",
-    "thing_name": "brotha"
+    "thing_name": "$thing_name"
 }

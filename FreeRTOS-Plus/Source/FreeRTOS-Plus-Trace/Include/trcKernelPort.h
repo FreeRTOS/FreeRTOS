@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v4.3.11
+ * Trace Recorder Library for Tracealyzer v4.4.0
  * Percepio AB, www.percepio.com
  *
  * Terms of Use
@@ -73,6 +73,7 @@ extern "C" {
 #define TRC_FREERTOS_VERSION_10_3_0				9
 #define TRC_FREERTOS_VERSION_10_3_1				TRC_FREERTOS_VERSION_10_3_0
 #define TRC_FREERTOS_VERSION_10_4_0				10
+#define TRC_FREERTOS_VERSION_10_4_1				TRC_FREERTOS_VERSION_10_4_0
 
 /* Legacy FreeRTOS version codes for backwards compatibility with old trace configurations */
 #define TRC_FREERTOS_VERSION_7_3				TRC_FREERTOS_VERSION_7_3_X

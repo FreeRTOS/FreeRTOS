@@ -489,7 +489,7 @@
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT\include</Filter>
     </ClInclude>
     <ClInclude Include="core_mqtt_config.h" />
-    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\include\transport_interface.h">
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Source\Application-Protocols\platform\include\retry_utils.h">

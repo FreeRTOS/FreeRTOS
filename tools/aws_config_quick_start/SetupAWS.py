@@ -103,7 +103,7 @@ def update_credential_file():
     else:
         private_key_pem = private_key_pem_file.read()
 
-    # Modify 'iot_clientcredential.h' file
+    # Modify 'demo_config.h' file
     misc.write_client_credentials(
         source_dir,
         thing_name=thing_name,
@@ -160,7 +160,7 @@ def cleanup_creds():
 
     source_dir = os.path.expanduser(json_text['FreeRTOS_source_dir'])
 
-    # Cleanup 'iot_clientcredential.h' file
+    # Cleanup 'demo_config.h' file
     misc.write_client_credentials(source_dir, cleanup=True)
 
 

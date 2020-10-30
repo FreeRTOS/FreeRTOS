@@ -127,7 +127,7 @@
 #define mqttexampleSHARED_BUFFER_SIZE                ( 500U )
 
 /**
- * @brief Time to wait between each cycle of the demo implemented by prvMQTTDemoTask().
+ * @brief The number of iterations to call #MQTT_ReceiveLoop before failing.
  */
 #define mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS     ( pdMS_TO_TICKS( 5000U ) )
 
@@ -370,7 +370,7 @@ static BaseType_t xReceivedSubAck = pdFALSE;
 static BaseType_t xReceivedUnsubAck = pdFALSE;
 
 /**
- * @brief The number of iterations to call #MQTT_ReceiveLoop before failing.
+ * @brief The number of times #MQTT_ReceiveLoop has been called in the loop.
  */
 static uint32_t ulReceiveLoopIterations = 0;
 

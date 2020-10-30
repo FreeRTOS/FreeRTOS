@@ -159,7 +159,7 @@
 #define mqttexampleRECEIVE_LOOP_ITERATION_DELAY      ( pdMS_TO_TICKS( ( ( mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS / 8 ) * 1000 ) ) )
 
 /**
- * @brief Time to wait between each cycle of the demo implemented by prvMQTTDemoTask().
+ * @brief The number of iterations to call #MQTT_ReceiveLoop before failing.
  */
 #define mqttexampleMAX_RECEIVE_LOOP_ITERATIONS       ( 5U )
 

@@ -127,7 +127,7 @@
 #define mqttexampleSHARED_BUFFER_SIZE                ( 500U )
 
 /**
- * @brief The number of iterations to call #MQTT_ReceiveLoop before failing.
+ * @brief Time to wait between each cycle of the demo implemented by prvMQTTDemoTask().
  */
 #define mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS     ( pdMS_TO_TICKS( 5000U ) )
 

@@ -151,7 +151,7 @@
 #define mqttexampleKEEP_ALIVE_DELAY                  ( pdMS_TO_TICKS( ( ( mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS / 4 ) * 1000 ) ) )
 
 /**
- * @brief The amount of time to wait before calling #MQTT_ReceiveLoop.
+ * @brief Time to wait before calling #MQTT_ReceiveLoop.
  *
  * @note This delay is deliberately chosen so that the keep-alive timer callback
  * is invoked if an expected control packet is not received within 2 iterations.

@@ -31,7 +31,7 @@ else
     CFLAGS += -O2
 endif
 
-SRCS = main.c riscv-virt.c ns16550.c \
+SRCS = main.c main_blinky.c riscv-virt.c ns16550.c \
 	$(DEMO_SOURCE_DIR)/EventGroupsDemo.c \
 	$(DEMO_SOURCE_DIR)/TaskNotify.c \
 	$(DEMO_SOURCE_DIR)/TimerDemo.c \

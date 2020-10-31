@@ -139,16 +139,16 @@
  * absence of sending any other control packets, the client MUST send a
  * PINGREQ Packet.
  */
-#define mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS        ( 15U )
+#define mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS        ( 16U )
 
 /**
- * @brief Time to wait before sending ping request to keep MQTT connection alive.
+ * @brief Time to wait before sending ping request to keep the MQTT connection alive.
  *
  * A PINGREQ is attempted to be sent at every ( #mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS / 4 )
  * seconds. This is to make sure that a PINGREQ is always sent before the timeout
- * expires in broker.
+ * expires in the broker.
  */
-#define mqttexampleKEEP_ALIVE_DELAY                  ( pdMS_TO_TICKS( ( ( mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS / 4 ) * 1000 ) ) )
+#define mqttexamplePING_REQUEST_DELAY                ( pdMS_TO_TICKS( ( ( mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS / 4 ) * 1000 ) ) )
 
 /**
  * @brief Time to wait before calling #MQTT_ReceiveLoop.
@@ -156,7 +156,15 @@
  * @note This delay is deliberately chosen so that the keep-alive timer callback
  * is invoked if an expected control packet is not received within 2 iterations.
  */
-#define mqttexampleRECEIVE_LOOP_ITERATION_DELAY      ( pdMS_TO_TICKS( ( ( mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS / 8 ) * 1000 ) ) )
+#define mqttexampleRECEIVE_LOOP_ITERATION_DELAY      ( mqttexamplePING_REQUEST_DELAY / 2 )
+
+/**
+ * @brief Time to wait before expecting ping response from the MQTT broker.
+ *
+ * This timeout provides some leeway so that the PINGRESP can be received within
+ * 4 iterations of #MQTT_ReceiveLoop since other control packets may be received first.
+ */
+#define mqttexamplePING_RESPONSE_DELAY               ( mqttexampleRECEIVE_LOOP_ITERATION_DELAY * 4 )
 
 /**
  * @brief The number of iterations to call #MQTT_ReceiveLoop before failing.
@@ -281,7 +289,18 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo );
  *
  * @param[in] pxTimer The auto-reload software timer for handling keep alive.
  */
-static void prvKeepAliveTimerCallback( TimerHandle_t pxTimer );
+static void prvPingReqTimerCallback( TimerHandle_t pxTimer );
+
+/**
+ * @brief This callback is invoked through a software timer that is started by
+ * #prvPingReqTimerCallback.
+ *
+ * Its responsibility is to check that a PINGRESP has been received within
+ * the specified keep-alive timeout period.
+ *
+ * @param[in] pxTimer The auto-reload software timer for handling keep alive.
+ */
+static void prvPingRespTimerCallback( TimerHandle_t pxTimer );
 
 /**
  * @brief The application callback function for getting the incoming publish
@@ -345,14 +364,31 @@ static topicFilterContext_t xTopicFilterContext[ mqttexampleTOPIC_COUNT ] =
 };
 
 /**
- * @brief Timer to handle the MQTT keep-alive mechanism.
+ * @brief Auto-reload timer to send a PINGREQ packet every time
+ * #mqttexamplePING_REQUEST_DELAY ticks have passed.
  */
-static TimerHandle_t xKeepAliveTimer;
+static TimerHandle_t xPingReqTimer;
 
 /**
- * @brief Storage space for xKeepAliveTimer.
+ * @brief Storage space for xPingReqTimer.
  */
-static StaticTimer_t xKeepAliveTimerBuffer;
+static StaticTimer_t xPingReqTimerBuffer;
+
+/**
+ * @brief Auto-reload timer to check that a PINGRESP packet from the broker
+ * was received before the timeout period.
+ */
+static TimerHandle_t xPingRespTimer;
+
+/**
+ * @brief Storage space for xPingRespTimer.
+ */
+static StaticTimer_t xPingRespTimerBuffer;
+
+/**
+ * @brief Set to true when PINGREQ is sent then false when PINGRESP is received.
+ */
+static volatile bool xWaitingForPingResp = false;
 
 /**
  * @brief A flag indicating whether a PUBACK from the broker was received.
@@ -447,17 +483,24 @@ static void prvMQTTDemoTask( void * pvParameters )
         LogInfo( ( "Creating an MQTT connection to %s.", democonfigMQTT_BROKER_ENDPOINT ) );
         prvCreateMQTTConnectionWithBroker( &xMQTTContext, &xNetworkContext );
 
-        /* Create an auto-reload timer to handle keep-alive. */
-        xKeepAliveTimer = xTimerCreateStatic( "KeepAliveTimer",
-                                              mqttexampleKEEP_ALIVE_DELAY,
-                                              pdTRUE,
-                                              ( void * ) &xMQTTContext.transportInterface,
-                                              prvKeepAliveTimerCallback,
-                                              &xKeepAliveTimerBuffer );
-        configASSERT( xKeepAliveTimer );
+        /* Create timers to handle keep-alive. */
+        xPingReqTimer = xTimerCreateStatic( "PingReqTimer",
+                                            mqttexamplePING_REQUEST_DELAY,
+                                            pdTRUE,
+                                            ( void * ) &xMQTTContext.transportInterface,
+                                            prvPingReqTimerCallback,
+                                            &xPingReqTimerBuffer );
+        configASSERT( xPingReqTimer );
+        xPingRespTimer = xTimerCreateStatic( "PingRespTimer",
+                                             mqttexamplePING_RESPONSE_DELAY,
+                                             pdFALSE,
+                                             NULL,
+                                             prvPingRespTimerCallback,
+                                             &xPingRespTimerBuffer );
+        configASSERT( xPingRespTimer );
 
-        /* Start the timer for keep alive. */
-        xTimerStatus = xTimerStart( xKeepAliveTimer, 0 );
+        /* Start the timer to send a PINGREQ. */
+        xTimerStatus = xTimerStart( xPingReqTimer, 0 );
         configASSERT( xTimerStatus == pdPASS );
 
         /**************************** Subscribe. ******************************/
@@ -466,6 +509,12 @@ static void prvMQTTDemoTask( void * pvParameters )
          * to the topic. Attempts are made according to the exponential backoff retry
          * strategy declared in retry_utils.h. */
         prvMQTTSubscribeWithBackoffRetries( &xMQTTContext );
+
+        /************************ Send PINGREQ packet. ************************/
+
+        /* Deliberately delay in order for the auto-reload timer to send a
+         * PINGREQ to the broker. */
+        vTaskDelay( mqttexamplePING_REQUEST_DELAY );
 
         /********************* Publish and Receive Loop. **********************/
         /* Publish messages with QOS1, send and process keep-alive messages. */
@@ -522,8 +571,10 @@ static void prvMQTTDemoTask( void * pvParameters )
         xMQTTStatus = MQTT_Disconnect( &xMQTTContext );
         configASSERT( xMQTTStatus == MQTTSuccess );
 
-        /* Stop the keep-alive timer for the next iteration. */
-        xTimerStatus = xTimerStop( xKeepAliveTimer, 0 );
+        /* Stop the keep-alive timers for the next iteration. */
+        xTimerStatus = xTimerStop( xPingReqTimer, 0 );
+        configASSERT( xTimerStatus == pdPASS );
+        xTimerStatus = xTimerStop( xPingRespTimer, 0 );
         configASSERT( xTimerStatus == pdPASS );
 
         /* Close the network connection.  */
@@ -713,7 +764,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
         LogInfo( ( "SUBSCRIBE sent for topic %s to broker.\n\n", mqttexampleTOPIC ) );
 
         /* When a SUBSCRIBE packet has been sent, the keep-alive timer can be reset. */
-        xTimerStatus = xTimerReset( xKeepAliveTimer, 0 );
+        xTimerStatus = xTimerReset( xPingReqTimer, 0 );
         configASSERT( xTimerStatus == pdPASS );
 
         /* Process incoming packet from the broker. After sending the subscribe, the
@@ -788,12 +839,12 @@ static void prvMQTTPublishToTopic( MQTTContext_t * pxMQTTContext )
     /* Get a unique packet id. */
     usPublishPacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
 
-    /* Send a PUBLISH packet. Packet ID is not used for a QoS1 publish. */
+    /* Send a PUBLISH packet. */
     xResult = MQTT_Publish( pxMQTTContext, &xMQTTPublishInfo, usPublishPacketIdentifier );
     configASSERT( xResult == MQTTSuccess );
 
     /* When a PUBLISH packet has been sent, the keep-alive timer can be reset. */
-    xTimerStatus = xTimerReset( xKeepAliveTimer, 0 );
+    xTimerStatus = xTimerReset( xPingReqTimer, 0 );
     configASSERT( xTimerStatus == pdPASS );
 }
 /*-----------------------------------------------------------*/
@@ -827,7 +878,7 @@ static void prvMQTTUnsubscribeFromTopic( MQTTContext_t * pxMQTTContext )
     configASSERT( xResult == MQTTSuccess );
 
     /* When an UNSUBSCRIBE packet has been sent, the keep-alive timer can be reset. */
-    xTimerStatus = xTimerReset( xKeepAliveTimer, 0 );
+    xTimerStatus = xTimerReset( xPingReqTimer, 0 );
     configASSERT( xTimerStatus == pdPASS );
 }
 /*-----------------------------------------------------------*/
@@ -877,6 +928,7 @@ static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
             break;
 
         case MQTT_PACKET_TYPE_PINGRESP:
+            xWaitingForPingResp = false;
             LogInfo( ( "Ping Response successfully received." ) );
             break;
 
@@ -917,19 +969,39 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo )
 
 /*-----------------------------------------------------------*/
 
-static void prvKeepAliveTimerCallback( TimerHandle_t pxTimer )
+static void prvPingReqTimerCallback( TimerHandle_t pxTimer )
 {
     TransportInterface_t * pxTransport;
     int32_t xTransportStatus;
+    BaseType_t xTimerStatus;
 
     pxTransport = ( TransportInterface_t * ) pvTimerGetTimerID( pxTimer );
 
-    /* Send Ping Request to the broker. */
-    LogInfo( ( "Ping the MQTT broker." ) );
-    xTransportStatus = pxTransport->send( pxTransport->pNetworkContext,
-                                          ( void * ) xPingReqBuffer.pBuffer,
-                                          xPingReqBuffer.size );
-    configASSERT( ( size_t ) xTransportStatus == xPingReqBuffer.size );
+    /* Do not resend if waiting on a PINGRESP. */
+    if( xWaitingForPingResp == false )
+    {
+        /* Send PINGREQ to broker */
+        LogInfo( ( "Ping the MQTT broker." ) );
+        xTransportStatus = pxTransport->send( pxTransport->pNetworkContext,
+                                              ( void * ) xPingReqBuffer.pBuffer,
+                                              xPingReqBuffer.size );
+        configASSERT( ( size_t ) xTransportStatus == xPingReqBuffer.size );
+
+        xWaitingForPingResp = true;
+        /* Start the timer to expect a PINGRESP. */
+        xTimerStatus = xTimerStart( xPingRespTimer, 0 );
+        configASSERT( xTimerStatus == pdPASS );
+    }
+}
+
+/*-----------------------------------------------------------*/
+
+static void prvPingRespTimerCallback( TimerHandle_t pxTimer )
+{
+    ( void ) pxTimer;
+
+    /* Assert that a pending PINGRESP has been received. */
+    configASSERT( xWaitingForPingResp == false );
 }
 
 /*-----------------------------------------------------------*/

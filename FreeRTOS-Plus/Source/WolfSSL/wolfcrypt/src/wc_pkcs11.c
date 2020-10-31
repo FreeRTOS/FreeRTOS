@@ -6,7 +6,7 @@
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
  * wolfSSL is distributed in the hope that it will be useful,
@@ -1061,8 +1061,8 @@ static int Pkcs11GetRsaPublicKey(RsaKey* key, Pkcs11Session* session,
         ret = WC_HW_E;
 
     if (ret == 0) {
-        modSz = tmpl[0].ulValueLen;
-        expSz = tmpl[1].ulValueLen;
+        modSz = (int)tmpl[0].ulValueLen;
+        expSz = (int)tmpl[1].ulValueLen;
         mod = (unsigned char*)XMALLOC(modSz, key->heap,
                                                        DYNAMIC_TYPE_TMP_BUFFER);
         if (mod == NULL)
@@ -1162,9 +1162,9 @@ static int Pkcs11RsaKeyGen(Pkcs11Session* session, wc_CryptoInfo* info)
         ret = Pkcs11GetRsaPublicKey(key, session, pubKey);
 
     if (pubKey != NULL_PTR)
-        ret = session->func->C_DestroyObject(session->handle, pubKey);
+        ret = (int)session->func->C_DestroyObject(session->handle, pubKey);
     if (ret != 0 && privKey != NULL_PTR)
-        ret = session->func->C_DestroyObject(session->handle, privKey);
+        ret = (int)session->func->C_DestroyObject(session->handle, privKey);
 
     return ret;
 }

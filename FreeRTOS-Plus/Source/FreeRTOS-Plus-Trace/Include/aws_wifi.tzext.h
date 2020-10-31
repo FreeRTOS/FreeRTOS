@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v4.2.0
+ * Trace Recorder Library for Tracealyzer v4.4.0
  * Percepio AB, www.percepio.com
  *
  * aws_secure_socket.tzext.h

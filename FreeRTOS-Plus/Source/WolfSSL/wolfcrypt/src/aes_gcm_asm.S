@@ -8731,3 +8731,7 @@ L_AES_GCM_decrypt_avx2_cmp_tag_done:
 .size	AES_GCM_decrypt_avx2,.-AES_GCM_decrypt_avx2
 #endif /* __APPLE__ */
 #endif /* HAVE_INTEL_AVX2 */
+
+#if defined(__linux__) && defined(__ELF__)
+.section	.note.GNU-stack,"",%progbits
+#endif

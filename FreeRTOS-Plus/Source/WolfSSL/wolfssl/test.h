@@ -55,6 +55,7 @@
     #endif
     #define SOCKET_T SOCKET
     #define SNPRINTF _snprintf
+    #define XSLEEP_MS(t) Sleep(t)
 #elif defined(WOLFSSL_MDK_ARM) || defined(WOLFSSL_KEIL_TCP_NET)
     #include <string.h>
     #include "rl_net.h"
@@ -69,9 +70,9 @@
         return(ret) ;
     }
     #if defined(HAVE_KEIL_RTX)
-        #define sleep(t) os_dly_wait(t/1000+1);
+        #define XSLEEP_MS(t)  os_dly_wait(t)
     #elif defined(WOLFSSL_CMSIS_RTOS) || defined(WOLFSSL_CMSIS_RTOSv2)
-        #define sleep(t) osDelay(t/1000+1);
+        #define XSLEEP_MS(t)  osDelay(t)
     #endif
 #elif defined(WOLFSSL_TIRTOS)
     #include <string.h>
@@ -88,6 +89,7 @@
         char **h_addr_list; /* list of addresses from name server */
     };
     #define SOCKET_T int
+    #define XSLEEP_MS(t) Task_sleep(t/1000)
 #elif defined(WOLFSSL_VXWORKS)
     #include <hostLib.h>
     #include <sockLib.h>
@@ -148,7 +150,18 @@
         #include <signal.h>  /* ignore SIGPIPE */
     #endif
     #define SNPRINTF snprintf
+
+    #define XSELECT_WAIT(x,y) do { \
+        struct timeval tv = {(x),(y)}; \
+        select(0, NULL, NULL, NULL, &tv); \
+    } while (0)
+    #define XSLEEP_US(u) XSELECT_WAIT(0,u)
+    #define XSLEEP_MS(m) XSELECT_WAIT(0,(m)*1000)
 #endif /* USE_WINDOWS_API */
+
+#ifndef XSLEEP_MS
+    #define XSLEEP_MS(t) sleep(t/1000)
+#endif
 
 #ifdef WOLFSSL_ASYNC_CRYPT
     #include <wolfssl/wolfcrypt/async.h>
@@ -409,6 +422,7 @@ typedef struct callback_functions {
     ssl_callback ssl_ready;
     ssl_callback on_result;
     WOLFSSL_CTX* ctx;
+    unsigned char isSharedCtx:1;
 } callback_functions;
 
 typedef struct func_args {
@@ -1302,7 +1316,7 @@ static WC_INLINE unsigned int my_psk_client_cb(WOLFSSL* ssl, const char* hint,
     (void)key_max_len;
 
     /* see internal.h MAX_PSK_ID_LEN for PSK identity limit */
-    strncpy(identity, kIdentityStr, id_max_len);
+    XSTRNCPY(identity, kIdentityStr, id_max_len);
 
     if (wolfSSL_GetVersion(ssl) < WOLFSSL_TLSV1_3) {
         /* test key in hex is 0x1a2b3c4d , in decimal 439,041,101 , we're using
@@ -1336,7 +1350,7 @@ static WC_INLINE unsigned int my_psk_server_cb(WOLFSSL* ssl, const char* identit
     (void)key_max_len;
 
     /* see internal.h MAX_PSK_ID_LEN for PSK identity limit */
-    if (strncmp(identity, kIdentityStr, strlen(kIdentityStr)) != 0)
+    if (XSTRNCMP(identity, kIdentityStr, XSTRLEN(kIdentityStr)) != 0)
         return 0;
 
     if (wolfSSL_GetVersion(ssl) < WOLFSSL_TLSV1_3) {
@@ -1370,13 +1384,14 @@ static WC_INLINE unsigned int my_psk_client_tls13_cb(WOLFSSL* ssl,
 {
     int i;
     int b = 0x01;
+    const char* userCipher = (const char*)wolfSSL_get_psk_callback_ctx(ssl);
 
     (void)ssl;
     (void)hint;
     (void)key_max_len;
 
     /* see internal.h MAX_PSK_ID_LEN for PSK identity limit */
-    strncpy(identity, kIdentityStr, id_max_len);
+    XSTRNCPY(identity, kIdentityStr, id_max_len);
 
     for (i = 0; i < 32; i++, b += 0x22) {
         if (b >= 0x100)
@@ -1384,7 +1399,7 @@ static WC_INLINE unsigned int my_psk_client_tls13_cb(WOLFSSL* ssl,
         key[i] = b;
     }
 
-    *ciphersuite = "TLS13-AES128-GCM-SHA256";
+    *ciphersuite = userCipher ? userCipher : "TLS13-AES128-GCM-SHA256";
 
     return 32;   /* length of key in octets or 0 for error */
 }
@@ -1396,12 +1411,13 @@ static WC_INLINE unsigned int my_psk_server_tls13_cb(WOLFSSL* ssl,
 {
     int i;
     int b = 0x01;
+    const char* userCipher = (const char*)wolfSSL_get_psk_callback_ctx(ssl);
 
     (void)ssl;
     (void)key_max_len;
 
     /* see internal.h MAX_PSK_ID_LEN for PSK identity limit */
-    if (strncmp(identity, kIdentityStr, strlen(kIdentityStr)) != 0)
+    if (XSTRNCMP(identity, kIdentityStr, XSTRLEN(kIdentityStr)) != 0)
         return 0;
 
     for (i = 0; i < 32; i++, b += 0x22) {
@@ -1410,12 +1426,12 @@ static WC_INLINE unsigned int my_psk_server_tls13_cb(WOLFSSL* ssl,
         key[i] = b;
     }
 
-    *ciphersuite = "TLS13-AES128-GCM-SHA256";
+    *ciphersuite = userCipher ? userCipher : "TLS13-AES128-GCM-SHA256";
 
     return 32;   /* length of key in octets or 0 for error */
 }
 
-#endif /* NO_PSK */
+#endif /* !NO_PSK */
 
 
 #if defined(WOLFSSL_USER_CURRTIME)
@@ -1675,7 +1691,13 @@ static WC_INLINE void OCSPRespFreeCb(void* ioCtx, unsigned char* response)
     #endif /* !NO_FILESYSTEM || (NO_FILESYSTEM && FORCE_BUFFER_TEST) */
 #endif /* !NO_CERTS */
 
-static int myVerifyFail = 0;
+enum {
+    VERIFY_OVERRIDE_ERROR,
+    VERIFY_FORCE_FAIL,
+    VERIFY_USE_PREVERFIY,
+    VERIFY_OVERRIDE_DATE_ERR,
+};
+static THREAD_LS_T int myVerifyAction = VERIFY_OVERRIDE_ERROR;
 
 /* The verify callback is called for every certificate only when
  * --enable-opensslextra is defined because it sets WOLFSSL_ALWAYS_VERIFY_CB and
@@ -1727,7 +1749,7 @@ static WC_INLINE int myVerify(int preverify, WOLFSSL_X509_STORE_CTX* store)
         XFREE(subject, 0, DYNAMIC_TYPE_OPENSSL);
         XFREE(issuer,  0, DYNAMIC_TYPE_OPENSSL);
 #if defined(SHOW_CERTS) && !defined(NO_FILESYSTEM)
-/* avoid printing duplicate certs */
+        /* avoid printing duplicate certs */
         if (store->depth == 1) {
             /* retrieve x509 certs and display them on stdout */
             sk = wolfSSL_X509_STORE_GetCerts(store);
@@ -1762,37 +1784,24 @@ static WC_INLINE int myVerify(int preverify, WOLFSSL_X509_STORE_CTX* store)
     printf("\tSubject's domain name at %d is %s\n", store->error_depth, store->domain);
 
     /* Testing forced fail case by return zero */
-    if (myVerifyFail) {
+    if (myVerifyAction == VERIFY_FORCE_FAIL) {
         return 0; /* test failure case */
     }
 
+    if (myVerifyAction == VERIFY_OVERRIDE_DATE_ERR && 
+        (store->error == ASN_BEFORE_DATE_E || store->error == ASN_AFTER_DATE_E)) {
+        printf("Overriding cert date error as example for bad clock testing\n");
+        return 1;
+    }
+
     /* If error indicate we are overriding it for testing purposes */
-    if (store->error != 0) {
+    if (store->error != 0 && myVerifyAction == VERIFY_OVERRIDE_ERROR) {
         printf("\tAllowing failed certificate check, testing only "
             "(shouldn't do this in production)\n");
     }
 
     /* A non-zero return code indicates failure override */
-    return 1;
-}
-
-
-static WC_INLINE int myDateCb(int preverify, WOLFSSL_X509_STORE_CTX* store)
-{
-    char buffer[WOLFSSL_MAX_ERROR_SZ];
-    (void)preverify;
-
-    printf("In verification callback, error = %d, %s\n", store->error,
-                                 wolfSSL_ERR_error_string(store->error, buffer));
-    printf("Subject's domain name is %s\n", store->domain);
-
-    if (store->error == ASN_BEFORE_DATE_E || store->error == ASN_AFTER_DATE_E) {
-        printf("Overriding cert date error as example for bad clock testing\n");
-        return 1;
-    }
-    printf("Cert error is not date error, not overriding\n");
-
-    return 0;
+    return (myVerifyAction == VERIFY_OVERRIDE_ERROR) ? 1 : preverify;
 }
 
 
@@ -1952,7 +1961,7 @@ static WC_INLINE int StackSizeCheck(func_args* args, thread_func tf)
     int            ret, i, used;
     void*          status;
     unsigned char* myStack = NULL;
-    int            stackSize = 1024*152;
+    int            stackSize = 1024*176;
     pthread_attr_t myAttr;
     pthread_t      threadId;
 
@@ -2664,6 +2673,13 @@ static WC_INLINE int myEccSharedSecret(WOLFSSL* ssl, ecc_key* otherKey,
         ret = BAD_FUNC_ARG;
     }
 
+#if defined(ECC_TIMING_RESISTANT) && !defined(HAVE_FIPS) && \
+                                                         !defined(HAVE_SELFTEST)
+    if (ret == 0) {
+        ret = wc_ecc_set_rng(privKey, wolfSSL_GetRNG(ssl));
+    }
+#endif
+
     /* generate shared secret and return it */
     if (ret == 0) {
         ret = wc_ecc_shared_secret(privKey, pubKey, out, outlen);
@@ -2873,7 +2889,7 @@ static WC_INLINE int myEd448Sign(WOLFSSL* ssl, const byte* in, word32 inSz,
     if (ret == 0) {
         ret = wc_Ed448PrivateKeyDecode(keyBuf, &idx, &myKey, keySz);
         if (ret == 0)
-            ret = wc_ed448_sign_msg(in, inSz, out, outSz, &myKey);
+            ret = wc_ed448_sign_msg(in, inSz, out, outSz, &myKey, NULL, 0);
         wc_ed448_free(&myKey);
     }
 
@@ -2905,7 +2921,8 @@ static WC_INLINE int myEd448Verify(WOLFSSL* ssl, const byte* sig, word32 sigSz,
     if (ret == 0) {
         ret = wc_ed448_import_public(key, keySz, &myKey);
         if (ret == 0) {
-            ret = wc_ed448_verify_msg(sig, sigSz, msg, msgSz, result, &myKey);
+            ret = wc_ed448_verify_msg(sig, sigSz, msg, msgSz, result, &myKey,
+                                                                       NULL, 0);
         }
         wc_ed448_free(&myKey);
     }
@@ -3605,15 +3622,16 @@ static WC_INLINE const char* mymktemp(char *tempfn, int len, int num)
                              int enc, byte* ticket, int inLen, int* outLen,
                              void* userCtx)
     {
-        (void)ssl;
-        (void)userCtx;
-
         int ret;
         word16 sLen = XHTONS(inLen);
         byte aad[WOLFSSL_TICKET_NAME_SZ + WOLFSSL_TICKET_IV_SZ + 2];
         int  aadSz = WOLFSSL_TICKET_NAME_SZ + WOLFSSL_TICKET_IV_SZ + 2;
         byte* tmp = aad;
 
+        (void)ssl;
+        (void)userCtx;
+
+        /* encrypt */
         if (enc) {
             XMEMCPY(key_name, myKey_ctx.name, WOLFSSL_TICKET_NAME_SZ);
 
@@ -3634,8 +3652,9 @@ static WC_INLINE const char* mymktemp(char *tempfn, int len, int num)
                                               mac);
             if (ret != 0) return WOLFSSL_TICKET_RET_REJECT;
             *outLen = inLen;  /* no padding in this mode */
-        } else {
-            /* decrypt */
+        }
+        /* decrypt */
+        else {
 
             /* see if we know this key */
             if (XMEMCMP(key_name, myKey_ctx.name, WOLFSSL_TICKET_NAME_SZ) != 0){
@@ -3662,7 +3681,7 @@ static WC_INLINE const char* mymktemp(char *tempfn, int len, int num)
         return WOLFSSL_TICKET_RET_OK;
     }
 
-#endif  /* HAVE_SESSION_TICKET && CHACHA20 && POLY1305 */
+#endif  /* HAVE_SESSION_TICKET && HAVE_CHACHA && HAVE_POLY1305 */
 
 static WC_INLINE word16 GetRandomPort(void)
 {

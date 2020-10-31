@@ -301,13 +301,12 @@ typedef struct {
     securityAssociation         sa                 __attribute__((aligned (8)));
 } pic32mz_desc;
 
-static pic32mz_desc gLHDesc;
+static pic32mz_desc gLHDesc __attribute__((coherent));
 static uint8_t gLHDataBuf[PIC32MZ_MAX_BD][PIC32_BLOCK_SIZE] __attribute__((aligned (4), coherent));
 
-static void reset_engine(pic32mz_desc *desc, int algo)
+static void reset_engine(int algo)
 {
     int i;
-    pic32mz_desc* uc_desc = KVA0_TO_KVA1(desc);
 
     wolfSSL_CryptHwMutexLock();
 
@@ -319,37 +318,36 @@ static void reset_engine(pic32mz_desc *desc, int algo)
     CEINTSRC = 0xF;
 
     /* Make sure everything is clear first before we setup */
-    XMEMSET(desc, 0, sizeof(pic32mz_desc));
-    XMEMSET((void *)&uc_desc->sa, 0, sizeof(uc_desc->sa));
+    XMEMSET(&gLHDesc, 0, sizeof(pic32mz_desc));
 
     /* Set up the Security Association */
-    uc_desc->sa.SA_CTRL.ALGO = algo;
-    uc_desc->sa.SA_CTRL.LNC = 1;
-    uc_desc->sa.SA_CTRL.FB = 1;
-    uc_desc->sa.SA_CTRL.ENCTYPE = 1;
-    uc_desc->sa.SA_CTRL.LOADIV = 1;
+    gLHDesc.sa.SA_CTRL.ALGO = algo;
+    gLHDesc.sa.SA_CTRL.LNC = 1;
+    gLHDesc.sa.SA_CTRL.FB = 1;
+    gLHDesc.sa.SA_CTRL.ENCTYPE = 1;
+    gLHDesc.sa.SA_CTRL.LOADIV = 1;
 
     /* Set up the Buffer Descriptor */
-    uc_desc->err = 0;
+    gLHDesc.err = 0;
     for (i = 0; i < PIC32MZ_MAX_BD; i++) {
-        XMEMSET((void *)&uc_desc->bd[i], 0, sizeof(uc_desc->bd[i]));
-        uc_desc->bd[i].BD_CTRL.LAST_BD = 1;
-        uc_desc->bd[i].BD_CTRL.LIFM = 1;
-        uc_desc->bd[i].BD_CTRL.PKT_INT_EN = 1;
-        uc_desc->bd[i].SA_ADDR = KVA_TO_PA(&uc_desc->sa);
-        uc_desc->bd[i].SRCADDR = KVA_TO_PA(&gLHDataBuf[i]);
+        XMEMSET((void *)&gLHDesc.bd[i], 0, sizeof(gLHDesc.bd[i]));
+        gLHDesc.bd[i].BD_CTRL.LAST_BD = 1;
+        gLHDesc.bd[i].BD_CTRL.LIFM = 1;
+        gLHDesc.bd[i].BD_CTRL.PKT_INT_EN = 1;
+        gLHDesc.bd[i].SA_ADDR = KVA_TO_PA(&gLHDesc.sa);
+        gLHDesc.bd[i].SRCADDR = KVA_TO_PA(&gLHDataBuf[i]);
         if (PIC32MZ_MAX_BD > i+1)
-            uc_desc->bd[i].NXTPTR = KVA_TO_PA(&uc_desc->bd[i+1]);
+            gLHDesc.bd[i].NXTPTR = KVA_TO_PA(&gLHDesc.bd[i+1]);
         else
-            uc_desc->bd[i].NXTPTR = KVA_TO_PA(&uc_desc->bd[0]);
+            gLHDesc.bd[i].NXTPTR = KVA_TO_PA(&gLHDesc.bd[0]);
         XMEMSET((void *)&gLHDataBuf[i], 0, PIC32_BLOCK_SIZE);
     }
-    uc_desc->bd[0].BD_CTRL.SA_FETCH_EN = 1; /* Fetch the security association on the first BD */
-    desc->dbPtr = 0;
-    desc->currBd = 0;
-    desc->msgSize = 0;
-    desc->processed = 0;
-    CEBDPADDR = KVA_TO_PA(&(desc->bd[0]));
+    gLHDesc.bd[0].BD_CTRL.SA_FETCH_EN = 1; /* Fetch the security association on the first BD */
+    gLHDesc.dbPtr = 0;
+    gLHDesc.currBd = 0;
+    gLHDesc.msgSize = 0;
+    gLHDesc.processed = 0;
+    CEBDPADDR = KVA_TO_PA(&(gLHDesc.bd[0]));
 
     CEPOLLCON = 10;
 
@@ -360,13 +358,11 @@ static void reset_engine(pic32mz_desc *desc, int algo)
 #endif
 }
 
-static void update_engine(pic32mz_desc *desc, const byte *input, word32 len,
-    word32 *hash)
+static void update_engine(const byte *input, word32 len, word32 *hash)
 {
     int total;
-    pic32mz_desc *uc_desc = KVA0_TO_KVA1(desc);
-
-    uc_desc->bd[desc->currBd].UPDPTR = KVA_TO_PA(hash);
+    
+    gLHDesc.bd[gLHDesc.currBd].UPDPTR = KVA_TO_PA(hash);
 
     /* Add the data to the current buffer. If the buffer fills, start processing it
        and fill the next one. */
@@ -374,78 +370,76 @@ static void update_engine(pic32mz_desc *desc, const byte *input, word32 len,
         /* If we've been given the message size, we can process along the
            way.
            Enable the current buffer descriptor if it is full. */
-        if (desc->dbPtr >= PIC32_BLOCK_SIZE) {
+        if (gLHDesc.dbPtr >= PIC32_BLOCK_SIZE) {
             /* Wrap up the buffer descriptor and enable it so the engine can process */
-            uc_desc->bd[desc->currBd].MSGLEN = desc->msgSize;
-            uc_desc->bd[desc->currBd].BD_CTRL.BUFLEN = desc->dbPtr;
-            uc_desc->bd[desc->currBd].BD_CTRL.LAST_BD = 0;
-            uc_desc->bd[desc->currBd].BD_CTRL.LIFM = 0;
-            uc_desc->bd[desc->currBd].BD_CTRL.DESC_EN = 1;
+            gLHDesc.bd[gLHDesc.currBd].MSGLEN = gLHDesc.msgSize;
+            gLHDesc.bd[gLHDesc.currBd].BD_CTRL.BUFLEN = gLHDesc.dbPtr;
+            gLHDesc.bd[gLHDesc.currBd].BD_CTRL.LAST_BD = 0;
+            gLHDesc.bd[gLHDesc.currBd].BD_CTRL.LIFM = 0;
+            gLHDesc.bd[gLHDesc.currBd].BD_CTRL.DESC_EN = 1;
             /* Move to the next buffer descriptor, or wrap around. */
-            desc->currBd++;
-            if (desc->currBd >= PIC32MZ_MAX_BD)
-                desc->currBd = 0;
+            gLHDesc.currBd++;
+            if (gLHDesc.currBd >= PIC32MZ_MAX_BD)
+                gLHDesc.currBd = 0;
             /* Wait until the engine has processed the new BD. */
-            while (uc_desc->bd[desc->currBd].BD_CTRL.DESC_EN);
-            uc_desc->bd[desc->currBd].UPDPTR = KVA_TO_PA(hash);
-            desc->dbPtr = 0;
+            while (gLHDesc.bd[gLHDesc.currBd].BD_CTRL.DESC_EN);
+            gLHDesc.bd[gLHDesc.currBd].UPDPTR = KVA_TO_PA(hash);
+            gLHDesc.dbPtr = 0;
         }
         if (!PIC32MZ_IF_RAM(input)) {
             /* If we're inputting from flash, let the BD have
                the address and max the buffer size */
-            uc_desc->bd[desc->currBd].SRCADDR = KVA_TO_PA(input);
+            gLHDesc.bd[gLHDesc.currBd].SRCADDR = KVA_TO_PA(input);
             total = (len > PIC32MZ_MAX_BLOCK ? PIC32MZ_MAX_BLOCK : len);
-            desc->dbPtr = total;
+            gLHDesc.dbPtr = total;
             len -= total;
             input += total;
         }
         else {
-            if (len > PIC32_BLOCK_SIZE - desc->dbPtr) {
+            if (len > PIC32_BLOCK_SIZE - gLHDesc.dbPtr) {
                 /* We have more data than can be put in the buffer. Fill what we can.*/
-                total = PIC32_BLOCK_SIZE - desc->dbPtr;
-                XMEMCPY(&gLHDataBuf[desc->currBd][desc->dbPtr], input, total);
+                total = PIC32_BLOCK_SIZE - gLHDesc.dbPtr;
+                XMEMCPY(&gLHDataBuf[gLHDesc.currBd][gLHDesc.dbPtr], input, total);
                 len -= total;
-                desc->dbPtr = PIC32_BLOCK_SIZE;
+                gLHDesc.dbPtr = PIC32_BLOCK_SIZE;
                 input += total;
             }
             else {
                 /* Fill up what we have, but don't turn on the engine.*/
-                XMEMCPY(&gLHDataBuf[desc->currBd][desc->dbPtr], input, len);
-                desc->dbPtr += len;
+                XMEMCPY(&gLHDataBuf[gLHDesc.currBd][gLHDesc.dbPtr], input, len);
+                gLHDesc.dbPtr += len;
                 len = 0;
             }
         }
     }
 }
 
-static void start_engine(pic32mz_desc *desc)
+static void start_engine(void)
 {
     /* Wrap up the last buffer descriptor and enable it */
     int bufferLen;
-    pic32mz_desc *uc_desc = KVA0_TO_KVA1(desc);
 
-    bufferLen = desc->dbPtr;
+    bufferLen = gLHDesc.dbPtr;
     if (bufferLen % 4)
         bufferLen = (bufferLen + 4) - (bufferLen % 4);
     /* initialize the MSGLEN on engine startup to avoid infinite loop when
      * length is less than 257 (size of PIC32_BLOCK_SIZE) */
-    uc_desc->bd[desc->currBd].MSGLEN = desc->msgSize;
-    uc_desc->bd[desc->currBd].BD_CTRL.BUFLEN = bufferLen;
-    uc_desc->bd[desc->currBd].BD_CTRL.LAST_BD = 1;
-    uc_desc->bd[desc->currBd].BD_CTRL.LIFM = 1;
-    uc_desc->bd[desc->currBd].BD_CTRL.DESC_EN = 1;
+    gLHDesc.bd[gLHDesc.currBd].MSGLEN = gLHDesc.msgSize;
+    gLHDesc.bd[gLHDesc.currBd].BD_CTRL.BUFLEN = bufferLen;
+    gLHDesc.bd[gLHDesc.currBd].BD_CTRL.LAST_BD = 1;
+    gLHDesc.bd[gLHDesc.currBd].BD_CTRL.LIFM = 1;
+    gLHDesc.bd[gLHDesc.currBd].BD_CTRL.DESC_EN = 1;
 }
 
-void wait_engine(pic32mz_desc *desc, char *hash, int hash_sz)
+void wait_engine(char *hash, int hash_sz)
 {
     int i;
-    pic32mz_desc *uc_desc = KVA0_TO_KVA1(desc);
     unsigned int engineRunning;
 
     do {
         engineRunning = 0;
         for (i = 0; i < PIC32MZ_MAX_BD; i++) {
-            engineRunning = engineRunning || uc_desc->bd[i].BD_CTRL.DESC_EN;
+            engineRunning = engineRunning || gLHDesc.bd[i].BD_CTRL.DESC_EN;
         }
     } while (engineRunning);
 
@@ -489,10 +483,10 @@ static int wc_Pic32HashUpdate(hashUpdCache* cache, byte* stdBuf, int stdBufLen,
     /* if final length is set then pass straight to hardware */
     if (cache->finalLen) {
         if (cache->bufLen == 0) {
-            reset_engine(&gLHDesc, algo);
+            reset_engine(algo);
             gLHDesc.msgSize = cache->finalLen;
         }
-        update_engine(&gLHDesc, data, len, digest);
+        update_engine(data, len, digest);
         cache->bufLen += len; /* track progress for blockType */
         return 0;
     }
@@ -560,9 +554,16 @@ static int wc_Pic32HashFinal(hashUpdCache* cache, byte* stdBuf,
 
 #ifdef WOLFSSL_PIC32MZ_LARGE_HASH
     if (cache->finalLen) {
-        start_engine(&gLHDesc);
-        wait_engine(&gLHDesc, (char*)digest, digestSz);
-        XMEMCPY(hash, digest, digestSz);
+        /* Only submit to hardware if update data provided matches expected */
+        if (cache->bufLen == cache->finalLen) {
+            start_engine();
+            wait_engine((char*)digest, digestSz);
+            XMEMCPY(hash, digest, digestSz);
+        }
+        else {
+            wolfSSL_CryptHwMutexUnLock();
+            ret = BUFFER_E;
+        }
         cache->finalLen = 0;
     }
     else

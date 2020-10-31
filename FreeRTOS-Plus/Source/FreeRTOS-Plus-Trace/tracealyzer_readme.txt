@@ -24,6 +24,11 @@ Tracealyzer supports FreeRTOS v7.3 and newer, including Amazon FreeRTOS.
 
 -------------------------------------------------------------------------------
 
+Changes, v4.3.11 -> v4.4.0
+- Updates to the USB CDC streamport
+
+-------------------------------------------------------------------------------
+
 Changes, v4.3.10 -> v4.3.11
 - Adapted for new Task Notify changes
 

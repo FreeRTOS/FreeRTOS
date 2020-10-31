@@ -215,8 +215,10 @@ if BUILD_SP_X86_64
 src_libwolfssl_la_SOURCES += wolfcrypt/src/sp_x86_64.c
 src_libwolfssl_la_SOURCES += wolfcrypt/src/sp_x86_64_asm.S
 endif
+if !BUILD_FIPS_V2
 if BUILD_SP_ARM32
 src_libwolfssl_la_SOURCES += wolfcrypt/src/sp_arm32.c
+endif
 endif
 if BUILD_SP_ARM_THUMB
 src_libwolfssl_la_SOURCES += wolfcrypt/src/sp_armthumb.c

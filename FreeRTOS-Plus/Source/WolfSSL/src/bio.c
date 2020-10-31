@@ -159,22 +159,20 @@ static int wolfSSL_BIO_SSL_read(WOLFSSL_BIO* bio, void* buf,
 
 static int wolfSSL_BIO_MD_read(WOLFSSL_BIO* bio, void* buf, int sz)
 {
-    int ret = sz;
-
     if (wolfSSL_EVP_MD_CTX_type((WOLFSSL_EVP_MD_CTX*)bio->ptr) == NID_hmac) {
         if (wolfSSL_EVP_DigestSignUpdate((WOLFSSL_EVP_MD_CTX*)bio->ptr, buf,
                         sz) != WOLFSSL_SUCCESS)
         {
-            ret = WOLFSSL_FATAL_ERROR;
+            return WOLFSSL_FATAL_ERROR;
         }
     }
     else {
-        if (wolfSSL_EVP_DigestUpdate((WOLFSSL_EVP_MD_CTX*)bio->ptr, buf, ret)
+        if (wolfSSL_EVP_DigestUpdate((WOLFSSL_EVP_MD_CTX*)bio->ptr, buf, sz)
                 != WOLFSSL_SUCCESS) {
-            ret = WOLFSSL_FATAL_ERROR;
+            return WOLFSSL_FATAL_ERROR;
         }
     }
-    return ret;
+    return sz;
 }
 #endif /* WOLFCRYPT_ONLY */
 
@@ -609,15 +607,15 @@ int wolfSSL_BIO_write(WOLFSSL_BIO* bio, const void* data, int len)
         bio = bio->next;
     }
 
-    if (frmt != NULL) {
-        XFREE(frmt, front->heap, DYNAMIC_TYPE_TMP_BUFFER);
-    }
-
     /* info cb, user can override return value */
     if (front != NULL && front->infoCb != NULL) {
         ret = (int)front->infoCb(front,
                                  WOLFSSL_BIO_CB_WRITE | WOLFSSL_BIO_CB_RETURN,
                                  (const char*)data, 0, 0, ret);
+    }
+
+    if (frmt != NULL) {
+        XFREE(frmt, front->heap, DYNAMIC_TYPE_TMP_BUFFER);
     }
 
     if (retB64 != 0)
@@ -1527,6 +1525,7 @@ void* wolfSSL_BIO_get_data(WOLFSSL_BIO* bio)
  */
 long wolfSSL_BIO_set_nbio(WOLFSSL_BIO* bio, long on)
 {
+    int ret = 0;
     #ifndef WOLFSSL_DTLS
     (void)on;
     #endif
@@ -1538,9 +1537,9 @@ long wolfSSL_BIO_set_nbio(WOLFSSL_BIO* bio, long on)
             {
                 int flag = XFCNTL(bio->num, F_GETFL, 0);
                 if (on)
-                    XFCNTL(bio->num, F_SETFL, flag | O_NONBLOCK);
+                    ret = XFCNTL(bio->num, F_SETFL, flag | O_NONBLOCK);
                 else
-                    XFCNTL(bio->num, F_SETFL, flag & ~O_NONBLOCK);
+                    ret = XFCNTL(bio->num, F_SETFL, flag & ~O_NONBLOCK);
             }
         #endif
             break;
@@ -1554,8 +1553,10 @@ long wolfSSL_BIO_set_nbio(WOLFSSL_BIO* bio, long on)
             WOLFSSL_MSG("Unsupported bio type for non blocking");
             break;
     }
-
-    return 1;
+    if (ret != -1)
+        return 1;
+    else
+        return 0;
 }
 
 

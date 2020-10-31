@@ -124,6 +124,12 @@ static void prvInterruptTriggerLevelTest( void *pvParameters );
 	static void prvSenderTask( void *pvParameters );
 
 	static StaticStreamBuffer_t xStaticStreamBuffers[ sbNUMBER_OF_ECHO_CLIENTS ];
+
+	/* The +1 is to make the test logic easier as the function that calculates the
+	free space will return one less than the actual free space - adding a 1 to the
+	actual length makes it appear to the tests as if the free space is returned as
+	it might logically be expected.  Returning 1 less than the actual free space is
+	fine as it can never result in an overrun. */
 	static uint8_t ucBufferStorage[ sbNUMBER_OF_SENDER_TASKS ][ sbSTREAM_BUFFER_LENGTH_BYTES + 1 ];
 	static uint32_t ulSenderLoopCounters[ sbNUMBER_OF_SENDER_TASKS ] = { 0 };
 #endif /* configSUPPORT_STATIC_ALLOCATION */
@@ -221,8 +227,9 @@ static void prvCheckExpectedState( BaseType_t xState )
 
 static void prvSingleTaskTests( StreamBufferHandle_t xStreamBuffer )
 {
-size_t xReturned, xItem, xExpectedSpace;
+size_t xReturned, xItem, xExpected, xExpectedSpaces, xExpectedBytes;
 const size_t xMax6ByteMessages = sbSTREAM_BUFFER_LENGTH_BYTES / 6;
+const size_t xTrueSize = ( sizeof( ucBufferStorage ) / sbNUMBER_OF_SENDER_TASKS );
 const size_t x6ByteLength = 6, x17ByteLength = 17, xFullBufferSize = sbSTREAM_BUFFER_LENGTH_BYTES * ( size_t ) 2;
 uint8_t *pucFullBuffer, *pucData, *pucReadData;
 TickType_t xTimeBeforeCall, xTimeAfterCall;
@@ -242,14 +249,122 @@ UBaseType_t uxOriginalPriority;
 	pucReadData = pucData + x17ByteLength;
 
 	/* Nothing has been added or removed yet, so expect the free space to be
-	exactly as created. */
-	xExpectedSpace = xStreamBufferSpacesAvailable( xStreamBuffer );
-	prvCheckExpectedState( xExpectedSpace == sbSTREAM_BUFFER_LENGTH_BYTES );
+	exactly as created.  Head and tail are both at 0. */
+	xExpectedSpaces = sbSTREAM_BUFFER_LENGTH_BYTES;
+	xExpectedBytes = 0;
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedSpaces );
+	xExpected = xStreamBufferBytesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedBytes );
 	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdTRUE );
+	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdFALSE );
+
+	/* Add a single item - number of bytes available should go up by one and spaces
+	available down by one.  Head is in front of tail. */
+	xExpectedSpaces--;
+	xExpectedBytes++;
+	xReturned = xStreamBufferSend( xStreamBuffer, ( void * ) pucData, sizeof( *pucData ), ( TickType_t ) 0 );
+	prvCheckExpectedState( xReturned == sizeof( *pucData ) );
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedSpaces );
+	xExpected = xStreamBufferBytesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedBytes );
+	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdFALSE );
+	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdFALSE );
+
+	/* Now fill the buffer by adding another 29 bytes.  Head is 30 tail is at 0. */
+	xExpectedSpaces -= 29;
+	xExpectedBytes += 29;
+	xReturned = xStreamBufferSend( xStreamBuffer, ( void * ) pucData, ( sbSTREAM_BUFFER_LENGTH_BYTES - 1 ), ( TickType_t ) 0 );
+	prvCheckExpectedState( xReturned == ( sbSTREAM_BUFFER_LENGTH_BYTES - 1 ) );
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedSpaces );
+	xExpected = xStreamBufferBytesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedBytes );
+	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdFALSE );
+	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdTRUE );
+
+	/* Should not be able to add another byte now. */
+	xReturned = xStreamBufferSend( xStreamBuffer, ( void * ) pucData, sizeof( *pucData ), ( TickType_t ) 0 );
+	prvCheckExpectedState( xReturned == ( size_t ) 0 );
+
+	/* Remove a byte so the tail pointer moves off 0.  Head pointer remains at the
+	end of the buffer. */
+	xExpectedSpaces += 1;
+	xExpectedBytes -= 1;
+	xReturned = xStreamBufferReceive( xStreamBuffer, ( void * ) pucData, sizeof( *pucData ), ( TickType_t ) 0 );
+	prvCheckExpectedState( xReturned == sizeof( *pucData ) );
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedSpaces );
+	xExpected = xStreamBufferBytesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedBytes );
+	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdFALSE );
+	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdFALSE );
+
+	/* Should be able to add another byte to fill the buffer again now. */
+	xExpectedSpaces -= 1;
+	xExpectedBytes += 1;
+	xReturned = xStreamBufferSend( xStreamBuffer, ( void * ) pucData, sizeof( *pucData ), ( TickType_t ) 0 );
+	prvCheckExpectedState( xReturned == sizeof( *pucData ) );
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedSpaces );
+	xExpected = xStreamBufferBytesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedBytes );
+	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdFALSE );
+	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdTRUE );
+
+	/* Now the head pointer is behind the tail pointer.  Read another 29 bytes so
+	the tail pointer moves to the end of the buffer. */
+	xExpectedSpaces += 29;
+	xExpectedBytes -= 29;
+	xReturned = xStreamBufferReceive( xStreamBuffer, ( void * ) pucData, ( size_t ) 29, ( TickType_t ) 0 );
+	prvCheckExpectedState( xReturned == ( size_t ) 29 );
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedSpaces );
+	xExpected = xStreamBufferBytesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedBytes );
+	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdFALSE );
+	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdFALSE );
+
+	/* Read out one more byte to wrap the tail back around to the start, to get back
+	to where we started. */
+	xExpectedSpaces += 1;
+	xExpectedBytes -= 1;
+	xReturned = xStreamBufferReceive( xStreamBuffer, ( void * ) pucData, sizeof( *pucData ), ( TickType_t ) 0 );
+	prvCheckExpectedState( xReturned == sizeof( *pucData ) );
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedSpaces );
+	xExpected = xStreamBufferBytesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedBytes );
+	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdTRUE );
+	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdFALSE );
+
+	/* Try filling the message buffer in one write, blocking indefinitely.  Expect to
+	have written one byte less. */
+	xReturned = xStreamBufferSend( xStreamBuffer, ( void * ) pucData, xTrueSize, portMAX_DELAY );
+	xExpectedSpaces = ( size_t ) 0;
+	prvCheckExpectedState( xReturned ==  ( xTrueSize - ( size_t ) 1 ) );
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == xExpectedSpaces );
+	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdFALSE );
+	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdTRUE );
+
+	/* Empty the buffer again ready for the rest of the tests.  Again block
+	indefinitely to ensure reading more than there can possible be won't lock this
+	task up, so expect to actually receive one byte less than requested. */
+	xReturned = xStreamBufferReceive( xStreamBuffer, ( void * ) pucData, xTrueSize, portMAX_DELAY );
+	prvCheckExpectedState( xReturned == ( xTrueSize - ( size_t ) 1 ) );
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == sbSTREAM_BUFFER_LENGTH_BYTES );
+	xExpected = xStreamBufferBytesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == ( size_t ) 0 );
+	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdTRUE );
+	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdFALSE );
 
 
 	/* The buffer is 30 bytes long.  6 5 byte messages should fit before the
 	buffer is completely full. */
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
 	for( xItem = 0; xItem < xMax6ByteMessages; xItem++ )
 	{
 		prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdFALSE );
@@ -270,16 +385,15 @@ UBaseType_t uxOriginalPriority;
 
 		/* The space in the buffer will have reduced by the amount of user data
 		written into the buffer. */
-		xExpectedSpace -= x6ByteLength;
+		xExpected -= x6ByteLength;
 		xReturned = xStreamBufferSpacesAvailable( xStreamBuffer );
-		prvCheckExpectedState( xReturned == xExpectedSpace );
+		prvCheckExpectedState( xReturned == xExpected );
 		xReturned = xStreamBufferBytesAvailable( xStreamBuffer );
 		/* +1 as it is zero indexed. */
 		prvCheckExpectedState( xReturned == ( ( xItem + 1 ) * x6ByteLength ) );
 	}
 
-	/* Now the buffer should be full, and attempting to add anything will should
-	fail. */
+	/* Now the buffer should be full, and attempting to add anything should fail. */
 	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdTRUE );
 	xReturned = xStreamBufferSend( xStreamBuffer, ( void * ) pucData, sizeof( pucData[ 0 ] ), sbDONT_BLOCK );
 	prvCheckExpectedState( xReturned == 0 );
@@ -321,17 +435,17 @@ UBaseType_t uxOriginalPriority;
 
 		/* The space in the buffer will have increased by the amount of user
 		data removed from the buffer. */
-		xExpectedSpace += x6ByteLength;
+		xExpected += x6ByteLength;
 		xReturned = xStreamBufferSpacesAvailable( xStreamBuffer );
-		prvCheckExpectedState( xReturned == xExpectedSpace );
+		prvCheckExpectedState( xReturned == xExpected );
 		xReturned = xStreamBufferBytesAvailable( xStreamBuffer );
-		prvCheckExpectedState( xReturned == ( sbSTREAM_BUFFER_LENGTH_BYTES - xExpectedSpace ) );
+		prvCheckExpectedState( xReturned == ( sbSTREAM_BUFFER_LENGTH_BYTES - xExpected ) );
 	}
 
 	/* The buffer should be empty again. */
 	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdTRUE );
-	xExpectedSpace = xStreamBufferSpacesAvailable( xStreamBuffer );
-	prvCheckExpectedState( xExpectedSpace == sbSTREAM_BUFFER_LENGTH_BYTES );
+	xExpected = xStreamBufferSpacesAvailable( xStreamBuffer );
+	prvCheckExpectedState( xExpected == sbSTREAM_BUFFER_LENGTH_BYTES );
 
 	/* Reading with a timeout should also fail after the appropriate time.  The
 	priority is temporarily boosted in this part of the test to keep the
@@ -348,7 +462,7 @@ UBaseType_t uxOriginalPriority;
 
 	/* In the next loop 17 bytes are written to then read out on each
 	iteration.  As 30 is not divisible by 17 the data will wrap around. */
-	xExpectedSpace = sbSTREAM_BUFFER_LENGTH_BYTES - x17ByteLength;
+	xExpected = sbSTREAM_BUFFER_LENGTH_BYTES - x17ByteLength;
 
 	for( xItem = 0; xItem < 100; xItem++ )
 	{
@@ -362,7 +476,7 @@ UBaseType_t uxOriginalPriority;
 		/* The space in the buffer will have reduced by the amount of user data
 		written into the buffer. */
 		xReturned = xStreamBufferSpacesAvailable( xStreamBuffer );
-		prvCheckExpectedState( xReturned == xExpectedSpace );
+		prvCheckExpectedState( xReturned == xExpected );
 		xReturned = xStreamBufferBytesAvailable( xStreamBuffer );
 		prvCheckExpectedState( xReturned == x17ByteLength );
 		prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdFALSE );
@@ -430,12 +544,8 @@ UBaseType_t uxOriginalPriority;
 
 	/* Try writing more bytes than there is space. */
 	vTaskPrioritySet( NULL, configMAX_PRIORITIES - 1 );
-	xTimeBeforeCall = xTaskGetTickCount();
 	xReturned = xStreamBufferSend( xStreamBuffer, ( const void * ) pc54ByteString, sbSTREAM_BUFFER_LENGTH_BYTES * ( size_t ) 2, xMinimalBlockTime );
-	xTimeAfterCall = xTaskGetTickCount();
 	vTaskPrioritySet( NULL, uxOriginalPriority );
-	prvCheckExpectedState( ( xTimeAfterCall - xTimeBeforeCall ) >= xMinimalBlockTime );
-	prvCheckExpectedState( ( xTimeAfterCall - xTimeBeforeCall ) < ( xMinimalBlockTime + xAllowableMargin ) );
 	prvCheckExpectedState( xReturned == sbSTREAM_BUFFER_LENGTH_BYTES );
 	prvCheckExpectedState( xStreamBufferIsFull( xStreamBuffer ) == pdTRUE );
 	prvCheckExpectedState( xStreamBufferIsEmpty( xStreamBuffer ) == pdFALSE );
@@ -945,7 +1055,7 @@ BaseType_t xErrorDetected = pdFALSE;
 			each loop to ensure the interrupt that sends to the stream buffer
 			detects it needs to start sending from the start of the strin again.. */
 			vTaskDelay( xCycleBlockTime );
-		
+
 			/* Create the stream buffer that will be used from inside the tick
 			interrupt. */
 			memset( ucRxData, 0x00, sizeof( ucRxData ) );

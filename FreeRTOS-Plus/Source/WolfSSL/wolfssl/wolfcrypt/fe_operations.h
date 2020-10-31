@@ -79,7 +79,7 @@ Bounds on each t[i] vary depending on context.
 #if !defined(FREESCALE_LTC_ECC)
 WOLFSSL_LOCAL void fe_init(void);
 
-WOLFSSL_LOCAL int  curve25519(byte * q, byte * n, byte * p);
+WOLFSSL_LOCAL int  curve25519(byte * q, const byte * n, const byte * p);
 #endif
 
 /* default to be faster but take more memory */

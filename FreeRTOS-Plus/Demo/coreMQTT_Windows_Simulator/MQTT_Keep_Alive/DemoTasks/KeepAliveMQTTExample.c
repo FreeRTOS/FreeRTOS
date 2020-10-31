@@ -255,8 +255,9 @@ static void prvMQTTPublishToTopic( MQTTContext_t * pxMQTTContext );
 static void prvMQTTUnsubscribeFromTopic( MQTTContext_t * pxMQTTContext );
 
 /**
- * @brief The timer query function provided to the MQTT context. This provides
- * an example of how to use the library without implementing an actual timer.
+ * @brief The timer query function provided to the MQTT context that always
+ * returns 0. This provides an example of how to use the MQTT library without
+ * implementing an actual timer.
  *
  * @return 0.
  */

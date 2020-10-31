@@ -1,29 +1,35 @@
-CROSS=riscv64-unknown-elf-
-CC=$(CROSS)gcc
-OBJCOPY=$(CROSS)objcopy
-ARCH=$(CROSS)ar
+CROSS   = riscv64-unknown-elf-
+CC      = $(CROSS)gcc
+OBJCOPY = $(CROSS)objcopy
+ARCH    = $(CROSS)ar
 
-RTOS_SOURCE_DIR=../../Source
-DEMO_SOURCE_DIR=../Common/Minimal
-LIBWRAP_SOURCE_DIR=./freedom-e-sdk/libwrap
+BUILD_DIR       = build
+RTOS_SOURCE_DIR = $(abspath ../../Source)
+DEMO_SOURCE_DIR = $(abspath ../Common/Minimal)
 
 CPPFLAGS = \
-	-g -O2 -Wall \
-	-fmessage-length=0 \
-	-ffunction-sections \
-	-fdata-sections \
-	-fno-builtin-printf \
 	-D__riscv_float_abi_soft \
 	-DportasmHANDLE_INTERRUPT=handle_trap \
 	-I . -I ../Common/include \
 	-I $(RTOS_SOURCE_DIR)/include \
 	-I $(RTOS_SOURCE_DIR)/portable/GCC/RISC-V \
 	-I $(RTOS_SOURCE_DIR)/portable/GCC/RISC-V/chip_specific_extensions/RV32I_CLINT_no_extensions
-CFLAGS  = -march=rv32ima -mabi=ilp32 -mcmodel=medany
+CFLAGS  = -march=rv32ima -mabi=ilp32 -mcmodel=medany \
+	-Wall \
+	-fmessage-length=0 \
+	-ffunction-sections \
+	-fdata-sections \
+	-fno-builtin-printf
 ASFLAGS = -march=rv32ima -mabi=ilp32 -mcmodel=medany
 LDFLAGS = -nostartfiles -Tfake_rom.lds \
 	-Xlinker --gc-sections \
 	-Xlinker --defsym=__stack_size=300
+
+ifeq ($(DEBUG), 1)
+    CFLAGS += -Og -ggdb3
+else
+    CFLAGS += -O2
+endif
 
 SRCS = main.c riscv-virt.c ns16550.c \
 	$(DEMO_SOURCE_DIR)/EventGroupsDemo.c \
@@ -44,10 +50,21 @@ SRCS = main.c riscv-virt.c ns16550.c \
 ASMS = start.S \
 	$(RTOS_SOURCE_DIR)/portable/GCC/RISC-V/portASM.S
 
-OBJS = $(SRCS:.c=.o) $(ASMS:.S=.o)
+OBJS = $(SRCS:%.c=$(BUILD_DIR)/%.o) $(ASMS:%.S=$(BUILD_DIR)/%.o)
+DEPS = $(SRCS:%.c=$(BUILD_DIR)/%.d) $(ASMS:%.S=$(BUILD_DIR)/%.d)
 
-demo.elf: $(OBJS) fake_rom.lds Makefile
-	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $@
+$(BUILD_DIR)/RTOSDemo.axf: $(OBJS) fake_rom.lds Makefile
+	$(CC) $(LDFLAGS) $(OBJS) -o $@
+
+$(BUILD_DIR)/%.o: %.c Makefile
+	@mkdir -p $(@D)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
+
+$(BUILD_DIR)/%.o: %.S Makefile
+	@mkdir -p $(@D)
+	$(CC) $(CPPFLAGS) $(ASFLAGS) -MMD -MP -c $< -o $@
 
 clean:
-	rm -rf demo.elf $(OBJS)
+	rm -rf $(BUILD_DIR)
+
+-include $(DEPS)

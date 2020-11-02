@@ -24,8 +24,6 @@
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
-#include "atomic.h"
-#include "semphr.h"
 
 /* FreeRTOS+TCP includes. */
 #include "FreeRTOS_IP.h"

@@ -20,7 +20,7 @@
  */
 
 /**
- * @file freertos_sockets_wrapper.h
+ * @file freertos_plus_tcp_sockets_wrapper.h
  * @brief FreeRTOS Sockets connect and disconnect function wrapper.
  */
 

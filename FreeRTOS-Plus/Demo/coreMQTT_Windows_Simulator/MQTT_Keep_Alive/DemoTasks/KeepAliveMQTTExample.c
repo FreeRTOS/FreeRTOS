@@ -60,7 +60,7 @@
 #include "retry_utils.h"
 
 /* Transport interface include. */
-#include "plaintext_freertos.h"
+#include "freertos_plus_tcp_plaintext.h"
 
 /*-----------------------------------------------------------*/
 

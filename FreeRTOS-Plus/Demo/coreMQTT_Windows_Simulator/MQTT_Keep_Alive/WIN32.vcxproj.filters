@@ -120,10 +120,10 @@
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\src\plaintext_freertos.c">
+    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\transport\plaintext\freertos_plus_tcp_plaintext.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\retry_utils\retry_utils_freertos.c">
+    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\retry_utils\retry_utils.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
     </ClCompile>
   </ItemGroup>
@@ -210,7 +210,7 @@
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT\include</Filter>
     </ClInclude>
     <ClInclude Include="core_mqtt_config.h" />
-    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\include\plaintext_freertos.h">
+    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\transport\include\freertos_plus_tcp_plaintext.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h">

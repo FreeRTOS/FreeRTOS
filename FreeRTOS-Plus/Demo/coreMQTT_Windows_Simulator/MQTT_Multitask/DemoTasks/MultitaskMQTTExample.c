@@ -75,9 +75,9 @@
 
 /* Transport interface include. */
 #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
-    #include "tls_freertos.h"
+    #include "freertos_plus_tcp_mbedtls.h"
 #else
-    #include "plaintext_freertos.h"
+    #include "freertos_plus_tcp_plaintext.h"
 #endif
 
 /**

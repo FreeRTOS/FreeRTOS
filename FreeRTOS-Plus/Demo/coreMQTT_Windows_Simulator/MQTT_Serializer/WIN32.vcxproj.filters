@@ -114,7 +114,7 @@
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\retry_utils\retry_utils_freertos.c">
+    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\retry_utils\retry_utils.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
     </ClCompile>
   </ItemGroup>

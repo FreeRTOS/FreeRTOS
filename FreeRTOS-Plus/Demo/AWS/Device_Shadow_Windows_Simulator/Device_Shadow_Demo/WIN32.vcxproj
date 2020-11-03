@@ -165,7 +165,7 @@
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c" />
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c" />
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c" />
-    <ClCompile Include="..\..\..\..\Source\AWS\device-shadow-for-aws-iot-embedded-sdk\source\shadow.c" />
+    <ClCompile Include="..\..\..\..\Source\AWS\device-shadow\source\shadow.c" />
     <ClCompile Include="..\..\..\..\Source\coreJSON\source\core_json.c" />
     <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\aes.c">
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>

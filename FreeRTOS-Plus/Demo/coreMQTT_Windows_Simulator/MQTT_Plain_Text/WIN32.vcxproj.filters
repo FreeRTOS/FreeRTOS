@@ -222,7 +222,7 @@
     <ClInclude Include="..\..\..\Source\Application-Protocols\platform\retry_utils\retry_utils.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\transport\include\freertos_plus_tcp_sockets_wrapper.h">
+    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\transport\freertos_plus_tcp_sockets_wrapper.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
     </ClInclude>
   </ItemGroup>

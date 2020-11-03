@@ -554,7 +554,7 @@
     <ClInclude Include="..\..\..\Source\Application-Protocols\platform\transport\freertos_plus_tcp_sockets_wrapper.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\transport\mbedtls\include\freertos_plus_tcp_mbedtls.h">
+    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\transport\tls\include\freertos_plus_tcp_mbedtls.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
     </ClInclude>
     <ClInclude Include="core_mqtt_config.h">

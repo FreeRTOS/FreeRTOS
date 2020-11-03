@@ -20,7 +20,7 @@
  */
 
 /**
- * @file retry_utils_freertos.c
+ * @file retry_utils.c
  * @brief Utility implementation of backoff logic, used for attempting retries of failed processes.
  */
 

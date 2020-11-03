@@ -20,7 +20,7 @@
  */
 
 /**
- * @file freertos_sockets_wrapper.c
+ * @file freertos_plus_tcp_sockets_wrapper.c
  * @brief FreeRTOS Sockets connect and disconnect wrapper implementation.
  */
 
@@ -30,7 +30,7 @@
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 
-#include "freertos_sockets_wrapper.h"
+#include "freertos_plus_tcp_sockets_wrapper.h"
 
 /*-----------------------------------------------------------*/
 

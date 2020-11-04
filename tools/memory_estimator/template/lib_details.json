@@ -1,0 +1,30 @@
+{
+    "kernel" : {
+        "src": [
+            "event_groups.c",
+            "list.c",
+            "queue.c",
+            "stream_buffer.c",
+            "tasks.c",
+            "timers.c",
+            "portable/GCC/ARM_CM4F"
+        ],
+        "include": [
+            "include",
+            "portable/GCC/ARM_CM4F"
+        ],
+        "size_description":"Code Size of FreeRTOS Kernel (example generated with GCC for ARM Cortex-M)"
+    },
+    "coreHTTP" : {
+        "src": [
+            "source/core_http_client.c",
+            "source/dependency/3rdparty/http_parser/http_parser.c"
+        ],
+        "include": [
+            "source/include",
+            "source/interface",
+            "source/dependency/3rdparty/http_parser"
+        ],
+        "size_description":"Code Size of HTTPS (example generated with GCC for ARM Cortex-M)"
+    }
+}

@@ -58,7 +58,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\FreeRTOS-Plus\Source\Logging;..\Common\WinPCap;..\..\..\..\FreeRTOS\Source\include;..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\Source\Application-Protocols\platform\include;..\..\..\Source\Application-Protocols\platform\freertos\transport\include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\FreeRTOS-Plus\Source\Logging;..\Common\WinPCap;..\..\..\..\FreeRTOS\Source\include;..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\Source\Application-Protocols\platform\retry_utils;..\..\..\Source\Application-Protocols\platform\transport;..\..\..\Source\Application-Protocols\platform\transport\plaintext\include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -157,9 +157,9 @@
     <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_UDP_IP.c" />
     <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement\BufferAllocation_2.c" />
     <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\NetworkInterface\WinPCap\NetworkInterface.c" />
-    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\src\freertos_sockets_wrapper.c" />
-    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\src\plaintext_freertos.c" />
-    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\retry_utils\retry_utils_freertos.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\transport\freertos_plus_tcp_sockets_wrapper.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\transport\plaintext\freertos_plus_tcp_plaintext.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\retry_utils\retry_utils.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c" />
@@ -194,9 +194,9 @@
     <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\Logging\logging.h" />
     <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\Logging\logging_levels.h" />
     <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\Logging\logging_stack.h" />
-    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\include\plaintext_freertos.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\transport\plaintext\include\freertos_plus_tcp_plaintext.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h" />
-    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\include\retry_utils.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\retry_utils\retry_utils.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_serializer.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_state.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt.h" />

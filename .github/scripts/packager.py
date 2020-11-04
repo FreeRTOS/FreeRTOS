@@ -100,16 +100,41 @@ def unzip_baseline_zip(path_inzip, path_outdir):
 
     return os.path.join(path_outdir, str(os.path.basename(path_inzip)).replace('.zip', ''))
 
-def download_git_tree(git_link, root_dir, dir_name, ref='master', commit_id='HEAD'):
+def download_git_tree(git_link, root_dir, dir_name, ref='master', commit_id='HEAD', recurse=False):
     '''
     Download HEAD from Git Master. Place into working files dir
     '''
-    rc = subprocess.run(['git', '-C', root_dir, 'clone', '-b', ref, git_link, dir_name]).returncode
-    rc += subprocess.run(['git', '-C', os.path.join(root_dir, dir_name), 'checkout', '-f', commit_id]).returncode    
-    rc += subprocess.run(['git', '-C', os.path.join(root_dir, dir_name), 'clean', '-fd']).returncode    
-    rc += subprocess.run(['git', '-C', os.path.join(root_dir, dir_name), 'submodule', 'update', '--init', '--recursive']).returncode    
+    args = ['git', '-C', root_dir, 'clone', '-b', ref, git_link, dir_name]
+    rc = subprocess.run(args).returncode
+    rc += subprocess.run(['git', '-C', os.path.join(root_dir, dir_name), 'checkout', '-f', commit_id]).returncode
+    rc += subprocess.run(['git', '-C', os.path.join(root_dir, dir_name), 'clean', '-fd']).returncode
+    if recurse:
+        rc += subprocess.run(['git', '-C', os.path.join(root_dir, dir_name), 'submodule', 'update', '--init', '--recursive']).returncode
 
     return os.path.join(root_dir, dir_name) if rc == 0 else None
+
+
+def commit_git_tree_changes(repo_dir, commit_message=''):
+    rc = subprocess.run(['git', '-C', repo_dir, 'add', '-u']).returncode
+    rc += subprocess.run(['git', '-C', repo_dir, 'commit', '-m', commit_message]).returncode
+
+    return rc
+
+def push_git_tree_changes(repo_dir, tag=None, force_tag=False):
+    rc = subprocess.run(['git', '-C', repo_dir, 'push']).returncode
+
+    if tag != None:
+        force_tag_arg = '-f' if force_tag else ''
+        rc += subprocess.run(['git', '-C', repo_dir, 'tag', force_tag_arg, tag]).returncode
+        rc += subprocess.run(['git', '-C', repo_dir, 'push', force_tag_arg, '--tags']).returncode
+
+    return rc
+
+def update_submodule_pointer(repo_dir, rel_submodule_path, new_submodule_ref):
+    rc = subprocess.run(['git', '-C', repo_dir, 'submodule', 'update', '--init']).returncode
+    rc += subprocess.run(['git', '-C', os.path.join(repo_dir, rel_submodule_path), 'fetch']).returncode
+    rc += subprocess.run(['git', '-C', os.path.join(repo_dir, rel_submodule_path), 'checkout', new_submodule_ref]).returncode
+    rc += subprocess.run(['git', '-C', repo_dir, 'add', rel_submodule_path]).returncode
 
 def setup_intermediate_files(scratch_dir, intree_dir, outtree_dir):
     cleanup_intermediate_files(scratch_dir)
@@ -157,7 +182,7 @@ def zip_result_tree(path_tree, path_outzip):
     Zip file tree rooted at 'path_root', using same compression as 7z at max compression,
     to zip at 'path_outzip'
     '''
-    subprocess.run(['7z', 'a', '-tzip', '-mx=9', path_outzip, os.path.join('.', path_tree)])
+    subprocess.run(['7z', 'a', '-tzip', '-mx=9', path_outzip, os.path.join('.', path_tree, '*')])
 
 def show_package_diagnostics(path_newzip, path_basezip):
     '''
@@ -171,13 +196,13 @@ def show_package_diagnostics(path_newzip, path_basezip):
                path_basezip,
                '+' if size_diff_KB >= 0 else '', size_diff_KB))
 
-def create_package(path_outtree, package_name, exclude_files=[]):
+def create_package(path_ziproot, path_outtree, package_name, exclude_files=[]):
     print("Packaging '%s'..." % package_name)
     pruned_files = prune_result_tree(path_outtree, exclude_files)
     print('Files removed:\n    %s' % '\n    '.join(pruned_files))
 
     path_outzip = '%s.zip' % package_name
-    zip_result_tree(path_outtree, path_outzip)
+    zip_result_tree(path_ziproot, path_outzip)
     print('Done.')
 
     return path_outzip

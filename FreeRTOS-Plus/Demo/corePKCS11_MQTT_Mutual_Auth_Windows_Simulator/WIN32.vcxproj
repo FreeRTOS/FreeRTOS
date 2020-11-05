@@ -164,7 +164,7 @@
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c" />
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c" />
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\Application-Protocols\coreMQTT\source\core_mqtt.c" />
-    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\Logging\logging.c" />
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Demo\Common\Logging\Logging_WinSim.c" />
     <ClCompile Include="..\..\Source\Application-Protocols\platform\transport\tls\freertos_plus_tcp_mbedtls_pkcs11.c" />
     <ClCompile Include="..\..\Source\corePKCS11\source\core_pkcs11.c" />
     <ClCompile Include="..\..\Source\corePKCS11\source\core_pki_utils.c" />

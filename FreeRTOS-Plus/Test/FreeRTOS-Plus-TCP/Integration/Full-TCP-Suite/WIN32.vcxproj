@@ -162,7 +162,7 @@
     <ClCompile Include="..\..\..\CMock\vendor\unity\extras\fixture\src\unity_fixture.c" />
     <ClCompile Include="..\..\..\CMock\vendor\unity\extras\memory\src\unity_memory.c" />
     <ClCompile Include="..\..\..\CMock\vendor\unity\src\unity.c" />
-    <ClCompile Include="..\..\..\..\Source\Logging\logging.c" />
+    <ClCompile Include="..\..\..\..\Demo\Common\Logging\Logging_WinSim.c" />
     <ClCompile Include="Logging\run-time-stats-utils.c" />
     <ClCompile Include="main.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

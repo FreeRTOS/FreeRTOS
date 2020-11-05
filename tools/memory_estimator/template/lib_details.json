@@ -15,16 +15,46 @@
         ],
         "size_description":"Code Size of FreeRTOS Kernel (example generated with GCC for ARM Cortex-M)"
     },
-    "coreHTTP" : {
+    "coreMQTT" : {
         "src": [
-            "source/core_http_client.c",
-            "source/dependency/3rdparty/http_parser/http_parser.c"
+            "source/core_mqtt.c",
+            "source/core_mqtt_state.c",
+            "source/core_mqtt_serializer.c"
         ],
         "include": [
             "source/include",
-            "source/interface",
-            "source/dependency/3rdparty/http_parser"
+            "source/interface"
         ],
-        "size_description":"Code Size of HTTPS (example generated with GCC for ARM Cortex-M)"
+        "size_description":"Code Size of coreMQTT (example generated with GCC for ARM Cortex-M)"
+    },
+    "coreJSON" : {
+        "src": [
+            "source/core_json.c"
+        ],
+        "include": [
+            "source/include"
+        ],
+        "size_description":"Code Size of coreJSON (example generated with GCC for ARM Cortex-M)"
+    },
+    "corePKCS11" : {
+        "src": [
+            "source/core_pkcs11.c",
+            "source/portable/mbedtls/core_pkcs11_mbedtls.c",
+            "source/core_pki_utils.c"
+        ],
+        "include": [
+            "3rdparty/pkcs11",
+            "source/include"
+        ],
+        "size_description":"Code Size of corePKCS11 (example generated with GCC for ARM Cortex-M)"
+    },
+    "shadow" : {
+        "src": [
+            "source/shadow.c"
+        ],
+        "include": [
+            "source/include"
+        ],
+        "size_description":"Code Size of AWS IoT Device Shadow (example generated with GCC for ARM Cortex-M)"
     }
 }

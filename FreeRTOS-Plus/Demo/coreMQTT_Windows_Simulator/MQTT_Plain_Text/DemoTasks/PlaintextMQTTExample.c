@@ -53,10 +53,10 @@
 #include "core_mqtt.h"
 
 /* Retry utilities include. */
-#include "retry_utils.h"
+#include "exponential_backoff.h"
 
 /* Transport interface include. */
-#include "freertos_plus_tcp_plaintext.h"
+#include "using_plaintext.h"
 
 /*-----------------------------------------------------------*/
 
@@ -370,7 +370,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         /* If server rejected the subscription request, attempt to resubscribe to
          * the topic. Attempts are made according to the exponential backoff retry
-         * strategy declared in retry_utils.h. */
+         * strategy declared in exponential_backoff.h. */
         prvMQTTSubscribeWithBackoffRetries( &xMQTTContext );
 
         /******************* Publish and Keep Alive Loop. *********************/

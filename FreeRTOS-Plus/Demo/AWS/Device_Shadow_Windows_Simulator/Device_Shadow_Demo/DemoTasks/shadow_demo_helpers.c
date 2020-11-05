@@ -50,10 +50,10 @@
 #include "core_mqtt.h"
 
 /* Retry utilities include. */
-#include "retry_utils.h"
+#include "exponential_backoff.h"
 
 /* Transport interface implementation include header for TLS. */
-#include "freertos_plus_tcp_mbedtls.h"
+#include "using_mbedtls.h"
 
 /*------------- Demo configurations -------------------------*/
 

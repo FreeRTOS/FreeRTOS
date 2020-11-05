@@ -179,7 +179,7 @@
       <Filter>Transport</Filter>
     </ClCompile>
     <ClCompile Include="main.c" />
-    <ClCompile Include="..\..\..\FreeRTOS-Plus\Logging\logging.c">
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Demo\Common\Logging\Logging_WinSim.c">
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\corePKCS11\source\core_pkcs11.c">

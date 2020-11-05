@@ -3,7 +3,7 @@
         "files":[
         ],
         "total":{
-            "total_header":"Total estimate (configurations defined <a href=\"https://github.com/FreeRTOS/FreeRTOS/tree/lts-development/tools/memory_estimator\" target=\"_blank\" rel=\"noopener noreferrer\">here</a>)"
+            "total_header":"Total estimate (configurations defined <a href=\"https://github.com/FreeRTOS/FreeRTOS/tree/master/tools/memory_estimator\" target=\"_blank\" rel=\"noopener noreferrer\">here</a>)"
         },
         "column_header":{
             "files_column_header":"File",

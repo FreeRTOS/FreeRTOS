@@ -18,7 +18,7 @@ __GENERATED_MAKE_FILE__ = os.path.join(__THIS_FILE_PATH__, 'Makefile')
 __LIB_DETAILS_JSON__ = os.path.join(__THIS_FILE_PATH__, 'template', 'lib_details.json')
 
 __JSON_REPORT_TEMPLATE__ = os.path.join(__THIS_FILE_PATH__, 'template', 'report.json.template')
-__GENERATED_JSON_REPORT__ = os.path.join(__THIS_FILE_PATH__, 'freertos_lts_memory_estimates.json')
+__GENERATED_JSON_REPORT__ = os.path.join(__THIS_FILE_PATH__, 'freertos_memory_estimates.json')
 
 
 def get_lib_src_and_include(lib_name, src_path):

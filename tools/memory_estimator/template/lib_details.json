@@ -58,6 +58,9 @@
         "include": [
             "source/include"
         ],
+        "compiler_flags": [
+            "SHADOW_DO_NOT_USE_CUSTOM_CONFIG"
+        ],
         "size_description":"Code Size of AWS IoT Device Shadow (example generated with GCC for ARM Cortex-M)"
     }
 }

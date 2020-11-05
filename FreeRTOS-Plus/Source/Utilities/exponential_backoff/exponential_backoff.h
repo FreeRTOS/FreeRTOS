@@ -20,13 +20,13 @@
  */
 
 /**
- * @file retry_utils.h
+ * @file exponential_backoff.h
  * @brief Declaration of the exponential backoff retry logic utility functions
  * and constants.
  */
 
-#ifndef RETRY_UTILS_H_
-#define RETRY_UTILS_H_
+#ifndef EXPONENTIAL_BACKOFF_H
+#define EXPONENTIAL_BACKOFF_H
 
 /* Standard include. */
 #include <stdint.h>
@@ -66,11 +66,11 @@
  * The functions are used as shown in the diagram below. This is the exponential
  * backoff with jitter loop:
  *
- * @image html retry_utils_flow.png width=25%
+ * @image html exponential_backoff_flow.png width=25%
  *
  * The following steps give guidance on implementing the Retry Utils. An example
- * implementation of the Retry Utils for a POSIX platform can be found in file
- * @ref retry_utils_posix.c.
+ * implementation of the Retry Utils for the FreeRTOS platform can be found in file
+ * @ref exponential_backoff.c.
  *
  * -# Implementing @ref RetryUtils_ParamsReset
  * @snippet this define_retryutils_paramsreset
@@ -242,4 +242,4 @@ void RetryUtils_ParamsReset( RetryUtilsParams_t * pRetryParams );
  */
 RetryUtilsStatus_t RetryUtils_BackoffAndSleep( RetryUtilsParams_t * pRetryParams );
 
-#endif /* ifndef RETRY_UTILS_H_ */
+#endif /* ifndef EXPONENTIAL_BACKOFF_H */

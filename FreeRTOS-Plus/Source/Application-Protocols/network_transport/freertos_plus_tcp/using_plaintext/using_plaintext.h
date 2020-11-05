@@ -19,8 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef TRANSPORT_INTERFACE_FREERTOS_H_
-#define TRANSPORT_INTERFACE_FREERTOS_H_
+#ifndef USING_PLAINTEXT_H
+#define USING_PLAINTEXT_H
 
 /**************************************************/
 /******* DO NOT CHANGE the following order ********/
@@ -127,4 +127,4 @@ int32_t Plaintext_FreeRTOS_send( NetworkContext_t * pNetworkContext,
                                  const void * pBuffer,
                                  size_t bytesToSend );
 
-#endif /* ifndef TRANSPORT_INTERFACE_FREERTOS_H_ */
+#endif /* ifndef USING_PLAINTEXT_H */

@@ -20,7 +20,7 @@
  */
 
 /**
- * @file retry_utils.c
+ * @file exponential_backoff.c
  * @brief Utility implementation of backoff logic, used for attempting retries of failed processes.
  */
 
@@ -31,7 +31,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-#include "retry_utils.h"
+#include "exponential_backoff.h"
 
 #define MILLISECONDS_PER_SECOND    ( 1000U )                                                         /**< @brief Milliseconds per second. */
 

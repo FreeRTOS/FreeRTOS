@@ -31,6 +31,7 @@ def get_lib_src_and_include(lib_name, src_path):
 
     src_files = []
     include_dirs = []
+    compiler_flags = []
 
     for entry in lib_details['src']:
         entry_full_path = os.path.join(src_path, entry)
@@ -45,7 +46,10 @@ def get_lib_src_and_include(lib_name, src_path):
     for entry in lib_details['include']:
         include_dirs.append(os.path.join(src_path, entry))
 
-    return src_files, include_dirs
+    if 'compiler_flags' in lib_details:
+        compiler_flags = lib_details['compiler_flags']
+
+    return src_files, include_dirs, compiler_flags
 
 
 def get_lib_size_description(lib_name):
@@ -60,7 +64,7 @@ def get_lib_size_description(lib_name):
 
 
 def generate_makefile(lib_name, src_path, optimization, disable_asserts):
-    src_files, include_dirs = get_lib_src_and_include(lib_name, src_path)
+    src_files, include_dirs, compiler_flags = get_lib_src_and_include(lib_name, src_path)
 
     # Add config files dir to include dirs list.
     include_dirs.append(os.path.join(__THIS_FILE_PATH__, 'config_files'))
@@ -70,6 +74,7 @@ def generate_makefile(lib_name, src_path, optimization, disable_asserts):
                                     include_dirs,
                                     optimization,
                                     disable_asserts,
+                                    compiler_flags,
                                     __MAKE_FILE_TEMPLATE__,
                                     __GENERATED_MAKE_FILE__)
 

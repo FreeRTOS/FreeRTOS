@@ -1,6 +1,12 @@
 
 
-def generate_makefile_from_template(source_files, include_dirs, optimization, disable_asserts, template_file, output_file):
+def generate_makefile_from_template(source_files,
+                                    include_dirs,
+                                    optimization,
+                                    disable_asserts,
+                                    compiler_flags,
+                                    template_file,
+                                    output_file):
     '''
     source_files - A list containing all source files.
     include_dirs - A list containing all include directories.
@@ -22,6 +28,8 @@ def generate_makefile_from_template(source_files, include_dirs, optimization, di
     c_flags = '-{}'.format(optimization)
     if disable_asserts:
         c_flags += ' -DNDEBUG'
+    for compiler_flag in compiler_flags:
+        c_flags += ' -D{}'.format(compiler_flag)
 
     makefile_content = makefile_content.replace('SOURCE_FILES', formatted_source_files)
     makefile_content = makefile_content.replace('INCLUDE_DIRECTORIES', formatted_include_dirs)

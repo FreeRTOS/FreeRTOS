@@ -25,6 +25,9 @@
             "source/include",
             "source/interface"
         ],
+        "compiler_flags": [
+            "MQTT_DO_NOT_USE_CUSTOM_CONFIG"
+        ],
         "size_description":"Code Size of coreMQTT (example generated with GCC for ARM Cortex-M)"
     },
     "coreJSON" : {

@@ -36,10 +36,10 @@
 #include "FreeRTOS_Sockets.h"
 
 /* TLS transport header. */
-#include "freertos_plus_tcp_mbedtls.h"
+#include "using_mbedtls.h"
 
 /* FreeRTOS Socket wrapper include. */
-#include "freertos_plus_tcp_sockets_wrapper.h"
+#include "sockets_wrapper.h"
 
 /* mbedTLS util includes. */
 #include "mbedtls_error.h"

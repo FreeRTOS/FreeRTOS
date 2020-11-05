@@ -52,7 +52,7 @@
 /* MQTT library includes. */
 #include "core_mqtt.h"
 
-/* Retry utilities include. */
+/* Exponential backoff retry include. */
 #include "exponential_backoff.h"
 
 /* Transport interface include. */

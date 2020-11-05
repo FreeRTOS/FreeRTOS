@@ -60,7 +60,7 @@
 /* MQTT library includes. */
 #include "core_mqtt_serializer.h"
 
-/* Retry utilities include. */
+/* Exponential backoff retry include. */
 #include "exponential_backoff.h"
 
 /*-----------------------------------------------------------*/

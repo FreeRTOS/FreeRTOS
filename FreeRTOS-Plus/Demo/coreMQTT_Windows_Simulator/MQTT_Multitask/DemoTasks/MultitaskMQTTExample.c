@@ -70,7 +70,7 @@
 #include "core_mqtt.h"
 #include "core_mqtt_state.h"
 
-/* Retry utilities include. */
+/* Exponential backoff retry include. */
 #include "exponential_backoff.h"
 
 /* Transport interface include. */

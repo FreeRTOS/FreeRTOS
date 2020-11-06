@@ -116,7 +116,7 @@
       <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalIncludeDirectories>..\Common\Utils;..\Common\ethernet\lwip-1.4.0\ports\win32\WinPCap;..\Common\ethernet\lwip-1.4.0\src\include\ipv4;..\Common\ethernet\lwip-1.4.0\src\include;..\..\Source\include;..\..\Source\portable\MSVC-MingW;..\Common\ethernet\lwip-1.4.0\ports\win32\include;..\Common\Include;..\..\Source\Logging;.\lwIP_Apps;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Common\Utils;..\Common\ethernet\lwip-1.4.0\ports\win32\WinPCap;..\Common\ethernet\lwip-1.4.0\src\include\ipv4;..\Common\ethernet\lwip-1.4.0\src\include;..\..\Source\include;..\..\Source\portable\MSVC-MingW;..\Common\ethernet\lwip-1.4.0\ports\win32\include;..\Common\Include;..\..\Source\Utilities\logging;.\lwIP_Apps;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>

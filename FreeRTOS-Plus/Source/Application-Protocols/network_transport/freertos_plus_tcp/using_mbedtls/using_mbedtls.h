@@ -24,8 +24,8 @@
  * @brief TLS transport interface header.
  */
 
-#ifndef TLS_FREERTOS_H_
-#define TLS_FREERTOS_H_
+#ifndef USING_MBEDTLS
+#define USING_MBEDTLS
 
 /**************************************************/
 /******* DO NOT CHANGE the following order ********/
@@ -196,4 +196,4 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
                            const void * pBuffer,
                            size_t bytesToSend );
 
-#endif /* ifndef TLS_FREERTOS_H_ */
+#endif /* ifndef USING_MBEDTLS */

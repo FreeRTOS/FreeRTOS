@@ -27,8 +27,8 @@
  * PKCS #11 when using TLS.
  */
 
-#ifndef TLS_FREERTOS_H_
-#define TLS_FREERTOS_H_
+#ifndef USING_MBEDTLS_PKCS11
+#define USING_MBEDTLS_PKCS11
 
 /**************************************************/
 /******* DO NOT CHANGE the following order ********/
@@ -209,4 +209,4 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
                            const void * pBuffer,
                            size_t bytesToSend );
 
-#endif /* ifndef TLS_FREERTOS_H_ */
+#endif /* ifndef USING_MBEDTLS_PKCS11 */

@@ -70,14 +70,14 @@
 #include "core_mqtt.h"
 #include "core_mqtt_state.h"
 
-/* Retry utilities include. */
-#include "retry_utils.h"
+/* Exponential backoff retry include. */
+#include "exponential_backoff.h"
 
 /* Transport interface include. */
 #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
-    #include "freertos_plus_tcp_mbedtls.h"
+    #include "using_mbedtls.h"
 #else
-    #include "freertos_plus_tcp_plaintext.h"
+    #include "using_plaintext.h"
 #endif
 
 /**

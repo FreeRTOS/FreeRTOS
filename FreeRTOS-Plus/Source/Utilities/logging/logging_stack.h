@@ -95,8 +95,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
     ( LIBRARY_LOG_LEVEL != LOG_ERROR ) &&  \
     ( LIBRARY_LOG_LEVEL != LOG_WARN ) &&   \
     ( LIBRARY_LOG_LEVEL != LOG_INFO ) &&   \
-    ( LIBRARY_LOG_LEVEL != LOG_DEBUG )     \
-    )
+    ( LIBRARY_LOG_LEVEL != LOG_DEBUG ) )
     #error "Please define LIBRARY_LOG_LEVEL as either LOG_NONE, LOG_ERROR, LOG_WARN, LOG_INFO, or LOG_DEBUG."
 #else
     #if LIBRARY_LOG_LEVEL == LOG_DEBUG

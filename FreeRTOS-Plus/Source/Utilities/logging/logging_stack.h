@@ -68,21 +68,21 @@
     #define LOG_METADATA_ARGS    LIBRARY_LOG_NAME, __FUNCTION__, __LINE__ /**< @brief Arguments into the metadata logging prefix format. */
 #endif
 
-#if !defined( DISABLE_LOGGING )
-
 /* Prototype for the function used to print out.  In this case it prints to the
  * console before the network is connected then a UDP port after the network has
  * connected. */
-    extern void vLoggingPrintf( const char * pcFormatString,
-                                ... );
+extern void vLoggingPrintf( const char * pcFormatString,
+                            ... );
 
 /**
  * @brief Common macro that maps all the logging interfaces,
  * (#LogDebug, #LogInfo, #LogWarn, #LogError) to the platform-specific logging
  * function.
+ *
+ * @note The default definition of the macro maps to the vLoggingPrintf function.
  */
+#ifndef SdkLog
     #define SdkLog( string )    vLoggingPrintf string
-    #define SdkLog( string )
 #endif
 
 /**

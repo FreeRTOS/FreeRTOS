@@ -162,7 +162,7 @@
     <ClCompile Include="..\..\..\CMock\vendor\unity\extras\fixture\src\unity_fixture.c" />
     <ClCompile Include="..\..\..\CMock\vendor\unity\extras\memory\src\unity_memory.c" />
     <ClCompile Include="..\..\..\CMock\vendor\unity\src\unity.c" />
-    <ClCompile Include="..\..\..\..\Demo\Common\Logging\Logging_WinSim.c" />
+    <ClCompile Include="..\..\..\..\Demo\Common\Logging\windows\Logging_WinSim.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="Test_code\Test_Cases\test_freertos_tcp.c" />
     <ClCompile Include="Test_code\Test_Runner\test_runner.c" />

@@ -224,7 +224,7 @@ def update_freertos_version_macros(path_macrofile, major, minor, build):
 
     print('Done. Replaced "%s" --> "V%s.%s.%s".' % (old_version_number, major, minor, build))
 
-def update_version_number_in_freertos_component(component, root_dir, old_version, new_version, verbose=False):
+def update_version_number_in_freertos_component(component, root_dir, old_version_prefix, new_version, verbose=False):
     print('Updating "%s"...' % component)
     component_files = list_files_in_a_component(component, root_dir, ext_filter=None)
     version_numbers = defaultdict(list)
@@ -242,7 +242,7 @@ def update_version_number_in_freertos_component(component, root_dir, old_version
         old_version_string = vkey[0]
         new_version_string = new_version
 
-        if old_version in old_version_string:
+        if old_version_prefix in old_version_string:
             if old_version_string != new_version_string:
                 files_using_old_version = version_numbers[vkey]
 

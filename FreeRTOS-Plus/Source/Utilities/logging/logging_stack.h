@@ -39,7 +39,6 @@
 /* Standard Include. */
 #include <stdio.h>
 #include <stdint.h>
-#include <string.h>
 
 /* The macro definition for LIBRARY_LOG_NAME is for Doxygen
  * documentation only. This macro is typically defined in only the
@@ -71,16 +70,18 @@
 
 #if !defined( DISABLE_LOGGING )
 
+/* Prototype for the function used to print out.  In this case it prints to the
+ * console before the network is connected then a UDP port after the network has
+ * connected. */
+    extern void vLoggingPrintf( const char * pcFormatString,
+                                ... );
+
 /**
  * @brief Common macro that maps all the logging interfaces,
  * (#LogDebug, #LogInfo, #LogWarn, #LogError) to the platform-specific logging
  * function.
- *
- * `printf` from the standard C library is the POSIX platform implementation used
- * for logging functionality.
  */
-    #define SdkLog( string )    printf string
-#else
+    #define SdkLog( string )    vLoggingPrintf string
     #define SdkLog( string )
 #endif
 

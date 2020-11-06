@@ -106,7 +106,7 @@
     <ClCompile Include="..\..\..\..\FreeRTOS\Source\stream_buffer.c">
       <Filter>FreeRTOS\Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Demo\Common\Logging\Logging_WinSim.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Demo\Common\Logging\windows\Logging_WinSim.c" />
     <ClCompile Include="..\Common\main.c" />
     <ClCompile Include="DemoTasks\SerializerMQTTExample.c">
       <Filter>DemoTasks</Filter>

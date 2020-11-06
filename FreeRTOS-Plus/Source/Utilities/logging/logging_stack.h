@@ -62,7 +62,7 @@
 
 /* Metadata information to prepend to every log message. */
 #ifndef LOG_METADATA_FORMAT
-    #define LOG_METADATA_FORMAT    "[%s] [%s:%d] "                  /**< @brief Format of metadata prefix in log messages as `[<Logging-Level>] [<Library-Name>] [<File-Name>:<Line-Number>]` */
+    #define LOG_METADATA_FORMAT    "[%s] [%s:%d] "                  /**< @brief Format of metadata prefix in log messages as `[<Logging-Level>] [<Library-Name>] [<Function-Name>:<Line-Number>]` */
 #endif
 
 #ifndef LOG_METADATA_FORMAT

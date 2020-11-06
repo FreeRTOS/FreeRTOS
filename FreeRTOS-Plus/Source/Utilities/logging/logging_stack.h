@@ -64,7 +64,7 @@
     #define LOG_METADATA_FORMAT    "[%s] [%s:%d] "                  /**< @brief Format of metadata prefix in log messages as `[<Logging-Level>] [<Library-Name>] [<Function-Name>:<Line-Number>]` */
 #endif
 
-#ifndef LOG_METADATA_FORMAT
+#ifndef LOG_METADATA_ARGS
     #define LOG_METADATA_ARGS    LIBRARY_LOG_NAME, __FUNCTION__, __LINE__ /**< @brief Arguments into the metadata logging prefix format. */
 #endif
 

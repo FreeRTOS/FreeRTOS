@@ -159,7 +159,7 @@
     <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\NetworkInterface\WinPCap\NetworkInterface.c" />
     <ClCompile Include="..\..\..\Source\Utilities\exponential_backoff\exponential_backoff.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c" />
-    <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Demo\Common\Logging\Logging_WinSim.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Demo\Common\Logging\windows\Logging_WinSim.c" />
     <ClCompile Include="..\Common\main.c" />
     <ClCompile Include="DemoTasks\SerializerMQTTExample.c" />
   </ItemGroup>

@@ -63,14 +63,19 @@ TLS mutual authentication for use with this MQTT demo.
             "-----BEGIN CERTIFICATE-----\n" \
             "...base64 data...\n" \
             "-----END CERTIFICATE-----\n"
-11. In the certs folder of your Documents, you will find a file called `client.key`.
+12. In the certs folder of your Documents, you will find a file called `client.key`.
     Copy its contents to `#define democonfigCLIENT_PRIVATE_KEY_PEM`. Keep in mind
     that it must include the PEM header and footer and be formatted in this manner:
         #define democonfigCLIENT_PRIVATE_KEY_PEM \
             "-----BEGIN RSA PRIVATE KEY-----\n" \
             "...base64 data...\n" \
             "-----END RSA PRIVATE KEY-----\n"
-12. Update the config `democonfigdisableSNI` to `( pdTRUE )`. It needs to be 
+
+    *!!! Please note democonfigCLIENT_PRIVATE_KEY_PEM in used for convenience
+    *!!! of demonstration only.  Production devices should store keys securely,
+    *!!! such as within a secure element.
+
+13. Update the config `democonfigdisableSNI` to `( pdTRUE )`. It needs to be
     configured this way because the local MQTT broker will only have an IP
     address but not a hostname. However, SNI (Server name indication) should
     be enabled whenever possible.

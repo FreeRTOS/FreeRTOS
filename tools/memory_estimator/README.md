@@ -1,6 +1,11 @@
 # MemoryEstimator
 
-This utility helps in determining the memory estimates for FreeRTOS libraries.
+This utility helps in determining memory estimates for FreeRTOS libraries.
+
+It outputs the sizes of the sections of the library's object file, as well as
+the total size, when compiled with the GNU ARM Embedded Toolchain, as measured
+by the `arm-none-eabi-size` utility. The GNU ARM Embedded Toolchain must be
+available in the PATH when this utility is run.
 
 # Usage
 
@@ -11,8 +16,8 @@ python memory_estimator.py --path <path_to_freertos_library> --lib <library_name
 Where:
 
 * `<path_to_freertos_library>` is the path to the directory containing FreeRTOS library source code.
-* `<optimization>` is the compiler optimization level (O0, O1, Os etc).
-* `<library_name>` is the library to calculate the memory estimates for.
+* `<optimization>` is the compiler optimization level (O0, O1, Os, etc.).
+* `<library_name>` is the library to calculate the memory estimates for, as defined in `template/lib_details.json`.
 
 
 # Options

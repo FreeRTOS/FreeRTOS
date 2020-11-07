@@ -177,7 +177,9 @@ def calculate_sizes(lib_name, src_path, optimization, disable_asserts, dontclean
 
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description='Memory Estimator.')
+    parser = argparse.ArgumentParser(description='Memory Estimator for FreeRTOS libraries.\n'+
+                                                 'Requires the GNU ARM Embedded Toolchain.\n'+
+                                                 'The output contains the sizes of the sections of the generated object file, and the total size.\n')
 
     parser.add_argument('-p', '--path', required=True, help='Path to the source code for the library.')
     parser.add_argument('-l', '--lib', required=True, help='Library name to generate the memory estimate for.')

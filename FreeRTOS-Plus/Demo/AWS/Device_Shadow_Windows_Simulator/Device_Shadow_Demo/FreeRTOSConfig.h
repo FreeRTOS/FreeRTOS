@@ -187,8 +187,6 @@
 /* The UDP port to which print messages are sent. */
 #define configPRINT_PORT                    ( 15000 )
 
-/* Choose CRLF as the new-line character for logging. */
-#define configLOGGING_NEW_LINE              "\r\n"
 
 #if ( defined( _MSC_VER ) && ( _MSC_VER <= 1600 ) && !defined( snprintf ) )
     /* Map to Windows names. */

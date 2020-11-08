@@ -71,11 +71,6 @@
 /* A block time of zero simply means don't block. */
 #define dlDONT_BLOCK                    0
 
-/* Choose CRLF as the default new-line character. */
-#ifndef configLOGGING_NEW_LINE
-    #define configLOGGING_NEW_LINE    "\r\n"
-#endif
-
 /*-----------------------------------------------------------*/
 
 /*
@@ -291,7 +286,7 @@ void vLoggingPrintf( const char * pcFormat,
             pcTaskName = pcNoTask;
         }
 
-        if( strcmp( pcFormat, configLOGGING_NEW_LINE ) != 0 )
+        if( strcmp( pcFormat, "\r\n" ) != 0 )
         {
             xLength = snprintf( cPrintString, dlMAX_PRINT_STRING_LENGTH, "%lu %lu [%s] ",
                                 xMessageNumber++,

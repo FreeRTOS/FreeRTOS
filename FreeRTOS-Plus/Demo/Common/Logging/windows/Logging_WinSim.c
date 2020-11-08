@@ -71,9 +71,9 @@
 /* A block time of zero simply means don't block. */
 #define dlDONT_BLOCK                    0
 
-/* Choose LF as the default new-line character. */
+/* Choose CRLF as the default new-line character. */
 #ifndef configLOGGING_NEW_LINE
-    #define configLOGGING_NEW_LINE    "\n"
+    #define configLOGGING_NEW_LINE    "\r\n"
 #endif
 
 /*-----------------------------------------------------------*/

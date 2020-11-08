@@ -165,244 +165,246 @@
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\sockets_wrapper.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\aes.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\aes.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\aesni.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\aesni.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\arc4.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\arc4.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\aria.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\aria.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\asn1parse.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\asn1parse.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\asn1write.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\asn1write.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\base64.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\base64.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\bignum.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\bignum.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\blowfish.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\blowfish.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\camellia.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\camellia.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ccm.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ccm.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\certs.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\certs.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\chacha20.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\chacha20.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\chachapoly.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\chachapoly.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\cipher.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\cipher.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\cipher_wrap.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\cipher_wrap.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\cmac.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\cmac.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ctr_drbg.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ctr_drbg.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\debug.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\debug.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\des.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\des.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\dhm.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\dhm.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ecdh.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ecdh.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ecdsa.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ecdsa.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ecjpake.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ecjpake.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ecp.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ecp.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ecp_curves.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ecp_curves.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\entropy.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\entropy.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\entropy_poll.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\entropy_poll.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\error.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\error.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\gcm.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\gcm.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\havege.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\havege.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\hkdf.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\hkdf.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\hmac_drbg.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\hmac_drbg.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\md.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\md.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\md2.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\md2.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\md4.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\md4.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\md5.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\md5.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\memory_buffer_alloc.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\memory_buffer_alloc.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\net_sockets.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\net_sockets.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\nist_kw.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\nist_kw.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\oid.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\oid.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\padlock.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\padlock.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\pem.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\pem.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\pk.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\pk.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\pkcs11.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\pkcs11.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\pkcs12.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\pkcs12.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\pkcs5.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\pkcs5.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\pkparse.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\pkparse.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\pkwrite.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\pkwrite.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\pk_wrap.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\pk_wrap.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\platform.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\platform.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\platform_util.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\platform_util.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\poly1305.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\poly1305.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ripemd160.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ripemd160.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\rsa.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\rsa.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\rsa_internal.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\rsa_internal.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\sha1.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\sha1.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\sha256.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\sha256.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\sha512.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\sha512.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ssl_cache.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ssl_cache.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ssl_ciphersuites.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ssl_ciphersuites.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ssl_cli.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ssl_cli.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ssl_cookie.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ssl_cookie.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ssl_msg.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ssl_msg.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ssl_srv.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ssl_srv.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ssl_ticket.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ssl_ticket.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ssl_tls.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ssl_tls.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ssl_tls13_keys.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ssl_tls13_keys.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\threading.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\threading.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\timing.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\timing.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\version.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\version.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\version_features.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\version_features.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\x509.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\x509.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\x509write_crt.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\x509write_crt.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\x509write_csr.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\x509write_csr.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\x509_create.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\x509_create.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\x509_crl.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\x509_crl.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\x509_crt.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\x509_crt.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\x509_csr.c" >
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\x509_csr.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\xtea.c" />
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\xtea.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
     <ClCompile Include="DemoTasks\shadow_demo_helpers.c">
       <Filter>DemoTasks</Filter>
     </ClCompile>

@@ -57,6 +57,11 @@
  * must be unique so edit as required to ensure no two clients connecting to the
  * same broker use the same client identifier.
  *
+ *!!! Please note a #defined constant is used for convenience of demonstration
+ *!!! only.  Production devices can use something unique to the device that can
+ *!!! be read by software, such as a production serial number, instead of a
+ *!!! hard coded constant.
+ *
  * #define democonfigCLIENT_IDENTIFIER				"insert here."
  */
 
@@ -132,6 +137,14 @@
 
 /**
  * @brief Client's private key.
+ *
+ *!!! Please note pasting a key into the header file in this manner is for
+ *!!! convenience of demonstration only and should not be done in production.
+ *!!! Never paste a production private key here!.  Production devices should
+ *!!! store keys securely, such as within a secure element.  Additionally,
+ *!!! we provide the corePKCS library that further enhances security by
+ *!!! enabling securely stored keys to be used without exposing them to
+ *!!! software.
  *
  * For AWS IoT MQTT broker, refer to the AWS documentation below for details
  * regarding clientauthentication.

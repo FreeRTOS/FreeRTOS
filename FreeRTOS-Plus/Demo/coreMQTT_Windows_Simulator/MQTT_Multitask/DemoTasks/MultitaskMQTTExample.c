@@ -111,6 +111,13 @@
 
 /* If no username is defined, then a client certificate/key is required. */
     #ifndef democonfigCLIENT_USERNAME
+
+        /*
+         *!!! Please note democonfigCLIENT_PRIVATE_KEY_PEM in used for
+         *!!! convenience of demonstration only.  Production devices should
+         *!!! store keys securely, such as within a secure element.
+         */
+
         #ifndef democonfigCLIENT_CERTIFICATE_PEM
             #error "Please define client certificate(democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h."
         #endif

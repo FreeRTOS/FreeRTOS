@@ -27,11 +27,11 @@
 
 /**
  * @file logging_levels.h
- * @brief Defines the logging level macros.
+ * @brief Defines the configuration constants for all logging verbosity levels.
  */
 
-#ifndef LOGGING_LEVELS_H_
-#define LOGGING_LEVELS_H_
+#ifndef LOGGING_LEVELS_H
+#define LOGGING_LEVELS_H
 
 /**
  * @constantspage{logging,logging library}
@@ -111,4 +111,4 @@
  */
 #define LOG_DEBUG    4
 
-#endif /* ifndef LOGGING_LEVELS_H_ */
+#endif /* ifndef LOGGING_LEVELS_H */

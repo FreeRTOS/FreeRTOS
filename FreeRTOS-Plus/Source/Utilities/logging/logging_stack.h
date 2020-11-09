@@ -27,35 +27,59 @@
 
 /**
  * @file logging_stack.h
- * @brief Reference implementation of Logging stack as a header-only library.
+ * @brief Utility header file that exposes macros for configuring logging implementation of logging macros (LogError, LogWarn, LogInfo, LogDebug).
  */
 
-#ifndef LOGGING_STACK_H_
-#define LOGGING_STACK_H_
+#ifndef LOGGING_STACK_H
+#define LOGGING_STACK_H
 
 /* Include header for logging level macros. */
 #include "logging_levels.h"
 
 /* Standard Include. */
+#include <stdio.h>
 #include <stdint.h>
 
+/**
+ * @brief The name of the library or demo to add as metadata in log messages
+ * from the library or demo.
+ *
+ * This metadata aids in identifying the module source of log messages.
+ * The metadata is logged in the format `[ <LIBRARY-NAME> ]` as a prefix to the
+ * log messages.
+ * Refer to #LOG_METADATA_FORMAT for the complete format of the metadata prefix in
+ * log messages.
+ */
+/* Check if LIBRARY_LOG_NAME macro has been defined. */
+#if !defined( LIBRARY_LOG_NAME )
+    #error "Please define LIBRARY_LOG_NAME for the library."
+#endif
+
 /* Metadata information to prepend to every log message. */
-#define LOG_METADATA_FORMAT    "[%s:%d] "
-#define LOG_METADATA_ARGS      __FUNCTION__, __LINE__
+#ifndef LOG_METADATA_FORMAT
+    #define LOG_METADATA_FORMAT    "[%s:%d] "                  /**< @brief Format of metadata prefix in log messages. */
+#endif
 
-/* Common macro for all logging interface macros. */
-#if !defined( DISABLE_LOGGING )
+#ifndef LOG_METADATA_ARGS
+    #define LOG_METADATA_ARGS    __FUNCTION__, __LINE__  /**< @brief Arguments into the metadata logging prefix format. */
+#endif
 
-/* Prototype for the function used to print out.  In this case it prints to the
- * console before the network is connected then a UDP port after the network has
- * connected. */
-    extern void vLoggingPrintf( const char * pcFormatString,
-                                ... );
-    #define SdkLog( string )    vLoggingPrintf string
-#else
+/**
+ * @brief Common macro that maps all the logging interfaces,
+ * (#LogDebug, #LogInfo, #LogWarn, #LogError) to the platform-specific logging
+ * function.
+ *
+ * @note The default definition of the macro is an empty definition that does not
+ * generate any logging.
+ */
+#ifndef SdkLog
     #define SdkLog( string )
 #endif
 
+/**
+ * Disable definition of logging interface macros when generating doxygen output,
+ * to avoid conflict with documentation of macros at the end of the file.
+ */
 /* Check that LIBRARY_LOG_LEVEL is defined and has a valid value. */
 #if !defined( LIBRARY_LOG_LEVEL ) ||       \
     ( ( LIBRARY_LOG_LEVEL != LOG_NONE ) && \
@@ -64,8 +88,6 @@
     ( LIBRARY_LOG_LEVEL != LOG_INFO ) &&   \
     ( LIBRARY_LOG_LEVEL != LOG_DEBUG ) )
     #error "Please define LIBRARY_LOG_LEVEL as either LOG_NONE, LOG_ERROR, LOG_WARN, LOG_INFO, or LOG_DEBUG."
-#elif !defined( LIBRARY_LOG_NAME )
-    #error "Please define LIBRARY_LOG_NAME for the library."
 #else
     #if LIBRARY_LOG_LEVEL == LOG_DEBUG
         /* All log level messages will logged. */
@@ -105,4 +127,4 @@
     #endif /* if LIBRARY_LOG_LEVEL == LOG_ERROR */
 #endif /* if !defined( LIBRARY_LOG_LEVEL ) || ( ( LIBRARY_LOG_LEVEL != LOG_NONE ) && ( LIBRARY_LOG_LEVEL != LOG_ERROR ) && ( LIBRARY_LOG_LEVEL != LOG_WARN ) && ( LIBRARY_LOG_LEVEL != LOG_INFO ) && ( LIBRARY_LOG_LEVEL != LOG_DEBUG ) ) */
 
-#endif /* ifndef LOGGING_STACK_H_ */
+#endif /* ifndef LOGGING_STACK_H */

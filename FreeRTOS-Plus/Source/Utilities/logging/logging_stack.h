@@ -40,10 +40,6 @@
 #include <stdio.h>
 #include <stdint.h>
 
-/* The macro definition for LIBRARY_LOG_NAME is for Doxygen
- * documentation only. This macro is typically defined in only the
- * <library>_config.h file or the demo_config.h file. */
-
 /**
  * @brief The name of the library or demo to add as metadata in log messages
  * from the library or demo.
@@ -68,21 +64,16 @@
     #define LOG_METADATA_ARGS    LIBRARY_LOG_NAME, __FUNCTION__, __LINE__ /**< @brief Arguments into the metadata logging prefix format. */
 #endif
 
-/* Prototype for the function used to print out.  In this case it prints to the
- * console before the network is connected then a UDP port after the network has
- * connected. */
-extern void vLoggingPrintf( const char * pcFormatString,
-                            ... );
-
 /**
  * @brief Common macro that maps all the logging interfaces,
  * (#LogDebug, #LogInfo, #LogWarn, #LogError) to the platform-specific logging
  * function.
  *
- * @note The default definition of the macro maps to the vLoggingPrintf function.
+ * @note The default definition of the macro is an empty definition that does not
+ * generate any logging.
  */
 #ifndef SdkLog
-    #define SdkLog( string )    vLoggingPrintf string
+    #define SdkLog( string )
 #endif
 
 /**

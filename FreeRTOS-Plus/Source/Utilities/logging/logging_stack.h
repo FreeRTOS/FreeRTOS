@@ -27,7 +27,7 @@
 
 /**
  * @file logging_stack.h
- * @brief Reference implementation of Logging stack as a header-only library.
+ * @brief Utility header file that exposes macros for configuring logging implementation of logging macros (LogError, LogWarn, LogInfo, LogDebug).
  */
 
 #ifndef LOGGING_STACK_H

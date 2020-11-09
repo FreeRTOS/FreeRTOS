@@ -71,7 +71,7 @@
 #endif
 
 #ifndef democonfigMQTT_BROKER_ENDPOINT
-    #error "Define the config democonfigMQTT_BROKER_ENDPOINT by following the instructions in file demo_config.h."
+    #error "Please define democonfigMQTT_BROKER_ENDPOINT in demo_config.h."
 #endif
 
 #ifndef democonfigMQTT_BROKER_PORT

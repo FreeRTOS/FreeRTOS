@@ -1,4 +1,4 @@
-See https://freertos.org/corepkcs11/index.html for further information.
+See https://freertos.org/pkcs11/index.html for further information.
 
 Contains projects that demonstrate the PKCS #11 library.
 In order to run the mutual authentication demo, please convert the certificate and key PEM files associated with your IoT Thing, into a binary format DER.

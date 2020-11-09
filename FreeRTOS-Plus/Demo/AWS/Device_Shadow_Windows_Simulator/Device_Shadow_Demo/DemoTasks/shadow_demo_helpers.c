@@ -27,9 +27,9 @@
  * do MQTT operations over a mutually authenticated TLS connection.
  *
  * A mutually authenticated TLS connection is used to connect to the AWS IoT
- * MQTT message broker in this example. Define ROOT_CA_CERT_PATH,
- * CLIENT_CERT_PATH, and CLIENT_PRIVATE_KEY_PATH in demo_config.h to achieve
- * mutual authentication.
+ * MQTT message broker in this example. Define democonfigCLIENT_PRIVATE_KEY_PEM,
+ * democonfigCLIENT_CERTIFICATE_PEM, and democonfigMQTT_BROKER_ENDPOINT in
+ * demo_config.h to achieve mutual authentication.
  */
 
 /* Standard includes. */

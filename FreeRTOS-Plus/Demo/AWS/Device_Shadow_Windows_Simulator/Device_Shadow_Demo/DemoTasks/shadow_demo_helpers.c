@@ -58,17 +58,20 @@
 /*------------- Demo configurations -------------------------*/
 
 /** Note: The device client certificate and private key credentials are
- * obtained by the transport interface implementation (with Secure Sockets)
- * from the demos/include/aws_clientcredential_keys.h file.
- *
- * The following macros SHOULD be defined for this demo which uses both server
- * and client authentications for TLS session:
- *   - keyCLIENT_CERTIFICATE_PEM for client certificate.
- *   - keyCLIENT_PRIVATE_KEY_PEM for client private key.
+ * obtained by the TLS transport interface implementation from the
+ * demo_config.h file.
  */
 
+#ifndef democonfigCLIENT_PRIVATE_KEY_PEM
+    #error "Please define client private key(democonfigCLIENT_PRIVATE_KEY_PEM) in demo_config.h."
+#endif
+
+#ifndef democonfigCLIENT_CERTIFICATE_PEM
+    #error "Please define client certificate(democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h."
+#endif
+
 #ifndef democonfigMQTT_BROKER_ENDPOINT
-    #define democonfigMQTT_BROKER_ENDPOINT    clientcredentialMQTT_BROKER_ENDPOINT
+    #error "Define the config democonfigMQTT_BROKER_ENDPOINT by following the instructions in file demo_config.h."
 #endif
 
 #ifndef democonfigMQTT_BROKER_PORT
@@ -76,9 +79,8 @@
 /**
  * @brief The port to use for the demo.
  */
-    #define democonfigMQTT_BROKER_PORT    clientcredentialMQTT_BROKER_PORT
+    #define democonfigMQTT_BROKER_PORT    ( 8883 )
 #endif
-
 /*-----------------------------------------------------------*/
 
 /**

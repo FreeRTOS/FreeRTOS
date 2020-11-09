@@ -58,7 +58,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\Source\FreeRTOS-Plus-FAT\include;..\..\Source\FreeRTOS-Plus-FAT\portable\common;..\..\Source\FreeRTOS-Plus-TCP\protocols\include;..\..\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;.\DemoTasks\include;..\..\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;.\WinPCap;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\Source\FreeRTOS-Plus-CLI;.\TraceMacros\Example1;..\..\Source\FreeRTOS-Plus-TCP\include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Source\FreeRTOS-Plus-FAT\include;..\..\Source\FreeRTOS-Plus-FAT\portable\common;..\..\Source\FreeRTOS-Plus-TCP\protocols\include;..\..\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;.\DemoTasks\include;..\..\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;.\WinPCap;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\Source\FreeRTOS-Plus-CLI;.\TraceMacros\Example1;..\..\Source\FreeRTOS-Plus-TCP\include;..\..\Source\Utilities\logging;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>

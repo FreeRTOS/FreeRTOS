@@ -1,4 +1,4 @@
-The subdirectories off this directory contain multiple examples that demonstrate
+The subdirectories of this directory contain multiple examples that demonstrate
 coreMQTT using in both single and multi-threaded scenarios, as well as with
 both plain text and authenticated and encrypted network interfaces.
 

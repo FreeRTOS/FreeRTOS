@@ -116,7 +116,7 @@
       <Filter>Test_Code\Test_Runner</Filter>
     </ClCompile>
     <ClCompile Include="main.c" />
-    <ClCompile Include="..\..\..\..\Source\Logging\logging.c" />
+    <ClCompile Include="..\..\..\..\Demo\Common\Logging\windows\Logging_WinSim.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\event_groups.h">

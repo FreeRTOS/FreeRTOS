@@ -96,7 +96,7 @@
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_Stream_Buffer.c">
       <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Logging\logging.c" />
+    <ClCompile Include="..\..\Demo\Common\Logging\windows\Logging_WinSim.c" />
     <ClCompile Include="DemoTasks\SimpleTCPEchoServer.c">
       <Filter>DemoTasks</Filter>
     </ClCompile>

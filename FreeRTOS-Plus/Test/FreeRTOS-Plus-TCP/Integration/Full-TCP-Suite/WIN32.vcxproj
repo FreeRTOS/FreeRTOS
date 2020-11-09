@@ -62,7 +62,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\Source\Logging;.\Config;.\Test_Code\Test_Cases\include;..\..\..\CMock\vendor\unity\extras\fixture\src;..\..\..\..\Source\FreeRTOS-Plus-FAT\include;..\..\..\..\Source\FreeRTOS-Plus-FAT\portable\common;..\..\..\..\Source\FreeRTOS-Plus-TCP\protocols\include;..\..\..\..\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\Source\FreeRTOS-Plus-TCP\include;..\..\..\CMock\vendor\unity\extras\memory\src;.\DemoTasks\include;.\WinPCap;..\..\..\..\..\FreeRTOS\Source\include;..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\Source\FreeRTOS-Plus-CLI;..\..\..\CMock\vendor\unity\src;.\TraceMacros\Example1;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\Source\Utilities\logging;.\Config;.\Test_Code\Test_Cases\include;..\..\..\CMock\vendor\unity\extras\fixture\src;..\..\..\..\Source\FreeRTOS-Plus-FAT\include;..\..\..\..\Source\FreeRTOS-Plus-FAT\portable\common;..\..\..\..\Source\FreeRTOS-Plus-TCP\protocols\include;..\..\..\..\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\Source\FreeRTOS-Plus-TCP\include;..\..\..\CMock\vendor\unity\extras\memory\src;.\DemoTasks\include;.\WinPCap;..\..\..\..\..\FreeRTOS\Source\include;..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\Source\FreeRTOS-Plus-CLI;..\..\..\CMock\vendor\unity\src;.\TraceMacros\Example1;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0600;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -162,7 +162,7 @@
     <ClCompile Include="..\..\..\CMock\vendor\unity\extras\fixture\src\unity_fixture.c" />
     <ClCompile Include="..\..\..\CMock\vendor\unity\extras\memory\src\unity_memory.c" />
     <ClCompile Include="..\..\..\CMock\vendor\unity\src\unity.c" />
-    <ClCompile Include="..\..\..\..\Source\Logging\logging.c" />
+    <ClCompile Include="..\..\..\..\Demo\Common\Logging\windows\Logging_WinSim.c" />
     <ClCompile Include="Logging\run-time-stats-utils.c" />
     <ClCompile Include="main.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

@@ -286,7 +286,7 @@ void vLoggingPrintf( const char * pcFormat,
             pcTaskName = pcNoTask;
         }
 
-        if( strcmp( pcFormat, "\n" ) != 0 )
+        if( strcmp( pcFormat, "\r\n" ) != 0 )
         {
             xLength = snprintf( cPrintString, dlMAX_PRINT_STRING_LENGTH, "%lu %lu [%s] ",
                                 xMessageNumber++,

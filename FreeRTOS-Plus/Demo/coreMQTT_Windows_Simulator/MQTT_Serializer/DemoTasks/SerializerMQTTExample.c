@@ -60,8 +60,8 @@
 /* MQTT library includes. */
 #include "core_mqtt_serializer.h"
 
-/* Retry utilities include. */
-#include "retry_utils.h"
+/* Exponential backoff retry include. */
+#include "exponential_backoff.h"
 
 /*-----------------------------------------------------------*/
 
@@ -421,7 +421,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         /* If the server rejected the subscription request, attempt to resubscribe
          * to the topic. Attempts are made according to the exponential backoff
-         * retry strategy declared in retry_utils.h. */
+         * retry strategy declared in exponential_backoff.h. */
         prvMQTTSubscribeWithBackoffRetries( xMQTTSocket );
 
         /**************************** Publish and Keep-Alive Loop. ******************************/

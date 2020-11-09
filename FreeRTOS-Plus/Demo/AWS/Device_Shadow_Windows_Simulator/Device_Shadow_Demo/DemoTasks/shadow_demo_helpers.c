@@ -27,9 +27,9 @@
  * do MQTT operations over a mutually authenticated TLS connection.
  *
  * A mutually authenticated TLS connection is used to connect to the AWS IoT
- * MQTT message broker in this example. Define ROOT_CA_CERT_PATH,
- * CLIENT_CERT_PATH, and CLIENT_PRIVATE_KEY_PATH in demo_config.h to achieve
- * mutual authentication.
+ * MQTT message broker in this example. Define democonfigCLIENT_PRIVATE_KEY_PEM,
+ * democonfigCLIENT_CERTIFICATE_PEM, and democonfigMQTT_BROKER_ENDPOINT in
+ * demo_config.h to achieve mutual authentication.
  */
 
 /* Standard includes. */
@@ -49,26 +49,29 @@
 /* MQTT library includes. */
 #include "core_mqtt.h"
 
-/* Retry utilities include. */
-#include "retry_utils.h"
+/* Exponential backoff retry include. */
+#include "exponential_backoff.h"
 
 /* Transport interface implementation include header for TLS. */
-#include "freertos_plus_tcp_mbedtls.h"
+#include "using_mbedtls.h"
 
 /*------------- Demo configurations -------------------------*/
 
 /** Note: The device client certificate and private key credentials are
- * obtained by the transport interface implementation (with Secure Sockets)
- * from the demos/include/aws_clientcredential_keys.h file.
- *
- * The following macros SHOULD be defined for this demo which uses both server
- * and client authentications for TLS session:
- *   - keyCLIENT_CERTIFICATE_PEM for client certificate.
- *   - keyCLIENT_PRIVATE_KEY_PEM for client private key.
+ * obtained by the TLS transport interface implementation from the
+ * demo_config.h file.
  */
 
+#ifndef democonfigCLIENT_PRIVATE_KEY_PEM
+    #error "Please define client private key(democonfigCLIENT_PRIVATE_KEY_PEM) in demo_config.h."
+#endif
+
+#ifndef democonfigCLIENT_CERTIFICATE_PEM
+    #error "Please define client certificate(democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h."
+#endif
+
 #ifndef democonfigMQTT_BROKER_ENDPOINT
-    #define democonfigMQTT_BROKER_ENDPOINT    clientcredentialMQTT_BROKER_ENDPOINT
+    #error "Please define democonfigMQTT_BROKER_ENDPOINT in demo_config.h."
 #endif
 
 #ifndef democonfigMQTT_BROKER_PORT
@@ -76,9 +79,8 @@
 /**
  * @brief The port to use for the demo.
  */
-    #define democonfigMQTT_BROKER_PORT    clientcredentialMQTT_BROKER_PORT
+    #define democonfigMQTT_BROKER_PORT    ( 8883 )
 #endif
-
 /*-----------------------------------------------------------*/
 
 /**

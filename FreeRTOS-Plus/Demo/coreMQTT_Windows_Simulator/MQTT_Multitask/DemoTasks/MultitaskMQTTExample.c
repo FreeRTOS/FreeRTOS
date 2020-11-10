@@ -665,6 +665,14 @@ static void prvMQTTDemoTask( void * pvParameters );
  */
 static uint32_t prvGetTimeMs( void );
 
+/**
+ * @brief Cleans any persistent sessions that may already exist
+ * This demo uses a persistent session that can be re-connected if disconnected.
+ * Clean any lingering sessions that may exist from previous executions of the
+ * demo.
+ */
+static void prvCleanExistingPersistentSession( void );
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -2028,12 +2036,38 @@ void prvSubscribeTask( void * pvParameters )
 
 /*-----------------------------------------------------------*/
 
+static void prvCleanExistingPersistentSession( void )
+{
+    BaseType_t xNetworkStatus = pdFAIL;
+    MQTTStatus_t xMQTTStatus;
+
+    /* Connect to the broker. We connect here with the "clean session" flag set
+     * to true in order to clear any prior state in the broker. We will disconnect
+     * and later form a persistent session, so that it may be resumed if the
+     * network suddenly disconnects. */
+    xNetworkStatus = prvSocketConnect( &xNetworkContext );
+    configASSERT( xNetworkStatus == pdPASS );
+    LogInfo( ( "Creating a clean session to clear any broker state information." ) );
+    xMQTTStatus = prvMQTTInit( &globalMqttContext, &xNetworkContext );
+    configASSERT( xMQTTStatus == MQTTSuccess );
+    xMQTTStatus = prvMQTTConnect( &globalMqttContext, true );
+    configASSERT( xMQTTStatus == MQTTSuccess );
+
+    /* Disconnect. */
+    xMQTTStatus = MQTT_Disconnect( &globalMqttContext );
+    configASSERT( xMQTTStatus == MQTTSuccess );
+    xNetworkStatus = prvSocketDisconnect( &xNetworkContext );
+    configASSERT( xNetworkStatus == pdPASS );
+}
+
+/*-----------------------------------------------------------*/
+
 static void prvMQTTDemoTask( void * pvParameters )
 {
     BaseType_t xNetworkStatus = pdFAIL;
+    MQTTStatus_t xMQTTStatus;
     BaseType_t xResult = pdFALSE;
     uint32_t ulNotification = 0;
-    MQTTStatus_t xMQTTStatus;
     uint32_t ulExpectedNotifications = mqttexamplePUBLISHER_SYNC_COMPLETE_BIT |
                                        mqttexampleSUBSCRIBE_TASK_COMPLETE_BIT |
                                        mqttexamplePUBLISHER_ASYNC_COMPLETE_BIT;
@@ -2053,23 +2087,10 @@ static void prvMQTTDemoTask( void * pvParameters )
      * synchronization primitives. */
     xDefaultResponseQueue = xQueueCreate( 1, sizeof( PublishElement_t ) );
 
-    /* Connect to the broker. We connect here with the "clean session" flag set
-     * to true in order to clear any prior state in the broker. We will disconnect
-     * and later form a persistent session, so that it may be resumed if the
-     * network suddenly disconnects. */
-    xNetworkStatus = prvSocketConnect( &xNetworkContext );
-    configASSERT( xNetworkStatus == pdPASS );
-    LogInfo( ( "Creating a clean session to clear any broker state information." ) );
-    xMQTTStatus = prvMQTTInit( &globalMqttContext, &xNetworkContext );
-    configASSERT( xMQTTStatus == MQTTSuccess );
-    xMQTTStatus = prvMQTTConnect( &globalMqttContext, true );
-    configASSERT( xMQTTStatus == MQTTSuccess );
-
-    /* Disconnect. */
-    xMQTTStatus = MQTT_Disconnect( &globalMqttContext );
-    configASSERT( xMQTTStatus == MQTTSuccess );
-    xNetworkStatus = prvSocketDisconnect( &xNetworkContext );
-    configASSERT( xNetworkStatus == pdPASS );
+    /* This demo uses a persistent session that can be re-connected if disconnected.
+     * Clean any lingering sessions that may exist from previous executions of the
+     * demo. */
+    prvCleanExistingPersistentSession();
 
     for( ; ; )
     {

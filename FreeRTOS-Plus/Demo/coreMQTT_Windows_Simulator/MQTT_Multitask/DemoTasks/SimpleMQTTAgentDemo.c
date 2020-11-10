@@ -168,7 +168,7 @@
 /**
  * @brief Ticks to wait for task notifications.
  */
-#define mqttexampleDEMO_TICKS_TO_WAIT                pdMS_TO_TICKS( 1000 )
+#define mqttexampleDEMO_TICKS_TO_WAIT                pdMS_TO_TICKS( 100 )
 
 /**
  * @brief Maximum number of operations awaiting an ack packet from the broker.
@@ -281,6 +281,7 @@
  */
 typedef enum CommandType
 {
+    NO_COMMAND,
     PROCESSLOOP, /**< @brief Call MQTT_ProcessLoop(). */
     PUBLISH,     /**< @brief Call MQTT_Publish(). */
     SUBSCRIBE,   /**< @brief Call MQTT_Subscribe(). */
@@ -578,7 +579,7 @@ static void prvEventCallback( MQTTContext_t * pMqttContext,
  * function, and will re-add a process loop command every time one is processed.
  * This demo will exit the loop after receiving an unsubscribe operation.
  */
-static void prvCommandLoop( void );
+static void prvCommandLoop( void *pvParameters );
 
 /**
  * @brief Common callback for commands in this demo.
@@ -752,15 +753,37 @@ static uint32_t ulGlobalEntryTimeMs;
  */
 void vStartSimpleMQTTDemo( void )
 {
-    /* This example uses one application task to process the command queue for
-     * MQTT operations, and creates additional tasks to add operations to that
-     * queue. */
-    xTaskCreate( prvMQTTDemoTask,          /* Function that implements the task. */
-                 "MQTTDemo",               /* Text name for the task - only used for debugging. */
-                 democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
-                 NULL,                     /* Task parameter - not used in this case. */
-                 tskIDLE_PRIORITY + 1,     /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
-                 &xMainTask );             /* Used to pass out a handle to the created task. */
+    BaseType_t xResult = pdFALSE;
+
+    ulGlobalEntryTimeMs = prvGetTimeMs();
+
+    /* Create command queue for processing MQTT commands. */
+    xCommandQueue = xQueueCreate( mqttexampleCOMMAND_QUEUE_SIZE, sizeof( Command_t ) );
+    /* Create response queues for each task. */
+    xSubscriberResponseQueue = xQueueCreate( mqttexamplePUBLISH_QUEUE_SIZE, sizeof( PublishElement_t ) );
+
+    /* In this demo, send publishes on non-subscribed topics to this queue.
+     * Note that this value is not meant to be changed after `prvCommandLoop` has
+     * been called, since access to this variable is not protected by thread
+     * synchronization primitives. */
+    xDefaultResponseQueue = xQueueCreate( 1, sizeof( PublishElement_t ) );
+
+    /* Clear the lists of subscriptions and pending acknowledgments. */
+    memset( pxPendingAcks, 0x00, mqttexamplePENDING_ACKS_MAX_SIZE * sizeof( AckInfo_t ) );
+    memset( pxSubscriptions, 0x00, mqttexampleSUBSCRIPTIONS_MAX_COUNT * sizeof( SubscriptionElement_t ) );
+
+    /* Create the agent. */
+    xResult = xTaskCreate( prvCommandLoop, "Agent", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY + 2, NULL );
+
+    /* Give subscriber task higher priority so the subscribe will be processed
+    before the first publish.  This must be less than or equal to the priority of
+    the main task. */
+    xResult = xTaskCreate( prvSubscribeTask, "Subscriber", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY + 1, &xSubscribeTask );
+    configASSERT( xResult == pdPASS );
+    xResult = xTaskCreate( prvSyncPublishTask, "SyncPublisher", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY, &xSyncPublisherTask );
+    configASSERT( xResult == pdPASS );
+    xResult = xTaskCreate( prvAsyncPublishTask, "AsyncPublisher", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY, &xAsyncPublisherTask );
+    configASSERT( xResult == pdPASS );
 }
 /*-----------------------------------------------------------*/
 
@@ -1635,29 +1658,40 @@ static void prvEventCallback( MQTTContext_t * pMqttContext,
 
 /*-----------------------------------------------------------*/
 
-static void prvCommandLoop( void )
+static void prvCommandLoop( void * pvParameters )
 {
     Command_t xCommand;
     Command_t xNewCommand;
-    Command_t * pxCommand;
     MQTTStatus_t xStatus = MQTTSuccess;
     static int lNumProcessed = 0;
     bool xTerminateReceived = false;
     BaseType_t xCommandAdded = pdTRUE;
+    BaseType_t xNetworkStatus = pdFAIL;
+    MQTTStatus_t xMQTTStatus;
+
+    /* Avoid compiler warning about unused parameters. */
+    ( void ) pvParameters;
+
+    xMQTTStatus = prvMQTTInit( &globalMqttContext, &xNetworkContext );
+    configASSERT( xMQTTStatus == MQTTSuccess );
+
+    /* Connect to the broker. */
+    xNetworkStatus = prvSocketConnect( &xNetworkContext );
+    configASSERT( xNetworkStatus == pdPASS );
+
+    /* Form an MQTT connection with a clean session. */
+    xMQTTStatus = prvMQTTConnect( &globalMqttContext, true );
+    configASSERT( xMQTTStatus == MQTTSuccess );
+    configASSERT( globalMqttContext.connectStatus == MQTTConnected );
 
     /* Loop until we receive a terminate command. */
     for( ; ; )
     {
         /* If there is no command in the queue, try again. */
-        if( xQueueReceive( xCommandQueue, &xCommand, mqttexampleDEMO_TICKS_TO_WAIT ) == pdFALSE )
-        {
-            LogInfo( ( "No commands in the queue. Trying again." ) );
-            continue;
-        }
+        xCommand.xCommandType = NO_COMMAND;
+        xQueueReceive( xCommandQueue, &xCommand, mqttexampleDEMO_TICKS_TO_WAIT );
 
-        pxCommand = &xCommand;
-
-        xStatus = prvProcessCommand( pxCommand );
+        xStatus = prvProcessCommand( &xCommand );
 
         /* Add connect operation to front of queue if status was not successful. */
         if( xStatus != MQTTSuccess )
@@ -1676,14 +1710,14 @@ static void prvCommandLoop( void )
         /* Delay after sending a subscribe. This is to so that the broker
          * creates a subscription for us before processing our next publish,
          * which should be immediately after this. */
-        if( pxCommand->xCommandType == SUBSCRIBE )
+        if( xCommand.xCommandType == SUBSCRIBE )
         {
             LogDebug( ( "Sleeping for %d ms after sending SUBSCRIBE packet.", mqttexampleSUBSCRIBE_TASK_DELAY_MS ) );
             vTaskDelay( mqttexampleSUBSCRIBE_TASK_DELAY_MS );
         }
 
         /* Terminate the loop if we receive the termination command. */
-        if( pxCommand->xCommandType == TERMINATE )
+        if( xCommand.xCommandType == TERMINATE )
         {
             xTerminateReceived = true;
             break;
@@ -1700,6 +1734,7 @@ static void prvCommandLoop( void )
     prvCreateCommand( DISCONNECT, NULL, NULL, &xNewCommand );
     prvProcessCommand( &xNewCommand );
     LogInfo( ( "Disconnected from broker." ) );
+    vTaskDelete( NULL );
 }
 
 /*-----------------------------------------------------------*/
@@ -2030,13 +2065,7 @@ void prvSubscribeTask( void * pvParameters )
 
 static void prvMQTTDemoTask( void * pvParameters )
 {
-    BaseType_t xNetworkStatus = pdFAIL;
     BaseType_t xResult = pdFALSE;
-    uint32_t ulNotification = 0;
-    MQTTStatus_t xMQTTStatus;
-    uint32_t ulExpectedNotifications = mqttexamplePUBLISHER_SYNC_COMPLETE_BIT |
-                                       mqttexampleSUBSCRIBE_TASK_COMPLETE_BIT |
-                                       mqttexamplePUBLISHER_ASYNC_COMPLETE_BIT;
 
     ( void ) pvParameters;
 
@@ -2053,74 +2082,24 @@ static void prvMQTTDemoTask( void * pvParameters )
      * synchronization primitives. */
     xDefaultResponseQueue = xQueueCreate( 1, sizeof( PublishElement_t ) );
 
-    /* Connect to the broker. We connect here with the "clean session" flag set
-     * to true in order to clear any prior state in the broker. We will disconnect
-     * and later form a persistent session, so that it may be resumed if the
-     * network suddenly disconnects. */
-    xNetworkStatus = prvSocketConnect( &xNetworkContext );
-    configASSERT( xNetworkStatus == pdPASS );
-    LogInfo( ( "Creating a clean session to clear any broker state information." ) );
-    xMQTTStatus = prvMQTTInit( &globalMqttContext, &xNetworkContext );
-    configASSERT( xMQTTStatus == MQTTSuccess );
-    xMQTTStatus = prvMQTTConnect( &globalMqttContext, true );
-    configASSERT( xMQTTStatus == MQTTSuccess );
+    /* Clear the lists of subscriptions and pending acknowledgments. */
+    memset( pxPendingAcks, 0x00, mqttexamplePENDING_ACKS_MAX_SIZE * sizeof( AckInfo_t ) );
+    memset( pxSubscriptions, 0x00, mqttexampleSUBSCRIPTIONS_MAX_COUNT * sizeof( SubscriptionElement_t ) );
 
-    /* Disconnect. */
-    xMQTTStatus = MQTT_Disconnect( &globalMqttContext );
-    configASSERT( xMQTTStatus == MQTTSuccess );
-    xNetworkStatus = prvSocketDisconnect( &xNetworkContext );
-    configASSERT( xNetworkStatus == pdPASS );
+    /* Create the agent. */
+    xResult = xTaskCreate( prvCommandLoop, "Agent", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY + 2, NULL );
 
-    for( ; ; )
-    {
-        /* Clear the lists of subscriptions and pending acknowledgments. */
-        memset( pxPendingAcks, 0x00, mqttexamplePENDING_ACKS_MAX_SIZE * sizeof( AckInfo_t ) );
-        memset( pxSubscriptions, 0x00, mqttexampleSUBSCRIPTIONS_MAX_COUNT * sizeof( SubscriptionElement_t ) );
+    /* Give subscriber task higher priority so the subscribe will be processed
+    before the first publish.  This must be less than or equal to the priority of
+    the main task. */
+    xResult = xTaskCreate( prvSubscribeTask, "Subscriber", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY + 1, &xSubscribeTask );
+    configASSERT( xResult == pdPASS );
+    xResult = xTaskCreate( prvSyncPublishTask, "SyncPublisher", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY, &xSyncPublisherTask );
+    configASSERT( xResult == pdPASS );
+    xResult = xTaskCreate( prvAsyncPublishTask, "AsyncPublisher", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY, &xAsyncPublisherTask );
+    configASSERT( xResult == pdPASS );
 
-        /* Connect to the broker. */
-        xNetworkStatus = prvSocketConnect( &xNetworkContext );
-        configASSERT( xNetworkStatus == pdPASS );
-        /* Form an MQTT connection with a persistent session. */
-        xMQTTStatus = prvMQTTConnect( &globalMqttContext, false );
-        configASSERT( xMQTTStatus == MQTTSuccess );
-        configASSERT( globalMqttContext.connectStatus == MQTTConnected );
-
-        /* Give subscriber task higher priority so the subscribe will be processed
-        before the first publish.  This must be less than or equal to the priority of
-        the main task. */
-        xResult = xTaskCreate( prvSubscribeTask, "Subscriber", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY + 1, &xSubscribeTask );
-        configASSERT( xResult == pdPASS );
-        xResult = xTaskCreate( prvSyncPublishTask, "SyncPublisher", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY, &xSyncPublisherTask );
-        configASSERT( xResult == pdPASS );
-        xResult = xTaskCreate( prvAsyncPublishTask, "AsyncPublisher", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY, &xAsyncPublisherTask );
-        configASSERT( xResult == pdPASS );
-
-        LogInfo( ( "Running command loop" ) );
-        prvCommandLoop();
-
-        /* Delete created queues. Wait for tasks to exit before cleaning up. */
-        LogInfo( ( "Waiting for tasks to exit." ) );
-        ( void ) prvNotificationWaitLoop( &ulNotification, ulExpectedNotifications, false );
-
-        configASSERT( ( ulNotification & ulExpectedNotifications ) == ulExpectedNotifications );
-
-        /* Reset queues. */
-        xQueueReset( xCommandQueue );
-        xQueueReset( xDefaultResponseQueue );
-        xQueueReset( xSubscriberResponseQueue );
-
-        /* Clear task notifications. */
-        ulNotification = ulTaskNotifyValueClear( NULL, ~( 0U ) );
-
-        /* Disconnect. */
-        xNetworkStatus = prvSocketDisconnect( &xNetworkContext );
-        configASSERT( xNetworkStatus == pdPASS );
-
-        LogInfo( ( "prvMQTTDemoTask() completed an iteration successfully. Total free heap is %u.\r\n", xPortGetFreeHeapSize() ) );
-        LogInfo( ( "Demo completed successfully.\r\n" ) );
-        LogInfo( ( "Short delay before starting the next iteration.... \r\n\r\n" ) );
-        vTaskDelay( mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS );
-    }
+    vTaskDelete( NULL );
 }
 
 /*-----------------------------------------------------------*/

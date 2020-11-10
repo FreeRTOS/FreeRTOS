@@ -262,7 +262,8 @@ void vLoggingPrintf( const char * pcFormat,
     char cOutputString[ dlMAX_PRINT_STRING_LENGTH ];
     char * pcSource, * pcTarget, * pcBegin;
     size_t xLength, xLength2, rc;
-    static BaseType_t xMessageNumber = 0, xAfterLineBreak = pdTRUE;
+    static BaseType_t xMessageNumber = 0;
+    static BaseType_t xAfterLineBreak = pdTRUE;
     va_list args;
     uint32_t ulIPAddress;
     const char * pcTaskName;

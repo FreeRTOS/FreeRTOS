@@ -661,7 +661,7 @@ void prvShadowDemoTask( void * pvParameters )
     xNetworkCredentials.pAlpnProtos = pcAlpnProtocols;
 
 
-    demoStatus = xEstablishMqttSession( xNetworkCredentials,
+    demoStatus = xEstablishMqttSession( &xNetworkCredentials,
                                         &xMqttContext,
                                         &xNetworkContext,
                                         &xBuffer,

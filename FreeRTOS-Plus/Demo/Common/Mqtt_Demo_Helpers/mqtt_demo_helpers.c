@@ -143,6 +143,8 @@ typedef struct PublishPackets
     MQTTPublishInfo_t pubInfo;
 } PublishPackets_t;
 
+/*-----------------------------------------------------------*/
+
 /**
  * @brief Global entry time into the application to use as a reference timestamp
  * in the #prvGetTimeMs function. #prvGetTimeMs will always return the difference
@@ -151,7 +153,10 @@ typedef struct PublishPackets
  */
 static uint32_t ulGlobalEntryTimeMs;
 
-/*-----------------------------------------------------------*/
+/**
+ * @brief The flag to indicate the mqtt session changed.
+ */
+static BaseType_t mqttSessionEstablished = pdFALSE;
 
 /**
  * @brief Packet Identifier generated when Subscribe request was sent to the broker;
@@ -268,7 +273,7 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext
         xNetworkStatus = TLS_FreeRTOS_Connect( pxNetworkContext,
                                                democonfigMQTT_BROKER_ENDPOINT,
                                                democonfigMQTT_BROKER_PORT,
-                                               &xNetworkCredentials,
+                                               pxNetworkCredentials,
                                                mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS,
                                                mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS );
 
@@ -489,7 +494,7 @@ BaseType_t xEstablishMqttSession( NetworkCredentials_t * pxNetworkCredentials,
                                  &xTransport,
                                  prvGetTimeMs,
                                  eventCallback,
-                                 &xBuffer );
+                                 pxNetworkBuffer);
 
         if( xMQTTStatus != MQTTSuccess )
         {

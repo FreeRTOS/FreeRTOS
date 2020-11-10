@@ -249,7 +249,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @brief Whether to use mutual authentication. If this macro is not set to 1
  * or not defined, then plaintext TCP will be used instead of TLS over TCP.
  */
-#define democonfigUSE_TLS                   0
+#define democonfigUSE_TLS                   1
 
 /**
  * @brief Set the stack size of the main demo task.

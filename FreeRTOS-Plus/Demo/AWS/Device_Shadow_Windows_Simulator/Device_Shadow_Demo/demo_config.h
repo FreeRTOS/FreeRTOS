@@ -124,10 +124,9 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * "...base64 data...\n"\
  * "-----END CERTIFICATE-----\n"
  *
- * #define democonfigROOT_CA_PEM    "...insert here..."
  */
 
-#define democonfigROOT_CA_PEM                                            \
+#define democonfigAMAZON_ROOT_CA_1_PEM                                   \
     "-----BEGIN CERTIFICATE-----\n"                                      \
     "MIIDQTCCAimgAwIBAgITBmyfz5m/jAo54vB4ikPmljZbyjANBgkqhkiG9w0BAQsF\n" \
     "ADA5MQswCQYDVQQGEwJVUzEPMA0GA1UEChMGQW1hem9uMRkwFwYDVQQDExBBbWF6\n" \

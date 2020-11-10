@@ -62,10 +62,10 @@
 /* JSON library includes. */
 #include "core_json.h"
 
-/* Include MQTT demo helpers header. */
-#include "mqtt_demo_helpers.h"
+/* Shadow demo helpers header. */
+#include "shadow_demo_helpers.h"
 
-/* Demo Specific config file. */
+/* Demo Specific configs. */
 #include "demo_config.h"
 
 
@@ -148,48 +148,6 @@
  */
 #define SHADOW_REPORTED_JSON_LENGTH    ( sizeof( SHADOW_REPORTED_JSON ) - 3 )
 
-/**
- * @brief ALPN (Application-Layer Protocol Negotiation) protocol name for AWS IoT MQTT.
- *
- * This will be used if democonfigMQTT_BROKER_PORT is configured as 443 for the AWS IoT MQTT broker.
- * Please see more details about the ALPN protocol for AWS IoT MQTT endpoint
- * in the link below.
- * https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/
- */
-#define AWS_IOT_MQTT_ALPN              "\x0ex-amzn-mqtt-ca"
-
-
-/*------------- Demo configurations -------------------------*/
-
-/**
- * Note: The TLS connection credentials for the server root CA certificate,
- * and device client certificate and private key should be defined in the
- * demo_config.h file.
- */
-
-#ifndef democonfigAMAZON_ROOT_CA_1_PEM
-    #error "Please define the AWS Root CA certificate (democonfigAMAZON_ROOT_CA_1_PEM) in demo_config.h."
-#endif
-#ifndef democonfigCLIENT_PRIVATE_KEY_PEM
-    #error "Please define client private key(democonfigCLIENT_PRIVATE_KEY_PEM) in demo_config.h."
-#endif
-
-#ifndef democonfigCLIENT_CERTIFICATE_PEM
-    #error "Please define client certificate(democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h."
-#endif
-
-#ifndef democonfigMQTT_BROKER_ENDPOINT
-    #error "Please define democonfigMQTT_BROKER_ENDPOINT in demo_config.h."
-#endif
-
-#ifndef democonfigMQTT_BROKER_PORT
-
-/**
- * @brief The port to use for the demo.
- */
-    #define democonfigMQTT_BROKER_PORT    ( 8883 )
-#endif
-
 #ifndef THING_NAME
 
 /**
@@ -205,31 +163,9 @@
  */
 #define THING_NAME_LENGTH    ( ( uint16_t ) ( sizeof( THING_NAME ) - 1 ) )
 
+
+
 /*-----------------------------------------------------------*/
-
-/**
- * @brief The MQTT context used for MQTT operation.
- */
-static MQTTContext_t xMqttContext;
-
-/**
- * @brief The network context used for Openssl operation.
- */
-static NetworkContext_t xNetworkContext;
-
-/**
- * @brief Static buffer used to hold MQTT messages being sent and received.
- */
-static uint8_t ucSharedBuffer[ democonfigNETWORK_BUFFER_SIZE ];
-
-/**
- * @brief Static buffer used to hold MQTT messages being sent and received.
- */
-static MQTTFixedBuffer_t xBuffer =
-{
-    .pBuffer = ucSharedBuffer,
-    .size    = democonfigNETWORK_BUFFER_SIZE
-};
 
 /**
  * @brief The simulated device current power on state.
@@ -627,45 +563,15 @@ void vStartShadowDemo( void )
 void prvShadowDemoTask( void * pvParameters )
 {
     BaseType_t demoStatus = pdPASS;
-    NetworkCredentials_t xNetworkCredentials = { 0 };
 
-    /* ALPN protocols must be a NULL-terminated list of strings. Therefore,
-     * the first entry will contain the actual ALPN protocol string while the
-     * second entry must remain NULL. */
-    char * pcAlpnProtocols[] = { NULL, NULL };
+    /* Remove compiler warnings about unused parameters. */
+    ( void ) pvParameters;
 
     /* A buffer containing the update document. It has static duration to prevent
      * it from being placed on the call stack. */
     static char pcUpdateDocument[ SHADOW_REPORTED_JSON_LENGTH + 1 ] = { 0 };
 
-    /* Remove compiler warnings about unused parameters. */
-    ( void ) pvParameters;
-
-    /* Set the credentials for establishing a TLS connection. */
-    xNetworkCredentials.pRootCa = ( const unsigned char * ) democonfigAMAZON_ROOT_CA_1_PEM;
-    xNetworkCredentials.rootCaSize = sizeof( democonfigAMAZON_ROOT_CA_1_PEM );
-    #ifdef democonfigCLIENT_CERTIFICATE_PEM
-        xNetworkCredentials.pClientCert = ( const unsigned char * ) democonfigCLIENT_CERTIFICATE_PEM;
-        xNetworkCredentials.clientCertSize = sizeof( democonfigCLIENT_CERTIFICATE_PEM );
-        xNetworkCredentials.pPrivateKey = ( const unsigned char * ) democonfigCLIENT_PRIVATE_KEY_PEM;
-        xNetworkCredentials.privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
-    #endif
-
-    xNetworkCredentials.disableSni = pdFALSE;
-/* The ALPN string changes depending on whether username/password authentication is used. */
-    #ifdef democonfigCLIENT_USERNAME
-        pcAlpnProtocols[ 0 ] = AWS_IOT_CUSTOM_AUTH_ALPN;
-    #else
-        pcAlpnProtocols[ 0 ] = AWS_IOT_MQTT_ALPN;
-    #endif
-    xNetworkCredentials.pAlpnProtos = pcAlpnProtocols;
-
-
-    demoStatus = xEstablishMqttSession( xNetworkCredentials,
-                                        &xMqttContext,
-                                        &xNetworkContext,
-                                        &xBuffer,
-                                        prvEventCallback );
+    demoStatus = xEstablishMqttSession( prvEventCallback );
 
     if( pdFAIL == demoStatus )
     {
@@ -675,8 +581,7 @@ void prvShadowDemoTask( void * pvParameters )
     else
     {
         /* First of all, try to delete any Shadow document in the cloud. */
-        demoStatus = xPublishToTopic( &xMqttContext,
-                                      SHADOW_TOPIC_STRING_DELETE( THING_NAME ),
+        demoStatus = xPublishToTopic( SHADOW_TOPIC_STRING_DELETE( THING_NAME ),
                                       SHADOW_TOPIC_LENGTH_DELETE( THING_NAME_LENGTH ),
                                       pcUpdateDocument,
                                       0U );
@@ -684,22 +589,19 @@ void prvShadowDemoTask( void * pvParameters )
         /* Then try to subscribe shadow topics. */
         if( demoStatus == pdPASS )
         {
-            demoStatus = xSubscribeToTopic( &xMqttContext,
-                                            SHADOW_TOPIC_STRING_UPDATE_DELTA( THING_NAME ),
+            demoStatus = xSubscribeToTopic( SHADOW_TOPIC_STRING_UPDATE_DELTA( THING_NAME ),
                                             SHADOW_TOPIC_LENGTH_UPDATE_DELTA( THING_NAME_LENGTH ) );
         }
 
         if( demoStatus == pdPASS )
         {
-            demoStatus = xSubscribeToTopic( &xMqttContext,
-                                            SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( THING_NAME ),
+            demoStatus = xSubscribeToTopic( SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( THING_NAME ),
                                             SHADOW_TOPIC_LENGTH_UPDATE_ACCEPTED( THING_NAME_LENGTH ) );
         }
 
         if( demoStatus == pdPASS )
         {
-            demoStatus = xSubscribeToTopic( &xMqttContext,
-                                            SHADOW_TOPIC_STRING_UPDATE_REJECTED( THING_NAME ),
+            demoStatus = xSubscribeToTopic( SHADOW_TOPIC_STRING_UPDATE_REJECTED( THING_NAME ),
                                             SHADOW_TOPIC_LENGTH_UPDATE_REJECTED( THING_NAME_LENGTH ) );
         }
 
@@ -749,8 +651,7 @@ void prvShadowDemoTask( void * pvParameters )
                       ( int ) 1,
                       ( long unsigned ) ( xTaskGetTickCount() % 1000000 ) );
 
-            demoStatus = xPublishToTopic( &xMqttContext,
-                                          SHADOW_TOPIC_STRING_UPDATE( THING_NAME ),
+            demoStatus = xPublishToTopic( SHADOW_TOPIC_STRING_UPDATE( THING_NAME ),
                                           SHADOW_TOPIC_LENGTH_UPDATE( THING_NAME_LENGTH ),
                                           pcUpdateDocument,
                                           ( SHADOW_DESIRED_JSON_LENGTH + 1 ) );
@@ -782,8 +683,7 @@ void prvShadowDemoTask( void * pvParameters )
                           ( int ) ulCurrentPowerOnState,
                           ( long unsigned ) ulClientToken );
 
-                demoStatus = xPublishToTopic( &xMqttContext,
-                                              SHADOW_TOPIC_STRING_UPDATE( THING_NAME ),
+                demoStatus = xPublishToTopic( SHADOW_TOPIC_STRING_UPDATE( THING_NAME ),
                                               SHADOW_TOPIC_LENGTH_UPDATE( THING_NAME_LENGTH ),
                                               pcUpdateDocument,
                                               ( SHADOW_DESIRED_JSON_LENGTH + 1 ) );
@@ -798,8 +698,7 @@ void prvShadowDemoTask( void * pvParameters )
         {
             LogInfo( ( "Start to unsubscribe shadow topics and disconnect from MQTT. \r\n" ) );
 
-            demoStatus = xUnsubscribeFromTopic( &xMqttContext,
-                                                SHADOW_TOPIC_STRING_UPDATE_DELTA( THING_NAME ),
+            demoStatus = xUnsubscribeFromTopic( SHADOW_TOPIC_STRING_UPDATE_DELTA( THING_NAME ),
                                                 SHADOW_TOPIC_LENGTH_UPDATE_DELTA( THING_NAME_LENGTH ) );
 
             if( demoStatus != pdPASS )
@@ -811,8 +710,7 @@ void prvShadowDemoTask( void * pvParameters )
 
         if( demoStatus == pdPASS )
         {
-            demoStatus = xUnsubscribeFromTopic( &xMqttContext,
-                                                SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( THING_NAME ),
+            demoStatus = xUnsubscribeFromTopic( SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( THING_NAME ),
                                                 SHADOW_TOPIC_LENGTH_UPDATE_ACCEPTED( THING_NAME_LENGTH ) );
 
             if( demoStatus != pdPASS )
@@ -824,8 +722,7 @@ void prvShadowDemoTask( void * pvParameters )
 
         if( demoStatus == pdPASS )
         {
-            demoStatus = xUnsubscribeFromTopic( &xMqttContext,
-                                                SHADOW_TOPIC_STRING_UPDATE_REJECTED( THING_NAME ),
+            demoStatus = xUnsubscribeFromTopic( SHADOW_TOPIC_STRING_UPDATE_REJECTED( THING_NAME ),
                                                 SHADOW_TOPIC_LENGTH_UPDATE_REJECTED( THING_NAME_LENGTH ) );
 
             if( demoStatus != pdPASS )
@@ -836,7 +733,7 @@ void prvShadowDemoTask( void * pvParameters )
         }
 
         /* The MQTT session is always disconnected, even there were prior failures. */
-        demoStatus = xDisconnectMqttSession( &xMqttContext, &xNetworkContext );
+        demoStatus = xDisconnectMqttSession();
 
         /* This demo performs only Device Shadow operations. If matching the Shadow
          * MQTT topic fails or there are failure in parsing the received JSON document,

@@ -2076,8 +2076,8 @@ static void prvMQTTDemoTask( void * pvParameters )
         configASSERT( globalMqttContext.connectStatus == MQTTConnected );
 
         /* Give subscriber task higher priority so the subscribe will be processed
-        before the first publish.  This must be less than or equal to the priority of
-        the main task. */
+         * before the first publish.  This must be less than or equal to the priority of
+         * the main task. */
         xResult = xTaskCreate( prvSubscribeTask, "Subscriber", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY + 1, &xSubscribeTask );
         configASSERT( xResult == pdPASS );
         xResult = xTaskCreate( prvSyncPublishTask, "SyncPublisher", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY, &xSyncPublisherTask );

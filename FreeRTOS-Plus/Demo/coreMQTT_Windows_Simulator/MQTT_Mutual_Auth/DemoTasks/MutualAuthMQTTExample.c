@@ -73,11 +73,11 @@
 /* If no username is defined, then a client certificate/key is required. */
 #ifndef democonfigCLIENT_USERNAME
 
-    /*
-     *!!! Please note democonfigCLIENT_PRIVATE_KEY_PEM in used for
-     *!!! convenience of demonstration only.  Production devices should
-     *!!! store keys securely, such as within a secure element.
-     */
+/*
+ *!!! Please note democonfigCLIENT_PRIVATE_KEY_PEM in used for
+ *!!! convenience of demonstration only.  Production devices should
+ *!!! store keys securely, such as within a secure element.
+ */
 
     #ifndef democonfigCLIENT_CERTIFICATE_PEM
         #error "Please define client certificate(democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h."
@@ -432,7 +432,7 @@ void vStartSimpleMQTTDemo( void )
      * connect, subscribe, publish, unsubscribe and disconnect from the MQTT
      * broker. */
     xTaskCreate( prvMQTTDemoTask,          /* Function that implements the task. */
-                 "MQTTDemo",               /* Text name for the task - only used for debugging. */
+                 "DemoTask",               /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
                  NULL,                     /* Task parameter - not used in this case. */
                  tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */

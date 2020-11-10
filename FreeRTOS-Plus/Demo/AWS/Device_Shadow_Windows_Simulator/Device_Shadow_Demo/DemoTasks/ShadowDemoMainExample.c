@@ -596,7 +596,7 @@ void vStartShadowDemo( void )
      * use Device Shadow library to get shadow topics and validate shadow topics
      * via MQTT APIs communicating with the MQTT broker. */
     xTaskCreate( prvShadowDemoTask,        /* Function that implements the task. */
-                 "ShadowDemo",             /* Text name for the task - only used for debugging. */
+                 "DemoTask",               /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
                  NULL,                     /* Task parameter - not used in this case. */
                  tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */

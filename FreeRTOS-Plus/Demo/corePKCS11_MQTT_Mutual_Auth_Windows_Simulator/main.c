@@ -26,7 +26,7 @@
  */
 
 /***
- * See https://www.FreeRTOS.org/pkcs11/index.html for configuration and usage instructions.
+ * See https://www.FreeRTOS.org/pkcs11/ for configuration and usage instructions.
  ***/
 
 /* Standard includes. */

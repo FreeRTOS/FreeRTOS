@@ -24,15 +24,17 @@
  */
 
 /*
- * This demo shows how to use coreMQTT in a multithreaded environment by
- * encapsulating the MQTT library within its own agent (or daemon) task.  Only the
- * agent task is allowed to call the coreMQTT API directly.  Anything else needing to
- * interact with the coreMQTT API does so via a queue.  Currently an example agent
- * implementation is contained within this demo.  Future coreMQTT releases will
- * build an agent into the library itself, encapsulating the interaction via queues
- * into the coreMQTT library's API.
+ * This demo shows how to use coreMQTT in a multithreaded environment - it does not
+ * yet go as far as encapsulating the MQTT library within its own agent (or daemon)
+ * task - although the prvCommandLoop() function demonstrates how that might be done.
+ * In this task prvCommandLoop() is only executed from a single thread and is the
+ * only function that is allowed to use the coreMQTT API directly.  Anything else
+ * needing to interact with the coreMQTT API does so by posting commands to
+ * prvCommandLoop() via a queue.  Future coreMQTT releases will build an agent into
+ * the library itself, and then encapsulate the queues into the implementation of a
+ * thread safe coreMQTT API.
  *
- * To use the demo with TLS set democonfigUSE_TLS to 1.  To use the demo without
+ * To use this demo with TLS set democonfigUSE_TLS to 1.  To use this demo without
  * TLS (so plain text) set democonfigUSE_TLS to 0.  democonfigUSE_TLS is defined
  * in demo_config.h.
  *
@@ -41,23 +43,25 @@
  *!!! mutually authenticated and encrypted connections.
  *
  * There are four tasks to note in this demo:
- *  - A command (main) task for processing commands from the command queue while
- *    other tasks enqueue them. This task enters a loop, during which it processes
- *    commands from the command queue. If a termination command is received, it
- *    will break from the loop.
- *  - A publisher task for synchronous publishes. This task creates a series of
- *    publish operations to push to the command queue, which are then executed
- *    by the command task. This task uses synchronous publishes, meaning it will
- *    wait for each publish to complete before scheduling the next one.
- *  - A publisher task for asynchronous publishes. The difference between this
- *    task and the previous is that it will not wait for completion before
- *    scheduling the next publish, and checks them after all publishes have been
- *    enqueued. Note that the distinction between synchronous and asynchronous
- *    publishes is only in the behavior of the task, not in the actual publish
- *    command.
- *  - A subscriber task that creates an MQTT subscription to a topic filter
- *    matching the topics published on by the publishers. It loops while waiting
- *    for publish messages to be received.
+ *  - prvMQTTDemoTask() manages multiple iterations of the demo.  Each iteration
+ *    creates the other tasks, calls prvCommandLoop() to handle the MQTT traffic,
+ *    then cleans up ready for the next iteration.
+ *  - prvSyncPublishTask() which demonstrates synchronous publishes. The task creates
+ *    a series of publish operations that are sent over the command queue to be
+ *    processed by prvCommandLoop(), waiting for each publish to complete before
+ *    sending the next.
+ *  - prvAsyncPublishTask() which demonstrates asynchronous publishes. Like
+ *    prvSyncPublishTask(), the task creates a series of publish operations that are
+ *    sent over the command queue to be processed by prvCommandLoop(), but unlike
+ *    prvSyncPublishTask() this task does not wait for each publish to be complete
+ *    until after all the publish commands are sent.  Note that the distinction
+ *    between synchronous and asynchronous publishes is only in the behavior of the
+ *    task, not in the actual publish command.
+ *  - prvSubscribeTask() which creates an MQTT subscription to a topic filter
+ *    matching the topics published on by the two publishing tasks, and in doing so,
+ *    ensures the demo received a publish command back for each publish command it
+ *    sends. It loops while waiting for publish messages to be received.
+ *
  * Tasks can have queues to hold received publish messages, and the command task
  * will push incoming publishes to the queue of each task that is subscribed to
  * the incoming topic.
@@ -97,20 +101,6 @@
 /**
  * These configuration settings are required to run the demo.
  */
-#ifndef democonfigCLIENT_IDENTIFIER
-
-/**
- * @brief The MQTT client identifier used in this example.  Each client identifier
- * must be unique so edit as required to ensure no two clients connecting to the
- * same broker use the same client identifier.
- *
- * @note Appending __TIME__ to the client id string will reduce the possibility of a
- * client id collision in the broker. Note that the appended time is the compilation
- * time. This client id can cause collision, if more than one instance of the same
- * binary is used at the same time to connect to the broker.
- */
-    #define democonfigCLIENT_IDENTIFIER    "testClient"__TIME__
-#endif
 
 /**
  * @brief The size to use for the network buffer.
@@ -1628,7 +1618,6 @@ static void prvCommandLoop( void )
 {
     Command_t xCommand;
     Command_t xNewCommand;
-    Command_t * pxCommand;
     MQTTStatus_t xStatus = MQTTSuccess;
     static int lNumProcessed = 0;
     bool xTerminateReceived = false;
@@ -1644,9 +1633,7 @@ static void prvCommandLoop( void )
             continue;
         }
 
-        pxCommand = &xCommand;
-
-        xStatus = prvProcessCommand( pxCommand );
+        xStatus = prvProcessCommand( &xCommand );
 
         /* Add connect operation to front of queue if status was not successful. */
         if( xStatus != MQTTSuccess )
@@ -1664,15 +1651,17 @@ static void prvCommandLoop( void )
 
         /* Delay after sending a subscribe. This is to so that the broker
          * creates a subscription for us before processing our next publish,
-         * which should be immediately after this. */
-        if( pxCommand->xCommandType == SUBSCRIBE )
+         * which should be immediately after this.  Only required because the
+         * subscribe and publish commands are coming from separate tasks, which
+         * would not normally be the case. */
+        if( xCommand.xCommandType == SUBSCRIBE )
         {
             LogDebug( ( "Sleeping for %d ms after sending SUBSCRIBE packet.", mqttexampleSUBSCRIBE_TASK_DELAY_MS ) );
             vTaskDelay( mqttexampleSUBSCRIBE_TASK_DELAY_MS );
         }
 
         /* Terminate the loop if we receive the termination command. */
-        if( pxCommand->xCommandType == TERMINATE )
+        if( xCommand.xCommandType == TERMINATE )
         {
             xTerminateReceived = true;
             break;
@@ -2117,7 +2106,7 @@ static void prvMQTTDemoTask( void * pvParameters )
         xNetworkStatus = prvSocketDisconnect( &xNetworkContext );
         configASSERT( xNetworkStatus == pdPASS );
 
-        LogInfo( ( "prvMQTTDemoTask() completed an iteration successfully. Total free heap is %u.\r\n", xPortGetFreeHeapSize() ) );
+        LogInfo( ( "\r\n\r\nprvMQTTDemoTask() completed an iteration successfully. Total free heap is %u.\r\n", xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully.\r\n" ) );
         LogInfo( ( "Short delay before starting the next iteration.... \r\n\r\n" ) );
         vTaskDelay( mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS );

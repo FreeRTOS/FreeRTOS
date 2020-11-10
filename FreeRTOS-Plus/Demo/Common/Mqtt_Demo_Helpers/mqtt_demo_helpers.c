@@ -249,7 +249,7 @@ static uint32_t prvGetTimeMs( void );
 /*-----------------------------------------------------------*/
 
 static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredentials_t * pxNetworkCredentials,
-                                                                  NetworkContext_t * pxNetworkContext, )
+                                                                  NetworkContext_t * pxNetworkContext)
 {
     TlsTransportStatus_t xNetworkStatus = TLS_TRANSPORT_SUCCESS;
     RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;

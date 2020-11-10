@@ -193,7 +193,8 @@ static PublishPackets_t outgoingPublishPackets[ MAX_OUTGOING_PUBLISHES ] = { 0 }
  *
  * @return The status of the final connection attempt.
  */
-static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext_t * pxNetworkContext );
+static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredentials_t * pxNetworkCredentials,
+                                                                  NetworkContext_t * pxNetworkContext );
 
 /**
  * @brief Function to get the free index at which an outgoing publish
@@ -247,12 +248,15 @@ static uint32_t prvGetTimeMs( void );
 
 /*-----------------------------------------------------------*/
 
-static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext_t * pxNetworkContext,
-                                                                  NetworkCredentials_t * pxNetworkCredentials )
+static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredentials_t * pxNetworkCredentials,
+                                                                  NetworkContext_t * pxNetworkContext, )
 {
     TlsTransportStatus_t xNetworkStatus = TLS_TRANSPORT_SUCCESS;
     RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
     RetryUtilsParams_t xReconnectParams = { 0 };
+
+    configASSERT( pxNetworkCredentials != NULL );
+    configASSERT( pxNetworkContext != NULL );
 
     /* Initialize reconnect attempts and interval. */
     RetryUtils_ParamsReset( &xReconnectParams );
@@ -494,7 +498,7 @@ BaseType_t xEstablishMqttSession( NetworkCredentials_t * pxNetworkCredentials,
                                  &xTransport,
                                  prvGetTimeMs,
                                  eventCallback,
-                                 pxNetworkBuffer);
+                                 pxNetworkBuffer );
 
         if( xMQTTStatus != MQTTSuccess )
         {

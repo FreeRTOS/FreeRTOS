@@ -430,13 +430,6 @@ static BaseType_t prvSocketDisconnect( NetworkContext_t * pxNetworkContext );
 static void prvMQTTClientSocketWakeupCallback( Socket_t pxSocket );
 
 /**
- * @brief Initialize context for a command.
- *
- * @param[in] pxContext Context to initialize.
- */
-static void prvInitializeCommandContext( CommandContext_t * pxContext );
-
-/**
  * @brief Track an operation by adding it to a list, indicating it is anticipating
  * an acknowledgment.
  *
@@ -954,7 +947,7 @@ static MQTTStatus_t prvResumeSession( bool xSessionPresent )
         /* Resubscribe if needed. */
         if( j > 0 )
         {
-            prvInitializeCommandContext( &xResubscribeContext );
+            memset( ( void * ) &xResubscribeContext, 0x00, sizeof( xResubscribeContext ) );
             xResubscribeContext.pxSubscribeInfo = pxResendSubscriptions;
             xResubscribeContext.ulSubscriptionCount = j;
             /* Set to NULL so existing queues will not be overwritten. */
@@ -1122,18 +1115,6 @@ static void prvMQTTClientSocketWakeupCallback( Socket_t pxSocket )
         xResult = prvAddCommandToQueue( &xCommand );
         configASSERT( xResult == pdTRUE );
     }
-}
-
-/*-----------------------------------------------------------*/
-
-static void prvInitializeCommandContext( CommandContext_t * pxContext )
-{
-    pxContext->xIsComplete = false;
-    pxContext->pxResponseQueue = NULL;
-    pxContext->xReturnStatus = MQTTSuccess;
-    pxContext->pxPublishInfo = NULL;
-    pxContext->pxSubscribeInfo = NULL;
-    pxContext->ulSubscriptionCount = 0;
 }
 
 /*-----------------------------------------------------------*/
@@ -1777,7 +1758,7 @@ void prvSyncPublishTask( void * pvParameters )
         snprintf( topicBuf, mqttexampleDEMO_BUFFER_SIZE, mqttexamplePUBLISH_TOPIC_FORMAT_STRING, "sync", i + 1 );
         xPublishInfo.topicNameLength = ( uint16_t ) strlen( topicBuf );
 
-        prvInitializeCommandContext( &xContext );
+        memset( ( void * ) &xContext, 0x00, sizeof( xContext ) );
         xContext.xTaskToNotify = xTaskGetCurrentTaskHandle();
         xContext.ulNotificationBit = 1 << i;
         xContext.pxPublishInfo = &xPublishInfo;
@@ -1839,7 +1820,7 @@ void prvAsyncPublishTask( void * pvParameters )
     for( int i = 0; i < mqttexamplePUBLISH_COUNT / 2; i++ )
     {
         pxContexts[ i ] = ( CommandContext_t * ) pvPortMalloc( sizeof( CommandContext_t ) );
-        prvInitializeCommandContext( pxContexts[ i ] );
+        memset( ( void * ) pxContexts[ i ], 0x00, sizeof( pxContexts[ i ] ) );
         pxContexts[ i ]->xTaskToNotify = xTaskGetCurrentTaskHandle();
 
         /* Set the notification bit to be the publish number. This prevents this demo
@@ -1927,7 +1908,7 @@ void prvSubscribeTask( void * pvParameters )
     LogInfo( ( "Topic filter: %.*s", xSubscribeInfo.topicFilterLength, xSubscribeInfo.pTopicFilter ) );
 
     /* Create the context and subscribe command. */
-    prvInitializeCommandContext( &xContext );
+    memset( &xContext, 0x00, sizeof( xContext ) );
     xContext.pxResponseQueue = xSubscriberResponseQueue;
     xContext.xTaskToNotify = xTaskGetCurrentTaskHandle();
     xContext.ulNotificationBit = mqttexampleSUBSCRIBE_COMPLETE_BIT;
@@ -2001,7 +1982,7 @@ void prvSubscribeTask( void * pvParameters )
 
     LogInfo( ( "Finished receiving\n" ) );
     prvCreateCommand( UNSUBSCRIBE, &xContext, prvCommandCallback, &xCommand );
-    prvInitializeCommandContext( &xContext );
+    memset( ( void * ) &xContext, 0x00, sizeof( xContext ) );
     xContext.pxResponseQueue = xSubscriberResponseQueue;
     xContext.xTaskToNotify = xTaskGetCurrentTaskHandle();
     xContext.ulNotificationBit = mqttexampleUNSUBSCRIBE_COMPLETE_BIT;

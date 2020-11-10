@@ -1809,7 +1809,7 @@ void prvAsyncPublishTask( void * pvParameters )
     for( int i = 0; i < mqttexamplePUBLISH_COUNT / 2; i++ )
     {
         pxContexts[ i ] = ( CommandContext_t * ) pvPortMalloc( sizeof( CommandContext_t ) );
-        memset( ( void * ) pxContexts[ i ], 0x00, sizeof( pxContexts[ i ] ) );
+        memset( ( void * ) pxContexts[ i ], 0x00, sizeof( CommandContext_t ) );
         pxContexts[ i ]->xTaskToNotify = xTaskGetCurrentTaskHandle();
 
         /* Set the notification bit to be the publish number. This prevents this demo

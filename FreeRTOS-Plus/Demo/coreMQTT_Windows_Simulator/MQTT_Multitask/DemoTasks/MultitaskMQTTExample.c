@@ -1705,8 +1705,7 @@ static void prvCommandLoop( void )
     configASSERT( xTerminateReceived == true );
 
     LogInfo( ( "Creating Disconnect operation." ) );
-    prvCreateCommand( DISCONNECT, NULL, NULL, &xNewCommand );
-    prvProcessCommand( &xNewCommand );
+    MQTT_Disconnect( &globalMqttContext );
     LogInfo( ( "Disconnected from broker." ) );
 }
 

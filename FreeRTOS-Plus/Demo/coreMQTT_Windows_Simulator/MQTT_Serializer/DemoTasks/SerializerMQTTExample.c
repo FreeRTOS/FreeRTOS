@@ -383,7 +383,7 @@ void vStartSimpleMQTTDemo( void )
      * connect, subscribe, publish, unsubscribe and disconnect from the MQTT
      * broker. */
     xTaskCreate( prvMQTTDemoTask,          /* Function that implements the task. */
-                 "MQTTSerializerDemo",     /* Text name for the task - only used for debugging. */
+                 "DemoTask",               /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
                  NULL,                     /* Task parameter - not used in this case. */
                  tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */

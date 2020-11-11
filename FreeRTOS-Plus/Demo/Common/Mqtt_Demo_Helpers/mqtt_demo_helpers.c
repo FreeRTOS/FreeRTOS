@@ -43,9 +43,6 @@
 /* Shadow includes */
 #include "mqtt_demo_helpers.h"
 
-/* Demo Specific configs. */
-#include "demo_config.h"
-
 /* MQTT library includes. */
 #include "core_mqtt.h"
 
@@ -187,13 +184,16 @@ static PublishPackets_t outgoingPublishPackets[ MAX_OUTGOING_PUBLISHES ] = { 0 }
  * Timeout value will exponentially increase until maximum
  * timeout value is reached or the number of attempts are exhausted.
  *
+ * @param[in] pcBrokerEndpoint The MQTT broker endpoint to establish a connection with.
+ * The string should be NUL terminated.
  * @param[in] pxNetworkCredentials The credentials required for TLS connection with
  * MQTT broker.
  * @param[out] pxNetworkContext The output parameter to return the created network context.
  *
  * @return The status of the final connection attempt.
  */
-static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredentials_t * pxNetworkCredentials,
+static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( const char * pcBrokerEndpoint,
+                                                                  NetworkCredentials_t * pxNetworkCredentials,
                                                                   NetworkContext_t * pxNetworkContext );
 
 /**
@@ -248,8 +248,9 @@ static uint32_t prvGetTimeMs( void );
 
 /*-----------------------------------------------------------*/
 
-static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredentials_t * pxNetworkCredentials,
-                                                                  NetworkContext_t * pxNetworkContext)
+static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( const char * pcBrokerEndpoint,
+                                                                  NetworkCredentials_t * pxNetworkCredentials,
+                                                                  NetworkContext_t * pxNetworkContext )
 {
     TlsTransportStatus_t xNetworkStatus = TLS_TRANSPORT_SUCCESS;
     RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
@@ -272,10 +273,10 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
          * the MQTT broker as specified in democonfigMQTT_BROKER_ENDPOINT and
          * democonfigMQTT_BROKER_PORT at the top of this file. */
         LogInfo( ( "Create a TCP connection to %s:%d.",
-                   democonfigMQTT_BROKER_ENDPOINT,
+                   pcBrokerEndpoint,
                    democonfigMQTT_BROKER_PORT ) );
         xNetworkStatus = TLS_FreeRTOS_Connect( pxNetworkContext,
-                                               democonfigMQTT_BROKER_ENDPOINT,
+                                               pcBrokerEndpoint,
                                                democonfigMQTT_BROKER_PORT,
                                                pxNetworkCredentials,
                                                mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS,
@@ -457,7 +458,8 @@ static BaseType_t xHandlePublishResend( MQTTContext_t * pxMqttContext )
 
 /*-----------------------------------------------------------*/
 
-BaseType_t xEstablishMqttSession( NetworkCredentials_t * pxNetworkCredentials,
+BaseType_t xEstablishMqttSession( const char * pcBrokerEndpoint,
+                                  NetworkCredentials_t * pxNetworkCredentials,
                                   MQTTContext_t * pxMqttContext,
                                   NetworkContext_t * pxNetworkContext,
                                   MQTTFixedBuffer_t * pxNetworkBuffer,
@@ -476,8 +478,10 @@ BaseType_t xEstablishMqttSession( NetworkCredentials_t * pxNetworkCredentials,
     ( void ) memset( pxMqttContext, 0U, sizeof( MQTTContext_t ) );
     ( void ) memset( pxNetworkContext, 0U, sizeof( NetworkContext_t ) );
 
-    if( prvConnectToServerWithBackoffRetries( pxNetworkCredentials,
-                                              pxNetworkContext ) != TLS_TRANSPORT_SUCCESS )
+    if( prvConnectToServerWithBackoffRetries(
+            pcBrokerEndpoint,
+            pxNetworkCredentials,
+            pxNetworkContext ) != TLS_TRANSPORT_SUCCESS )
     {
         /* Log error to indicate connection failure after all
          * reconnect attempts are over. */

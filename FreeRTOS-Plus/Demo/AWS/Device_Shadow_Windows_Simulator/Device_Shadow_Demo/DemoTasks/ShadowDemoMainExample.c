@@ -179,25 +179,11 @@
 #endif
 
 #ifndef democonfigMQTT_BROKER_ENDPOINT
-    #error "Please define democonfigMQTT_BROKER_ENDPOINT in demo_config.h."
+    #error "Please define the AWS IoT broker endpoint(democonfigMQTT_BROKER_ENDPOINT) in demo_config.h."
 #endif
 
-#ifndef democonfigMQTT_BROKER_PORT
-
-/**
- * @brief The port to use for the demo.
- */
-    #define democonfigMQTT_BROKER_PORT    ( 8883 )
-#endif
-
-#ifndef THING_NAME
-
-/**
- * @brief Predefined thing name.
- *
- * This is the example predefine thing name and could be compiled in ROM code.
- */
-    #define THING_NAME    democonfigCLIENT_IDENTIFIER
+#ifndef democonfigTHING_NAME
+    #error "Please define democonfigTHING_NAME in demo_config.h."
 #endif
 
 /**
@@ -587,14 +573,15 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
 /*-----------------------------------------------------------*/
 
 /*
- * @brief Create the task that demonstrates the Shadow API Demo via a
- * MQTT mutually authenticated network connection with MQTT broker.
+ * @brief Create the task that demonstrates the Device Shadow library API via a
+ * MQTT mutually authenticated network connection with the AWS IoT broker.
  */
 void vStartShadowDemo( void )
 {
     /* This example uses a single application task, which shows that how to
-     * use Device Shadow library to get shadow topics and validate shadow topics
-     * via MQTT APIs communicating with the MQTT broker. */
+     * use Device Shadow library to generate and validate AWS IoT Device Shadow
+     * MQTT topics, and use the coreMQTT library to communicate with the AWS IoT
+     * Device Shadow service. */
     xTaskCreate( prvShadowDemoTask,        /* Function that implements the task. */
                  "DemoTask",               /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
@@ -602,7 +589,6 @@ void vStartShadowDemo( void )
                  tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
                  NULL );                   /* Used to pass out a handle to the created task - not used in this case. */
 }
-
 /*-----------------------------------------------------------*/
 
 /**
@@ -660,8 +646,8 @@ void prvShadowDemoTask( void * pvParameters )
     #endif
     xNetworkCredentials.pAlpnProtos = pcAlpnProtocols;
 
-
-    demoStatus = xEstablishMqttSession( &xNetworkCredentials,
+    demoStatus = xEstablishMqttSession( democonfigMQTT_BROKER_ENDPOINT,
+                                        &xNetworkCredentials,
                                         &xMqttContext,
                                         &xNetworkContext,
                                         &xBuffer,

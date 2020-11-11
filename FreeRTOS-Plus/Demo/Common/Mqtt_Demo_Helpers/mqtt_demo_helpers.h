@@ -32,6 +32,8 @@
 /**
  * @brief Establish a MQTT connection.
  *
+ * @param[in] pcBrokerEndpoint The endpoint address of the MQTT broker to establish
+ * a connection with. The string should be NUL terminated.
  * @param[in] pxNetworkCredentials The credentials required for TLS connection with
  * MQTT broker.
  * @param[in, out] pxContext The memory for the MQTTContext_t that will be used for the
@@ -45,7 +47,8 @@
  *
  * @return The status of the final connection attempt.
  */
-BaseType_t xEstablishMqttSession( NetworkCredentials_t * pxNetworkCredentials,
+BaseType_t xEstablishMqttSession( const char * pcBrokerEndpoint,
+                                  NetworkCredentials_t * pxNetworkCredentials,
                                   MQTTContext_t * pxMqttContext,
                                   NetworkContext_t * pxNetContext,
                                   MQTTFixedBuffer_t * pxNetworkBuffer,

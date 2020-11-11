@@ -62,9 +62,7 @@
 #include <string.h>
 
 /* Demo Specific config file. */
-#include "jobs_demo_config.h"
-
-#include "aws_demo.h"
+#include "demo_config.h"
 
 /* Kernel includes. */
 #include "FreeRTOS.h"
@@ -78,41 +76,11 @@
 
 /* Include common MQTT demo helpers. */
 #include "mqtt_demo_helpers.h"
-#include "core_json.h"
 
 /*------------- Demo configurations -------------------------*/
 
-/**
- * Note: The TLS connection credentials for the server root CA certificate,
- * and device client certificate and private key should be defined in the
- * demo_config.h file.
- */
-
-#ifndef democonfigAMAZON_ROOT_CA_1_PEM
-    #error "Please define the AWS Root CA certificate (democonfigAMAZON_ROOT_CA_1_PEM) in demo_config.h."
-#endif
-#ifndef democonfigCLIENT_PRIVATE_KEY_PEM
-    #error "Please define client private key(democonfigCLIENT_PRIVATE_KEY_PEM) in demo_config.h."
-#endif
-
-#ifndef democonfigCLIENT_CERTIFICATE_PEM
-    #error "Please define client certificate(democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h."
-#endif
-
-#ifndef democonfigAWS_IOT_ENDPOINT
-    #error "Please define the AWS IoT broker endpoint(democonfigAWS_IOT_ENDPOINT) in demo_config.h."
-#endif
-
 #ifndef democonfigTHING_NAME
-    #error "Please define democonfigTHING_NAME in demo_config.h."
-#endif
-
-#ifndef democonfigMQTT_BROKER_PORT
-
-/**
- * @brief The port to use for the demo.
- */
-    #define democonfigMQTT_BROKER_PORT    ( 8883 )
+    #define democonfigTHING_NAME    democonfigCLIENT_IDENTIFIER
 #endif
 
 /**
@@ -756,38 +724,11 @@ void prvJobsDemoTask( void * pvParameters )
 {
     BaseType_t xDemoStatus = pdPASS;
 
-    NetworkCredentials_t xNetworkCredentials = { 0 };
-
-    /* ALPN protocols must be a NULL-terminated list of strings. Therefore,
-     * the first entry will contain the actual ALPN protocol string while the
-     * second entry must remain NULL. */
-    char * pcAlpnProtocols[] = { NULL, NULL };
-
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
 
-    /* Set the credentials for establishing a TLS connection. */
-    xNetworkCredentials.pRootCa = ( const unsigned char * ) democonfigAMAZON_ROOT_CA_1_PEM;
-    xNetworkCredentials.rootCaSize = sizeof( democonfigAMAZON_ROOT_CA_1_PEM );
-    #ifdef democonfigCLIENT_CERTIFICATE_PEM
-        xNetworkCredentials.pClientCert = ( const unsigned char * ) democonfigCLIENT_CERTIFICATE_PEM;
-        xNetworkCredentials.clientCertSize = sizeof( democonfigCLIENT_CERTIFICATE_PEM );
-        xNetworkCredentials.pPrivateKey = ( const unsigned char * ) democonfigCLIENT_PRIVATE_KEY_PEM;
-        xNetworkCredentials.privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
-    #endif
-
-    xNetworkCredentials.disableSni = pdFALSE;
-/* The ALPN string changes depending on whether username/password authentication is used. */
-    #ifdef democonfigCLIENT_USERNAME
-        pcAlpnProtocols[ 0 ] = AWS_IOT_CUSTOM_AUTH_ALPN;
-    #else
-        pcAlpnProtocols[ 0 ] = AWS_IOT_MQTT_ALPN;
-    #endif
-    xNetworkCredentials.pAlpnProtos = pcAlpnProtocols;
-
     /* Establish an MQTT connection with AWS IoT over a mutually authenticated TLS session. */
-    xDemoStatus = xEstablishMqttSession( &xNetworkCredentials,
-                                         &xMqttContext,
+    xDemoStatus = xEstablishMqttSession( &xMqttContext,
                                          &xNetworkContext,
                                          &xBuffer,
                                          prvEventCallback );

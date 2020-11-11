@@ -100,7 +100,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * Settings/Custom Endpoint, or using the describe-endpoint REST API (with
  * AWS CLI command line tool).
  *
- * #define democonfigAWS_IOT_ENDPOINT    "...insert here..."
+ * #define democonfigMQTT_BROKER_PORT    "...insert here..."
  */
 
 /**
@@ -117,10 +117,10 @@ extern void vLoggingPrintf( const char * pcFormatString,
  */
 
 /**
- * @brief AWS root CA certificate.
+ * @brief Root CA certificate of AWS IoT broker.
  *
- * For AWS IoT MQTT broker, this certificate is used to identify the AWS IoT
- * server and is publicly available. Refer to the link below.
+ * This certificate is used to identify the AWS IoT server and is publicly
+ * available. Refer to the link below.
  * https://www.amazontrust.com/repository/AmazonRootCA1.pem
  *
  * @note This certificate should be PEM-encoded.
@@ -132,7 +132,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *
  */
 
-#define democonfigAMAZON_ROOT_CA_1_PEM                                   \
+#define democonfigROOT_CA_PEM                                            \
     "-----BEGIN CERTIFICATE-----\n"                                      \
     "MIIDQTCCAimgAwIBAgITBmyfz5m/jAo54vB4ikPmljZbyjANBgkqhkiG9w0BAQsF\n" \
     "ADA5MQswCQYDVQQGEwJVUzEPMA0GA1UEChMGQW1hem9uMRkwFwYDVQQDExBBbWF6\n" \
@@ -157,7 +157,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /**
  * @brief Client certificate.
  *
- * For AWS IoT MQTT broker, refer to the AWS documentation below for details
+ * Please refer to the AWS documentation below for details
  * regarding client authentication.
  * https://docs.aws.amazon.com/iot/latest/developerguide/client-authentication.html
  *
@@ -192,7 +192,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @brief The username value for authenticating client to the MQTT broker when
  * username/password based client authentication is used.
  *
- * For AWS IoT MQTT broker, refer to the AWS IoT documentation below for
+ * Please refer to the AWS IoT documentation below for
  * details regarding client authentication with a username and password.
  * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
  * An authorizer setup needs to be done, as mentioned in the above link, to use
@@ -205,7 +205,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @brief The password value for authenticating client to the MQTT broker when
  * username/password based client authentication is used.
  *
- * For AWS IoT MQTT broker, refer to the AWS IoT documentation below for
+ * Please refer to the AWS IoT documentation below for
  * details regarding client authentication with a username and password.
  * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
  * An authorizer setup needs to be done, as mentioned in the above link, to use

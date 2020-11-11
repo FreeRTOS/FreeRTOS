@@ -148,48 +148,16 @@
  */
 #define SHADOW_REPORTED_JSON_LENGTH    ( sizeof( SHADOW_REPORTED_JSON ) - 3 )
 
-/**
- * @brief ALPN (Application-Layer Protocol Negotiation) protocol name for AWS IoT MQTT.
- *
- * This will be used if democonfigMQTT_BROKER_PORT is configured as 443 for the AWS IoT MQTT broker.
- * Please see more details about the ALPN protocol for AWS IoT MQTT endpoint
- * in the link below.
- * https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/
- */
-#define AWS_IOT_MQTT_ALPN              "\x0ex-amzn-mqtt-ca"
-
-
 /*------------- Demo configurations -------------------------*/
-
-/**
- * Note: The TLS connection credentials for the server root CA certificate,
- * and device client certificate and private key should be defined in the
- * demo_config.h file.
- */
-
-#ifndef democonfigAMAZON_ROOT_CA_1_PEM
-    #error "Please define the AWS Root CA certificate (democonfigAMAZON_ROOT_CA_1_PEM) in demo_config.h."
-#endif
-#ifndef democonfigCLIENT_PRIVATE_KEY_PEM
-    #error "Please define client private key(democonfigCLIENT_PRIVATE_KEY_PEM) in demo_config.h."
-#endif
-
-#ifndef democonfigCLIENT_CERTIFICATE_PEM
-    #error "Please define client certificate(democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h."
-#endif
-
-#ifndef democonfigMQTT_BROKER_ENDPOINT
-    #error "Please define the AWS IoT broker endpoint(democonfigMQTT_BROKER_ENDPOINT) in demo_config.h."
-#endif
 
 #ifndef democonfigTHING_NAME
     #define democonfigTHING_NAME    democonfigCLIENT_IDENTIFIER
 #endif
 
 /**
- * @brief The length of #THING_NAME.
+ * @brief The length of #democonfigTHING_NAME.
  */
-#define THING_NAME_LENGTH    ( ( uint16_t ) ( sizeof( THING_NAME ) - 1 ) )
+#define THING_NAME_LENGTH    ( ( uint16_t ) ( sizeof( democonfigTHING_NAME ) - 1 ) )
 
 /*-----------------------------------------------------------*/
 
@@ -627,28 +595,7 @@ void prvShadowDemoTask( void * pvParameters )
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
 
-    /* Set the credentials for establishing a TLS connection. */
-    xNetworkCredentials.pRootCa = ( const unsigned char * ) democonfigAMAZON_ROOT_CA_1_PEM;
-    xNetworkCredentials.rootCaSize = sizeof( democonfigAMAZON_ROOT_CA_1_PEM );
-    #ifdef democonfigCLIENT_CERTIFICATE_PEM
-        xNetworkCredentials.pClientCert = ( const unsigned char * ) democonfigCLIENT_CERTIFICATE_PEM;
-        xNetworkCredentials.clientCertSize = sizeof( democonfigCLIENT_CERTIFICATE_PEM );
-        xNetworkCredentials.pPrivateKey = ( const unsigned char * ) democonfigCLIENT_PRIVATE_KEY_PEM;
-        xNetworkCredentials.privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
-    #endif
-
-    xNetworkCredentials.disableSni = pdFALSE;
-/* The ALPN string changes depending on whether username/password authentication is used. */
-    #ifdef democonfigCLIENT_USERNAME
-        pcAlpnProtocols[ 0 ] = AWS_IOT_CUSTOM_AUTH_ALPN;
-    #else
-        pcAlpnProtocols[ 0 ] = AWS_IOT_MQTT_ALPN;
-    #endif
-    xNetworkCredentials.pAlpnProtos = pcAlpnProtocols;
-
-    demoStatus = xEstablishMqttSession( democonfigMQTT_BROKER_ENDPOINT,
-                                        &xNetworkCredentials,
-                                        &xMqttContext,
+    demoStatus = xEstablishMqttSession( &xMqttContext,
                                         &xNetworkContext,
                                         &xBuffer,
                                         prvEventCallback );
@@ -662,7 +609,7 @@ void prvShadowDemoTask( void * pvParameters )
     {
         /* First of all, try to delete any Shadow document in the cloud. */
         demoStatus = xPublishToTopic( &xMqttContext,
-                                      SHADOW_TOPIC_STRING_DELETE( THING_NAME ),
+                                      SHADOW_TOPIC_STRING_DELETE( democonfigTHING_NAME ),
                                       SHADOW_TOPIC_LENGTH_DELETE( THING_NAME_LENGTH ),
                                       pcUpdateDocument,
                                       0U );
@@ -671,25 +618,25 @@ void prvShadowDemoTask( void * pvParameters )
         if( demoStatus == pdPASS )
         {
             demoStatus = xSubscribeToTopic( &xMqttContext,
-                                            SHADOW_TOPIC_STRING_UPDATE_DELTA( THING_NAME ),
+                                            SHADOW_TOPIC_STRING_UPDATE_DELTA( democonfigTHING_NAME ),
                                             SHADOW_TOPIC_LENGTH_UPDATE_DELTA( THING_NAME_LENGTH ) );
         }
 
         if( demoStatus == pdPASS )
         {
             demoStatus = xSubscribeToTopic( &xMqttContext,
-                                            SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( THING_NAME ),
+                                            SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( democonfigTHING_NAME ),
                                             SHADOW_TOPIC_LENGTH_UPDATE_ACCEPTED( THING_NAME_LENGTH ) );
         }
 
         if( demoStatus == pdPASS )
         {
             demoStatus = xSubscribeToTopic( &xMqttContext,
-                                            SHADOW_TOPIC_STRING_UPDATE_REJECTED( THING_NAME ),
+                                            SHADOW_TOPIC_STRING_UPDATE_REJECTED( democonfigTHING_NAME ),
                                             SHADOW_TOPIC_LENGTH_UPDATE_REJECTED( THING_NAME_LENGTH ) );
         }
 
-        /* This demo uses a constant #THING_NAME known at compile time therefore we can use macros to
+        /* This demo uses a constant #democonfigTHING_NAME known at compile time therefore we can use macros to
          * assemble shadow topic strings.
          * If the thing name is known at run time, then we could use the API #Shadow_GetTopicString to
          * assemble shadow topic strings, here is the example for /update/delta:
@@ -736,7 +683,7 @@ void prvShadowDemoTask( void * pvParameters )
                       ( long unsigned ) ( xTaskGetTickCount() % 1000000 ) );
 
             demoStatus = xPublishToTopic( &xMqttContext,
-                                          SHADOW_TOPIC_STRING_UPDATE( THING_NAME ),
+                                          SHADOW_TOPIC_STRING_UPDATE( democonfigTHING_NAME ),
                                           SHADOW_TOPIC_LENGTH_UPDATE( THING_NAME_LENGTH ),
                                           pcUpdateDocument,
                                           ( SHADOW_DESIRED_JSON_LENGTH + 1 ) );
@@ -769,7 +716,7 @@ void prvShadowDemoTask( void * pvParameters )
                           ( long unsigned ) ulClientToken );
 
                 demoStatus = xPublishToTopic( &xMqttContext,
-                                              SHADOW_TOPIC_STRING_UPDATE( THING_NAME ),
+                                              SHADOW_TOPIC_STRING_UPDATE( democonfigTHING_NAME ),
                                               SHADOW_TOPIC_LENGTH_UPDATE( THING_NAME_LENGTH ),
                                               pcUpdateDocument,
                                               ( SHADOW_DESIRED_JSON_LENGTH + 1 ) );
@@ -785,39 +732,39 @@ void prvShadowDemoTask( void * pvParameters )
             LogInfo( ( "Start to unsubscribe shadow topics and disconnect from MQTT. \r\n" ) );
 
             demoStatus = xUnsubscribeFromTopic( &xMqttContext,
-                                                SHADOW_TOPIC_STRING_UPDATE_DELTA( THING_NAME ),
+                                                SHADOW_TOPIC_STRING_UPDATE_DELTA( democonfigTHING_NAME ),
                                                 SHADOW_TOPIC_LENGTH_UPDATE_DELTA( THING_NAME_LENGTH ) );
 
             if( demoStatus != pdPASS )
             {
                 LogError( ( "Failed to unsubscribe the topic %s",
-                            SHADOW_TOPIC_STRING_UPDATE_DELTA( THING_NAME ) ) );
+                            SHADOW_TOPIC_STRING_UPDATE_DELTA( democonfigTHING_NAME ) ) );
             }
         }
 
         if( demoStatus == pdPASS )
         {
             demoStatus = xUnsubscribeFromTopic( &xMqttContext,
-                                                SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( THING_NAME ),
+                                                SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( democonfigTHING_NAME ),
                                                 SHADOW_TOPIC_LENGTH_UPDATE_ACCEPTED( THING_NAME_LENGTH ) );
 
             if( demoStatus != pdPASS )
             {
                 LogError( ( "Failed to unsubscribe the topic %s",
-                            SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( THING_NAME ) ) );
+                            SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( democonfigTHING_NAME ) ) );
             }
         }
 
         if( demoStatus == pdPASS )
         {
             demoStatus = xUnsubscribeFromTopic( &xMqttContext,
-                                                SHADOW_TOPIC_STRING_UPDATE_REJECTED( THING_NAME ),
+                                                SHADOW_TOPIC_STRING_UPDATE_REJECTED( democonfigTHING_NAME ),
                                                 SHADOW_TOPIC_LENGTH_UPDATE_REJECTED( THING_NAME_LENGTH ) );
 
             if( demoStatus != pdPASS )
             {
                 LogError( ( "Failed to unsubscribe the topic %s",
-                            SHADOW_TOPIC_STRING_UPDATE_REJECTED( THING_NAME ) ) );
+                            SHADOW_TOPIC_STRING_UPDATE_REJECTED( democonfigTHING_NAME ) ) );
             }
         }
 

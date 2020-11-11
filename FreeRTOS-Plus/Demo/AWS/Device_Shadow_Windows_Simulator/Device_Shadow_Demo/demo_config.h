@@ -119,7 +119,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *
  */
 
-#define democonfigAMAZON_ROOT_CA_1_PEM                                   \
+#define democonfigROOT_CA_PEM                                            \
     "-----BEGIN CERTIFICATE-----\n"                                      \
     "MIIDQTCCAimgAwIBAgITBmyfz5m/jAo54vB4ikPmljZbyjANBgkqhkiG9w0BAQsF\n" \
     "ADA5MQswCQYDVQQGEwJVUzEPMA0GA1UEChMGQW1hem9uMRkwFwYDVQQDExBBbWF6\n" \

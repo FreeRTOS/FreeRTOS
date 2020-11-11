@@ -52,6 +52,35 @@
 /* Transport interface implementation include header for TLS. */
 #include "using_mbedtls.h"
 
+/* Demo specific config. */
+#include "demo_config.h"
+
+
+/*------------- Demo configurations -------------------------*/
+
+/**
+ * Note: The TLS connection credentials for the server root CA certificate,
+ * and device client certificate and private key should be defined in the
+ * demo_config.h file.
+ */
+
+#ifndef democonfigROOT_CA_PEM
+    #error "Please define the AWS Root CA certificate (democonfigROOT_CA_PEM) in demo_config.h."
+#endif
+#ifndef democonfigCLIENT_PRIVATE_KEY_PEM
+    #error "Please define client private key (democonfigCLIENT_PRIVATE_KEY_PEM) in demo_config.h."
+#endif
+
+#ifndef democonfigCLIENT_CERTIFICATE_PEM
+    #error "Please define client certificate (democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h."
+#endif
+
+#ifndef democonfigMQTT_BROKER_ENDPOINT
+    #error "Please define the AWS IoT broker endpoint (democonfigMQTT_BROKER_ENDPOINT) in demo_config.h."
+#endif
+
+/*-----------------------------------------------------------*/
+
 /**
  * @brief Timeout for receiving CONNACK packet in milliseconds.
  */
@@ -121,6 +150,17 @@
  */
 #define AWS_IOT_METRICS_STRING_LENGTH    ( ( uint16_t ) ( sizeof( AWS_IOT_METRICS_STRING ) - 1 ) )
 
+/**
+ * @brief ALPN (Application-Layer Protocol Negotiation) protocol name for AWS IoT MQTT.
+ *
+ * This will be used if democonfigMQTT_BROKER_PORT is configured as 443 for the AWS IoT MQTT broker.
+ * Please see more details about the ALPN protocol for AWS IoT MQTT endpoint
+ * in the link below.
+ * https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/
+ */
+#define AWS_IOT_MQTT_ALPN                "\x0ex-amzn-mqtt-ca"
+
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -184,17 +224,11 @@ static PublishPackets_t outgoingPublishPackets[ MAX_OUTGOING_PUBLISHES ] = { 0 }
  * Timeout value will exponentially increase until maximum
  * timeout value is reached or the number of attempts are exhausted.
  *
- * @param[in] pcBrokerEndpoint The MQTT broker endpoint to establish a connection with.
- * The string should be NUL terminated.
- * @param[in] pxNetworkCredentials The credentials required for TLS connection with
- * MQTT broker.
  * @param[out] pxNetworkContext The output parameter to return the created network context.
  *
  * @return The status of the final connection attempt.
  */
-static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( const char * pcBrokerEndpoint,
-                                                                  NetworkCredentials_t * pxNetworkCredentials,
-                                                                  NetworkContext_t * pxNetworkContext );
+static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext_t * pxNetworkContext );
 
 /**
  * @brief Function to get the free index at which an outgoing publish
@@ -248,16 +282,38 @@ static uint32_t prvGetTimeMs( void );
 
 /*-----------------------------------------------------------*/
 
-static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( const char * pcBrokerEndpoint,
-                                                                  NetworkCredentials_t * pxNetworkCredentials,
-                                                                  NetworkContext_t * pxNetworkContext )
+static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext_t * pxNetworkContext )
 {
     TlsTransportStatus_t xNetworkStatus = TLS_TRANSPORT_SUCCESS;
     RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
     RetryUtilsParams_t xReconnectParams = { 0 };
+    NetworkCredentials_t xNetworkCredentials = { 0 };
 
-    configASSERT( pxNetworkCredentials != NULL );
+    /* ALPN protocols must be a NULL-terminated list of strings. Therefore,
+     * the first entry will contain the actual ALPN protocol string while the
+     * second entry must remain NULL. */
+    char * pcAlpnProtocols[] = { NULL, NULL };
+
     configASSERT( pxNetworkContext != NULL );
+
+    /* Set the credentials for establishing a TLS connection. */
+    xNetworkCredentials.pRootCa = ( const unsigned char * ) democonfigROOT_CA_PEM;
+    xNetworkCredentials.rootCaSize = sizeof( democonfigROOT_CA_PEM );
+    #ifdef democonfigCLIENT_CERTIFICATE_PEM
+        xNetworkCredentials.pClientCert = ( const unsigned char * ) democonfigCLIENT_CERTIFICATE_PEM;
+        xNetworkCredentials.clientCertSize = sizeof( democonfigCLIENT_CERTIFICATE_PEM );
+        xNetworkCredentials.pPrivateKey = ( const unsigned char * ) democonfigCLIENT_PRIVATE_KEY_PEM;
+        xNetworkCredentials.privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
+    #endif
+
+    xNetworkCredentials.disableSni = pdFALSE;
+/* The ALPN string changes depending on whether username/password authentication is used. */
+    #ifdef democonfigCLIENT_USERNAME
+        pcAlpnProtocols[ 0 ] = AWS_IOT_CUSTOM_AUTH_ALPN;
+    #else
+        pcAlpnProtocols[ 0 ] = AWS_IOT_MQTT_ALPN;
+    #endif
+    xNetworkCredentials.pAlpnProtos = pcAlpnProtocols;
 
     /* Initialize reconnect attempts and interval. */
     RetryUtils_ParamsReset( &xReconnectParams );
@@ -273,10 +329,10 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( const char * p
          * the MQTT broker as specified in democonfigMQTT_BROKER_ENDPOINT and
          * democonfigMQTT_BROKER_PORT at the top of this file. */
         LogInfo( ( "Create a TCP connection to %s:%d.",
-                   pcBrokerEndpoint,
+                   democonfigMQTT_BROKER_ENDPOINT,
                    democonfigMQTT_BROKER_PORT ) );
         xNetworkStatus = TLS_FreeRTOS_Connect( pxNetworkContext,
-                                               pcBrokerEndpoint,
+                                               democonfigMQTT_BROKER_ENDPOINT,
                                                democonfigMQTT_BROKER_PORT,
                                                pxNetworkCredentials,
                                                mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS,
@@ -458,9 +514,7 @@ static BaseType_t xHandlePublishResend( MQTTContext_t * pxMqttContext )
 
 /*-----------------------------------------------------------*/
 
-BaseType_t xEstablishMqttSession( const char * pcBrokerEndpoint,
-                                  NetworkCredentials_t * pxNetworkCredentials,
-                                  MQTTContext_t * pxMqttContext,
+BaseType_t xEstablishMqttSession( MQTTContext_t * pxMqttContext,
                                   NetworkContext_t * pxNetworkContext,
                                   MQTTFixedBuffer_t * pxNetworkBuffer,
                                   MQTTEventCallback_t eventCallback )
@@ -478,10 +532,7 @@ BaseType_t xEstablishMqttSession( const char * pcBrokerEndpoint,
     ( void ) memset( pxMqttContext, 0U, sizeof( MQTTContext_t ) );
     ( void ) memset( pxNetworkContext, 0U, sizeof( NetworkContext_t ) );
 
-    if( prvConnectToServerWithBackoffRetries(
-            pcBrokerEndpoint,
-            pxNetworkCredentials,
-            pxNetworkContext ) != TLS_TRANSPORT_SUCCESS )
+    if( prvConnectToServerWithBackoffRetries( pxNetworkContext ) != TLS_TRANSPORT_SUCCESS )
     {
         /* Log error to indicate connection failure after all
          * reconnect attempts are over. */

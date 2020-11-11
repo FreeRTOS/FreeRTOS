@@ -26,7 +26,7 @@
  */
 
 /***
- * See https://www.FreeRTOS.org/pkcs11/index.html for configuration and usage instructions.
+ * See https://www.FreeRTOS.org/pkcs11/ for configuration and usage instructions.
  ***/
 
 /* Standard includes. */
@@ -97,7 +97,7 @@ static UBaseType_t ulNextRand;
 int main( void )
 {
     /***
-     * See https://www.FreeRTOS.org/mqtt_lts/index.html for configuration and usage instructions.
+     * See https://www.FreeRTOS.org/coremqtt for configuration and usage instructions.
      ***/
 
     /* Miscellaneous initialization including preparing the logging and seeding

@@ -1,4 +1,9 @@
 /*
+ *!
+ *! The protocols implemented in this file are intended to be demo quality only,
+ *! and not for production devices.
+ *!
+ *
  * FreeRTOS+TCP V2.0.3
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *

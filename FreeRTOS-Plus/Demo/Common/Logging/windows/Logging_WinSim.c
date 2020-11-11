@@ -263,6 +263,7 @@ void vLoggingPrintf( const char * pcFormat,
     char * pcSource, * pcTarget, * pcBegin;
     size_t xLength, xLength2, rc;
     static BaseType_t xMessageNumber = 0;
+    static BaseType_t xAfterLineBreak = pdTRUE;
     va_list args;
     uint32_t ulIPAddress;
     const char * pcTaskName;
@@ -286,17 +287,19 @@ void vLoggingPrintf( const char * pcFormat,
             pcTaskName = pcNoTask;
         }
 
-        if( strcmp( pcFormat, "\r\n" ) != 0 )
+        if( ( xAfterLineBreak == pdTRUE ) && ( strcmp( pcFormat, "\r\n" ) != 0 ) )
         {
             xLength = snprintf( cPrintString, dlMAX_PRINT_STRING_LENGTH, "%lu %lu [%s] ",
                                 xMessageNumber++,
                                 ( unsigned long ) xTaskGetTickCount(),
                                 pcTaskName );
+            xAfterLineBreak = pdFALSE;
         }
         else
         {
             xLength = 0;
             memset( cPrintString, 0x00, dlMAX_PRINT_STRING_LENGTH );
+            xAfterLineBreak = pdTRUE;
         }
 
         xLength2 = vsnprintf( cPrintString + xLength, dlMAX_PRINT_STRING_LENGTH - xLength, pcFormat, args );

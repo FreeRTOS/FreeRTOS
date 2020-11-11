@@ -183,7 +183,7 @@
 #endif
 
 #ifndef democonfigTHING_NAME
-    #error "Please define democonfigTHING_NAME in demo_config.h."
+    #define democonfigTHING_NAME    democonfigCLIENT_IDENTIFIER
 #endif
 
 /**

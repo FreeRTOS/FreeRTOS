@@ -100,14 +100,14 @@ const BaseType_t xLogToStdout = pdTRUE, xLogToFile = pdFALSE, xLogToUDP = pdFALS
  * the real network connection to use. */
 const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_ADDR2, configMAC_ADDR3, configMAC_ADDR4, configMAC_ADDR5 };
 
-/* Use by the pseudo random number generator. */
+/* Used by the pseudo random number generator. */
 static UBaseType_t ulNextRand;
 /*-----------------------------------------------------------*/
 
 int main( void )
 {
     /***
-     * See https://www.FreeRTOS.org/coremqtt for configuration and usage instructions.
+     * See https://www.FreeRTOS.org/iot-device-shadow for configuration and usage instructions.
      ***/
 
     /* Miscellaneous initialization including preparing the logging and seeding

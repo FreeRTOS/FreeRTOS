@@ -28,7 +28,7 @@
  * @file JobsDemoExample.c
  *
  * @brief Demo for showing use of the Jobs library API. This demo uses the Jobs library
- * along with the coreMQTT and mbedTLS based transport libraries to communicate with the AWS IoT Jobs service.
+ * along with the coreMQTT, mbedTLS and FreeRTOS+TCP libraries to communicate with the AWS IoT Jobs service.
  * Please refer to AWS documentation for more information about AWS IoT Jobs.
  * https://docs.aws.amazon.com/iot/latest/developerguide/iot-jobs.html
  *

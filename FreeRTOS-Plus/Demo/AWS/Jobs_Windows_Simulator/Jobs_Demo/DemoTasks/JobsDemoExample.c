@@ -785,7 +785,7 @@ void prvJobsDemoTask( void * pvParameters )
          * job in the queue for the Thing resource used by this demo. */
         if( xSubscribeToTopic( &xMqttContext,
                                NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ),
-                               sizeof( NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) - 1 ) ) )
+                               sizeof( NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) - 1 ) ) != pdPASS )
         {
             xDemoStatus = pdFAIL;
             LogError( ( "Failed to subscribe to NextJobExecutionChanged API of AWS IoT Jobs service: Topic=%s",
@@ -820,9 +820,8 @@ void prvJobsDemoTask( void * pvParameters )
     /* Unsubscribe from the NextJobExecutionChanged API topic. */
     if( xSubscribeToTopic( &xMqttContext,
                            NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ),
-                           sizeof( NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) - 1 ) ) )
+                           sizeof( NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) - 1 ) ) != pdPASS )
     {
-        xDemoStatus = pdFAIL;
         LogError( ( "Failed to subscribe unsubscribe from the NextJobExecutionChanged API of AWS IoT Jobs service: "
                     "Topic=%s", NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) ) );
     }
@@ -830,7 +829,6 @@ void prvJobsDemoTask( void * pvParameters )
     /* Disconnect the MQTT and network connections with AWS IoT. */
     if( xDisconnectMqttSession( &xMqttContext, &xNetworkContext ) != pdPASS )
     {
-        xDemoStatus = pdFAIL;
         LogError( ( "Disconnection from AWS Iot failed..." ) );
     }
 

@@ -581,12 +581,6 @@ void vStartShadowDemo( void )
 void prvShadowDemoTask( void * pvParameters )
 {
     BaseType_t demoStatus = pdPASS;
-    NetworkCredentials_t xNetworkCredentials = { 0 };
-
-    /* ALPN protocols must be a NULL-terminated list of strings. Therefore,
-     * the first entry will contain the actual ALPN protocol string while the
-     * second entry must remain NULL. */
-    char * pcAlpnProtocols[] = { NULL, NULL };
 
     /* A buffer containing the update document. It has static duration to prevent
      * it from being placed on the call stack. */

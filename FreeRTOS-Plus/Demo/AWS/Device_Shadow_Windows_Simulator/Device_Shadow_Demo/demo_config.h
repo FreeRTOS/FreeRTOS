@@ -104,6 +104,19 @@ extern void vLoggingPrintf( const char * pcFormatString,
  */
 
 /**
+ * @brief The port to use for the demo.
+ *
+ * In general, port 8883 is for secured MQTT connections.
+ *
+ * @note Port 443 requires use of the ALPN TLS extension with the ALPN protocol
+ * name. Using ALPN with this demo would require additional changes, including
+ * setting the `pAlpnProtos` member of the `NetworkCredentials_t` struct before
+ * forming the TLS connection. When using port 8883, ALPN is not required.
+ *
+ * #define democonfigMQTT_BROKER_PORT    ( insert here. )
+ */
+
+/**
  * @brief AWS root CA certificate.
  *
  * This certificate is used to identify the AWS IoT server and is publicly available.

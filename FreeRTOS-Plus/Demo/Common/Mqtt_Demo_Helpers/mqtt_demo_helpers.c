@@ -55,7 +55,6 @@
 /* Demo specific config. */
 #include "demo_config.h"
 
-
 /*------------- Demo configurations -------------------------*/
 
 /**
@@ -334,7 +333,7 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext
         xNetworkStatus = TLS_FreeRTOS_Connect( pxNetworkContext,
                                                democonfigMQTT_BROKER_ENDPOINT,
                                                democonfigMQTT_BROKER_PORT,
-                                               pxNetworkCredentials,
+                                               &xNetworkCredentials,
                                                mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS,
                                                mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS );
 

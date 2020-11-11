@@ -52,11 +52,11 @@
 /* MQTT library includes. */
 #include "core_mqtt.h"
 
-/* Retry utilities include. */
-#include "retry_utils.h"
+/* Exponential backoff retry include. */
+#include "exponential_backoff.h"
 
 /* Transport interface include. */
-#include "plaintext_freertos.h"
+#include "using_plaintext.h"
 
 /*-----------------------------------------------------------*/
 
@@ -153,8 +153,8 @@
  */
 #define mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS    ( 200U )
 
-#define MILLISECONDS_PER_SECOND                     ( 1000U )                                         /**< @brief Milliseconds per second. */
-#define MILLISECONDS_PER_TICK                       ( MILLISECONDS_PER_SECOND / configTICK_RATE_HZ ) /**< Milliseconds per FreeRTOS tick. */
+#define MILLISECONDS_PER_SECOND                      ( 1000U )                                        /**< @brief Milliseconds per second. */
+#define MILLISECONDS_PER_TICK                        ( MILLISECONDS_PER_SECOND / configTICK_RATE_HZ ) /**< Milliseconds per FreeRTOS tick. */
 
 /*-----------------------------------------------------------*/
 
@@ -327,7 +327,7 @@ void vStartSimpleMQTTDemo( void )
      * connect, subscribe, publish, unsubscribe and disconnect from the MQTT
      * broker. */
     xTaskCreate( prvMQTTDemoTask,          /* Function that implements the task. */
-                 "MQTTDemo",               /* Text name for the task - only used for debugging. */
+                 "DemoTask",               /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
                  NULL,                     /* Task parameter - not used in this case. */
                  tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
@@ -370,7 +370,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         /* If server rejected the subscription request, attempt to resubscribe to
          * the topic. Attempts are made according to the exponential backoff retry
-         * strategy declared in retry_utils.h. */
+         * strategy declared in exponential_backoff.h. */
         prvMQTTSubscribeWithBackoffRetries( &xMQTTContext );
 
         /******************* Publish and Keep Alive Loop. *********************/
@@ -723,7 +723,11 @@ static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
             break;
 
         case MQTT_PACKET_TYPE_PINGRESP:
-            LogInfo( ( "Ping Response successfully received." ) );
+
+            /* Nothing to be done from application as library handles
+             * PINGRESP with the use of MQTT_ProcessLoop API function. */
+            LogWarn( ( "PINGRESP should not be handled by the application "
+                       "callback when using MQTT_ProcessLoop.\n" ) );
             break;
 
         /* Any other packet type is invalid. */

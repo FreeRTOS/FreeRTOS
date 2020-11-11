@@ -60,8 +60,8 @@
 /* MQTT library includes. */
 #include "core_mqtt_serializer.h"
 
-/* Retry utilities include. */
-#include "retry_utils.h"
+/* Exponential backoff retry include. */
+#include "exponential_backoff.h"
 
 /*-----------------------------------------------------------*/
 
@@ -383,7 +383,7 @@ void vStartSimpleMQTTDemo( void )
      * connect, subscribe, publish, unsubscribe and disconnect from the MQTT
      * broker. */
     xTaskCreate( prvMQTTDemoTask,          /* Function that implements the task. */
-                 "MQTTSerializerDemo",     /* Text name for the task - only used for debugging. */
+                 "DemoTask",               /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
                  NULL,                     /* Task parameter - not used in this case. */
                  tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
@@ -421,7 +421,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         /* If the server rejected the subscription request, attempt to resubscribe
          * to the topic. Attempts are made according to the exponential backoff
-         * retry strategy declared in retry_utils.h. */
+         * retry strategy declared in exponential_backoff.h. */
         prvMQTTSubscribeWithBackoffRetries( xMQTTSocket );
 
         /**************************** Publish and Keep-Alive Loop. ******************************/

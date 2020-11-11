@@ -53,11 +53,11 @@
 /* MQTT library includes. */
 #include "core_mqtt.h"
 
-/* Retry utilities include. */
-#include "retry_utils.h"
+/* Exponential backoff retry include. */
+#include "exponential_backoff.h"
 
 /* Transport interface implementation include header for TLS. */
-#include "tls_freertos.h"
+#include "using_mbedtls.h"
 
 /*-----------------------------------------------------------*/
 
@@ -343,7 +343,7 @@ void vStartSimpleMQTTDemo( void )
      * connect, subscribe, publish, unsubscribe, and disconnect from the MQTT
      * broker. */
     xTaskCreate( prvMQTTDemoTask,          /* Function that implements the task. */
-                 "MQTTDemo",               /* Text name for the task - only used for debugging. */
+                 "DemoTask",               /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
                  NULL,                     /* Task parameter - not used in this case. */
                  tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
@@ -778,7 +778,11 @@ static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
             break;
 
         case MQTT_PACKET_TYPE_PINGRESP:
-            LogInfo( ( "Ping Response successfully received.\r\n" ) );
+
+            /* Nothing to be done from application as library handles
+             * PINGRESP with the use of MQTT_ProcessLoop API function. */
+            LogWarn( ( "PINGRESP should not be handled by the application "
+                       "callback when using MQTT_ProcessLoop.\n" ) );
             break;
 
         case MQTT_PACKET_TYPE_PUBREC:

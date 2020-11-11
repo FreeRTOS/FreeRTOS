@@ -336,13 +336,14 @@ static void prvSendUpdateForJob( char * pcJobId,
 static void prvProcessJobDocument( MQTTPublishInfo_t * pxPublishInfo,
                                    char * pcJobId,
                                    uint16_t usJobIdLength );
+
 /**
  * @brief The task used to demonstrate the Jobs library API.
  *
- * @param[in] pvParameters Parameters as passed at the time of task creation. 
+ * @param[in] pvParameters Parameters as passed at the time of task creation.
  * Not used in this example.
  */
-static void prvJobsDemoTask(void* pvParameters);
+static void prvJobsDemoTask( void * pvParameters );
 
 
 /*-----------------------------------------------------------*/
@@ -393,10 +394,10 @@ static void prvSendUpdateForJob( char * pcJobId,
     if( xStatus == JobsSuccess )
     {
         if( xPublishToTopic( &xMqttContext,
-                            pUpdateJobTopic,
-                            ulTopicLength,
-                            pcJobStatusReport,
-                            strlen( pcJobStatusReport ) ) == pdFALSE )
+                             pUpdateJobTopic,
+                             ulTopicLength,
+                             pcJobStatusReport,
+                             strlen( pcJobStatusReport ) ) == pdFALSE )
         {
             /* Set global flag to terminate demo as PUBLISH operation to update job status failed. */
             xDemoEncounteredError = pdTRUE;
@@ -518,10 +519,10 @@ static void prvProcessJobDocument( MQTTPublishInfo_t * pxPublishInfo,
                         /* Publish to the parsed MQTT topic with the message obtained from
                          * the Jobs document.*/
                         if( xPublishToTopic( &xMqttContext,
-                                            pcTopic,
-                                            ulTopicLength,
-                                            pcMessage,
-                                            ulMessageLength ) == pdFALSE )
+                                             pcTopic,
+                                             ulTopicLength,
+                                             pcMessage,
+                                             ulMessageLength ) == pdFALSE )
                         {
                             /* Set global flag to terminate demo as PUBLISH operation to execute job failed. */
                             xDemoEncounteredError = pdTRUE;
@@ -782,9 +783,14 @@ void prvJobsDemoTask( void * pvParameters )
 
         /* Subscribe to the NextJobExecutionChanged API topic to receive notifications about the next pending
          * job in the queue for the Thing resource used by this demo. */
-        xDemoStatus = xSubscribeToTopic( &xMqttContext,
-                                        NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ),
-                                        sizeof( NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) - 1 ) );
+        if( xSubscribeToTopic( &xMqttContext,
+                               NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ),
+                               sizeof( NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) - 1 ) ) )
+        {
+            xDemoStatus = pdFAIL;
+            LogError( ( "Failed to subscribe to NextJobExecutionChanged API of AWS IoT Jobs service: Topic=%s",
+                        NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) ) );
+        }
     }
 
     /* Keep on running the demo until we receive a job for the "Exit" action to exit the demo. */
@@ -801,14 +807,24 @@ void prvJobsDemoTask( void * pvParameters )
          * This demo processes incoming messages from the response topics of the API in the prvEventCallback()
          * handler that is supplied to the coreMQTT library. */
         xDemoStatus = xPublishToTopic( &xMqttContext,
-                                      START_NEXT_JOB_TOPIC( democonfigTHING_NAME ),
-                                      sizeof( START_NEXT_JOB_TOPIC( democonfigTHING_NAME ) ) - 1,
-                                      JSON_EMPTY_REQUEST,
-                                      sizeof( JSON_EMPTY_REQUEST ) - 1 );
+                                       START_NEXT_JOB_TOPIC( democonfigTHING_NAME ),
+                                       sizeof( START_NEXT_JOB_TOPIC( democonfigTHING_NAME ) ) - 1,
+                                       JSON_EMPTY_REQUEST,
+                                       sizeof( JSON_EMPTY_REQUEST ) - 1 );
 
         /* Delay before next iteration. */
         LogInfo( ( "Adding some delay before requesting the next pending job..." ) );
         vTaskDelay( pdMS_TO_TICKS( 300 ) );
+    }
+
+    /* Unsubscribe from the NextJobExecutionChanged API topic. */
+    if( xSubscribeToTopic( &xMqttContext,
+                           NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ),
+                           sizeof( NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) - 1 ) ) )
+    {
+        xDemoStatus = pdFAIL;
+        LogError( ( "Failed to subscribe unsubscribe from the NextJobExecutionChanged API of AWS IoT Jobs service: "
+                    "Topic=%s", NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) ) );
     }
 
     /* Disconnect the MQTT and network connections with AWS IoT. */

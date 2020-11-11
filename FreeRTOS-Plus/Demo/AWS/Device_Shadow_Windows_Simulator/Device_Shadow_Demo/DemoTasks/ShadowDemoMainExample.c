@@ -167,7 +167,7 @@
 static MQTTContext_t xMqttContext;
 
 /**
- * @brief The network context used for Openssl operation.
+ * @brief The network context used for mbedTLS operation.
  */
 static NetworkContext_t xNetworkContext;
 

@@ -192,7 +192,7 @@ static uint32_t ulGlobalEntryTimeMs;
 /**
  * @brief The flag to indicate the mqtt session changed.
  */
-static BaseType_t mqttSessionEstablished = pdFALSE;
+static BaseType_t xMqttSessionEstablished = pdFALSE;
 
 /**
  * @brief Packet Identifier generated when Subscribe request was sent to the broker;
@@ -623,7 +623,7 @@ BaseType_t xEstablishMqttSession( MQTTContext_t * pxMqttContext,
             /* Keep a flag for indicating if MQTT session is established. This
              * flag will mark that an MQTT DISCONNECT has to be sent at the end
              * of the demo even if there are intermediate failures. */
-            mqttSessionEstablished = true;
+            xMqttSessionEstablished = true;
         }
 
         if( xReturnStatus == pdFAIL )
@@ -665,7 +665,7 @@ BaseType_t xDisconnectMqttSession( MQTTContext_t * pxMqttContext,
     configASSERT( pxMqttContext != NULL );
     configASSERT( pxNetworkContext != NULL );
 
-    if( mqttSessionEstablished == true )
+    if( xMqttSessionEstablished == true )
     {
         /* Send DISCONNECT. */
         xMQTTStatus = MQTT_Disconnect( pxMqttContext );

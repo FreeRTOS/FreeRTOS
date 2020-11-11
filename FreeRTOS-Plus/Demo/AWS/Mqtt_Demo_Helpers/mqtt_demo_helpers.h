@@ -32,11 +32,11 @@
 /**
  * @brief Establish a MQTT connection.
  *
- * @param[in, out] pxContext The memory for the MQTTContext_t that will be used for the
+ * @param[in, out] pxMqttContext The memory for the MQTTContext_t that will be used for the
  * MQTT connection.
  * @param[out] pxNetworkContext The memory for the NetworkContext_t required for the
  * MQTT connection.
- * @param[in] pxNetworkBuffer The buffer space for initializing the @p pxContext MQTT
+ * @param[in] pxNetworkBuffer The buffer space for initializing the @p pxMqttContext MQTT
  * context used in the MQTT connection.
  * @param[in] appCallback The callback function used to receive incoming
  * publishes and incoming acks from MQTT library.
@@ -44,7 +44,7 @@
  * @return The status of the final connection attempt.
  */
 BaseType_t xEstablishMqttSession( MQTTContext_t * pxMqttContext,
-                                  NetworkContext_t * pxNetContext,
+                                  NetworkContext_t * pxNetworkContext,
                                   MQTTFixedBuffer_t * pxNetworkBuffer,
                                   MQTTEventCallback_t eventCallback );
 
@@ -60,18 +60,20 @@ void vHandleOtherIncomingPacket( MQTTPacketInfo_t * pxPacketInfo,
 /**
  * @brief Close the MQTT connection.
  *
- * @param[in] pxContext The MQTT context for the MQTT connection to close.
+ * @param[in, out] pxMqttContext The MQTT context for the MQTT connection to close.
+ * @param[in, out] pxNetworkContext The network context for the TLS session to
+ * terminate.
  *
  * @return pdPASS if DISCONNECT was successfully sent;
  * pdFAIL otherwise.
  */
-BaseType_t xDisconnectMqttSession( MQTTContext_t * pxContext,
-                                   NetworkContext_t * pxNetContext );
+BaseType_t xDisconnectMqttSession( MQTTContext_t * pxMqttContext,
+                                   NetworkContext_t * pxNetworkContext );
 
 /**
  * @brief Subscribe to a MQTT topic filter.
  *
- * @param[in] pxContext The MQTT context for the MQTT connection to close.
+ * @param[in] pxMqttContext The MQTT context for the MQTT connection to close.
  * @param[in] pcTopicFilter Pointer to the shadow topic buffer.
  * @param[in] usTopicFilterLength Indicates the length of the shadow
  * topic buffer.
@@ -79,7 +81,7 @@ BaseType_t xDisconnectMqttSession( MQTTContext_t * pxContext,
  * @return pdPASS if SUBSCRIBE was successfully sent;
  * pdFAIL otherwise.
  */
-BaseType_t xSubscribeToTopic( MQTTContext_t * pxContext,
+BaseType_t xSubscribeToTopic( MQTTContext_t * pxMqttContext,
                               const char * pcTopicFilter,
                               uint16_t usTopicFilterLength );
 
@@ -87,22 +89,21 @@ BaseType_t xSubscribeToTopic( MQTTContext_t * pxContext,
  * @brief Sends an MQTT UNSUBSCRIBE to unsubscribe from the shadow
  * topic.
  *
- * @param[in] pxContext The MQTT context for the MQTT connection.
- * @param[in] pcTopicFilter Pointer to the shadow topic buffer.
- * @param[in] usTopicFilterLength Indicates the length of the shadow
- * topic buffer.
+ * @param[in] pxMqttContext The MQTT context for the MQTT connection.
+ * @param[in] pcTopicFilter Pointer to the MQTT topic filter.
+ * @param[in] usTopicFilterLength Indicates the length of the topic filter.
  *
  * @return pdPASS if UNSUBSCRIBE was successfully sent;
  * pdFAIL otherwise.
  */
-BaseType_t xUnsubscribeFromTopic( MQTTContext_t * pxContext,
+BaseType_t xUnsubscribeFromTopic( MQTTContext_t * pxMqttContext,
                                   const char * pcTopicFilter,
                                   uint16_t usTopicFilterLength );
 
 /**
  * @brief Publish a message to a MQTT topic.
  *
- * @param[in] pxContext The MQTT context for the MQTT connection.
+ * @param[in] pxMqttContext The MQTT context for the MQTT connection.
  * @param[in] pcTopicFilter Points to the topic.
  * @param[in] topicFilterLength The length of the topic.
  * @param[in] pcPayload Points to the payload.
@@ -111,7 +112,7 @@ BaseType_t xUnsubscribeFromTopic( MQTTContext_t * pxContext,
  * @return pdPASS if PUBLISH was successfully sent;
  * pdFAIL otherwise.
  */
-BaseType_t xPublishToTopic( MQTTContext_t * pxContext,
+BaseType_t xPublishToTopic( MQTTContext_t * pxMqttContext,
                             const char * pcTopicFilter,
                             int32_t topicFilterLength,
                             const char * pcPayload,

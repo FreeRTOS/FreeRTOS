@@ -20,8 +20,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef MQTT_DEMO_HELPERS_H_
-#define MQTT_DEMO_HELPERS_H_
+#ifndef MQTT_DEMO_HELPERS_H
+#define MQTT_DEMO_HELPERS_H
 
 /* MQTT API header. */
 #include "core_mqtt.h"
@@ -117,4 +117,4 @@ BaseType_t xPublishToTopic( MQTTContext_t * pxContext,
                             const char * pcPayload,
                             size_t payloadLength );
 
-#endif /* ifndef MQTT_DEMO_HELPERS_H_ */
+#endif /* ifndef MQTT_DEMO_HELPERS_H */

@@ -54,7 +54,7 @@
 
 /*
  * Prototypes for the demos that can be started from this project.  Note the
- * Shadow demo is not actually started until the network is already, which is
+ * Jobs demo is not actually started until the network is already, which is
  * indicated by vApplicationIPNetworkEventHook() executing - hence
  * vStartJobsDemo() is called from inside vApplicationIPNetworkEventHook().
  */
@@ -100,16 +100,12 @@ const BaseType_t xLogToStdout = pdTRUE, xLogToFile = pdFALSE, xLogToUDP = pdFALS
  * the real network connection to use. */
 const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_ADDR2, configMAC_ADDR3, configMAC_ADDR4, configMAC_ADDR5 };
 
-/* Use by the pseudo random number generator. */
+/* Used by the pseudo random number generator. */
 static UBaseType_t ulNextRand;
 /*-----------------------------------------------------------*/
 
 int main( void )
 {
-    /***
-     * See https://www.FreeRTOS.org/coremqtt for configuration and usage instructions.
-     ***/
-
     /* Miscellaneous initialization including preparing the logging and seeding
      * the random number generator. */
     prvMiscInitialisation();

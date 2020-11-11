@@ -660,7 +660,6 @@ BaseType_t xDisconnectMqttSession( MQTTContext_t * pxMqttContext,
 {
     MQTTStatus_t xMQTTStatus = MQTTSuccess;
     BaseType_t xReturnStatus = pdTRUE;
-    TlsTransportStatus_t xNetworkStatus;
 
     configASSERT( pxMqttContext != NULL );
     configASSERT( pxNetworkContext != NULL );

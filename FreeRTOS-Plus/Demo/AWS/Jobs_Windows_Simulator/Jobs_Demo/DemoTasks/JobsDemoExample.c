@@ -60,6 +60,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 /* Demo Specific config file. */
 #include "demo_config.h"
@@ -335,6 +336,14 @@ static void prvSendUpdateForJob( char * pcJobId,
 static void prvProcessJobDocument( MQTTPublishInfo_t * pxPublishInfo,
                                    char * pcJobId,
                                    uint16_t usJobIdLength );
+/**
+ * @brief The task used to demonstrate the Jobs library API.
+ *
+ * @param[in] pvParameters Parameters as passed at the time of task creation. 
+ * Not used in this example.
+ */
+static void prvJobsDemoTask(void* pvParameters);
+
 
 /*-----------------------------------------------------------*/
 
@@ -383,7 +392,7 @@ static void prvSendUpdateForJob( char * pcJobId,
 
     if( xStatus == JobsSuccess )
     {
-        if( PublishToTopic( &xMqttContext,
+        if( xPublishToTopic( &xMqttContext,
                             pUpdateJobTopic,
                             ulTopicLength,
                             pcJobStatusReport,
@@ -508,7 +517,7 @@ static void prvProcessJobDocument( MQTTPublishInfo_t * pxPublishInfo,
                     {
                         /* Publish to the parsed MQTT topic with the message obtained from
                          * the Jobs document.*/
-                        if( PublishToTopic( &xMqttContext,
+                        if( xPublishToTopic( &xMqttContext,
                                             pcTopic,
                                             ulTopicLength,
                                             pcMessage,
@@ -773,7 +782,7 @@ void prvJobsDemoTask( void * pvParameters )
 
         /* Subscribe to the NextJobExecutionChanged API topic to receive notifications about the next pending
          * job in the queue for the Thing resource used by this demo. */
-        xDemoStatus = SubscribeToTopic( &xMqttContext,
+        xDemoStatus = xSubscribeToTopic( &xMqttContext,
                                         NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ),
                                         sizeof( NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) - 1 ) );
     }
@@ -791,7 +800,7 @@ void prvJobsDemoTask( void * pvParameters )
          * response topics or not.
          * This demo processes incoming messages from the response topics of the API in the prvEventCallback()
          * handler that is supplied to the coreMQTT library. */
-        xDemoStatus = PublishToTopic( &xMqttContext,
+        xDemoStatus = xPublishToTopic( &xMqttContext,
                                       START_NEXT_JOB_TOPIC( democonfigTHING_NAME ),
                                       sizeof( START_NEXT_JOB_TOPIC( democonfigTHING_NAME ) ) - 1,
                                       JSON_EMPTY_REQUEST,
@@ -803,7 +812,7 @@ void prvJobsDemoTask( void * pvParameters )
     }
 
     /* Disconnect the MQTT and network connections with AWS IoT. */
-    if( DisconnectMqttSession( &xMqttContext, &xNetworkContext ) != pdPASS )
+    if( xDisconnectMqttSession( &xMqttContext, &xNetworkContext ) != pdPASS )
     {
         xDemoStatus = pdFAIL;
         LogError( ( "Disconnection from AWS Iot failed..." ) );

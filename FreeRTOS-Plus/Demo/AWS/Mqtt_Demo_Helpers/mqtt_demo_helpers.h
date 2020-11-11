@@ -20,8 +20,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef SHADOW_DEMO_HELPERS_H
-#define SHADOW_DEMO_HELPERS_H
+#ifndef MQTT_DEMO_HELPERS_H
+#define MQTT_DEMO_HELPERS_H
 
 /* MQTT API header. */
 #include "core_mqtt.h"
@@ -29,17 +29,24 @@
 /* Transport interface implementation include header for TLS. */
 #include "using_mbedtls.h"
 
-/*-----------------------------------------------------------*/
-
 /**
  * @brief Establish a MQTT connection.
  *
- * @param[in] eventCallback The callback function used to receive incoming
+ * @param[in, out] pxMqttContext The memory for the MQTTContext_t that will be used for the
+ * MQTT connection.
+ * @param[out] pxNetworkContext The memory for the NetworkContext_t required for the
+ * MQTT connection.
+ * @param[in] pxNetworkBuffer The buffer space for initializing the @p pxMqttContext MQTT
+ * context used in the MQTT connection.
+ * @param[in] appCallback The callback function used to receive incoming
  * publishes and incoming acks from MQTT library.
  *
  * @return The status of the final connection attempt.
  */
-BaseType_t xEstablishMqttSession( MQTTEventCallback_t eventCallback );
+BaseType_t xEstablishMqttSession( MQTTContext_t * pxMqttContext,
+                                  NetworkContext_t * pxNetworkContext,
+                                  MQTTFixedBuffer_t * pxNetworkBuffer,
+                                  MQTTEventCallback_t eventCallback );
 
 /**
  * @brief Handle the incoming packet if it's not related to the device shadow.
@@ -53,41 +60,50 @@ void vHandleOtherIncomingPacket( MQTTPacketInfo_t * pxPacketInfo,
 /**
  * @brief Close the MQTT connection.
  *
+ * @param[in, out] pxMqttContext The MQTT context for the MQTT connection to close.
+ * @param[in, out] pxNetworkContext The network context for the TLS session to
+ * terminate.
+ *
  * @return pdPASS if DISCONNECT was successfully sent;
  * pdFAIL otherwise.
  */
-BaseType_t xDisconnectMqttSession( void );
+BaseType_t xDisconnectMqttSession( MQTTContext_t * pxMqttContext,
+                                   NetworkContext_t * pxNetworkContext );
 
 /**
  * @brief Subscribe to a MQTT topic filter.
  *
+ * @param[in] pxMqttContext The MQTT context for the MQTT connection to close.
  * @param[in] pcTopicFilter Pointer to the shadow topic buffer.
  * @param[in] usTopicFilterLength Indicates the length of the shadow
- * topic filter.
+ * topic buffer.
  *
  * @return pdPASS if SUBSCRIBE was successfully sent;
  * pdFAIL otherwise.
  */
-BaseType_t xSubscribeToTopic( const char * pcTopicFilter,
+BaseType_t xSubscribeToTopic( MQTTContext_t * pxMqttContext,
+                              const char * pcTopicFilter,
                               uint16_t usTopicFilterLength );
 
 /**
  * @brief Sends an MQTT UNSUBSCRIBE to unsubscribe from the shadow
  * topic.
  *
- * @param[in] pcTopicFilter Pointer to the shadow topic buffer.
- * @param[in] usTopicFilterLength Indicates the length of the shadow
- * topic filter.
+ * @param[in] pxMqttContext The MQTT context for the MQTT connection.
+ * @param[in] pcTopicFilter Pointer to the MQTT topic filter.
+ * @param[in] usTopicFilterLength Indicates the length of the topic filter.
  *
  * @return pdPASS if UNSUBSCRIBE was successfully sent;
  * pdFAIL otherwise.
  */
-BaseType_t xUnsubscribeFromTopic( const char * pcTopicFilter,
+BaseType_t xUnsubscribeFromTopic( MQTTContext_t * pxMqttContext,
+                                  const char * pcTopicFilter,
                                   uint16_t usTopicFilterLength );
 
 /**
  * @brief Publish a message to a MQTT topic.
  *
+ * @param[in] pxMqttContext The MQTT context for the MQTT connection.
  * @param[in] pcTopicFilter Points to the topic.
  * @param[in] topicFilterLength The length of the topic.
  * @param[in] pcPayload Points to the payload.
@@ -96,9 +112,10 @@ BaseType_t xUnsubscribeFromTopic( const char * pcTopicFilter,
  * @return pdPASS if PUBLISH was successfully sent;
  * pdFAIL otherwise.
  */
-BaseType_t xPublishToTopic( const char * pcTopicFilter,
+BaseType_t xPublishToTopic( MQTTContext_t * pxMqttContext,
+                            const char * pcTopicFilter,
                             int32_t topicFilterLength,
                             const char * pcPayload,
                             size_t payloadLength );
 
-#endif /* ifndef SHADOW_DEMO_HELPERS_H */
+#endif /* ifndef MQTT_DEMO_HELPERS_H */

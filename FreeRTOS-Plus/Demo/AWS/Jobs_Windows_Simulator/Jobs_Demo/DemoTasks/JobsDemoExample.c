@@ -208,12 +208,6 @@
  */
 #define MAKE_STATUS_REPORT( x )    "{\"status\":\"" x "\"}"
 
-/**
- * @brief Empty JSON message to send as PUBLISH message payload to
- * AWS IoT Jobs service APIs.
- */
-#define JSON_EMPTY_REQUEST    "{}"
-
 /*-----------------------------------------------------------*/
 
 /**
@@ -792,8 +786,8 @@ void prvJobsDemoTask( void * pvParameters )
         xDemoStatus = xPublishToTopic( &xMqttContext,
                                        START_NEXT_JOB_TOPIC( democonfigTHING_NAME ),
                                        sizeof( START_NEXT_JOB_TOPIC( democonfigTHING_NAME ) ) - 1,
-                                       JSON_EMPTY_REQUEST,
-                                       sizeof( JSON_EMPTY_REQUEST ) - 1 );
+                                       NULL,
+                                       0 );
 
         /* Delay before next iteration. */
         LogInfo( ( "Adding some delay before requesting the next pending job..." ) );

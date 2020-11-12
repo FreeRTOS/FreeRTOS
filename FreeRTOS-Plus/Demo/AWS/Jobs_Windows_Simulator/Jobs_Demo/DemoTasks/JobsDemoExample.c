@@ -34,13 +34,13 @@
  *
  * The Jobs library API provides macros and helper functions for assembling MQTT topics strings,
  * and for determining whether an incoming MQTT message is related to the AWS IoT Jobs service.
- * The Jobs library does not depend on a MQTT library, therefore the code for MQTT connections
- * are placed in another file (mqtt_demo_helpers.c). to make it easy to read the demo code using the
- * Jobs library.
+ * The Jobs library does not depend on an MQTT library, and therefore, the code for MQTT operations
+ * is placed in another file (mqtt_demo_helpers.c). to for improving readability of the demo code about using
+ * the Jobs library.
  *
  * @note This demo requires setup of an AWS account, provisioning of a Thing resource on the AWS IoT account,
- * and the creation of Jobs for the Thing resource. Please refer to AWS CLI documentation for more information in creating a
- * job document.
+ * and the creation of Jobs for the Thing resource. Please refer to AWS CLI documentation for more information
+ * in creating a job document.
  * https://docs.aws.amazon.com/cli/latest/reference/iot/create-job.html
  *
  * This demo connects to the AWS IoT broker and calls the MQTT APIs of the AWS IoT Jobs service to receive
@@ -48,12 +48,12 @@
  * then executes the jobs and updates the status of the jobs back to the cloud.
  * The demo expects job documents to have an "action" JSON key. Actions can
  * be one of "print", "publish", or "exit".
- * Print Jobs log a message to the local console, and must contain a "message",
+ * A "print" job logs a message to the local console, and must contain a "message",
  * e.g. { "action": "print", "message": "Hello World!" }.
- * Publish Jobs publish a message to an MQTT Topic. The job document must
+ * A "publish" job publishes a message to an MQTT Topic. The job document must
  * contain a "message" and "topic" to publish to, e.g.
  * { "action": "publish", "topic": "demo/jobs", "message": "Hello World!" }.
- * An Exit Job exits the demo. Sending { "action": "exit" } will end the program.
+ * An "exit" job exits the demo. Sending { "action": "exit" } will end the demo program.
  */
 
 /* Standard includes. */

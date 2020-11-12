@@ -299,8 +299,7 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
  * @param[in] pPublishInfo Deserialized publish info pointer for the incoming
  * packet.
  */
-static void prvNextJobHandler( MQTTPublishInfo_t * pxPublishInfo,
-                               JobsTopic_t topicType );
+static void prvNextJobHandler( MQTTPublishInfo_t * pxPublishInfo );
 
 /**
  * @brief Sends an update for a job to the UpdateJobExecution API of the AWS IoT Jobs service.
@@ -542,8 +541,7 @@ static void prvProcessJobDocument( MQTTPublishInfo_t * pxPublishInfo,
     }
 }
 
-static void prvNextJobHandler( MQTTPublishInfo_t * pxPublishInfo,
-                               JobsTopic_t topicType )
+static void prvNextJobHandler( MQTTPublishInfo_t * pxPublishInfo )
 {
     configASSERT( pxPublishInfo != NULL );
     configASSERT( ( pxPublishInfo->pPayload != NULL ) && ( pxPublishInfo->payloadLength > 0 ) );
@@ -633,7 +631,7 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
             if( ( topicType == JobsStartNextSuccess ) || ( topicType == JobsNextJobChanged ) )
             {
                 /* Handler function to process payload. */
-                prvNextJobHandler( pxDeserializedInfo->pPublishInfo, topicType );
+                prvNextJobHandler( pxDeserializedInfo->pPublishInfo );
             }
             else if( topicType == JobsUpdateSuccess )
             {

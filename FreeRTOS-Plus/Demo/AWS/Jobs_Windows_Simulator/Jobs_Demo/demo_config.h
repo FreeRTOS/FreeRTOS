@@ -102,7 +102,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * Settings/Custom Endpoint, or using the describe-endpoint REST API (with
  * AWS CLI command line tool).
  *
- * #define democonfigMQTT_BROKER_PORT    "...insert here..."
+ * #define democonfigMQTT_BROKER_ENDPOINT    "...insert here..."
  */
 
 /**

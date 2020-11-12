@@ -302,7 +302,7 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
  * @param[in] usJobIdLength The length of the job ID string.
  */
 static void prvStartNextJobHandler( MQTTPublishInfo_t * pxPublishInfo,
-                                    char * pJobId,
+                                    char * pcJobId,
                                     uint16_t usJobIdLength );
 
 /**
@@ -546,7 +546,7 @@ static void prvProcessJobDocument( MQTTPublishInfo_t * pxPublishInfo,
 }
 
 static void prvStartNextJobHandler( MQTTPublishInfo_t * pxPublishInfo,
-                                    char * pJobId,
+                                    char * pcJobId,
                                     uint16_t usJobIdLength )
 {
     JSONStatus_t xJsonStatus = JSONSuccess;
@@ -564,7 +564,7 @@ static void prvStartNextJobHandler( MQTTPublishInfo_t * pxPublishInfo,
     else
     {
         /* Process the Job document and execute the job. */
-        prvProcessJobDocument( pxPublishInfo, pcJobId, ( uint16_t ) ulJobIdLength );
+        prvProcessJobDocument( pxPublishInfo, pcJobId, ( uint16_t ) usJobIdLength );
     }
 }
 
@@ -801,7 +801,7 @@ void prvJobsDemoTask( void * pvParameters )
 
         /* Check if we have notification for the next pending job in the queue from the
          * NextJobExecutionChanged API of the AWS IoT Jobs service. */
-        xMqttStatus = MQTT_ProcessLoop( &xMqttContex, 300U );
+        xMqttStatus = MQTT_ProcessLoop( &xMqttContext, 300U );
 
         if( xMqttStatus != MQTTSuccess )
         {

@@ -58,7 +58,9 @@ extern void vLoggingPrintf( const char * pcFormatString,
 
 /* Map the SdkLog macro to the logging function to enable logging
  * on Windows simulator. */
-#define SdkLog( message )    vLoggingPrintf message
+#ifndef SdkLog
+    #define SdkLog( message )    vLoggingPrintf message
+#endif
 
 #include "logging_stack.h"
 
@@ -261,13 +263,9 @@ extern void vLoggingPrintf( const char * pcFormatString,
 
 
 
-
-
-
-
 /**********************************************************************************
- * Error checks and derived values only below here - do not edit below here. -----*
- **********************************************************************************/
+* Error checks and derived values only below here - do not edit below here. -----*
+**********************************************************************************/
 
 
 /* Compile time error for some undefined configs, and provide default values
@@ -277,14 +275,15 @@ extern void vLoggingPrintf( const char * pcFormatString,
 #endif
 
 #ifndef democonfigCLIENT_IDENTIFIER
-    /**
-     * @brief The MQTT client identifier used in this example.  Each client identifier
-     * must be unique so edit as required to ensure no two clients connecting to the
-     * same broker use the same client identifier.  Using a #define is for convenience
-     * of demonstration only - production devices should use something unique to the
-     * device that can be read from software - such as a production serial number.
-     */
-     #error  "Please define democonfigCLIENT_IDENTIFIER in demo_config.h to something unique for this device."
+
+/**
+ * @brief The MQTT client identifier used in this example.  Each client identifier
+ * must be unique so edit as required to ensure no two clients connecting to the
+ * same broker use the same client identifier.  Using a #define is for convenience
+ * of demonstration only - production devices should use something unique to the
+ * device that can be read from software - such as a production serial number.
+ */
+    #error  "Please define democonfigCLIENT_IDENTIFIER in demo_config.h to something unique for this device."
 #endif
 
 
@@ -296,11 +295,11 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /* If no username is defined, then a client certificate/key is required. */
     #ifndef democonfigCLIENT_USERNAME
 
-        /*
-         *!!! Please note democonfigCLIENT_PRIVATE_KEY_PEM in used for
-         *!!! convenience of demonstration only.  Production devices should
-         *!!! store keys securely, such as within a secure element.
-         */
+/*
+ *!!! Please note democonfigCLIENT_PRIVATE_KEY_PEM in used for
+ *!!! convenience of demonstration only.  Production devices should
+ *!!! store keys securely, such as within a secure element.
+ */
 
         #ifndef democonfigCLIENT_CERTIFICATE_PEM
             #error "Please define client certificate(democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h."
@@ -393,12 +392,12 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /**
  * @brief Length of client identifier.
  */
-#define democonfigCLIENT_IDENTIFIER_LENGTH           ( ( uint16_t ) ( sizeof( democonfigCLIENT_IDENTIFIER ) - 1 ) )
+#define democonfigCLIENT_IDENTIFIER_LENGTH    ( ( uint16_t ) ( sizeof( democonfigCLIENT_IDENTIFIER ) - 1 ) )
 
 /**
  * @brief Length of MQTT server host name.
  */
-#define democonfigBROKER_ENDPOINT_LENGTH             ( ( uint16_t ) ( sizeof( democonfigMQTT_BROKER_ENDPOINT ) - 1 ) )
+#define democonfigBROKER_ENDPOINT_LENGTH      ( ( uint16_t ) ( sizeof( democonfigMQTT_BROKER_ENDPOINT ) - 1 ) )
 
 
 #endif /* DEMO_CONFIG_H */

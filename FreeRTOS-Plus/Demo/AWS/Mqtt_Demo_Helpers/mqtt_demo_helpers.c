@@ -637,7 +637,7 @@ BaseType_t xEstablishMqttSession( MQTTContext_t * pxMqttContext,
                            "Resending unacked publishes." ) );
 
                 /* Handle all the resend of publish messages. */
-                returnStatus = xHandlePublishResend( &mqttContext );
+                xReturnStatus = xHandlePublishResend( pxMqttContext );
             }
             else
             {
@@ -661,7 +661,6 @@ BaseType_t xDisconnectMqttSession( MQTTContext_t * pxMqttContext,
 {
     MQTTStatus_t xMQTTStatus = MQTTSuccess;
     BaseType_t xReturnStatus = pdTRUE;
-    TlsTransportStatus_t xNetworkStatus;
 
     configASSERT( pxMqttContext != NULL );
     configASSERT( pxNetworkContext != NULL );
@@ -869,7 +868,7 @@ BaseType_t xPublishToTopic( MQTTContext_t * pxMqttContext,
              * sends ping request to broker if MQTT_KEEP_ALIVE_INTERVAL_SECONDS
              * has expired since the last MQTT packet sent and receive
              * ping responses. */
-            xMQTTStatus = MQTT_ProcessLoop( &mqttContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
+            xMQTTStatus = MQTT_ProcessLoop( pxMqttContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
 
             if( xMQTTStatus != MQTTSuccess )
             {

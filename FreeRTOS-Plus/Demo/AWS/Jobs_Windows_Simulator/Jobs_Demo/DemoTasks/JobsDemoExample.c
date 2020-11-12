@@ -290,7 +290,8 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
                               MQTTDeserializedInfo_t * pxDeserializedInfo );
 
 /**
- * @brief Process payload from $aws/things/<thingName>/jobs/start-next/accepted topic.
+ * @brief Process payload from NextJobExecutionChanged and StartNextPendingJobExecution
+ * API MQTT topics of AWS IoT Jobs service.
  *
  * This handler parses the payload received about the next pending job to identify
  * the action requested in the job document, and perform the appropriate
@@ -564,11 +565,10 @@ static void prvNextJobHandler( MQTTPublishInfo_t * pxPublishInfo )
                          &pcJobId,
                          &ulJobIdLength ) != JSONSuccess )
         {
-            xDemoEncounteredError = pdTRUE;
-            LogError( ( "Failed to parse Job ID in message received from AWS IoT Jobs service: "
-                        "IncomingTopic=%.*s, Payload=%.*s",
-                        pxPublishInfo->topicNameLength, pxPublishInfo->pTopicName,
-                        pxPublishInfo->payloadLength, pxPublishInfo->pPayload ) );
+            LogWarn( ( "Failed to parse Job ID in message received from AWS IoT Jobs service: "
+                       "IncomingTopic=%.*s, Payload=%.*s",
+                       pxPublishInfo->topicNameLength, pxPublishInfo->pTopicName,
+                       pxPublishInfo->payloadLength, pxPublishInfo->pPayload ) );
         }
         else
         {

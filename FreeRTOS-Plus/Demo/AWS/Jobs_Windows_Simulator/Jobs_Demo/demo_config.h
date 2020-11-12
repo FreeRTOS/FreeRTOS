@@ -80,20 +80,13 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * #define democonfigTHING_NAME    "...insert here..."
  */
 
-#ifndef democonfigCLIENT_IDENTIFIER
-
 /**
  * @brief The MQTT client identifier used in this example.  Each client identifier
  * must be unique so edit as required to ensure no two clients connecting to the
  * same broker use the same client identifier.
  *
- * @note Appending __TIME__ to the client id string will reduce the possibility of a
- * client id collision in the broker. Note that the appended time is the compilation
- * time. This client id can cause collision, if more than one instance of the same
- * binary is used at the same time to connect to the broker.
+ * #define democonfigCLIENT_IDENTIFIER "...insert here..."
  */
-    #define democonfigCLIENT_IDENTIFIER    "testClient"__TIME__
-#endif
 
 /**
  * @brief The AWS IoT broker endpoint to connect to in the demo.

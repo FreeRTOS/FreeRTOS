@@ -81,7 +81,7 @@
 /*------------- Demo configurations -------------------------*/
 
 #ifndef democonfigTHING_NAME
-    #define democonfigTHING_NAME    democonfigCLIENT_IDENTIFIER
+    #error "Please define the Thing resource name, democonfigTHING_NAME, in demo_config.h"
 #endif
 
 /**

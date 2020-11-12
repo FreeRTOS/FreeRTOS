@@ -701,10 +701,10 @@ void vStartJobsDemo( void )
  *
  * This function also shows that the communication with the AWS IoT Jobs services does
  * not require explicit subscriptions to the response MQTT topics for request commands that
- * sent to the MQTT APIs (like DescribeJobExecution API) of the service. The service
+ * sent to the MQTT APIs (like StartNextPendingJobExecution API) of the service. The service
  * will send messages on the response topics for the request commands on the same
  * MQTT connection irrespective of whether the client subscribes to the response topics.
- * Therefore, this demo processes incoming messages from response topics of DescribeJobExecution
+ * Therefore, this demo processes incoming messages from response topics of StartNextPendingJobExecution
  * and UpdateJobExecution APIs without explicitly subscribing to the topics.
  */
 void prvJobsDemoTask( void * pvParameters )
@@ -770,28 +770,45 @@ void prvJobsDemoTask( void * pvParameters )
         }
     }
 
-    /* Keep on running the demo until we receive a job for the "Exit" action to exit the demo. */
+    if( xDemoStatus == pdPASS )
+    {
+        /* Publish to AWS IoT Jobs on the StartNextPendingJobExecution API to request the next pending job.
+         *
+         * Note: It is not required to make MQTT subscriptions to the response topics of the
+         * StartNextPendingJobExecution API because the AWS IoT Jobs service sends responses for
+         * the PUBLISH commands on the same MQTT connection irrespective of whether the client has subscribed
+         * to the response topics or not.
+         * This demo processes incoming messages from the response topics of the API in the prvEventCallback()
+         * handler that is supplied to the coreMQTT library. */
+        if( xPublishToTopic( &xMqttContext,
+                             START_NEXT_JOB_TOPIC( democonfigTHING_NAME ),
+                             sizeof( START_NEXT_JOB_TOPIC( democonfigTHING_NAME ) ) - 1,
+                             NULL,
+                             0 ) != pdPASS )
+        {
+            xDemoStatus = pdFAIL;
+            LogError( ( "Failed to publish to StartNextPendingJobExecution API of AWS IoT Jobs service: "
+                        "Topic=%s", START_NEXT_JOB_TOPIC( democonfigTHING_NAME ) ) );
+        }
+    }
+
+    /* Keep on running the demo until we receive a job for the "exit" action to exit the demo. */
     while( ( xExitActionJobReceived == pdFALSE ) &&
            ( xDemoEncounteredError == pdFALSE ) &&
            ( xDemoStatus == pdPASS ) )
     {
-        /* Publish to AWS IoT Jobs on the DescribeJobExecution API to request the next pending job.
-         *
-         * Note: It is not required to make MQTT subscriptions to the response topics of the
-         * DescribeJobExecution API because the AWS IoT Jobs service sends responses for the PUBLISH
-         * commands on the same MQTT connection irrespective of whether the client has subscribed to the
-         * response topics or not.
-         * This demo processes incoming messages from the response topics of the API in the prvEventCallback()
-         * handler that is supplied to the coreMQTT library. */
-        xDemoStatus = xPublishToTopic( &xMqttContext,
-                                       START_NEXT_JOB_TOPIC( democonfigTHING_NAME ),
-                                       sizeof( START_NEXT_JOB_TOPIC( democonfigTHING_NAME ) ) - 1,
-                                       NULL,
-                                       0 );
+        MQTTStatus_t xMqttStatus = MQTTSuccess;
 
-        /* Delay before next iteration. */
-        LogInfo( ( "Adding some delay before requesting the next pending job..." ) );
-        vTaskDelay( pdMS_TO_TICKS( 300 ) );
+        /* Check if we have notification for the next pending job in the queue from the
+         * NextJobExecutionChanged API of the AWS IoT Jobs service. */
+        xMqttStatus = MQTT_ProcessLoop( &xMqttContex, 300U );
+
+        if( xMqttStatus != MQTTSuccess )
+        {
+            xDemoStatus = pdFAIL;
+            LogError( ( "Failed to receive notification about next pending job: "
+                        "MQTT_ProcessLoop failed" ) );
+        }
     }
 
     /* Unsubscribe from the NextJobExecutionChanged API topic. */

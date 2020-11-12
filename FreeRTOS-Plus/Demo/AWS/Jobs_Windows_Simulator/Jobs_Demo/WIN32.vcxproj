@@ -488,7 +488,7 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\FreeRTOS-Plus\Demo\Common\Logging\windows\Logging_WinSim.c" />
-    <ClCompile Include="..\Common\main.c" />
+    <ClCompile Include="main.c" />
     <ClCompile Include="DemoTasks\JobsDemoExample.c" />
     <ClCompile Include="..\..\Mqtt_Demo_Helpers\mqtt_demo_helpers.c" />
   </ItemGroup>

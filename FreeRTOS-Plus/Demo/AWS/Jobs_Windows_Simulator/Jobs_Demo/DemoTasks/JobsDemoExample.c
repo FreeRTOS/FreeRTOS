@@ -35,7 +35,7 @@
  * The Jobs library API provides macros and helper functions for assembling MQTT topics strings,
  * and for determining whether an incoming MQTT message is related to the AWS IoT Jobs service.
  * The Jobs library does not depend on an MQTT library, and therefore, the code for MQTT operations
- * is placed in another file (mqtt_demo_helpers.c). to for improving readability of the demo code about using
+ * is placed in another file (mqtt_demo_helpers.c) for improving readability of the demo code about using
  * the Jobs library.
  *
  * @note This demo requires setup of an AWS account, provisioning of a Thing resource on the AWS IoT account,

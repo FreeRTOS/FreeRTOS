@@ -299,7 +299,8 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
  * @param[in] pPublishInfo Deserialized publish info pointer for the incoming
  * packet.
  */
-static void prvStartNextJobHandler( MQTTPublishInfo_t * pxPublishInfo );
+static void prvNextJobHandler( MQTTPublishInfo_t * pxPublishInfo,
+                               JobsTopic_t topicType );
 
 /**
  * @brief Sends an update for a job to the UpdateJobExecution API of the AWS IoT Jobs service.
@@ -541,17 +542,14 @@ static void prvProcessJobDocument( MQTTPublishInfo_t * pxPublishInfo,
     }
 }
 
-static void prvStartNextJobHandler( MQTTPublishInfo_t * pxPublishInfo )
+static void prvNextJobHandler( MQTTPublishInfo_t * pxPublishInfo,
+                               JobsTopic_t topicType )
 {
-    JSONStatus_t xJsonStatus = JSONSuccess;
-
     configASSERT( pxPublishInfo != NULL );
     configASSERT( ( pxPublishInfo->pPayload != NULL ) && ( pxPublishInfo->payloadLength > 0 ) );
 
     /* Check validity of JSON message response from server.*/
-    xJsonStatus = JSON_Validate( pxPublishInfo->pPayload, pxPublishInfo->payloadLength );
-
-    if( xJsonStatus != JSONSuccess )
+    if( JSON_Validate( pxPublishInfo->pPayload, pxPublishInfo->payloadLength ) != JSONSuccess )
     {
         LogError( ( "Received invalid JSON payload from AWS IoT Jobs service" ) );
     }
@@ -561,17 +559,22 @@ static void prvStartNextJobHandler( MQTTPublishInfo_t * pxPublishInfo )
         size_t ulJobIdLength = 0U;
 
         /* Parse the Job ID of the next pending job execution from the JSON payload. */
-        xJsonStatus = JSON_Search( ( char * ) pxPublishInfo->pPayload,
-                                   pxPublishInfo->payloadLength,
-                                   jobsexampleQUERY_KEY_FOR_JOB_ID,
-                                   jobsexampleQUERY_KEY_FOR_JOB_ID_LENGTH,
-                                   &pcJobId,
-                                   &ulJobIdLength );
-
-        configASSERT( ulJobIdLength < JOBS_JOBID_MAX_LENGTH );
-
-        if( xJsonStatus == JSONSuccess )
+        if( JSON_Search( ( char * ) pxPublishInfo->pPayload,
+                         pxPublishInfo->payloadLength,
+                         jobsexampleQUERY_KEY_FOR_JOB_ID,
+                         jobsexampleQUERY_KEY_FOR_JOB_ID_LENGTH,
+                         &pcJobId,
+                         &ulJobIdLength ) != JSONSuccess )
         {
+            xDemoEncounteredError = pdTRUE;
+            LogError( ( "Failed to parse Job ID in message received from AWS IoT Jobs service: "
+                        "IncomingTopic=%.*s, Payload=%.*s",
+                        pxPublishInfo->topicNameLength, pxPublishInfo->pTopicName,
+                        pxPublishInfo->payloadLength, pxPublishInfo->pPayload ) );
+        }
+        else
+        {
+            configASSERT( ulJobIdLength < JOBS_JOBID_MAX_LENGTH );
             LogInfo( ( "Received a Job from AWS IoT Jobs service: JobId=%.*s",
                        ulJobIdLength, pcJobId ) );
 
@@ -630,7 +633,7 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
             if( ( topicType == JobsStartNextSuccess ) || ( topicType == JobsNextJobChanged ) )
             {
                 /* Handler function to process payload. */
-                prvStartNextJobHandler( pxDeserializedInfo->pPublishInfo );
+                prvNextJobHandler( pxDeserializedInfo->pPublishInfo, topicType );
             }
             else if( topicType == JobsUpdateSuccess )
             {

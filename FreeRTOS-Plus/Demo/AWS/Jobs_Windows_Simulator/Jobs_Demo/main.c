@@ -54,11 +54,11 @@
 
 /*
  * Prototypes for the demos that can be started from this project.  Note the
- * Shadow demo is not actually started until the network is already, which is
+ * Jobs demo is not actually started until the network is already, which is
  * indicated by vApplicationIPNetworkEventHook() executing - hence
- * vStartShadowDemo() is called from inside vApplicationIPNetworkEventHook().
+ * vStartJobsDemo() is called from inside vApplicationIPNetworkEventHook().
  */
-extern void vStartShadowDemo( void );
+extern void vStartJobsDemo( void );
 
 /*
  * Just seeds the simple pseudo random number generator.
@@ -106,10 +106,6 @@ static UBaseType_t ulNextRand;
 
 int main( void )
 {
-    /***
-     * See https://www.FreeRTOS.org/iot-device-shadow for configuration and usage instructions.
-     ***/
-
     /* Miscellaneous initialization including preparing the logging and seeding
      * the random number generator. */
     prvMiscInitialisation();
@@ -157,7 +153,7 @@ void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
             /* Demos that use the network are created after the network is
              * up. */
             LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
-            vStartShadowDemo();
+            vStartJobsDemo();
             xTasksAlreadyCreated = pdTRUE;
         }
 

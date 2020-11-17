@@ -881,6 +881,30 @@ BaseType_t xPublishToTopic( MQTTContext_t * pxMqttContext,
 
     return xReturnStatus;
 }
+
+/*-----------------------------------------------------------*/
+
+BaseType_t xProcessLoop( MQTTContext_t * pxMqttContext )
+{
+    BaseType_t xReturnStatus = pdFAIL;
+    MQTTStatus_t xMQTTStatus = MQTTSuccess;
+
+    xMQTTStatus = MQTT_ProcessLoop( pxMqttContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
+
+    if( xMQTTStatus != MQTTSuccess )
+    {
+        LogWarn( ( "MQTT_ProcessLoop returned with status = %u.",
+                   xMQTTStatus ) );
+    }
+    else
+    {
+        LogDebug( ( "MQTT_ProcessLoop successful." ) );
+        xReturnStatus = pdPASS;
+    }
+
+    return xReturnStatus;
+}
+
 /*-----------------------------------------------------------*/
 
 static uint32_t prvGetTimeMs( void )

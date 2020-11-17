@@ -38,7 +38,7 @@
  * MQTT connection.
  * @param[in] pxNetworkBuffer The buffer space for initializing the @p pxMqttContext MQTT
  * context used in the MQTT connection.
- * @param[in] appCallback The callback function used to receive incoming
+ * @param[in] eventCallback The callback function used to receive incoming
  * publishes and incoming acks from MQTT library.
  *
  * @return The status of the final connection attempt.
@@ -117,5 +117,15 @@ BaseType_t xPublishToTopic( MQTTContext_t * pxMqttContext,
                             int32_t topicFilterLength,
                             const char * pcPayload,
                             size_t payloadLength );
+
+/**
+ * @brief Invoke the core MQTT library's process loop function.
+ *
+ * @param[in] pxMqttContext The MQTT context for the MQTT connection.
+ *
+ * @return pdPASS if process loop was successful;
+ * pdFAIL otherwise.
+ */
+BaseType_t xProcessLoop( MQTTContext_t * pxMqttContext );
 
 #endif /* ifndef MQTT_DEMO_HELPERS_H */

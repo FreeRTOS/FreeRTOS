@@ -3,25 +3,45 @@
 import os, sys
 from argparse import ArgumentParser
 from difflib import unified_diff
+from json import load
 
 def dprint(msg):
     print('[DEBUG]: %s' % str(msg))
 
 class HeaderChecker:
-    def __init__(self, header, prefix_tolerance=10):
-        self.prefix_tolerance = 10
+    def __init__(self, header, padding=1000):
+        self.padding = padding
         self.header = header
 
     def normalizeHeader():
         assert False, 'Unimplemented'
+
+    def checkJSONList(self, path_json):
+        '''
+        This is particularly useful when ingesting output from other programs, like git actions
+        '''
+        assert os.path.exists(path_json), 'No such file: ' + path_json
+
+        # Get list of files to check from JSON file
+        with open(path_json) as file_json:
+            file_checklist = load(file_json)
+            assert isinstance(file_checklist, list), 'Expected list for singular JSON List entry'
+
+        # Accrue how how files fail the check
+        n_failed = 0
+        for path_file in file_checklist:
+            assert isinstance(path_file, str), 'Unexpected JSON format for ' + path_json
+            n_failed += not self.isValidFile(path_file)
+
+        return n_failed
 
     def isValidFile(self, path):
         assert os.path.exists(path), 'No such file: ' + path
 
         # Don't need entire file. Read sufficienly large chunk of file that should contain the header
         with open(path, encoding='utf-8', errors='ignore') as file:
-            chunk = file.read(len('\n'.join(self.header)))
-            lines = [('%s\n' % l) for l in chunk.strip().splitlines()]
+            chunk = file.read(len(''.join(self.header)) + self.padding)
+            lines = [('%s\n' % l) for l in chunk.strip().splitlines()][:len(self.header)]
             if self.header == lines:
                 return True
             else:
@@ -45,6 +65,10 @@ def configArgParser():
                         action  = 'store_true',
                         help    = 'Compare with kernel file header. It has different versioning.')
 
+    parser.add_argument('-j', '--json',
+                        default = False,
+                        action  = 'store_true',
+                        help    = 'Treat arguments json files that store a list of files to check.')
     return parser
 
 def main():
@@ -113,8 +137,10 @@ def main():
     print()
     n_failed = 0
     for path in args.files_checked:
-        if not checker.isValidFile(path):
-            n_failed += 1
+        if args.json:
+            n_failed += checker.checkJSONList(path)
+        else:
+            n_failed += not checker.isValidFile(path)
 
     return n_failed
 

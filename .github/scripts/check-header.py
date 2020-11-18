@@ -9,12 +9,13 @@ def dprint(msg):
     print('[DEBUG]: %s' % str(msg))
 
 class HeaderChecker:
-    def __init__(self, header, padding=1000):
+    def __init__(self, header, padding=1000, ignored_files=[], ignored_ext=[], ignored_paths=[]):
         self.padding = padding
         self.header = header
 
-    def normalizeHeader():
-        assert False, 'Unimplemented'
+        self.ignorePathList = ignored_paths.copy()
+        self.ignoreFileList = ignored_files.copy()
+        self.ignoreExtList = ignored_ext.copy()
 
     def checkJSONList(self, path_json):
         '''
@@ -38,6 +39,10 @@ class HeaderChecker:
     def isValidFile(self, path):
         assert os.path.exists(path), 'No such file: ' + path
 
+        # Skip any ignored files
+        if self.isIgnoredFile(path):
+            return True
+
         # Don't need entire file. Read sufficienly large chunk of file that should contain the header
         with open(path, encoding='utf-8', errors='ignore') as file:
             chunk = file.read(len(''.join(self.header)) + self.padding)
@@ -48,6 +53,30 @@ class HeaderChecker:
                 print('File Delta: %s' % path)
                 print(*unified_diff(lines[:len(self.header)], self.header))
                 return False
+
+    def ignoreExtension(self, *args):
+        for ext in args:
+            self.ignoreExtList.append(ext)
+
+    def ignoreFile(self, *args):
+        for f in args:
+            self.ignoreFileList.append(f)
+
+    def ignorePath(self, *args):
+        for p in args:
+            self.ignorePathList.append(p)
+
+    def isIgnoredFile(self, path):
+        '''
+        There are multiple ways a file can be ignored. This is a catch all
+        '''
+        assert os.path.exists(path), 'No such file: ' + path
+
+        filename  = os.path.split(path)[-1]
+        extension = os.path.splitext(filename)[-1]
+        return (path in self.ignorePathList
+                or extension in self.ignoreExtList
+                or filename in self.ignoreFileList)
 
 
 def configArgParser():
@@ -132,6 +161,13 @@ def main():
     ]
 
     checker = HeaderChecker(kernel_header if args.kernel else freertos_header)
+    checker.ignoreExtension('.vcxproj',
+                            '.vcxproj.filters',
+                            '.sln'
+                            '.md')
+
+    checker.ignoreFile(os.path.split(__file__)[-1], # Add self
+                       'mbedtls_config.h')
 
     print()
     n_failed = 0

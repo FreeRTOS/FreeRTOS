@@ -241,6 +241,12 @@ static bool prvValidateDefenderResponse( const char * pcDefenderResponse,
 /**
  * @brief The task used to demonstrate the Defender API.
  *
+ * This task collects metrics from the device using the functions in metrics_collector.h
+ * and uses them to build a defender report using functions in report_builder.h. Metrics
+ * include the number for bytes written and read over the network, open TCP and UDP ports,
+ * and open TCP sockets. The generated report is then published to the AWS IoT Device
+ * Defender service.
+ *
  * @param[in] pvParameters Parameters as passed at the time of task creation. Not
  * used in this example.
  */

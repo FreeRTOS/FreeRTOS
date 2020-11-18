@@ -100,7 +100,6 @@ def main():
         ' * https://www.FreeRTOS.org\n',
         ' * https://github.com/FreeRTOS\n',
         ' *\n',
-        ' * 1 tab == 4 spaces!\n',
         ' */\n',
     ]
 

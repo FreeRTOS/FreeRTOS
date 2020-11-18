@@ -778,7 +778,7 @@ void prvShadowDemoTask( void * pvParameters )
 
     /****************************** Disconnect. *******************************/
 
-    /* The MQTT session is always disconnected, even there were prior failures. */
+    /* The MQTT session is always disconnected, even if there were prior failures. */
     demoStatus = xDisconnectMqttSession( &xMqttContext, &xNetworkContext );
 
     /* This demo performs only Device Shadow operations. If matching the Shadow

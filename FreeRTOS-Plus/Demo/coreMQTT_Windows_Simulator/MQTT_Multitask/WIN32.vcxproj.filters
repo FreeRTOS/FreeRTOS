@@ -232,9 +232,6 @@
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\md.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\md_wrap.c">
-      <Filter>FreeRTOS+\mbedtls\library</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\md2.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
@@ -405,6 +402,7 @@
     <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls\using_mbedtls.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport</Filter>
     </ClCompile>
+    <ClCompile Include="mqtt_agent.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\NetworkInterface.h">
@@ -748,5 +746,10 @@
     <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls\using_mbedtls.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_levels.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_stack.h" />
+    <ClInclude Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_error.h" />
+    <ClInclude Include="mqtt_agent.h" />
   </ItemGroup>
 </Project>

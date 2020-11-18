@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS V202011.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,17 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
  * 1 tab == 4 spaces!
+ */
+
+/**
+ * @file metrics_collector.h
+ *
+ * @brief Functions used by the defender demo to collect metrics on the
+ * device's open ports and sockets.
  */
 
 #ifndef METRICS_COLLECTOR_H_
@@ -63,25 +70,23 @@ typedef struct Connection
 /**
  * @brief Get network stats.
  *
- * This function finds the network stats by reading "/proc/net/dev".
+ * This function returns the network stats.
  *
  * @param[out] pxOutNetworkStats The network stats.
  *
  * @return #MetricsCollectorSuccess if the network stats are successfully obtained;
  * #MetricsCollectorBadParameter if invalid parameters are passed;
- * #MetricsCollectorFileOpenFailed if the function fails to open "/proc/net/dev";
- * MetricsCollectorParsingFailed if the function fails to parses the data read
- * from "/proc/net/dev".
+ * #MetricsCollectorCollectionFailed if the collection methods failed.
  */
 MetricsCollectorStatus_t xGetNetworkStats( NetworkStats_t * pxOutNetworkStats );
 
 /**
  * @brief Get a list of the open TCP ports.
  *
- * This function finds the open TCP ports by reading "/proc/net/tcp". It can be
- * called with @p pusOutTcpPortsArray NULL to get the number of the open TCP ports.
+ * This function finds the open TCP ports. It can be called with
+ * @p pusOutTcpPortsArray NULL to get the number of the open TCP ports.
  *
- * @param[in] pusOutTcpPortsArray The array to write the open TCP ports into. This
+ * @param[out] pusOutTcpPortsArray The array to write the open TCP ports into. This
  * can be NULL, if only the number of open ports is needed.
  * @param[in] ulTcpPortsArrayLength Length of the pusOutTcpPortsArray, if it is not
  * NULL.
@@ -89,9 +94,7 @@ MetricsCollectorStatus_t xGetNetworkStats( NetworkStats_t * pxOutNetworkStats );
  *
  * @return #MetricsCollectorSuccess if open TCP ports are successfully obtained;
  * #MetricsCollectorBadParameter if invalid parameters are passed;
- * #MetricsCollectorFileOpenFailed if the function fails to open "/proc/net/tcp";
- * MetricsCollectorParsingFailed if the function fails to parses the data read
- * from "/proc/net/tcp".
+ * #MetricsCollectorCollectionFailed if the collection methods failed.
  */
 MetricsCollectorStatus_t xGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
                                            uint32_t ulTcpPortsArrayLength,
@@ -100,10 +103,10 @@ MetricsCollectorStatus_t xGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
 /**
  * @brief Get a list of the open UDP ports.
  *
- * This function finds the open UDP ports by reading "/proc/net/udp". It can be
- * called with pusOutUdpPortsArray NULL to get the number of the open UDP ports.
+ * This function finds the open UDP ports. It can be called with
+ * @p pusOutUdpPortsArray NULL to get the number of the open UDP ports.
  *
- * @param[in] pusOutUdpPortsArray The array to write the open UDP ports into. Can
+ * @param[out] pusOutUdpPortsArray The array to write the open UDP ports into. Can
  * be NULL, if only number of open ports is needed.
  * @param[in] ulUdpPortsArrayLength Length of the pusOutUdpPortsArray, if it is not
  * NULL.
@@ -111,9 +114,7 @@ MetricsCollectorStatus_t xGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
  *
  * @return #MetricsCollectorSuccess if open UDP ports are successfully obtained;
  * #MetricsCollectorBadParameter if invalid parameters are passed;
- * #MetricsCollectorFileOpenFailed if the function fails to open "/proc/net/udp";
- * MetricsCollectorParsingFailed if the function fails to parses the data read
- * from "/proc/net/udp".
+ * #MetricsCollectorCollectionFailed if the collection methods failed.
  */
 MetricsCollectorStatus_t xGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
                                            uint32_t ulUdpPortsArrayLength,
@@ -122,11 +123,11 @@ MetricsCollectorStatus_t xGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
 /**
  * @brief Get a list of established connections.
  *
- * This function finds the established connections by reading "/proc/net/tcp".
+ * This function finds the established TCP connections.
  * It can be called with @p pxOutConnectionsArray NULL to get the number of
  * established connections.
  *
- * @param[in] pxOutConnectionsArray The array to write the established connections
+ * @param[out] pxOutConnectionsArray The array to write the established connections
  * into. This can be NULL, if only the number of established connections is
  * needed.
  * @param[in] ulConnectionsArrayLength Length of the pxOutConnectionsArray, if it
@@ -135,9 +136,7 @@ MetricsCollectorStatus_t xGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
  *
  * @return #MetricsCollectorSuccess if established connections are successfully obtained;
  * #MetricsCollectorBadParameter if invalid parameters are passed;
- * #MetricsCollectorFileOpenFailed if the function fails to open "/proc/net/tcp";
- * MetricsCollectorParsingFailed if the function fails to parses the data read
- * from "/proc/net/tcp".
+ * #MetricsCollectorCollectionFailed if the collection methods failed.
  */
 MetricsCollectorStatus_t GetEstablishedConnections( Connection_t * pxOutConnectionsArray,
                                                     uint32_t ulConnectionsArrayLength,

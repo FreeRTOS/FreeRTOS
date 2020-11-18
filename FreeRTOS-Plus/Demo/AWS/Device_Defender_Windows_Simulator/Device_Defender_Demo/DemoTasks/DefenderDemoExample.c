@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS V202011.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,13 +19,33 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
+ * 1 tab == 4 spaces!
+ */
+
+/*
+ * Demo for showing how to use the Device Defender library's API. This version
+ * of the Device Defender API provides macros and helper functions for
+ * assembling MQTT topics strings, and for determining whether an incoming MQTT
+ * message is related to device defender. The Device Defender library does not
+ * depend on a MQTT library, therefore the code for MQTT connections is placed
+ * in another file (mqtt_demo_helpers.c) to make it easy to read the code using
+ * the Device Defender library.
+ *
+ * This demo connects to the AWS IoT broker and subscribes to the device
+ * defender topics. It then collects metrics for the open ports and sockets on
+ * the device using FreeRTOS+TCP, and generates a device defender report. The
+ * report is then published, and the demo waits for a response from the device
+ * defender service. Upon recieving the response or timing out, the demo
+ * finishes.
  */
 
 /* Standard includes. */
 #include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 #include <stdint.h>
 
 /* Kernel includes. */
@@ -60,13 +80,17 @@
 /**
  * @brief The length of #democonfigTHING_NAME.
  */
-#define THING_NAME_LENGTH                 ( ( uint16_t ) ( sizeof( democonfigTHING_NAME ) - 1 ) )
+#define THING_NAME_LENGTH                           ( ( uint16_t ) ( sizeof( democonfigTHING_NAME ) - 1 ) )
 
 /**
  * @brief Number of seconds to wait for the response from AWS IoT Device
  * Defender service.
  */
-#define DEFENDER_RESPONSE_WAIT_SECONDS    ( 2 )
+#define DEFENDER_RESPONSE_WAIT_SECONDS              ( 2 )
+
+#define DEFENDER_RESPONSE_REPORT_ID_FIELD           "reportId"
+
+#define DEFENDER_RESPONSE_REPORT_ID_FIELD_LENGTH    ( sizeof( DEFENDER_RESPONSE_REPORT_ID_FIELD ) - 1 )
 
 /**
  * @brief Status values of the device defender report.
@@ -99,8 +123,8 @@ static uint8_t ucSharedBuffer[ democonfigNETWORK_BUFFER_SIZE ];
  */
 static MQTTFixedBuffer_t xBuffer =
 {
-    .pBuffer = ucSharedBuffer,
-    .size    = democonfigNETWORK_BUFFER_SIZE
+    ucSharedBuffer,
+    democonfigNETWORK_BUFFER_SIZE
 };
 
 /**
@@ -129,7 +153,7 @@ static Connection_t pxEstablishedConnections[ democonfigESTABLISHED_CONNECTIONS_
 static ReportMetrics_t xDeviceMetrics;
 
 /**
- * @brief Report xStatus.
+ * @brief Report status.
  */
 static ReportStatus_t xReportStatus;
 
@@ -141,18 +165,19 @@ static char pcDeviceMetricsJsonReport[ democonfigDEVICE_METRICS_REPORT_BUFFER_SI
 /**
  * @brief Report Id sent in the defender report.
  */
-static uint32_t ulReportId = 0;
+static uint32_t ulReportId = 0UL;
 /*-----------------------------------------------------------*/
 
 /**
  * @brief Callback to receive the incoming publish messages from the MQTT broker.
  *
- * @param[in] pPublishInfo Pointer to publish info of the incoming publish.
- * @param[in] usPacketIdentifier Packet identifier of the incoming publish.
+ * @param[in] pxMqttContext The MQTT context for the MQTT connection.
+ * @param[in] pxPacketInfo Pointer to publish info of the incoming publish.
+ * @param[in] pxDeserializedInfo Deserialized information from the incoming publish.
  */
-static void prvPublishCallback( MQTTContext_t * pMqttContext,
-                                MQTTPacketInfo_t * pPacketInfo,
-                                MQTTDeserializedInfo_t * pDeserializedInfo );
+static void prvPublishCallback( MQTTContext_t * pxMqttContext,
+                                MQTTPacketInfo_t * pxPacketInfo,
+                                MQTTDeserializedInfo_t * pxDeserializedInfo );
 
 /**
  * @brief Collect all the metrics to be sent in the device defender report.
@@ -201,7 +226,7 @@ static bool prvPublishDeviceMetricsReport( uint32_t ulReportLength );
 /**
  * @brief Validate the response received from the AWS IoT Device Defender Service.
  *
- * This functions checks that a valid JSON is received and the value of ulReportId
+ * This functions checks that a valid JSON is received and the report ID
  * is same as was sent in the published report.
  *
  * @param[in] pcDefenderResponse The defender response to validate.
@@ -228,9 +253,11 @@ static bool prvValidateDefenderResponse( const char * pcDefenderResponse,
 {
     bool xStatus = false;
     JSONStatus_t eJsonResult = JSONSuccess;
-    char * ucReportIdString = 0;
+    char * ucReportIdString = NULL;
     size_t xReportIdStringLength;
     uint32_t ulReportIdInResponse;
+
+    configASSERT( pcDefenderResponse != NULL );
 
     /* Is the response a valid JSON? */
     eJsonResult = JSON_Validate( pcDefenderResponse, ulDefenderResponseLength );
@@ -244,18 +271,19 @@ static bool prvValidateDefenderResponse( const char * pcDefenderResponse,
 
     if( eJsonResult == JSONSuccess )
     {
-        /* Search the ulReportId key in the response. */
+        /* Search the ReportId key in the response. */
         eJsonResult = JSON_Search( ( char * ) pcDefenderResponse,
                                    ulDefenderResponseLength,
-                                   "ulReportId",
-                                   sizeof( "ulReportId" ) - 1,
+                                   DEFENDER_RESPONSE_REPORT_ID_FIELD,
+                                   DEFENDER_RESPONSE_REPORT_ID_FIELD_LENGTH,
                                    &( ucReportIdString ),
                                    &( xReportIdStringLength ) );
 
         if( eJsonResult != JSONSuccess )
         {
-            LogError( ( "ulReportId key not found in the response from the"
+            LogError( ( "%s key not found in the response from the"
                         "AWS IoT Device Defender Service: %.*s.",
+                        DEFENDER_RESPONSE_REPORT_ID_FIELD,
                         ( int ) ulDefenderResponseLength,
                         pcDefenderResponse ) );
         }
@@ -265,21 +293,22 @@ static bool prvValidateDefenderResponse( const char * pcDefenderResponse,
     {
         ulReportIdInResponse = ( uint32_t ) strtoul( ucReportIdString, NULL, 10 );
 
-        /* Is the ulReportId present in the response same as was sent in the
+        /* Is the report ID present in the response same as was sent in the
          * published report? */
         if( ulReportIdInResponse == ulReportId )
         {
-            LogInfo( ( "A valid reponse with ulReportId %u received from the "
+            LogInfo( ( "A valid reponse with report ID %u received from the "
                        "AWS IoT Device Defender Service.", ulReportId ) );
             xStatus = true;
         }
         else
         {
-            LogError( ( "Unexpected ulReportId found in the response from the AWS"
+            LogError( ( "Unexpected %s found in the response from the AWS"
                         "IoT Device Defender Service. Expected: %u, Found: %u, "
                         "Complete Response: %.*s.",
-                        ulReportIdInResponse,
+                        DEFENDER_RESPONSE_REPORT_ID_FIELD,
                         ulReportId,
+                        ulReportIdInResponse,
                         ( int ) ulDefenderResponseLength,
                         pcDefenderResponse ) );
         }
@@ -294,6 +323,10 @@ static void prvPublishCallback( MQTTContext_t * pxMqttContext,
                                 MQTTDeserializedInfo_t * pxDeserializedInfo )
 {
     uint16_t usPacketIdentifier;
+    DefenderStatus_t xStatus;
+    DefenderTopic_t xApi;
+    bool xValidationResult;
+    MQTTPublishInfo_t * pxPublishInfo;
 
     configASSERT( pxMqttContext != NULL );
     configASSERT( pxPacketInfo != NULL );
@@ -303,8 +336,6 @@ static void prvPublishCallback( MQTTContext_t * pxMqttContext,
      * build. */
     ( void ) pxMqttContext;
 
-    usPacketIdentifier = pxDeserializedInfo->packetIdentifier;
-
     /* Handle an incoming publish. The lower 4 bits of the publish packet
      * type is used for the dup, QoS, and retain flags. Hence masking
      * out the lower bits to check if the packet is publish. */
@@ -312,63 +343,60 @@ static void prvPublishCallback( MQTTContext_t * pxMqttContext,
     {
         configASSERT( pxDeserializedInfo->pPublishInfo != NULL );
 
-        /* Invoke the application callback for incoming publishes. */
-        DefenderStatus_t status;
-        DefenderTopic_t api;
-        bool validationResult;
-        MQTTPublishInfo_t * pPublishInfo = pxDeserializedInfo->pPublishInfo;
+        pxPublishInfo = pxDeserializedInfo->pPublishInfo;
 
-        /* Silence compiler warnings about unused variables. */
-        ( void ) usPacketIdentifier;
+        /* Verify that the publish is for device defender, and if so get which
+         * defender API it is for */
+        xStatus = Defender_MatchTopic( pxPublishInfo->pTopicName,
+                                       pxPublishInfo->topicNameLength,
+                                       &( xApi ),
+                                       NULL,
+                                       NULL );
 
-        status = Defender_MatchTopic( pPublishInfo->pTopicName,
-                                      pPublishInfo->topicNameLength,
-                                      &( api ),
-                                      NULL,
-                                      NULL );
-
-        if( status == DefenderSuccess )
+        if( xStatus == DefenderSuccess )
         {
-            if( api == DefenderJsonReportAccepted )
+            if( xApi == DefenderJsonReportAccepted )
             {
                 /* Check if the response is valid and is for the report we published. */
-                validationResult = prvValidateDefenderResponse( pPublishInfo->pPayload,
-                                                                pPublishInfo->payloadLength );
+                /* If so, report was accepted. */
+                xValidationResult = prvValidateDefenderResponse( pxPublishInfo->pPayload,
+                                                                 pxPublishInfo->payloadLength );
 
-                if( validationResult == true )
+                if( xValidationResult == true )
                 {
                     LogInfo( ( "The defender report was accepted by the service. Response: %.*s.",
-                               ( int ) pPublishInfo->payloadLength,
-                               ( const char * ) pPublishInfo->pPayload ) );
+                               ( int ) pxPublishInfo->payloadLength,
+                               ( const char * ) pxPublishInfo->pPayload ) );
                     xReportStatus = ReportStatusAccepted;
                 }
             }
-            else if( api == DefenderJsonReportRejected )
+            else if( xApi == DefenderJsonReportRejected )
             {
                 /* Check if the response is valid and is for the report we published. */
-                validationResult = prvValidateDefenderResponse( pPublishInfo->pPayload,
-                                                                pPublishInfo->payloadLength );
+                /* If so, report was rejected. */
+                xValidationResult = prvValidateDefenderResponse( pxPublishInfo->pPayload,
+                                                                 pxPublishInfo->payloadLength );
 
-                if( validationResult == true )
+                if( xValidationResult == true )
                 {
                     LogError( ( "The defender report was rejected by the service. Response: %.*s.",
-                                ( int ) pPublishInfo->payloadLength,
-                                ( const char * ) pPublishInfo->pPayload ) );
+                                ( int ) pxPublishInfo->payloadLength,
+                                ( const char * ) pxPublishInfo->pPayload ) );
                     xReportStatus = ReportStatusRejected;
                 }
             }
             else
             {
-                LogError( ( "Unexpected defender API : %d.", api ) );
+                LogError( ( "Unexpected defender API : %d.", xApi ) );
             }
         }
         else
         {
             LogError( ( "Unexpected publish message received. Topic: %.*s, Payload: %.*s.",
-                        ( int ) pPublishInfo->topicNameLength,
-                        ( const char * ) pPublishInfo->pTopicName,
-                        ( int ) pPublishInfo->payloadLength,
-                        ( const char * ) ( pPublishInfo->pPayload ) ) );
+                        ( int ) pxPublishInfo->topicNameLength,
+                        ( const char * ) pxPublishInfo->pTopicName,
+                        ( int ) pxPublishInfo->payloadLength,
+                        ( const char * ) ( pxPublishInfo->pPayload ) ) );
         }
     }
     else
@@ -382,7 +410,7 @@ static bool prvCollectDeviceMetrics( void )
 {
     bool xStatus = false;
     MetricsCollectorStatus_t eMetricsCollectorStatus;
-    uint32_t ulNumOpenTcpPorts = 0, ulNumOpenUdpPorts = 0, ulNumEstablishedConnections = 0;
+    uint32_t ulNumOpenTcpPorts = 0UL, ulNumOpenUdpPorts = 0UL, ulNumEstablishedConnections = 0UL;
 
     /* Collect bytes and packets sent and received. */
     eMetricsCollectorStatus = xGetNetworkStats( &( xNetworkStats ) );
@@ -488,15 +516,31 @@ static bool prvSubscribeToDefenderTopics( void )
 {
     bool xStatus = false;
 
+    /* Subscribe to defender topic for responses for accepted reports */
     xStatus = xSubscribeToTopic( &xMqttContext,
                                  DEFENDER_API_JSON_ACCEPTED( democonfigTHING_NAME ),
                                  DEFENDER_API_LENGTH_JSON_ACCEPTED( THING_NAME_LENGTH ) );
 
+    if( xStatus == false )
+    {
+        LogError( ( "Failed to subscribe to defender topic: %.*s.",
+                    DEFENDER_API_LENGTH_JSON_ACCEPTED( THING_NAME_LENGTH ),
+                    DEFENDER_API_JSON_ACCEPTED( democonfigTHING_NAME ) ) );
+    }
+
     if( xStatus == true )
     {
+        /* Subscribe to defender topic for responses for rejected reports */
         xStatus = xSubscribeToTopic( &xMqttContext,
                                      DEFENDER_API_JSON_REJECTED( democonfigTHING_NAME ),
                                      DEFENDER_API_LENGTH_JSON_REJECTED( THING_NAME_LENGTH ) );
+
+        if( xStatus == false )
+        {
+            LogError( ( "Failed to subscribe to defender topic: %.*s.",
+                        DEFENDER_API_LENGTH_JSON_REJECTED( THING_NAME_LENGTH ),
+                        DEFENDER_API_JSON_REJECTED( democonfigTHING_NAME ) ) );
+        }
     }
 
     return xStatus;
@@ -507,12 +551,14 @@ static bool prvUnsubscribeFromDefenderTopics( void )
 {
     bool xStatus = false;
 
+    /* Unsubscribe from defender accpted topic. */
     xStatus = xUnsubscribeFromTopic( &xMqttContext,
                                      DEFENDER_API_JSON_ACCEPTED( democonfigTHING_NAME ),
                                      DEFENDER_API_LENGTH_JSON_ACCEPTED( THING_NAME_LENGTH ) );
 
     if( xStatus == true )
     {
+        /* Unsubscribe from defender rejected topic. */
         xStatus = xUnsubscribeFromTopic( &xMqttContext,
                                          DEFENDER_API_JSON_REJECTED( democonfigTHING_NAME ),
                                          DEFENDER_API_LENGTH_JSON_REJECTED( THING_NAME_LENGTH ) );
@@ -532,7 +578,7 @@ static bool prvPublishDeviceMetricsReport( uint32_t reportLength )
 }
 /*-----------------------------------------------------------*/
 
-/*
+/**
  * @brief Create the task that demonstrates the Device Defender library API via a
  * MQTT mutually authenticated network connection with the AWS IoT broker.
  */
@@ -555,7 +601,7 @@ void prvDefenderDemoTask( void * pvParameters )
 {
     bool xStatus = false;
     BaseType_t xExitStatus = EXIT_FAILURE;
-    uint32_t ulReportLength = 0, i, ulMqttSessionEstablished = 0;
+    uint32_t ulReportLength = 0UL, i, ulMqttSessionEstablished = 0UL;
 
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
@@ -563,8 +609,16 @@ void prvDefenderDemoTask( void * pvParameters )
     /* Start with report not received. */
     xReportStatus = ReportStatusNotReceived;
 
-    /* Set a report Id to be used. */
+    /* Set a report Id to be used.
+     *
+     * !!!NOTE!!!
+     * This demo just sets the report ID to 1, which should not be used in
+     * production. The report ID needs to be unique per report sent with a
+     * given Thing. We reccomend using a increasing unique id such as the
+     * current timestamp. */
     ulReportId = 1;
+
+    /****************************** Connect. ******************************/
 
     LogInfo( ( "Establishing MQTT session..." ) );
     xStatus = xEstablishMqttSession( &xMqttContext,
@@ -581,6 +635,8 @@ void prvDefenderDemoTask( void * pvParameters )
         ulMqttSessionEstablished = 1;
     }
 
+    /******************** Subscribe to Defender topics. *******************/
+
     if( xStatus == true )
     {
         LogInfo( ( "Subscribing to defender topics..." ) );
@@ -591,6 +647,8 @@ void prvDefenderDemoTask( void * pvParameters )
             LogError( ( "Failed to subscribe to defender topics." ) );
         }
     }
+
+    /*********************** Collect device metrics. **********************/
 
     if( xStatus == true )
     {
@@ -603,6 +661,8 @@ void prvDefenderDemoTask( void * pvParameters )
         }
     }
 
+    /********************** Generate defender report. *********************/
+
     if( xStatus == true )
     {
         LogInfo( ( "Generating device defender report..." ) );
@@ -613,6 +673,8 @@ void prvDefenderDemoTask( void * pvParameters )
             LogError( ( "Failed to generate device defender report." ) );
         }
     }
+
+    /********************** Publish defender report. **********************/
 
     if( xStatus == true )
     {
@@ -625,6 +687,8 @@ void prvDefenderDemoTask( void * pvParameters )
         }
     }
 
+    /* Wait for the response to our report. Response will be handled by the
+     * callback passed to xEstablishMqttSession() earlier. */
     if( xStatus == true )
     {
         for( i = 0; i < DEFENDER_RESPONSE_WAIT_SECONDS; i++ )
@@ -648,6 +712,8 @@ void prvDefenderDemoTask( void * pvParameters )
         xStatus = false;
     }
 
+    /**************************** Disconnect. *****************************/
+
     /* Unsubscribe and disconnect if MQTT session was established. Per the MQTT
      * protocol spec, it is okay to send UNSUBSCRIBE even if no corresponding
      * subscription exists on the broker. Therefore, it is okay to attempt
@@ -666,6 +732,8 @@ void prvDefenderDemoTask( void * pvParameters )
         ( void ) xDisconnectMqttSession( &xMqttContext,
                                          &xNetworkContext );
     }
+
+    /****************************** Finish. ******************************/
 
     if( ( xStatus == true ) && ( xReportStatus == ReportStatusAccepted ) )
     {

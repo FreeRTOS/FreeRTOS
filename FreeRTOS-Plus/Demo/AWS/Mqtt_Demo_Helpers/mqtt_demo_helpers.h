@@ -18,6 +18,11 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
+ * 1 tab == 4 spaces!
  */
 
 #ifndef MQTT_DEMO_HELPERS_H
@@ -73,7 +78,7 @@ BaseType_t xDisconnectMqttSession( MQTTContext_t * pxMqttContext,
 /**
  * @brief Subscribe to a MQTT topic filter.
  *
- * @param[in] pxMqttContext The MQTT context for the MQTT connection to close.
+ * @param[in] pxMqttContext The MQTT context for the MQTT connection.
  * @param[in] pcTopicFilter Pointer to the shadow topic buffer.
  * @param[in] usTopicFilterLength Indicates the length of the shadow
  * topic buffer.

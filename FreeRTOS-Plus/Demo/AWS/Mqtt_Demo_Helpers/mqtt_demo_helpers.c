@@ -18,12 +18,17 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
+ * 1 tab == 4 spaces!
  */
 
 /**
- * @file shadow_demo_helpers.c
+ * @file mqtt_demo_helpers.c
  *
- * @brief This file provides helper functions used by the Shadow demo application to
+ * @brief This file provides helper functions used by the AWS demo applications to
  * do MQTT operations over a mutually authenticated TLS connection.
  *
  * A mutually authenticated TLS connection is used to connect to the AWS IoT

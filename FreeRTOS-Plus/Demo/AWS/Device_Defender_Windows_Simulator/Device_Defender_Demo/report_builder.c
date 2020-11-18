@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS V202011.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,8 +19,8 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
  * 1 tab == 4 spaces!
  */
@@ -168,6 +168,10 @@ static ReportBuilderStatus_t prvWritePortsArray( char * pcBuffer,
     uint32_t ulCharactersWritten;
     ReportBuilderStatus_t eStatus = ReportBuilderSuccess;
 
+    configASSERT( pcBuffer != NULL );
+    configASSERT( pusOpenPortsArray != NULL );
+    configASSERT( pulOutCharsWritten != NULL );
+
     /* Write the JSON array open marker. */
     if( ulRemainingBufferLength > 1 )
     {
@@ -242,6 +246,10 @@ static ReportBuilderStatus_t prvWriteConnectionsArray( char * pcBuffer,
     uint32_t ulCharactersWritten;
     ReportBuilderStatus_t eStatus = ReportBuilderSuccess;
     const Connection_t * pxConn;
+
+    configASSERT( pcBuffer != NULL );
+    configASSERT( pxConnectionsArray != NULL );
+    configASSERT( pulOutCharsWritten != NULL );
 
     /* Write the JSON array open marker. */
     if( ulRemainingBufferLength > 1 )
@@ -324,6 +332,10 @@ ReportBuilderStatus_t xGenerateJsonReport( char * pcBuffer,
     uint32_t ulRemainingBufferLength = ulBufferLength, bufferWritten;
     ReportBuilderStatus_t eStatus = ReportBuilderSuccess;
     uint32_t ulCharactersWritten;
+
+    configASSERT( pcBuffer != NULL );
+    configASSERT( pxMetrics != NULL );
+    configASSERT( pulOutReportLength != NULL );
 
     if( ( pcBuffer == NULL ) ||
         ( ulBufferLength == 0 ) ||

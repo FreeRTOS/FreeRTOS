@@ -78,7 +78,7 @@ typedef struct Connection
  * #MetricsCollectorBadParameter if invalid parameters are passed;
  * #MetricsCollectorCollectionFailed if the collection methods failed.
  */
-eMetricsCollectorStatus xGetNetworkStats( NetworkStats_t * pxOutNetworkStats );
+eMetricsCollectorStatus eGetNetworkStats( NetworkStats_t * pxOutNetworkStats );
 
 /**
  * @brief Get a list of the open TCP ports.
@@ -96,9 +96,9 @@ eMetricsCollectorStatus xGetNetworkStats( NetworkStats_t * pxOutNetworkStats );
  * #MetricsCollectorBadParameter if invalid parameters are passed;
  * #MetricsCollectorCollectionFailed if the collection methods failed.
  */
-eMetricsCollectorStatus xGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
-                                           uint32_t ulTcpPortsArrayLength,
-                                           uint32_t * pulOutNumTcpOpenPorts );
+eMetricsCollectorStatus eGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
+                                          uint32_t ulTcpPortsArrayLength,
+                                          uint32_t * pulOutNumTcpOpenPorts );
 
 /**
  * @brief Get a list of the open UDP ports.
@@ -116,9 +116,9 @@ eMetricsCollectorStatus xGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
  * #MetricsCollectorBadParameter if invalid parameters are passed;
  * #MetricsCollectorCollectionFailed if the collection methods failed.
  */
-eMetricsCollectorStatus xGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
-                                           uint32_t ulUdpPortsArrayLength,
-                                           uint32_t * pulOutNumUdpOpenPorts );
+eMetricsCollectorStatus eGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
+                                          uint32_t ulUdpPortsArrayLength,
+                                          uint32_t * pulOutNumUdpOpenPorts );
 
 /**
  * @brief Get a list of established connections.
@@ -138,7 +138,7 @@ eMetricsCollectorStatus xGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
  * #MetricsCollectorBadParameter if invalid parameters are passed;
  * #MetricsCollectorCollectionFailed if the collection methods failed.
  */
-eMetricsCollectorStatus GetEstablishedConnections( Connection_t * pxOutConnectionsArray,
+eMetricsCollectorStatus eGetEstablishedConnections( Connection_t * pxOutConnectionsArray,
                                                     uint32_t ulConnectionsArrayLength,
                                                     uint32_t * pulOutNumEstablishedConnections );
 

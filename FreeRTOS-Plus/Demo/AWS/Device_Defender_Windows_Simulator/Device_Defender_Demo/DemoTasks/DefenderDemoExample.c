@@ -414,7 +414,7 @@ static void prvPublishCallback( MQTTContext_t * pxMqttContext,
     }
     else
     {
-        vHandleOtherIncomingPacket( pxPacketInfo, pxDeserializedInfo->packetIdentifier);
+        vHandleOtherIncomingPacket( pxPacketInfo, pxDeserializedInfo->packetIdentifier );
     }
 }
 /*-----------------------------------------------------------*/
@@ -426,7 +426,7 @@ static bool prvCollectDeviceMetrics( void )
     uint32_t ulNumOpenTcpPorts = 0UL, ulNumOpenUdpPorts = 0UL, ulNumEstablishedConnections = 0UL;
 
     /* Collect bytes and packets sent and received. */
-    eMetricsCollectorStatus = xGetNetworkStats( &( xNetworkStats ) );
+    eMetricsCollectorStatus = eGetNetworkStats( &( xNetworkStats ) );
 
     if( eMetricsCollectorStatus != eMetricsCollectorSuccess )
     {
@@ -437,7 +437,7 @@ static bool prvCollectDeviceMetrics( void )
     /* Collect a list of open TCP ports. */
     if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
     {
-        eMetricsCollectorStatus = xGetOpenTcpPorts( &( pusOpenTcpPorts[ 0 ] ),
+        eMetricsCollectorStatus = eGetOpenTcpPorts( &( pusOpenTcpPorts[ 0 ] ),
                                                     democonfigOPEN_TCP_PORTS_ARRAY_SIZE,
                                                     &( ulNumOpenTcpPorts ) );
 
@@ -451,7 +451,7 @@ static bool prvCollectDeviceMetrics( void )
     /* Collect a list of open UDP ports. */
     if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
     {
-        eMetricsCollectorStatus = xGetOpenUdpPorts( &( pusOpenUdpPorts[ 0 ] ),
+        eMetricsCollectorStatus = eGetOpenUdpPorts( &( pusOpenUdpPorts[ 0 ] ),
                                                     democonfigOPEN_UDP_PORTS_ARRAY_SIZE,
                                                     &( ulNumOpenUdpPorts ) );
 
@@ -465,9 +465,9 @@ static bool prvCollectDeviceMetrics( void )
     /* Collect a list of established connections. */
     if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
     {
-        eMetricsCollectorStatus = GetEstablishedConnections( &( pxEstablishedConnections[ 0 ] ),
-                                                             democonfigESTABLISHED_CONNECTIONS_ARRAY_SIZE,
-                                                             &( ulNumEstablishedConnections ) );
+        eMetricsCollectorStatus = eGetEstablishedConnections( &( pxEstablishedConnections[ 0 ] ),
+                                                              democonfigESTABLISHED_CONNECTIONS_ARRAY_SIZE,
+                                                              &( ulNumEstablishedConnections ) );
 
         if( eMetricsCollectorStatus != eMetricsCollectorSuccess )
         {

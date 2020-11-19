@@ -54,7 +54,7 @@
 #include "metrics_collector.h"
 /*-----------------------------------------------------------*/
 
-eMetricsCollectorStatus xGetNetworkStats( NetworkStats_t * pxOutNetworkStats )
+eMetricsCollectorStatus eGetNetworkStats( NetworkStats_t * pxOutNetworkStats )
 {
     eMetricsCollectorStatus eStatus = eMetricsCollectorSuccess;
 
@@ -90,9 +90,9 @@ eMetricsCollectorStatus xGetNetworkStats( NetworkStats_t * pxOutNetworkStats )
 }
 /*-----------------------------------------------------------*/
 
-eMetricsCollectorStatus xGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
-                                           uint32_t ulTcpPortsArrayLength,
-                                           uint32_t * pulOutNumTcpOpenPorts )
+eMetricsCollectorStatus eGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
+                                          uint32_t ulTcpPortsArrayLength,
+                                          uint32_t * pulOutNumTcpOpenPorts )
 {
     eMetricsCollectorStatus eStatus = eMetricsCollectorSuccess;
 
@@ -137,9 +137,9 @@ eMetricsCollectorStatus xGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
 }
 /*-----------------------------------------------------------*/
 
-eMetricsCollectorStatus xGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
-                                           uint32_t ulUdpPortsArrayLength,
-                                           uint32_t * pulOutNumUdpOpenPorts )
+eMetricsCollectorStatus eGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
+                                          uint32_t ulUdpPortsArrayLength,
+                                          uint32_t * pulOutNumUdpOpenPorts )
 {
     eMetricsCollectorStatus eStatus = eMetricsCollectorSuccess;
 
@@ -184,7 +184,7 @@ eMetricsCollectorStatus xGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
 
 /*-----------------------------------------------------------*/
 
-eMetricsCollectorStatus GetEstablishedConnections( Connection_t * pxOutConnectionsArray,
+eMetricsCollectorStatus eGetEstablishedConnections( Connection_t * pxOutConnectionsArray,
                                                     uint32_t ulConnectionsArrayLength,
                                                     uint32_t * pulOutNumEstablishedConnections )
 {

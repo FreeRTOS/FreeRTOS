@@ -29,7 +29,8 @@
  * @file metrics_collector.c
  *
  * @brief Functions used by the defender demo to collect metrics on the
- * device's open ports and sockets. Depends on FreeRTOS+TCP utilities.
+ * device's open ports and sockets. FreeRTOS+TCP tcp_netstat utility
+ * is used to collect this metrics.
  */
 
 /* Standard includes. */
@@ -43,7 +44,7 @@
 #include "FreeRTOS.h"
 #include "FreeRTOS_IP.h"
 
-/* Metrics includes for FreeRTOS+TCP */
+/* FreeRTOS+TCP tcp_netstat utility include. */
 #include "tcp_netstat.h"
 
 /* Demo config. */
@@ -53,31 +54,31 @@
 #include "metrics_collector.h"
 /*-----------------------------------------------------------*/
 
-MetricsCollectorStatus_t xGetNetworkStats( NetworkStats_t * pxOutNetworkStats )
+eMetricsCollectorStatus xGetNetworkStats( NetworkStats_t * pxOutNetworkStats )
 {
-    MetricsCollectorStatus_t eStatus = MetricsCollectorSuccess;
+    eMetricsCollectorStatus eStatus = eMetricsCollectorSuccess;
 
     MetricsType_t xMetrics = { 0 };
     BaseType_t xMetricsStatus = 0;
 
     configASSERT( pxOutNetworkStats != NULL );
 
-    if( eStatus == MetricsCollectorSuccess )
+    if( eStatus == eMetricsCollectorSuccess )
     {
         /* Start with everything as zero. */
         memset( pxOutNetworkStats, 0, sizeof( NetworkStats_t ) );
 
-        /* Get metrics from FreeRTOS+TCP tcp_netstat utility */
+        /* Get metrics from FreeRTOS+TCP tcp_netstat utility. */
         xMetricsStatus = vGetMetrics( &xMetrics );
 
         if( xMetricsStatus != 0 )
         {
-            eStatus = MetricsCollectorCollectionFailed;
+            eStatus = eMetricsCollectorCollectionFailed;
         }
     }
 
-    /* Fill our response with values gotten from FreeRTOS+TCP */
-    if( eStatus == MetricsCollectorSuccess )
+    /* Fill our response with values gotten from FreeRTOS+TCP. */
+    if( eStatus == eMetricsCollectorSuccess )
     {
         pxOutNetworkStats->ulBytesReceived = xMetrics.xInput.uxByteCount;
         pxOutNetworkStats->ulPacketsReceived = xMetrics.xInput.uxPacketCount;
@@ -89,32 +90,32 @@ MetricsCollectorStatus_t xGetNetworkStats( NetworkStats_t * pxOutNetworkStats )
 }
 /*-----------------------------------------------------------*/
 
-MetricsCollectorStatus_t xGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
+eMetricsCollectorStatus xGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
                                            uint32_t ulTcpPortsArrayLength,
                                            uint32_t * pulOutNumTcpOpenPorts )
 {
-    MetricsCollectorStatus_t eStatus = MetricsCollectorSuccess;
+    eMetricsCollectorStatus eStatus = eMetricsCollectorSuccess;
 
     MetricsType_t xMetrics = { 0 };
     BaseType_t xMetricsStatus = 0;
 
-    /* pusOutTcpPortsArray can be NULL */
+    /* pusOutTcpPortsArray can be NULL. */
     configASSERT( pulOutNumTcpOpenPorts != NULL );
 
-    if( eStatus == MetricsCollectorSuccess )
+    if( eStatus == eMetricsCollectorSuccess )
     {
-        /* Get metrics from FreeRTOS+TCP tcp_netstat utility */
+        /* Get metrics from FreeRTOS+TCP tcp_netstat utility. */
         xMetricsStatus = vGetMetrics( &xMetrics );
 
         if( xMetricsStatus != 0 )
         {
-            eStatus = MetricsCollectorCollectionFailed;
+            eStatus = eMetricsCollectorCollectionFailed;
         }
     }
 
-    if( eStatus == MetricsCollectorSuccess )
+    if( eStatus == eMetricsCollectorSuccess )
     {
-        /* Set the out value for number of open TCP ports */
+        /* Set the out value for number of open TCP ports. */
         *pulOutNumTcpOpenPorts = xMetrics.xTCPPortList.uxCount;
 
         /* Fill the output array with as many tcp ports as will fit in the
@@ -132,34 +133,34 @@ MetricsCollectorStatus_t xGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
         }
     }
 
-    return MetricsCollectorSuccess;
+    return eMetricsCollectorSuccess;
 }
 /*-----------------------------------------------------------*/
 
-MetricsCollectorStatus_t xGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
+eMetricsCollectorStatus xGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
                                            uint32_t ulUdpPortsArrayLength,
                                            uint32_t * pulOutNumUdpOpenPorts )
 {
-    MetricsCollectorStatus_t eStatus = MetricsCollectorSuccess;
+    eMetricsCollectorStatus eStatus = eMetricsCollectorSuccess;
 
     MetricsType_t xMetrics = { 0 };
     BaseType_t xMetricsStatus = 0;
 
-    /* pusOutUdpPortsArray can be NULL */
+    /* pusOutUdpPortsArray can be NULL. */
     configASSERT( pulOutNumUdpOpenPorts != NULL );
 
-    if( eStatus == MetricsCollectorSuccess )
+    if( eStatus == eMetricsCollectorSuccess )
     {
-        /* Get metrics from FreeRTOS+TCP tcp_netstat utility */
+        /* Get metrics from FreeRTOS+TCP tcp_netstat utility. */
         xMetricsStatus = vGetMetrics( &xMetrics );
 
         if( xMetricsStatus != 0 )
         {
-            eStatus = MetricsCollectorCollectionFailed;
+            eStatus = eMetricsCollectorCollectionFailed;
         }
     }
 
-    if( eStatus == MetricsCollectorSuccess )
+    if( eStatus == eMetricsCollectorSuccess )
     {
         *pulOutNumUdpOpenPorts = xMetrics.xUDPPortList.uxCount;
 
@@ -178,36 +179,36 @@ MetricsCollectorStatus_t xGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
         }
     }
 
-    return MetricsCollectorSuccess;
+    return eMetricsCollectorSuccess;
 }
 
 /*-----------------------------------------------------------*/
 
-MetricsCollectorStatus_t GetEstablishedConnections( Connection_t * pxOutConnectionsArray,
+eMetricsCollectorStatus GetEstablishedConnections( Connection_t * pxOutConnectionsArray,
                                                     uint32_t ulConnectionsArrayLength,
                                                     uint32_t * pulOutNumEstablishedConnections )
 {
-    MetricsCollectorStatus_t eStatus = MetricsCollectorSuccess;
+    eMetricsCollectorStatus eStatus = eMetricsCollectorSuccess;
 
     MetricsType_t xMetrics = { 0 };
     BaseType_t xMetricsStatus = 0;
     uint32_t ulLocalIp = 0UL;
 
-    /* pxOutConnectionsArray can be NULL */
+    /* pxOutConnectionsArray can be NULL. */
     configASSERT( pulOutNumEstablishedConnections != NULL );
 
-    if( eStatus == MetricsCollectorSuccess )
+    if( eStatus == eMetricsCollectorSuccess )
     {
-        /* Get metrics from FreeRTOS+TCP tcp_netstat utility */
+        /* Get metrics from FreeRTOS+TCP tcp_netstat utility. */
         xMetricsStatus = vGetMetrics( &xMetrics );
 
         if( xMetricsStatus != 0 )
         {
-            eStatus = MetricsCollectorCollectionFailed;
+            eStatus = eMetricsCollectorCollectionFailed;
         }
     }
 
-    if( eStatus == MetricsCollectorSuccess )
+    if( eStatus == eMetricsCollectorSuccess )
     {
         /* We consider only TCP sockets for open connections. */
         *pulOutNumEstablishedConnections = xMetrics.xTCPSocketList.uxCount;
@@ -227,7 +228,7 @@ MetricsCollectorStatus_t GetEstablishedConnections( Connection_t * pxOutConnecti
             }
 
             /* If xMetrics.xTCPSocketList.uxCount > ulConnectionsArrayLength, we
-             * return the first ulConnectionsArrayLength ports */
+             * return the first ulConnectionsArrayLength ports. */
             while( ulConnectionsArrayLength > 0 )
             {
                 ulConnectionsArrayLength--;

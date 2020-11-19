@@ -26,13 +26,15 @@
  */
 
 /*
- * Demo for showing how to use the Device Defender library's API. This version
- * of the Device Defender API provides macros and helper functions for
- * assembling MQTT topics strings, and for determining whether an incoming MQTT
- * message is related to device defender. The Device Defender library does not
- * depend on a MQTT library, therefore the code for MQTT connections is placed
- * in another file (mqtt_demo_helpers.c) to make it easy to read the code using
- * the Device Defender library.
+ * Demo for showing how to use the Device Defender library's APIs. The Device
+ * Defender API provides macros and helper functions for assembling MQTT topics
+ * strings, and for determining whether an incoming MQTT message is related to
+ * device defender. The Device Defender library does not depend on any particular
+ * MQTT library, therefore the code for MQTT operations is placed in another file
+ * (mqtt_demo_helpers.c). This demo uses the coreMQTT library. If needed,
+ * mqtt_demo_helpers.c can be modified to replace coreMQTT with another MQTT
+ * library. This demo requires using the AWS IoT broker as Device Defender is an
+ * AWS service.
  *
  * This demo connects to the AWS IoT broker and subscribes to the device
  * defender topics. It then collects metrics for the open ports and sockets on
@@ -40,6 +42,12 @@
  * report is then published, and the demo waits for a response from the device
  * defender service. Upon recieving the response or timing out, the demo
  * finishes.
+ *
+ * This demo just sets the report ID to 1, which should not be used in
+ * production. Reports for a Thing with a previously used report ID will be
+ * assumed to be duplicates and discarded by the Device Defender service.
+ * The report ID needs to be unique per report sent with a given Thing.
+ * We reccomend using an increasing unique id such as the current timestamp.
  */
 
 /* Standard includes. */
@@ -51,6 +59,9 @@
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+
+/* Demo config. */
+#include "demo_config.h"
 
 /* JSON Library. */
 #include "core_json.h"
@@ -66,9 +77,6 @@
 
 /* Report builder. */
 #include "report_builder.h"
-
-/* Demo config. */
-#include "demo_config.h"
 
 /**
  * democonfigTHING_NAME is required. Throw compilation error if it is not defined.
@@ -328,7 +336,6 @@ static void prvPublishCallback( MQTTContext_t * pxMqttContext,
                                 MQTTPacketInfo_t * pxPacketInfo,
                                 MQTTDeserializedInfo_t * pxDeserializedInfo )
 {
-    uint16_t usPacketIdentifier;
     DefenderStatus_t xStatus;
     DefenderTopic_t xApi;
     bool xValidationResult;
@@ -407,7 +414,7 @@ static void prvPublishCallback( MQTTContext_t * pxMqttContext,
     }
     else
     {
-        vHandleOtherIncomingPacket( pxPacketInfo, usPacketIdentifier );
+        vHandleOtherIncomingPacket( pxPacketInfo, pxDeserializedInfo->packetIdentifier);
     }
 }
 /*-----------------------------------------------------------*/
@@ -415,26 +422,26 @@ static void prvPublishCallback( MQTTContext_t * pxMqttContext,
 static bool prvCollectDeviceMetrics( void )
 {
     bool xStatus = false;
-    MetricsCollectorStatus_t eMetricsCollectorStatus;
+    eMetricsCollectorStatus eMetricsCollectorStatus;
     uint32_t ulNumOpenTcpPorts = 0UL, ulNumOpenUdpPorts = 0UL, ulNumEstablishedConnections = 0UL;
 
     /* Collect bytes and packets sent and received. */
     eMetricsCollectorStatus = xGetNetworkStats( &( xNetworkStats ) );
 
-    if( eMetricsCollectorStatus != MetricsCollectorSuccess )
+    if( eMetricsCollectorStatus != eMetricsCollectorSuccess )
     {
         LogError( ( "xGetNetworkStats failed. Status: %d.",
                     eMetricsCollectorStatus ) );
     }
 
     /* Collect a list of open TCP ports. */
-    if( eMetricsCollectorStatus == MetricsCollectorSuccess )
+    if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
     {
         eMetricsCollectorStatus = xGetOpenTcpPorts( &( pusOpenTcpPorts[ 0 ] ),
                                                     democonfigOPEN_TCP_PORTS_ARRAY_SIZE,
                                                     &( ulNumOpenTcpPorts ) );
 
-        if( eMetricsCollectorStatus != MetricsCollectorSuccess )
+        if( eMetricsCollectorStatus != eMetricsCollectorSuccess )
         {
             LogError( ( "xGetOpenTcpPorts failed. Status: %d.",
                         eMetricsCollectorStatus ) );
@@ -442,13 +449,13 @@ static bool prvCollectDeviceMetrics( void )
     }
 
     /* Collect a list of open UDP ports. */
-    if( eMetricsCollectorStatus == MetricsCollectorSuccess )
+    if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
     {
         eMetricsCollectorStatus = xGetOpenUdpPorts( &( pusOpenUdpPorts[ 0 ] ),
                                                     democonfigOPEN_UDP_PORTS_ARRAY_SIZE,
                                                     &( ulNumOpenUdpPorts ) );
 
-        if( eMetricsCollectorStatus != MetricsCollectorSuccess )
+        if( eMetricsCollectorStatus != eMetricsCollectorSuccess )
         {
             LogError( ( "xGetOpenUdpPorts failed. Status: %d.",
                         eMetricsCollectorStatus ) );
@@ -456,13 +463,13 @@ static bool prvCollectDeviceMetrics( void )
     }
 
     /* Collect a list of established connections. */
-    if( eMetricsCollectorStatus == MetricsCollectorSuccess )
+    if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
     {
         eMetricsCollectorStatus = GetEstablishedConnections( &( pxEstablishedConnections[ 0 ] ),
                                                              democonfigESTABLISHED_CONNECTIONS_ARRAY_SIZE,
                                                              &( ulNumEstablishedConnections ) );
 
-        if( eMetricsCollectorStatus != MetricsCollectorSuccess )
+        if( eMetricsCollectorStatus != eMetricsCollectorSuccess )
         {
             LogError( ( "GetEstablishedConnections failed. Status: %d.",
                         eMetricsCollectorStatus ) );
@@ -470,7 +477,7 @@ static bool prvCollectDeviceMetrics( void )
     }
 
     /* Populate device metrics. */
-    if( eMetricsCollectorStatus == MetricsCollectorSuccess )
+    if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
     {
         xStatus = true;
         xDeviceMetrics.pxNetworkStats = &( xNetworkStats );
@@ -522,7 +529,7 @@ static bool prvSubscribeToDefenderTopics( void )
 {
     bool xStatus = false;
 
-    /* Subscribe to defender topic for responses for accepted reports */
+    /* Subscribe to defender topic for responses for accepted reports. */
     xStatus = xSubscribeToTopic( &xMqttContext,
                                  DEFENDER_API_JSON_ACCEPTED( democonfigTHING_NAME ),
                                  DEFENDER_API_LENGTH_JSON_ACCEPTED( THING_NAME_LENGTH ) );
@@ -536,7 +543,7 @@ static bool prvSubscribeToDefenderTopics( void )
 
     if( xStatus == true )
     {
-        /* Subscribe to defender topic for responses for rejected reports */
+        /* Subscribe to defender topic for responses for rejected reports. */
         xStatus = xSubscribeToTopic( &xMqttContext,
                                      DEFENDER_API_JSON_REJECTED( democonfigTHING_NAME ),
                                      DEFENDER_API_LENGTH_JSON_REJECTED( THING_NAME_LENGTH ) );
@@ -557,7 +564,7 @@ static bool prvUnsubscribeFromDefenderTopics( void )
 {
     bool xStatus = false;
 
-    /* Unsubscribe from defender accpted topic. */
+    /* Unsubscribe from defender accepted topic. */
     xStatus = xUnsubscribeFromTopic( &xMqttContext,
                                      DEFENDER_API_JSON_ACCEPTED( democonfigTHING_NAME ),
                                      DEFENDER_API_LENGTH_JSON_ACCEPTED( THING_NAME_LENGTH ) );
@@ -619,13 +626,17 @@ void prvDefenderDemoTask( void * pvParameters )
      *
      * !!!NOTE!!!
      * This demo just sets the report ID to 1, which should not be used in
-     * production. The report ID needs to be unique per report sent with a
-     * given Thing. We reccomend using a increasing unique id such as the
-     * current timestamp. */
+     * production. Reports for a Thing with a previously used report ID will be
+     * assumed to be duplicates and discarded by the Device Defender service.
+     * The report ID needs to be unique per report sent with a given Thing.
+     * We reccomend using an increasing unique id such as the current timestamp. */
     ulReportId = 1;
 
     /****************************** Connect. ******************************/
 
+    /* Attempts to connect to the AWS IoT MQTT broker over TCP. If the
+     * connection fails, retries after a timeout. Timeout value will
+     * exponentially increase until maximum attempts are reached. */
     LogInfo( ( "Establishing MQTT session..." ) );
     xStatus = xEstablishMqttSession( &xMqttContext,
                                      &xNetworkContext,
@@ -643,6 +654,36 @@ void prvDefenderDemoTask( void * pvParameters )
 
     /******************** Subscribe to Defender topics. *******************/
 
+    /* Attempt to subscribe to the AWS IoT Device Defender topics.
+     * Since this demo is using JSON, in prvSubscribeToDefenderTopics() we
+     * subscribe to the topics to which accepted and rejected responses are
+     * recieved from after publishing a JSON report.
+     *
+     * This demo uses a constant #democonfigTHING_NAME known at compile time
+     * therefore we use macros to assemble defender topic strings.
+     * If the thing name is known at run time, then we could use the API
+     * #Defender_GetTopic instead.
+     *
+     * For example, for the JSON accepted responses topic:
+     *
+     * #define TOPIC_BUFFER_LENGTH      ( 256U )
+     *
+     * // Every device should have a unique thing name registered with AWS IoT Core.
+     * // This example assumes that the device has a unique serial number which is
+     * // registered as the thing name with AWS IoT Core.
+     * const char * pThingName = GetDeviceSerialNumber();
+     * uint16_t thingNameLength = ( uint16_t )strlen( pThingname );
+     * char topicBuffer[ TOPIC_BUFFER_LENGTH ] = { 0 };
+     * uint16_t topicLength = 0;
+     * DefenderStatus_t status = DefenderSuccess;
+     *
+     * status = Defender_GetTopic( &( topicBuffer[ 0 ] ),
+     *                             TOPIC_BUFFER_LENGTH,
+     *                             pThingName,
+     *                             thingNameLength,
+     *                             DefenderJsonReportAccepted,
+     *                             &( topicLength ) );
+     */
     if( xStatus == true )
     {
         LogInfo( ( "Subscribing to defender topics..." ) );
@@ -656,6 +697,11 @@ void prvDefenderDemoTask( void * pvParameters )
 
     /*********************** Collect device metrics. **********************/
 
+    /* We then need to collect the metrics that will be sent to the AWS IoT
+     * Device Defender service. This demo puts the functions for collecting
+     * metrics in metrics_collector.h, as to abstract over the transport
+     * implementation. This demo provides metrics_collecter.c which implements
+     * the demo's metric collection for the FreeRTOS+TCP stack. */
     if( xStatus == true )
     {
         LogInfo( ( "Collecting device metrics..." ) );
@@ -669,6 +715,11 @@ void prvDefenderDemoTask( void * pvParameters )
 
     /********************** Generate defender report. *********************/
 
+    /* The data needs to be incorporated into a JSON formatted report,
+     * which follows the format expected by the Device Defender service.
+     * This format is documented here:
+     * https://docs.aws.amazon.com/iot/latest/developerguide/detect-device-side-metrics.html
+     */
     if( xStatus == true )
     {
         LogInfo( ( "Generating device defender report..." ) );
@@ -682,6 +733,11 @@ void prvDefenderDemoTask( void * pvParameters )
 
     /********************** Publish defender report. **********************/
 
+    /* The report is then published to the Device Defender service. This report
+     * is pubished on the MQTT topic for publishing JSON reports. As before,
+     * we use the defender library macros to create the topic string, though
+     * #Defender_GetTopic could be used if the Thing name is aquired at
+     * run time */
     if( xStatus == true )
     {
         LogInfo( ( "Publishing device defender report..." ) );
@@ -694,7 +750,10 @@ void prvDefenderDemoTask( void * pvParameters )
     }
 
     /* Wait for the response to our report. Response will be handled by the
-     * callback passed to xEstablishMqttSession() earlier. */
+     * callback passed to xEstablishMqttSession() earlier.
+     * The callback will verify that the MQTT messages recieved are from the
+     * defender service's topic. Based on whether the repsonse comes from
+     * the accepted or rejected topics, it updates xReportStatus. */
     if( xStatus == true )
     {
         for( i = 0; i < DEFENDER_RESPONSE_WAIT_SECONDS; i++ )

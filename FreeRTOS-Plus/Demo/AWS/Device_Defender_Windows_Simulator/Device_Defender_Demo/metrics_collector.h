@@ -40,10 +40,10 @@
  */
 typedef enum
 {
-    MetricsCollectorSuccess = 0,
-    MetricsCollectorBadParameter,
-    MetricsCollectorCollectionFailed
-} MetricsCollectorStatus_t;
+    eMetricsCollectorSuccess = 0,
+    eMetricsCollectorBadParameter,
+    eMetricsCollectorCollectionFailed
+} eMetricsCollectorStatus;
 
 /**
  * @brief Represents network stats.
@@ -78,7 +78,7 @@ typedef struct Connection
  * #MetricsCollectorBadParameter if invalid parameters are passed;
  * #MetricsCollectorCollectionFailed if the collection methods failed.
  */
-MetricsCollectorStatus_t xGetNetworkStats( NetworkStats_t * pxOutNetworkStats );
+eMetricsCollectorStatus xGetNetworkStats( NetworkStats_t * pxOutNetworkStats );
 
 /**
  * @brief Get a list of the open TCP ports.
@@ -96,7 +96,7 @@ MetricsCollectorStatus_t xGetNetworkStats( NetworkStats_t * pxOutNetworkStats );
  * #MetricsCollectorBadParameter if invalid parameters are passed;
  * #MetricsCollectorCollectionFailed if the collection methods failed.
  */
-MetricsCollectorStatus_t xGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
+eMetricsCollectorStatus xGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
                                            uint32_t ulTcpPortsArrayLength,
                                            uint32_t * pulOutNumTcpOpenPorts );
 
@@ -116,7 +116,7 @@ MetricsCollectorStatus_t xGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
  * #MetricsCollectorBadParameter if invalid parameters are passed;
  * #MetricsCollectorCollectionFailed if the collection methods failed.
  */
-MetricsCollectorStatus_t xGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
+eMetricsCollectorStatus xGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
                                            uint32_t ulUdpPortsArrayLength,
                                            uint32_t * pulOutNumUdpOpenPorts );
 
@@ -138,7 +138,7 @@ MetricsCollectorStatus_t xGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
  * #MetricsCollectorBadParameter if invalid parameters are passed;
  * #MetricsCollectorCollectionFailed if the collection methods failed.
  */
-MetricsCollectorStatus_t GetEstablishedConnections( Connection_t * pxOutConnectionsArray,
+eMetricsCollectorStatus GetEstablishedConnections( Connection_t * pxOutConnectionsArray,
                                                     uint32_t ulConnectionsArrayLength,
                                                     uint32_t * pulOutNumEstablishedConnections );
 

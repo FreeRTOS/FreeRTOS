@@ -593,7 +593,7 @@ static bool prvPublishDeviceMetricsReport( uint32_t reportLength )
 
 /**
  * @brief Create the task that demonstrates the Device Defender library API via
- * a MQTT mutually authenticated network connection with the AWS IoT broker.
+ * a mutually authenticated MQTT connection with the AWS IoT broker.
  */
 void vStartDefenderDemo( void )
 {

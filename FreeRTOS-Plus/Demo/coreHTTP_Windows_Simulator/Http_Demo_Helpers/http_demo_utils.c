@@ -139,8 +139,8 @@ HTTPStatus_t getUrlPath( const char * pcUrl,
 
 HTTPStatus_t getUrlAddress( const char * pcUrl,
                             size_t xUrlLen,
-                            const char ** pAddress,
-                            size_t * pAddressLen )
+                            const char ** pcAddress,
+                            size_t * pxAddressLen )
 {
     /* http-parser status. Initialized to 1 to signify failure. */
     int parserStatus = 1;
@@ -150,7 +150,7 @@ HTTPStatus_t getUrlAddress( const char * pcUrl,
     /* Sets all members in urlParser to 0. */
     http_parser_url_init( &urlParser );
 
-    if( ( pcUrl == NULL ) || ( pAddress == NULL ) || ( pAddressLen == NULL ) )
+    if( ( pcUrl == NULL ) || ( pcAddress == NULL ) || ( pxAddressLen == NULL ) )
     {
         LogError( ( "NULL parameter passed to getUrlAddress()." ) );
         xHTTPStatus = HTTPInvalidParameter;
@@ -172,16 +172,16 @@ HTTPStatus_t getUrlAddress( const char * pcUrl,
 
     if( xHTTPStatus == HTTPSuccess )
     {
-        *pAddressLen = ( size_t ) ( urlParser.field_data[ UF_HOST ].len );
+        *pxAddressLen = ( size_t ) ( urlParser.field_data[ UF_HOST ].len );
 
-        if( *pAddressLen == 0 )
+        if( *pxAddressLen == 0 )
         {
             xHTTPStatus = HTTPNoResponse;
-            *pAddress = NULL;
+            *pcAddress = NULL;
         }
         else
         {
-            *pAddress = &pcUrl[ urlParser.field_data[ UF_HOST ].off ];
+            *pcAddress = &pcUrl[ urlParser.field_data[ UF_HOST ].off ];
         }
     }
 

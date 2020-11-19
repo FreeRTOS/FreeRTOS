@@ -46,16 +46,6 @@
 #include "core_mqtt_state.h"
 
 /**
- * @brief Maximum number of operations awaiting an ack packet from the broker.
- */
-#define mqttexamplePENDING_ACKS_MAX_SIZE      20
-
-/**
- * @brief Maximum number of subscriptions to store in the subscription list.
- */
-#define mqttexampleSUBSCRIPTIONS_MAX_COUNT    10
-
-/**
  * @brief Timeout for MQTT_ProcessLoop function in milliseconds.
  *
  * This demo uses no delay for the process loop, so each invocation will run
@@ -63,6 +53,8 @@
  * no data available on the socket, the entire socket timeout value will elapse.
  */
 #define mqttexamplePROCESS_LOOP_TIMEOUT_MS    ( 0U )
+
+#define MAX_CONNECTIONS                       5
 
 /**
  * @brief Size of statically allocated buffers for holding topic names and payloads in this demo.
@@ -78,6 +70,8 @@
 
 /*-----------------------------------------------------------*/
 
+struct MQTTAgentContext;
+
 /**
  * @brief A type of command for interacting with the MQTT API.
  */
@@ -89,7 +83,6 @@ typedef enum CommandType
     UNSUBSCRIBE, /**< @brief Call MQTT_Unsubscribe(). */
     PING,        /**< @brief Call MQTT_Ping(). */
     DISCONNECT,  /**< @brief Call MQTT_Disconnect(). */
-    RECONNECT,   /**< @brief Reconnect a broken connection. */
     TERMINATE    /**< @brief Exit the command loop and stop processing commands. */
 } CommandType_t;
 
@@ -127,6 +120,7 @@ typedef struct Command
     CommandType_t xCommandType;
     CommandContext_t * pxCmdContext;
     CommandCallback_t vCallback;
+    struct MQTTAgentContext * pAgentContext;
 } Command_t;
 
 /**
@@ -168,6 +162,18 @@ typedef struct publishElement
     uint8_t pcTopicNameBuf[ mqttexampleDEMO_BUFFER_SIZE ];
 } PublishElement_t;
 
+typedef struct MQTTAgentContext
+{
+    MQTTContext_t * pMQTTContext;
+    AckInfo_t * pPendingAcks;
+    size_t pendingAckSize;
+    SubscriptionElement_t * pSubscriptionList;
+    size_t maxSubscriptions;
+    MQTTSubscribeInfo_t * pResendSubscriptions;
+    CommandContext_t * pResubscribeContext;
+    void * pDefaultResponseQueue;
+} MQTTAgentContext_t;
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -208,7 +214,8 @@ bool MQTTAgent_CommandLoop( void );
 bool MQTTAgent_CreateCommand( CommandType_t xCommandType,
                               CommandContext_t * pxContext,
                               CommandCallback_t xCallback,
-                              Command_t * pxCommand );
+                              Command_t * pxCommand,
+                              MQTTAgentContext_t * pAgentContext );
 
 /**
  * @brief Add a command to the global command queue.
@@ -228,43 +235,49 @@ BaseType_t MQTTAgent_AddCommandToQueue( Command_t * pxCommand );
  * @return `MQTTSuccess` if it succeeds in resending publishes, else an
  * appropriate error code from `MQTT_Publish()`
  */
-MQTTStatus_t MQTTAgent_ResumeSession( bool xSessionPresent );
+MQTTStatus_t MQTTAgent_ResumeSession( MQTTAgentContext_t * pAgentContext,
+                                      bool xSessionPresent );
+
+bool MQTTAgent_Subscribe( MQTTAgentContext_t * pAgentContext,
+                          CommandContext_t * pContext,
+                          CommandCallback_t cmdCallback,
+                          const MQTTSubscribeInfo_t * pSubscriptionList,
+                          size_t subscriptionCount );
+
+bool MQTTAgent_Unsubscribe( MQTTAgentContext_t * pAgentContext,
+                            CommandContext_t * pContext,
+                            CommandCallback_t cmdCallback,
+                            const MQTTSubscribeInfo_t * pSubscriptionList,
+                            size_t subscriptionCount );
+
+bool MQTTAgent_Publish( MQTTAgentContext_t * pAgentContext,
+                        CommandContext_t * pContext,
+                        CommandCallback_t cmdCallback,
+                        const MQTTPublishInfo_t *pPublishInfo );
+
+bool MQTTAgent_ProcessLoop( MQTTAgentContext_t * pAgentContext,
+                            CommandContext_t * pContext,
+                            CommandCallback_t cmdCallback,
+                            uint32_t timeoutMs );
+
+bool MQTTAgent_Ping( MQTTAgentContext_t * pAgentContext,
+                     CommandContext_t * pContext,
+                     CommandCallback_t cmdCallback );
+
+bool MQTTAgent_Disconnect( MQTTAgentContext_t * pAgentContext,
+                           CommandContext_t * pContext,
+                           CommandCallback_t cmdCallback );
+
+bool MQTTAgent_Terminate();
+
+/* Not thread safe. */
+void MQTTAgent_RegisterContexts( MQTTContext_t * pMQTTContext, MQTTAgentContext_t * pAgentContext );
 
 /*-----------------------------------------------------------*/
-
-/**
- * @brief List of operations that are awaiting an ack from the broker.
- */
-AckInfo_t pxPendingAcks[ mqttexamplePENDING_ACKS_MAX_SIZE ];
-
-/**
- * @brief List of active subscriptions.
- */
-SubscriptionElement_t pxSubscriptions[ mqttexampleSUBSCRIPTIONS_MAX_COUNT ];
-
-/**
- * @brief Array of subscriptions to resubscribe to.
- */
-MQTTSubscribeInfo_t pxResendSubscriptions[ mqttexampleSUBSCRIPTIONS_MAX_COUNT ];
-
-/**
- * @brief Context to use for a resubscription after a reconnect.
- */
-CommandContext_t xResubscribeContext;
 
 /**
  * @brief Queue for main task to handle MQTT operations.
  */
 QueueHandle_t xCommandQueue;
-
-/**
- * @brief Response queue for publishes received on non-subscribed topics.
- */
-QueueHandle_t xDefaultResponseQueue;
-
-/**
- * @brief Global MQTT context.
- */
-MQTTContext_t globalMqttContext;
 
 #endif /* MQTT_AGENT_H */

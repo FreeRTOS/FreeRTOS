@@ -149,6 +149,16 @@
 #define mqttexampleMILLISECONDS_PER_TICK             ( mqttexampleMILLISECONDS_PER_SECOND / configTICK_RATE_HZ )
 
 /**
+ * @brief Maximum number of operations awaiting an ack packet from the broker.
+ */
+#define mqttexamplePENDING_ACKS_MAX_SIZE             20
+
+/**
+ * @brief Maximum number of subscriptions to store in the subscription list.
+ */
+#define mqttexampleSUBSCRIPTIONS_MAX_COUNT           10
+
+/**
  * @brief Number of publishes done by the publisher in this demo.
  */
 #define mqttexamplePUBLISH_COUNT                     16
@@ -388,7 +398,7 @@ static void prvCleanExistingPersistentSession( void );
 /**
  * @brief Global MQTT context.
  */
-extern MQTTContext_t globalMqttContext;
+static MQTTContext_t globalMqttContext;
 
 /**
  * @brief Global Network context.
@@ -404,11 +414,6 @@ extern QueueHandle_t xCommandQueue;
  * @brief Response queue for prvSubscribeTask.
  */
 static QueueHandle_t xSubscriberResponseQueue;
-
-/**
- * @brief Response queue for publishes received on non-subscribed topics.
- */
-extern QueueHandle_t xDefaultResponseQueue;
 
 /**
  * @brief Handle for prvMQTTDemoTask.
@@ -430,10 +435,39 @@ static TaskHandle_t xAsyncPublisherTask;
  */
 static TaskHandle_t xSubscribeTask;
 
+static TaskHandle_t xAgentTask;
+
 /**
  * @brief The network buffer must remain valid for the lifetime of the MQTT context.
  */
 static uint8_t pcNetworkBuffer[ mqttexampleNETWORK_BUFFER_SIZE ];
+
+/**
+ * @brief List of operations that are awaiting an ack from the broker.
+ */
+static AckInfo_t pxPendingAcks[ mqttexamplePENDING_ACKS_MAX_SIZE ];
+
+/**
+ * @brief List of active subscriptions.
+ */
+static SubscriptionElement_t pxSubscriptions[ mqttexampleSUBSCRIPTIONS_MAX_COUNT ];
+
+/**
+ * @brief Array of subscriptions to resubscribe to.
+ */
+static MQTTSubscribeInfo_t pxResendSubscriptions[ mqttexampleSUBSCRIPTIONS_MAX_COUNT ];
+
+/**
+ * @brief Context to use for a resubscription after a reconnect.
+ */
+static CommandContext_t xResubscribeContext;
+
+/**
+ * @brief Response queue for publishes received on non-subscribed topics.
+ */
+static QueueHandle_t xDefaultResponseQueue;
+
+static MQTTAgentContext_t globalAgentContext;
 
 /**
  * @brief Global entry time into the application to use as a reference timestamp
@@ -484,6 +518,18 @@ static MQTTStatus_t prvMQTTInit( MQTTContext_t * pxMQTTContext,
 
     /* Initialize MQTT library. */
     return MQTT_Init( pxMQTTContext, &xTransport, prvGetTimeMs, MQTTAgent_EventCallback, &xNetworkBuffer );
+}
+
+static void prvMQTTAgentInit()
+{
+    globalAgentContext.pMQTTContext = &globalMqttContext;
+    globalAgentContext.pPendingAcks = pxPendingAcks;
+    globalAgentContext.pendingAckSize = mqttexamplePENDING_ACKS_MAX_SIZE;
+    globalAgentContext.pSubscriptionList = pxSubscriptions;
+    globalAgentContext.maxSubscriptions = mqttexampleSUBSCRIPTIONS_MAX_COUNT;
+    globalAgentContext.pResendSubscriptions = pxResendSubscriptions;
+    globalAgentContext.pResubscribeContext = &xResubscribeContext;
+    globalAgentContext.pDefaultResponseQueue = xDefaultResponseQueue;
 }
 
 static MQTTStatus_t prvMQTTConnect( MQTTContext_t * pxMQTTContext,
@@ -550,7 +596,7 @@ static MQTTStatus_t prvMQTTConnect( MQTTContext_t * pxMQTTContext,
     /* Resume a session if desired. */
     if( ( xResult == MQTTSuccess ) && !xCleanSession )
     {
-        xResult = MQTTAgent_ResumeSession( xSessionPresent );
+        xResult = MQTTAgent_ResumeSession( &globalAgentContext, xSessionPresent );
     }
 
     return xResult;
@@ -703,8 +749,7 @@ static void prvMQTTClientSocketWakeupCallback( Socket_t pxSocket )
      * to the MQTT task to make sure the task is not blocked on xCommandQueue. */
     if( uxQueueMessagesWaiting( xCommandQueue ) == ( UBaseType_t ) 0 )
     {
-        MQTTAgent_CreateCommand( PROCESSLOOP, NULL, NULL, &xCommand );
-        xResult = MQTTAgent_AddCommandToQueue( &xCommand );
+        xResult = MQTTAgent_ProcessLoop( &globalAgentContext, NULL, NULL, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
         configASSERT( xResult == pdTRUE );
     }
 }
@@ -782,8 +827,9 @@ void prvSyncPublishTask( void * pvParameters )
         xContext.ulNotificationBit = 1 << i;
         xContext.pxPublishInfo = &xPublishInfo;
         LogInfo( ( "Adding publish operation for message %s \non topic %.*s", payloadBuf, xPublishInfo.topicNameLength, xPublishInfo.pTopicName ) );
-        MQTTAgent_CreateCommand( PUBLISH, &xContext, prvCommandCallback, &xCommand );
-        xCommandAdded = MQTTAgent_AddCommandToQueue( &xCommand );
+        xCommandAdded = MQTTAgent_Publish( &globalAgentContext, &xContext, prvCommandCallback, &xPublishInfo );
+        // MQTTAgent_CreateCommand( PUBLISH, &xContext, prvCommandCallback, &xCommand );
+        // xCommandAdded = MQTTAgent_AddCommandToQueue( &xCommand );
         /* Ensure command was added to queue. */
         configASSERT( xCommandAdded == pdTRUE );
         LogInfo( ( "Waiting for publish %d to complete.", i + 1 ) );
@@ -863,8 +909,9 @@ void prvAsyncPublishTask( void * pvParameters )
                    payloadBuffers[ i ],
                    pxPublishes[ i ].topicNameLength,
                    pxPublishes[ i ].pTopicName ) );
-        MQTTAgent_CreateCommand( PUBLISH, pxContexts[ i ], prvCommandCallback, &xCommand );
-        xCommandAdded = MQTTAgent_AddCommandToQueue( &xCommand );
+        xCommandAdded = MQTTAgent_Publish( &globalAgentContext, pxContexts[ i ], prvCommandCallback, &pxPublishes[ i ] );
+        // MQTTAgent_CreateCommand( PUBLISH, pxContexts[ i ], prvCommandCallback, &xCommand );
+        // xCommandAdded = MQTTAgent_AddCommandToQueue( &xCommand );
         /* Ensure command was added to queue. */
         configASSERT( xCommandAdded == pdTRUE );
         /* Short delay so we do not bombard the broker with publishes. */
@@ -934,8 +981,9 @@ void prvSubscribeTask( void * pvParameters )
     xContext.pxSubscribeInfo = &xSubscribeInfo;
     xContext.ulSubscriptionCount = 1;
     LogInfo( ( "Adding subscribe operation" ) );
-    MQTTAgent_CreateCommand( SUBSCRIBE, &xContext, prvCommandCallback, &xCommand );
-    xCommandAdded = MQTTAgent_AddCommandToQueue( &xCommand );
+    xCommandAdded = MQTTAgent_Subscribe( &globalAgentContext, &xContext, prvCommandCallback, &xSubscribeInfo, 1 );
+    // MQTTAgent_CreateCommand( SUBSCRIBE, &xContext, prvCommandCallback, &xCommand );
+    // xCommandAdded = MQTTAgent_AddCommandToQueue( &xCommand );
     /* Ensure command was added to queue. */
     configASSERT( xCommandAdded == pdTRUE );
 
@@ -1000,7 +1048,6 @@ void prvSubscribeTask( void * pvParameters )
     }
 
     LogInfo( ( "Finished receiving\n" ) );
-    MQTTAgent_CreateCommand( UNSUBSCRIBE, &xContext, prvCommandCallback, &xCommand );
     memset( ( void * ) &xContext, 0x00, sizeof( xContext ) );
     xContext.pxResponseQueue = xSubscriberResponseQueue;
     xContext.xTaskToNotify = xTaskGetCurrentTaskHandle();
@@ -1008,7 +1055,9 @@ void prvSubscribeTask( void * pvParameters )
     xContext.pxSubscribeInfo = &xSubscribeInfo;
     xContext.ulSubscriptionCount = 1;
     LogInfo( ( "Adding unsubscribe operation\n" ) );
-    xCommandAdded = MQTTAgent_AddCommandToQueue( &xCommand );
+    xCommandAdded = MQTTAgent_Unsubscribe( &globalAgentContext, &xContext, prvCommandCallback, &xSubscribeInfo, 1 );
+    // MQTTAgent_CreateCommand( UNSUBSCRIBE, &xContext, prvCommandCallback, &xCommand );
+    // xCommandAdded = MQTTAgent_AddCommandToQueue( &xCommand );
     /* Ensure command was added to queue. */
     configASSERT( xCommandAdded == pdTRUE );
 
@@ -1020,8 +1069,7 @@ void prvSubscribeTask( void * pvParameters )
 
     /* Create command to stop command loop. */
     LogInfo( ( "Beginning command queue termination." ) );
-    MQTTAgent_CreateCommand( TERMINATE, NULL, NULL, &xCommand );
-    xCommandAdded = MQTTAgent_AddCommandToQueue( &xCommand );
+    MQTTAgent_Terminate();
     /* Ensure command was added to queue. */
     configASSERT( xCommandAdded == pdTRUE );
 
@@ -1088,6 +1136,7 @@ static void prvMQTTAgentTask( void * pvParameters )
     LogInfo( ( "Creating Disconnect operation." ) );
     MQTT_Disconnect( &globalMqttContext );
     LogInfo( ( "Disconnected from broker." ) );
+    vTaskDelete( NULL );
 }
 
 /*-----------------------------------------------------------*/
@@ -1124,6 +1173,10 @@ static void prvMQTTDemoTask( void * pvParameters )
      * demo. */
     prvCleanExistingPersistentSession();
 
+    prvMQTTAgentInit();
+
+    MQTTAgent_RegisterContexts( &globalMqttContext, &globalAgentContext );
+
     for( ; ; )
     {
         /* Clear the lists of subscriptions and pending acknowledgments. */
@@ -1141,6 +1194,8 @@ static void prvMQTTDemoTask( void * pvParameters )
         /* Give subscriber task higher priority so the subscribe will be processed
          * before the first publish.  This must be less than or equal to the priority of
          * the main task. */
+        xResult = xTaskCreate( prvMQTTAgentTask, "MQTTAgent", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY + 1, &xAgentTask );
+        configASSERT( xResult == pdPASS );
         xResult = xTaskCreate( prvSubscribeTask, "Subscriber", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY + 1, &xSubscribeTask );
         configASSERT( xResult == pdPASS );
         xResult = xTaskCreate( prvSyncPublishTask, "SyncPublisher", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY, &xSyncPublisherTask );
@@ -1150,26 +1205,10 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         LogInfo( ( "Running command loop" ) );
 
-        do
+        while( globalMqttContext.connectStatus == MQTTConnected )
         {
-            xTerminateReceived = MQTTAgent_CommandLoop();
-
-            if( xTerminateReceived != true )
-            {
-                /* Reconnect TCP. */
-                xNetworkStatus = prvSocketDisconnect( &xNetworkContext );
-                configASSERT( xNetworkStatus == pdPASS );
-                xNetworkStatus = prvSocketConnect( &xNetworkContext );
-                configASSERT( xNetworkStatus == pdPASS );
-                /* MQTT Connect with a persistent session. */
-                xMQTTStatus = prvMQTTConnect( &globalMqttContext, false );
-            }
-        } while( !xTerminateReceived && ( ++ulWaitCounter < mqttexampleMAX_WAIT_ITERATIONS ) );
-
-        configASSERT( xTerminateReceived );
-        LogInfo( ( "Creating Disconnect operation." ) );
-        MQTT_Disconnect( &globalMqttContext );
-        LogInfo( ( "Disconnected from broker." ) );
+            vTaskDelay( 1000 );
+        }
 
         /* Delete created queues. Wait for tasks to exit before cleaning up. */
         LogInfo( ( "Waiting for tasks to exit." ) );

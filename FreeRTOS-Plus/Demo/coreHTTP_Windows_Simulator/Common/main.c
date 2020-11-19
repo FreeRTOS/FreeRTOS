@@ -22,11 +22,10 @@
  * http://www.FreeRTOS.org
  * http://aws.amazon.com/freertos
  *
- * 1 tab == 4 spaces!
  */
 
 /***
- * See https://www.FreeRTOS.org/corehttp for configuration and usage instructions.
+ * See https://www.FreeRTOS.org for configuration and usage instructions.
  ***/
 
 /* Standard includes. */

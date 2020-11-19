@@ -22,7 +22,6 @@
  * https://www.FreeRTOS.org
  * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /**
@@ -118,7 +117,7 @@ eMetricsCollectorStatus eGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
         /* Set the out value for number of open TCP ports. */
         *pulOutNumTcpOpenPorts = xMetrics.xTCPPortList.uxCount;
 
-        /* Fill the output array with as many tcp ports as will fit in the
+        /* Fill the output array with as many TCP ports as will fit in the
          * given array. */
         if( pusOutTcpPortsArray != NULL )
         {
@@ -164,7 +163,7 @@ eMetricsCollectorStatus eGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
     {
         *pulOutNumUdpOpenPorts = xMetrics.xUDPPortList.uxCount;
 
-        /* Fill the output array with as many udp ports as will fit in the
+        /* Fill the output array with as many UDP ports as will fit in the
          * given array. */
         if( pusOutUdpPortsArray != NULL )
         {
@@ -213,7 +212,7 @@ eMetricsCollectorStatus eGetEstablishedConnections( Connection_t * pxOutConnecti
         /* We consider only TCP sockets for open connections. */
         *pulOutNumEstablishedConnections = xMetrics.xTCPSocketList.uxCount;
 
-        /* Fill the output array with as many tcp socket infos as will fit in
+        /* Fill the output array with as many TCP socket infos as will fit in
          * the given array. */
         if( pxOutConnectionsArray != NULL )
         {

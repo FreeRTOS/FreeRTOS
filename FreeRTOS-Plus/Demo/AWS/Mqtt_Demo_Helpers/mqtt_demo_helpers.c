@@ -22,7 +22,6 @@
  * https://www.FreeRTOS.org
  * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /**
@@ -195,7 +194,7 @@ typedef struct PublishPackets
 static uint32_t ulGlobalEntryTimeMs;
 
 /**
- * @brief The flag to indicate the mqtt session changed.
+ * @brief The flag to indicate the MQTT session changed.
  */
 static BaseType_t xMqttSessionEstablished = pdFALSE;
 
@@ -371,7 +370,7 @@ static BaseType_t prvGetNextFreeIndexForOutgoingPublishes( uint8_t * pucIndex )
     for( ucIndex = 0; ucIndex < MAX_OUTGOING_PUBLISHES; ucIndex++ )
     {
         /* A free ucIndex is marked by invalid packet id.
-         * Check if the the ucIndex has a free slot. */
+         * Check if the ucIndex has a free slot. */
         if( outgoingPublishPackets[ ucIndex ].packetId == MQTT_PACKET_ID_INVALID )
         {
             xReturnStatus = pdPASS;

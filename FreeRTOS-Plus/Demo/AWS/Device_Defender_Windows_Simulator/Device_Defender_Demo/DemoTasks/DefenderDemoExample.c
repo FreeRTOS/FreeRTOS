@@ -22,32 +22,32 @@
  * https://www.FreeRTOS.org
  * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /*
  * Demo for showing how to use the Device Defender library's APIs. The Device
- * Defender API provides macros and helper functions for assembling MQTT topics
- * strings, and for determining whether an incoming MQTT message is related to
- * device defender. The Device Defender library does not depend on any particular
- * MQTT library, therefore the code for MQTT operations is placed in another file
- * (mqtt_demo_helpers.c). This demo uses the coreMQTT library. If needed,
- * mqtt_demo_helpers.c can be modified to replace coreMQTT with another MQTT
- * library. This demo requires using the AWS IoT broker as Device Defender is an
- * AWS service.
+ * Defender library provides macros and helper functions for assembling MQTT
+ * topics strings, and for determining whether an incoming MQTT message is
+ * related to device defender. The Device Defender library does not depend on
+ * any particular MQTT library, therefore the code for MQTT operations is
+ * placed in another file (mqtt_demo_helpers.c). This demo uses the coreMQTT
+ * library. If needed, mqtt_demo_helpers.c can be modified to replace coreMQTT
+ * with another MQTT library. This demo requires using the AWS IoT broker as
+ * Device Defender is an AWS service.
  *
  * This demo connects to the AWS IoT broker and subscribes to the device
  * defender topics. It then collects metrics for the open ports and sockets on
  * the device using FreeRTOS+TCP, and generates a device defender report. The
  * report is then published, and the demo waits for a response from the device
- * defender service. Upon recieving the response or timing out, the demo
+ * defender service. Upon receiving the response or timing out, the demo
  * finishes.
  *
- * This demo just sets the report ID to 1, which should not be used in
- * production. Reports for a Thing with a previously used report ID will be
- * assumed to be duplicates and discarded by the Device Defender service.
- * The report ID needs to be unique per report sent with a given Thing.
- * We reccomend using an increasing unique id such as the current timestamp.
+ * This demo sets the report ID to xTaskGetTickCount(), which may collide if
+ * the device is reset. Reports for a Thing with a previously used report ID
+ * will be assumed to be duplicates and discarded by the Device Defender
+ * service. The report ID needs to be unique per report sent with a given
+ * Thing. We recommend using an increasing unique id such as the current
+ * timestamp.
  */
 
 /* Standard includes. */
@@ -249,14 +249,14 @@ static bool prvValidateDefenderResponse( const char * pcDefenderResponse,
 /**
  * @brief The task used to demonstrate the Defender API.
  *
- * This task collects metrics from the device using the functions in metrics_collector.h
- * and uses them to build a defender report using functions in report_builder.h. Metrics
- * include the number for bytes written and read over the network, open TCP and UDP ports,
- * and open TCP sockets. The generated report is then published to the AWS IoT Device
- * Defender service.
+ * This task collects metrics from the device using the functions in
+ * metrics_collector.h and uses them to build a defender report using functions
+ * in report_builder.h. Metrics include the number for bytes written and read
+ * over the network, open TCP and UDP ports, and open TCP sockets. The
+ * generated report is then published to the AWS IoT Device Defender service.
  *
- * @param[in] pvParameters Parameters as passed at the time of task creation. Not
- * used in this example.
+ * @param[in] pvParameters Parameters as passed at the time of task creation.
+ * Not used in this example.
  */
 static void prvDefenderDemoTask( void * pvParameters );
 
@@ -311,7 +311,7 @@ static bool prvValidateDefenderResponse( const char * pcDefenderResponse,
          * published report? */
         if( ulReportIdInResponse == ulReportId )
         {
-            LogInfo( ( "A valid reponse with report ID %u received from the "
+            LogInfo( ( "A valid response with report ID %u received from the "
                        "AWS IoT Device Defender Service.", ulReportId ) );
             xStatus = true;
         }
@@ -370,8 +370,8 @@ static void prvPublishCallback( MQTTContext_t * pxMqttContext,
         {
             if( xApi == DefenderJsonReportAccepted )
             {
-                /* Check if the response is valid and is for the report we published. */
-                /* If so, report was accepted. */
+                /* Check if the response is valid and is for the report we
+                 * published. If so, report was accepted. */
                 xValidationResult = prvValidateDefenderResponse( pxPublishInfo->pPayload,
                                                                  pxPublishInfo->payloadLength );
 
@@ -385,8 +385,8 @@ static void prvPublishCallback( MQTTContext_t * pxMqttContext,
             }
             else if( xApi == DefenderJsonReportRejected )
             {
-                /* Check if the response is valid and is for the report we published. */
-                /* If so, report was rejected. */
+                /* Check if the response is valid and is for the report we
+                 * published. If so, report was rejected. */
                 xValidationResult = prvValidateDefenderResponse( pxPublishInfo->pPayload,
                                                                  pxPublishInfo->payloadLength );
 
@@ -496,11 +496,11 @@ static bool prvCollectDeviceMetrics( void )
 static bool prvGenerateDeviceMetricsReport( uint32_t * pulOutReportLength )
 {
     bool xStatus = false;
-    ReportBuilderStatus_t eReportBuilderStatus;
+    eReportBuilderStatus eReportBuilderStatus;
 
     /* Generate the metrics report in the format expected by the AWS IoT Device
      * Defender Service. */
-    eReportBuilderStatus = xGenerateJsonReport( &( pcDeviceMetricsJsonReport[ 0 ] ),
+    eReportBuilderStatus = eGenerateJsonReport( &( pcDeviceMetricsJsonReport[ 0 ] ),
                                                 democonfigDEVICE_METRICS_REPORT_BUFFER_SIZE,
                                                 &( xDeviceMetrics ),
                                                 democonfigDEVICE_METRICS_REPORT_MAJOR_VERSION,
@@ -508,7 +508,7 @@ static bool prvGenerateDeviceMetricsReport( uint32_t * pulOutReportLength )
                                                 ulReportId,
                                                 pulOutReportLength );
 
-    if( eReportBuilderStatus != ReportBuilderSuccess )
+    if( eReportBuilderStatus != eReportBuilderSuccess )
     {
         LogError( ( "GenerateJsonReport failed. Status: %d.",
                     eReportBuilderStatus ) );
@@ -592,15 +592,15 @@ static bool prvPublishDeviceMetricsReport( uint32_t reportLength )
 /*-----------------------------------------------------------*/
 
 /**
- * @brief Create the task that demonstrates the Device Defender library API via a
- * MQTT mutually authenticated network connection with the AWS IoT broker.
+ * @brief Create the task that demonstrates the Device Defender library API via
+ * a MQTT mutually authenticated network connection with the AWS IoT broker.
  */
 void vStartDefenderDemo( void )
 {
-    /* This example uses a single application task, which shows that how to
-     * use Device Defender library to generate and validate AWS IoT Device Defender
-     * MQTT topics, and use the coreMQTT library to communicate with the AWS IoT
-     * Device Defender service. */
+    /* This example uses a single application task, which shows that how to use
+     * Device Defender library to generate and validate AWS IoT Device Defender
+     * MQTT topics, and use the coreMQTT library to communicate with the AWS
+     * IoT Device Defender service. */
     xTaskCreate( prvDefenderDemoTask,      /* Function that implements the task. */
                  "DemoTask",               /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
@@ -625,12 +625,13 @@ void prvDefenderDemoTask( void * pvParameters )
     /* Set a report Id to be used.
      *
      * !!!NOTE!!!
-     * This demo just sets the report ID to 1, which should not be used in
-     * production. Reports for a Thing with a previously used report ID will be
-     * assumed to be duplicates and discarded by the Device Defender service.
-     * The report ID needs to be unique per report sent with a given Thing.
-     * We reccomend using an increasing unique id such as the current timestamp. */
-    ulReportId = 1;
+     * This demo sets the report ID to xTaskGetTickCount(), which may collide
+     * if the device is reset. Reports for a Thing with a previously used
+     * report ID will be assumed to be duplicates and discarded by the Device
+     * Defender service. The report ID needs to be unique per report sent with
+     * a given Thing. We recommend using an increasing unique id such as the
+     * current timestamp. */
+    ulReportId = ( uint32_t ) xTaskGetTickCount();
 
     /****************************** Connect. ******************************/
 
@@ -657,7 +658,7 @@ void prvDefenderDemoTask( void * pvParameters )
     /* Attempt to subscribe to the AWS IoT Device Defender topics.
      * Since this demo is using JSON, in prvSubscribeToDefenderTopics() we
      * subscribe to the topics to which accepted and rejected responses are
-     * recieved from after publishing a JSON report.
+     * received from after publishing a JSON report.
      *
      * This demo uses a constant #democonfigTHING_NAME known at compile time
      * therefore we use macros to assemble defender topic strings.
@@ -698,10 +699,10 @@ void prvDefenderDemoTask( void * pvParameters )
     /*********************** Collect device metrics. **********************/
 
     /* We then need to collect the metrics that will be sent to the AWS IoT
-     * Device Defender service. This demo puts the functions for collecting
-     * metrics in metrics_collector.h, as to abstract over the transport
-     * implementation. This demo provides metrics_collecter.c which implements
-     * the demo's metric collection for the FreeRTOS+TCP stack. */
+     * Device Defender service. This demo uses the functions declared in
+     * in metrics_collector.h to collect network metrics. For this demo, the
+     * implementation of these functions are in metrics_collector.c and
+     * collects metrics using tcp_netstat utility for FreeRTOS+TCP. */
     if( xStatus == true )
     {
         LogInfo( ( "Collecting device metrics..." ) );
@@ -734,9 +735,9 @@ void prvDefenderDemoTask( void * pvParameters )
     /********************** Publish defender report. **********************/
 
     /* The report is then published to the Device Defender service. This report
-     * is pubished on the MQTT topic for publishing JSON reports. As before,
+     * is published to the MQTT topic for publishing JSON reports. As before,
      * we use the defender library macros to create the topic string, though
-     * #Defender_GetTopic could be used if the Thing name is aquired at
+     * #Defender_GetTopic could be used if the Thing name is acquired at
      * run time */
     if( xStatus == true )
     {
@@ -751,8 +752,8 @@ void prvDefenderDemoTask( void * pvParameters )
 
     /* Wait for the response to our report. Response will be handled by the
      * callback passed to xEstablishMqttSession() earlier.
-     * The callback will verify that the MQTT messages recieved are from the
-     * defender service's topic. Based on whether the repsonse comes from
+     * The callback will verify that the MQTT messages received are from the
+     * defender service's topic. Based on whether the response comes from
      * the accepted or rejected topics, it updates xReportStatus. */
     if( xStatus == true )
     {

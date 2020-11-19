@@ -22,7 +22,6 @@
  * https://www.FreeRTOS.org
  * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 #ifndef DEMO_CONFIG_H
@@ -157,7 +156,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @brief Client's private key.
  *
  * Please refer to the AWS documentation below for details
- * regarding clientauthentication.
+ * regarding client authentication.
  * https://docs.aws.amazon.com/iot/latest/developerguide/client-authentication.html
  *
  * @note This private key should be PEM-encoded.

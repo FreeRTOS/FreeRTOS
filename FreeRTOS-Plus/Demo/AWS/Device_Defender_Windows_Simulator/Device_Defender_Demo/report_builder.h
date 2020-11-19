@@ -22,7 +22,6 @@
  * https://www.FreeRTOS.org
  * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 #ifndef REPORT_BUILDER_H_
@@ -36,10 +35,10 @@
  */
 typedef enum
 {
-    ReportBuilderSuccess = 0,
-    ReportBuilderBadParameter,
-    ReportBuilderBufferTooSmall
-} ReportBuilderStatus_t;
+    eReportBuilderSuccess = 0,
+    eReportBuilderBadParameter,
+    eReportBuilderBufferTooSmall
+} eReportBuilderStatus;
 
 /**
  * @brief Represents metrics to be included in the report.
@@ -71,12 +70,12 @@ typedef struct ReportMetrics
  * #ReportBuilderBadParameter if invalid parameters are passed;
  * #ReportBuilderBufferTooSmall if the buffer cannot hold the full report.
  */
-ReportBuilderStatus_t xGenerateJsonReport( char * pcBuffer,
-                                           uint32_t ulBufferLength,
-                                           const ReportMetrics_t * pxMetrics,
-                                           uint32_t ulMajorReportVersion,
-                                           uint32_t ulMinorReportVersion,
-                                           uint32_t ulReportId,
-                                           uint32_t * pulOutReportLength );
+eReportBuilderStatus eGenerateJsonReport( char * pcBuffer,
+                                          uint32_t ulBufferLength,
+                                          const ReportMetrics_t * pxMetrics,
+                                          uint32_t ulMajorReportVersion,
+                                          uint32_t ulMinorReportVersion,
+                                          uint32_t ulReportId,
+                                          uint32_t * pulOutReportLength );
 
 #endif /* ifndef REPORT_BUILDER_H_ */

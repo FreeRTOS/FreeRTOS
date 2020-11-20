@@ -83,12 +83,12 @@ HTTPStatus_t getUrlPath( const char * pcUrl,
                          size_t * pxPathLen )
 {
     /* http-parser status. Initialized to 1 to signify failure. */
-    int parserStatus = 1;
-    struct http_parser_url urlParser;
+    int lParserStatus = 1;
+    struct http_parser_url xUrlParser;
     HTTPStatus_t xHTTPStatus = HTTPSuccess;
 
-    /* Sets all members in urlParser to 0. */
-    http_parser_url_init( &urlParser );
+    /* Sets all members in xUrlParser to 0. */
+    http_parser_url_init( &xUrlParser );
 
     if( ( pcUrl == NULL ) || ( pcPath == NULL ) || ( pxPathLen == NULL ) )
     {
@@ -98,21 +98,21 @@ HTTPStatus_t getUrlPath( const char * pcUrl,
 
     if( xHTTPStatus == HTTPSuccess )
     {
-        parserStatus = http_parser_parse_url( pcUrl, xUrlLen, 0, &urlParser );
+        lParserStatus = http_parser_parse_url( pcUrl, xUrlLen, 0, &xUrlParser );
 
-        if( parserStatus != 0 )
+        if( lParserStatus != 0 )
         {
             LogError( ( "Error parsing the input URL %.*s. Error code: %d.",
                         ( int32_t ) xUrlLen,
                         pcUrl,
-                        parserStatus ) );
+                        lParserStatus ) );
             xHTTPStatus = HTTPParserInternalError;
         }
     }
 
     if( xHTTPStatus == HTTPSuccess )
     {
-        *pxPathLen = ( size_t ) ( urlParser.field_data[ UF_PATH ].len );
+        *pxPathLen = ( size_t ) ( xUrlParser.field_data[ UF_PATH ].len );
 
         if( *pxPathLen == 0 )
         {
@@ -121,7 +121,7 @@ HTTPStatus_t getUrlPath( const char * pcUrl,
         }
         else
         {
-            *pcPath = &pcUrl[ urlParser.field_data[ UF_PATH ].off ];
+            *pcPath = &pcUrl[ xUrlParser.field_data[ UF_PATH ].off ];
         }
     }
 
@@ -143,12 +143,12 @@ HTTPStatus_t getUrlAddress( const char * pcUrl,
                             size_t * pxAddressLen )
 {
     /* http-parser status. Initialized to 1 to signify failure. */
-    int parserStatus = 1;
-    struct http_parser_url urlParser;
+    int lParserStatus = 1;
+    struct http_parser_url xUrlParser;
     HTTPStatus_t xHTTPStatus = HTTPSuccess;
 
-    /* Sets all members in urlParser to 0. */
-    http_parser_url_init( &urlParser );
+    /* Sets all members in xUrlParser to 0. */
+    http_parser_url_init( &xUrlParser );
 
     if( ( pcUrl == NULL ) || ( pcAddress == NULL ) || ( pxAddressLen == NULL ) )
     {
@@ -158,21 +158,21 @@ HTTPStatus_t getUrlAddress( const char * pcUrl,
 
     if( xHTTPStatus == HTTPSuccess )
     {
-        parserStatus = http_parser_parse_url( pcUrl, xUrlLen, 0, &urlParser );
+        lParserStatus = http_parser_parse_url( pcUrl, xUrlLen, 0, &xUrlParser );
 
-        if( parserStatus != 0 )
+        if( lParserStatus != 0 )
         {
             LogError( ( "Error parsing the input URL %.*s. Error code: %d.",
                         ( int32_t ) xUrlLen,
                         pcUrl,
-                        parserStatus ) );
+                        lParserStatus ) );
             xHTTPStatus = HTTPParserInternalError;
         }
     }
 
     if( xHTTPStatus == HTTPSuccess )
     {
-        *pxAddressLen = ( size_t ) ( urlParser.field_data[ UF_HOST ].len );
+        *pxAddressLen = ( size_t ) ( xUrlParser.field_data[ UF_HOST ].len );
 
         if( *pxAddressLen == 0 )
         {
@@ -181,7 +181,7 @@ HTTPStatus_t getUrlAddress( const char * pcUrl,
         }
         else
         {
-            *pcAddress = &pcUrl[ urlParser.field_data[ UF_HOST ].off ];
+            *pcAddress = &pcUrl[ xUrlParser.field_data[ UF_HOST ].off ];
         }
     }
 

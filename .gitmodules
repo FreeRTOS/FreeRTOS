@@ -31,3 +31,6 @@
 [submodule "FreeRTOS-Plus/Source/AWS/device-defender"]
 	path = FreeRTOS-Plus/Source/AWS/device-defender
 	url = https://github.com/aws/device-defender-for-aws-iot-embedded-sdk.git
+[submodule "FreeRTOS-Plus/Source/Application-Protocols/coreHTTP"]
+	path = FreeRTOS-Plus/Source/Application-Protocols/coreHTTP
+	url = https://github.com/FreeRTOS/coreHTTP

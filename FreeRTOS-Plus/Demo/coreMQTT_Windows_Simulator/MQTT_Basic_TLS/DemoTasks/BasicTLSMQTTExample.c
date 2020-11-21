@@ -479,7 +479,7 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
                                                                   NetworkContext_t * pxNetworkContext )
 {
     TlsTransportStatus_t xNetworkStatus;
-    BackoffAlgStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
+    BackoffAlgorithmStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
     BackoffAlgorithmContext_t xReconnectParams;
 
     /* Set the credentials for establishing a TLS connection. */
@@ -491,7 +491,7 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
                                        RETRY_BACKOFF_BASE_MS,
                                        RETRY_MAX_BACKOFF_DELAY_MS,
                                        RETRY_MAX_ATTEMPTS,
-                                       generateRandomNumber );
+                                       prvGenerateRandonNumber );
 
     /* Attempt to connect to the MQTT broker. If connection fails, retry after
      * a timeout. Timeout value will exponentially increase until maximum
@@ -608,7 +608,7 @@ static void prvUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo )
 static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
 {
     MQTTStatus_t xResult = MQTTSuccess;
-    BackoffAlgStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
+    BackoffAlgorithmStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
     BackoffAlgorithmContext_t xRetryParams;
     MQTTSubscribeInfo_t xMQTTSubscription[ mqttexampleTOPIC_COUNT ];
     bool xFailedSubscribeToTopic = false;
@@ -631,7 +631,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
                                        RETRY_BACKOFF_BASE_MS,
                                        RETRY_MAX_BACKOFF_DELAY_MS,
                                        RETRY_MAX_ATTEMPTS,
-                                       generateRandomNumber );
+                                       prvGenerateRandonNumber );
     xRetryParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
 
     do

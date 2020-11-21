@@ -959,7 +959,7 @@ static MQTTStatus_t prvResumeSession( bool xSessionPresent )
 static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
 {
     BaseType_t xConnected = pdFAIL;
-    BackoffAlgStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
+    BackoffAlgorithmStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
     BackoffAlgorithmContext_t xReconnectParams;
 
     #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
@@ -1002,7 +1002,7 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
                                        RETRY_BACKOFF_BASE_MS,
                                        RETRY_MAX_BACKOFF_DELAY_MS,
                                        RETRY_MAX_ATTEMPTS,
-                                       generateRandomNumber );
+                                       prvGenerateRandonNumber );
 
     /* Attempt to connect to MQTT broker. If connection fails, retry after a
      * timeout. Timeout value will exponentially increase until the maximum

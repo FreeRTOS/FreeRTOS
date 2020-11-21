@@ -445,7 +445,7 @@ static PlaintextTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkC
                                        RETRY_BACKOFF_BASE_MS,
                                        RETRY_MAX_BACKOFF_DELAY_MS,
                                        RETRY_MAX_ATTEMPTS,
-                                       prvGenerateRandonNumber );
+                                       prvGenerateRandomNumber );
 
     /* Attempt to connect to MQTT broker. If connection fails, retry after
      * a timeout. Timeout value will exponentially increase till maximum
@@ -581,7 +581,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
                                        RETRY_BACKOFF_BASE_MS,
                                        RETRY_MAX_BACKOFF_DELAY_MS,
                                        RETRY_MAX_ATTEMPTS,
-                                       prvGenerateRandonNumber );
+                                       prvGenerateRandomNumber );
     xRetryParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
 
     do

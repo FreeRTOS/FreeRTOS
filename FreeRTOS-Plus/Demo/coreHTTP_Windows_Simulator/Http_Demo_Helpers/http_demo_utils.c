@@ -49,7 +49,7 @@ BaseType_t connectToServerWithBackoffRetries( TransportConnect_t connectFunction
                                        RETRY_BACKOFF_BASE_MS,
                                        RETRY_MAX_BACKOFF_DELAY_MS,
                                        RETRY_MAX_ATTEMPTS,
-                                       prvGenerateRandonNumber );
+                                       prvGenerateRandomNumber );
 
     /* Attempt to connect to the HTTP server. If connection fails, retry after a
      * timeout. The timeout value will exponentially increase until either the

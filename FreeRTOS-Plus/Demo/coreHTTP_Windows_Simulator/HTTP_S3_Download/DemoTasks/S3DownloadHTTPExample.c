@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS V202011.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,8 +19,8 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -35,6 +35,11 @@
  * client library API is used to download the S3 file (by sending multiple GET
  * requests, filling up the response buffer each time until all parts are
  * downloaded). If any request fails, an error code is returned.
+ *
+ * @Note: This demo requires user-generated pre-signed URLs to be pasted into
+ * demo_config.h. Please use the provided script "presigned_urls_gen.py"
+ * (located in Http_Demo_Helpers) to generate these URLs. For detailed
+ * instructions, see the accompanied README.md.
  */
 
 /**
@@ -249,13 +254,13 @@ void vStartSimpleHTTPDemo( void )
 /**
  * @brief Entry point of the demo.
  *
- * This example, using a pre-signed URL,  resolves a S3 domain, establishes a
- * TCP connection, validates the server's certificate using the root CA
- * certificate defined in the config header, then finally performs a TLS
- * handshake with the HTTP server so that all communication is encrypted. After
- * which, the HTTP Client library API is used to download the S3 file (by
- * sending multiple GET requests, filling up the response buffer each time until
- * all parts are downloaded). If any request fails, an error code is returned.
+ * This example, using a pre-signed URL, resolves a S3 domain, establishes a TCP
+ * connection, validates the server's certificate using the root CA certificate
+ * defined in the config header, then finally performs a TLS handshake with the
+ * HTTP server so that all communication is encrypted. After which, the HTTP
+ * Client library API is used to download the S3 file (by sending multiple GET
+ * requests, filling up the response buffer each time until all parts are
+ * downloaded). If any request fails, an error code is returned.
  *
  * @note This example is single-threaded and uses statically allocated memory.
  *
@@ -270,9 +275,7 @@ static void prvHTTPDemoTask( void * pvParameters )
     /* HTTPS Client library return status. */
     HTTPStatus_t xHTTPStatus = HTTPSuccess;
 
-    /* Upon return, pdPASS will indicate a successful demo execution.
-    * pdFAIL will indicate some failures occurred during execution. The
-    * user of this demo must check the logs for any failure codes. */
+    /* The user of this demo must check the logs for any failure codes. */
     BaseType_t xDemoStatus = pdPASS;
 
     /* Remove compiler warnings about unused parameters. */

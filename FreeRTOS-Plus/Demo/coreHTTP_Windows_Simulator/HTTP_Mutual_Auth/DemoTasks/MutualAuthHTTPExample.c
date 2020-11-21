@@ -231,9 +231,7 @@ static void prvHTTPDemoTask( void * pvParameters )
     NetworkContext_t xNetworkContext = { 0 };
     BaseType_t xIsConnectionEstablished = pdFALSE;
 
-    /* Upon return, pdPASS will indicate a successful demo execution.
-    * pdFAIL will indicate some failures occurred during execution. The
-    * user of this demo must check the logs for any failure codes. */
+    /* The user of this demo must check the logs for any failure codes. */
     BaseType_t xDemoStatus = pdPASS;
 
     /* Remove compiler warnings about unused parameters. */

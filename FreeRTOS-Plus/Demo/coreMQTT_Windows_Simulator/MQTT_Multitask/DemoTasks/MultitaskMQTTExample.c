@@ -89,7 +89,7 @@
 #include "core_mqtt_state.h"
 
 /* Exponential backoff retry include. */
-#include "exponential_backoff.h"
+#include "backoff_algorithm.h"
 
 /* Transport interface include. */
 #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
@@ -998,8 +998,11 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
 
     /* We will use a retry mechanism with an exponential backoff mechanism and
      * jitter. We initialize reconnect attempts and interval here. */
-    xReconnectParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
-    RetryUtils_ParamsReset( &xReconnectParams );
+    BackoffAlgorithm_InitializeParams( &xReconnectParams,
+                                       RETRY_BACKOFF_BASE_MS,
+                                       RETRY_MAX_BACKOFF_DELAY_MS,
+                                       RETRY_MAX_ATTEMPTS,
+                                       generateRandomNumber );
 
     /* Attempt to connect to MQTT broker. If connection fails, retry after a
      * timeout. Timeout value will exponentially increase until the maximum
@@ -1036,7 +1039,7 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
         if( !xConnected )
         {
             LogWarn( ( "Connection to the broker failed. Retrying connection with backoff and jitter." ) );
-            xRetryUtilsStatus = RetryUtils_BackoffAndSleep( &xReconnectParams );
+            xRetryUtilsStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextBackoff );
         }
 
         if( xRetryUtilsStatus == RetryUtilsRetriesExhausted )

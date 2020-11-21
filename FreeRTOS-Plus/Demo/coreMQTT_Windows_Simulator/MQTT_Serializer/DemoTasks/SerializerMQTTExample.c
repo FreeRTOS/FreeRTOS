@@ -61,7 +61,7 @@
 #include "core_mqtt_serializer.h"
 
 /* Exponential backoff retry include. */
-#include "exponential_backoff.h"
+#include "backoff_algorithm.h"
 
 /*-----------------------------------------------------------*/
 
@@ -421,7 +421,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         /* If the server rejected the subscription request, attempt to resubscribe
          * to the topic. Attempts are made according to the exponential backoff
-         * retry strategy declared in exponential_backoff.h. */
+         * retry strategy declared in backoff_algorithm.h. */
         prvMQTTSubscribeWithBackoffRetries( xMQTTSocket );
 
         /**************************** Publish and Keep-Alive Loop. ******************************/
@@ -617,8 +617,11 @@ static Socket_t prvConnectToServerWithBackoffRetries()
     RetryUtilsParams_t xReconnectParams;
 
     /* Initialize reconnect attempts and interval. */
-    RetryUtils_ParamsReset( &xReconnectParams );
-    xReconnectParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
+    BackoffAlgorithm_InitializeParams( &xReconnectParams,
+                                       RETRY_BACKOFF_BASE_MS,
+                                       RETRY_MAX_BACKOFF_DELAY_MS,
+                                       RETRY_MAX_ATTEMPTS,
+                                       generateRandomNumber );
 
     /* Attempt to connect to MQTT broker. If connection fails, retry after
      * a timeout. Timeout value will exponentially increase till maximum
@@ -637,7 +640,7 @@ static Socket_t prvConnectToServerWithBackoffRetries()
         if( xSocket == FREERTOS_INVALID_SOCKET )
         {
             LogWarn( ( "Connection to the broker failed. Retrying connection with backoff and jitter." ) );
-            xRetryUtilsStatus = RetryUtils_BackoffAndSleep( &xReconnectParams );
+            xRetryUtilsStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextBackoff );
         }
 
         if( xRetryUtilsStatus == RetryUtilsRetriesExhausted )
@@ -817,7 +820,11 @@ static void prvMQTTSubscribeWithBackoffRetries( Socket_t xMQTTSocket )
     bool xFailedSubscribeToTopic = false;
 
     /* Initialize retry attempts and interval. */
-    RetryUtils_ParamsReset( &xRetryParams );
+    BackoffAlgorithm_InitializeParams( &xRetryParams,
+                                       RETRY_BACKOFF_BASE_MS,
+                                       RETRY_MAX_BACKOFF_DELAY_MS,
+                                       RETRY_MAX_ATTEMPTS,
+                                       generateRandomNumber );
     xRetryParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
 
     do
@@ -857,7 +864,7 @@ static void prvMQTTSubscribeWithBackoffRetries( Socket_t xMQTTSocket )
                 LogWarn( ( "Server rejected subscription request. Attempting to re-subscribe to topic %s.",
                            xTopicFilterContext[ ulTopicCount ].pcTopicFilter ) );
                 xFailedSubscribeToTopic = true;
-                xRetryUtilsStatus = RetryUtils_BackoffAndSleep( &xRetryParams );
+                xRetryUtilsStatus = BackoffAlgorithm_GetNextBackoff( &xRetryParams, &usNextBackoff );
                 break;
             }
         }

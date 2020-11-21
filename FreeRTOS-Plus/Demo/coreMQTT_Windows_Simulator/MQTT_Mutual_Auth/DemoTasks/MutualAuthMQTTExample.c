@@ -494,7 +494,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         /* If server rejected the subscription request, attempt to resubscribe to
          * topic. Attempts are made according to the exponential backoff retry
-         * strategy implemented in retryUtils. */
+         * strategy implemented in BackoffAlgorithm. */
         prvMQTTSubscribeWithBackoffRetries( &xMQTTContext );
 
         /****************** Publish and Keep Alive Loop. **********************/
@@ -561,8 +561,8 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
                                                                   NetworkContext_t * pxNetworkContext )
 {
     TlsTransportStatus_t xNetworkStatus;
-    RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
-    RetryUtilsParams_t xReconnectParams;
+    BackoffAlgStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
+    BackoffAlgorithmContext_t xReconnectParams;
 
     #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
 
@@ -620,15 +620,15 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
         if( xNetworkStatus != TLS_TRANSPORT_SUCCESS )
         {
             LogWarn( ( "Connection to the broker failed. Retrying connection with backoff and jitter." ) );
-            xRetryUtilsStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextBackoff );
+            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextBackoff );
         }
 
-        if( xRetryUtilsStatus == RetryUtilsRetriesExhausted )
+        if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )
         {
             LogError( ( "Connection to the broker failed, all attempts exhausted." ) );
             xNetworkStatus = TLS_TRANSPORT_CONNECT_FAILURE;
         }
-    } while( ( xNetworkStatus != TLS_TRANSPORT_SUCCESS ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
+    } while( ( xNetworkStatus != TLS_TRANSPORT_SUCCESS ) && ( xBackoffAlgStatus == BackoffAlgorithmSuccess ) );
 
     return xNetworkStatus;
 }
@@ -735,8 +735,8 @@ static void prvUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo )
 static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
 {
     MQTTStatus_t xResult = MQTTSuccess;
-    RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
-    RetryUtilsParams_t xRetryParams;
+    BackoffAlgStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
+    BackoffAlgorithmContext_t xRetryParams;
     MQTTSubscribeInfo_t xMQTTSubscription[ mqttexampleTOPIC_COUNT ];
     bool xFailedSubscribeToTopic = false;
     uint32_t ulTopicCount = 0U;
@@ -803,13 +803,13 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
                 LogWarn( ( "Server rejected subscription request. Attempting to re-subscribe to topic %s.",
                            xTopicFilterContext[ ulTopicCount ].pcTopicFilter ) );
                 xFailedSubscribeToTopic = true;
-                xRetryUtilsStatus = BackoffAlgorithm_GetNextBackoff( &xRetryParams, &usNextBackoff );
+                xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xRetryParams, &usNextBackoff );
                 break;
             }
         }
 
-        configASSERT( xRetryUtilsStatus != RetryUtilsRetriesExhausted );
-    } while( ( xFailedSubscribeToTopic == true ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
+        configASSERT( xBackoffAlgStatus != BackoffAlgorithmRetriesExhausted );
+    } while( ( xFailedSubscribeToTopic == true ) && ( xBackoffAlgStatus == BackoffAlgorithmSuccess ) );
 }
 /*-----------------------------------------------------------*/
 

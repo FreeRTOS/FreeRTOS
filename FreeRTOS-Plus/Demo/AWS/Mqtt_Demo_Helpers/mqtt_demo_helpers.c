@@ -318,7 +318,7 @@ static uint32_t prvGetTimeMs( void );
 /**
  * @brief The random number generator to use for exponential backoff with
  * jitter retry logic.
- * This function is an implementation the #RetryUtils_RNG_t interface type
+ * This function is an implementation the #BackoffAlgorithm_RNG_t interface type
  * of the retry utils library API.
  *
  * @return The generated random number. This function ALWAYS succeeds
@@ -374,8 +374,8 @@ static BaseType_t prvSeedRandomNumberGenerator()
 static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext_t * pxNetworkContext )
 {
     TlsTransportStatus_t xNetworkStatus = TLS_TRANSPORT_SUCCESS;
-    RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
-    RetryUtilsParams_t xReconnectParams = { 0 };
+    BackoffAlgStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
+    BackoffAlgorithmContext_t xReconnectParams = { 0 };
     NetworkCredentials_t xNetworkCredentials = { 0 };
     uint16_t usNextRetryBackOff = 0U;
 
@@ -440,21 +440,21 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext
         if( xNetworkStatus != TLS_TRANSPORT_SUCCESS )
         {
             /* Get back-off value (in milliseconds) for the next connection retry. */
-            xRetryUtilsStatus = RetryUtils_GetNextBackOff( &xReconnectParams, &usNextRetryBackOff );
-            configASSERT( xRetryUtilsStatus != RetryUtilsRngFailure );
+            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackOff( &xReconnectParams, &usNextRetryBackOff );
+            configASSERT( xBackoffAlgStatus != BackoffAlgorithmRngFailure );
 
-            if( xRetryUtilsStatus == RetryUtilsRetriesExhausted )
+            if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )
             {
                 LogError( ( "Connection to the server failed, all attempts exhausted." ) );
             }
-            else if( xRetryUtilsStatus == RetryUtilsSuccess )
+            else if( xBackoffAlgStatus == BackoffAlgorithmSuccess )
             {
                 LogWarn( ( "Connection to the HTTP server failed. "
                            "Retrying connection with backoff and jitter." ) );
                 vTaskDelay( pdMS_TO_TICKS( usNextRetryBackOff ) );
             }
         }
-    } while( ( xNetworkStatus != TLS_TRANSPORT_SUCCESS ) && ( xRngSeeded == pdTRUE ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
+    } while( ( xNetworkStatus != TLS_TRANSPORT_SUCCESS ) && ( xRngSeeded == pdTRUE ) && ( xBackoffAlgStatus == BackoffAlgorithmSuccess ) );
 
     return xNetworkStatus;
 }

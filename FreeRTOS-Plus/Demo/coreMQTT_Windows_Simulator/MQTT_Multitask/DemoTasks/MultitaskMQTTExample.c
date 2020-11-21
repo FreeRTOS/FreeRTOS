@@ -959,8 +959,8 @@ static MQTTStatus_t prvResumeSession( bool xSessionPresent )
 static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
 {
     BaseType_t xConnected = pdFAIL;
-    RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
-    RetryUtilsParams_t xReconnectParams;
+    BackoffAlgStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
+    BackoffAlgorithmContext_t xReconnectParams;
 
     #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
         TlsTransportStatus_t xNetworkStatus = TLS_TRANSPORT_CONNECT_FAILURE;
@@ -1039,14 +1039,14 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
         if( !xConnected )
         {
             LogWarn( ( "Connection to the broker failed. Retrying connection with backoff and jitter." ) );
-            xRetryUtilsStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextBackoff );
+            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextBackoff );
         }
 
-        if( xRetryUtilsStatus == RetryUtilsRetriesExhausted )
+        if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )
         {
             LogError( ( "Connection to the broker failed. All attempts exhausted." ) );
         }
-    } while( ( xConnected != pdPASS ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
+    } while( ( xConnected != pdPASS ) && ( xBackoffAlgStatus == BackoffAlgorithmSuccess ) );
 
     /* Set the socket wakeup callback. */
     if( xConnected )

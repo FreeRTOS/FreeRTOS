@@ -604,8 +604,8 @@ static void prvMQTTDemoTask( void * pvParameters )
 static PlaintextTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext_t * pxNetworkContext )
 {
     PlaintextTransportStatus_t xNetworkStatus;
-    RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
-    RetryUtilsParams_t xReconnectParams;
+    BackoffAlgStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
+    BackoffAlgorithmContext_t xReconnectParams;
 
     /* Initialize reconnect attempts and interval. */
     BackoffAlgorithm_InitializeParams( &xReconnectParams,
@@ -635,15 +635,15 @@ static PlaintextTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkC
         if( xNetworkStatus != PLAINTEXT_TRANSPORT_SUCCESS )
         {
             LogWarn( ( "Connection to the broker failed. Retrying connection with backoff and jitter." ) );
-            xRetryUtilsStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextBackoff );
+            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextBackoff );
         }
 
-        if( xRetryUtilsStatus == RetryUtilsRetriesExhausted )
+        if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )
         {
             LogError( ( "Connection to the broker failed, all attempts exhausted." ) );
             xNetworkStatus = PLAINTEXT_TRANSPORT_CONNECT_FAILURE;
         }
-    } while( ( xNetworkStatus != PLAINTEXT_TRANSPORT_SUCCESS ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
+    } while( ( xNetworkStatus != PLAINTEXT_TRANSPORT_SUCCESS ) && ( xBackoffAlgStatus == BackoffAlgorithmSuccess ) );
 
     return xNetworkStatus;
 }
@@ -726,8 +726,8 @@ static void prvUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo )
 static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
 {
     MQTTStatus_t xResult = MQTTSuccess;
-    RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
-    RetryUtilsParams_t xRetryParams;
+    BackoffAlgStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
+    BackoffAlgorithmContext_t xRetryParams;
     MQTTSubscribeInfo_t xMQTTSubscription[ mqttexampleTOPIC_COUNT ];
     BaseType_t xTimerStatus;
     bool xFailedSubscribeToTopic = false;
@@ -812,13 +812,13 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
                 LogWarn( ( "Server rejected subscription request. Attempting to re-subscribe to topic %s.",
                            xTopicFilterContext[ ulTopicCount ].pcTopicFilter ) );
                 xFailedSubscribeToTopic = true;
-                xRetryUtilsStatus = BackoffAlgorithm_GetNextBackoff( &xRetryParams, &usNextBackoff );
+                xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xRetryParams, &usNextBackoff );
                 break;
             }
         }
 
-        configASSERT( xRetryUtilsStatus != RetryUtilsRetriesExhausted );
-    } while( ( xFailedSubscribeToTopic == true ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
+        configASSERT( xBackoffAlgStatus != BackoffAlgorithmRetriesExhausted );
+    } while( ( xFailedSubscribeToTopic == true ) && ( xBackoffAlgStatus == BackoffAlgorithmSuccess ) );
 }
 /*-----------------------------------------------------------*/
 

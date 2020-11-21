@@ -613,8 +613,8 @@ static Socket_t prvCreateTCPConnectionToBroker( void )
 static Socket_t prvConnectToServerWithBackoffRetries()
 {
     Socket_t xSocket;
-    RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
-    RetryUtilsParams_t xReconnectParams;
+    BackoffAlgStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
+    BackoffAlgorithmContext_t xReconnectParams;
 
     /* Initialize reconnect attempts and interval. */
     BackoffAlgorithm_InitializeParams( &xReconnectParams,
@@ -640,15 +640,15 @@ static Socket_t prvConnectToServerWithBackoffRetries()
         if( xSocket == FREERTOS_INVALID_SOCKET )
         {
             LogWarn( ( "Connection to the broker failed. Retrying connection with backoff and jitter." ) );
-            xRetryUtilsStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextBackoff );
+            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextBackoff );
         }
 
-        if( xRetryUtilsStatus == RetryUtilsRetriesExhausted )
+        if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )
         {
             LogError( ( "Connection to the broker failed, all attempts exhausted." ) );
             xSocket = FREERTOS_INVALID_SOCKET;
         }
-    } while( ( xSocket == FREERTOS_INVALID_SOCKET ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
+    } while( ( xSocket == FREERTOS_INVALID_SOCKET ) && ( xBackoffAlgStatus == BackoffAlgorithmSuccess ) );
 
     return xSocket;
 }
@@ -815,8 +815,8 @@ static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket )
 static void prvMQTTSubscribeWithBackoffRetries( Socket_t xMQTTSocket )
 {
     uint32_t ulTopicCount = 0U;
-    RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
-    RetryUtilsParams_t xRetryParams;
+    BackoffAlgStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
+    BackoffAlgorithmContext_t xRetryParams;
     bool xFailedSubscribeToTopic = false;
 
     /* Initialize retry attempts and interval. */
@@ -864,13 +864,13 @@ static void prvMQTTSubscribeWithBackoffRetries( Socket_t xMQTTSocket )
                 LogWarn( ( "Server rejected subscription request. Attempting to re-subscribe to topic %s.",
                            xTopicFilterContext[ ulTopicCount ].pcTopicFilter ) );
                 xFailedSubscribeToTopic = true;
-                xRetryUtilsStatus = BackoffAlgorithm_GetNextBackoff( &xRetryParams, &usNextBackoff );
+                xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xRetryParams, &usNextBackoff );
                 break;
             }
         }
 
-        configASSERT( xRetryUtilsStatus != RetryUtilsRetriesExhausted );
-    } while( ( xFailedSubscribeToTopic == true ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
+        configASSERT( xBackoffAlgStatus != BackoffAlgorithmRetriesExhausted );
+    } while( ( xFailedSubscribeToTopic == true ) && ( xBackoffAlgStatus == BackoffAlgorithmSuccess ) );
 }
 /*-----------------------------------------------------------*/
 

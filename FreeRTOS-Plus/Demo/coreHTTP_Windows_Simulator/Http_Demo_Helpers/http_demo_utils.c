@@ -38,9 +38,9 @@ BaseType_t connectToServerWithBackoffRetries( TransportConnect_t connectFunction
 {
     BaseType_t xReturn = pdFAIL;
     /* Status returned by the retry utilities. */
-    RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
+    BackoffAlgStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
     /* Struct containing the next backoff time. */
-    RetryUtilsParams_t xReconnectParams;
+    BackoffAlgorithmContext_t xReconnectParams;
 
     assert( connectFunction != NULL );
 
@@ -66,9 +66,9 @@ BaseType_t connectToServerWithBackoffRetries( TransportConnect_t connectFunction
             LogInfo( ( "Retry attempt %lu out of maximum retry attempts %lu.",
                        ( xReconnectParams.attemptsDone + 1 ),
                        MAX_RETRY_ATTEMPTS ) );
-            xRetryUtilsStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextBackoff );
+            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextBackoff );
         }
-    } while( ( xReturn == pdFAIL ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
+    } while( ( xReturn == pdFAIL ) && ( xBackoffAlgStatus == BackoffAlgorithmSuccess ) );
 
     if( xReturn == pdFAIL )
     {

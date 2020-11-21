@@ -191,9 +191,4 @@ extern void vLoggingPrintf( const char * pcFormatString,
  */
 #define democonfigDEMO_STACKSIZE                    configMINIMAL_STACK_SIZE
 
-/**
- * @brief Size of the network buffer for MQTT packets.
- */
-#define democonfigNETWORK_BUFFER_SIZE               ( 1024U )
-
 #endif /* ifndef DEMO_CONFIG_H */

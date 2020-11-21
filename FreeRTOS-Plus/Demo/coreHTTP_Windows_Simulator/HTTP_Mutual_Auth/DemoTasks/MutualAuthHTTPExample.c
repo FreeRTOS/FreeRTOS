@@ -44,6 +44,7 @@
  * @file MutualAuthHTTPExample.c
  * @brief Demonstrates usage of the HTTP library.
  */
+
 /* Standard includes. */
 #include <stdio.h>
 #include <stdlib.h>
@@ -56,7 +57,7 @@
 /* Demo Specific configs. */
 #include "demo_config.h"
 
-/* MQTT library includes. */
+/* HTTP library includes. */
 #include "core_http_client.h"
 
 /* Exponential backoff retry include. */
@@ -83,6 +84,7 @@
 #ifndef democonfigCLIENT_CERTIFICATE_PEM
     #error "Please define democonfigCLIENT_CERTIFICATE_PEM in demo_config.h."
 #endif
+
 #ifndef democonfigCLIENT_PRIVATE_KEY_PEM
     #error "Please define democonfigCLIENT_PRIVATE_KEY_PEM in demo_config.h."
 #endif
@@ -101,7 +103,6 @@
 #ifndef democonfigAWS_HTTP_PORT
     #define democonfigAWS_HTTP_PORT    ( 8443 )
 #endif
-
 
 /* Check that a transport timeout for transport send and receive is defined. */
 #ifndef democonfigTRANSPORT_SEND_RECV_TIMEOUT_MS

@@ -53,6 +53,9 @@
 /* Exponential backoff retry include. */
 #include "backoff_algorithm.h"
 
+/* Include PKCS11 wrapper helper. */
+#include "pkcs11_helpers.h"
+
 /* Transport interface implementation include header for TLS. */
 #include "using_mbedtls.h"
 
@@ -440,7 +443,7 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext
         if( xNetworkStatus != TLS_TRANSPORT_SUCCESS )
         {
             /* Get back-off value (in milliseconds) for the next connection retry. */
-            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackOff( &xReconnectParams, &usNextRetryBackOff );
+            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextRetryBackOff );
             configASSERT( xBackoffAlgStatus != BackoffAlgorithmRngFailure );
 
             if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )

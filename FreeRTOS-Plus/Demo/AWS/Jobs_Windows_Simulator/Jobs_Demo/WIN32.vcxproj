@@ -168,6 +168,7 @@
     <ClCompile Include="..\..\..\..\Source\AWS\jobs\source\jobs.c" />
     <ClCompile Include="..\..\..\..\Source\coreJSON\source\core_json.c" />
     <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\aes.c">
+    <ClInclude Include="..\..\..\Common\PKCS11_Helpers\pkcs11_helpers.c" />
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
     </ClCompile>

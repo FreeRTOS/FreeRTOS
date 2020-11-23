@@ -53,9 +53,6 @@
 /* Exponential backoff retry include. */
 #include "backoff_algorithm.h"
 
-/* Include PKCS11 wrapper helper. */
-#include "pkcs11_helpers.h"
-
 /* Transport interface implementation include header for TLS. */
 #include "using_mbedtls.h"
 
@@ -387,7 +384,7 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext
                 vTaskDelay( pdMS_TO_TICKS( usNextRetryBackOff ) );
             }
         }
-    } while( ( xNetworkStatus != TLS_TRANSPORT_SUCCESS ) && ( xRngSeeded == pdTRUE ) && ( xBackoffAlgStatus == BackoffAlgorithmSuccess ) );
+    } while( ( xNetworkStatus != TLS_TRANSPORT_SUCCESS ) && ( xBackoffAlgStatus == BackoffAlgorithmSuccess ) );
 
     return xNetworkStatus;
 }

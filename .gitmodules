@@ -36,4 +36,4 @@
 	url = https://github.com/FreeRTOS/coreHTTP
 [submodule "FreeRTOS-Plus/Source/Utilities/backoff_algorithm"]
 	path = FreeRTOS-Plus/Source/Utilities/backoff_algorithm
-	url = git@github.com:FreeRTOS/backoffAlgorithm.git
+	url = https://github.com/FreeRTOS/backoffAlgorithm.git

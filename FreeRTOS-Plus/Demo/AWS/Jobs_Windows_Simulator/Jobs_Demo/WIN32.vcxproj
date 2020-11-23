@@ -58,7 +58,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\..\..\Common\WinPCap;..\..\..\..\..\FreeRTOS\Source\include;..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp;..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls;..\..\..\..\Source\Utilities\mbedtls_freertos;..\..\..\..\..\Source\mbedtls_utils;..\..\..\..\ThirdParty\mbedtls\include;..\..\..\..\Source\AWS\jobs\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\Mqtt_Demo_Helpers;..\..\..\Common\PKCS11_Helpers;..\..\..\..\Source\corePKCS11\source\include;..\..\..\..\Source\corePKCS11\source\portable\mbedtls\include;..\..\..\..\Source\corePKCS11\3rdparty\pkcs11;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\..\..\Common\WinPCap;..\..\..\..\..\FreeRTOS\Source\include;..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp;..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls;..\..\..\..\Source\Utilities\mbedtls_freertos;..\..\..\..\..\Source\mbedtls_utils;..\..\..\..\ThirdParty\mbedtls\include;..\..\..\..\Source\AWS\jobs\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\Mqtt_Demo_Helpers;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config.h";WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -165,9 +165,6 @@
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c" />
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c" />
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c" />
-    <ClCompile Include="..\..\..\..\Source\corePKCS11\source\core_pkcs11.c" />
-    <ClCompile Include="..\..\..\..\Source\corePKCS11\source\portable\mbedtls\core_pkcs11_mbedtls.c" />
-    <ClCompile Include="..\..\..\..\Source\corePKCS11\source\portable\windows\core_pkcs11_pal.c" />
     <ClCompile Include="..\..\..\..\Source\AWS\jobs\source\jobs.c" />
     <ClCompile Include="..\..\..\..\Source\coreJSON\source\core_json.c" />
     <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\aes.c">
@@ -494,7 +491,6 @@
     <ClCompile Include="main.c" />
     <ClCompile Include="DemoTasks\JobsDemoExample.c" />
     <ClCompile Include="..\..\Mqtt_Demo_Helpers\mqtt_demo_helpers.c" />
-    <ClCompile Include="..\..\..\Common\PKCS11_Helpers\pkcs11_helpers.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\event_groups.h" />
@@ -612,7 +608,6 @@
     <ClInclude Include="..\..\..\..\ThirdParty\mbedtls\include\mbedtls\x509_crt.h" />
     <ClInclude Include="..\..\..\..\ThirdParty\mbedtls\include\mbedtls\x509_csr.h" />
     <ClInclude Include="..\..\..\..\ThirdParty\mbedtls\include\mbedtls\xtea.h" />
-    <ClInclude Include="..\..\..\Common\PKCS11_Helpers\pkcs11_helpers.h" />
     <ClInclude Include="mbedtls_config.h" />
     <ClInclude Include="demo_config.h" />
     <ClInclude Include="FreeRTOSConfig.h" />

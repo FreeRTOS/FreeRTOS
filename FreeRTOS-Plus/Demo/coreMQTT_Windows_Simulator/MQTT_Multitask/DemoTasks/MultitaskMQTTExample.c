@@ -109,6 +109,22 @@
     #define mqttexampleNETWORK_BUFFER_SIZE    ( 1024U )
 #endif
 
+/**
+ * @brief The maximum number of retries for network operation with server.
+ */
+#define mqttexampleRETRY_MAX_ATTEMPTS                ( 5U )
+
+/**
+ * @brief The maximum back-off delay (in milliseconds) for retrying failed operation
+ *  with server.
+ */
+#define mqttexampleRETRY_MAX_BACKOFF_DELAY_MS        ( 5000U )
+
+/**
+ * @brief The base back-off delay (in milliseconds) to use for network operation retry
+ * attempts.
+ */
+#define mqttexampleRETRY_BACKOFF_BASE_MS             ( 500U )
 
 /**
  * @brief Timeout for receiving CONNACK packet in milliseconds.
@@ -961,6 +977,7 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
     BaseType_t xConnected = pdFAIL;
     BackoffAlgorithmStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
     BackoffAlgorithmContext_t xReconnectParams;
+    uint16_t usNextRetryBackOff = 0U;
 
     #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
         TlsTransportStatus_t xNetworkStatus = TLS_TRANSPORT_CONNECT_FAILURE;
@@ -997,12 +1014,15 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
     #endif /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
 
     /* We will use a retry mechanism with an exponential backoff mechanism and
-     * jitter. We initialize reconnect attempts and interval here. */
+     * jitter. We initialize the context required for backoff period calculation here.
+     * Note: This demo is using pseudo random number generator for the backoff
+     * algorithm. However, it is recommended to use a True Random Number generator to
+     * avoid possibility of collisions between multiple devices retrying connection. */
     BackoffAlgorithm_InitializeParams( &xReconnectParams,
-                                       RETRY_BACKOFF_BASE_MS,
-                                       RETRY_MAX_BACKOFF_DELAY_MS,
-                                       RETRY_MAX_ATTEMPTS,
-                                       prvGenerateRandomNumber );
+                                       mqttexampleRETRY_BACKOFF_BASE_MS,
+                                       mqttexampleRETRY_MAX_BACKOFF_DELAY_MS,
+                                       mqttexampleRETRY_MAX_ATTEMPTS,
+                                       uxRand );
 
     /* Attempt to connect to MQTT broker. If connection fails, retry after a
      * timeout. Timeout value will exponentially increase until the maximum
@@ -1038,13 +1058,20 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
 
         if( !xConnected )
         {
-            LogWarn( ( "Connection to the broker failed. Retrying connection with backoff and jitter." ) );
-            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextBackoff );
-        }
+            /* Get back-off value (in milliseconds) for the next connection retry. */
+            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextRetryBackOff );
+            configASSERT( xBackoffAlgStatus != BackoffAlgorithmRngFailure );
 
-        if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )
-        {
-            LogError( ( "Connection to the broker failed. All attempts exhausted." ) );
+            if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )
+            {
+                LogError( ( "Connection to the broker failed, all attempts exhausted." ) );
+            }
+            else if( xBackoffAlgStatus == BackoffAlgorithmSuccess )
+            {
+                LogWarn( ( "Connection to the broker failed. "
+                           "Retrying connection with backoff and jitter." ) );
+                vTaskDelay( pdMS_TO_TICKS( usNextRetryBackOff ) );
+            }
         }
     } while( ( xConnected != pdPASS ) && ( xBackoffAlgStatus == BackoffAlgorithmSuccess ) );
 

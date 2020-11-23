@@ -84,24 +84,22 @@
 
 /*-----------------------------------------------------------*/
 
-
 /**
  * @brief The maximum number of retries for network operation with server.
  */
-#define RETRY_MAX_ATTEMPTS            ( 5U )
+#define RETRY_MAX_ATTEMPTS                           ( 5U )
 
 /**
  * @brief The maximum back-off delay (in milliseconds) for retrying failed operation
  *  with server.
  */
-#define RETRY_MAX_BACKOFF_DELAY_MS    ( 5000U )
+#define RETRY_MAX_BACKOFF_DELAY_MS                   ( 5000U )
 
 /**
  * @brief The base back-off delay (in milliseconds) to use for network operation retry
  * attempts.
  */
-#define RETRY_BACKOFF_BASE_MS         ( 500U )
-
+#define RETRY_BACKOFF_BASE_MS                        ( 500U )
 
 /**
  * @brief Timeout for receiving CONNACK packet in milliseconds.
@@ -375,11 +373,11 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext
 
             if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )
             {
-                LogError( ( "Connection to the server failed, all attempts exhausted." ) );
+                LogError( ( "Connection to the broker failed, all attempts exhausted." ) );
             }
             else if( xBackoffAlgStatus == BackoffAlgorithmSuccess )
             {
-                LogWarn( ( "Connection to the HTTP server failed. "
+                LogWarn( ( "Connection to the broker failed. "
                            "Retrying connection with backoff and jitter." ) );
                 vTaskDelay( pdMS_TO_TICKS( usNextRetryBackOff ) );
             }

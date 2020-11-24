@@ -381,7 +381,7 @@
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\core_http_client.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\http_parser.c">
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser\http_parser.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c">
@@ -476,7 +476,7 @@
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreHTTP\source\include\core_http_client.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Source\Application-Protocols\coreHTTP\source\include\http_parser.h">
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser\http_parser.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP\include</Filter>
     </ClInclude>
     <ClInclude Include="core_http_config.h" />

@@ -40,7 +40,7 @@
 /**
  * @brief The maximum number of retries for network operation with server.
  */
-#define MAX_RETRY_ATTEMPTS            ( 5U )
+#define RETRY_MAX_ATTEMPTS            ( 5U )
 
 /**
  * @brief The maximum back-off delay (in milliseconds) for retrying failed
@@ -96,7 +96,7 @@ BaseType_t connectToServerWithBackoffRetries( TransportConnect_t connectFunction
     BackoffAlgorithm_InitializeParams( &xReconnectParams,
                                        RETRY_BACKOFF_BASE_MS,
                                        RETRY_MAX_BACKOFF_DELAY_MS,
-                                       MAX_RETRY_ATTEMPTS,
+                                       RETRY_MAX_ATTEMPTS,
                                        prvGenerateRandomNumber );
 
     /* Attempt to connect to the HTTP server. If connection fails, retry after a
@@ -113,7 +113,7 @@ BaseType_t connectToServerWithBackoffRetries( TransportConnect_t connectFunction
                        "Retrying connection with backoff and jitter." ) );
             LogInfo( ( "Retry attempt %lu out of maximum retry attempts %lu.",
                        ( xReconnectParams.attemptsDone + 1 ),
-                       MAX_RETRY_ATTEMPTS ) );
+                       RETRY_MAX_ATTEMPTS ) );
             xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextBackoff );
         }
     } while( ( xReturn == pdFAIL ) && ( xBackoffAlgStatus == BackoffAlgorithmSuccess ) );

@@ -37,6 +37,49 @@
 
 /*-----------------------------------------------------------*/
 
+/**
+ * @brief The maximum number of retries for network operation with server.
+ */
+#define RETRY_MAX_ATTEMPTS            ( 5U )
+
+/**
+ * @brief The maximum back-off delay (in milliseconds) for retrying failed
+ * operation with server.
+ */
+#define RETRY_MAX_BACKOFF_DELAY_MS    ( 5000U )
+
+/**
+ * @brief The base back-off delay (in milliseconds) to use for network operation
+ * retry attempts.
+ */
+#define RETRY_BACKOFF_BASE_MS         ( 500U )
+
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief A wrapper to the "uxRand()" random number generator so that it
+ * can be passed to the backoffAlgorithm library for retry logic.
+ *
+ * This function implements the #BackoffAlgorithm_RNG_T type interface
+ * in the backoffAlgorithm library API.
+ *
+ * @note The "uxRand" function represents a pseudo random number generator.
+ * However, it is recommended to use a True Randon Number Generator (TRNG)
+ * for generating unique device-specific random values to avoid possibility
+ * of network collisions from multiple devices retrying network operations.
+ *
+ * @return The generated randon number. This function ALWAYS succeeds.
+ */
+static int32_t prvGenerateRandomNumber();
+
+/*-----------------------------------------------------------*/
+
+static int32_t prvGenerateRandomNumber()
+{
+    return( uxRand() & INT32_MAX );
+}
+
+/*-----------------------------------------------------------*/
 BaseType_t connectToServerWithBackoffRetries( TransportConnect_t connectFunction,
                                               NetworkContext_t * pxNetworkContext )
 {
@@ -45,6 +88,7 @@ BaseType_t connectToServerWithBackoffRetries( TransportConnect_t connectFunction
     BackoffAlgorithmStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
     /* Struct containing the next backoff time. */
     BackoffAlgorithmContext_t xReconnectParams;
+    uint16_t usNextBackoff = 0U;
 
     assert( connectFunction != NULL );
 

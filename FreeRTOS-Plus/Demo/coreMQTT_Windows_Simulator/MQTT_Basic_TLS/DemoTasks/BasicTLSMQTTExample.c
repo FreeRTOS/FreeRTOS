@@ -194,6 +194,22 @@
 static void prvMQTTDemoTask( void * pvParameters );
 
 /**
+ * @brief A wrapper to the "uxRand()" random number generator so that it
+ * can be passed to the backoffAlgorithm library for retry logic.
+ *
+ * This function implements the #BackoffAlgorithm_RNG_T type interface
+ * in the backoffAlgorithm library API.
+ *
+ * @note The "uxRand" function represents a pseudo random number generator.
+ * However, it is recommended to use a True Randon Number Generator (TRNG)
+ * for generating unique device-specific random values to avoid possibility
+ * of network collisions from multiple devices retrying network operations.
+ *
+ * @return The generated randon number. This function ALWAYS succeeds.
+ */
+static int32_t prvGenerateRandomNumber();
+
+/**
  * @brief Connect to MQTT broker with reconnection retries.
  *
  * If connection fails, retry is attempted after a timeout.
@@ -492,6 +508,13 @@ static void prvMQTTDemoTask( void * pvParameters )
 }
 /*-----------------------------------------------------------*/
 
+static int32_t prvGenerateRandomNumber()
+{
+    return( uxRand() & INT32_MAX );
+}
+
+/*-----------------------------------------------------------*/
+
 static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredentials_t * pxNetworkCredentials,
                                                                   NetworkContext_t * pxNetworkContext )
 {
@@ -513,7 +536,7 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
                                        mqttexampleRETRY_BACKOFF_BASE_MS,
                                        mqttexampleRETRY_MAX_BACKOFF_DELAY_MS,
                                        mqttexampleRETRY_MAX_ATTEMPTS,
-                                       uxRand );
+                                       prvGenerateRandomNum );
 
     /* Attempt to connect to the MQTT broker. If connection fails, retry after
      * a timeout. Timeout value will exponentially increase until maximum
@@ -663,7 +686,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
                                        mqttexampleRETRY_BACKOFF_BASE_MS,
                                        mqttexampleRETRY_MAX_BACKOFF_DELAY_MS,
                                        mqttexampleRETRY_MAX_ATTEMPTS,
-                                       uxRand );
+                                       prvGenerateRandomNum );
 
     do
     {

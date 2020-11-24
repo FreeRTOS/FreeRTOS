@@ -45,7 +45,7 @@
 
 /* Logging configuration for the Demo. */
 #ifndef LIBRARY_LOG_NAME
-    #define LIBRARY_LOG_NAME    "ShadowDemo"
+    #define LIBRARY_LOG_NAME    "DefenderDemo"
 #endif
 
 #ifndef LIBRARY_LOG_LEVEL
@@ -66,6 +66,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
 #endif
 
 #include "logging_stack.h"
+
 
 /************ End of logging configuration ****************/
 
@@ -156,7 +157,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @brief Client's private key.
  *
  * Please refer to the AWS documentation below for details
- * regarding clientauthentication.
+ * regarding client authentication.
  * https://docs.aws.amazon.com/iot/latest/developerguide/client-authentication.html
  *
  * @note This private key should be PEM-encoded.
@@ -200,27 +201,27 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * The current value is given as an example. Please update for your specific
  * operating system.
  */
-#define democonfigOS_NAME                   "FreeRTOS"
+#define democonfigOS_NAME                                "FreeRTOS"
 
 /**
  * @brief The version of the operating system that the application is running
  * on. The current value is given as an example. Please update for your specific
  * operating system version.
  */
-#define democonfigOS_VERSION                tskKERNEL_VERSION_NUMBER
+#define democonfigOS_VERSION                             tskKERNEL_VERSION_NUMBER
 
 /**
  * @brief The name of the hardware platform the application is running on. The
  * current value is given as an example. Please update for your specific
  * hardware platform.
  */
-#define democonfigHARDWARE_PLATFORM_NAME    "WinSim"
+#define democonfigHARDWARE_PLATFORM_NAME                 "WinSim"
 
 /**
  * @brief The name of the MQTT library used and its version, following an "@"
  * symbol.
  */
-#define democonfigMQTT_LIB                  "core-mqtt@1.0.0"
+#define democonfigMQTT_LIB                               "core-mqtt@1.0.1"
 
 /**
  * @brief Set the stack size of the main demo task.
@@ -228,11 +229,52 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * In the Windows port, this stack only holds a structure. The actual
  * stack is created by an operating system thread.
  */
-#define democonfigDEMO_STACKSIZE            configMINIMAL_STACK_SIZE
+#define democonfigDEMO_STACKSIZE                         configMINIMAL_STACK_SIZE
 
 /**
  * @brief Size of the network buffer for MQTT packets.
  */
-#define democonfigNETWORK_BUFFER_SIZE       ( 1024U )
+#define democonfigNETWORK_BUFFER_SIZE                    ( 1024U )
+
+/**
+ * @brief Size of the open TCP ports array.
+ *
+ * A maximum of these many open TCP ports will be sent in the device defender
+ * report.
+ */
+#define democonfigOPEN_TCP_PORTS_ARRAY_SIZE              10
+
+/**
+ * @brief Size of the open UDP ports array.
+ *
+ * A maximum of these many open UDP ports will be sent in the device defender
+ * report.
+ */
+#define democonfigOPEN_UDP_PORTS_ARRAY_SIZE              10
+
+/**
+ * @brief Size of the established connections array.
+ *
+ * A maximum of these many established connections will be sent in the device
+ * defender report.
+ */
+#define democonfigESTABLISHED_CONNECTIONS_ARRAY_SIZE     10
+
+/**
+ * @brief Size of the buffer which contains the generated device defender report.
+ *
+ * If the generated report is larger than this, it is rejected.
+ */
+#define democonfigDEVICE_METRICS_REPORT_BUFFER_SIZE      1000
+
+/**
+ * @brief Major version number of the device defender report.
+ */
+#define democonfigDEVICE_METRICS_REPORT_MAJOR_VERSION    1
+
+/**
+ * @brief Minor version number of the device defender report.
+ */
+#define democonfigDEVICE_METRICS_REPORT_MINOR_VERSION    0
 
 #endif /* DEMO_CONFIG_H */

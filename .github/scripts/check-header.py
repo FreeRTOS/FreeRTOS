@@ -43,6 +43,11 @@ class HeaderChecker:
         if self.isIgnoredFile(path):
             return True
 
+        # Skip if entry is a directory.
+        if os.path.isdir(path):
+            print('Skipping valid file check on directory path: %s' % path)
+            return True
+
         # Don't need entire file. Read sufficienly large chunk of file that should contain the header
         with open(path, encoding='utf-8', errors='ignore') as file:
             chunk = file.read(len(''.join(self.header)) + self.padding)
@@ -164,7 +169,8 @@ def main():
     checker.ignoreExtension('.vcxproj',
                             '.vcxproj.filters',
                             '.sln'
-                            '.md')
+                            '.md,'
+                            '.gitmodules')
 
     checker.ignoreFile(os.path.split(__file__)[-1], # Add self
                        'mbedtls_config.h')

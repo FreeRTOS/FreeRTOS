@@ -18,12 +18,16 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 
 /**
- * @file shadow_demo_helpers.c
+ * @file mqtt_demo_helpers.c
  *
- * @brief This file provides helper functions used by the Shadow demo application to
+ * @brief This file provides helper functions used by the AWS demo applications to
  * do MQTT operations over a mutually authenticated TLS connection.
  *
  * A mutually authenticated TLS connection is used to connect to the AWS IoT
@@ -190,7 +194,7 @@ typedef struct PublishPackets
 static uint32_t ulGlobalEntryTimeMs;
 
 /**
- * @brief The flag to indicate the mqtt session changed.
+ * @brief The flag to indicate the MQTT session changed.
  */
 static BaseType_t xMqttSessionEstablished = pdFALSE;
 
@@ -366,7 +370,7 @@ static BaseType_t prvGetNextFreeIndexForOutgoingPublishes( uint8_t * pucIndex )
     for( ucIndex = 0; ucIndex < MAX_OUTGOING_PUBLISHES; ucIndex++ )
     {
         /* A free ucIndex is marked by invalid packet id.
-         * Check if the the ucIndex has a free slot. */
+         * Check if the ucIndex has a free slot. */
         if( outgoingPublishPackets[ ucIndex ].packetId == MQTT_PACKET_ID_INVALID )
         {
             xReturnStatus = pdPASS;
@@ -881,6 +885,30 @@ BaseType_t xPublishToTopic( MQTTContext_t * pxMqttContext,
 
     return xReturnStatus;
 }
+
+/*-----------------------------------------------------------*/
+
+BaseType_t xProcessLoop( MQTTContext_t * pxMqttContext )
+{
+    BaseType_t xReturnStatus = pdFAIL;
+    MQTTStatus_t xMQTTStatus = MQTTSuccess;
+
+    xMQTTStatus = MQTT_ProcessLoop( pxMqttContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
+
+    if( xMQTTStatus != MQTTSuccess )
+    {
+        LogWarn( ( "MQTT_ProcessLoop returned with status = %u.",
+                   xMQTTStatus ) );
+    }
+    else
+    {
+        LogDebug( ( "MQTT_ProcessLoop successful." ) );
+        xReturnStatus = pdPASS;
+    }
+
+    return xReturnStatus;
+}
+
 /*-----------------------------------------------------------*/
 
 static uint32_t prvGetTimeMs( void )

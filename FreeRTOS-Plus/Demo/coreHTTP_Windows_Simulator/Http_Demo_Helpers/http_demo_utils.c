@@ -26,7 +26,7 @@
 #include "http_demo_utils.h"
 
 /* Exponential backoff retry include. */
-#include "exponential_backoff.h"
+#include "backoff_algorithm.h"
 
 /* Parser utilities. */
 #include "http_parser.h"
@@ -38,15 +38,18 @@ BaseType_t connectToServerWithBackoffRetries( TransportConnect_t connectFunction
 {
     BaseType_t xReturn = pdFAIL;
     /* Status returned by the retry utilities. */
-    RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
+    BackoffAlgorithmStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
     /* Struct containing the next backoff time. */
-    RetryUtilsParams_t xReconnectParams;
+    BackoffAlgorithmContext_t xReconnectParams;
 
     assert( connectFunction != NULL );
 
     /* Initialize reconnect attempts and interval */
-    RetryUtils_ParamsReset( &xReconnectParams );
-    xReconnectParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
+    BackoffAlgorithm_InitializeParams( &xReconnectParams,
+                                       RETRY_BACKOFF_BASE_MS,
+                                       RETRY_MAX_BACKOFF_DELAY_MS,
+                                       RETRY_MAX_ATTEMPTS,
+                                       prvGenerateRandomNumber );
 
     /* Attempt to connect to the HTTP server. If connection fails, retry after a
      * timeout. The timeout value will exponentially increase until either the
@@ -63,9 +66,9 @@ BaseType_t connectToServerWithBackoffRetries( TransportConnect_t connectFunction
             LogInfo( ( "Retry attempt %lu out of maximum retry attempts %lu.",
                        ( xReconnectParams.attemptsDone + 1 ),
                        MAX_RETRY_ATTEMPTS ) );
-            xRetryUtilsStatus = RetryUtils_BackoffAndSleep( &xReconnectParams );
+            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextBackoff );
         }
-    } while( ( xReturn == pdFAIL ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
+    } while( ( xReturn == pdFAIL ) && ( xBackoffAlgStatus == BackoffAlgorithmSuccess ) );
 
     if( xReturn == pdFAIL )
     {

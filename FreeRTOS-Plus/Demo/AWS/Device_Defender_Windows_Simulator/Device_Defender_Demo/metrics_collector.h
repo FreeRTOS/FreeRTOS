@@ -34,6 +34,8 @@
 #ifndef METRICS_COLLECTOR_H_
 #define METRICS_COLLECTOR_H_
 
+#include <stdint.h>
+
 /**
  * @brief Return codes from metrics collector APIs.
  */

@@ -133,6 +133,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * "...base64 data...\n"\
  * "-----END CERTIFICATE-----\n"
  *
+ * #define democonfigROOT_CA_PEM    "...insert here..."
  */
 
 /**

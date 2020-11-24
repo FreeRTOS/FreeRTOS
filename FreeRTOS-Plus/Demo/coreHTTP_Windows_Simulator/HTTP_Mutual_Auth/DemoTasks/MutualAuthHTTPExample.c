@@ -59,9 +59,6 @@
 /* HTTP library includes. */
 #include "core_http_client.h"
 
-/* Exponential backoff retry include. */
-#include "exponential_backoff.h"
-
 /* Transport interface implementation include header for TLS. */
 #include "using_mbedtls.h"
 

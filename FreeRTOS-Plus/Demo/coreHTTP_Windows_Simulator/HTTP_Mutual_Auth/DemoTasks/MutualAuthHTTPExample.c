@@ -30,9 +30,8 @@
  *
  * The example shown below uses HTTP APIs to first create a
  * mutually-authenticated network connection with an HTTP server, and then send
- * a POST request containing a simple message. This example is single threaded
- * and uses statically allocated memory. It uses QoS1 for sending and receiving
- * messages from the server.
+ * a POST request containing a simple message. This example is single-threaded,
+ * and uses QoS1 for sending and receiving messages from the server.
  *
  * A mutually-authenticated TLS connection is used to connect to the HTTP server
  * in this example. Define democonfigAWS_IOT_ENDPOINT, democonfigROOT_CA_PEM,
@@ -117,29 +116,14 @@
 /**
  * @brief The length of the AWS IoT Endpoint.
  */
-#define httpexampleAWS_IOT_ENDPOINT_LENGTH    ( sizeof( democonfigAWS_IOT_ENDPOINT ) - 1 )
+#define AWS_IOT_ENDPOINT_LENGTH        ( sizeof( democonfigAWS_IOT_ENDPOINT ) - 1 )
 
 /**
  * @brief ALPN protocol name to be sent as part of the ClientHello message.
  *
  * @note When using ALPN, port 443 must be used to connect to AWS IoT Core.
  */
-#define IOT_CORE_ALPN_PROTOCOL_NAME           "\x0ex-amzn-http-ca"
-
-/**
- * @brief The length of the HTTP POST method.
- */
-#define httpexampleHTTP_METHOD_POST_LENGTH    ( sizeof( HTTP_METHOD_POST ) - 1 )
-
-/**
- * @brief The length of the HTTP POST path.
- */
-#define httpexamplePOST_PATH_LENGTH           ( sizeof( democonfigPOST_PATH ) - 1 )
-
-/**
- * @brief Length of the request body.
- */
-#define httpexampleREQUEST_BODY_LENGTH        ( sizeof( democonfigREQUEST_BODY ) - 1 )
+#define IOT_CORE_ALPN_PROTOCOL_NAME    "\x0ex-amzn-http-ca"
 
 /**
  * @brief A buffer used in the demo for storing HTTP request headers and
@@ -219,9 +203,6 @@ void vStartSimpleHTTPDemo( void )
  * is used to make a POST request to AWS IoT Core in order to publish a message
  * to a topic named "topic" with QoS=1 so that all clients subscribed to this
  * topic receive the message at least once. Any possible errors are also logged.
- *
- * @note This example is single-threaded and uses statically allocated memory.
- *
  */
 static void prvHTTPDemoTask( void * pvParameters )
 {
@@ -262,7 +243,7 @@ static void prvHTTPDemoTask( void * pvParameters )
         /* Log error to indicate connection failure after all
          * reconnect attempts are over. */
         LogError( ( "Failed to connect to HTTP server %.*s.",
-                    ( int32_t ) httpexampleAWS_IOT_ENDPOINT_LENGTH,
+                    ( int32_t ) AWS_IOT_ENDPOINT_LENGTH,
                     democonfigAWS_IOT_ENDPOINT ) );
     }
 
@@ -272,9 +253,9 @@ static void prvHTTPDemoTask( void * pvParameters )
     {
         xDemoStatus = prvSendHttpRequest( &xTransportInterface,
                                           HTTP_METHOD_POST,
-                                          httpexampleHTTP_METHOD_POST_LENGTH,
+                                          ( sizeof( HTTP_METHOD_POST ) - 1 ),
                                           democonfigPOST_PATH,
-                                          httpexamplePOST_PATH_LENGTH );
+                                          ( sizeof( democonfigPOST_PATH ) - 1 ) );
     }
 
     /**************************** Disconnect. ******************************/
@@ -312,9 +293,7 @@ static BaseType_t prvConnectToServer( NetworkContext_t * pxNetworkContext )
         /* ALPN protocols must be a NULL-terminated list of strings. Therefore,
          * the first entry will contain the actual ALPN protocol string while the
          * second entry must remain NULL. */
-        char * pcAlpnProtocols[] = { NULL, NULL };
-        pcAlpnProtocols[ 0 ] = IOT_CORE_ALPN_PROTOCOL_NAME;
-
+        static const char * pcAlpnProtocols[] = { IOT_CORE_ALPN_PROTOCOL_NAME, NULL };
         xNetworkCredentials.pAlpnProtos = pcAlpnProtocols;
     }
 
@@ -331,7 +310,7 @@ static BaseType_t prvConnectToServer( NetworkContext_t * pxNetworkContext )
      * the HTTP server as specified in democonfigAWS_IOT_ENDPOINT and
      * democonfigAWS_HTTP_PORT in demo_config.h. */
     LogInfo( ( "Establishing a TLS session to %.*s:%d.",
-               ( int32_t ) httpexampleAWS_IOT_ENDPOINT_LENGTH,
+               ( int32_t ) AWS_IOT_ENDPOINT_LENGTH,
                democonfigAWS_IOT_ENDPOINT,
                democonfigAWS_HTTP_PORT ) );
 
@@ -383,7 +362,7 @@ static BaseType_t prvSendHttpRequest( const TransportInterface_t * pxTransportIn
 
     /* Initialize the request object. */
     xRequestInfo.pHost = democonfigAWS_IOT_ENDPOINT;
-    xRequestInfo.hostLen = httpexampleAWS_IOT_ENDPOINT_LENGTH;
+    xRequestInfo.hostLen = AWS_IOT_ENDPOINT_LENGTH;
     xRequestInfo.pMethod = pcMethod;
     xRequestInfo.methodLen = xMethodLen;
     xRequestInfo.pPath = pcPath;
@@ -409,19 +388,20 @@ static BaseType_t prvSendHttpRequest( const TransportInterface_t * pxTransportIn
 
         LogInfo( ( "Sending HTTP %.*s request to %.*s%.*s...",
                    ( int32_t ) xRequestInfo.methodLen, xRequestInfo.pMethod,
-                   ( int32_t ) httpexampleAWS_IOT_ENDPOINT_LENGTH, democonfigAWS_IOT_ENDPOINT,
+                   ( int32_t ) AWS_IOT_ENDPOINT_LENGTH, democonfigAWS_IOT_ENDPOINT,
                    ( int32_t ) xRequestInfo.pathLen, xRequestInfo.pPath ) );
         LogDebug( ( "Request Headers:\n%.*s\n"
                     "Request Body:\n%.*s\n",
                     ( int32_t ) xRequestHeaders.headersLen,
                     ( char * ) xRequestHeaders.pBuffer,
-                    ( int32_t ) httpexampleREQUEST_BODY_LENGTH, democonfigREQUEST_BODY ) );
+                    ( int32_t ) ( sizeof( democonfigREQUEST_BODY ) - 1 ),
+                    democonfigREQUEST_BODY ) );
 
         /* Send the request and receive the response. */
         xHTTPStatus = HTTPClient_Send( pxTransportInterface,
                                        &xRequestHeaders,
                                        ( uint8_t * ) democonfigREQUEST_BODY,
-                                       httpexampleREQUEST_BODY_LENGTH,
+                                       ( sizeof( democonfigREQUEST_BODY ) - 1 ),
                                        &xResponse,
                                        0 );
     }
@@ -434,7 +414,7 @@ static BaseType_t prvSendHttpRequest( const TransportInterface_t * pxTransportIn
     if( xHTTPStatus == HTTPSuccess )
     {
         LogInfo( ( "Received HTTP response from %.*s%.*s...\n",
-                   ( int32_t ) httpexampleAWS_IOT_ENDPOINT_LENGTH, democonfigAWS_IOT_ENDPOINT,
+                   ( int32_t ) AWS_IOT_ENDPOINT_LENGTH, democonfigAWS_IOT_ENDPOINT,
                    ( int32_t ) xRequestInfo.pathLen, xRequestInfo.pPath ) );
         LogDebug( ( "Response Headers:\n%.*s\n",
                     ( int32_t ) xResponse.headersLen, xResponse.pHeaders ) );
@@ -447,7 +427,7 @@ static BaseType_t prvSendHttpRequest( const TransportInterface_t * pxTransportIn
     {
         LogError( ( "Failed to send HTTP %.*s request to %.*s%.*s: Error=%s.",
                     ( int32_t ) xRequestInfo.methodLen, xRequestInfo.pMethod,
-                    ( int32_t ) httpexampleAWS_IOT_ENDPOINT_LENGTH, democonfigAWS_IOT_ENDPOINT,
+                    ( int32_t ) AWS_IOT_ENDPOINT_LENGTH, democonfigAWS_IOT_ENDPOINT,
                     ( int32_t ) xRequestInfo.pathLen, xRequestInfo.pPath,
                     HTTPClient_strerror( xHTTPStatus ) ) );
     }

@@ -70,19 +70,20 @@ eMetricsCollectorStatus eGetNetworkStats( NetworkStats_t * pxOutNetworkStats )
 
     if( xMetricsStatus != 0 )
     {
-        LogError( ( "Failed to acquire metrics from FreeRTOS+TCP tcp_netstat utility." ) );
+        LogError( ( "Failed to acquire metrics from FreeRTOS+TCP tcp_netstat utility. Status: %d.",
+                    (int) xMetricsStatus) );
         eStatus = eMetricsCollectorCollectionFailed;
     }
 
     /* Fill our response with values gotten from FreeRTOS+TCP. */
     if( eStatus == eMetricsCollectorSuccess )
     {
-        LogDebug( ( "Network stats read. Bytes received: %d, packets received: %d "
-                    "bytes sent: %d, packets sent: %d.",
-                    ( int ) xMetrics.xInput.uxByteCount,
-                    ( int ) xMetrics.xInput.uxPacketCount,
-                    ( int ) xMetrics.XOutput.uxByteCount,
-                    ( int ) xMetrics.XOutput.uxPacketCount ) );
+        LogDebug( ( "Network stats read. Bytes received: %u, packets received: %u, "
+                    "bytes sent: %u, packets sent: %u.",
+                    ( unsigned int ) xMetrics.xInput.uxByteCount,
+                    ( unsigned int ) xMetrics.xInput.uxPacketCount,
+                    ( unsigned int ) xMetrics.XOutput.uxByteCount,
+                    ( unsigned int ) xMetrics.XOutput.uxPacketCount ) );
 
         pxOutNetworkStats->ulBytesReceived = xMetrics.xInput.uxByteCount;
         pxOutNetworkStats->ulPacketsReceived = xMetrics.xInput.uxPacketCount;
@@ -112,7 +113,8 @@ eMetricsCollectorStatus eGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
 
     if( xMetricsStatus != 0 )
     {
-        LogError( ( "Failed to acquire metrics from FreeRTOS+TCP tcp_netstat utility." ) );
+        LogError( ( "Failed to acquire metrics from FreeRTOS+TCP tcp_netstat utility. Status: %d.",
+                    (int) xMetricsStatus) );
         eStatus = eMetricsCollectorCollectionFailed;
     }
 
@@ -160,7 +162,8 @@ eMetricsCollectorStatus eGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
 
     if( xMetricsStatus != 0 )
     {
-        LogError( ( "Failed to acquire metrics from FreeRTOS+TCP tcp_netstat utility." ) );
+        LogError( ( "Failed to acquire metrics from FreeRTOS+TCP tcp_netstat utility. Status: %d.",
+                    (int) xMetricsStatus) );
         eStatus = eMetricsCollectorCollectionFailed;
     }
 
@@ -210,7 +213,8 @@ eMetricsCollectorStatus eGetEstablishedConnections( Connection_t * pxOutConnecti
 
     if( xMetricsStatus != 0 )
     {
-        LogError( ( "Failed to acquire metrics from FreeRTOS+TCP tcp_netstat utility." ) );
+        LogError( ( "Failed to acquire metrics from FreeRTOS+TCP tcp_netstat utility. Status: %d.",
+                    (int) xMetricsStatus) );
         eStatus = eMetricsCollectorCollectionFailed;
     }
 

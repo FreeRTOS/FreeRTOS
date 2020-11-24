@@ -58,7 +58,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\..\Common\WinPCap;..\..\..\..\FreeRTOS\Source\include;..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\Source\Application-Protocols\coreHTTP\source\include;..\..\..\Source\Application-Protocols\coreHTTP\source\interface;..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser;..\..\..\Source\Utilities\exponential_backoff;..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp;..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls;..\..\..\Source\Utilities\mbedtls_freertos;..\..\..\..\Source\mbedtls_utils;..\..\..\ThirdParty\mbedtls\include;..\Http_Demo_Helpers;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\..\Common\WinPCap;..\..\..\..\FreeRTOS\Source\include;..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\Source\Application-Protocols\coreHTTP\source\include;..\..\..\Source\Application-Protocols\coreHTTP\source\interface;..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser;..\..\..\Source\Utilities\exponential_backoff;..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp;..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls;..\..\..\Source\Utilities\mbedtls_freertos;..\..\..\..\Source\mbedtls_utils;..\..\..\ThirdParty\mbedtls\include;..\Common;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config.h";WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -487,7 +487,7 @@
     <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Demo\Common\Logging\windows\Logging_WinSim.c" />
     <ClCompile Include="..\Common\main.c" />
     <ClCompile Include="DemoTasks\MutualAuthHTTPExample.c" />
-    <ClCompile Include="..\Http_Demo_Helpers\http_demo_utils.c" />
+    <ClCompile Include="..\Common\http_demo_utils.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\FreeRTOS\Source\include\event_groups.h" />

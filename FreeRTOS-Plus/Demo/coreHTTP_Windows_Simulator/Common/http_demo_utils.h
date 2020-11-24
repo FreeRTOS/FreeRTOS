@@ -36,9 +36,6 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-/* Transport interface implementation include header for TLS. */
-#include "using_mbedtls.h"
-
 /* HTTP API header. */
 #include "core_http_client.h"
 

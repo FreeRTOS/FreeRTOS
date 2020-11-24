@@ -96,8 +96,15 @@
  */
 #define DEFENDER_RESPONSE_WAIT_SECONDS              ( 2 )
 
+/**
+ * @brief Name of the report id field in the response from the AWS IoT Device
+ * Defender service.
+ */
 #define DEFENDER_RESPONSE_REPORT_ID_FIELD           "reportId"
 
+/**
+ * @brief The length of #DEFENDER_RESPONSE_REPORT_ID_FIELD.
+ */
 #define DEFENDER_RESPONSE_REPORT_ID_FIELD_LENGTH    ( sizeof( DEFENDER_RESPONSE_REPORT_ID_FIELD ) - 1 )
 
 /**

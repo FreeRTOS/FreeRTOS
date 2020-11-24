@@ -29,6 +29,10 @@
 #include <string.h>
 #include <stdint.h>
 
+/* Kernel includes. */
+#include "FreeRTOS.h"
+#include "task.h"
+
 /* Demo config. */
 #include "demo_config.h"
 

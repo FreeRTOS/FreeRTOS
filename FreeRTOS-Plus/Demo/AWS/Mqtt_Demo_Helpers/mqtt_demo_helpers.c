@@ -51,7 +51,7 @@
 #include "core_mqtt.h"
 
 /* Exponential backoff retry include. */
-#include "exponential_backoff.h"
+#include "backoff_algorithm.h"
 
 /* Transport interface implementation include header for TLS. */
 #include "using_mbedtls.h"
@@ -83,6 +83,23 @@
 #endif
 
 /*-----------------------------------------------------------*/
+
+/**
+ * @brief The maximum number of retries for network operation with server.
+ */
+#define RETRY_MAX_ATTEMPTS                           ( 5U )
+
+/**
+ * @brief The maximum back-off delay (in milliseconds) for retrying failed operation
+ *  with server.
+ */
+#define RETRY_MAX_BACKOFF_DELAY_MS                   ( 5000U )
+
+/**
+ * @brief The base back-off delay (in milliseconds) to use for network operation retry
+ * attempts.
+ */
+#define RETRY_BACKOFF_BASE_MS                        ( 500U )
 
 /**
  * @brief Timeout for receiving CONNACK packet in milliseconds.
@@ -221,6 +238,22 @@ static PublishPackets_t outgoingPublishPackets[ MAX_OUTGOING_PUBLISHES ] = { 0 }
 /*-----------------------------------------------------------*/
 
 /**
+ * @brief A wrapper to the "uxRand()" random number generator so that it
+ * can be passed to the backoffAlgorithm library for retry logic.
+ *
+ * This function implements the #BackoffAlgorithm_RNG_T type interface
+ * in the backoffAlgorithm library API.
+ *
+ * @note The "uxRand" function represents a pseudo random number generator.
+ * However, it is recommended to use a True Randon Number Generator (TRNG)
+ * for generating unique device-specific random values to avoid possibility
+ * of network collisions from multiple devices retrying network operations.
+ *
+ * @return The generated randon number. This function ALWAYS succeeds.
+ */
+static int32_t prvGenerateRandomNumber();
+
+/**
  * @brief Connect to MQTT broker with reconnection retries.
  *
  * If connection fails, retry is attempted after a timeout.
@@ -285,12 +318,20 @@ static uint32_t prvGetTimeMs( void );
 
 /*-----------------------------------------------------------*/
 
+static int32_t prvGenerateRandomNumber()
+{
+    return( uxRand() & INT32_MAX );
+}
+
+/*-----------------------------------------------------------*/
+
 static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext_t * pxNetworkContext )
 {
     TlsTransportStatus_t xNetworkStatus = TLS_TRANSPORT_SUCCESS;
-    RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
-    RetryUtilsParams_t xReconnectParams = { 0 };
+    BackoffAlgorithmStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
+    BackoffAlgorithmContext_t xReconnectParams = { 0 };
     NetworkCredentials_t xNetworkCredentials = { 0 };
+    uint16_t usNextRetryBackOff = 0U;
 
     /* ALPN protocols must be a NULL-terminated list of strings. Therefore,
      * the first entry will contain the actual ALPN protocol string while the
@@ -318,9 +359,15 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext
     #endif
     xNetworkCredentials.pAlpnProtos = pcAlpnProtocols;
 
-    /* Initialize reconnect attempts and interval. */
-    RetryUtils_ParamsReset( &xReconnectParams );
-    xReconnectParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
+    /* Initialize reconnect attempts and interval.
+     * Note: This utility uses a pseudo random number generator for use with the backoff
+     * algorithm. However, it is recommended to use a True Random Number generator to
+     * avoid possibility of collisions between multiple devices retrying connection. */
+    BackoffAlgorithm_InitializeParams( &xReconnectParams,
+                                       RETRY_BACKOFF_BASE_MS,
+                                       RETRY_MAX_BACKOFF_DELAY_MS,
+                                       RETRY_MAX_ATTEMPTS,
+                                       prvGenerateRandomNumber );
 
     /* Attempt to connect to MQTT broker. If connection fails, retry after
      * a timeout. Timeout value will exponentially increase until maximum
@@ -343,16 +390,22 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext
 
         if( xNetworkStatus != TLS_TRANSPORT_SUCCESS )
         {
-            LogWarn( ( "Connection to the broker failed. Retrying connection with backoff and jitter." ) );
-            xRetryUtilsStatus = RetryUtils_BackoffAndSleep( &xReconnectParams );
-        }
+            /* Get back-off value (in milliseconds) for the next connection retry. */
+            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextRetryBackOff );
+            configASSERT( xBackoffAlgStatus != BackoffAlgorithmRngFailure );
 
-        if( xRetryUtilsStatus == RetryUtilsRetriesExhausted )
-        {
-            LogError( ( "Connection to the broker failed, all attempts exhausted." ) );
-            xNetworkStatus = TLS_TRANSPORT_CONNECT_FAILURE;
+            if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )
+            {
+                LogError( ( "Connection to the broker failed, all attempts exhausted." ) );
+            }
+            else if( xBackoffAlgStatus == BackoffAlgorithmSuccess )
+            {
+                LogWarn( ( "Connection to the broker failed. "
+                           "Retrying connection with backoff and jitter." ) );
+                vTaskDelay( pdMS_TO_TICKS( usNextRetryBackOff ) );
+            }
         }
-    } while( ( xNetworkStatus != TLS_TRANSPORT_SUCCESS ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
+    } while( ( xNetworkStatus != TLS_TRANSPORT_SUCCESS ) && ( xBackoffAlgStatus == BackoffAlgorithmSuccess ) );
 
     return xNetworkStatus;
 }

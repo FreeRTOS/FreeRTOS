@@ -175,7 +175,7 @@
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c">
       <Filter>Transport</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\Utilities\exponential_backoff\exponential_backoff.c">
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
       <Filter>Transport</Filter>
     </ClCompile>
     <ClCompile Include="main.c" />
@@ -541,7 +541,7 @@
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Source\Utilities\exponential_backoff\exponential_backoff.h">
+    <ClInclude Include="..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
     </ClInclude>
     <ClInclude Include="mbedtls_config.h" />

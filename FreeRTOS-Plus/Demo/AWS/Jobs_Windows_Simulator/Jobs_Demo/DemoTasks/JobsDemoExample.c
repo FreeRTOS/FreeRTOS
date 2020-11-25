@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS V202011.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,8 +19,8 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -229,7 +229,7 @@ typedef enum JobActionType
 static MQTTContext_t xMqttContext;
 
 /**
- * @brief The network context used for Openssl operation.
+ * @brief The network context used for mbedTLS operation.
  */
 static NetworkContext_t xNetworkContext;
 
@@ -828,6 +828,7 @@ void prvJobsDemoTask( void * pvParameters )
                                NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ),
                                sizeof( NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) ) - 1 ) != pdPASS )
     {
+        xDemoStatus == pdFAIL;
         LogError( ( "Failed to subscribe unsubscribe from the NextJobExecutionChanged API of AWS IoT Jobs service: "
                     "Topic=%s", NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) ) );
     }
@@ -835,7 +836,13 @@ void prvJobsDemoTask( void * pvParameters )
     /* Disconnect the MQTT and network connections with AWS IoT. */
     if( xDisconnectMqttSession( &xMqttContext, &xNetworkContext ) != pdPASS )
     {
+        xDemoStatus == pdFAIL;
         LogError( ( "Disconnection from AWS Iot failed..." ) );
+    }
+
+    if( ( xDemoEncounteredError == pdFALSE ) && ( xDemoStatus == pdPASS ) )
+    {
+        LogInfo( ( "Demo completed successfully." ) );
     }
 
     /* Delete this demo task. */

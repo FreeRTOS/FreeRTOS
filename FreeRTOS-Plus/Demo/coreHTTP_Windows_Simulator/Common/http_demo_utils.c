@@ -56,6 +56,10 @@
 
 /*-----------------------------------------------------------*/
 
+extern UBaseType_t uxRand();
+
+/*-----------------------------------------------------------*/
+
 /**
  * @brief A wrapper to the "uxRand()" random number generator so that it
  * can be passed to the backoffAlgorithm library for retry logic.

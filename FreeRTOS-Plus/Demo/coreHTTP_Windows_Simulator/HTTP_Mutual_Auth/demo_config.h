@@ -27,9 +27,6 @@
 #ifndef DEMO_CONFIG_H
 #define DEMO_CONFIG_H
 
-/* FreeRTOS config include. */
-#include "FreeRTOSConfig.h"
-
 /**************************************************/
 /******* DO NOT CHANGE the following order ********/
 /**************************************************/
@@ -41,11 +38,12 @@
  * 3. Include the header file "logging_stack.h", if logging is enabled for DEMO.
  */
 
+/* Include header that defines log levels. */
 #include "logging_levels.h"
 
-/* Logging configuration for the Demo. */
+/* Logging configuration for the demo. */
 #ifndef LIBRARY_LOG_NAME
-    #define LIBRARY_LOG_NAME    "JobsDemo"
+    #define LIBRARY_LOG_NAME    "HTTPDemo"
 #endif
 
 #ifndef LIBRARY_LOG_LEVEL
@@ -70,53 +68,32 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /************ End of logging configuration ****************/
 
 /**
- * @brief The Thing resource registered on your AWS IoT account to use in the demo.
- * A Thing resource is required to communicate with the AWS IoT Jobs service.
- *
- * @note The Things associated with your AWS account can be found in the
- * AWS IoT console under Manage/Things, or using the ListThings REST API (that can
- * be called with the AWS CLI command line tool).
- *
- * #define democonfigTHING_NAME    "...insert here..."
- */
-
-/**
- * @brief The MQTT client identifier used in this example.  Each client identifier
- * must be unique so edit as required to ensure no two clients connecting to the
- * same broker use the same client identifier.
- *
- * #define democonfigCLIENT_IDENTIFIER "...insert here..."
- */
-
-/**
- * @brief The AWS IoT broker endpoint to connect to in the demo.
+ * @brief Your AWS IoT Core endpoint.
  *
  * @note Your AWS IoT Core endpoint can be found in the AWS IoT console under
- * Settings/Custom Endpoint, or using the describe-endpoint REST API (with
- * AWS CLI command line tool).
+ * Settings/Custom Endpoint, or using the describe-endpoint REST API (with AWS
+ * CLI command line tool).
  *
- * #define democonfigMQTT_BROKER_ENDPOINT    "...insert here..."
+ * #define democonfigAWS_IOT_ENDPOINT                 "...insert here..."
  */
 
 /**
- * @brief The port to use for the demo.
+ * @brief AWS IoT Core server port number for HTTPS connections.
  *
- * In general, port 8883 is for secured MQTT connections.
+ * For this demo, an X.509 certificate is used to verify the client.
  *
  * @note Port 443 requires use of the ALPN TLS extension with the ALPN protocol
- * name. Using ALPN with this demo would require additional changes, including
- * setting the `pAlpnProtos` member of the `NetworkCredentials_t` struct before
- * forming the TLS connection. When using port 8883, ALPN is not required.
- *
- * #define democonfigMQTT_BROKER_PORT    ( insert here. )
+ * name being x-amzn-http-ca. When using port 8443, ALPN is not required.
  */
+#ifndef democonfigAWS_HTTP_PORT
+    #define democonfigAWS_HTTP_PORT    8443
+#endif
 
 /**
- * @brief Root CA certificate of AWS IoT broker.
+ * @brief Server's root CA certificate for TLS authentication to AWS IoT Core.
  *
- * This certificate is used to identify the AWS IoT server and is publicly
- * available. Refer to the link below.
- * https://www.amazontrust.com/repository/AmazonRootCA1.pem
+ * Amazon's root CA certificate can be found @ref
+ * https://www.amazontrust.com/repository/AmazonRootCA1.pem.
  *
  * @note This certificate should be PEM-encoded.
  *
@@ -131,7 +108,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /**
  * @brief Client certificate.
  *
- * Please refer to the AWS documentation below for details
+ * For AWS IoT, refer to the AWS documentation below for details
  * regarding client authentication.
  * https://docs.aws.amazon.com/iot/latest/developerguide/client-authentication.html
  *
@@ -148,7 +125,15 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /**
  * @brief Client's private key.
  *
- * Please refer to the AWS documentation below for details
+ *!!! Please note pasting a key into the header file in this manner is for
+ *!!! convenience of demonstration only and should not be done in production.
+ *!!! Never paste a production private key here!. Production devices should
+ *!!! store keys securely, such as within a secure element. Additionally,
+ *!!! we provide the corePKCS library that further enhances security by
+ *!!! enabling securely stored keys to be used without exposing them to
+ *!!! software.
+ *
+ * For AWS IoT, refer to the AWS documentation below for details
  * regarding client authentication.
  * https://docs.aws.amazon.com/iot/latest/developerguide/client-authentication.html
  *
@@ -163,57 +148,40 @@ extern void vLoggingPrintf( const char * pcFormatString,
  */
 
 /**
- * @brief The username value for authenticating client to the MQTT broker when
- * username/password based client authentication is used.
+ * @brief An option to disable Server Name Indication.
  *
- * Please refer to the AWS IoT documentation below for
- * details regarding client authentication with a username and password.
- * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
- * An authorizer setup needs to be done, as mentioned in the above link, to use
- * username/password based client authentication.
+ * @note When using a local server setup, SNI needs to be disabled for a broker
+ * that only has an IP address but no hostname. However, SNI should be enabled
+ * whenever possible.
+ */
+#define democonfigDISABLE_SNI                       ( pdFALSE )
+
+/**
+ * @brief This endpoint can be used to publish a message to a topic named topic
+ * on AWS IoT Core.
  *
- * #define democonfigCLIENT_USERNAME    "...insert here..."
- */
-
-/**
- * @brief The password value for authenticating client to the MQTT broker when
- * username/password based client authentication is used.
+ * Each client certificate has an associated policy document that must be
+ * configured to support the path below for this demo to work correctly.
  *
- * Please refer to the AWS IoT documentation below for
- * details regarding client authentication with a username and password.
- * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
- * An authorizer setup needs to be done, as mentioned in the above link, to use
- * username/password based client authentication.
- *
- * #define democonfigCLIENT_PASSWORD    "...insert here..."
+ * @note QoS=1 implies the message is delivered to all subscribers of the topic
+ * at least once.
  */
+#define democonfigPOST_PATH                         "/topics/topic?qos=1"
 
 /**
- * @brief The name of the operating system that the application is running on.
- * The current value is given as an example. Please update for your specific
- * operating system.
+ * @brief Transport timeout in milliseconds for transport send and receive.
  */
-#define democonfigOS_NAME                   "FreeRTOS"
+#define democonfigTRANSPORT_SEND_RECV_TIMEOUT_MS    ( 5000 )
 
 /**
- * @brief The version of the operating system that the application is running
- * on. The current value is given as an example. Please update for your specific
- * operating system version.
+ * @brief The length in bytes of the user buffer.
  */
-#define democonfigOS_VERSION                tskKERNEL_VERSION_NUMBER
+#define democonfigUSER_BUFFER_LENGTH                ( 2048 )
 
 /**
- * @brief The name of the hardware platform the application is running on. The
- * current value is given as an example. Please update for your specific
- * hardware platform.
+ * @brief Request body to send for POST requests in this demo.
  */
-#define democonfigHARDWARE_PLATFORM_NAME    "WinSim"
-
-/**
- * @brief The name of the MQTT library used and its version, following an "@"
- * symbol.
- */
-#define democonfigMQTT_LIB                  "core-mqtt@1.0.0"
+#define democonfigREQUEST_BODY                      "{ \"message\": \"Hello, world\" }"
 
 /**
  * @brief Set the stack size of the main demo task.
@@ -221,11 +189,6 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * In the Windows port, this stack only holds a structure. The actual
  * stack is created by an operating system thread.
  */
-#define democonfigDEMO_STACKSIZE            configMINIMAL_STACK_SIZE
+#define democonfigDEMO_STACKSIZE                    configMINIMAL_STACK_SIZE
 
-/**
- * @brief Size of the network buffer for MQTT packets.
- */
-#define democonfigNETWORK_BUFFER_SIZE       ( 1024U )
-
-#endif /* DEMO_CONFIG_H */
+#endif /* ifndef DEMO_CONFIG_H */

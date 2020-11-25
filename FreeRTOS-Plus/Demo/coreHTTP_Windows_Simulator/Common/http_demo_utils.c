@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS V202011.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -18,6 +18,10 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 
 /* Standard includes. */
@@ -26,27 +30,78 @@
 #include "http_demo_utils.h"
 
 /* Exponential backoff retry include. */
-#include "exponential_backoff.h"
+#include "backoff_algorithm.h"
 
 /* Parser utilities. */
 #include "http_parser.h"
 
 /*-----------------------------------------------------------*/
 
+/**
+ * @brief The maximum number of retries for network operation with server.
+ */
+#define RETRY_MAX_ATTEMPTS            ( 5U )
+
+/**
+ * @brief The maximum back-off delay (in milliseconds) for retrying failed
+ * operation with server.
+ */
+#define RETRY_MAX_BACKOFF_DELAY_MS    ( 5000U )
+
+/**
+ * @brief The base back-off delay (in milliseconds) to use for network operation
+ * retry attempts.
+ */
+#define RETRY_BACKOFF_BASE_MS         ( 500U )
+
+/*-----------------------------------------------------------*/
+
+extern UBaseType_t uxRand();
+
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief A wrapper to the "uxRand()" random number generator so that it
+ * can be passed to the backoffAlgorithm library for retry logic.
+ *
+ * This function implements the #BackoffAlgorithm_RNG_T type interface
+ * in the backoffAlgorithm library API.
+ *
+ * @note The "uxRand" function represents a pseudo random number generator.
+ * However, it is recommended to use a True Randon Number Generator (TRNG)
+ * for generating unique device-specific random values to avoid possibility
+ * of network collisions from multiple devices retrying network operations.
+ *
+ * @return The generated randon number. This function ALWAYS succeeds.
+ */
+static int32_t prvGenerateRandomNumber();
+
+/*-----------------------------------------------------------*/
+
+static int32_t prvGenerateRandomNumber()
+{
+    return( uxRand() & INT32_MAX );
+}
+
+/*-----------------------------------------------------------*/
 BaseType_t connectToServerWithBackoffRetries( TransportConnect_t connectFunction,
                                               NetworkContext_t * pxNetworkContext )
 {
     BaseType_t xReturn = pdFAIL;
     /* Status returned by the retry utilities. */
-    RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
+    BackoffAlgorithmStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
     /* Struct containing the next backoff time. */
-    RetryUtilsParams_t xReconnectParams;
+    BackoffAlgorithmContext_t xReconnectParams;
+    uint16_t usNextBackoff = 0U;
 
     assert( connectFunction != NULL );
 
     /* Initialize reconnect attempts and interval */
-    RetryUtils_ParamsReset( &xReconnectParams );
-    xReconnectParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
+    BackoffAlgorithm_InitializeParams( &xReconnectParams,
+                                       RETRY_BACKOFF_BASE_MS,
+                                       RETRY_MAX_BACKOFF_DELAY_MS,
+                                       RETRY_MAX_ATTEMPTS,
+                                       prvGenerateRandomNumber );
 
     /* Attempt to connect to the HTTP server. If connection fails, retry after a
      * timeout. The timeout value will exponentially increase until either the
@@ -62,10 +117,10 @@ BaseType_t connectToServerWithBackoffRetries( TransportConnect_t connectFunction
                        "Retrying connection with backoff and jitter." ) );
             LogInfo( ( "Retry attempt %lu out of maximum retry attempts %lu.",
                        ( xReconnectParams.attemptsDone + 1 ),
-                       MAX_RETRY_ATTEMPTS ) );
-            xRetryUtilsStatus = RetryUtils_BackoffAndSleep( &xReconnectParams );
+                       RETRY_MAX_ATTEMPTS ) );
+            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextBackoff );
         }
-    } while( ( xReturn == pdFAIL ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
+    } while( ( xReturn == pdFAIL ) && ( xBackoffAlgStatus == BackoffAlgorithmSuccess ) );
 
     if( xReturn == pdFAIL )
     {

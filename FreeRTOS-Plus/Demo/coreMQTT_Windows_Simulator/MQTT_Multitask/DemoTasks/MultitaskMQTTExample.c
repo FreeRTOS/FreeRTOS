@@ -409,21 +409,6 @@ static MQTTStatus_t prvMQTTConnect( MQTTContext_t * pxMQTTContext,
  */
 static MQTTStatus_t prvResumeSession( bool xSessionPresent );
 
-/**
- * @brief A wrapper to the "uxRand()" random number generator so that it
- * can be passed to the backoffAlgorithm library for retry logic.
- *
- * This function implements the #BackoffAlgorithm_RNG_T type interface
- * in the backoffAlgorithm library API.
- *
- * @note The "uxRand" function represents a pseudo random number generator.
- * However, it is recommended to use a True Randon Number Generator (TRNG)
- * for generating unique device-specific random values to avoid possibility
- * of network collisions from multiple devices retrying network operations.
- *
- * @return The generated randon number. This function ALWAYS succeeds.
- */
-static int32_t prvGenerateRandomNumber();
 
 /**
  * @brief Form a TCP connection to a server.
@@ -988,13 +973,6 @@ static MQTTStatus_t prvResumeSession( bool xSessionPresent )
 
 /*-----------------------------------------------------------*/
 
-static int32_t prvGenerateRandomNumber()
-{
-    return( uxRand() & INT32_MAX );
-}
-
-/*-----------------------------------------------------------*/
-
 static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
 {
     BaseType_t xConnected = pdFAIL;
@@ -1037,15 +1015,11 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
     #endif /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
 
     /* We will use a retry mechanism with an exponential backoff mechanism and
-     * jitter. We initialize the context required for backoff period calculation here.
-     * Note: This demo is using pseudo random number generator for the backoff
-     * algorithm. However, it is recommended to use a True Random Number generator to
-     * avoid possibility of collisions between multiple devices retrying connection. */
+     * jitter. We initialize the context required for backoff period calculation here. */
     BackoffAlgorithm_InitializeParams( &xReconnectParams,
                                        mqttexampleRETRY_BACKOFF_BASE_MS,
                                        mqttexampleRETRY_MAX_BACKOFF_DELAY_MS,
-                                       mqttexampleRETRY_MAX_ATTEMPTS,
-                                       prvGenerateRandomNumber );
+                                       mqttexampleRETRY_MAX_ATTEMPTS );
 
     /* Attempt to connect to MQTT broker. If connection fails, retry after a
      * timeout. Timeout value will exponentially increase until the maximum
@@ -1081,8 +1055,12 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
 
         if( !xConnected )
         {
-            /* Get back-off value (in milliseconds) for the next connection retry. */
-            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextRetryBackOff );
+            /* Generate a random number and calculate backoff value (in milliseconds) for
+             * the next connection retry.
+             * Note: It is recommended to seed the random number generator with a device-specific
+             * entropy source so that possibility of multiple devices retrying failed network operations
+             * at similar intervals can be avoided. */
+            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, uxRand(), &usNextRetryBackOff );
             configASSERT( xBackoffAlgStatus != BackoffAlgorithmRngFailure );
 
             if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )

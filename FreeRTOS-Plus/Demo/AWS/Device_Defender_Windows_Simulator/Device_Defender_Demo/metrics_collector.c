@@ -82,13 +82,13 @@ eMetricsCollectorStatus eGetNetworkStats( NetworkStats_t * pxOutNetworkStats )
                     "bytes sent: %u, packets sent: %u.",
                     ( unsigned int ) xMetrics.xInput.uxByteCount,
                     ( unsigned int ) xMetrics.xInput.uxPacketCount,
-                    ( unsigned int ) xMetrics.XOutput.uxByteCount,
-                    ( unsigned int ) xMetrics.XOutput.uxPacketCount ) );
+                    ( unsigned int ) xMetrics.xOutput.uxByteCount,
+                    ( unsigned int ) xMetrics.xOutput.uxPacketCount ) );
 
         pxOutNetworkStats->ulBytesReceived = xMetrics.xInput.uxByteCount;
         pxOutNetworkStats->ulPacketsReceived = xMetrics.xInput.uxPacketCount;
-        pxOutNetworkStats->ulBytesSent = xMetrics.XOutput.uxByteCount;
-        pxOutNetworkStats->ulPacketsSent = xMetrics.XOutput.uxPacketCount;
+        pxOutNetworkStats->ulBytesSent = xMetrics.xOutput.uxByteCount;
+        pxOutNetworkStats->ulPacketsSent = xMetrics.xOutput.uxPacketCount;
     }
 
     return eStatus;

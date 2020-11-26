@@ -59,31 +59,6 @@
 extern UBaseType_t uxRand();
 
 /*-----------------------------------------------------------*/
-
-/**
- * @brief A wrapper to the "uxRand()" random number generator so that it
- * can be passed to the backoffAlgorithm library for retry logic.
- *
- * This function implements the #BackoffAlgorithm_RNG_T type interface
- * in the backoffAlgorithm library API.
- *
- * @note The "uxRand" function represents a pseudo random number generator.
- * However, it is recommended to use a True Randon Number Generator (TRNG)
- * for generating unique device-specific random values to avoid possibility
- * of network collisions from multiple devices retrying network operations.
- *
- * @return The generated randon number. This function ALWAYS succeeds.
- */
-static int32_t prvGenerateRandomNumber();
-
-/*-----------------------------------------------------------*/
-
-static int32_t prvGenerateRandomNumber()
-{
-    return( uxRand() & INT32_MAX );
-}
-
-/*-----------------------------------------------------------*/
 BaseType_t connectToServerWithBackoffRetries( TransportConnect_t connectFunction,
                                               NetworkContext_t * pxNetworkContext )
 {
@@ -100,8 +75,7 @@ BaseType_t connectToServerWithBackoffRetries( TransportConnect_t connectFunction
     BackoffAlgorithm_InitializeParams( &xReconnectParams,
                                        RETRY_BACKOFF_BASE_MS,
                                        RETRY_MAX_BACKOFF_DELAY_MS,
-                                       RETRY_MAX_ATTEMPTS,
-                                       prvGenerateRandomNumber );
+                                       RETRY_MAX_ATTEMPTS );
 
     /* Attempt to connect to the HTTP server. If connection fails, retry after a
      * timeout. The timeout value will exponentially increase until either the

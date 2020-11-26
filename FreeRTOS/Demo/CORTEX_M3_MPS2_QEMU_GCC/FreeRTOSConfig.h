@@ -40,13 +40,19 @@
  * See http://www.freertos.org/a00110.html
  *----------------------------------------------------------*/
 
+#define configASSERT_DEFINED 1
+extern void vAssertCalled( void );
+#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( )
+
 #define configUSE_PREEMPTION		1
+#define configUSE_TIME_SLICING		1
+
 #define configUSE_IDLE_HOOK			0
 #define configUSE_TICK_HOOK			0
 #define configCPU_CLOCK_HZ			( ( unsigned long ) 20000000 )
 #define configTICK_RATE_HZ			( ( TickType_t ) 1000 )
-#define configMINIMAL_STACK_SIZE	( ( unsigned short ) 70 )
-#define configTOTAL_HEAP_SIZE		( ( size_t ) ( 7000 ) )
+#define configMINIMAL_STACK_SIZE	( ( unsigned short ) 2000 )
+#define configTOTAL_HEAP_SIZE		( ( size_t ) ( 279000 ) )
 #define configMAX_TASK_NAME_LEN		( 10 )
 #define configUSE_TRACE_FACILITY	0
 //#define configCHECK_FOR_STACK_OVERFLOW	0
@@ -54,8 +60,13 @@
 #define configIDLE_SHOULD_YIELD		0
 #define configUSE_CO_ROUTINES		0
 
-#define configMAX_PRIORITIES		( 5 )
+#define configMAX_PRIORITIES		( 10 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
+#define configTIMER_QUEUE_LENGTH				20
+#define configTIMER_TASK_PRIORITY				( configMAX_PRIORITIES - 3 )
+#define configUSE_COUNTING_SEMAPHORES 1
+#define configSUPPORT_DYNAMIC_ALLOCATION 1
+#define  configNUM_TX_DESCRIPTORS 15
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
@@ -70,14 +81,77 @@ to exclude the API function. */
 #define INCLUDE_vTaskSuspend			0
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
-//#define INCLUDE_uxTaskGetStackHighWaterMark	0
-//#define INCLUDE_uxTaskGetStackHighWaterMark2	0
+
 
 #define configKERNEL_INTERRUPT_PRIORITY 		255
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
 See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 	191 /* equivalent to 0xa0, or priority 5. */
+#define configMAC_INTERRUPT_PRIORITY 5
 
 
 
+/* networking definitions */
+#define configMAC_ISR_SIMULATOR_PRIORITY	( configMAX_PRIORITIES - 2 )
+#define ipconfigUSE_NETWORK_EVENT_HOOK 1
+//#define ipconfigSOCK_DEFAULT_RECEIVE_BLOCK_TIME  pdMS_TO_TICKS(5000)
+#define configNETWORK_INTERFACE_TO_USE 1L
+
+/* The address of an echo server that will be used by the two demo echo client
+tasks.
+http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html
+http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/UDP_Echo_Clients.html */
+
+#define configECHO_SERVER_ADDR0	192
+#define configECHO_SERVER_ADDR1 168
+#define configECHO_SERVER_ADDR2 1
+#define configECHO_SERVER_ADDR3 201
+
+/* Default MAC address configuration.  The demo creates a virtual network
+connection that uses this MAC address by accessing the raw Ethernet/WiFi data
+to and from a real network connection on the host PC.  See the
+configNETWORK_INTERFACE_TO_USE definition above for information on how to
+configure the real network connection to use. */
+
+#define configMAC_ADDR0		0x52
+#define configMAC_ADDR1		0x54
+#define configMAC_ADDR2		0x00
+#define configMAC_ADDR3		0x12
+#define configMAC_ADDR4		0x34
+#define configMAC_ADDR5		0xAD
+
+/* Default IP address configuration.  Used in ipconfigUSE_DNS is set to 0, or
+ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
+
+#define configIP_ADDR0		10
+#define configIP_ADDR1		211
+#define configIP_ADDR2		55
+#define configIP_ADDR3		250
+
+/* Default gateway IP address configuration.  Used in ipconfigUSE_DNS is set to
+0, or ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
+
+#define configGATEWAY_ADDR0	10
+#define configGATEWAY_ADDR1	211
+#define configGATEWAY_ADDR2	55
+#define configGATEWAY_ADDR3	1
+
+/* Default DNS server configuration.  OpenDNS addresses are 208.67.222.222 and
+208.67.220.220.  Used in ipconfigUSE_DNS is set to 0, or ipconfigUSE_DNS is set
+to 1 but a DNS server cannot be contacted.*/
+
+#define configDNS_SERVER_ADDR0	127
+#define configDNS_SERVER_ADDR1  0
+#define configDNS_SERVER_ADDR2	0
+#define configDNS_SERVER_ADDR3	53
+
+/* Default netmask configuration.  Used in ipconfigUSE_DNS is set to 0, or
+ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
+#define configNET_MASK0		255
+#define configNET_MASK1		255
+#define configNET_MASK2		255
+#define configNET_MASK3		0
+
+/* The UDP port to which print messages are sent. */
+#define configPRINT_PORT	( 15000 )
 #endif /* FREERTOS_CONFIG_H */

@@ -25,20 +25,40 @@
  * 1 tab == 4 spaces!
  */
 
-#include <string.h>
 #include <FreeRTOS.h>
 #include <task.h>
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY 1
 
-void vApplicationMallocFailedHook( void );
-void vApplicationIdleHook( void );
+#include<FreeRTOSConfig.h>
+
+#include <string.h>
+#include <stdarg.h>
+#include <stdio.h>
+
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
+void vApplicationMallocFailedHook( void );
+void main_tcp_echo_client_tasks( void );
+void vApplicationIdleHook( void );
 void vApplicationTickHook( void );
 void main_blinky( void );
 
+extern void initialise_monitor_handles(void);
+
 int main ()
 {
+#if (mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1)
+    {
     main_blinky();
+    }
+#elif ( mainCREATE_NETWROKING_DEMO_ONLY == 1 )
+    {
+    main_tcp_echo_client_tasks();
+    }
+#else
+    {
+    #error "Invalid Selection..." \
+            "\nPlease Select a Demo application from the main command"
+    }
+#endif
     return 0;
 }
 
@@ -52,7 +72,7 @@ void vApplicationMallocFailedHook( void )
 	timers, and semaphores.  The size of the FreeRTOS heap is set by the
 	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
 	taskDISABLE_INTERRUPTS();
-	for( ;; );
+	for( ;; ){};
 }
 /*-----------------------------------------------------------*/
 
@@ -65,7 +85,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
 	function is called if a stack overflow is detected. */
 	taskDISABLE_INTERRUPTS();
-	for( ;; );
+	for( ;; ){};
 }
 /*-----------------------------------------------------------*/
 
@@ -76,44 +96,26 @@ volatile size_t xFreeHeapSpace;
 	/* This is just a trivial example of an idle hook.  It is called on each
 	cycle of the idle task.  It must *NOT* attempt to block.  In this case the
 	idle task just queries the amount of FreeRTOS heap that remains.  See the
-	memory management section on the http://www.FreeRTOS.org web site for memory
+	memory management section on the https://www.FreeRTOS.org web site for memory
 	management options.  If there is a lot of heap memory free then the
 	configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
 	RAM. */
-	xFreeHeapSpace = xPortGetFreeHeapSize();
-
-	/* Remove compiler warning about xFreeHeapSpace being set but never used. */
-	( void ) xFreeHeapSpace;
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationTickHook( void )
 {
-	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0 )
-	{
-		/* The full demo includes a software timer demo/test that requires
-		prodding periodically from the tick interrupt. */
-		vTimerPeriodicISRTests();
-
-		/* Call the periodic queue overwrite from ISR demo. */
-		vQueueOverwritePeriodicISRDemo();
-
-		/* Call the periodic event group from ISR demo. */
-		vPeriodicEventGroupsProcessing();
-	}
-	#endif
 }
 /*-----------------------------------------------------------*/
 
 void vAssertCalled( void )
 {
-volatile unsigned long ul = 0;
-
+volatile unsigned long looping = 0;
 	taskENTER_CRITICAL();
 	{
 		/* Use the debugger to set ul to a non-zero value in order to step out
 		of this function to determine why it was called. */
-		while( ul == 0 )
+		while( looping == 0LU )
 		{
 			portNOP();
 		}
@@ -121,4 +123,11 @@ volatile unsigned long ul = 0;
 	taskEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
+void vLoggingPrintf( const char *pcFormat, ... )
+{
+        va_list arg;
 
+	va_start( arg, pcFormat );
+        vprintf( pcFormat, arg );
+	va_end( arg );
+}

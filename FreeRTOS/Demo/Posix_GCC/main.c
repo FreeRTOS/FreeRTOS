@@ -34,11 +34,11 @@
  * If mainSELECTED_APPLICATION = BLINKY_DEMO the simple blinky demo will be built.
  * The simply blinky demo is implemented and described in main_blinky.c.
  *
- * If mainSELECTED_APPLICATION = FULL_DEMO the more comprehensive test and demo 
+ * If mainSELECTED_APPLICATION = FULL_DEMO the more comprehensive test and demo
  * application built. This is implemented and described in main_full.c.
  *
- * If mainSELECTED_APPLICATION = ECHO_CLIENT_DEMO the tcp echo demo will be built. 
- * This is implemented and described in main_networking.c 
+ * If mainSELECTED_APPLICATION = ECHO_CLIENT_DEMO the tcp echo demo will be built.
+ * This is implemented and described in main_networking.c
  *
  * This file implements the code that is not demo specific, including the
  * hardware setup and FreeRTOS hook functions.

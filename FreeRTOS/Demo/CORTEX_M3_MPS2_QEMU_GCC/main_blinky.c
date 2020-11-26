@@ -121,7 +121,7 @@ const uint32_t ulExpectedValue = 100UL;
 		is it the expected value?  If it is, toggle the LED. */
 		if( ulReceivedValue == ulExpectedValue )
 		{
-			_write(1, "blinking\n", 9);
+			printf("%s\n","blinking");
 			vTaskDelay(1000);
 			ulReceivedValue = 0U;
 			ulRxEvents++;

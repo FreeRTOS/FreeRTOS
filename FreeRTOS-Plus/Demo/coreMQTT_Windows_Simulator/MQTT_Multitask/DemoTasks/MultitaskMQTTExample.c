@@ -1061,7 +1061,6 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
              * entropy source so that possibility of multiple devices retrying failed network operations
              * at similar intervals can be avoided. */
             xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, uxRand(), &usNextRetryBackOff );
-            configASSERT( xBackoffAlgStatus != BackoffAlgorithmRngFailure );
 
             if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )
             {

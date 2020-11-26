@@ -537,7 +537,6 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
             /* Generate a random number and calculate backoff value (in milliseconds) for
              * the next connection retry. */
             xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, uxRand(), &usNextRetryBackOff );
-            configASSERT( xBackoffAlgStatus != BackoffAlgorithmRngFailure );
 
             if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )
             {
@@ -706,7 +705,6 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
                  * entropy source so that possibility of multiple devices retrying failed network operations
                  * at similar intervals can be avoided. */
                 xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xRetryParams, uxRand(), &usNextRetryBackOff );
-                configASSERT( xBackoffAlgStatus != BackoffAlgorithmRngFailure );
 
                 if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )
                 {

@@ -663,7 +663,6 @@ static Socket_t prvConnectToServerWithBackoffRetries()
              * entropy source so that possibility of multiple devices retrying failed network operations
              * at similar intervals can be avoided. */
             xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, uxRand(), &usNextRetryBackOff );
-            configASSERT( xBackoffAlgStatus != BackoffAlgorithmRngFailure );
 
             if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )
             {
@@ -896,7 +895,6 @@ static void prvMQTTSubscribeWithBackoffRetries( Socket_t xMQTTSocket )
                  * entropy source so that possibility of multiple devices retrying failed network operations
                  * at similar intervals can be avoided. */
                 xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xRetryParams, uxRand(), &usNextRetryBackOff );
-                configASSERT( xBackoffAlgStatus != BackoffAlgorithmRngFailure );
 
                 if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )
                 {

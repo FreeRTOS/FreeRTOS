@@ -527,7 +527,7 @@ static MQTTStatus_t prvProcessCommand( Command_t * pxCommand )
 
             /* The process loop will run at the end of every command, so we don't
              * need to call it again here. */
-            LogDebug( ( "Running Process Loop." ) );
+            LogDebug( ( "Running Process Loop.\n" ) );
             processLoopTimeoutMs = pxCommand->uintParam;
             break;
 
@@ -540,7 +540,7 @@ static MQTTStatus_t prvProcessCommand( Command_t * pxCommand )
                 usPacketId = MQTT_GetPacketId( pMQTTContext );
             }
 
-            LogDebug( ( "Publishing message to %.*s.", ( int ) pxPublishInfo->topicNameLength, pxPublishInfo->pTopicName ) );
+            LogDebug( ( "Publishing message to %.*s.\n", ( int ) pxPublishInfo->topicNameLength, pxPublishInfo->pTopicName ) );
             xStatus = MQTT_Publish( pMQTTContext, pxPublishInfo, usPacketId );
 
             /* Add to pending ack list, or call callback if QoS 0. */
@@ -621,7 +621,7 @@ static MQTTStatus_t prvProcessCommand( Command_t * pxCommand )
             break;
 
         case TERMINATE:
-            LogInfo( ( "Terminating command loop." ) );
+            LogInfo( ( "Terminating command loop.\n" ) );
 
         default:
             break;
@@ -751,7 +751,7 @@ static void prvHandleSubscriptionAcks( MQTTAgentContext_t * pAgentContext,
         {
             if( pcSubackCodes[ i ] != MQTTSubAckFailure )
             {
-                LogInfo( ( "Adding subscription to %.*s",
+                LogInfo( ( "Adding subscription to %.*s\n",
                            pxSubscribeInfo[ i ].topicFilterLength,
                            pxSubscribeInfo[ i ].pTopicFilter ) );
                 prvAddSubscription( pAgentContext,
@@ -769,7 +769,7 @@ static void prvHandleSubscriptionAcks( MQTTAgentContext_t * pAgentContext,
         }
         else
         {
-            LogInfo( ( "Removing subscription to %.*s",
+            LogInfo( ( "Removing subscription to %.*s\n",
                        pxSubscribeInfo[ i ].topicFilterLength,
                        pxSubscribeInfo[ i ].pTopicFilter ) );
             prvRemoveSubscription( pAgentContext,
@@ -1234,11 +1234,11 @@ bool MQTTAgent_CreateCommandQueue( const uint32_t uxCommandQueueLength )
         if( xCommandQueue == NULL )
         {
             xQueueCreated = pdFALSE;
-            LogDebug( ( "Could not create queue." ) );
+            LogDebug( ( "Could not create queue.\n" ) );
         }
         else
         {
-            LogInfo( ( "Successfully created MQTT agent queue." ) );
+            LogInfo( ( "Successfully created MQTT agent queue.\n" ) );
         }
     }
 

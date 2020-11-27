@@ -19,20 +19,14 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
-#ifndef TWO_ECHO_CLIENTS_H
-#define TWO_ECHO_CLIENTS_H
+#ifndef UDP_COMMAND_INTERPRETER_H
+#define UDP_COMMAND_INTERPRETER_H
 
-/*
- * Create the two UDP echo client tasks.  One task uses the standard interface
- * to send to and receive from an echo server.  The other task uses the zero
- * copy interface to send to and receive from an echo server.
- */
-void vStartEchoClientTasks( uint16_t usTaskStackSize, unsigned portBASE_TYPE uxTaskPriority );
+void vStartUDPCommandInterpreterTask( uint16_t usStackSize, uint32_t ulPort, unsigned portBASE_TYPE uxPriority );
 
-#endif /* TWO_ECHO_CLIENTS_H */
+#endif /* UDP_COMMAND_INTERPRETER_H */

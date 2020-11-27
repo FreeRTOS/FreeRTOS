@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /*
@@ -40,7 +39,7 @@
 /* FreeRTOS includes. */
 #include <FreeRTOS.h>
 
-/* Variables used in the creation of the run time stats time base.  Run time 
+/* Variables used in the creation of the run time stats time base.  Run time
 stats record how much time each task spends in the Running state. */
 static long long llInitialRunTimeCounterValue = 0LL, llTicksPerHundedthMillisecond = 0LL;
 

@@ -20,9 +20,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * http://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
  /******************************************************************************

@@ -31,11 +31,6 @@
 #ifndef MQTT_AGENT_H
 #define MQTT_AGENT_H
 
-/* Kernel includes. */
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
-
 /* Demo Specific configs. */
 #include "demo_config.h"
 
@@ -50,21 +45,33 @@
  * one iteration, and will only receive a single packet. However, if there is
  * no data available on the socket, the entire socket timeout value will elapse.
  */
-#define mqttexamplePROCESS_LOOP_TIMEOUT_MS    ( 0U )
-
-#define MAX_CONNECTIONS                       2
-#define PENDING_ACKS_MAX_SIZE                 20
-#define SUBSCRIPTIONS_MAX_COUNT               10
+#define MQTT_AGENT_PROCESS_LOOP_TIMEOUT_MS     ( 0U )
 
 /**
- * @brief Size of statically allocated buffers for holding topic names and payloads in this demo.
+ * @brief The maximum number of MQTT connections that can be tracked.
  */
-#define mqttexampleDEMO_BUFFER_SIZE           100
+#define MAX_CONNECTIONS                        2
+
+/**
+ * @brief The maximum number of pending acknowledgments to track for a single
+ * connection.
+ */
+#define PENDING_ACKS_MAX_SIZE                  20
+
+/**
+ * @brief The maximum number of subscriptions to track for a single connection.
+ */
+#define SUBSCRIPTIONS_MAX_COUNT                10
+
+/**
+ * @brief Size of statically allocated buffers for holding subscription filters.
+ */
+#define MQTT_AGENT_SUBSCRIPTION_BUFFER_SIZE    100
 
 /**
  * @brief Ticks to wait for task notifications.
  */
-#define mqttexampleDEMO_TICKS_TO_WAIT         pdMS_TO_TICKS( 1000 )
+#define MQTT_AGENT_QUEUE_WAIT_TIME             pdMS_TO_TICKS( 1000 )
 
 /*-----------------------------------------------------------*/
 
@@ -73,7 +80,6 @@
  *
  * @note An instance of this struct and any variables it points to MUST stay
  * in scope until the associated command is processed, and its callback called.
- * The command callback will set the `xIsComplete` flag, and notify the calling task.
  */
 struct CommandContext;
 typedef struct CommandContext CommandContext_t;
@@ -89,22 +95,6 @@ typedef void (* CommandCallback_t )( CommandContext_t *,
  */
 typedef void (* PublishCallback_t )( MQTTPublishInfo_t * pxPublishInfo,
                                      void * pxSubscriptionContext );
-
-/**
- * @brief An element for a task's response queue for received publishes.
- *
- * @note Since elements are copied to queues, this struct needs to hold
- * buffers for the payload and topic of incoming publishes, as the original
- * pointers are out of scope. When processing a publish from this struct,
- * the `pcTopicNameBuf` and `pcPayloadBuf` pointers need to be set to point to the
- * static buffers in this struct.
- */
-typedef struct publishElement
-{
-    MQTTPublishInfo_t xPublishInfo;
-    uint8_t pcPayloadBuf[ mqttexampleDEMO_BUFFER_SIZE ];
-    uint8_t pcTopicNameBuf[ mqttexampleDEMO_BUFFER_SIZE ];
-} PublishElement_t;
 
 /*-----------------------------------------------------------*/
 
@@ -148,9 +138,10 @@ MQTTStatus_t MQTTAgent_ResumeSession( MQTTContext_t * pMqttContext,
 bool MQTTAgent_Subscribe( MQTTContext_t * pMqttContext,
                           MQTTSubscribeInfo_t * pSubscriptionList,
                           size_t subscriptionCount,
+                          PublishCallback_t publishCallback,
+                          void * pPublishCallbackContext,
                           CommandContext_t * pContext,
-                          CommandCallback_t cmdCallback,
-                          void * pResponseQueue );
+                          CommandCallback_t cmdCallback );
 
 bool MQTTAgent_Unsubscribe( MQTTContext_t * pMqttContext,
                             MQTTSubscribeInfo_t * pSubscriptionList,
@@ -176,10 +167,9 @@ bool MQTTAgent_Disconnect( MQTTContext_t * pMqttContext,
                            CommandContext_t * pContext,
                            CommandCallback_t cmdCallback );
 
-bool MQTTAgent_Terminate( void );
-
 bool MQTTAgent_Register( MQTTContext_t * pMqttContext,
-                         void * pDefaultResponseQueue,
+                         PublishCallback_t defaultPublishCallback,
+                         void * pDefaultPublishContext,
                          CommandContext_t * pContext,
                          CommandCallback_t cmdCallback );
 
@@ -187,8 +177,10 @@ bool MQTTAgent_Free( MQTTContext_t * pMqttContext,
                      CommandContext_t * pContext,
                      CommandCallback_t cmdCallback );
 
+bool MQTTAgent_Terminate( void );
+
 uint32_t MQTTAgent_GetNumWaiting( void );
 
-bool MQTTAgent_CreateCommandQueue( const UBaseType_t uxCommandQueueLength );
+bool MQTTAgent_CreateCommandQueue( const uint32_t uxCommandQueueLength );
 
 #endif /* MQTT_AGENT_H */

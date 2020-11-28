@@ -120,9 +120,6 @@ eMetricsCollectorStatus eGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
 
     if( eStatus == eMetricsCollectorSuccess )
     {
-        /* Set the out value for number of open TCP ports. */
-        *pulOutNumTcpOpenPorts = xMetrics.xTCPPortList.uxCount;
-
         /* Fill the output array with as many TCP ports as will fit in the
          * given array. */
         if( pusOutTcpPortsArray != NULL )
@@ -137,6 +134,14 @@ eMetricsCollectorStatus eGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
             }
 
             memcpy( pusOutTcpPortsArray, &xMetrics.xTCPPortList.usTCPPortList, ulCopyAmount * sizeof( uint16_t ) );
+
+            /* Return the number of elements copied to the array. */
+            *pulOutNumTcpOpenPorts = ulCopyAmount;
+        }
+        else
+        {
+            /* Return the total number of open ports. */
+            *pulOutNumTcpOpenPorts = xMetrics.xTCPPortList.uxCount;
         }
     }
 
@@ -169,8 +174,6 @@ eMetricsCollectorStatus eGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
 
     if( eStatus == eMetricsCollectorSuccess )
     {
-        *pulOutNumUdpOpenPorts = xMetrics.xUDPPortList.uxCount;
-
         /* Fill the output array with as many UDP ports as will fit in the
          * given array. */
         if( pusOutUdpPortsArray != NULL )
@@ -185,6 +188,14 @@ eMetricsCollectorStatus eGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
             }
 
             memcpy( pusOutUdpPortsArray, &xMetrics.xUDPPortList.usUDPPortList, ulCopyAmount * sizeof( uint16_t ) );
+
+            /* Return the number of elements copied to the array. */
+            *pulOutNumUdpOpenPorts = ulCopyAmount;
+        }
+        else
+        {
+            /* Return the total number of open ports. */
+            *pulOutNumUdpOpenPorts = xMetrics.xUDPPortList.uxCount;
         }
     }
 
@@ -220,9 +231,6 @@ eMetricsCollectorStatus eGetEstablishedConnections( Connection_t * pxOutConnecti
 
     if( eStatus == eMetricsCollectorSuccess )
     {
-        /* We consider only TCP sockets for open connections. */
-        *pulOutNumEstablishedConnections = xMetrics.xTCPSocketList.uxCount;
-
         /* Fill the output array with as many TCP socket infos as will fit in
          * the given array. */
         if( pxOutConnectionsArray != NULL )
@@ -249,6 +257,14 @@ eMetricsCollectorStatus eGetEstablishedConnections( Connection_t * pxOutConnecti
                 pxOutConnectionsArray[ i ].usRemotePort =
                     xMetrics.xTCPSocketList.xTCPList[ i ].usRemotePort;
             }
+
+            /* Return the number of elements copied to the array. */
+            *pulOutNumEstablishedConnections = ulCopyAmount;
+        }
+        else
+        {
+            /* Return the total number of established connections. */
+            *pulOutNumEstablishedConnections = xMetrics.xTCPSocketList.uxCount;
         }
     }
 

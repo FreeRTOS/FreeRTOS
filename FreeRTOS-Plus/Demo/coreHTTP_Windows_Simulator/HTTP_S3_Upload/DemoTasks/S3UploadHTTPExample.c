@@ -112,7 +112,7 @@
 #define httpexampleS3_PRESIGNED_GET_URL_LENGTH               ( sizeof( democonfigS3_PRESIGNED_GET_URL ) - 1 )
 
 /**
- * @brief Length of the pre-signed PUT URL defined in http_demo_s3_upload_config.h.
+ * @brief Length of the pre-signed PUT URL defined in demo_config.h.
  */
 #define httpexampleS3_PRESIGNED_PUT_URL_LENGTH               ( sizeof( democonfigS3_PRESIGNED_PUT_URL ) - 1 )
 
@@ -127,7 +127,7 @@
 #define httpexampleHTTP_METHOD_PUT_LENGTH                    ( sizeof( HTTP_METHOD_PUT ) - 1 )
 
 /**
- * @brief Field name of the HTTP range header to read from server response.
+ * @brief Field name of the HTTP range header to read from the server response.
  */
 #define httpexampleHTTP_CONTENT_RANGE_HEADER_FIELD           "Content-Range"
 
@@ -334,7 +334,7 @@ static void prvHTTPDemoTask( void * pvParameters )
      * timeout. The timeout value will be exponentially increased until either the
      * maximum number of attempts or the maximum timeout value is reached. The
      * function returns pdFAIL if the TCP connection cannot be established with
-     * the broker after configured number of attempts. */
+     * the server after configured number of attempts. */
     xDemoStatus = connectToServerWithBackoffRetries( prvConnectToServer,
                                                      &xNetworkContext );
 

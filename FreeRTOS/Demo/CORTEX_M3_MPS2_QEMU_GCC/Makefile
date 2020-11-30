@@ -58,6 +58,7 @@ endif
 DEFINES := -DprojCOVERAGE_TEST -DQEMU_SOC_MPS2 -DHEAP3
 
 LDFLAGS = -T ./scripts/mps2_m3.ld -specs=nano.specs --specs=rdimon.specs -lc -lrdimon
+LDFLAGS += -Xlinker -Map=${BUILD_DIR}/output.map
 
 CFLAGS += -nostartfiles -mthumb -mcpu=cortex-m3 -Wno-error=implicit-function-declaration
 CFLAGS += -Wno-builtin-declaration-mismatch -Werror

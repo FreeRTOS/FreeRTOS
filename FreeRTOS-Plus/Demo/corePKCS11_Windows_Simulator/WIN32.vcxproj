@@ -235,7 +235,7 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509write_csr.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509_create.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509_crl.c" />
-    <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509_crt.c" />
+    <ClCompile Include="..\..\thirdparty\mbedtls\library\x509_crt.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509_csr.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\xtea.c" />
     <ClCompile Include="..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils\mbedtls_error.c" />

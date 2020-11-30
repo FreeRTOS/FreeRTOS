@@ -38,12 +38,12 @@
  *
  * @Note: This demo requires user-generated pre-signed URLs to be pasted into
  * demo_config.h. Please use the provided script "presigned_urls_gen.py"
- * (located in Http_Demo_Helpers) to generate these URLs. For detailed
- * instructions, see the accompanied README.md.
+ * (located in coreHTTP_Windows_Simulator/Common) to generate these URLs. For
+ * detailed instructions, see the accompanied README.md.
  */
 
 /**
- * @file http_demo_s3_upload.c
+ * @file S3UploadHTTPExample.c
  * @brief Demonstrates usage of the HTTP library.
  */
 
@@ -61,9 +61,6 @@
 
 /* HTTP library includes. */
 #include "core_http_client.h"
-
-/* Exponential backoff retry include. */
-#include "exponential_backoff.h"
 
 /* Transport interface implementation include header for TLS. */
 #include "using_mbedtls.h"

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS V202011.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,8 +19,8 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -189,21 +189,6 @@ static void prvMQTTDemoTask( void * pvParameters );
  */
 static Socket_t prvCreateTCPConnectionToBroker( void );
 
-/**
- * @brief A wrapper to the "uxRand()" random number generator so that it
- * can be passed to the backoffAlgorithm library for retry logic.
- *
- * This function implements the #BackoffAlgorithm_RNG_T type interface
- * in the backoffAlgorithm library API.
- *
- * @note The "uxRand" function represents a pseudo random number generator.
- * However, it is recommended to use a True Randon Number Generator (TRNG)
- * for generating unique device-specific random values to avoid possibility
- * of network collisions from multiple devices retrying network operations.
- *
- * @return The generated randon number. This function ALWAYS succeeds.
- */
-static int32_t prvGenerateRandomNumber();
 
 /**
  * @brief Connect to MQTT broker with reconnection retries.
@@ -643,13 +628,6 @@ static Socket_t prvCreateTCPConnectionToBroker( void )
 }
 /*-----------------------------------------------------------*/
 
-static int32_t prvGenerateRandomNumber()
-{
-    return( uxRand() & INT32_MAX );
-}
-
-/*-----------------------------------------------------------*/
-
 static Socket_t prvConnectToServerWithBackoffRetries()
 {
     Socket_t xSocket;
@@ -657,15 +635,11 @@ static Socket_t prvConnectToServerWithBackoffRetries()
     BackoffAlgorithmContext_t xReconnectParams;
     uint16_t usNextRetryBackOff = 0U;
 
-    /* Initialize reconnect attempts and interval.
-     * Note: This demo is using pseudo random number generator for the backoff
-     * algorithm. However, it is recommended to use a True Random Number generator to
-     * avoid possibility of collisions between multiple devices retrying connection. */
+    /* Initialize reconnect attempts and interval.*/
     BackoffAlgorithm_InitializeParams( &xReconnectParams,
                                        mqttexampleRETRY_BACKOFF_BASE_MS,
                                        mqttexampleRETRY_MAX_BACKOFF_DELAY_MS,
-                                       mqttexampleRETRY_MAX_ATTEMPTS,
-                                       prvGenerateRandomNumber );
+                                       mqttexampleRETRY_MAX_ATTEMPTS );
 
     /* Attempt to connect to MQTT broker. If connection fails, retry after
      * a timeout. Timeout value will exponentially increase till maximum
@@ -683,9 +657,12 @@ static Socket_t prvConnectToServerWithBackoffRetries()
 
         if( xSocket == FREERTOS_INVALID_SOCKET )
         {
-            /* Get back-off value (in milliseconds) for the next connection retry. */
-            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextRetryBackOff );
-            configASSERT( xBackoffAlgStatus != BackoffAlgorithmRngFailure );
+            /* Generate a random number and calculate backoff value (in milliseconds) for
+             * the next connection retry.
+             * Note: It is recommended to seed the random number generator with a device-specific
+             * entropy source so that possibility of multiple devices retrying failed network operations
+             * at similar intervals can be avoided. */
+            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, uxRand(), &usNextRetryBackOff );
 
             if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )
             {
@@ -870,15 +847,11 @@ static void prvMQTTSubscribeWithBackoffRetries( Socket_t xMQTTSocket )
     uint16_t usNextRetryBackOff = 0U;
     bool xFailedSubscribeToTopic = false;
 
-    /* Initialize context for backoff retry attempts if SUBSCRIBE request fails.
-     * Note: This demo is using pseudo random number generator for the backoff
-     * algorithm. However, it is recommended to use a True Random Number generator to
-     * avoid possibility of collisions between multiple devices retrying network operations. */
+    /* Initialize context for backoff retry attempts if SUBSCRIBE request fails. */
     BackoffAlgorithm_InitializeParams( &xRetryParams,
                                        mqttexampleRETRY_BACKOFF_BASE_MS,
                                        mqttexampleRETRY_MAX_BACKOFF_DELAY_MS,
-                                       mqttexampleRETRY_MAX_ATTEMPTS,
-                                       prvGenerateRandomNumber );
+                                       mqttexampleRETRY_MAX_ATTEMPTS );
 
     do
     {
@@ -916,9 +889,12 @@ static void prvMQTTSubscribeWithBackoffRetries( Socket_t xMQTTSocket )
             {
                 xFailedSubscribeToTopic = true;
 
-                /* Get back-off value (in milliseconds) for the next connection retry. */
-                xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xRetryParams, &usNextRetryBackOff );
-                configASSERT( xBackoffAlgStatus != BackoffAlgorithmRngFailure );
+                /* Generate a random number and calculate backoff value (in milliseconds) for
+                 * the next connection retry.
+                 * Note: It is recommended to seed the random number generator with a device-specific
+                 * entropy source so that possibility of multiple devices retrying failed network operations
+                 * at similar intervals can be avoided. */
+                xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xRetryParams, uxRand(), &usNextRetryBackOff );
 
                 if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )
                 {

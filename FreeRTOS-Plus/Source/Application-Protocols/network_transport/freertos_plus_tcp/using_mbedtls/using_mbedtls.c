@@ -282,17 +282,17 @@ static int32_t setClientCertificate( SSLContext_t * pSslContext,
 /*-----------------------------------------------------------*/
 
 static int32_t setPrivateKey( SSLContext_t * pSslContext,
-                              const uint8_t * pPrivateKeyPath,
+                              const uint8_t * pPrivateKey,
                               size_t privateKeySize )
 {
     int32_t mbedtlsError = -1;
 
     configASSERT( pSslContext != NULL );
-    configASSERT( pPrivateKeyPath != NULL );
+    configASSERT( pPrivateKey != NULL );
 
     /* Setup the client private key. */
     mbedtlsError = mbedtls_pk_parse_key( &( pSslContext->privKey ),
-                                         pPrivateKeyPath,
+                                         pPrivateKey,
                                          privateKeySize,
                                          NULL,
                                          0 );

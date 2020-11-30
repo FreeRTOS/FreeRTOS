@@ -381,7 +381,7 @@
     <ClCompile Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_error.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\Utilities\exponential_backoff\exponential_backoff.c">
+    <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls\using_mbedtls.c">
@@ -392,7 +392,7 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\core_http_client.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser\http_parser.c" />
-    <ClCompile Include="..\Http_Demo_Helpers\http_demo_utils.c" />
+    <ClCompile Include="..\Common\http_demo_utils.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\NetworkInterface.h">
@@ -468,7 +468,7 @@
     </ClInclude>
     <ClInclude Include="demo_config.h" />
     <ClInclude Include="core_http_config.h" />
-    <ClInclude Include="..\..\..\Source\Utilities\exponential_backoff\exponential_backoff.h">
+    <ClInclude Include="..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\aes.h">

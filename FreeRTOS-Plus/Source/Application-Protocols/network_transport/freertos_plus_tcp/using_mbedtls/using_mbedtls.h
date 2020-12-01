@@ -99,14 +99,14 @@ typedef struct SSLContext
 } SSLContext_t;
 
 /**
- * @brief Definition of the network context for the transport interface
- * implementation that uses mbedTLS and FreeRTOS+TLS sockets.
+ * @brief Parameters for the network context of the transport interface
+ * implementation that uses mbedTLS and FreeRTOS+TCP sockets.
  */
-struct NetworkContext
+typedef struct TlsTransportParams
 {
     Socket_t tcpSocket;
     SSLContext_t sslContext;
-};
+} TlsTransportParams_t;
 
 /**
  * @brief Contains the credentials necessary for tls connection setup.

@@ -40,16 +40,27 @@
 /* Transport interface include. */
 #include "using_plaintext.h"
 
+/*-----------------------------------------------------------*/
+
+/* Each compilation unit must define the NetworkContext struct. */
+struct NetworkContext
+{
+    PlaintextTransportParams_t * pParams;
+};
+
+/*-----------------------------------------------------------*/
+
 PlaintextTransportStatus_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
                                                        const char * pHostName,
                                                        uint16_t port,
                                                        uint32_t receiveTimeoutMs,
                                                        uint32_t sendTimeoutMs )
 {
+    PlaintextTransportParams_t * pPlaintextTransportParams = NULL;
     PlaintextTransportStatus_t plaintextStatus = PLAINTEXT_TRANSPORT_SUCCESS;
     BaseType_t socketStatus = 0;
 
-    if( ( pNetworkContext == NULL ) || ( pHostName == NULL ) )
+    if( ( pNetworkContext == NULL ) || ( pNetworkContext->pParams == NULL ) || ( pHostName == NULL ) )
     {
         LogError( ( "Invalid input parameter(s): Arguments cannot be NULL. pNetworkContext=%p, "
                     "pHostName=%p.",
@@ -59,8 +70,9 @@ PlaintextTransportStatus_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetwo
     }
     else
     {
+        pPlaintextTransportParams = pNetworkContext->pParams;
         /* Establish a TCP connection with the server. */
-        socketStatus = Sockets_Connect( &( pNetworkContext->tcpSocket ),
+        socketStatus = Sockets_Connect( &( pPlaintextTransportParams->tcpSocket ),
                                         pHostName,
                                         port,
                                         receiveTimeoutMs,
@@ -81,22 +93,24 @@ PlaintextTransportStatus_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetwo
 
 PlaintextTransportStatus_t Plaintext_FreeRTOS_Disconnect( const NetworkContext_t * pNetworkContext )
 {
+    PlaintextTransportParams_t * pPlaintextTransportParams = NULL;
     PlaintextTransportStatus_t plaintextStatus = PLAINTEXT_TRANSPORT_SUCCESS;
 
-    if( pNetworkContext == NULL )
+    if( ( pNetworkContext == NULL ) || ( pNetworkContext->pParams == NULL ) )
     {
         LogError( ( "pNetworkContext cannot be NULL." ) );
         plaintextStatus = PLAINTEXT_TRANSPORT_INVALID_PARAMETER;
     }
-    else if( pNetworkContext->tcpSocket == FREERTOS_INVALID_SOCKET )
+    else if( pNetworkContext->pParams->tcpSocket == FREERTOS_INVALID_SOCKET )
     {
-        LogError( ( "pNetworkContext->tcpSocket cannot be an invalid socket." ) );
+        LogError( ( "pPlaintextTransportParams->tcpSocket cannot be an invalid socket." ) );
         plaintextStatus = PLAINTEXT_TRANSPORT_INVALID_PARAMETER;
     }
     else
     {
+        pPlaintextTransportParams = pNetworkContext->pParams;
         /* Call socket disconnect function to close connection. */
-        Sockets_Disconnect( pNetworkContext->tcpSocket );
+        Sockets_Disconnect( pPlaintextTransportParams->tcpSocket );
     }
 
     return plaintextStatus;
@@ -106,9 +120,16 @@ int32_t Plaintext_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
                                  void * pBuffer,
                                  size_t bytesToRecv )
 {
+    PlaintextTransportParams_t * pPlaintextTransportParams = NULL;
     int32_t socketStatus = 0;
 
-    socketStatus = FreeRTOS_recv( pNetworkContext->tcpSocket, pBuffer, bytesToRecv, 0 );
+    configASSERT( ( pNetworkContext != NULL ) && ( pNetworkContext->pParams != NULL ) );
+
+    pPlaintextTransportParams = pNetworkContext->pParams;
+    socketStatus = FreeRTOS_recv( pPlaintextTransportParams->tcpSocket,
+                                  pBuffer,
+                                  bytesToRecv,
+                                  0 );
 
     return socketStatus;
 }
@@ -117,9 +138,16 @@ int32_t Plaintext_FreeRTOS_send( NetworkContext_t * pNetworkContext,
                                  const void * pBuffer,
                                  size_t bytesToSend )
 {
+    PlaintextTransportParams_t * pPlaintextTransportParams = NULL;
     int32_t socketStatus = 0;
 
-    socketStatus = FreeRTOS_send( pNetworkContext->tcpSocket, pBuffer, bytesToSend, 0 );
+    configASSERT( ( pNetworkContext != NULL ) && ( pNetworkContext->pParams != NULL ) );
+
+    pPlaintextTransportParams = pNetworkContext->pParams;
+    socketStatus = FreeRTOS_send( pPlaintextTransportParams->tcpSocket,
+                                  pBuffer,
+                                  bytesToSend,
+                                  0 );
 
     return socketStatus;
 }

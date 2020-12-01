@@ -72,12 +72,12 @@ extern void vLoggingPrintf( const char * pcFormatString,
 #include "transport_interface.h"
 
 /**
- * @brief Network context definition for FreeRTOS sockets.
+ * @brief Parameters for the network context that uses FreeRTOS+TCP sockets.
  */
-struct NetworkContext
+typedef struct PlaintextTransportParams
 {
     Socket_t tcpSocket;
-};
+} PlaintextTransportParams_t;
 
 /**
  * @brief Plain text transport Connect / Disconnect return status.

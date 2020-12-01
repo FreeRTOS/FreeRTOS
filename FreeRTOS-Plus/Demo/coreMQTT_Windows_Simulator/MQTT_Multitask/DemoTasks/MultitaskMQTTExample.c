@@ -375,6 +375,18 @@ typedef struct publishElement
 
 /*-----------------------------------------------------------*/
 
+/* Each compilation unit must define the NetworkContext struct. */
+struct NetworkContext
+{
+    #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
+        TlsTransportParams_t * pParams;
+    #else
+        PlaintextTransportParams_t * pParams;
+    #endif
+};
+
+/*-----------------------------------------------------------*/
+
 /**
  * @brief Initializes an MQTT context, including transport interface and
  * network buffer.
@@ -685,6 +697,20 @@ static MQTTContext_t globalMqttContext;
  * @brief Global Network context.
  */
 static NetworkContext_t xNetworkContext;
+
+#if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
+
+/**
+ * @brief The parameters for the network context using a TLS channel.
+ */
+    static TlsTransportParams_t xTlsTransportParams;
+#else
+
+/**
+ * @brief The parameters for the network context using a non-encrypted channel.
+ */
+    static PlaintextTransportParams_t xPlaintextTransportParams;
+#endif
 
 /**
  * @brief List of operations that are awaiting an ack from the broker.
@@ -2073,6 +2099,13 @@ static void prvMQTTDemoTask( void * pvParameters )
                                        mqttexamplePUBLISHER_ASYNC_COMPLETE_BIT;
 
     ( void ) pvParameters;
+
+    /* Set the pParams member of the network context with desired transport. */
+    #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
+        xNetworkContext.pParams = &xTlsTransportParams;
+    #else
+        xNetworkContext.pParams = &xPlaintextTransportParams;
+    #endif
 
     ulGlobalEntryTimeMs = prvGetTimeMs();
 

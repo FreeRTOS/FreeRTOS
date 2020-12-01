@@ -223,6 +223,14 @@ typedef enum JobActionType
 
 /*-----------------------------------------------------------*/
 
+/* Each compilation unit must define the NetworkContext struct. */
+struct NetworkContext
+{
+    TlsTransportParams_t * pParams;
+};
+
+/*-----------------------------------------------------------*/
+
 /**
  * @brief The MQTT context used for MQTT operation.
  */
@@ -232,6 +240,11 @@ static MQTTContext_t xMqttContext;
  * @brief The network context used for mbedTLS operation.
  */
 static NetworkContext_t xNetworkContext;
+
+/**
+ * @brief The parameters for the network context using mbedTLS operation.
+ */
+static TlsTransportParams_t xTlsTransportParams;
 
 /**
  * @brief Static buffer used to hold MQTT messages being sent and received.
@@ -725,6 +738,9 @@ void prvJobsDemoTask( void * pvParameters )
 
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
+
+    /* Set the pParams member of the network context with desired transport. */
+    xNetworkContext.pParams = &xTlsTransportParams;
 
     /* Establish an MQTT connection with AWS IoT over a mutually authenticated TLS session. */
     xDemoStatus = xEstablishMqttSession( &xMqttContext,

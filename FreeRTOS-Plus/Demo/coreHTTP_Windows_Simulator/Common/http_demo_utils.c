@@ -56,6 +56,15 @@
 
 /*-----------------------------------------------------------*/
 
+/* Each compilation unit must define the NetworkContext struct.
+ * void * is used as this utility can be used by both plaintext and TLS demos. */
+struct NetworkContext
+{
+    void * pParams;
+};
+
+/*-----------------------------------------------------------*/
+
 extern UBaseType_t uxRand();
 
 /*-----------------------------------------------------------*/

@@ -260,7 +260,6 @@
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\arc4.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\asm.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\asn.c" />
-    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\async.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\blake2b.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\blake2s.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\camellia.c" />
@@ -277,15 +276,12 @@
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\dh.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\dsa.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\ecc.c" />
-    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\ecc_fp.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\ed25519.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\ed448.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\error.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fe_448.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fe_low_mem.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fe_operations.c" />
-    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fips.c" />
-    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fips_test.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\ge_448.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\ge_low_mem.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\ge_operations.c" />
@@ -299,7 +295,6 @@
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\md4.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\md5.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\memory.c" />
-    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\misc.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\pkcs12.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\pkcs7.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\poly1305.c" />
@@ -308,7 +303,6 @@
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\random.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\ripemd.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\rsa.c" />
-    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\selftest.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\sha.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\sha256.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\sha3.c" />
@@ -329,8 +323,6 @@
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\wc_encrypt.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\wc_pkcs11.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\wc_port.c" />
-    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\wolfcrypt_first.c" />
-    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\wolfcrypt_last.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\wolfevent.c" />
     <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\wolfmath.c" />
     <ClCompile Include="main.c">
@@ -349,12 +341,7 @@
     <ClInclude Include="user_settings.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\aes_asm.asm" />
-    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\aes_asm.S" />
-    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\aes_gcm_asm.S" />
-    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\chacha_asm.S" />
     <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fe_x25519_128.i" />
-    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fe_x25519_asm.S" />
     <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_mont_small.i" />
     <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_mul_comba_12.i" />
     <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_mul_comba_17.i" />
@@ -386,11 +373,6 @@
     <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_sqr_comba_8.i" />
     <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_sqr_comba_9.i" />
     <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_sqr_comba_small_set.i" />
-    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\include.am" />
-    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\poly1305_asm.S" />
-    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\sha256_asm.S" />
-    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\sha512_asm.S" />
-    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\sp_x86_64_asm.S" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

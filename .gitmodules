@@ -37,3 +37,6 @@
 [submodule "FreeRTOS-Plus/Source/Utilities/backoff_algorithm"]
 	path = FreeRTOS-Plus/Source/Utilities/backoff_algorithm
 	url = https://github.com/FreeRTOS/backoffAlgorithm.git
+[submodule "FreeRTOS-Plus/ThirdParty/WolfSSl"]
+	path = FreeRTOS-Plus/ThirdParty/WolfSSl
+	url = https://github.com/wolfSSL/wolfssl.git

@@ -87,7 +87,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\Source\wolfSSL-FIPS-Ready;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\ThirdParty\WolfSS-FIPS-Ready;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WOLFSSL_USER_SETTINGS</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -131,7 +131,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\Source\wolfSSL-FIPS-Ready;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\ThirdParty\WolfSS-FIPS-Ready;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WOLFSSL_USER_SETTINGS</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -184,7 +184,7 @@
       <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalIncludeDirectories>..\..\Source\wolfSSL-FIPS-Ready;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\ThirdParty\WolfSS-FIPS-Ready;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -223,7 +223,7 @@
       <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalIncludeDirectories>..\..\Source\wolfSSL-FIPS-Ready;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\ThirdParty\WolfSS-FIPS-Ready;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -249,92 +249,92 @@
     <ClCompile Include="..\..\..\FreeRTOS\Source\queue.c" />
     <ClCompile Include="..\..\..\FreeRTOS\Source\tasks.c" />
     <ClCompile Include="..\..\..\FreeRTOS\Source\timers.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\src\crl.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\src\internal.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\src\keys.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\src\ocsp.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\src\sniffer.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\src\ssl.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\src\tls.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\src\tls13.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\src\wolfio.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\aes.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\arc4.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\asm.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\asn.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\async.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\blake2b.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\blake2s.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\camellia.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\chacha.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\chacha20_poly1305.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\cmac.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\coding.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\compress.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\cpuid.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\cryptocb.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\curve25519.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\curve448.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\des3.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\dh.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\dsa.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\ecc.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\ecc_fp.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\ed25519.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\ed448.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\error.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fe_448.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fe_low_mem.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fe_operations.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fips.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fips_test.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\ge_448.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\ge_low_mem.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\ge_operations.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\hash.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\hc128.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\hmac.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\idea.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\integer.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\logging.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\md2.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\md4.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\md5.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\memory.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\misc.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\pkcs12.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\pkcs7.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\poly1305.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\pwdbased.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\rabbit.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\random.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\ripemd.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\rsa.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\selftest.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\sha.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\sha256.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\sha3.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\sha512.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\signature.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\sp_arm32.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\sp_arm64.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\sp_armthumb.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\sp_c32.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\sp_c64.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\sp_cortexm.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\sp_dsp32.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\sp_int.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\sp_x86_64.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\srp.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\tfm.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\wc_dsp.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\wc_encrypt.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\wc_pkcs11.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\wc_port.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\wolfcrypt_first.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\wolfcrypt_last.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\wolfevent.c" />
-    <ClCompile Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\wolfmath.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\src\crl.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\src\internal.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\src\keys.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\src\ocsp.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\src\sniffer.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\src\ssl.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\src\tls.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\src\tls13.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\src\wolfio.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\aes.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\arc4.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\asm.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\asn.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\async.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\blake2b.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\blake2s.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\camellia.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\chacha.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\chacha20_poly1305.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\cmac.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\coding.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\compress.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\cpuid.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\cryptocb.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\curve25519.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\curve448.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\des3.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\dh.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\dsa.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\ecc.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\ecc_fp.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\ed25519.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\ed448.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\error.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fe_448.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fe_low_mem.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fe_operations.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fips.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fips_test.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\ge_448.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\ge_low_mem.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\ge_operations.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\hash.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\hc128.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\hmac.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\idea.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\integer.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\logging.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\md2.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\md4.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\md5.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\memory.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\misc.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\pkcs12.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\pkcs7.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\poly1305.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\pwdbased.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\rabbit.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\random.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\ripemd.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\rsa.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\selftest.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\sha.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\sha256.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\sha3.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\sha512.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\signature.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\sp_arm32.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\sp_arm64.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\sp_armthumb.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\sp_c32.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\sp_c64.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\sp_cortexm.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\sp_dsp32.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\sp_int.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\sp_x86_64.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\srp.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\tfm.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\wc_dsp.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\wc_encrypt.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\wc_pkcs11.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\wc_port.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\wolfcrypt_first.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\wolfcrypt_last.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\wolfevent.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\wolfmath.c" />
     <ClCompile Include="main.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -351,48 +351,48 @@
     <ClInclude Include="user_settings.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\aes_asm.asm" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\aes_asm.S" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\aes_gcm_asm.S" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\chacha_asm.S" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fe_x25519_128.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fe_x25519_asm.S" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_mont_small.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_mul_comba_12.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_mul_comba_17.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_mul_comba_20.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_mul_comba_24.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_mul_comba_28.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_mul_comba_3.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_mul_comba_32.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_mul_comba_4.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_mul_comba_48.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_mul_comba_6.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_mul_comba_64.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_mul_comba_7.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_mul_comba_8.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_mul_comba_9.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_mul_comba_small_set.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_12.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_17.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_20.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_24.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_28.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_3.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_32.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_4.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_48.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_6.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_64.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_7.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_8.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_9.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_small_set.i" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\include.am" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\poly1305_asm.S" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\sha256_asm.S" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\sha512_asm.S" />
-    <None Include="..\..\Source\WolfSSL-FIPS-Ready\wolfcrypt\src\sp_x86_64_asm.S" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\aes_asm.asm" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\aes_asm.S" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\aes_gcm_asm.S" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\chacha_asm.S" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fe_x25519_128.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fe_x25519_asm.S" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_mont_small.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_mul_comba_12.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_mul_comba_17.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_mul_comba_20.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_mul_comba_24.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_mul_comba_28.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_mul_comba_3.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_mul_comba_32.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_mul_comba_4.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_mul_comba_48.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_mul_comba_6.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_mul_comba_64.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_mul_comba_7.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_mul_comba_8.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_mul_comba_9.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_mul_comba_small_set.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_12.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_17.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_20.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_24.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_28.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_3.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_32.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_4.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_48.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_6.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_64.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_7.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_8.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_9.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\fp_sqr_comba_small_set.i" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\include.am" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\poly1305_asm.S" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\sha256_asm.S" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\sha512_asm.S" />
+    <None Include="..\..\ThirdParty\WolfSS-FIPS-Ready\wolfcrypt\src\sp_x86_64_asm.S" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

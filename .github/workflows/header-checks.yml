@@ -16,12 +16,11 @@ jobs:
         env:  
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
       
-      # Get latest checks from master
+      # Use the checks as defined by the user, so they can locally adjust as needed
       - name: Checkout FreeRTOS Tools
         uses: actions/checkout@v2
         with:
-          repository: FreeRTOS/FreeRTOS 
-          ref:  master
+          ref:  ${{ github.event.pull_request.head.sha }}
           path: tools
 
       # Checkout user pull request changes
@@ -41,6 +40,6 @@ jobs:
       - name: Check File Headers
         run: |
           cd inspect
-          ../tools/.github/scripts/check-header.py --json ${HOME}/files.json
+          ../tools/.github/scripts/check-header.py --json ${HOME}/files_modified.json ${HOME}/files_added.json ${HOME}/files_renamed.json
           exit $?
                   

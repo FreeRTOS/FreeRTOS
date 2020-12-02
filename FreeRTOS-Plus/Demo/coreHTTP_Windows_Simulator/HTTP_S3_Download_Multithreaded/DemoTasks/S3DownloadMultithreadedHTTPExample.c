@@ -442,6 +442,23 @@ void vStartSimpleHTTPDemo( void )
 
 /**
  * @brief Entry point of the demo.
+ *
+ * This example resolves a S3 domain (using a pre-signed URL), establishes a TCP
+ * connection, validates the server's certificate using the configurable root CA
+ * certificate, and then finally performs a TLS handshake with the HTTP server,
+ * so that all communication is encrypted.
+ *
+ * Afterwards, two additional tasks are created (a request and response task),
+ * along with two thread-safe queues (a request and response queue), to
+ * demonstrate an asynchronous workflow for downloading an S3 file. The tasks
+ * run continuously until the entire file is downloaded. If any request fails,
+ * an error code is returned.
+ *
+ * @Note: This demo requires user-generated pre-signed URLs to be pasted into
+ * demo_config.h. Please use the provided script "presigned_urls_gen.py"
+ * (located in located in coreHTTP_Windows_Simulator/Common) to generate these
+ * URLs. For detailed instructions, see the accompanied README.md.
+ *
  */
 static void prvHTTPDemoTask( void * pvParameters )
 {

@@ -22,7 +22,7 @@ For a release build run:
 $ export PATH=/path/to/arm/toolchain:$PATH
 $ make
 ```
-and for a versions with debugging symbols and no optimizations activated, run:
+For a versions with debugging symbols and no optimizations **-O0**, run:
 ```
 $ make DEBUG=1
 ```
@@ -50,7 +50,6 @@ virbr0:     virtual bridge         (to be created)
 virbr0-nic: veth virtual interface (to be created)
 ```
 ### A few assumptions (your numbers could varry)
----------------------------------------------
 ```
 Local Host IP address:          192.168.1.81
 Local FreeRTOS IP address:      192.168.1.80
@@ -63,7 +62,6 @@ Local FreeRTOS Mac address:     52:54:00:12:34:AD
 ```
 
 ### Building and Running
------------------------
 
 1. Fill the defines values in FreeRTOSConfig.h with what is equivalent to the
    above values on your system
@@ -154,9 +152,6 @@ Replace the value of macaddr=52:54:00:12:34:AD with your own value from
 ```
 configMAC_ADDR0 through  configMAC_ADDR5
 ```
-
-Extra options -s: to run a gdb server
-              -S: to start in paused mode
 
 7. Expectations
 On the remote machine you should expect to see something similar to the

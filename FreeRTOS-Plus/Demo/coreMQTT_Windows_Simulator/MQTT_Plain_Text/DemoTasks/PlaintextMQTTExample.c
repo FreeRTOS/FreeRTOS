@@ -179,7 +179,7 @@
 /* Each compilation unit must define the NetworkContext struct. */
 struct NetworkContext
 {
-    TLSTransportParams_t * pParams;
+    TlsTransportParams_t * pParams;
 };
 
 /*-----------------------------------------------------------*/

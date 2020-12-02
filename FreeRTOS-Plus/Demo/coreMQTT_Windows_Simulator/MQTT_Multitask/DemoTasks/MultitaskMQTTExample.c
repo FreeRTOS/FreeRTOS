@@ -1007,6 +1007,8 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
     BackoffAlgorithmContext_t xReconnectParams;
     uint16_t usNextRetryBackOff = 0U;
 
+    configASSERT( pxNetworkContext != NULL && pxNetworkContext->pParams != NULL );
+
     #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
         TlsTransportStatus_t xNetworkStatus = TLS_TRANSPORT_CONNECT_FAILURE;
         NetworkCredentials_t xNetworkCredentials = { 0 };
@@ -1105,7 +1107,7 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
     /* Set the socket wakeup callback. */
     if( xConnected )
     {
-        ( void ) FreeRTOS_setsockopt( pxNetworkContext->tcpSocket,
+        ( void ) FreeRTOS_setsockopt( pxNetworkContext->pParams->tcpSocket,
                                       0, /* Level - Unused. */
                                       FREERTOS_SO_WAKEUP_CALLBACK,
                                       ( void * ) prvMQTTClientSocketWakeupCallback,
@@ -1121,8 +1123,10 @@ static BaseType_t prvSocketDisconnect( NetworkContext_t * pxNetworkContext )
 {
     BaseType_t xDisconnected = pdFAIL;
 
+    configASSERT( pxNetworkContext != NULL && pxNetworkContext->pParams != NULL );
+
     /* Set the wakeup callback to NULL since the socket will disconnect. */
-    ( void ) FreeRTOS_setsockopt( pxNetworkContext->tcpSocket,
+    ( void ) FreeRTOS_setsockopt( pxNetworkContext->pParams->tcpSocket,
                                   0, /* Level - Unused. */
                                   FREERTOS_SO_WAKEUP_CALLBACK,
                                   ( void * ) NULL,

@@ -151,6 +151,7 @@ void vPKCS11SignVerifyDemo( void )
      */
     xResult = xFindObjectWithLabelAndClass( hSession, 
             pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS, 
+            strlen( pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS ), 
             CKO_PRIVATE_KEY,
             &xPrivateKeyHandle );
     configASSERT( xResult == CKR_OK );
@@ -160,6 +161,7 @@ void vPKCS11SignVerifyDemo( void )
      * demo. */
     xResult = xFindObjectWithLabelAndClass( hSession, 
             pkcs11configLABEL_DEVICE_PUBLIC_KEY_FOR_TLS, 
+            strlen( pkcs11configLABEL_DEVICE_PUBLIC_KEY_FOR_TLS ), 
             CKO_PRIVATE_KEY,
             &xPublicKeyHandle );
     configASSERT( xResult == CKR_OK );

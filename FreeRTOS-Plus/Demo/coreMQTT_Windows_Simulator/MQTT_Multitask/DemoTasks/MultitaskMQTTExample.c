@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS V202011.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,8 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 
 /*
@@ -374,6 +375,18 @@ typedef struct publishElement
 
 /*-----------------------------------------------------------*/
 
+/* Each compilation unit must define the NetworkContext struct. */
+struct NetworkContext
+{
+    #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
+        TlsTransportParams_t * pParams;
+    #else
+        PlaintextTransportParams_t * pParams;
+    #endif
+};
+
+/*-----------------------------------------------------------*/
+
 /**
  * @brief Initializes an MQTT context, including transport interface and
  * network buffer.
@@ -409,21 +422,6 @@ static MQTTStatus_t prvMQTTConnect( MQTTContext_t * pxMQTTContext,
  */
 static MQTTStatus_t prvResumeSession( bool xSessionPresent );
 
-/**
- * @brief A wrapper to the "uxRand()" random number generator so that it
- * can be passed to the backoffAlgorithm library for retry logic.
- *
- * This function implements the #BackoffAlgorithm_RNG_T type interface
- * in the backoffAlgorithm library API.
- *
- * @note The "uxRand" function represents a pseudo random number generator.
- * However, it is recommended to use a True Randon Number Generator (TRNG)
- * for generating unique device-specific random values to avoid possibility
- * of network collisions from multiple devices retrying network operations.
- *
- * @return The generated randon number. This function ALWAYS succeeds.
- */
-static int32_t prvGenerateRandomNumber();
 
 /**
  * @brief Form a TCP connection to a server.
@@ -699,6 +697,20 @@ static MQTTContext_t globalMqttContext;
  * @brief Global Network context.
  */
 static NetworkContext_t xNetworkContext;
+
+#if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
+
+/**
+ * @brief The parameters for the network context using a TLS channel.
+ */
+    static TlsTransportParams_t xTlsTransportParams;
+#else
+
+/**
+ * @brief The parameters for the network context using a non-encrypted channel.
+ */
+    static PlaintextTransportParams_t xPlaintextTransportParams;
+#endif
 
 /**
  * @brief List of operations that are awaiting an ack from the broker.
@@ -988,19 +1000,14 @@ static MQTTStatus_t prvResumeSession( bool xSessionPresent )
 
 /*-----------------------------------------------------------*/
 
-static int32_t prvGenerateRandomNumber()
-{
-    return( uxRand() & INT32_MAX );
-}
-
-/*-----------------------------------------------------------*/
-
 static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
 {
     BaseType_t xConnected = pdFAIL;
     BackoffAlgorithmStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
     BackoffAlgorithmContext_t xReconnectParams;
     uint16_t usNextRetryBackOff = 0U;
+
+    configASSERT( pxNetworkContext != NULL && pxNetworkContext->pParams != NULL );
 
     #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
         TlsTransportStatus_t xNetworkStatus = TLS_TRANSPORT_CONNECT_FAILURE;
@@ -1037,15 +1044,11 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
     #endif /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
 
     /* We will use a retry mechanism with an exponential backoff mechanism and
-     * jitter. We initialize the context required for backoff period calculation here.
-     * Note: This demo is using pseudo random number generator for the backoff
-     * algorithm. However, it is recommended to use a True Random Number generator to
-     * avoid possibility of collisions between multiple devices retrying connection. */
+     * jitter. We initialize the context required for backoff period calculation here. */
     BackoffAlgorithm_InitializeParams( &xReconnectParams,
                                        mqttexampleRETRY_BACKOFF_BASE_MS,
                                        mqttexampleRETRY_MAX_BACKOFF_DELAY_MS,
-                                       mqttexampleRETRY_MAX_ATTEMPTS,
-                                       prvGenerateRandomNumber );
+                                       mqttexampleRETRY_MAX_ATTEMPTS );
 
     /* Attempt to connect to MQTT broker. If connection fails, retry after a
      * timeout. Timeout value will exponentially increase until the maximum
@@ -1081,9 +1084,12 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
 
         if( !xConnected )
         {
-            /* Get back-off value (in milliseconds) for the next connection retry. */
-            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextRetryBackOff );
-            configASSERT( xBackoffAlgStatus != BackoffAlgorithmRngFailure );
+            /* Generate a random number and calculate backoff value (in milliseconds) for
+             * the next connection retry.
+             * Note: It is recommended to seed the random number generator with a device-specific
+             * entropy source so that possibility of multiple devices retrying failed network operations
+             * at similar intervals can be avoided. */
+            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, uxRand(), &usNextRetryBackOff );
 
             if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )
             {
@@ -1101,7 +1107,7 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
     /* Set the socket wakeup callback. */
     if( xConnected )
     {
-        ( void ) FreeRTOS_setsockopt( pxNetworkContext->tcpSocket,
+        ( void ) FreeRTOS_setsockopt( pxNetworkContext->pParams->tcpSocket,
                                       0, /* Level - Unused. */
                                       FREERTOS_SO_WAKEUP_CALLBACK,
                                       ( void * ) prvMQTTClientSocketWakeupCallback,
@@ -1117,8 +1123,10 @@ static BaseType_t prvSocketDisconnect( NetworkContext_t * pxNetworkContext )
 {
     BaseType_t xDisconnected = pdFAIL;
 
+    configASSERT( pxNetworkContext != NULL && pxNetworkContext->pParams != NULL );
+
     /* Set the wakeup callback to NULL since the socket will disconnect. */
-    ( void ) FreeRTOS_setsockopt( pxNetworkContext->tcpSocket,
+    ( void ) FreeRTOS_setsockopt( pxNetworkContext->pParams->tcpSocket,
                                   0, /* Level - Unused. */
                                   FREERTOS_SO_WAKEUP_CALLBACK,
                                   ( void * ) NULL,
@@ -2095,6 +2103,13 @@ static void prvMQTTDemoTask( void * pvParameters )
                                        mqttexamplePUBLISHER_ASYNC_COMPLETE_BIT;
 
     ( void ) pvParameters;
+
+    /* Set the pParams member of the network context with desired transport. */
+    #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
+        xNetworkContext.pParams = &xTlsTransportParams;
+    #else
+        xNetworkContext.pParams = &xPlaintextTransportParams;
+    #endif
 
     ulGlobalEntryTimeMs = prvGetTimeMs();
 

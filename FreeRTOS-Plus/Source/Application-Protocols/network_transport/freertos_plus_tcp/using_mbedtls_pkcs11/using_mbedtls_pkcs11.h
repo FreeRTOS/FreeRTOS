@@ -1,4 +1,5 @@
 /*
+ * FreeRTOS V202011.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -17,6 +18,10 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 
 /**
@@ -110,11 +115,11 @@ typedef struct SSLContext
  * @brief Definition of the network context for the transport interface
  * implementation that uses mbedTLS and FreeRTOS+TLS sockets.
  */
-struct NetworkContext
+typedef struct TlsTransportParams
 {
     Socket_t tcpSocket;
     SSLContext_t sslContext;
-};
+} TlsTransportParams_t;
 
 /**
  * @brief Contains the credentials necessary for tls connection setup.

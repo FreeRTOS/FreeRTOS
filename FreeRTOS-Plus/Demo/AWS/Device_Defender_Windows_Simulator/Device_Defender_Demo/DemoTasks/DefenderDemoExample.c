@@ -811,7 +811,7 @@ void prvDefenderDemoTask( void * pvParameters )
                 }
 
                 /* Wait for sometime between consecutive executions of ProcessLoop. */
-                vTaskDelay( 1000 / portTICK_PERIOD_MS );
+                vTaskDelay( pdMS_TO_TICKS( 1000U ) );
             }
         }
 

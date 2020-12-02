@@ -60,32 +60,32 @@ Local FreeRTOS Mac address:     52:54:00:12:34:AD
 1. Fill the defines values in FreeRTOSConfig.h with what is equivalent to the
    above values on your system
 ```c
-#define configIP_ADDR0		    192
-#define configIP_ADDR1		    168
-#define configIP_ADDR2	     	1
-#define configIP_ADDR3	    	80
+#define configIP_ADDR0          192
+#define configIP_ADDR1          168
+#define configIP_ADDR2          1
+#define configIP_ADDR3          80
 
-#define configNET_MASK0	    	255
-#define configNET_MASK1	    	255
-#define configNET_MASK2	    	255
-#define configNET_MASK3	    	0
+#define configNET_MASK0         255
+#define configNET_MASK1         255
+#define configNET_MASK2         255
+#define configNET_MASK3         0
 
-#define configGATEWAY_ADDR0   	192
-#define configGATEWAY_ADDR1	    168
-#define configGATEWAY_ADDR2  	1
-#define configGATEWAY_ADDR3	    254
+#define configGATEWAY_ADDR0     192
+#define configGATEWAY_ADDR1     168
+#define configGATEWAY_ADDR2     1
+#define configGATEWAY_ADDR3     254
 
-#define configDNS_SERVER_ADDR0	192
+#define configDNS_SERVER_ADDR0  192
 #define configDNS_SERVER_ADDR1  168
-#define configDNS_SERVER_ADDR2	1
-#define configDNS_SERVER_ADDR3	254
+#define configDNS_SERVER_ADDR2  1
+#define configDNS_SERVER_ADDR3  254
 
-#define configMAC_ADDR0	     	0x52
-#define configMAC_ADDR1		    0x54
-#define configMAC_ADDR2		    0x00
-#define configMAC_ADDR3		    0x12
-#define configMAC_ADDR4		    0x34
-#define configMAC_ADDR5		    0xAD
+#define configMAC_ADDR0         0x52
+#define configMAC_ADDR1         0x54
+#define configMAC_ADDR2         0x00
+#define configMAC_ADDR3         0x12
+#define configMAC_ADDR4         0x34
+#define configMAC_ADDR5         0xAD
 
 #define configECHO_SERVER_ADDR0 192
 #define configECHO_SERVER_ADDR1 168

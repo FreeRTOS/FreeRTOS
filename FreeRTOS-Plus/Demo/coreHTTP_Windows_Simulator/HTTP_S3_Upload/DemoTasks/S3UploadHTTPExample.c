@@ -310,6 +310,17 @@ void vStartSimpleHTTPDemo( void )
 
 /**
  * @brief Entry point of the demo.
+ *
+ * This example, using a pre-signed URL, resolves a S3 domain, establishes a TCP
+ * connection, validates the server's certificate using the root CA certificate
+ * defined in the config header, and then finally performs a TLS handshake with
+ * the HTTP server so that all communication is encrypted. After which, the HTTP
+ * Client library API is used to upload a file to a S3 bucket by sending a PUT
+ * request, and verify that the file was uploaded using a GET request. If any
+ * request fails, an error code is returned.
+ *
+ * @note This example is single-threaded.
+ *
  */
 static void prvHTTPDemoTask( void * pvParameters )
 {

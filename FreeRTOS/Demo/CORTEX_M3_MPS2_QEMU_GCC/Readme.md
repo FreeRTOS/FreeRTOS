@@ -162,7 +162,8 @@ TxRx message number
 @ABCDEFGHIJKLM
 ```
 
-## How to start debugging (gdb)
+## How to start debugging
+1. gdb
 <P>
 Append the -s and -S switches to the previous command (qemu-system-arm)<br>
 -s: allow gdb to be attached to the process remotely at port 1234 <br>
@@ -176,6 +177,15 @@ $ arm-none-eabi-gdb -q ./build/RTOSDemo.axf
 (gdb) break main
 (gdb) c
 ```
+
+2. tcpdump
+To monitor packets received to quemu running the qemu command (qemu-system-arm)
+    shown above will create a network packet dump that you could inspect with
+
+```
+$ sudo tcpdump -r /tmp/qemu_tap_dump  | less
+```
+
 ## Demo
 This Demo implements the blinky demo, the user should expect the word 
 "blinking" to be repeatedly printed on the screen.

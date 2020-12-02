@@ -116,6 +116,12 @@ typedef enum
     ReportStatusAccepted,
     ReportStatusRejected
 } ReportStatus_t;
+
+/* Each compilation unit must define the NetworkContext struct. */
+struct NetworkContext
+{
+    TlsTransportParams_t * pParams;
+};
 /*-----------------------------------------------------------*/
 
 /**
@@ -127,6 +133,11 @@ static MQTTContext_t xMqttContext;
  * @brief The network context used for mbedTLS operation.
  */
 static NetworkContext_t xNetworkContext;
+
+/**
+ * @brief The parameters for the network context using mbedTLS operation.
+ */
+static TlsTransportParams_t xTlsTransportParams;
 
 /**
  * @brief Static buffer used to hold MQTT messages being sent and received.
@@ -625,6 +636,9 @@ void prvDefenderDemoTask( void * pvParameters )
 
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
+
+    /* Set the pParams member of the network context with desired transport. */
+    xNetworkContext.pParams = &xTlsTransportParams;
 
     /* Start with report not received. */
     xReportStatus = ReportStatusNotReceived;

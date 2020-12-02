@@ -90,10 +90,9 @@
     #define democonfigHTTPS_PORT    ( 443 )
 #endif
 
-
 /* Check that a transport timeout for transport send and receive is defined. */
 #ifndef democonfigTRANSPORT_SEND_RECV_TIMEOUT_MS
-    #define democonfigTRANSPORT_SEND_RECV_TIMEOUT_MS    ( 1000 )
+    #define democonfigTRANSPORT_SEND_RECV_TIMEOUT_MS    ( 5000 )
 #endif
 
 /* Check that a size for the user buffer is defined. */
@@ -152,6 +151,22 @@
 #define httpexampleHTTP_STATUS_CODE_SUCCESSFUL_REQUEST       200
 
 /**
+ * @brief The maximum number of times to run the loop in this demo.
+ *
+ * @note The demo loop is re-run only if the demo fails initially. Once the demo
+ * loop succeeds on an iteration, the demo exits successfully.
+ */
+#ifndef HTTP_MAX_DEMO_LOOP_COUNT
+    #define HTTP_MAX_DEMO_LOOP_COUNT    ( 3 )
+#endif
+
+/**
+ * @brief Time in ticks to wait between retries of the demo loop if
+ * demo loop fails.
+ */
+#define DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS    ( pdMS_TO_TICKS( 5000U ) )
+
+/**
  * @brief A buffer used in the demo for storing HTTP request headers, and HTTP
  * response headers and body.
  *
@@ -162,7 +177,7 @@
 static uint8_t ucUserBuffer[ democonfigUSER_BUFFER_LENGTH ];
 
 /**
- * @brief Represents header data that will be sent in an HTTP request.
+ * @brief Header data sent as part of an HTTP request to the server.
  */
 static HTTPRequestHeaders_t xRequestHeaders;
 
@@ -173,7 +188,7 @@ static HTTPRequestHeaders_t xRequestHeaders;
 static HTTPRequestInfo_t xRequestInfo;
 
 /**
- * @brief Represents a response returned from an HTTP server.
+ * @brief Response returned from the HTTP server.
  */
 static HTTPResponse_t xResponse;
 
@@ -205,14 +220,13 @@ static const char * pcPath;
  */
 static void prvHTTPDemoTask( void * pvParameters );
 
-
 /**
  * @brief Connect to HTTP server with reconnection retries.
  *
  * @param[out] pxNetworkContext The output parameter to return the created
  * network context.
  *
- * @return pdFAIL on failure; pdPASS on successful connection.
+ * @return pdPASS on successful connection; pdFAIL otherwise.
  */
 static BaseType_t prvConnectToServer( NetworkContext_t * pxNetworkContext );
 
@@ -290,17 +304,6 @@ void vStartSimpleHTTPDemo( void )
 
 /**
  * @brief Entry point of the demo.
- *
- * This example, using a pre-signed URL, resolves a S3 domain, establishes a TCP
- * connection, validates the server's certificate using the root CA certificate
- * defined in the config header, and then finally performs a TLS handshake with
- * the HTTP server so that all communication is encrypted. After which, the HTTP
- * Client library API is used to upload a file to a S3 bucket by sending a PUT
- * request, and verify the file was uploaded using a GET request. If any request
- * fails, an error code is returned.
- *
- * @note This example is single-threaded and uses statically allocated memory.
- *
  */
 static void prvHTTPDemoTask( void * pvParameters )
 {
@@ -309,8 +312,9 @@ static void prvHTTPDemoTask( void * pvParameters )
     /* The network context for the transport layer interface. */
     NetworkContext_t xNetworkContext = { 0 };
     BaseType_t xIsConnectionEstablished = pdFALSE;
-    /* HTTPS Client library return status. */
+    /* HTTP Client library return status. */
     HTTPStatus_t xHTTPStatus = HTTPSuccess;
+    UBaseType_t uxDemoRunCount = 0UL;
 
     /* The user of this demo must check the logs for any failure codes. */
     BaseType_t xDemoStatus = pdPASS;
@@ -328,86 +332,114 @@ static void prvHTTPDemoTask( void * pvParameters )
     LogInfo( ( "HTTP Client Synchronous S3 upload demo using pre-signed URL:\n%s",
                democonfigS3_PRESIGNED_PUT_URL ) );
 
-    /**************************** Connect. ******************************/
-
-    /* Attempt to connect to the HTTP server. If connection fails, retry after a
-     * timeout. The timeout value will be exponentially increased until either the
-     * maximum number of attempts or the maximum timeout value is reached. The
-     * function returns pdFAIL if the TCP connection cannot be established with
-     * the server after configured number of attempts. */
-    xDemoStatus = connectToServerWithBackoffRetries( prvConnectToServer,
-                                                     &xNetworkContext );
-
-    if( xDemoStatus == pdPASS )
+    /* This demo runs once, unless there are failures in the demo execution. In
+     * case of failures, the demo loop will run up to HTTP_MAX_DEMO_LOOP_COUNT
+     * times. */
+    do
     {
-        /* Set a flag indicating that a TLS connection exists. */
-        xIsConnectionEstablished = pdTRUE;
+        /**************************** Connect. ******************************/
 
-        /* Define the transport interface. */
-        xTransportInterface.pNetworkContext = &xNetworkContext;
-        xTransportInterface.send = TLS_FreeRTOS_send;
-        xTransportInterface.recv = TLS_FreeRTOS_recv;
-    }
-    else
-    {
-        /* Log an error to indicate connection failure after all
-         * reconnect attempts are over. */
-        LogError( ( "Failed to connect to HTTP server %s.",
-                    cServerHost ) );
-    }
+        /* Attempt to connect to the HTTP server. If connection fails, retry after a
+         * timeout. The timeout value will be exponentially increased until either the
+         * maximum number of attempts or the maximum timeout value is reached. The
+         * function returns pdFAIL if the TCP connection cannot be established with
+         * the server after configured number of attempts. */
+        xDemoStatus = connectToServerWithBackoffRetries( prvConnectToServer,
+                                                         &xNetworkContext );
 
-    /********************** Upload S3 Object File. **********************/
+        if( xDemoStatus == pdPASS )
+        {
+            /* Set a flag indicating that a TLS connection exists. */
+            xIsConnectionEstablished = pdTRUE;
 
-    if( xDemoStatus == pdPASS )
-    {
-        /* Retrieve the path location from democonfigS3_PRESIGNED_PUT_URL. This
-         * function returns the length of the path without the query into
-         * xPathLen, which is left unused in this demo. */
-        xHTTPStatus = getUrlPath( democonfigS3_PRESIGNED_PUT_URL,
-                                  httpexampleS3_PRESIGNED_PUT_URL_LENGTH,
-                                  &pcPath,
-                                  &xPathLen );
+            /* Define the transport interface. */
+            xTransportInterface.pNetworkContext = &xNetworkContext;
+            xTransportInterface.send = TLS_FreeRTOS_send;
+            xTransportInterface.recv = TLS_FreeRTOS_recv;
+        }
+        else
+        {
+            /* Log an error to indicate connection failure after all
+             * reconnect attempts are over. */
+            LogError( ( "Failed to connect to HTTP server %s.",
+                        cServerHost ) );
+        }
 
-        xDemoStatus = ( xHTTPStatus == HTTPSuccess ) ? pdPASS : pdFAIL;
-    }
+        /********************** Upload S3 Object File. **********************/
 
-    if( xDemoStatus == pdPASS )
-    {
-        xDemoStatus = prvUploadS3ObjectFile( &xTransportInterface,
-                                             pcPath );
-    }
+        if( xDemoStatus == pdPASS )
+        {
+            /* Retrieve the path location from democonfigS3_PRESIGNED_PUT_URL. This
+             * function returns the length of the path without the query into
+             * xPathLen, which is left unused in this demo. */
+            xHTTPStatus = getUrlPath( democonfigS3_PRESIGNED_PUT_URL,
+                                      httpexampleS3_PRESIGNED_PUT_URL_LENGTH,
+                                      &pcPath,
+                                      &xPathLen );
 
-    /******************* Verify S3 Object File Upload. ********************/
+            xDemoStatus = ( xHTTPStatus == HTTPSuccess ) ? pdPASS : pdFAIL;
+        }
 
-    if( xDemoStatus == pdPASS )
-    {
-        /* Retrieve the path location from democonfigS3_PRESIGNED_GET_URL. This
-         * function returns the length of the path without the query into
-         * xPathLen. */
-        xHTTPStatus = getUrlPath( democonfigS3_PRESIGNED_GET_URL,
-                                  httpexampleS3_PRESIGNED_GET_URL_LENGTH,
-                                  &pcPath,
-                                  &xPathLen );
-
-        xDemoStatus = ( xHTTPStatus == HTTPSuccess ) ? pdPASS : pdFAIL;
-    }
-
-    if( xDemoStatus == pdPASS )
-    {
-        /* Verify the file exists by retrieving the file size. */
-        xDemoStatus = prvVerifyS3ObjectFileSize( &xTransportInterface,
+        if( xDemoStatus == pdPASS )
+        {
+            xDemoStatus = prvUploadS3ObjectFile( &xTransportInterface,
                                                  pcPath );
-    }
+        }
 
-    /************************** Disconnect. *****************************/
+        /******************* Verify S3 Object File Upload. ********************/
 
-    /* Close the network connection to clean up any system resources that the
-     * demo may have consumed. */
-    if( xIsConnectionEstablished == pdTRUE )
-    {
-        /* Close the network connection.  */
-        TLS_FreeRTOS_Disconnect( &xNetworkContext );
-    }
+        if( xDemoStatus == pdPASS )
+        {
+            /* Retrieve the path location from democonfigS3_PRESIGNED_GET_URL. This
+             * function returns the length of the path without the query into
+             * xPathLen. */
+            xHTTPStatus = getUrlPath( democonfigS3_PRESIGNED_GET_URL,
+                                      httpexampleS3_PRESIGNED_GET_URL_LENGTH,
+                                      &pcPath,
+                                      &xPathLen );
+
+            xDemoStatus = ( xHTTPStatus == HTTPSuccess ) ? pdPASS : pdFAIL;
+        }
+
+        if( xDemoStatus == pdPASS )
+        {
+            /* Verify the file exists by retrieving the file size. */
+            xDemoStatus = prvVerifyS3ObjectFileSize( &xTransportInterface,
+                                                     pcPath );
+        }
+
+        /************************** Disconnect. *****************************/
+
+        /* Close the network connection to clean up any system resources that the
+         * demo may have consumed. */
+        if( xIsConnectionEstablished == pdTRUE )
+        {
+            /* Close the network connection.  */
+            TLS_FreeRTOS_Disconnect( &xNetworkContext );
+        }
+
+        /*********************** Retry in case of failure. ************************/
+
+        /* Increment the demo run count. */
+        uxDemoRunCount++;
+
+        if( xDemoStatus == pdPASS )
+        {
+            LogInfo( ( "Demo iteration %lu was successful.", uxDemoRunCount ) );
+        }
+        /* Attempt to retry a failed demo iteration for up to #HTTP_MAX_DEMO_LOOP_COUNT times. */
+        else if( uxDemoRunCount < HTTP_MAX_DEMO_LOOP_COUNT )
+        {
+            LogWarn( ( "Demo iteration %lu failed. Retrying...", uxDemoRunCount ) );
+            vTaskDelay( DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS );
+        }
+        /* Failed all #HTTP_MAX_DEMO_LOOP_COUNT demo iterations. */
+        else
+        {
+            LogError( ( "All %d demo iterations failed.", HTTP_MAX_DEMO_LOOP_COUNT ) );
+            break;
+        }
+    } while( xDemoStatus != pdPASS );
 
     if( xDemoStatus == pdPASS )
     {
@@ -764,7 +796,7 @@ static BaseType_t prvVerifyS3ObjectFileSize( const TransportInterface_t * pxTran
         }
         else
         {
-            LogInfo( ( "Successfuly verified that the size of the file found on S3 matches the file size uploaded "
+            LogInfo( ( "Successfully verified that the size of the file found on S3 matches the file size uploaded "
                        "(Uploaded: %d bytes, Found: %d bytes).",
                        ( int32_t ) httpexampleDEMO_HTTP_UPLOAD_DATA_LENGTH,
                        ( int32_t ) xFileSize ) );

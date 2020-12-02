@@ -141,9 +141,13 @@ $ sudo qemu-system-arm -machine mps2-an385 -cpu cortex-m3
           -display gtk -m 16M  -nographic -serial stdio \
           -monitor null -semihosting -semihosting-config enable=on,target=native 
 ```
-take hold of the mac address in the command and change it appropriately
-(52:54:00:12:34:AD)
+Replace the value of macaddr=52:54:00:12:34:AD with your own value from
 ```
+configMAC_ADDR0 through  configMAC_ADDR5
+```
+
+Extra options -s: to run a gdb server
+              -S: to start in paused mode
 
 7. Expectations
 On the remote machine you should expect to see something similar to the

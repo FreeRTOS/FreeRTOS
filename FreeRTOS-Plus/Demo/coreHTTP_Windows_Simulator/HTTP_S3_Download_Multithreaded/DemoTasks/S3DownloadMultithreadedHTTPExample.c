@@ -189,6 +189,12 @@
  */
 #define DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS    ( pdMS_TO_TICKS( 5000U ) )
 
+/* Each compilation unit must define the NetworkContext struct. */
+struct NetworkContext
+{
+    TlsTransportParams_t * pParams;
+};
+
 /**
  * @brief The network context used for the TLS session with the server.
  */
@@ -435,6 +441,7 @@ void vStartSimpleHTTPDemo( void )
 static void prvHTTPDemoTask( void * pvParameters )
 {
     BaseType_t xIsConnectionEstablished = pdFALSE;
+    TlsTransportParams_t xTlsTransportParams = { 0 };
     /* HTTP client library return status. */
     HTTPStatus_t xHTTPStatus = HTTPSuccess;
     /* The location of the host address within the pre-signed URL. */
@@ -452,6 +459,9 @@ static void prvHTTPDemoTask( void * pvParameters )
 
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
+
+    /* Set the pParams member of the network context with desired transport. */
+    xNetworkContext.pParams = &xTlsTransportParams;
 
     LogInfo( ( "HTTP Client S3 multi-threaded download demo using pre-signed URL:\n%s",
                democonfigS3_PRESIGNED_GET_URL ) );
@@ -1028,13 +1038,12 @@ static BaseType_t prvCheckNotification( uint32_t * pulNotification,
 
 static BaseType_t prvDownloadLoop( void )
 {
+    /* The transport layer interface used by the HTTP client library. */
+    TransportInterface_t xTransportInterface;
     HTTPStatus_t xHTTPStatus = HTTPSuccess;
     BaseType_t xStatus = pdPASS;
     uint32_t ulNotification = 0U;
     uint32_t ulWaitCounter = 0U;
-
-    /* The transport layer interface used by the HTTP client library. */
-    TransportInterface_t xTransportInterface;
 
     /* Expected task completion notifications. */
     uint32_t ulExpectedNotifications = httpexampleREQUEST_TASK_COMPLETION |

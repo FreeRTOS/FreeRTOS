@@ -141,6 +141,12 @@
  */
 #define DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS    ( pdMS_TO_TICKS( 5000U ) )
 
+/* Each compilation unit must define the NetworkContext struct. */
+struct NetworkContext
+{
+    TlsTransportParams_t * pParams;
+};
+
 /**
  * @brief A buffer used in the demo for storing HTTP request headers, and HTTP
  * response headers and body.
@@ -183,7 +189,7 @@ static size_t xServerHostLength;
 /**
  * @brief The location of the path within the pre-signed URL.
  */
-static const char * pcPath;
+static const char * pcRequestURI;
 
 /*-----------------------------------------------------------*/
 
@@ -271,6 +277,7 @@ static void prvHTTPDemoTask( void * pvParameters )
     TransportInterface_t xTransportInterface;
     /* The network context for the transport layer interface. */
     NetworkContext_t xNetworkContext = { 0 };
+    TlsTransportParams_t xTlsTransportParams = { 0 };
     BaseType_t xIsConnectionEstablished = pdFALSE;
     /* HTTP Client library return status. */
     HTTPStatus_t xHTTPStatus = HTTPSuccess;
@@ -279,15 +286,18 @@ static void prvHTTPDemoTask( void * pvParameters )
     /* The user of this demo must check the logs for any failure codes. */
     BaseType_t xDemoStatus = pdPASS;
 
-    /* Remove compiler warnings about unused parameters. */
-    ( void ) pvParameters;
-
     /* The length of the path within the pre-signed URL. This variable is
      * defined in order to store the length returned from parsing the URL, but
      * it is unused. The path used for the requests in this demo needs all the
      * query information following the location of the object, to the end of the
      * S3 presigned URL. */
     size_t xPathLen = 0;
+
+    /* Remove compiler warnings about unused parameters. */
+    ( void ) pvParameters;
+
+    /* Set the pParams member of the network context with desired transport. */
+    xNetworkContext.pParams = &xTlsTransportParams;
 
     LogInfo( ( "HTTP Client Synchronous S3 download demo using pre-signed URL:\n%s",
                democonfigS3_PRESIGNED_GET_URL ) );
@@ -334,7 +344,7 @@ static void prvHTTPDemoTask( void * pvParameters )
              * xPathLen, which is left unused in this demo. */
             xHTTPStatus = getUrlPath( democonfigS3_PRESIGNED_GET_URL,
                                       httpexampleS3_PRESIGNED_GET_URL_LENGTH,
-                                      &pcPath,
+                                      &pcRequestURI,
                                       &xPathLen );
 
             xDemoStatus = ( xHTTPStatus == HTTPSuccess ) ? pdPASS : pdFAIL;
@@ -343,7 +353,7 @@ static void prvHTTPDemoTask( void * pvParameters )
         if( xDemoStatus == pdPASS )
         {
             xDemoStatus = prvDownloadS3ObjectFile( &xTransportInterface,
-                                                   pcPath );
+                                                   pcRequestURI );
         }
 
         /************************** Disconnect. *****************************/
@@ -399,6 +409,8 @@ static BaseType_t prvConnectToServer( NetworkContext_t * pxNetworkContext )
 
     /* The location of the host address within the pre-signed URL. */
     const char * pcAddress = NULL;
+
+    configASSERT( pxNetworkContext != NULL );
 
     /* Retrieve the address location and length from democonfigS3_PRESIGNED_GET_URL. */
     xHTTPStatus = getUrlAddress( democonfigS3_PRESIGNED_GET_URL,
@@ -462,6 +474,7 @@ static BaseType_t prvGetS3ObjectFileSize( size_t * pxFileSize,
     char * pcContentRangeValStr = NULL;
     size_t xContentRangeValStrLength = 0;
 
+    configASSERT( pxTransportInterface != NULL );
     configASSERT( pcHost != NULL );
     configASSERT( pcPath != NULL );
 
@@ -630,6 +643,7 @@ static BaseType_t prvDownloadS3ObjectFile( const TransportInterface_t * pxTransp
     /* xCurByte indicates which starting byte we want to download next. */
     size_t xCurByte = 0;
 
+    configASSERT( pxTransportInterface != NULL );
     configASSERT( pcPath != NULL );
 
     /* Initialize all HTTP Client library API structs to 0. */
@@ -742,7 +756,7 @@ static BaseType_t prvDownloadS3ObjectFile( const TransportInterface_t * pxTransp
         }
         else
         {
-            LogError( ( "An error occured in downloading the file. "
+            LogError( ( "An error occurred in downloading the file. "
                         "Failed to send HTTP GET request to %s%s: Error=%s.",
                         cServerHost, pcPath, HTTPClient_strerror( xHTTPStatus ) ) );
         }

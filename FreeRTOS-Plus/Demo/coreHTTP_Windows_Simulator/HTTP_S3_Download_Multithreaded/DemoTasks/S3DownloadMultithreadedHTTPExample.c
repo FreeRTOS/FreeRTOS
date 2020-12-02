@@ -33,19 +33,24 @@
  * certificate, and then finally performs a TLS handshake with the HTTP server,
  * so that all communication is encrypted.
  *
- * Afterwards, a request and a response task are created, in addition to the
- * main demo task, along with two thread-safe queues (a request and response
- * queue), to demonstrate an asynchronous workflow for downloading an S3 file.
+ * Afterwards, two additional tasks are created (a request and response task),
+ * along with two thread-safe queues (a request and response queue), to
+ * demonstrate an asynchronous workflow for downloading an S3 file.
  *
- * The main task is responsible for sending HTTP requests to the server over the
- * transport interface, using the HTTP Client library API. It reads requests
- * from the request queue and places the corresponding server response on the
- * response queue. The request task is responsible for generating these
- * requests, specifying a byte range with each iteration in order to download
- * the S3 file in partial content responses. Finally, the response task logs and
- * evaluates the responses to these requests. The tasks run continuously until
- * the entire file is downloaded. If any request fails, an error code is
- * returned.
+ * There are three tasks to note in this demo:
+ * - prvHTTPDemoTask() is responsible for sending HTTP requests to the server
+ *   over the transport interface, using the HTTP Client library API. It reads
+ *   requests from the request queue and places corresponding server responses
+ *   on the response queue.
+ * - prvRequestTask() is responsible for generating request objects and placing
+ *   them on the request queue, specifying a byte range with each iteration in
+ *   order to download the S3 file in partial content responses.
+ * - prvResponseTask() logs and evaluates server responses to outgoing requests.
+ *   It reads responses from the response queue until the expected number of
+ *   responses have been received.
+ *
+ * The tasks run continuously until the entire file is downloaded. If any
+ * request fails, an error code is returned.
  *
  * @Note: This demo requires user-generated pre-signed URLs to be pasted into
  * demo_config.h. Please use the provided script "presigned_urls_gen.py"
@@ -381,8 +386,8 @@ static BaseType_t prvCheckNotification( uint32_t * pulNotification,
 static BaseType_t prvGetS3ObjectFileSize( const HTTPRequestInfo_t * pxRequestInfo );
 
 /**
- * @brief Enqueue HTTP range requests onto the request queue continuously, until
- * the entire length of the file has been requested.
+ * @brief Task to continuously enqueue HTTP range requests onto the request
+ * queue, until the entire length of the file has been requested.
  *
  * @param[in] pvArgs Parameters as passed at the time of task creation. Not used
  * in this example.
@@ -398,8 +403,8 @@ static void prvRequestTask( void * pvArgs );
 static BaseType_t prvReadFileSize( void );
 
 /**
- * @brief Log and interpret responses present on the response queue
- * continuously, until the length of the file is downloaded.
+ * @brief Task to continuously log and interpret responses present on the
+ * response queue, until the length of the file is downloaded.
  *
  * @param[in] pvArgs Parameters as passed at the time of task creation. Not used
  * in this example.
@@ -426,7 +431,7 @@ void vStartSimpleHTTPDemo( void )
      * HTTP operations, and creates additional tasks to add operations to that
      * queue and interpret server responses. */
     xTaskCreate( prvHTTPDemoTask,          /* Function that implements the task. */
-                 "DemoTask",               /* Text name for the task - only used for debugging. */
+                 "MainTask",               /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
                  NULL,                     /* Task parameter - not used in this case. */
                  tskIDLE_PRIORITY + 1,     /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
@@ -505,13 +510,16 @@ static void prvHTTPDemoTask( void * pvParameters )
 
         /**************************** Connect. ******************************/
 
-        /* Attempt to connect to the HTTP server. If connection fails, retry after a
-         * timeout. The timeout value will be exponentially increased until either the
-         * maximum number of attempts or the maximum timeout value is reached. The
-         * function returns pdFAIL if the TCP connection cannot be established with
-         * the server after the configured number of attempts. */
-        xDemoStatus = connectToServerWithBackoffRetries( prvConnectToServer,
-                                                         &xNetworkContext );
+        if( xDemoStatus == pdPASS )
+        {
+            /* Attempt to connect to the HTTP server. If connection fails, retry after a
+             * timeout. The timeout value will be exponentially increased until either the
+             * maximum number of attempts or the maximum timeout value is reached. The
+             * function returns pdFAIL if the TCP connection cannot be established with
+             * the server after the configured number of attempts. */
+            xDemoStatus = connectToServerWithBackoffRetries( prvConnectToServer,
+                                                             &xNetworkContext );
+        }
 
         if( xDemoStatus == pdPASS )
         {
@@ -744,7 +752,7 @@ static BaseType_t prvGetS3ObjectFileSize( const HTTPRequestInfo_t * pxRequestInf
 static void prvRequestTask( void * pvArgs )
 {
     BaseType_t xStatus = pdPASS;
-    uint32_t ulNotification = 0U;
+    uint32_t ulNotification = 0UL;
 
     /* Configurations of the initial request headers. */
     HTTPRequestInfo_t xRequestInfo = { 0 };
@@ -831,7 +839,7 @@ static void prvRequestTask( void * pvArgs )
 
     /* Clear this task's notifications. */
     xTaskNotifyStateClear( NULL );
-    ulNotification = ulTaskNotifyValueClear( NULL, ~( 0U ) );
+    ulNotification = ulTaskNotifyValueClear( NULL, ~( 0UL ) );
 
     /* Notify the other tasks of completion. */
     xTaskNotify( xMainTask, httpexampleREQUEST_TASK_COMPLETION, eSetBits );
@@ -927,8 +935,8 @@ static BaseType_t prvReadFileSize( void )
 
 static void prvResponseTask( void * pvArgs )
 {
-    uint32_t ulWaitCounter = 0U;
-    uint32_t ulNotification = 0U;
+    uint32_t ulWaitCounter = 0UL;
+    uint32_t ulNotification = 0UL;
     size_t xNumResponses = 0;
 
     ( void ) pvArgs;
@@ -1003,7 +1011,7 @@ static void prvResponseTask( void * pvArgs )
 
     /* Clear this task's notifications. */
     xTaskNotifyStateClear( NULL );
-    ulNotification = ulTaskNotifyValueClear( NULL, ~( 0U ) );
+    ulNotification = ulTaskNotifyValueClear( NULL, ~( 0UL ) );
 
     /* Notify the other tasks of completion. */
     xTaskNotify( xMainTask, httpexampleRESPONSE_TASK_COMPLETION, eSetBits );
@@ -1042,8 +1050,8 @@ static BaseType_t prvDownloadLoop( void )
     TransportInterface_t xTransportInterface;
     HTTPStatus_t xHTTPStatus = HTTPSuccess;
     BaseType_t xStatus = pdPASS;
-    uint32_t ulNotification = 0U;
-    uint32_t ulWaitCounter = 0U;
+    uint32_t ulNotification = 0UL;
+    uint32_t ulWaitCounter = 0UL;
 
     /* Expected task completion notifications. */
     uint32_t ulExpectedNotifications = httpexampleREQUEST_TASK_COMPLETION |

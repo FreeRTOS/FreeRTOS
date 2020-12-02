@@ -558,9 +558,9 @@ static BaseType_t xHandlePublishResend( MQTTContext_t * pxMqttContext )
             if( xMQTTStatus != MQTTSuccess )
             {
                 LogError( ( "Sending duplicate PUBLISH for packet id %u "
-                            " failed with status %u.",
+                            " failed with status %s.",
                             outgoingPublishPackets[ ucIndex ].packetId,
-                            xMQTTStatus ) );
+                            MQTT_Status_strerror( xMQTTStatus ) ) );
                 xReturnStatus = pdFAIL;
                 break;
             }

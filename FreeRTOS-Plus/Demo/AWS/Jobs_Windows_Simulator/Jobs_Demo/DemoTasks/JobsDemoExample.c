@@ -751,7 +751,7 @@ void vStartJobsDemo( void )
 void prvJobsDemoTask( void * pvParameters )
 {
     BaseType_t xDemoStatus = pdPASS;
-    BaseType_t xDemoRunCount = 0L;
+    UBaseType_t uxDemoRunCount = 0UL;
     BaseType_t retryDemoLoop = pdFALSE;
 
     /* Remove compiler warnings about unused parameters. */
@@ -863,7 +863,7 @@ void prvJobsDemoTask( void * pvParameters )
         }
 
         /* Increment the demo run count. */
-        xDemoRunCount++;
+        uxDemoRunCount++;
 
         /* Retry demo loop only if there is a failure before completing
          * the processing of any pending jobs. Any failure in MQTT unsubscribe
@@ -872,9 +872,9 @@ void prvJobsDemoTask( void * pvParameters )
          * make this demo indefinitely wait. */
         if( ( xDemoStatus == pdFAIL ) || ( xDemoEncounteredError == pdTRUE ) )
         {
-            if( xDemoRunCount < JOBS_MAX_DEMO_LOOP_COUNT )
+            if( uxDemoRunCount < JOBS_MAX_DEMO_LOOP_COUNT )
             {
-                LogWarn( ( "Demo iteration %lu failed. Retrying...", xDemoRunCount ) );
+                LogWarn( ( "Demo iteration %lu failed. Retrying...", uxDemoRunCount ) );
                 retryDemoLoop = pdTRUE;
             }
             else
@@ -903,7 +903,7 @@ void prvJobsDemoTask( void * pvParameters )
         if( xDisconnectMqttSession( &xMqttContext, &xNetworkContext ) != pdPASS )
         {
             xDemoStatus == pdFAIL;
-            LogError( ( "Disconnection from AWS Iot failed..." ) );
+            LogError( ( "Disconnection from AWS IoT failed..." ) );
         }
 
         /* Add a delay if a retry is required. */

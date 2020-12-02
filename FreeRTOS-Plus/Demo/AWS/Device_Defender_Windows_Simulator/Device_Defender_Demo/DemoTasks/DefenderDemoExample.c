@@ -649,7 +649,7 @@ void prvDefenderDemoTask( void * pvParameters )
     bool xStatus = false;
     BaseType_t xExitStatus = EXIT_FAILURE;
     uint32_t ulReportLength = 0UL, i, ulMqttSessionEstablished = 0UL;
-    BaseType_t xDemoRunCount = 0L;
+    UBaseType_t uxDemoRunCount = 0UL;
 
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
@@ -850,16 +850,16 @@ void prvDefenderDemoTask( void * pvParameters )
         /*********************** Retry in case of failure. ************************/
 
         /* Increment the demo run count. */
-        xDemoRunCount++;
+        uxDemoRunCount++;
 
         if( xExitStatus == EXIT_SUCCESS )
         {
-            LogInfo( ( "Demo iteration %lu is successful.", xDemoRunCount ) );
+            LogInfo( ( "Demo iteration %lu is successful.", uxDemoRunCount ) );
         }
         /* Attempt to retry a failed iteration of demo for up to #DEFENDER_MAX_DEMO_LOOP_COUNT times. */
-        else if( xDemoRunCount < DEFENDER_MAX_DEMO_LOOP_COUNT )
+        else if( uxDemoRunCount < DEFENDER_MAX_DEMO_LOOP_COUNT )
         {
-            LogWarn( ( "Demo iteration %lu failed. Retrying...", xDemoRunCount ) );
+            LogWarn( ( "Demo iteration %lu failed. Retrying...", uxDemoRunCount ) );
             vTaskDelay( DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS );
         }
         /* Failed all #DEFENDER_MAX_DEMO_LOOP_COUNT demo iterations. */

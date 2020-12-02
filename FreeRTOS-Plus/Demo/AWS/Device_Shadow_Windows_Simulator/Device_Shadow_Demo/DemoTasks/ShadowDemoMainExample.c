@@ -177,7 +177,7 @@
 
 /**
  * @brief JSON key for response code that indicates the type of error in
- * the error document received on topic `delete/rejected`.
+ * the error document received on topic `/delete/rejected`.
  */
 #define SHADOW_DELETE_REJECTED_ERROR_CODE_KEY           "code"
 
@@ -275,8 +275,8 @@ static BaseType_t xDeleteResponseReceived = pdFALSE;
  * The Shadow delete status will be updated by the incoming publishes on the
  * MQTT topics for delete acknowledgement from AWS IoT message broker
  * (accepted/rejected). Shadow document is considered to be deleted if an
- * incoming publish is received on `delete/accepted` topic or an incoming
- * publish is received on `delete/rejected` topic with error code 404. Code 404
+ * incoming publish is received on `/delete/accepted` topic or an incoming
+ * publish is received on `/delete/rejected` topic with error code 404. Code 404
  * indicates that the Shadow document does not exist for the Thing yet.
  */
 static BaseType_t xShadowDeleted = pdFALSE;
@@ -365,7 +365,7 @@ static BaseType_t prvWaitForDeleteResponse( MQTTContext_t * pxMQTTContext )
            ( xMQTTStatus == MQTTSuccess ) )
     {
         /* Event callback will set #xDeleteResponseReceived when receiving an
-         * incoming publish on either `delete/accepted` or `delete/rejected`
+         * incoming publish on either `/delete/accepted` or `/delete/rejected`
          * Shadow topics. */
         xMQTTStatus = MQTT_ProcessLoop( pxMQTTContext, MQTT_PROCESS_LOOP_TIMEOUT_MS );
     }
@@ -782,7 +782,7 @@ void vStartShadowDemo( void )
 void prvShadowDemoTask( void * pvParameters )
 {
     BaseType_t xDemoStatus = pdPASS;
-    BaseType_t xDemoRunCount = 0L;
+    UBaseType_t uxDemoRunCount = 0UL;
 
     /* A buffer containing the update document. It has static duration to prevent
      * it from being placed on the call stack. */
@@ -822,7 +822,7 @@ void prvShadowDemoTask( void * pvParameters )
             xShadowDeleted = pdFALSE;
 
             /* First of all, try to delete any Shadow document in the cloud.
-             * Try to subscribe to `delete/accepted` and `delete/rejected` topics. */
+             * Try to subscribe to `/delete/accepted` and `/delete/rejected` topics. */
             xDemoStatus = xSubscribeToTopic( &xMqttContext,
                                              SHADOW_TOPIC_STRING_DELETE_ACCEPTED( democonfigTHING_NAME ),
                                              SHADOW_TOPIC_LENGTH_DELETE_ACCEPTED( THING_NAME_LENGTH ) );
@@ -830,7 +830,7 @@ void prvShadowDemoTask( void * pvParameters )
 
         if( xDemoStatus == pdPASS )
         {
-            /* Try to subscribe to `delete/rejected` topic. */
+            /* Try to subscribe to `/delete/rejected` topic. */
             xDemoStatus = xSubscribeToTopic( &xMqttContext,
                                              SHADOW_TOPIC_STRING_DELETE_REJECTED( democonfigTHING_NAME ),
                                              SHADOW_TOPIC_LENGTH_DELETE_REJECTED( THING_NAME_LENGTH ) );
@@ -847,14 +847,14 @@ void prvShadowDemoTask( void * pvParameters )
                                            0U );
         }
 
-        /* Wait for an incoming publish on `delete/accepted` or `delete/rejected`
+        /* Wait for an incoming publish on `/delete/accepted` or `/delete/rejected`
          * topics, if not already received a publish. */
         if( ( xDemoStatus == pdPASS ) && ( xDeleteResponseReceived != pdTRUE ) )
         {
             xDemoStatus = prvWaitForDeleteResponse( &xMqttContext );
         }
 
-        /* Unsubscribe from the `delete/accepted` and 'delete/rejected` topics.*/
+        /* Unsubscribe from the `/delete/accepted` and 'delete/rejected` topics.*/
         if( xDemoStatus == pdPASS )
         {
             xDemoStatus = xUnsubscribeFromTopic( &xMqttContext,
@@ -867,6 +867,18 @@ void prvShadowDemoTask( void * pvParameters )
             xDemoStatus = xUnsubscribeFromTopic( &xMqttContext,
                                                  SHADOW_TOPIC_STRING_DELETE_REJECTED( democonfigTHING_NAME ),
                                                  SHADOW_TOPIC_LENGTH_DELETE_REJECTED( THING_NAME_LENGTH ) );
+        }
+
+        /* Check if Shadow document delete was successful. A delete can be
+         * successful in cases listed below.
+         *  1. If an incoming publish is received on `/delete/accepted` topic.
+         *  2. If an incoming publish is received on `/delete/rejected` topic
+         *     with error code 404. This indicates that a Shadow document was
+         *     not present for the Thing. */
+        if( xShadowDeleted == pdFALSE )
+        {
+            LogError( ( "Shadow delete operation failed." ) );
+            xDemoStatus = pdFAIL;
         }
 
         /********************* Subscribe to Shadow topics. ************************/
@@ -1047,16 +1059,16 @@ void prvShadowDemoTask( void * pvParameters )
         /*********************** Retry in case of failure. ************************/
 
         /* Increment the demo run count. */
-        xDemoRunCount++;
+        uxDemoRunCount++;
 
         if( xDemoStatus == pdPASS )
         {
-            LogInfo( ( "Demo iteration %lu is successful.", xDemoRunCount ) );
+            LogInfo( ( "Demo iteration %lu is successful.", uxDemoRunCount ) );
         }
         /* Attempt to retry a failed iteration of demo for up to #SHADOW_MAX_DEMO_LOOP_COUNT times. */
-        else if( xDemoRunCount < SHADOW_MAX_DEMO_LOOP_COUNT )
+        else if( uxDemoRunCount < SHADOW_MAX_DEMO_LOOP_COUNT )
         {
-            LogWarn( ( "Demo iteration %lu failed. Retrying...", xDemoRunCount ) );
+            LogWarn( ( "Demo iteration %lu failed. Retrying...", uxDemoRunCount ) );
             vTaskDelay( DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS );
         }
         /* Failed all #SHADOW_MAX_DEMO_LOOP_COUNT demo iterations. */

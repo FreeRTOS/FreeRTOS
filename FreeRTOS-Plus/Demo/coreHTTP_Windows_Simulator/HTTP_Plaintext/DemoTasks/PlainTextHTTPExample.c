@@ -310,7 +310,7 @@ static void prvHTTPDemoTask( void * pvParameters )
     };
     BaseType_t xIsConnectionEstablished = pdFALSE;
     UBaseType_t uxHttpPathCount = 0U;
-    BaseType_t xDemoRunCount = 0L;
+    UBaseType_t uxDemoRunCount = 0UL;
 
     /* The user of this demo must check the logs for any failure codes. */
     BaseType_t xDemoStatus = pdPASS;
@@ -386,16 +386,16 @@ static void prvHTTPDemoTask( void * pvParameters )
         /*********************** Retry in case of failure. ************************/
 
         /* Increment the demo run count. */
-        xDemoRunCount++;
+        uxDemoRunCount++;
 
         if( xDemoStatus == pdPASS )
         {
-            LogInfo( ( "Demo iteration %lu was successful.", xDemoRunCount ) );
+            LogInfo( ( "Demo iteration %lu was successful.", uxDemoRunCount ) );
         }
         /* Attempt to retry a failed demo iteration for up to #HTTP_MAX_DEMO_LOOP_COUNT times. */
-        else if( xDemoRunCount < HTTP_MAX_DEMO_LOOP_COUNT )
+        else if( uxDemoRunCount < HTTP_MAX_DEMO_LOOP_COUNT )
         {
-            LogWarn( ( "Demo iteration %lu failed. Retrying...", xDemoRunCount ) );
+            LogWarn( ( "Demo iteration %lu failed. Retrying...", uxDemoRunCount ) );
             vTaskDelay( DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS );
         }
         /* Failed all #HTTP_MAX_DEMO_LOOP_COUNT demo iterations. */

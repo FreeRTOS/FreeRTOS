@@ -126,7 +126,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * be less than democonfigUSER_BUFFER_LENGTH. We don't expect S3 to send more
  * than 1024 bytes of headers.
  */
-#define democonfigUSER_BUFFER_LENGTH                ( 4096 )
+#define democonfigUSER_BUFFER_LENGTH                ( 2048 )
 
 /**
  * @brief The size of the range of the file to download, with each request.
@@ -135,12 +135,12 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * in the user buffer. We don't expect S3 to send more than 1024 bytes of
  * headers.
  */
-#define democonfigRANGE_REQUEST_LENGTH              ( 2048 )
+#define democonfigRANGE_REQUEST_LENGTH              ( 1024 )
 
 /**
  * @brief The number of items that can be held in each queue.
  */
-#define democonfigQUEUE_SIZE                        ( 20 )
+#define democonfigQUEUE_SIZE                        ( 10 )
 
 /**
  * @brief Set the stack size of the main demo task.

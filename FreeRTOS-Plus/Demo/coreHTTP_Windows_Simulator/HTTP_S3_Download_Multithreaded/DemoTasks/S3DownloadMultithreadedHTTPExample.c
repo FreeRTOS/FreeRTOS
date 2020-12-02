@@ -99,7 +99,7 @@
 
 /* Check the the queue size is defined. */
 #ifndef democonfigQUEUE_SIZE
-    #define democonfigQUEUE_SIZE    ( 20 )
+    #define democonfigQUEUE_SIZE    ( 10 )
 #endif
 
 /* Check that a transport timeout for transport send and receive is defined. */
@@ -109,12 +109,12 @@
 
 /* Check that a size for the user buffer is defined. */
 #ifndef democonfigUSER_BUFFER_LENGTH
-    #define democonfigUSER_BUFFER_LENGTH    ( 4096 )
+    #define democonfigUSER_BUFFER_LENGTH    ( 2048 )
 #endif
 
 /* Check that the range request length is defined. */
 #ifndef democonfigRANGE_REQUEST_LENGTH
-    #define democonfigRANGE_REQUEST_LENGTH    ( 2048 )
+    #define democonfigRANGE_REQUEST_LENGTH    ( 1024 )
 #endif
 
 /* Check that the stack size to use for HTTP tasks is defined. */

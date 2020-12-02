@@ -46,7 +46,7 @@ virbr0:     virtual bridge         (to be created)
 virbr0-nic: veth virtual interface (to be created)
 ```
 A few assumptions (your numbers could varry)
-=============================================
+---------------------------------------------
 Local Host IP address:          192.168.1.81
 Local FreeRTOS IP address:      192.168.1.80
 Local FreeRTOS Subnet mask:     255.255.255.0
@@ -56,6 +56,9 @@ Echo Server IP address:         192.168.1.204
 Echo Server Port:               7
 
 Local FreeRTOS Mac address:     52:54:00:12:34:AD
+
+Building and Running
+-----------------------
 
 1. Fill the defines values in FreeRTOSConfig.h with what is equivalent to the
    above values on your system

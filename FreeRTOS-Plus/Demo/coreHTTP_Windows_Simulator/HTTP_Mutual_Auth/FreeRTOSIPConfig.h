@@ -287,7 +287,7 @@ extern UBaseType_t uxRand();
 
 /* Each TCP socket has a circular buffers for Rx and Tx, which have a fixed
  * maximum size.  Define the size of Rx buffer for TCP sockets. */
-#define ipconfigTCP_RX_BUFFER_LENGTH                          ( 1000 )
+#define ipconfigTCP_RX_BUFFER_LENGTH                          ( 5000 )
 
 /* Define the size of Tx buffer for TCP sockets. */
 #define ipconfigTCP_TX_BUFFER_LENGTH                          ( 1000 )

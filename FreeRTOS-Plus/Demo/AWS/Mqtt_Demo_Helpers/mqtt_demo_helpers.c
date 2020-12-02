@@ -202,6 +202,14 @@ typedef struct PublishPackets
 
 /*-----------------------------------------------------------*/
 
+/* Each compilation unit must define the NetworkContext struct. */
+struct NetworkContext
+{
+    TlsTransportParams_t * pParams;
+};
+
+/*-----------------------------------------------------------*/
+
 /**
  * @brief Global entry time into the application to use as a reference timestamp
  * in the #prvGetTimeMs function. #prvGetTimeMs will always return the difference
@@ -583,9 +591,8 @@ BaseType_t xEstablishMqttSession( MQTTContext_t * pxMqttContext,
     configASSERT( pxMqttContext != NULL );
     configASSERT( pxNetworkContext != NULL );
 
-    /* Initialize the mqtt context and network context. */
+    /* Initialize the mqtt context. */
     ( void ) memset( pxMqttContext, 0U, sizeof( MQTTContext_t ) );
-    ( void ) memset( pxNetworkContext, 0U, sizeof( NetworkContext_t ) );
 
     if( prvConnectToServerWithBackoffRetries( pxNetworkContext ) != TLS_TRANSPORT_SUCCESS )
     {

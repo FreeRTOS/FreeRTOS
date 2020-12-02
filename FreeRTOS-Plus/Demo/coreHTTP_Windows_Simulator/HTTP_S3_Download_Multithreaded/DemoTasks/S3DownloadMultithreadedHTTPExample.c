@@ -174,6 +174,22 @@
 #define httpexampleMAX_WAIT_ITERATIONS                       ( 5 )
 
 /**
+ * @brief The maximum number of times to run the loop in this demo.
+ *
+ * @note The loop is executed only if the demo fails initially. Once the demo
+ * loop succeeds on a single iteration, the demo exits successfully.
+ */
+#ifndef HTTP_MAX_DEMO_LOOP_COUNT
+    #define HTTP_MAX_DEMO_LOOP_COUNT    ( 3 )
+#endif
+
+/**
+ * @brief Time in ticks to wait between retries of the demo loop, if
+ * demo loop fails.
+ */
+#define DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS    ( pdMS_TO_TICKS( 5000U ) )
+
+/**
  * @brief The network context used for the TLS session with the server.
  */
 static NetworkContext_t xNetworkContext;
@@ -425,6 +441,7 @@ static void prvHTTPDemoTask( void * pvParameters )
     const char * pcAddress = NULL;
     /* The user of this demo must check the logs for any failure codes. */
     BaseType_t xDemoStatus = pdPASS;
+    UBaseType_t uxDemoRunCount = 0UL;
 
     /* The length of the path within the pre-signed URL. This variable is
      * defined in order to store the length returned from parsing the URL, but
@@ -439,9 +456,13 @@ static void prvHTTPDemoTask( void * pvParameters )
     LogInfo( ( "HTTP Client S3 multi-threaded download demo using pre-signed URL:\n%s",
                democonfigS3_PRESIGNED_GET_URL ) );
 
-    /**************************** Parse Signed URL. ******************************/
-    if( xDemoStatus == pdPASS )
+    /* This demo runs once, unless there are failures in the demo execution. In
+     * case of failure, the demo loop will be retried for up to
+     * HTTP_MAX_DEMO_LOOP_COUNT times. */
+    do
     {
+        /**************************** Parse Signed URL. ******************************/
+
         /* Retrieve the path location from democonfigS3_PRESIGNED_GET_URL. This
          * function returns the length of the path without the query, into
          * pathLen. */
@@ -451,107 +472,129 @@ static void prvHTTPDemoTask( void * pvParameters )
                                   &pathLen );
 
         xDemoStatus = ( xHTTPStatus == HTTPSuccess ) ? pdPASS : pdFAIL;
-    }
 
-    if( xDemoStatus == pdPASS )
-    {
-        /* Retrieve the address location and length from
-         * democonfigS3_PRESIGNED_GET_URL. */
-        xHTTPStatus = getUrlAddress( democonfigS3_PRESIGNED_GET_URL,
-                                     httpexampleS3_PRESIGNED_GET_URL_LENGTH,
-                                     &pcAddress,
-                                     &xServerHostLength );
+        if( xDemoStatus == pdPASS )
+        {
+            /* Retrieve the address location and length from
+             * democonfigS3_PRESIGNED_GET_URL. */
+            xHTTPStatus = getUrlAddress( democonfigS3_PRESIGNED_GET_URL,
+                                         httpexampleS3_PRESIGNED_GET_URL_LENGTH,
+                                         &pcAddress,
+                                         &xServerHostLength );
 
-        xDemoStatus = ( xHTTPStatus == HTTPSuccess ) ? pdPASS : pdFAIL;
-    }
+            xDemoStatus = ( xHTTPStatus == HTTPSuccess ) ? pdPASS : pdFAIL;
+        }
 
-    if( xDemoStatus == pdPASS )
-    {
-        /* cServerHost should consist only of the host address located in
-         * democonfigS3_PRESIGNED_GET_URL. */
-        memcpy( cServerHost, pcAddress, xServerHostLength );
-        cServerHost[ xServerHostLength ] = '\0';
-    }
+        if( xDemoStatus == pdPASS )
+        {
+            /* cServerHost should consist only of the host address located in
+             * democonfigS3_PRESIGNED_GET_URL. */
+            memcpy( cServerHost, pcAddress, xServerHostLength );
+            cServerHost[ xServerHostLength ] = '\0';
+        }
 
-    /**************************** Connect. ******************************/
+        /**************************** Connect. ******************************/
 
-    /* Attempt to connect to the HTTP server. If connection fails, retry after a
-     * timeout. The timeout value will be exponentially increased until either the
-     * maximum number of attempts or the maximum timeout value is reached. The
-     * function returns pdFAIL if the TCP connection cannot be established with
-     * the server after the configured number of attempts. */
-    xDemoStatus = connectToServerWithBackoffRetries( prvConnectToServer,
-                                                     &xNetworkContext );
+        /* Attempt to connect to the HTTP server. If connection fails, retry after a
+         * timeout. The timeout value will be exponentially increased until either the
+         * maximum number of attempts or the maximum timeout value is reached. The
+         * function returns pdFAIL if the TCP connection cannot be established with
+         * the server after the configured number of attempts. */
+        xDemoStatus = connectToServerWithBackoffRetries( prvConnectToServer,
+                                                         &xNetworkContext );
 
-    if( xDemoStatus == pdPASS )
-    {
-        /* Set a flag indicating that a TLS connection exists. */
-        xIsConnectionEstablished = pdTRUE;
-    }
-    else
-    {
-        /* Log an error to indicate connection failure after all reconnect
-         * attempts are over. */
-        LogError( ( "Failed to connect to HTTP server %s.",
-                    cServerHost ) );
-    }
+        if( xDemoStatus == pdPASS )
+        {
+            /* Set a flag indicating that a TLS connection exists. */
+            xIsConnectionEstablished = pdTRUE;
+        }
+        else
+        {
+            /* Log an error to indicate connection failure after all reconnect
+             * attempts are over. */
+            LogError( ( "Failed to connect to HTTP server %s.",
+                        cServerHost ) );
+        }
 
-    /************* Open queues and create additional tasks. *************/
-    if( xDemoStatus == pdPASS )
-    {
-        /* Open request and response queues. */
-        xRequestQueue = xQueueCreate( democonfigQUEUE_SIZE,
-                                      sizeof( RequestItem_t ) );
+        /************* Open queues and create additional tasks. *************/
+        if( xDemoStatus == pdPASS )
+        {
+            /* Open request and response queues. */
+            xRequestQueue = xQueueCreate( democonfigQUEUE_SIZE,
+                                          sizeof( RequestItem_t ) );
 
-        xResponseQueue = xQueueCreate( democonfigQUEUE_SIZE,
-                                       sizeof( ResponseItem_t ) );
+            xResponseQueue = xQueueCreate( democonfigQUEUE_SIZE,
+                                           sizeof( ResponseItem_t ) );
 
-        /* Open request and response tasks. */
-        xDemoStatus = xTaskCreate( prvRequestTask,
-                                   "RequestTask",
-                                   httpexampleTASK_STACK_SIZE,
-                                   NULL,
-                                   tskIDLE_PRIORITY,
-                                   &xRequestTask );
+            /* Open request and response tasks. */
+            xDemoStatus = xTaskCreate( prvRequestTask,
+                                       "RequestTask",
+                                       httpexampleTASK_STACK_SIZE,
+                                       NULL,
+                                       tskIDLE_PRIORITY,
+                                       &xRequestTask );
 
-        xDemoStatus = xTaskCreate( prvResponseTask,
-                                   "ResponseTask",
-                                   httpexampleTASK_STACK_SIZE,
-                                   NULL,
-                                   tskIDLE_PRIORITY,
-                                   &xResponseTask );
-    }
+            xDemoStatus = xTaskCreate( prvResponseTask,
+                                       "ResponseTask",
+                                       httpexampleTASK_STACK_SIZE,
+                                       NULL,
+                                       tskIDLE_PRIORITY,
+                                       &xResponseTask );
+        }
 
-    /******************** Download S3 Object File. **********************/
+        /******************** Download S3 Object File. **********************/
 
-    if( xDemoStatus == pdPASS )
-    {
-        /* Enter main HTTP task download loop. */
-        xDemoStatus = prvDownloadLoop();
-    }
+        if( xDemoStatus == pdPASS )
+        {
+            /* Enter main HTTP task download loop. */
+            xDemoStatus = prvDownloadLoop();
+        }
 
-    /************************** Disconnect. *****************************/
+        /************************** Disconnect. *****************************/
 
-    /* Close the network connection to clean up any system resources that the
-     * demo may have consumed. */
-    if( xIsConnectionEstablished == pdTRUE )
-    {
-        /* Close the network connection.  */
-        TLS_FreeRTOS_Disconnect( &xNetworkContext );
-    }
+        /* Close the network connection to clean up any system resources that the
+         * demo may have consumed. */
+        if( xIsConnectionEstablished == pdTRUE )
+        {
+            /* Close the network connection.  */
+            TLS_FreeRTOS_Disconnect( &xNetworkContext );
+        }
 
-    LogInfo( ( "Deleting queues." ) );
+        LogInfo( ( "Deleting queues." ) );
 
-    /* Close and delete the queues. */
-    if( xRequestQueue != NULL )
-    {
-        vQueueDelete( xRequestQueue );
-    }
+        /* Close and delete the queues. */
+        if( xRequestQueue != NULL )
+        {
+            vQueueDelete( xRequestQueue );
+        }
 
-    if( xResponseQueue != NULL )
-    {
-        vQueueDelete( xResponseQueue );
-    }
+        if( xResponseQueue != NULL )
+        {
+            vQueueDelete( xResponseQueue );
+        }
+
+        /******************** Retry in case of failure. *********************/
+
+        /* Increment the demo run count. */
+        uxDemoRunCount++;
+
+        if( xDemoStatus == pdPASS )
+        {
+            LogInfo( ( "Demo iteration %lu was successful.", uxDemoRunCount ) );
+        }
+        /* Attempt to retry a failed demo iteration for up to #HTTP_MAX_DEMO_LOOP_COUNT times. */
+        else if( uxDemoRunCount < HTTP_MAX_DEMO_LOOP_COUNT )
+        {
+            LogWarn( ( "Demo iteration %lu failed. Retrying...", uxDemoRunCount ) );
+            vTaskDelay( DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS );
+        }
+        /* Failed all #HTTP_MAX_DEMO_LOOP_COUNT demo iterations. */
+        else
+        {
+            LogError( ( "All %d demo iterations failed.", HTTP_MAX_DEMO_LOOP_COUNT ) );
+            break;
+        }
+    } while( xDemoStatus != pdPASS );
 
     if( xDemoStatus == pdPASS )
     {

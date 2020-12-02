@@ -270,6 +270,22 @@ void vStartSimpleHTTPDemo( void )
 
 /**
  * @brief Entry point of the demo.
+ *
+ * This example, using a pre-signed URL, resolves a S3 domain, establishes a TCP
+ * connection, validates the server's certificate using the root CA certificate
+ * defined in the config header, and then finally performs a TLS handshake with
+ * the HTTP server so that all communication is encrypted. After which, the HTTP
+ * Client library API is used to download the S3 file (by sending multiple GET
+ * requests, filling up the response buffer each time until all parts are
+ * downloaded). If any request fails, an error code is returned.
+ *
+ * @Note: This demo requires user-generated pre-signed URLs to be pasted into
+ * demo_config.h. Please use the provided script "presigned_urls_gen.py"
+ * (located in located in coreHTTP_Windows_Simulator/Common) to generate these
+ * URLs. For detailed instructions, see the accompanied README.md.
+ *
+ * @note This example is single-threaded.
+ *
  */
 static void prvHTTPDemoTask( void * pvParameters )
 {

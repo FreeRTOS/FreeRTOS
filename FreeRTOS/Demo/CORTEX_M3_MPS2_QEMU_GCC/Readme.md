@@ -13,7 +13,8 @@ $ git clone https://github.com/FreeRTOS/FreeRTOS.git --recurse-submodules --dept
 ```
 The previous command should create a directory named **FreeRTOS**
 
-## How to build blinky demo
+## Blinky Demo
+### How to build blinky demo
 Navigate with the command line to FreeRTOS/Demo/CORTEX\_M3\_MPS2\_QEMU\_GCC
 For a release build run:
 
@@ -34,6 +35,9 @@ $ sudo qemu-system-arm -machine mps2-an385 -monitor null -semihosting \
         -kernel ./build/RTOSDemo.axf \
         -serial stdio -nographic
 ```
+### Blinky Demo Expectations
+after running the blinky demo you shoud see on the screen the word blinking
+printed continuously
 
 ## Networking Support
 To make networking support possible a few steps needs to be done on the machine
@@ -45,7 +49,7 @@ enp0s3:     ethernet interface
 virbr0:     virtual bridge         (to be created)
 virbr0-nic: veth virtual interface (to be created)
 ```
-A few assumptions (your numbers could varry)
+### A few assumptions (your numbers could varry)
 ---------------------------------------------
 Local Host IP address:          192.168.1.81
 Local FreeRTOS IP address:      192.168.1.80
@@ -57,7 +61,7 @@ Echo Server Port:               7
 
 Local FreeRTOS Mac address:     52:54:00:12:34:AD
 
-Building and Running
+### Building and Running
 -----------------------
 
 1. Fill the defines values in FreeRTOSConfig.h with what is equivalent to the

@@ -140,7 +140,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /**
  * @brief The number of items that can be held in each queue.
  */
-#define democonfigQUEUE_SIZE                        ( 10 )
+#define democonfigQUEUE_SIZE                        ( 20 )
 
 /**
  * @brief Set the stack size of the main demo task.

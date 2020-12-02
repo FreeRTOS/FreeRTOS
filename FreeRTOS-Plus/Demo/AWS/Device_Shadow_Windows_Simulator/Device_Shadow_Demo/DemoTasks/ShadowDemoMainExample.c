@@ -182,9 +182,20 @@
 #define SHADOW_DELETE_REJECTED_ERROR_CODE_KEY           "code"
 
 /**
- * @brief Length of #SHADOW_DELETE_REJECTED_ERROR_CODE_KEY
+ * @brief Length of #SHADOW_DELETE_REJECTED_ERROR_CODE_KEY.
  */
 #define SHADOW_DELETE_REJECTED_ERROR_CODE_KEY_LENGTH    ( ( uint16_t ) ( sizeof( SHADOW_DELETE_REJECTED_ERROR_CODE_KEY ) - 1 ) )
+
+/**
+ * @brief Error response code sent from AWS IoT Shadow service when an attempt
+ * is made to delete a Shadow document that doesn't exist.
+ */
+#define SHADOW_NO_SHADOW_EXISTS_ERROR_CODE              "404"
+
+/**
+ * @brief Length of #SHADOW_NO_SHADOW_EXISTS_ERROR_CODE.
+ */
+#define SHADOW_NO_SHADOW_EXISTS_ERROR_CODE_LENGTH       ( ( uint16_t ) ( sizeof( SHADOW_NO_SHADOW_EXISTS_ERROR_CODE ) - 1 ) )
 
 /*------------- Demo configurations -------------------------*/
 
@@ -389,7 +400,6 @@ static void prvDeleteRejectedHandler( MQTTPublishInfo_t * pxPublishInfo )
     JSONStatus_t result = JSONSuccess;
     char * pcOutValue = NULL;
     uint32_t ulOutValueLength = 0UL;
-    uint32_t ulErrorCode = 0UL;
 
     configASSERT( pxPublishInfo != NULL );
     configASSERT( pxPublishInfo->pPayload != NULL );
@@ -412,12 +422,13 @@ static void prvDeleteRejectedHandler( MQTTPublishInfo_t * pxPublishInfo )
     if( result == JSONSuccess )
     {
         /* Then we start to get the version value by JSON keyword "version". */
-        result = JSON_Search( ( char * ) pxPublishInfo->pPayload,
-                              pxPublishInfo->payloadLength,
-                              SHADOW_DELETE_REJECTED_ERROR_CODE_KEY,
-                              SHADOW_DELETE_REJECTED_ERROR_CODE_KEY_LENGTH,
-                              &pcOutValue,
-                              ( size_t * ) &ulOutValueLength );
+        result = JSON_SearchConst( pxPublishInfo->pPayload,
+                                   pxPublishInfo->payloadLength,
+                                   SHADOW_DELETE_REJECTED_ERROR_CODE_KEY,
+                                   SHADOW_DELETE_REJECTED_ERROR_CODE_KEY_LENGTH,
+                                   &pcOutValue,
+                                   ( size_t * ) &ulOutValueLength,
+                                   NULL );
     }
     else
     {
@@ -430,20 +441,20 @@ static void prvDeleteRejectedHandler( MQTTPublishInfo_t * pxPublishInfo )
                    ulOutValueLength,
                    pcOutValue ) );
 
-        /* Convert the extracted value to an unsigned integer value. */
-        ulErrorCode = ( uint32_t ) strtoul( pcOutValue, NULL, 10 );
+        /* Check if error code is `404`. An error code `404` indicates that an
+         * attempt was made to delete a Shadow document that didn't exist. */
+        if( ulOutValueLength == SHADOW_NO_SHADOW_EXISTS_ERROR_CODE_LENGTH )
+        {
+            if( strncmp( pcOutValue, SHADOW_NO_SHADOW_EXISTS_ERROR_CODE,
+                         SHADOW_NO_SHADOW_EXISTS_ERROR_CODE_LENGTH ) == 0 )
+            {
+                xShadowDeleted = pdTRUE;
+            }
+        }
     }
     else
     {
         LogError( ( "No error code in json document!!" ) );
-    }
-
-    LogInfo( ( "Error code:%lu.", ulErrorCode ) );
-
-    /* Mark Shadow delete operation as a success if error code is 404. */
-    if( ulErrorCode == 404 )
-    {
-        xShadowDeleted = pdTRUE;
     }
 }
 

@@ -858,9 +858,8 @@ static void prvRequestTask( void * pvArgs )
     xTaskNotifyStateClear( NULL );
     ulNotification = ulTaskNotifyValueClear( NULL, ~( 0UL ) );
 
-    /* Notify the other tasks of completion. */
+    /* Notify the main task of completion. */
     xTaskNotify( xMainTask, httpexampleREQUEST_TASK_COMPLETION, eSetBits );
-    xTaskNotify( xResponseTask, httpexampleREQUEST_TASK_COMPLETION, eSetBits );
 
     /* Delete this task. */
     LogInfo( ( "Deleting request task." ) );
@@ -1030,9 +1029,8 @@ static void prvResponseTask( void * pvArgs )
     xTaskNotifyStateClear( NULL );
     ulNotification = ulTaskNotifyValueClear( NULL, ~( 0UL ) );
 
-    /* Notify the other tasks of completion. */
+    /* Notify the main task of completion. */
     xTaskNotify( xMainTask, httpexampleRESPONSE_TASK_COMPLETION, eSetBits );
-    xTaskNotify( xResponseTask, httpexampleRESPONSE_TASK_COMPLETION, eSetBits );
 
     /* Delete this task. */
     LogInfo( ( "Deleting response task." ) );
@@ -1088,7 +1086,7 @@ static BaseType_t prvDownloadLoop( void )
         /* Read request from the request queue. */
         if( xQueueReceive( xRequestQueue, &xDownloadReqItem, httpexampleDEMO_TICKS_TO_WAIT ) != pdPASS )
         {
-            /* Check for any errors in other tasks. */
+            /* Check for any errors in the response task. */
             if( prvCheckNotification( &ulNotification, httpexampleHTTP_FAILURE, pdFALSE ) != pdFALSE )
             {
                 LogInfo( ( "Main HTTP task: Received error notification from response task. Exiting HTTP download loop." ) );

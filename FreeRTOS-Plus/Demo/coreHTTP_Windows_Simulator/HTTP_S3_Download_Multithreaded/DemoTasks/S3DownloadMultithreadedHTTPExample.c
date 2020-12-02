@@ -42,17 +42,17 @@
  *   over the transport interface, using the HTTP Client library API. It reads
  *   requests from the request queue and places corresponding server responses
  *   on the response queue.
- * - prvRequestTask() is responsible for generating request objects and placing
- *   them on the request queue, specifying a byte range with each iteration in
+ * - prvRequestTask() is responsible for generating request objects and adding
+ *   them to the request queue, specifying a byte range with each iteration in
  *   order to download the S3 file in partial content responses.
  * - prvResponseTask() logs and evaluates server responses to outgoing requests.
  *   It reads responses from the response queue until the expected number of
  *   responses have been received.
  *
- * The tasks run continuously until the entire file is downloaded. If any
- * request fails, an error code is returned.
+ * Each individual task runs continuously in a loop, until its respective job is
+ * completed. If any request fails, an error code is returned.
  *
- * @Note: This demo requires user-generated pre-signed URLs to be pasted into
+ * @note This demo requires user-generated pre-signed URLs to be pasted into
  * demo_config.h. Please use the provided script "presigned_urls_gen.py"
  * (located in located in coreHTTP_Windows_Simulator/Common) to generate these
  * URLs. For detailed instructions, see the accompanied README.md.
@@ -454,7 +454,7 @@ void vStartSimpleHTTPDemo( void )
  * run continuously until the entire file is downloaded. If any request fails,
  * an error code is returned.
  *
- * @Note: This demo requires user-generated pre-signed URLs to be pasted into
+ * @note This demo requires user-generated pre-signed URLs to be pasted into
  * demo_config.h. Please use the provided script "presigned_urls_gen.py"
  * (located in located in coreHTTP_Windows_Simulator/Common) to generate these
  * URLs. For detailed instructions, see the accompanied README.md.

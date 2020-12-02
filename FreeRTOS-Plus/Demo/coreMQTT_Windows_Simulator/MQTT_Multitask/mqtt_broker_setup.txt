@@ -41,7 +41,7 @@ TLS mutual authentication for use with this MQTT demo.
    Defender Firewall can be found at the link below.
    https://support.microsoft.com/en-us/help/4558235/windows-10-allow-an-app-through-microsoft-defender-firewall
    After running this MQTT example, consider disabling the Mosquitto broker to
-   communicate through Windows Firewall for avoiding unwanted network traffic
+   communicate through Windows Firewall to avoid unwanted network traffic
    to your machine.
 9. After verifying that a Mosquitto broker is running successfully, update
    the config `democonfigMQTT_BROKER_ENDPOINT` to the local IP address of your
@@ -63,14 +63,19 @@ TLS mutual authentication for use with this MQTT demo.
             "-----BEGIN CERTIFICATE-----\n" \
             "...base64 data...\n" \
             "-----END CERTIFICATE-----\n"
-11. In the certs folder of your Documents, you will find a file called `client.key`.
+12. In the certs folder of your Documents, you will find a file called `client.key`.
     Copy its contents to `#define democonfigCLIENT_PRIVATE_KEY_PEM`. Keep in mind
     that it must include the PEM header and footer and be formatted in this manner:
         #define democonfigCLIENT_PRIVATE_KEY_PEM \
             "-----BEGIN RSA PRIVATE KEY-----\n" \
             "...base64 data...\n" \
             "-----END RSA PRIVATE KEY-----\n"
-12. Update the config `democonfigdisableSNI` to `( pdTRUE )`. It needs to be 
+
+    *!!! Please note democonfigCLIENT_PRIVATE_KEY_PEM in used for convenience
+    *!!! of demonstration only.  Production devices should store keys securely,
+    *!!! such as within a secure element.
+
+13. Update the config `democonfigdisableSNI` to `( pdTRUE )`. It needs to be
     configured this way because the local MQTT broker will only have an IP
     address but not a hostname. However, SNI (Server name indication) should
     be enabled whenever possible.

@@ -166,6 +166,12 @@
  */
 #define DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS    ( pdMS_TO_TICKS( 5000U ) )
 
+/* Each compilation unit must define the NetworkContext struct. */
+struct NetworkContext
+{
+    TlsTransportParams_t * pParams;
+};
+
 /**
  * @brief A buffer used in the demo for storing HTTP request headers, and HTTP
  * response headers and body.
@@ -208,7 +214,7 @@ static size_t xServerHostLength;
 /**
  * @brief The location of the path within the pre-signed URL.
  */
-static const char * pcPath;
+static const char * pcRequestURI;
 
 /*-----------------------------------------------------------*/
 
@@ -311,6 +317,7 @@ static void prvHTTPDemoTask( void * pvParameters )
     TransportInterface_t xTransportInterface;
     /* The network context for the transport layer interface. */
     NetworkContext_t xNetworkContext = { 0 };
+    TlsTransportParams_t xTlsTransportParams = { 0 };
     BaseType_t xIsConnectionEstablished = pdFALSE;
     /* HTTP Client library return status. */
     HTTPStatus_t xHTTPStatus = HTTPSuccess;
@@ -319,15 +326,18 @@ static void prvHTTPDemoTask( void * pvParameters )
     /* The user of this demo must check the logs for any failure codes. */
     BaseType_t xDemoStatus = pdPASS;
 
-    /* Remove compiler warnings about unused parameters. */
-    ( void ) pvParameters;
-
     /* The length of the path within the pre-signed URL. This variable is
      * defined in order to store the length returned from parsing the URL, but
      * it is unused. The path used for the requests in this demo needs all the
      * query information following the location of the object, to the end of the
      * S3 presigned URL. */
     size_t xPathLen = 0;
+
+    /* Remove compiler warnings about unused parameters. */
+    ( void ) pvParameters;
+
+    /* Set the pParams member of the network context with desired transport. */
+    xNetworkContext.pParams = &xTlsTransportParams;
 
     LogInfo( ( "HTTP Client Synchronous S3 upload demo using pre-signed URL:\n%s",
                democonfigS3_PRESIGNED_PUT_URL ) );
@@ -374,7 +384,7 @@ static void prvHTTPDemoTask( void * pvParameters )
              * xPathLen, which is left unused in this demo. */
             xHTTPStatus = getUrlPath( democonfigS3_PRESIGNED_PUT_URL,
                                       httpexampleS3_PRESIGNED_PUT_URL_LENGTH,
-                                      &pcPath,
+                                      &pcRequestURI,
                                       &xPathLen );
 
             xDemoStatus = ( xHTTPStatus == HTTPSuccess ) ? pdPASS : pdFAIL;
@@ -383,7 +393,7 @@ static void prvHTTPDemoTask( void * pvParameters )
         if( xDemoStatus == pdPASS )
         {
             xDemoStatus = prvUploadS3ObjectFile( &xTransportInterface,
-                                                 pcPath );
+                                                 pcRequestURI );
         }
 
         /******************* Verify S3 Object File Upload. ********************/
@@ -395,7 +405,7 @@ static void prvHTTPDemoTask( void * pvParameters )
              * xPathLen. */
             xHTTPStatus = getUrlPath( democonfigS3_PRESIGNED_GET_URL,
                                       httpexampleS3_PRESIGNED_GET_URL_LENGTH,
-                                      &pcPath,
+                                      &pcRequestURI,
                                       &xPathLen );
 
             xDemoStatus = ( xHTTPStatus == HTTPSuccess ) ? pdPASS : pdFAIL;
@@ -405,7 +415,7 @@ static void prvHTTPDemoTask( void * pvParameters )
         {
             /* Verify the file exists by retrieving the file size. */
             xDemoStatus = prvVerifyS3ObjectFileSize( &xTransportInterface,
-                                                     pcPath );
+                                                     pcRequestURI );
         }
 
         /************************** Disconnect. *****************************/

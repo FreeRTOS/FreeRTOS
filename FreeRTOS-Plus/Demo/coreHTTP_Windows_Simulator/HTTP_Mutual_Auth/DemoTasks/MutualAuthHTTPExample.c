@@ -122,6 +122,12 @@
  */
 #define IOT_CORE_ALPN_PROTOCOL_NAME    "\x0ex-amzn-http-ca"
 
+/* Each compilation unit must define the NetworkContext struct. */
+struct NetworkContext
+{
+    TlsTransportParams_t * pParams;
+};
+
 /**
  * @brief A buffer used in the demo for storing HTTP request headers and
  * HTTP response headers and body.
@@ -207,6 +213,7 @@ static void prvHTTPDemoTask( void * pvParameters )
     TransportInterface_t xTransportInterface;
     /* The network context for the transport layer interface. */
     NetworkContext_t xNetworkContext = { 0 };
+    TlsTransportParams_t xTlsTransportParams = { 0 };
     BaseType_t xIsConnectionEstablished = pdFALSE;
 
     /* The user of this demo must check the logs for any failure codes. */
@@ -214,6 +221,9 @@ static void prvHTTPDemoTask( void * pvParameters )
 
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
+
+    /* Set the pParams member of the network context with desired transport. */
+    xNetworkContext.pParams = &xTlsTransportParams;
 
     /**************************** Connect. ******************************/
 

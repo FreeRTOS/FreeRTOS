@@ -937,8 +937,8 @@ BaseType_t xPublishToTopic( MQTTContext_t * pxMqttContext,
 
             if( xMQTTStatus != MQTTSuccess )
             {
-                LogWarn( ( "MQTT_ProcessLoop returned with status = %s.",
-                           MQTT_Status_strerror( xMQTTStatus ) ) );
+                LogError( ( "MQTT_ProcessLoop returned with status = %s.",
+                            MQTT_Status_strerror( xMQTTStatus ) ) );
                 xReturnStatus = pdFAIL;
             }
         }
@@ -959,8 +959,8 @@ BaseType_t xProcessLoop( MQTTContext_t * pxMqttContext,
 
     if( xMQTTStatus != MQTTSuccess )
     {
-        LogWarn( ( "MQTT_ProcessLoop returned with status = %s.",
-                   MQTT_Status_strerror( xMQTTStatus ) ) );
+        LogError( ( "MQTT_ProcessLoop returned with status = %s.",
+                    MQTT_Status_strerror( xMQTTStatus ) ) );
     }
     else
     {

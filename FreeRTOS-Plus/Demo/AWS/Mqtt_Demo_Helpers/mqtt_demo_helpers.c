@@ -620,7 +620,8 @@ BaseType_t xEstablishMqttSession( MQTTContext_t * pxMqttContext,
         if( xMQTTStatus != MQTTSuccess )
         {
             xReturnStatus = pdFAIL;
-            LogError( ( "MQTT init failed with status %u.", xMQTTStatus ) );
+            LogError( ( "MQTT init failed with status %s.",
+                        MQTT_Status_strerror( xMQTTStatus ) ) );
         }
         else
         {
@@ -673,7 +674,8 @@ BaseType_t xEstablishMqttSession( MQTTContext_t * pxMqttContext,
             if( xMQTTStatus != MQTTSuccess )
             {
                 xReturnStatus = pdFAIL;
-                LogError( ( "Connection with MQTT broker failed with status %u.", xMQTTStatus ) );
+                LogError( ( "Connection with MQTT broker failed with status %s.",
+                            MQTT_Status_strerror( xMQTTStatus ) ) );
             }
             else
             {
@@ -735,8 +737,8 @@ BaseType_t xDisconnectMqttSession( MQTTContext_t * pxMqttContext,
 
         if( xMQTTStatus != MQTTSuccess )
         {
-            LogError( ( "Sending MQTT DISCONNECT failed with status=%u.",
-                        xMQTTStatus ) );
+            LogError( ( "Sending MQTT DISCONNECT failed with status=%s.",
+                        MQTT_Status_strerror( xMQTTStatus ) ) );
             xReturnStatus = pdFAIL;
         }
     }
@@ -780,8 +782,8 @@ BaseType_t xSubscribeToTopic( MQTTContext_t * pxMqttContext,
 
     if( xMQTTStatus != MQTTSuccess )
     {
-        LogError( ( "Failed to send SUBSCRIBE packet to broker with error = %u.",
-                    xMQTTStatus ) );
+        LogError( ( "Failed to send SUBSCRIBE packet to broker with error = %s.",
+                    MQTT_Status_strerror( xMQTTStatus ) ) );
         xReturnStatus = pdFAIL;
     }
     else
@@ -802,8 +804,8 @@ BaseType_t xSubscribeToTopic( MQTTContext_t * pxMqttContext,
         if( xMQTTStatus != MQTTSuccess )
         {
             xReturnStatus = pdFAIL;
-            LogError( ( "MQTT_ProcessLoop returned with status = %u.",
-                        xMQTTStatus ) );
+            LogError( ( "MQTT_ProcessLoop returned with status = %s.",
+                        MQTT_Status_strerror( xMQTTStatus ) ) );
         }
     }
 
@@ -843,8 +845,8 @@ BaseType_t xUnsubscribeFromTopic( MQTTContext_t * pxMqttContext,
 
     if( xMQTTStatus != MQTTSuccess )
     {
-        LogError( ( "Failed to send UNSUBSCRIBE packet to broker with error = %u.",
-                    xMQTTStatus ) );
+        LogError( ( "Failed to send UNSUBSCRIBE packet to broker with error = %s.",
+                    MQTT_Status_strerror( xMQTTStatus ) ) );
         xReturnStatus = pdFAIL;
     }
     else
@@ -859,8 +861,8 @@ BaseType_t xUnsubscribeFromTopic( MQTTContext_t * pxMqttContext,
         if( xMQTTStatus != MQTTSuccess )
         {
             xReturnStatus = pdFAIL;
-            LogError( ( "MQTT_ProcessLoop returned with status = %u.",
-                        xMQTTStatus ) );
+            LogError( ( "MQTT_ProcessLoop returned with status = %s.",
+                        MQTT_Status_strerror( xMQTTStatus ) ) );
         }
     }
 
@@ -913,8 +915,8 @@ BaseType_t xPublishToTopic( MQTTContext_t * pxMqttContext,
 
         if( xMQTTStatus != MQTTSuccess )
         {
-            LogError( ( "Failed to send PUBLISH packet to broker with error = %u.",
-                        xMQTTStatus ) );
+            LogError( ( "Failed to send PUBLISH packet to broker with error = %s.",
+                        MQTT_Status_strerror( xMQTTStatus ) ) );
             vCleanupOutgoingPublishAt( ucPublishIndex );
             xReturnStatus = pdFAIL;
         }
@@ -935,8 +937,8 @@ BaseType_t xPublishToTopic( MQTTContext_t * pxMqttContext,
 
             if( xMQTTStatus != MQTTSuccess )
             {
-                LogWarn( ( "MQTT_ProcessLoop returned with status = %u.",
-                           xMQTTStatus ) );
+                LogWarn( ( "MQTT_ProcessLoop returned with status = %s.",
+                           MQTT_Status_strerror( xMQTTStatus ) ) );
                 xReturnStatus = pdFAIL;
             }
         }
@@ -957,8 +959,8 @@ BaseType_t xProcessLoop( MQTTContext_t * pxMqttContext,
 
     if( xMQTTStatus != MQTTSuccess )
     {
-        LogWarn( ( "MQTT_ProcessLoop returned with status = %u.",
-                   xMQTTStatus ) );
+        LogWarn( ( "MQTT_ProcessLoop returned with status = %s.",
+                   MQTT_Status_strerror( xMQTTStatus ) ) );
     }
     else
     {

@@ -145,6 +145,19 @@ take hold of the mac address in the command and change it appropriately
 (52:54:00:12:34:AD)
 ```
 
+7. Expectations
+On the remote machine you should expect to see something similar to the
+following:
+```
+$ sudo nc -l 7
+Password:
+TxRx message number
+0FGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~0123456789:;<=> ?
+@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~0123456789:;<=>?
+@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~0123456789:;<=>?
+@ABCDEFGHIJKLM
+```
+
 ## How to start debugging (gdb)
 <P>
 Append the -s and -S switches to the previous command (qemu-system-arm)<br>

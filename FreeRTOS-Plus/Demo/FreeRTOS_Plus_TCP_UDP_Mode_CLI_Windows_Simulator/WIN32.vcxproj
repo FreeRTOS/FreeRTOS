@@ -56,7 +56,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\Source\Utilities\logging;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\Source\FreeRTOS-Plus-TCP\include;.\DemoTasks\include;.\WinPCap;..\..\Source\FreeRTOS-Plus-CLI;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Source\Utilities\logging;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\Source\FreeRTOS-Plus-TCP\include;.\DemoTasks\include;..\Common\WinPCap;..\..\Source\FreeRTOS-Plus-CLI;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -82,7 +82,7 @@
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalDependencies>wpcap.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>.\WinPCap</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Common\WinPCap</AdditionalLibraryDirectories>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>

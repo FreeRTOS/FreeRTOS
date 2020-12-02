@@ -123,7 +123,8 @@ $ sudo ufw disable
 $ sudo ufw status
 ```
 5. Setup the local machine
-Run the fullowing commands replacing the values that conform to your system
+Run the fullowing commands replacing the values  and interface names
+that conform to your system
 ```
 sudo ip link add virbr0 type bridge
 sudo ip tuntap add dev virbr0-nic mode tap

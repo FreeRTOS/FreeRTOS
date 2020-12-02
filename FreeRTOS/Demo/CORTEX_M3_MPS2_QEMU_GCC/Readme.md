@@ -59,7 +59,7 @@ Local FreeRTOS Mac address:     52:54:00:12:34:AD
 
 1. Fill the defines values in FreeRTOSConfig.h with what is equivalent to the
    above values on your system
-   ```c
+```c
 #define configIP_ADDR0		    192
 #define configIP_ADDR1		    168
 #define configIP_ADDR2	     	1
@@ -91,7 +91,7 @@ Local FreeRTOS Mac address:     52:54:00:12:34:AD
 #define configECHO_SERVER_ADDR1 168
 #define configECHO_SERVER_ADDR2 1
 #define configECHO_SERVER_ADDR3 204
-   ```
+```
 
 2.  Build your software
 ```

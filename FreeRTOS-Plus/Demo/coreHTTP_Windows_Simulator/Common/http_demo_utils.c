@@ -56,32 +56,16 @@
 
 /*-----------------------------------------------------------*/
 
-extern UBaseType_t uxRand();
-
-/*-----------------------------------------------------------*/
-
-/**
- * @brief A wrapper to the "uxRand()" random number generator so that it
- * can be passed to the backoffAlgorithm library for retry logic.
- *
- * This function implements the #BackoffAlgorithm_RNG_T type interface
- * in the backoffAlgorithm library API.
- *
- * @note The "uxRand" function represents a pseudo random number generator.
- * However, it is recommended to use a True Randon Number Generator (TRNG)
- * for generating unique device-specific random values to avoid possibility
- * of network collisions from multiple devices retrying network operations.
- *
- * @return The generated randon number. This function ALWAYS succeeds.
- */
-static int32_t prvGenerateRandomNumber();
-
-/*-----------------------------------------------------------*/
-
-static int32_t prvGenerateRandomNumber()
+/* Each compilation unit must define the NetworkContext struct.
+ * void * is used as this utility can be used by both plaintext and TLS demos. */
+struct NetworkContext
 {
-    return( uxRand() & INT32_MAX );
-}
+    void * pParams;
+};
+
+/*-----------------------------------------------------------*/
+
+extern UBaseType_t uxRand();
 
 /*-----------------------------------------------------------*/
 BaseType_t connectToServerWithBackoffRetries( TransportConnect_t connectFunction,
@@ -100,8 +84,7 @@ BaseType_t connectToServerWithBackoffRetries( TransportConnect_t connectFunction
     BackoffAlgorithm_InitializeParams( &xReconnectParams,
                                        RETRY_BACKOFF_BASE_MS,
                                        RETRY_MAX_BACKOFF_DELAY_MS,
-                                       RETRY_MAX_ATTEMPTS,
-                                       prvGenerateRandomNumber );
+                                       RETRY_MAX_ATTEMPTS );
 
     /* Attempt to connect to the HTTP server. If connection fails, retry after a
      * timeout. The timeout value will exponentially increase until either the
@@ -118,7 +101,13 @@ BaseType_t connectToServerWithBackoffRetries( TransportConnect_t connectFunction
             LogInfo( ( "Retry attempt %lu out of maximum retry attempts %lu.",
                        ( xReconnectParams.attemptsDone + 1 ),
                        RETRY_MAX_ATTEMPTS ) );
-            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextBackoff );
+
+            /* Generate a random number and calculate backoff value (in milliseconds) for
+             * the next connection retry.
+             * Note: It is recommended to seed the random number generator with a device-specific
+             * entropy source so that possibility of multiple devices retrying failed network operations
+             * at similar intervals can be avoided. */
+            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, uxRand(), &usNextBackoff );
         }
     } while( ( xReturn == pdFAIL ) && ( xBackoffAlgStatus == BackoffAlgorithmSuccess ) );
 

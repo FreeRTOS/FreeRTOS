@@ -202,6 +202,14 @@ typedef struct PublishPackets
 
 /*-----------------------------------------------------------*/
 
+/* Each compilation unit must define the NetworkContext struct. */
+struct NetworkContext
+{
+    TlsTransportParams_t * pParams;
+};
+
+/*-----------------------------------------------------------*/
+
 /**
  * @brief Global entry time into the application to use as a reference timestamp
  * in the #prvGetTimeMs function. #prvGetTimeMs will always return the difference
@@ -359,15 +367,11 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext
     #endif
     xNetworkCredentials.pAlpnProtos = pcAlpnProtocols;
 
-    /* Initialize reconnect attempts and interval.
-     * Note: This utility uses a pseudo random number generator for use with the backoff
-     * algorithm. However, it is recommended to use a True Random Number generator to
-     * avoid possibility of collisions between multiple devices retrying connection. */
+    /* Initialize reconnect attempts and interval.*/
     BackoffAlgorithm_InitializeParams( &xReconnectParams,
                                        RETRY_BACKOFF_BASE_MS,
                                        RETRY_MAX_BACKOFF_DELAY_MS,
-                                       RETRY_MAX_ATTEMPTS,
-                                       prvGenerateRandomNumber );
+                                       RETRY_MAX_ATTEMPTS );
 
     /* Attempt to connect to MQTT broker. If connection fails, retry after
      * a timeout. Timeout value will exponentially increase until maximum
@@ -390,9 +394,12 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext
 
         if( xNetworkStatus != TLS_TRANSPORT_SUCCESS )
         {
-            /* Get back-off value (in milliseconds) for the next connection retry. */
-            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, &usNextRetryBackOff );
-            configASSERT( xBackoffAlgStatus != BackoffAlgorithmRngFailure );
+            /* Generate a random number and calculate backoff value (in milliseconds) for
+             * the next connection retry.
+             * Note: It is recommended to seed the random number generator with a device-specific
+             * entropy source so that possibility of multiple devices retrying failed network operations
+             * at similar intervals can be avoided. */
+            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, uxRand(), &usNextRetryBackOff );
 
             if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )
             {
@@ -584,9 +591,8 @@ BaseType_t xEstablishMqttSession( MQTTContext_t * pxMqttContext,
     configASSERT( pxMqttContext != NULL );
     configASSERT( pxNetworkContext != NULL );
 
-    /* Initialize the mqtt context and network context. */
+    /* Initialize the mqtt context. */
     ( void ) memset( pxMqttContext, 0U, sizeof( MQTTContext_t ) );
-    ( void ) memset( pxNetworkContext, 0U, sizeof( NetworkContext_t ) );
 
     if( prvConnectToServerWithBackoffRetries( pxNetworkContext ) != TLS_TRANSPORT_SUCCESS )
     {

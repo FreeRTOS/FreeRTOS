@@ -75,9 +75,9 @@ typedef struct Connection
  *
  * @param[out] pxOutNetworkStats The network stats.
  *
- * @return #MetricsCollectorSuccess if the network stats are successfully obtained;
- * #MetricsCollectorBadParameter if invalid parameters are passed;
- * #MetricsCollectorCollectionFailed if the collection methods failed.
+ * @return #eMetricsCollectorSuccess if the network stats are successfully obtained;
+ * #eMetricsCollectorBadParameter if invalid parameters are passed;
+ * #eMetricsCollectorCollectionFailed if the collection methods failed.
  */
 eMetricsCollectorStatus eGetNetworkStats( NetworkStats_t * pxOutNetworkStats );
 
@@ -91,11 +91,12 @@ eMetricsCollectorStatus eGetNetworkStats( NetworkStats_t * pxOutNetworkStats );
  * can be NULL, if only the number of open ports is needed.
  * @param[in] ulTcpPortsArrayLength Length of the pusOutTcpPortsArray, if it is not
  * NULL.
- * @param[out] pulOutNumTcpOpenPorts Number of the open TCP ports.
+ * @param[out] pulOutNumTcpOpenPorts Number of open TCP ports if @p
+ * pusOutTcpPortsArray NULL, else number of TCP ports written.
  *
- * @return #MetricsCollectorSuccess if open TCP ports are successfully obtained;
- * #MetricsCollectorBadParameter if invalid parameters are passed;
- * #MetricsCollectorCollectionFailed if the collection methods failed.
+ * @return #eMetricsCollectorSuccess if open TCP ports are successfully obtained;
+ * #eMetricsCollectorBadParameter if invalid parameters are passed;
+ * #eMetricsCollectorCollectionFailed if the collection methods failed.
  */
 eMetricsCollectorStatus eGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
                                           uint32_t ulTcpPortsArrayLength,
@@ -111,11 +112,12 @@ eMetricsCollectorStatus eGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
  * be NULL, if only number of open ports is needed.
  * @param[in] ulUdpPortsArrayLength Length of the pusOutUdpPortsArray, if it is not
  * NULL.
- * @param[out] pulOutNumUdpOpenPorts Number of the open UDP ports.
+ * @param[out] pulOutNumUdpOpenPorts Number of open UDP ports if @p
+ * pusOutUdpPortsArray NULL, else number of UDP ports written.
  *
- * @return #MetricsCollectorSuccess if open UDP ports are successfully obtained;
- * #MetricsCollectorBadParameter if invalid parameters are passed;
- * #MetricsCollectorCollectionFailed if the collection methods failed.
+ * @return #eMetricsCollectorSuccess if open UDP ports are successfully obtained;
+ * #eMetricsCollectorBadParameter if invalid parameters are passed;
+ * #eMetricsCollectorCollectionFailed if the collection methods failed.
  */
 eMetricsCollectorStatus eGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
                                           uint32_t ulUdpPortsArrayLength,
@@ -133,11 +135,12 @@ eMetricsCollectorStatus eGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
  * needed.
  * @param[in] ulConnectionsArrayLength Length of the pxOutConnectionsArray, if it
  * is not NULL.
- * @param[out] pulOutNumEstablishedConnections Number of the established connections.
+ * @param[out] pulOutNumEstablishedConnections Number of established connections if @p
+ * pusOutNumEstablishedConnections NULL, else number of established connections written.
  *
- * @return #MetricsCollectorSuccess if established connections are successfully obtained;
- * #MetricsCollectorBadParameter if invalid parameters are passed;
- * #MetricsCollectorCollectionFailed if the collection methods failed.
+ * @return #eMetricsCollectorSuccess if established connections are successfully obtained;
+ * #eMetricsCollectorBadParameter if invalid parameters are passed;
+ * #eMetricsCollectorCollectionFailed if the collection methods failed.
  */
 eMetricsCollectorStatus eGetEstablishedConnections( Connection_t * pxOutConnectionsArray,
                                                     uint32_t ulConnectionsArrayLength,

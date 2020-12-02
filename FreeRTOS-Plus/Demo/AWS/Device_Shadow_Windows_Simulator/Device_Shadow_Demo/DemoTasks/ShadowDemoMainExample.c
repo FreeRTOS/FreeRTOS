@@ -795,6 +795,7 @@ void prvShadowDemoTask( void * pvParameters )
     xNetworkContext.pParams = &xTlsTransportParams;
 
     /****************************** Connect. ******************************/
+
     /* This demo runs a single loop unless there are failures in the demo execution.
      * In case of failures in the demo execution, demo loop will be retried for up to
      * SHADOW_MAX_DEMO_LOOP_COUNT times. */

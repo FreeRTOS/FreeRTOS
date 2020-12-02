@@ -894,7 +894,7 @@ void prvJobsDemoTask( void * pvParameters )
                                    NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ),
                                    sizeof( NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) ) - 1 ) != pdPASS )
         {
-            xDemoStatus == pdFAIL;
+            xDemoStatus = pdFAIL;
             LogError( ( "Failed to subscribe unsubscribe from the NextJobExecutionChanged API of AWS IoT Jobs service: "
                         "Topic=%s", NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) ) );
         }
@@ -902,7 +902,7 @@ void prvJobsDemoTask( void * pvParameters )
         /* Disconnect the MQTT and network connections with AWS IoT. */
         if( xDisconnectMqttSession( &xMqttContext, &xNetworkContext ) != pdPASS )
         {
-            xDemoStatus == pdFAIL;
+            xDemoStatus = pdFAIL;
             LogError( ( "Disconnection from AWS IoT failed..." ) );
         }
 

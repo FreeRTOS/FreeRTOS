@@ -164,6 +164,12 @@
  */
 #define httpexampleNUMBER_HTTP_PATHS          ( 4 )
 
+/* Each compilation unit must define the NetworkContext struct. */
+struct NetworkContext
+{
+    PlaintextTransportParams_t * pParams;
+};
+
 /**
  * @brief A pair containing a path string of the URI and its length.
  */
@@ -269,6 +275,7 @@ static void prvHTTPDemoTask( void * pvParameters )
     TransportInterface_t xTransportInterface;
     /* The network context for the transport layer interface. */
     NetworkContext_t xNetworkContext = { 0 };
+    PlaintextTransportParams_t xPlaintextTransportParams = { 0 };
     /* An array of HTTP paths to request. */
     const httpPathStrings_t xHttpMethodPaths[] =
     {
@@ -293,6 +300,9 @@ static void prvHTTPDemoTask( void * pvParameters )
 
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
+
+    /* Set the pParams member of the network context with desired transport. */
+    xNetworkContext.pParams = &xPlaintextTransportParams;
 
     /**************************** Connect. ******************************/
 

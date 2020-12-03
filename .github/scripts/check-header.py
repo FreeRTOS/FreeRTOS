@@ -350,14 +350,17 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.xsl',
     '.yml',
     '.md',
-    'Makefile',
-    'makefile',
     '.zip'
 ]
 
 FREERTOS_IGNORED_PATTERNS = [
     r'.*\.git.*',
     r'.*mbedtls_config\.h.*',
+    r'.*mbedtls_config\.h.*',
+    r'.Makefile',
+    r'.makefile',
+    r'.CMSIS\.h.*',
+    r'.CMSIS\.c.*',
 ]
 
 FREERTOS_HEADER = [

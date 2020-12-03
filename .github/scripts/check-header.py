@@ -349,6 +349,9 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.xmsgs',
     '.xsl',
     '.yml',
+    '.md',
+    'Makefile',
+    'makefile',
     '.zip'
 ]
 

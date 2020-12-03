@@ -108,6 +108,22 @@
 #define DEFENDER_RESPONSE_REPORT_ID_FIELD_LENGTH    ( sizeof( DEFENDER_RESPONSE_REPORT_ID_FIELD ) - 1 )
 
 /**
+ * @brief The maximum number of times to run the loop in this demo.
+ *
+ * @note The demo loop is attempted to re-run only if it fails in an iteration.
+ * Once the demo loop succeeds in an iteration, the demo exits successfully.
+ */
+#ifndef DEFENDER_MAX_DEMO_LOOP_COUNT
+    #define DEFENDER_MAX_DEMO_LOOP_COUNT    ( 3 )
+#endif
+
+/**
+ * @brief Time in ticks to wait between retries of the demo loop if
+ * demo loop fails.
+ */
+#define DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS    ( pdMS_TO_TICKS( 5000U ) )
+
+/**
  * @brief Status values of the device defender report.
  */
 typedef enum
@@ -633,6 +649,7 @@ void prvDefenderDemoTask( void * pvParameters )
     bool xStatus = false;
     BaseType_t xExitStatus = EXIT_FAILURE;
     uint32_t ulReportLength = 0UL, i, ulMqttSessionEstablished = 0UL;
+    UBaseType_t uxDemoRunCount = 0UL;
 
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
@@ -643,188 +660,220 @@ void prvDefenderDemoTask( void * pvParameters )
     /* Start with report not received. */
     xReportStatus = ReportStatusNotReceived;
 
-    /* Set a report Id to be used.
-     *
-     * !!!NOTE!!!
-     * This demo sets the report ID to xTaskGetTickCount(), which may collide
-     * if the device is reset. Reports for a Thing with a previously used
-     * report ID will be assumed to be duplicates and discarded by the Device
-     * Defender service. The report ID needs to be unique per report sent with
-     * a given Thing. We recommend using an increasing unique id such as the
-     * current timestamp. */
-    ulReportId = ( uint32_t ) xTaskGetTickCount();
-
-    /****************************** Connect. ******************************/
-
-    /* Attempts to connect to the AWS IoT MQTT broker over TCP. If the
-     * connection fails, retries after a timeout. Timeout value will
-     * exponentially increase until maximum attempts are reached. */
-    LogInfo( ( "Establishing MQTT session..." ) );
-    xStatus = xEstablishMqttSession( &xMqttContext,
-                                     &xNetworkContext,
-                                     &xBuffer,
-                                     prvPublishCallback );
-
-    if( xStatus != true )
+    /* This demo runs a single loop unless there are failures in the demo execution.
+     * In case of failures in the demo execution, demo loop will be retried for up to
+     * DEFENDER_MAX_DEMO_LOOP_COUNT times. */
+    do
     {
-        LogError( ( "Failed to establish MQTT session." ) );
-    }
-    else
-    {
-        ulMqttSessionEstablished = 1;
-    }
+        /* Set a report Id to be used.
+         *
+         * !!!NOTE!!!
+         * This demo sets the report ID to xTaskGetTickCount(), which may collide
+         * if the device is reset. Reports for a Thing with a previously used
+         * report ID will be assumed to be duplicates and discarded by the Device
+         * Defender service. The report ID needs to be unique per report sent with
+         * a given Thing. We recommend using an increasing unique id such as the
+         * current timestamp. */
+        ulReportId = ( uint32_t ) xTaskGetTickCount();
 
-    /******************** Subscribe to Defender topics. *******************/
+        /****************************** Connect. ******************************/
 
-    /* Attempt to subscribe to the AWS IoT Device Defender topics.
-     * Since this demo is using JSON, in prvSubscribeToDefenderTopics() we
-     * subscribe to the topics to which accepted and rejected responses are
-     * received from after publishing a JSON report.
-     *
-     * This demo uses a constant #democonfigTHING_NAME known at compile time
-     * therefore we use macros to assemble defender topic strings.
-     * If the thing name is known at run time, then we could use the API
-     * #Defender_GetTopic instead.
-     *
-     * For example, for the JSON accepted responses topic:
-     *
-     * #define TOPIC_BUFFER_LENGTH      ( 256U )
-     *
-     * // Every device should have a unique thing name registered with AWS IoT Core.
-     * // This example assumes that the device has a unique serial number which is
-     * // registered as the thing name with AWS IoT Core.
-     * const char * pThingName = GetDeviceSerialNumber();
-     * uint16_t thingNameLength = ( uint16_t )strlen( pThingname );
-     * char topicBuffer[ TOPIC_BUFFER_LENGTH ] = { 0 };
-     * uint16_t topicLength = 0;
-     * DefenderStatus_t status = DefenderSuccess;
-     *
-     * status = Defender_GetTopic( &( topicBuffer[ 0 ] ),
-     *                             TOPIC_BUFFER_LENGTH,
-     *                             pThingName,
-     *                             thingNameLength,
-     *                             DefenderJsonReportAccepted,
-     *                             &( topicLength ) );
-     */
-    if( xStatus == true )
-    {
-        LogInfo( ( "Subscribing to defender topics..." ) );
-        xStatus = prvSubscribeToDefenderTopics();
+        /* Attempts to connect to the AWS IoT MQTT broker over TCP. If the
+         * connection fails, retries after a timeout. Timeout value will
+         * exponentially increase until maximum attempts are reached. */
+        LogInfo( ( "Establishing MQTT session..." ) );
+        xStatus = xEstablishMqttSession( &xMqttContext,
+                                         &xNetworkContext,
+                                         &xBuffer,
+                                         prvPublishCallback );
 
         if( xStatus != true )
         {
-            LogError( ( "Failed to subscribe to defender topics." ) );
+            LogError( ( "Failed to establish MQTT session." ) );
         }
-    }
-
-    /*********************** Collect device metrics. **********************/
-
-    /* We then need to collect the metrics that will be sent to the AWS IoT
-     * Device Defender service. This demo uses the functions declared in
-     * in metrics_collector.h to collect network metrics. For this demo, the
-     * implementation of these functions are in metrics_collector.c and
-     * collects metrics using tcp_netstat utility for FreeRTOS+TCP. */
-    if( xStatus == true )
-    {
-        LogInfo( ( "Collecting device metrics..." ) );
-        xStatus = prvCollectDeviceMetrics();
-
-        if( xStatus != true )
+        else
         {
-            LogError( ( "Failed to collect device metrics." ) );
+            ulMqttSessionEstablished = 1;
         }
-    }
 
-    /********************** Generate defender report. *********************/
+        /******************** Subscribe to Defender topics. *******************/
 
-    /* The data needs to be incorporated into a JSON formatted report,
-     * which follows the format expected by the Device Defender service.
-     * This format is documented here:
-     * https://docs.aws.amazon.com/iot/latest/developerguide/detect-device-side-metrics.html
-     */
-    if( xStatus == true )
-    {
-        LogInfo( ( "Generating device defender report..." ) );
-        xStatus = prvGenerateDeviceMetricsReport( &( ulReportLength ) );
-
-        if( xStatus != true )
+        /* Attempt to subscribe to the AWS IoT Device Defender topics.
+         * Since this demo is using JSON, in prvSubscribeToDefenderTopics() we
+         * subscribe to the topics to which accepted and rejected responses are
+         * received from after publishing a JSON report.
+         *
+         * This demo uses a constant #democonfigTHING_NAME known at compile time
+         * therefore we use macros to assemble defender topic strings.
+         * If the thing name is known at run time, then we could use the API
+         * #Defender_GetTopic instead.
+         *
+         * For example, for the JSON accepted responses topic:
+         *
+         * #define TOPIC_BUFFER_LENGTH      ( 256U )
+         *
+         * // Every device should have a unique thing name registered with AWS IoT Core.
+         * // This example assumes that the device has a unique serial number which is
+         * // registered as the thing name with AWS IoT Core.
+         * const char * pThingName = GetDeviceSerialNumber();
+         * uint16_t thingNameLength = ( uint16_t )strlen( pThingname );
+         * char topicBuffer[ TOPIC_BUFFER_LENGTH ] = { 0 };
+         * uint16_t topicLength = 0;
+         * DefenderStatus_t status = DefenderSuccess;
+         *
+         * status = Defender_GetTopic( &( topicBuffer[ 0 ] ),
+         *                             TOPIC_BUFFER_LENGTH,
+         *                             pThingName,
+         *                             thingNameLength,
+         *                             DefenderJsonReportAccepted,
+         *                             &( topicLength ) );
+         */
+        if( xStatus == true )
         {
-            LogError( ( "Failed to generate device defender report." ) );
-        }
-    }
+            LogInfo( ( "Subscribing to defender topics..." ) );
+            xStatus = prvSubscribeToDefenderTopics();
 
-    /********************** Publish defender report. **********************/
-
-    /* The report is then published to the Device Defender service. This report
-     * is published to the MQTT topic for publishing JSON reports. As before,
-     * we use the defender library macros to create the topic string, though
-     * #Defender_GetTopic could be used if the Thing name is acquired at
-     * run time */
-    if( xStatus == true )
-    {
-        LogInfo( ( "Publishing device defender report..." ) );
-        xStatus = prvPublishDeviceMetricsReport( ulReportLength );
-
-        if( xStatus != true )
-        {
-            LogError( ( "Failed to publish device defender report." ) );
-        }
-    }
-
-    /* Wait for the response to our report. Response will be handled by the
-     * callback passed to xEstablishMqttSession() earlier.
-     * The callback will verify that the MQTT messages received are from the
-     * defender service's topic. Based on whether the response comes from
-     * the accepted or rejected topics, it updates xReportStatus. */
-    if( xStatus == true )
-    {
-        for( i = 0; i < DEFENDER_RESPONSE_WAIT_SECONDS; i++ )
-        {
-            ( void ) xProcessLoop( &xMqttContext );
-
-            /* xReportStatus is updated in the prvPublishCallback. */
-            if( xReportStatus != ReportStatusNotReceived )
+            if( xStatus != true )
             {
-                break;
+                LogError( ( "Failed to subscribe to defender topics." ) );
+            }
+        }
+
+        /*********************** Collect device metrics. **********************/
+
+        /* We then need to collect the metrics that will be sent to the AWS IoT
+         * Device Defender service. This demo uses the functions declared in
+         * in metrics_collector.h to collect network metrics. For this demo, the
+         * implementation of these functions are in metrics_collector.c and
+         * collects metrics using tcp_netstat utility for FreeRTOS+TCP. */
+        if( xStatus == true )
+        {
+            LogInfo( ( "Collecting device metrics..." ) );
+            xStatus = prvCollectDeviceMetrics();
+
+            if( xStatus != true )
+            {
+                LogError( ( "Failed to collect device metrics." ) );
+            }
+        }
+
+        /********************** Generate defender report. *********************/
+
+        /* The data needs to be incorporated into a JSON formatted report,
+         * which follows the format expected by the Device Defender service.
+         * This format is documented here:
+         * https://docs.aws.amazon.com/iot/latest/developerguide/detect-device-side-metrics.html
+         */
+        if( xStatus == true )
+        {
+            LogInfo( ( "Generating device defender report..." ) );
+            xStatus = prvGenerateDeviceMetricsReport( &( ulReportLength ) );
+
+            if( xStatus != true )
+            {
+                LogError( ( "Failed to generate device defender report." ) );
+            }
+        }
+
+        /********************** Publish defender report. **********************/
+
+        /* The report is then published to the Device Defender service. This report
+         * is published to the MQTT topic for publishing JSON reports. As before,
+         * we use the defender library macros to create the topic string, though
+         * #Defender_GetTopic could be used if the Thing name is acquired at
+         * run time */
+        if( xStatus == true )
+        {
+            LogInfo( ( "Publishing device defender report..." ) );
+            xStatus = prvPublishDeviceMetricsReport( ulReportLength );
+
+            if( xStatus != true )
+            {
+                LogError( ( "Failed to publish device defender report." ) );
+            }
+        }
+
+        /* Wait for the response to our report. Response will be handled by the
+         * callback passed to xEstablishMqttSession() earlier.
+         * The callback will verify that the MQTT messages received are from the
+         * defender service's topic. Based on whether the response comes from
+         * the accepted or rejected topics, it updates xReportStatus. */
+        if( xStatus == true )
+        {
+            for( i = 0; i < DEFENDER_RESPONSE_WAIT_SECONDS; i++ )
+            {
+                ( void ) xProcessLoop( &xMqttContext );
+
+                /* xReportStatus is updated in the prvPublishCallback. */
+                if( xReportStatus != ReportStatusNotReceived )
+                {
+                    break;
+                }
+
+                /* Wait for sometime between consecutive executions of ProcessLoop. */
+                vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+            }
+        }
+
+        if( xReportStatus == ReportStatusNotReceived )
+        {
+            LogError( ( "Failed to receive response from AWS IoT Device Defender Service." ) );
+            xStatus = false;
+        }
+
+        /**************************** Disconnect. *****************************/
+
+        /* Unsubscribe and disconnect if MQTT session was established. Per the MQTT
+         * protocol spec, it is okay to send UNSUBSCRIBE even if no corresponding
+         * subscription exists on the broker. Therefore, it is okay to attempt
+         * unsubscribe even if one more subscribe failed earlier. */
+        if( ulMqttSessionEstablished == 1 )
+        {
+            LogInfo( ( "Unsubscribing from defender topics..." ) );
+            xStatus = prvUnsubscribeFromDefenderTopics();
+
+            if( xStatus != true )
+            {
+                LogError( ( "Failed to unsubscribe from defender topics." ) );
             }
 
-            /* Wait for sometime between consecutive executions of ProcessLoop. */
-            vTaskDelay( 1000 / portTICK_PERIOD_MS );
+            LogInfo( ( "Closing MQTT session..." ) );
+            ( void ) xDisconnectMqttSession( &xMqttContext,
+                                             &xNetworkContext );
         }
-    }
 
-    if( xReportStatus == ReportStatusNotReceived )
-    {
-        LogError( ( "Failed to receive response from AWS IoT Device Defender Service." ) );
-        xStatus = false;
-    }
-
-    /**************************** Disconnect. *****************************/
-
-    /* Unsubscribe and disconnect if MQTT session was established. Per the MQTT
-     * protocol spec, it is okay to send UNSUBSCRIBE even if no corresponding
-     * subscription exists on the broker. Therefore, it is okay to attempt
-     * unsubscribe even if one more subscribe failed earlier. */
-    if( ulMqttSessionEstablished == 1 )
-    {
-        LogInfo( ( "Unsubscribing from defender topics..." ) );
-        xStatus = prvUnsubscribeFromDefenderTopics();
-
-        if( xStatus != true )
+        if( ( xStatus == true ) && ( xReportStatus == ReportStatusAccepted ) )
         {
-            LogError( ( "Failed to unsubscribe from defender topics." ) );
+            xExitStatus = EXIT_SUCCESS;
         }
 
-        LogInfo( ( "Closing MQTT session..." ) );
-        ( void ) xDisconnectMqttSession( &xMqttContext,
-                                         &xNetworkContext );
-    }
+        /*********************** Retry in case of failure. ************************/
+
+        /* Increment the demo run count. */
+        uxDemoRunCount++;
+
+        if( xExitStatus == EXIT_SUCCESS )
+        {
+            LogInfo( ( "Demo iteration %lu is successful.", uxDemoRunCount ) );
+        }
+        /* Attempt to retry a failed iteration of demo for up to #DEFENDER_MAX_DEMO_LOOP_COUNT times. */
+        else if( uxDemoRunCount < DEFENDER_MAX_DEMO_LOOP_COUNT )
+        {
+            LogWarn( ( "Demo iteration %lu failed. Retrying...", uxDemoRunCount ) );
+            vTaskDelay( DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS );
+        }
+        /* Failed all #DEFENDER_MAX_DEMO_LOOP_COUNT demo iterations. */
+        else
+        {
+            LogError( ( "All %d demo iterations failed.", DEFENDER_MAX_DEMO_LOOP_COUNT ) );
+            break;
+        }
+    } while( xExitStatus != EXIT_SUCCESS );
 
     /****************************** Finish. ******************************/
 
-    if( ( xStatus == true ) && ( xReportStatus == ReportStatusAccepted ) )
+    if( xExitStatus == EXIT_SUCCESS )
     {
-        xExitStatus = EXIT_SUCCESS;
         LogInfo( ( "Demo completed successfully." ) );
     }
     else

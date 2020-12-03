@@ -129,6 +129,22 @@ struct NetworkContext
 };
 
 /**
+ * @brief The maximum number of times to run the loop in this demo.
+ *
+ * @note The demo loop is attempted to re-run only if it fails in an iteration.
+ * Once the demo loop succeeds in an iteration, the demo exits successfully.
+ */
+#ifndef HTTP_MAX_DEMO_LOOP_COUNT
+    #define HTTP_MAX_DEMO_LOOP_COUNT    ( 3 )
+#endif
+
+/**
+ * @brief Time in ticks to wait between retries of the demo loop if
+ * demo loop fails.
+ */
+#define DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS    ( pdMS_TO_TICKS( 5000U ) )
+
+/**
  * @brief A buffer used in the demo for storing HTTP request headers and
  * HTTP response headers and body.
  *
@@ -215,6 +231,7 @@ static void prvHTTPDemoTask( void * pvParameters )
     NetworkContext_t xNetworkContext = { 0 };
     TlsTransportParams_t xTlsTransportParams = { 0 };
     BaseType_t xIsConnectionEstablished = pdFALSE;
+    UBaseType_t uxDemoRunCount = 0UL;
 
     /* The user of this demo must check the logs for any failure codes. */
     BaseType_t xDemoStatus = pdPASS;
@@ -225,55 +242,83 @@ static void prvHTTPDemoTask( void * pvParameters )
     /* Set the pParams member of the network context with desired transport. */
     xNetworkContext.pParams = &xTlsTransportParams;
 
-    /**************************** Connect. ******************************/
-
-    /* Attempt to connect to the HTTP server. If connection fails, retry after a
-     * timeout. The timeout value will be exponentially increased until either the
-     * maximum number of attempts or the maximum timeout value is reached. The
-     * function returns pdFAIL if the TCP connection cannot be established with
-     * the broker after configured number of attempts. */
-    xDemoStatus = connectToServerWithBackoffRetries( prvConnectToServer,
-                                                     &xNetworkContext );
-
-    if( xDemoStatus == pdPASS )
+    /* This demo runs a single loop unless there are failures in the demo execution.
+     * In case of failures in the demo execution, demo loop will be retried for up to
+     * HTTP_MAX_DEMO_LOOP_COUNT times. */
+    do
     {
-        /* Set a flag indicating that a TLS connection exists. */
-        xIsConnectionEstablished = pdTRUE;
+        /**************************** Connect. ******************************/
 
-        /* Define the transport interface. */
-        xTransportInterface.pNetworkContext = &xNetworkContext;
-        xTransportInterface.send = TLS_FreeRTOS_send;
-        xTransportInterface.recv = TLS_FreeRTOS_recv;
-    }
-    else
-    {
-        /* Log error to indicate connection failure after all
-         * reconnect attempts are over. */
-        LogError( ( "Failed to connect to HTTP server %.*s.",
-                    ( int32_t ) AWS_IOT_ENDPOINT_LENGTH,
-                    democonfigAWS_IOT_ENDPOINT ) );
-    }
+        /* Attempt to connect to the HTTP server. If connection fails, retry after a
+         * timeout. The timeout value will be exponentially increased until either the
+         * maximum number of attempts or the maximum timeout value is reached. The
+         * function returns pdFAIL if the TCP connection cannot be established with
+         * the broker after configured number of attempts. */
+        xDemoStatus = connectToServerWithBackoffRetries( prvConnectToServer,
+                                                         &xNetworkContext );
 
-    /*********************** Send HTTP request.************************/
+        if( xDemoStatus == pdPASS )
+        {
+            /* Set a flag indicating that a TLS connection exists. */
+            xIsConnectionEstablished = pdTRUE;
 
-    if( xDemoStatus == pdPASS )
-    {
-        xDemoStatus = prvSendHttpRequest( &xTransportInterface,
-                                          HTTP_METHOD_POST,
-                                          ( sizeof( HTTP_METHOD_POST ) - 1 ),
-                                          democonfigPOST_PATH,
-                                          ( sizeof( democonfigPOST_PATH ) - 1 ) );
-    }
+            /* Define the transport interface. */
+            xTransportInterface.pNetworkContext = &xNetworkContext;
+            xTransportInterface.send = TLS_FreeRTOS_send;
+            xTransportInterface.recv = TLS_FreeRTOS_recv;
+        }
+        else
+        {
+            /* Log error to indicate connection failure after all
+             * reconnect attempts are over. */
+            LogError( ( "Failed to connect to HTTP server %.*s.",
+                        ( int32_t ) AWS_IOT_ENDPOINT_LENGTH,
+                        democonfigAWS_IOT_ENDPOINT ) );
+        }
 
-    /**************************** Disconnect. ******************************/
+        /*********************** Send HTTP request.************************/
 
-    /* Close the network connection to clean up any system resources that the
-     * demo may have consumed. */
-    if( xIsConnectionEstablished == pdTRUE )
-    {
-        /* Close the network connection.  */
-        TLS_FreeRTOS_Disconnect( &xNetworkContext );
-    }
+        if( xDemoStatus == pdPASS )
+        {
+            xDemoStatus = prvSendHttpRequest( &xTransportInterface,
+                                              HTTP_METHOD_POST,
+                                              ( sizeof( HTTP_METHOD_POST ) - 1 ),
+                                              democonfigPOST_PATH,
+                                              ( sizeof( democonfigPOST_PATH ) - 1 ) );
+        }
+
+        /**************************** Disconnect. ******************************/
+
+        /* Close the network connection to clean up any system resources that the
+         * demo may have consumed. */
+        if( xIsConnectionEstablished == pdTRUE )
+        {
+            /* Close the network connection.  */
+            TLS_FreeRTOS_Disconnect( &xNetworkContext );
+        }
+
+        /*********************** Retry in case of failure. ************************/
+
+        /* Increment the demo run count. */
+        uxDemoRunCount++;
+
+        if( xDemoStatus == pdPASS )
+        {
+            LogInfo( ( "Demo iteration %lu was successful.", uxDemoRunCount ) );
+        }
+        /* Attempt to retry a failed demo iteration for up to #HTTP_MAX_DEMO_LOOP_COUNT times. */
+        else if( uxDemoRunCount < HTTP_MAX_DEMO_LOOP_COUNT )
+        {
+            LogWarn( ( "Demo iteration %lu failed. Retrying...", uxDemoRunCount ) );
+            vTaskDelay( DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS );
+        }
+        /* Failed all #HTTP_MAX_DEMO_LOOP_COUNT demo iterations. */
+        else
+        {
+            LogError( ( "All %d demo iterations failed.", HTTP_MAX_DEMO_LOOP_COUNT ) );
+            break;
+        }
+    } while( xDemoStatus != pdPASS );
 
     if( xDemoStatus == pdPASS )
     {

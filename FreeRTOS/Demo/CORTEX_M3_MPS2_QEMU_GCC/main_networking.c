@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.4.1
+ * FreeRTOS V202011.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,9 +20,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * https://gihub.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /*
@@ -157,7 +156,7 @@ void main_tcp_echo_client_tasks( void )
      * when the network is connected and ready for use (see the definition of
      * vApplicationIPNetworkEventHook() below).  The address values passed in here
      * are used if ipconfigUSE_DHCP is set to 0, or if ipconfigUSE_DHCP is set to 1
-     * but a DHCP server cannot be	contacted. */
+     * but a DHCP server cannot be contacted. */
     FreeRTOS_debug_printf( ( "FreeRTOS_IPInit\n" ) );
     FreeRTOS_IPInit( ucIPAddress,
                      ucNetMask,
@@ -173,7 +172,7 @@ void main_tcp_echo_client_tasks( void )
     /* If all is well, the scheduler will now be running, and the following
      * line will never be reached.  If the following line does execute, then
      * there was insufficient FreeRTOS heap memory available for the idle and/or
-     * timer tasks	to be created.  See the memory management section on the
+     * timer tasks to be created.  See the memory management section on the
      * FreeRTOS web site for more details (this is standard text that is not not
      * really applicable to the Linux simulator port). */
     for( ; ; )

@@ -7,11 +7,11 @@ the same transport interface definition.
 Directories:
 
 + coreMQTT contains the implementation of the coreMQTT library.  See:
-  https://www.FreeRTOS.org/mqtt
+  https://www.freertos.org/mqtt
 
 + network_transport contains the transport interface definition.  See the
   comment above and https://www.freertos.org/network-interface.html
   
 + coreHTTP contains the implementation of the coreHTTP library.  See:
-  https://www.FreeRTOS.org/http
+  https://www.freertos.org/http
 

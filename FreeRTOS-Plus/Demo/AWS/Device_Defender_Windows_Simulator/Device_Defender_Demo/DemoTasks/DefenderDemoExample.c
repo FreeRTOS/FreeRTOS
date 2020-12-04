@@ -826,14 +826,14 @@ void prvDefenderDemoTask( void * pvParameters )
          * unsubscribe even if one more subscribe failed earlier. */
         if( ulMqttSessionEstablished == 1 )
         {
-            xStatus = prvUnsubscribeFromDefenderTopics();
             LogInfo( ( "Unsubscribing from defender topics..." ) );
+            xStatus = prvUnsubscribeFromDefenderTopics();
 
             if( xStatus != true )
             {
                 LogError( ( "Failed to unsubscribe from defender topics." ) );
             }
-          
+
             LogInfo( ( "Closing MQTT session..." ) );
             ( void ) xDisconnectMqttSession( &xMqttContext,
                                              &xNetworkContext );

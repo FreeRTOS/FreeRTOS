@@ -802,16 +802,13 @@ void prvDefenderDemoTask( void * pvParameters )
         {
             for( i = 0; i < DEFENDER_RESPONSE_WAIT_SECONDS; i++ )
             {
-                ( void ) xProcessLoop( &xMqttContext );
+                ( void ) xProcessLoop( &xMqttContext, 1000 );
 
                 /* xReportStatus is updated in the prvPublishCallback. */
                 if( xReportStatus != ReportStatusNotReceived )
                 {
                     break;
                 }
-
-                /* Wait for sometime between consecutive executions of ProcessLoop. */
-                vTaskDelay( pdMS_TO_TICKS( 1000U ) );
             }
         }
 

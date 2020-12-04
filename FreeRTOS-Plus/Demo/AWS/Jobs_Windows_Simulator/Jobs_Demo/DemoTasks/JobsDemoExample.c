@@ -208,6 +208,22 @@
  */
 #define MAKE_STATUS_REPORT( x )    "{\"status\":\"" x "\"}"
 
+/**
+ * @brief The maximum number of times to run the loop in this demo.
+ *
+ * @note The demo loop is attempted to re-run only if it fails in an iteration.
+ * Once the demo loop succeeds in an iteration, the demo exits successfully.
+ */
+#ifndef JOBS_MAX_DEMO_LOOP_COUNT
+    #define JOBS_MAX_DEMO_LOOP_COUNT    ( 3 )
+#endif
+
+/**
+ * @brief Time in ticks to wait between retries of the demo loop if
+ * demo loop fails.
+ */
+#define DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS    ( pdMS_TO_TICKS( 5000U ) )
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -735,6 +751,8 @@ void vStartJobsDemo( void )
 void prvJobsDemoTask( void * pvParameters )
 {
     BaseType_t xDemoStatus = pdPASS;
+    UBaseType_t uxDemoRunCount = 0UL;
+    BaseType_t retryDemoLoop = pdFALSE;
 
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
@@ -742,119 +760,163 @@ void prvJobsDemoTask( void * pvParameters )
     /* Set the pParams member of the network context with desired transport. */
     xNetworkContext.pParams = &xTlsTransportParams;
 
-    /* Establish an MQTT connection with AWS IoT over a mutually authenticated TLS session. */
-    xDemoStatus = xEstablishMqttSession( &xMqttContext,
-                                         &xNetworkContext,
-                                         &xBuffer,
-                                         prvEventCallback );
-
-    if( xDemoStatus == pdFAIL )
+    /* This demo runs a single loop unless there are failures in the demo execution.
+     * In case of failures in the demo execution, demo loop will be retried for up to
+     * JOBS_MAX_DEMO_LOOP_COUNT times. */
+    do
     {
-        /* Log error to indicate connection failure. */
-        LogError( ( "Failed to connect to AWS IoT broker." ) );
-    }
-    else
-    {
-        /* Print out a short user guide to the console. The default logging
-         * limit of 255 characters can be changed in demo_logging.c, but breaking
-         * up the only instance of a 1000+ character string is more practical. */
-        LogInfo( ( "\r\n"
-                   "/*-----------------------------------------------------------*/\r\n"
-                   "\r\n"
-                   "The Jobs demo is now ready to accept Jobs.\r\n"
-                   "Jobs may be created using the AWS IoT console or AWS CLI.\r\n"
-                   "See the following link for more information.\r\n" ) );
-        LogInfo( ( "\r"
-                   "https://docs.aws.amazon.com/cli/latest/reference/iot/create-job.html\r\n"
-                   "\r\n"
-                   "This demo expects Job documents to have an \"action\" JSON key.\r\n"
-                   "The following actions are currently supported:\r\n" ) );
-        LogInfo( ( "\r"
-                   " - print          \r\n"
-                   "   Logs a message to the local console. The Job document must also contain a \"message\".\r\n"
-                   "   For example: { \"action\": \"print\", \"message\": \"Hello world!\"} will cause\r\n"
-                   "   \"Hello world!\" to be printed on the console.\r\n" ) );
-        LogInfo( ( "\r"
-                   " - publish        \r\n"
-                   "   Publishes a message to an MQTT topic. The Job document must also contain a \"message\" and \"topic\".\r\n" ) );
-        LogInfo( ( "\r"
-                   "   For example: { \"action\": \"publish\", \"topic\": \"demo/jobs\", \"message\": \"Hello world!\"} will cause\r\n"
-                   "   \"Hello world!\" to be published to the topic \"demo/jobs\".\r\n" ) );
-        LogInfo( ( "\r"
-                   " - exit           \r\n"
-                   "   Exits the demo program. This program will run until { \"action\": \"exit\" } is received.\r\n"
-                   "\r\n"
-                   "/*-----------------------------------------------------------*/\r\n" ) );
+        /* Establish an MQTT connection with AWS IoT over a mutually authenticated TLS session. */
+        xDemoStatus = xEstablishMqttSession( &xMqttContext,
+                                             &xNetworkContext,
+                                             &xBuffer,
+                                             prvEventCallback );
 
-        /* Subscribe to the NextJobExecutionChanged API topic to receive notifications about the next pending
-         * job in the queue for the Thing resource used by this demo. */
-        if( xSubscribeToTopic( &xMqttContext,
-                               NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ),
-                               sizeof( NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) ) - 1 ) != pdPASS )
+        if( xDemoStatus == pdFAIL )
+        {
+            /* Log error to indicate connection failure. */
+            LogError( ( "Failed to connect to AWS IoT broker." ) );
+        }
+        else
+        {
+            /* Print out a short user guide to the console. The default logging
+             * limit of 255 characters can be changed in demo_logging.c, but breaking
+             * up the only instance of a 1000+ character string is more practical. */
+            LogInfo( ( "\r\n"
+                       "/*-----------------------------------------------------------*/\r\n"
+                       "\r\n"
+                       "The Jobs demo is now ready to accept Jobs.\r\n"
+                       "Jobs may be created using the AWS IoT console or AWS CLI.\r\n"
+                       "See the following link for more information.\r\n" ) );
+            LogInfo( ( "\r"
+                       "https://docs.aws.amazon.com/cli/latest/reference/iot/create-job.html\r\n"
+                       "\r\n"
+                       "This demo expects Job documents to have an \"action\" JSON key.\r\n"
+                       "The following actions are currently supported:\r\n" ) );
+            LogInfo( ( "\r"
+                       " - print          \r\n"
+                       "   Logs a message to the local console. The Job document must also contain a \"message\".\r\n"
+                       "   For example: { \"action\": \"print\", \"message\": \"Hello world!\"} will cause\r\n"
+                       "   \"Hello world!\" to be printed on the console.\r\n" ) );
+            LogInfo( ( "\r"
+                       " - publish        \r\n"
+                       "   Publishes a message to an MQTT topic. The Job document must also contain a \"message\" and \"topic\".\r\n" ) );
+            LogInfo( ( "\r"
+                       "   For example: { \"action\": \"publish\", \"topic\": \"demo/jobs\", \"message\": \"Hello world!\"} will cause\r\n"
+                       "   \"Hello world!\" to be published to the topic \"demo/jobs\".\r\n" ) );
+            LogInfo( ( "\r"
+                       " - exit           \r\n"
+                       "   Exits the demo program. This program will run until { \"action\": \"exit\" } is received.\r\n"
+                       "\r\n"
+                       "/*-----------------------------------------------------------*/\r\n" ) );
+
+            /* Subscribe to the NextJobExecutionChanged API topic to receive notifications about the next pending
+             * job in the queue for the Thing resource used by this demo. */
+            if( xSubscribeToTopic( &xMqttContext,
+                                   NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ),
+                                   sizeof( NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) ) - 1 ) != pdPASS )
+            {
+                xDemoStatus = pdFAIL;
+                LogError( ( "Failed to subscribe to NextJobExecutionChanged API of AWS IoT Jobs service: Topic=%s",
+                            NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) ) );
+            }
+        }
+
+        if( xDemoStatus == pdPASS )
+        {
+            /* Publish to AWS IoT Jobs on the StartNextPendingJobExecution API to request the next pending job.
+             *
+             * Note: It is not required to make MQTT subscriptions to the response topics of the
+             * StartNextPendingJobExecution API because the AWS IoT Jobs service sends responses for
+             * the PUBLISH commands on the same MQTT connection irrespective of whether the client has subscribed
+             * to the response topics or not.
+             * This demo processes incoming messages from the response topics of the API in the prvEventCallback()
+             * handler that is supplied to the coreMQTT library. */
+            if( xPublishToTopic( &xMqttContext,
+                                 START_NEXT_JOB_TOPIC( democonfigTHING_NAME ),
+                                 sizeof( START_NEXT_JOB_TOPIC( democonfigTHING_NAME ) ) - 1,
+                                 NULL,
+                                 0 ) != pdPASS )
+            {
+                xDemoStatus = pdFAIL;
+                LogError( ( "Failed to publish to StartNextPendingJobExecution API of AWS IoT Jobs service: "
+                            "Topic=%s", START_NEXT_JOB_TOPIC( democonfigTHING_NAME ) ) );
+            }
+        }
+
+        /* Keep on running the demo until we receive a job for the "exit" action to exit the demo. */
+        while( ( xExitActionJobReceived == pdFALSE ) &&
+               ( xDemoEncounteredError == pdFALSE ) &&
+               ( xDemoStatus == pdPASS ) )
+        {
+            MQTTStatus_t xMqttStatus = MQTTSuccess;
+
+            /* Check if we have notification for the next pending job in the queue from the
+             * NextJobExecutionChanged API of the AWS IoT Jobs service. */
+            xMqttStatus = MQTT_ProcessLoop( &xMqttContext, 300U );
+
+            if( xMqttStatus != MQTTSuccess )
+            {
+                xDemoStatus = pdFAIL;
+                LogError( ( "Failed to receive notification about next pending job: "
+                            "MQTT_ProcessLoop failed" ) );
+            }
+        }
+
+        /* Increment the demo run count. */
+        uxDemoRunCount++;
+
+        /* Retry demo loop only if there is a failure before completing
+         * the processing of any pending jobs. Any failure in MQTT unsubscribe
+         * or disconnect is considered a failure in demo execution and retry
+         * will not be attempted since a retry without any pending jobs will
+         * make this demo indefinitely wait. */
+        if( ( xDemoStatus == pdFAIL ) || ( xDemoEncounteredError == pdTRUE ) )
+        {
+            if( uxDemoRunCount < JOBS_MAX_DEMO_LOOP_COUNT )
+            {
+                LogWarn( ( "Demo iteration %lu failed. Retrying...", uxDemoRunCount ) );
+                retryDemoLoop = pdTRUE;
+            }
+            else
+            {
+                LogError( ( "All %d demo iterations failed.", JOBS_MAX_DEMO_LOOP_COUNT ) );
+                retryDemoLoop = pdFALSE;
+            }
+        }
+        else
+        {
+            /* Reset the flag for demo retry. */
+            retryDemoLoop = pdFALSE;
+        }
+
+        /* Unsubscribe from the NextJobExecutionChanged API topic. */
+        if( xUnsubscribeFromTopic( &xMqttContext,
+                                   NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ),
+                                   sizeof( NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) ) - 1 ) != pdPASS )
         {
             xDemoStatus = pdFAIL;
-            LogError( ( "Failed to subscribe to NextJobExecutionChanged API of AWS IoT Jobs service: Topic=%s",
-                        NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) ) );
+            LogError( ( "Failed to subscribe unsubscribe from the NextJobExecutionChanged API of AWS IoT Jobs service: "
+                        "Topic=%s", NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) ) );
         }
-    }
 
-    if( xDemoStatus == pdPASS )
-    {
-        /* Publish to AWS IoT Jobs on the StartNextPendingJobExecution API to request the next pending job.
-         *
-         * Note: It is not required to make MQTT subscriptions to the response topics of the
-         * StartNextPendingJobExecution API because the AWS IoT Jobs service sends responses for
-         * the PUBLISH commands on the same MQTT connection irrespective of whether the client has subscribed
-         * to the response topics or not.
-         * This demo processes incoming messages from the response topics of the API in the prvEventCallback()
-         * handler that is supplied to the coreMQTT library. */
-        if( xPublishToTopic( &xMqttContext,
-                             START_NEXT_JOB_TOPIC( democonfigTHING_NAME ),
-                             sizeof( START_NEXT_JOB_TOPIC( democonfigTHING_NAME ) ) - 1,
-                             NULL,
-                             0 ) != pdPASS )
+        /* Disconnect the MQTT and network connections with AWS IoT. */
+        if( xDisconnectMqttSession( &xMqttContext, &xNetworkContext ) != pdPASS )
         {
             xDemoStatus = pdFAIL;
-            LogError( ( "Failed to publish to StartNextPendingJobExecution API of AWS IoT Jobs service: "
-                        "Topic=%s", START_NEXT_JOB_TOPIC( democonfigTHING_NAME ) ) );
+            LogError( ( "Disconnection from AWS IoT failed..." ) );
         }
-    }
 
-    /* Keep on running the demo until we receive a job for the "exit" action to exit the demo. */
-    while( ( xExitActionJobReceived == pdFALSE ) &&
-           ( xDemoEncounteredError == pdFALSE ) &&
-           ( xDemoStatus == pdPASS ) )
-    {
-        MQTTStatus_t xMqttStatus = MQTTSuccess;
-
-        /* Check if we have notification for the next pending job in the queue from the
-         * NextJobExecutionChanged API of the AWS IoT Jobs service. */
-        xMqttStatus = MQTT_ProcessLoop( &xMqttContext, 300U );
-
-        if( xMqttStatus != MQTTSuccess )
+        /* Add a delay if a retry is required. */
+        if( retryDemoLoop == pdTRUE )
         {
-            xDemoStatus = pdFAIL;
-            LogError( ( "Failed to receive notification about next pending job: "
-                        "MQTT_ProcessLoop failed" ) );
+            /* Clear the flag that indicates that indicates the demo error
+             * before attempting a retry. */
+            xDemoEncounteredError = pdFALSE;
+
+            LogInfo( ( "A short delay before the next demo iteration." ) );
+            vTaskDelay( DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS );
         }
-    }
-
-    /* Unsubscribe from the NextJobExecutionChanged API topic. */
-    if( xUnsubscribeFromTopic( &xMqttContext,
-                               NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ),
-                               sizeof( NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) ) - 1 ) != pdPASS )
-    {
-        xDemoStatus == pdFAIL;
-        LogError( ( "Failed to subscribe unsubscribe from the NextJobExecutionChanged API of AWS IoT Jobs service: "
-                    "Topic=%s", NEXT_JOB_EXECUTION_CHANGED_TOPIC( democonfigTHING_NAME ) ) );
-    }
-
-    /* Disconnect the MQTT and network connections with AWS IoT. */
-    if( xDisconnectMqttSession( &xMqttContext, &xNetworkContext ) != pdPASS )
-    {
-        xDemoStatus == pdFAIL;
-        LogError( ( "Disconnection from AWS Iot failed..." ) );
-    }
+    } while( retryDemoLoop == pdTRUE );
 
     if( ( xDemoEncounteredError == pdFALSE ) && ( xDemoStatus == pdPASS ) )
     {

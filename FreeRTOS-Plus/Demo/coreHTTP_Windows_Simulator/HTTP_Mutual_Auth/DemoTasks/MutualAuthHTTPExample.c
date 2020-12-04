@@ -253,7 +253,7 @@ static void prvHTTPDemoTask( void * pvParameters )
          * timeout. The timeout value will be exponentially increased until either the
          * maximum number of attempts or the maximum timeout value is reached. The
          * function returns pdFAIL if the TCP connection cannot be established with
-         * the broker after configured number of attempts. */
+         * the server after the configured number of attempts. */
         xDemoStatus = connectToServerWithBackoffRetries( prvConnectToServer,
                                                          &xNetworkContext );
 

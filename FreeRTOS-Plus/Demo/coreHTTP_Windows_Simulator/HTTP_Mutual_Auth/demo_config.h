@@ -150,7 +150,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /**
  * @brief An option to disable Server Name Indication.
  *
- * @note When using a local server setup, SNI needs to be disabled for a broker
+ * @note When using a local server setup, SNI needs to be disabled for a server
  * that only has an IP address but no hostname. However, SNI should be enabled
  * whenever possible.
  */

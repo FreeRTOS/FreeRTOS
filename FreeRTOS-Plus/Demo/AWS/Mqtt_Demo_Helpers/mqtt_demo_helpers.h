@@ -126,10 +126,12 @@ BaseType_t xPublishToTopic( MQTTContext_t * pxMqttContext,
  * @brief Invoke the core MQTT library's process loop function.
  *
  * @param[in] pxMqttContext The MQTT context for the MQTT connection.
+ * @param[in] ulTimeoutMs Minimum time for the loop to run, if no error occurs.
  *
  * @return pdPASS if process loop was successful;
  * pdFAIL otherwise.
  */
-BaseType_t xProcessLoop( MQTTContext_t * pxMqttContext );
+BaseType_t xProcessLoop( MQTTContext_t * pxMqttContext,
+                         uint32_t ulTimeoutMs );
 
 #endif /* ifndef MQTT_DEMO_HELPERS_H */

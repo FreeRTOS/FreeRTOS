@@ -323,6 +323,7 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.tra',
     '.tree',
     '.tws',
+    '.txt',
     '.ucf',
     '.url',
     '.user',

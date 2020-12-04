@@ -10,7 +10,7 @@ Directories:
   https://www.FreeRTOS.org/mqtt
 
 + network_transport contains the transport interface definition.  See the
-  comment above and https://www.freertos.org/transportinterface.html
+  comment above and https://www.freertos.org/network-interface.html
   
 + coreHTTP contains the implementation of the coreHTTP library.  See:
   https://www.FreeRTOS.org/http

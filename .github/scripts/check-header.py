@@ -247,6 +247,7 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.mcpar',
     '.mcs',
     '.mcw',
+    '.md',
     '.mdm',
     '.mem',
     '.mhs',

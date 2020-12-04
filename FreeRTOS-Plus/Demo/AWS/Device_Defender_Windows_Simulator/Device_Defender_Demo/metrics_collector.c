@@ -145,7 +145,7 @@ eMetricsCollectorStatus eGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
         }
     }
 
-    return eMetricsCollectorSuccess;
+    return eStatus;
 }
 /*-----------------------------------------------------------*/
 
@@ -199,7 +199,7 @@ eMetricsCollectorStatus eGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
         }
     }
 
-    return eMetricsCollectorSuccess;
+    return eStatus;
 }
 
 /*-----------------------------------------------------------*/

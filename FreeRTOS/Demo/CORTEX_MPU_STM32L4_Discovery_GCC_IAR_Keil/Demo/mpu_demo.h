@@ -22,7 +22,6 @@
  * https://www.FreeRTOS.org
  * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 #ifndef __MPU_DEMO_H__

@@ -33,6 +33,7 @@
 #include "mbedtls_config.h"
 #include "threading_alt.h"
 #include "mbedtls/entropy.h"
+#include "mbedtls/ssl.h"
 
 /*-----------------------------------------------------------*/
 
@@ -96,13 +97,39 @@ int mbedtls_platform_send( void * ctx,
                            size_t len )
 {
     Socket_t socket;
+    BaseType_t recvStatus;
+    int ret = -1;
 
     configASSERT( ctx != NULL );
     configASSERT( buf != NULL );
 
     socket = ( Socket_t ) ctx;
+    recvStatus = FreeRTOS_send( socket, buf, len, 0 );
 
-    return ( int ) FreeRTOS_send( socket, buf, len, 0 );
+    switch( recvStatus )
+    {
+        /* Socket was closed or just got closed. */
+        case -pdFREERTOS_ERRNO_ENOTCONN:
+        /* Not enough memory for the socket to create either an Rx or Tx stream. */
+        case -pdFREERTOS_ERRNO_ENOMEM:
+        /* Socket is not valid, is not a TCP socket, or is not bound. */
+        case -pdFREERTOS_ERRNO_EINVAL:
+        /* Socket received a signal, causing the read operation to be aborted. */
+        case -pdFREERTOS_ERRNO_EINTR:
+            returnStatus = MBEDTLS_ERR_SSL_INTERNAL_ERROR;
+            break;
+
+        /* A timeout occurred before any data could be sent. */
+        case -pdFREERTOS_ERRNO_ENOSPC:
+            returnStatus = MBEDTLS_ERR_SSL_TIMEOUT;
+            break;
+
+        default:
+            returnStatus = ( int ) recvStatus;
+            break;
+    }
+
+    return recvStatus;
 }
 
 /*-----------------------------------------------------------*/
@@ -121,13 +148,37 @@ int mbedtls_platform_recv( void * ctx,
                            size_t len )
 {
     Socket_t socket;
+    BaseType_t recvStatus;
+    int returnStatus = -1;
 
     configASSERT( ctx != NULL );
     configASSERT( buf != NULL );
 
     socket = ( Socket_t ) ctx;
+    recvStatus = FreeRTOS_recv( socket, buf, len, 0 );
 
-    return ( int ) FreeRTOS_recv( socket, buf, len, 0 );
+    switch( recvStatus )
+    {
+        /* No data could be sent because the socket was or just got closed. */
+        case -pdFREERTOS_ERRNO_ENOTCONN:
+        /* No data could be sent because there was insufficient memory. */
+        case -pdFREERTOS_ERRNO_ENOMEM:
+        /* No data could be sent because xSocket was not a valid TCP socket. */
+        case -pdFREERTOS_ERRNO_EINVAL:
+            returnStatus = MBEDTLS_ERR_SSL_INTERNAL_ERROR;
+            break;
+
+        /* A timeout occurred before any data could be sent. */
+        case -pdFREERTOS_ERRNO_ENOSPC:
+            returnStatus = MBEDTLS_ERR_SSL_TIMEOUT;
+            break;
+
+        default:
+            returnStatus = ( int ) recvStatus;
+            break;
+    }
+
+    return returnStatus;
 }
 
 /*-----------------------------------------------------------*/

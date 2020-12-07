@@ -98,7 +98,7 @@ int mbedtls_platform_send( void * ctx,
 {
     Socket_t socket;
     BaseType_t recvStatus;
-    int ret = -1;
+    int returnStatus = -1;
 
     configASSERT( ctx != NULL );
     configASSERT( buf != NULL );

@@ -21,7 +21,9 @@
  *
  * https://www.FreeRTOS.org
  * https://github.com/FreeRTOS
+ * 
  */
+
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"

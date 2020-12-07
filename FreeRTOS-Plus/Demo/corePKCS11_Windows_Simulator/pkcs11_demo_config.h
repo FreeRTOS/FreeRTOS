@@ -21,6 +21,7 @@
  *
  * https://www.FreeRTOS.org
  * https://github.com/FreeRTOS
+ *
  */
 
 #ifndef _PKCS11_DEMO_CONFIG_

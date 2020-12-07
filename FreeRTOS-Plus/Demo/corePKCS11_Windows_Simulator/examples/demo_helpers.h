@@ -21,7 +21,9 @@
  *
  * https://www.FreeRTOS.org
  * https://github.com/FreeRTOS
+ *
  */
+
 #ifndef _DEMO_HELPER_FUNCTIONS_
 #define _DEMO_HELPER_FUNCTIONS_
 

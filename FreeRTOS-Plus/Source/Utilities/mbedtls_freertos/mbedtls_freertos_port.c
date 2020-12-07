@@ -129,7 +129,7 @@ int mbedtls_platform_send( void * ctx,
             break;
     }
 
-    return recvStatus;
+    return returnStatus;
 }
 
 /*-----------------------------------------------------------*/

@@ -631,7 +631,7 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx )
         /* Get the handle of the device private key. */
         xResult = xFindObjectWithLabelAndClass( pxCtx->xP11Session,
                                                 pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS,
-                                                strlen( pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS ),
+                                                sizeof( pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS ) - 1UL,
                                                 CKO_PRIVATE_KEY,
                                                 &pxCtx->xP11PrivateKey );
     }

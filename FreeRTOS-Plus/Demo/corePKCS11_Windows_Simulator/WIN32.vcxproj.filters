@@ -412,8 +412,8 @@
     <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pki_utils.h">
       <Filter>corePKCS11\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\source\portable\mbedtls\threading_alt.h">
-      <Filter>corePKCS11\include</Filter>
+    <ClInclude Include="threading_alt.h">
+      <Filter>examples</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\aes.h">
       <Filter>3rdparty\mbedtls\include</Filter>

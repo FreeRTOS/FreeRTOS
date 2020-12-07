@@ -1,5 +1,5 @@
 /*
- * FreeRTOS PKCS #11 V1.0.3
+ * FreeRTOS V202011.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,8 +19,8 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://aws.amazon.com/freertos
  * http://www.FreeRTOS.org
+ * http://aws.amazon.com/freertos
  */
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -151,7 +151,7 @@ void vPKCS11SignVerifyDemo( void )
      */
     xResult = xFindObjectWithLabelAndClass( hSession, 
             pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS, 
-            strlen( pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS ), 
+            sizeof( pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS ) - 1UL, 
             CKO_PRIVATE_KEY,
             &xPrivateKeyHandle );
     configASSERT( xResult == CKR_OK );
@@ -161,7 +161,7 @@ void vPKCS11SignVerifyDemo( void )
      * demo. */
     xResult = xFindObjectWithLabelAndClass( hSession, 
             pkcs11configLABEL_DEVICE_PUBLIC_KEY_FOR_TLS, 
-            strlen( pkcs11configLABEL_DEVICE_PUBLIC_KEY_FOR_TLS ), 
+            sizeof( pkcs11configLABEL_DEVICE_PUBLIC_KEY_FOR_TLS ) - 1UL, 
             CKO_PRIVATE_KEY,
             &xPublicKeyHandle );
     configASSERT( xResult == CKR_OK );

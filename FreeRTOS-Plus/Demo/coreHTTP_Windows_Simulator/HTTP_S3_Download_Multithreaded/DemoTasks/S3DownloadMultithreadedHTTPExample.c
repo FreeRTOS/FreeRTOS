@@ -1127,38 +1127,34 @@ static BaseType_t prvDownloadLoop( void )
             xStatus = pdFAIL;
             break;
         }
-
-        /* Check for the "Connection: close" here (instead of the response
-         * task), so that the failed request can be re-sent */
-        else if( xDownloadRespItem.xResponse.respFlags == HTTP_RESPONSE_CONNECTION_CLOSE_FLAG )
-        {
-            LogInfo( ( "'Connection:close' header found in server response. Attempting to re-connect to the server." ) );
-            vTaskSuspend( xRequestTask );
-            vTaskSuspend( xResponseTask );
-
-            /* Disconnect and re-establish the connection. */
-            TLS_FreeRTOS_Disconnect( &xNetworkContext );
-            xStatus = connectToServerWithBackoffRetries( prvConnectToServer,
-                                                         &xNetworkContext );
-
-            if( xStatus != pdPASS )
-            {
-                LogError( ( "Could not reconnect to server. Exiting task." ) );
-
-                /* Notify the response task that a response should not be expected. */
-                xTaskNotify( xResponseTask, httpexampleHTTP_FAILURE, eSetBits );
-                break;
-            }
-
-            /* Re-queue the unsuccessful request. */
-            xQueueSendToFront( xRequestQueue,
-                               &xDownloadReqItem,
-                               httpexampleDEMO_TICKS_TO_WAIT );
-            vTaskResume( xRequestTask );
-            vTaskResume( xResponseTask );
-        }
         else
         {
+            /* Check for the "Connection: close" here (instead of the response
+             * task), so that the failed request can be re-sent */
+            if( xDownloadRespItem.xResponse.respFlags == HTTP_RESPONSE_CONNECTION_CLOSE_FLAG )
+            {
+                LogInfo( ( "'Connection:close' header found in server response. Attempting to re-connect to the server." ) );
+                vTaskSuspend( xRequestTask );
+                vTaskSuspend( xResponseTask );
+
+                /* Disconnect and re-establish the connection. */
+                TLS_FreeRTOS_Disconnect( &xNetworkContext );
+                xStatus = connectToServerWithBackoffRetries( prvConnectToServer,
+                                                             &xNetworkContext );
+
+                vTaskResume( xRequestTask );
+                vTaskResume( xResponseTask );
+
+                if( xStatus != pdPASS )
+                {
+                    /* Notify the response task that a response should not be expected. */
+                    xTaskNotify( xResponseTask, httpexampleHTTP_FAILURE, eSetBits );
+
+                    LogError( ( "Could not reconnect to server. Exiting task." ) );
+                    break;
+                }
+            }
+
             LogInfo( ( "The HTTP task received a response from the server. Adding to response queue." ) );
 
             /* Add response to response queue. */

@@ -770,28 +770,26 @@ static BaseType_t prvDownloadS3ObjectFile( const TransportInterface_t * pxTransp
                     break;
                 }
             }
-            else
+
+            LogDebug( ( "Received HTTP response from %s%s...",
+                        cServerHost, pcPath ) );
+            LogDebug( ( "Response Headers:\n%.*s",
+                        ( int32_t ) xResponse.headersLen,
+                        xResponse.pHeaders ) );
+            LogInfo( ( "Response Body:\n%.*s\n",
+                       ( int32_t ) xResponse.bodyLen,
+                       xResponse.pBody ) );
+
+            /* We increment by the content length because the server may not
+             * have sent us the range we request. */
+            xCurByte += xResponse.contentLength;
+
+            if( ( xFileSize - xCurByte ) < xNumReqBytes )
             {
-                LogDebug( ( "Received HTTP response from %s%s...",
-                            cServerHost, pcPath ) );
-                LogDebug( ( "Response Headers:\n%.*s",
-                            ( int32_t ) xResponse.headersLen,
-                            xResponse.pHeaders ) );
-                LogInfo( ( "Response Body:\n%.*s\n",
-                           ( int32_t ) xResponse.bodyLen,
-                           xResponse.pBody ) );
-
-                /* We increment by the content length because the server may not
-                 * have sent us the range we request. */
-                xCurByte += xResponse.contentLength;
-
-                if( ( xFileSize - xCurByte ) < xNumReqBytes )
-                {
-                    xNumReqBytes = xFileSize - xCurByte;
-                }
-
-                xStatus = ( xResponse.statusCode == httpexampleHTTP_STATUS_CODE_PARTIAL_CONTENT ) ? pdPASS : pdFAIL;
+                xNumReqBytes = xFileSize - xCurByte;
             }
+
+            xStatus = ( xResponse.statusCode == httpexampleHTTP_STATUS_CODE_PARTIAL_CONTENT ) ? pdPASS : pdFAIL;
         }
         else
         {

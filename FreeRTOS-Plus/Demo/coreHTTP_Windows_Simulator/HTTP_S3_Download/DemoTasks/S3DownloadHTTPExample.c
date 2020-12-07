@@ -148,6 +148,11 @@ struct NetworkContext
 };
 
 /**
+ * @brief The network context for the transport layer interface.
+ */
+static NetworkContext_t xNetworkContext;
+
+/**
  * @brief A buffer used in the demo for storing HTTP request headers, and HTTP
  * response headers and body.
  *
@@ -291,8 +296,6 @@ static void prvHTTPDemoTask( void * pvParameters )
 {
     /* The transport layer interface used by the HTTP Client library. */
     TransportInterface_t xTransportInterface;
-    /* The network context for the transport layer interface. */
-    NetworkContext_t xNetworkContext = { 0 };
     TlsTransportParams_t xTlsTransportParams = { 0 };
     BaseType_t xIsConnectionEstablished = pdFALSE;
     /* HTTP Client library return status. */
@@ -750,25 +753,45 @@ static BaseType_t prvDownloadS3ObjectFile( const TransportInterface_t * pxTransp
 
         if( xHTTPStatus == HTTPSuccess )
         {
-            LogDebug( ( "Received HTTP response from %s%s...",
-                        cServerHost, pcPath ) );
-            LogDebug( ( "Response Headers:\n%.*s",
-                        ( int32_t ) xResponse.headersLen,
-                        xResponse.pHeaders ) );
-            LogInfo( ( "Response Body:\n%.*s\n",
-                       ( int32_t ) xResponse.bodyLen,
-                       xResponse.pBody ) );
-
-            /* We increment by the content length because the server may not
-             * have sent us the range we request. */
-            xCurByte += xResponse.contentLength;
-
-            if( ( xFileSize - xCurByte ) < xNumReqBytes )
+            /* Check for the "Connection: close" header in case the connection
+             * needs to be re-established. */
+            if( xResponse.respFlags == HTTP_RESPONSE_CONNECTION_CLOSE_FLAG )
             {
-                xNumReqBytes = xFileSize - xCurByte;
-            }
+                LogInfo( ( "'Connection:close' header found in server response. Attempting to re-connect to the server." ) );
 
-            xStatus = ( xResponse.statusCode == httpexampleHTTP_STATUS_CODE_PARTIAL_CONTENT ) ? pdPASS : pdFAIL;
+                /* Disconnect and re-establish the connection. */
+                TLS_FreeRTOS_Disconnect( &xNetworkContext );
+                xStatus = connectToServerWithBackoffRetries( prvConnectToServer,
+                                                             &xNetworkContext );
+
+                if( xStatus != pdPASS )
+                {
+                    LogError( ( "Could not reconnect to server. Exiting loop." ) );
+                    break;
+                }
+            }
+            else
+            {
+                LogDebug( ( "Received HTTP response from %s%s...",
+                            cServerHost, pcPath ) );
+                LogDebug( ( "Response Headers:\n%.*s",
+                            ( int32_t ) xResponse.headersLen,
+                            xResponse.pHeaders ) );
+                LogInfo( ( "Response Body:\n%.*s\n",
+                           ( int32_t ) xResponse.bodyLen,
+                           xResponse.pBody ) );
+
+                /* We increment by the content length because the server may not
+                 * have sent us the range we request. */
+                xCurByte += xResponse.contentLength;
+
+                if( ( xFileSize - xCurByte ) < xNumReqBytes )
+                {
+                    xNumReqBytes = xFileSize - xCurByte;
+                }
+
+                xStatus = ( xResponse.statusCode == httpexampleHTTP_STATUS_CODE_PARTIAL_CONTENT ) ? pdPASS : pdFAIL;
+            }
         }
         else
         {

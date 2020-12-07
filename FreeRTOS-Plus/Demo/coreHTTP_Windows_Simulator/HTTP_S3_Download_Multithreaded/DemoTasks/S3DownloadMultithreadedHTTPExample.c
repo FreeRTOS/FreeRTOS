@@ -122,11 +122,6 @@
     #define democonfigRANGE_REQUEST_LENGTH    ( 1024 )
 #endif
 
-/* Check that the stack size to use for HTTP tasks is defined. */
-#ifndef httpexampleTASK_STACK_SIZE
-    #define httpexampleTASK_STACK_SIZE    ( configMINIMAL_STACK_SIZE * 4 )
-#endif
-
 /**
  * @brief Length of the pre-signed GET URL defined in demo_config.h.
  */
@@ -564,14 +559,14 @@ static void prvHTTPDemoTask( void * pvParameters )
             /* Open request and response tasks. */
             xDemoStatus = xTaskCreate( prvRequestTask,
                                        "RequestTask",
-                                       httpexampleTASK_STACK_SIZE,
+                                       democonfigDEMO_STACKSIZE,
                                        NULL,
                                        tskIDLE_PRIORITY,
                                        &xRequestTask );
 
             xDemoStatus = xTaskCreate( prvResponseTask,
                                        "ResponseTask",
-                                       httpexampleTASK_STACK_SIZE,
+                                       democonfigDEMO_STACKSIZE,
                                        NULL,
                                        tskIDLE_PRIORITY,
                                        &xResponseTask );
@@ -1131,6 +1126,36 @@ static BaseType_t prvDownloadLoop( void )
 
             xStatus = pdFAIL;
             break;
+        }
+
+        /* Check for the "Connection: close" here (instead of the response
+         * task), so that the failed request can be re-sent */
+        else if( xDownloadRespItem.xResponse.respFlags == HTTP_RESPONSE_CONNECTION_CLOSE_FLAG )
+        {
+            LogInfo( ( "'Connection:close' header found in server response. Attempting to re-connect to the server." ) );
+            vTaskSuspend( xRequestTask );
+            vTaskSuspend( xResponseTask );
+
+            /* Disconnect and re-establish the connection. */
+            TLS_FreeRTOS_Disconnect( &xNetworkContext );
+            xStatus = connectToServerWithBackoffRetries( prvConnectToServer,
+                                                         &xNetworkContext );
+
+            if( xStatus != pdPASS )
+            {
+                LogError( ( "Could not reconnect to server. Exiting task." ) );
+
+                /* Notify the response task that a response should not be expected. */
+                xTaskNotify( xResponseTask, httpexampleHTTP_FAILURE, eSetBits );
+                break;
+            }
+
+            /* Re-queue the unsuccessful request. */
+            xQueueSendToFront( xRequestQueue,
+                               &xDownloadReqItem,
+                               httpexampleDEMO_TICKS_TO_WAIT );
+            vTaskResume( xRequestTask );
+            vTaskResume( xResponseTask );
         }
         else
         {

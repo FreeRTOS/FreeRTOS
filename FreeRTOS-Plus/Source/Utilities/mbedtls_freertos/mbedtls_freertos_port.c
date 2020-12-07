@@ -101,16 +101,16 @@ int mbedtls_platform_send( void * ctx,
                            size_t len )
 {
     Socket_t socket;
-    BaseType_t recvStatus;
+    BaseType_t sendStatus;
     int returnStatus = -1;
 
     configASSERT( ctx != NULL );
     configASSERT( buf != NULL );
 
     socket = ( Socket_t ) ctx;
-    recvStatus = FreeRTOS_send( socket, buf, len, 0 );
+    sendStatus = FreeRTOS_send( socket, buf, len, 0 );
 
-    switch( recvStatus )
+    switch( sendStatus )
     {
         /* Socket was closed or just got closed. */
         case -pdFREERTOS_ERRNO_ENOTCONN:
@@ -129,7 +129,7 @@ int mbedtls_platform_send( void * ctx,
             break;
 
         default:
-            returnStatus = ( int ) recvStatus;
+            returnStatus = ( int ) sendStatus;
             break;
     }
 
@@ -171,12 +171,10 @@ int mbedtls_platform_recv( void * ctx,
         case -pdFREERTOS_ERRNO_EINVAL:
             returnStatus = MBEDTLS_ERR_SSL_INTERNAL_ERROR;
             break;
-
-        /* A timeout occurred before any data could be sent. */
-        case -pdFREERTOS_ERRNO_ENOSPC:
+        /* A timeout occurred before any data could be received. */
+        case 0:
             returnStatus = MBEDTLS_ERR_SSL_TIMEOUT;
             break;
-
         default:
             returnStatus = ( int ) recvStatus;
             break;

@@ -24,37 +24,27 @@
  *
  */
 
-#ifndef _PKCS11_DEMO_CONFIG_
-#define _PKCS11_DEMO_CONFIG_
+#ifndef __THREADING_ALT_H__
+#define __THREADING_ALT_H__
 
-/*
- * @brief this macro defines the stack size for the PKCS #11 demo task.
- */
-#define configPKCS11_DEMO_STACK_SIZE                200
 
-/*
- * @brief set this macro to "1" in order to run the PKCS #11 management and
- * random number generator demo.
- */
-#define configPKCS11_MANAGEMENT_AND_RNG_DEMO        1
+#include "FreeRTOS.h"
+#include "semphr.h"
 
-/*
- * @brief set this macro to "1" in order to run the PKCS #11 mechanisms and
- * digest demo.
- */
-#define configPKCS11_MECHANISMS_AND_DIGESTS_DEMO    0
-
-/*
- * @brief set this macro to "1" in order to run the PKCS #11 object demo.
- */
-#define configPKCS11_OBJECT_DEMO                    0
-
-/*
- * @brief set this macro to "1" in order to run the PKCS #11 sign and verify 
- * demo.
+/**
+ * @brief Mutex struct used to synchronize mbed TLS operations.
  *
- * @warning This demo relies on the objects created in the object demo.
  */
-#define configPKCS11_SIGN_AND_VERIFY_DEMO           0
+typedef struct
+{
+    SemaphoreHandle_t mutex; /**< @brief FreeRTOS semaphore. */
+    char is_valid;           /**< @brief Flag used by mbedTLS to track wether a mutex is valid. */
+} mbedtls_threading_mutex_t;
 
-#endif
+extern void mbedtls_threading_set_alt( void ( * mutex_init )( mbedtls_threading_mutex_t * ),
+                                       void ( * mutex_free )( mbedtls_threading_mutex_t * ),
+                                       int ( * mutex_lock )( mbedtls_threading_mutex_t * ),
+                                       int ( * mutex_unlock )( mbedtls_threading_mutex_t * ) );
+
+
+#endif /* ifndef __THREADING_ALT_H__ */

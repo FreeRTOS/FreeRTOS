@@ -517,6 +517,7 @@ static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
     /* Get the handle of the certificate. */
     xResult = xFindObjectWithLabelAndClass( pSslContext->xP11Session,
                                             pcLabelName,
+                                            strlen( pcLabelName ),
                                             xClass,
                                             &xCertObj );
 
@@ -630,6 +631,7 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx )
         /* Get the handle of the device private key. */
         xResult = xFindObjectWithLabelAndClass( pxCtx->xP11Session,
                                                 pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS,
+                                                sizeof( pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS ) - 1UL,
                                                 CKO_PRIVATE_KEY,
                                                 &pxCtx->xP11PrivateKey );
     }

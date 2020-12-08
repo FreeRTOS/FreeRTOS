@@ -129,9 +129,12 @@ int32_t Plaintext_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
     pPlaintextTransportParams = pNetworkContext->pParams;
 
     if( ( bytesToRecv > 1 ) ||
-        ( recvCount = FreeRTOS_recvcount( pNetworkContext->tcpSocket ) > 0 ) )
+        ( recvCount = FreeRTOS_recvcount( pPlaintextTransportParams->tcpSocket ) > 0 ) )
     {
-        socketStatus = FreeRTOS_recv( pNetworkContext->tcpSocket, pBuffer, bytesToRecv, 0 );
+        socketStatus = FreeRTOS_recv( pPlaintextTransportParams->tcpSocket,
+                                      pBuffer,
+                                      bytesToRecv,
+                                      0 );
     }
     else
     {

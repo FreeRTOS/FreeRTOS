@@ -130,7 +130,7 @@ extern UBaseType_t uxRand();
  * becomes available or the send block time expires.  If the send block time expires
  * then the send operation is aborted.  The maximum allowable send block time is
  * capped to the value set by ipconfigMAX_SEND_BLOCK_TIME_TICKS.  Capping the
- * maximum allowable send block time prevents prevents a deadlock occurring when
+ * maximum allowable send block time prevents a deadlock occurring when
  * all the network buffers are in use and the tasks that process (and subsequently
  * free) the network buffers are themselves blocked waiting for a network buffer.
  * ipconfigMAX_SEND_BLOCK_TIME_TICKS is specified in RTOS ticks.  A time in
@@ -286,7 +286,7 @@ extern UBaseType_t uxRand();
 
 /* Each TCP socket has a circular buffers for Rx and Tx, which have a fixed
  * maximum size.  Define the size of Rx buffer for TCP sockets. */
-#define ipconfigTCP_RX_BUFFER_LENGTH                          ( 1000 )
+#define ipconfigTCP_RX_BUFFER_LENGTH                          ( 5000 )
 
 /* Define the size of Tx buffer for TCP sockets. */
 #define ipconfigTCP_TX_BUFFER_LENGTH                          ( 1000 )

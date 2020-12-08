@@ -12,18 +12,14 @@ over plaintext for use with this HTTP demo.
         is an active connection listening on port 80.
      c. Verify that there is an output as shown below
         `TCP    0.0.0.0:80           <HOST-NAME>:0       LISTENING`
-     d. If there is no output on step c, go through the Mosquitto documentation
-        listed above to check if the setup was correct.
 4. Make sure the httpbin server is allowed to communicate through
-   Windows Firewall. The instructions for allowing an application on Windows 10
-   Defender Firewall can be found at the link below.
-   https://support.microsoft.com/en-us/help/4558235/windows-10-allow-an-app-through-microsoft-defender-firewall
-   After running this HTTP demo, consider disabling the Mosquitto broker to
-   communicate through Windows Firewall for avoiding unwanted network traffic
+   Windows Firewall.
+   After running this demo, consider disabling the httpbin server to
+   communicate through Windows Firewall to avoid unwanted network traffic
    to your machine.
 5. After verifying that a httpbin server is running successfully, update
    the config `democonfigSERVER_HOSTNAME` in `demo_config.h` to the local IP
    address of your Windows host machine. Please note that "localhost" or address
    "127.0.0.1" will not work as this example is running on a Windows Simulator and
    not on a Windows host natively. Also note that, if the Windows host is using a
-   Virtual Private Network(VPN), connection to the Mosquitto broker may not work.
+   Virtual Private Network(VPN), connection to the server may not work.

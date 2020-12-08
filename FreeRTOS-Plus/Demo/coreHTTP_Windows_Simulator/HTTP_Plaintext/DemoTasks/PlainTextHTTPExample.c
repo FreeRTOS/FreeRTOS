@@ -164,6 +164,28 @@
  */
 #define httpexampleNUMBER_HTTP_PATHS          ( 4 )
 
+/* Each compilation unit must define the NetworkContext struct. */
+struct NetworkContext
+{
+    PlaintextTransportParams_t * pParams;
+};
+
+/**
+ * @brief The maximum number of times to run the loop in this demo.
+ *
+ * @note The demo loop is attempted to re-run only if it fails in an iteration.
+ * Once the demo loop succeeds in an iteration, the demo exits successfully.
+ */
+#ifndef HTTP_MAX_DEMO_LOOP_COUNT
+    #define HTTP_MAX_DEMO_LOOP_COUNT    ( 3 )
+#endif
+
+/**
+ * @brief Time in ticks to wait between retries of the demo loop if
+ * demo loop fails.
+ */
+#define DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS    ( pdMS_TO_TICKS( 5000U ) )
+
 /**
  * @brief A pair containing a path string of the URI and its length.
  */
@@ -269,6 +291,7 @@ static void prvHTTPDemoTask( void * pvParameters )
     TransportInterface_t xTransportInterface;
     /* The network context for the transport layer interface. */
     NetworkContext_t xNetworkContext = { 0 };
+    PlaintextTransportParams_t xPlaintextTransportParams = { 0 };
     /* An array of HTTP paths to request. */
     const httpPathStrings_t xHttpMethodPaths[] =
     {
@@ -287,6 +310,7 @@ static void prvHTTPDemoTask( void * pvParameters )
     };
     BaseType_t xIsConnectionEstablished = pdFALSE;
     UBaseType_t uxHttpPathCount = 0U;
+    UBaseType_t uxDemoRunCount = 0UL;
 
     /* The user of this demo must check the logs for any failure codes. */
     BaseType_t xDemoStatus = pdPASS;
@@ -294,62 +318,93 @@ static void prvHTTPDemoTask( void * pvParameters )
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
 
-    /**************************** Connect. ******************************/
+    /* Set the pParams member of the network context with desired transport. */
+    xNetworkContext.pParams = &xPlaintextTransportParams;
 
-    /* Attempt to connect to the HTTP server. If connection fails, retry after a
-     * timeout. The timeout value will be exponentially increased until either the
-     * maximum number of attempts or the maximum timeout value is reached. The
-     * function returns pdFAIL if the TCP connection cannot be established with
-     * the broker after configured number of attempts. */
-    xDemoStatus = connectToServerWithBackoffRetries( prvConnectToServer,
-                                                     &xNetworkContext );
-
-    if( xDemoStatus == pdPASS )
+    /* This demo runs a single loop unless there are failures in the demo execution.
+     * In case of failures in the demo execution, demo loop will be retried for up to
+     * HTTP_MAX_DEMO_LOOP_COUNT times. */
+    do
     {
-        /* Set a flag indicating that a TCP connection has been established. */
-        xIsConnectionEstablished = pdTRUE;
+        /**************************** Connect. ******************************/
 
-        /* Define the transport interface. */
-        xTransportInterface.pNetworkContext = &xNetworkContext;
-        xTransportInterface.send = Plaintext_FreeRTOS_send;
-        xTransportInterface.recv = Plaintext_FreeRTOS_recv;
-    }
-    else
-    {
-        /* Log error to indicate connection failure after all
-         * reconnect attempts are over. */
-        LogError( ( "Failed to connect to HTTP server %.*s.",
-                    ( int32_t ) httpexampleSERVER_HOSTNAME_LENGTH,
-                    democonfigSERVER_HOSTNAME ) );
-    }
+        /* Attempt to connect to the HTTP server. If connection fails, retry after a
+         * timeout. The timeout value will be exponentially increased until either the
+         * maximum number of attempts or the maximum timeout value is reached. The
+         * function returns pdFAIL if the TCP connection cannot be established with
+         * the server after the number of attempts. */
+        xDemoStatus = connectToServerWithBackoffRetries( prvConnectToServer,
+                                                         &xNetworkContext );
 
-    /*********************** Send HTTP request.************************/
-
-    for( uxHttpPathCount = 0; uxHttpPathCount < httpexampleNUMBER_HTTP_PATHS; ++uxHttpPathCount )
-    {
         if( xDemoStatus == pdPASS )
         {
-            xDemoStatus = prvSendHttpRequest( &xTransportInterface,
-                                              xHttpMethods[ uxHttpPathCount ].pcHttpMethod,
-                                              xHttpMethods[ uxHttpPathCount ].ulHttpMethodLength,
-                                              xHttpMethodPaths[ uxHttpPathCount ].pcHttpPath,
-                                              xHttpMethodPaths[ uxHttpPathCount ].ulHttpPathLength );
+            /* Set a flag indicating that a TCP connection has been established. */
+            xIsConnectionEstablished = pdTRUE;
+
+            /* Define the transport interface. */
+            xTransportInterface.pNetworkContext = &xNetworkContext;
+            xTransportInterface.send = Plaintext_FreeRTOS_send;
+            xTransportInterface.recv = Plaintext_FreeRTOS_recv;
         }
         else
         {
+            /* Log error to indicate connection failure after all
+             * reconnect attempts are over. */
+            LogError( ( "Failed to connect to HTTP server %.*s.",
+                        ( int32_t ) httpexampleSERVER_HOSTNAME_LENGTH,
+                        democonfigSERVER_HOSTNAME ) );
+        }
+
+        /*********************** Send HTTP request.************************/
+
+        for( uxHttpPathCount = 0; uxHttpPathCount < httpexampleNUMBER_HTTP_PATHS; ++uxHttpPathCount )
+        {
+            if( xDemoStatus == pdPASS )
+            {
+                xDemoStatus = prvSendHttpRequest( &xTransportInterface,
+                                                  xHttpMethods[ uxHttpPathCount ].pcHttpMethod,
+                                                  xHttpMethods[ uxHttpPathCount ].ulHttpMethodLength,
+                                                  xHttpMethodPaths[ uxHttpPathCount ].pcHttpPath,
+                                                  xHttpMethodPaths[ uxHttpPathCount ].ulHttpPathLength );
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        /**************************** Disconnect. ******************************/
+
+        /* Close the network connection to clean up any system resources that the
+         * demo may have consumed. */
+        if( xIsConnectionEstablished == pdTRUE )
+        {
+            /* Close the network connection.  */
+            Plaintext_FreeRTOS_Disconnect( &xNetworkContext );
+        }
+
+        /*********************** Retry in case of failure. ************************/
+
+        /* Increment the demo run count. */
+        uxDemoRunCount++;
+
+        if( xDemoStatus == pdPASS )
+        {
+            LogInfo( ( "Demo iteration %lu was successful.", uxDemoRunCount ) );
+        }
+        /* Attempt to retry a failed demo iteration for up to #HTTP_MAX_DEMO_LOOP_COUNT times. */
+        else if( uxDemoRunCount < HTTP_MAX_DEMO_LOOP_COUNT )
+        {
+            LogWarn( ( "Demo iteration %lu failed. Retrying...", uxDemoRunCount ) );
+            vTaskDelay( DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS );
+        }
+        /* Failed all #HTTP_MAX_DEMO_LOOP_COUNT demo iterations. */
+        else
+        {
+            LogError( ( "All %d demo iterations failed.", HTTP_MAX_DEMO_LOOP_COUNT ) );
             break;
         }
-    }
-
-    /**************************** Disconnect. ******************************/
-
-    /* Close the network connection to clean up any system resources that the
-     * demo may have consumed. */
-    if( xIsConnectionEstablished == pdTRUE )
-    {
-        /* Close the network connection.  */
-        Plaintext_FreeRTOS_Disconnect( &xNetworkContext );
-    }
+    } while( xDemoStatus != pdPASS );
 
     if( xDemoStatus == pdPASS )
     {

@@ -320,6 +320,11 @@ static size_t xFileSize = 0;
  */
 static size_t xResponseCount = 0;
 
+/**
+ * @brief The status of the network connection.
+ */
+static BaseType_t xIsConnectionEstablished = pdFALSE;
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -457,7 +462,6 @@ void vStartSimpleHTTPDemo( void )
  */
 static void prvHTTPDemoTask( void * pvParameters )
 {
-    BaseType_t xIsConnectionEstablished = pdFALSE;
     TlsTransportParams_t xTlsTransportParams = { 0 };
     /* HTTP client library return status. */
     HTTPStatus_t xHTTPStatus = HTTPSuccess;
@@ -1129,6 +1133,14 @@ static BaseType_t prvDownloadLoop( void )
         }
         else
         {
+            if( xDownloadRespItem.xResponse.statusCode != httpexampleHTTP_STATUS_CODE_PARTIAL_CONTENT )
+            {
+                LogError( ( "Received response with unexpected status code: %d.", xDownloadRespItem.xResponse.statusCode ) );
+                xIsConnectionEstablished = pdFALSE;
+                xStatus = pdFAIL;
+                break;
+            }
+
             /* Check for the "Connection: close" here (instead of the response
              * task), so that the failed request can be re-sent */
             if( xDownloadRespItem.xResponse.respFlags == HTTP_RESPONSE_CONNECTION_CLOSE_FLAG )
@@ -1149,6 +1161,7 @@ static BaseType_t prvDownloadLoop( void )
                 {
                     /* Notify the response task that a response should not be expected. */
                     xTaskNotify( xResponseTask, httpexampleHTTP_FAILURE, eSetBits );
+                    xIsConnectionEstablished = pdFALSE;
 
                     LogError( ( "Could not reconnect to server. Exiting task." ) );
                     break;

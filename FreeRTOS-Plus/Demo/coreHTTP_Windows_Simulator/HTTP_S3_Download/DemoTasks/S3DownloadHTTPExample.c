@@ -196,6 +196,11 @@ static size_t xServerHostLength;
  */
 static const char * pcRequestURI;
 
+/**
+ * @brief The status of the network connection.
+ */
+static BaseType_t xIsConnectionEstablished = pdFALSE;
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -753,6 +758,15 @@ static BaseType_t prvDownloadS3ObjectFile( const TransportInterface_t * pxTransp
 
         if( xHTTPStatus == HTTPSuccess )
         {
+            /* Check that we received a valid status code */
+            if( xResponse.statusCode != httpexampleHTTP_STATUS_CODE_PARTIAL_CONTENT )
+            {
+                LogError( ( "Received response with unexpected status code: %d.", xResponse.statusCode ) );
+                xIsConnectionEstablished = pdFALSE;
+                xStatus = pdFAIL;
+                break;
+            }
+
             /* Check for the "Connection: close" header in case the connection
              * needs to be re-established. */
             if( xResponse.respFlags == HTTP_RESPONSE_CONNECTION_CLOSE_FLAG )
@@ -767,6 +781,7 @@ static BaseType_t prvDownloadS3ObjectFile( const TransportInterface_t * pxTransp
                 if( xStatus != pdPASS )
                 {
                     LogError( ( "Could not reconnect to server. Exiting loop." ) );
+                    xIsConnectionEstablished = pdFALSE;
                     break;
                 }
             }
@@ -788,21 +803,12 @@ static BaseType_t prvDownloadS3ObjectFile( const TransportInterface_t * pxTransp
             {
                 xNumReqBytes = xFileSize - xCurByte;
             }
-
-            xStatus = ( xResponse.statusCode == httpexampleHTTP_STATUS_CODE_PARTIAL_CONTENT ) ? pdPASS : pdFAIL;
         }
         else
         {
             LogError( ( "An error occurred in downloading the file. "
                         "Failed to send HTTP GET request to %s%s: Error=%s.",
                         cServerHost, pcPath, HTTPClient_strerror( xHTTPStatus ) ) );
-        }
-
-        if( xStatus != pdPASS )
-        {
-            LogError( ( "Received an invalid response from the server "
-                        "(Status Code: %u).",
-                        xResponse.statusCode ) );
         }
     }
 

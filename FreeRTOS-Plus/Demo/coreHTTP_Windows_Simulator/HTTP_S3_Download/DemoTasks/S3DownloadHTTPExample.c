@@ -302,7 +302,6 @@ static void prvHTTPDemoTask( void * pvParameters )
     /* The transport layer interface used by the HTTP Client library. */
     TransportInterface_t xTransportInterface;
     TlsTransportParams_t xTlsTransportParams = { 0 };
-    BaseType_t xIsConnectionEstablished = pdFALSE;
     /* HTTP Client library return status. */
     HTTPStatus_t xHTTPStatus = HTTPSuccess;
     UBaseType_t uxDemoRunCount = 0UL;
@@ -758,6 +757,15 @@ static BaseType_t prvDownloadS3ObjectFile( const TransportInterface_t * pxTransp
 
         if( xHTTPStatus == HTTPSuccess )
         {
+            LogDebug( ( "Received HTTP response from %s%s...",
+                        cServerHost, pcPath ) );
+            LogDebug( ( "Response Headers:\n%.*s",
+                        ( int32_t ) xResponse.headersLen,
+                        xResponse.pHeaders ) );
+            LogInfo( ( "Response Body:\n%.*s\n",
+                       ( int32_t ) xResponse.bodyLen,
+                       xResponse.pBody ) );
+
             /* Check that we received a valid status code */
             if( xResponse.statusCode != httpexampleHTTP_STATUS_CODE_PARTIAL_CONTENT )
             {
@@ -785,15 +793,6 @@ static BaseType_t prvDownloadS3ObjectFile( const TransportInterface_t * pxTransp
                     break;
                 }
             }
-
-            LogDebug( ( "Received HTTP response from %s%s...",
-                        cServerHost, pcPath ) );
-            LogDebug( ( "Response Headers:\n%.*s",
-                        ( int32_t ) xResponse.headersLen,
-                        xResponse.pHeaders ) );
-            LogInfo( ( "Response Body:\n%.*s\n",
-                       ( int32_t ) xResponse.bodyLen,
-                       xResponse.pBody ) );
 
             /* We increment by the content length because the server may not
              * have sent us the range we request. */

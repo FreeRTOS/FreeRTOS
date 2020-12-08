@@ -886,6 +886,16 @@ static BaseType_t prvReadFileSize( void )
             /* Ensure that the buffer pointer is accurate after being copied from the queue. */
             xResponseItem.xResponse.pBuffer = xResponseItem.ucResponseBuffer;
 
+            LogInfo( ( "The response task retrieved a server response to the file size request." ) );
+            LogDebug( ( "Response Headers:\n%.*s",
+                        ( int32_t ) xResponseItem.xResponse.headersLen,
+                        xResponseItem.xResponse.pHeaders ) );
+            LogDebug( ( "Response Status:\n%u",
+                        xResponseItem.xResponse.statusCode ) );
+            LogInfo( ( "Response Body:\n%.*s\n",
+                       ( int32_t ) xResponseItem.xResponse.bodyLen,
+                       xResponseItem.xResponse.pBody ) );
+
             /* Ensure that we received a successful response from the server. */
             if( xResponseItem.xResponse.statusCode != httpexampleHTTP_STATUS_CODE_PARTIAL_CONTENT )
             {
@@ -1133,6 +1143,20 @@ static BaseType_t prvDownloadLoop( void )
         }
         else
         {
+            LogInfo( ( "The HTTP task received a response from the server. Adding to response queue." ) );
+
+            /* Add response to response queue. */
+            xStatus = xQueueSendToBack( xResponseQueue,
+                                        &xDownloadRespItem,
+                                        httpexampleDEMO_TICKS_TO_WAIT );
+
+            /* Ensure response was added to the queue successfully. */
+            if( xStatus != pdPASS )
+            {
+                LogError( ( "Main HTTP task: Could not enqueue response." ) );
+                break;
+            }
+
             if( xDownloadRespItem.xResponse.statusCode != httpexampleHTTP_STATUS_CODE_PARTIAL_CONTENT )
             {
                 LogError( ( "Received response with unexpected status code: %d.", xDownloadRespItem.xResponse.statusCode ) );
@@ -1166,20 +1190,6 @@ static BaseType_t prvDownloadLoop( void )
                     LogError( ( "Could not reconnect to server. Exiting task." ) );
                     break;
                 }
-            }
-
-            LogInfo( ( "The HTTP task received a response from the server. Adding to response queue." ) );
-
-            /* Add response to response queue. */
-            xStatus = xQueueSendToBack( xResponseQueue,
-                                        &xDownloadRespItem,
-                                        httpexampleDEMO_TICKS_TO_WAIT );
-
-            /* Ensure response was added to the queue successfully. */
-            if( xStatus != pdPASS )
-            {
-                LogError( ( "Main HTTP task: Could not enqueue response." ) );
-                break;
             }
         }
     }

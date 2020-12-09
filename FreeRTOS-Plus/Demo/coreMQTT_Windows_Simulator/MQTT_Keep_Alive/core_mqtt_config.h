@@ -106,7 +106,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @note For this demo, the timeout value is configured to zero as the demo uses a
  * dummy timer function (of #MQTTGetCurrentTimeFunc_t) that always returns zero.
  * It is REQUIRED to set the the timeout to zero when using a dummy timer function
- * that always zero.
+ * that always returns zero.
  *
  */
 #define MQTT_SEND_RETRY_TIMEOUT_MS      0U

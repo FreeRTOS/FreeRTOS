@@ -89,7 +89,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @note For this demo, the timeout value is configured to zero as the demo uses a
  * dummy timer function (of #MQTTGetCurrentTimeFunc_t) that always returns zero.
  * It is REQUIRED to set the the timeout to zero when using a dummy timer function
- * that always zero.
+ * that always returns zero.
  */
 #define MQTT_RECV_POLLING_TIMEOUT_MS    0U
 
@@ -99,8 +99,8 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * API functions.
  *
  * When sending an MQTT packet, the transport send function may be called multiple
- * times until all of the required number of bytes are sent.
- * This timeout represents the maximum duration that is allowed for no data
+ * times until the required number of bytes are sent.
+ * This timeout represents the maximum time wait for any data
  * transmission over the network through the transport send function.
  *
  * @note For this demo, the timeout value is configured to zero as the demo uses a

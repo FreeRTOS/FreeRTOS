@@ -25,10 +25,10 @@
  */
 
 #ifndef DEMO_CONFIG_H
-    #define DEMO_CONFIG_H
+#define DEMO_CONFIG_H
 
 /* FreeRTOS config include. */
-    #include "FreeRTOSConfig.h"
+#include "FreeRTOSConfig.h"
 
 /**************************************************/
 /******* DO NOT CHANGE the following order ********/
@@ -41,31 +41,31 @@
  * 3. Include the header file "logging_stack.h", if logging is enabled for DEMO.
  */
 
-    #include "logging_levels.h"
+#include "logging_levels.h"
 
 /* Logging configuration for the Demo. */
-    #ifndef LIBRARY_LOG_NAME
-        #define LIBRARY_LOG_NAME    "ShadowDemo"
-    #endif
+#ifndef LIBRARY_LOG_NAME
+    #define LIBRARY_LOG_NAME    "ShadowDemo"
+#endif
 
-    #ifndef LIBRARY_LOG_LEVEL
-        #define LIBRARY_LOG_LEVEL    LOG_INFO
-    #endif
+#ifndef LIBRARY_LOG_LEVEL
+    #define LIBRARY_LOG_LEVEL    LOG_INFO
+#endif
 
 /* Prototype for the function used to print to console on Windows simulator
  * of FreeRTOS.
  * The function prints to the console before the network is connected;
  * then a UDP port after the network has connected. */
-    extern void vLoggingPrintf( const char * pcFormatString,
-                                ... );
+extern void vLoggingPrintf( const char * pcFormatString,
+                            ... );
 
 /* Map the SdkLog macro to the logging function to enable logging
  * on Windows simulator. */
-    #ifndef SdkLog
-        #define SdkLog( message )    vLoggingPrintf message
-    #endif
+#ifndef SdkLog
+    #define SdkLog( message )    vLoggingPrintf message
+#endif
 
-    #include "logging_stack.h"
+#include "logging_stack.h"
 
 /************ End of logging configuration ****************/
 
@@ -80,7 +80,7 @@
  * #define democonfigTHING_NAME    "...insert here..."
  */
 
-    #ifndef democonfigCLIENT_IDENTIFIER
+#ifndef democonfigCLIENT_IDENTIFIER
 
 /**
  * @brief The MQTT client identifier used in this example.  Each client identifier
@@ -92,8 +92,8 @@
  * time. This client id can cause collision, if more than one instance of the same
  * binary is used at the same time to connect to the broker.
  */
-        #define democonfigCLIENT_IDENTIFIER    "testClient"__TIME__
-    #endif
+    #define democonfigCLIENT_IDENTIFIER    "testClient"__TIME__
+#endif
 
 /**
  * @brief The AWS IoT broker endpoint to connect to in the demo.
@@ -200,28 +200,28 @@
  * The current value is given as an example. Please update for your specific
  * operating system.
  */
-    #define democonfigOS_NAME                   "FreeRTOS"
+#define democonfigOS_NAME                   "FreeRTOS"
 
 /**
  * @brief The version of the operating system that the application is running
  * on. The current value is given as an example. Please update for your specific
  * operating system version.
  */
-    #define democonfigOS_VERSION                tskKERNEL_VERSION_NUMBER
+#define democonfigOS_VERSION                tskKERNEL_VERSION_NUMBER
 
 /**
  * @brief The name of the hardware platform the application is running on. The
  * current value is given as an example. Please update for your specific
  * hardware platform.
  */
-    #define democonfigHARDWARE_PLATFORM_NAME    "WinSim"
+#define democonfigHARDWARE_PLATFORM_NAME    "WinSim"
 
 /**
  * @brief The name of the MQTT library used and its version, following an "@"
  * symbol.
  */
-    #include "core_mqtt.h" /* Include coreMQTT header for MQTT_LIBRARY_VERSION macro. */
-    #define democonfigMQTT_LIB    "core-mqtt@"MQTT_LIBRARY_VERSION
+#include "core_mqtt.h"     /* Include coreMQTT header for MQTT_LIBRARY_VERSION macro. */
+#define democonfigMQTT_LIB               "core-mqtt@"MQTT_LIBRARY_VERSION
 
 /**
  * @brief Set the stack size of the main demo task.
@@ -237,4 +237,3 @@
 #define democonfigNETWORK_BUFFER_SIZE    ( 1024U )
 
 #endif /* DEMO_CONFIG_H */
-

@@ -236,7 +236,7 @@
 #endif
 
 #ifndef democonfigMQTT_LIB
-    #define democonfigMQTT_LIB    "core-mqtt@1.0.0"
+    #define democonfigMQTT_LIB    "core-mqtt@"MQTT_LIBRARY_VERSION
 #endif
 
 /**

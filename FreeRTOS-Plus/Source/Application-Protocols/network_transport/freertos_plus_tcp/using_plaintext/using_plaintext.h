@@ -117,7 +117,9 @@ PlaintextTransportStatus_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetwo
 PlaintextTransportStatus_t Plaintext_FreeRTOS_Disconnect( const NetworkContext_t * pNetworkContext );
 
 /**
- * @brief Receives data from an established TCP connection.
+ * @brief Receives data from an established TCP connection. When the number of
+ * bytes to read is 1, the TCP socket’s Rx stream is checked for available bytes
+ * to read. If there are none, the function immediately returns.
  *
  * @param[in] pNetworkContext The network context containing the TCP socket
  * handle.

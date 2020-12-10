@@ -239,7 +239,13 @@ typedef enum JobActionType
 
 /*-----------------------------------------------------------*/
 
-/* Each compilation unit must define the NetworkContext struct. */
+/** 
+ * @brief Each compilation unit that consumes the NetworkContext must define it. 
+ * It should contain a single pointer to the type of your desired transport.
+ * When using multiple transports in the same compilation unit, define this pointer as void *.
+ *
+ * @note Stacks are defined in FreeRTOS-Plus/Source/Application-Protocols/network_transport.
+ */
 struct NetworkContext
 {
     TlsTransportParams_t * pParams;

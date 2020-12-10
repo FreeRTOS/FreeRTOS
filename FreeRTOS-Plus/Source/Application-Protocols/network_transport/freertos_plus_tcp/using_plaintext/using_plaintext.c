@@ -128,6 +128,8 @@ int32_t Plaintext_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
 
     pPlaintextTransportParams = pNetworkContext->pParams;
 
+    /* When 1 byte is requested without any available data in the TCP socket's
+     * Rx stream, this function immediately returns 0. */
     if( ( bytesToRecv > 1 ) ||
         ( recvCount = FreeRTOS_recvcount( pPlaintextTransportParams->tcpSocket ) > 0 ) )
     {

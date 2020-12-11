@@ -36,7 +36,7 @@
  * request, and verify the file was uploaded using a GET request. If any request
  * fails, an error code is returned.
  *
- * @Note: This demo requires user-generated pre-signed URLs to be pasted into
+ * @note This demo requires user-generated pre-signed URLs to be pasted into
  * demo_config.h. Please use the provided script "presigned_urls_gen.py"
  * (located in coreHTTP_Windows_Simulator/Common) to generate these URLs. For
  * detailed instructions, see the accompanied README.md.

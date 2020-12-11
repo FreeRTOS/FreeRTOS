@@ -356,9 +356,6 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto.c">
       <Filter>ThirdParty\mbedtls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_driver_wrappers.c">
-      <Filter>ThirdParty\mbedtls</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_se.c">
       <Filter>ThirdParty\mbedtls</Filter>
     </ClCompile>
@@ -565,9 +562,6 @@
       <Filter>ThirdParty\mbedtls</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_core.h">
-      <Filter>ThirdParty\mbedtls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_driver_wrappers.h">
       <Filter>ThirdParty\mbedtls</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_invasive.h">

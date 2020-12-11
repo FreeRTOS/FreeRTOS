@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS V202011.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,8 +19,8 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -245,13 +245,14 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @brief The name of the MQTT library used and its version, following an "@"
  * symbol.
  */
-#define democonfigMQTT_LIB                  "core-mqtt@1.0.0"
+#include "core_mqtt.h" /* Include coreMQTT header for MQTT_LIBRARY_VERSION macro. */
+#define democonfigMQTT_LIB          "core-mqtt@"MQTT_LIBRARY_VERSION
 
 /**
  * @brief Whether to use mutual authentication. If this macro is not set to 1
  * or not defined, then plaintext TCP will be used instead of TLS over TCP.
  */
-#define democonfigUSE_TLS                   1
+#define democonfigUSE_TLS           1
 
 /**
  * @brief Set the stack size of the main demo task.
@@ -259,7 +260,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * In the Windows port, this stack only holds a structure. The actual
  * stack is created by an operating system thread.
  */
-#define democonfigDEMO_STACKSIZE            configMINIMAL_STACK_SIZE
+#define democonfigDEMO_STACKSIZE    configMINIMAL_STACK_SIZE
 
 
 
@@ -363,7 +364,8 @@ extern void vLoggingPrintf( const char * pcFormatString,
 #endif
 
 #ifndef democonfigMQTT_LIB
-    #define democonfigMQTT_LIB    "core-mqtt@1.0.0"
+    #include "core_mqtt.h" /* Include coreMQTT header for MQTT_LIBRARY_VERSION macro. */
+    #define democonfigMQTT_LIB    "core-mqtt@"MQTT_LIBRARY_VERSION
 #endif
 
 /**

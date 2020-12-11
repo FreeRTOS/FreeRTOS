@@ -42,7 +42,14 @@
 
 /*-----------------------------------------------------------*/
 
-/* Each compilation unit must define the NetworkContext struct. */
+/** 
+ * @brief Each compilation unit that consumes the NetworkContext must define it. 
+ * It should contain a single pointer as seen below whenever the header file
+ * of this transport implementation is included to your project.
+ *
+ * @note When using multiple transports in the same compilation unit,
+ *       define this pointer as void *.
+ */
 struct NetworkContext
 {
     PlaintextTransportParams_t * pParams;

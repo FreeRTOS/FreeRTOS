@@ -42,6 +42,17 @@
 /*-----------------------------------------------------------*/
 
 /**
+ * @brief The number of bytes in a standard TLS record header.
+ *
+ * @note This only applies to a standard TCP+TLS connection.
+ *       DTLS has a different length for its record headers.
+ *
+ */
+#define TLS_RECORD_HEADER_BYTE_LENGTH    5
+
+/*-----------------------------------------------------------*/
+
+/**
  * @brief Allocates memory for an array of members.
  *
  * @param[in] nmemb Number of members that need to be allocated.
@@ -101,7 +112,7 @@ int mbedtls_platform_send( void * ctx,
                            size_t len )
 {
     Socket_t socket;
-    BaseType_t sendStatus;
+    BaseType_t sendStatus = 0;
     int returnStatus = -1;
 
     configASSERT( ctx != NULL );
@@ -152,14 +163,25 @@ int mbedtls_platform_recv( void * ctx,
                            size_t len )
 {
     Socket_t socket;
-    BaseType_t recvStatus;
+    BaseType_t recvStatus = 0, recvCount = 0;
     int returnStatus = -1;
 
     configASSERT( ctx != NULL );
     configASSERT( buf != NULL );
 
     socket = ( Socket_t ) ctx;
-    recvStatus = FreeRTOS_recv( socket, buf, len, 0 );
+
+    /* When attempting to read a TLS record header and there is no data
+     * to receive, this function will immediately return 0 without blocking. */
+    if( ( len != TLS_RECORD_HEADER_BYTE_LENGTH ) ||
+        ( recvCount = FreeRTOS_recvcount( socket ) > 0 ) )
+    {
+        recvStatus = FreeRTOS_recv( socket, buf, len, 0 );
+    }
+    else
+    {
+        recvStatus = recvCount;
+    }
 
     switch( recvStatus )
     {
@@ -171,10 +193,12 @@ int mbedtls_platform_recv( void * ctx,
         case -pdFREERTOS_ERRNO_EINVAL:
             returnStatus = MBEDTLS_ERR_SSL_INTERNAL_ERROR;
             break;
+
         /* A timeout occurred before any data could be received. */
         case 0:
-            returnStatus = MBEDTLS_ERR_SSL_TIMEOUT;
+            returnStatus = MBEDTLS_ERR_SSL_WANT_READ;
             break;
+
         default:
             returnStatus = ( int ) recvStatus;
             break;

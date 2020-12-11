@@ -36,10 +36,17 @@
  * requests, filling up the response buffer each time until all parts are
  * downloaded). If any request fails, an error code is returned.
  *
- * @Note: This demo requires user-generated pre-signed URLs to be pasted into
+ * @note This demo requires user-generated pre-signed URLs to be pasted into
  * demo_config.h. Please use the provided script "presigned_urls_gen.py"
  * (located in located in coreHTTP_Windows_Simulator/Common) to generate these
  * URLs. For detailed instructions, see the accompanied README.md.
+ *
+ * @note If your file requires more than 99 range requests to S3 (depending on the
+ * size of the file and the length specified in democonfigRANGE_REQUEST_LENGTH),
+ * your connection may be dropped by S3. In this case, either increase the
+ * buffer size and range request length (if feasible), to reduce the number of
+ * requests required, or re-establish the connection with S3 after receiving a
+ * "Connection: close" response header.
  */
 
 /**
@@ -141,7 +148,13 @@
  */
 #define DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS    ( pdMS_TO_TICKS( 5000U ) )
 
-/* Each compilation unit must define the NetworkContext struct. */
+/** 
+ * @brief Each compilation unit that consumes the NetworkContext must define it. 
+ * It should contain a single pointer to the type of your desired transport.
+ * When using multiple transports in the same compilation unit, define this pointer as void *.
+ *
+ * @note Transport stacks are defined in FreeRTOS-Plus/Source/Application-Protocols/network_transport.
+ */
 struct NetworkContext
 {
     TlsTransportParams_t * pParams;
@@ -279,7 +292,7 @@ void vStartSimpleHTTPDemo( void )
  * requests, filling up the response buffer each time until all parts are
  * downloaded). If any request fails, an error code is returned.
  *
- * @Note: This demo requires user-generated pre-signed URLs to be pasted into
+ * @note This demo requires user-generated pre-signed URLs to be pasted into
  * demo_config.h. Please use the provided script "presigned_urls_gen.py"
  * (located in located in coreHTTP_Windows_Simulator/Common) to generate these
  * URLs. For detailed instructions, see the accompanied README.md.

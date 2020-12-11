@@ -23,7 +23,7 @@ enp0s3:     ethernet interface
 virbr0:     virtual bridge         (to be created)
 virbr0-nic: veth virtual interface (to be created)
 ```
-### A few assumptions (your numbers could varry)
+### A few assumptions (your numbers could vary)
 ```
 Local Host IP address:          192.168.1.81
 Local FreeRTOS IP address:      192.168.1.80
@@ -95,7 +95,7 @@ $ sudo ufw disable
 $ sudo ufw status
 ```
 5. Setup the local machine
-Run the fullowing commands replacing the values  and interface names
+Run the following commands replacing the values  and interface names
 that conform to your system
 ```
 sudo ip link add virbr0 type bridge
@@ -157,7 +157,7 @@ $ arm-none-eabi-gdb -q ./build/RTOSDemo.axf
 ```
 
 2. tcpdump
-To monitor packets received to quemu running the qemu command (qemu-system-arm)
+To monitor packets received to qemu running the qemu command (qemu-system-arm)
     shown above will create a network packet dump that you could inspect with
 
 ```

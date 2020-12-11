@@ -344,9 +344,6 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto.c">
       <Filter>3rdparty\mbedtls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_driver_wrappers.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_se.c">
       <Filter>3rdparty\mbedtls</Filter>
     </ClCompile>
@@ -360,9 +357,6 @@
       <Filter>3rdparty\mbedtls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_msg.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_tls13_keys.c">
       <Filter>3rdparty\mbedtls</Filter>
     </ClCompile>
   </ItemGroup>
@@ -676,9 +670,6 @@
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_core.h">
       <Filter>3rdparty\mbedtls</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_driver_wrappers.h">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_invasive.h">
       <Filter>3rdparty\mbedtls</Filter>
     </ClInclude>
@@ -701,9 +692,6 @@
       <Filter>3rdparty\mbedtls</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\ssl_invasive.h">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\mbedtls\library\ssl_tls13_keys.h">
       <Filter>3rdparty\mbedtls</Filter>
     </ClInclude>
   </ItemGroup>

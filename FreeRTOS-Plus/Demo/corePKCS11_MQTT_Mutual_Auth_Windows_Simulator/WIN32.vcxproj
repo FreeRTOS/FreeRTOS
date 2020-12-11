@@ -243,7 +243,6 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_srv.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_ticket.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_tls.c" />
-    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_tls13_keys.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\threading.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\timing.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\version.c" />
@@ -387,7 +386,6 @@
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_slot_management.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_storage.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\ssl_invasive.h" />
-    <ClInclude Include="..\..\ThirdParty\mbedtls\library\ssl_tls13_keys.h" />
     <ClInclude Include="mbedtls_config.h" />
     <ClInclude Include="demo_config.h" />
     <ClInclude Include="FreeRTOSConfig.h" />

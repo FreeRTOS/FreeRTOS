@@ -72,6 +72,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <stdio.h>
 
 /* Kernel includes. */
 #include <FreeRTOS.h>

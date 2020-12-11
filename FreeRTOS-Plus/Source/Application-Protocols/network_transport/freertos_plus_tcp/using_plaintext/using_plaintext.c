@@ -128,15 +128,33 @@ int32_t Plaintext_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
                                  size_t bytesToRecv )
 {
     PlaintextTransportParams_t * pPlaintextTransportParams = NULL;
-    int32_t socketStatus = 0;
+    int32_t socketStatus = 1;
 
     configASSERT( ( pNetworkContext != NULL ) && ( pNetworkContext->pParams != NULL ) );
 
     pPlaintextTransportParams = pNetworkContext->pParams;
-    socketStatus = FreeRTOS_recv( pPlaintextTransportParams->tcpSocket,
-                                  pBuffer,
-                                  bytesToRecv,
-                                  0 );
+
+    /* The TCP socket may have a receive block time.  If bytesToRecv is greater 
+     * than 1 then a frame is likely already part way through reception and 
+     * blocking to wait for the desired number of bytes to be available is the
+     * most efficient thing to do.  If bytesToRecv is 1 then this may be a 
+     * speculative call to read to find the start of a new frame, in which case 
+     * blocking is not desirable as it could block an entire protocol agent 
+     * task for the duration of the read block time and therefore negatively 
+     * impact performance.  So if bytesToRecv is 1 then don't call recv unless 
+     * it is known that bytes are already available. */
+    if( bytesToRecv == 1 )
+    {
+        socketStatus = ( int32_t ) FreeRTOS_recvcount( pPlaintextTransportParams->tcpSocket );
+    }
+
+    if( socketStatus > 0 )
+    {
+        socketStatus = FreeRTOS_recv( pPlaintextTransportParams->tcpSocket,
+                                      pBuffer,
+                                      bytesToRecv,
+                                      0 );
+    }
 
     return socketStatus;
 }
@@ -155,6 +173,14 @@ int32_t Plaintext_FreeRTOS_send( NetworkContext_t * pNetworkContext,
                                   pBuffer,
                                   bytesToSend,
                                   0 );
+
+    if( socketStatus == -pdFREERTOS_ERRNO_ENOSPC )
+    {
+        /* The TCP buffers could not accept any more bytes so zero bytes were sent.
+         * This is not necessarily an error that should cause a disconnect
+         * unless it persists. */
+        socketStatus = 0;
+    }
 
     return socketStatus;
 }

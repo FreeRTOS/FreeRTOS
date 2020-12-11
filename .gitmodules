@@ -28,3 +28,15 @@
 [submodule "FreeRTOS-Plus/Source/AWS/jobs"]
 	path = FreeRTOS-Plus/Source/AWS/jobs
 	url = https://github.com/aws/jobs-for-aws-iot-embedded-sdk.git
+[submodule "FreeRTOS-Plus/Source/AWS/device-defender"]
+	path = FreeRTOS-Plus/Source/AWS/device-defender
+	url = https://github.com/aws/device-defender-for-aws-iot-embedded-sdk.git
+[submodule "FreeRTOS-Plus/Source/Application-Protocols/coreHTTP"]
+	path = FreeRTOS-Plus/Source/Application-Protocols/coreHTTP
+	url = https://github.com/FreeRTOS/coreHTTP
+[submodule "FreeRTOS-Plus/Source/Utilities/backoff_algorithm"]
+	path = FreeRTOS-Plus/Source/Utilities/backoff_algorithm
+	url = https://github.com/FreeRTOS/backoffAlgorithm.git
+[submodule "FreeRTOS-Plus/ThirdParty/wolfSSL"]
+	path = FreeRTOS-Plus/ThirdParty/wolfSSL
+	url = https://github.com/wolfSSL/wolfssl.git

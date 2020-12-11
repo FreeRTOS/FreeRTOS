@@ -18,6 +18,10 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 
 #ifndef MQTT_DEMO_HELPERS_H
@@ -38,7 +42,7 @@
  * MQTT connection.
  * @param[in] pxNetworkBuffer The buffer space for initializing the @p pxMqttContext MQTT
  * context used in the MQTT connection.
- * @param[in] appCallback The callback function used to receive incoming
+ * @param[in] eventCallback The callback function used to receive incoming
  * publishes and incoming acks from MQTT library.
  *
  * @return The status of the final connection attempt.
@@ -73,7 +77,7 @@ BaseType_t xDisconnectMqttSession( MQTTContext_t * pxMqttContext,
 /**
  * @brief Subscribe to a MQTT topic filter.
  *
- * @param[in] pxMqttContext The MQTT context for the MQTT connection to close.
+ * @param[in] pxMqttContext The MQTT context for the MQTT connection.
  * @param[in] pcTopicFilter Pointer to the shadow topic buffer.
  * @param[in] usTopicFilterLength Indicates the length of the shadow
  * topic buffer.
@@ -117,5 +121,17 @@ BaseType_t xPublishToTopic( MQTTContext_t * pxMqttContext,
                             int32_t topicFilterLength,
                             const char * pcPayload,
                             size_t payloadLength );
+
+/**
+ * @brief Invoke the core MQTT library's process loop function.
+ *
+ * @param[in] pxMqttContext The MQTT context for the MQTT connection.
+ * @param[in] ulTimeoutMs Minimum time for the loop to run, if no error occurs.
+ *
+ * @return pdPASS if process loop was successful;
+ * pdFAIL otherwise.
+ */
+BaseType_t xProcessLoop( MQTTContext_t * pxMqttContext,
+                         uint32_t ulTimeoutMs );
 
 #endif /* ifndef MQTT_DEMO_HELPERS_H */

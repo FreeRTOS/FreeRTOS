@@ -175,7 +175,7 @@
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c">
       <Filter>Transport</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\Utilities\exponential_backoff\exponential_backoff.c">
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
       <Filter>Transport</Filter>
     </ClCompile>
     <ClCompile Include="main.c" />
@@ -452,9 +452,7 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\xtea.c">
       <Filter>ThirdParty\mbedtls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Application-Protocols\platform\transport\tls\using_mbedtls_pkcs11.c">
-      <Filter>Transport</Filter>
-    </ClCompile>
+    <ClCompile Include="..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls_pkcs11\using_mbedtls_pkcs11.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\NetworkInterface.h">
@@ -541,7 +539,7 @@
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Source\Utilities\exponential_backoff\exponential_backoff.h">
+    <ClInclude Include="..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
     </ClInclude>
     <ClInclude Include="mbedtls_config.h" />
@@ -552,9 +550,6 @@
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\sockets_wrapper.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls\using_mbedtls.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
     </ClInclude>
     <ClInclude Include="core_mqtt_config.h">
@@ -838,6 +833,16 @@
     </ClInclude>
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\xtea.h">
       <Filter>ThirdParty\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls_pkcs11\using_mbedtls_pkcs11.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_levels.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_stack.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

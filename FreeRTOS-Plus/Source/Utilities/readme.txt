@@ -1,6 +1,6 @@
 Directories:
 
-+ Utilities/exponential_backoff contains a utility that calculates an
++ Utilities/backoff_algorithm contains a utility that calculates an
   exponential back off time, with some jitter.  It is used to ensure fleets of
   IoT devices that become disconnected don't all try and reconnect at the same
   time.

@@ -1,4 +1,5 @@
 /*
+ * FreeRTOS V202011.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -17,6 +18,10 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 
 /**
@@ -62,7 +67,9 @@ extern void vLoggingPrintf( const char * pcFormatString,
 
 /* Map the SdkLog macro to the logging function to enable logging
  * on Windows simulator. */
-#define SdkLog( message )    vLoggingPrintf message
+#ifndef SdkLog
+    #define SdkLog( message )    vLoggingPrintf message
+#endif
 
 #include "logging_stack.h"
 

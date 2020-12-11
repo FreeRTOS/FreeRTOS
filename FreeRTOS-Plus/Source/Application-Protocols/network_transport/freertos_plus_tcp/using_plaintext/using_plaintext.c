@@ -121,26 +121,25 @@ int32_t Plaintext_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
                                  size_t bytesToRecv )
 {
     PlaintextTransportParams_t * pPlaintextTransportParams = NULL;
-    int32_t socketStatus = 0;
-    BaseType_t recvCount = 0;
+    int32_t socketStatus = 1;
 
     configASSERT( ( pNetworkContext != NULL ) && ( pNetworkContext->pParams != NULL ) );
 
     pPlaintextTransportParams = pNetworkContext->pParams;
 
     /* When 1 byte is requested without any available data in the TCP socket's
-     * Rx stream, this function immediately returns 0. */
-    if( ( bytesToRecv > 1 ) ||
-        ( recvCount = FreeRTOS_recvcount( pPlaintextTransportParams->tcpSocket ) > 0 ) )
+     * Rx stream, this function immediately returns 0 without blocking. */
+    if( bytesToRecv == 1 )
+    {
+        socketStatus = ( int32_t ) FreeRTOS_recvcount( pPlaintextTransportParams->tcpSocket );
+    }
+
+    if( socketStatus > 0 )
     {
         socketStatus = FreeRTOS_recv( pPlaintextTransportParams->tcpSocket,
                                       pBuffer,
                                       bytesToRecv,
                                       0 );
-    }
-    else
-    {
-        socketStatus = ( int32_t ) recvCount;
     }
 
     return socketStatus;
@@ -163,8 +162,8 @@ int32_t Plaintext_FreeRTOS_send( NetworkContext_t * pNetworkContext,
 
     if( socketStatus == -pdFREERTOS_ERRNO_ENOSPC )
     {
-        /* The TCP buffers could not accept any more bytes so zero bytes were sent
-         * but this is not necessarily an error that should cause a disconnect
+        /* The TCP buffers could not accept any more bytes so zero bytes were sent.
+         * This is not necessarily an error that should cause a disconnect
          * unless it persists. */
         socketStatus = 0;
     }

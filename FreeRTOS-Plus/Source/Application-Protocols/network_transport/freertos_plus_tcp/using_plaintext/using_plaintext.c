@@ -151,9 +151,9 @@ int32_t Plaintext_FreeRTOS_send( NetworkContext_t * pNetworkContext,
 
     if( socketStatus == -pdFREERTOS_ERRNO_ENOSPC )
     {
-        /* The TCP buffers could not accept any more bytes so zero bytes were sent
-         * but this is not necessarily an error that should cause a disconnect
-         * unless it persists. */
+        /* The TCP buffers could not accept any more bytes so zero bytes were sent.
+         * This is not necessarily an error that should cause a disconnect, unless it
+         * persists. */
         socketStatus = 0;
     }
 

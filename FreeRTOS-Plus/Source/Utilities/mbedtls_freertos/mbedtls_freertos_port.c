@@ -171,8 +171,8 @@ int mbedtls_platform_recv( void * ctx,
 
     socket = ( Socket_t ) ctx;
 
-    /* When attempting to read a TLS record header and there is no data
-     * to receive, this function will immediately return 0 without blocking. */
+    /* When attempting to read a TLS record header and there is no data to receive,
+     * this function will immediately return MBEDTLS_ERR_SSL_WANT_READ without blocking. */
     if( ( len != TLS_RECORD_HEADER_BYTE_LENGTH ) ||
         ( recvCount = FreeRTOS_recvcount( socket ) > 0 ) )
     {

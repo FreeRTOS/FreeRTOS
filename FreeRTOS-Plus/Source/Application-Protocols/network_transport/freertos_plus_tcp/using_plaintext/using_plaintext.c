@@ -127,8 +127,15 @@ int32_t Plaintext_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
 
     pPlaintextTransportParams = pNetworkContext->pParams;
 
-    /* When 1 byte is requested without any available data in the TCP socket's
-     * Rx stream, this function immediately returns 0 without blocking. */
+    /* The TCP socket may have a receive block time.  If bytesToRecv is greater 
+     * than 1 then a frame is likely already part way through reception and 
+     * blocking to wait for the desired number of bytes to be available is the
+     * most efficient thing to do.  If bytesToRecv is 1 then this may be a 
+     * speculative call to read to find the start of a new frame, in which case 
+     * blocking is not desirable as it could block an entire protocol agent 
+     * task for the duration of the read block time and therefore negatively 
+     * impact performance.  So if bytesToRecv is 1 then don't call recv unless 
+     * it is known that bytes are already available. */
     if( bytesToRecv == 1 )
     {
         socketStatus = ( int32_t ) FreeRTOS_recvcount( pPlaintextTransportParams->tcpSocket );

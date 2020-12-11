@@ -58,7 +58,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\FreeRTOS-Plus\Source\Logging;..\common\WinPCap;..\..\..\..\FreeRTOS\Source\include;..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\Source\Application-Protocols\platform\include;..\..\..\Source\Application-Protocols\platform\freertos\transport\include;..\..\..\Source\Application-Protocols\platform\freertos\mbedtls;..\..\..\..\Source\mbedtls_utils;..\..\..\ThirdParty\mbedtls\include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\common\WinPCap;..\..\..\..\FreeRTOS\Source\include;..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp;..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls;..\..\..\Source\Utilities\mbedtls_freertos;..\..\..\..\Source\mbedtls_utils;..\..\..\ThirdParty\mbedtls\include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config.h";WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -157,11 +157,11 @@
     <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_UDP_IP.c" />
     <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement\BufferAllocation_2.c" />
     <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\NetworkInterface\WinPCap\NetworkInterface.c" />
-    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\mbedtls\mbedtls_freertos_port.c" />
-    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\mbedtls\mbedtls_error.c" />
-    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\retry_utils\retry_utils_freertos.c" />
-    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\src\freertos_sockets_wrapper.c" />
-    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\src\tls_freertos.c" />
+    <ClCompile Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c" />
+    <ClCompile Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_error.c" />
+    <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\sockets_wrapper.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls\using_mbedtls.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c" />
@@ -485,7 +485,7 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\Logging\logging.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Demo\Common\Logging\windows\Logging_WinSim.c" />
     <ClCompile Include="..\Common\main.c" />
     <ClCompile Include="DemoTasks\MutualAuthMQTTExample.c" />
   </ItemGroup>
@@ -513,14 +513,14 @@
     <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\IPTraceMacroDefaults.h" />
     <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\NetworkBufferManagement.h" />
     <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\NetworkInterface.h" />
-    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\Logging\logging.h" />
-    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\Logging\logging_levels.h" />
-    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\Logging\logging_stack.h" />
-    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\mbedtls\mbedtls_error.h" />
-    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\mbedtls\threading_alt.h" />
-    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\include\freertos_sockets_wrapper.h" />
-    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\include\tls_freertos.h" />
-    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\include\retry_utils.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_levels.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_stack.h" />
+    <ClInclude Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_error.h" />
+    <ClInclude Include="..\..\..\Source\Utilities\mbedtls_freertos\threading_alt.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\sockets_wrapper.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls\using_mbedtls.h" />
+    <ClInclude Include="..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_serializer.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_state.h" />

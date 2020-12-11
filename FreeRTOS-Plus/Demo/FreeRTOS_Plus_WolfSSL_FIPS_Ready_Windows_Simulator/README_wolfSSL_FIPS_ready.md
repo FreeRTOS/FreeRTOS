@@ -64,7 +64,7 @@ The in-core integrity check requires a pre-calculated hash value to be stored in
 
 1. Let us go back to the messages in the console shown in the previous section. You may see "hash = C66491A040..." in the message. **The charactor sequence is the value for the pre-calculated hash value.** Please copy this charactor sequece and store it in a temporary location for reference in the next step.
 
-2. Find and open the file named "**fips_test.c**" under the RTOSDemo/FreeRTOS+/wolfSSL/wolfcrypt folder in the Visual Studio solution explorer pane. Or you can reach the file by traversing "../../Source/WolfSSL-FIPS-Ready/wolfcrypt/src/fips_test.c" starting from the folder where this README is included.
+2. Find and open the file named "**fips_test.c**" under the RTOSDemo/FreeRTOS+/wolfSSL/wolfcrypt folder in the Visual Studio solution explorer pane. Or you can reach the file by traversing "../../ThirdParty/WolfSSL-FIPS-Ready/wolfcrypt/src/fips_test.c" starting from the folder where this README is included.
 
 3. In the fips_test.c, find the following statement: 
 

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.4.1
+ * FreeRTOS V202011.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -20,43 +20,90 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://www.gihub.com/FreeRTOS
+ * https://github.com/FreeRTOS
  *
  */
 
 MEMORY
 {
-    RAM (xrw)  : ORIGIN = 0x00000000,  LENGTH = 4M
+    FLASH (xr) : ORIGIN = 0x00000000, LENGTH = 4M /* to 0x00003FFF = 0x007FFFFF*/
+    RAM (xrw)  : ORIGIN = 0x20000000, LENGTH = 4M /* to 0x21FFFFFF = 0xFFFFFF */
 }
+ENTRY(Reset_Handler)
 
-_Min_Heap_Size = 0x200 ;        /* Required amount of heap. */
-_Min_Stack_Size = 0x400 ;       /* Required amount of stack. */
-
+_Min_Heap_Size = 0x40000 ;        /* Required amount of heap. */
+_Min_Stack_Size = 0x4000 ;       /* Required amount of stack. */
+M_VECTOR_RAM_SIZE = (16 + 48) * 4;
 _estack = ORIGIN(RAM) + LENGTH(RAM);
 
 SECTIONS
 {
-    .text : {
-        . = ALIGN(4);
+
+    .isr_vector :
+    {
+        __vector_table = .;
         KEEP(*(.isr_vector))
+        . = ALIGN(4);
+    } > FLASH
+
+    .text :
+    {
+        . = ALIGN(4);
         *(.text*)
         KEEP (*(.init))
         KEEP (*(.fini))
+        KEEP(*(.eh_frame))
+        *(.rodata*)
         . = ALIGN(4);
         _etext = .;
         _sidata = _etext;
-    } > RAM
+    } > FLASH
 
-    .data : AT ( _sidata )
+	.ARM.extab :
+	{
+		. = ALIGN(4);
+		*(.ARM.extab* .gnu.linkonce.armextab.*)
+		. = ALIGN(4);
+	} >FLASH
+
+	.ARM :
+	{
+		. = ALIGN(4);
+		__exidx_start = .;
+		*(.ARM.exidx* .gnu.linkonce.armexidx.*)
+		__exidx_end = .;
+		. = ALIGN(4);
+	} >FLASH
+
+    .interrupts_ram :
+    {
+        . = ALIGN(4);
+        __VECTOR_RAM__ = .;
+        __interrupts_ram_start__ = .;
+        . += M_VECTOR_RAM_SIZE;
+        . = ALIGN(4);
+        __interrupts_ram_end = .;
+
+    } > RAM
+    
+    .data : /* AT ( _sidata ) */
     {
         . = ALIGN(4);
         _sdata = .;
         *(.data*)
-        *(.rodata*)
-        KEEP(*(.eh_frame))
         . = ALIGN(4);
         _edata = .;
-    } >RAM
+    } > RAM AT > FLASH
+
+    .uninitialized (NOLOAD):
+    {
+        . = ALIGN(32);
+        __uninitialized_start = .;
+        *(.uninitialized)
+        KEEP(*(.keep.uninitialized))
+        . = ALIGN(32);
+        __uninitialized_end = .;
+    } > RAM
 
     .bss :
     {
@@ -70,7 +117,7 @@ SECTIONS
         __bss_end__ = _ebss;
     } >RAM
 
-    ._user_heap_stack :
+    .heap :
     {
         . = ALIGN(8);
         PROVIDE ( end = . );
@@ -82,20 +129,13 @@ SECTIONS
         . = ALIGN(8);
        } >RAM
 
-	.ARM.extab :
-	{
-		. = ALIGN(4);
-		*(.ARM.extab* .gnu.linkonce.armextab.*)
-		. = ALIGN(4);
-	} >RAM
-
-	.ARM :
-	{
-		. = ALIGN(4);
-		__exidx_start = .;
-		*(.ARM.exidx*)
-		__exidx_end = .;
-		. = ALIGN(4);
-	} >RAM
+   /* Set stack top to end of RAM, and stack limit move down by
+    * size of stack_dummy section */
+   __StackTop = ORIGIN(RAM) + LENGTH(RAM);
+   __StackLimit = __StackTop - _Min_Stack_Size;
+   PROVIDE(__stack = __StackTop);
+     
+  /* Check if data + heap + stack exceeds RAM limit */
+  ASSERT(__StackLimit >= _heap_top, "region RAM overflowed with stack")
 }
 

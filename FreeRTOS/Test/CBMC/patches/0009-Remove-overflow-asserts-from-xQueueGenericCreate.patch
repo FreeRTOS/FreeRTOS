@@ -1,0 +1,13 @@
+diff --git a/FreeRTOS/Source/queue.c b/FreeRTOS/Source/queue.c
+index b01dfd11f..b219b599a 100644
+--- a/FreeRTOS/Source/queue.c
++++ b/FreeRTOS/Source/queue.c
+@@ -395,7 +395,7 @@ BaseType_t xQueueGenericReset( QueueHandle_t xQueue,
+         xQueueSizeInBytes = ( size_t ) ( uxQueueLength * uxItemSize ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+ 
+         /* Check for multiplication overflow. */
+-        configASSERT( ( uxItemSize == 0 ) || ( uxQueueLength == ( xQueueSizeInBytes / uxItemSize ) ) );
++        /* configASSERT( ( uxItemSize == 0 ) || ( uxQueueLength == ( xQueueSizeInBytes / uxItemSize ) ) ); */
+ 
+         /* Check for addition overflow. */
+         configASSERT( ( sizeof( Queue_t ) + xQueueSizeInBytes ) >  xQueueSizeInBytes );

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS V202011.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 #ifndef CORE_MQTT_CONFIG_H
 #define CORE_MQTT_CONFIG_H
@@ -49,6 +48,19 @@
     #define LIBRARY_LOG_LEVEL    LOG_NONE
 #endif
 
+/* Prototype for the function used to print to console on Windows simulator
+ * of FreeRTOS.
+ * The function prints to the console before the network is connected;
+ * then a UDP port after the network has connected. */
+extern void vLoggingPrintf( const char * pcFormatString,
+                            ... );
+
+/* Map the SdkLog macro to the logging function to enable logging
+ * on Windows simulator. */
+#ifndef SdkLog
+    #define SdkLog( message )    vLoggingPrintf message
+#endif
+
 #include "logging_stack.h"
 /************ End of logging configuration ****************/
 
@@ -62,6 +74,41 @@
  * macro sets the limit on how many simultaneous PUBLISH states an MQTT
  * context maintains.
  */
-#define MQTT_STATE_ARRAY_MAX_COUNT    10U
+#define MQTT_STATE_ARRAY_MAX_COUNT      10U
+
+/**
+ * @brief The maximum duration between non-empty network reads while
+ * receiving an MQTT packet via the #MQTT_ProcessLoop or #MQTT_ReceiveLoop
+ * API functions.
+ *
+ * When an incoming MQTT packet is detected, the transport receive function
+ * may be called multiple times until all of the expected number of bytes of the
+ * packet are received. This timeout represents the maximum polling duration that
+ * is allowed without any data reception from the network for the incoming packet.
+ *
+ * @note For this demo, the timeout value is configured to zero as the demo uses a
+ * dummy timer function (of #MQTTGetCurrentTimeFunc_t) that always returns zero.
+ * It is REQUIRED to set the the timeout to zero when using a dummy timer function
+ * that always returns zero.
+ */
+#define MQTT_RECV_POLLING_TIMEOUT_MS    0U
+
+/**
+ * @brief The maximum duration between non-empty network transmissions while
+ * sending an MQTT packet via the #MQTT_ProcessLoop or #MQTT_ReceiveLoop
+ * API functions.
+ *
+ * When sending an MQTT packet, the transport send function may be called multiple
+ * times until the required number of bytes are sent.
+ * This timeout represents the maximum time wait for any data
+ * transmission over the network through the transport send function.
+ *
+ * @note For this demo, the timeout value is configured to zero as the demo uses a
+ * dummy timer function (of #MQTTGetCurrentTimeFunc_t) that always returns zero.
+ * It is REQUIRED to set the the timeout to zero when using a dummy timer function
+ * that always returns zero.
+ *
+ */
+#define MQTT_SEND_RETRY_TIMEOUT_MS      0U
 
 #endif /* ifndef CORE_MQTT_CONFIG_H */

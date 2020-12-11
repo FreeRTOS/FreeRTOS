@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS V202011.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,8 +19,8 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -62,10 +62,10 @@
 /* JSON library includes. */
 #include "core_json.h"
 
-/* Shadow demo helpers header. */
-#include "shadow_demo_helpers.h"
+/* Include MQTT demo helpers header. */
+#include "mqtt_demo_helpers.h"
 
-/* Demo Specific configs. */
+/* Demo Specific config file. */
 #include "demo_config.h"
 
 
@@ -148,24 +148,104 @@
  */
 #define SHADOW_REPORTED_JSON_LENGTH    ( sizeof( SHADOW_REPORTED_JSON ) - 3 )
 
-#ifndef THING_NAME
-
 /**
- * @brief Predefined thing name.
+ * @brief The maximum number of times to run the loop in this demo.
  *
- * This is the example predefine thing name and could be compiled in ROM code.
+ * @note The demo loop is attempted to re-run only if it fails in an iteration.
+ * Once the demo loop succeeds in an iteration, the demo exits successfully.
  */
-    #define THING_NAME    democonfigCLIENT_IDENTIFIER
+#ifndef SHADOW_MAX_DEMO_LOOP_COUNT
+    #define SHADOW_MAX_DEMO_LOOP_COUNT    ( 3 )
 #endif
 
 /**
- * @brief The length of #THING_NAME.
+ * @brief Time in ticks to wait between retries of the demo loop if
+ * demo loop fails.
  */
-#define THING_NAME_LENGTH    ( ( uint16_t ) ( sizeof( THING_NAME ) - 1 ) )
+#define DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS       ( pdMS_TO_TICKS( 5000U ) )
 
+/**
+ * @brief The maximum number of times to call MQTT_ProcessLoop() when waiting
+ * for a response for Shadow delete operation.
+ */
+#define MQTT_PROCESS_LOOP_DELETE_RESPONSE_COUNT_MAX     ( 30U )
 
+/**
+ * @brief Timeout for MQTT_ProcessLoop in milliseconds.
+ */
+#define MQTT_PROCESS_LOOP_TIMEOUT_MS                    ( 700U )
+
+/**
+ * @brief JSON key for response code that indicates the type of error in
+ * the error document received on topic `/delete/rejected`.
+ */
+#define SHADOW_DELETE_REJECTED_ERROR_CODE_KEY           "code"
+
+/**
+ * @brief Length of #SHADOW_DELETE_REJECTED_ERROR_CODE_KEY.
+ */
+#define SHADOW_DELETE_REJECTED_ERROR_CODE_KEY_LENGTH    ( ( uint16_t ) ( sizeof( SHADOW_DELETE_REJECTED_ERROR_CODE_KEY ) - 1 ) )
+
+/**
+ * @brief Error response code sent from AWS IoT Shadow service when an attempt
+ * is made to delete a Shadow document that doesn't exist.
+ */
+#define SHADOW_NO_SHADOW_EXISTS_ERROR_CODE              "404"
+
+/**
+ * @brief Length of #SHADOW_NO_SHADOW_EXISTS_ERROR_CODE.
+ */
+#define SHADOW_NO_SHADOW_EXISTS_ERROR_CODE_LENGTH       ( ( uint16_t ) ( sizeof( SHADOW_NO_SHADOW_EXISTS_ERROR_CODE ) - 1 ) )
+
+/*------------- Demo configurations -------------------------*/
+
+#ifndef democonfigTHING_NAME
+    #define democonfigTHING_NAME    democonfigCLIENT_IDENTIFIER
+#endif
+
+/**
+ * @brief The length of #democonfigTHING_NAME.
+ */
+#define THING_NAME_LENGTH    ( ( uint16_t ) ( sizeof( democonfigTHING_NAME ) - 1 ) )
 
 /*-----------------------------------------------------------*/
+
+/* Each compilation unit must define the NetworkContext struct. */
+struct NetworkContext
+{
+    TlsTransportParams_t * pParams;
+};
+
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief The MQTT context used for MQTT operation.
+ */
+static MQTTContext_t xMqttContext;
+
+/**
+ * @brief The network context used for mbedTLS operation.
+ */
+static NetworkContext_t xNetworkContext;
+
+/**
+ * @brief The parameters for the network context using mbedTLS operation.
+ */
+static TlsTransportParams_t xTlsTransportParams;
+
+/**
+ * @brief Static buffer used to hold MQTT messages being sent and received.
+ */
+static uint8_t ucSharedBuffer[ democonfigNETWORK_BUFFER_SIZE ];
+
+/**
+ * @brief Static buffer used to hold MQTT messages being sent and received.
+ */
+static MQTTFixedBuffer_t xBuffer =
+{
+    .pBuffer = ucSharedBuffer,
+    .size    = democonfigNETWORK_BUFFER_SIZE
+};
 
 /**
  * @brief The simulated device current power on state.
@@ -193,6 +273,24 @@ static BaseType_t xUpdateDeltaReturn = pdPASS;
  * @brief The return status of prvUpdateAcceptedHandler callback function.
  */
 static BaseType_t xUpdateAcceptedReturn = pdPASS;
+
+/**
+ * @brief Status of the response of Shadow delete operation from AWS IoT
+ * message broker.
+ */
+static BaseType_t xDeleteResponseReceived = pdFALSE;
+
+/**
+ * @brief Status of the Shadow delete operation.
+ *
+ * The Shadow delete status will be updated by the incoming publishes on the
+ * MQTT topics for delete acknowledgement from AWS IoT message broker
+ * (accepted/rejected). Shadow document is considered to be deleted if an
+ * incoming publish is received on `/delete/accepted` topic or an incoming
+ * publish is received on `/delete/rejected` topic with error code 404. Code 404
+ * indicates that the Shadow document does not exist for the Thing yet.
+ */
+static BaseType_t xShadowDeleted = pdFALSE;
 
 /*-----------------------------------------------------------*/
 
@@ -240,6 +338,126 @@ static void prvUpdateAcceptedHandler( MQTTPublishInfo_t * pxPublishInfo );
  */
 static void prvShadowDemoTask( void * pvParameters );
 
+/**
+ * @brief Process payload from `/delete/rejected` topic.
+ *
+ * This handler examines the rejected message to look for the reject reason code.
+ * If the reject reason code is `404`, an attempt was made to delete a shadow
+ * document which was not present yet. This is considered to be success for this
+ * demo application.
+ *
+ * @param[in] pxPublishInfo Deserialized publish info pointer for the incoming
+ * packet.
+ */
+static void prvDeleteRejectedHandler( MQTTPublishInfo_t * pxPublishInfo );
+
+/**
+ * @brief Helper function to wait for a response for Shadow delete operation.
+ *
+ * @param[in] pxMQTTContext MQTT context pointer.
+ *
+ * @return pdPASS if successfully received a response for Shadow delete
+ * operation; pdFAIL otherwise.
+ */
+static BaseType_t prvWaitForDeleteResponse( MQTTContext_t * pxMQTTContext );
+
+/*-----------------------------------------------------------*/
+
+static BaseType_t prvWaitForDeleteResponse( MQTTContext_t * pxMQTTContext )
+{
+    uint8_t ucCount = 0U;
+    MQTTStatus_t xMQTTStatus = MQTTSuccess;
+    BaseType_t xReturnStatus = pdPASS;
+
+    configASSERT( pxMQTTContext != NULL );
+
+    while( ( xDeleteResponseReceived != pdTRUE ) &&
+           ( ucCount++ < MQTT_PROCESS_LOOP_DELETE_RESPONSE_COUNT_MAX ) &&
+           ( xMQTTStatus == MQTTSuccess ) )
+    {
+        /* Event callback will set #xDeleteResponseReceived when receiving an
+         * incoming publish on either `/delete/accepted` or `/delete/rejected`
+         * Shadow topics. */
+        xMQTTStatus = MQTT_ProcessLoop( pxMQTTContext, MQTT_PROCESS_LOOP_TIMEOUT_MS );
+    }
+
+    if( ( xMQTTStatus != MQTTSuccess ) || ( xDeleteResponseReceived != pdTRUE ) )
+    {
+        LogError( ( "MQTT_ProcessLoop failed to receive a response for Shadow delete operation:"
+                    " LoopDuration=%u, MQTT Status=%s.",
+                    ( MQTT_PROCESS_LOOP_TIMEOUT_MS * ucCount ),
+                    MQTT_Status_strerror( xMQTTStatus ) ) );
+        xReturnStatus = pdFAIL;
+    }
+
+    return xReturnStatus;
+}
+
+/*-----------------------------------------------------------*/
+
+static void prvDeleteRejectedHandler( MQTTPublishInfo_t * pxPublishInfo )
+{
+    JSONStatus_t result = JSONSuccess;
+    char * pcOutValue = NULL;
+    uint32_t ulOutValueLength = 0UL;
+
+    configASSERT( pxPublishInfo != NULL );
+    configASSERT( pxPublishInfo->pPayload != NULL );
+
+    LogInfo( ( "/delete/rejected json payload:%s.", ( const char * ) pxPublishInfo->pPayload ) );
+
+    /* The payload will look similar to this:
+     * {
+     *    "code": error-code,
+     *    "message": "error-message",
+     *    "timestamp": timestamp,
+     *    "clientToken": "token"
+     * }
+     */
+
+    /* Make sure the payload is a valid json document. */
+    result = JSON_Validate( pxPublishInfo->pPayload,
+                            pxPublishInfo->payloadLength );
+
+    if( result == JSONSuccess )
+    {
+        /* Then we start to get the version value by JSON keyword "version". */
+        result = JSON_SearchConst( pxPublishInfo->pPayload,
+                                   pxPublishInfo->payloadLength,
+                                   SHADOW_DELETE_REJECTED_ERROR_CODE_KEY,
+                                   SHADOW_DELETE_REJECTED_ERROR_CODE_KEY_LENGTH,
+                                   &pcOutValue,
+                                   ( size_t * ) &ulOutValueLength,
+                                   NULL );
+    }
+    else
+    {
+        LogError( ( "The json document is invalid!!" ) );
+    }
+
+    if( result == JSONSuccess )
+    {
+        LogInfo( ( "Error code is: %.*s.",
+                   ulOutValueLength,
+                   pcOutValue ) );
+
+        /* Check if error code is `404`. An error code `404` indicates that an
+         * attempt was made to delete a Shadow document that didn't exist. */
+        if( ulOutValueLength == SHADOW_NO_SHADOW_EXISTS_ERROR_CODE_LENGTH )
+        {
+            if( strncmp( pcOutValue, SHADOW_NO_SHADOW_EXISTS_ERROR_CODE,
+                         SHADOW_NO_SHADOW_EXISTS_ERROR_CODE_LENGTH ) == 0 )
+            {
+                xShadowDeleted = pdTRUE;
+            }
+        }
+    }
+    else
+    {
+        LogError( ( "No error code in json document!!" ) );
+    }
+}
+
 /*-----------------------------------------------------------*/
 
 static void prvUpdateDeltaHandler( MQTTPublishInfo_t * pxPublishInfo )
@@ -283,7 +501,6 @@ static void prvUpdateDeltaHandler( MQTTPublishInfo_t * pxPublishInfo )
                               pxPublishInfo->payloadLength,
                               "version",
                               sizeof( "version" ) - 1,
-                              '.',
                               &pcOutValue,
                               ( size_t * ) &ulOutValueLength );
     }
@@ -320,7 +537,6 @@ static void prvUpdateDeltaHandler( MQTTPublishInfo_t * pxPublishInfo )
                               pxPublishInfo->payloadLength,
                               "state.powerOn",
                               sizeof( "state.powerOn" ) - 1,
-                              '.',
                               &pcOutValue,
                               ( size_t * ) &ulOutValueLength );
     }
@@ -410,7 +626,6 @@ static void prvUpdateAcceptedHandler( MQTTPublishInfo_t * pxPublishInfo )
                               pxPublishInfo->payloadLength,
                               "clientToken",
                               sizeof( "clientToken" ) - 1,
-                              '.',
                               &pcOutValue,
                               ( size_t * ) &ulOutValueLength );
     }
@@ -508,6 +723,18 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
             {
                 LogInfo( ( "/update/rejected json payload:%s.", ( const char * ) pxDeserializedInfo->pPublishInfo->pPayload ) );
             }
+            else if( messageType == ShadowMessageTypeDeleteAccepted )
+            {
+                LogInfo( ( "Received an MQTT incoming publish on /delete/accepted topic." ) );
+                xShadowDeleted = pdTRUE;
+                xDeleteResponseReceived = pdTRUE;
+            }
+            else if( messageType == ShadowMessageTypeDeleteRejected )
+            {
+                /* Handler function to process payload. */
+                prvDeleteRejectedHandler( pxDeserializedInfo->pPublishInfo );
+                xDeleteResponseReceived = pdTRUE;
+            }
             else
             {
                 LogInfo( ( "Other message type:%d !!", messageType ) );
@@ -526,22 +753,22 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
 /*-----------------------------------------------------------*/
 
 /*
- * @brief Create the task that demonstrates the Shadow API Demo via a
- * MQTT mutually authenticated network connection with MQTT broker.
+ * @brief Create the task that demonstrates the Device Shadow library API via a
+ * MQTT mutually authenticated network connection with the AWS IoT broker.
  */
 void vStartShadowDemo( void )
 {
     /* This example uses a single application task, which shows that how to
-     * use Device Shadow library to get shadow topics and validate shadow topics
-     * via MQTT APIs communicating with the MQTT broker. */
+     * use Device Shadow library to generate and validate AWS IoT Device Shadow
+     * MQTT topics, and use the coreMQTT library to communicate with the AWS IoT
+     * Device Shadow service. */
     xTaskCreate( prvShadowDemoTask,        /* Function that implements the task. */
-                 "ShadowDemo",             /* Text name for the task - only used for debugging. */
+                 "DemoTask",               /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
                  NULL,                     /* Task parameter - not used in this case. */
                  tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
                  NULL );                   /* Used to pass out a handle to the created task - not used in this case. */
 }
-
 /*-----------------------------------------------------------*/
 
 /**
@@ -565,53 +792,139 @@ void vStartShadowDemo( void )
  */
 void prvShadowDemoTask( void * pvParameters )
 {
-    BaseType_t demoStatus = pdPASS;
-
-    /* Remove compiler warnings about unused parameters. */
-    ( void ) pvParameters;
+    BaseType_t xDemoStatus = pdPASS;
+    UBaseType_t uxDemoRunCount = 0UL;
 
     /* A buffer containing the update document. It has static duration to prevent
      * it from being placed on the call stack. */
     static char pcUpdateDocument[ SHADOW_REPORTED_JSON_LENGTH + 1 ] = { 0 };
 
-    demoStatus = xEstablishMqttSession( prvEventCallback );
+    /* Remove compiler warnings about unused parameters. */
+    ( void ) pvParameters;
 
-    if( pdFAIL == demoStatus )
+    /* Set the pParams member of the network context with desired transport. */
+    xNetworkContext.pParams = &xTlsTransportParams;
+
+    /****************************** Connect. ******************************/
+
+    /* This demo runs a single loop unless there are failures in the demo execution.
+     * In case of failures in the demo execution, demo loop will be retried for up to
+     * SHADOW_MAX_DEMO_LOOP_COUNT times. */
+    do
     {
-        /* Log error to indicate connection failure. */
-        LogError( ( "Failed to connect to MQTT broker." ) );
-    }
-    else
-    {
-        /* First of all, try to delete any Shadow document in the cloud. */
-        demoStatus = xPublishToTopic( SHADOW_TOPIC_STRING_DELETE( THING_NAME ),
-                                      SHADOW_TOPIC_LENGTH_DELETE( THING_NAME_LENGTH ),
-                                      pcUpdateDocument,
-                                      0U );
+        /****************************** Connect. ******************************/
 
-        /* Then try to subscribe shadow topics. */
-        if( demoStatus == pdPASS )
+        xDemoStatus = xEstablishMqttSession( &xMqttContext,
+                                             &xNetworkContext,
+                                             &xBuffer,
+                                             prvEventCallback );
+
+        if( xDemoStatus == pdFAIL )
         {
-            demoStatus = xSubscribeToTopic( SHADOW_TOPIC_STRING_UPDATE_DELTA( THING_NAME ),
-                                            SHADOW_TOPIC_LENGTH_UPDATE_DELTA( THING_NAME_LENGTH ) );
+            /* Log error to indicate connection failure. */
+            LogError( ( "Failed to connect to MQTT broker." ) );
         }
 
-        if( demoStatus == pdPASS )
+        /**************** Attempt to delete Shadow document. ******************/
+
+        if( xDemoStatus == pdPASS )
         {
-            demoStatus = xSubscribeToTopic( SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( THING_NAME ),
-                                            SHADOW_TOPIC_LENGTH_UPDATE_ACCEPTED( THING_NAME_LENGTH ) );
+            /* Reset the shadow delete status flags. */
+            xDeleteResponseReceived = pdFALSE;
+            xShadowDeleted = pdFALSE;
+
+            /* First of all, try to delete any Shadow document in the cloud.
+             * Try to subscribe to `/delete/accepted` and `/delete/rejected` topics. */
+            xDemoStatus = xSubscribeToTopic( &xMqttContext,
+                                             SHADOW_TOPIC_STRING_DELETE_ACCEPTED( democonfigTHING_NAME ),
+                                             SHADOW_TOPIC_LENGTH_DELETE_ACCEPTED( THING_NAME_LENGTH ) );
         }
 
-        if( demoStatus == pdPASS )
+        if( xDemoStatus == pdPASS )
         {
-            demoStatus = xSubscribeToTopic( SHADOW_TOPIC_STRING_UPDATE_REJECTED( THING_NAME ),
-                                            SHADOW_TOPIC_LENGTH_UPDATE_REJECTED( THING_NAME_LENGTH ) );
+            /* Try to subscribe to `/delete/rejected` topic. */
+            xDemoStatus = xSubscribeToTopic( &xMqttContext,
+                                             SHADOW_TOPIC_STRING_DELETE_REJECTED( democonfigTHING_NAME ),
+                                             SHADOW_TOPIC_LENGTH_DELETE_REJECTED( THING_NAME_LENGTH ) );
         }
 
-        /* This demo uses a constant #THING_NAME known at compile time therefore we can use macros to
-         * assemble shadow topic strings.
-         * If the thing name is known at run time, then we could use the API #Shadow_GetTopicString to
-         * assemble shadow topic strings, here is the example for /update/delta:
+        if( xDemoStatus == pdPASS )
+        {
+            /* Publish to Shadow `delete` topic to attempt to delete the
+             * Shadow document if exists. */
+            xDemoStatus = xPublishToTopic( &xMqttContext,
+                                           SHADOW_TOPIC_STRING_DELETE( democonfigTHING_NAME ),
+                                           SHADOW_TOPIC_LENGTH_DELETE( THING_NAME_LENGTH ),
+                                           pcUpdateDocument,
+                                           0U );
+        }
+
+        /* Wait for an incoming publish on `/delete/accepted` or `/delete/rejected`
+         * topics, if not already received a publish. */
+        if( ( xDemoStatus == pdPASS ) && ( xDeleteResponseReceived != pdTRUE ) )
+        {
+            xDemoStatus = prvWaitForDeleteResponse( &xMqttContext );
+        }
+
+        /* Unsubscribe from the `/delete/accepted` and 'delete/rejected` topics.*/
+        if( xDemoStatus == pdPASS )
+        {
+            xDemoStatus = xUnsubscribeFromTopic( &xMqttContext,
+                                                 SHADOW_TOPIC_STRING_DELETE_ACCEPTED( democonfigTHING_NAME ),
+                                                 SHADOW_TOPIC_LENGTH_DELETE_ACCEPTED( THING_NAME_LENGTH ) );
+        }
+
+        if( xDemoStatus == pdPASS )
+        {
+            xDemoStatus = xUnsubscribeFromTopic( &xMqttContext,
+                                                 SHADOW_TOPIC_STRING_DELETE_REJECTED( democonfigTHING_NAME ),
+                                                 SHADOW_TOPIC_LENGTH_DELETE_REJECTED( THING_NAME_LENGTH ) );
+        }
+
+        /* Check if Shadow document delete was successful. A delete can be
+         * successful in cases listed below.
+         *  1. If an incoming publish is received on `/delete/accepted` topic.
+         *  2. If an incoming publish is received on `/delete/rejected` topic
+         *     with error code 404. This indicates that a Shadow document was
+         *     not present for the Thing. */
+        if( xShadowDeleted == pdFALSE )
+        {
+            LogError( ( "Shadow delete operation failed." ) );
+            xDemoStatus = pdFAIL;
+        }
+
+        /********************* Subscribe to Shadow topics. ************************/
+
+        /* Then try to subscribe the Shadow topics. */
+
+        if( xDemoStatus == pdPASS )
+        {
+            xDemoStatus = xSubscribeToTopic( &xMqttContext,
+                                             SHADOW_TOPIC_STRING_UPDATE_DELTA( democonfigTHING_NAME ),
+                                             SHADOW_TOPIC_LENGTH_UPDATE_DELTA( THING_NAME_LENGTH ) );
+        }
+
+        if( xDemoStatus == pdPASS )
+        {
+            xDemoStatus = xSubscribeToTopic( &xMqttContext,
+                                             SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( democonfigTHING_NAME ),
+                                             SHADOW_TOPIC_LENGTH_UPDATE_ACCEPTED( THING_NAME_LENGTH ) );
+        }
+
+        if( xDemoStatus == pdPASS )
+        {
+            xDemoStatus = xSubscribeToTopic( &xMqttContext,
+                                             SHADOW_TOPIC_STRING_UPDATE_REJECTED( democonfigTHING_NAME ),
+                                             SHADOW_TOPIC_LENGTH_UPDATE_REJECTED( THING_NAME_LENGTH ) );
+        }
+
+        /********************* Publish to Shadow topics. **********************/
+
+        /* This demo uses a constant #democonfigTHING_NAME known at compile time
+         * therefore we can use macros to assemble shadow topic strings.
+         * If the thing name is known at run time, then we could use the API
+         * #Shadow_GetTopicString to assemble shadow topic strings, here is the
+         * example for /update/delta:
          *
          * For /update/delta:
          *
@@ -633,13 +946,13 @@ void prvShadowDemoTask( void * pvParameters )
          */
 
         /* Then we publish a desired state to the /update topic. Since we've deleted
-         * the device shadow at the beginning of the demo, this will cause a delta message
-         * to be published, which we have subscribed to.
+         * the device shadow at the beginning of the demo, this will cause a delta
+         * message to be published, which we have subscribed to.
          * In many real applications, the desired state is not published by
          * the device itself. But for the purpose of making this demo self-contained,
          * we publish one here so that we can receive a delta message later.
          */
-        if( demoStatus == pdPASS )
+        if( xDemoStatus == pdPASS )
         {
             /* Desired power on state . */
             LogInfo( ( "Send desired power state with 1." ) );
@@ -654,13 +967,14 @@ void prvShadowDemoTask( void * pvParameters )
                       ( int ) 1,
                       ( long unsigned ) ( xTaskGetTickCount() % 1000000 ) );
 
-            demoStatus = xPublishToTopic( SHADOW_TOPIC_STRING_UPDATE( THING_NAME ),
-                                          SHADOW_TOPIC_LENGTH_UPDATE( THING_NAME_LENGTH ),
-                                          pcUpdateDocument,
-                                          ( SHADOW_DESIRED_JSON_LENGTH + 1 ) );
+            xDemoStatus = xPublishToTopic( &xMqttContext,
+                                           SHADOW_TOPIC_STRING_UPDATE( democonfigTHING_NAME ),
+                                           SHADOW_TOPIC_LENGTH_UPDATE( THING_NAME_LENGTH ),
+                                           pcUpdateDocument,
+                                           ( SHADOW_DESIRED_JSON_LENGTH + 1 ) );
         }
 
-        if( demoStatus == pdPASS )
+        if( xDemoStatus == pdPASS )
         {
             /* Note that PublishToTopic already called MQTT_ProcessLoop,
              * therefore responses may have been received and the prvEventCallback
@@ -686,10 +1000,11 @@ void prvShadowDemoTask( void * pvParameters )
                           ( int ) ulCurrentPowerOnState,
                           ( long unsigned ) ulClientToken );
 
-                demoStatus = xPublishToTopic( SHADOW_TOPIC_STRING_UPDATE( THING_NAME ),
-                                              SHADOW_TOPIC_LENGTH_UPDATE( THING_NAME_LENGTH ),
-                                              pcUpdateDocument,
-                                              ( SHADOW_DESIRED_JSON_LENGTH + 1 ) );
+                xDemoStatus = xPublishToTopic( &xMqttContext,
+                                               SHADOW_TOPIC_STRING_UPDATE( democonfigTHING_NAME ),
+                                               SHADOW_TOPIC_LENGTH_UPDATE( THING_NAME_LENGTH ),
+                                               pcUpdateDocument,
+                                               ( SHADOW_DESIRED_JSON_LENGTH + 1 ) );
             }
             else
             {
@@ -697,46 +1012,53 @@ void prvShadowDemoTask( void * pvParameters )
             }
         }
 
-        if( demoStatus == pdPASS )
+        /****************** Unsubscribe from Shadow topics. *******************/
+
+        if( xDemoStatus == pdPASS )
         {
             LogInfo( ( "Start to unsubscribe shadow topics and disconnect from MQTT. \r\n" ) );
 
-            demoStatus = xUnsubscribeFromTopic( SHADOW_TOPIC_STRING_UPDATE_DELTA( THING_NAME ),
-                                                SHADOW_TOPIC_LENGTH_UPDATE_DELTA( THING_NAME_LENGTH ) );
+            xDemoStatus = xUnsubscribeFromTopic( &xMqttContext,
+                                                 SHADOW_TOPIC_STRING_UPDATE_DELTA( democonfigTHING_NAME ),
+                                                 SHADOW_TOPIC_LENGTH_UPDATE_DELTA( THING_NAME_LENGTH ) );
 
-            if( demoStatus != pdPASS )
+            if( xDemoStatus != pdPASS )
             {
                 LogError( ( "Failed to unsubscribe the topic %s",
-                            SHADOW_TOPIC_STRING_UPDATE_DELTA( THING_NAME ) ) );
+                            SHADOW_TOPIC_STRING_UPDATE_DELTA( democonfigTHING_NAME ) ) );
             }
         }
 
-        if( demoStatus == pdPASS )
+        if( xDemoStatus == pdPASS )
         {
-            demoStatus = xUnsubscribeFromTopic( SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( THING_NAME ),
-                                                SHADOW_TOPIC_LENGTH_UPDATE_ACCEPTED( THING_NAME_LENGTH ) );
+            xDemoStatus = xUnsubscribeFromTopic( &xMqttContext,
+                                                 SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( democonfigTHING_NAME ),
+                                                 SHADOW_TOPIC_LENGTH_UPDATE_ACCEPTED( THING_NAME_LENGTH ) );
 
-            if( demoStatus != pdPASS )
+            if( xDemoStatus != pdPASS )
             {
                 LogError( ( "Failed to unsubscribe the topic %s",
-                            SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( THING_NAME ) ) );
+                            SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( democonfigTHING_NAME ) ) );
             }
         }
 
-        if( demoStatus == pdPASS )
+        if( xDemoStatus == pdPASS )
         {
-            demoStatus = xUnsubscribeFromTopic( SHADOW_TOPIC_STRING_UPDATE_REJECTED( THING_NAME ),
-                                                SHADOW_TOPIC_LENGTH_UPDATE_REJECTED( THING_NAME_LENGTH ) );
+            xDemoStatus = xUnsubscribeFromTopic( &xMqttContext,
+                                                 SHADOW_TOPIC_STRING_UPDATE_REJECTED( democonfigTHING_NAME ),
+                                                 SHADOW_TOPIC_LENGTH_UPDATE_REJECTED( THING_NAME_LENGTH ) );
 
-            if( demoStatus != pdPASS )
+            if( xDemoStatus != pdPASS )
             {
                 LogError( ( "Failed to unsubscribe the topic %s",
-                            SHADOW_TOPIC_STRING_UPDATE_REJECTED( THING_NAME ) ) );
+                            SHADOW_TOPIC_STRING_UPDATE_REJECTED( democonfigTHING_NAME ) ) );
             }
         }
 
-        /* The MQTT session is always disconnected, even there were prior failures. */
-        demoStatus = xDisconnectMqttSession();
+        /****************************** Disconnect. *******************************/
+
+        /* The MQTT session is always disconnected, even if there were prior failures. */
+        xDemoStatus = xDisconnectMqttSession( &xMqttContext, &xNetworkContext );
 
         /* This demo performs only Device Shadow operations. If matching the Shadow
          * MQTT topic fails or there are failure in parsing the received JSON document,
@@ -746,14 +1068,36 @@ void prvShadowDemoTask( void * pvParameters )
             LogError( ( "Callback function failed." ) );
         }
 
-        if( demoStatus == pdPASS )
+        /*********************** Retry in case of failure. ************************/
+
+        /* Increment the demo run count. */
+        uxDemoRunCount++;
+
+        if( xDemoStatus == pdPASS )
         {
-            LogInfo( ( "Demo completed successfully." ) );
+            LogInfo( ( "Demo iteration %lu is successful.", uxDemoRunCount ) );
         }
+        /* Attempt to retry a failed iteration of demo for up to #SHADOW_MAX_DEMO_LOOP_COUNT times. */
+        else if( uxDemoRunCount < SHADOW_MAX_DEMO_LOOP_COUNT )
+        {
+            LogWarn( ( "Demo iteration %lu failed. Retrying...", uxDemoRunCount ) );
+            vTaskDelay( DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS );
+        }
+        /* Failed all #SHADOW_MAX_DEMO_LOOP_COUNT demo iterations. */
         else
         {
-            LogError( ( "Shadow Demo failed." ) );
+            LogError( ( "All %d demo iterations failed.", SHADOW_MAX_DEMO_LOOP_COUNT ) );
+            break;
         }
+    } while( xDemoStatus != pdPASS );
+
+    if( xDemoStatus == pdPASS )
+    {
+        LogInfo( ( "Demo completed successfully." ) );
+    }
+    else
+    {
+        LogError( ( "Shadow Demo failed." ) );
     }
 
     /* Delete this task. */

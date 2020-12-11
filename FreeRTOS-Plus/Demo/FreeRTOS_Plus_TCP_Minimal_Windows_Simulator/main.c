@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.4.1
+ * FreeRTOS V202011.00
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -153,11 +153,11 @@ int main( void )
      * vApplicationIPNetworkEventHook() below).  The address values passed in here
      * are used if ipconfigUSE_DHCP is set to 0, or if ipconfigUSE_DHCP is set to 1
      * but a DHCP server cannot be	contacted. */
-    FreeRTOS_debug_printf( ( "FreeRTOS_IPInit\n" ) );
+    FreeRTOS_debug_printf( ( "FreeRTOS_IPInit\r\n" ) );
     FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
 
     /* Start the RTOS scheduler. */
-    FreeRTOS_debug_printf( ( "vTaskStartScheduler\n" ) );
+    FreeRTOS_debug_printf( ( "vTaskStartScheduler\r\n" ) );
     vTaskStartScheduler();
 
     /* If all is well, the scheduler will now be running, and the following
@@ -196,7 +196,7 @@ void vAssertCalled( const char * pcFile,
     ( void ) pcFileName;
     ( void ) ulLineNumber;
 
-    FreeRTOS_debug_printf( ( "vAssertCalled( %s, %ld\n", pcFile, ulLine ) );
+    FreeRTOS_debug_printf( ( "vAssertCalled( %s, %ld\r\n", pcFile, ulLine ) );
 
     /* Setting ulBlockVariable to a non-zero value in the debugger will allow
      * this function to be exited. */
@@ -307,9 +307,9 @@ static void prvMiscInitialisation( void )
 
     /* Seed the random number generator. */
     time( &xTimeNow );
-    FreeRTOS_debug_printf( ( "Seed for randomiser: %lu\n", xTimeNow ) );
+    FreeRTOS_debug_printf( ( "Seed for randomiser: %lu\r\n", xTimeNow ) );
     prvSRand( ( uint32_t ) xTimeNow );
-    FreeRTOS_debug_printf( ( "Random numbers: %08X %08X %08X %08X\n", ipconfigRAND32(), ipconfigRAND32(), ipconfigRAND32(), ipconfigRAND32() ) );
+    FreeRTOS_debug_printf( ( "Random numbers: %08X %08X %08X %08X\r\n", ipconfigRAND32(), ipconfigRAND32(), ipconfigRAND32(), ipconfigRAND32() ) );
 }
 /*-----------------------------------------------------------*/
 

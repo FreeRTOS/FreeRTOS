@@ -1,5 +1,21 @@
 Documentation and download available at https://www.FreeRTOS.org/
 
+Changes between FreeRTOS V10.4.1 and FreeRTOS V202011.00 released November 10 2020
+
+	+ Added new coreJSON Library. See https://www.freertos.org/json/
+	+ Added new coreMQTT Library. See https://www.freertos.org/mqtt/
+	+ Added new corePKCS11 Library. See https://www.freertos.org/pkcs11/
+	+ Added new AWS IoT Device Shadow Library. See
+	  https://www.freertos.org/iot-device-shadow/
+	+ Updated to FreeRTOS Kernel v10.4.2. See
+	  https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/master/History.txt
+	+ Updated to FreeRTOS+TCP v2.3.1. See
+	  https://github.com/FreeRTOS/FreeRTOS-Plus-TCP/blob/master/History.txt
+	+ Update WolfSSL to 4.5.0 and add the WolfSSL FIPS ready demo.
+	+ Convert most dependent libraries to Git submodules.
+	+ Various general maintenance and improvements.
+
+
 Changes between FreeRTOS V10.4.0 and FreeRTOS V10.4.1 released September 17 2020
 	See https://www.FreeRTOS.org/FreeRTOS-V10.4.x.html
 

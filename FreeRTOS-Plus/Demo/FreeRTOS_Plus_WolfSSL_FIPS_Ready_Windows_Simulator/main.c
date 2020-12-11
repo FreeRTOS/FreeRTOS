@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.4.1
+ * FreeRTOS V202011.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -54,6 +54,11 @@ extern void vSecureTCPServerTask( void *pvParameters );
 
 /*-----------------------------------------------------------*/
 
+/*
+ *! It is necessary to update the build hash before running this project for the
+ *! time.  Ensure to read README_wolfSSL_FIPS_ready.md in the directory that contains
+ *! this Visual Studio project for instructions.
+ */
 int main( void )
 {
 const uint32_t ulLongTime_ms = 250UL;
@@ -96,6 +101,14 @@ const unsigned long ulLongSleep = 1000UL;
 	taskDISABLE_INTERRUPTS();
 	for( ;; )
 	{
+		/* Cause debugger break point if being debugged.
+
+		If you see reach here and the console shows "In core integrity check error"
+		then you have not updated the expected build hash since building this
+		project.  See README_wolfSSL_FIPS_ready.md in the directory that contains
+		this Visual Studio project for instructions. */
+		__debugbreak();
+
 		Sleep( ulLongSleep );
 	}
 }

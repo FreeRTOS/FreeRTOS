@@ -49,6 +49,20 @@
 #ifndef LIBRARY_LOG_LEVEL
     #define LIBRARY_LOG_LEVEL    LOG_INFO
 #endif
+
+/* Prototype for the function used to print to console on Windows simulator
+ * of FreeRTOS.
+ * The function prints to the console before the network is connected;
+ * then a UDP port after the network has connected. */
+extern void vLoggingPrintf( const char * pcFormatString,
+                            ... );
+
+/* Map the SdkLog macro to the logging function to enable logging
+ * on Windows simulator. */
+#ifndef SdkLog
+    #define SdkLog( message )    vLoggingPrintf message
+#endif
+
 #include "logging_stack.h"
 
 /************ End of logging configuration ****************/
@@ -57,6 +71,11 @@
  * @brief The MQTT client identifier used in this example.  Each client identifier
  * must be unique so edit as required to ensure no two clients connecting to the
  * same broker use the same client identifier.
+ *
+ *!!! Please note a #defined constant is used for convenience of demonstration
+ *!!! only.  Production devices can use something unique to the device that can
+ *!!! be read by software, such as a production serial number, instead of a
+ *!!! hard coded constant.
  *
  * #define democonfigCLIENT_IDENTIFIER				"insert here."
  */

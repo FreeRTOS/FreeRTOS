@@ -163,7 +163,7 @@ int mbedtls_platform_recv( void * ctx,
                            size_t len )
 {
     Socket_t socket;
-    BaseType_t recvStatus = 0, recvCount = 0;
+    BaseType_t recvStatus = 0;
     int returnStatus = -1;
 
     configASSERT( ctx != NULL );
@@ -171,17 +171,7 @@ int mbedtls_platform_recv( void * ctx,
 
     socket = ( Socket_t ) ctx;
 
-    /* When attempting to read a TLS record header and there is no data to receive,
-     * this function will immediately return MBEDTLS_ERR_SSL_WANT_READ without blocking. */
-    if( ( len != TLS_RECORD_HEADER_BYTE_LENGTH ) ||
-        ( recvCount = FreeRTOS_recvcount( socket ) > 0 ) )
-    {
-        recvStatus = FreeRTOS_recv( socket, buf, len, 0 );
-    }
-    else
-    {
-        recvStatus = recvCount;
-    }
+    recvStatus = FreeRTOS_recv( socket, buf, len, 0 );
 
     switch( recvStatus )
     {

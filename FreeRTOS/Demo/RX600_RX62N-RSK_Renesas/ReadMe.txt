@@ -1,0 +1,1 @@
+The third party uIP TCP/IP stack and the demo project that used to be in this directory was removed in FreeRTOS version V10.4.3 due to security vulnerabilities identified in uIP. In a future version this demo may be replaced by a version which does not use TCP/IP or uses FreeRTOS’s own TCP/IP stack in place of the original third party stack.

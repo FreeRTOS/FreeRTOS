@@ -36,6 +36,14 @@
  * !!! NOTE !!!
  * This MQTT demo does not authenticate the server nor the client.
  * Hence, this demo should not be used as production ready code.
+ *
+ * Also see https://www.freertos.org/mqtt/mqtt-agent-demo.html? for an
+ * alternative run time model whereby coreMQTT runs in an autonomous
+ * background agent task.  Executing the MQTT protocol in an agent task
+ * removes the need for the application writer to explicitly manage any MQTT
+ * state or call the MQTT_ProcessLoop() API function. Using an agent task
+ * also enables multiple application tasks to more easily share a single
+ * MQTT connection.
  */
 
 /* Standard includes. */
@@ -176,7 +184,13 @@
 
 /*-----------------------------------------------------------*/
 
-/* Each compilation unit must define the NetworkContext struct. */
+/**
+ * @brief Each compilation unit that consumes the NetworkContext must define it.
+ * It should contain a single pointer to the type of your desired transport.
+ * When using multiple transports in the same compilation unit, define this pointer as void *.
+ *
+ * @note Transport stacks are defined in FreeRTOS-Plus/Source/Application-Protocols/network_transport.
+ */
 struct NetworkContext
 {
     PlaintextTransportParams_t * pParams;
@@ -352,7 +366,15 @@ void vStartSimpleMQTTDemo( void )
 {
     /* This example uses a single application task, which in turn is used to
      * connect, subscribe, publish, unsubscribe and disconnect from the MQTT
-     * broker. */
+     * broker.
+     *
+     * Also see https://www.freertos.org/mqtt/mqtt-agent-demo.html? for an
+     * alternative run time model whereby coreMQTT runs in an autonomous
+     * background agent task.  Executing the MQTT protocol in an agent task
+     * removes the need for the application writer to explicitly manage any MQTT
+     * state or call the MQTT_ProcessLoop() API function. Using an agent task
+     * also enables multiple application tasks to more easily share a single
+     * MQTT connection.*/
     xTaskCreate( prvMQTTDemoTask,          /* Function that implements the task. */
                  "DemoTask",               /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */

@@ -37,30 +37,6 @@ LABS_RELATIVE_EXCLUDE_FILES = [
     os.path.join('.git')
 ]
 
-'''
-- Take inputs 
-    - version will be specified
-        - This will be used to name directory
-    - baseline zip. From last release
-        - Used to compare contents of last release
-- setup stage
-    - Create 'zipper-output' directory
-        - This will house the zip
-        - and the directory used to zip. 'out/unzipped-package'
-    - Unzip the input zip into 'out/baseline'
-    - Git clone recursive into latest FreeRTOS master from Git into 'out/head-master
-
-- process stage
-    - remove all RELATIVE_FILE_EXCLUDES from 'out/unzipped-package'
-    - perform a filetree diff between 'out/unzipped-package' and 'out/head-master'
-        - Save to a file, to be confirmed by user
-        - Present and query user to authorize the diff
-    - zip contents of 'out/unzipped-package' --> 'out/FreeRTOSVXX.YY.ZZ.zip
-        - Use 7z compression, with compression set to max
-    - calculate zip file size diff, present to user
-    - Done
-'''
-
 # -------------------------------------------------------------------------------------------------
 # Helpers
 # -------------------------------------------------------------------------------------------------
@@ -105,36 +81,37 @@ def download_git_tree(git_link, root_dir, dir_name, ref='master', commit_id='HEA
     Download HEAD from Git Master. Place into working files dir
     '''
     args = ['git', '-C', root_dir, 'clone', '-b', ref, git_link, dir_name]
-    rc = subprocess.run(args).returncode
-    rc += subprocess.run(['git', '-C', os.path.join(root_dir, dir_name), 'checkout', '-f', commit_id]).returncode
-    rc += subprocess.run(['git', '-C', os.path.join(root_dir, dir_name), 'clean', '-fd']).returncode
+    subprocess.run(args, check=True)
+    subprocess.run(['git', '-C', os.path.join(root_dir, dir_name), 'checkout', '-f', commit_id], check=True)
+    subprocess.run(['git', '-C', os.path.join(root_dir, dir_name), 'clean', '-fd'], check=True)
     if recurse:
-        rc += subprocess.run(['git', '-C', os.path.join(root_dir, dir_name), 'submodule', 'update', '--init', '--recursive']).returncode
+        subprocess.run(['git', '-C', os.path.join(root_dir, dir_name), 'submodule', 'update', '--init', '--recursive'], check=True)
 
-    return os.path.join(root_dir, dir_name) if rc == 0 else None
-
+    return os.path.join(root_dir, dir_name)
 
 def commit_git_tree_changes(repo_dir, commit_message=''):
-    rc = subprocess.run(['git', '-C', repo_dir, 'add', '-u']).returncode
-    rc += subprocess.run(['git', '-C', repo_dir, 'commit', '-m', commit_message]).returncode
+    subprocess.run(['git', '-C', repo_dir, 'add', '-u'], check=True)
+    subprocess.run(['git', '-C', repo_dir, 'commit', '-m', commit_message], check=True)
 
-    return rc
+    return 0
 
 def push_git_tree_changes(repo_dir, tag=None, force_tag=False):
-    rc = subprocess.run(['git', '-C', repo_dir, 'push']).returncode
+    subprocess.run(['git', '-C', repo_dir, 'push'], check=True)
 
     if tag != None:
         force_tag_arg = '-f' if force_tag else ''
-        rc += subprocess.run(['git', '-C', repo_dir, 'tag', force_tag_arg, tag]).returncode
-        rc += subprocess.run(['git', '-C', repo_dir, 'push', force_tag_arg, '--tags']).returncode
+        subprocess.run(['git', '-C', repo_dir, 'tag', force_tag_arg, tag], check=True)
+        subprocess.run(['git', '-C', repo_dir, 'push', force_tag_arg, '--tags'], check=True)
 
-    return rc
+    return 0
 
 def update_submodule_pointer(repo_dir, rel_submodule_path, new_submodule_ref):
-    rc = subprocess.run(['git', '-C', repo_dir, 'submodule', 'update', '--init']).returncode
-    rc += subprocess.run(['git', '-C', os.path.join(repo_dir, rel_submodule_path), 'fetch']).returncode
-    rc += subprocess.run(['git', '-C', os.path.join(repo_dir, rel_submodule_path), 'checkout', new_submodule_ref]).returncode
-    rc += subprocess.run(['git', '-C', repo_dir, 'add', rel_submodule_path]).returncode
+    subprocess.run(['git', '-C', repo_dir, 'submodule', 'update', '--init'], check=True)
+    subprocess.run(['git', '-C', os.path.join(repo_dir, rel_submodule_path), 'fetch'], check=True)
+    subprocess.run(['git', '-C', os.path.join(repo_dir, rel_submodule_path), 'checkout', new_submodule_ref], check=True)
+    subprocess.run(['git', '-C', repo_dir, 'add', rel_submodule_path], check=True)
+
+    return 0
 
 def setup_intermediate_files(scratch_dir, intree_dir, outtree_dir):
     cleanup_intermediate_files(scratch_dir)
@@ -206,6 +183,7 @@ def create_package(path_ziproot, path_outtree, package_name, exclude_files=[]):
     print('Done.')
 
     return path_outzip
+
 # -------------------------------------------------------------------------------------------------
 # CLI
 # -------------------------------------------------------------------------------------------------

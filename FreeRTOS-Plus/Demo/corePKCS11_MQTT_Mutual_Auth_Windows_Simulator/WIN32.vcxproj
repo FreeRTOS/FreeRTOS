@@ -224,7 +224,6 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\platform_util.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\poly1305.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto.c" />
-    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_driver_wrappers.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_se.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_slot_management.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_storage.c" />
@@ -243,7 +242,6 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_srv.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_ticket.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_tls.c" />
-    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_tls13_keys.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\threading.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\timing.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\version.c" />
@@ -379,7 +377,6 @@
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\xtea.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\common.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_core.h" />
-    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_driver_wrappers.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_invasive.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_its.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_se.h" />
@@ -387,7 +384,6 @@
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_slot_management.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_storage.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\ssl_invasive.h" />
-    <ClInclude Include="..\..\ThirdParty\mbedtls\library\ssl_tls13_keys.h" />
     <ClInclude Include="mbedtls_config.h" />
     <ClInclude Include="demo_config.h" />
     <ClInclude Include="FreeRTOSConfig.h" />

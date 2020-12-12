@@ -38,6 +38,14 @@
  * democonfigROOT_CA_PEM, democonfigCLIENT_CERTIFICATE_PEM,
  * and democonfigCLIENT_PRIVATE_KEY_PEM in demo_config.h to establish a
  * mutually authenticated connection.
+ *
+ * Also see https://www.freertos.org/mqtt/mqtt-agent-demo.html? for an
+ * alternative run time model whereby coreMQTT runs in an autonomous
+ * background agent task.  Executing the MQTT protocol in an agent task
+ * removes the need for the application writer to explicitly manage any MQTT
+ * state or call the MQTT_ProcessLoop() API function. Using an agent task
+ * also enables multiple application tasks to more easily share a single
+ * MQTT connection.
  */
 
 /* Standard includes. */
@@ -274,8 +282,8 @@
 
 /*-----------------------------------------------------------*/
 
-/** 
- * @brief Each compilation unit that consumes the NetworkContext must define it. 
+/**
+ * @brief Each compilation unit that consumes the NetworkContext must define it.
  * It should contain a single pointer to the type of your desired transport.
  * When using multiple transports in the same compilation unit, define this pointer as void *.
  *
@@ -462,7 +470,15 @@ void vStartSimpleMQTTDemo( void )
 {
     /* This example uses a single application task, which in turn is used to
      * connect, subscribe, publish, unsubscribe and disconnect from the MQTT
-     * broker. */
+     * broker.
+     *
+     * Also see https://www.freertos.org/mqtt/mqtt-agent-demo.html? for an
+     * alternative run time model whereby coreMQTT runs in an autonomous
+     * background agent task.  Executing the MQTT protocol in an agent task
+     * removes the need for the application writer to explicitly manage any MQTT
+     * state or call the MQTT_ProcessLoop() API function. Using an agent task
+     * also enables multiple application tasks to more easily share a single
+     * MQTT connection. */
     xTaskCreate( prvMQTTDemoTask,          /* Function that implements the task. */
                  "DemoTask",               /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */

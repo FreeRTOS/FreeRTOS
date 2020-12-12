@@ -1,23 +1,27 @@
 /*
+ * FreeRTOS V202011.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 
 /**
@@ -33,6 +37,18 @@
 #include "mbedtls_config.h"
 #include "threading_alt.h"
 #include "mbedtls/entropy.h"
+#include "mbedtls/ssl.h"
+
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief The number of bytes in a standard TLS record header.
+ *
+ * @note This only applies to a standard TCP+TLS connection.
+ *       DTLS has a different length for its record headers.
+ *
+ */
+#define TLS_RECORD_HEADER_BYTE_LENGTH    5
 
 /*-----------------------------------------------------------*/
 
@@ -96,13 +112,39 @@ int mbedtls_platform_send( void * ctx,
                            size_t len )
 {
     Socket_t socket;
+    BaseType_t sendStatus = 0;
+    int returnStatus = -1;
 
     configASSERT( ctx != NULL );
     configASSERT( buf != NULL );
 
     socket = ( Socket_t ) ctx;
+    sendStatus = FreeRTOS_send( socket, buf, len, 0 );
 
-    return ( int ) FreeRTOS_send( socket, buf, len, 0 );
+    switch( sendStatus )
+    {
+        /* Socket was closed or just got closed. */
+        case -pdFREERTOS_ERRNO_ENOTCONN:
+        /* Not enough memory for the socket to create either an Rx or Tx stream. */
+        case -pdFREERTOS_ERRNO_ENOMEM:
+        /* Socket is not valid, is not a TCP socket, or is not bound. */
+        case -pdFREERTOS_ERRNO_EINVAL:
+        /* Socket received a signal, causing the read operation to be aborted. */
+        case -pdFREERTOS_ERRNO_EINTR:
+            returnStatus = MBEDTLS_ERR_SSL_INTERNAL_ERROR;
+            break;
+
+        /* A timeout occurred before any data could be sent. */
+        case -pdFREERTOS_ERRNO_ENOSPC:
+            returnStatus = MBEDTLS_ERR_SSL_TIMEOUT;
+            break;
+
+        default:
+            returnStatus = ( int ) sendStatus;
+            break;
+    }
+
+    return returnStatus;
 }
 
 /*-----------------------------------------------------------*/
@@ -121,13 +163,38 @@ int mbedtls_platform_recv( void * ctx,
                            size_t len )
 {
     Socket_t socket;
+    BaseType_t recvStatus = 0;
+    int returnStatus = -1;
 
     configASSERT( ctx != NULL );
     configASSERT( buf != NULL );
 
     socket = ( Socket_t ) ctx;
 
-    return ( int ) FreeRTOS_recv( socket, buf, len, 0 );
+    recvStatus = FreeRTOS_recv( socket, buf, len, 0 );
+
+    switch( recvStatus )
+    {
+        /* No data could be sent because the socket was or just got closed. */
+        case -pdFREERTOS_ERRNO_ENOTCONN:
+        /* No data could be sent because there was insufficient memory. */
+        case -pdFREERTOS_ERRNO_ENOMEM:
+        /* No data could be sent because xSocket was not a valid TCP socket. */
+        case -pdFREERTOS_ERRNO_EINVAL:
+            returnStatus = MBEDTLS_ERR_SSL_INTERNAL_ERROR;
+            break;
+
+        /* A timeout occurred before any data could be received. */
+        case 0:
+            returnStatus = MBEDTLS_ERR_SSL_WANT_READ;
+            break;
+
+        default:
+            returnStatus = ( int ) recvStatus;
+            break;
+    }
+
+    return returnStatus;
 }
 
 /*-----------------------------------------------------------*/

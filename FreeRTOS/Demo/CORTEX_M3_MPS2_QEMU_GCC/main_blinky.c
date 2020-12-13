@@ -31,11 +31,10 @@
 
 static void prvQueueReceiveTask( void *pvParameters );
 static void prvQueueSendTask( void *pvParameters );
-extern int _write(int file, char *ptr, int len);
 
 #define mainQUEUE_RECEIVE_TASK_PRIORITY     ( tskIDLE_PRIORITY + 2 )
 #define mainQUEUE_SEND_TASK_PRIORITY        ( tskIDLE_PRIORITY + 1 )
-#define mainQUEUE_LENGT                     ( 1 )
+#define mainQUEUE_LENGTH                    ( 1 )
 #define mainQUEUE_SEND_FREQUENCY_MS         ( 200 / portTICK_PERIOD_MS )
 /* The queue used by both tasks. */
 static QueueHandle_t xQueue = NULL;

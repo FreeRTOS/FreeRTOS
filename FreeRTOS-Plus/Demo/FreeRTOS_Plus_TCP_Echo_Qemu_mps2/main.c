@@ -35,21 +35,22 @@
 
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationMallocFailedHook( void );
+void main_tcp_echo_client_tasks( void );
 void vApplicationIdleHook( void );
 void vApplicationTickHook( void );
-void main_blinky( void );
 
 extern void initialise_monitor_handles(void);
 
 int main ()
 {
-#if (mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1)
+#if ( mainCREATE_NETWORKING_DEMO_ONLY == 1 )
     {
-    main_blinky();
+       main_tcp_echo_client_tasks();
     }
 #else
     {
-    #error "Invalid Selection...\nPlease Select a Demo application from the main command"
+    #error "Invalid Selection..." \
+           "\nPlease Select a Demo application from the main command"
     }
 #endif
     return 0;

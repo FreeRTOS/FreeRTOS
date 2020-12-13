@@ -25,16 +25,12 @@
  */
 
 /******************************************************************************
- * This project provides three demo applications.  A simple blinky style project,
- * a more comprehensive test and demo application, and a TCP echo demo.
+ * This project provides one demo application.  A TCP echo demo.
  * The mainSELECTED_APPLICATION setting is used to select between
  * the three
  *
- * If mainSELECTED_APPLICATION = BLINKY_DEMO the simple blinky demo will be built.
- * The simply blinky demo is implemented and described in main_blinky.c.
- *
- * If mainSELECTED_APPLICATION = FULL_DEMO the more comprehensive test and demo
- * application built. This is implemented and described in main_full.c.
+ * If mainSELECTED_APPLICATION = ECHO_CLIENT_DEMO the tcp echo demo will be built.
+ * This is implemented and described in main_networking.c
  *
  * This file implements the code that is not demo specific, including the
  * hardware setup and FreeRTOS hook functions.
@@ -63,24 +59,15 @@
 /* Local includes. */
 #include "console.h"
 
-#define    BLINKY_DEMO       0
-#define    FULL_DEMO         1
+#define    ECHO_CLIENT_DEMO  0
 
-#define mainSELECTED_APPLICATION BLINKY_DEMO
+#define mainSELECTED_APPLICATION ECHO_CLIENT_DEMO
 
 /* This demo uses heap_3.c (the libc provided malloc() and free()). */
 
 /*-----------------------------------------------------------*/
-extern void main_blinky( void );
-extern void main_full( void );
 extern void main_tcp_echo_client_tasks( void );
 static void traceOnEnter( void );
-/*
- * Only the comprehensive demo uses application hook (callback) functions.  See
- * http://www.freertos.org/a00016.html for more information.
- */
-void vFullDemoTickHookFunction( void );
-void vFullDemoIdleFunction( void );
 
 /*
  * Prototypes for the standard FreeRTOS application hook (callback) functions
@@ -136,15 +123,10 @@ int main( void )
     #endif
 
     console_init();
-    #if ( mainSELECTED_APPLICATION == BLINKY_DEMO )
+    #if ( mainSELECTED_APPLICATION == ECHO_CLIENT_DEMO )
     {
-        console_print("Starting echo blinky demo\n");
-        main_blinky();
-    }
-    #elif ( mainSELECTED_APPLICATION == FULL_DEMO)
-    {
-        console_print("Starting full demo\n");
-        main_full();
+        console_print("Starting echo client demo\n");
+        main_tcp_echo_client_tasks();
     }
     #else
     {
@@ -189,14 +171,6 @@ void vApplicationIdleHook( void )
 
     usleep(15000);
     traceOnEnter();
-
-    #if ( mainSELECTED_APPLICATION == FULL_DEMO )
-    {
-        /* Call the idle task processing used by the full demo.  The simple
-        blinky demo does not use the idle task hook. */
-        vFullDemoIdleFunction();
-    }
-    #endif
 }
 /*-----------------------------------------------------------*/
 
@@ -222,12 +196,6 @@ void vApplicationTickHook( void )
     added here, but the tick hook is called from an interrupt context, so
     code must not attempt to block, and only the interrupt safe FreeRTOS API
     functions can be used (those that end in FromISR()). */
-
-    #if (mainSELECTED_APPLICATION == FULL_DEMO )
-    {
-        vFullDemoTickHookFunction();
-    }
-    #endif /* mainSELECTED_APPLICATION */
 }
 
 void traceOnEnter()

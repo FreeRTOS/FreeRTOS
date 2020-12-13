@@ -362,6 +362,9 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*CMSIS.*',
     r'.*/makefile',
     r'.*/Makefile',
+    r'.*/trcConfig\.h.*',
+    r'.*/trcConfig\.c.*',
+    r'.*/trcSnapshotConfig\.h.*',
 ]
 
 FREERTOS_HEADER = [

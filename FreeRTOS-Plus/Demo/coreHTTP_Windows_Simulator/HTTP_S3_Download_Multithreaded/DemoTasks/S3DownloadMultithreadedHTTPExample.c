@@ -650,6 +650,7 @@ static void prvHTTPDemoTask( void * pvParameters )
                    "Total free heap is %u.\r\n",
                    xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully.\r\n" ) );
+        vTaskDelete( NULL );
     }
 }
 

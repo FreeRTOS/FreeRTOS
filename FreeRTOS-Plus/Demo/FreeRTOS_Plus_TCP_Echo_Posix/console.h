@@ -23,45 +23,22 @@
  * https://github.com/FreeRTOS
  *
  */
+#ifndef CONSOLE_H
+#define CONSOLE_H
 
-/*
- * Utility functions required to gather run time statistics.  See:
- * http://www.freertos.org/rtos-run-time-stats.html
- *
- * Note that this is a simulated port, where simulated time is a lot slower than
- * real time, therefore the run time counter values have no real meaningful
- * units.
- *
- * Also note that it is assumed this demo is going to be used for short periods
- * of time only, and therefore timer overflows are not handled.
-*/
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#include <time.h>
+/*-----------------------------------------------------------
+ * Example console I/O wrappers.
+ *----------------------------------------------------------*/
 
-/* FreeRTOS includes. */
-#include <FreeRTOS.h>
+void console_init(void);
+void console_print(const char *fmt, ...);
 
-/* Time at start of day (in ns). */
-static unsigned long ulStartTimeNs;
-
-/*-----------------------------------------------------------*/
-
-void vConfigureTimerForRunTimeStats( void )
-{
-struct timespec xNow;
-
-	clock_gettime(CLOCK_MONOTONIC, &xNow);
-	ulStartTimeNs = xNow.tv_sec * 1000000000ul + xNow.tv_nsec;
+#ifdef __cplusplus
 }
-/*-----------------------------------------------------------*/
+#endif
 
-unsigned long ulGetRunTimeCounterValue( void )
-{
-struct timespec xNow;
-
-	/* Time at start. */
-	clock_gettime(CLOCK_MONOTONIC, &xNow);
-
-	return xNow.tv_sec * 1000000000ul + xNow.tv_nsec - ulStartTimeNs;
-}
-/*-----------------------------------------------------------*/
+#endif /* CONSOLE_H */

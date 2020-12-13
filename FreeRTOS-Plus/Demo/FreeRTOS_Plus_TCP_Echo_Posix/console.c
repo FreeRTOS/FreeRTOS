@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202011.00
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,22 +19,39 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
-#ifndef SINGLE_TASK_TCP_ECHO_CLIENTS_H
-#define SINGLE_TASK_TCP_ECHO_CLIENTS_H
+/*-----------------------------------------------------------
+ * Example console I/O wrappers.
+ *----------------------------------------------------------*/
 
-/*
- * Create the TCP echo client tasks.  This is the version where an echo request
- * is made from the same task that listens for the echo reply.
- */
-void vStartTCPEchoClientTasks_SingleTasks( uint16_t usTaskStackSize, UBaseType_t uxTaskPriority );
-BaseType_t xAreSingleTaskTCPEchoClientsStillRunning( void );
+#include <stdarg.h>
+#include <stdio.h>
 
-#endif /* SINGLE_TASK_TCP_ECHO_CLIENTS_H */
+#include <FreeRTOS.h>
+#include <semphr.h>
+
+SemaphoreHandle_t xStdioMutex;
+StaticSemaphore_t xStdioMutexBuffer;
+
+void console_init(void)
+{
+    xStdioMutex = xSemaphoreCreateMutexStatic(&xStdioMutexBuffer);
+}
+
+void console_print(const char *fmt, ...)
+{
+    va_list vargs;
+
+    va_start(vargs, fmt);
+
+    xSemaphoreTake(xStdioMutex, portMAX_DELAY);
+
+    vprintf(fmt, vargs);
 
 
+    va_end(vargs);
+}

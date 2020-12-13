@@ -86,45 +86,69 @@ to exclude the API function. */
 See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY    191 /* equivalent to 0xa0, or priority 5. */
 #define configMAC_INTERRUPT_PRIORITY 5
-/* Prototype for the function used to print out.  In this case it prints to the
-|     10 console before the network is connected then a UDP port after the network has
-|      9 connected. */
-extern void vLoggingPrintf( const char *pcFormatString, ... );
 
 
-/* Set to 1 to print out debug messages.  If ipconfigHAS_DEBUG_PRINTF is set to
-1 then FreeRTOS_debug_printf should be defined to the function used to print
- out the debugging messages. */
-#define ipconfigHAS_DEBUG_PRINTF   1
+/* networking definitions */
+#define configMAC_ISR_SIMULATOR_PRIORITY     ( configMAX_PRIORITIES - 2 )
+#define ipconfigUSE_NETWORK_EVENT_HOOK 1
+//#define ipconfigSOCK_DEFAULT_RECEIVE_BLOCK_TIME  pdMS_TO_TICKS(5000)
+#define configNETWORK_INTERFACE_TO_USE 1L
 
-#ifdef HEAP3
-#define xPortGetMinimumEverFreeHeapSize (x)
-#define xPortGetFreeHeapSize (x)
-#endif
+/* The address of an echo server that will be used by the two demo echo client
+tasks.
+http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html
+http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/UDP_Echo_Clients.html */
 
-#if( ipconfigHAS_DEBUG_PRINTF == 1 )
-#include <stdio.h>
-#define FreeRTOS_debug_printf(X)        \
-    printf("%p->%s %d: ",               \
-           xTaskGetCurrentTaskHandle(), \
-           __FUNCTION__,                \
-           __LINE__);                   \
-    vLoggingPrintf X
-#endif
+#define configECHO_SERVER_ADDR0 192
+#define configECHO_SERVER_ADDR1 168
+#define configECHO_SERVER_ADDR2 1
+#define configECHO_SERVER_ADDR3 201
 
-/* Set to 1 to print out non debugging messages, for example the output of the
-   FreeRTOS_netstat() command, and ping replies.  If ipconfigHAS_PRINTF is set to 1
-   then FreeRTOS_printf should be set to the function used to print out the
-   messages.  */
-#define ipconfigHAS_PRINTF      1
-#if( ipconfigHAS_PRINTF == 1 )
-#include <stdio.h>
-#define FreeRTOS_printf(X)                 \
-    printf("%p->%s %d: ",                  \
-           xTaskGetCurrentTaskHandle(),    \
-           __FUNCTION__,                   \
-           __LINE__);                      \
-    vLoggingPrintf X
-#endif
+/* Default MAC address configuration.  The demo creates a virtual network
+connection that uses this MAC address by accessing the raw Ethernet/WiFi data
+to and from a real network connection on the host PC.  See the
+configNETWORK_INTERFACE_TO_USE definition above for information on how to
+configure the real network connection to use. */
 
+#define configMAC_ADDR0    0x52
+#define configMAC_ADDR1    0x54
+#define configMAC_ADDR2    0x00
+#define configMAC_ADDR3    0x12
+#define configMAC_ADDR4    0x34
+#define configMAC_ADDR5    0xAD
+
+/* Default IP address configuration.  Used in ipconfigUSE_DNS is set to 0, or
+ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
+
+#define configIP_ADDR0      10
+#define configIP_ADDR1      211
+#define configIP_ADDR2      55
+#define configIP_ADDR3      250
+
+/* Default gateway IP address configuration.  Used in ipconfigUSE_DNS is set to
+0, or ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
+
+#define configGATEWAY_ADDR0 10
+#define configGATEWAY_ADDR1 211
+#define configGATEWAY_ADDR2 55
+#define configGATEWAY_ADDR3 1
+
+/* Default DNS server configuration.  OpenDNS addresses are 208.67.222.222 and
+208.67.220.220.  Used in ipconfigUSE_DNS is set to 0, or ipconfigUSE_DNS is set
+to 1 but a DNS server cannot be contacted.*/
+
+#define configDNS_SERVER_ADDR0  127
+#define configDNS_SERVER_ADDR1  0
+#define configDNS_SERVER_ADDR2  0
+#define configDNS_SERVER_ADDR3  53
+
+/* Default netmask configuration.  Used in ipconfigUSE_DNS is set to 0, or
+ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
+#define configNET_MASK0     255
+#define configNET_MASK1     255
+#define configNET_MASK2     255
+#define configNET_MASK3     0
+
+/* The UDP port to which print messages are sent. */
+#define configPRINT_PORT   ( 15000 )
 #endif /* FREERTOS_CONFIG_H */

@@ -334,9 +334,6 @@
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\ssl_tls.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\ssl_tls13_keys.c">
-      <Filter>FreeRTOS+\mbedtls\library</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\threading.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
@@ -706,9 +703,6 @@
       <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\ssl_ticket.h">
-      <Filter>FreeRTOS+\mbedtls\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\ssl_tls13_keys.h">
       <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\threading.h">

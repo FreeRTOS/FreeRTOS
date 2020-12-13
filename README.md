@@ -39,3 +39,10 @@ This repository contains the FreeRTOS Kernel, a number of supplementary librarie
 ## Previous releases
 [Releases](https://github.com/FreeRTOS/FreeRTOS/releases) contains older FreeRTOS releases.
 
+## FreeRTOS Lab Projects
+FreeRTOS Lab projects are libraries and demos that are fully functional, but may be experimental or undergoing optimizations and refactorization to improve memory usage, modularity, documentation, demo usability, or test coverage.
+
+Most FreeRTOS Lab libraries can be found in the [FreeRTOS-Labs repository](https://github.com/FreeRTOS/FreeRTOS-Labs).
+
+A number of FreeRTOS Lab Demos can be found in the [FreeRTOS Github Organization](https://github.com/FreeRTOS) by searching for "Lab" or following [this link](https://github.com/FreeRTOS?q=Lab&type=&language=) to the search results.
+

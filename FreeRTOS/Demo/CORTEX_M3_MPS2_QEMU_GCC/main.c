@@ -35,7 +35,6 @@
 
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationMallocFailedHook( void );
-void main_tcp_echo_client_tasks( void );
 void vApplicationIdleHook( void );
 void vApplicationTickHook( void );
 void main_blinky( void );
@@ -48,14 +47,9 @@ int main ()
     {
     main_blinky();
     }
-#elif ( mainCREATE_NETWROKING_DEMO_ONLY == 1 )
-    {
-    main_tcp_echo_client_tasks();
-    }
 #else
     {
-    #error "Invalid Selection..." \
-            "\nPlease Select a Demo application from the main command"
+    #error "Invalid Selection...\nPlease Select a Demo application from the main command"
     }
 #endif
     return 0;

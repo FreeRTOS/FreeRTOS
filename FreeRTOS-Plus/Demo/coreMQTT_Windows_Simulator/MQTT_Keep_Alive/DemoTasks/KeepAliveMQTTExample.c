@@ -40,6 +40,14 @@
  * !!! NOTE !!!
  * This MQTT demo does not authenticate the server nor the client.
  * Hence, this demo should not be used as production ready code.
+ *
+ * Also see https://www.freertos.org/mqtt/mqtt-agent-demo.html? for an
+ * alternative run time model whereby coreMQTT runs in an autonomous
+ * background agent task.  Executing the MQTT protocol in an agent task
+ * removes the need for the application writer to explicitly manage any MQTT
+ * state or call the MQTT_ProcessLoop() API function. Using an agent task
+ * also enables multiple application tasks to more easily share a single
+ * MQTT connection.
  */
 
 /* Standard includes. */
@@ -207,8 +215,8 @@
 
 /*-----------------------------------------------------------*/
 
-/** 
- * @brief Each compilation unit that consumes the NetworkContext must define it. 
+/**
+ * @brief Each compilation unit that consumes the NetworkContext must define it.
  * It should contain a single pointer to the type of your desired transport.
  * When using multiple transports in the same compilation unit, define this pointer as void *.
  *
@@ -481,6 +489,13 @@ void vStartSimpleMQTTDemo( void )
 }
 /*-----------------------------------------------------------*/
 
+ /* Also see https://www.freertos.org/mqtt/mqtt-agent-demo.html? for an
+ * alternative run time model whereby coreMQTT runs in an autonomous
+ * background agent task.  Executing the MQTT protocol in an agent task
+ * removes the need for the application writer to explicitly manage any MQTT
+ * state or call the MQTT_ProcessLoop() API function. Using an agent task
+ * also enables multiple application tasks to more easily share a single
+ * MQTT connection. */
 static void prvMQTTDemoTask( void * pvParameters )
 {
     uint32_t ulTopicCount = 0U;

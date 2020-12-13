@@ -187,7 +187,14 @@
     <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\IPTraceMacroDefaults.h" />
     <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\NetworkBufferManagement.h" />
     <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\NetworkInterface.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_config_defaults.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_serializer.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_errno_TCP.h" />
+    <ClInclude Include="..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h" />
+    <ClInclude Include="..\..\..\Source\Utilities\logging\logging.h" />
+    <ClInclude Include="..\..\..\Source\Utilities\logging\logging_levels.h" />
+    <ClInclude Include="..\..\..\Source\Utilities\logging\logging_stack.h" />
     <ClInclude Include="demo_config.h" />
     <ClInclude Include="FreeRTOSConfig.h" />
     <ClInclude Include="FreeRTOSIPConfig.h" />

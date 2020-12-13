@@ -152,6 +152,7 @@
     <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging.h" />
     <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_levels.h" />
     <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_stack.h" />
+    <ClCompile Include="..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\aes.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\aesni.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\arc4.c" />
@@ -354,6 +355,7 @@
     <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11_pal.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pki_utils.h" />
+    <ClInclude Include="core_pkcs11_config.h" />
     <ClInclude Include="threading_alt.h" />
     <ClInclude Include="aws_mbedtls_config.h" />
     <ClInclude Include="examples\demo_helpers.h" />
@@ -365,4 +367,3 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>
-

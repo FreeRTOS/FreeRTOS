@@ -512,12 +512,15 @@
     <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging.h" />
     <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_levels.h" />
     <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_stack.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreHTTP\source\include\core_http_client_private.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreHTTP\source\include\core_http_config_defaults.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_errno_TCP.h" />
     <ClInclude Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_error.h" />
     <ClInclude Include="..\..\..\Source\Utilities\mbedtls_freertos\threading_alt.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\sockets_wrapper.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls\using_mbedtls.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreHTTP\source\include\core_http_client.h" />
-    <ClInclude Include="..\..\..\Source\Application-Protocols\coreHTTP\source\interface\transport_interface.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser\http_parser.h" />
     <ClInclude Include="..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h" />
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\aes.h" />

@@ -38,14 +38,21 @@ void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
 void vApplicationTickHook( void );
 void main_blinky( void );
+void main_full( void );
 
 extern void initialise_monitor_handles(void);
+
+StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
 int main ()
 {
 #if (mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1)
     {
     main_blinky();
+    }
+#elif (mainCREATE_FULL_DEMO_ONLY == 1)
+    {
+        main_full();
     }
 #else
     {
@@ -123,4 +130,26 @@ void vLoggingPrintf( const char *pcFormat, ... )
         va_start( arg, pcFormat );
         vprintf( pcFormat, arg );
         va_end( arg );
+}
+/*-----------------------------------------------------------*/
+void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer,
+                                     StackType_t **ppxTimerTaskStackBuffer,
+                                     uint32_t *pulTimerTaskStackSize )
+{
+    /* If the buffers to be provided to the Timer task are declared inside this
+    function then they must be declared static - otherwise they will be allocated on
+    the stack and so not exists after this function exits. */
+    static StaticTask_t xTimerTaskTCB;
+
+    /* Pass out a pointer to the StaticTask_t structure in which the Timer
+    task's state will be stored. */
+    *ppxTimerTaskTCBBuffer = &xTimerTaskTCB;
+
+    /* Pass out the array that will be used as the Timer task's stack. */
+    *ppxTimerTaskStackBuffer = uxTimerTaskStack;
+
+     /* Pass out the size of the array pointed to by *ppxTimerTaskStackBuffer.
+     Note that, as the array is necessarily of type StackType_t,
+     configMINIMAL_STACK_SIZE is specified in words, not bytes. */
+    *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }

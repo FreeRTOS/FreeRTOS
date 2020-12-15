@@ -36,19 +36,7 @@ All required settings have been set in the user_settings.h header file included 
 2. Run the RTOSDemo.exe 
 
 You will see a console that pops up, and it shows output like the following:
-<<<<<<< HEAD
 
-```
-Starting Power On Self Test
-In core integrity check error: hash = C66491A040D5B9686BAA7A75A280290D91B49...
-ERROR: -203
-Power On Self Test(Known-Answer-Test) FAILURE
-```
-
-Do not warry about this result, an error is expected at this point. Error number "-203" means In-Core-integrity-check failed. The check is identical to the "In Core Integrity Test" listed in the previous section. And the subsequent KAT also failed due to the first error. Once FIPS Ready has failed POST, it enters an error state and never allows subsequent cryptographic operations until the device is restarted and the tests can complete successfully. 
-
-The in-core integrity check requires a pre-calclated hash value to be stored in the fips_test.c source file. Remember that you did not yet set this pre-calculated value durling the build process. Because the hash does not match the stored value is the reason why this first run will fail.
-=======
 # Self Test Explanation
 ```
 Starting Power On Self Test
@@ -58,7 +46,6 @@ In core integrity check error: hash = C66491A040D5B9686BAA7A75A280290D91B49...
 Do not worry about this result, an error is expected at this point. Error number "-203" means In-Core-integrity-check failed. The check is identical to the "In Core Integrity Test" listed in the previous section. And the subsequent KAT also failed due to the first error. Once FIPS Ready has failed POST, it enters an error state and never allows subsequent cryptographic operations until the device is restarted and the tests can complete successfully. 
 
 The in-core integrity check requires a pre-calculated hash value to be stored in the fips_test.c source file. Remember that you did not yet set this pre-calculated value during the build process. Because the hash does not match the stored value is the reason why this first run will fail.
->>>>>>> 5a8f03b63335df7a08d7f9c01db0b579a37ec75c
 
 # Update Pre-calculated hash value
 

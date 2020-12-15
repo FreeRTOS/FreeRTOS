@@ -71,7 +71,7 @@ dependencies:
     repository:
       type: "git"
       url: "https://github.com/wolfSSL/wolfssl"
-      path: "FreeRTOS-Plus/ThirdParty/WolfSSL"
+      path: "FreeRTOS-Plus/ThirdParty/wolfSSL"
 
   - name: "mbedtls"
     version: "v2.25.0"

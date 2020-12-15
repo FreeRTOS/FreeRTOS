@@ -129,11 +129,6 @@
     #define democonfigRANGE_REQUEST_LENGTH    ( 1024 )
 #endif
 
-/* Check that the stack size to use for HTTP tasks is defined. */
-#ifndef httpexampleTASK_STACK_SIZE
-    #define httpexampleTASK_STACK_SIZE    ( configMINIMAL_STACK_SIZE * 4 )
-#endif
-
 /**
  * @brief Length of the pre-signed GET URL defined in demo_config.h.
  */
@@ -577,14 +572,14 @@ static void prvHTTPDemoTask( void * pvParameters )
             /* Open request and response tasks. */
             xDemoStatus = xTaskCreate( prvRequestTask,
                                        "RequestTask",
-                                       httpexampleTASK_STACK_SIZE,
+                                       democonfigDEMO_STACKSIZE,
                                        NULL,
                                        tskIDLE_PRIORITY,
                                        &xRequestTask );
 
             xDemoStatus = xTaskCreate( prvResponseTask,
                                        "ResponseTask",
-                                       httpexampleTASK_STACK_SIZE,
+                                       democonfigDEMO_STACKSIZE,
                                        NULL,
                                        tskIDLE_PRIORITY,
                                        &xResponseTask );

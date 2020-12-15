@@ -60,16 +60,16 @@
 
 /* Compile time error for undefined configs. */
 #ifndef democonfigMQTT_BROKER_ENDPOINT
-    #pragma message( "Define the config democonfigMQTT_BROKER_ENDPOINT by following the instructions in file demo_config.h.")
+    #error "Define the config democonfigMQTT_BROKER_ENDPOINT by following the instructions in file demo_config.h."
 #endif
 #ifndef democonfigROOT_CA_PEM
-    #pragma message( "Please define Root CA certificate of the MQTT broker(democonfigROOT_CA_PEM) in demo_config.h.")
+    #error "Please define Root CA certificate of the MQTT broker(democonfigROOT_CA_PEM) in demo_config.h."
 #endif
 #ifndef democonfigCLIENT_CERTIFICATE_PEM
-    #pragma message( "Please define client certificate(democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h.")
+    #error "Please define client certificate(democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h."
 #endif
 #ifndef democonfigCLIENT_PRIVATE_KEY_PEM
-    #pragma message( "Please define client private key(democonfigCLIENT_PRIVATE_KEY_PEM) in demo_config.h.")
+    #error "Please define client private key(democonfigCLIENT_PRIVATE_KEY_PEM) in demo_config.h."
 #endif
 
 /*-----------------------------------------------------------*/

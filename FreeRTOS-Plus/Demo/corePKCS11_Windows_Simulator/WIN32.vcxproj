@@ -152,7 +152,6 @@
     <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging.h" />
     <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_levels.h" />
     <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_stack.h" />
-    <ClCompile Include="..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\aes.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\aesni.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\arc4.c" />

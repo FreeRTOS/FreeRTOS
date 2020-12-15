@@ -50,6 +50,9 @@
 /* wolfSSL user settings header */
 #include "user_settings.h"
 
+/* Demo Specific configs. */
+#include "demo_config.h"
+
 /**
  * @brief Initialize the TLS structures in a network connection.
  *
@@ -97,14 +100,23 @@ static TlsTransportStatus_t initTLS(void);
 */
 static int wolfSSL_IORecvGlue(WOLFSSL* ssl, char* buf, int sz, void* context);
 
-
-
+/*
+*  @brief  Send date to the socket passed as the context
+*
+*  @param[in] ssl WOLFSSL object.
+*  @param[in] buf Buffer for data to be sent
+*  @param[in] sz  Size to send
+*  @param[in] context Socket to be sent to
+*
+*  @return received size( > 0 ), #WOLFSSL_CBIO_ERR_CONN_CLOSE, #WOLFSSL_CBIO_ERR_WANT_WRITE.
+*/
+static int wolfSSL_IOSendGlue(WOLFSSL* ssl, char* buf, int sz, void* context);
 
 
 /*-----------------------------------------------------------*/
 static int wolfSSL_IORecvGlue(WOLFSSL* ssl, char* buf, int sz, void* context)
 {
-    ssl;    /* to prevent unused warning*/
+    ( void )ssl;    /* to prevent unused warning*/
 
     Socket_t xSocket = (Socket_t)context;
 
@@ -132,7 +144,7 @@ static int wolfSSL_IORecvGlue(WOLFSSL* ssl, char* buf, int sz, void* context)
 
 static int wolfSSL_IOSendGlue(WOLFSSL* ssl, char* buf, int sz, void* context)
 {
-    ssl;    /* to prevent unused warning*/
+    ( void )ssl;    /* to prevent unused warning*/
 
     Socket_t xSocket = (Socket_t)context;
 
@@ -168,97 +180,120 @@ static TlsTransportStatus_t initTLS(void)
 
 /*-----------------------------------------------------------*/
 
-static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
-                                      const char * pHostName,
-                                      const NetworkCredentials_t * pNetworkCredentials )
+static TlsTransportStatus_t tlsSetup(NetworkContext_t* pNetCtx,
+    const char* pHostName,
+    const NetworkCredentials_t* pNetCred )
 {
     TlsTransportStatus_t returnStatus = TLS_TRANSPORT_SUCCESS;
-    int iResult = SSL_SUCCESS;
+ 
     /*char errString[80];*/
 
-    configASSERT( pNetworkContext != NULL );
-    configASSERT( pHostName != NULL );
-    configASSERT( pNetworkCredentials != NULL );
-    configASSERT( pNetworkCredentials->pRootCa != NULL );
-    configASSERT( pNetworkContext->tcpSocket != NULL );
-    
-    if (pNetworkContext->sslContext.ctx == NULL)
+    configASSERT(pNetCtx != NULL);
+    configASSERT(pHostName != NULL);
+    configASSERT(pNetCred != NULL);
+    configASSERT(pNetCred->pRootCa != NULL);
+    configASSERT(pNetCtx->tcpSocket != NULL);
+
+
+    if (pNetCtx->sslContext.ctx == NULL )
     {
-        /* Attempt to create a context that uses the TLS 1.3 or 1.2 client protocol. */
-        pNetworkContext->sslContext.ctx = wolfSSL_CTX_new(wolfSSLv23_client_method_ex(NULL));
+        /* Attempt to create a context that uses the TLS 1.3 or 1.2 */
+        pNetCtx->sslContext.ctx =
+            wolfSSL_CTX_new( wolfSSLv23_client_method_ex( NULL ) );
     }
 
-    if (pNetworkContext->sslContext.ctx == NULL)
+    if (pNetCtx->sslContext.ctx != NULL )
+    {
+        /* attempt to load ca cert file, client cert file and client private key file */
+        if( wolfSSL_CTX_load_verify_locations( pNetCtx->sslContext.ctx,
+                (const char*)(pNetCred->pRootCa), NULL) == SSL_SUCCESS )
+        {
+            if( wolfSSL_CTX_use_certificate_file(pNetCtx->sslContext.ctx,
+                (const char*)(pNetCred->pClientCert), SSL_FILETYPE_PEM)
+                                                              == SSL_SUCCESS )
+            {
+                if ( wolfSSL_CTX_use_PrivateKey_file(pNetCtx->sslContext.ctx,
+                    (const char*)(pNetCred->pPrivateKey), SSL_FILETYPE_PEM) 
+                                                                == SSL_SUCCESS)
+                {
+                    /* create a ssl object */
+                    pNetCtx->sslContext.ssl = 
+                                        wolfSSL_new(pNetCtx->sslContext.ctx);
+
+                    if (pNetCtx->sslContext.ssl != NULL)
+                    {
+                        Socket_t xSocket = pNetCtx->tcpSocket;
+
+                        /* set Recv/Send glue functions to the WOLFSSL object */
+                        wolfSSL_SSLSetIORecv(pNetCtx->sslContext.ssl, 
+                                                        wolfSSL_IORecvGlue);
+                        wolfSSL_SSLSetIOSend(pNetCtx->sslContext.ssl,
+                                                        wolfSSL_IOSendGlue);
+
+                        /* set socket as a context of read/send glue funcs */
+                        wolfSSL_SetIOReadCtx(pNetCtx->sslContext.ssl, xSocket);
+                        wolfSSL_SetIOWriteCtx(pNetCtx->sslContext.ssl, xSocket);
+
+                        /* let wolfSSL perform tls handshake */
+                        if (wolfSSL_connect(pNetCtx->sslContext.ssl)
+                            == SSL_SUCCESS)
+                        {
+                            returnStatus = TLS_TRANSPORT_SUCCESS;
+                        }
+                        else
+                        {
+                            wolfSSL_shutdown(pNetCtx->sslContext.ssl);
+                            wolfSSL_free(pNetCtx->sslContext.ssl);
+                            pNetCtx->sslContext.ssl = NULL;
+                            wolfSSL_CTX_free(pNetCtx->sslContext.ctx);
+                            pNetCtx->sslContext.ctx = NULL;
+
+                            LogError(("Failed to establish a TLS connection"));
+                            returnStatus = TLS_TRANSPORT_HANDSHAKE_FAILED;
+                        }
+                    }
+                    else
+                    {
+                        wolfSSL_CTX_free(pNetCtx->sslContext.ctx);
+                        pNetCtx->sslContext.ctx = NULL;
+
+                        LogError(("Failed to create wolfSSL object"));
+                        returnStatus = TLS_TRANSPORT_INTERNAL_ERROR;
+                    }
+                }
+                else
+                {
+                    wolfSSL_CTX_free(pNetCtx->sslContext.ctx);
+                    pNetCtx->sslContext.ctx = NULL;
+
+                    LogError(("Failed to load client-private-key file"));
+                    returnStatus = TLS_TRANSPORT_INVALID_CREDENTIALS;
+                }
+            }
+            else
+            {
+                wolfSSL_CTX_free(pNetCtx->sslContext.ctx);
+                pNetCtx->sslContext.ctx = NULL;
+
+                LogError(("Failed to load client-certificate file"));
+                returnStatus = TLS_TRANSPORT_INVALID_CREDENTIALS;
+            }
+        }
+        else
+        {
+            wolfSSL_CTX_free(pNetCtx->sslContext.ctx);
+            pNetCtx->sslContext.ctx = NULL;
+
+            LogError(("Failed to load ca-certificate file"));
+            returnStatus = TLS_TRANSPORT_INVALID_CREDENTIALS;
+        }
+    }
+    else
     {
         LogError(("Failed to create a wolfSSL_CTX"));
         returnStatus = TLS_TRANSPORT_CONNECT_FAILURE;
-        return returnStatus;
     }
-
-    /* attempt to load ca cert file, client cert file and client private key file */
-    iResult = wolfSSL_CTX_load_verify_locations(pNetworkContext->sslContext.ctx,
-        (const char*)(pNetworkCredentials->pRootCa), NULL);
-
-    if (iResult == SSL_SUCCESS)
-    {
-        iResult = wolfSSL_CTX_use_certificate_file(pNetworkContext->sslContext.ctx,
-            (const char*)(pNetworkCredentials->pClientCert), SSL_FILETYPE_PEM);
-    }
-    else
-    {
-        LogError(("Failed to load ca-certificate file"));
-        returnStatus = TLS_TRANSPORT_INVALID_CREDENTIALS;
-    }
- 
-    if (iResult == SSL_SUCCESS)
-    {
-        iResult = wolfSSL_CTX_use_PrivateKey_file(pNetworkContext->sslContext.ctx,
-            (const char*)(pNetworkCredentials->pPrivateKey), SSL_FILETYPE_PEM);
-    }
-    else
-    {
-        LogError(("Failed to load client-certificate file"));
-        returnStatus = TLS_TRANSPORT_INVALID_CREDENTIALS;
-    }
-
-    if (iResult != SSL_SUCCESS)
-    {
-        LogError(("Failed to load client-private-key file"));
-        returnStatus = TLS_TRANSPORT_INVALID_CREDENTIALS;
-    }
- 
-    /* on success of file loading, attempt to create a ssl object */
-    if (returnStatus == TLS_TRANSPORT_SUCCESS)
-    {
-        /* create a ssl object */
-        pNetworkContext->sslContext.ssl = wolfSSL_new(pNetworkContext->sslContext.ctx);
-        Socket_t xSocket = pNetworkContext->tcpSocket;
-
-        if (pNetworkContext->sslContext.ssl != NULL)
-        {
-            /* set Recv/Send glue functions to the WOLFSSL object */
-            wolfSSL_SSLSetIORecv(pNetworkContext->sslContext.ssl, wolfSSL_IORecvGlue);
-            wolfSSL_SSLSetIOSend(pNetworkContext->sslContext.ssl, wolfSSL_IOSendGlue);
-
-            /* set FreeRTOS socket as the context of read/send glue functions */
-            wolfSSL_SetIOReadCtx(pNetworkContext->sslContext.ssl, xSocket);
-            wolfSSL_SetIOWriteCtx(pNetworkContext->sslContext.ssl, xSocket);
-
-            /* let wolfSSL perform tls handshake */
-            iResult = wolfSSL_connect( pNetworkContext->sslContext.ssl );
-
-            if (iResult != SSL_SUCCESS)
-            {
-                wolfSSL_shutdown(pNetworkContext->sslContext.ssl);
-                wolfSSL_free(pNetworkContext->sslContext.ssl);
-                pNetworkContext->sslContext.ssl = NULL;
-
-                LogError(("Failed to establish a TLS connection"));
-                returnStatus = TLS_TRANSPORT_HANDSHAKE_FAILED;
-            }
-        }
-    }
-
+    
     return returnStatus;
 }
 
@@ -379,12 +414,16 @@ int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
     
     iResult = wolfSSL_read( pSsl, pBuffer, bytesToRecv );
 
-    
     if (iResult > 0)
         tlsStatus = iResult;
-    else
+    else if ( wolfSSL_want_read( pSsl ) == 1 )
         tlsStatus = 0;
-        
+    else
+    {
+        tlsStatus = wolfSSL_state( pSsl );
+        LogError(("Error from wolfSSL_read %d : %s ",
+            iResult, wolfSSL_ERR_reason_error_string( tlsStatus )));
+    }
     return tlsStatus;
 }
 
@@ -396,14 +435,20 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
 {
     int32_t tlsStatus = 0;
     int  iResult = 0;
+    WOLFSSL* pSsl = pNetworkContext->sslContext.ssl;
     
-    iResult = wolfSSL_write(pNetworkContext->sslContext.ssl, pBuffer, bytesToSend);
+    iResult = wolfSSL_write( pSsl, pBuffer, bytesToSend );
     
     if (iResult > 0)
         tlsStatus = iResult;
-    else
+    else if( wolfSSL_want_write( pSsl ) == 1)
         tlsStatus = 0;
-
+    else
+    {
+        tlsStatus = wolfSSL_state(pSsl);
+        LogError(("Error from wolfSL_write %d : %s ",
+            iResult, wolfSSL_ERR_reason_error_string( tlsStatus )));
+    }
     return tlsStatus;
 }
 /*-----------------------------------------------------------*/

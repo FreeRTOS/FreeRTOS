@@ -75,7 +75,7 @@ dependencies:
 
   - name: "mbedtls"
     version: "v2.25.0"
-    respository:
+    repository:
       type: "git"
       url:  "https://github.com/ARMmbed/mbedtls"
       path: "FreeRTOS-Plus/ThirdParty/mbedtls"

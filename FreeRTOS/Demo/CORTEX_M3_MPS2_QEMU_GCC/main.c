@@ -37,6 +37,8 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
 void vApplicationTickHook( void );
+void vFullDemoIdleFunction( void );
+void vFullDemoTickHookFunction( void );
 void main_blinky( void );
 void main_full( void );
 
@@ -52,7 +54,7 @@ int main ()
     }
 #elif (mainCREATE_FULL_DEMO_ONLY == 1)
     {
-        main_full();
+    main_full();
     }
 #else
     {
@@ -100,11 +102,23 @@ volatile size_t xFreeHeapSpace;
     management options.  If there is a lot of heap memory free then the
     configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
     RAM. */
+#if (mainCREATE_FULL_DEMO_ONLY == 1)
+   {
+    /* Call the idle task processing used by the full demo.  The simple
+     blinky demo does not use the idle task hook. */
+    vFullDemoIdleFunction();
+    }
+#endif
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationTickHook( void )
 {
+#if (mainSELECTED_APPLICATION == FULL_DEMO )
+{
+    vFullDemoTickHookFunction();
+}
+#endif /* mainSELECTED_APPLICATION */
 }
 /*-----------------------------------------------------------*/
 

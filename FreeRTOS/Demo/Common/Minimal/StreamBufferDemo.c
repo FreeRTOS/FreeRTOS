@@ -1013,6 +1013,7 @@ BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 		/* One character from the pcDataSentFromInterrupt string is sent on each
 		interrupt.  The task blocked on the stream buffer should not be
 		unblocked until the defined trigger level is hit. */
+		//printf("sending stream buffer from isr\n");
 		xStreamBufferSendFromISR( xInterruptStreamBuffer, ( const void * ) &( pcDataSentFromInterrupt[ xNextChar ] ), sizeof( char ), &xHigherPriorityTaskWoken );
 
 		if( xNextChar < strlen( pcDataSentFromInterrupt ) )
@@ -1071,6 +1072,7 @@ BaseType_t xErrorDetected = pdFALSE;
 			taskEXIT_CRITICAL();
 
 			xBytesReceived = xStreamBufferReceive( xStreamBuffer, ( void * ) ucRxData, sizeof( ucRxData ), xReadBlockTime );
+			//printf("received stream buffer %d == %d\n", xBytesReceived, xReadBlockTime );
 
 			/* Set the file scope variable back to NULL so the interrupt doesn't
 			try to use it again. */

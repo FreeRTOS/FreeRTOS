@@ -1072,7 +1072,6 @@ BaseType_t xErrorDetected = pdFALSE;
 			taskEXIT_CRITICAL();
 
 			xBytesReceived = xStreamBufferReceive( xStreamBuffer, ( void * ) ucRxData, sizeof( ucRxData ), xReadBlockTime );
-			//printf("received stream buffer %d == %d\n", xBytesReceived, xReadBlockTime );
 
 			/* Set the file scope variable back to NULL so the interrupt doesn't
 			try to use it again. */

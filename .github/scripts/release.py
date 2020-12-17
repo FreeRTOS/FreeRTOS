@@ -219,10 +219,13 @@ class KernelRelease(BaseRelease):
         Then tags commit #2 with the new tag version. Notes this will overwrite a tag it already exists
         Finally pushes all these changes
         '''
-        info('Updating file header versions for "%s"' % self.version)
-
+        info('Updating file header versions for "%s"...' % self.version, end='')
         target_version_prefixes = ['FreeRTOS Kernel V']
-        update_version_number_in_freertos_component(self.repo_path, '.', target_version_prefixes, 'FreeRTOS Kernel V%s' % self.version)
+        n_updated = update_version_number_in_freertos_component(self.repo_path,
+                                                                '.',
+                                                                target_version_prefixes,
+                                                                'FreeRTOS Kernel V%s' % self.version)
+        print('%d Files updated.' % n_updated)
 
         self.commitChanges(self.commit_msg_prefix + 'Bump file header version to "%s"' % self.version)
 
@@ -238,8 +241,6 @@ class KernelRelease(BaseRelease):
         '''
         Creates/Overwrites release identified by target tag
         '''
-        info('Creating git release endpoint for "%s"' % self.tag)
-
         # If this release already exists, delete it
         try:
             release_queried = self.repo.get_release(self.tag)
@@ -257,14 +258,12 @@ class KernelRelease(BaseRelease):
                                                prerelease = False)
 
     def autoRelease(self):
-        info('Creating kernel "FreeRTOS Kernel V%s"' % self.version)
+        info('Auto-releasing FreeRTOS Kernel V%s' % self.version)
 
         self.updateFileHeaderVersions()
         self.updateVersionMacros()
         self.pushLocalCommits()
         self.pushTag()
-        self.createGitRelease()
-
 
 class FreertosRelease(BaseRelease):
     def __init__(self, mGit, version, commit, git_ssh=False, git_org='FreeRTOS'):
@@ -292,10 +291,13 @@ class FreertosRelease(BaseRelease):
         assert False, 'Unimplemented'
 
     def updateFileHeaderVersions(self):
-        info('Updating file header versions to "%s"' % self.version)
-
+        info('Updating file header versions to "%s"...' % self.version, end='')
         target_version_substrings = ['FreeRTOS Kernel V', 'FreeRTOS V']
-        update_version_number_in_freertos_component(self.repo_path, '.', target_version_substrings, 'FreeRTOS V%s' % self.version)
+        n_updated = update_version_number_in_freertos_component(self.repo_path,
+                                                                '.',
+                                                                target_version_substrings,
+                                                                'FreeRTOS V%s' % self.version)
+        print('%d Files updated.')
 
         self.commitChanges(self.commit_msg_prefix + 'Bump file header version to "%s"' % self.version)
 
@@ -352,8 +354,9 @@ class FreertosRelease(BaseRelease):
         print()
 
         # Prune then zip package
-        info('Pruning from release zip...')
-        pruned_files = prune_result_tree(rel_repo_path, FREERTOS_RELATIVE_FILE_EXCLUDES)
+        info('Pruning from release zip...', end='')
+        n_pruned = prune_result_tree(rel_repo_path, FREERTOS_RELATIVE_FILE_EXCLUDES)
+        print('%d Files Removed.' % n_pruned)
 
         info('Compressing "%s"...' % self.zip_path)
         with zipfile.ZipFile(self.zip_path, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as zip:
@@ -372,8 +375,6 @@ class FreertosRelease(BaseRelease):
         '''
         Creates/Overwrites release identified by target tag
         '''
-        info('Creating git release endpoint for "%s"' % self.tag)
-
         # If this release already exists, delete it
         try:
             release_queried = self.repo.get_release(self.tag)
@@ -393,7 +394,7 @@ class FreertosRelease(BaseRelease):
         release.upload_asset(self.zip_path, name='FreeRTOSv%s.zip' % self.version, content_type='application/zip')
 
     def autoRelease(self):
-        info('Creating core release "FreeRTOS V%s"' % self.version)
+        info('Auto-releasing FreeRTOS V%s' % self.version)
 
         self.updateFileHeaderVersions()
         self.updateSubmodulePointers()
@@ -492,7 +493,7 @@ def main():
         logIndentPop()
 
     info('Review script output for any unexpected behaviour.')
-    info('Release done.')
+    info('Done.')
 
 if __name__ == '__main__':
     main()

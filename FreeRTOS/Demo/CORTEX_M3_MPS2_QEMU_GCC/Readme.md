@@ -1,8 +1,8 @@
 # Emulating MPS2 Cortex M3 AN385 on QEMU
 
 ## Requirements
-1. GNU Arm Embedded Toolchain download [here](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads)
-3. qemu-arm-system download [here](https://www.qemu.org/download)
+1. GNU Arm Embedded Toolchain download [here](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads) (tested on versiom 9.3.1 20200408)
+3. qemu-arm-system download [here](https://www.qemu.org/download) (tested on version 5.0.1 (v5.0.1-dirty))
 2. Make (tested on version 3.82)
 4. Linux OS (tested on Ubuntu 18.04)
 

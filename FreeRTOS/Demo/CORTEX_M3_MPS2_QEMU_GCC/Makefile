@@ -10,7 +10,7 @@ KERNEL_DIR := $(FREERTOS_DIR)/Source
 FREERTOS_PLUS_DIR_REL := ../../../FreeRTOS-Plus
 FREERTOS_PLUS_DIR := $(abspath $(FREERTOS_PLUS_DIR_REL))
 
-SOURCE_FILES += init/startup.c  syscall.c main.c 
+SOURCE_FILES += init/startup.c  syscall.c main.c
 SOURCE_FILES += $(KERNEL_DIR)/portable/GCC/ARM_CM3/port.c
 SOURCE_FILES += $(KERNEL_DIR)/tasks.c
 SOURCE_FILES += $(KERNEL_DIR)/list.c
@@ -24,36 +24,8 @@ INCLUDE_DIRS += -I$(FREERTOS_DIR)/Demo/CORTEX_M3_MPS2_QEMU_GCC/CMSIS
 INCLUDE_DIRS += -I$(KERNEL_DIR)/include
 INCLUDE_DIRS += -I$(KERNEL_DIR)/portable/GCC/ARM_CM3
 
-ifeq ($(NETWORKING), 1)
-    FREERTOS_TCP = ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP
-
-    # FreeRTOS networking header directories
-    INCLUDE_DIRS += -I${FREERTOS_TCP}/include/
-    INCLUDE_DIRS += -I${FREERTOS_TCP}/portable/Compiler/GCC/
-
-    # FreeRTOS networking sources
-    SOURCE_FILES +=  main_networking.c
-    SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_DNS.c
-    SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_DHCP.c
-    SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_ARP.c
-    SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_TCP_WIN.c
-    SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_Stream_Buffer.c
-    SOURCE_FILES += ${FREERTOS_TCP}/portable/BufferManagement/BufferAllocation_2.c
-    SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_IP.c
-    SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_TCP_IP.c
-    SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_UDP_IP.c
-    SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_Sockets.c
-    SOURCE_FILES += ${FREERTOS_TCP}/portable/NetworkInterface/MPS2_AN385/NetworkInterface.c
-    SOURCE_FILES += TCPEchoClient_SingleTasks.c
-    SOURCE_FILES += ${FREERTOS_TCP}/portable/NetworkInterface/MPS2_AN385/ether_lan9118/smsc9220_eth_drv.c
-
-    # networking specific cflags
-    CFLAGS := -DmainCREATE_NETWROKING_DEMO_ONLY=1
-    CFLAGS += -DmainCREATE_TCP_ECHO_TASKS_SINGLE=1              
-else
-    SOURCE_FILES += main_blinky.c
-    CFLAGS := -DmainCREATE_SIMPLE_BLINKY_DEMO_ONLY=1
-endif
+SOURCE_FILES += main_blinky.c
+CFLAGS := -DmainCREATE_SIMPLE_BLINKY_DEMO_ONLY=1
 
 DEFINES := -DprojCOVERAGE_TEST -DQEMU_SOC_MPS2 -DHEAP3
 
@@ -72,7 +44,7 @@ endif
 
 OBJ_FILES := $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.o)
 
-CFLAGS += $(DEFINES)
+CPPFLAGS += $(DEFINES)
 CFLAGS += $(INCLUDE_DIRS)
 
 .PHONY: clean
@@ -91,7 +63,7 @@ INCLUDES := $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.d)
 
 ${BUILD_DIR}/%.o : %.c Makefile
 	-mkdir -p $(@D)
-	$(CC) $(CFLAGS) -MMD -c $< -o $@
+	$(CC) $(CFLAGS) $(CPPFLAGS) -MMD -c $< -o $@
 
 clean:
 	-rm -rf build

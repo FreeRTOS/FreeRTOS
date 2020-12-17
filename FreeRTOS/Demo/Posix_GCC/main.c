@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202011.00
+ * FreeRTOS V202012.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -36,9 +36,6 @@
  * If mainSELECTED_APPLICATION = FULL_DEMO the more comprehensive test and demo
  * application built. This is implemented and described in main_full.c.
  *
- * If mainSELECTED_APPLICATION = ECHO_CLIENT_DEMO the tcp echo demo will be built.
- * This is implemented and described in main_networking.c
- *
  * This file implements the code that is not demo specific, including the
  * hardware setup and FreeRTOS hook functions.
  *
@@ -68,9 +65,8 @@
 
 #define    BLINKY_DEMO       0
 #define    FULL_DEMO         1
-#define    ECHO_CLIENT_DEMO  2
 
-#define mainSELECTED_APPLICATION FULL_DEMO
+#define mainSELECTED_APPLICATION BLINKY_DEMO
 
 /* This demo uses heap_3.c (the libc provided malloc() and free()). */
 
@@ -140,12 +136,7 @@ int main( void )
     #endif
 
     console_init();
-    #if ( mainSELECTED_APPLICATION == ECHO_CLIENT_DEMO )
-    {
-        console_print("Starting echo client demo\n");
-        main_tcp_echo_client_tasks();
-    }
-    #elif ( mainSELECTED_APPLICATION == BLINKY_DEMO )
+    #if ( mainSELECTED_APPLICATION == BLINKY_DEMO )
     {
         console_print("Starting echo blinky demo\n");
         main_blinky();
@@ -193,7 +184,7 @@ void vApplicationIdleHook( void )
     vTaskDelete() API function to delete themselves then it is also important
     that vApplicationIdleHook() is permitted to return to its calling function,
     because it is the responsibility of the idle task to clean up memory
-    allocated by the kernel to any task that has since deleted itself. */    
+    allocated by the kernel to any task that has since deleted itself. */
 
 
     usleep(15000);

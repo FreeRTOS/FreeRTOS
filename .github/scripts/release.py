@@ -114,8 +114,8 @@ class BaseRelease:
         for r in releases:
             print(r)
 
-    def pushAutoCommits(self):
-        push_infos = self.local_repo.remote('origin').push()
+    def pushLocalCommits(self, force=False):
+        push_infos = self.local_repo.remote('origin').push(force=force)
 
         # Check for any errors
         for info in push_infos:
@@ -126,10 +126,69 @@ class BaseRelease:
         tag_info = self.local_repo.create_tag(self.tag, message=self.tag_msg, force=True)
         self.local_repo.git.push(tags=True, force=True)
 
+    def deleteTag(self):
+        # Remove from remote
+        if self.tag in self.local_repo.tags:
+            info('Deleting tag "%s"' % self.tag)
+            self.local_repo.remote('origin').push(':%s' % self.tag)
+        else:
+            info('A tag does not exists for "%s". No need to delete.' % self.tag)
+
     def updateSubmodulePointer(self, rel_path, ref):
         submodule = Repo(rel_path)
         submodule.remote('origin').fetch()
         submodule.git.checkout(ref)
+
+    def deleteGitRelease(self):
+        info('Deleting git release endpoint for "%s"' % self.tag)
+
+        try:
+            self.repo.get_release(self.tag).delete_release()
+        except UnknownObjectException:
+            info('A release endpoint does not exist for "%s". No need to erase.' % self.tag)
+        except:
+            assert False, 'Encountered error while trying to delete git release endpoint'
+
+    def rollbackAutoCommits(self, n_autocommits=2):
+        info('Rolling back "%s" autocommits' % self.tag)
+
+        if self.tag not in self.local_repo.tags:
+            error('Could not find a SHA to rollback to for tag "%s"' % self.tag)
+            return False
+
+        # Search for auto release SHAs that match the release tag SHA
+        tag_commit = self.local_repo.tag('refs/tags/%s' % self.tag).commit
+        prior_commit = self.local_repo.commit(tag_commit.hexsha + '~%d' % n_autocommits)
+        n_commits_searched = 0
+        for commit in self.local_repo.iter_commits():
+            if n_commits_searched > 25:
+                error('Exhaustively searched but could not find tag commit to rollback')
+                return False
+
+            if (self.commit_msg_prefix in commit.message
+                    and commit.hexsha == tag_commit.hexsha
+                    and self.version in commit.message):
+
+                info('Found matching tag commit %s. Reverting to prior commit %s'
+                        % (tag_commit.hexsha, prior_commit.hexsha))
+
+                # Found the commit prior to this autorelease. Revert back to it then push
+                self.local_repo.git.reset(prior_commit.hexsha, hard=True)
+                self.pushLocalCommits(force=True)
+                return True
+
+            n_commits_searched += 1
+
+        return False
+
+    def restorePriorToRelease(self):
+        info('Restoring "master" to just before autorelease:%s' % self.version)
+
+        self.deleteGitRelease()
+        self.rollbackAutoCommits()
+        self.deleteTag()
+        self.pushLocalCommits(force=True)
+
 
 class KernelRelease(BaseRelease):
     def __init__(self, mGit, version, commit, git_ssh=False, git_org='FreeRTOS'):
@@ -196,6 +255,16 @@ class KernelRelease(BaseRelease):
                                                message = self.description,
                                                draft = False,
                                                prerelease = False)
+
+    def autoRelease(self):
+        info('Creating kernel "FreeRTOS Kernel V%s"' % self.version)
+
+        self.updateFileHeaderVersions()
+        self.updateVersionMacros()
+        self.pushLocalCommits()
+        self.pushTag()
+        self.createGitRelease()
+
 
 class FreertosRelease(BaseRelease):
     def __init__(self, mGit, version, commit, git_ssh=False, git_org='FreeRTOS'):
@@ -323,6 +392,15 @@ class FreertosRelease(BaseRelease):
 
         release.upload_asset(self.zip_path, name='FreeRTOSv%s.zip' % self.version, content_type='application/zip')
 
+    def autoRelease(self):
+        info('Creating core release "FreeRTOS V%s"' % self.version)
+
+        self.updateFileHeaderVersions()
+        self.updateSubmodulePointers()
+        self.pushLocalCommits()
+        self.pushTag()
+        self.createReleaseZip()
+        self.createGitRelease()
 
 def configure_argparser():
     parser = ArgumentParser(description='FreeRTOS Release tool')
@@ -337,10 +415,20 @@ def configure_argparser():
                         required=False,
                         help='FreeRTOS Standard Distribution Version to replace old version. (Ex. "FreeRTOS V202012.00")')
 
+    parser.add_argument('--rollback-core-version',
+                        default=None,
+                        required=False,
+                        help='Reset "master" to state prior to autorelease of given core version')
+
     parser.add_argument('--new-kernel-version',
                         default=None,
                         required=False,
-                        help='FreeRTOS-Kernel Version to replace old version. (Ex. "FreeRTOS Kernel V10.4.3")')
+                        help='Reset "master" to just before the autorelease for the specified kernel version")')
+
+    parser.add_argument('--rollback-kernel-version',
+                        default=None,
+                        required=False,
+                        help='Reset "master" to state prior to autorelease of the given kernel version')
 
     parser.add_argument('--use-git-ssh',
                         default=True,
@@ -362,30 +450,45 @@ def main():
     assert 'GITHUB_TOKEN' in os.environ, 'Set env{GITHUB_TOKEN} to an authorized git PAT'
     mGit = Github(os.environ.get('GITHUB_TOKEN'))
 
-    # Create release or test
+    # Unit tests
     if args.unit_test:
+        rel_freertos = FreertosRelease(mGit, args.new_core_version, None, git_ssh=args.use_git_ssh, git_org=args.git_org)
+
+        # Undo a release
+        rel_freertos.deleteGitRelease()
+        rel_freertos.rollbackAutoCommits()
+        rel_freertos.deleteTag()
+        rel_freertos.pushLocalCommits(force=True)
         return
 
+    # Create Releases
     if args.new_kernel_version:
-        info('Creating kernel "FreeRTOS Kernel V%s"' % args.new_kernel_version)
+        info('Starting kernel release...')
         logIndentPush()
         rel_kernel = KernelRelease(mGit, args.new_kernel_version, None, git_ssh=args.use_git_ssh, git_org=args.git_org)
-        rel_kernel.updateFileHeaderVersions()
-        rel_kernel.updateVersionMacros()
-        rel_kernel.pushAutoCommits()
-        rel_kernel.pushTag()
-        rel_kernel.createGitRelease()
+        rel_kernel.autoRelease()
         logIndentPop()
+
     if args.new_core_version:
-        info('Creating core release "FreeRTOS V%s"' % args.new_core_version)
+        info('Starting core release...')
         logIndentPush()
         rel_freertos = FreertosRelease(mGit, args.new_core_version, None, git_ssh=args.use_git_ssh, git_org=args.git_org)
-        #rel_freertos.updateFileHeaderVersions()
-        #rel_freertos.updateSubmodulePointers()
-        #rel_freertos.pushAutoCommits()
-        #rel_freertos.pushTag()
-        rel_freertos.createReleaseZip()
-        rel_freertos.createGitRelease()
+        rel_freertos.autoRelease()
+        logIndentPop()
+
+    # Undo autoreleases
+    if args.rollback_kernel_version:
+        info('Starting kernel rollback...')
+        rel_kernel = KernelRelease(mGit, args.rollback_kernel_version, None, git_ssh=args.use_git_ssh, git_org=args.git_org)
+        logIndentPush()
+        rel_kernel.restorePriorToRelease()
+        logIndentPop()
+
+    if args.rollback_core_version:
+        info('Starting core rollback...')
+        logIndentPush()
+        rel_freertos = FreertosRelease(mGit, args.rollback_core_version, None, git_ssh=args.use_git_ssh, git_org=args.git_org)
+        rel_freertos.restorePriorToRelease()
         logIndentPop()
 
     info('Review script output for any unexpected behaviour.')

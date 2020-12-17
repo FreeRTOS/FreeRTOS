@@ -67,6 +67,7 @@ extern void vAssertCalled( void );
 #define configTIMER_TASK_PRIORITY                ( configMAX_PRIORITIES - 1 )
 #define configUSE_COUNTING_SEMAPHORES            1
 #define configSUPPORT_DYNAMIC_ALLOCATION         1
+#define configSUPPORT_STATIC_ALLOCATION          1
 #define  configNUM_TX_DESCRIPTORS                15
 #define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN 2
 

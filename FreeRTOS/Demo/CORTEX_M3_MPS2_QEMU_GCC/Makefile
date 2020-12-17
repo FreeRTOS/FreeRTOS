@@ -26,14 +26,12 @@ INCLUDE_DIRS += -I$(KERNEL_DIR)/portable/GCC/ARM_CM3
 
 ifeq ($(FULL_DEMO), 1)
     SOURCE_FILES += main_full.c
-    SOURCE_FILES += $(FREERTOS_DIR)/Demo/Common/Full/death.c
-    SOURCE_FILES += $(FREERTOS_DIR)/Demo/Common/Full/BlockQ.c
     SOURCE_FILES += $(KERNEL_DIR)/stream_buffer.c
     SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/AbortDelay.c
-#SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/BlockQ.c
+    SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/BlockQ.c
     SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/blocktim.c
     SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/countsem.c
-#SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/death.c
+    SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/death.c
     SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/dynamic.c
     SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/EventGroupsDemo.c
     SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/flop.c
@@ -55,14 +53,6 @@ ifeq ($(FULL_DEMO), 1)
     SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/TaskNotify.c
     SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/TimerDemo.c
     SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Full/print.c
-
-# Trace library.
-#SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/trcKernelPort.c
-#SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/trcSnapshotRecorder.c
-#SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/trcStreamingRecorder.c
-#SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/File/trcStreamingPort.c
-#SOURCE_FILES += run-time-stats-utils.c
-
 
     INCLUDE_DIRS += -I$(FREERTOS_DIR)/Demo/Common/include
     INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/Include/

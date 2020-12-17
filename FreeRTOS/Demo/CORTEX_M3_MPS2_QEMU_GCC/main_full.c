@@ -402,7 +402,7 @@ HeapStats_t xHeapStats;
 					xTaskGetTickCount() );
 
 		// Reset the error condition
-		pcStatusMessage = "OK: No errors";	
+		pcStatusMessage = "OK: No errors";
 	}
 }
 /*-----------------------------------------------------------*/

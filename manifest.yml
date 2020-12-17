@@ -25,14 +25,14 @@ dependencies:
       path: "FreeRTOS-Plus/Source/coreJSON"
 
   - name: "coreHTTP"
-    version: "v1.0.1"
+    version: "v2.0.0"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreHTTP.git"
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreHTTP"
 
   - name: "coreMQTT"
-    version: "v1.0.2"
+    version: "v1.1.0"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreMQTT.git"
@@ -60,9 +60,31 @@ dependencies:
       path: "FreeRTOS-Plus/Source/AWS/device-shadow"
 
   - name: "jobs"
-    version: "v1.0.1"
+    version: "v1.0.0"
     repository:
       type: "git"
       url: "https://github.com/aws/Jobs-for-AWS-IoT-embedded-sdk.git"
       path: "FreeRTOS-Plus/Source/AWS/jobs"
 
+  - name: "wolfssl"
+    version: "v4.5.0-stable"
+    repository:
+      type: "git"
+      url: "https://github.com/wolfSSL/wolfssl"
+      path: "FreeRTOS-Plus/ThirdParty/wolfSSL"
+
+  - name: "mbedtls"
+    version: "v2.25.0"
+    repository:
+      type: "git"
+      url:  "https://github.com/ARMmbed/mbedtls"
+      path: "FreeRTOS-Plus/ThirdParty/mbedtls"
+
+  - name: "backoffAlgorithm"
+    version: "v1.0.0"
+    repository:
+      type: "git"
+      url: "https://github.com/FreeRTOS/backoffAlgorithm"
+      path: "FreeRTOS-Plus/Source/Utilities/backoff_algorithm"
+
+license: "MIT"

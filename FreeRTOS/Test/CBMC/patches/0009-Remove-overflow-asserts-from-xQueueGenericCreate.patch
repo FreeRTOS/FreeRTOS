@@ -1,5 +1,5 @@
 diff --git a/FreeRTOS/Source/queue.c b/FreeRTOS/Source/queue.c
-index d2e27e55a..4dd164da6 100644
+index b01dfd11f..b219b599a 100644
 --- a/FreeRTOS/Source/queue.c
 +++ b/FreeRTOS/Source/queue.c
 @@ -395,7 +395,7 @@ BaseType_t xQueueGenericReset( QueueHandle_t xQueue,
@@ -9,5 +9,5 @@ index d2e27e55a..4dd164da6 100644
 -        configASSERT( ( uxItemSize == 0 ) || ( uxQueueLength == ( xQueueSizeInBytes / uxItemSize ) ) );
 +        /* configASSERT( ( uxItemSize == 0 ) || ( uxQueueLength == ( xQueueSizeInBytes / uxItemSize ) ) ); */
  
-         /* Allocate the queue and storage area.  Justification for MISRA
-          * deviation as follows:  pvPortMalloc() always ensures returned memory
+         /* Check for addition overflow. */
+         configASSERT( ( sizeof( Queue_t ) + xQueueSizeInBytes ) >  xQueueSizeInBytes );

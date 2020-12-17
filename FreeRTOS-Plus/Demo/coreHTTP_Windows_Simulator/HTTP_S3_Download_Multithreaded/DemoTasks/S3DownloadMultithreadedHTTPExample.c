@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202011.00
+ * FreeRTOS V202012.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -127,11 +127,6 @@
 /* Check that the range request length is defined. */
 #ifndef democonfigRANGE_REQUEST_LENGTH
     #define democonfigRANGE_REQUEST_LENGTH    ( 1024 )
-#endif
-
-/* Check that the stack size to use for HTTP tasks is defined. */
-#ifndef httpexampleTASK_STACK_SIZE
-    #define httpexampleTASK_STACK_SIZE    ( configMINIMAL_STACK_SIZE * 4 )
 #endif
 
 /**
@@ -577,14 +572,14 @@ static void prvHTTPDemoTask( void * pvParameters )
             /* Open request and response tasks. */
             xDemoStatus = xTaskCreate( prvRequestTask,
                                        "RequestTask",
-                                       httpexampleTASK_STACK_SIZE,
+                                       democonfigDEMO_STACKSIZE,
                                        NULL,
                                        tskIDLE_PRIORITY,
                                        &xRequestTask );
 
             xDemoStatus = xTaskCreate( prvResponseTask,
                                        "ResponseTask",
-                                       httpexampleTASK_STACK_SIZE,
+                                       democonfigDEMO_STACKSIZE,
                                        NULL,
                                        tskIDLE_PRIORITY,
                                        &xResponseTask );

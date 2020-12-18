@@ -61,26 +61,21 @@ def printDot(op_code, cur_count, max_count=None, message=''):
         print('.', end='')
 
 class BaseRelease:
-    def __init__(self, mGit, version, commit='HEAD', git_ssh=False, git_org='FreeRTOS'):
+    def __init__(self, mGit, version, commit='HEAD', git_ssh=False, git_org='FreeRTOS', repo_path=None):
         self.version = version
         self.tag_msg = 'Autocreated by FreeRTOS Git Tools.'
         self.commit = commit
         self.git_ssh = git_ssh
         self.git_org = git_org
-        self.repo_path = None
+        self.repo_path = repo_path
         self.local_repo = None
         self.commit_msg_prefix = '[AUTO][RELEASE]: '
         self.description = ''
-
         self.mGit = mGit # Save a handle to the authed git session
 
-    def updateFileHeaderVersions(self):
-        '''
-        Updates for all FreeRTOS/FreeRTOS files, not including submodules, to have their file header
-        versions updated to match this release version. It creates the release tag and stores these updates there,
-        at a detached commit (akin to a branch).
-        '''
-        assert False, 'Implement me'
+        if self.repo_path:
+            info('Sourcing "%s" to make local commits' % self.repo_path)
+            self.local_repo = Repo(self.repo_path)
 
     def CheckRelease(self):
         '''
@@ -142,6 +137,25 @@ class BaseRelease:
         submodule.remote('origin').fetch()
         submodule.git.checkout(ref)
 
+    def updateFileHeaderVersions(self, old_version_substrings, new_version_string):
+        info('Updating file header versions for "%s"...' % self.version, end='')
+        n_updated = 0
+        n_updated += update_version_number_in_freertos_component(self.repo_path,
+                                                                 '.',
+                                                                 old_version_substrings,
+                                                                 new_version_string,
+                                                                 exclude_hidden=True)
+
+        n_updated += update_version_number_in_freertos_component(os.path.join('.github', 'scripts'),
+                                                                 self.repo_path,
+                                                                 old_version_substrings,
+                                                                 new_version_string,
+                                                                 exclude_hidden=False)
+
+        print('...%d Files updated.' % n_updated)
+
+        self.commitChanges(self.commit_msg_prefix + 'Bump file header version to "%s"' % self.version)
+
     def deleteGitRelease(self):
         info('Deleting git release endpoint for "%s"' % self.tag)
 
@@ -194,44 +208,29 @@ class BaseRelease:
 
 
 class KernelRelease(BaseRelease):
-    def __init__(self, mGit, version, commit='HEAD', git_ssh=False, git_org='FreeRTOS'):
-        super().__init__(mGit, version, commit=commit, git_ssh=git_ssh, git_org=git_org)
+    def __init__(self, mGit, version, commit='HEAD', git_ssh=False, git_org='FreeRTOS', repo_path=None):
+        super().__init__(mGit, version, commit=commit, git_ssh=git_ssh, git_org=git_org, repo_path=repo_path)
 
         self.repo_name = '%s/FreeRTOS-Kernel' % self.git_org
         self.repo = mGit.get_repo(self.repo_name)
         self.tag = 'V%s' % version
 
-        # Download a local git repo for pushing commits
-        remote_name = self.getRemoteEndpoint(self.repo_name)
-        self.repo_path = 'tmp-release-freertos-kernel'
+        # Parent ctor configures local_repo if caller chooses to source local repo from repo_path.
+        if self.repo_path is None:
+            self.repo_path = 'tmp-release-freertos-kernel'
+            if os.path.exists(self.repo_path):
+                shutil.rmtree(self.repo_path)
 
-        # Clean up any old work from previous runs
-        if os.path.exists(self.repo_path):
-            shutil.rmtree(self.repo_path)
+            # Clone the target repo for creating the release autocommits
+            remote_name = self.getRemoteEndpoint(self.repo_name)
+            info('Downloading %s@%s to baseline auto-commits...' % (remote_name, commit), end='')
+            self.local_repo = Repo.clone_from(remote_name, self.repo_path, progress=printDot)
 
-        # Clone the target repo for creating the release autocommits
-        info('Downloading %s@%s to baseline auto-commits...' % (remote_name, commit), end='')
-        self.local_repo = Repo.clone_from(remote_name, self.repo_path, progress=printDot)
+        # In case user gave non-HEAD commit to baseline
         self.local_repo.git.checkout(commit)
+
         print()
 
-    def updateFileHeaderVersions(self):
-        '''
-        Adds changes for two commits
-            1.) Updates to file headers
-            2.) Update to task.h macros
-        Then tags commit #2 with the new tag version. Notes this will overwrite a tag it already exists
-        Finally pushes all these changes
-        '''
-        info('Updating file header versions for "%s"...' % self.version, end='')
-        target_version_prefixes = ['FreeRTOS Kernel V']
-        n_updated = update_version_number_in_freertos_component(self.repo_path,
-                                                                '.',
-                                                                target_version_prefixes,
-                                                                'FreeRTOS Kernel V%s' % self.version)
-        print('...%d Files updated.' % n_updated)
-
-        self.commitChanges(self.commit_msg_prefix + 'Bump file header version to "%s"' % self.version)
 
     def updateVersionMacros(self):
         info('Updating version macros in task.h for "%s"' % self.version)
@@ -264,7 +263,7 @@ class KernelRelease(BaseRelease):
     def autoRelease(self):
         info('Auto-releasing FreeRTOS Kernel V%s' % self.version)
 
-        self.updateFileHeaderVersions()
+        self.updateFileHeaderVersions(['FreeRTOS Kernel V'], 'FreeRTOS Kernel V%s' % self.version)
         self.updateVersionMacros()
 
         # When baselining off a non-HEAD commit, master is left unchanged by tagging a detached HEAD,
@@ -278,9 +277,11 @@ class KernelRelease(BaseRelease):
 
         info('Kernel release done.')
 
+
+
 class FreertosRelease(BaseRelease):
-    def __init__(self, mGit, version, commit, git_ssh=False, git_org='FreeRTOS'):
-        super().__init__(mGit, version, commit, git_ssh=git_ssh, git_org=git_org)
+    def __init__(self, mGit, version, commit, git_ssh=False, git_org='FreeRTOS', repo_path=None):
+        super().__init__(mGit, version, commit, git_ssh=git_ssh, git_org=git_org, repo_path=repo_path)
 
         self.repo_name = '%s/FreeRTOS' % self.git_org
         self.repo = mGit.get_repo(self.repo_name)
@@ -288,32 +289,25 @@ class FreertosRelease(BaseRelease):
         self.description = 'Contains source code and example projects for the FreeRTOS Kernel and FreeRTOS+ libraries.'
         self.zip_path = 'FreeRTOSv%s.zip' % self.version
 
-        remote_name = self.getRemoteEndpoint(self.repo_name)
-        self.repo_path = 'tmp-release-freertos'
+        # Download a fresh copy of local repo for making autocommits, if necessary
+        if self.repo_path is None:
+            self.repo_path = 'tmp-release-freertos'
 
-        # Clean up any old work from previous runs
-        if os.path.exists(self.repo_path):
-            shutil.rmtree(self.repo_path)
+            # Clean up any old work from previous runs
+            if os.path.exists(self.repo_path):
+                shutil.rmtree(self.repo_path)
 
-        # Clone the target repo for creating the release autocommits
-        info('Downloading %s@%s to baseline auto-commits...' % (remote_name, commit), end='')
-        self.local_repo = Repo.clone_from(remote_name, self.repo_path, progress=printDot)
+            # Clone the target repo for creating the release autocommits
+            remote_name = self.getRemoteEndpoint(self.repo_name)
+            info('Downloading %s@%s to baseline auto-commits...' % (remote_name, commit), end='')
+            self.local_repo = Repo.clone_from(remote_name, self.repo_path, progress=printDot)
+
+        # In support of non-HEAD baselines
         self.local_repo.git.checkout(commit)
         print()
 
     def isValidManifestYML(self, path_yml):
         assert False, 'Unimplemented'
-
-    def updateFileHeaderVersions(self):
-        info('Updating file header versions to "%s"...' % self.version, end='')
-        target_version_substrings = ['FreeRTOS Kernel V', 'FreeRTOS V']
-        n_updated = update_version_number_in_freertos_component(self.repo_path,
-                                                                '.',
-                                                                target_version_substrings,
-                                                                'FreeRTOS V%s' % self.version)
-        print('...%d Files updated.' % n_updated)
-
-        self.commitChanges(self.commit_msg_prefix + 'Bump file header version to "%s"' % self.version)
 
     def updateSubmodulePointers(self):
         '''
@@ -414,7 +408,7 @@ class FreertosRelease(BaseRelease):
     def autoRelease(self):
         info('Auto-releasing FreeRTOS V%s' % self.version)
 
-        self.updateFileHeaderVersions()
+        self.updateFileHeaderVersions(['FreeRTOS Kernel V', 'FreeRTOS V'], 'FreeRTOS V%s' % self.version)
         self.updateSubmodulePointers()
         # When baselining off a non-HEAD commit, master is left unchanged by tagging a detached HEAD,
         # applying the autocommits, tagging, and pushing the new tag data to remote.

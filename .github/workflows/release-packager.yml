@@ -1,4 +1,4 @@
-name: FreeRTOS-Release-Packager
+name: Auto-Release
 
 on:
   workflow_dispatch:
@@ -6,57 +6,49 @@ on:
       commit_id:
         description: 'Commit ID'
         required: true
+        default: 'HEAD'
       version_number:
-        description: 'Version Number (Ex. 10.4.1)'
+        description: 'Version Number (Ex. 202000.00)'
         required: true
-        default: '10.4.1'             
+        default: '202000.00'
 
 jobs:
-  release-packager:
-    name: Release Packager
+  auto-release:
+    name: Auto Release
     runs-on: ubuntu-latest
     steps:
-      # Need a separate copy to fetch packing tools, as source FreeRTOS dir will be pruned and operated on
-      - name: Checkout FreeRTOS Tools
-        uses: actions/checkout@v2
-        with:
-          ref:  master
-          path: tools          
-          
-      # Setup packing tools
       - name: Tool Setup
         uses: actions/setup-python@v2
         with:
           python-version: 3.8.5
-          architecture:   x64  
-        env:  
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-      
-      # Packaging     
-      - name: Packaging 
-        run: python tools/.github/scripts/freertos_zipper.py --freertos-commit ${{ github.event.inputs.commit_id }} --zip-version ${{ github.event.inputs.version_number }} 
-                  
-      # Create release endpoint
-      - name: Create Release
-        id:   create_release
-        uses: actions/create-release@v1
+          architecture:   x64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-            tag_name:     V${{ github.event.inputs.version_number }} 
-            release_name: FreeRTOS Release V${{ github.event.inputs.version_number }} 
-            draft:        false
-            prerelease:   false
-            commitish:    ${{ github.event.inputs.commit_id }}
-                      
-      # Upload release assets the recently created endpoint
-      - name: Upload Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: ./FreeRTOSv${{ github.event.inputs.version_number }}.zip
-            asset_name: FreeRTOSv${{ github.event.inputs.version_number }}.zip
-            asset_content_type: application/zip
 
+      # Source the release tools from FreeRTOS/FreeRTOS
+      - name: Checkout FreeRTOS Release Tools
+        uses: actions/checkout@v2
+        with:
+          repository: dachalco/FreeRTOS
+          ref: autorelease/enhancements
+          path: tools
+
+      # Simpler git auth if we use checkout action and forward the repo to release script
+      - name: Checkout FreeRTOS
+        uses: actions/checkout@v2
+        with:
+          repository: dachalco/FreeRTOS
+          path: local_core
+
+      - name: Release
+        run: |
+          # Configure repo for push
+          git config --global user.name ${{ github.actor }}
+          git config --global user.email ${{ github.actor }}@users.noreply.github.com
+
+          # Run the release script
+          pip install -r ./tools/.github/scripts/release-requirements.txt
+          ./tools/.github/scripts/release.py dachalco --core-repo-path=local_core --core-commit=${{ github.event.inputs.commit_id }} --new-core-version=${{ github.event.inputs.version_number }}
+          exit $?
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

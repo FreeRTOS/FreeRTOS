@@ -32,29 +32,30 @@ class HeaderChecker:
         n_failed = 0
         for path_file in file_checklist:
             assert isinstance(path_file, str), 'Unexpected JSON format for ' + path_json
-            n_failed += not self.isValidFile(path_file)
+            if os.path.exists(path_file):
+                n_failed += not self.isValidFile(path_file)
+            else:
+                print('Skipping check on deleted file: %s' & path_file)
 
         return n_failed
 
     def isValidFile(self, path):
         assert os.path.exists(path), 'No such file: ' + path
+        print('Checking file: %s...' % path, end='')
 
-        # Skip any ignored files
-        if self.isIgnoredFile(path):
+        if self.isIgnoredFile(path) or os.path.isdir(path):
+            print('SKIP')
             return True
 
-        # Skip if entry is a directory.
-        if os.path.isdir(path):
-            print('Skipping valid file check on directory path: %s' % path)
-            return True
-
-        # Don't need entire file. Read sufficienly large chunk of file that should contain the header
+        # Don't need entire file. Read sufficiently large chunk of file that should contain the header
         with open(path, encoding='utf-8', errors='ignore') as file:
             chunk = file.read(len(''.join(self.header)) + self.padding)
             lines = [('%s\n' % l) for l in chunk.strip().splitlines()][:len(self.header)]
             if self.header == lines:
+                print('PASS')
                 return True
             else:
+                print('FAIL')
                 print('File Delta: %s' % path)
                 print(*unified_diff(lines[:len(self.header)], self.header))
                 return False

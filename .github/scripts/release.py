@@ -446,6 +446,12 @@ def configure_argparser():
                         required=False,
                         help='Reset "master" to state prior to autorelease of given core version')
 
+    parser.add_argument('--core-repo-path',
+                        type=str,
+                        default=None,
+                        required=False,
+                        help='Instead of downloading from git, use existing local repos for autocommits')
+
     parser.add_argument('--new-kernel-version',
                         default=None,
                         required=False,
@@ -462,8 +468,14 @@ def configure_argparser():
                         required=False,
                         help='Reset "master" to state prior to autorelease of the given kernel version')
 
+    parser.add_argument('--kernel-repo-path',
+                        type=str,
+                        default=None,
+                        required=False,
+                        help='Instead of downloading from git, use existing local repos for autocommits')
+
     parser.add_argument('--use-git-ssh',
-                        default=True,
+                        default=False,
                         action='store_false',
                         help='Use SSH endpoints to interface git remotes, instead of HTTPS')
 
@@ -484,7 +496,8 @@ def main():
 
     # Unit tests
     if args.unit_test:
-        rel_freertos = FreertosRelease(mGit, args.new_core_version, args.core_commit, git_ssh=args.use_git_ssh, git_org=args.git_org)
+        rel_freertos = FreertosRelease(mGit, args.new_core_version, args.core_commit, git_ssh=args.use_git_ssh,
+                                       git_org=args.git_org)
 
         # Undo a release
         rel_freertos.deleteGitRelease()
@@ -497,21 +510,24 @@ def main():
     if args.new_kernel_version:
         info('Starting kernel release...')
         logIndentPush()
-        rel_kernel = KernelRelease(mGit, args.new_kernel_version, args.kernel_commit, git_ssh=args.use_git_ssh, git_org=args.git_org)
+        rel_kernel = KernelRelease(mGit, args.new_kernel_version, args.kernel_commit, git_ssh=args.use_git_ssh,
+                                   git_org=args.git_org, repo_path=args.kernel_repo_path)
         rel_kernel.autoRelease()
         logIndentPop()
 
     if args.new_core_version:
         info('Starting core release...')
         logIndentPush()
-        rel_freertos = FreertosRelease(mGit, args.new_core_version, args.core_commit, git_ssh=args.use_git_ssh, git_org=args.git_org)
+        rel_freertos = FreertosRelease(mGit, args.new_core_version, args.core_commit, git_ssh=args.use_git_ssh,
+                                       git_org=args.git_org, repo_path=args.core_repo_path)
         rel_freertos.autoRelease()
         logIndentPop()
 
     # Undo autoreleases
     if args.rollback_kernel_version:
         info('Starting kernel rollback...')
-        rel_kernel = KernelRelease(mGit, args.rollback_kernel_version, args.kernel_commit, git_ssh=args.use_git_ssh, git_org=args.git_org)
+        rel_kernel = KernelRelease(mGit, args.rollback_kernel_version, args.kernel_commit, git_ssh=args.use_git_ssh,
+                                   git_org=args.git_org, repo_path=args.kernel_repo_path)
         logIndentPush()
         rel_kernel.restorePriorToRelease()
         logIndentPop()
@@ -519,7 +535,8 @@ def main():
     if args.rollback_core_version:
         info('Starting core rollback...')
         logIndentPush()
-        rel_freertos = FreertosRelease(mGit, args.rollback_core_version, args.core_commit, git_ssh=args.use_git_ssh, git_org=args.git_org)
+        rel_freertos = FreertosRelease(mGit, args.rollback_core_version, args.core_commit, git_ssh=args.use_git_ssh,
+                                       git_org=args.git_org, repo_path=args.core_repo_path)
         rel_freertos.restorePriorToRelease()
         logIndentPop()
 

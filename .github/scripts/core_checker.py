@@ -297,3 +297,7 @@ def main():
 
     # Run the check on processed args
     return checker.processArgs(args)
+
+
+if __name__ == '__main__':
+    exit(main())

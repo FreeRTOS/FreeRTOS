@@ -32,10 +32,8 @@ class HeaderChecker:
         n_failed = 0
         for path_file in file_checklist:
             assert isinstance(path_file, str), 'Unexpected JSON format for ' + path_json
-            if os.path.exists(path_file):
-                n_failed += not self.isValidFile(path_file)
-            else:
-                print('Skipping check on deleted file: %s' & path_file)
+            if os.path.exists(path_file) and not self.isValidFile(path_file):
+                n_failed += 1
 
         return n_failed
 

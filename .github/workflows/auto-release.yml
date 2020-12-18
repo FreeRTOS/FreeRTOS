@@ -10,7 +10,6 @@ on:
       version_number:
         description: 'Version Number (Ex. 202000.00)'
         required: true
-        default: '202000.00'
 
 jobs:
   auto-release:

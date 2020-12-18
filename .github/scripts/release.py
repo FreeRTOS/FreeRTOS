@@ -166,7 +166,7 @@ class BaseRelease:
         except:
             assert False, 'Encountered error while trying to delete git release endpoint'
 
-    def rollbackAutoCommits(self, n_autocommits=2):
+    def rollbackAutoCommits(self, n_autocommits=2, n_search=25):
         info('Rolling back "%s" autocommits' % self.tag)
 
         if self.tag not in self.local_repo.tags:
@@ -178,7 +178,7 @@ class BaseRelease:
         prior_commit = self.local_repo.commit(tag_commit.hexsha + '~%d' % n_autocommits)
         n_commits_searched = 0
         for commit in self.local_repo.iter_commits():
-            if n_commits_searched > 25:
+            if n_commits_searched > n_search:
                 error('Exhaustively searched but could not find tag commit to rollback')
                 return False
 
@@ -360,7 +360,7 @@ class FreertosRelease(BaseRelease):
         info('Downloading fresh copy of %s for packing...' % zip_name, end='')
         packaged_repo = Repo.clone_from(self.getRemoteEndpoint(self.repo_name),
                                         rel_repo_path,
-                                        multi_options=['-b%s' % self.tag, '--recurse-submodules'],
+                                        multi_options=['--depth=1', '-b%s' % self.tag, '--recurse-submodules'],
                                         progress=printDot)
         print()
 

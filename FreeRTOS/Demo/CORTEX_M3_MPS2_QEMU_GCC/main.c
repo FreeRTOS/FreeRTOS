@@ -120,7 +120,7 @@ volatile size_t xFreeHeapSpace;
 
 void vApplicationTickHook( void )
 {
-#if (mainSELECTED_APPLICATION == FULL_DEMO )
+#if (mainCREATE_FULL_DEMO_ONLY == 1)
 {
     vFullDemoTickHookFunction();
 }

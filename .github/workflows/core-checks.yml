@@ -1,10 +1,10 @@
-name: FreeRTOS-Header-Checker
+name: Core-Checker
 
 on: [pull_request]          
 
 jobs:
-  header-checker:
-    name: File Header Checks
+  core-checker:
+    name: FreeRTOS Core Checks
     runs-on: ubuntu-latest
     steps:
       # Install python 3
@@ -40,6 +40,7 @@ jobs:
       - name: Check File Headers
         run: |
           cd inspect
-          ../tools/.github/scripts/check-header.py --json ${HOME}/files_modified.json ${HOME}/files_added.json ${HOME}/files_renamed.json
+          export PYTHONPATH=tools/.github/scripts:${PYTHONPATH}
+          .github/scripts/core_checker.py --json ${HOME}/files_modified.json ${HOME}/files_added.json ${HOME}/files_renamed.json
           exit $?
                   

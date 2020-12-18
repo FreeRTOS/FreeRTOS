@@ -39,6 +39,7 @@ jobs:
         with:
           repository: dachalco/FreeRTOS
           path: local_core
+          fetch-depth: 0
 
       - name: Release
         run: |

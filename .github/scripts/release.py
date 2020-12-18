@@ -227,6 +227,8 @@ class KernelRelease(BaseRelease):
             self.local_repo = Repo.clone_from(remote_name, self.repo_path, progress=printDot)
 
         # In case user gave non-HEAD commit to baseline
+        debug(os.getcwd())
+        self.local_repo.git.status()
         self.local_repo.git.checkout(commit)
 
         print()
@@ -476,7 +478,7 @@ def configure_argparser():
 
     parser.add_argument('--use-git-ssh',
                         default=False,
-                        action='store_false',
+                        action='store_true',
                         help='Use SSH endpoints to interface git remotes, instead of HTTPS')
 
     parser.add_argument('--unit-test',

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V202012.00
+    FreeRTOS V404000.02
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.

@@ -103,7 +103,7 @@ def extract_version_number_from_file(file_path):
         if match is None:
             match = re.search('\s*\*\s*(FreeRTOS Kernel.*V(.*))', content, re.MULTILINE)
         if match is None:
-            match = re.search('\s*\*\s*(FreeRTOS.*V(.*))', content, re.MULTILINE)
+            match = re.search('\s*\*\s*(FreeRTOS V(.*\..*))', content, re.MULTILINE)
         # Is it s FreeRTOS+TCP file?
         if match is None:
             match = re.search('\s*\*\s*(FreeRTOS\+TCP.*V(.*))', content, re.MULTILINE)

@@ -41,10 +41,13 @@ class HeaderChecker:
 
     def isValidFile(self, path):
         assert os.path.exists(path), 'No such file: ' + path
+        print('-------------------------------------------------------------------------------------')
+
         print('Checking file: %s...' % path, end='')
 
         if self.isIgnoredFile(path) or os.path.isdir(path):
             print('SKIP')
+            print('-------------------------------------------------------------------------------------')
             return True
 
         # Don't need entire file. Read sufficiently large chunk of file that should contain the header
@@ -53,11 +56,13 @@ class HeaderChecker:
             lines = [('%s\n' % l) for l in chunk.strip().splitlines()][:len(self.header)]
             if self.header == lines:
                 print('PASS')
+                print('-------------------------------------------------------------------------------------')
                 return True
             else:
                 print('FAIL')
                 print('File Delta: %s' % path)
                 print(*unified_diff(lines[:len(self.header)], self.header))
+                print('-------------------------------------------------------------------------------------')
                 return False
 
     def ignoreExtension(self, *args):
@@ -91,6 +96,15 @@ class HeaderChecker:
                 return True
 
         return False
+
+    def showHelp(self, path_config):
+        print('\n\n'
+              "Please fix all highlighted diffs or add exceptions to '%s' as necessary.\n"
+              "Include your changes to '%s' in your PR. Git PR checks source this file from your PR.\n"
+              "\n"
+              "The FreeRTOS Header Check ensures all files that contain FreeRTOS Headers are up to date\n"
+              "with the latest version, copyright, and licensing info."
+              "\n\n" % (path_config, path_config))
 
     @staticmethod
     def configArgParser():

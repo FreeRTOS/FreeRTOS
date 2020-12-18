@@ -257,6 +257,11 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*/trcSnapshotConfig\.h.*',
 ]
 
+FREERTOS_IGNORED_FILES = [
+    'fyi-another-way-to-ignore-file.txt',
+    'mbedtls_config.h'
+]
+
 FREERTOS_HEADER = [
     '/*\n',
     ' * FreeRTOS V202011.00\n',
@@ -289,15 +294,16 @@ def main():
     parser = HeaderChecker.configArgParser()
     args   = parser.parse_args()
 
-    # Configure the checks
+    # Configure the checks then run
     checker = HeaderChecker(FREERTOS_HEADER)
     checker.ignoreExtension(*FREERTOS_IGNORED_EXTENSIONS)
     checker.ignorePattern(*FREERTOS_IGNORED_PATTERNS)
+    checker.ignoreFile(*FREERTOS_IGNORED_FILES)
     checker.ignoreFile(os.path.split(__file__)[-1])
 
-    # Run the check on processed args
     return checker.processArgs(args)
 
 
 if __name__ == '__main__':
     exit(main())
+

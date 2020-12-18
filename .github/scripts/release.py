@@ -44,16 +44,16 @@ def logIndentPop():
         indent_level = 0
 
 def info(msg, end='\n'):
-    print('[INFO]: %s%s' % (' ' * indent_level, str(msg)), end=end)
+    print('[INFO]: %s%s' % (' ' * indent_level, str(msg)), end=end, flush=True)
 
 def warning(msg):
-    print('[WARNING]: %s%s' % (' ' * indent_level, str(msg)))
+    print('[WARNING]: %s%s' % (' ' * indent_level, str(msg)), flush=True)
 
 def error(msg):
-    print('[ERROR]: %s%s' % (' ' * indent_level, str(msg)))
+    print('[ERROR]: %s%s' % (' ' * indent_level, str(msg)), flush=True)
 
 def debug(msg):
-    print('[DEBUG]: %s%s' % (' ' * indent_level, str(msg)))
+    print('[DEBUG]: %s%s' % (' ' * indent_level, str(msg)), flush=True)
 
 # Callback for progress updates. For long spanning gitpython commands
 def printDot(op_code, cur_count, max_count=None, message=''):
@@ -476,7 +476,7 @@ def configure_argparser():
 
     parser.add_argument('--use-git-ssh',
                         default=False,
-                        action='store_false',
+                        action='store_true',
                         help='Use SSH endpoints to interface git remotes, instead of HTTPS')
 
     parser.add_argument('--unit-test',
@@ -496,14 +496,6 @@ def main():
 
     # Unit tests
     if args.unit_test:
-        rel_freertos = FreertosRelease(mGit, args.new_core_version, args.core_commit, git_ssh=args.use_git_ssh,
-                                       git_org=args.git_org)
-
-        # Undo a release
-        rel_freertos.deleteGitRelease()
-        rel_freertos.rollbackAutoCommits()
-        rel_freertos.deleteTag()
-        rel_freertos.pushLocalCommits(force=True)
         return
 
     # Create Releases

@@ -69,7 +69,7 @@ def ask_yes_no_question(question):
     return answer
 
 
-def list_files_in_a_component(component, afr_path, exclude_dirs=[], ext_filter=['.c', '.h']):
+def list_files_in_a_component(component, afr_path, exclude_dirs=[], ext_filter=['.c', '.h'], exclude_hidden=True):
     '''
     Returns a list of all the files in a component.
     '''
@@ -77,19 +77,17 @@ def list_files_in_a_component(component, afr_path, exclude_dirs=[], ext_filter=[
     search_path = os.path.join(afr_path, component)
 
     for root, dirs, files in os.walk(search_path, topdown=True):
-        dirs[:] = [d for d in dirs if d not in exclude_dirs]
-
-        # Do not include hidden files and folders.
-        dirs[:] = [d for d in dirs if not d[0] == '.']
-        files = [f for f in files if not f[0] == '.']
+        # Current root is an excluded dir so skip
+        if root in exclude_dirs:
+            continue
 
         for f in files:
-            if ext_filter != None:
-                ext = '.' + f.split('.')[-1]
-                if ext in ext_filter:
+            if exclude_hidden and f[0] == '.':
+                continue
+
+            if (ext_filter is None
+                or ext_filter is not None and os.path.splitext(f)[-1] in ext_filter):
                     list_of_files.append(os.path.join(os.path.relpath(root, afr_path), f))
-            else:
-                list_of_files.append(os.path.join(os.path.relpath(root, afr_path), f))
 
     return list_of_files
 
@@ -104,6 +102,8 @@ def extract_version_number_from_file(file_path):
         # Is it a kernel file?
         if match is None:
             match = re.search('\s*\*\s*(FreeRTOS Kernel.*V(.*))', content, re.MULTILINE)
+        if match is None:
+            match = re.search('\s*\*\s*(FreeRTOS V(.*\..*))', content, re.MULTILINE)
         # Is it s FreeRTOS+TCP file?
         if match is None:
             match = re.search('\s*\*\s*(FreeRTOS\+TCP.*V(.*))', content, re.MULTILINE)
@@ -194,7 +194,6 @@ def process_components(root_dir, components, exclude_dirs=[]):
             update_version_number_in_a_component(c, root_dir, exclude_dirs=exclude_dirs)
 
 def update_freertos_version_macros(path_macrofile, major, minor, build):
-    print('\nUpdating preprocessor version macros...')
     with open(path_macrofile, encoding='utf-8', errors='ignore', newline='') as macro_file:
         macro_file_content = macro_file.read()
         match_version = re.search(r'(^.*#define *tskKERNEL_VERSION_NUMBER *(".*")$)', macro_file_content, re.MULTILINE)
@@ -222,12 +221,10 @@ def update_freertos_version_macros(path_macrofile, major, minor, build):
     with open(path_macrofile, 'w', newline='') as macro_file:
         macro_file.write(macro_file_content)
 
-    print('Done. Replaced "%s" --> "V%s.%s.%s".' % (old_version_number, major, minor, build))
-
-def update_version_number_in_freertos_component(component, root_dir, old_version_prefix_list, new_version, verbose=False):
+def update_version_number_in_freertos_component(component, root_dir, old_version_prefix_list, new_version,
+                                                verbose=False, exclude_hidden=True):
     assert isinstance(old_version_prefix_list, list), 'Expected a list for arg(old_version_prefix_list)'
-    print('Updating "%s"...' % component)
-    component_files = list_files_in_a_component(component, root_dir, ext_filter=None)
+    component_files = list_files_in_a_component(component, root_dir, ext_filter=None, exclude_hidden=exclude_hidden)
     version_numbers = defaultdict(list)
     n_updated = 0
 
@@ -257,7 +254,6 @@ def update_version_number_in_freertos_component(component, root_dir, old_version
                 update_version_number_in_files(files_using_old_version, old_version_string, new_version_string)
                 n_updated += len(files_using_old_version)
 
-    print('Updated "%d" files.' % n_updated)
     return n_updated
 
 def process_freertos_components(root_dir, components, old_version, new_version, verbose=False):

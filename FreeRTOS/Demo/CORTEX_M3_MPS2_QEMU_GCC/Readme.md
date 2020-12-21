@@ -13,6 +13,47 @@ $ git clone https://github.com/FreeRTOS/FreeRTOS.git --recurse-submodules --dept
 ```
 The previous command should create a directory named **FreeRTOS**
 
+## Getting Started on Windows using WSL
+The Windows Subsystem for Linux allows you to run native Linux applications from a shell on your windows machine.
+
+To set up your Windows 10 machine to run this QEMU based demo you can follow these steps
+1. Install Ubuntu 20.04 LTS version from Microsoft Store, search for "Ubuntu"
+2. Update apt-get
+```
+sudo apt-get update 
+```
+3. Install Make and Qemu
+```
+sudo apt-get install -y make qemu qemu-system-arm 
+```
+4. Download and unzip Arm tools
+```
+cd ~
+curl https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/10-2020q4/gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2 -o gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
+tar -xjvf gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2  
+```
+
+5. Update your path to include the arm toolchain Edit ".profile", add the unzipped bin folder to the front of the path. You can run the same command in the terminal to update the path temporarily in the current shell
+```
+export PATH="$HOME/gcc-arm-none-eabi-10-2020-q4-major/bin:$PATH"
+```
+
+6. Clone FreeRTOS
+```
+git clone https://github.com/FreeRTOS/FreeRTOS.git --recurse-submodules
+```
+
+7. Compile the code
+```
+cd ./FreeRTOS/FreeRTOS/Demo/CORTEX_M3_MPS2_QEMU_GCC
+make
+```
+8. Run the Blinky Demo
+```
+sudo qemu-system-arm -machine mps2-an385 -monitor null -semihosting --semihosting-config enable=on,target=native -kernel ./build/RTOSDemo.axf -serial stdio -nographic
+```
+
+
 ## Blinky Demo
 ### How to build blinky demo
 Navigate with the command line to FreeRTOS/Demo/CORTEX\_M3\_MPS2\_QEMU\_GCC
@@ -40,7 +81,7 @@ After running the blinky demo you shoud see on the screen the word blinking
 printed continuously
 
 ## Full Demo
-### How to build blinky demo
+### How to build the Full Demo
 Navigate with the command line to FreeRTOS/Demo/CORTEX\_M3\_MPS2\_QEMU\_GCC
 For a release build run:
 

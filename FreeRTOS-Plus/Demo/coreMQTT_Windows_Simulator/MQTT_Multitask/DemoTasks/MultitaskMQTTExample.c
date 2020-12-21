@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202011.00
+ * FreeRTOS V202012.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -28,6 +28,13 @@
  * This demo shows how to use coreMQTT in a multithreaded environment - it does not
  * yet go as far as encapsulating the MQTT library within its own agent (or daemon)
  * task - although the prvCommandLoop() function demonstrates how that might be done.
+ * Also see https://www.freertos.org/mqtt/mqtt-agent-demo.html? for an
+ * example that does use an agent task.  Executing the MQTT protocol in an agent
+ * task removes the need for the application writer to explicitly manage any MQTT
+ * state or call the MQTT_ProcessLoop() API function. Using an agent task
+ * also enables multiple application tasks to more easily share a single
+ * MQTT connection.
+ *
  * In this task prvCommandLoop() is only executed from a single thread and is the
  * only function that is allowed to use the coreMQTT API directly.  Anything else
  * needing to interact with the coreMQTT API does so by posting commands to
@@ -375,7 +382,13 @@ typedef struct publishElement
 
 /*-----------------------------------------------------------*/
 
-/* Each compilation unit must define the NetworkContext struct. */
+/**
+ * @brief Each compilation unit that consumes the NetworkContext must define it.
+ * It should contain a single pointer to the type of your desired transport.
+ * When using multiple transports in the same compilation unit, define this pointer as void *.
+ *
+ * @note Transport stacks are defined in FreeRTOS-Plus/Source/Application-Protocols/network_transport.
+ */
 struct NetworkContext
 {
     #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
@@ -2092,6 +2105,13 @@ static void prvCleanExistingPersistentSession( void )
 
 /*-----------------------------------------------------------*/
 
+ /* Also see https://www.freertos.org/mqtt/mqtt-agent-demo.html? for an
+  * alternative run time model whereby coreMQTT runs in an autonomous
+  * background agent task.  Executing the MQTT protocol in an agent task
+  * removes the need for the application writer to explicitly manage any MQTT
+  * state or call the MQTT_ProcessLoop() API function. Using an agent task
+  * also enables multiple application tasks to more easily share a single
+  * MQTT connection. */
 static void prvMQTTDemoTask( void * pvParameters )
 {
     BaseType_t xNetworkStatus = pdFAIL;

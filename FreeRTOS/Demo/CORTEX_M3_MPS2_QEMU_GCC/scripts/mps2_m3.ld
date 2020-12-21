@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202011.00
+ * FreeRTOS V202012.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -31,7 +31,7 @@ MEMORY
 }
 ENTRY(Reset_Handler)
 
-_Min_Heap_Size = 0x40000 ;        /* Required amount of heap. */
+_Min_Heap_Size = 0x300000 ;        /* Required amount of heap. */
 _Min_Stack_Size = 0x4000 ;       /* Required amount of stack. */
 M_VECTOR_RAM_SIZE = (16 + 48) * 4;
 _estack = ORIGIN(RAM) + LENGTH(RAM);

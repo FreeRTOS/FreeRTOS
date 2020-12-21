@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V4.6.1 - copyright (C) 2003-2006 Richard Barry.
+    FreeRTOS V202012.00
     MCF5235 Port - Copyright (C) 2006 Christian Walter.
 
     This file is part of the FreeRTOS distribution.

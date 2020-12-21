@@ -38,16 +38,16 @@ define symbol __reigon_ROM_unprivileged_end__   = __ICFEDIT_region_ROM_end__;
 /* RAM Organization
  *  1. Privileged Data:
  *      Start   : 0x20000000
- *      End     : 0x200003FF
- *      Size    : 1 Kbytes
+ *      End     : 0x20007FFF
+ *      Size    : 32 Kbytes
  *  2. Unprivileged Data:
- *      Start   : 0x20000400
+ *      Start   : 0x20008000
  *      End     : 0x20017FFF
- *      Size    : 95 Kbytes
+ *      Size    : 64 Kbytes
  */
 define symbol __region_RAM_privileged_start__   = __ICFEDIT_region_RAM_start__;
-define symbol __region_RAM_privileged_end__     = 0x200003FF;
-define symbol __region_RAM_unprivileged_start__ = 0x20000400;
+define symbol __region_RAM_privileged_end__     = 0x20007FFF;
+define symbol __region_RAM_unprivileged_start__ = 0x20008000;
 define symbol __region_RAM_unprivileged_end__   = __ICFEDIT_region_RAM_end__;
 define symbol __region_SRAM2_start__            = 0x10000000;
 define symbol __region_SRAM2_end__              = 0x10007FFF;

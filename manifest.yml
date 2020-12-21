@@ -1,0 +1,90 @@
+name : "FreeRTOS"
+version: "202012.00"
+description: "This is the standard distribution of FreeRTOS."
+
+dependencies:
+  - name: "FreeRTOS-Kernel"
+    version: "V10.4.3"
+    repository:
+      type: "git"
+      url: "https://github.com/FreeRTOS/FreeRTOS-Kernel.git"
+      path: "FreeRTOS/Source"
+
+  - name: "FreeRTOS-Plus-TCP"
+    version: "V2.3.2"
+    repository:
+      type: "git"
+      url: "https://github.com/FreeRTOS/FreeRTOS-Plus-TCP.git"
+      path: "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP"
+
+  - name: "coreJSON"
+    version: "v3.0.0"
+    repository:
+      type: "git"
+      url: "https://github.com/FreeRTOS/coreJSON.git"
+      path: "FreeRTOS-Plus/Source/coreJSON"
+
+  - name: "coreHTTP"
+    version: "v2.0.0"
+    repository:
+      type: "git"
+      url: "https://github.com/FreeRTOS/coreHTTP.git"
+      path: "FreeRTOS-Plus/Source/Application-Protocols/coreHTTP"
+
+  - name: "coreMQTT"
+    version: "v1.1.0"
+    repository:
+      type: "git"
+      url: "https://github.com/FreeRTOS/coreMQTT.git"
+      path: "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT"
+
+  - name: "corePKCS11"
+    version: "v3.0.0"
+    repository:
+      type: "git"
+      url: "https://github.com/FreeRTOS/corePKCS11.git"
+      path: "FreeRTOS-Plus/Source/corePKCS11"
+
+  - name: "device-defender"
+    version: "v1.0.1"
+    repository:
+      type: "git"
+      url: "https://github.com/aws/Device-Defender-for-AWS-IoT-embedded-sdk.git"
+      path: "FreeRTOS-Plus/Source/AWS/device-defender"
+
+  - name: "device-shadow"
+    version: "v1.0.2"
+    repository:
+      type: "git"
+      url: "https://github.com/aws/Device-Shadow-for-AWS-IoT-embedded-sdk.git"
+      path: "FreeRTOS-Plus/Source/AWS/device-shadow"
+
+  - name: "jobs"
+    version: "v1.0.0"
+    repository:
+      type: "git"
+      url: "https://github.com/aws/Jobs-for-AWS-IoT-embedded-sdk.git"
+      path: "FreeRTOS-Plus/Source/AWS/jobs"
+
+  - name: "wolfssl"
+    version: "v4.5.0-stable"
+    repository:
+      type: "git"
+      url: "https://github.com/wolfSSL/wolfssl"
+      path: "FreeRTOS-Plus/ThirdParty/wolfSSL"
+
+  - name: "mbedtls"
+    version: "v2.25.0"
+    repository:
+      type: "git"
+      url:  "https://github.com/ARMmbed/mbedtls"
+      path: "FreeRTOS-Plus/ThirdParty/mbedtls"
+
+  - name: "backoffAlgorithm"
+    version: "v1.0.0"
+    repository:
+      type: "git"
+      url: "https://github.com/FreeRTOS/backoffAlgorithm"
+      path: "FreeRTOS-Plus/Source/Utilities/backoff_algorithm"
+
+license: "MIT"

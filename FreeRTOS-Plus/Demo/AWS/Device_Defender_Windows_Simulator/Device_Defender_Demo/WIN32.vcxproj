@@ -436,10 +436,6 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\ssl_tls13_keys.c">
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\threading.c">
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
@@ -522,7 +518,11 @@
     <ClInclude Include="..\..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging.h" />
     <ClInclude Include="..\..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_levels.h" />
     <ClInclude Include="..\..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_stack.h" />
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_config_defaults.h" />
     <ClInclude Include="..\..\..\..\Source\AWS\device-defender\source\include\defender.h" />
+    <ClInclude Include="..\..\..\..\Source\AWS\device-defender\source\include\defender_config_defaults.h" />
+    <ClInclude Include="..\..\..\..\Source\coreJSON\source\include\core_json.h" />
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_errno_TCP.h" />
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include\tcp_netstat.h" />
     <ClInclude Include="..\..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_error.h" />
     <ClInclude Include="..\..\..\..\Source\Utilities\mbedtls_freertos\threading_alt.h" />
@@ -604,7 +604,6 @@
     <ClInclude Include="..\..\..\..\ThirdParty\mbedtls\include\mbedtls\ssl_cookie.h" />
     <ClInclude Include="..\..\..\..\ThirdParty\mbedtls\include\mbedtls\ssl_internal.h" />
     <ClInclude Include="..\..\..\..\ThirdParty\mbedtls\include\mbedtls\ssl_ticket.h" />
-    <ClInclude Include="..\..\..\..\ThirdParty\mbedtls\include\mbedtls\ssl_tls13_keys.h" />
     <ClInclude Include="..\..\..\..\ThirdParty\mbedtls\include\mbedtls\threading.h" />
     <ClInclude Include="..\..\..\..\ThirdParty\mbedtls\include\mbedtls\timing.h" />
     <ClInclude Include="..\..\..\..\ThirdParty\mbedtls\include\mbedtls\version.h" />

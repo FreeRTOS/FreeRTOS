@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202011.00
+ * FreeRTOS V202012.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -56,8 +56,13 @@
 
 /*-----------------------------------------------------------*/
 
-/* Each compilation unit must define the NetworkContext struct.
- * void * is used as this utility can be used by both plaintext and TLS demos. */
+/** 
+ * @brief Each compilation unit that consumes the NetworkContext must define it. 
+ * It should contain a single pointer to the type of your desired transport.
+ * This utility is used by both TLS and plaintext HTTP demos, so define this pointer as void *.
+ *
+ * @note Transport stacks are defined in FreeRTOS-Plus/Source/Application-Protocols/network_transport.
+ */
 struct NetworkContext
 {
     void * pParams;

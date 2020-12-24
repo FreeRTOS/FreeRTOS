@@ -46,6 +46,7 @@
             "label": "qemu",
             "type":"shell",
             "isBackground":true,
+            "dependsOn": "build",
             "runOptions": 
                 {
                     "instanceLimit": 1

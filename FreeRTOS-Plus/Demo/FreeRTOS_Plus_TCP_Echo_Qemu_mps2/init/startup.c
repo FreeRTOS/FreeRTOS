@@ -41,7 +41,10 @@ void __attribute__((weak)) EthernetISR (void);
 
 extern uint32_t _estack, _sidata, _sdata, _edata, _sbss, _ebss;
 
-__attribute__((naked)) void Reset_Handler(void)
+/* Prevent optimization so gcc does not replace code with memcpy */
+__attribute__((optimize("O0")))
+__attribute__((naked))
+void Reset_Handler(void)
  {
     // set stack pointer
     __asm volatile ("ldr r0, =_estack");

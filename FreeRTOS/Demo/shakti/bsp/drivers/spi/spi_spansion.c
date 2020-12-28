@@ -30,61 +30,61 @@
 #include "log.h"
 #include "utils.h"
 
-int* spi_cr1    = (int*) SPI_CR1;
-int* spi_cr2    = (int*) SPI_CR2;
-int* spi_sr     = (int*) SPI_SR ;
-int* spi_dr1    = (int*) SPI_DR1;
-int* spi_dr2    = (int*) SPI_DR2;
-int* spi_dr3    = (int*) SPI_DR3;
-int* spi_dr4    = (int*) SPI_DR4;
-int* spi_dr5    = (int*) SPI_DR5;
-int* spi_crcpr  = (int*) SPI_CRCPR;
-int* spi_rxcrcr = (int*) SPI_RXCRCR;
-int* spi_txcrcr = (int*) SPI_TXCRCR;
+uint32_t* spi_cr1    = (uint32_t*) SPI_CR1;
+uint32_t* spi_cr2    = (uint32_t*) SPI_CR2;
+uint32_t* spi_sr     = (uint32_t*) SPI_SR ;
+uint32_t* spi_dr1    = (uint32_t*) SPI_DR1;
+uint32_t* spi_dr2    = (uint32_t*) SPI_DR2;
+uint32_t* spi_dr3    = (uint32_t*) SPI_DR3;
+uint32_t* spi_dr4    = (uint32_t*) SPI_DR4;
+uint32_t* spi_dr5    = (uint32_t*) SPI_DR5;
+uint32_t* spi_crcpr  = (uint32_t*) SPI_CRCPR;
+uint32_t* spi_rxcrcr = (uint32_t*) SPI_RXCRCR;
+uint32_t* spi_txcrcr = (uint32_t*) SPI_TXCRCR;
 
 //By default, spi 0 is configured
 /**
- * @fn void configure_spi(int offset)
+ * @fn void configure_spi(uint32_t offset)
  * @brief assigns memory mapped addres value to SPI registers.
  * @details Takes the SPI Base address and then adds offset to each and every
  *          spi registers..
- * @param int* ---> offset value
+ * @param uint32_t* ---> offset value
  */
-void configure_spi(int offset)
+void configure_spi(uint32_t offset)
 {
-	spi_cr1    = (int*) (SPI_CR1 + offset);
-	spi_cr2    = (int*) (SPI_CR2 + offset);
-	spi_sr     = (int*) (SPI_SR + offset);
-	spi_dr1    = (int*) (SPI_DR1 + offset);
-	spi_dr2    = (int*) (SPI_DR2 + offset);
-	spi_dr3    = (int*) (SPI_DR3 + offset);
-	spi_dr4    = (int*) (SPI_DR4 + offset);
-	spi_dr5    = (int*) (SPI_DR5 + offset);
-	spi_crcpr  = (int*) (SPI_CRCPR + offset);
-	spi_rxcrcr = (int*) (SPI_RXCRCR + offset);
-	spi_txcrcr = (int*) (SPI_TXCRCR + offset);
+	spi_cr1    = (uint32_t*) (SPI_CR1 + offset);
+	spi_cr2    = (uint32_t*) (SPI_CR2 + offset);
+	spi_sr     = (uint32_t*) (SPI_SR + offset);
+	spi_dr1    = (uint32_t*) (SPI_DR1 + offset);
+	spi_dr2    = (uint32_t*) (SPI_DR2 + offset);
+	spi_dr3    = (uint32_t*) (SPI_DR3 + offset);
+	spi_dr4    = (uint32_t*) (SPI_DR4 + offset);
+	spi_dr5    = (uint32_t*) (SPI_DR5 + offset);
+	spi_crcpr  = (uint32_t*) (SPI_CRCPR + offset);
+	spi_rxcrcr = (uint32_t*) (SPI_RXCRCR + offset);
+	spi_txcrcr = (uint32_t*) (SPI_TXCRCR + offset);
 }
 
 /**
- * @fn void set_spi(int* addr, int val)
+ * @fn void set_spi(uint32_t* addr, uint32_t val)
  * @brief to assign value to memory mapped spi register
  * @details writes the given value to given addres (SPI).
- * @param int* addr 
- * @param int val 
+ * @param uint32_t* addr 
+ * @param uint32_t val 
  */
-void set_spi(int* addr, int val)
+void set_spi(uint32_t* addr, uint32_t val)
 {
 	*addr = val;
 }
 
 /**
- * @fn int get_spi(int* addr)
+ * @fn uint32_t get_spi(uint32_t* addr)
  * @brief to get value for memory mapped spi register
  * @details Reads the SPI register value from passed address.
- * @param int* ---> address from where read has to happen
- * @return int ---> SPI Register read value.
+ * @param uint32_t* ---> address from where read has to happen
+ * @return uint32_t ---> SPI Register read value.
  */
-int get_spi(int* addr)
+uint32_t get_spi(uint32_t* addr)
 {
 	return *addr;
 }
@@ -120,28 +120,28 @@ void spi_rx_enable(void)
 }
 
 /**
- * @fn int bitExtracted(int number, int k, int p)
+ * @fn uint32_t bitExtracted(uint32_t number, uint32_t k, uint32_t p)
  * @brief Extract the k number of bit from (p-1) position of 'number'
  * @details If one want to extract the k bits from (p-1) position in 32 bit "number".   
- * @param int (number (32 bit))
- * @param int (k (number of bits to be extracted))
- * @param int (p (position from where the bits to be extracted))
- * @return int (32 bit which have k bit from "number" and rest are zero)
+ * @param uint32_t (number (32 bit))
+ * @param uint32_t (k (number of bits to be extracted))
+ * @param uint32_t (p (position from where the bits to be extracted))
+ * @return uint32_t (32 bit which have k bit from "number" and rest are zero)
  */
-int bitExtracted(int number, int k, int p)
+uint32_t bitExtracted(uint32_t number, uint32_t k, uint32_t p)
 {
 	return (((1 << k) - 1) & (number >> (p - 1)));
 }
 
 /**
- * @fn  int spi_rxne_enable(void)
+ * @fn  uint32_t spi_rxne_enable(void)
  * @brief to check if receive buffer is empty or not
  * @details As soons as data come to receive buffer this bit is set.  
- * @return int (1: if there is data into the RxFIFO else 0)
+ * @return uint32_t (1: if there is data uint32_to the RxFIFO else 0)
  */
-int spi_rxne_enable(void)
+uint32_t spi_rxne_enable(void)
 {
-	int value = 0;
+	uint32_t value = 0;
 
 	while (!(value & 0x1))
 	{
@@ -152,15 +152,15 @@ int spi_rxne_enable(void)
 }
 
 /**
- * @fn int spi_notbusy(void)
+ * @fn uint32_t spi_notbusy(void)
  * @brief to check if spi is ready for next transaction or busy with previous one
  * @details it read the status of bsy bit in spi_sr 
  * @warning One should check this bit before going to next transcation
- * @return int (0: SPI is busy in communication, 1: SPI nt busy)
+ * @return uint32_t (0: SPI is busy in communication, 1: SPI nt busy)
  */
-int spi_notbusy(void)
+uint32_t spi_notbusy(void)
 {
-	int value = 0x80;
+	uint32_t value = 0x80;
 
 	while ((value & 0x80))
 	{
@@ -172,13 +172,13 @@ int spi_notbusy(void)
 }
 
 /**
- * @fn int flash_write_enable(void)
+ * @fn uint32_t flash_write_enable(void)
  * @brief to set the WEL (Write Enable Latch) bit in status register
  * @details Before modifying content of flash, one should enable the WEL bit first
- * @warning Without enabling this bit one cannot erase/write into the flash
- * @return int
+ * @warning Without enabling this bit one cannot erase/write uint32_to the flash
+ * @return uint32_t
  */
-int flash_write_enable(void)
+uint32_t flash_write_enable(void)
 {
 	set_spi(spi_dr1, 0x06000000);
 	set_spi(spi_dr5, 0x06);
@@ -189,13 +189,13 @@ int flash_write_enable(void)
 }
 
 /**
- * @fn int flash_clear_sr(void)
+ * @fn uint32_t flash_clear_sr(void)
  * @brief to reset the status register
  * @details It will reset the bits of status register
- * @return int
+ * @return uint32_t
  */
 
-int flash_clear_sr(void)
+uint32_t flash_clear_sr(void)
 {
 	set_spi(spi_dr1,0x30000000);
 	set_spi(spi_dr5,0x30);
@@ -206,19 +206,19 @@ int flash_clear_sr(void)
 }
 
 /**
- * @fn int flash_cmd_addr(int command, int addr)
+ * @fn uint32_t flash_cmd_addr(uint32_t command, uint32_t addr)
  * @brief Use for sending 8bit of command + 32 bit of address 
  * @details Useful for function like erase
- * @warning to move data drom dr register to fifo there must be some data into spi_dr5 
- * @param int (command (opcode))
- * @param int (addr (address after the opcode))
- * @return int
+ * @warning to move data drom dr register to fifo there must be some data uint32_to spi_dr5 
+ * @param uint32_t (command (opcode))
+ * @param uint32_t (addr (address after the opcode))
+ * @return uint32_t
  */
-int flash_cmd_addr(int command, int addr)
+uint32_t flash_cmd_addr(uint32_t command, uint32_t addr)
 {
-	int address1 = bitExtracted(addr, 24, 9);
-	int address2 = bitExtracted(addr, 8, 1);
-	int data1 = command | address1 ;
+	uint32_t address1 = bitExtracted(addr, 24, 9);
+	uint32_t address2 = bitExtracted(addr, 8, 1);
+	uint32_t data1 = command | address1 ;
 	address2 = address2 << 24;
 
 	set_spi(spi_dr1, data1);
@@ -232,19 +232,19 @@ int flash_cmd_addr(int command, int addr)
 }
 
 /**
- * @fn void flash_cmd_addr_data(int command, int addr, int data)
+ * @fn void flash_cmd_addr_data(uint32_t command, uint32_t addr, uint32_t data)
  * @brief useful for function like Write 
  * @details use for sending 8bit command +32bit of write address + 32 bit of write data
- * @warning to move data from data register to fifo there must be some data into spi_dr5
- * @param int (command (opcode))
- * @param int (addr(address after the opcode))
- * @param int (data (data after the address))
+ * @warning to move data from data register to fifo there must be some data uint32_to spi_dr5
+ * @param uint32_t (command (opcode))
+ * @param uint32_t (addr(address after the opcode))
+ * @param uint32_t (data (data after the address))
  */
-void flash_cmd_addr_data(int command, int addr, int data)
+void flash_cmd_addr_data(uint32_t command, uint32_t addr, uint32_t data)
 {
-	int cmd_addr = command | ( (addr & 0xFFFFFF00)  >> 8);
-	int data1 = ( (addr & 0xFF)  << 24 ) |( (data & 0xFFFFFF00)  >> 8);
-	int data2 = ( (data & 0xFF)  << 24 ) & 0xFF000000;
+	uint32_t cmd_addr = command | ( (addr & 0xFFFFFF00)  >> 8);
+	uint32_t data1 = ( (addr & 0xFF)  << 24 ) |( (data & 0xFFFFFF00)  >> 8);
+	uint32_t data2 = ( (data & 0xFF)  << 24 ) & 0xFF000000;
 
 	log_debug("\n cmd: %x;d1: %x; d2: %x", cmd_addr, data1, data2);
 
@@ -259,14 +259,14 @@ void flash_cmd_addr_data(int command, int addr, int data)
 }
 
 /**
- * @fn void flash_write(int address, int data)
+ * @fn void flash_write(uint32_t address, uint32_t data)
  * @brief  Write 4bytes of data from given address
  * @details flash_cmd_addr_data with opcode 12h.  
- * @warning before writing into the flash one should enable the WEL bit spi_sr by using write_enable(void)
- * @param int (addres (write address))
- * @param int(data (write data))
+ * @warning before writing uint32_to the flash one should enable the WEL bit spi_sr by using write_enable(void)
+ * @param uint32_t (addres (write address))
+ * @param uint32_t(data (write data))
  */
-void flash_write(int address, int data)
+void flash_write(uint32_t address, uint32_t data)
 {
 	flash_write_enable();
 	flash_cmd_addr_data(0x12000000, address,data);
@@ -274,20 +274,20 @@ void flash_write(int address, int data)
 }
 
 /**
- * @fn int flash_cmd_to_read(int command, int addr)
+ * @fn uint32_t flash_cmd_to_read(uint32_t command, uint32_t addr)
  * @briefUse useful for function like read
  * @details for sending command of 8bit + read address of 32bit + 8bit of dummy cycle and receive 
  *          32bit value from flash 
  * @warning As receive shoild start as soon as transmit state end, use spi_rx_tx_start() Before 
  *          setting control register 1
- * @param int (command (opcode))
- * @param int (addr(read_address))
- * @return int 
+ * @param uint32_t (command (opcode))
+ * @param uint32_t (addr(read_address))
+ * @return uint32_t 
  */
-int flash_cmd_to_read(int command, int addr)
+uint32_t flash_cmd_to_read(uint32_t command, uint32_t addr)
 {
-	int dr5;
-	int address2 = bitExtracted(addr, 8, 1);
+	uint32_t dr5;
+	uint32_t address2 = bitExtracted(addr, 8, 1);
 
 	address2 = address2 << 24;
 	set_spi(spi_dr1, ( command  | ( (addr & 0xFFFFFF00) >> 8) ));
@@ -306,28 +306,28 @@ int flash_cmd_to_read(int command, int addr)
 
 }
 
-/** @fn int flash_read(int address)
+/** @fn uint32_t flash_read(uint32_t address)
  * @brief read the 4bytes data from given address 
  * @details flash_cmd_to_read with opcode 0Bh for fast read
- * @param int (address (read address))
- * @return int 
+ * @param uint32_t (address (read address))
+ * @return uint32_t 
  */
-int flash_read(int address)
+uint32_t flash_read(uint32_t address)
 {
-	int read_value = flash_cmd_to_read(0x0C000000,address);
+	uint32_t read_value = flash_cmd_to_read(0x0C000000,address);
 	return read_value;
 }
 
 /**
- * @fn int flash_cmd_read(int command)
+ * @fn uint32_t flash_cmd_read(uint32_t command)
  * @brief usefull for reading status register
  * @details use for sending 8bit command and receive the 32bit of data
- * @param int command (opcode)
- * @return int  value (flash response to opcode)
+ * @param uint32_t command (opcode)
+ * @return uint32_t  value (flash response to opcode)
  */
-int flash_cmd_read(int command)
+uint32_t flash_cmd_read(uint32_t command)
 {
-	int dr5;
+	uint32_t dr5;
 	set_spi(spi_dr1, command);
 	set_spi(spi_dr5, command);
 	spi_tx_rx_start();
@@ -339,27 +339,27 @@ int flash_cmd_read(int command)
 }
 
 /**
- * @fn  void flash_erase(int address)
+ * @fn  void flash_erase(uint32_t address)
  * @brief Erase the flash
  * @details Erase the 64kb sector from given address 
  * @warning before erasing the flash one should enable the WEL bit spi_sr by using write_enable()
- * @param int (address (address from which data should erase))
+ * @param uint32_t (address (address from which data should erase))
  */
-void flash_erase(int address)
+void flash_erase(uint32_t address)
 {
 	flash_cmd_addr(0xdc000000, address);
 }
 
 /**
- * @fn int flash_status_register_read(void)
+ * @fn uint32_t flash_status_register_read(void)
  * @briefRead read status register of flash
  * @details  Using flash_cmd_read function with opcode 05h to check status of WIP(Write in progress)
  *           and WEL(Write Enable Latch) bit.
- * @return int
+ * @return uint32_t
  */
-int flash_status_register_read(void)
+uint32_t flash_status_register_read(void)
 {
-	int stat = 0x3;
+	uint32_t stat = 0x3;
 
 	while (stat & 0x03)
 	{
@@ -371,17 +371,17 @@ int flash_status_register_read(void)
 }
 
 /**
- * @fn int flash_device_id(void)
+ * @fn uint32_t flash_device_id(void)
  * @briefto read Device ID and Mfg. ID of flash
  * @details Device ID is 1byte and Mfg. ID of flash is of 2byte. Hence 8bit of command and receiving 
  *          24 bits of data from flash
- * @warning to move data from data register to fifo there must be some data into spi_dr5
- * @return int
+ * @warning to move data from data register to fifo there must be some data uint32_to spi_dr5
+ * @return uint32_t
  */
-int flash_device_id(void)
+uint32_t flash_device_id(void)
 {
-	int dr3;
-	int val1, val2;
+	uint32_t dr3;
+	uint32_t val1, val2;
 
 	flash_write_enable();
 	set_spi(spi_dr1, 0x9f000000);

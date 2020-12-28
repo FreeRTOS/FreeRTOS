@@ -27,7 +27,6 @@ PORT_ASM = $(FREERTOS_SOURCE_DIR)/portable/GCC/RISC-V/portASM.S
 
 DEMO_SRC = \
         $(BSP_DIR)/drivers/uart/uart.c \
-	$(BSP_DIR)/drivers/clint/clint_driver.c \
 	$(BSP_DIR)/drivers/spi/spi_spansion.c \
 	$(BSP_DIR)/drivers/i2c/i2c_driver.c \
 	$(BSP_DIR)/drivers/plic/plic_driver.c \
@@ -94,4 +93,3 @@ clean :
 
 force_true:
 	@true
-

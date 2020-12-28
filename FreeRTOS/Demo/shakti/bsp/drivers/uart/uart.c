@@ -187,7 +187,7 @@ uint32_t write_uart_string(uart_struct * instance, uint8_t * ptr_string)
  * character pointer to store the character.
  * @param uart instance 
  * @param pointer to a character.
- * @return Received character value as integer
+ * @return number of characters read
  */
 uint8_t read_uart_character(uart_struct * instance, char * prn_character)
 {

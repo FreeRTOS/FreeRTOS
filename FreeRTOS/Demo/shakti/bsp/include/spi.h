@@ -1,7 +1,7 @@
 /***************************************************************************
  * Project                          : shakti devt board
  * Name of the file                 : spi.h
- * Brief Description of file        : Header to spi driver
+ * Brief Description of file        : Header to spi spansion driver
  * Name of Author                   : Kaustubh Ghormade
  * Email ID                         : kaustubh4347@gmail.com
 
@@ -22,15 +22,21 @@
  ***************************************************************************/
 /**
  * @file spi.h
- * @brief Header to spi driver
+ * @brief Header to spi spansion driver
  * @detail this is the header file for spi_flash_w25q32.c,spi_spansion.c
  */
 #ifndef SPI_H
 #define SPI_H
 
 #include<stdlib.h>
-/*By default SPI0 is enabled at initialization.
-  SPI0 is not available externally in TARGET=artix7_35t*/
+#include <stdint.h> 
+
+/*
+   By default SPI0 is enabled at initialization.
+   SPI0 is not available externally in certain boards.
+   Check the SoC design for further information
+ */
+
 #define SPI0_OFFSET 0x00000000
 #define SPI1_OFFSET 0x00000100
 #define SPI2_OFFSET 0x00000200
@@ -93,28 +99,28 @@
 
 // function prototype
 
-void configure_spi(int offset);
+void configure_spi(uint32_t offset);
 void spi_init(void);
-void set_spi(int* addr, int val);
+void set_spi(uint32_t* addr, uint32_t val);
 void bin(unsigned n);
 void spi_tx_rx_start(void);
 void spi_enable(void);
 void spi_rx_enable(void);
-void flash_cmd_addr_data(int command, int addr, int data);
-void flash_write(int address, int data);
-void flash_erase(int address);
-int get_spi(int* addr);
-int bitExtracted(int number, int k, int p) ;
-int concat(int x, int y) ;
-int spi_rxne_enable(void);
-int spi_notbusy(void);
-int flash_write_enable(void);
-int flash_clear_sr(void);
-int flash_cmd_addr(int command, int addr);
-int flash_cmd_to_read(int command, int addr);
-int flash_read(int address);
-int flash_cmd_read(int command);
-int flash_status_register_read(void);
-int flash_device_id(void);
+void flash_cmd_addr_data(uint32_t command, uint32_t addr, uint32_t data);
+void flash_write(uint32_t address, uint32_t data);
+void flash_erase(uint32_t address);
+uint32_t get_spi(uint32_t* addr);
+uint32_t bitExtracted(uint32_t number, uint32_t k, uint32_t p) ;
+uint32_t concat(uint32_t x, uint32_t y) ;
+uint32_t spi_rxne_enable(void);
+uint32_t spi_notbusy(void);
+uint32_t flash_write_enable(void);
+uint32_t flash_clear_sr(void);
+uint32_t flash_cmd_addr(uint32_t command, uint32_t addr);
+uint32_t flash_cmd_to_read(uint32_t command, uint32_t addr);
+uint32_t flash_read(uint32_t address);
+uint32_t flash_cmd_read(uint32_t command);
+uint32_t flash_status_register_read(void);
+uint32_t flash_device_id(void);
 
 #endif

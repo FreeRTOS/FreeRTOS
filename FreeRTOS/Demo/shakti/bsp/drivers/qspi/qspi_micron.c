@@ -33,27 +33,27 @@
 
 char fail_bit = 0;
 int status = 0;
-
-int* cr       =  (int*) CR;
-int* dcr      =  (int*) DCR;
-int* sr       =  (int*) SR;
-int* fcr      =  (int*) FCR;
-int* ccr      =  (int*) CCR;
-int* ar       =  (int*) AR;
-int* abr      =  (int*) ABR;
-int* dr       =  (int*) DR;
-int* dlr      =  (int*) DLR;
-int* psmkr    =  (int*) PSMKR;
-int* pir      =  (int*) PIR;
-int* lprt     =  (int*) LPRT;
-int* startmm  =  (int*) STARTMM;
-int* endmm    =  (int*) ENDMM;
+/*! Pointer to QSPI registers */
+int* cr       =  (int*) CR; /*! Control Register */
+int* dcr      =  (int*) DCR; /*! Data Configuration Register */
+int* sr       =  (int*) SR; /*! Status Register */
+int* fcr      =  (int*) FCR; /* Flag Clear Register */
+int* ccr      =  (int*) CCR; /* Commn. Configuration Register */
+int* ar       =  (int*) AR; /*! Address Register */
+int* abr      =  (int*) ABR; /*! Alternate Bytes Register */
+int* dr       =  (int*) DR; /*! Data Register */
+int* dlr      =  (int*) DLR; /*! Data Length Register */
+int* psmkr    =  (int*) PSMKR; /*! Polling Status Mask Register */
+int* pir      =  (int*) PIR; /*! Polling Interval Register */
+int* lprt     =  (int*) LPRT; /*! Low power Time Register */
+int* startmm  =  (int*) STARTMM; /*! Start Memory Map Register */
+int* endmm    =  (int*) ENDMM; /*! End Memory Map Register */
 
 /** @fn void set_qspi_shakti32(int* addr, int val)
  * @brief Writes 32 bit value into QSPI register.
  * @details Writes 32 bit value into passed address QSPI register.
- * @param int* addr 
- * @param int val
+ * @param int* addr --- Addresss where the data (val) needs to be written
+ * @param int val ---  Data which needs to be written.
  */
 void set_qspi_shakti32(int* addr, int val)
 {
@@ -63,8 +63,8 @@ void set_qspi_shakti32(int* addr, int val)
 /** @fn void set_qspi_shakti16(int16_t* addr, int16_t val)
  * @brief Writes 16 bit value 
  * @details Writes 16 bit value into 16bit QSPI register 
- * @param 16bit int* addr
- * @param 16bit int val
+ * @param 16bit int* addr --- Addresss where the data (val) needs to be written
+ * @param 16bit int val ---  Data which needs to be written.
  */
 void set_qspi_shakti16(int16_t* addr, int16_t val)
 {
@@ -74,8 +74,8 @@ void set_qspi_shakti16(int16_t* addr, int16_t val)
 /** @fn void set_qspi_shakti8(char* addr, char val) 
  * @brief Writes 8 bit value.
  * @details Writes 8 bit value into 8 bit qspi register.
- * @param char* addr
- * @param char val
+ * @param char* addr --- Addresss where the data (val) needs to be written
+ * @param char val ---  Data which needs to be written.
  */
 void set_qspi_shakti8(char* addr, char val)
 {
@@ -85,8 +85,8 @@ void set_qspi_shakti8(char* addr, char val)
 /** @fn int get_qspi_shakti(int* addr)
  * @brief reads from qspi register
  * @details Reads from the passed QSPI register and returns the value.
- * @param int* addr   
- * @return Read value.
+ * @param int* addr --- 32 bit Read Addresss  
+ * @return Read value -- Read value from the passed value.
  */
 int get_qspi_shakti(int* addr)
 {
@@ -96,12 +96,12 @@ int get_qspi_shakti(int* addr)
 /** @fn void qspi_init(int fsize, int csht, int prescaler, int enable_interrupts, int fthreshold, int ck_mode)
  * @brief Initialises the qspi
  * @details Initialises the qspi registers for carrying out flash access operations.
- * @param int fsize
- * @param int csht
- * @param int prescaler
- * @param int enable_interrupts
- * @param int fthreshold
- * @param int ck_mode
+ * @param int fsize --- No of address bits(fsize+1) required to address flash memory.
+ * @param int csht --- Chip select high time (csht + 1 is the CS high time between flash commands).
+ * @param int prescaler --- System clock divide factor (QSPI Clock = system clock / (prescaler clock + 1)
+ * @param int ---  enable_interrupts that need to be enabled.
+ * @param int --- FIFO threshold Level
+ * @param int ck_mode --- Clock mode selection (Mode 0 and Mode 3)
  */
 void qspi_init(int fsize, int csht, int prescaler, int enable_interrupts, int fthreshold, int ck_mode){
 	int int_vector = enable_interrupts? (CR_TOIE|CR_SMIE|CR_FTIE|CR_TCIE|CR_TEIE) : 0; 
@@ -121,7 +121,7 @@ void reset_interrupt_flags(){
  * @brief Wait for the transfer complete flag.
  * @details WCF bit status register indicates the completion of flash 
  *  operation. The same is cheked here.
- * @param int status
+ * @param int status register read value.
  * @return Zero on success else -1
  */
 int wait_for_tcf(int status){
@@ -210,7 +210,7 @@ int wait_for_wip(void){
 /** @fn int micron_write_enable(int status)
  * @brief Enables the micron flash for write operation.
  * @details Enables micron flash for programming flash data.
- * @param int status
+ * @param int status --- Write enable status.
  * @return Zero on Success
  */
 int micron_write_enable(int status){
@@ -224,11 +224,11 @@ int micron_write_enable(int status){
 /** @fn int pageProgramSingleSPI(int value1, int value2, int value3, int value4, int address)
  * @brief Writes into page of flash over single SPI.
  * @details Writes into micron flash page memory over legacy SPI
- * @param int value1
- * @param int value2
- * @param int value3
- * @param int value4
- * @param int address
+ * @param int value1 -- Value (MSB 32 bit) that needs to be written
+ * @param int value2 -- Second 32 bit that neds to be written.
+ * @param int value3 --- Third 32 bit that needs to be written.
+ * @param int value4 --- Fourth 32 bit that needs to be written.
+ * @param int address --- Address where data needs to be written.
  * @return Zero on Success else -1
  */
 int pageProgramSingleSPI(int value1, int value2, int value3, int value4, int address){
@@ -260,11 +260,11 @@ int pageProgramSingleSPI(int value1, int value2, int value3, int value4, int add
 /** @fn int pageProgramQuadSPI(int value1, int value2, int value3, int value4, int address)
  * @brief Writes a page over QSPI
  * @details Writes a page over Quad SPI lines.
- * @param int value1
- * @param int value2
- * @param int value3
- * @param int value4
- * @param int address
+ * @param int value1 -- Value (MSB 32 bit) that needs to be written
+ * @param int value2 -- Second 32 bit that neds to be written.
+ * @param int value3 --- Third 32 bit that needs to be written.
+ * @param int value4 --- Fourth 32 bit that needs to be written.
+ * @param int address --- Address where data needs to be written.
  * @return Zero on success else -1
  */
 int pageProgramQuadSPI(int value1, int value2, int value3, int value4, int address){
@@ -383,11 +383,11 @@ int flashEnable4ByteAddressingMode(void){  //Enable 4-byte addressing Mode and r
 /** @fn int flashReadSingleSPI(int dummy_cycles, int read_address, int instruction, int data_words, int adsize)
  * @brief Reads flash device over single SPI.
  * @details Reads the flash device over single spi (MOSI, MISO, CS, CLK)
- * @param int dummy_cycles
- * @param int read_address
- * @param int instruction
- * @param int data_words
- * @param int adsize
+ * @param int dummy_cycles -- No of dummy cycles needs to be added.
+ * @param int read_address --- Address from where data needs to be read.
+ * @param int instruction --- Read instruction (command) that needs to be sent.
+ * @param int data_words --- Number of Data bytes (data_words + 1) needs to be read 
+ * @param int adsize --- Address Size (8, 16, 24 & 32 bit address) 
  * @return Status of the performed operation; else -1
  */
 int flashReadSingleSPI(int dummy_cycles, int read_address, int instruction, int data_words, int adsize){
@@ -410,8 +410,8 @@ int flashReadSingleSPI(int dummy_cycles, int read_address, int instruction, int 
 /** @fn int flashReadDualSPI(int address, int data_length)
  * @brief  Reads flash device over two io lines SPI.
  * @details Reads the flash device over two io lines for spi (IO1, IO2, CS, CLK) data
- * @param int address
- * @param int data_length 
+ * @param int address --- Address which needs to be read.
+ * @param int data_length --- Number of Data bytes (data_words + 1) needs to be read 
  * @return Status of the performed operation; else -1
  */
 int flashReadDualSPI(int address, int data_length){
@@ -435,11 +435,11 @@ int flashReadDualSPI(int address, int data_length){
 /** @fn int flashReadQuadSPI(int dummy_cycles, int read_address, int instruction, int data_words, int adsize)
  * @brief  Reads flash device over four io lines SPI.
  * @details Reads the flash device over two io lines for spi (IO1, IO2, IO3, IO4, CS, CLK) data
- * @param int dummy_cycles
- * @param int read_address
- * @param int instruction
- * @param int data_words
- * @param int adsize
+ * @param int dummy_cycles -- No of dummy cycles needs to be added.
+ * @param int read_address --- Address from where data needs to be read.
+ * @param int instruction --- Read instruction (command) that needs to be sent.
+ * @param int data_words --- Number of Data bytes (data_words + 1) needs to be read 
+ * @param int adsize --- Address Size (8, 16, 24 & 32 bit address) 
  * @return Status of the performed operation; else -1
  */
 int flashReadQuadSPI(int dummy_cycles, int read_address, int instruction, int data_words, int adsize){
@@ -464,8 +464,8 @@ int flashReadQuadSPI(int dummy_cycles, int read_address, int instruction, int da
 /** @fn int flashSingleSPIXip(int addr, int* dest_addr) 
  * @brief Reads over single SPI XIP
  * @details Generic Read for xip SPI Read.
- * @param int addr
- * @param int* dest_addr
+ * @param int addr --- Flash Address from where XIP reads needs to be performed.
+ * @param int* dest_addr --- RAM location to where the data needs to be copied.
  * @return Zero on success.
  */
 int flashSingleSPIXip(int addr, int* dest_addr){
@@ -489,8 +489,8 @@ int flashSingleSPIXip(int addr, int* dest_addr){
 /** @fn int flashSingleSPIDDRXip(int addr, int* dest_addr)  
  * @brief Reads over DDR XIP mode.
  * @details Reads for DDR based XIP mode.
- * @param int 
- * @param int* dest_addr
+ * @param int addr --- Flash Address from where XIP reads needs to be performed.
+ * @param int* dest_addr --- RAM location to where the data needs to be copied.
  * @return Zero on Success
  */
 int flashSingleSPIDDRXip(int addr, int* dest_addr){
@@ -513,8 +513,8 @@ int flashSingleSPIDDRXip(int addr, int* dest_addr){
 /** @fn int flashDualSPIXip(int addr, int* dest_addr)
  * @brief Reads over XIP mode.
  * @details Reads for XIP mode using two io bits for data.
- * @param int addr 
- * @param int* dest_addr
+ * @param int addr --- Flash Address from where XIP reads needs to be performed.
+ * @param int* dest_addr --- RAM location to where the data needs to be copied.
  * @return Zero on Success
  */
 int flashDualSPIXip(int addr, int* dest_addr){
@@ -538,8 +538,8 @@ int flashDualSPIXip(int addr, int* dest_addr){
 /** @fn int flashDualSPIDDRXip(int addr, int* dest_addr) 
  * @brief Reads over XIP mode.
  * @details Reads for DDR based XIP mode using two io bits for data.
- * @param int addr
- * @param int* dest_addr
+ * @param int addr --- Flash Address from where XIP reads needs to be performed.
+ * @param int* dest_addr --- RAM location to where the data needs to be copied.
  * @return Zero on Success
  */
 int flashDualSPIDDRXip(int addr, int* dest_addr){
@@ -562,7 +562,7 @@ int flashDualSPIDDRXip(int addr, int* dest_addr){
 /** @fn int flashWriteVolatileConfigReg(int value) 
  * @brief Writes into flash volatile configuration register.
  * @details Writes the passed value into flash volatile configuration register.
- * @param int value
+ * @param int value needs to written into Write Volatile Config Register.
  * @return Zero on Success
  */
 int flashWriteVolatileConfigReg(int value){
@@ -588,8 +588,8 @@ int flashWriteVolatileConfigReg(int value){
 /** @fn int flashQuadSPIXip(int addr, int* dest_addr)
  * @brief Reads over XIP mode.
  * @details Reads for DDR based XIP mode using quad io bits for data.
- * @param int addr
- * @param int* dest_addr
+ * @param int addr --- Flash Address from where XIP reads needs to be performed.
+ * @param int* dest_addr --- RAM location to where the data needs to be copied.
  * @return Zero on Success
  */
 int flashQuadSPIXip(int addr, int* dest_addr){
@@ -619,8 +619,8 @@ int flashQuadSPIXip(int addr, int* dest_addr){
 /** @fn int flashQuadSPIDDRXip(int addr, int* dest_addr)
  * @brief Reads over XIP mode.
  * @details Reads for DDR based XIP mode using four io bits for data.
- * @param int addr 
- * @param int* dest_addr
+ * @param int addr --- Flash Address from where XIP reads needs to be performed.
+ * @param int* dest_addr --- RAM location to where the data needs to be copied.
  * @return Zero on Success
  */
 int flashQuadSPIDDRXip(int addr, int* dest_addr){
@@ -665,8 +665,8 @@ int flash_Write_disable(void){
 /** @fn int eraseSector(int command, int address)
  * @brief Erases one sector 
  * @details Erases a complete sector which falls in the sector range.
- * @param int command 
- * @param int address
+ * @param int command --- Erase command (sector erase, block erase or chip erase)
+ * @param int address --- Starting address of erase.
  * @return Zero on Success
  */
 int eraseSector(int command, int address){
@@ -686,7 +686,7 @@ int eraseSector(int command, int address){
 /** @fn int micron_volatile_write_enable(int status) 
  * @brief Enable for volatile write.
  * @details Enables micron flash for programming volatile config. register.
- * @param int status
+ * @param int --- status register value.
  * @return Zero on Success
  */
 int micron_volatile_write_enable(int status){
@@ -701,7 +701,7 @@ int micron_volatile_write_enable(int status){
  * @brief Enables micron flash for 4 byte addressing.
  * @details Address can be passed as 3 bytes or 4 bytes before read or write 
  * operation. This function sets the number of address bytes to 4 bytes.
- * @param int status
+ * @param int --- status register value
  * @return Zero on Success
  */
 int micron_enable_4byte_addressing(int status){
@@ -715,8 +715,8 @@ int micron_enable_4byte_addressing(int status){
 /** @fn int micron_configure_xip_volatile(int status, int value)
  * @brief Configures the xip volatile config. register.
  * @details Configures the volatile config. register for xip Read mode.
- * @param int status
- * @param int value
+ * @param int --- status register value
+ * @param int value  --- Values that needs to be configured.
  * @return Zero on Success
  */
 int micron_configure_xip_volatile(int status, int value){
@@ -734,8 +734,8 @@ int micron_configure_xip_volatile(int status, int value){
 /** @fn int micron_disable_xip_volatile(int status, int value)
  * @brief Configures(disables) the xip volatile config. register.
  * @details Configures(disables) the volatile config. register for xip Read mode.
- * @param int status
- * @param int value
+ * @param int --- status register value
+ * @param int value  --- Values that needs to be configured.
  * @return Zero on Success
  */
 int micron_disable_xip_volatile(int status, __attribute__ ((unused)) int value){
@@ -759,8 +759,8 @@ int micron_disable_xip_volatile(int status, __attribute__ ((unused)) int value){
  * @brief Reads the id of the micron flash.
  * @details Micron flash is having a fixed value as ID during production. This 
  * value is read to confirm proper flash device.
- * @param int status 
- * @param int value
+ * @param int --- status register value
+ * @param int value  --- Values that needs to be configured.
  * @return Zero on Success
  */
 int micron_read_id_cmd(int status, int value){
@@ -776,8 +776,8 @@ int micron_read_id_cmd(int status, int value){
 /** @fn int micron_read_configuration_register(int status, int value)
  * @brief Reads configuration register. 
  * @details The configurartion register is read using this function.
- * @param int status
- * @param int value
+ * @param int --- status register value
+ * @param int value  --- Values that needs to be configured.
  * @return Zero on Success
  */
 int micron_read_configuration_register(int status, int value){

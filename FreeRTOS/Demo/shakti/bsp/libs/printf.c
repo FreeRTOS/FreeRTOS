@@ -36,7 +36,7 @@ value based on there data type. Currently, shakti-sdk supports few formatting op
 /** @fn  static inline void itoa (unsigned long long int number, unsigned base)
  * @brief integer to string conversion
  * @param unsigned long long int
- * @param unsigned 
+ * @param unsigned
  */
 
 static inline void itoa (unsigned long long int number, unsigned base)
@@ -69,7 +69,8 @@ static inline void itoa (unsigned long long int number, unsigned base)
 /** @fn void _printf_(const char *fmt, va_list ap)
  * @brief Handles the input stream of characters to print on screen
  * @details Identifies the type of format string, number of arguments and prints the right characer on screen
- * @param const char
+ * @param const char * fmt - formatting strings
+ * @param const va_list ap - arg list
  */
 void _printf_(const char *fmt, va_list ap)
 {
@@ -92,7 +93,7 @@ void _printf_(const char *fmt, va_list ap)
 
 		// Process a %-escape sequence
 		last_fmt = fmt;
-		lflag = 0; 
+		lflag = 0;
 
 		backtothebeginning = 0;
 		for (;;) {
@@ -234,6 +235,5 @@ int printf(const char* fmt, ...)
 	_printf_(fmt, ap);
 
 	va_end(ap);
-	return 0; // incorrect return value, but who cares, anyway?
+	return 0;// incorrect return value, but who cares, anyway?
 }
-

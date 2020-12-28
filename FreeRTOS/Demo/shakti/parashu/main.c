@@ -167,7 +167,7 @@ int read_bmp280_values(i2c_struct * instance, uint32_t reg_offset,
 	temp = (t_fine * 5 + 128) / 256;
 	*temperature = temp;
 
-	printf("\nTemperature Value:%u.%u °C", (temp/100),(temp%100));
+	printf("\nTemperature Value:%lu.%lu °C", (temp/100),(temp%100));
 
 	//Calculate Pressure
 	var1 = 0; 
@@ -197,7 +197,7 @@ int read_bmp280_values(i2c_struct * instance, uint32_t reg_offset,
 	p = (uint32_t)((int32_t)p + ((var1 + var2 + (int32_t)bmp280_calib_dig_P7)/16));
 	*pressure = p;
 
-	printf("\nThe Pressure Value:%u.%u Kpa",(p/1000),(p%1000));
+	printf("\nThe Pressure Value:%lu.%lu Kpa",(p/1000),(p%1000));
 	return 0;
 }
 
@@ -284,6 +284,12 @@ void vTaskbmp280(__attribute__((unused)) void *pvParameters);
 
 int main(void)
 {
+	/*
+	   The demo here is to show the capability of Parashu SoC of shakti family.
+	   Here we read temperature & pressure from bmp280, and update it regularly to spi flash.
+	   Based on temperature, we control the gpio pin.
+	 */
+
 	printf("FREERTOS starting\n");
 
 	xTaskCreate(vTaskbmp280,"Task 3",500,NULL,1,NULL);
@@ -371,7 +377,7 @@ void vTaskbmp280(__attribute__((unused)) void *pvParameters )
 	}
 }
 
-void spi_write()
+static void spi_write(void)
 {
 	uint32_t write_address = 0x0b00000;
 
@@ -412,25 +418,28 @@ void vTaskgpio(__attribute__((unused)) void *pvParameters)
 {
 	const TickType_t xDelay1000ms = pdMS_TO_TICKS(10);
 
-	write_word(GPIO_DIRECTION_CNTRL_REG, 0xffffffff);
+	write_word(GPIO_DIRECTION_CNTRL_REG, 0x190);
 
-	/* As per most tasks, this task is implemented in an infinite loop. */
+	/*
+	   We are giving 1 gpio pin for each device. GPIO4. GPIO7.
+	   GPIO8. It is upto the end user to use them appropriately.
+	 */
 	for( ;; )
 	{
 		if(gtemp > 3000)
 		{
 			// switch on air cooler
-			write_word(GPIO_DATA_REG, 0xff);
+			write_word(GPIO_DATA_REG, 0x10);
 		}
 		else if(gtemp > 2600)
 		{
 			//Full speed fan rotation
-			write_word(GPIO_DATA_REG, 0xff00);
+			write_word(GPIO_DATA_REG, 0xf0);
 		}
 		else if(gtemp < 26)
 		{
 			//mild speed fan rotation
-			write_word(GPIO_DATA_REG, 0x0ff0000);
+			write_word(GPIO_DATA_REG, 0x100);
 		}
 
 		vTaskDelay( xDelay1000ms );

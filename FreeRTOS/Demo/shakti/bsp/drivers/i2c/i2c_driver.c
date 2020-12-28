@@ -208,11 +208,11 @@ int wait_till_txrx_operation_Completes(i2c_struct * instance, int *status)
  * @fn int sendbytes(i2c_struct * instance, const char *buf, int count, int last, int eni)
  * @brief  writes "n" number of bits over i2c bus.
  * @details Called when the user wants to write n number of bits over i2c bus.
- * @param i2c_struct*
- * @param const char *buf
- * @param int count
- * @param int last
- * @param int eni
+ * @param i2c_struct*  --- i2c structure pointer
+ * @param const char *buf --- Pointer to buffer which contains the data to be written.
+ * @param int count --- No of bytes to be written.
+ * @param int last --- If 1, I2C stop command can be sent
+ * @param int eni  --- External Interrupt Control
  * @return Returns number of bytes written else EREMOTEIO.
  */
 int sendbytes(i2c_struct * instance, const char *buf, int count, int last, int eni)
@@ -254,10 +254,10 @@ int sendbytes(i2c_struct * instance, const char *buf, int count, int last, int e
  * @brief Reads "n" number of bytes from I2C Bus
  * @details Reads n number of bytes over I2C Bus and store teh same in 
  *          "buf" pointer.
- * @param i2c_struct*
- * @param char *buf
- * @param int count
- * @param int last
+ * @param i2c_struct*  --- i2c structure pointer
+ * @param const char *buf --- Pointer to buffer which contains the read data.
+ * @param int count --- No of bytes to be read.
+ * @param int last --- If 1, I2C stop command can be sent
  * @return Returns number of bytest read over i2c bus. else -1.
  */
 int readbytes(i2c_struct * instance, char *buf, int count, int last)

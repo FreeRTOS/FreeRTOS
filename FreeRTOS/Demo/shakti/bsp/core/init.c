@@ -32,6 +32,7 @@ Disable Xip for Aardonyx
 
 #include "traps.h"
 #include "plic_driver.h"
+#include "pwm_driver.h"
 #include "clint_driver.h"
 #include "log.h"
 #include "utils.h"
@@ -95,7 +96,7 @@ static void trap_init(void)
 	mcause_interrupt_table[USER_TIMER_INTERRUPT]     = default_handler;
 	mcause_interrupt_table[SUPER_TIMER_INTERRUPT]    = default_handler;
 	mcause_interrupt_table[RESERVED_INTERRUPT1]      = default_handler;
-	mcause_interrupt_table[MACH_TIMER_INTERRUPT]     = mach_clint_handler;
+	//mcause_interrupt_table[MACH_TIMER_INTERRUPT]     = mach_clint_handler;
 	mcause_interrupt_table[USER_EXT_INTERRUPT]       = default_handler;
 	mcause_interrupt_table[SUPERVISOR_EXT_INTERRUPT] = default_handler;
 	mcause_interrupt_table[RESERVED_INTERRUPT2]      = default_handler;
@@ -148,6 +149,7 @@ void init(void)
 {
 //	section_init(); // uncomment on need basis
 	uart_init();
+	pwm_init();
 
 	log_trace("init entered \n ");
 

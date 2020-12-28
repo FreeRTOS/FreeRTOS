@@ -1,7 +1,9 @@
+steps run demo applications
+===========================
 
-git clone https://github.com/FreeRTOS/FreeRTOS.git --recurse-submodules
+1. git clone https://github.com/FreeRTOS/FreeRTOS.git --recurse-submodules
 
-Please ensure, you installed the risc-v toolchain and exported them to 'PATH' variable.
+2. Please ensure, you installed the risc-v toolchain and exported them to 'PATH' variable. Please refer documentation section in https://shakti.org.in/sp2020-shakti.html for more details.
 
 vajra SoC
 =========
@@ -20,3 +22,8 @@ parashu SoC
 
 cd FreeRTOS/FreeRTOS/Demo/shakti/parashu
 make
+
+
+
+
+

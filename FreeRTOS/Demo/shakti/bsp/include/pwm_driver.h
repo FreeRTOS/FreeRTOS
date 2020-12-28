@@ -26,8 +26,24 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * @detail the header file for the pwm module which is used to change the frequency, period and duty registers
  */
 
-#include<stdbool.h>
+#ifndef PWM_DRIVER_H
+#define PWM_DRIVER_H
 
+#include<stdbool.h>
+#include<stdint.h>
+
+typedef struct{
+	uint16_t period;
+	uint16_t reserved1;
+	uint16_t duty;
+	uint16_t reserved2;
+	uint8_t control;
+	uint8_t reserved3;
+	uint16_t reserved4;
+	uint16_t clock;
+}pwm_struct;
+
+#define MAX_PWM_COUNT 6
 // PWM Registers 
 #define PERIOD_REGISTER     0x00000000	//16 bits (short)
 #define DUTY_REGISTER       0x00000004	//16 bits (short)
@@ -52,22 +68,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define PWM_4 4
 #define PWM_5 5
 
-//function prototype
-void pwm_configure(int module_number, int clock_divisor, int period, int duty, bool external_clock);
-void pwm_start(int module_number, int mode);
-int pwm_check_continuous_mode(int module_number);
-void pwm_clear_registers(int module_number);
-void pwm_init(void);
-void pwm_set_external_clock(int module_number, bool value);
-void pwm_set_clock(int module_number, int clock_divisor);
-void pwm_set_duty_cycle(int module_number, int duty);
-void pwm_set_periodic_cycle(int module_number, int period);
-void pwm_stop(int module_number);
-void show_register_values(int module_number);
-int set_pwm_period_register(int module_number, int value);
-int set_pwm_duty_register(int module_number, int value);
-int set_pwm_control_register(int module_number, int value);
-int set_pwm_clock_register(int module_number, int value);
-int configure_control_register_mode(int mode);
-void pwm_use_external_clock(int module_number, bool value);
+extern pwm_struct *pwm_instance[MAX_PWM_COUNT];
 
+//function prototype
+void pwm_configure(uint32_t module_number, uint32_t clock_divisor, uint32_t
+		   period, uint32_t duty, bool external_clock);
+void pwm_start(uint32_t module_number, uint32_t mode);
+uint32_t pwm_check_continuous_mode(uint32_t module_number);
+void pwm_clear_registers(uint32_t module_number);
+void pwm_init(void);
+void pwm_set_external_clock(uint32_t module_number, bool value);
+void pwm_set_clock(uint32_t module_number, uint32_t clock_divisor);
+void pwm_set_duty_cycle(uint32_t module_number, uint32_t duty);
+void pwm_set_periodic_cycle(uint32_t module_number, uint32_t period);
+void pwm_stop(uint32_t module_number);
+void show_register_values(uint32_t module_number);
+uint32_t set_pwm_period_register(uint32_t module_number, uint32_t value);
+uint32_t set_pwm_duty_register(uint32_t module_number, uint32_t value);
+uint32_t set_pwm_control_register(uint32_t module_number, uint32_t value);
+uint32_t set_pwm_clock_register(uint32_t module_number, uint32_t value);
+uint32_t configure_control_register_mode(uint32_t mode);
+void pwm_use_external_clock(uint32_t module_number, bool value);
+#endif

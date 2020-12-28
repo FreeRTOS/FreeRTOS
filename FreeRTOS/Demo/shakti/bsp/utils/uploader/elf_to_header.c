@@ -43,8 +43,8 @@ void convert_hex_array()
 	FILE *myFile;
 	FILE *Cypress;
 
-	myFile = fopen(FILEPATH "/output/code.mem", "r");
-	Cypress = fopen(FILEPATH "/output/flashdata.h","w");
+	myFile = fopen(  "output/code.mem", "r");
+	Cypress = fopen( "output/flashdata.h","w");
 
 	if(!myFile) {
 		printf(" unable to read code.mem\n");

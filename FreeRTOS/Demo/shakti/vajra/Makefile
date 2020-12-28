@@ -4,11 +4,18 @@ OBJCOPY	= $(TARGET)objcopy
 OBJDUMP	= $(TARGET)objdump
 AR	= $(TARGET)ar
 RANLIB	= $(TARGET)ranlib
+XLEN = 64
+MARCH = rv64imac 
+MABI = lp64
+OPENOCD = $(shell which openocd)
+INTERFACE = $(BSP_DIR)/third_party/vajra/ftdi
 
 PROG	= freeRtos-c64-100t
 
 FREERTOS_SOURCE_DIR	= ../../../Source
 BSP_DIR = ../bsp
+
+filepath = .
 
 #-----------------------------------------------------------
 WARNINGS= -Wall -Wextra -Wshadow -Wpointer-arith -Wbad-function-cast -Wcast-align -Wsign-compare -Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wunused
@@ -65,7 +72,7 @@ DEMO_OBJ = $(DEMO_SRC:.c=.o)
 PORT_OBJ = $(PORT_SRC:.c=.o)
 RTOS_OBJ = $(FREERTOS_SRC:.c=.o)
 
-OBJS = $(DEMO_ASM_OBJ) $(PORT_OBJ) $(PORT_ASM_OBJ) $(RTOS_OBJ) $(DEMO_OBJ) 
+OBJS = $(DEMO_ASM_OBJ) $(PORT_OBJ) $(PORT_ASM_OBJ) $(RTOS_OBJ) $(DEMO_OBJ)
 
 LDFLAGS	 = -march=rv64imac -mabi=lp64 -T $(BSP_DIR)/third_party/vajra/link.ld -nostartfiles -static -nostdlib
 
@@ -78,9 +85,9 @@ LIBS	 = -lc -lgcc
 	@echo "    CC $<"
 	@$(GCC) -c $(CFLAGS) -o $@ $<
 
-all: $(PROG).elf
+all: $(PROG).elf 
 
-$(PROG).elf  : $(OBJS) Makefile 
+$(PROG).elf: $(OBJS) Makefile 
 	@echo Linking....
 	@$(GCC) -o $@ $(LDFLAGS) $(OBJS) $(LIBS)
 	@$(OBJDUMP) -S $(PROG).elf > $(PROG).asm	
@@ -90,6 +97,26 @@ clean :
 	@rm -f $(OBJS)
 	@rm -f $(PROG).elf 
 	@rm -f $(PROG).asm
+	@rm -fr $(filepath)/output
+	@echo cleaned
 
 force_true:
 	@true
+
+
+upload: $(PROG).elf path do1 
+path:
+FILEPATH:='"$(filepath)"'
+do1:
+	@mkdir -p ./output
+	@elf2hex 4 16384 $(filepath)/$(PROG).elf 2147483648 > $(filepath)/output/code.mem
+	@gcc -g -w -D FILEPATH='"$(FILEPATH)"' $(BSP_DIR)/utils/uploader/elf_to_header.c -o $(filepath)/output/elf_to_header
+	@$(filepath)/output/elf_to_header
+	@riscv$(XLEN)-unknown-elf-gcc -w $(DC) -mcmodel=medany -static -std=gnu99 -fno-builtin-printf -I$(BSP_DIR)/include -I$(BSP_DIR)/third_party/vajra/ -I$(filepath)/output -c $(BSP_DIR)/utils/uploader/spansion/deploy.c -o $(filepath)/output/deploy.o -march=$(MARCH) -mabi=$(MABI) -lm -lgcc
+	@riscv$(XLEN)-unknown-elf-ar rcs $(filepath)/output/libshakti$(XLEN).a $(OBJS) 
+	@riscv$(XLEN)-unknown-elf-gcc -T $(BSP_DIR)/third_party/vajra/link.ld $(filepath)/output/deploy.o $(filepath)/output/libshakti$(XLEN).a -o $(filepath)/output/deploy.shakti -static -nostartfiles -march=$(MARCH) -mabi=$(MABI) -lm -lgcc
+	@riscv$(XLEN)-unknown-elf-objdump -D $(filepath)/output/deploy.shakti > $(filepath)/output/deploy.dump
+	@echo -e "Upload elf to Flash"
+	@riscv$(XLEN)-unknown-elf-objcopy -O ihex $(filepath)/output/deploy.shakti $(filepath)/output/deploy.hex
+	@sudo $(OPENOCD) -f $(INTERFACE).cfg -c "reset init" -c "load_image $(filepath)/output/deploy.hex ;resume 0x80000000;shutdown"
+

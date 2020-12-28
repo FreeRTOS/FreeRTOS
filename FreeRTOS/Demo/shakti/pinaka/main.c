@@ -47,7 +47,9 @@ void vTaskgpio(__attribute__((unused)) void *pvParameters)
 
 	write_word(GPIO_DIRECTION_CNTRL_REG, 0x2);
 
-	/* As per most tasks, this task is implemented in an infinite loop. */
+	/*
+	   Read the value from GPIO0 and based on that value control the led connected to GPIO1
+	 */
 	for( ;; )
 	{
 		if(read_word(GPIO_DATA_REG) & 0X01)

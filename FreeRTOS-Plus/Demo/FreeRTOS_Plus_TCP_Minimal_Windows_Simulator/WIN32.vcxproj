@@ -179,6 +179,7 @@
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_ARP.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_DHCP.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_DNS.h" />
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_errno_TCP.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_IP.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_IP_Private.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_Sockets.h" />

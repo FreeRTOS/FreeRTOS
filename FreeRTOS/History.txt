@@ -1,5 +1,19 @@
 Documentation and download available at https://www.FreeRTOS.org/
 
+Changes between FreeRTOS V202012.00 and FreeRTOS V202012.00 released December 2020
+
+    + Includes libraries that are part of the FreeRTOS 202012.00 LTS release.
+        - Learn more at https:/freertos.org/lts-libraries.html
+	+ Networking support for QEMU MPS2
+	+ Demo Updates
+		- AWS IoT Jobs Library
+		- AWS Defender
+		- HTTP Mutual Auth
+		- HTTP Plaintext
+		- UDP for FreeRTOS+TCP
+		- S3 Upload & Download
+
+
 Changes between FreeRTOS V10.4.1 and FreeRTOS V202011.00 released November 10 2020
 
 	+ Added new coreJSON Library. See https://www.freertos.org/json/

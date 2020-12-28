@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202011.00
+ * FreeRTOS V202012.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -41,8 +41,11 @@ void __attribute__((weak)) EthernetISR (void);
 
 extern uint32_t _estack, _sidata, _sdata, _edata, _sbss, _ebss;
 
-__attribute__((naked)) void Reset_Handler(void)
- {
+/* Prevent optimization so gcc does not replace code with memcpy */
+__attribute__((optimize("O0")))
+__attribute__((naked))
+void Reset_Handler(void)
+{
     // set stack pointer
     __asm volatile ("ldr r0, =_estack");
     __asm volatile ("mov sp, r0");

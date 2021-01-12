@@ -30,7 +30,7 @@ jobs:
           fetch-depth: 1
           ref:  ${{ github.event.pull_request.head.sha }}
           path: inspect  
-          submodules: true
+          submodules: 'true'
           
       # Collect all affected files
       - name: Collecting changed files

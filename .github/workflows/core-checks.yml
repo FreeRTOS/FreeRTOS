@@ -53,5 +53,5 @@ jobs:
             path: ./FreeRTOS
       - name: Posix Build Checker
         run: | 
-            bash FreeRTOS/.github/actions/posix_build_checker.sh FreeRTOS
+            bash FreeRTOS/.github/scripts/posix_build_checker.sh FreeRTOS
                   

@@ -14,7 +14,7 @@ cd ${PROJECT}/FreeRTOS/Demo/Posix_GCC
 
 make
 
-SCRIPT_RET = $?
+SCRIPT_RET=$?
 
 if [ "${SCRIPT_RET}" -eq 0 ]
 then

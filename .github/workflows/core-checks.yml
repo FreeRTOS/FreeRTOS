@@ -52,8 +52,8 @@ jobs:
       - name: Clone This Repo
         uses: actions/checkout@v2
         with:
-            path: ./FreeRTOS
+            path: ./workspace
       - name: Posix Build Checker
         run: | 
-            bash FreeRTOS/.github/scripts/posix_build_checker.sh FreeRTOS
+            bash workspace/.github/scripts/posix_build_checker.sh workspace
                   

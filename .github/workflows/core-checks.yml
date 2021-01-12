@@ -43,4 +43,15 @@ jobs:
           export PYTHONPATH=tools/.github/scripts:${PYTHONPATH}
           .github/scripts/core_checker.py --json ${HOME}/files_modified.json ${HOME}/files_added.json ${HOME}/files_renamed.json
           exit $?
+  build-checker:
+    name: FreeRTOS Posix Build Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone This Repo
+        uses: actions/checkout@v2
+        with:
+            path: ./FreeRTOS
+      - name: Posix Build Checker
+        run: | 
+            bash FreeRTOS/.github/actions/posix_build_checker.sh FreeRTOS
                   

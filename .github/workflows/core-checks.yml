@@ -27,8 +27,10 @@ jobs:
       - name: Checkout Pull Request
         uses: actions/checkout@v2
         with:
+          fetch-depth: 1
           ref:  ${{ github.event.pull_request.head.sha }}
           path: inspect  
+          submodules: recursive
           
       # Collect all affected files
       - name: Collecting changed files

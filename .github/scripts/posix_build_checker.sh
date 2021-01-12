@@ -15,5 +15,11 @@ cd ${PROJECT}/FreeRTOS/Demo/Posix_GCC
 make
 
 SCRIPT_RET = $?
-exit ${SCRIPT_RET}
+
+if [ "${SCRIPT_RET}" -eq 0 ]
+then
+    exit 0
+else
+    exit 1
+fi
 

@@ -59,4 +59,7 @@ jobs:
       - name: Posix Build Checker
         run: | 
             bash workspace/.github/scripts/posix_build_checker.sh workspace
+      - name: Posix Network Build Checker
+        run: | 
+            bash workspace/.github/scripts/posix_network_build_checker.sh workspace
                   

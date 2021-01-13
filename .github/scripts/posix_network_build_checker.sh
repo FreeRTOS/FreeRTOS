@@ -1,3 +1,4 @@
+
 PROJECT=$1
 echo "Verifying url links of: ${PROJECT}"
 if [ ! -d "$PROJECT" ]
@@ -10,7 +11,7 @@ SCRIPT_RET=0
 
 set -o nounset        # Treat unset variables as an error
 
-cd ${PROJECT}/FreeRTOS/Demo/Posix_GCC
+cd ${PROJECT}/FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix
 make
 
 SCRIPT_RET=$?
@@ -21,4 +22,3 @@ then
 else
     exit 1
 fi
-

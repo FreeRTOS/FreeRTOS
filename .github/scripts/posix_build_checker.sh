@@ -11,7 +11,6 @@ SCRIPT_RET=0
 set -o nounset        # Treat unset variables as an error
 
 cd ${PROJECT}/FreeRTOS/Demo/Posix_GCC
-
 make
 
 SCRIPT_RET=$?
@@ -23,3 +22,16 @@ else
     exit 1
 fi
 
+
+cd ../../../
+cd FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix
+make
+
+SCRIPT_RET=$?
+
+if [ "${SCRIPT_RET}" -eq 0 ]
+then
+    exit 0
+else
+    exit 1
+fi

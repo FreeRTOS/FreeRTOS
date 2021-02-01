@@ -4,6 +4,7 @@ import os, sys, re
 from argparse import ArgumentParser
 from difflib import unified_diff
 from json import load
+from colorama import Fore, Style
 
 def dprint(msg):
     print('[DEBUG]: %s' % str(msg))
@@ -96,13 +97,32 @@ class HeaderChecker:
         return False
 
     def showHelp(self, path_config):
-        print('\n\n'
-              "Please fix all highlighted diffs or add exceptions to '%s' as necessary.\n"
-              "Include your changes to '%s' in your PR. Git PR checks source this file from your PR.\n"
-              "\n"
-              "The FreeRTOS Header Check ensures all files that contain FreeRTOS Headers are up to date\n"
-              "with the latest version, copyright, and licensing info."
-              "\n\n" % (path_config, path_config))
+        print(Fore.YELLOW)
+        print(
+              "\n\n"
+              "*************************************************************************************************\n"
+              "*                                FreeRTOS Header Check %s(FAILED)%s                                 *\n"
+              "*************************************************************************************************\n"
+              "*                                                                                               *\n" 
+              "* %sWe do NOT require that all files contain the FreeRTOS File Header (copyright + license).%s      *\n"
+              "* While some files in this change-set don't adhere with the FreeRTOS File Header,               *\n"
+              "* they can be omitted from this check as needed.                                                *\n"
+              "*                                                                                               *\n" 
+              "* The Git PR check sources its scripts from your fork.                                          *\n"
+              "* For FreeRTOS/FreeRTOS, ignored files are listed in '.github/scripts/core_checker.py'          *\n"
+              "* For FreeRTOS/FreeRTOS-Kernel, ignored files are listed in '.github/scripts/kernel_checker.py' *\n"
+              "*                                                                                               *\n"
+              "* Please fix any offending files that should have the FreeRTOS header,                          *\n"
+              "* or add new files to the ignore list as needed to make the check pass.                         *\n"
+              "*                                                                                               *\n"
+              "* %sInclude the required updates to the '*_checker.py' script in your PR to make the check pass.%s  *\n"
+              "*************************************************************************************************\n"
+              "\n\n"
+              % (Fore.RED, Fore.YELLOW,
+                 Fore.RED, Fore.YELLOW,
+                 Fore.RED, Fore.YELLOW)
+              )
+        print(Style.RESET_ALL)
 
     @staticmethod
     def configArgParser():

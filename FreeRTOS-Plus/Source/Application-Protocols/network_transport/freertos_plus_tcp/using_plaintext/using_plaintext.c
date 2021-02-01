@@ -29,6 +29,9 @@
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
+#if ( configUSE_PREEMPTION == 0 )
+    #include "task.h"
+#endif
 
 /* FreeRTOS+TCP includes. */
 #include "FreeRTOS_IP.h"
@@ -42,8 +45,8 @@
 
 /*-----------------------------------------------------------*/
 
-/** 
- * @brief Each compilation unit that consumes the NetworkContext must define it. 
+/**
+ * @brief Each compilation unit that consumes the NetworkContext must define it.
  * It should contain a single pointer as seen below whenever the header file
  * of this transport implementation is included to your project.
  *
@@ -134,14 +137,14 @@ int32_t Plaintext_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
 
     pPlaintextTransportParams = pNetworkContext->pParams;
 
-    /* The TCP socket may have a receive block time.  If bytesToRecv is greater 
-     * than 1 then a frame is likely already part way through reception and 
+    /* The TCP socket may have a receive block time.  If bytesToRecv is greater
+     * than 1 then a frame is likely already part way through reception and
      * blocking to wait for the desired number of bytes to be available is the
-     * most efficient thing to do.  If bytesToRecv is 1 then this may be a 
-     * speculative call to read to find the start of a new frame, in which case 
-     * blocking is not desirable as it could block an entire protocol agent 
-     * task for the duration of the read block time and therefore negatively 
-     * impact performance.  So if bytesToRecv is 1 then don't call recv unless 
+     * most efficient thing to do.  If bytesToRecv is 1 then this may be a
+     * speculative call to read to find the start of a new frame, in which case
+     * blocking is not desirable as it could block an entire protocol agent
+     * task for the duration of the read block time and therefore negatively
+     * impact performance.  So if bytesToRecv is 1 then don't call recv unless
      * it is known that bytes are already available. */
     if( bytesToRecv == 1 )
     {
@@ -181,6 +184,16 @@ int32_t Plaintext_FreeRTOS_send( NetworkContext_t * pNetworkContext,
          * unless it persists. */
         socketStatus = 0;
     }
+
+    #if ( configUSE_PREEMPTION == 0 )
+        {
+            /* FreeRTOS_send adds the packet to be sent to the IP task's queue for later processing.
+             * The packet is sent later by the IP task. When FreeRTOS is used in collaborative
+             * mode (i.e. configUSE_PREEMPTION is 0), call taskYIELD to give IP task a chance to run
+             * so that the packet is actually sent before this function returns. */
+            taskYIELD();
+        }
+    #endif
 
     return socketStatus;
 }

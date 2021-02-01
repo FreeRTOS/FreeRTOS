@@ -260,7 +260,8 @@ FREERTOS_IGNORED_PATTERNS = [
 
 FREERTOS_IGNORED_FILES = [
     'fyi-another-way-to-ignore-file.txt',
-    'mbedtls_config.h'
+    'mbedtls_config.h',
+    'requirements.txt'
 ]
 
 FREERTOS_HEADER = [

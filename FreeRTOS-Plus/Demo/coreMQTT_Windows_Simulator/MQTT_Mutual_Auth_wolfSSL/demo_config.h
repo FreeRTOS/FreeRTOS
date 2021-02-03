@@ -76,7 +76,7 @@ extern void vLoggingPrintf(const char* pcFormatString,
  *
  * #define democonfigCLIENT_IDENTIFIER    "insert here."
  */
-#define democonfigCLIENT_IDENTIFIER    "demoDevice"
+
 /**
  * @brief Endpoint of the MQTT broker to connect to.
  *
@@ -91,7 +91,7 @@ extern void vLoggingPrintf(const char* pcFormatString,
  *
  * #define democonfigMQTT_BROKER_ENDPOINT    "...insert here..."
  */
-#define democonfigMQTT_BROKER_ENDPOINT      "...insert here..."
+
 /**
  * @brief The port to use for the demo.
  *
@@ -102,7 +102,7 @@ extern void vLoggingPrintf(const char* pcFormatString,
  *
  * #define democonfigMQTT_BROKER_PORT    "...insert here..."
  */
-#define democonfigMQTT_BROKER_PORT    8883
+
 /**
  * @brief Server's root CA certificate.
  *
@@ -111,16 +111,19 @@ extern void vLoggingPrintf(const char* pcFormatString,
  * in the link below.
  * https://docs.aws.amazon.com/iot/latest/developerguide/server-authentication.html#server-authentication-certs
  *
- * @note This certificate should be PEM-encoded.
  *
- * Must include the PEM header and footer:
- * "-----BEGIN CERTIFICATE-----\n"\
- * "...base64 data...\n"\
- * "-----END CERTIFICATE-----\n"
+ * @note This certificate should be PEM-encoded.
+ * @note define the path to the certificate, do not copy and paste the certificate
+ * contents to this macro.
+ * @warning If wolfSSL cannot verify the peer when connecting to AWS IoT, try
+ * using the root CA found at
+ * https://www.amazontrust.com/repository/SFSRootCAG2.pem.
+ * wolfSSL requires that the whole CA certificate chain is trusted. AWS
+ * certificates are cross signed by this CA.
  *
  * #define democonfigROOT_CA_PEM    "...insert here..."
  */
-#define democonfigROOT_CA_PEM     "...insert here..."
+
 /**
  * @brief Client certificate.
  *
@@ -129,15 +132,12 @@ extern void vLoggingPrintf(const char* pcFormatString,
  * https://docs.aws.amazon.com/iot/latest/developerguide/client-authentication.html
  *
  * @note This certificate should be PEM-encoded.
- *
- * Must include the PEM header and footer:
- * "-----BEGIN CERTIFICATE-----\n"\
- * "...base64 data...\n"\
- * "-----END CERTIFICATE-----\n"
+ * @note define the path to the certificate, do not copy and paste the certificate
+ * contents to this macro.
  *
  * #define democonfigCLIENT_CERTIFICATE_PEM    "...insert here..."
  */
-#define democonfigCLIENT_CERTIFICATE_PEM      "...insert here..."
+
 /**
  * @brief Client's private key.
  *
@@ -146,15 +146,12 @@ extern void vLoggingPrintf(const char* pcFormatString,
  * https://docs.aws.amazon.com/iot/latest/developerguide/client-authentication.html
  *
  * @note This private key should be PEM-encoded.
- *
- * Must include the PEM header and footer:
- * "-----BEGIN RSA PRIVATE KEY-----\n"\
- * "...base64 data...\n"\
- * "-----END RSA PRIVATE KEY-----\n"
+ * @note define the path to the certificate, do not copy and paste the certificate
+ * contents to this macro.
  *
  * #define democonfigCLIENT_PRIVATE_KEY_PEM    "...insert here..."
  */
-#define democonfigCLIENT_PRIVATE_KEY_PEM     "...insert here..."
+
 /**
  * @brief Set the stack size of the main demo task.
  *

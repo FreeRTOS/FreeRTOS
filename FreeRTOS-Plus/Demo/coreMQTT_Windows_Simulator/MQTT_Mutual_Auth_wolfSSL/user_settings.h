@@ -23,16 +23,21 @@
  * https://github.com/FreeRTOS
  *
  */
+#ifndef USER_SETTINGS_H
+#define USER_SETTINGS_H
 
-#ifndef USER_SETTINGS_H_
-#define USER_SETTINGS_H_
+#define FREERTOS_TCP
+#define WOLFSSL_USER_IO
+#define USE_WOLFSSL_IO
+#define WOLFSSL_IGNORE_FILE_WARN
+
 /*-- Cipher related definitions  -----------------------------------------------
  *
  *
  *----------------------------------------------------------------------------*/
+#define WOLFSSL_HAVE_MAX
+#define WOLFSSL_HAVE_MIN
 
-#define HAVE_FIPS
-#define HAVE_FIPS_VERSION 3
 #define WOLFSSL_TLS13
 #define HAVE_TLS_EXTENSIONS
 
@@ -48,58 +53,63 @@
 #define TFM_TIMING_RESISTANT
 #define ECC_TIMING_RESISTANT
 #define WC_RSA_BLINDING
+
 #define HAVE_AESGCM
+#define HAVE_AESCCM
+#define HAVE_AES_ECB
+#define WOLFSSL_AES_COUNTER
+#define WOLFSSL_AES_DIRECT
+
 #define WOLFSSL_SHA512
 #define WOLFSSL_SHA384
 #define HAVE_HKDF
-#define NO_DSA
+
 #define HAVE_ECC
 #define TFM_ECC256
 #define ECC_SHAMIR
 #define WC_RSA_PSS
 #define WOLFSSL_BASE64_ENCODE
-#define NO_RC4
-#define NO_HC128
-#define NO_RABBIT
+
 #define WOLFSSL_KEY_GEN
-#define WOLFSSL_SHA224
-#define WOLFSSL_AES_DIRECT
-#define HAVE_AES_ECB
+
+
 #define HAVE_ECC_CDH
 #define WC_RSA_NO_PADDING
 #define WOLFSSL_VALIDATE_FFC_IMPORT
+#define WOLFSSL_VALIDATE_ECC_IMPORT
 #define HAVE_FFDHE_Q
 #define WOLFSSL_NO_SHAKE256
-#define HAVE_AESCCM
-#define WOLFSSL_VALIDATE_ECC_IMPORT
-#define WOLFSSL_AES_COUNTER
+
 #define WOLFSSL_CMAC
 #define WOLFSSL_SHA224
 #define WOLFSSL_SHA3
 #define WOLFSSL_SHAKE256
 #define HAVE_HASHDRBG
-#define HAVE_TLS_EXTENSIONS
+
 #define HAVE_SUPPORTED_CURVES
 #define HAVE_EXTENDED_MASTER
-#define NO_RC4
 #define HAVE_ENCRYPT_THEN_MAC
-#define NO_PSK
-#define NO_MD4
-#define NO_PWDBASED
 #define USE_FAST_MATH
 #define WOLFSSL_X86_64_BUILD
 #define WC_NO_ASYNC_THREADING
 #define HAVE_DH_DEFAULT_PARAMS
 #define HAVE___UINT128_T 1
 
-
-
-/*-- Debugging options  ------------------------------------------------------
+#define NO_DSA
+#define NO_HC128
+#define NO_RABBIT
+#define NO_RC4
+#define NO_PSK
+#define NO_MD4
+#define NO_PWDBASED
+ /*-- Debugging options  ------------------------------------------------------
  *
  * "DEBUG_WOLFSSL" definition enables log to output into stdout.
  * Note: wolfSSL_Debugging_ON() must be called just after wolfSSL_Init().
  *----------------------------------------------------------------------------*/
 
 /*#define DEBUG_WOLFSSL*/
+	
 
-#endif /* ifndef USER_SETTINGS_H_ */
+
+#endif /* USER_SETTINGS_H */

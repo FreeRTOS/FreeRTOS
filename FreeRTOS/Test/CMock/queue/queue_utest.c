@@ -21,8 +21,8 @@
  *
  * https://www.FreeRTOS.org
  * https://github.com/FreeRTOS
+ *
  */
-
 /*! @file queue_utest.c */
 
 /* C runtime includes. */

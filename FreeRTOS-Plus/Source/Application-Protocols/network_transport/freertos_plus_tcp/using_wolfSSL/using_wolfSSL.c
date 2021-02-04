@@ -126,7 +126,7 @@ static int wolfSSL_IORecvGlue( WOLFSSL * ssl,
                                void * context )
 {
     ( void ) ssl; /* to prevent unused warning*/
-    BaseType_t read;
+    BaseType_t read = 0;
 
     Socket_t xSocket = ( Socket_t ) context;
 
@@ -196,7 +196,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetCtx,
                                       const NetworkCredentials_t * pNetCred )
 {
     TlsTransportStatus_t returnStatus = TLS_TRANSPORT_SUCCESS;
-    Socket_t xSocket;
+    Socket_t xSocket = { 0 };
 
     configASSERT( pNetCtx != NULL );
     configASSERT( pHostName != NULL );
@@ -392,7 +392,7 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
 void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
 {
     WOLFSSL * pSsl = pNetworkContext->sslContext.ssl;
-    WOLFSSL_CTX * pCtx;
+    WOLFSSL_CTX * pCtx = NULL; 
 
     /* shutdown an active TLS connection */
     wolfSSL_shutdown( pSsl );

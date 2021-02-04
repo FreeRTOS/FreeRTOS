@@ -13,6 +13,10 @@ Make
 ```
 GNU Make 3.82
 ```
+Ruby
+```
+ruby 2.0.0p648 (2015-12-16) [x86_64-linux]
+```
 Doxygen (optional)
 ```
 1.8.5

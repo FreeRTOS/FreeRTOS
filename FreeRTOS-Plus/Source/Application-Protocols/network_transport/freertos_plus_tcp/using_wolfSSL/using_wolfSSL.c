@@ -199,7 +199,6 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetCtx,
 {
     TlsTransportStatus_t returnStatus = TLS_TRANSPORT_SUCCESS;
 
-    /*char errString[80];*/
 
     configASSERT( pNetCtx != NULL );
     configASSERT( pHostName != NULL );

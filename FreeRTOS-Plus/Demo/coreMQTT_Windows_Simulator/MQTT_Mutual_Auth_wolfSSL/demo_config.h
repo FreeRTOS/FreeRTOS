@@ -113,10 +113,10 @@ extern void vLoggingPrintf(const char* pcFormatString,
  *
  *
  * @note This certificate should be PEM-encoded.
- * @note define the path to the certificate, do not copy and paste the certificate
+ * @note Define the path to the certificate, do not copy and paste the certificate
  * contents to this macro.
  * @warning If wolfSSL cannot verify the peer when connecting to AWS IoT, try
- * using the root CA found at
+ * using the root CA of Starfield Services found at
  * https://www.amazontrust.com/repository/SFSRootCAG2.pem.
  * wolfSSL requires that the whole CA certificate chain is trusted. AWS
  * certificates are cross signed by this CA.
@@ -132,7 +132,7 @@ extern void vLoggingPrintf(const char* pcFormatString,
  * https://docs.aws.amazon.com/iot/latest/developerguide/client-authentication.html
  *
  * @note This certificate should be PEM-encoded.
- * @note define the path to the certificate, do not copy and paste the certificate
+ * @note Define the path to the certificate, do not copy and paste the certificate
  * contents to this macro.
  *
  * #define democonfigCLIENT_CERTIFICATE_PEM    "...insert here..."

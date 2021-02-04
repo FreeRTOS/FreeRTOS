@@ -126,10 +126,10 @@ static int wolfSSL_IORecvGlue( WOLFSSL * ssl,
                                void * context )
 {
     ( void ) ssl; /* to prevent unused warning*/
+    BaseType_t read;
 
     Socket_t xSocket = ( Socket_t ) context;
 
-    BaseType_t read;
 
     read = FreeRTOS_recv( xSocket, ( void * ) buf, ( size_t ) sz, 0 );
 
@@ -157,9 +157,7 @@ static int wolfSSL_IOSendGlue( WOLFSSL * ssl,
                                void * context )
 {
     ( void ) ssl; /* to prevent unused warning*/
-
     Socket_t xSocket = ( Socket_t ) context;
-
     BaseType_t sent = FreeRTOS_send( xSocket, ( void * ) buf, ( size_t ) sz, 0 );
 
     if( sent == -pdFREERTOS_ERRNO_EWOULDBLOCK )
@@ -198,7 +196,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetCtx,
                                       const NetworkCredentials_t * pNetCred )
 {
     TlsTransportStatus_t returnStatus = TLS_TRANSPORT_SUCCESS;
-
+    Socket_t xSocket;
 
     configASSERT( pNetCtx != NULL );
     configASSERT( pHostName != NULL );
@@ -233,7 +231,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetCtx,
 
                     if( pNetCtx->sslContext.ssl != NULL )
                     {
-                        Socket_t xSocket = pNetCtx->tcpSocket;
+                        xSocket = pNetCtx->tcpSocket;
 
                         /* set Recv/Send glue functions to the WOLFSSL object */
                         wolfSSL_SSLSetIORecv( pNetCtx->sslContext.ssl,
@@ -394,6 +392,7 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
 void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
 {
     WOLFSSL * pSsl = pNetworkContext->sslContext.ssl;
+    WOLFSSL_CTX * pCtx;
 
     /* shutdown an active TLS connection */
     wolfSSL_shutdown( pSsl );
@@ -406,7 +405,7 @@ void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
     Sockets_Disconnect( pNetworkContext->tcpSocket );
 
     /* free WOLFSSL_CTX object*/
-    WOLFSSL_CTX * pCtx = pNetworkContext->sslContext.ctx;
+    pCtx = pNetworkContext->sslContext.ctx;
 
     wolfSSL_CTX_free( pCtx );
     pNetworkContext->sslContext.ctx = NULL;

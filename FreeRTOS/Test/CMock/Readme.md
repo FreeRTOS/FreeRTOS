@@ -26,7 +26,8 @@ Doxygen (optional)
 $ make help
 Usage: $ make <unit>
 
- where <unit> is one of queue doc all run coverage
+ where <unit> is one of: queue doc all run run_formatted run_col
+ run_col_formatted coverage
 ```
 Explanation
 ```
@@ -40,9 +41,10 @@ $ make doc
 Would generate the doxygen documentation in build/doc
 
 ```
-$ make run
+$ make run | run_formatted | run_col | run_col_formatted 
 ```
-Would build all unit tests and runs them one after the other
+Would build all unit tests and runs them one after the other with different
+options between normal and formatted and colored for easily spotting errors
 
 ```
 $ make coverage

@@ -31,7 +31,7 @@ clean:
 
 help:
 	@echo -e 'Usage: $$ make <unit>\n '
-	@echo -e ' where <unit> is one of $(UNITS) doc all run coverage'
+	@echo -e ' where <unit> is one of: $(UNITS) doc all run run_formatted run_col run_col_formatted coverage'
 
 $(LIB_DIR)/libcmock.so : ${CMOCK_SRC_DIR}/cmock.c     \
 			${CMOCK_SRC_DIR}/cmock.h      \
@@ -48,8 +48,23 @@ run : $(UNITS) directories
 	for f in $(BIN_DIR)/*; do \
 	  $${f}; done 
 
-coverage : run
+run_col : $(UNITS) directories
+	for f in $(BIN_DIR)/*; do \
+	  ruby -r $(UNITY_BIN_DIR)/colour_reporter.rb  -e "report('`$${f}`')"; done 
+
+run_formatted :  $(UNITS) directories
+	for f in $(BIN_DIR)/*; do \
+	  $${f} > $(BUILD_DIR)/output; \
+	  ruby  $(UNITY_BIN_DIR)/parse_output.rb $(BUILD_DIR)/output ; \
+	  done 
+
+run_col_formatted :  $(UNITS) directories
+	for f in $(BIN_DIR)/*; do \
+	  $${f} > $(BUILD_DIR)/output; \
+	  ruby -r $(UNITY_BIN_DIR)/colour_reporter.rb  -e "report('$$(ruby $(UNITY_BIN_DIR)/parse_output.rb $(BUILD_DIR)/output)')"; \
+	  done 
+
+coverage : run_col
 	lcov --base-directory . --directory . -c --rc lcov_branch_coverage=1 --rc genhtml_branch_coverage=1  -o $(BUILD_DIR)/cmock_test.info
 	genhtml $(BUILD_DIR)/cmock_test.info --branch-coverage --output-directory $(COVERAGE_DIR)
-
 

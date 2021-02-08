@@ -1,4 +1,5 @@
 /*
+ * FreeRTOS V202012.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -18,9 +19,11 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
+/*! @file queue_utest.c */
 
 /* C runtime includes. */
 #include <stdlib.h>
@@ -36,6 +39,7 @@
 
 /* Mock includes. */
 #include "mock_task.h"
+#include "mock_list.h"
 
 /* ============================  GLOBAL VARIABLES =========================== */
 static uint16_t usMallocFreeCalls = 0;
@@ -44,12 +48,13 @@ static uint16_t usMallocFreeCalls = 0;
 
 void * pvPortMalloc( size_t xSize )
 {
-    return malloc(xSize);
+    return malloc( xSize );
 }
 void vPortFree( void * pv )
 {
-    return free(pv);
+    return free( pv );
 }
+
 /*******************************************************************************
  * Unity fixtures
  ******************************************************************************/
@@ -57,7 +62,7 @@ void setUp( void )
 {
 }
 
-/* called before each testcase */
+/*! called before each testcase */
 void tearDown( void )
 {
     TEST_ASSERT_EQUAL_INT_MESSAGE( 0, usMallocFreeCalls,
@@ -66,12 +71,12 @@ void tearDown( void )
     usMallocFreeCalls = 0;
 }
 
-/* called at the beginning of the whole suite */
+/*! called at the beginning of the whole suite */
 void suiteSetUp()
 {
 }
 
-/* called at the end of the whole suite */
+/*! called at the end of the whole suite */
 int suiteTearDown( int numFailures )
 {
     return numFailures;
@@ -83,6 +88,8 @@ int suiteTearDown( int numFailures )
  */
 void test_xQueueCreate_Success( void )
 {
-    QueueHandle_t xQueue = xQueueCreate(1 , 1);
+    vListInitialise_Ignore();
+    QueueHandle_t xQueue = xQueueCreate( 1, 1 );
+
     TEST_ASSERT_NOT_EQUAL( NULL, xQueue );
 }

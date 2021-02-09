@@ -2,16 +2,22 @@
 export CC ?= /usr/local/bin/gcc
 export LD ?= /usr/local/bin/ld
 # Add units here when adding a new unit test directory with the same name
-UNITS := queue list timers
+UNITS := list
+
+.PHONY: makefile.in
 
 include makefile.in
 
 .PHONY: all doc clean $(UNITS) directories coverage zero_coverage
-.PHONY: run run_formatted run_col_formatted run_col
-
+.PHONY: run run_formatted run_col_formatted run_col Makefile makefile.in
+.PHONY :  cmock.c libcmock.so
+ 
 all: doc coverage
 execs: $(UNITS) | directories
 
+Makefile : ;
+
+makefile.in : ;
 
 $(UNITS) : ${LIB_DIR}/libcmock.so  ${LIB_DIR}/libunity.so | directories
 	$(MAKE) -C $@
@@ -41,14 +47,16 @@ help:
 	@echo -e 'Usage: $$ make <unit>\n '
 	@echo -e ' where <unit> is one of: $(UNITS) doc all run run_formatted run_col run_col_formatted coverage'
 
-$(LIB_DIR)/libcmock.so : ${CMOCK_SRC_DIR}/cmock.c     \
-			${CMOCK_SRC_DIR}/cmock.h      \
-			${LIB_DIR}/libunity.so        \
+$(LIB_DIR)/libcmock.so : $(CMOCK_SRC_DIR)/cmock.c     \
+			$(CMOCK_SRC_DIR)/cmock.h      \
+			$(LIB_DIR)/libunity.so        \
 			Makefile | directories
-	${CC} -o $@ -shared -fPIC  $<  ${INCLUDE_DIR}
+	echo "my cmocm rule"
+	$(CC) -o $@ -shared -fPIC  $<  $(INCLUDE_DIR)
 
-$(LIB_DIR)/libunity.so : ${UNITY_SRC_DIR}/unity.c     \
-			 ${UNITY_SRC_DIR}/unity.h     \
+
+$(LIB_DIR)/libunity.so : $(UNITY_SRC_DIR)/unity.c     \
+			 $(UNITY_SRC_DIR)/unity.h     \
 			 Makefile | directories
 	${CC} -o $@ -shared -fPIC  $<
 
@@ -84,5 +92,4 @@ coverage : run_col
 	    --rc genhtml_branch_coverage=1  -o $(BUILD_DIR)/cmock_test.info
 	genhtml $(BUILD_DIR)/cmock_test.info --branch-coverage               \
 	    --output-directory $(COVERAGE_DIR)
-
 

@@ -31,6 +31,10 @@ ifeq ($(MOCK_FILES_FP),)
      $(shell touch -a $(MOCKS_DIR)/mock_dummy.c)
 endif
 
+SOURCES := $(wildcard $(PROJECT)_*.c)
+
+$(warning "results are $(SOURCES)")
+
 $(MOCKS_DIR)/mock_%.c : Makefile $(PROJECT_DIR)/$(PROJECT).yml | directories
 	cd $(SCRATCH_DIR) &&                                                \
 	    ruby $(CMOCK_EXEC_DIR)/cmock.rb -o$(PROJECT_DIR)/$(PROJECT).yml \

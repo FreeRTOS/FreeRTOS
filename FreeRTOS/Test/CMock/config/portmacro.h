@@ -26,34 +26,34 @@
  */
 
 /*
-	Changes from V3.2.3
-
-	+ Modified portENTER_SWITCHING_ISR() to allow use with GCC V4.0.1.
-
-	Changes from V3.2.4
-
-	+ Removed the use of the %0 parameter within the assembler macros and
-	  replaced them with hard coded registers.  This will ensure the
-	  assembler does not select the link register as the temp register as
-	  was occasionally happening previously.
-
-	+ The assembler statements are now included in a single asm block rather
-	  than each line having its own asm block.
-
-	Changes from V4.5.0
-
-	+ Removed the portENTER_SWITCHING_ISR() and portEXIT_SWITCHING_ISR() macros
-	  and replaced them with portYIELD_FROM_ISR() macro.  Application code
-	  should now make use of the portSAVE_CONTEXT() and portRESTORE_CONTEXT()
-	  macros as per the V4.5.1 demo code.
-*/
+ *  Changes from V3.2.3
+ *
+ + Modified portENTER_SWITCHING_ISR() to allow use with GCC V4.0.1.
+ +
+ +  Changes from V3.2.4
+ +
+ + Removed the use of the %0 parameter within the assembler macros and
+ +    replaced them with hard coded registers.  This will ensure the
+ +    assembler does not select the link register as the temp register as
+ +    was occasionally happening previously.
+ +
+ + The assembler statements are now included in a single asm block rather
+ +    than each line having its own asm block.
+ +
+ +  Changes from V4.5.0
+ +
+ + Removed the portENTER_SWITCHING_ISR() and portEXIT_SWITCHING_ISR() macros
+ +    and replaced them with portYIELD_FROM_ISR() macro.  Application code
+ +    should now make use of the portSAVE_CONTEXT() and portRESTORE_CONTEXT()
+ +    macros as per the V4.5.1 demo code.
+ */
 
 #ifndef PORTMACRO_H
-#define PORTMACRO_H
+    #define PORTMACRO_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+        extern "C" {
+    #endif
 
 /*-----------------------------------------------------------
  * Port specific definitions.
@@ -66,42 +66,42 @@ extern "C" {
  */
 
 /* Type definitions. */
-#define portCHAR		char
-#define portFLOAT		float
-#define portDOUBLE		double
-#define portLONG		long
-#define portSHORT		short
-#define portSTACK_TYPE	uint32_t
-#define portBASE_TYPE	long
+    #define portCHAR          char
+    #define portFLOAT         float
+    #define portDOUBLE        double
+    #define portLONG          long
+    #define portSHORT         short
+    #define portSTACK_TYPE    uint32_t
+    #define portBASE_TYPE     long
 
-typedef portSTACK_TYPE StackType_t;
-typedef long BaseType_t;
-typedef unsigned long UBaseType_t;
+    typedef portSTACK_TYPE   StackType_t;
+    typedef long             BaseType_t;
+    typedef unsigned long    UBaseType_t;
 
-#if( configUSE_16_BIT_TICKS == 1 )
-	typedef uint16_t TickType_t;
-	#define portMAX_DELAY ( TickType_t ) 0xffff
-#else
-	typedef uint32_t TickType_t;
-	#define portMAX_DELAY ( TickType_t ) 0xffffffffUL
-#endif
+    #if ( configUSE_16_BIT_TICKS == 1 )
+        typedef uint16_t     TickType_t;
+        #define portMAX_DELAY    ( TickType_t ) 0xffff
+    #else
+        typedef uint32_t     TickType_t;
+        #define portMAX_DELAY    ( TickType_t ) 0xffffffffUL
+    #endif
 /*-----------------------------------------------------------*/
 
 /* Hardware specifics. */
-#define portSTACK_GROWTH			( -1 )
-#define portTICK_PERIOD_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
-#define portBYTE_ALIGNMENT			8
-#define portYIELD()				
-#define portNOP()				
+    #define portSTACK_GROWTH      ( -1 )
+    #define portTICK_PERIOD_MS    ( ( TickType_t ) 1000 / configTICK_RATE_HZ )
+    #define portBYTE_ALIGNMENT    8
+    #define portYIELD()
+    #define portNOP()
 
 /*
  * These define the timer to use for generating the tick interrupt.
  * They are put in this file so they can be shared between "port.c"
  * and "portisr.c".
  */
-#define portTIMER_REG_BASE_PTR
-#define portTIMER_CLK_ENABLE_BIT
-#define portTIMER_AIC_CHANNEL
+    #define portTIMER_REG_BASE_PTR
+    #define portTIMER_CLK_ENABLE_BIT
+    #define portTIMER_AIC_CHANNEL
 /*-----------------------------------------------------------*/
 
 /* Task utilities. */
@@ -113,37 +113,71 @@ typedef unsigned long UBaseType_t;
  * THUMB mode code will result in a compile time error.
  */
 
-#define portRESTORE_CONTEXT()											
+    #define portRESTORE_CONTEXT()
 /*-----------------------------------------------------------*/
 
-#define portSAVE_CONTEXT()										
+    #define portSAVE_CONTEXT()
 
-#define portYIELD_FROM_ISR() 
+    #define portYIELD_FROM_ISR()
 
 /* Critical section handling. */
 
-#define portDISABLE_INTERRUPTS()
+    #define portDISABLE_INTERRUPTS()
 
-#define portENABLE_INTERRUPTS()										
+    #define portENABLE_INTERRUPTS()
 
 
-extern void vPortEnterCritical( void );
-extern void vPortExitCritical( void );
+    extern void vPortEnterCritical( void );
+    extern void vPortExitCritical( void );
 
-#define portENTER_CRITICAL()		
-#define portEXIT_CRITICAL()			
+    #define portENTER_CRITICAL()
+    #define portEXIT_CRITICAL()
+    static inline uint8_t ucPortCountLeadingZeros( uint32_t ulBitmap )
+    {
+        uint8_t ucReturn;
 
-#undef portUSING_MPU_WRAPPERS
+        ucReturn = __builtin_clzll( ulBitmap );
+
+        /*__asm volatile ( "LZCNT %0, %1" : "=r" ( ucReturn ) : "r" ( ulBitmap ) ); */
+
+        return ucReturn;
+    }
+    #define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities )      ( uxReadyPriorities ) |= ( 1UL << ( uxPriority ) )
+    #define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities )       ( uxReadyPriorities ) &= ~( 1UL << ( uxPriority ) )
+    #define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities )    uxTopPriority = ( 31UL - ( uint32_t ) ucPortCountLeadingZeros( ( uxReadyPriorities ) ) )
+
+    #undef portUSING_MPU_WRAPPERS
 
 /*-----------------------------------------------------------*/
 
 /* Task function macros as described on the FreeRTOS.org WEB site. */
-#define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void *pvParameters )
-#define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
+    #define portTASK_FUNCTION_PROTO( vFunction, pvParameters )    void vFunction( void * pvParameters )
+    #define portTASK_FUNCTION( vFunction, pvParameters )          void vFunction( void * pvParameters )
 
-#ifdef __cplusplus
-}
-#endif
+
+/* MPU settings that can be overriden in FreeRTOSConfig.h. */
+    #ifndef configTOTAL_MPU_REGIONS
+        /* Define to 8 for backward compatibility. */
+        #define configTOTAL_MPU_REGIONS    ( 8UL )
+    #endif
+
+    #define portTOTAL_NUM_REGIONS          ( configTOTAL_MPU_REGIONS )
+
+/*
+ * typedef struct MPU_REGION_REGISTERS
+ * {
+ *  uint32_t ulRegionBaseAddress;
+ *  uint32_t ulRegionAttribute;
+ * } xMPU_REGION_REGISTERS;
+ *
+ *  typedef struct MPU_SETTINGS
+ *  {
+ *      xMPU_REGION_REGISTERS xRegion[ portTOTAL_NUM_REGIONS ];
+ *  } xMPU_SETTINGS;
+ */
+
+    #ifdef __cplusplus
+        }
+    #endif
 
 #endif /* PORTMACRO_H */
-

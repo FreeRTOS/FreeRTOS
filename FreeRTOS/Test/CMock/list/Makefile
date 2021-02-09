@@ -3,11 +3,11 @@
 # and the project name should be queue
 # if testing list.c your directory should be called list
 # and the project name should be list
-PROJECT          :=   queue
+PROJECT          :=   list
 
 # List the dependency files you wish to mock
-MOCK_FILES_FP    :=  $(KERNEL_DIR)/include/task.h
-MOCK_FILES_FP    +=  $(KERNEL_DIR)/include/list.h
+#MOCK_FILES_FP    :=  $(KERNEL_DIR)/include/task.h
+#MOCK_FILES_FP    +=  $(KERNEL_DIR)/include/list.h
 
 # List the options the compilation would need
 CPPFLAGS         +=   -DportUSING_MPU_WRAPPERS=0

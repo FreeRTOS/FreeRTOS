@@ -17,3 +17,7 @@
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+
+# Ignore certificate files.
+*.pem
+*.crt

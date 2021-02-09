@@ -9,10 +9,13 @@ export LD ?= /usr/local/bin/ld
 # Add units here when adding a new unit test directory with the same name
 UNITS       +=  list
 UNITS       +=  queue
-#UNITS       +=  timers
+UNITS       +=  timers
+UNITS       +=  tasks
 UNITS       +=  stream_buffer
 UNITS       +=  message_buffer
 UNITS       +=  event_groups
+
+.PHONY: makefile.in
 
 COVINFO     :=  $(BUILD_DIR)/cmock_test.info
 LCOV_LIST   :=  $(foreach unit,$(UNITS),$(GENERATED_DIR)/$(unit).info )
@@ -26,20 +29,23 @@ execs: $(UNITS)
 
 $(UNITS) : libs | directories
     $(MAKE) -C $@
+Makefile : ;
+
+makefile.in : ;
 
 SHARED_LIBS := $(addprefix $(LIB_DIR)/,$(addsuffix .so,$(LIBS)))
 
 libs : $(SHARED_LIBS)
 
 doc:
-    $(MAKE) -C doc all
+	$(MAKE) -C doc all
 
 clean:
-    rm -rf build
+	rm -rf build
 
 help:
-    @echo -e 'Usage: $$ make <unit>\n '
-    @echo -e ' where <unit> is one of: $(UNITS) doc all run run_formatted run_col run_col_formatted coverage'
+	@echo -e 'Usage: $$ make <unit>\n '
+	@echo -e ' where <unit> is one of: $(UNITS) doc all run run_formatted run_col run_col_formatted coverage'
 
 $(LIB_DIR)/libcmock.so : ${CMOCK_SRC_DIR}/cmock.c   \
                          ${CMOCK_SRC_DIR}/cmock.h   \
@@ -95,7 +101,7 @@ run_col_formatted : $(UNITS) zero_coverage
     done
 
 zero_coverage :
-    lcov --zerocounters --directory $(BUILD_DIR) --config-file $(UT_ROOT_DIR)/lcovrc
+	lcov --zerocounters --directory $(BUILD_DIR) --config-file $(UT_ROOT_DIR)/lcovrc
 
 coverage : run_col
     lcov --base-directory $(KERNEL_DIR) --directory $(BUILD_DIR) --capture  \

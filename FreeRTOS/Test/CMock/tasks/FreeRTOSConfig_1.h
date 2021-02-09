@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202012.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -28,8 +28,6 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
-#include "fake_assert.h"
-
 /*-----------------------------------------------------------
 * Application specific definitions.
 *
@@ -38,7 +36,7 @@
 *
 * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
 * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.  See
-* https://www.FreeRTOS.org/a00110.html
+* http://www.freertos.org/a00110.html
 *----------------------------------------------------------*/
 
 #define configUSE_PREEMPTION                             1
@@ -79,7 +77,6 @@
 /* Run time stats gathering configuration options. */
 unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
 void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that initialises the run time counter. */
-
 #define configGENERATE_RUN_TIME_STATS             1
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()    vConfigureTimerForRunTimeStats()
 #define portGET_RUN_TIME_COUNTER_VALUE()            ulGetRunTimeCounterValue()
@@ -110,30 +107,15 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 #define INCLUDE_xTaskGetSchedulerState            1
 #define INCLUDE_xTimerGetTimerDaemonTaskHandle    1
 #define INCLUDE_xTaskGetIdleTaskHandle            1
-#define INCLUDE_xTaskGetCurrentTaskHandle         1
 #define INCLUDE_xTaskGetHandle                    1
 #define INCLUDE_eTaskGetState                     1
 #define INCLUDE_xSemaphoreGetMutexHolder          1
 #define INCLUDE_xTimerPendFunctionCall            1
 #define INCLUDE_xTaskAbortDelay                   1
-#define INCLUDE_xTaskGetCurrentTaskHandle         1
 
 /* It is a good idea to define configASSERT() while developing.  configASSERT()
  * uses the same semantics as the standard C assert() macro. */
-#define configASSERT( x )                             \
-    do                                                \
-    {                                                 \
-        if( x )                                       \
-        {                                             \
-            vFakeAssert( true, __FILE__, __LINE__ );  \
-        }                                             \
-        else                                          \
-        {                                             \
-            vFakeAssert( false, __FILE__, __LINE__ ); \
-        }                                             \
-    } while( 0 )
-
-#define mtCOVERAGE_TEST_MARKER()    __asm volatile ( "NOP" )
+#define configASSERT( x )
 
 #define configINCLUDE_MESSAGE_BUFFER_AMP_DEMO    0
 #if ( configINCLUDE_MESSAGE_BUFFER_AMP_DEMO == 1 )

@@ -87,7 +87,7 @@ static void initialise_list_items( ListItem_t * listItems,
  * @param listItems list to initilize
  * @param count the number of listItems in the list
  */
-static void initialize_list_items_with_position( ListItem_t * listItems,
+static void initialise_list_items_with_position( ListItem_t * listItems,
                                                  int count )
 {
     for( int i = 0; i < count; i++ )
@@ -394,7 +394,7 @@ void test_vListInsert_success_multiple_items( void )
     MiniListItem_t * miniListEnd;
 
     vListInitialise( &pxList );
-    initialize_list_items_with_position( pxNewListItem, MAX_ITEMS );
+    initialise_list_items_with_position( pxNewListItem, MAX_ITEMS );
     miniListEnd = ( MiniListItem_t * ) pxList.pxIndex;
 
     for( int i = 0; i < MAX_ITEMS; i++ )
@@ -600,21 +600,19 @@ void test_uxListRemove_index_item( void )
     void * nextOwner;
 
     vListInitialise( &pxList );
-    initialise_list_items( pxNewListItem, 2 );
-
-    pxNewListItem[ 0 ].xItemValue = 0;
+    initialise_list_items_with_position( pxNewListItem, 2 );
 
     vListInsert( &pxList, &pxNewListItem[ 0 ] );
     vListInsert( &pxList, &pxNewListItem[ 1 ] );
     listSET_LIST_ITEM_OWNER( &pxNewListItem[ 0 ], owner1 );
-    listSET_LIST_ITEM_OWNER( &pxNewListItem[ 0 ], owner2 );
+    listSET_LIST_ITEM_OWNER( &pxNewListItem[ 1 ], owner2 );
 
     TEST_ASSERT_EQUAL_PTR( &pxList.xListEnd, pxList.pxIndex );
 
     listGET_OWNER_OF_NEXT_ENTRY( nextOwner, ( List_t * const ) &pxList );
-    TEST_ASSERT_EQUAL_PTR( nextOwner, owner2 );
-    listGET_OWNER_OF_NEXT_ENTRY( nextOwner, ( List_t * const ) &pxList );
     TEST_ASSERT_EQUAL_PTR( nextOwner, owner1 );
+    listGET_OWNER_OF_NEXT_ENTRY( nextOwner, ( List_t * const ) &pxList );
+    TEST_ASSERT_EQUAL_PTR( nextOwner, owner2 );
 
     uxListRemove( &pxNewListItem[ 1 ] );
     TEST_ASSERT_EQUAL( &pxNewListItem[ 0 ], pxList.pxIndex );

@@ -6,8 +6,8 @@
 PROJECT          :=   list
 
 # List the dependency files you wish to mock
-#MOCK_FILES_FP    :=  $(KERNEL_DIR)/include/task.h
-#MOCK_FILES_FP    +=  $(KERNEL_DIR)/include/list.h
+MOCK_FILES_FP    :=
+
 
 # List the options the compilation would need
 CPPFLAGS         +=   -DportUSING_MPU_WRAPPERS=0
@@ -26,31 +26,43 @@ MOCK_SRC_LIST    :=   $(addprefix $(MOCKS_DIR)/,$(MOCK_SRC))
 CFLAGS           +=   -I$(MOCKS_DIR)
 COVERAGE_OPTS    := -fprofile-arcs -ftest-coverage -fprofile-generate
 
-$(MOCKS_DIR)/mock_%.c : Makefile | directories
-	cd $(SCRATCH_DIR) && \
+ifeq ($(MOCK_FILES_FP),)
+     $(shell mkdir -p  $(MOCKS_DIR))
+     $(shell touch -a $(MOCKS_DIR)/mock_dummy.c)
+endif
+
+$(MOCKS_DIR)/mock_%.c : Makefile $(PROJECT_DIR)/$(PROJECT).yml | directories 
+ifneq ($(MOCK_FILES_FP),)
+	cd $(SCRATCH_DIR) &&                                                \
 	    ruby $(CMOCK_EXEC_DIR)/cmock.rb -o$(PROJECT_DIR)/$(PROJECT).yml \
 	    $(MOCK_FILES_FP)
+else
+endif
 
 $(PROJ_LIB_DIR)/mock_%.o : $(MOCKS_DIR)/mock_%.c
 	$(CC) -c $< -fPIC $(CFLAGS) -o $@
 
-$(BIN_DIR)/$(EXEC) : $(SCRATCH_DIR)/test_runner.o             \
-		    $(SCRATCH_DIR)/$(PROJECT).o               \
-		    $(SCRATCH_DIR)/$(PROJECT)_utest.o         \
-		    $(MOCK_OBJ_LIST) | Makefile
+$(BIN_DIR)/$(EXEC) : $(SCRATCH_DIR)/test_runner.o                           \
+		    $(SCRATCH_DIR)/$(PROJECT).o                             \
+		    $(SCRATCH_DIR)/$(PROJECT)_utest.o                       \
+		    $(MOCK_OBJ_LIST)
 	$(CC) $+ $(LDFLAGS) -o $@
  
-$(SCRATCH_DIR)/test_runner.o : $(SCRATCH_DIR)/test_runner.c
+$(SCRATCH_DIR)/test_runner.o : $(SCRATCH_DIR)/test_runner.c                 \
+                               $(SCRATCH_DIR)/$(PROJECT).o
 	$(CC) -c $< $(CPPFLAGS)  $(CFLAGS) -o $@
 
-$(SCRATCH_DIR)/$(PROJECT)_utest.o : $(PROJECT_DIR)/$(PROJECT)_utest.c
+$(SCRATCH_DIR)/$(PROJECT)_utest.o : $(PROJECT_DIR)/$(PROJECT)_utest.c       \
+                                    $(MOCKS_DIR)/mock_*.c                   \
+                                    | directories
 	$(CC) -c $< $(CPPFLAGS)  $(CFLAGS) -o $@
 
 $(SCRATCH_DIR)/$(PROJECT).o : $(KERNEL_DIR)/$(PROJECT).c 
 	$(CC) -c $< $(CPPFLAGS)  $(CFLAGS) $(COVERAGE_OPTS) -o $@
 
-$(SCRATCH_DIR)/test_runner.c : $(MOCK_OBJ_LIST) Makefile | directories 
-	ruby $(UNITY_BIN_DIR)/generate_test_runner.rb $(EXEC).c   \
+$(SCRATCH_DIR)/test_runner.c : $(SCRATCH_DIR)/$(PROJECT)_utest.o            \
+                               Makefile | directories 
+	ruby $(UNITY_BIN_DIR)/generate_test_runner.rb $(EXEC).c             \
 		$(PROJECT_DIR)/$(PROJECT).yml $@
 
 .PHONY: directories

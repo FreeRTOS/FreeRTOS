@@ -6,7 +6,8 @@ UNITS := queue list
 
 include makefile.in
 
-.PHONY: all run doc clean $(UNITS) coverage | directories
+.PHONY: all doc clean $(UNITS) directories coverage zero_coverage
+.PHONY: run run_formatted run_col_formatted run_col
 
 all: doc coverage
 execs: $(UNITS) | directories
@@ -51,21 +52,21 @@ $(LIB_DIR)/libunity.so : ${UNITY_SRC_DIR}/unity.c     \
 			 Makefile | directories
 	${CC} -o $@ -shared -fPIC  $< 
 
-run : $(UNITS) | directories
+run : $(UNITS) zero_coverage | directories
 	for f in $(BIN_DIR)/*; do \
 	  $${f}; done 
 
-run_col : $(UNITS) | directories
+run_col : $(UNITS) zero_coverage | directories
 	for f in $(BIN_DIR)/*; do \
 	  ruby -r $(UNITY_BIN_DIR)/colour_reporter.rb  -e "report('`$${f}`')"; done 
 
-run_formatted :  $(UNITS) | directories
+run_formatted :  $(UNITS) zero_coverage | directories
 	for f in $(BIN_DIR)/*; do \
 	  $${f} > $(BUILD_DIR)/output; \
 	  ruby  $(UNITY_BIN_DIR)/parse_output.rb $(BUILD_DIR)/output ; \
 	  done 
 
-run_col_formatted :  $(UNITS) | directories
+run_col_formatted :  $(UNITS) zero_coverage | directories
 	for f in $(BIN_DIR)/*; do \
 	  $${f} > $(BUILD_DIR)/output; \
 	  ruby -r $(UNITY_BIN_DIR)/colour_reporter.rb  \
@@ -73,6 +74,8 @@ run_col_formatted :  $(UNITS) | directories
 		 $(BUILD_DIR)/output)')"; \
 	  done 
 
+zero_coverage :
+	lcov --zerocounters --directory $(BUILD_DIR)
 coverage : run_col
 	lcov --base-directory . --directory . -c --rc lcov_branch_coverage=1 \
 	    --rc genhtml_branch_coverage=1  -o $(BUILD_DIR)/cmock_test.info

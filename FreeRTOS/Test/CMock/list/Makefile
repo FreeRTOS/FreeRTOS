@@ -31,13 +31,10 @@ ifeq ($(MOCK_FILES_FP),)
      $(shell touch -a $(MOCKS_DIR)/mock_dummy.c)
 endif
 
-$(MOCKS_DIR)/mock_%.c : Makefile $(PROJECT_DIR)/$(PROJECT).yml | directories 
-ifneq ($(MOCK_FILES_FP),)
+$(MOCKS_DIR)/mock_%.c : Makefile $(PROJECT_DIR)/$(PROJECT).yml | directories
 	cd $(SCRATCH_DIR) &&                                                \
 	    ruby $(CMOCK_EXEC_DIR)/cmock.rb -o$(PROJECT_DIR)/$(PROJECT).yml \
 	    $(MOCK_FILES_FP)
-else
-endif
 
 $(PROJ_LIB_DIR)/mock_%.o : $(MOCKS_DIR)/mock_%.c
 	$(CC) -c $< -fPIC $(CFLAGS) -o $@
@@ -47,7 +44,7 @@ $(BIN_DIR)/$(EXEC) : $(SCRATCH_DIR)/test_runner.o                           \
 		    $(SCRATCH_DIR)/$(PROJECT)_utest.o                       \
 		    $(MOCK_OBJ_LIST)
 	$(CC) $+ $(LDFLAGS) -o $@
- 
+
 $(SCRATCH_DIR)/test_runner.o : $(SCRATCH_DIR)/test_runner.c                 \
                                $(SCRATCH_DIR)/$(PROJECT).o
 	$(CC) -c $< $(CPPFLAGS)  $(CFLAGS) -o $@
@@ -57,19 +54,19 @@ $(SCRATCH_DIR)/$(PROJECT)_utest.o : $(PROJECT_DIR)/$(PROJECT)_utest.c       \
                                     | directories
 	$(CC) -c $< $(CPPFLAGS)  $(CFLAGS) -o $@
 
-$(SCRATCH_DIR)/$(PROJECT).o : $(KERNEL_DIR)/$(PROJECT).c 
+$(SCRATCH_DIR)/$(PROJECT).o : $(KERNEL_DIR)/$(PROJECT).c
 	$(CC) -c $< $(CPPFLAGS)  $(CFLAGS) $(COVERAGE_OPTS) -o $@
 
 $(SCRATCH_DIR)/test_runner.c : $(SCRATCH_DIR)/$(PROJECT)_utest.o            \
-                               Makefile | directories 
+                               Makefile | directories
 	ruby $(UNITY_BIN_DIR)/generate_test_runner.rb $(EXEC).c             \
 		$(PROJECT_DIR)/$(PROJECT).yml $@
 
 .PHONY: directories
 directories :
 	-mkdir  $(SCRATCH_DIR)
-	-mkdir  $(MOCKS_DIR) 
-	-mkdir  $(PROJ_LIB_DIR) 
+	-mkdir  $(MOCKS_DIR)
+	-mkdir  $(PROJ_LIB_DIR)
 
 # prevent deletion by chain of implicit rules
 NO_DELETE: $(MOCK_SRC_LIST)

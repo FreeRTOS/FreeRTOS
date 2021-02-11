@@ -78,7 +78,7 @@ def get_args():
     }, {
             "flags": ["--project-name"],
             "metavar": "NAME",
-            "default": "Amazon FreeRTOS Plus TCP",
+            "default": "FreeRTOS",
             "help": "Project name for report. Default: %(default)s",
     }, {
             "flags": ["--verbose"],

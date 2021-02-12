@@ -262,7 +262,7 @@ FREERTOS_IGNORED_FILES = [
     'fyi-another-way-to-ignore-file.txt',
     'mbedtls_config.h',
     'requirements.txt',
-    'FreeRTOS/Test/CBMC/proofs/run-cbmc-proofs.py'
+    'run-cbmc-proofs.py'
 ]
 
 FREERTOS_HEADER = [

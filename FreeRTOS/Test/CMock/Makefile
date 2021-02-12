@@ -2,29 +2,37 @@
 export CC=/usr/local/bin/gcc
 export LD=/usr/local/bin/ld
 # Add units here when adding a new unit test directory with the same name
-UNITS := queue
+UNITS := queue list
 
 include makefile.in
 
-.PHONY: all run doc clean directories $(UNITS) coverage
+.PHONY: all doc clean $(UNITS) directories coverage zero_coverage
+.PHONY: run run_formatted run_col_formatted run_col
 
 all: doc coverage
-execs: $(UNITS) directories
+execs: $(UNITS) | directories
 
 
-$(UNITS): directories ${LIB_DIR}/libcmock.so  ${LIB_DIR}/libunity.so
+$(UNITS) : ${LIB_DIR}/libcmock.so  ${LIB_DIR}/libunity.so | directories
 	$(MAKE) -C $@ 
 
-doc: directories
+doc: | directories
 	$(MAKE) -C doc all
 
-directories:
-	-mkdir $(BUILD_DIR)
-	-mkdir $(GENERATED_DIR)
-	-mkdir $(COVERAGE_DIR)
-	-mkdir $(BIN_DIR)
-	-mkdir $(DOC_DIR)
-	-mkdir $(LIB_DIR)
+directories : $(BUILD_DIR) $(GENERATED_DIR) $(COVERAGE_DIR) $(BIN_DIR) $(DOC_DIR) $(LIB_DIR)
+
+$(BUILD_DIR) :
+	-mkdir  $(BUILD_DIR)
+$(GENERATED_DIR) :
+	-mkdir -p $(GENERATED_DIR)
+$(COVERAGE_DIR) :
+	-mkdir -p $(COVERAGE_DIR)
+$(BIN_DIR) :
+	-mkdir -p $(BIN_DIR)
+$(DOC_DIR) :
+	-mkdir -p $(DOC_DIR)
+$(LIB_DIR) :
+	-mkdir -p $(LIB_DIR)
 
 clean:
 	rm -rf build
@@ -36,35 +44,41 @@ help:
 $(LIB_DIR)/libcmock.so : ${CMOCK_SRC_DIR}/cmock.c     \
 			${CMOCK_SRC_DIR}/cmock.h      \
 			${LIB_DIR}/libunity.so        \
-			Makefile
+			Makefile | directories
 	${CC} -o $@ -shared -fPIC  $<  ${INCLUDE_DIR}
 
 $(LIB_DIR)/libunity.so : ${UNITY_SRC_DIR}/unity.c     \
-			${CMOCK_SRC_DIR}/cmock.h      \
-			Makefile directories
+			 ${UNITY_SRC_DIR}/unity.h     \
+			 Makefile | directories
 	${CC} -o $@ -shared -fPIC  $< 
 
-run : $(UNITS) directories
+run : $(UNITS) zero_coverage | directories
 	for f in $(BIN_DIR)/*; do \
 	  $${f}; done 
 
-run_col : $(UNITS) directories
+run_col : $(UNITS) zero_coverage | directories
 	for f in $(BIN_DIR)/*; do \
 	  ruby -r $(UNITY_BIN_DIR)/colour_reporter.rb  -e "report('`$${f}`')"; done 
 
-run_formatted :  $(UNITS) directories
+run_formatted :  $(UNITS) zero_coverage | directories
 	for f in $(BIN_DIR)/*; do \
 	  $${f} > $(BUILD_DIR)/output; \
 	  ruby  $(UNITY_BIN_DIR)/parse_output.rb $(BUILD_DIR)/output ; \
 	  done 
 
-run_col_formatted :  $(UNITS) directories
+run_col_formatted :  $(UNITS) zero_coverage | directories
 	for f in $(BIN_DIR)/*; do \
 	  $${f} > $(BUILD_DIR)/output; \
-	  ruby -r $(UNITY_BIN_DIR)/colour_reporter.rb  -e "report('$$(ruby $(UNITY_BIN_DIR)/parse_output.rb $(BUILD_DIR)/output)')"; \
+	  ruby -r $(UNITY_BIN_DIR)/colour_reporter.rb  \
+		-e "report('$$(ruby $(UNITY_BIN_DIR)/parse_output.rb \
+		 $(BUILD_DIR)/output)')"; \
 	  done 
 
+zero_coverage :
+	lcov --zerocounters --directory $(BUILD_DIR)
 coverage : run_col
-	lcov --base-directory . --directory . -c --rc lcov_branch_coverage=1 --rc genhtml_branch_coverage=1  -o $(BUILD_DIR)/cmock_test.info
-	genhtml $(BUILD_DIR)/cmock_test.info --branch-coverage --output-directory $(COVERAGE_DIR)
+	lcov --base-directory . --directory . -c --rc lcov_branch_coverage=1 \
+	    --rc genhtml_branch_coverage=1  -o $(BUILD_DIR)/cmock_test.info
+	genhtml $(BUILD_DIR)/cmock_test.info --branch-coverage               \
+	    --output-directory $(COVERAGE_DIR)
 

@@ -35,45 +35,61 @@
 /* Library includes. */
 #include "SMM_MPS2.h"
 
+/* Timer frequencies are slightly offset so they nest. */
 #define tmrTIMER_0_FREQUENCY	( 2000UL )
 #define tmrTIMER_1_FREQUENCY	( 2001UL )
 
-volatile uint32_t ulNest, ulMaxNext, ulNestCount;
+volatile uint32_t ulNest, ulNestCount;
+
+/*-----------------------------------------------------------*/
 
 void TIMER0_Handler( void )
 {
-	CMSDK_TIMER0->INTCLEAR = (1ul <<  0);    /* clear interrupt                 */
+	/* Clear interrupt. */
+	CMSDK_TIMER0->INTCLEAR = ( 1ul <<  0 );
 	if( ulNest > 0 )
 	{
+		/* This interrupt occurred in between the nesting count being incremented
+		and decremented in the TIMER1_Handler.  Keep a count of the number of
+		times this happens as its printed out by the check task in main_full.c.*/
 		ulNestCount++;
 	}
 	portEND_SWITCHING_ISR( xSecondTimerHandler() );
 }
+/*-----------------------------------------------------------*/
 
 void TIMER1_Handler( void )
 {
+	/* Increment the nest count while inside this ISR as a crude way of the
+	higher priority timer interrupt knowing if it interrupted the execution of
+	this ISR. */
 	ulNest++;
-	CMSDK_TIMER1->INTCLEAR = (1ul <<  0);    /* clear interrupt                 */
+	/* Clear interrupt. */
+	CMSDK_TIMER1->INTCLEAR = ( 1ul <<  0 );
 	portEND_SWITCHING_ISR( xFirstTimerHandler() );
 	ulNest--;
 }
+/*-----------------------------------------------------------*/
 
 void vInitialiseTimerForIntQueueTest( void )
 {
-  CMSDK_TIMER0->INTCLEAR = (1ul <<  0);   /* clear interrupt                 */
-  CMSDK_TIMER0->RELOAD   = ( configCPU_CLOCK_HZ / tmrTIMER_0_FREQUENCY ) + 1UL;   /* set reload value                */
-  CMSDK_TIMER0->CTRL     = ((1ul <<  3) |  /* enable Timer interrupt          */
-                           (1ul <<  0) ); /* enable Timer                    */
+	/* Clear interrupt. */
+	CMSDK_TIMER0->INTCLEAR = ( 1ul <<  0 );
 
-  CMSDK_TIMER1->INTCLEAR = (1ul <<  0);   /* clear interrupt                 */
-  CMSDK_TIMER1->RELOAD   = ( configCPU_CLOCK_HZ / tmrTIMER_1_FREQUENCY ) + 1UL;   /* set reload value                */
-  CMSDK_TIMER1->CTRL     = ((1ul <<  3) |  /* enable Timer interrupt          */
-                           (1ul <<  0) ); /* enable Timer                    */
+	 /* Reload value is slightly offset from the other timer. */
+	CMSDK_TIMER0->RELOAD   = ( configCPU_CLOCK_HZ / tmrTIMER_0_FREQUENCY ) + 1UL;
+	CMSDK_TIMER0->CTRL     = ( ( 1ul <<  3 ) | /* Enable Timer interrupt. */
+						     ( 1ul <<  0 ) );  /* Enable Timer. */
 
-  NVIC_SetPriority( TIMER0_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY );
-  NVIC_SetPriority( TIMER1_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY + 1 );
-  NVIC_EnableIRQ(TIMER0_IRQn);             /* Enable interrupt in NVIC        */
-  NVIC_EnableIRQ(TIMER1_IRQn);             /* Enable interrupt in NVIC        */
+	CMSDK_TIMER1->INTCLEAR = ( 1ul <<  0 );
+	CMSDK_TIMER1->RELOAD   = ( configCPU_CLOCK_HZ / tmrTIMER_1_FREQUENCY ) + 1UL;
+	CMSDK_TIMER1->CTRL     = ( ( 1ul <<  3 ) |
+						     ( 1ul <<  0 ) );
+
+	NVIC_SetPriority( TIMER0_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY );
+	NVIC_SetPriority( TIMER1_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY + 1 );
+	NVIC_EnableIRQ( TIMER0_IRQn );
+	NVIC_EnableIRQ( TIMER1_IRQn );
 }
 /*-----------------------------------------------------------*/
 

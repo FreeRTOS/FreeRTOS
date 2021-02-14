@@ -63,6 +63,12 @@ demo application will be built.  The comprehensive test and demo application is
 implemented and described in main_full.c. */
 #define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
+/* printf() output uses the UART.  These constants define the addresses of the
+required UART registers. */
+#define UART0_ADDRESS 	( 0x40004000UL )
+#define UART0_DATA		( * ( ( ( uint32_t * )( UART0_ADDRESS + 0UL ) ) ) )
+#define UART0_CTRL		( * ( ( ( uint32_t * )( UART0_ADDRESS + 8UL ) ) ) )
+#define UART0_BAUDDIV	( * ( ( ( uint32_t * )( UART0_ADDRESS + 16UL ) ) ) )
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -81,14 +87,14 @@ void vFullDemoIdleFunction( void );
 /*
  * Printf() output is sent to the serial port.  Initialise the serial hardware.
  */
-void uart_init( void );
+static void prvUARTInit( void );
 
 /*-----------------------------------------------------------*/
 
 void main( void )
 {
-	/* Hardware initialisation. */
-	uart_init();
+	/* Hardware initialisation.  printf() output uses the UART for IO. */
+	prvUARTInit();
 
 	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
 	of this file. */
@@ -144,9 +150,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 
 	/* Run time stack overflow checking is performed if
 	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-	function is called if a stack overflow is detected.  This function is
-	provided as an example only as stack overflow checking does not function
-	when running the FreeRTOS Windows port. */
+	function is called if a stack overflow is detected. */
 	vAssertCalled( __FILE__, __LINE__ );
 }
 /*-----------------------------------------------------------*/
@@ -252,49 +256,27 @@ static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 }
 /*-----------------------------------------------------------*/
 
-#warning Do something with the below.
-
-typedef struct UART_t
+static void prvUARTInit( void )
 {
-    volatile uint32_t DATA;
-    volatile uint32_t STATE;
-    volatile uint32_t CTRL;
-    volatile uint32_t INTSTATUS;
-    volatile uint32_t BAUDDIV;
-} UART_t;
-
-#define UART0_ADDR ((UART_t *)(0x40004000))
-#define UART_DR(baseaddr) (*(unsigned int *)(baseaddr))
-
-#define UART_STATE_TXFULL (1 << 0)
-#define UART_CTRL_TX_EN (1 << 0)
-#define UART_CTRL_RX_EN (1 << 1)
-
-void uart_init( void )
-{
-    UART0_ADDR->BAUDDIV = 16;
-    UART0_ADDR->CTRL = UART_CTRL_TX_EN;
+    UART0_BAUDDIV = 16;
+    UART0_CTRL = 1;
 }
+/*-----------------------------------------------------------*/
 
-void UART_OUT( const char * buf )
+int __write( int iFile, char *pcString, int iStringLength )
 {
-	while( *buf != NULL )
+    uint32_t ulNextChar;
+
+	/* Avoid compiler warnings about unused parameters. */
+	( void ) iFile;
+
+	/* Output the formatted string to the UART. */
+    for( ulNextChar = 0; ulNextChar < iStringLength; ulNextChar++ )
 	{
-        UART_DR(UART0_ADDR) = *buf;
-		buf++;
+        UART0_DATA = *pcString;
+		pcString++;
     }
 
-	UART_DR( UART0_ADDR ) = '\r';
-	UART_DR( UART0_ADDR ) = '\n';
-}
-
-int __write(int file, char *buf, int len)
-{
-    int todo;
-
-    for (todo = 0; todo < len; todo++){
-        UART_DR(UART0_ADDR) = *buf++;
-    }
-    return len;
+    return iStringLength;
 }
 

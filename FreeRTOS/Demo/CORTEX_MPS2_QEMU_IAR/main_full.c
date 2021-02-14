@@ -46,13 +46,17 @@
  * In addition to the standard demo tasks, the following tasks and tests are
  * defined and/or created within this file:
  *
- * "Check" task - This only executes every five seconds but has a high priority
- * to ensure it gets processor time.  Its main function is to check that all the
- * standard demo tasks are still operational.  While no errors have been
- * discovered the check task will print out "PASS", the current RTOS tick count,
- * and the number of times the interrupt nesting demo has seen nested
- * interrupts.  If an error is discovered in the execution of a task then the
- * check task will print a message indicating in which task the error occurred.
+ * "Check" task - This only executes every five (simulated) seconds.  Its main
+ * function is to check the tests running in the standard demo tasks have never
+ * failed and that all the tasks are still running.  If that is the case the
+ * check task prints "PASS : nnnn (x)", where nnnn is the current tick count and
+ * x is the number of times the interrupt nesting test executed while interrupts
+ * were nested.  If the check task discovers a failed test or a stalled task
+ * it prints a message that indicates which task reported the error or stalled.
+ * Normally the check task would have the highest priority to keep its timing
+ * jitter to a minimum.  In this case the check task is run at the idle priority
+ * to ensure other tasks are not stalled by it writing to a slow UART using a
+ * polling driver.
  *
  */
 
@@ -109,11 +113,6 @@ static void prvCheckTask( void *pvParameters );
 
 /*-----------------------------------------------------------*/
 
-/*************************************************************************
- * Please ensure to read http://www.freertos.org/portlm3sx965.html
- * which provides information on configuring and running this demo for the
- * various Luminary Micro EKs.
- *************************************************************************/
 void main_full( void )
 {
 	/* Start the standard demo tasks. */
@@ -159,6 +158,7 @@ void main_full( void )
 }
 /*-----------------------------------------------------------*/
 
+/* See the comments at the top of this file. */
 static void prvCheckTask( void *pvParameters )
 {
 static const char * pcMessage = "PASS";
@@ -270,6 +270,8 @@ extern uint32_t ulNestCount;
 			pcMessage = "xAreInterruptSemaphoreTasksStillRunning() returned false";
 		}
 
+		/* It is normally not good to call printf() from an embedded system,
+		although it is ok in this simulated case. */
 		printf( "%s : %d (%d)\r\n", pcMessage, (int) xTaskGetTickCount(), ulNestCount );
 	}
 }

@@ -220,7 +220,7 @@
                 <debug>1</debug>
                 <option>
                     <name>CCOptimizationNoSizeConstraints</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CCDefines</name>
@@ -285,7 +285,7 @@
                 <option>
                     <name>CCAllowList</name>
                     <version>1</version>
-                    <state>00000000</state>
+                    <state>11111110</state>
                 </option>
                 <option>
                     <name>CCDebugInfo</name>
@@ -369,7 +369,7 @@
                 </option>
                 <option>
                     <name>CCOptLevel</name>
-                    <state>0</state>
+                    <state>3</state>
                 </option>
                 <option>
                     <name>CCOptStrategy</name>
@@ -378,7 +378,7 @@
                 </option>
                 <option>
                     <name>CCOptLevelSlave</name>
-                    <state>0</state>
+                    <state>3</state>
                 </option>
                 <option>
                     <name>CompilerMisraRules98</name>

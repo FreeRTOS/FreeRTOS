@@ -214,10 +214,11 @@ uint32_t ulReceivedValue;
 		xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
 
 		/*  To get here something must have been received from the queue, but
-		is it an expected value?  Normally calling printf() from a task is not
-		a good idea as it can use a lot of stack. */
+		is it an expected value? */
 		if( ulReceivedValue == mainVALUE_SENT_FROM_TASK )
 		{
+			/* It is normally not good to call printf() from an embedded system,
+			although it is ok in this simulated case. */
 			printf( "Message received from task\r\n" );
 		}
 		else if( ulReceivedValue == mainVALUE_SENT_FROM_TIMER )

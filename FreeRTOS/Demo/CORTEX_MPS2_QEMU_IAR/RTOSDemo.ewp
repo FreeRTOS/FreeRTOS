@@ -285,7 +285,7 @@
                 <option>
                     <name>CCAllowList</name>
                     <version>1</version>
-                    <state>11111110</state>
+                    <state>00000000</state>
                 </option>
                 <option>
                     <name>CCDebugInfo</name>
@@ -369,16 +369,16 @@
                 </option>
                 <option>
                     <name>CCOptLevel</name>
-                    <state>3</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CCOptStrategy</name>
                     <version>0</version>
-                    <state>0</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>CCOptLevelSlave</name>
-                    <state>3</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CompilerMisraRules98</name>
@@ -437,7 +437,7 @@
                 <option>
                     <name>CCOptStrategySlave</name>
                     <version>0</version>
-                    <state>0</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>CCGuardCalls</name>
@@ -1061,6 +1061,12 @@
         </settings>
     </configuration>
     <group>
+        <name>Blinky Demo</name>
+        <file>
+            <name>$PROJ_DIR$\main_blinky.c</name>
+        </file>
+    </group>
+    <group>
         <name>FreeRTOS Kernel</name>
         <group>
             <name>include</name>
@@ -1127,87 +1133,93 @@
         </file>
     </group>
     <group>
-        <name>Standard Demo Tasks</name>
+        <name>Full Demo</name>
+        <group>
+            <name>Standard Demo Tasks</name>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\AbortDelay.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\BlockQ.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\blocktim.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\countsem.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\death.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\dynamic.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\EventGroupsDemo.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\GenQTest.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\integer.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\IntQueue.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\IntQueueTimer.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\IntSemTest.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\MessageBufferAMP.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\MessageBufferDemo.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\PollQ.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\QPeek.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\QueueOverwrite.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\QueueSet.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\QueueSetPolling.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\recmutex.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\semtest.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\StaticAllocation.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\StreamBufferDemo.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\StreamBufferInterrupt.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\TaskNotify.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\TaskNotifyArray.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Common\Minimal\TimerDemo.c</name>
+            </file>
+        </group>
         <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\AbortDelay.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\BlockQ.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\blocktim.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\countsem.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\death.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\dynamic.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\EventGroupsDemo.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\GenQTest.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\integer.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\IntQueue.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\IntQueueTimer.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\IntSemTest.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\MessageBufferAMP.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\MessageBufferDemo.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\PollQ.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\QPeek.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\QueueOverwrite.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\QueueSet.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\QueueSetPolling.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\recmutex.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\semtest.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\StaticAllocation.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\StreamBufferDemo.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\StreamBufferInterrupt.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\TaskNotify.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\TaskNotifyArray.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Common\Minimal\TimerDemo.c</name>
+            <name>$PROJ_DIR$\main_full.c</name>
         </file>
     </group>
     <group>
@@ -1221,8 +1233,5 @@
     </file>
     <file>
         <name>$PROJ_DIR$\main.c</name>
-    </file>
-    <file>
-        <name>$PROJ_DIR$\main_full.c</name>
     </file>
 </project>

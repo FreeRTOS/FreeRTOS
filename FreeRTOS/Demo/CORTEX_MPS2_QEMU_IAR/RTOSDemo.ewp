@@ -1222,4 +1222,7 @@
     <file>
         <name>$PROJ_DIR$\main.c</name>
     </file>
+    <file>
+        <name>$PROJ_DIR$\main_full.c</name>
+    </file>
 </project>

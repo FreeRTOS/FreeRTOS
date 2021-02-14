@@ -26,314 +26,181 @@
  */
 
 
-/*
- * Creates all the demo application tasks, then starts the scheduler.  The WEB
- * documentation provides more details of the standard demo application tasks.
+/******************************************************************************
+ * This project provides two demo applications.  A simple blinky style project,
+ * and a more comprehensive test and demo application.  The
+ * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY constant, defined in this file, is used to
+ * select between the two.  The simply blinky demo is implemented and described
+ * in main_blinky.c.  The more comprehensive test and demo application is
+ * implemented and described in main_full.c.
  *
- * "Check" hook -  This only executes every five seconds from the tick hook.
- * Its main function is to check that all the standard demo tasks are still
- * operational.  Should any unexpected behaviour within a demo task be discovered
- * the tick hook will write an error to the OLED (via the OLED task).  If all the
- * demo tasks are executing with their expected behaviour then the check task
- * writes PASS to the OLED (again via the OLED task), as described above.
+ * This file implements the code that is not demo specific, including the
+ * hardware setup and FreeRTOS hook functions.
  *
- * Use the following command to execute in QEMU from the IAR IDE:
- * qemu-system-arm -machine lm3s6965evb -s -S -kernel [pat_to]\RTOSDemo.out
+ * Use the following command to start the application running in a way that
+ * enables the IAR IDE to connect and debug:
+ * qemu-system-arm -machine mps2-an385 -cpu cortex-m3 -kernel [path-to]/RTOSDemo.out -nographic -serial stdio -semihosting -semihosting-config enable=on,target=native -s -S
  * and set IAR connect GDB server to "localhost,1234" in project debug options.
  */
 
-/*************************************************************************
- * Please ensure to read http://www.freertos.org/portlm3sx965.html
- * which provides information on configuring and running this demo for the
- * various Luminary Micro EKs.
- *************************************************************************/
+/* FreeRTOS includes. */
+#include "FreeRTOS.h"
+#include "task.h"
 
 /* Standard includes. */
 #include <stdio.h>
 #include <string.h>
 
-/* Scheduler includes. */
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
-#include "semphr.h"
+/* This project provides two demo applications.  A simple blinky style demo
+application, and a more comprehensive test and demo application.  The
+mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between the two.
 
-/* Demo app includes. */
-#include "death.h"
-#include "blocktim.h"
-#include "semtest.h"
-#include "PollQ.h"
-#include "GenQTest.h"
-#include "QPeek.h"
-#include "recmutex.h"
-#include "IntQueue.h"
-#include "QueueSet.h"
-#include "EventGroupsDemo.h"
-#include "MessageBufferDemo.h"
-#include "StreamBufferDemo.h"
-#include "AbortDelay.h"
-#include "countsem.h"
-#include "dynamic.h"
-#include "MessageBufferAMP.h"
-#include "QueueOverwrite.h"
-#include "QueueSetPolling.h"
-#include "StaticAllocation.h"
-#include "TaskNotify.h"
-#include "TaskNotifyArray.h"
-#include "TimerDemo.h"
-#include "StreamBufferInterrupt.h"
-#include "IntSemTest.h"
+If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is 1 then the blinky demo will be built.
+The blinky demo is implemented and described in main_blinky.c.
 
-/*-----------------------------------------------------------*/
+If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is not 1 then the comprehensive test and
+demo application will be built.  The comprehensive test and demo application is
+implemented and described in main_full.c. */
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
-/* Task priorities. */
-#define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2 )
-#define mainCHECK_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
-#define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
-#define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 3 )
-#define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
 
-/*-----------------------------------------------------------*/
+/*
+ * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
+ * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
+ */
+extern void main_blinky( void );
+extern void main_full( void );
 
+/*
+ * Only the comprehensive demo uses application hook (callback) functions.  See
+ * http://www.freertos.org/a00016.html for more information.
+ */
+void vFullDemoTickHookFunction( void );
+void vFullDemoIdleFunction( void );
+
+/*
+ * Printf() output is sent to the serial port.  Initialise the serial hardware.
+ */
 void uart_init( void );
-static void prvCheckTask( void *pvParameters );
 
 /*-----------------------------------------------------------*/
 
-/*************************************************************************
- * Please ensure to read http://www.freertos.org/portlm3sx965.html
- * which provides information on configuring and running this demo for the
- * various Luminary Micro EKs.
- *************************************************************************/
-int main( void )
+void main( void )
 {
+	/* Hardware initialisation. */
 	uart_init();
 
-	/* Start the standard demo tasks. */
-	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
-	vStartInterruptQueueTasks();
-	vStartRecursiveMutexTasks();
-	vCreateBlockTimeTasks();
-	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-	vStartQueuePeekTasks();
-	vStartQueueSetTasks();
-	vStartEventGroupTasks();
-	vStartMessageBufferTasks( configMINIMAL_STACK_SIZE );
-	vStartStreamBufferTasks();
-	vCreateAbortDelayTasks();
-	vStartCountingSemaphoreTasks();
-	vStartDynamicPriorityTasks();
-	vStartMessageBufferAMPTasks( configMINIMAL_STACK_SIZE );
-	vStartQueueOverwriteTask( tskIDLE_PRIORITY );
-	vStartQueueSetPollingTask();
-	vStartStaticallyAllocatedTasks();
-	vStartTaskNotifyTask();
-	vStartTaskNotifyArrayTask();
-	vStartTimerDemoTask( 50 );
-	vStartStreamBufferInterruptDemo();
-	vStartInterruptSemaphoreTasks();
-
-	/* The suicide tasks must be created last as they need to know how many
-	tasks were running prior to their creation in order to ascertain whether
-	or not the correct/expected number of tasks are running at any given time. */
-	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
-
-	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-
-	/* Start the scheduler. */
-	vTaskStartScheduler();
-
-	/* Will only get here if there was insufficient memory to create the idle
-	task. */
-	for( ;; );
+	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
+	of this file. */
+	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
+	{
+		main_blinky();
+	}
+	#else
+	{
+		main_full();
+	}
+	#endif
 }
 /*-----------------------------------------------------------*/
 
-void vInitialiseTimerForIntQueueTest( void );
-static void prvCheckTask( void *pvParameters )
+void vApplicationMallocFailedHook( void )
 {
-static const char * pcMessage = "PASS";
-const TickType_t xTaskPeriod = pdMS_TO_TICKS( 5000UL );
-TickType_t xPreviousWakeTime;
-extern uint32_t ulNestCount;
+	/* vApplicationMallocFailedHook() will only be called if
+	configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
+	function that will get called if a call to pvPortMalloc() fails.
+	pvPortMalloc() is called internally by the kernel whenever a task, queue,
+	timer or semaphore is created using the dynamic allocation (as opposed to
+	static allocation) option.  It is also called by various parts of the
+	demo application.  If heap_1.c, heap_2.c or heap_4.c is being used, then the
+	size of the	heap available to pvPortMalloc() is defined by
+	configTOTAL_HEAP_SIZE in FreeRTOSConfig.h, and the xPortGetFreeHeapSize()
+	API function can be used to query the size of free heap space that remains
+	(although it does not provide information on how the remaining heap might be
+	fragmented).  See http://www.freertos.org/a00111.html for more
+	information. */
+	vAssertCalled( __FILE__, __LINE__ );
+}
+/*-----------------------------------------------------------*/
 
-	xPreviousWakeTime = xTaskGetTickCount();
+void vApplicationIdleHook( void )
+{
+	/* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
+	to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle
+	task.  It is essential that code added to this hook function never attempts
+	to block in any way (for example, call xQueueReceive() with a block time
+	specified, or call vTaskDelay()).  If application tasks make use of the
+	vTaskDelete() API function to delete themselves then it is also important
+	that vApplicationIdleHook() is permitted to return to its calling function,
+	because it is the responsibility of the idle task to clean up memory
+	allocated by the kernel to any task that has since deleted itself. */
+}
+/*-----------------------------------------------------------*/
 
-	for( ;; )
-	{
-		vTaskDelayUntil( &xPreviousWakeTime, xTaskPeriod );
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
+{
+	( void ) pcTaskName;
+	( void ) pxTask;
 
-		/* Has an error been found in any task? */
-		if( xAreStreamBufferTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreStreamBufferTasksStillRunning() returned false";
-		}
-		else if( xAreMessageBufferTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreMessageBufferTasksStillRunning() returned false";
-		}
-		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreGenericQueueTasksStillRunning() returned false";
-		}
-	    else if( xIsCreateTaskStillRunning() != pdTRUE )
-	    {
-	        pcMessage = "xIsCreateTaskStillRunning() returned false";
-	    }
-		else if( xAreIntQueueTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreIntQueueTasksStillRunning() returned false";
-		}
-		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreBlockTimeTestTasksStillRunning() returned false";
-		}
-		else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreSemaphoreTasksStillRunning() returned false";
-		}
-		else if( xArePollingQueuesStillRunning() != pdTRUE )
-		{
-			pcMessage = "xArePollingQueuesStillRunning() returned false";
-		}
-		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreQueuePeekTasksStillRunning() returned false";
-		}
-		else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreRecursiveMutexTasksStillRunning() returned false";
-		}
-		else if( xAreQueueSetTasksStillRunning() != pdPASS )
-		{
-			pcMessage = "xAreQueueSetTasksStillRunning() returned false";
-		}
-		else if( xAreEventGroupTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreEventGroupTasksStillRunning() returned false";
-		}
-		else if( xAreAbortDelayTestTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreAbortDelayTestTasksStillRunning() returned false";
-		}
-		else if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreCountingSemaphoreTasksStillRunning() returned false";
-		}
-		else if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreDynamicPriorityTasksStillRunning() returned false";
-		}
-		else if( xAreMessageBufferAMPTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreMessageBufferAMPTasksStillRunning() returned false";
-		}
-		else if( xIsQueueOverwriteTaskStillRunning() != pdTRUE )
-		{
-			pcMessage = "xIsQueueOverwriteTaskStillRunning() returned false";
-		}
-		else if( xAreQueueSetPollTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreQueueSetPollTasksStillRunning() returned false";
-		}
-		else if( xAreStaticAllocationTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreStaticAllocationTasksStillRunning() returned false";
-		}
-		else if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreTaskNotificationTasksStillRunning() returned false";
-		}
-		else if( xAreTaskNotificationArrayTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreTaskNotificationArrayTasksStillRunning() returned false";
-		}
-		else if( xAreTimerDemoTasksStillRunning( xTaskPeriod ) != pdTRUE )
-		{
-			pcMessage = "xAreTimerDemoTasksStillRunning() returned false";
-		}
-		else if( xIsInterruptStreamBufferDemoStillRunning() != pdTRUE )
-		{
-			pcMessage = "xIsInterruptStreamBufferDemoStillRunning() returned false";
-		}
-		else if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreInterruptSemaphoreTasksStillRunning() returned false";
-		}
-
-		printf( "%s : %d (%d) %s", pcMessage, (int) xTaskGetTickCount(), ulNestCount, "\r\n" );
-	}
+	/* Run time stack overflow checking is performed if
+	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+	function is called if a stack overflow is detected.  This function is
+	provided as an example only as stack overflow checking does not function
+	when running the FreeRTOS Windows port. */
+	vAssertCalled( __FILE__, __LINE__ );
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationTickHook( void )
 {
-	/* Write to a queue that is in use as part of the queue set demo to
-	demonstrate using queue sets from an ISR. */
-	vQueueSetAccessQueueSetFromISR();
+	/* This function will be called by each tick interrupt if
+	configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
+	added here, but the tick hook is called from an interrupt context, so
+	code must not attempt to block, and only the interrupt safe FreeRTOS API
+	functions can be used (those that end in FromISR()). */
 
-	/* Call the event group ISR tests. */
-	vPeriodicEventGroupsProcessing();
-
-	/* Exercise stream buffers from interrupts. */
-	vPeriodicStreamBufferProcessing();
-
-	/* Exercise using queue overwrites from interrupts. */
-	vQueueOverwritePeriodicISRDemo();
-
-	/* Exercise using Queue Sets from interrupts. */
-	vQueueSetPollingInterruptAccess();
-
-	/* Exercise using task notifications from interrupts. */
-	xNotifyTaskFromISR();
-	xNotifyArrayTaskFromISR();
-
-	/* Exercise software timers from interrupts. */
-	vTimerPeriodicISRTests();
-
-	/* Exercise stream buffers from interrupts. */
-	vBasicStreamBufferSendFromISR();
-
-	/* Exercise sempahores from interrupts. */
-	vInterruptSemaphorePeriodicTest();
-}
-/*-----------------------------------------------------------*/
-
-volatile char *pcOverflowedTask = NULL; /* Prevent task name being optimised away. */
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
-{
-	( void ) pxTask;
-	pcOverflowedTask = pcTaskName;
-	vAssertCalled( __FILE__, __LINE__ );
-	for( ;; );
-}
-/*-----------------------------------------------------------*/
-
-void vAssertCalled( const char *pcFile, uint32_t ulLine )
-{
-volatile uint32_t ulSetTo1InDebuggerToExit = 0;
-
-	taskENTER_CRITICAL();
+	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
 	{
-		printf( "Assert, file = %s, line = %d\r\n", pcFile, ( int ) ulLine );
+		extern void vFullDemoTickHookFunction( void );
 
-		while( ulSetTo1InDebuggerToExit == 0 )
+		vFullDemoTickHookFunction();
+	}
+	#endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationDaemonTaskStartupHook( void )
+{
+	/* This function will be called once only, when the daemon task starts to
+	execute (sometimes called the timer task).  This is useful if the
+	application includes initialisation code that would benefit from executing
+	after the scheduler has been started. */
+}
+/*-----------------------------------------------------------*/
+
+void vAssertCalled( const char *pcFileName, uint32_t ulLine )
+{
+volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
+
+	/* Called if an assertion passed to configASSERT() fails.  See
+	http://www.freertos.org/a00110.html#configASSERT for more information. */
+
+	printf( "ASSERT! Line %ld, file %s\r\n", ulLine, pcFileName );
+
+ 	taskENTER_CRITICAL();
+	{
+		/* You can step out of this function to debug the assertion by using
+		the debugger to set ulSetToNonZeroInDebuggerToContinue to a non-zero
+		value. */
+		while( ulSetToNonZeroInDebuggerToContinue == 0 )
 		{
-			/* Nothing to do here.  Set the loop variable to a non zero value in
-			the debugger to step out of this function to the point that caused
-			the assertion. */
-			( void ) pcFile;
-			( void ) ulLine;
+			__asm volatile( "NOP" );
+			__asm volatile( "NOP" );
 		}
 	}
 	taskEXIT_CRITICAL();
 }
-
-void vApplicationMallocFailedHook( void )
-{
-	configASSERT( 0 );
-}
+/*-----------------------------------------------------------*/
 
 /* configUSE_STATIC_ALLOCATION is set to 1, so the application must provide an
 implementation of vApplicationGetIdleTaskMemory() to provide the memory that is
@@ -385,7 +252,10 @@ static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 }
 /*-----------------------------------------------------------*/
 
-typedef struct UART_t {
+#warning Do something with the below.
+
+typedef struct UART_t
+{
     volatile uint32_t DATA;
     volatile uint32_t STATE;
     volatile uint32_t CTRL;
@@ -399,7 +269,6 @@ typedef struct UART_t {
 #define UART_STATE_TXFULL (1 << 0)
 #define UART_CTRL_TX_EN (1 << 0)
 #define UART_CTRL_RX_EN (1 << 1)
-
 
 void uart_init( void )
 {

@@ -1,6 +1,6 @@
 # Change to match installed location
-export CC := /usr/local/bin/gcc
-export LD := /usr/local/bin/ld
+export CC ?= /usr/local/bin/gcc
+export LD ?= /usr/local/bin/ld
 # Add units here when adding a new unit test directory with the same name
 UNITS := queue list timers
 

@@ -54,7 +54,7 @@ $(LIB_DIR)/libunity.so : ${UNITY_SRC_DIR}/unity.c     \
 
 run : $(UNITS) zero_coverage | directories
 	for f in $(BIN_DIR)/*; do \
-	  $${f}; done 
+	  $${f}; done
 
 run_col : $(UNITS) zero_coverage | directories
 	for f in $(BIN_DIR)/*; do \
@@ -64,7 +64,7 @@ run_formatted :  $(UNITS) zero_coverage | directories
 	for f in $(BIN_DIR)/*; do \
 	  $${f} > $(BUILD_DIR)/output; \
 	  ruby  $(UNITY_BIN_DIR)/parse_output.rb $(BUILD_DIR)/output ; \
-	  done 
+	  done
 
 run_col_formatted :  $(UNITS) zero_coverage | directories
 	for f in $(BIN_DIR)/*; do \
@@ -81,4 +81,10 @@ coverage : run_col
 	    --rc genhtml_branch_coverage=1  -o $(BUILD_DIR)/cmock_test.info
 	genhtml $(BUILD_DIR)/cmock_test.info --branch-coverage               \
 	    --output-directory $(COVERAGE_DIR)
+
+run_report : $(UNITS) directories
+	-rm $(BUILD_DIR)/unit_test_report.txt
+	for f in $(BIN_DIR)/*; do \
+	  $${f} >> $(BUILD_DIR)/unit_test_report.txt ; done
+	  ruby $(UNITY_BIN_DIR)/parse_output.rb $(BUILD_DIR)/unit_test_report.txt
 

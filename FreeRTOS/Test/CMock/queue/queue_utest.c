@@ -36,23 +36,24 @@
 
 /* Test includes. */
 #include "unity.h"
+#include "unity_memory.h"
 
 /* Mock includes. */
 #include "mock_task.h"
 #include "mock_list.h"
+#include "mock_fake_assert.h"
 
 /* ============================  GLOBAL VARIABLES =========================== */
-static uint16_t usMallocFreeCalls = 0;
 
 /* ==========================  CALLBACK FUNCTIONS =========================== */
 
 void * pvPortMalloc( size_t xSize )
 {
-    return malloc( xSize );
+    return unity_malloc( xSize );
 }
 void vPortFree( void * pv )
 {
-    return free( pv );
+    return unity_free( pv );
 }
 
 /*******************************************************************************
@@ -60,15 +61,16 @@ void vPortFree( void * pv )
  ******************************************************************************/
 void setUp( void )
 {
+    vFakeAssert_Ignore();
+
+    /* Track calls to malloc / free */
+    UnityMalloc_StartTest();
 }
 
 /*! called before each testcase */
 void tearDown( void )
 {
-    TEST_ASSERT_EQUAL_INT_MESSAGE( 0, usMallocFreeCalls,
-                                   "free is not called the same number of times as malloc,"
-                                   "you might have a memory leak!!" );
-    usMallocFreeCalls = 0;
+    UnityMalloc_EndTest();
 }
 
 /*! called at the beginning of the whole suite */
@@ -92,4 +94,5 @@ void test_xQueueCreate_Success( void )
     QueueHandle_t xQueue = xQueueCreate( 1, 1 );
 
     TEST_ASSERT_NOT_EQUAL( NULL, xQueue );
+    vQueueDelete(xQueue);
 }

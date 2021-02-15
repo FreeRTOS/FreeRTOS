@@ -95,7 +95,7 @@ $ sudo ufw disable
 $ sudo ufw status
 ```
 5. Setup the local machine
-Run the following commands replacing the values  and interface names
+Run the following commands replacing the values and interface names
 that conform to your system
 ```
 sudo ip link add virbr0 type bridge

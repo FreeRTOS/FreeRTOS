@@ -1,0 +1,382 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C686325E-3261-42F7-AEB1-DDE5280E1CEB}</ProjectGuid>
+    <ProjectName>RTOSDemo</ProjectName>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <TypeLibraryName>.\Debug/WIN32.tlb</TypeLibraryName>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\Common\WinPCap;..\..\..\..\FreeRTOS\Source\include;..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\FreeRTOS-Plus\Source\Application-Protocols\coreMQTT\source\include;..\..\..\..\FreeRTOS-Plus\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\..\FreeRTOS-Plus\Source\Utilities\backoff_algorithm\source\include;..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp;..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_wolfSSL;..\..\..\Source\Utilities\wolfSSL_freertos;..\..\..\ThirdParty\wolfSSL;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WOLFSSL_USER_SETTINGS;WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>.\Debug/WIN32.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalOptions>/wd4210 /wd4127 /wd4214 /wd4201 /wd4244  /wd4310 /wd4200 %(AdditionalOptions)</AdditionalOptions>
+      <BrowseInformation>true</BrowseInformation>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <ExceptionHandling>false</ExceptionHandling>
+      <CompileAs>CompileAsC</CompileAs>
+      <DisableSpecificWarnings>4819;4206;4706</DisableSpecificWarnings>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Link>
+      <OutputFile>.\Debug/RTOSDemo.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Debug/WIN32.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>wpcap.lib;Bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\common\WinPCap</AdditionalLibraryDirectories>
+      <Profile>false</Profile>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug/WIN32.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <TypeLibraryName>.\Release/WIN32.tlb</TypeLibraryName>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <PreprocessorDefinitions>_WINSOCKAPI_;WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\Release/WIN32.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalIncludeDirectories>..\Common\Utils;..\Common\ethernet\lwip-1.4.0\ports\win32\WinPCap;..\Common\ethernet\lwip-1.4.0\src\include\ipv4;..\Common\ethernet\lwip-1.4.0\src\include;..\..\..\Source\include;..\..\..\Source\portable\MSVC-MingW;..\Common\ethernet\lwip-1.4.0\ports\win32\include;..\Common\Include;.\lwIP_Apps;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Link>
+      <OutputFile>.\Release/RTOSDemo.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <ProgramDatabaseFile>.\Release/WIN32.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>..\Common\ethernet\lwip-1.4.0\ports\win32\WinPCap</AdditionalLibraryDirectories>
+      <AdditionalDependencies>wpcap.lib;Bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release/WIN32.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\FreeRTOS\Source\event_groups.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS\Source\list.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS\Source\portable\MemMang\heap_4.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS\Source\queue.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS\Source\stream_buffer.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS\Source\tasks.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS\Source\timers.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_ARP.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_DHCP.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_DNS.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_IP.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_Sockets.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_Stream_Buffer.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_TCP_IP.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_TCP_WIN.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_UDP_IP.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement\BufferAllocation_2.c" />
+    <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\NetworkInterface\WinPCap\NetworkInterface.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\sockets_wrapper.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_wolfSSL\using_wolfSSL.c" />
+    <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\bio.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\crl.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\internal.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\keys.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\ocsp.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\sniffer.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\ssl.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\tls.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\tls13.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\wolfio.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\aes.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\arc4.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\asm.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\asn.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\blake2b.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\blake2s.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\camellia.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\chacha.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\chacha20_poly1305.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\cmac.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\coding.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\compress.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\cpuid.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\cryptocb.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\curve25519.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\curve448.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\des3.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\dh.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\dsa.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\ecc.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\ecc_fp.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\ed25519.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\ed448.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\error.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\evp.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\fe_448.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\fe_low_mem.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\fe_operations.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\ge_448.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\ge_low_mem.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\ge_operations.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\hash.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\hc128.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\hmac.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\idea.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\integer.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\logging.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\md2.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\md4.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\md5.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\memory.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\misc.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\pkcs12.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\pkcs7.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\poly1305.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\pwdbased.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\rabbit.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\random.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\ripemd.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\rsa.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sha.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sha256.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sha3.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sha512.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\signature.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_arm32.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_arm64.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_armthumb.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_c32.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_c64.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_cortexm.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_dsp32.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_int.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_x86_64.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\srp.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\tfm.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\wc_dsp.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\wc_encrypt.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\wc_pkcs11.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\wc_port.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\wolfevent.c" />
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\wolfmath.c" />
+    <ClCompile Include="..\..\Common\Logging\windows\Logging_WinSim.c" />
+    <ClCompile Include="..\common\main.c" />
+    <ClCompile Include="DemoTasks\MutualAuthMQTTExample.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\FreeRTOS\Source\include\event_groups.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS\Source\include\FreeRTOS.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS\Source\include\portable.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS\Source\include\projdefs.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS\Source\include\queue.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS\Source\include\semphr.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS\Source\include\task.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS\Source\include\timers.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW\portmacro.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOSIPConfigDefaults.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_ARP.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_DHCP.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_DNS.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_IP.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_IP_Private.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_Sockets.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_Stream_Buffer.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_TCP_IP.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_TCP_WIN.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_UDP_IP.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\IPTraceMacroDefaults.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\NetworkBufferManagement.h" />
+    <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\NetworkInterface.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\callbacks.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\certs_test.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\crl.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\error-ssl.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\internal.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\ocsp.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\sniffer.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\sniffer_error.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\ssl.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\test.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\version.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\aes.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\arc4.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\asn.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\asn_public.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\blake2-impl.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\blake2-int.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\blake2.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\camellia.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\chacha.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\chacha20_poly1305.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\cmac.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\coding.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\compress.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\cpuid.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\cryptocb.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\curve25519.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\curve448.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\des3.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\dh.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\dsa.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\ecc.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\ed25519.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\ed448.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\error-crypt.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\fe_448.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\fe_operations.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\fips_test.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\ge_448.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\ge_operations.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\hash.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\hc128.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\hmac.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\idea.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\integer.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\logging.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\md2.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\md4.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\md5.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\memory.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\mem_track.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\misc.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\mpi_class.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\mpi_superclass.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\pkcs11.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\pkcs12.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\pkcs7.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\poly1305.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\pwdbased.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\rabbit.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\random.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\ripemd.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\rsa.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\selftest.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\settings.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\sha.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\sha256.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\sha3.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\sha512.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\signature.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\sp.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\sp_int.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\srp.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\tfm.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\types.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\visibility.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\wc_encrypt.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\wc_pkcs11.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\wc_port.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\wolfevent.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfcrypt\wolfmath.h" />
+    <ClInclude Include="..\..\..\..\Source\wolfSSL\wolfssl\wolfio.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_config_defaults.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_serializer.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_state.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\sockets_wrapper.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_wolfSSL\using_wolfSSL.h" />
+    <ClInclude Include="..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h" />
+    <ClInclude Include="..\..\..\Source\Utilities\logging\logging.h" />
+    <ClInclude Include="..\..\..\Source\Utilities\logging\logging_levels.h" />
+    <ClInclude Include="..\..\..\Source\Utilities\logging\logging_stack.h" />
+    <ClInclude Include="core_mqtt_config.h" />
+    <ClInclude Include="demo_config.h" />
+    <ClInclude Include="FreeRTOSConfig.h" />
+    <ClInclude Include="FreeRTOSIPConfig.h" />
+    <ClInclude Include="user_settings.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\Source\wolfSSL\wolfcrypt\src\aes_asm.asm" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

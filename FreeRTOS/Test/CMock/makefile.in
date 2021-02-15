@@ -36,7 +36,12 @@ INCLUDE_DIR      += -I$(UNITY_MEM_SRC_DIR)
 
 CPPFLAGS :=
 CFLAGS   := $(INCLUDE_DIR)  -O0 -ggdb -pthread  --std=c99 -Werror -Wall
-LDFLAGS  := -L$(LIB_DIR) -lunity -lunitymemory -lcmock -Wl,-rpath,$(LIB_DIR) -pthread -lgcov
+LDFLAGS  := -L$(LIB_DIR) -Wl,-rpath,$(LIB_DIR) -fsanitize=address
+LDFLAGS  += -pthread
+LDFLAGS  += -lunity
+LDFLAGS  += -lunitymemory
+LDFLAGS  += -lcmock
+LDFLAGS  += -lgcov
 
 export BUILD_DIR
 export DOC_DIR

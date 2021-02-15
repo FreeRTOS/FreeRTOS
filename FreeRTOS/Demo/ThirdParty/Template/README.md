@@ -110,33 +110,35 @@ No errors
 
 1. If your hardware **does not** support interrupt nesting, skip this section.
 2. Fill the `void vInitialiseTimerForIntQueueTest( void )` function in the
-   `IntQueueTimer.c` file copied in the [Initial Setup](#Initial-Setup) step.
-   Make sure that the timer interrupt runs at a logical priority less than or
-   equal to `configMAX_SYSCALL_INTERRUPT_PRIORITY`. This function is supposed to
-   initialize and start a hardware timer. The following is an example for STM32
-   to start TIM7 (Note that the initialization for TIM7 is done before and here
-   we are just starting the TIM7 interrupt):
+   `IntQueueTimer.c` file copied in the [Initial Setup](#Initial-Setup) step to
+   initialize and start a hardware timer. Make sure that the timer interrupt
+   runs at a logical priority less than or equal to `configMAX_SYSCALL_INTERRUPT_PRIORITY`.
+   The following is an example for ARM MPS2 which starts TIM0 timer:
 ```c
-extern TIM_HandleTypeDef htim7;
-
 void vInitialiseTimerForIntQueueTest( void )
 {
-    HAL_NVIC_SetPriority( TIM7_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY , 0U );
-    HAL_NVIC_EnableIRQ( TIM7_IRQn );
-    HAL_TIM_Base_Start_IT( &( htim7 ) );
+    /* Clear interrupt. */
+    CMSDK_TIMER0->INTCLEAR = ( 1ul <<  0 );
+
+    /* Reload value is slightly offset from the other timer. */
+    CMSDK_TIMER0->RELOAD = ( configCPU_CLOCK_HZ / tmrTIMER_0_FREQUENCY ) + 1UL;
+    CMSDK_TIMER0->CTRL   = ( ( 1ul <<  3 ) | ( 1ul <<  0 ) );
+
+    NVIC_SetPriority( TIMER0_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY );
+    NVIC_EnableIRQ( TIMER0_IRQn );
 }
 ```
 3. Either install `void IntQueueTestTimerHandler( void )` function as the timer
    interrupt handler or call it from the timer interrupt handler of the above
-   timer. The following is an example for STM32 which calls
-   `IntQueueTestTimerHandler` from the TIM7 handler:
+   timer. The following is an example for ARM MPS2 which calls
+   `IntQueueTestTimerHandler` from the TIM0 handler:
 ```c
-void HAL_TIM_PeriodElapsedCallback( TIM_HandleTypeDef *htim )
+void TIMER0_Handler( void )
 {
-    if( htim->Instance == TIM7 )
-    {
-        IntQueueTestTimerHandler();
-    }
+    /* Clear interrupt. */
+    CMSDK_TIMER0->INTCLEAR = ( 1ul <<  0 );
+
+    IntQueueTestTimerHandler();
 }
 ```
 4. Define `configSTART_INTERRUPT_QUEUE_TESTS` to `1` in your `FreeRTOSConfig.h`:

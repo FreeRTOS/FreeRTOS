@@ -95,8 +95,13 @@
     "\"total\": %u"                           \
     "}"                                       \
     "}"                                       \
+    "},"                                      \
+    "\"custom_metrics\":{"
+
+#define reportbuilderJSON_REPORT_FORMAT_PART5 \
     "}"                                       \
     "}"
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -158,6 +163,57 @@ static eReportBuilderStatus prvWriteConnectionsArray( char * pcBuffer,
                                                       const Connection_t * pxConnectionsArray,
                                                       uint32_t ulConnectionsArrayLength,
                                                       uint32_t * pulOutCharsWritten );
+
+/**
+ * @brief Write custom metrics entries to the given buffer in the format
+ * expected by the AWS IoT Device Defender Service.
+ *
+ * This function writes the following format:
+ * "MyMetricOfType_Number":[
+ *     {
+ *         "number":1.0
+ *     }
+ * ],
+ * "MyMetricOfType_NumberList":[
+ *     {
+ *         "number_list":[
+ *             1.0,
+ *             2.0,
+ *             3.0
+ *         ]
+ *     }
+ * ],
+ * "MyMetricOfType_StringList":[
+ *     {
+ *         "string_list":[
+ *             "value_1",
+ *             "value_2"
+ *         ]
+ *     }
+ * ],
+ * "MyMetricOfType_IpList":[
+ *     {
+ *         "ip_list":[
+ *             "172.0.0.0",
+ *             "172.0.0.10"
+ *         ]
+ *     }
+ * ]
+ *
+ * @param[in] pcBuffer The buffer to write the connections array.
+ * @param[in] ulBufferLength The length of the buffer.
+ * @param[in] pxCustomMetricsArray The array containing the custom metrics.
+ * @param[in] ulCustomMetricsArrayLength Length of the pxCustomMetricsArray array.
+ * @param[out] pulOutCharsWritten Number of characters written to the buffer.
+ *
+ * @return #ReportBuilderSuccess if the array is successfully written;
+ * #ReportBuilderBufferTooSmall if the buffer cannot hold the full array.
+ */
+static eReportBuilderStatus prvWriteCustomMetrics( char * pcBuffer,
+                                                   uint32_t ulBufferLength,
+                                                   const CustomMetric_t * pxCustomMetricsArray,
+                                                   uint32_t ulCustomMetricsArrayLength,
+                                                   uint32_t * pulOutCharsWritten );
 /*-----------------------------------------------------------*/
 
 static eReportBuilderStatus prvWritePortsArray( char * pcBuffer,
@@ -311,6 +367,185 @@ static eReportBuilderStatus prvWriteConnectionsArray( char * pcBuffer,
         else
         {
             eStatus = eReportBuilderBufferTooSmall;
+        }
+    }
+
+    if( eStatus == eReportBuilderSuccess )
+    {
+        *pulOutCharsWritten = ulBufferLength - ulRemainingBufferLength;
+    }
+
+    return eStatus;
+}
+/*-----------------------------------------------------------*/
+
+static eReportBuilderStatus prvWriteCustomMetrics( char * pcBuffer,
+                                                   uint32_t ulBufferLength,
+                                                   const CustomMetric_t * pxCustomMetricsArray,
+                                                   uint32_t ulCustomMetricsArrayLength,
+                                                   uint32_t * pulOutCharsWritten )
+{
+    char * pcCurrentWritePos = pcBuffer;
+    uint32_t i, ulRemainingBufferLength = ulBufferLength;
+    int32_t ulCharactersWritten;
+    eReportBuilderStatus eStatus = eReportBuilderSuccess;
+    const CustomMetric_t * pxCustomMetric;
+
+    configASSERT( pcBuffer != NULL );
+    configASSERT( pxCustomMetricsArray != NULL );
+    configASSERT( pulOutCharsWritten != NULL );
+
+    /* Write the custom metrics array elements. */
+    for( i = 0; i < ulCustomMetricsArrayLength; i++ )
+    {
+        pxCustomMetric = &( pxCustomMetricsArray[ i ] );
+
+        /* Write the metric name key. */
+        ulCharactersWritten = snprintf( pcCurrentWritePos,
+                                        ulRemainingBufferLength,
+                                        "\"%s\":[{",
+                                        pxCustomMetric->pcName );
+
+        if( !reportbuilderSNPRINTF_SUCCESS( ulCharactersWritten, ulRemainingBufferLength ) )
+        {
+            eStatus = eReportBuilderBufferTooSmall;
+            break;
+        }
+        else
+        {
+            ulRemainingBufferLength -= ulCharactersWritten;
+            pcCurrentWritePos += ulCharactersWritten;
+        }
+
+        /* Write the metric data. */
+        if( pxCustomMetric->eType == eCustomMetricNumber )
+        {
+            ulCharactersWritten = snprintf( pcCurrentWritePos,
+                                            ulRemainingBufferLength,
+                                            "\"number\":%lld}],",
+                                            ( long long ) pxCustomMetric->xData.llNumber );
+
+            if( !reportbuilderSNPRINTF_SUCCESS( ulCharactersWritten, ulRemainingBufferLength ) )
+            {
+                eStatus = eReportBuilderBufferTooSmall;
+                break;
+            }
+            else
+            {
+                ulRemainingBufferLength -= ulCharactersWritten;
+                pcCurrentWritePos += ulCharactersWritten;
+            }
+        }
+        else
+        {
+            /* Metric is a list type */
+            if( pxCustomMetric->eType == eCustomMetricNumberList )
+            {
+                ulCharactersWritten = snprintf( pcCurrentWritePos,
+                                                ulRemainingBufferLength,
+                                                "\"number_list\":[" );
+            }
+            else if( pxCustomMetric->eType == eCustomMetricStringList )
+            {
+                ulCharactersWritten = snprintf( pcCurrentWritePos,
+                                                ulRemainingBufferLength,
+                                                "\"string_list\":[" );
+            }
+            else if( pxCustomMetric->eType == eCustomMetricIpList )
+            {
+                ulCharactersWritten = snprintf( pcCurrentWritePos,
+                                                ulRemainingBufferLength,
+                                                "\"ip_list\":[" );
+            }
+
+            if( !reportbuilderSNPRINTF_SUCCESS( ulCharactersWritten, ulRemainingBufferLength ) )
+            {
+                eStatus = eReportBuilderBufferTooSmall;
+                break;
+            }
+            else
+            {
+                ulRemainingBufferLength -= ulCharactersWritten;
+                pcCurrentWritePos += ulCharactersWritten;
+            }
+
+            /* Write the metric array elements. */
+            for( i = 0; i < pxCustomMetric->ulLength; i++ )
+            {
+                if( pxCustomMetric->eType == eCustomMetricNumberList )
+                {
+                    ulCharactersWritten = snprintf( pcCurrentWritePos,
+                                                    ulRemainingBufferLength,
+                                                    "%lld,",
+                                                    ( long long ) ( pxCustomMetric->xData.pllNumberList )[ i ] );
+                }
+                else if( pxCustomMetric->eType == eCustomMetricStringList )
+                {
+                    ulCharactersWritten = snprintf( pcCurrentWritePos,
+                                                    ulRemainingBufferLength,
+                                                    "\"%s\",",
+                                                    ( pxCustomMetric->xData.ppcStringList )[ i ] );
+                }
+                else if( pxCustomMetric->eType == eCustomMetricIpList )
+                {
+                    ulCharactersWritten = snprintf( pcCurrentWritePos,
+                                                    ulRemainingBufferLength,
+                                                    "\"%u.%u.%u.%u\",",
+                                                    ( unsigned int ) ( ( pxCustomMetric->xData.pulIpList )[ i ] >> 24 ) & 0xFF,
+                                                    ( unsigned int ) ( ( pxCustomMetric->xData.pulIpList )[ i ] >> 16 ) & 0xFF,
+                                                    ( unsigned int ) ( ( pxCustomMetric->xData.pulIpList )[ i ] >> 8 ) & 0xFF,
+                                                    ( unsigned int ) ( pxCustomMetric->xData.pulIpList )[ i ] & 0xFF );
+                }
+
+                if( !reportbuilderSNPRINTF_SUCCESS( ulCharactersWritten, ulRemainingBufferLength ) )
+                {
+                    eStatus = eReportBuilderBufferTooSmall;
+                    break;
+                }
+                else
+                {
+                    ulRemainingBufferLength -= ulCharactersWritten;
+                    pcCurrentWritePos += ulCharactersWritten;
+                }
+            }
+
+            if( eStatus != eReportBuilderSuccess )
+            {
+                break;
+            }
+
+            /* Discard the last comma. */
+            if( pxCustomMetric->ulLength > 0 )
+            {
+                pcCurrentWritePos -= 1;
+                ulRemainingBufferLength += 1;
+            }
+
+            /* Close the custom metric element */
+            ulCharactersWritten = snprintf( pcCurrentWritePos,
+                                            ulRemainingBufferLength,
+                                            "]}]," );
+
+            if( !reportbuilderSNPRINTF_SUCCESS( ulCharactersWritten, ulRemainingBufferLength ) )
+            {
+                eStatus = eReportBuilderBufferTooSmall;
+                break;
+            }
+            else
+            {
+                ulRemainingBufferLength -= ulCharactersWritten;
+                pcCurrentWritePos += ulCharactersWritten;
+            }
+        }
+    }
+
+    if( eStatus == eReportBuilderSuccess )
+    {
+        /* Discard the last comma. */
+        if( ulCustomMetricsArrayLength > 0 )
+        {
+            pcCurrentWritePos -= 1;
+            ulRemainingBufferLength += 1;
         }
     }
 
@@ -492,6 +727,45 @@ eReportBuilderStatus eGenerateJsonReport( char * pcBuffer,
         if( !reportbuilderSNPRINTF_SUCCESS( ulCharactersWritten, ulRemainingBufferLength ) )
         {
             LogError( ( "Failed to write part 4." ) );
+            eStatus = eReportBuilderBufferTooSmall;
+        }
+        else
+        {
+            ulRemainingBufferLength -= ulCharactersWritten;
+            pcCurrentWritePos += ulCharactersWritten;
+        }
+    }
+
+    /* Write custom metrics. */
+    if( ( eStatus == eReportBuilderSuccess ) && ( pxMetrics->pxCustomMetricsArray != NULL ) )
+    {
+        eStatus = prvWriteCustomMetrics( pcCurrentWritePos,
+                                         ulRemainingBufferLength,
+                                         pxMetrics->pxCustomMetricsArray,
+                                         pxMetrics->ulCustomMetricsArrayLength,
+                                         &( bufferWritten ) );
+
+        if( eStatus == eReportBuilderSuccess )
+        {
+            pcCurrentWritePos += bufferWritten;
+            ulRemainingBufferLength -= bufferWritten;
+        }
+        else
+        {
+            LogError( ( "Failed to write custom metrics." ) );
+        }
+    }
+
+    /* Write part5. */
+    if( eStatus == eReportBuilderSuccess )
+    {
+        ulCharactersWritten = snprintf( pcCurrentWritePos,
+                                        ulRemainingBufferLength,
+                                        reportbuilderJSON_REPORT_FORMAT_PART5 );
+
+        if( !reportbuilderSNPRINTF_SUCCESS( ulCharactersWritten, ulRemainingBufferLength ) )
+        {
+            LogError( ( "Failed to write part 5." ) );
             eStatus = eReportBuilderBufferTooSmall;
         }
         else

@@ -41,6 +41,34 @@ typedef enum
 } eReportBuilderStatus;
 
 /**
+ * @brief Represents the data type of a custom metric.
+ */
+typedef enum
+{
+    eCustomMetricNumber,
+    eCustomMetricNumberList,
+    eCustomMetricStringList,
+    eCustomMetricIpList
+} eCustomMetricType;
+
+/**
+ * @brief Represents a custom metric.
+ */
+typedef struct CustomMetric
+{
+    const char * pcName;
+    eCustomMetricType eType;
+    union
+    {
+        int64_t llNumber;
+        int64_t * pllNumberList;
+        char ** ppcStringList;
+        uint32_t * pulIpList;
+    } xData;
+    uint32_t ulLength;
+} CustomMetric_t;
+
+/**
  * @brief Represents metrics to be included in the report.
  */
 typedef struct ReportMetrics
@@ -52,6 +80,8 @@ typedef struct ReportMetrics
     uint32_t ulOpenUdpPortsArrayLength;
     Connection_t * pxEstablishedConnectionsArray;
     uint32_t ulEstablishedConnectionsArrayLength;
+    CustomMetric_t * pxCustomMetricsArray;
+    uint32_t ulCustomMetricsArrayLength;
 } ReportMetrics_t;
 
 /**

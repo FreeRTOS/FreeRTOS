@@ -133,8 +133,8 @@ typedef enum
     ReportStatusRejected
 } ReportStatus_t;
 
-/** 
- * @brief Each compilation unit that consumes the NetworkContext must define it. 
+/**
+ * @brief Each compilation unit that consumes the NetworkContext must define it.
  * It should contain a single pointer to the type of your desired transport.
  * When using multiple transports in the same compilation unit, define this pointer as void *.
  *
@@ -194,6 +194,33 @@ static uint16_t pusOpenUdpPorts[ democonfigOPEN_UDP_PORTS_ARRAY_SIZE ];
  * @brief Established connections array.
  */
 static Connection_t pxEstablishedConnections[ democonfigESTABLISHED_CONNECTIONS_ARRAY_SIZE ];
+
+
+/**
+ * @brief Custom metrics array.
+ */
+static CustomMetric_t pxCustomMetrics[ democonfigCUSTOM_METRICS_ARRAY_SIZE ];
+
+
+/**
+ * @brief Task status array for uxTaskGetSystemState().
+ */
+static TaskStatus_t pxTaskList[ democonfigCUSTOM_METRICS_TASKS_ARRAY_SIZE ];
+
+/**
+ * @brief Task numbers custom metric array.
+ */
+static int64_t pllCustomMetricsTaskNumbers[ democonfigCUSTOM_METRICS_TASKS_ARRAY_SIZE ];
+
+/**
+ * @brief Total run time custom metric name.
+ */
+static const char pcStackHighWaterMarkName[] = "stack_high_water_mark";
+
+/**
+ * @brief Task numbers custom metric name.
+ */
+static const char pcTaskNumbersName[] = "task_numbers";
 
 /**
  * @brief All the metrics sent in the device defender report.
@@ -516,6 +543,48 @@ static bool prvCollectDeviceMetrics( void )
         }
     }
 
+    /* Collect custom metrics. */
+    if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
+    {
+        UBaseType_t uxTasksWritten;
+        TaskStatus_t pxTaskStatus;
+        uint32_t i;
+
+        vTaskGetInfo(
+            /* Query this task. */
+            NULL,
+            &pxTaskStatus,
+            /* Include the stack high water mark value. */
+            pdTRUE,
+            /* Don't include the task state in the TaskStatus_t structure. */
+            0 );
+        uxTasksWritten = uxTaskGetSystemState( pxTaskList, democonfigCUSTOM_METRICS_TASKS_ARRAY_SIZE, NULL );
+
+        if( uxTasksWritten == 0 )
+        {
+            eMetricsCollectorStatus = eMetricsCollectorCollectionFailed;
+            LogError( ( "uxTaskGetSystemState failed. Insufficient space in buffer.",
+                        eMetricsCollectorStatus ) );
+        }
+        else
+        {
+            for( i = 0; i < uxTasksWritten; i++ )
+            {
+                pllCustomMetricsTaskNumbers[ i ] = pxTaskList[ i ].xTaskNumber;
+            }
+
+            pxCustomMetrics[ 0 ].pcName = pcStackHighWaterMarkName;
+            pxCustomMetrics[ 0 ].eType = eCustomMetricNumber;
+            pxCustomMetrics[ 0 ].xData.llNumber = pxTaskStatus.usStackHighWaterMark;
+            pxCustomMetrics[ 0 ].ulLength = 1;
+
+            pxCustomMetrics[ 1 ].pcName = pcTaskNumbersName;
+            pxCustomMetrics[ 1 ].eType = eCustomMetricNumberList;
+            pxCustomMetrics[ 1 ].xData.pllNumberList = pllCustomMetricsTaskNumbers;
+            pxCustomMetrics[ 1 ].ulLength = uxTasksWritten;
+        }
+    }
+
     /* Populate device metrics. */
     if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
     {
@@ -527,6 +596,8 @@ static bool prvCollectDeviceMetrics( void )
         xDeviceMetrics.ulOpenUdpPortsArrayLength = ulNumOpenUdpPorts;
         xDeviceMetrics.pxEstablishedConnectionsArray = &( pxEstablishedConnections[ 0 ] );
         xDeviceMetrics.ulEstablishedConnectionsArrayLength = ulNumEstablishedConnections;
+        xDeviceMetrics.pxCustomMetricsArray = pxCustomMetrics;
+        xDeviceMetrics.ulCustomMetricsArrayLength = 2;
     }
 
     return xStatus;

@@ -39,6 +39,8 @@
 /* Mock includes. */
 #include "mock_queue.h"
 #include "mock_list.h"
+#include "mock_fake_assert.h"
+
 
 /* ============================  GLOBAL VARIABLES =========================== */
 static uint16_t usMallocFreeCalls = 0;
@@ -59,6 +61,8 @@ void vPortFree( void * pv )
  ******************************************************************************/
 void setUp( void )
 {
+    vFakeAssert_Ignore();
+
     /* Track calls to malloc / free */
     UnityMalloc_StartTest();
 }

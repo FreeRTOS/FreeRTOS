@@ -3,14 +3,17 @@
 # and the project name should be queue
 # if testing list.c your directory should be called list
 # and the project name should be list
-PROJECT          :=   queue
+PROJECT          :=   timers
 
 # List the dependency files you wish to mock
 MOCK_FILES_FP    :=  $(KERNEL_DIR)/include/task.h
+MOCK_FILES_FP    +=  $(KERNEL_DIR)/include/queue.h
 MOCK_FILES_FP    +=  $(KERNEL_DIR)/include/list.h
 
 # List the options the compilation would need
-CPPFLAGS         +=   -DportUSING_MPU_WRAPPERS=0
+CPPFLAGS         +=   -DconfigSUPPORT_DYNAMIC_ALLOCATION=1
+CPPFLAGS         +=   -DconfigSUPPORT_STATIC_ALLOCATION=1
+
 
 # Try not to edit beyond this line
 MOCK_FILES       :=   $(notdir $(MOCK_FILES_FP))

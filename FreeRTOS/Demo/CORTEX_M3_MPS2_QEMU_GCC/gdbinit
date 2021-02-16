@@ -1,0 +1,29 @@
+target remote :1234
+set pagination off
+p xTaskGetTickCount()
+p ullSuccesfulIterations
+p ullTimerDemoTaskFailures
+p ullStreamBufferTaskFailures
+p ullMessageBufferFailures
+p ullTaskNotificationFailures
+p ullInterruptSemaphoreFailures
+p ullEventGroupTaskFailures
+p ullIntegerMathsFailures
+p ullGenericQueueFailures
+p ullQueuePeekFailures
+p ullBlockingQueueFailures
+p ullSemaphoreTaskFailures
+p ullPollingQueueFailures
+p ullMathsFailures
+p ullRecursiveMutexFailures
+p ullCountingSemaphoreFailures
+p ullCreateTaskFailures
+p ullDynamicPriorityFailures
+p ullQueueOverwriteFailures
+p ullBlockTimeFailures
+p ullAbortDelayFailures
+p ullInterruptStreamBufferFailures
+p ullMessageBufferAMPFailures
+p ullStaticAllocationFailures
+quit
+

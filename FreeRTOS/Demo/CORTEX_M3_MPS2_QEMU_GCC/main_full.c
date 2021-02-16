@@ -189,6 +189,40 @@ static char *pcStatusMessage = "OK: No errors";
 semaphore tracing API functions.  It has no other purpose. */
 static SemaphoreHandle_t xMutexToDelete = NULL;
 
+/* Counters for task failures. */
+long long unsigned ullSuccesfulIterations = 0;
+#if( configUSE_PREEMPTION != 0 )
+long long unsigned ullTimerDemoTaskFailures = 0;
+#endif
+long long unsigned ullStreamBufferTaskFailures = 0;
+long long unsigned ullMessageBufferFailures = 0;
+long long unsigned ullTaskNotificationFailures = 0;
+long long unsigned ullInterruptSemaphoreFailures = 0;
+long long unsigned ullEventGroupTaskFailures = 0;
+long long unsigned ullIntegerMathsFailures = 0;
+long long unsigned ullGenericQueueFailures = 0;
+long long unsigned ullQueuePeekFailures = 0;
+long long unsigned ullBlockingQueueFailures = 0;
+long long unsigned ullSemaphoreTaskFailures = 0;
+long long unsigned ullPollingQueueFailures = 0;
+long long unsigned ullMathsFailures = 0;
+long long unsigned ullRecursiveMutexFailures = 0;
+long long unsigned ullCountingSemaphoreFailures = 0;
+long long unsigned ullCreateTaskFailures = 0;
+long long unsigned ullDynamicPriorityFailures = 0;
+long long unsigned ullQueueOverwriteFailures = 0;
+long long unsigned ullBlockTimeFailures = 0;
+long long unsigned ullAbortDelayFailures = 0;
+long long unsigned ullInterruptStreamBufferFailures = 0;
+long long unsigned ullMessageBufferAMPFailures = 0;
+#if( configUSE_QUEUE_SETS == 1 )
+long long unsigned ullQueueSetFailures = 0;
+long long unsigned ullQueueSetPollFailures = 0;
+#endif
+#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+long long unsigned ullStaticAllocationFailures = 0;
+#endif
+
 /*-----------------------------------------------------------*/
 
 int main_full( void )
@@ -285,6 +319,7 @@ HeapStats_t xHeapStats;
 			/* These tasks are only created when preemption is used. */
 			if( xAreTimerDemoTasksStillRunning( xCycleFrequency ) != pdTRUE )
 			{
+				ullTimerDemoTaskFailures++;
 				pcStatusMessage = "Error: TimerDemo";
 			}
 		}
@@ -292,14 +327,17 @@ HeapStats_t xHeapStats;
 
 		if( xAreStreamBufferTasksStillRunning() != pdTRUE )
 		{
+			ullStreamBufferTaskFailures++;
 			pcStatusMessage = "Error:  StreamBuffer";
 		}
 		else if( xAreMessageBufferTasksStillRunning() != pdTRUE )
 		{
+			ullMessageBufferFailures++;
 			pcStatusMessage = "Error:  MessageBuffer";
 		}
 		else if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
 		{
+			ullTaskNotificationFailures++;
 			pcStatusMessage = "Error:  Notification";
 		}
 		// else if( xAreTaskNotificationArrayTasksStillRunning() != pdTRUE )
@@ -308,84 +346,104 @@ HeapStats_t xHeapStats;
 		// }
 		else if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
 		{
+			ullInterruptSemaphoreFailures++;
 			pcStatusMessage = "Error: IntSem";
 		}
 		else if( xAreEventGroupTasksStillRunning() != pdTRUE )
 		{
+			ullEventGroupTaskFailures++;
 			pcStatusMessage = "Error: EventGroup";
 		}
 		else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 		{
+			ullIntegerMathsFailures++;
 			pcStatusMessage = "Error: IntMath";
 		}
 		else if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 		{
+			ullGenericQueueFailures++;
 			pcStatusMessage = "Error: GenQueue";
 		}
 		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
 		{
+			ullQueuePeekFailures++;
 			pcStatusMessage = "Error: QueuePeek";
 		}
 		else if( xAreBlockingQueuesStillRunning() != pdTRUE )
 		{
+			ullBlockingQueueFailures++;
 			pcStatusMessage = "Error: BlockQueue";
 		}
 		else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 		{
+			ullSemaphoreTaskFailures++;
 			pcStatusMessage = "Error: SemTest";
 		}
 		else if( xArePollingQueuesStillRunning() != pdTRUE )
 		{
+			ullPollingQueueFailures++;
 			pcStatusMessage = "Error: PollQueue";
 		}
 		else if( xAreMathsTaskStillRunning() != pdPASS )
 		{
+			ullMathsFailures++;
 			pcStatusMessage = "Error: Flop";
 		}
 		else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 		{
+			ullRecursiveMutexFailures++;
 			pcStatusMessage = "Error: RecMutex";
 		}
 		else if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
 		{
+			ullCountingSemaphoreFailures++;
 			pcStatusMessage = "Error: CountSem";
 		}
 		else if( xIsCreateTaskStillRunning() != pdTRUE )
 		{
+			ullCreateTaskFailures++;
 			pcStatusMessage = "Error: Death";
 		}
 		else if( xAreDynamicPriorityTasksStillRunning() != pdPASS )
 		{
+			ullDynamicPriorityFailures++;
 			pcStatusMessage = "Error: Dynamic";
 		}
 		else if( xIsQueueOverwriteTaskStillRunning() != pdPASS )
 		{
+			ullQueueOverwriteFailures++;
 			pcStatusMessage = "Error: Queue overwrite";
 		}
 		else if( xAreBlockTimeTestTasksStillRunning() != pdPASS )
 		{
+			ullBlockTimeFailures++;
 			pcStatusMessage = "Error: Block time";
 		}
 		else if( xAreAbortDelayTestTasksStillRunning() != pdPASS )
 		{
+			ullAbortDelayFailures++;
 			pcStatusMessage = "Error: Abort delay";
 		}
 		else if( xIsInterruptStreamBufferDemoStillRunning() != pdPASS )
 		{
+			ullInterruptStreamBufferFailures++;
 			pcStatusMessage = "Error: Stream buffer interrupt";
 		}
 		else if( xAreMessageBufferAMPTasksStillRunning() != pdPASS )
 		{
+			ullMessageBufferAMPFailures++;
 			pcStatusMessage = "Error: Message buffer AMP";
 		}
 
 		#if( configUSE_QUEUE_SETS == 1 )
 			else if( xAreQueueSetTasksStillRunning() != pdPASS )
 			{
+				ullQueueSetFailures++;
 				pcStatusMessage = "Error: Queue set";
 			}
 			else if( xAreQueueSetPollTasksStillRunning() != pdPASS )
 			{
+				ullQueueSetPollFailures++;
 				pcStatusMessage = "Error: Queue set polling";
 			}
 		#endif
@@ -393,9 +451,14 @@ HeapStats_t xHeapStats;
 		#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 			else if( xAreStaticAllocationTasksStillRunning() != pdPASS )
 			{
+				ullStaticAllocationFailures++;
 				pcStatusMessage = "Error: Static allocation";
 			}
 		#endif /* configSUPPORT_STATIC_ALLOCATION */
+		else
+		{
+			ullSuccesfulIterations++;
+		}
 
 		printf( "%s - tick count %u \r\n",
 					pcStatusMessage,

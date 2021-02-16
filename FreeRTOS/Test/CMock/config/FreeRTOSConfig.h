@@ -117,6 +117,8 @@ uses the same semantics as the standard C assert() macro. */
 #define configASSERT( x ) \
         vFakeAssert( (bool) ( x ), __FILE__, __LINE__)
 
+#define mtCOVERAGE_TEST_MARKER() __asm volatile( "NOP" )
+
 #define configINCLUDE_MESSAGE_BUFFER_AMP_DEMO	0
 #if ( configINCLUDE_MESSAGE_BUFFER_AMP_DEMO == 1 )
 	extern void vGenerateCoreBInterrupt( void * xUpdatedMessageBuffer );

@@ -84,7 +84,6 @@ $(EXEC_PATH)_% : $(MOCK_OBJS)                                                  \
                  $(SCRATCH_DIR)/%/$(PROJECT).o                                 \
 		 $(SCRATCH_DIR)/%/$(PROJECT)_utest.o                           \
 		 $(SCRATCH_DIR)/%/heap_3.o                                     \
-		 $(SCRATCH_DIR)/%/port.o                                       \
 		 | directories
 	$(CC) $+ $(LDFLAGS) -o $@ 
 
@@ -147,12 +146,6 @@ $(SCRATCH_DIR)/%/$(PROJECT).o : $(KERNEL_DIR)/$(PROJECT).c | directories
 .SECONDARY:
 # Build the unit tests with heap3 as it uses the standard malloc and free
 $(SCRATCH_DIR)/%/heap_3.o : $(KERNEL_DIR)/portable/MemMang/heap_3.c
-	$(eval INCLUDE = -I$(SCRATCH_DIR)/$*/include)
-	$(CC) -c $< $(INCLUDE) $(CPPFLAGS) $(CFLAGS) -o $@
-
-.SECONDARY:
-# Buld port.o from port.c
-$(SCRATCH_DIR)/%/port.o : $(UT_ROOT_DIR)/config/port.c
 	$(eval INCLUDE = -I$(SCRATCH_DIR)/$*/include)
 	$(CC) -c $< $(INCLUDE) $(CPPFLAGS) $(CFLAGS) -o $@
 

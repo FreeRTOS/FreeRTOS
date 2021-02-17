@@ -97,8 +97,9 @@ $(MOCK_SRC_LIST) : $(CPP_FILES)                                                \
 	    $(<D)/*
 
 .SECONDARY:
-# Preprocess ALL the headers
-# This target is called ONLY once per configuration (%)
+# Copies the appropriate header file into the private include directory
+# Pre-process ALL the headers in the cpp directory
+# This target is called ONLY once per configuration pattern (%)
 $(CPP_FILES) : $(MOCK_FILES_FP) $(SCRATCH_DIR)/%/cpp | directories
 	cp $(PROJECT_DIR)/FreeRTOSConfig_$*.h                                  \
 	   $(SCRATCH_DIR)/$*/include/FreeRTOSConfig.h
@@ -109,10 +110,9 @@ $(CPP_FILES) : $(MOCK_FILES_FP) $(SCRATCH_DIR)/%/cpp | directories
 		  -o $(@D)/$$(basename $$files);                               \
         done
 
-
 .SECONDARY:
 # Build ALL the mock objects for the config
-# This target is called ONLY once per configuration (%)
+# This target is called ONLY once per configuration pattern (%)
 $(MOCK_OBJS) : $(MOCK_SRC_LIST)
 	$(eval INCLUDE = -I$(SCRATCH_DIR)/$*/include)
 	for files in $^ ; do                                                   \

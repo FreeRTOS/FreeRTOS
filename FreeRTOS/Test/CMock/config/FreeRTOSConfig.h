@@ -28,6 +28,8 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
+#include "fake_assert.h"
+
 /*-----------------------------------------------------------
  * Application specific definitions.
  *
@@ -113,7 +115,6 @@ functions anyway. */
 
 /* It is a good idea to define configASSERT() while developing.  configASSERT()
 uses the same semantics as the standard C assert() macro. */
-#include "fake_assert.h"
 #define configASSERT( x ) \
         vFakeAssert( (bool) ( x ), __FILE__, __LINE__)
 

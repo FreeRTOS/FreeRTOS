@@ -30,6 +30,8 @@
 /* Fake assert.h */
 #include <stdbool.h>
 
-void vFakeAssert(bool x, char* file, int line);
+void vFakeAssert( bool x,
+                  char * file,
+                  int line );
 
 #endif /* FAKE_ASSERT_H */

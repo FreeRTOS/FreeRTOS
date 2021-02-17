@@ -89,7 +89,7 @@ int suiteTearDown( int numFailures )
     return numFailures;
 }
 
-static void _xCallback_Test( TimerHandle_t xTimer )
+static void xCallback_Test( TimerHandle_t xTimer )
 {
 }
 
@@ -111,7 +111,7 @@ void test_xTimerCreate_Success( void )
                            pdMS_TO_TICKS( 1000 ),
                            pdTRUE,
                            &ulID,
-                           _xCallback_Test );
+                           xCallback_Test );
 
     TEST_ASSERT_NOT_EQUAL( NULL, xTimer );
 

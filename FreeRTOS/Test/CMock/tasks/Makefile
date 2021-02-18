@@ -121,12 +121,14 @@ $(MOCK_OBJS) : $(MOCK_SRC_LIST)
 	    $(CC) -c $$files $(INCLUDE) -fPIC $(CFLAGS) -DUNITY_EXCLUDE_MATH_H \
 		-DUNITY_EXCLUDE_STDINT_H -DUNITY_OUTPUT_CHAR -o $$new_name ;   \
         done
+	cd $(@D) && find . -type f ! -name 'mock_*' -delete
 
 .SECONDARY:
 # Build test_runner.o from test_runner.c
 $(SCRATCH_DIR)/%/test_runner.o : $(SCRATCH_DIR)/%/test_runner.c                \
                                  $(SCRATCH_DIR)/%/$(PROJECT).o
 	$(eval INCLUDE = -I$(SCRATCH_DIR)/$*/include)                          \
+	$(eval INCLUDE += -I$(SCRATCH_DIR)/$*/mocks)                           \
 	$(CC) -c $< $(INCLUDE) $(CPPFLAGS)  $(CFLAGS) -o $@
 
 .SECONDARY:
@@ -134,6 +136,7 @@ $(SCRATCH_DIR)/%/test_runner.o : $(SCRATCH_DIR)/%/test_runner.c                \
 $(SCRATCH_DIR)/%/$(PROJECT)_utest.o : $(PROJECT_DIR)/$(PROJECT)_utest_%.c      \
                                       | directories
 	$(eval INCLUDE = -I$(SCRATCH_DIR)/$*/include)
+	$(eval INCLUDE += -I$(SCRATCH_DIR)/$*/mocks)
 	$(CC) -c $< $(INCLUDE) $(CPPFLAGS)  $(CFLAGS) -o $@
 
 .SECONDARY:

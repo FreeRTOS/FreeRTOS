@@ -37,6 +37,8 @@
 #include "FreeRTOSConfig.h"
 #include "task.h"
 
+#include "mock_list.h"
+
 void vApplicationIdleHook( void )
 {
 }

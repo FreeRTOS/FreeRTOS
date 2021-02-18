@@ -19,7 +19,7 @@ CFLAGS += -Wno-error=int-to-pointer-cast -Wno-int-to-pointer-cast
 CPPFLAGS         +=
 
 # List special linker flags for this module
-LDFLAGS          +=   -Wl,--allow-multiple-definition 
+LDFLAGS          +=   -Wl,--allow-multiple-definition
 
 # Makefile Flags (if needed)
 #MAKEFLAGS += -rR
@@ -85,7 +85,7 @@ $(EXEC_PATH)_% : $(MOCK_OBJS)                                                  \
 		 $(SCRATCH_DIR)/%/$(PROJECT)_utest.o                           \
 		 $(SCRATCH_DIR)/%/heap_3.o                                     \
 		 | directories
-	$(CC) $+ $(LDFLAGS) -o $@ 
+	$(CC) $+ $(LDFLAGS) -o $@
 
 .SECONDARY:
 # Mock All preprocessed header files
@@ -121,19 +121,23 @@ $(MOCK_OBJS) : $(MOCK_SRC_LIST)
 	    $(CC) -c $$files $(INCLUDE) -fPIC $(CFLAGS) -DUNITY_EXCLUDE_MATH_H \
 		-DUNITY_EXCLUDE_STDINT_H -DUNITY_OUTPUT_CHAR -o $$new_name ;   \
         done
+	cd $(@D) && find . -type f ! -name 'mock_*' -delete
 
 .SECONDARY:
 # Build test_runner.o from test_runner.c
 $(SCRATCH_DIR)/%/test_runner.o : $(SCRATCH_DIR)/%/test_runner.c                \
                                  $(SCRATCH_DIR)/%/$(PROJECT).o
-	$(eval INCLUDE = -I$(SCRATCH_DIR)/$*/include)                          \
-	$(CC) -c $< $(INCLUDE) $(CPPFLAGS)  $(CFLAGS) -o $@
+	$(eval INCLUDE = -I$(SCRATCH_DIR)/$*/include)
+	$(eval INCLUDE += -I$(SCRATCH_DIR)/$*/mocks)                          
+#	-rm $(SCRATCH_DIR)/$*/mocks/list.h
+	$(CC) -c $< $(INCLUDE) $(CPPFLAGS) $(CFLAGS) -o $@
 
 .SECONDARY:
 # Build tasks_utest.o from tasks_utest_%.c
 $(SCRATCH_DIR)/%/$(PROJECT)_utest.o : $(PROJECT_DIR)/$(PROJECT)_utest_%.c      \
                                       | directories
 	$(eval INCLUDE = -I$(SCRATCH_DIR)/$*/include)
+	$(eval INCLUDE += -I$(SCRATCH_DIR)/$*/mocks)
 	$(CC) -c $< $(INCLUDE) $(CPPFLAGS)  $(CFLAGS) -o $@
 
 .SECONDARY:

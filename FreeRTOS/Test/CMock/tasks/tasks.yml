@@ -20,9 +20,7 @@
     int8:     INT8
     bool:     UINT8
   :includes:        # This will add these includes to each mock.
-    - <stdbool.h>
     - "FreeRTOSConfig.h"
-#    - "FreeRTOS.h"
   :treat_externs: :exclude  # Now the extern-ed functions will be mocked.
   :weak: __attribute__((weak))
   :verbosity: 3

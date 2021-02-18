@@ -10,7 +10,7 @@ export LD ?= /usr/local/bin/ld
 UNITS       +=  list
 #UNITS       +=  queue
 #UNITS       += timers
-UNITS += list
+UNITS += tasks
 
 .PHONY: makefile.in
 

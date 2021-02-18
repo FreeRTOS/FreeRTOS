@@ -26,8 +26,8 @@
 /*! @file tasks_utest.c */
 
 /* C runtime includes. */
-#include <stdlib.h>
-#include <stdbool.h>
+/*#include <stdlib.h> */
+/*#include <stdbool.h> */
 
 /* Test includes. */
 #include "unity.h"
@@ -35,6 +35,11 @@
 /* Tasks includes */
 #include "FreeRTOS.h"
 #include "FreeRTOSConfig.h"
+
+#include "mock_list.h"
+/*#include "mock_timers.h" */
+/*#include "mock_portable.h" */
+
 #include "task.h"
 
 void vApplicationIdleHook( void )
@@ -80,7 +85,72 @@ int suiteTearDown( int numFailures )
 /*!
  * @brief
  */
-void test_dummy( void )
+void test_xTaskCreateStatic_null_puxStackBuffer( void )
 {
-    TEST_PASS();
+    StaticTask_t pxTaskBuffer[ 300 ];
+    TaskFunction_t pxTaskCode = NULL;
+    const char * const pcName = { "unit test" };
+    const uint32_t ulStackDepth = 0;
+    void * const pvParameters = NULL;
+    UBaseType_t uxPriority = 3;
+    TaskHandle_t ret;
+
+    ret = xTaskCreateStatic( pxTaskCode,
+                             pcName,
+                             ulStackDepth,
+                             pvParameters,
+                             uxPriority,
+                             NULL,
+                             pxTaskBuffer );
+    TEST_ASSERT_EQUAL( NULL, ret );
+}
+
+
+/*!
+ * @brief
+ */
+void test_xTaskCreateStatic_null_pxTaskBuffer( void )
+{
+    StackType_t puxStackBuffer[ 300 ];
+
+    TaskFunction_t pxTaskCode = NULL;
+    const char * const pcName = { "unit test" };
+    const uint32_t ulStackDepth = 0;
+    void * const pvParameters = NULL;
+    UBaseType_t uxPriority = 3;
+    TaskHandle_t ret;
+
+    ret = xTaskCreateStatic( pxTaskCode,
+                             pcName,
+                             ulStackDepth,
+                             pvParameters,
+                             uxPriority,
+                             puxStackBuffer,
+                             NULL );
+    TEST_ASSERT_EQUAL( NULL, ret );
+}
+
+/*!
+ * @brief
+ */
+void test_xTaskCreateStatic_success( void )
+{
+    StackType_t puxStackBuffer[ 300 * 8 ];
+    StaticTask_t pxTaskBuffer[ 300 * 8 ];
+    TaskFunction_t pxTaskCode = NULL;
+    const char * const pcName = { "unit test" };
+    const uint32_t ulStackDepth = 0;
+    void * const pvParameters = NULL;
+    UBaseType_t uxPriority = 3;
+    TaskHandle_t ret;
+
+    vListInitialise_Ignore();
+    ret = xTaskCreateStatic( pxTaskCode,
+                             pcName,
+                             ulStackDepth,
+                             pvParameters,
+                             uxPriority,
+                             puxStackBuffer,
+                             pxTaskBuffer );
+    TEST_ASSERT_EQUAL( NULL, ret );
 }

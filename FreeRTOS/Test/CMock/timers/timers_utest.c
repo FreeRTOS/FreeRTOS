@@ -23,27 +23,27 @@
  * https://github.com/FreeRTOS
  *
  */
-/*! @file queue_utest.c */
+/*! @file timers_utest.c */
 
 /* C runtime includes. */
 #include <stdlib.h>
 #include <stdbool.h>
 
-/* Queue includes */
+/* Test includes. */
 #include "FreeRTOS.h"
 #include "FreeRTOSConfig.h"
-#include "queue.h"
-
-/* Test includes. */
+#include "timers.h"
 #include "unity.h"
 #include "unity_memory.h"
 
 /* Mock includes. */
-#include "mock_task.h"
+#include "mock_queue.h"
 #include "mock_list.h"
 #include "mock_fake_assert.h"
 
+
 /* ============================  GLOBAL VARIABLES =========================== */
+static uint16_t usMallocFreeCalls = 0;
 
 /* ==========================  CALLBACK FUNCTIONS =========================== */
 
@@ -70,6 +70,11 @@ void setUp( void )
 /*! called before each testcase */
 void tearDown( void )
 {
+    TEST_ASSERT_EQUAL_INT_MESSAGE( 0, usMallocFreeCalls,
+                                   "free is not called the same number of times as malloc,"
+                                   "you might have a memory leak!!" );
+    usMallocFreeCalls = 0;
+
     UnityMalloc_EndTest();
 }
 
@@ -84,15 +89,48 @@ int suiteTearDown( int numFailures )
     return numFailures;
 }
 
-/*!
- * @brief xQueueCreate happy path.
+static void xCallback_Test( TimerHandle_t xTimer )
+{
+}
+
+/**
+ * @brief xTimerCreate happy path
  *
  */
-void test_xQueueCreate_Success( void )
+void test_xTimerCreate_Success( void )
 {
-    vListInitialise_Ignore();
-    QueueHandle_t xQueue = xQueueCreate( 1, 1 );
+    uint32_t ulID = 0;
+    TimerHandle_t xTimer = NULL;
 
-    TEST_ASSERT_NOT_EQUAL( NULL, xQueue );
-    vQueueDelete(xQueue);
+    vListInitialise_Ignore();
+    xQueueGenericCreateStatic_IgnoreAndReturn( ( QueueHandle_t ) 1 );
+    vQueueAddToRegistry_Ignore();
+    vListInitialiseItem_Ignore();
+
+    xTimer = xTimerCreate( "ut-timer",
+                           pdMS_TO_TICKS( 1000 ),
+                           pdTRUE,
+                           &ulID,
+                           xCallback_Test );
+
+    TEST_ASSERT_NOT_EQUAL( NULL, xTimer );
+
+    /* HACK: Free the timer directly */
+    vPortFree( ( void * ) xTimer );
+}
+
+void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
+                                     StackType_t ** ppxTimerTaskStackBuffer,
+                                     uint32_t * pulTimerTaskStackSize )
+{
+    static StaticTask_t xTimerTaskTCB;
+    static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
+
+    *ppxTimerTaskTCBBuffer = &xTimerTaskTCB;
+    *ppxTimerTaskStackBuffer = uxTimerTaskStack;
+    *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
+}
+
+void vApplicationDaemonTaskStartupHook( void )
+{
 }

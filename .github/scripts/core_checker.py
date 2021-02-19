@@ -255,13 +255,15 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*/Makefile',
     r'.*/trcConfig\.h.*',
     r'.*/trcConfig\.c.*',
-    r'.*/trcSnapshotConfig\.h.*',
+    r'.*/trcSnapshotConfig\.h.*'
 ]
 
 FREERTOS_IGNORED_FILES = [
     'fyi-another-way-to-ignore-file.txt',
     'mbedtls_config.h',
-    'requirements.txt'
+    'requirements.txt',
+    'run-cbmc-proofs.py',
+    '.editorconfig'
 ]
 
 FREERTOS_HEADER = [

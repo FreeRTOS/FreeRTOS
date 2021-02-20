@@ -108,6 +108,8 @@ static void prvNonBlockingSenderTask( void *pvParameters );
 	static void prvSpaceAvailableCoherenceActor( void *pvParameters );
 	static void prvSpaceAvailableCoherenceTester( void *pvParameters );
 	static MessageBufferHandle_t xCoherenceTestMessageBuffer = NULL;
+
+	static uint32_t ulSizeCoherencyTestCycles = 0UL;
 #endif
 
 /*-----------------------------------------------------------*/
@@ -873,7 +875,6 @@ const TickType_t xTicksToBlock = pdMS_TO_TICKS( 250UL );
 	static void prvSpaceAvailableCoherenceTester( void *pvParameters )
 	{
 	size_t xSpaceAvailable;
-	uint32_t ulSuccessCount = 0UL;
 	BaseType_t xErrorFound = pdFALSE;
 
 		( void ) pvParameters;
@@ -888,7 +889,12 @@ const TickType_t xTicksToBlock = pdMS_TO_TICKS( 250UL );
 			if( ( xSpaceAvailable == mbCOHERENCE_TEST_BUFFER_SIZE ) ||
 				( xSpaceAvailable == mbEXPECTED_FREE_BYTES_AFTER_WRITING_STRING ) )
 			{
-				ulSuccessCount++;
+				/* Only continue to increment the variable that shows this task
+				is still executing if no errors have been found. */
+				if( xErrorFound == pdFALSE )
+				{
+					ulSizeCoherencyTestCycles++;
+				}
 			}
 			else
 			{
@@ -946,6 +952,21 @@ BaseType_t xReturn = pdPASS, x;
 		}
 	}
 	#endif /* configSUPPORT_STATIC_ALLOCATION */
+
+	#if( configRUN_ADDITIONAL_TESTS == 1 )
+	{
+		static uint32_t ullastSizeCoherencyTestCycles = 0UL;
+
+		if( ullastSizeCoherencyTestCycles == ulSizeCoherencyTestCycles )
+		{
+			xReturn = pdFAIL;
+		}
+		else
+		{
+			ullastSizeCoherencyTestCycles = ulSizeCoherencyTestCycles;
+		}
+	}
+	#endif
 
 	return xReturn;
 }

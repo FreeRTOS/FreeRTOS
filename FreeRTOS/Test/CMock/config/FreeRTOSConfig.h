@@ -19,15 +19,16 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
+
+#include "fake_assert.h"
 
 /*-----------------------------------------------------------
  * Application specific definitions.
@@ -114,7 +115,10 @@ functions anyway. */
 
 /* It is a good idea to define configASSERT() while developing.  configASSERT()
 uses the same semantics as the standard C assert() macro. */
-#define configASSERT( x ) 
+#define configASSERT( x ) \
+        vFakeAssert( (bool) ( x ), __FILE__, __LINE__)
+
+#define mtCOVERAGE_TEST_MARKER() __asm volatile( "NOP" )
 
 #define configINCLUDE_MESSAGE_BUFFER_AMP_DEMO	0
 #if ( configINCLUDE_MESSAGE_BUFFER_AMP_DEMO == 1 )

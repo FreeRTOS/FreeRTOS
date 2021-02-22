@@ -17,12 +17,14 @@ FREERTOS_DIR     := $(abspath $(FREERTOS_DIR_REL))
 KERNEL_DIR_REL   := ../../../FreeRTOS/Source
 KERNEL_DIR       := $(abspath $(KERNEL_DIR_REL))
 
-CMOCK_DIR        := $(UT_ROOT_DIR)/CMock
-CMOCK_SRC_DIR    := $(CMOCK_DIR)/src
-UNITY_DIR        := $(CMOCK_DIR)/vendor/unity
-UNITY_SRC_DIR    := $(UNITY_DIR)/src
-UNITY_INC_DIR    := $(UNITY_DIR)/src
-UNITY_BIN_DIR    := $(UNITY_DIR)/auto
+CMOCK_DIR           := $(UT_ROOT_DIR)/CMock
+CMOCK_SRC_DIR       := $(CMOCK_DIR)/src
+UNITY_DIR           := $(CMOCK_DIR)/vendor/unity
+UNITY_SRC_DIR       := $(UNITY_DIR)/src
+UNITY_INC_DIR       := $(UNITY_DIR)/src
+UNITY_BIN_DIR       := $(UNITY_DIR)/auto
+UNITY_EXTRAS_DIR    := $(UNITY_DIR)/extras
+UNITY_MEM_SRC_DIR   := $(UNITY_EXTRAS_DIR)/memory/src
 
 CMOCK_EXEC_DIR   := $(CMOCK_DIR)/lib
 
@@ -30,13 +32,25 @@ CMOCK_EXEC_DIR   := $(CMOCK_DIR)/lib
 INCLUDE_DIR      := -I$(KERNEL_DIR)/include -I. -I$(UT_ROOT_DIR)/config
 INCLUDE_DIR      += -I$(UNITY_INC_DIR)
 INCLUDE_DIR      += -I$(CMOCK_SRC_DIR)
+INCLUDE_DIR      += -I$(UNITY_MEM_SRC_DIR)
 
 CPPFLAGS :=
 CFLAGS   := $(INCLUDE_DIR)  -O0 -ggdb -pthread  --std=c99 -Werror -Wall
-LDFLAGS  := -L$(LIB_DIR) -lunity -lcmock -Wl,-rpath,$(LIB_DIR) -pthread -lgcov
+CFLAGS   += -fsanitize=address,undefined -fsanitize-recover=address
+CFLAGS   += -fstack-protector-all
+CFLAGS   += -Wformat -Werror=format-security -Werror=array-bounds
+CFLAGS   += -D_FORTIFY_SOURCE=2
+
+LDFLAGS  := -L$(LIB_DIR) -Wl,-rpath,$(LIB_DIR)
+LDFLAGS  += -fsanitize=address,undefined
+LDFLAGS  += -pthread
+LDFLAGS  += -lunity
+LDFLAGS  += -lunitymemory
+LDFLAGS  += -lcmock
+LDFLAGS  += -lgcov
 
 export BUILD_DIR
-export DOC_DIR 
+export DOC_DIR
 export GENERATED_DIR
 export COVERAGE_DIR
 export BIN_DIR
@@ -48,4 +62,4 @@ export CMOCK_EXEC_DIR
 export KERNEL_DIR
 export UNITY_BIN_DIR
 export LIB_DIR
-
+export UT_ROOT_DIR

@@ -19,7 +19,7 @@ jobs:
       - name: Tool Setup
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8.5
+          python-version: 3.7.10
           architecture:   x64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

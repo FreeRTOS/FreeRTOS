@@ -262,13 +262,6 @@ extern void vLoggingPrintf( const char * pcFormatString,
 #define democonfigESTABLISHED_CONNECTIONS_ARRAY_SIZE     10
 
 /**
- * @brief Size of the custom metrics array.
- *
- * This must be at least the number of custom metrics used.
- */
-#define democonfigCUSTOM_METRICS_ARRAY_SIZE              2
-
-/**
  * @brief Size of the task numbers array.
  *
  * This must be at least the number of tasks used.

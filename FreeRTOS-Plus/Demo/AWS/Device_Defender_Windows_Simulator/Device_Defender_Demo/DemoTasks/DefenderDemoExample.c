@@ -35,12 +35,13 @@
  * with another MQTT library. This demo requires using the AWS IoT broker as
  * Device Defender is an AWS service.
  *
- * This demo connects to the AWS IoT broker and subscribes to the device
- * defender topics. It then collects metrics for the open ports and sockets on
- * the device using FreeRTOS+TCP, and generates a device defender report. The
+ * This demo subscribes to the device defender topics. It then collects metrics
+ * for the open ports and sockets on the device using FreeRTOS+TCP. Additonally
+ * the stack high water mark and task ids are collected for custom metrics.
+ * These metrics are uses to generate a device defender report. The
  * report is then published, and the demo waits for a response from the device
  * defender service. Upon receiving the response or timing out, the demo
- * finishes.
+ * sleeps until the next iteration.
  *
  * This demo sets the report ID to xTaskGetTickCount(), which may collide if
  * the device is reset. Reports for a Thing with a previously used report ID
@@ -195,15 +196,19 @@ static uint16_t pusOpenUdpPorts[ democonfigOPEN_UDP_PORTS_ARRAY_SIZE ];
  */
 static Connection_t pxEstablishedConnections[ democonfigESTABLISHED_CONNECTIONS_ARRAY_SIZE ];
 
+/**
+ * @brief Number of custom metrics sent in the demo.
+ */
+#define democonfigCUSTOM_METRICS_ARRAY_SIZE    2
 
 /**
  * @brief Custom metrics array.
  */
 static CustomMetric_t pxCustomMetrics[ democonfigCUSTOM_METRICS_ARRAY_SIZE ];
 
-
 /**
- * @brief Task status array for uxTaskGetSystemState().
+ * @brief Task status array which will store status information of tasks
+ * running in the system, which is used to generate custom metrics.
  */
 static TaskStatus_t pxTaskList[ democonfigCUSTOM_METRICS_TASKS_ARRAY_SIZE ];
 
@@ -241,6 +246,7 @@ static char pcDeviceMetricsJsonReport[ democonfigDEVICE_METRICS_REPORT_BUFFER_SI
  * @brief Report Id sent in the defender report.
  */
 static uint32_t ulReportId = 0UL;
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -543,7 +549,9 @@ static bool prvCollectDeviceMetrics( void )
         }
     }
 
-    /* Collect custom metrics. */
+    /* Collect custom metrics. This demo sends this tasks stack high water mark
+     * as a number type custom metric and the current task ids as a list of
+     * numbers type custom metric. */
     if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
     {
         UBaseType_t uxTasksWritten;
@@ -563,7 +571,7 @@ static bool prvCollectDeviceMetrics( void )
         if( uxTasksWritten == 0 )
         {
             eMetricsCollectorStatus = eMetricsCollectorCollectionFailed;
-            LogError( ( "uxTaskGetSystemState failed. Insufficient space in buffer.",
+            LogError( ( "Failed to collect system state. uxTaskGetSystemState() failed due to insufficient buffer space.",
                         eMetricsCollectorStatus ) );
         }
         else

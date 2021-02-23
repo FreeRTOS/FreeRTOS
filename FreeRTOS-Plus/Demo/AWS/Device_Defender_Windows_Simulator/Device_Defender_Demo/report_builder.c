@@ -36,6 +36,9 @@
 /* Demo config. */
 #include "demo_config.h"
 
+/* Device Defender Client Library. */
+#include "defender.h"
+
 /* Interface include. */
 #include "report_builder.h"
 
@@ -50,53 +53,53 @@
 /* Formats used to generate the JSON report. */
 #define reportbuilderJSON_PORT_OBJECT_FORMAT \
     "{"                                      \
-    "\"port\": %u"                           \
+    "\"%s\": %u"                             \
     "},"
 
 #define reportbuilderJSON_CONNECTION_OBJECT_FORMAT \
     "{"                                            \
-    "\"local_port\": %u,"                          \
-    "\"remote_addr\": \"%u.%u.%u.%u:%u\""          \
+    "\"%s\": %u,"                                  \
+    "\"%s\": \"%u.%u.%u.%u:%u\""                   \
     "},"
 
 #define reportbuilderJSON_REPORT_FORMAT_PART1 \
     "{"                                       \
-    "\"header\": {"                           \
-    "\"report_id\": %u,"                      \
-    "\"version\": \"%u.%u\""                  \
+    "\"%s\": {"                               \
+    "\"%s\": %u,"                             \
+    "\"%s\": \"%u.%u\""                       \
     "},"                                      \
-    "\"metrics\": {"                          \
-    "\"listening_tcp_ports\": {"              \
-    "\"ports\": "
+    "\"%s\": {"                               \
+    "\"%s\": {"                               \
+    "\"%s\": "
 
 #define reportbuilderJSON_REPORT_FORMAT_PART2 \
     ","                                       \
-    "\"total\": %u"                           \
+    "\"%s\": %u"                              \
     "},"                                      \
-    "\"listening_udp_ports\": {"              \
-    "\"ports\": "
+    "\"%s\": {"                               \
+    "\"%s\": "
 
 #define reportbuilderJSON_REPORT_FORMAT_PART3 \
     ","                                       \
-    "\"total\": %u"                           \
+    "\"%s\": %u"                              \
     "},"                                      \
-    "\"network_stats\": {"                    \
-    "\"bytes_in\": %u,"                       \
-    "\"bytes_out\": %u,"                      \
-    "\"packets_in\": %u,"                     \
-    "\"packets_out\": %u"                     \
+    "\"%s\": {"                               \
+    "\"%s\": %u,"                             \
+    "\"%s\": %u,"                             \
+    "\"%s\": %u,"                             \
+    "\"%s\": %u"                              \
     "},"                                      \
-    "\"tcp_connections\": {"                  \
-    "\"established_connections\": {"          \
-    "\"connections\": "
+    "\"%s\": {"                               \
+    "\"%s\": {"                               \
+    "\"%s\": "
 
 #define reportbuilderJSON_REPORT_FORMAT_PART4 \
     ","                                       \
-    "\"total\": %u"                           \
+    "\"%s\": %u"                              \
     "}"                                       \
     "}"                                       \
     "},"                                      \
-    "\"custom_metrics\":{"
+    "\"%s\":{"
 
 #define reportbuilderJSON_REPORT_FORMAT_PART5 \
     "}"                                       \
@@ -249,6 +252,7 @@ static eReportBuilderStatus prvWritePortsArray( char * pcBuffer,
         ulCharactersWritten = snprintf( pcCurrentWritePos,
                                         ulRemainingBufferLength,
                                         reportbuilderJSON_PORT_OBJECT_FORMAT,
+                                        DEFENDER_REPORT_PORT_KEY,
                                         pusOpenPortsArray[ i ] );
 
         if( !reportbuilderSNPRINTF_SUCCESS( ulCharactersWritten, ulRemainingBufferLength ) )
@@ -329,7 +333,9 @@ static eReportBuilderStatus prvWriteConnectionsArray( char * pcBuffer,
         ulCharactersWritten = snprintf( pcCurrentWritePos,
                                         ulRemainingBufferLength,
                                         reportbuilderJSON_CONNECTION_OBJECT_FORMAT,
+                                        DEFENDER_REPORT_LOCAL_PORT_KEY,
                                         pxConn->usLocalPort,
+                                        DEFENDER_REPORT_REMOTE_ADDR_KEY,
                                         ( pxConn->ulRemoteIp >> 24 ) & 0xFF,
                                         ( pxConn->ulRemoteIp >> 16 ) & 0xFF,
                                         ( pxConn->ulRemoteIp >> 8 ) & 0xFF,
@@ -422,7 +428,8 @@ static eReportBuilderStatus prvWriteCustomMetrics( char * pcBuffer,
         {
             ulCharactersWritten = snprintf( pcCurrentWritePos,
                                             ulRemainingBufferLength,
-                                            "\"number\":%lld}],",
+                                            "\"%s\":%lld}],",
+                                            DEFENDER_REPORT_NUMBER_KEY,
                                             ( long long ) pxCustomMetric->xData.llNumber );
 
             if( !reportbuilderSNPRINTF_SUCCESS( ulCharactersWritten, ulRemainingBufferLength ) )
@@ -443,19 +450,22 @@ static eReportBuilderStatus prvWriteCustomMetrics( char * pcBuffer,
             {
                 ulCharactersWritten = snprintf( pcCurrentWritePos,
                                                 ulRemainingBufferLength,
-                                                "\"number_list\":[" );
+                                                "\"%s\":[",
+                                                DEFENDER_REPORT_NUMBER_LIST_KEY );
             }
             else if( pxCustomMetric->eType == eCustomMetricStringList )
             {
                 ulCharactersWritten = snprintf( pcCurrentWritePos,
                                                 ulRemainingBufferLength,
-                                                "\"string_list\":[" );
+                                                "\"%s\":[",
+                                                DEFENDER_REPORT_STRING_LIST_KEY );
             }
             else if( pxCustomMetric->eType == eCustomMetricIpList )
             {
                 ulCharactersWritten = snprintf( pcCurrentWritePos,
                                                 ulRemainingBufferLength,
-                                                "\"ip_list\":[" );
+                                                "\"%s\":[",
+                                                DEFENDER_REPORT_IP_LIST_KEY );
             }
 
             if( !reportbuilderSNPRINTF_SUCCESS( ulCharactersWritten, ulRemainingBufferLength ) )
@@ -596,9 +606,16 @@ eReportBuilderStatus eGenerateJsonReport( char * pcBuffer,
         ulCharactersWritten = snprintf( pcCurrentWritePos,
                                         ulRemainingBufferLength,
                                         reportbuilderJSON_REPORT_FORMAT_PART1,
+                                        DEFENDER_REPORT_HEADER_KEY,
+                                        DEFENDER_REPORT_ID_KEY,
                                         ulReportId,
+                                        DEFENDER_REPORT_VERSION_KEY,
                                         ulMajorReportVersion,
-                                        ulMinorReportVersion );
+                                        ulMinorReportVersion,
+                                        DEFENDER_REPORT_METRICS_KEY,
+                                        DEFENDER_REPORT_TCP_LISTENING_PORTS_KEY,
+                                        DEFENDER_REPORT_PORTS_KEY
+                                        );
 
         if( !reportbuilderSNPRINTF_SUCCESS( ulCharactersWritten, ulRemainingBufferLength ) )
         {
@@ -638,7 +655,11 @@ eReportBuilderStatus eGenerateJsonReport( char * pcBuffer,
         ulCharactersWritten = snprintf( pcCurrentWritePos,
                                         ulRemainingBufferLength,
                                         reportbuilderJSON_REPORT_FORMAT_PART2,
-                                        pxMetrics->ulOpenTcpPortsArrayLength );
+                                        DEFENDER_REPORT_TOTAL_KEY,
+                                        pxMetrics->ulOpenTcpPortsArrayLength,
+                                        DEFENDER_REPORT_UDP_LISTENING_PORTS_KEY,
+                                        DEFENDER_REPORT_PORTS_KEY
+                                        );
 
         if( !reportbuilderSNPRINTF_SUCCESS( ulCharactersWritten, ulRemainingBufferLength ) )
         {
@@ -678,11 +699,21 @@ eReportBuilderStatus eGenerateJsonReport( char * pcBuffer,
         ulCharactersWritten = snprintf( pcCurrentWritePos,
                                         ulRemainingBufferLength,
                                         reportbuilderJSON_REPORT_FORMAT_PART3,
+                                        DEFENDER_REPORT_TOTAL_KEY,
                                         pxMetrics->ulOpenUdpPortsArrayLength,
+                                        DEFENDER_REPORT_NETWORK_STATS_KEY,
+                                        DEFENDER_REPORT_BYTES_IN_KEY,
                                         pxMetrics->pxNetworkStats->ulBytesReceived,
+                                        DEFENDER_REPORT_BYTES_OUT_KEY,
                                         pxMetrics->pxNetworkStats->ulBytesSent,
+                                        DEFENDER_REPORT_PKTS_IN_KEY,
                                         pxMetrics->pxNetworkStats->ulPacketsReceived,
-                                        pxMetrics->pxNetworkStats->ulPacketsSent );
+                                        DEFENDER_REPORT_PKTS_OUT_KEY,
+                                        pxMetrics->pxNetworkStats->ulPacketsSent,
+                                        DEFENDER_REPORT_TCP_CONNECTIONS_KEY,
+                                        DEFENDER_REPORT_ESTABLISHED_CONNECTIONS_KEY,
+                                        DEFENDER_REPORT_CONNECTIONS_KEY
+                                        );
 
         if( !reportbuilderSNPRINTF_SUCCESS( ulCharactersWritten, ulRemainingBufferLength ) )
         {
@@ -722,7 +753,10 @@ eReportBuilderStatus eGenerateJsonReport( char * pcBuffer,
         ulCharactersWritten = snprintf( pcCurrentWritePos,
                                         ulRemainingBufferLength,
                                         reportbuilderJSON_REPORT_FORMAT_PART4,
-                                        pxMetrics->ulEstablishedConnectionsArrayLength );
+                                        DEFENDER_REPORT_TOTAL_KEY,
+                                        pxMetrics->ulEstablishedConnectionsArrayLength,
+                                        DEFENDER_REPORT_CUSTOM_METRICS_KEY
+                                        );
 
         if( !reportbuilderSNPRINTF_SUCCESS( ulCharactersWritten, ulRemainingBufferLength ) )
         {

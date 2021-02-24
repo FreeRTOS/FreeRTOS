@@ -212,6 +212,9 @@ static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength,
         /* Check for multiplication overflow. */
         configASSERT( ( uxItemSize == 0 ) || ( uxQueueLength == ( xQueueSizeInBytes / uxItemSize ) ) );
 
+        /* Check for addition overflow. */
+        configASSERT( ( sizeof( Queue_t ) + xQueueSizeInBytes ) >  xQueueSizeInBytes );
+
 #ifdef VERIFAST /*< ***model single malloc of struct and buffer*** */
         pxNewQueue = ( Queue_t * ) pvPortMalloc( sizeof( Queue_t ) );
 #else

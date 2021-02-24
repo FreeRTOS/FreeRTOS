@@ -55,7 +55,7 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
         USART1.BAUD = (uint16_t)USART_BAUD_RATE(ulWantedBaud); /* set baud rate register */
 
         USART1.CTRLA = 1 << USART_LBME_bp       /* Loop-back Mode Enable: enabled */
-                     | USART_RS485_OFF_gc       /* RS485 Mode disabled */
+                     | USART_RS485_DISABLE_gc       /* RS485 Mode disabled */
                      | 1 << USART_RXCIE_bp;     /* Receive Complete Interrupt Enable: enabled */
 
         USART1.CTRLB = 1 << USART_RXEN_bp       /* Reciever enable: enabled */

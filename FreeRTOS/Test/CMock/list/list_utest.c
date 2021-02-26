@@ -740,7 +740,7 @@ void test_macro_listGET_ITEM_VALUE_OF_HEAD_ENTRY( void )
     initialise_list_items( pxNewListItem, 2 );
 
     pxNewListItem[ 0 ].xItemValue = 0;
-    pxNewListItem[ 2 ].xItemValue = 2;
+    pxNewListItem[ 1 ].xItemValue = 1;
 
     vListInsert( &pxList, &pxNewListItem[ 0 ] );
     vListInsert( &pxList, &pxNewListItem[ 1 ] );
@@ -762,7 +762,7 @@ void test_macro_listGET_HEAD_ENTRY( void )
     initialise_list_items( pxNewListItem, 2 );
 
     pxNewListItem[ 0 ].xItemValue = 0;
-    pxNewListItem[ 2 ].xItemValue = 2;
+    pxNewListItem[ 1 ].xItemValue = 1;
 
     vListInsert( &pxList, &pxNewListItem[ 0 ] );
     vListInsert( &pxList, &pxNewListItem[ 1 ] );
@@ -784,7 +784,7 @@ void test_macro_listGET_NEXT( void )
     initialise_list_items( pxNewListItem, 2 );
 
     pxNewListItem[ 0 ].xItemValue = 0;
-    pxNewListItem[ 2 ].xItemValue = 2;
+    pxNewListItem[ 1 ].xItemValue = 1;
 
     vListInsert( &pxList, &pxNewListItem[ 0 ] );
     vListInsert( &pxList, &pxNewListItem[ 1 ] );
@@ -808,7 +808,7 @@ void test_macro_listGET_END_MARKER( void )
     initialise_list_items( pxNewListItem, 2 );
 
     pxNewListItem[ 0 ].xItemValue = 0;
-    pxNewListItem[ 2 ].xItemValue = 2;
+    pxNewListItem[ 1 ].xItemValue = 1;
 
     vListInsert( &pxList, &pxNewListItem[ 0 ] );
     vListInsert( &pxList, &pxNewListItem[ 1 ] );
@@ -858,7 +858,7 @@ void test_macro_listGET_OWNER_OF_HEAD_ENTRY( void )
     initialise_list_items( pxNewListItem, 2 );
 
     pxNewListItem[ 0 ].xItemValue = 0;
-    pxNewListItem[ 2 ].xItemValue = 2;
+    pxNewListItem[ 1 ].xItemValue = 1;
 
     listSET_LIST_ITEM_OWNER( &pxNewListItem[ 0 ], owner1 );
     listSET_LIST_ITEM_OWNER( &pxNewListItem[ 1 ], owner2 );

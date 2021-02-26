@@ -534,47 +534,47 @@ static bool prvCollectDeviceMetrics( void )
     /* Collect custom metrics. This demo sends this tasks stack high water mark
      * as a number type custom metric and the current task ids as a list of
      * numbers type custom metric. */
-    if (eMetricsCollectorStatus == eMetricsCollectorSuccess)
+    if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
     {
-       vTaskGetInfo(
-          /* Query this task. */
-          NULL,
-          &pxTaskStatus,
-          /* Include the stack high water mark value. */
-          pdTRUE,
-          /* Don't include the task state in the TaskStatus_t structure. */
-          0);
-       uxTasksWritten = uxTaskGetSystemState(pxTaskList, democonfigCUSTOM_METRICS_TASKS_ARRAY_SIZE, NULL);
+        vTaskGetInfo(
+            /* Query this task. */
+            NULL,
+            &pxTaskStatus,
+            /* Include the stack high water mark value. */
+            pdTRUE,
+            /* Don't include the task state in the TaskStatus_t structure. */
+            0 );
+        uxTasksWritten = uxTaskGetSystemState( pxTaskList, democonfigCUSTOM_METRICS_TASKS_ARRAY_SIZE, NULL );
 
-       if (uxTasksWritten == 0)
-       {
-          eMetricsCollectorStatus = eMetricsCollectorCollectionFailed;
-          LogError(("Failed to collect system state. uxTaskGetSystemState() failed due to insufficient buffer space.",
-             eMetricsCollectorStatus));
-       }
-       else
-       {
-          for (i = 0; i < uxTasksWritten; i++)
-          {
-             pulCustomMetricsTaskNumbers[i] = pxTaskList[i].xTaskNumber;
-          }
-       }
+        if( uxTasksWritten == 0 )
+        {
+            eMetricsCollectorStatus = eMetricsCollectorCollectionFailed;
+            LogError( ( "Failed to collect system state. uxTaskGetSystemState() failed due to insufficient buffer space.",
+                        eMetricsCollectorStatus ) );
+        }
+        else
+        {
+            for( i = 0; i < uxTasksWritten; i++ )
+            {
+                pulCustomMetricsTaskNumbers[ i ] = pxTaskList[ i ].xTaskNumber;
+            }
+        }
     }
 
     /* Populate device metrics. */
-    if (eMetricsCollectorStatus == eMetricsCollectorSuccess)
+    if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
     {
-       xStatus = true;
-       xDeviceMetrics.pxNetworkStats = &(xNetworkStats);
-       xDeviceMetrics.pusOpenTcpPortsArray = &(pusOpenTcpPorts[0]);
-       xDeviceMetrics.ulOpenTcpPortsArrayLength = ulNumOpenTcpPorts;
-       xDeviceMetrics.pusOpenUdpPortsArray = &(pusOpenUdpPorts[0]);
-       xDeviceMetrics.ulOpenUdpPortsArrayLength = ulNumOpenUdpPorts;
-       xDeviceMetrics.pxEstablishedConnectionsArray = &(pxEstablishedConnections[0]);
-       xDeviceMetrics.ulEstablishedConnectionsArrayLength = ulNumEstablishedConnections;
-       xDeviceMetrics.ulStackHighWaterMark = pxTaskStatus.usStackHighWaterMark;
-       xDeviceMetrics.pulTaskIdsArray = pulCustomMetricsTaskNumbers;
-       xDeviceMetrics.ulTaskIdsArrayLength = uxTasksWritten;
+        xStatus = true;
+        xDeviceMetrics.pxNetworkStats = &( xNetworkStats );
+        xDeviceMetrics.pusOpenTcpPortsArray = &( pusOpenTcpPorts[ 0 ] );
+        xDeviceMetrics.ulOpenTcpPortsArrayLength = ulNumOpenTcpPorts;
+        xDeviceMetrics.pusOpenUdpPortsArray = &( pusOpenUdpPorts[ 0 ] );
+        xDeviceMetrics.ulOpenUdpPortsArrayLength = ulNumOpenUdpPorts;
+        xDeviceMetrics.pxEstablishedConnectionsArray = &( pxEstablishedConnections[ 0 ] );
+        xDeviceMetrics.ulEstablishedConnectionsArrayLength = ulNumEstablishedConnections;
+        xDeviceMetrics.ulStackHighWaterMark = pxTaskStatus.usStackHighWaterMark;
+        xDeviceMetrics.pulTaskIdsArray = pulCustomMetricsTaskNumbers;
+        xDeviceMetrics.ulTaskIdsArrayLength = uxTasksWritten;
     }
 
     return xStatus;

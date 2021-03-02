@@ -38,10 +38,11 @@
  * This demo subscribes to the device defender topics. It then collects metrics
  * for the open ports and sockets on the device using FreeRTOS+TCP. Additonally
  * the stack high water mark and task ids are collected for custom metrics.
- * These metrics are uses to generate a device defender report. The
+ * These metrics are used to generate a device defender report. The
  * report is then published, and the demo waits for a response from the device
- * defender service. Upon receiving the response or timing out, the demo
- * sleeps until the next iteration.
+ * defender service. Upon receiving an accepted response, the demo finishes.
+ * If the demo recieves a rejected response or times out, the demo repeats up to
+ * a maximum of DEFENDER_MAX_DEMO_LOOP_COUNT times.
  *
  * This demo sets the report ID to xTaskGetTickCount(), which may collide if
  * the device is reset. Reports for a Thing with a previously used report ID

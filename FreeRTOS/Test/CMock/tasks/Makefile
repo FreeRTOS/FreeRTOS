@@ -5,11 +5,20 @@
 # and the project name should be list
 
 PROJECT          :=   tasks
+#
+# Test/CMock/tasks
+PROJECT_DIR      :=   $(abspath .)
 
 # List the dependency files you wish to mock
 MOCK_FILES_FP    :=   $(KERNEL_DIR)/include/timers.h
 MOCK_FILES_FP    +=   $(KERNEL_DIR)/include/list.h
 MOCK_FILES_FP    +=   $(KERNEL_DIR)/include/portable.h
+MOCK_FILES_FP    +=   $(PROJECT_DIR)/list_macros.h
+
+UNDEF_MOCKED_HEADER_MACROS := -UlistLIST_IS_EMPTY -UlistGET_OWNER_OF_HEAD_ENTRY \
+		    -UlistIS_CONTAINED_WITHIN -UlistGET_LIST_ITEM_VALUE         \
+		    -UlistSET_LIST_ITEM_VALUE  -UlistGET_OWNER_OF_NEXT_ENTRY    \
+		    -UlistLIST_ITEM_CONTAINER -UlistCURRENT_LIST_LENGTH
 
 # List special compilation flags for this module
 CFLAGS += -Wno-error=pointer-to-int-cast -Wno-pointer-to-int-cast
@@ -19,7 +28,7 @@ CFLAGS += -Wno-error=int-to-pointer-cast -Wno-int-to-pointer-cast
 CPPFLAGS         +=
 
 # List special linker flags for this module
-LDFLAGS          +=   -Wl,--allow-multiple-definition
+LDFLAGS          +=
 
 # Makefile Flags (if needed)
 #MAKEFLAGS += -rR
@@ -43,11 +52,10 @@ MOCK_SRC_LIST    :=   $(addprefix $(SCRATCH_DIR)/%/mocks/,$(addprefix mock_,$(MO
 # executable generic name queue_utest without the _num
 EXEC             :=   $(PROJECT)_utest
 
-# Test/CMock/tasks
-PROJECT_DIR      :=   $(abspath .)
 
 # tasks/%/cpp/timers.h   tasks/%/cpp/list.h
 CPP_FILES        :=   $(addprefix $(SCRATCH_DIR)/%/cpp/,$(notdir $(MOCK_FILES_FP)))
+DEP_FILES        :=   $(addsuffix .d,$(addprefix $(SCRATCH_DIR)/%/cpp/,$(notdir $(MOCK_FILES_FP))))
 
 # tasks_utest_1.c   tasks_utest_2.c ...
 SOURCES          :=   $(sort $(wildcard $(PROJECT)_utest_*.c))
@@ -83,9 +91,8 @@ $(EXEC_PATH)_% : $(MOCK_OBJS)                                                  \
 		 $(SCRATCH_DIR)/%/test_runner.o                                \
                  $(SCRATCH_DIR)/%/$(PROJECT).o                                 \
 		 $(SCRATCH_DIR)/%/$(PROJECT)_utest.o                           \
-		 $(SCRATCH_DIR)/%/heap_3.o                                     \
 		 | directories
-	$(CC) $+ $(LDFLAGS) -o $@
+	$(CC) $+ $(LDFLAGS) -o $@ 
 
 .SECONDARY:
 # Mock All preprocessed header files
@@ -95,19 +102,61 @@ $(MOCK_SRC_LIST) : $(CPP_FILES)                                                \
 	cd $(@D) && cd .. &&                                                   \
 	    ruby $(CMOCK_EXEC_DIR)/cmock.rb -o$(PROJECT_DIR)/$(PROJECT).yml    \
 	    $(<D)/*
+	cd $(@D) && cd .. &&                                                   \
+	    ruby $(CMOCK_EXEC_DIR)/cmock.rb -o$(PROJECT_DIR)/$(PROJECT)2.yml    \
+	    $(<D)/list_macros.h
+
+# $1 = file to read
+# $2 = 
+define extract_dependency_list
+    gcc -E -I../Test/CMock/config -imacros FreeRTOS.h -fpreprocessed -fdirectives-only -MM -MG -MT $(1) 2>/dev/null;
+endef
+
+DEPENDENCY_LIST :=$(addprefix -imacros,$(gcc -E -I $$INCLUDE ../../Test/CMock/config -I include       \ -imacros FreeRTOS.h  -fpreprocessed -fdirectives-only -MM -MG  $(1) 2>/dev/null)) \
+
+.SECONDARY:
+$(DEP_FILES) : $(MOCK_FILES_FP) | directories
+	$(eval INCLUDE  =   -I$(SCRATCH_DIR)/$*/include)
+	$(eval INCLUDE  +=  -I$(SCRATCH_DIR)/$*/mocks)
+	$(eval INCLUDE  +=  -I$(KERNEL_DIR)/include)
+	for h_file in $(MOCK_FILES_FP) ; do                                    \
+	    $(CC) $$h_file -E -D INC_FREERTOS_H -I $(INCLUDE) $(CFLAGS)        \
+	         -imacros FreeRTOSConfig.h -imacros portmacro.h                \
+	         -imacros FreeRTOS.h                                           \
+		 -fpreprocessed -fdirectives-only -MM -MG                      \
+		 -MT $(SCRATCH_DIR)/$*/cpp/$$(basename $$h_file)               \
+		 -MF $(@D)/$$(basename $$h_file).d ;                           \
+		 sed -i -e '1,2d' $(@D)/$$(basename $$h_file).d;               \
+		 DEP="";                                                       \
+		for line in $$(cat $(@D)/$$(basename $$h_file).d | tr '\\' ' ' ); do  \
+		    DEP+="-imacros $$(basename $$line) " ;                     \
+		done;                                                          \
+	done
+
+#$(eval IMACROS= $$(cat $(@D)/$$(basename $$h_file).d.dep);         \ 
 
 .SECONDARY:
 # Copies the appropriate header file into the private include directory
 # Pre-process ALL the headers in the cpp directory
 # This target is called ONLY once per configuration pattern (%)
-$(CPP_FILES) : $(MOCK_FILES_FP) $(SCRATCH_DIR)/%/cpp | directories
+$(CPP_FILES) : $(DEP_FILES)  | directories
 	cp $(PROJECT_DIR)/FreeRTOSConfig_$*.h                                  \
 	   $(SCRATCH_DIR)/$*/include/FreeRTOSConfig.h
-	$(eval INCLUDE = -I$(SCRATCH_DIR)/$*/include)
-	for files in $(MOCK_FILES_FP) ; do                                     \
-	    $(CC) -E $$files  $(INCLUDE) $(CPPFLAGS) $(CFLAGS)                 \
-		  -include FreeRTOSConfig.h -include FreeRTOS.h                \
-		  -o $(@D)/$$(basename $$files);                               \
+	$(eval INCLUDE  =    -I$(SCRATCH_DIR)/$*/include)
+	$(eval INCLUDE  +=   -I$(SCRATCH_DIR)/$*/mocks)
+	$(eval INCLUDE  +=   -I$(KERNEL_DIR)/include)
+	for h_file in $(MOCK_FILES_FP) ; do                                    \
+	    IMACROS=$$(cat  $(@D)/$$(basename $$h_file).d.dep);           \
+	    $(CC) -E $(INCLUDE)                                                \
+	    -imacros FreeRTOSConfig.h -imacros portmacro.h -imacros FreeRTOS.h \
+	    -imacros task.h $(UNDEF_MOCKED_HEADER_MACROS) $$IMACROS \
+		  -fdirectives-only $$h_file $(CPPFLAGS) $(CFLAGS)             \
+	          -fmax-include-depth=0  -o $(@D)/$$(basename $$h_file);       \
+	    guard=$$(echo $$(basename $$h_file) |  tr '[:lower:]' '[:upper:]'| \
+			tr '.' '_') ;                                          \
+	    sed -i "1 i\#define $$guard" $(@D)/$$(basename $$h_file);          \
+	    sed -i "1 i\#ifndef $$guard" $(@D)/$$(basename $$h_file);          \
+	    sed -i -e '$$a#endif' $(@D)/$$(basename $$h_file);                 \
         done
 
 .SECONDARY:
@@ -115,22 +164,24 @@ $(CPP_FILES) : $(MOCK_FILES_FP) $(SCRATCH_DIR)/%/cpp | directories
 # This target is called ONLY once per configuration pattern (%)
 $(MOCK_OBJS) : $(MOCK_SRC_LIST)
 	$(eval INCLUDE = -I$(SCRATCH_DIR)/$*/include)
+	$(eval INCLUDE += -I$(SCRATCH_DIR)/$*/mocks)                           \
+	$(eval INCLUDE += -I$(KERNEL_DIR)/include)                             \
 	for files in $^ ; do                                                   \
-	    OBJECTS=$(patsubst %.c,%.o,$$files);                               \
        	    new_name=$${files%.c}.o;                                           \
-	    $(CC) -c $$files $(INCLUDE) -fPIC $(CFLAGS) -DUNITY_EXCLUDE_MATH_H \
-		-DUNITY_EXCLUDE_STDINT_H -DUNITY_OUTPUT_CHAR -o $$new_name ;   \
+	    $(CC) -c $$files $(INCLUDE) $(CFLAGS) -fPIC -DUNITY_EXCLUDE_MATH_H \
+		-DUNITY_EXCLUDE_STDINT_H -DUNITY_OUTPUT_CHAR      -Wno-error   \
+		-o $$new_name ;                                                \
         done
-	cd $(@D) && find . -type f ! -name 'mock_*' -delete
+#find $(@D)  -type f ! -name 'mock_*' -delete
 
 .SECONDARY:
 # Build test_runner.o from test_runner.c
 $(SCRATCH_DIR)/%/test_runner.o : $(SCRATCH_DIR)/%/test_runner.c                \
                                  $(SCRATCH_DIR)/%/$(PROJECT).o
 	$(eval INCLUDE = -I$(SCRATCH_DIR)/$*/include)
-	$(eval INCLUDE += -I$(SCRATCH_DIR)/$*/mocks)                          
-#	-rm $(SCRATCH_DIR)/$*/mocks/list.h
-	$(CC) -c $< $(INCLUDE) $(CPPFLAGS) $(CFLAGS) -o $@
+	$(eval INCLUDE += -I$(SCRATCH_DIR)/$*/mocks)
+	$(eval INCLUDE += -I$(KERNEL_DIR)/include)
+	$(CC) -c $< $(INCLUDE) $(CPPFLAGS)  $(CFLAGS) -Wno-error -o $@
 
 .SECONDARY:
 # Build tasks_utest.o from tasks_utest_%.c
@@ -138,20 +189,19 @@ $(SCRATCH_DIR)/%/$(PROJECT)_utest.o : $(PROJECT_DIR)/$(PROJECT)_utest_%.c      \
                                       | directories
 	$(eval INCLUDE = -I$(SCRATCH_DIR)/$*/include)
 	$(eval INCLUDE += -I$(SCRATCH_DIR)/$*/mocks)
-	$(CC) -c $< $(INCLUDE) $(CPPFLAGS)  $(CFLAGS) -o $@
+	$(eval INCLUDE += -I$(KERNEL_DIR)/include)
+	$(CC) -c $< $(INCLUDE) $(CPPFLAGS)  $(CFLAGS) -Wno-error -o $@
 
 .SECONDARY:
 # Build tasks.so from tasks.c with the custom FreeRTOSConfig.h and place it in
 # its configuration directory
 $(SCRATCH_DIR)/%/$(PROJECT).o : $(KERNEL_DIR)/$(PROJECT).c | directories
 	$(eval INCLUDE = -I$(SCRATCH_DIR)/$*/include)
-	$(CC) -c $< $(INCLUDE) $(CPPFLAGS)  $(CFLAGS) $(COVERAGE_OPTS) -o $@
+	$(eval INCLUDE += -I$(SCRATCH_DIR)/$*/mocks)                           \
+	$(eval INCLUDE += -I$(KERNEL_DIR)/include)                             \
+	$(CC) -c $< $(INCLUDE) $(CPPFLAGS)              \
+	      $(CFLAGS) -include list_macros.h $(COVERAGE_OPTS) -Wno-error -o $@
 
-.SECONDARY:
-# Build the unit tests with heap3 as it uses the standard malloc and free
-$(SCRATCH_DIR)/%/heap_3.o : $(KERNEL_DIR)/portable/MemMang/heap_3.c
-	$(eval INCLUDE = -I$(SCRATCH_DIR)/$*/include)
-	$(CC) -c $< $(INCLUDE) $(CPPFLAGS) $(CFLAGS) -o $@
 
 .SECONDARY:
 # Generate test_runner.c which contains the main function from the test file
@@ -162,11 +212,11 @@ $(SCRATCH_DIR)/%/test_runner.c : $(PROJECT_DIR)/$(PROJECT)_utest_%.c           \
 
 # Create needed directories
 directories :
-	-mkdir   $(SCRATCH_DIR)
-	-mkdir   $(CONFIG_DIRS)
-	-mkdir   $(MOCK_DIRS)
-	-mkdir   $(CPP_DIRS)
-	-mkdir   $(INCLUDE_DIRS)
+	-mkdir   -p  $(SCRATCH_DIR)
+	-mkdir   -p  $(CONFIG_DIRS)
+	-mkdir   -p  $(MOCK_DIRS)
+	-mkdir   -p  $(CPP_DIRS)
+	-mkdir   -p  $(INCLUDE_DIRS)
 
 .PRECIOUS: build/%.o
 .PRECIOUS: build/%.c

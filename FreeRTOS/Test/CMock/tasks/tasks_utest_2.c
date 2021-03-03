@@ -68,12 +68,59 @@ int suiteTearDown( int numFailures )
 
 
 /* ==============================  Test Cases  ============================== */
+
+void vPortEnterCritical( void )
+{
+}
+
+void vPortExitCritical( void )
+{
+}
+
+void vPortCurrentTaskDying( void * pvTaskToDelete,
+                            volatile BaseType_t * pxPendYield )
+{
+}
+
 void vApplicationIdleHook( void )
 {
 }
 
 void vApplicationMallocFailedHook( void )
 {
+}
+
+void vApplicationGetIdleTaskMemory( StaticTask_t ** a,
+                                    StackType_t ** b,
+                                    uint32_t * c )
+{
+}
+void vConfigureTimerForRunTimeStats( void )
+{
+}
+long unsigned int ulGetRunTimeCounterValue( void )
+{
+    return 3;
+}
+void vApplicationTickHook()
+{
+}
+
+void  port_yield_cb()
+{
+}
+
+void portSetupTCB_CB( void * tcb )
+{
+}
+
+void portClear_Interrupt_Mask(UBaseType_t bt)
+{
+}
+
+UBaseType_t portSet_Interrupt_Mask( void )
+{
+    return 1;
 }
 
 /*!

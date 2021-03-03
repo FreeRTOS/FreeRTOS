@@ -48,11 +48,13 @@
  */
 
 #ifndef PORTMACRO_H
-    #define PORTMACRO_H
+#define PORTMACRO_H
 
-    #ifdef __cplusplus
+/* *INDENT-OFF* */
+#ifdef __cplusplus
     extern "C" {
-    #endif
+#endif
+/* *INDENT-ON* */
 
 /*-----------------------------------------------------------
  * Port specific definitions.
@@ -64,26 +66,28 @@
  *-----------------------------------------------------------
  */
 
+#include <stdint.h>
+
 /* Type definitions. */
-    #define portCHAR          char
-    #define portFLOAT         float
-    #define portDOUBLE        double
-    #define portLONG          long
-    #define portSHORT         short
-    #define portSTACK_TYPE    uint32_t
-    #define portBASE_TYPE     long
+#define portCHAR          char
+#define portFLOAT         float
+#define portDOUBLE        double
+#define portLONG          long
+#define portSHORT         short
+#define portSTACK_TYPE    uint32_t
+#define portBASE_TYPE     long
 
-    typedef portSTACK_TYPE   StackType_t;
-    typedef long             BaseType_t;
-    typedef unsigned long    UBaseType_t;
+typedef portSTACK_TYPE   StackType_t;
+typedef long             BaseType_t;
+typedef unsigned long    UBaseType_t;
 
-    #if ( configUSE_16_BIT_TICKS == 1 )
-        typedef uint16_t     TickType_t;
-        #define portMAX_DELAY    ( TickType_t ) 0xffff
-    #else
-        typedef uint32_t     TickType_t;
-        #define portMAX_DELAY    ( TickType_t ) 0xffffffffUL
-    #endif
+#if ( configUSE_16_BIT_TICKS == 1 )
+    typedef uint16_t     TickType_t;
+    #define portMAX_DELAY    ( TickType_t ) 0xffff
+#else
+    typedef uint32_t     TickType_t;
+    #define portMAX_DELAY    ( TickType_t ) 0xffffffffUL
+#endif
 /*-----------------------------------------------------------*/
 
 /* Requires definition of UBaseType_t */
@@ -100,9 +104,9 @@
  * They are put in this file so they can be shared between "port.c"
  * and "portisr.c".
  */
-    #define portTIMER_REG_BASE_PTR
-    #define portTIMER_CLK_ENABLE_BIT
-    #define portTIMER_AIC_CHANNEL
+#define portTIMER_REG_BASE_PTR
+#define portTIMER_CLK_ENABLE_BIT
+#define portTIMER_AIC_CHANNEL
 /*-----------------------------------------------------------*/
 
 /* Task utilities. */
@@ -114,7 +118,7 @@
  * THUMB mode code will result in a compile time error.
  */
 
-    #define portRESTORE_CONTEXT()
+#define portRESTORE_CONTEXT()
 /*-----------------------------------------------------------*/
 
     #define portSAVE_CONTEXT()
@@ -137,16 +141,37 @@
     #define portENTER_CRITICAL()             vFakePortEnterCriticalSection()
     #define portEXIT_CRITICAL()              vFakePortExitCriticalSection()
 
-    #undef portUSING_MPU_WRAPPERS
+extern void portClear_Interrupt_Mask(UBaseType_t bt);
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR(X)   portClear_Interrupt_Mask(X)
+
+static inline uint8_t ucPortCountLeadingZeros( uint32_t ulBitmap )
+{
+    uint8_t ucReturn;
+
+    ucReturn = __builtin_clzll( ulBitmap );
+
+    return ucReturn;
+}
+
+
+#define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities ) \
+    ( uxReadyPriorities ) |= ( 1UL << ( uxPriority ) )
+#define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities ) \
+    ( uxReadyPriorities ) &= ~( 1UL << ( uxPriority ) )
+#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) \
+    uxTopPriority = ( 31UL - ( uint32_t ) ucPortCountLeadingZeros( ( uxReadyPriorities ) ) )
+
+/* Task function macros as described on the FreeRTOS.org WEB site. */
+#define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) \
+    void vFunction( void * pvParameters )
+#define portTASK_FUNCTION( vFunction, pvParameters ) \
+    void vFunction( void * pvParameters )
 
 /*-----------------------------------------------------------*/
 
-/* Task function macros as described on the FreeRTOS.org WEB site. */
-    #define portTASK_FUNCTION_PROTO( vFunction, pvParameters )    void vFunction( void * pvParameters )
-    #define portTASK_FUNCTION( vFunction, pvParameters )          void vFunction( void * pvParameters )
-
-    #ifdef __cplusplus
+/* *INDENT-OFF* */
+#ifdef __cplusplus
     }
-    #endif
-
+#endif
+/* *INDENT-ON* */
 #endif /* PORTMACRO_H */

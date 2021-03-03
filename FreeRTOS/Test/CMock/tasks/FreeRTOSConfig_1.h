@@ -39,6 +39,7 @@
 * http://www.freertos.org/a00110.html
 *----------------------------------------------------------*/
 
+#define portSTACK_GROWTH                                 ( -1 )
 #define configUSE_PREEMPTION                             1
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION          1
 #define configUSE_IDLE_HOOK                              1
@@ -72,20 +73,24 @@
 #define configTIMER_QUEUE_LENGTH                         20
 #define configTIMER_TASK_STACK_DEPTH                     ( configMINIMAL_STACK_SIZE * 2 )
 
-#define configMAX_PRIORITIES                             ( 7 )
+#define configMAX_PRIORITIES                             ( 9 )
 
 /* Run time stats gathering configuration options. */
 unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
 void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that initialises the run time counter. */
-#define configGENERATE_RUN_TIME_STATS             1
+#define configGENERATE_RUN_TIME_STATS    1
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()    vConfigureTimerForRunTimeStats()
 #define portGET_RUN_TIME_COUNTER_VALUE()            ulGetRunTimeCounterValue()
-#define portUSING_MPU_WRAPPERS                    0
-#define portHAS_STACK_OVERFLOW_CHECKING           1
+/*#define portUSING_MPU_WRAPPERS                    0 */
+#define portHAS_STACK_OVERFLOW_CHECKING           0
 
 /* Co-routine related configuration options. */
 #define configUSE_CO_ROUTINES                     0
 #define configMAX_CO_ROUTINE_PRIORITIES           ( 2 )
+
+#define tskSET_NEW_STACKS_TO_KNOWN_VALUE          1
+#define portSTACK_GROWTH                          ( -1 )
+#define configRECORD_STACK_HIGH_ADDRESS           1
 
 /* This demo makes use of one or more example stats formatting functions.  These
  * format the raw data provided by the uxTaskGetSystemState() function in to human
@@ -116,6 +121,7 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 /* It is a good idea to define configASSERT() while developing.  configASSERT()
  * uses the same semantics as the standard C assert() macro. */
 #define configASSERT( x )
+#define portREMOVE_STATIC_QUALIFIER              1
 
 #define configINCLUDE_MESSAGE_BUFFER_AMP_DEMO    0
 #if ( configINCLUDE_MESSAGE_BUFFER_AMP_DEMO == 1 )

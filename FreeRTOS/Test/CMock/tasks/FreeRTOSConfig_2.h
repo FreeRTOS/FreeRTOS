@@ -39,6 +39,7 @@
 * http://www.freertos.org/a00110.html
 *----------------------------------------------------------*/
 
+#define portSTACK_GROWTH                                 ( 1 )
 #define configUSE_PREEMPTION                             1
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION          1
 #define configUSE_IDLE_HOOK                              1
@@ -51,9 +52,9 @@
 #define configUSE_TRACE_FACILITY                         1
 #define configUSE_16_BIT_TICKS                           0
 #define configIDLE_SHOULD_YIELD                          1
-#define configUSE_MUTEXES                                1
+#define configUSE_MUTEXES                                0 /* diff config 1 */
 #define configCHECK_FOR_STACK_OVERFLOW                   0
-#define configUSE_RECURSIVE_MUTEXES                      1
+#define configUSE_RECURSIVE_MUTEXES                      0
 #define configQUEUE_REGISTRY_SIZE                        20
 #define configUSE_MALLOC_FAILED_HOOK                     1
 #define configUSE_APPLICATION_TASK_TAG                   1

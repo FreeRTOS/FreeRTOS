@@ -21,7 +21,8 @@
     bool:     UINT8
   :includes:        # This will add these includes to each mock.
     - "FreeRTOSConfig.h"
-  :treat_externs: :exclude  # Now the extern-ed functions will be mocked.
+    - "FreeRTOS.h"
+    - "task.h"
   :weak: __attribute__((weak))
   :verbosity: 3
   :attributes:
@@ -29,4 +30,5 @@
   :strippables:
     - PRIVILEGED_FUNCTION
     - portDONT_DISCARD
-  :treat_externs: :include
+    - '(?:listLIST_IS_EMPTY\s*\(+.*?\)+)'
+    - listLIST_IS_EMPTY

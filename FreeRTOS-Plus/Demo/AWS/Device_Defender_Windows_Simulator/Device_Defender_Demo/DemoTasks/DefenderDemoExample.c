@@ -37,18 +37,18 @@
  *
  * This demo subscribes to the device defender topics. It then collects metrics
  * for the open ports and sockets on the device using FreeRTOS+TCP. Additonally
- * the stack high water mark and task ids are collected for custom metrics.
+ * the stack high water mark and task IDs are collected for custom metrics.
  * These metrics are used to generate a device defender report. The
  * report is then published, and the demo waits for a response from the device
  * defender service. Upon receiving an accepted response, the demo finishes.
- * If the demo recieves a rejected response or times out, the demo repeats up to
+ * If the demo receives a rejected response or times out, the demo repeats up to
  * a maximum of DEFENDER_MAX_DEMO_LOOP_COUNT times.
  *
  * This demo sets the report ID to xTaskGetTickCount(), which may collide if
  * the device is reset. Reports for a Thing with a previously used report ID
  * will be assumed to be duplicates and discarded by the Device Defender
  * service. The report ID needs to be unique per report sent with a given
- * Thing. We recommend using an increasing unique id such as the current
+ * Thing. We recommend using an increasing unique ID such as the current
  * timestamp.
  */
 
@@ -99,7 +99,7 @@
 #define DEFENDER_RESPONSE_WAIT_SECONDS              ( 2 )
 
 /**
- * @brief Name of the report id field in the response from the AWS IoT Device
+ * @brief Name of the report ID field in the response from the AWS IoT Device
  * Defender service.
  */
 #define DEFENDER_RESPONSE_REPORT_ID_FIELD           "reportId"
@@ -198,10 +198,9 @@ static uint16_t pusOpenUdpPorts[ democonfigOPEN_UDP_PORTS_ARRAY_SIZE ];
 static Connection_t pxEstablishedConnections[ democonfigESTABLISHED_CONNECTIONS_ARRAY_SIZE ];
 
 /**
- * @brief Task status array which will store status information of tasks
- * running in the system, which is used to generate custom metrics.
+ * @brief Array of task statuses, used to generate custom metrics.
  */
-static TaskStatus_t pxTaskList[ democonfigCUSTOM_METRICS_TASKS_ARRAY_SIZE ];
+static TaskStatus_t pxTaskStatusList[ democonfigCUSTOM_METRICS_TASKS_ARRAY_SIZE ];
 
 /**
  * @brief Task numbers custom metric array.
@@ -224,7 +223,7 @@ static ReportStatus_t xReportStatus;
 static char pcDeviceMetricsJsonReport[ democonfigDEVICE_METRICS_REPORT_BUFFER_SIZE ];
 
 /**
- * @brief Report Id sent in the defender report.
+ * @brief Report ID sent in the defender report.
  */
 static uint32_t ulReportId = 0UL;
 
@@ -532,8 +531,8 @@ static bool prvCollectDeviceMetrics( void )
         }
     }
 
-    /* Collect custom metrics. This demo sends this tasks stack high water mark
-     * as a number type custom metric and the current task ids as a list of
+    /* Collect custom metrics. This demo sends this task's stack high water mark
+     * as a number type custom metric and the current task IDs as a list of
      * numbers type custom metric. */
     if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
     {
@@ -545,7 +544,7 @@ static bool prvCollectDeviceMetrics( void )
             pdTRUE,
             /* Don't include the task state in the TaskStatus_t structure. */
             0 );
-        uxTasksWritten = uxTaskGetSystemState( pxTaskList, democonfigCUSTOM_METRICS_TASKS_ARRAY_SIZE, NULL );
+        uxTasksWritten = uxTaskGetSystemState( pxTaskStatusList, democonfigCUSTOM_METRICS_TASKS_ARRAY_SIZE, NULL );
 
         if( uxTasksWritten == 0 )
         {
@@ -557,7 +556,7 @@ static bool prvCollectDeviceMetrics( void )
         {
             for( i = 0; i < uxTasksWritten; i++ )
             {
-                pulCustomMetricsTaskNumbers[ i ] = pxTaskList[ i ].xTaskNumber;
+                pulCustomMetricsTaskNumbers[ i ] = pxTaskStatusList[ i ].xTaskNumber;
             }
         }
     }
@@ -574,8 +573,8 @@ static bool prvCollectDeviceMetrics( void )
         xDeviceMetrics.pxEstablishedConnectionsArray = &( pxEstablishedConnections[ 0 ] );
         xDeviceMetrics.ulEstablishedConnectionsArrayLength = ulNumEstablishedConnections;
         xDeviceMetrics.ulStackHighWaterMark = pxTaskStatus.usStackHighWaterMark;
-        xDeviceMetrics.pulTaskIdsArray = pulCustomMetricsTaskNumbers;
-        xDeviceMetrics.ulTaskIdsArrayLength = uxTasksWritten;
+        xDeviceMetrics.pulTaskIdArray = pulCustomMetricsTaskNumbers;
+        xDeviceMetrics.ulTaskIdArrayLength = uxTasksWritten;
     }
 
     return xStatus;
@@ -720,14 +719,14 @@ void prvDefenderDemoTask( void * pvParameters )
      * DEFENDER_MAX_DEMO_LOOP_COUNT times. */
     do
     {
-        /* Set a report Id to be used.
+        /* Set a report ID to be used.
          *
          * !!!NOTE!!!
          * This demo sets the report ID to xTaskGetTickCount(), which may collide
          * if the device is reset. Reports for a Thing with a previously used
          * report ID will be assumed to be duplicates and discarded by the Device
          * Defender service. The report ID needs to be unique per report sent with
-         * a given Thing. We recommend using an increasing unique id such as the
+         * a given Thing. We recommend using an increasing unique ID such as the
          * current timestamp. */
         ulReportId = ( uint32_t ) xTaskGetTickCount();
 

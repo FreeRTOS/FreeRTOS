@@ -178,21 +178,21 @@ static eReportBuilderStatus prvWriteConnectionsArray( char * pcBuffer,
                                                       uint32_t * pulOutCharsWritten );
 
 /**
- * @brief Write task ids array to the given buffer as a JSON array.
+ * @brief Write task ID array to the given buffer as a JSON array.
  *
- * @param[in] pcBuffer The buffer to write the connections array.
+ * @param[in] pcBuffer The buffer to write the array of task IDs.
  * @param[in] ulBufferLength The length of the buffer.
- * @param[in] pulTaskIdsArray The array containing the task ids.
- * @param[in] pulTaskIdsArrayLength Length of the pulTaskIdsArray array.
+ * @param[in] pulTaskIdArray The array containing the task IDs.
+ * @param[in] pulTaskIdArrayLength Length of the pulTaskIdsArray array.
  * @param[out] pulOutCharsWritten Number of characters written to the buffer.
  *
  * @return #ReportBuilderSuccess if the array is successfully written;
  * #ReportBuilderBufferTooSmall if the buffer cannot hold the full array.
  */
-static eReportBuilderStatus prvWriteTaskIdsArray( char * pcBuffer,
+static eReportBuilderStatus prvWriteTaskIdArray( char * pcBuffer,
                                                   uint32_t ulBufferLength,
-                                                  const uint32_t * pulTaskIdsArray,
-                                                  uint32_t pulTaskIdsArrayLength,
+                                                  const uint32_t * pulTaskIdArray,
+                                                  uint32_t pulTaskIdArrayLength,
                                                   uint32_t * pulOutCharsWritten );
 /*-----------------------------------------------------------*/
 
@@ -235,7 +235,6 @@ static eReportBuilderStatus prvWritePortsArray( char * pcBuffer,
         if( !reportbuilderSNPRINTF_SUCCESS( lCharactersWritten, ulRemainingBufferLength ) )
         {
             eStatus = eReportBuilderBufferTooSmall;
-            break;
         }
         else
         {
@@ -259,16 +258,12 @@ static eReportBuilderStatus prvWritePortsArray( char * pcBuffer,
             *pcCurrentWritePos = reportbuilderJSON_ARRAY_CLOSE_MARKER;
             ulRemainingBufferLength -= 1;
             pcCurrentWritePos += 1;
+            *pulOutCharsWritten = ulBufferLength - ulRemainingBufferLength;
         }
         else
         {
             eStatus = eReportBuilderBufferTooSmall;
         }
-    }
-
-    if( eStatus == eReportBuilderSuccess )
-    {
-        *pulOutCharsWritten = ulBufferLength - ulRemainingBufferLength;
     }
 
     return eStatus;
@@ -322,7 +317,6 @@ static eReportBuilderStatus prvWriteConnectionsArray( char * pcBuffer,
         if( !reportbuilderSNPRINTF_SUCCESS( lCharactersWritten, ulRemainingBufferLength ) )
         {
             eStatus = eReportBuilderBufferTooSmall;
-            break;
         }
         else
         {
@@ -346,6 +340,7 @@ static eReportBuilderStatus prvWriteConnectionsArray( char * pcBuffer,
             *pcCurrentWritePos = reportbuilderJSON_ARRAY_CLOSE_MARKER;
             ulRemainingBufferLength -= 1;
             pcCurrentWritePos += 1;
+            *pulOutCharsWritten = ulBufferLength - ulRemainingBufferLength;
         }
         else
         {
@@ -353,19 +348,14 @@ static eReportBuilderStatus prvWriteConnectionsArray( char * pcBuffer,
         }
     }
 
-    if( eStatus == eReportBuilderSuccess )
-    {
-        *pulOutCharsWritten = ulBufferLength - ulRemainingBufferLength;
-    }
-
     return eStatus;
 }
 /*-----------------------------------------------------------*/
 
-static eReportBuilderStatus prvWriteTaskIdsArray( char * pcBuffer,
+static eReportBuilderStatus prvWriteTaskIdArray( char * pcBuffer,
                                                   uint32_t ulBufferLength,
-                                                  const uint32_t * pulTaskIdsArray,
-                                                  uint32_t pulTaskIdsArrayLength,
+                                                  const uint32_t * pulTaskIdArray,
+                                                  uint32_t pulTaskIdArrayLength,
                                                   uint32_t * pulOutCharsWritten )
 {
     char * pcCurrentWritePos = pcBuffer;
@@ -374,7 +364,7 @@ static eReportBuilderStatus prvWriteTaskIdsArray( char * pcBuffer,
     eReportBuilderStatus eStatus = eReportBuilderSuccess;
 
     configASSERT( pcBuffer != NULL );
-    configASSERT( pulTaskIdsArray != NULL );
+    configASSERT( pulTaskIdArray != NULL );
     configASSERT( pulOutCharsWritten != NULL );
 
     /* Write the JSON array open marker. */
@@ -390,17 +380,16 @@ static eReportBuilderStatus prvWriteTaskIdsArray( char * pcBuffer,
     }
 
     /* Write the array elements. */
-    for( i = 0; ( ( i < pulTaskIdsArrayLength ) && ( eStatus == eReportBuilderSuccess ) ); i++ )
+    for( i = 0; ( ( i < pulTaskIdArrayLength ) && ( eStatus == eReportBuilderSuccess ) ); i++ )
     {
         lCharactersWritten = snprintf( pcCurrentWritePos,
                                        ulRemainingBufferLength,
                                        "%u,",
-                                       pulTaskIdsArray[ i ] );
+                                       pulTaskIdArray[ i ] );
 
         if( !reportbuilderSNPRINTF_SUCCESS( lCharactersWritten, ulRemainingBufferLength ) )
         {
             eStatus = eReportBuilderBufferTooSmall;
-            break;
         }
         else
         {
@@ -412,7 +401,7 @@ static eReportBuilderStatus prvWriteTaskIdsArray( char * pcBuffer,
     if( eStatus == eReportBuilderSuccess )
     {
         /* Discard the last comma. */
-        if( pulTaskIdsArrayLength > 0 )
+        if( pulTaskIdArrayLength > 0 )
         {
             pcCurrentWritePos -= 1;
             ulRemainingBufferLength += 1;
@@ -424,16 +413,12 @@ static eReportBuilderStatus prvWriteTaskIdsArray( char * pcBuffer,
             *pcCurrentWritePos = reportbuilderJSON_ARRAY_CLOSE_MARKER;
             ulRemainingBufferLength -= 1;
             pcCurrentWritePos += 1;
+            *pulOutCharsWritten = ulBufferLength - ulRemainingBufferLength;
         }
         else
         {
             eStatus = eReportBuilderBufferTooSmall;
         }
-    }
-
-    if( eStatus == eReportBuilderSuccess )
-    {
-        *pulOutCharsWritten = ulBufferLength - ulRemainingBufferLength;
     }
 
     return eStatus;
@@ -449,7 +434,8 @@ eReportBuilderStatus eGenerateJsonReport( char * pcBuffer,
                                           uint32_t * pulOutReportLength )
 {
     char * pcCurrentWritePos = pcBuffer;
-    uint32_t ulRemainingBufferLength = ulBufferLength, bufferWritten;
+    uint32_t ulRemainingBufferLength = ulBufferLength;
+    uint32_t bufferWritten;
     eReportBuilderStatus eStatus = eReportBuilderSuccess;
     int32_t lCharactersWritten;
 
@@ -648,10 +634,10 @@ eReportBuilderStatus eGenerateJsonReport( char * pcBuffer,
     /* Write task ids array. */
     if( eStatus == eReportBuilderSuccess )
     {
-        eStatus = prvWriteTaskIdsArray( pcCurrentWritePos,
+        eStatus = prvWriteTaskIdArray( pcCurrentWritePos,
                                         ulRemainingBufferLength,
-                                        pxMetrics->pulTaskIdsArray,
-                                        pxMetrics->ulTaskIdsArrayLength,
+                                        pxMetrics->pulTaskIdArray,
+                                        pxMetrics->ulTaskIdArrayLength,
                                         &( bufferWritten ) );
 
         if( eStatus == eReportBuilderSuccess )
@@ -661,7 +647,7 @@ eReportBuilderStatus eGenerateJsonReport( char * pcBuffer,
         }
         else
         {
-            LogError( ( "Failed to write task ids array." ) );
+            LogError( ( "Failed to write task ID array." ) );
         }
     }
 
@@ -681,12 +667,8 @@ eReportBuilderStatus eGenerateJsonReport( char * pcBuffer,
         {
             ulRemainingBufferLength -= lCharactersWritten;
             pcCurrentWritePos += lCharactersWritten;
+            *pulOutReportLength = ulBufferLength - ulRemainingBufferLength;
         }
-    }
-
-    if( eStatus == eReportBuilderSuccess )
-    {
-        *pulOutReportLength = ulBufferLength - ulRemainingBufferLength;
     }
 
     return eStatus;

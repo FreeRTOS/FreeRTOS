@@ -10,18 +10,112 @@ By double-clicking the solution file named "**mqtt_mutual_auth_demo_wolfSSL.sln*
 
 All required settings for wolfSSL have been set in the user_settings.h header file included in the RTOSDemo folder in the solution explorer pane. For this demo to work, you need to set the following information:
 
-1. choose interface to use
-2. set MQTT broker endpoint URL
-2. set root CA certificate file(.pem) path
-3. set private key file(.pem) path
+1. set broker endpoint
+2. set root CA certificate
+3. set client certificate
+4. set private key
+5. choose interface to use
  
+If even one of the above 1 to 4 is not set, an error will occur at build time. You should open **demo_config.h** to set them.
 
+<br>
+
+# Set Broker endpoint
+
+A broker endpoint is a url that represents where MQTT subscribers and publishers access. In case your device is going to access AWS IoT device data endpoints, the endpoint would be the following format: ***account-specific-prefix*.iot.*aws-region*.amazonasw.com**.
+
+To set broker endpoint, find the statement '**#define democonfigMQTT_BROKER_ENDPOINT    "...insert here...**' in demo_config.h and activate it by copy & paste to the outside of the commented part. Replace "...insert here..." with your broker endpoint url.
+```
+#define democonfigMQTT_BROKER_ENDPOINT   "a****.iot.us-***.amazonaws.com"
+```
+You may find "democonfigMQTT_BROKER_PORT" just below of the democonfigMQTT_BROKER_ENDPOINT macro. If your MQTT broker port is "8883", no need to specifiy that value here, since the value is defined in MutualAuthMQTTExample.c by default.
+
+<br>
+
+# Set Credentials
+
+Since this demo handles mutual authentication, you need to provide rootCA certificate, client certificate and client private key. Those credentials should be set by way of following macros in demo_config.h:
+1. **democonfigROOT_CA_PEM**
+2. **democonfigCLIENT_CERTIFICATE_PEM**
+3. **democonfigCLIENT_PRIVATE_KEY_PEM**
+
+For setting those credentials, you have a option to specify the source of them, using file or using buffer. If you want provide credentials using buffer,
+activate **democonfigCREDENTIALS_IN_BUFFER** macro. Otherwise, let the macro commented out.
+```
+#define democonfigCREDENTIALS_IN_BUFFER
+```
+<br>
+
+## Setting credentials using file
+
+<br>
+
+By default, above **democonfigCREDENTIALS_IN_BUFFER** macro definition is commented out, therefore each credential should be provided by PEM encoded file. In this case, each macro definition looks like:
+
+```
+#define democonfigROOT_CA_PEM  "rootCA-PEM-encoded-file-path"
+```
+Activate two other macro definitions and set a file path for each.
+
+<br>
+
+## Setting credential using buffer
+
+<br>
+
+First of all, activate **democonfigCREDENTIALS_IN_BUFFER** macro.
+```
+#define democonfigCREDENTIALS_IN_BUFFER
+```
+Second, prepare a source file to contain the contents of the credentials. As an example, prepare credentials.c file and add it to the demo project. In the file, the contents of each credential need to be
+defined as "**const char***" variable. In this example, **root_ca**, **devide_cert** and **device_priv_key** represent buffers.
+
+```
+/* credentials.c */
+
+const char* root_ca =
+"-----BEGIN CERTIFICATE-----\n"
+"MIIE0zCCA7ugAwIBAgIQGNrRniZ96LtKIVjNzGs7SjANBgkqhkiG9w0BAQUFADCB\n"
+"yjELMAkGA1UEBhMCVVMxFzAVBgNVBAoTDlZlcmlTaWduLCBJbmMuMR8wHQYDVQQL\n"
+          ...
+"4fQRbxC1lfznQgUy286dUV4otp6F01vvpX1FQHKOtw5rDgb7MzVIcbidJ4vEZV8N\n"
+"hnacRHr2lVz2XTIIM6RUthg/aFzyQkqFOFSDX9HoLPKsEdao7WNq\n"
+"-----END CERTIFICATE-----";
+
+const char* device_cert =
+"-----BEGIN CERTIFICATE-----\n"
+"MIIDWjCCAkKgAwIBAgIVANIzUucLFUREa2BiJUXoRv6Z4XaIMA0GCSqGSIb3DQEB\n"
+"CwUAME0xSzBJBgNVBAsMQkFtYXpvbiBXZWIgU2VydmljZXMgTz1BbWF6b24uY29t\n"
+        ...
+"jKrLFSjEdbaUj3ukMv0sGO693Z5DqTL2t9ylM2LuE9iyiWF7DBHhuDLHsZfirjk3\n"
+"7/MBDwfbv7td8GOy6C2BennS5tWOL06+8lYErP4ECEQqW6izI2Cup+O01rrjkQ==\n"
+"-----END CERTIFICATE-----";
+
+const char* device_priv_key =
+"-----BEGIN RSA PRIVATE KEY-----\n"
+"MIIEpAIBAAKCAQEAqsAKVhbfQEWblC8PvgubqpJasVoCEsSfvLF4b5DIAsoMeieP\n"
+"26y6Vyd3njRyuigSQ6jP+mo3GyqSfeCbqfJ2dx3BNICEk7P46Bu37ewoI24pScnT\n"
+        ...
+"5aGgRkmSW/Fc1ab33Gj2liLXCDN8bziri3KfMW6n9Dxhk8ppue7N5vNpjaoMLU2e\n"
+"tT/aucPRjdDp9JPzZQaewIDz7OG8bJtwLfx25FiR2oWDz2kD02joag==\n"
+"-----END RSA PRIVATE KEY-----";
+```
+Third, go back to **demo_config.h** to define following macros:
+
+
+```
+#define democonfigROOT_CA_PEM               root_ca
+#define democonfigCLIENT_CERTIFICATE_PEM    device_cert
+#define democonfigCLIENT_PRIVATE_KEY_PEM    device_priv_key
+```
+Each macro defines variable name defined in credentials.c.
+
+Finally, make those three variables( root_ca, device_cert and device_priv_ke) visible from MutualAuthMQTTExample.c by adding extern declarations to the file.  
+
+If you completes above settings, re-build demo to continue with the final setup.
 
 # Choose an interface to use
-You should choose an interface to use to configure the demo. However you may not know how to choose it. The demo will give you  good guidance. Follow the steps below.
-
-1. Build the RTOSDemo project
-2. Run the RTOSDemo.exe 
+At this point, assume that you have completed all the necessary settings other than this interface settings and the demo is runnable. Remember you should choose an interface to use to configure the demo. However you may not know how to choose it. The demo will give you  good guidance. Run the demo.
 
 A console that pops up appears with output similar to the following:
 ```
@@ -68,26 +162,8 @@ vDHCPProcess: offer 192.168.1.6
 6 600 [MQTTDemo] [INFO] [MQTT-wolfSSL] [prvMQTTDemoTask:356] Creating a TLS connection to ...insert here...:8883.
 vAssertCalled( ***\FreeRTOS\FreeRTOS-Plus\Demo\coreMQTT_Windows_Simulator\MQTT_Mutual_Auth_wolfSSL\DemoTasks\MutualAuthMQTTExample.c, 457
 ```
-<br>
-
-The demo stops by assertion. The log saying "Creating a TLS connection to **...insert here...**:8883" has a hint. 
 
 <br>
-
-
-# Set Credentials
-
-Please remember you need to provide the remaining information to complete the demo configuration. This time, you should open **demo_config.h** and find following defininitions:
-
-- **democonfigMQTT_BROKER_ENDPOINT**
-- **democonfigROOT_CA_PEM**
-- **democonfigCLIENT_CERTIFICATE_PEM**
-- **democonfigCLIENT_PRIVATE_KEY_PEM**
-
-All have **"...insert here..."** as their defined value. This is the casuse of the assertion that stopped the demo. In the file, "...insert here..." is used as a placeholder. Therefore, you need to specify the correct value for each. Immediately above them, there is information on how and what to set for each definitions. 
-
-Please refer the [coreMQTT Demo(Mutual Authentication)](https://www.freertos.org/mqtt/mutual-authentication-mqtt-example.html) page to get more information. 
-If you completes above settings, re-build demo and run it.
 
 # Demo output
 Below is the output digest when a Aws MQTT IoT endpoint and appropriate credentials are set. You can find "**Hello World!**" message was published and received as a topic repeatedly. 

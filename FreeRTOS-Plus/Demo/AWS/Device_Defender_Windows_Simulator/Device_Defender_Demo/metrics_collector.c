@@ -43,9 +43,6 @@
 #include "FreeRTOS.h"
 #include "FreeRTOS_IP.h"
 
-/* FreeRTOS+TCP tcp_netstat utility include. */
-#include "tcp_netstat.h"
-
 /* Demo config. */
 #include "demo_config.h"
 

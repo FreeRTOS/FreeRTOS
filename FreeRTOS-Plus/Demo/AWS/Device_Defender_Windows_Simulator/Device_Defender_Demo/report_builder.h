@@ -41,7 +41,13 @@ typedef enum
 } eReportBuilderStatus;
 
 /**
- * @brief Represents metrics to be included in the report.
+ * @brief Represents metrics to be included in the report, including custom metrics.
+ *
+ * This demo demonstrates the use of the stack high water mark and list of
+ * running task ids as custom metrics sent to AWS IoT Device Defender service.
+ *
+ * For more information on custom metrics, refer to the following AWS document:
+ * https://docs.aws.amazon.com/iot/latest/developerguide/dd-detect-custom-metrics.html
  */
 typedef struct ReportMetrics
 {
@@ -52,6 +58,10 @@ typedef struct ReportMetrics
     uint32_t ulOpenUdpPortsArrayLength;
     Connection_t * pxEstablishedConnectionsArray;
     uint32_t ulEstablishedConnectionsArrayLength;
+    /* Custom metrics */
+    uint32_t ulStackHighWaterMark;
+    uint32_t * pulTaskIdArray;
+    uint32_t ulTaskIdArrayLength;
 } ReportMetrics_t;
 
 /**

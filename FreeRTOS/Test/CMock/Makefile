@@ -60,7 +60,7 @@ $(LIB_DIR)/libcmock.so : $(CMOCK_SRC_DIR)/cmock.c                              \
                          $(CMOCK_SRC_DIR)/cmock.h                              \
                          $(LIB_DIR)/libunity.so                                \
                          Makefile | directories
-	$(CC) -o $@ -shared -fPIC  $<  $(INCLUDE_DIR)
+	$(CC) -o $@ -shared -fPIC $<  $(INCLUDE_DIR)
 
 
 $(LIB_DIR)/libunity.so : $(UNITY_SRC_DIR)/unity.c                              \

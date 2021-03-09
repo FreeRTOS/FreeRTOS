@@ -49,7 +49,7 @@
 #define configMINIMAL_STACK_SIZE                         ( ( unsigned short ) 70 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the win32 thread. */
 #define configTOTAL_HEAP_SIZE                            ( ( size_t ) ( 52 * 1024 ) )
 #define configMAX_TASK_NAME_LEN                          ( 12 )
-#define configUSE_TRACE_FACILITY                         1
+#define configUSE_TRACE_FACILITY                         0
 #define configUSE_16_BIT_TICKS                           0
 #define configIDLE_SHOULD_YIELD                          1
 #define configUSE_MUTEXES                                0 /* diff config 1 */
@@ -78,7 +78,7 @@
 /* Run time stats gathering configuration options. */
 unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
 void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that initialises the run time counter. */
-#define configGENERATE_RUN_TIME_STATS             1
+#define configGENERATE_RUN_TIME_STATS             0
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()    vConfigureTimerForRunTimeStats()
 #define portGET_RUN_TIME_COUNTER_VALUE()            ulGetRunTimeCounterValue()
 #define portUSING_MPU_WRAPPERS                    0

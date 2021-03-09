@@ -123,6 +123,10 @@ UBaseType_t portSet_Interrupt_Mask( void )
     return 1;
 }
 
+void portAssert_if_int_prio_invalid(void)
+{
+}
+
 /*!
  * @brief
  */

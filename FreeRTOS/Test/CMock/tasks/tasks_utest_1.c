@@ -135,6 +135,7 @@ typedef void (*port_yield_operation)(void);
 static TCB_t * ptcb;
 static TCB_t tcb[10]; /* simulate up to 10 tasks: add them if needed */
 StackType_t stack[ ( ( size_t ) 300 ) * sizeof( StackType_t ) ];
+static bool vApplicationTickHook_Called  = false;
 static bool vTaskDeletePreCalled = false;
 static bool getIddleTaskMemoryValid = false;
 static bool getIddleTaskMemoryCalled = false;
@@ -147,6 +148,7 @@ static bool port_setup_tcb_called  = false;
 static port_yield_operation py_operation;
 static bool portClear_Interrupt_called = false;
 static bool portSet_Interrupt_called = false;
+static bool port_invalid_interrupt_called = false;
 
 /* ===========================  EXTERN VARIABLES  =========================== */
 extern TCB_t * volatile pxCurrentTCB;
@@ -173,8 +175,8 @@ extern volatile TickType_t xNextTaskUnblockTime;
 extern TaskHandle_t xIdleTaskHandle;
 extern volatile UBaseType_t uxSchedulerSuspended;
 /* configGENERATE_RUN_TIME_STATS */
-extern uint32_t ulTaskSwitchedInTime;
-extern volatile uint32_t ulTotalRunTime;
+//extern uint32_t ulTaskSwitchedInTime;
+//extern volatile uint32_t ulTotalRunTime;
 
 /* ============================  MACRO FUNCTIONS  ============================ */
 #define ASSERT_SETUP_TCB_CALLED()                                              \
@@ -209,6 +211,17 @@ extern volatile uint32_t ulTotalRunTime;
             TEST_ASSERT_EQUAL( false, vTaskDeletePreCalled );                  \
         } while ( 0 )
 
+#define ASSERT_APP_TICK_HOOK_CALLED()                                            \
+        do {                                                                   \
+            TEST_ASSERT_EQUAL( true, vApplicationTickHook_Called );                   \
+             vApplicationTickHook_Called = false;                                     \
+        } while ( 0 )
+
+#define  ASSERT_APP_TICK_HOOK_NOT_CALLED()                                        \
+        do {                                                                   \
+            TEST_ASSERT_EQUAL( false, vApplicationTickHook_Called );                  \
+        } while ( 0 )
+
 #define ASSERT_PORT_CLEAR_INTERRUPT_CALLED()                                   \
         do {                                                                   \
             TEST_ASSERT_EQUAL( true, portClear_Interrupt_called );             \
@@ -228,6 +241,13 @@ extern volatile uint32_t ulTotalRunTime;
         do {                                                                   \
             TEST_ASSERT_EQUAL( false, portSet_Interrupt_called );              \
         } while ( 0 )
+
+#define ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED()                             \
+        do {                                                                   \
+            TEST_ASSERT_EQUAL(true, port_invalid_interrupt_called);            \
+            port_invalid_interrupt_called = false;                             \
+        } while( 0 )
+
 /* ============================  HOOK FUNCTIONS  ============================ */
 #define HOOK_DIAG() \
     do { \
@@ -295,6 +315,7 @@ long unsigned int ulGetRunTimeCounterValue( void )
 void vApplicationTickHook()
 {
     HOOK_DIAG();
+    vApplicationTickHook_Called = true;
 }
 
 void vPortCurrentTaskDying( void * pvTaskToDelete,
@@ -342,6 +363,10 @@ UBaseType_t portSet_Interrupt_Mask( void )
     return 1;
 }
 
+void portAssert_if_int_prio_invalid(void)
+{
+    port_invalid_interrupt_called = true;
+}
 /* ============================  Unity Fixtures  ============================ */
 /*! called before each testcase */
 void setUp( void )
@@ -352,8 +377,10 @@ void setUp( void )
     memset( &pxReadyTasksLists, 0x00, configMAX_PRIORITIES * sizeof( List_t ) );
     memset( &xDelayedTaskList1, 0x00, sizeof( List_t ) );
     memset( &xDelayedTaskList2, 0x00, sizeof( List_t ) );
+    /*
     pxDelayedTaskList = NULL;
     pxOverflowDelayedTaskList = NULL;
+    */
     memset( &xPendingReadyList, 0x00, sizeof( List_t ) );
 
     memset( &xTasksWaitingTermination, 0x00, sizeof( List_t ) );
@@ -370,10 +397,11 @@ void setUp( void )
     uxTaskNumber = ( UBaseType_t ) 0U;
     xNextTaskUnblockTime = ( TickType_t ) 0U;
     xIdleTaskHandle = NULL;
-    uxSchedulerSuspended = ( UBaseType_t ) pdFALSE;
-    ulTaskSwitchedInTime = 0UL;
-    ulTotalRunTime = 0UL;
+    uxSchedulerSuspended = ( UBaseType_t ) 0;
+  //  ulTaskSwitchedInTime = 0UL;
+    //ulTotalRunTime = 0UL;
 
+    vApplicationTickHook_Called  = false;
     vTaskDeletePreCalled = false;
     getIddleTaskMemoryCalled = false;
     is_first_task = true;
@@ -382,6 +410,7 @@ void setUp( void )
     port_setup_tcb_called = false;
     portClear_Interrupt_called = false;
     portSet_Interrupt_called = false;
+    port_invalid_interrupt_called = false;
     py_operation = dummy_opration;
 }
 
@@ -436,7 +465,6 @@ static TaskHandle_t create_task()
         {
             vListInitialise_ExpectAnyArgs();
         }
-
         /* Delayed Task List 1 */
         vListInitialise_ExpectAnyArgs();
         /* Delayed Task List 2 */
@@ -447,11 +475,9 @@ static TaskHandle_t create_task()
         vListInitialise_ExpectAnyArgs();
         /* INCLUDE_vTaskSuspend */
         vListInitialise_ExpectAnyArgs();
-
         is_first_task = false;
     }
     vListInsertEnd_ExpectAnyArgs();
-
     ret = xTaskCreate( pxTaskCode,
                        pcName,
                        usStackDepth,
@@ -579,7 +605,7 @@ void test_xTaskCreateStatic_success( void )
 
     StackType_t * pxTopOfStack = &( ptcb->pxStack[ ulStackDepth - ( uint32_t ) 1 ] );
     pxTopOfStack = ( StackType_t * ) ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack )
-                                       & ( ~( ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) ) ); /*lint !e923 !e9033 !e9078 MISRA exception.  Avoiding casts between pointers and integers is not practical.  Size differences accounted for using portPOINTER_SIZE_TYPE type.  Checked by assert(). */
+                                       & ( ~( ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) ) );
 
     TEST_ASSERT_EQUAL( ptcb->pxEndOfStack,
                        pxTopOfStack );
@@ -1332,6 +1358,7 @@ void test_uxTaskPriorityGetFromISR_success( void )
     TEST_ASSERT_EQUAL(3, ret_priority);
     ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
     ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
 }
 
 void test_uxTaskPriorityGetFromISR_success_null_handle( void )
@@ -1348,6 +1375,7 @@ void test_uxTaskPriorityGetFromISR_success_null_handle( void )
     TEST_ASSERT_EQUAL(3, ret_priority);
     ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
     ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
 }
 
 /* ----------------------- testing vTaskDelay API --------------------------- */
@@ -1767,6 +1795,11 @@ void test_xTaskGenericNotifyWait_success_notif_not_recieved( void )
     ASSERT_PORT_YIELD_CALLED();
 }
 
+static BaseType_t pxHookFunction(void * arg)
+{
+    BaseType_t *i =  arg;
+    return *i;
+}
 
 /* called from port task yield, to simulate that another task ran and received
  * the notification */
@@ -1816,10 +1849,1477 @@ void test_vTaskSuspend_success( void )
 
     task_handle = create_task();
     ptcb = task_handle;
-
+    TEST_ASSERT_EQUAL_PTR(ptcb, pxCurrentTCB);
+    xSchedulerRunning = pdFALSE;
+    /* Expectations */
+    uxListRemove_ExpectAndReturn(&ptcb->xStateListItem, 0 );
+    /* taskRESET_READY_PRIORITY */
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ptcb->uxPriority],
+                                             0 );
+    /* back */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn(&ptcb->xEventListItem, NULL );
+    vListInsertEnd_Expect(&xSuspendedTaskList, &ptcb->xStateListItem );
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &xSuspendedTaskList,
+                                             uxCurrentNumberOfTasks );
     /* API Call */
     vTaskSuspend( task_handle );
+    /* Validations */
+    TEST_ASSERT_EQUAL_PTR(NULL, pxCurrentTCB);
+    ASSERT_PORT_YIELD_NOT_CALLED();
 }
+
+void test_vTaskSuspend_success_shced_running( void )
+{
+    TaskHandle_t task_handle;
+
+    task_handle = create_task();
+    ptcb = task_handle;
+    TEST_ASSERT_EQUAL_PTR(ptcb, pxCurrentTCB);
+    xSchedulerRunning = pdTRUE;
+    /* Expectations */
+    uxListRemove_ExpectAndReturn(&ptcb->xStateListItem, 0 );
+    /* taskRESET_READY_PRIORITY */
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ptcb->uxPriority],
+                                             0 );
+    /* back */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn(&ptcb->xEventListItem, NULL );
+    vListInsertEnd_Expect(&xSuspendedTaskList, &ptcb->xStateListItem );
+    /* prvResetNextTaskUnblockTime */
+    listLIST_IS_EMPTY_ExpectAndReturn(pxDelayedTaskList, pdTRUE);
+    /* API Call */
+    vTaskSuspend( task_handle );
+    /* Validations */
+    TEST_ASSERT_EQUAL (portMAX_DELAY, xNextTaskUnblockTime);
+    ASSERT_PORT_YIELD_CALLED();
+}
+
+void test_vTaskSuspend_success_shced_running_not_curr( void )
+{
+    TaskHandle_t task_handle, task_handle2;
+
+    created_task_priority = 3;
+    task_handle = create_task();
+    created_task_priority = 5;
+    task_handle2 = create_task();
+    ptcb = task_handle;
+    TEST_ASSERT_EQUAL_PTR(task_handle2, pxCurrentTCB);
+    xSchedulerRunning = pdTRUE;
+    /* Expectations */
+    uxListRemove_ExpectAndReturn(&ptcb->xStateListItem, 0 );
+    /* taskRESET_READY_PRIORITY */
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ptcb->uxPriority],
+                                             1 );
+    /* back */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn(&ptcb->xEventListItem, NULL );
+    vListInsertEnd_Expect(&xSuspendedTaskList, &ptcb->xStateListItem );
+    /* prvResetNextTaskUnblockTime */
+    listLIST_IS_EMPTY_ExpectAndReturn(pxDelayedTaskList, pdTRUE);
+    /* API Call */
+    vTaskSuspend( task_handle );
+    /* Validations */
+    TEST_ASSERT_EQUAL (portMAX_DELAY, xNextTaskUnblockTime);
+    ASSERT_PORT_YIELD_NOT_CALLED();
+}
+
+void test_vTaskSuspend_success_switch_context( void )
+{
+    TaskHandle_t task_handle;
+
+    task_handle = create_task();
+    ptcb = task_handle;
+    TEST_ASSERT_EQUAL_PTR(ptcb, pxCurrentTCB);
+    xSchedulerRunning = pdFALSE;
+    uxSchedulerSuspended = pdTRUE;
+    ptcb->ucNotifyState[ 0 ] = 1; /* taskWAITING_NOTIFICATION */;
+    /* Expectations */
+    uxListRemove_ExpectAndReturn(&ptcb->xStateListItem, 1 );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn(&ptcb->xEventListItem,
+                                            &xSuspendedTaskList );
+    uxListRemove_ExpectAndReturn( &ptcb->xEventListItem, pdTRUE);
+    vListInsertEnd_Expect(&xSuspendedTaskList, &ptcb->xStateListItem );
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &xSuspendedTaskList,
+                                             uxCurrentNumberOfTasks + 1);
+    /* API Call */
+    vTaskSuspend( NULL );
+    /* Validations */
+    ASSERT_PORT_YIELD_NOT_CALLED();
+    TEST_ASSERT_EQUAL( 0, ptcb->ucNotifyState[ 0 ] );
+}
+
+void test_vTaskResume_fail_null_handle(void)
+{
+    vTaskResume(NULL);
+    ASSERT_PORT_YIELD_NOT_CALLED();
+}
+
+void test_vTaskResume_fail_current_tcb_null(void)
+{
+    create_task();
+    vTaskResume(NULL);
+    ASSERT_PORT_YIELD_NOT_CALLED();
+}
+
+void test_vTaskResume_fail_current_tcb(void)
+{
+    TaskHandle_t task_handle;
+    task_handle = create_task();
+    vTaskResume(task_handle);
+    ASSERT_PORT_YIELD_NOT_CALLED();
+}
+
+void test_vTaskResume_fail_task_not_suspended(void)
+{
+    TaskHandle_t task_handle;
+    created_task_priority = 3;
+    task_handle = create_task();
+    created_task_priority = 5;
+    create_task();
+    ptcb = task_handle;
+    /* Expectations */
+    /* prvTaskIsTaskSuspended */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xSuspendedTaskList,
+                                             &ptcb->xStateListItem,
+                                             pdFALSE );
+    /* API Call */
+    vTaskResume(task_handle); /* not current tcb */
+    /* Validations */
+    ASSERT_PORT_YIELD_NOT_CALLED();
+}
+
+void test_vTaskResume_fail_task_ready(void)
+{
+    TaskHandle_t task_handle;
+    created_task_priority = 3;
+    task_handle = create_task();
+    created_task_priority = 5;
+    create_task();
+    ptcb = task_handle;
+    /* Expectations */
+    /* prvTaskIsTaskSuspended */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xSuspendedTaskList,
+                                             &ptcb->xStateListItem,
+                                             pdTRUE );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn ( &xPendingReadyList,
+                                              &ptcb->xEventListItem,
+                                              pdTRUE);
+    /* API Call */
+    vTaskResume(task_handle); /* not current tcb */
+    /* Validations */
+    ASSERT_PORT_YIELD_NOT_CALLED();
+}
+
+void test_vTaskResume_fail_task_event_list_not_orphan(void)
+{
+    TaskHandle_t task_handle;
+    created_task_priority = 3;
+    task_handle = create_task();
+    created_task_priority = 5;
+    create_task();
+    ptcb = task_handle;
+    /* Expectations */
+    /* prvTaskIsTaskSuspended */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xSuspendedTaskList,
+                                             &ptcb->xStateListItem,
+                                             pdTRUE );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xPendingReadyList,
+                                              &ptcb->xEventListItem,
+                                              pdFALSE);
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( NULL,
+                                             &ptcb->xEventListItem,
+                                             pdFALSE);
+    /* API Call */
+    vTaskResume(task_handle); /* not current tcb */
+    /* Validations */
+    ASSERT_PORT_YIELD_NOT_CALLED();
+}
+
+void test_vTaskResume_success_task_event_list_orphan(void)
+{
+    TaskHandle_t task_handle;
+    created_task_priority = 3;
+    task_handle = create_task();
+    created_task_priority = 5;
+    create_task();
+    ptcb = task_handle;
+    /* Expectations */
+    /* prvTaskIsTaskSuspended */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xSuspendedTaskList,
+                                             &ptcb->xStateListItem,
+                                             pdTRUE );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xPendingReadyList,
+                                             &ptcb->xEventListItem,
+                                             pdFALSE );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( NULL,
+                                             &ptcb->xEventListItem,
+                                             pdTRUE );
+    /* back */
+    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdTRUE);
+    /* prvAddTaskToReadyList*/
+    vListInsertEnd_Expect( &pxReadyTasksLists[ created_task_priority ],
+                           &ptcb->xStateListItem );
+    /* API Call */
+    vTaskResume(task_handle); /* not current tcb */
+    /* Validations */
+    ASSERT_PORT_YIELD_NOT_CALLED();
+}
+
+void test_vTaskResume_success_yield(void)
+{
+    TaskHandle_t task_handle;
+    created_task_priority = 3;
+    task_handle = create_task();
+    created_task_priority = 3;
+    create_task();
+    ptcb = task_handle;
+    /* Expectations */
+    /* prvTaskIsTaskSuspended */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xSuspendedTaskList,
+                                             &ptcb->xStateListItem,
+                                             pdTRUE );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xPendingReadyList,
+                                             &ptcb->xEventListItem,
+                                             pdFALSE );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( NULL,
+                                             &ptcb->xEventListItem,
+                                             pdTRUE );
+    /* back */
+    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdTRUE);
+    /* prvAddTaskToReadyList*/
+    vListInsertEnd_Expect( &pxReadyTasksLists[ created_task_priority ],
+                           &ptcb->xStateListItem );
+    /* API Call */
+    vTaskResume(task_handle); /* not current tcb */
+    /* Validations */
+    ASSERT_PORT_YIELD_CALLED();
+}
+
+void test_xTaskResumeFromISR_success( void )
+{
+    TaskHandle_t task_handle;
+    BaseType_t ret_task_resume;
+    created_task_priority = 3;
+    task_handle = create_task();
+    ptcb = task_handle;
+    /* Expectations */
+    /* prvTaskIsTaskSuspended */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xSuspendedTaskList,
+                                             &ptcb->xStateListItem,
+                                             pdTRUE );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xPendingReadyList,
+                                             &ptcb->xEventListItem,
+                                             pdFALSE );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( NULL,
+                                             &ptcb->xEventListItem,
+                                             pdTRUE );
+    /* back */
+    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdTRUE );
+    /* prvAddTaskToReadyList */
+    vListInsertEnd_Expect( &pxReadyTasksLists[ created_task_priority ],
+                           &ptcb->xStateListItem );
+    /* API Call */
+    ret_task_resume = xTaskResumeFromISR(task_handle);
+
+    /* Validations */
+    TEST_ASSERT_EQUAL(pdTRUE, ret_task_resume);
+    ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_CALLED();
+}
+
+void test_xTaskResumeFromISR_success_sched_suspended( void )
+{
+    TaskHandle_t task_handle;
+    BaseType_t ret_task_resume;
+    uxSchedulerSuspended = pdTRUE;
+    created_task_priority = 3;
+    task_handle = create_task();
+    ptcb = task_handle;
+    /* Expectations */
+    /* prvTaskIsTaskSuspended */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xSuspendedTaskList,
+                                             &ptcb->xStateListItem,
+                                             pdTRUE );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xPendingReadyList,
+                                             &ptcb->xEventListItem,
+                                             pdFALSE );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( NULL,
+                                             &ptcb->xEventListItem,
+                                             pdTRUE );
+    /* back */
+    vListInsertEnd_Expect(&xPendingReadyList, &ptcb->xEventListItem);
+    /* API Call */
+    ret_task_resume = xTaskResumeFromISR(task_handle);
+
+    /* Validations */
+    TEST_ASSERT_EQUAL(pdFALSE, ret_task_resume);
+    ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_CALLED();
+}
+
+void test_xTaskResumeFromISR_success_task_suspended( void )
+{
+    TaskHandle_t task_handle;
+    BaseType_t ret_task_resume;
+    uxSchedulerSuspended = pdTRUE;
+    created_task_priority = 3;
+    task_handle = create_task();
+    ptcb = task_handle;
+    /* Expectations */
+    /* prvTaskIsTaskSuspended */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xSuspendedTaskList,
+                                             &ptcb->xStateListItem,
+                                             pdFALSE );
+    /* API Call */
+    ret_task_resume = xTaskResumeFromISR(task_handle);
+
+    /* Validations */
+    TEST_ASSERT_EQUAL(pdFALSE, ret_task_resume);
+    ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_CALLED();
+}
+
+void test_xTaskResumeFromISR_success_curr_prio_lt_suspended_task( void )
+{
+    TaskHandle_t task_handle;
+    BaseType_t ret_task_resume;
+    uxSchedulerSuspended = pdFALSE;
+    created_task_priority = 3;
+    task_handle = create_task();
+    created_task_priority = 4;
+    create_task();
+    ptcb = task_handle;
+    /* Expectations */
+    /* prvTaskIsTaskSuspended */
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xSuspendedTaskList,
+                                             &ptcb->xStateListItem,
+                                             pdTRUE );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &xPendingReadyList,
+                                             &ptcb->xEventListItem,
+                                             pdFALSE );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( NULL,
+                                             &ptcb->xEventListItem,
+                                             pdTRUE );
+    /* back */
+    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdTRUE );
+    /* prvAddTaskToReadyList */
+    vListInsertEnd_Expect( &pxReadyTasksLists[ created_task_priority ],
+                           &ptcb->xStateListItem );
+    /* API Call */
+    ret_task_resume = xTaskResumeFromISR(task_handle);
+
+    /* Validations */
+    TEST_ASSERT_EQUAL(pdFALSE, ret_task_resume);
+    ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_CALLED();
+}
+
+/* testing INCLUDE_xTaskGetHandle */
+
+#define INITIALIZE_LIST_1E( list, owner) \
+    do {                                           \
+        ListItem_t list_item; \
+        (list).xListEnd.pxNext = &(list_item);       \
+        (list).xListEnd.pxPrevious = &(list_item);       \
+        (list).pxIndex = &(list).xListEnd;         \
+        (list).uxNumberOfItems = 1;               \
+        (list_item).pxNext = (list).pxIndex;     \
+        (list_item).pxPrevious = (list).pxIndex;     \
+        (list_item).pvOwner = (owner);             \
+        (list_item).pxContainer = &(list);             \
+    } while (0)
+
+#define INITIALIZE_LIST_2E( list, owner, owner2) \
+    do {                                           \
+        ListItem_t list_item; \
+        ListItem_t list_item2; \
+        (list).xListEnd.pxNext = &(list_item);       \
+        (list).xListEnd.pxPrevious = &(list_item2);       \
+        (list).pxIndex = &(list).xListEnd;         \
+        (list).uxNumberOfItems = 2;               \
+        (list_item).pxNext = &(list_item2);     \
+        (list_item).pxPrevious = (list).pxIndex;     \
+        (list_item).pvOwner = (owner);             \
+        (list_item).pxContainer = &(list);             \
+\
+        (list_item2).pxNext = (list).pxIndex;     \
+        (list_item2).pxPrevious = &(list_item);     \
+        (list_item2).pvOwner = (owner2);             \
+        (list_item2).pxContainer = &(list);             \
+    } while (0)
+
+void test_xtaskGetHandle_success(void)
+{
+    TaskHandle_t task_handle = NULL, task_handle2;
+    task_handle = create_task();
+    ptcb = task_handle;
+    INITIALIZE_LIST_1E( pxReadyTasksLists[configMAX_PRIORITIES - 1],
+                         ptcb );
+    /* Expectations */
+    /*  prvSearchForNameWithinSingleList */
+    listCURRENT_LIST_LENGTH_ExpectAndReturn(&pxReadyTasksLists[ configMAX_PRIORITIES - 1 ],
+                                            1);
+    /* vTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn(&xPendingReadyList, pdTRUE);
+
+    /* API Call */
+    task_handle2 = xTaskGetHandle( "create_task" );
+    /* Validations */
+    TEST_ASSERT_EQUAL_PTR(task_handle, task_handle2);
+}
+
+void test_xtaskGetHandle_success_2elements(void)
+{
+    TaskHandle_t task_handle = NULL, task_handle2, ret_task_handle;
+    task_handle = create_task();
+    task_handle2 = create_task();
+    ptcb = task_handle;
+    INITIALIZE_LIST_2E( pxReadyTasksLists[configMAX_PRIORITIES - 1],
+                         ptcb, task_handle2 );
+    /* Expectations */
+    /*  prvSearchForNameWithinSingleList */
+    listCURRENT_LIST_LENGTH_ExpectAndReturn(&pxReadyTasksLists[ configMAX_PRIORITIES - 1 ],
+                                            1);
+    /* vTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn(&xPendingReadyList, pdTRUE);
+
+    /* API Call */
+    ret_task_handle = xTaskGetHandle( "create_task" );
+    /* Validations */
+    TEST_ASSERT_EQUAL_PTR(task_handle2, ret_task_handle);
+}
+
+void test_xtaskGetHandle_success_2elements_set_index(void)
+{
+    TaskHandle_t task_handle = NULL, task_handle2, ret_task_handle;
+    task_handle = create_task();
+    task_handle2 = create_task();
+    ptcb = task_handle;
+    INITIALIZE_LIST_2E( pxReadyTasksLists[configMAX_PRIORITIES - 1],
+                         ptcb, task_handle2 );
+    pxReadyTasksLists[configMAX_PRIORITIES - 1].pxIndex = pxReadyTasksLists[configMAX_PRIORITIES - 1].pxIndex->pxNext;
+    pxReadyTasksLists[configMAX_PRIORITIES - 1].pxIndex = pxReadyTasksLists[configMAX_PRIORITIES - 1].pxIndex->pxNext;
+    /* Expectations */
+    /*  prvSearchForNameWithinSingleList */
+    listCURRENT_LIST_LENGTH_ExpectAndReturn(&pxReadyTasksLists[ configMAX_PRIORITIES - 1 ],
+                                            1);
+    /* vTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn(&xPendingReadyList, pdTRUE);
+
+    /* API Call */
+    ret_task_handle = xTaskGetHandle( "create_task" );
+    /* Validations */
+    TEST_ASSERT_EQUAL_PTR(task_handle2, ret_task_handle);
+}
+
+void test_xtaskGetHandle_fail_no_task_found(void)
+{
+    TaskHandle_t task_handle, task_handle2, ret_task_handle;
+    task_handle = create_task();
+    task_handle2 = create_task();
+    ptcb = task_handle;
+    INITIALIZE_LIST_2E( pxReadyTasksLists[configMAX_PRIORITIES - 1],
+                         ptcb, task_handle2 );
+    /* Expectations */
+    /*  prvSearchForNameWithinSingleList */
+    listCURRENT_LIST_LENGTH_ExpectAndReturn(
+                                &pxReadyTasksLists[ configMAX_PRIORITIES - 1 ],
+                                2 );
+    int i = configMAX_PRIORITIES - 1;
+    do
+    {
+        i--;
+        listCURRENT_LIST_LENGTH_ExpectAndReturn(&pxReadyTasksLists[ i ],
+                0);
+    } while (i > tskIDLE_PRIORITY);
+    listCURRENT_LIST_LENGTH_ExpectAndReturn(pxDelayedTaskList, 0);
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( pxOverflowDelayedTaskList, 0);
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &xSuspendedTaskList, 0);
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &xTasksWaitingTermination, 0);
+    /* vTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn(&xPendingReadyList, pdTRUE);
+
+    /* API Call */
+    ret_task_handle = xTaskGetHandle( "create_tasks" );
+    /* Validations */
+    TEST_ASSERT_EQUAL_PTR(NULL, ret_task_handle);
+}
+
+
+void test_xtaskGetHandle_fail_no_taks_running(void)
+{
+    TaskHandle_t task_handle2;
+    /* Expectations */
+    /*  prvSearchForNameWithinSingleList */
+    for (int i = configMAX_PRIORITIES; i > tskIDLE_PRIORITY; --i)
+    {
+        listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ i ], 0);
+    }
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( pxDelayedTaskList, 0);
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( pxOverflowDelayedTaskList, 0);
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &xSuspendedTaskList , 0);
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &xTasksWaitingTermination, 0);
+    /* API Call */
+    task_handle2 = xTaskGetHandle( "create_task" );
+    /* Validations */
+    TEST_ASSERT_EQUAL_PTR( NULL, task_handle2);
+}
+
+/* testing always available functions */
+void test_xTaskGetTickCount_sucess(void)
+{
+    TickType_t  ret_get_tick_count;
+    xTickCount = 565656;
+    ret_get_tick_count = xTaskGetTickCount();
+    TEST_ASSERT_EQUAL(565656, ret_get_tick_count);
+}
+
+void test_xTaskGetTickCountFromISR_success(void)
+{
+    TickType_t  ret_get_tick_count;
+    xTickCount = 565656;
+
+    ret_get_tick_count = xTaskGetTickCountFromISR();
+
+    TEST_ASSERT_EQUAL(565656, ret_get_tick_count);
+    ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_CALLED();
+}
+
+void test_uxTaskGetNumberOfTasks_success(void)
+{
+    UBaseType_t  ret_task_num;
+
+    create_task();
+    create_task();
+    create_task();
+
+    ret_task_num = uxTaskGetNumberOfTasks();
+
+    TEST_ASSERT_EQUAL(3, ret_task_num);
+}
+
+void test_pcTaskGetName_success(void)
+{
+    char * ret_task_name;
+    TaskHandle_t task_handle;
+    task_handle = create_task();
+
+    ret_task_name = pcTaskGetName(task_handle);
+    TEST_ASSERT_EQUAL_STRING("create_task", ret_task_name);
+
+}
+
+void test_pcTaskGetName_success_null_handle(void)
+{
+    char * ret_task_name;
+    create_task();
+
+    ret_task_name = pcTaskGetName(NULL);
+    TEST_ASSERT_EQUAL_STRING("create_task", ret_task_name);
+
+}
+void test_xTaskCatchUpTicks(void)
+{
+    BaseType_t ret_taskCatchUpTicks;
+    TaskHandle_t task_handle;
+    task_handle = create_task();
+    ptcb = task_handle;
+    uxSchedulerSuspended = pdTRUE;
+    /* API Call */
+    ret_taskCatchUpTicks = xTaskCatchUpTicks( 500 );
+    /* Validations */
+    TEST_ASSERT_EQUAL(pdFALSE, ret_taskCatchUpTicks);
+}
+
+void test_xTaskIncrementTick_success_sched_suspended_no_switch( void )
+{
+    BaseType_t  ret_task_incrementtick;
+    TickType_t  current_ticks = xPendedTicks;
+
+    vTaskSuspendAll();
+
+    /* API Call */
+    ret_task_incrementtick = xTaskIncrementTick();
+    /* Validations */
+    TEST_ASSERT_EQUAL(pdFALSE, ret_task_incrementtick);
+    TEST_ASSERT_EQUAL( current_ticks + 1, xPendedTicks);
+    ASSERT_APP_TICK_HOOK_CALLED();
+}
+
+/* ensures that the delayed task list and overflow list are switched when a
+ * tickcount overflow occurs */
+void test_xTaskIncrementTick_success_tickCount_overlow( void )
+{
+    BaseType_t  ret_task_incrementtick;
+    List_t * delayed, * overflow;
+    TaskHandle_t task_handle;
+
+    uxSchedulerSuspended  = pdFALSE;
+    delayed = pxDelayedTaskList;
+    overflow = pxOverflowDelayedTaskList;
+    xTickCount = 0;          /* overflowed */
+    task_handle = create_task();
+
+    /* Expectations */
+    /* prvResetNextTaskUnblockTime */
+    listLIST_IS_EMPTY_ExpectAndReturn(pxDelayedTaskList, pdTRUE);
+    /* back */
+    listCURRENT_LIST_LENGTH_ExpectAndReturn(&pxReadyTasksLists[pxCurrentTCB->uxPriority],
+                                            2);
+    /* API Call */
+    ret_task_incrementtick = xTaskIncrementTick();
+
+    /* Validations */
+    TEST_ASSERT_EQUAL( pdTRUE, ret_task_incrementtick );
+    ASSERT_APP_TICK_HOOK_CALLED();
+    /* make sure the lists are swapped on overflow */
+    TEST_ASSERT_EQUAL_PTR(pxOverflowDelayedTaskList, delayed);
+    TEST_ASSERT_EQUAL_PTR(pxDelayedTaskList, overflow);
+    TEST_ASSERT_EQUAL(1, xNumOfOverflows);
+    TEST_ASSERT_EQUAL(portMAX_DELAY, xNextTaskUnblockTime);
+}
+
+void test_xTaskIncrementTick_success_no_switch( void )
+{
+    BaseType_t  ret_task_incrementtick;
+    TaskHandle_t task_handle;
+
+    /* setup */
+    task_handle = create_task();
+    ptcb = task_handle;
+
+    /* Expectations */
+    listLIST_IS_EMPTY_ExpectAndReturn(pxDelayedTaskList, pdTRUE);
+    listCURRENT_LIST_LENGTH_ExpectAndReturn(&pxReadyTasksLists[ptcb->uxPriority],
+                1);
+
+    /* API Call */
+    ret_task_incrementtick = xTaskIncrementTick();
+
+    /* Validations */
+    TEST_ASSERT_EQUAL(pdFALSE, ret_task_incrementtick);
+    TEST_ASSERT_EQUAL(portMAX_DELAY, xNextTaskUnblockTime);
+    ASSERT_APP_TICK_HOOK_CALLED();
+}
+
+void test_xTaskIncrementTick_success_switch( void )
+{
+    BaseType_t  ret_task_incrementtick;
+    TaskHandle_t task_handle;
+
+    /* setup */
+    task_handle = create_task();
+    ptcb = task_handle;
+    xPendedTicks = 3;
+
+    /* Expectations */
+    listLIST_IS_EMPTY_ExpectAndReturn(pxDelayedTaskList, pdTRUE);
+    listCURRENT_LIST_LENGTH_ExpectAndReturn(&pxReadyTasksLists[ptcb->uxPriority],
+                3);
+
+    /* API Call */
+    ret_task_incrementtick = xTaskIncrementTick();
+
+    /* Validations */
+    TEST_ASSERT_EQUAL(pdTRUE, ret_task_incrementtick);
+    ASSERT_APP_TICK_HOOK_NOT_CALLED();
+    TEST_ASSERT_EQUAL(portMAX_DELAY, xNextTaskUnblockTime);
+}
+
+void test_xTaskIncrementTick_success_update_next_unblock( void )
+{
+    BaseType_t  ret_task_incrementtick;
+    TaskHandle_t task_handle;
+    TaskHandle_t task_handle2;
+
+    /* setup */
+    task_handle = create_task();
+    task_handle2 = create_task();
+    ptcb = task_handle;
+    xPendedTicks = 3;
+    xTickCount = 50;
+    xNextTaskUnblockTime = 49;  /* tasks due unblocking */
+    uxSchedulerSuspended  = pdFALSE;
+
+    /* Expectations */
+    listLIST_IS_EMPTY_ExpectAndReturn(pxDelayedTaskList, pdFALSE);
+    listGET_OWNER_OF_HEAD_ENTRY_ExpectAndReturn(pxDelayedTaskList, task_handle2);
+    listGET_LIST_ITEM_VALUE_ExpectAndReturn( &task_handle2->xStateListItem,
+                                             xTickCount + 5 );
+    listCURRENT_LIST_LENGTH_ExpectAndReturn(&pxReadyTasksLists[ptcb->uxPriority],
+                                            3);
+
+    /* API Call */
+    ret_task_incrementtick = xTaskIncrementTick();
+
+    /* Validations */
+    TEST_ASSERT_EQUAL(pdTRUE, ret_task_incrementtick);
+    ASSERT_APP_TICK_HOOK_NOT_CALLED();
+    TEST_ASSERT_EQUAL(xTickCount + 4, xNextTaskUnblockTime);
+}
+
+void test_xTaskIncrementTick_success_unblock_tasks( void )
+{
+    BaseType_t  ret_task_incrementtick;
+    TaskHandle_t task_handle;
+    TaskHandle_t task_handle2;
+
+    /* setup */
+    task_handle = create_task();
+    task_handle2 = create_task();
+    ptcb = task_handle;
+    xPendedTicks = 3;
+    xTickCount = 50;
+    xNextTaskUnblockTime = 49;  /* tasks due unblocking */
+    uxSchedulerSuspended  = pdFALSE;
+
+    /* Expectations */
+    listLIST_IS_EMPTY_ExpectAndReturn(pxDelayedTaskList, pdFALSE);
+    listGET_OWNER_OF_HEAD_ENTRY_ExpectAndReturn(pxDelayedTaskList, task_handle2);
+    listGET_LIST_ITEM_VALUE_ExpectAndReturn( &task_handle2->xStateListItem,
+                                             xTickCount - 5 );
+    uxListRemove_ExpectAndReturn(&task_handle2->xStateListItem, pdTRUE);
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &task_handle2->xEventListItem, NULL);
+    /* prvAddTaskToReadyList */
+    vListInsertEnd_Expect( &pxReadyTasksLists[ task_handle2->uxPriority ],
+                           &task_handle2->xStateListItem );
+    listLIST_IS_EMPTY_ExpectAndReturn(pxDelayedTaskList, pdTRUE);
+    /* back */
+    listCURRENT_LIST_LENGTH_ExpectAndReturn(&pxReadyTasksLists[ptcb->uxPriority],
+                                            1);
+
+    /* API Call */
+    ret_task_incrementtick = xTaskIncrementTick();
+
+    /* Validations */
+    TEST_ASSERT_EQUAL(pdTRUE, ret_task_incrementtick);
+    ASSERT_APP_TICK_HOOK_NOT_CALLED();
+    TEST_ASSERT_EQUAL(portMAX_DELAY, xNextTaskUnblockTime);
+}
+
+void test_xTaskIncrementTick_success_unblock_tasks2( void )
+{
+    BaseType_t  ret_task_incrementtick;
+    TaskHandle_t task_handle;
+    TaskHandle_t task_handle2;
+
+    /* setup */
+    task_handle = create_task();
+    created_task_priority = 2;
+    task_handle2 = create_task();
+    ptcb = task_handle;
+    xPendedTicks = 0;
+    xTickCount = 50;
+    xNextTaskUnblockTime = 49;  /* tasks due unblocking */
+    uxSchedulerSuspended  = pdFALSE;
+    vTaskMissedYield( );
+
+    /* Expectations */
+    listLIST_IS_EMPTY_ExpectAndReturn(pxDelayedTaskList, pdFALSE);
+    listGET_OWNER_OF_HEAD_ENTRY_ExpectAndReturn(pxDelayedTaskList, task_handle2);
+    listGET_LIST_ITEM_VALUE_ExpectAndReturn( &task_handle2->xStateListItem,
+                                             xTickCount - 5 );
+    uxListRemove_ExpectAndReturn(&task_handle2->xStateListItem, pdTRUE);
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &task_handle2->xEventListItem,
+                                             &xPendingReadyList);
+    uxListRemove_ExpectAndReturn(&task_handle2->xEventListItem, pdTRUE);
+    /* prvAddTaskToReadyList */
+    vListInsertEnd_Expect( &pxReadyTasksLists[ task_handle2->uxPriority ],
+                           &task_handle2->xStateListItem );
+    listLIST_IS_EMPTY_ExpectAndReturn(pxDelayedTaskList, pdTRUE);
+    /* back */
+    listCURRENT_LIST_LENGTH_ExpectAndReturn(&pxReadyTasksLists[ptcb->uxPriority],
+                                            1);
+
+    /* API Call */
+    ret_task_incrementtick = xTaskIncrementTick();
+
+    /* Validations */
+    TEST_ASSERT_EQUAL(pdTRUE, ret_task_incrementtick);
+    ASSERT_APP_TICK_HOOK_CALLED();
+    TEST_ASSERT_EQUAL(portMAX_DELAY, xNextTaskUnblockTime);
+}
+/* testing INCLUDE_xTaskAbortDelay */
+void test_xTaskAbortDelay_fail_current_task(void)
+{
+    BaseType_t ret_taskabort_delay;
+    TaskHandle_t task_handle;
+
+    task_handle = create_task();
+    ptcb = task_handle;
+
+    /* Expectations */
+    listLIST_IS_EMPTY_ExpectAndReturn(&xPendingReadyList, pdTRUE);
+    /* API Call */
+    ret_taskabort_delay = xTaskAbortDelay( task_handle );
+    /* Validations */
+    TEST_ASSERT_EQUAL(pdFALSE, ret_taskabort_delay);
+    TEST_ASSERT_EQUAL(pdFALSE, ptcb->ucDelayAborted);
+}
+
+void test_xTaskAbortDelay_success(void)
+{
+    BaseType_t ret_taskabort_delay;
+    TaskHandle_t task_handle;
+
+    created_task_priority = 4;
+    task_handle = create_task();
+    ptcb = task_handle;
+    created_task_priority = 5;
+    create_task();
+
+    /* Expectations */
+    /* eTaskGetState */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xStateListItem,
+                                             pxDelayedTaskList );
+    /* back */
+    uxListRemove_ExpectAndReturn(&tcb->xStateListItem, pdTRUE);
+    listLIST_ITEM_CONTAINER_ExpectAndReturn(&ptcb->xEventListItem, NULL);
+    /* prvAddTaskToReadyList */
+    vListInsertEnd_Expect( &pxReadyTasksLists[ created_task_priority ],
+                           &ptcb->xStateListItem );
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn(&xPendingReadyList, pdTRUE);
+    /* API Call */
+    ret_taskabort_delay = xTaskAbortDelay( task_handle );
+    /* Validations */
+    TEST_ASSERT_EQUAL(pdTRUE, ret_taskabort_delay);
+    TEST_ASSERT_EQUAL(pdFALSE, ptcb->ucDelayAborted);
+}
+
+void test_xTaskAbortDelay_success_notdelayed(void)
+{
+    BaseType_t ret_taskabort_delay;
+    TaskHandle_t task_handle;
+    TaskHandle_t task_handle2;
+
+    created_task_priority = 6;
+    task_handle = create_task();
+    ptcb = task_handle;
+
+    /* Expectations 1*/
+    uxListRemove_ExpectAndReturn(&ptcb->xStateListItem, 1 );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn(&ptcb->xEventListItem,
+                                            &xSuspendedTaskList );
+    uxListRemove_ExpectAndReturn( &ptcb->xEventListItem, pdTRUE);
+    vListInsertEnd_Expect(&xSuspendedTaskList, &ptcb->xStateListItem );
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &xSuspendedTaskList,
+                                             uxCurrentNumberOfTasks) ;
+    TEST_ASSERT_EQUAL(pxCurrentTCB, task_handle);
+
+    vTaskSuspend(task_handle);
+    TEST_ASSERT_EQUAL(NULL, pxCurrentTCB);
+
+    created_task_priority = 5;
+    task_handle2 = create_task();
+    TEST_ASSERT_EQUAL(pxCurrentTCB, task_handle2);
+
+    /* Expectations */
+    /* eTaskGetState */
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xStateListItem,
+                                             pxDelayedTaskList );
+    /* back */
+    uxListRemove_ExpectAndReturn(&tcb->xStateListItem, pdTRUE);
+    listLIST_ITEM_CONTAINER_ExpectAndReturn(&ptcb->xEventListItem,
+                                            pxDelayedTaskList);
+    uxListRemove_ExpectAndReturn(&ptcb->xEventListItem, pdTRUE);
+    /* prvAddTaskToReadyList */
+    vListInsertEnd_Expect( &pxReadyTasksLists[ created_task_priority ],
+                           &ptcb->xStateListItem );
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn(&xPendingReadyList, pdTRUE);
+    /* API Call */
+    ret_taskabort_delay = xTaskAbortDelay( task_handle );
+    /* Validations */
+    TEST_ASSERT_TRUE( ret_taskabort_delay );
+    TEST_ASSERT_TRUE( xYieldPending );
+    TEST_ASSERT_TRUE( ptcb->ucDelayAborted );
+}
+
+/* testing INCLUDE_xTaskGetIdleTaskHandle */
+
+void test_xTaskGetIdleTaskHandle_success(void)
+{
+    TaskHandle_t ret_idle_handle;
+    int ret;
+
+    vListInitialiseItem_ExpectAnyArgs();
+    vListInitialiseItem_ExpectAnyArgs();
+    /* set owner */
+    listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
+    /* set owner */
+
+    pxPortInitialiseStack_ExpectAnyArgsAndReturn( uxIdleTaskStack );
+
+    for( int i = ( UBaseType_t ) 0U; i < ( UBaseType_t ) configMAX_PRIORITIES; i++ )
+    {
+        vListInitialise_ExpectAnyArgs();
+    }
+
+    /* Delayed Task List 1 */
+    vListInitialise_ExpectAnyArgs();
+    /* Delayed Task List 2 */
+    vListInitialise_ExpectAnyArgs();
+    /* Pending Ready List */
+    vListInitialise_ExpectAnyArgs();
+    /* INCLUDE_vTaskDelete */
+    vListInitialise_ExpectAnyArgs();
+    /* INCLUDE_vTaskSuspend */
+    vListInitialise_ExpectAnyArgs();
+
+    vListInsertEnd_ExpectAnyArgs();
+
+    xTimerCreateTimerTask_ExpectAndReturn( pdPASS );
+    xPortStartScheduler_ExpectAndReturn( pdTRUE );
+    getIddleTaskMemoryValid = true;
+    vTaskStartScheduler();
+    TEST_ASSERT_EQUAL( true, getIddleTaskMemoryCalled );
+    ret_idle_handle = xTaskGetIdleTaskHandle( );
+    ptcb = ret_idle_handle;
+    ret = strcmp( ptcb->pcTaskName, "IDLE");
+    TEST_ASSERT_EQUAL(0, ret);
+}
+
+
+/* testing configUSE_APPLICATION_TASK_TAG */
+void test_vTaskSetApplicationTaskTag_current(void)
+{
+    create_task();
+
+    vTaskSetApplicationTaskTag( NULL, pxHookFunction);
+
+    TEST_ASSERT_EQUAL( &pxHookFunction, pxCurrentTCB->pxTaskTag);
+}
+
+void test_vTaskSetApplicationTaskTag_handle(void)
+{
+    TaskHandle_t task_handle;
+    task_handle = create_task();
+
+    vTaskSetApplicationTaskTag( task_handle, pxHookFunction);
+    TEST_ASSERT_EQUAL( &pxHookFunction, task_handle->pxTaskTag);
+}
+
+void test_xTaskGetApplicationTaskTag_null_tcb_current(void)
+{
+    TaskHandle_t task_handle;
+    task_handle = create_task();
+    vTaskSetApplicationTaskTag( task_handle, pxHookFunction);
+
+    TaskHookFunction_t hook_function;
+    hook_function = xTaskGetApplicationTaskTag(NULL);
+
+    TEST_ASSERT_EQUAL(&pxHookFunction, hook_function);
+}
+
+void test_xTaskGetApplicationTaskTag_tcb(void)
+{
+    TaskHandle_t task_handle;
+    task_handle = create_task();
+    vTaskSetApplicationTaskTag( task_handle, pxHookFunction);
+
+    TaskHookFunction_t hook_function;
+    hook_function = xTaskGetApplicationTaskTag(task_handle);
+
+    TEST_ASSERT_EQUAL(&pxHookFunction, hook_function);
+}
+
+void test_xTaskGetApplicationTaskTag_no_hook_set(void)
+{
+    TaskHandle_t task_handle;
+    task_handle = create_task();
+    TaskHookFunction_t hook_function;
+
+    hook_function = xTaskGetApplicationTaskTag(task_handle);
+
+    TEST_ASSERT_EQUAL(NULL, hook_function);
+}
+
+void test_xTaskGetApplicationTaskTagFromISR_success(void)
+{
+    TaskHandle_t task_handle;
+    task_handle = create_task();
+    vTaskSetApplicationTaskTag( task_handle, pxHookFunction);
+
+    TaskHookFunction_t hook_function;
+    hook_function = xTaskGetApplicationTaskTagFromISR(task_handle);
+
+    TEST_ASSERT_EQUAL(&pxHookFunction, hook_function);
+    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_CALLED();
+}
+
+void test_xTaskGetApplicationTaskTagFromISR_null_handle(void)
+{
+    TaskHandle_t task_handle;
+    task_handle = create_task();
+    vTaskSetApplicationTaskTag( task_handle, pxHookFunction);
+
+    TaskHookFunction_t hook_function;
+    hook_function = xTaskGetApplicationTaskTagFromISR(NULL);
+
+    TEST_ASSERT_EQUAL(&pxHookFunction, hook_function);
+    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_CALLED();
+}
+
+void test_xTaskCallApplicationTaskHook_success(void)
+{
+    BaseType_t  ret_task_hook;
+    TaskHandle_t task_handle;
+    BaseType_t i = 5;
+    void * args = &i;
+    task_handle = create_task();
+    vTaskSetApplicationTaskTag( task_handle, pxHookFunction );
+
+    ret_task_hook = xTaskCallApplicationTaskHook( task_handle,
+                                                  args );
+    TEST_ASSERT_EQUAL(i, ret_task_hook);
+}
+
+void test_xTaskCallApplicationTaskHook_success_null_handle(void)
+{
+    BaseType_t  ret_task_hook;
+    TaskHandle_t task_handle;
+    BaseType_t i = 6;
+    void * args = &i;
+    task_handle = create_task();
+
+    vTaskSetApplicationTaskTag( task_handle, pxHookFunction );
+
+    ret_task_hook = xTaskCallApplicationTaskHook( NULL,
+                                                  args );
+    TEST_ASSERT_EQUAL(i, ret_task_hook);
+}
+
+void test_xTaskCallApplicationTaskHook_fail_no_tag_set(void)
+{
+    BaseType_t  ret_task_hook;
+    TaskHandle_t task_handle;
+    int i = 7;
+    void * args = &i;
+    task_handle = create_task();
+
+    ret_task_hook = xTaskCallApplicationTaskHook( task_handle,
+                                                  args );
+    TEST_ASSERT_EQUAL(pdFAIL, ret_task_hook);
+}
+
+/* end testing configUSE_APPLICATION_TASK_TAG */
+
+
+void test_vTaskSwitchContext( void )
+{
+    TaskHandle_t task_handle;
+    TaskHandle_t task_handle2;
+
+    created_task_priority = 3;
+    task_handle = create_task();
+    created_task_priority = 4;
+    task_handle2 = create_task();
+    ptcb = task_handle;
+
+    INITIALIZE_LIST_2E( pxReadyTasksLists[3],
+                        ptcb, task_handle2 );
+    INITIALIZE_LIST_2E( pxReadyTasksLists[4],
+                        ptcb, task_handle2 );
+
+    /* Setup */
+    uxSchedulerSuspended = pdFALSE;
+    /* Expectations */
+
+    /* API Call */
+    vTaskSwitchContext( );
+
+    /* Validations */
+    TEST_ASSERT_EQUAL( 24, uxTopReadyPriority );
+    TEST_ASSERT_FALSE( xYieldPending );
+}
+
+void test_vTaskPlaceOnEventList_success( void )
+{
+    TaskHandle_t task_handle;
+    List_t  eventList;
+
+    created_task_priority = 3;
+    task_handle = create_task();
+    ptcb = task_handle;
+
+
+    /* Expectations */
+    vListInsert_Expect(&eventList, &ptcb->xEventListItem);
+    /*  prvAddCurrentTaskToDelayedList */
+    uxListRemove_ExpectAndReturn(&ptcb->xStateListItem, 1);
+    listSET_LIST_ITEM_VALUE_Expect(&ptcb->xStateListItem, (xTickCount + 34));
+    vListInsert_Expect(pxDelayedTaskList, &ptcb->xStateListItem);
+
+    /* API call */
+    vTaskPlaceOnEventList( &eventList,
+                            34 );
+    TEST_ASSERT_EQUAL( 0, xNextTaskUnblockTime );
+}
+void test_vTaskPlaceOnUnorderedEventList( void)
+{
+    TaskHandle_t task_handle;
+    List_t eventList;
+
+    created_task_priority = 3;
+    task_handle = create_task();
+    ptcb = task_handle;
+    xNextTaskUnblockTime  = 600;
+
+    /* Expectations */
+    listSET_LIST_ITEM_VALUE_Expect(&ptcb->xEventListItem,  32 | 0x80000000UL);
+    vListInsertEnd_Expect(&eventList, &ptcb->xEventListItem);
+    /* prvAddCurrentTaskToDelayedList */
+    uxListRemove_ExpectAndReturn(&ptcb->xStateListItem, 1);
+    listSET_LIST_ITEM_VALUE_Expect(&ptcb->xStateListItem, (xTickCount + 34));
+    vListInsert_Expect(pxDelayedTaskList, &ptcb->xStateListItem);
+    /* API Call */
+    vTaskPlaceOnUnorderedEventList( &eventList, 32, 34);
+    TEST_ASSERT_EQUAL( xTickCount + 34, xNextTaskUnblockTime );
+}
+
+/* testing configUSE_TIMERS  */
+void test_vTaskPlaceOnEventListRestricted_indefinite(void)
+{
+    List_t eventList;
+    TaskHandle_t task_handle;
+
+    created_task_priority = 3;
+    task_handle = create_task();
+    ptcb = task_handle;
+    /* Expectations */
+    vListInsertEnd_Expect(&eventList, &ptcb->xEventListItem);
+    /* prvAddCurrentTaskToDelayedList */
+    uxListRemove_ExpectAndReturn(&ptcb->xStateListItem, 0);
+    vListInsertEnd_Expect( &xSuspendedTaskList, &( ptcb->xStateListItem ) );
+    /* API Call */
+    vTaskPlaceOnEventListRestricted( &eventList, 100, pdTRUE);
+
+}
+
+void test_vTaskPlaceOnEventListRestricted_not_indefinite(void)
+{
+    List_t eventList;
+    TaskHandle_t task_handle;
+
+    created_task_priority = 3;
+    task_handle = create_task();
+    ptcb = task_handle;
+    /* Expectations */
+    vListInsertEnd_Expect(&eventList, &ptcb->xEventListItem);
+    /* prvAddCurrentTaskToDelayedList */
+    uxListRemove_ExpectAndReturn(&ptcb->xStateListItem, 1);
+    listSET_LIST_ITEM_VALUE_Expect(&ptcb->xStateListItem, (xTickCount + 100));
+    vListInsert_Expect(pxDelayedTaskList, &ptcb->xStateListItem);
+    /* API Call */
+    vTaskPlaceOnEventListRestricted( &eventList, 100, pdFALSE);
+}
+
+void test_vTaskPlaceOnEventListRestricted_max_wait(void)
+{
+    List_t eventList;
+    TaskHandle_t task_handle;
+
+    created_task_priority = 3;
+    task_handle = create_task();
+    ptcb = task_handle;
+    /* Expectations */
+    vListInsertEnd_Expect(&eventList, &ptcb->xEventListItem);
+    /* prvAddCurrentTaskToDelayedList */
+    uxListRemove_ExpectAndReturn(&ptcb->xStateListItem, 1);
+    listSET_LIST_ITEM_VALUE_Expect(&ptcb->xStateListItem, (xTickCount + portMAX_DELAY));
+    vListInsert_Expect(pxDelayedTaskList, &ptcb->xStateListItem);
+    /* API Call */
+    vTaskPlaceOnEventListRestricted( &eventList, portMAX_DELAY, pdFALSE);
+}
+/* end testing configUSE_TIMERS  */
+
+void test_xTaskRemoveFromEventList_fail(void)
+{
+    BaseType_t ret_task_remove;
+    TaskHandle_t task_handle;
+    List_t eventList;
+
+    /* Setup */
+    uxSchedulerSuspended = pdFALSE;
+    task_handle = create_task();
+    ptcb = task_handle;
+
+    /* Expectations */
+    listGET_OWNER_OF_HEAD_ENTRY_ExpectAndReturn( &eventList, ptcb );
+    uxListRemove_ExpectAndReturn( &ptcb->xEventListItem, pdTRUE );
+    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdTRUE );
+    /* prvAddTaskToReadyList */
+    vListInsertEnd_Expect( &pxReadyTasksLists[ created_task_priority ],
+                           &ptcb->xStateListItem );
+    /* prvResetNextTaskUnblockTime */
+    listLIST_IS_EMPTY_ExpectAndReturn(pxDelayedTaskList, pdTRUE);
+    /* API Call */
+    ret_task_remove = xTaskRemoveFromEventList( &eventList );
+    /* Validations */
+    TEST_ASSERT_EQUAL( pdFALSE, ret_task_remove );
+    TEST_ASSERT_EQUAL( pdFALSE, xYieldPending );
+}
+
+void test_xTaskRemoveFromEventList_sched_suspended(void)
+{
+    BaseType_t ret_task_remove;
+    TaskHandle_t task_handle;
+    TaskHandle_t task_handle2;
+    List_t eventList;
+
+    /* Setup */
+    uxSchedulerSuspended = pdTRUE;
+    created_task_priority = 3;
+    task_handle = create_task();
+    ptcb = task_handle; /* unblocked */
+
+    /* block the higher priority task */
+    uxListRemove_ExpectAndReturn(&ptcb->xStateListItem, 1 );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn(&ptcb->xEventListItem,
+                                            &xSuspendedTaskList );
+    uxListRemove_ExpectAndReturn( &ptcb->xEventListItem, pdTRUE);
+    vListInsertEnd_Expect(&xSuspendedTaskList, &ptcb->xStateListItem );
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &xSuspendedTaskList,
+                                             uxCurrentNumberOfTasks) ;
+    TEST_ASSERT_EQUAL(pxCurrentTCB, task_handle);
+
+    vTaskSuspend(task_handle);
+    TEST_ASSERT_EQUAL(NULL, pxCurrentTCB);
+    created_task_priority = 2;
+    task_handle2 = create_task();
+    TEST_ASSERT_EQUAL(task_handle2, pxCurrentTCB);
+
+    /* Expectations */
+    listGET_OWNER_OF_HEAD_ENTRY_ExpectAndReturn( &eventList, ptcb );
+    uxListRemove_ExpectAndReturn( &ptcb->xEventListItem, pdTRUE );
+    vListInsertEnd_Expect(&xPendingReadyList, &ptcb->xEventListItem);
+    /* API Call */
+    ret_task_remove = xTaskRemoveFromEventList( &eventList );
+    /* Validations */
+    TEST_ASSERT_EQUAL( pdTRUE, ret_task_remove );
+    TEST_ASSERT_EQUAL( pdTRUE, xYieldPending );
+}
+
+void test_vTaskRemoveFromUnorderedEventList( void )
+{
+    ListItem_t list_item;
+    TickType_t xItemValue = 500;
+    TaskHandle_t task_handle;
+
+    /* Setup */
+    uxSchedulerSuspended = pdTRUE;
+    created_task_priority = 3;
+    task_handle = create_task();
+    ptcb = task_handle;
+
+    /* Expectations */
+    listSET_LIST_ITEM_VALUE_Expect( &list_item, xItemValue | 0x80000000UL);
+    listGET_LIST_ITEM_OWNER_ExpectAndReturn(&list_item, tcb);
+    uxListRemove_ExpectAndReturn(&list_item, pdTRUE);
+    /* prvResetNextTaskUnblockTime */
+    listLIST_IS_EMPTY_ExpectAndReturn(pxDelayedTaskList, pdTRUE);
+    /* back */
+    uxListRemove_ExpectAndReturn(&ptcb->xStateListItem, pdTRUE);
+    /* prvAddTaskToReadyList */
+    vListInsertEnd_Expect( &pxReadyTasksLists[ created_task_priority ],
+                           &ptcb->xStateListItem );
+
+    /* API Call */
+    vTaskRemoveFromUnorderedEventList( &list_item,
+                                       xItemValue );
+    /* Validations */
+    TEST_ASSERT_FALSE(xYieldPending);
+}
+
+void test_vTaskRemoveFromUnorderedEventList_yielding( void )
+{
+    ListItem_t list_item;
+    TickType_t xItemValue = 500;
+    TaskHandle_t task_handle;
+    TaskHandle_t task_handle2;
+
+    /* Setup */
+    uxSchedulerSuspended = pdTRUE;
+    created_task_priority = 3;
+    task_handle = create_task();
+    ptcb = task_handle;
+    /* block the higher priority task */
+    uxListRemove_ExpectAndReturn(&ptcb->xStateListItem, 1 );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn(&ptcb->xEventListItem,
+                                            &xSuspendedTaskList );
+    uxListRemove_ExpectAndReturn( &ptcb->xEventListItem, pdTRUE);
+    vListInsertEnd_Expect(&xSuspendedTaskList, &ptcb->xStateListItem );
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &xSuspendedTaskList,
+                                             uxCurrentNumberOfTasks) ;
+    TEST_ASSERT_EQUAL(pxCurrentTCB, task_handle);
+
+    vTaskSuspend(task_handle);
+    TEST_ASSERT_EQUAL(NULL, pxCurrentTCB);
+    created_task_priority = 2;
+    task_handle2 = create_task();
+    TEST_ASSERT_EQUAL(task_handle2, pxCurrentTCB);
+
+    /* Expectations */
+    listSET_LIST_ITEM_VALUE_Expect( &list_item, xItemValue | 0x80000000UL);
+    listGET_LIST_ITEM_OWNER_ExpectAndReturn(&list_item, tcb);
+    uxListRemove_ExpectAndReturn(&list_item, pdTRUE);
+    /* prvResetNextTaskUnblockTime */
+    listLIST_IS_EMPTY_ExpectAndReturn(pxDelayedTaskList, pdTRUE);
+    /* back */
+    uxListRemove_ExpectAndReturn(&ptcb->xStateListItem, pdTRUE);
+    /* prvAddTaskToReadyList */
+    vListInsertEnd_Expect( &pxReadyTasksLists[ created_task_priority ],
+                           &ptcb->xStateListItem );
+
+    /* API Call */
+    vTaskRemoveFromUnorderedEventList( &list_item,
+                                       xItemValue );
+    /* Validations */
+    TEST_ASSERT_TRUE(xYieldPending);
+}
+
+void test_vTaskSetTimeOutState_success(void)
+{
+    TimeOut_t time_out;
+
+    /* API Call */
+    vTaskSetTimeOutState( &time_out );
+    /* Validations */
+    TEST_ASSERT_EQUAL( xNumOfOverflows, time_out.xOverflowCount );
+    TEST_ASSERT_EQUAL( xTickCount, time_out.xTimeOnEntering );
+}
+
+void test_vTaskInternalSetTimeOutState_success(void)
+{
+    TimeOut_t time_out;
+
+    /* API Call */
+    vTaskInternalSetTimeOutState( &time_out );
+    /* Validations */
+    TEST_ASSERT_EQUAL( xNumOfOverflows, time_out.xOverflowCount );
+    TEST_ASSERT_EQUAL( xTickCount, time_out.xTimeOnEntering );
+}
+
+void test_xTaskCheckForTimeOut( void )
+{
+    BaseType_t ret_check_timeout;
+    TimeOut_t time_out;
+    TickType_t  ticks_to_wait = 5;
+    TaskHandle_t task_handle;
+    created_task_priority = 3;
+    task_handle = create_task();
+    ptcb = task_handle;
+
+    ret_check_timeout = xTaskCheckForTimeOut( &time_out,
+                                              &ticks_to_wait );
+    TEST_ASSERT_TRUE(ret_check_timeout);
+}
+
+void test_xTaskCheckForTimeOut_delay_aborted( void )
+{
+    BaseType_t ret_check_timeout;
+    TimeOut_t time_out;
+    TickType_t  ticks_to_wait = portMAX_DELAY;
+    TaskHandle_t task_handle;
+    created_task_priority = 3;
+    task_handle = create_task();
+    ptcb = task_handle;
+    ptcb->ucDelayAborted = pdTRUE; /* achieved by calling  xTaskAbortDelay */
+
+    ret_check_timeout = xTaskCheckForTimeOut( &time_out,
+                                              &ticks_to_wait );
+    TEST_ASSERT_TRUE(ret_check_timeout);
+}
+
+void test_xTaskCheckForTimeOut_max_delay( void )
+{
+    BaseType_t ret_check_timeout;
+    TimeOut_t time_out;
+    TickType_t  ticks_to_wait = portMAX_DELAY;
+    TaskHandle_t task_handle;
+    created_task_priority = 3;
+    task_handle = create_task();
+    ptcb = task_handle;
+
+    ret_check_timeout = xTaskCheckForTimeOut( &time_out,
+                                              &ticks_to_wait );
+    TEST_ASSERT_FALSE(ret_check_timeout);
+}
+
+void test_xTaskCheckForTimeOut_overflow( void )
+{
+    BaseType_t ret_check_timeout;
+    TimeOut_t time_out;
+    TickType_t  ticks_to_wait = 10;
+    TaskHandle_t task_handle;
+    created_task_priority = 3;
+    task_handle = create_task();
+    ptcb = task_handle;
+    time_out.xOverflowCount = xNumOfOverflows + 2;
+    time_out.xTimeOnEntering  = xTickCount - 3;
+
+    ret_check_timeout = xTaskCheckForTimeOut( &time_out,
+                                              &ticks_to_wait );
+    TEST_ASSERT_TRUE(ret_check_timeout);
+    TEST_ASSERT_EQUAL(0, ticks_to_wait);
+}
+
+    //const TickType_t xElapsedTime = xConstTickCount - pxTimeOut->xTimeOnEntering;
+void test_xTaskCheckForTimeOut_timeout( void )
+{
+    BaseType_t ret_check_timeout;
+    TimeOut_t time_out;
+    TickType_t  ticks_to_wait = 1000;
+    TaskHandle_t task_handle;
+    created_task_priority = 3;
+    task_handle = create_task();
+    ptcb = task_handle;
+    ptcb->ucDelayAborted = pdFALSE;
+    time_out.xOverflowCount = xNumOfOverflows;
+    time_out.xTimeOnEntering  =  3;
+    uint32_t expected = (1000 - (xTickCount - time_out.xTimeOnEntering));
+    /* API Call */
+    ret_check_timeout = xTaskCheckForTimeOut( &time_out,
+                                              &ticks_to_wait );
+    /* Validations */
+    TEST_ASSERT_FALSE(ret_check_timeout);
+    TEST_ASSERT_EQUAL(expected, ticks_to_wait);
+    TEST_ASSERT_EQUAL(xTickCount, time_out.xTimeOnEntering);
+}
+
+
+void test_vTaskMissedYield( void )
+{
+    TEST_ASSERT_FALSE(xYieldPending);
+    vTaskMissedYield( );
+    TEST_ASSERT_TRUE(xYieldPending);
+}
+
+void test_prvIddleTask( void )
+{
+    int i = 8;
+    void *args = &i;
+    portTASK_FUNCTION( prvIdleTask, args);
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 xtaskdelayuntil

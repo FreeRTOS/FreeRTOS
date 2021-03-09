@@ -24,12 +24,24 @@ TickType_t listGET_LIST_ITEM_VALUE( ListItem_t * listItem  );
 #undef listSET_LIST_ITEM_VALUE
 void listSET_LIST_ITEM_VALUE( ListItem_t * listItem, TickType_t itemValue);
 
-#undef listGET_OWNER_OF_NEXT_ENTRY
-void listGET_OWNER_OF_NEXT_ENTRY( void * pvOwner, List_t * list);
 
 #undef listLIST_ITEM_CONTAINER
 List_t * listLIST_ITEM_CONTAINER(ListItem_t * listItem);
 
 #undef listCURRENT_LIST_LENGTH
 UBaseType_t listCURRENT_LIST_LENGTH(List_t * list);
+
+#undef listGET_ITEM_VALUE_OF_HEAD_ENTRY
+TickType_t listGET_ITEM_VALUE_OF_HEAD_ENTRY(List_t * list);
+
+#undef listGET_LIST_ITEM_OWNER
+TCB_t * listGET_LIST_ITEM_OWNER(ListItem_t * listItem);
+
+/*
+#undef listGET_OWNER_OF_NEXT_ENTRY
+#define listGET_OWNER_OF_NEXT_ENTRY( pvOwner, list) \
+    (pvOwner) = 6;
+*/
+
+
 #endif

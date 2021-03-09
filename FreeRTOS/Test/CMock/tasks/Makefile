@@ -17,7 +17,7 @@ MOCK_FILES_FP    +=   $(PROJECT_DIR)/list_macros.h
 
 UNDEF_MOCKED_HEADER_MACROS := -UlistLIST_IS_EMPTY -UlistGET_OWNER_OF_HEAD_ENTRY \
 		    -UlistIS_CONTAINED_WITHIN -UlistGET_LIST_ITEM_VALUE         \
-		    -UlistSET_LIST_ITEM_VALUE  -UlistGET_OWNER_OF_NEXT_ENTRY    \
+		    -UlistSET_LIST_ITEM_VALUE  \
 		    -UlistLIST_ITEM_CONTAINER -UlistCURRENT_LIST_LENGTH
 
 # List special compilation flags for this module

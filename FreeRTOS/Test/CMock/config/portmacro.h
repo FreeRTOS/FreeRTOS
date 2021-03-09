@@ -144,12 +144,14 @@ typedef unsigned long    UBaseType_t;
 extern void portClear_Interrupt_Mask(UBaseType_t bt);
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR(X)   portClear_Interrupt_Mask(X)
 
+extern void portAssert_if_int_prio_invalid(void);
+#define  portASSERT_IF_INTERRUPT_PRIORITY_INVALID() portAssert_if_int_prio_invalid()
+
 static inline uint8_t ucPortCountLeadingZeros( uint32_t ulBitmap )
 {
     uint8_t ucReturn;
 
-    ucReturn = __builtin_clzll( ulBitmap );
-
+    ucReturn = __builtin_clz( ulBitmap );
     return ucReturn;
 }
 
@@ -163,7 +165,8 @@ static inline uint8_t ucPortCountLeadingZeros( uint32_t ulBitmap )
 
 /* Task function macros as described on the FreeRTOS.org WEB site. */
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) \
-    void vFunction( void * pvParameters )
+    void vFunction( void * (pvParameters) )
+
 #define portTASK_FUNCTION( vFunction, pvParameters ) \
     void vFunction( void * pvParameters )
 

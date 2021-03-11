@@ -441,19 +441,19 @@ static void prvTLSConnect( NetworkCredentials_t * pxNetworkCredentials,
 
     /* Set the credentials for establishing a TLS connection. */
 
-    pxNetworkCredentials->pRootCa     = (const unsigned char*)democonfigROOT_CA_PEM;
-    pxNetworkCredentials->pClientCert = (const unsigned char*)democonfigCLIENT_CERTIFICATE_PEM;
-    pxNetworkCredentials->pPrivateKey = (const unsigned char*)democonfigCLIENT_PRIVATE_KEY_PEM;
+    pxNetworkCredentials->pRootCa = ( const unsigned char * ) democonfigROOT_CA_PEM;
+    pxNetworkCredentials->pClientCert = ( const unsigned char * ) democonfigCLIENT_CERTIFICATE_PEM;
+    pxNetworkCredentials->pPrivateKey = ( const unsigned char * ) democonfigCLIENT_PRIVATE_KEY_PEM;
 
-#if defined( democonfigCREDENTIALS_IN_BUFFER)
-    pxNetworkCredentials->rootCaSize     = strlen(democonfigROOT_CA_PEM);
-    pxNetworkCredentials->clientCertSize = strlen(democonfigCLIENT_CERTIFICATE_PEM);
-    pxNetworkCredentials->privateKeySize = strlen(democonfigCLIENT_PRIVATE_KEY_PEM);
-#else
-    pxNetworkCredentials->rootCaSize     = sizeof(democonfigROOT_CA_PEM);
-    pxNetworkCredentials->clientCertSize = sizeof(democonfigCLIENT_CERTIFICATE_PEM);
-    pxNetworkCredentials->privateKeySize = sizeof(democonfigCLIENT_PRIVATE_KEY_PEM);
-#endif
+    #if defined( democonfigCREDENTIALS_IN_BUFFER )
+        pxNetworkCredentials->rootCaSize = strlen( democonfigROOT_CA_PEM );
+        pxNetworkCredentials->clientCertSize = strlen( democonfigCLIENT_CERTIFICATE_PEM );
+        pxNetworkCredentials->privateKeySize = strlen( democonfigCLIENT_PRIVATE_KEY_PEM );
+    #else
+        pxNetworkCredentials->rootCaSize = sizeof( democonfigROOT_CA_PEM );
+        pxNetworkCredentials->clientCertSize = sizeof( democonfigCLIENT_CERTIFICATE_PEM );
+        pxNetworkCredentials->privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
+    #endif
 
     /* Attempt to create a mutually authenticated TLS connection. */
     xNetworkStatus = TLS_FreeRTOS_Connect( pxNetworkContext,

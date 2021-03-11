@@ -22,7 +22,7 @@ If even one of the above 1 to 4 is not set, an error will occur at build time. Y
 
 # Set Broker endpoint
 
-A broker endpoint is a url that represents where MQTT subscribers and publishers access. In case your device is going to access AWS IoT device data endpoints, the endpoint would be the following format: ***account-specific-prefix*.iot.*aws-region*.amazonasw.com**.
+A broker endpoint is a url that represents where MQTT subscribers and publishers access. In case your device is going to access AWS IoT device data endpoints, the endpoint would be the following format: ***account-specific-prefix*.iot.*aws-region*. amazonaws.com**.
 
 To set broker endpoint, find the statement '**#define democonfigMQTT_BROKER_ENDPOINT    "...insert here...**' in demo_config.h and activate it by copy & paste to the outside of the commented part. Replace "...insert here..." with your broker endpoint url.
 ```
@@ -68,37 +68,17 @@ First of all, activate **democonfigCREDENTIALS_IN_BUFFER** macro.
 #define democonfigCREDENTIALS_IN_BUFFER
 ```
 Second, prepare a source file to contain the contents of the credentials. As an example, prepare credentials.c file and add it to the demo project. In the file, the contents of each credential need to be
-defined as "**const char***" variable. In this example, **root_ca**, **devide_cert** and **device_priv_key** represent buffers.
+defined as "**const char***" variable. In this example, **root_ca**, **devide_cert** and **device_priv_key** represent buffers. Open the PEM file for each credential and paste its contents into the variables in the credentials.c file below.
 
 ```
 /* credentials.c */
 
-const char* root_ca =
-"-----BEGIN CERTIFICATE-----\n"
-"MIIE0zCCA7ugAwIBAgIQGNrRniZ96LtKIVjNzGs7SjANBgkqhkiG9w0BAQUFADCB\n"
-"yjELMAkGA1UEBhMCVVMxFzAVBgNVBAoTDlZlcmlTaWduLCBJbmMuMR8wHQYDVQQL\n"
-          ...
-"4fQRbxC1lfznQgUy286dUV4otp6F01vvpX1FQHKOtw5rDgb7MzVIcbidJ4vEZV8N\n"
-"hnacRHr2lVz2XTIIM6RUthg/aFzyQkqFOFSDX9HoLPKsEdao7WNq\n"
-"-----END CERTIFICATE-----";
+const char* root_ca         = "Paste Root CA here";
 
-const char* device_cert =
-"-----BEGIN CERTIFICATE-----\n"
-"MIIDWjCCAkKgAwIBAgIVANIzUucLFUREa2BiJUXoRv6Z4XaIMA0GCSqGSIb3DQEB\n"
-"CwUAME0xSzBJBgNVBAsMQkFtYXpvbiBXZWIgU2VydmljZXMgTz1BbWF6b24uY29t\n"
-        ...
-"jKrLFSjEdbaUj3ukMv0sGO693Z5DqTL2t9ylM2LuE9iyiWF7DBHhuDLHsZfirjk3\n"
-"7/MBDwfbv7td8GOy6C2BennS5tWOL06+8lYErP4ECEQqW6izI2Cup+O01rrjkQ==\n"
-"-----END CERTIFICATE-----";
+const char* device_cert     = "Paste device cert here";
 
-const char* device_priv_key =
-"-----BEGIN RSA PRIVATE KEY-----\n"
-"MIIEpAIBAAKCAQEAqsAKVhbfQEWblC8PvgubqpJasVoCEsSfvLF4b5DIAsoMeieP\n"
-"26y6Vyd3njRyuigSQ6jP+mo3GyqSfeCbqfJ2dx3BNICEk7P46Bu37ewoI24pScnT\n"
-        ...
-"5aGgRkmSW/Fc1ab33Gj2liLXCDN8bziri3KfMW6n9Dxhk8ppue7N5vNpjaoMLU2e\n"
-"tT/aucPRjdDp9JPzZQaewIDz7OG8bJtwLfx25FiR2oWDz2kD02joag==\n"
-"-----END RSA PRIVATE KEY-----";
+const char* device_priv_key = "Paste device private key here";
+
 ```
 Third, go back to **demo_config.h** to define following macros:
 
@@ -110,7 +90,7 @@ Third, go back to **demo_config.h** to define following macros:
 ```
 Each macro defines variable name defined in credentials.c.
 
-Finally, make those three variables( root_ca, device_cert and device_priv_ke) visible from MutualAuthMQTTExample.c by adding extern declarations to the file.  
+Finally, make those three variables( root_ca, device_cert and device_priv_key ) visible from MutualAuthMQTTExample.c by adding extern declarations to the file.
 
 If you completes above settings, re-build demo to continue with the final setup.
 

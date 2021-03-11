@@ -446,9 +446,9 @@ static void prvTLSConnect( NetworkCredentials_t * pxNetworkCredentials,
     pxNetworkCredentials->pPrivateKey = (const unsigned char*)democonfigCLIENT_PRIVATE_KEY_PEM;
 
 #if defined( democonfigCREDENTIALS_IN_BUFFER)
-    pxNetworkCredentials->rootCaSize     = XSTRLEN(democonfigROOT_CA_PEM);
-    pxNetworkCredentials->clientCertSize = XSTRLEN(democonfigCLIENT_CERTIFICATE_PEM);
-    pxNetworkCredentials->privateKeySize = XSTRLEN(democonfigCLIENT_PRIVATE_KEY_PEM);
+    pxNetworkCredentials->rootCaSize     = strlen(democonfigROOT_CA_PEM);
+    pxNetworkCredentials->clientCertSize = strlen(democonfigCLIENT_CERTIFICATE_PEM);
+    pxNetworkCredentials->privateKeySize = strlen(democonfigCLIENT_PRIVATE_KEY_PEM);
 #else
     pxNetworkCredentials->rootCaSize     = sizeof(democonfigROOT_CA_PEM);
     pxNetworkCredentials->clientCertSize = sizeof(democonfigCLIENT_CERTIFICATE_PEM);

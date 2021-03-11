@@ -132,10 +132,9 @@ $(SCRATCH_DIR)/callgraph.json : $(PROJ_SRC_LIST)
 	mkdir -p $(SCRATCH_DIR)
 	python3 $(UT_ROOT_DIR)/tools/callgraph.py $^ > $@
 
-COVERAGE_EXCLUDE := $(foreach excl,$(PROJECT_HEADER_DEPS), -fprofile-exclude-files=$(excl))
 # compile the project objects with coverage instrumented
 $(PROJ_DIR)/%.o : $(PROJ_DIR)/%.i
-	$(CC) -c $< $(CPPFLAGS) $(INCLUDE_DIR) $(GCC_COV_OPTS) $(COVERAGE_EXCLUDE) -o $@
+	$(CC) -c $< $(CPPFLAGS) $(INCLUDE_DIR) $(GCC_COV_OPTS) -o $@
 
 # Build mock objects
 $(SCRATCH_DIR)/mock_%.o : $(MOCKS_DIR)/mock_%.c

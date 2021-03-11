@@ -1,6 +1,10 @@
+# indent with spaces
+.RECIPEPREFIX := $(.RECIPEPREFIX) $(.RECIPEPREFIX)
+
 # Change to match installed location
 export CC ?= /usr/local/bin/gcc
 export LD ?= /usr/local/bin/ld
+
 # Add units here when adding a new unit test directory with the same name
 UNITS := list
 #UNITS += queue
@@ -15,69 +19,69 @@ all: doc coverage
 execs: $(UNITS)
 
 $(UNITS) : libs | directories
-	$(MAKE) -C $@
+    $(MAKE) -C $@
 
 SHARED_LIBS := $(addprefix $(LIB_DIR)/,$(addsuffix .so,$(LIBS)))
 
 libs : $(SHARED_LIBS)
 
 doc:
-	$(MAKE) -C doc all
+    $(MAKE) -C doc all
 
 clean:
-	rm -rf build
+    rm -rf build
 
 help:
-	@echo -e 'Usage: $$ make <unit>\n '
-	@echo -e ' where <unit> is one of: $(UNITS) doc all run run_formatted run_col run_col_formatted coverage'
+    @echo -e 'Usage: $$ make <unit>\n '
+    @echo -e ' where <unit> is one of: $(UNITS) doc all run run_formatted run_col run_col_formatted coverage'
 
 $(LIB_DIR)/libcmock.so : ${CMOCK_SRC_DIR}/cmock.c   \
                          ${CMOCK_SRC_DIR}/cmock.h   \
                          ${LIB_DIR}/libunity.so     \
                          Makefile
-	mkdir -p $(LIB_DIR)
-	${CC} -o $@ -shared -fPIC $< ${INCLUDE_DIR}
+    mkdir -p $(LIB_DIR)
+    ${CC} -o $@ -shared -fPIC $< ${INCLUDE_DIR}
 
 $(LIB_DIR)/libunity.so : ${UNITY_SRC_DIR}/unity.c   \
                          ${UNITY_SRC_DIR}/unity.h   \
                          Makefile
-	mkdir -p $(LIB_DIR)
-	${CC} -o $@ -shared -fPIC $<
+    mkdir -p $(LIB_DIR)
+    ${CC} -o $@ -shared -fPIC $<
 
 $(LIB_DIR)/libunitymemory.so: ${UNITY_MEM_DIR}/unity_memory.c   \
                               ${UNITY_MEM_DIR}/unity_memory.h   \
                               ${LIB_DIR}/libunity.so            \
                               Makefile
-	mkdir -p $(LIB_DIR)
-	${CC} -o $@ -shared -fPIC $< ${INCLUDE_DIR}
+    mkdir -p $(LIB_DIR)
+    ${CC} -o $@ -shared -fPIC $< ${INCLUDE_DIR}
 
 $(LIB_DIR)/libcexception.so: ${C_EXCEPTION_SRC_DIR}/CException.c    \
                              ${C_EXCEPTION_SRC_DIR}/CException.h
-	mkdir -p $(LIB_DIR)
-	${CC} -o $@ -shared -fPIC $< ${INCLUDE_DIR}
+    mkdir -p $(LIB_DIR)
+    ${CC} -o $@ -shared -fPIC $< ${INCLUDE_DIR}
 
 run : $(UNITS)
-	mkdir -p $(BUILD_DIR)
-	rm -f $(BUILD_DIR)/unit_test_report.txt
-	for f in $(BIN_DIR)/*; do                               \
+    mkdir -p $(BUILD_DIR)
+    rm -f $(BUILD_DIR)/unit_test_report.txt
+    for f in $(BIN_DIR)/*; do                               \
         $${f} | tee -a $(BUILD_DIR)/unit_test_report.txt;   \
     done
-	cd $(BUILD_DIR) &&                              \
+    cd $(BUILD_DIR) &&                              \
         ruby $(UNITY_BIN_DIR)/parse_output.rb -xml  \
         $(BUILD_DIR)/unit_test_report.txt
 
 run_col : $(UNITS) zero_coverage
-	for f in $(BIN_DIR)/*; do \
+    for f in $(BIN_DIR)/*; do \
         ruby -r $(UNITY_BIN_DIR)/colour_reporter.rb -e "report('`$${f}`')"; done
 
 run_formatted : $(UNITS) zero_coverage
-	for f in $(BIN_DIR)/*; do                                       \
+    for f in $(BIN_DIR)/*; do                                       \
         $${f} > $(BUILD_DIR)/output;                                \
         ruby $(UNITY_BIN_DIR)/parse_output.rb $(BUILD_DIR)/output ; \
     done
 
 run_col_formatted : $(UNITS) zero_coverage
-	for f in $(BIN_DIR)/*; do                                       \
+    for f in $(BIN_DIR)/*; do                                       \
         $${f} > $(BUILD_DIR)/output;                                \
         ruby -r $(UNITY_BIN_DIR)/colour_reporter.rb                 \
             -e "report('$$(ruby $(UNITY_BIN_DIR)/parse_output.rb    \
@@ -85,10 +89,10 @@ run_col_formatted : $(UNITS) zero_coverage
     done
 
 zero_coverage :
-	lcov --zerocounters --directory $(BUILD_DIR)
+    lcov --zerocounters --directory $(BUILD_DIR)
 
 coverage : run_col
-	lcov --base-directory $(KERNEL_DIR) --directory $(BUILD_DIR) --capture  \
+    lcov --base-directory $(KERNEL_DIR) --directory $(BUILD_DIR) --capture  \
         --config-file $(UT_ROOT_DIR)/lcovrc -o $(BUILD_DIR)/cmock_test.info
-	genhtml $(BUILD_DIR)/cmock_test.info --branch-coverage                      \
+    genhtml $(BUILD_DIR)/cmock_test.info --branch-coverage                      \
         --config-file $(UT_ROOT_DIR)/lcovrc --output-directory $(COVERAGE_DIR)

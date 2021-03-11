@@ -1,3 +1,6 @@
+# indent with spaces
+.RECIPEPREFIX := $(.RECIPEPREFIX) $(.RECIPEPREFIX)
+
 # Do not move this line below the include
 MAKEFILE_ABSPATH    :=  $(abspath $(lastword $(MAKEFILE_LIST)))
 include ../makefile.in
@@ -87,12 +90,12 @@ NO_DELETE : $(MOCK_SRC_LIST) $(MOCK_OBJ_LIST) $(SF_OBJ_LIST) $(EXEC_LIST)       
 all: gcov
 
 clean:
-	rm -rf $(SCRATCH_DIR)
-	rm -rf $(EXEC_LIST)
-	rm -rf $(COVERAGE_DIR)/$(PROJECT)
+    rm -rf $(SCRATCH_DIR)
+    rm -rf $(EXEC_LIST)
+    rm -rf $(COVERAGE_DIR)/$(PROJECT)
 
 $(LIBS)&:
-	make -C $(UT_ROOT_DIR) libs
+    make -C $(UT_ROOT_DIR) libs
 
 # Generate gcov files by default
 run : gcov
@@ -106,69 +109,69 @@ endef
 
 # Run and append to gcov data files
 $(PROJ_GCDA_LIST) &: $(EXEC_LIST)
-	rm -f $(PROJ_DIR)/*.gcda
-	# run each test case
-	$(foreach bin,$^,$(call run-test,$(bin)))
+    rm -f $(PROJ_DIR)/*.gcda
+    # run each test case
+    $(foreach bin,$^,$(call run-test,$(bin)))
 
 # Run and generate lcov
 lcov: $(SCRATCH_DIR)/$(COVINFO)
 
 lcovhtml : $(SCRATCH_DIR)/$(COVINFO)
-	mkdir -p $(COVERAGE_DIR)/$(PROJECT)
-	genhtml $(SCRATCH_DIR)/$(COVINFO) $(LCOV_OPTS)  \
+    mkdir -p $(COVERAGE_DIR)/$(PROJECT)
+    genhtml $(SCRATCH_DIR)/$(COVINFO) $(LCOV_OPTS)  \
         --output-directory $(COVERAGE_DIR)/$(PROJECT)
 
 bin: $(EXEC_LIST)
 
 # # Generate _mock.c / .h files
 # $(MOCK_SRC_LIST) &: $(PROJECT_DIR)/$(PROJECT).yml $(MOCK_FILES_FP)
-# 	mkdir -p $(SCRATCH_DIR) $(MOCKS_DIR)
-# 	cd $(SCRATCH_DIR) && \
+#     mkdir -p $(SCRATCH_DIR) $(MOCKS_DIR)
+#     cd $(SCRATCH_DIR) && \
 #         ruby $(CMOCK_EXEC_DIR)/cmock.rb -o$(PROJECT_DIR)/$(PROJECT).yml \
 #         $(MOCK_FILES_FP)
 
 # preprocess proj files to expand macros for coverage
 $(PROJ_DIR)/%.i : $(KERNEL_DIR)/%.c $(MOCK_SRC_LIST)
-	mkdir -p $(PROJ_DIR)
-	$(CC) -E $< $(CPPFLAGS) $(CFLAGS) -o $@
+    mkdir -p $(PROJ_DIR)
+    $(CC) -E $< $(CPPFLAGS) $(CFLAGS) -o $@
 
 # Generate callgraph for coverage filtering later on
 $(SCRATCH_DIR)/callgraph.json : $(PROJ_SRC_LIST)
-	mkdir -p $(SCRATCH_DIR)
-	python3 $(UT_ROOT_DIR)/tools/callgraph.py $^ > $@
+    mkdir -p $(SCRATCH_DIR)
+    python3 $(UT_ROOT_DIR)/tools/callgraph.py $^ > $@
 
 # compile the project objects with coverage instrumented
 $(PROJ_DIR)/%.o : $(PROJ_DIR)/%.i
-	$(CC) -c $< $(CPPFLAGS) $(INCLUDE_DIR) $(GCC_COV_OPTS) -o $@
+    $(CC) -c $< $(CPPFLAGS) $(INCLUDE_DIR) $(GCC_COV_OPTS) -o $@
 
 # Build mock objects
 $(SCRATCH_DIR)/mock_%.o : $(MOCKS_DIR)/mock_%.c
-	$(CC) -c $< $(CPPFLAGS) $(CFLAGS) -o $@
+    $(CC) -c $< $(CPPFLAGS) $(CFLAGS) -o $@
 
 # compile unit tests
 $(SCRATCH_DIR)/%_utest.o : $(SUITE_DIR)/%_utest.c $(MOCK_SRC_LIST)
-	mkdir -p $(SCRATCH_DIR)
-	$(CC) -c $< $(CPPFLAGS) $(CFLAGS) -o $@
+    mkdir -p $(SCRATCH_DIR)
+    $(CC) -c $< $(CPPFLAGS) $(CFLAGS) -o $@
 
 # compile support files
 $(SCRATCH_DIR)/sf_%.o : $(PROJECT_DIR)/%.c $(MOCK_SRC_LIST)
-	mkdir -p $(SCRATCH_DIR)
-	$(CC) -c $< $(CPPFLAGS) $(CFLAGS) -o $@
+    mkdir -p $(SCRATCH_DIR)
+    $(CC) -c $< $(CPPFLAGS) $(CFLAGS) -o $@
 
 # compile c files that are needed by PROJ but not mocked
 $(SCRATCH_DIR)/dep_%.o : $(KERNEL_DIR)/%.c $(MOCK_SRC_LIST)
-	mkdir -p $(SCRATCH_DIR)
-	$(CC) -c $< $(CPPFLAGS) $(CFLAGS) -o $@
+    mkdir -p $(SCRATCH_DIR)
+    $(CC) -c $< $(CPPFLAGS) $(CFLAGS) -o $@
 
 # generate a test runner for each test file
 $(SCRATCH_DIR)/%_utest_runner.c : $(SUITE_DIR)/%_utest.c
-	mkdir -p $(SCRATCH_DIR)
-	ruby $(UNITY_BIN_DIR)/generate_test_runner.rb\
-		$(PROJECT_DIR)/$(PROJECT).yml $< $@
+    mkdir -p $(SCRATCH_DIR)
+    ruby $(UNITY_BIN_DIR)/generate_test_runner.rb\
+        $(PROJECT_DIR)/$(PROJECT).yml $< $@
 
 # compile test runner
 $(SCRATCH_DIR)/%_utest_runner.o : $(SCRATCH_DIR)/%_utest_runner.c
-	$(CC) -c $< $(CPPFLAGS) $(CFLAGS) -o $@
+    $(CC) -c $< $(CPPFLAGS) $(CFLAGS) -o $@
 
 # Link the _utest binary $(SCRATCH_DIR)/%_utest_runner.o
 $(BIN_DIR)/$(PROJECT)_%_utest : $(SCRATCH_DIR)/%_utest.o \
@@ -176,34 +179,34 @@ $(BIN_DIR)/$(PROJECT)_%_utest : $(SCRATCH_DIR)/%_utest.o \
                                 $(SF_OBJ_LIST) $(MOCK_OBJ_LIST) \
                                 $(PROJ_OBJ_LIST) $(LIBS)    \
                                 $(DEPS_OBJ_LIST)
-	mkdir -p $(BIN_DIR)
-	$(CC) $< $(subst .o,_runner.o,$<) $(SF_OBJ_LIST) $(DEPS_OBJ_LIST) $(MOCK_OBJ_LIST) $(PROJ_OBJ_LIST) $(LDFLAGS) -o $@
+    mkdir -p $(BIN_DIR)
+    $(CC) $< $(subst .o,_runner.o,$<) $(SF_OBJ_LIST) $(DEPS_OBJ_LIST) $(MOCK_OBJ_LIST) $(PROJ_OBJ_LIST) $(LDFLAGS) -o $@
 
 # Run the test runner and genrate a filtered gcov.json.gz file
 $(SCRATCH_DIR)/%_utest.info : $(BIN_DIR)/$(PROJECT)_%_utest $(SCRATCH_DIR)/callgraph.json
-	# Remove any existing coverage data
-	rm -f $(PROJ_DIR)/*.gcda
+    # Remove any existing coverage data
+    rm -f $(PROJ_DIR)/*.gcda
 
-	# run the testrunner
-	$<
+    # run the testrunner
+    $<
 
-	# Gather coverage into a json.gz file
-	gcov $(GCOV_OPTS) $(foreach src,$(PROJECT_SRC),$(PROJ_DIR)/$(src:.c=.gcda)) \
-		 --json-format --stdout | gzip > $(subst .info,.json.gz,$@)
+    # Gather coverage into a json.gz file
+    gcov $(GCOV_OPTS) $(foreach src,$(PROJECT_SRC),$(PROJ_DIR)/$(src:.c=.gcda)) \
+         --json-format --stdout | gzip > $(subst .info,.json.gz,$@)
 
-	# Filter coverage based on tags in unit test file
-	$(TOOLS_DIR)/filtercov.py --in $(subst .info,.json.gz,$@) \
+    # Filter coverage based on tags in unit test file
+    $(TOOLS_DIR)/filtercov.py --in $(subst .info,.json.gz,$@) \
                               --map $(SCRATCH_DIR)/callgraph.json \
                               --test $(SUITE_DIR)/$*_utest.c \
                               --format lcov \
                               --out $@
-	-lcov $(LCOV_OPTS) --summary $@
+    -lcov $(LCOV_OPTS) --summary $@
 
-	# Remove temporary files
-	rm -f $(PROJ_DIR)/*.gcda
-	rm -f  $(subst .info,.json.gz,$@)
+    # Remove temporary files
+    rm -f $(PROJ_DIR)/*.gcda
+    rm -f  $(subst .info,.json.gz,$@)
 
 # # Combine lcov from each test bin into one lcov info file for the suite
 # $(SCRATCH_DIR)/$(COVINFO) : $(COV_LIST)
-# 	lcov $(LCOV_OPTS) -o $@ $(foreach cov,$(COV_LIST),--add-tracefile $(cov) )
-# 	-lcov $(LCOV_OPTS) --summary $@
+#     lcov $(LCOV_OPTS) -o $@ $(foreach cov,$(COV_LIST),--add-tracefile $(cov) )
+#     -lcov $(LCOV_OPTS) --summary $@

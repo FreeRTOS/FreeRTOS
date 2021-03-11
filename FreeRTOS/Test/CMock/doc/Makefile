@@ -6,5 +6,5 @@ DOXY_ARGS += "PROJECT_NAME=FreeRTOS Unit Tests\nGENERATE_LATEX=NO\n"
 DOXY_ARGS += "OUTPUT_DIRECTORY=$(DOC_DIR)"
 
 all:
-	mkdir -p $(DOC_DIR)
-	echo -e $(DOXY_ARGS) | doxygen -
+    mkdir -p $(DOC_DIR)
+    echo -e $(DOXY_ARGS) | doxygen -

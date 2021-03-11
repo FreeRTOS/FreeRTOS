@@ -1,5 +1,7 @@
-# Various directories
+# indent with spaces
+.RECIPEPREFIX := $(.RECIPEPREFIX) $(.RECIPEPREFIX)
 
+# Various directories
 # Note: for this to work in subdirectories, this makefile must be the first one included.
 UT_ROOT_DIR         :=  $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 

@@ -1,84 +1,89 @@
 # Do not move this line below the include
-MAKEFILE_ABSPATH	:=	$(abspath $(lastword $(MAKEFILE_LIST)))
+MAKEFILE_ABSPATH    :=  $(abspath $(lastword $(MAKEFILE_LIST)))
 include ../makefile.in
 
 # PROJECT_SRC lists the .c files under test
-PROJECT_SRC			:=	list.c
+PROJECT_SRC         :=  list.c
 
 # PROJECT_DEPS_SRC list the .c file that are dependencies of PROJECT_SRC files
 # Files in PROJECT_DEPS_SRC are excluded from coverage measurements
-PROJECT_DEPS_SRC	:=
+PROJECT_DEPS_SRC    :=
 
 # PROJECT_HEADER_DEPS: headers that should be excluded from coverage measurements.
-PROJECT_HEADER_DEPS	:=	FreeRTOS.h
+PROJECT_HEADER_DEPS :=  FreeRTOS.h
 
 # SUITE_UT_SRC: .c files that contain test cases (must end in _utest.c)
-SUITE_UT_SRC		:=	list_utest.c
+SUITE_UT_SRC        :=  list_utest.c
 
 # SUITE_SUPPORT_SRC: .c files used for testing that do not contain test cases.
 # Paths are relative to PROJECT_DIR
-SUITE_SUPPORT_SRC	:=
+SUITE_SUPPORT_SRC   :=
 
 # List the headers used by PROJECT_SRC that you would like to mock
-MOCK_FILES_FP		:=
+MOCK_FILES_FP       :=
 
 # List any addiitonal flags needed by the preprocessor
-CPPFLAGS			+=	-DportUSING_MPU_WRAPPERS=0
+CPPFLAGS            +=  -DportUSING_MPU_WRAPPERS=0
 
 # List any addiitonal flags needed by the compiler
-CFLAGS				+=
+CFLAGS              +=
 
 # Try not to edit beyond this line unless necessary.
 
 # Project is determined based on path: $(UT_ROOT_DIR)/$(PROJECT)
-PROJECT			:=	$(lastword $(subst /, ,$(dir $(abspath $(MAKEFILE_ABSPATH)))))
+PROJECT         :=  $(lastword $(subst /, ,$(dir $(abspath $(MAKEFILE_ABSPATH)))))
 
 # Define directory paths
-SCRATCH_DIR		:=	$(GENERATED_DIR)/$(PROJECT)
-MOCKS_DIR		:=	$(SCRATCH_DIR)/mocks
-PROJ_DIR		:=	$(SCRATCH_DIR)/proj
-PROJECT_DIR		:=	$(abspath .)
-SUITE_DIR		:=	$(abspath .)
+SCRATCH_DIR     :=  $(GENERATED_DIR)/$(PROJECT)
+MOCKS_DIR       :=  $(SCRATCH_DIR)/mocks
+PROJ_DIR        :=  $(SCRATCH_DIR)/proj
+PROJECT_DIR     :=  $(abspath .)
+SUITE_DIR       :=  $(abspath .)
 
 # Define mock details
-MOCK_FILES		:=	$(notdir $(MOCK_FILES_FP))
-MOCK_SRC		:=	$(addprefix mock_,$(MOCK_FILES:.h=.c))
-MOCK_OBJ		:=	$(addprefix mock_,$(MOCK_FILES:.h=.o))
-MOCK_SRC_LIST	:=	$(addprefix $(MOCKS_DIR)/,$(MOCK_SRC))
-MOCK_OBJ_LIST	:=	$(addprefix $(SCRATCH_DIR)/,$(MOCK_OBJ))
-CFLAGS			+=	-I$(MOCKS_DIR)/
-PROJ_SRC_LIST	:=	$(addprefix $(KERNEL_DIR)/,$(PROJECT_SRC))
-PROJ_PP_LIST	:=	$(addprefix $(PROJ_DIR)/,$(PROJECT_SRC:.c=.i))
-PROJ_OBJ_LIST	:=	$(addprefix $(PROJ_DIR)/,$(PROJECT_SRC:.c=.o))
-PROJ_GCDA_LIST	:=	$(PROJ_OBJ_LIST:.o=.gcda)
-SUITE_OBJ_LIST	:=	$(addprefix $(SCRATCH_DIR)/,$(SUITE_UT_SRC:.c=.o))
-RUNNER_SRC_LIST	:=	$(addprefix $(SCRATCH_DIR)/,$(SUITE_UT_SRC:_utest.c=_utest_runner.c))
-RUNNER_OBJ_LIST	:=	$(addprefix $(SCRATCH_DIR)/,$(SUITE_UT_SRC:_utest.c=_utest_runner.o))
-SF_OBJ_LIST		:= 	$(addprefix $(SCRATCH_DIR)/sf_,$(SUITE_SUPPORT_SRC:.c=.o))
-DEPS_OBJ_LIST	:= 	$(addprefix $(SCRATCH_DIR)/dep_,$(PROJECT_DEPS_SRC:.c=.o))
-EXECS			:=	$(addprefix $(PROJECT)_,$(SUITE_UT_SRC:.c=))
-EXEC_LIST		:=	$(addprefix $(BIN_DIR)/,$(EXECS))
-COV_LIST		:=	$(addsuffix .info,$(addprefix $(SCRATCH_DIR)/,$(SUITE_UT_SRC:.c=)))
-COVINFO			:=	$(PROJECT)_utest.info
-LIBS			:=	$(foreach lib, $(LIBS), $(LIB_DIR)/$(lib).so)
+MOCK_FILES      :=  $(notdir $(MOCK_FILES_FP))
+MOCK_SRC        :=  $(addprefix mock_,$(MOCK_FILES:.h=.c))
+MOCK_OBJ        :=  $(addprefix mock_,$(MOCK_FILES:.h=.o))
+MOCK_SRC_LIST   :=  $(addprefix $(MOCKS_DIR)/,$(MOCK_SRC))
+MOCK_OBJ_LIST   :=  $(addprefix $(SCRATCH_DIR)/,$(MOCK_OBJ))
+CFLAGS          +=  -I$(MOCKS_DIR)/
+
+# Kernel files under test
+PROJ_SRC_LIST   :=  $(addprefix $(KERNEL_DIR)/,$(PROJECT_SRC))
+PROJ_PP_LIST    :=  $(addprefix $(PROJ_DIR)/,$(PROJECT_SRC:.c=.i))
+PROJ_OBJ_LIST   :=  $(addprefix $(PROJ_DIR)/,$(PROJECT_SRC:.c=.o))
+PROJ_GCDA_LIST  :=  $(PROJ_OBJ_LIST:.o=.gcda)
+
+#UT files
+SUITE_OBJ_LIST  :=  $(addprefix $(SCRATCH_DIR)/,$(SUITE_UT_SRC:.c=.o))
+RUNNER_SRC_LIST :=  $(addprefix $(SCRATCH_DIR)/,$(SUITE_UT_SRC:_utest.c=_utest_runner.c))
+RUNNER_OBJ_LIST :=  $(addprefix $(SCRATCH_DIR)/,$(SUITE_UT_SRC:_utest.c=_utest_runner.o))
+# Support files
+SF_OBJ_LIST     :=  $(addprefix $(SCRATCH_DIR)/sf_,$(SUITE_SUPPORT_SRC:.c=.o))
+DEPS_OBJ_LIST   :=  $(addprefix $(SCRATCH_DIR)/dep_,$(PROJECT_DEPS_SRC:.c=.o))
+EXECS           :=  $(addprefix $(PROJECT)_,$(SUITE_UT_SRC:.c=))
+EXEC_LIST       :=  $(addprefix $(BIN_DIR)/,$(EXECS))
+COV_LIST        :=  $(addsuffix .info,$(addprefix $(SCRATCH_DIR)/,$(SUITE_UT_SRC:.c=)))
+COVINFO         :=  $(PROJECT)_utest.info
+LIBS            :=  $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib).so)
 
 # Coverage related options
-GCC_COV_OPTS	:=	-fprofile-arcs -ftest-coverage -fprofile-generate
-LCOV_OPTS		:=	--config-file $(UT_ROOT_DIR)/lcovrc
-GCOV_OPTS		:=	--unconditional-branches --branch-probabilities
+GCC_COV_OPTS    :=  -fprofile-arcs -ftest-coverage -fprofile-generate
+LCOV_OPTS       :=  --config-file $(UT_ROOT_DIR)/lcovrc
+GCOV_OPTS       :=  --unconditional-branches --branch-probabilities
 
 .PHONY: all clean run gcov bin lcov lcovhtml
 
 # Prevent deletion of intermediate files
-NO_DELETE :	$(MOCK_SRC_LIST) $(MOCK_OBJ_LIST) $(SF_OBJ_LIST) $(EXEC_LIST) \
-			$(DEPS_OBJ_LIST) $(PROJ_PP_LIST) $(PROJ_OBJ_LIST) $(PROJ_GCDA_LIST) \
-			$(SUITE_OBJ_LIST) $(RUNNER_SRC_LIST) $(RUNNER_OBJ_LIST) $(COV_LIST)	\
-			# $(COVINFO)
+NO_DELETE : $(MOCK_SRC_LIST) $(MOCK_OBJ_LIST) $(SF_OBJ_LIST) $(EXEC_LIST)       \
+            $(DEPS_OBJ_LIST) $(PROJ_PP_LIST) $(PROJ_OBJ_LIST) $(PROJ_GCDA_LIST) \
+            $(SUITE_OBJ_LIST) $(RUNNER_SRC_LIST) $(RUNNER_OBJ_LIST) $(COV_LIST) \
+            # $(COVINFO)
 
 # Rules that run test binaries cannot be run in parallel.
-.NOTPARALLEL 	:= 	$(SCRATCH_DIR)/$(COVINFO) $(COV_LIST) $(PROJ_GCDA_LIST)
+.NOTPARALLEL    :=  $(SCRATCH_DIR)/$(COVINFO) $(COV_LIST) $(PROJ_GCDA_LIST)
 
-.DEFAULT_GOAL 	:= 	all
+.DEFAULT_GOAL   :=  all
 all: gcov
 
 clean:
@@ -111,16 +116,16 @@ lcov: $(SCRATCH_DIR)/$(COVINFO)
 lcovhtml : $(SCRATCH_DIR)/$(COVINFO)
 	mkdir -p $(COVERAGE_DIR)/$(PROJECT)
 	genhtml $(SCRATCH_DIR)/$(COVINFO) $(LCOV_OPTS)  \
-			--output-directory $(COVERAGE_DIR)/$(PROJECT)
+        --output-directory $(COVERAGE_DIR)/$(PROJECT)
 
 bin: $(EXEC_LIST)
 
-# Generate _mock.c / .h files
+# # Generate _mock.c / .h files
 # $(MOCK_SRC_LIST) &: $(PROJECT_DIR)/$(PROJECT).yml $(MOCK_FILES_FP)
 # 	mkdir -p $(SCRATCH_DIR) $(MOCKS_DIR)
 # 	cd $(SCRATCH_DIR) && \
-# 		ruby $(CMOCK_EXEC_DIR)/cmock.rb -o$(PROJECT_DIR)/$(PROJECT).yml \
-# 		$(MOCK_FILES_FP)
+#         ruby $(CMOCK_EXEC_DIR)/cmock.rb -o$(PROJECT_DIR)/$(PROJECT).yml \
+#         $(MOCK_FILES_FP)
 
 # preprocess proj files to expand macros for coverage
 $(PROJ_DIR)/%.i : $(KERNEL_DIR)/%.c $(MOCK_SRC_LIST)
@@ -167,10 +172,10 @@ $(SCRATCH_DIR)/%_utest_runner.o : $(SCRATCH_DIR)/%_utest_runner.c
 
 # Link the _utest binary $(SCRATCH_DIR)/%_utest_runner.o
 $(BIN_DIR)/$(PROJECT)_%_utest : $(SCRATCH_DIR)/%_utest.o \
-								$(SCRATCH_DIR)/%_utest_runner.o \
-								$(SF_OBJ_LIST) $(MOCK_OBJ_LIST) \
-								$(PROJ_OBJ_LIST) $(LIBS)	\
-								$(DEPS_OBJ_LIST)
+                                $(SCRATCH_DIR)/%_utest_runner.o \
+                                $(SF_OBJ_LIST) $(MOCK_OBJ_LIST) \
+                                $(PROJ_OBJ_LIST) $(LIBS)    \
+                                $(DEPS_OBJ_LIST)
 	mkdir -p $(BIN_DIR)
 	$(CC) $< $(subst .o,_runner.o,$<) $(SF_OBJ_LIST) $(DEPS_OBJ_LIST) $(MOCK_OBJ_LIST) $(PROJ_OBJ_LIST) $(LDFLAGS) -o $@
 
@@ -188,10 +193,10 @@ $(SCRATCH_DIR)/%_utest.info : $(BIN_DIR)/$(PROJECT)_%_utest $(SCRATCH_DIR)/callg
 
 	# Filter coverage based on tags in unit test file
 	$(TOOLS_DIR)/filtercov.py --in $(subst .info,.json.gz,$@) \
-							  --map $(SCRATCH_DIR)/callgraph.json \
-							  --test $(SUITE_DIR)/$*_utest.c \
-							  --format lcov \
-							  --out $@
+                              --map $(SCRATCH_DIR)/callgraph.json \
+                              --test $(SUITE_DIR)/$*_utest.c \
+                              --format lcov \
+                              --out $@
 	-lcov $(LCOV_OPTS) --summary $@
 
 	# Remove temporary files

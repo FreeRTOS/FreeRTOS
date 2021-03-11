@@ -127,6 +127,20 @@ static BaseType_t senderTaskNotifyWaitCallback( UBaseType_t uxIndexToWaitOn,
     return pdTRUE;
 }
 
+static BaseType_t resetWhileBlockedCallback( UBaseType_t uxIndexToWaitOn,
+                     uint32_t ulBitsToClearOnEntry,
+                     uint32_t ulBitsToClearOnExit,
+                     uint32_t* pulNotificationValue,
+                     TickType_t xTicksToWait,
+                     int cmock_num_calls )
+{
+    BaseType_t status;
+
+    status = xStreamBufferReset( xStreamBuffer );
+    TEST_ASSERT_EQUAL( pdFAIL, status );
+    return pdTRUE;
+}
+
 static BaseType_t senderTaskNotificationCallback( TaskHandle_t xTaskToNotify,
                             UBaseType_t uxIndexToNotify,
                             uint32_t ulValue,
@@ -406,6 +420,7 @@ void test_xStreamBufferSend_success( void )
     dataSent = xStreamBufferSend( xStreamBuffer, data, sizeof(data), TEST_STREAM_BUFFER_WAIT_TICKS );
     TEST_ASSERT_EQUAL( sizeof(data), dataSent );
     TEST_ASSERT_EQUAL( sizeof(data), xStreamBufferBytesAvailable(xStreamBuffer));
+    TEST_ASSERT_EQUAL( pdFALSE, xStreamBufferIsEmpty(xStreamBuffer) );
 
     vStreamBufferDelete(xStreamBuffer);
 }
@@ -917,11 +932,11 @@ void test_xStreamBufferReset_success( void )
 void test_xStreamBufferReset_while_blocked( void )
 {
     uint8_t data[ TEST_STREAM_BUFFER_SIZE ]  = { 0xAA };
-    size_t receivedBytes  = 0;
+    size_t sentBytes = 0, receivedBytes  = 0;
 
     vTaskSetTimeOutState_Ignore();
     xTaskGenericNotifyStateClear_IgnoreAndReturn( pdTRUE );
-    xTaskGetCurrentTaskHandle_IgnoreAndReturn( receiverTask );
+    xTaskGetCurrentTaskHandle_IgnoreAndReturn( senderTask );
     xTaskGenericNotifyWait_StubWithCallback( resetWhileBlockedCallback );
     xTaskCheckForTimeOut_IgnoreAndReturn( pdTRUE );
     vTaskSuspendAll_Ignore();
@@ -933,11 +948,90 @@ void test_xStreamBufferReset_while_blocked( void )
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferSpacesAvailable( xStreamBuffer ) );
 
     /* 
-     * Perform a blocking operation to receive from an empty stream buffer. Call a reset stream buffer operation while the receive
-     * task is blocked.
+     * Perform a blocking operation to receive from an empty stream buffer. Reset stream buffer within receiver task notify
+     * wait callback should fail.
      */
     receivedBytes = xStreamBufferReceive( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE , TEST_STREAM_BUFFER_WAIT_TICKS );
     TEST_ASSERT_EQUAL( 0, receivedBytes );
+
+    /* 
+     * Send full size data to stream buffer.
+     */
+    sentBytes = xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE , TEST_STREAM_BUFFER_WAIT_TICKS );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, sentBytes );
+    TEST_ASSERT_EQUAL( pdTRUE, xStreamBufferIsFull( xStreamBuffer ));
+    
+    /* 
+     * Sending data again to a full stream buffer should cause task to be blocked. Reset stream buffer within sender task notify
+     * wait callback should fail.
+     */
+    sentBytes = xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE , TEST_STREAM_BUFFER_WAIT_TICKS );
+    TEST_ASSERT_EQUAL( 0, sentBytes );
+
+
+    vStreamBufferDelete(xStreamBuffer);
+}
+
+/**
+ * @brief Validates that a receiver task is able to receive data after lowering the stream buffer trigger level.
+ */
+void test_xStreamBufferSetTrigerLevel_change_triggerlevel( void )
+{
+    uint8_t data[ TEST_STREAM_BUFFER_SIZE ]  = { 0xAA };
+    BaseType_t status;
+
+    vTaskSetTimeOutState_Ignore();
+    xTaskGenericNotifyStateClear_IgnoreAndReturn( pdTRUE );
+    xTaskGetCurrentTaskHandle_IgnoreAndReturn( receiverTask );
+    xTaskGenericNotify_StubWithCallback( receiverTaskNotificationCallback );
+    xTaskGenericNotifyWait_StubWithCallback( receiverTaskNotifyWaitCallback );
+    xTaskCheckForTimeOut_IgnoreAndReturn( pdTRUE );
+    vTaskSuspendAll_Ignore();
+    xTaskResumeAll_IgnoreAndReturn( pdTRUE );
+
+    /* Initially create stream buffer with trigger level equal to maximum stream buffer size. */
+    xStreamBuffer = xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_SIZE );
+    TEST_ASSERT_NOT_NULL( xStreamBuffer );
+
+    /* 
+     * Perform receive operation on the empty stream buffer. Even if TEST_STREAM_BUFFER_TRIGGER_LEVEL bytes are sent to
+     * stream buffer in notify wait operation, receiver task should not be waken up.
+     */
+     ( void ) xStreamBufferReceive( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE , TEST_STREAM_BUFFER_WAIT_TICKS );
+    TEST_ASSERT_EQUAL( 0, receiverTaskWoken  );
+
+    /* 
+     * Lower the trigger level to TEST_STREAM_BUFFER_TRIGGER_LEVEL.
+     */
+    status = xStreamBufferSetTriggerLevel( xStreamBuffer, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
+    TEST_ASSERT_EQUAL( pdTRUE, status  );
+    
+    /* 
+     * Perform receive operation  again on the empty stream buffer. Since TEST_STREAM_BUFFER_TRIGGER_LEVEL bytes are sent to
+     * stream buffer in notify wait operation, receiver task should be waken up.
+     */
+     ( void ) xStreamBufferReceive( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE , TEST_STREAM_BUFFER_WAIT_TICKS );
+    TEST_ASSERT_EQUAL( 1, receiverTaskWoken  );
+
+    vStreamBufferDelete(xStreamBuffer);
+}
+
+/**
+ * @brief Validates that setting trigger level larger than stream buffer size fails.
+ */
+void test_xStreamBufferSetTrigerLevel_larger_than_buffer_size( void )
+{
+    BaseType_t status;
+
+    /* Initially create stream buffer with trigger level equal to maximum stream buffer size. */
+    xStreamBuffer = xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
+    TEST_ASSERT_NOT_NULL( xStreamBuffer );
+
+    /* 
+     * Set the trigger level to TEST_STREAM_BUFFER_SIZE + 1.
+     */
+    status = xStreamBufferSetTriggerLevel( xStreamBuffer, TEST_STREAM_BUFFER_SIZE + 1 );
+    TEST_ASSERT_EQUAL( pdFALSE, status );
 
     vStreamBufferDelete(xStreamBuffer);
 }

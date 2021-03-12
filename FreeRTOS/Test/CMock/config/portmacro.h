@@ -146,6 +146,10 @@ extern void portClear_Interrupt_Mask(UBaseType_t bt);
 
 extern void portAssert_if_int_prio_invalid(void);
 #define  portASSERT_IF_INTERRUPT_PRIORITY_INVALID() portAssert_if_int_prio_invalid()
+#define configMINIMAL_SECURE_STACK_SIZE   400
+void port_allocate_secure_context( BaseType_t stackSize );
+#define portALLOCATE_SECURE_CONTEXT( configMINIMAL_SECURE_STACK_SIZE )  \
+        port_allocate_secure_context( configMINIMAL_SECURE_STACK_SIZE )
 
 static inline uint8_t ucPortCountLeadingZeros( uint32_t ulBitmap )
 {
@@ -168,7 +172,7 @@ static inline uint8_t ucPortCountLeadingZeros( uint32_t ulBitmap )
     void vFunction( void * (pvParameters) )
 
 #define portTASK_FUNCTION( vFunction, pvParameters ) \
-    void vFunction( void * pvParameters )
+    void vFunction( void * (pvParameters) )
 
 /*-----------------------------------------------------------*/
 

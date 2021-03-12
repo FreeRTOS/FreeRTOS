@@ -68,7 +68,7 @@ EXECS           :=  $(addprefix $(PROJECT)_,$(SUITE_UT_SRC:.c=))
 EXEC_LIST       :=  $(addprefix $(BIN_DIR)/,$(EXECS))
 COV_LIST        :=  $(addsuffix .info,$(addprefix $(SCRATCH_DIR)/,$(SUITE_UT_SRC:.c=)))
 COVINFO         :=  $(PROJECT)_utest.info
-LIBS            :=  $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib).so)
+LIB_LIST        :=  $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib).so)
 
 # Coverage related options
 GCC_COV_OPTS    :=  -fprofile-arcs -ftest-coverage -fprofile-generate
@@ -94,7 +94,7 @@ clean:
     rm -rf $(EXEC_LIST)
     rm -rf $(COVERAGE_DIR)/$(PROJECT)
 
-$(LIBS)&:
+$(LIB_LIST)&:
     make -C $(UT_ROOT_DIR) libs
 
 # Generate gcov files by default
@@ -174,11 +174,11 @@ $(SCRATCH_DIR)/%_utest_runner.o : $(SCRATCH_DIR)/%_utest_runner.c
     $(CC) -c $< $(CPPFLAGS) $(CFLAGS) -o $@
 
 # Link the _utest binary $(SCRATCH_DIR)/%_utest_runner.o
-$(BIN_DIR)/$(PROJECT)_%_utest : $(SCRATCH_DIR)/%_utest.o \
-                                $(SCRATCH_DIR)/%_utest_runner.o \
-                                $(SF_OBJ_LIST) $(MOCK_OBJ_LIST) \
-                                $(PROJ_OBJ_LIST) $(LIBS)    \
-                                $(DEPS_OBJ_LIST)
+$(EXEC_LIST) : $(BIN_DIR)/$(PROJECT)_%_utest : $(SCRATCH_DIR)/%_utest.o \
+                                              $(SCRATCH_DIR)/%_utest_runner.o \
+                                              $(SF_OBJ_LIST) $(MOCK_OBJ_LIST) \
+                                              $(PROJ_OBJ_LIST) $(LIB_LIST)    \
+                                              $(DEPS_OBJ_LIST)
     mkdir -p $(BIN_DIR)
     $(CC) $< $(subst .o,_runner.o,$<) $(SF_OBJ_LIST) $(DEPS_OBJ_LIST) $(MOCK_OBJ_LIST) $(PROJ_OBJ_LIST) $(LDFLAGS) -o $@
 

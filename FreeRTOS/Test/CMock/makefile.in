@@ -33,7 +33,7 @@ INCLUDE_DIR         +=  -I.
 INCLUDE_DIR         +=  -I$(UT_ROOT_DIR)/config
 INCLUDE_DIR         +=  -I$(UNITY_INC_DIR)
 INCLUDE_DIR         +=  -I$(CMOCK_SRC_DIR)
-INCLUDE_DIR         +=  -I$(UNITY_MEM_SRC_DIR)
+INCLUDE_DIR         +=  -I$(UNITY_MEM_DIR)
 INCLUDE_DIR         +=  -I$(C_EXCEPTION_SRC_DIR)
 
 # Preprocessor flags

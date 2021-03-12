@@ -1,73 +1,57 @@
-# Change according to what your  unit test directory is.
-# For example if testing queue.c your directory should be called queue
-# and the project name should be queue
-# if testing list.c your directory should be called list
-# and the project name should be list
-PROJECT          :=   queue
+# Indent with spaces
+.RECIPEPREFIX := $(.RECIPEPREFIX) $(.RECIPEPREFIX)
+# Do not move this line below the include
+MAKEFILE_ABSPATH     := $(abspath $(lastword $(MAKEFILE_LIST)))
+include ../makefile.in
 
-# List the dependency files you wish to mock
-MOCK_FILES_FP    :=  $(KERNEL_DIR)/include/task.h
-MOCK_FILES_FP    +=  $(KERNEL_DIR)/include/list.h
-MOCK_FILES_FP    +=  $(UT_ROOT_DIR)/config/fake_assert.h
+# SUITES lists the suites contained in subdirectories
+SUITES          +=  two_tests
 
-# List the options the compilation would need
-CPPFLAGS         +=   -DportUSING_MPU_WRAPPERS=0
+# Project / Suite are determined based on path: $(UT_ROOT_DIR)/$(PROJECT)/$(SUITE)
+PROJECT         :=  $(lastword $(subst /, ,$(dir $(abspath $(MAKEFILE_ABSPATH)))))
 
-# Try not to edit beyond this line
-MOCK_FILES       :=   $(notdir $(MOCK_FILES_FP))
-MOCK_OBJ         :=   $(addprefix mock_,$(MOCK_FILES:.h=.o))
-MOCK_SRC         :=   $(addprefix mock_,$(MOCK_FILES:.h=.c))
-EXEC             :=   $(PROJECT)_utest
-PROJECT_DIR      :=   $(abspath .)
-SCRATCH_DIR      :=   $(GENERATED_DIR)/$(PROJECT)
-PROJ_LIB_DIR     :=   $(SCRATCH_DIR)/lib
-MOCK_OBJ_LIST    :=   $(addprefix $(PROJ_LIB_DIR)/,$(MOCK_OBJ))
-MOCKS_DIR        :=   $(SCRATCH_DIR)/mocks
-MOCK_SRC_LIST    :=   $(addprefix $(MOCKS_DIR)/,$(MOCK_SRC))
-CFLAGS           +=   -I$(MOCKS_DIR)
-COVERAGE_OPTS    := -fprofile-arcs -ftest-coverage -fprofile-generate
+# Define directory paths
+SCRATCH_DIR     :=  $(GENERATED_DIR)/$(PROJECT)
 
-ifeq ($(MOCK_FILES_FP),)
-     $(shell mkdir -p  $(MOCKS_DIR))
-     $(shell touch -a $(MOCKS_DIR)/mock_dummy.c)
-endif
+LCOV_LIST       :=  $(foreach suite,$(SUITES),$(SCRATCH_DIR)/$(PROJECT)_$(suite).info)
+COVINFO         :=  $(GENERATED_DIR)/$(PROJECT).info
 
-$(MOCKS_DIR)/mock_%.c : Makefile $(PROJECT_DIR)/$(PROJECT).yml | directories
-	cd $(SCRATCH_DIR) &&                                                \
-	    ruby $(CMOCK_EXEC_DIR)/cmock.rb -o$(PROJECT_DIR)/$(PROJECT).yml \
-	    $(MOCK_FILES_FP)
+.PHONY: all clean libs run bin lcov zerocoverage
 
-$(PROJ_LIB_DIR)/mock_%.o : $(MOCKS_DIR)/mock_%.c
-	$(CC) -c $< -fPIC $(CFLAGS) -o $@
+all: run
 
-$(BIN_DIR)/$(EXEC) : $(SCRATCH_DIR)/test_runner.o                           \
-		    $(SCRATCH_DIR)/$(PROJECT).o                             \
-		    $(SCRATCH_DIR)/$(PROJECT)_utest.o                       \
-		    $(MOCK_OBJ_LIST)
-	$(CC) $+ $(LDFLAGS) -o $@
+clean:
+    rm -rf $(SCRATCH_DIR)
+    rm -f $(BIN_DIR)/$(PROJECT)*_utest
+    rm -f $(COVINFO)
 
-$(SCRATCH_DIR)/test_runner.o : $(SCRATCH_DIR)/test_runner.c                 \
-                               $(SCRATCH_DIR)/$(PROJECT).o
-	$(CC) -c $< $(CPPFLAGS)  $(CFLAGS) -o $@
+libs:
+    make -C $(UT_ROOT_DIR) libs
 
-$(SCRATCH_DIR)/$(PROJECT)_utest.o : $(PROJECT_DIR)/$(PROJECT)_utest.c       \
-                                    $(MOCKS_DIR)/mock_*.c                   \
-                                    | directories
-	$(CC) -c $< $(CPPFLAGS)  $(CFLAGS) -o $@
+lcov : $(COVINFO)
 
-$(SCRATCH_DIR)/$(PROJECT).o : $(KERNEL_DIR)/$(PROJECT).c
-	$(CC) -c $< $(CPPFLAGS)  $(CFLAGS) $(COVERAGE_OPTS) -o $@
+# run each suite and leave gcda / gcov files in place
+run:
+    $(foreach suite,$(SUITES),\
+        make -C $(suite) run;)
 
-$(SCRATCH_DIR)/test_runner.c : $(SCRATCH_DIR)/$(PROJECT)_utest.o            \
-                               Makefile | directories
-	ruby $(UNITY_BIN_DIR)/generate_test_runner.rb $(EXEC).c             \
-		$(PROJECT_DIR)/$(PROJECT).yml $@
+bin: $(EXEC_LIST)
 
-.PHONY: directories
-directories :
-	-mkdir  $(SCRATCH_DIR)
-	-mkdir  $(MOCKS_DIR)
-	-mkdir  $(PROJ_LIB_DIR)
+zerocoverage:
+    $(LCOV_BIN_DIR)/lcov --zerocounters --directory $(SCRATCH_DIR)
 
-# prevent deletion by chain of implicit rules
-NO_DELETE: $(MOCK_SRC_LIST)
+# Combine lcov
+$(SCRATCH_DIR)/$(COVINFO): $(LCOV_LIST)
+    $(LCOV_BIN_DIR)/lcov $(foreach cov,$(LCOV_LIST),--add-tracefile $(cov) ) \
+    --rc lcov_branch_coverage=1 --rc genhtml_branch_coverage=1 \
+    -o $@
+    $(LCOV_BIN_DIR)/lcov --summary --rc lcov_branch_coverage=1 --rc genhtml_branch_coverage=1 $@
+
+# Generate lcov for each suite
+$(LCOV_LIST) :
+    $(foreach suite,$(SUITES),\
+        make -C $(suite) lcov;)
+
+# Combine lcov from each subdirectory into one lcov info file for the project
+$(COVINFO) : $(LCOV_LIST)
+    lcov $(LCOV_OPTS) -o $@ $(foreach cov,$(LCOV_LIST),--add-tracefile $(cov) )

@@ -42,6 +42,7 @@
 #include "mock_task.h"
 #include "mock_list.h"
 #include "mock_fake_assert.h"
+#include "mock_fake_port.h"
 
 /* ============================  GLOBAL VARIABLES =========================== */
 
@@ -61,7 +62,12 @@ void vPortFree( void * pv )
  ******************************************************************************/
 void setUp( void )
 {
+    mock_task_Init();
+    mock_fake_assert_Init();
+    mock_fake_port_Init();
     vFakeAssert_Ignore();
+    vFakePortEnterCriticalSection_Ignore();
+    vFakePortExitCriticalSection_Ignore();
 
     /* Track calls to malloc / free */
     UnityMalloc_StartTest();
@@ -71,6 +77,15 @@ void setUp( void )
 void tearDown( void )
 {
     UnityMalloc_EndTest();
+
+    mock_task_Verify();
+    mock_task_Destroy();
+
+    mock_fake_assert_Verify();
+    mock_fake_assert_Destroy();
+
+    mock_fake_port_Verify();
+    mock_fake_port_Destroy();
 }
 
 /*! called at the beginning of the whole suite */
@@ -86,7 +101,7 @@ int suiteTearDown( int numFailures )
 
 /*!
  * @brief xQueueCreate happy path.
- *
+ * @coverage xQueueGenericCreate
  */
 void test_xQueueCreate_Success( void )
 {

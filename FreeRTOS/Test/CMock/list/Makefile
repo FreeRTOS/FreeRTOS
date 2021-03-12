@@ -45,8 +45,10 @@ SUITE_DIR       :=  $(abspath .)
 
 # Define mock details
 MOCK_FILES      :=  $(notdir $(MOCK_FILES_FP))
+MOCK_HDR        :=  $(addprefix mock_,$(MOCK_FILES:.h))
 MOCK_SRC        :=  $(addprefix mock_,$(MOCK_FILES:.h=.c))
 MOCK_OBJ        :=  $(addprefix mock_,$(MOCK_FILES:.h=.o))
+MOCK_HDR_LIST   :=  $(addprefix $(MOCKS_DIR)/,$(MOCK_HDR))
 MOCK_SRC_LIST   :=  $(addprefix $(MOCKS_DIR)/,$(MOCK_SRC))
 MOCK_OBJ_LIST   :=  $(addprefix $(SCRATCH_DIR)/,$(MOCK_OBJ))
 CFLAGS          +=  -I$(MOCKS_DIR)/
@@ -67,7 +69,7 @@ DEPS_OBJ_LIST   :=  $(addprefix $(SCRATCH_DIR)/dep_,$(PROJECT_DEPS_SRC:.c=.o))
 EXECS           :=  $(addprefix $(PROJECT)_,$(SUITE_UT_SRC:.c=))
 EXEC_LIST       :=  $(addprefix $(BIN_DIR)/,$(EXECS))
 COV_LIST        :=  $(addsuffix .info,$(addprefix $(SCRATCH_DIR)/,$(SUITE_UT_SRC:.c=)))
-COVINFO         :=  $(PROJECT)_utest.info
+COVINFO         :=  $(abspath $(SCRATCH_DIR)/..)/$(PROJECT).info
 LIB_LIST        :=  $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib).so)
 
 # Coverage related options
@@ -78,13 +80,14 @@ GCOV_OPTS       :=  --unconditional-branches --branch-probabilities
 .PHONY: all clean run gcov bin lcov lcovhtml
 
 # Prevent deletion of intermediate files
-NO_DELETE : $(MOCK_SRC_LIST) $(MOCK_OBJ_LIST) $(SF_OBJ_LIST) $(EXEC_LIST)       \
-            $(DEPS_OBJ_LIST) $(PROJ_PP_LIST) $(PROJ_OBJ_LIST) $(PROJ_GCDA_LIST) \
-            $(SUITE_OBJ_LIST) $(RUNNER_SRC_LIST) $(RUNNER_OBJ_LIST) $(COV_LIST) \
-            # $(COVINFO)
+NO_DELETE : $(MOCK_HDR_LIST) $(MOCK_SRC_LIST) $(MOCK_OBJ_LIST)      \
+            $(DEPS_OBJ_LIST) $(SF_OBJ_LIST) $(EXEC_LIST)            \
+            $(PROJ_PP_LIST) $(PROJ_OBJ_LIST) $(PROJ_GCDA_LIST)      \
+            $(SUITE_OBJ_LIST) $(RUNNER_SRC_LIST) $(RUNNER_OBJ_LIST) \
+            $(COVINFO) $(COV_LIST)
 
 # Rules that run test binaries cannot be run in parallel.
-.NOTPARALLEL    :=  $(SCRATCH_DIR)/$(COVINFO) $(COV_LIST) $(PROJ_GCDA_LIST)
+.NOTPARALLEL    :=  $(COVINFO) $(COV_LIST) $(PROJ_GCDA_LIST)
 
 .DEFAULT_GOAL   :=  all
 all: gcov
@@ -94,7 +97,7 @@ clean:
     rm -rf $(EXEC_LIST)
     rm -rf $(COVERAGE_DIR)/$(PROJECT)
 
-$(LIB_LIST)&:
+$(LIB_LIST) :
     make -C $(UT_ROOT_DIR) libs
 
 # Generate gcov files by default
@@ -108,30 +111,30 @@ $(1)
 endef
 
 # Run and append to gcov data files
-$(PROJ_GCDA_LIST) &: $(EXEC_LIST)
+$(PROJ_GCDA_LIST) : $(EXEC_LIST)
     rm -f $(PROJ_DIR)/*.gcda
     # run each test case
     $(foreach bin,$^,$(call run-test,$(bin)))
 
 # Run and generate lcov
-lcov: $(SCRATCH_DIR)/$(COVINFO)
+lcov: $(COVINFO)
 
-lcovhtml : $(SCRATCH_DIR)/$(COVINFO)
+lcovhtml : $(COVINFO)
     mkdir -p $(COVERAGE_DIR)/$(PROJECT)
-    genhtml $(SCRATCH_DIR)/$(COVINFO) $(LCOV_OPTS)  \
+    genhtml $(COVINFO) $(LCOV_OPTS)  \
         --output-directory $(COVERAGE_DIR)/$(PROJECT)
 
 bin: $(EXEC_LIST)
 
-# # Generate _mock.c / .h files
-# $(MOCK_SRC_LIST) &: $(PROJECT_DIR)/$(PROJECT).yml $(MOCK_FILES_FP)
-#     mkdir -p $(SCRATCH_DIR) $(MOCKS_DIR)
-#     cd $(SCRATCH_DIR) && \
-#         ruby $(CMOCK_EXEC_DIR)/cmock.rb -o$(PROJECT_DIR)/$(PROJECT).yml \
-#         $(MOCK_FILES_FP)
+# Generate _mock.c / .h files
+$(MOCK_HDR_LIST) $(MOCK_SRC_LIST) : $(PROJECT_DIR)/$(PROJECT).yml $(MOCK_FILES_FP)
+    mkdir -p $(SCRATCH_DIR) $(MOCKS_DIR)
+    cd $(SCRATCH_DIR) && \
+        ruby $(CMOCK_EXEC_DIR)/cmock.rb -o$(PROJECT_DIR)/$(PROJECT).yml \
+        $(MOCK_FILES_FP)
 
 # preprocess proj files to expand macros for coverage
-$(PROJ_DIR)/%.i : $(KERNEL_DIR)/%.c $(MOCK_SRC_LIST)
+$(PROJ_DIR)/%.i : $(KERNEL_DIR)/%.c #$(MOCK_SRC_LIST)
     mkdir -p $(PROJ_DIR)
     $(CC) -E $< $(CPPFLAGS) $(CFLAGS) -o $@
 
@@ -149,17 +152,17 @@ $(SCRATCH_DIR)/mock_%.o : $(MOCKS_DIR)/mock_%.c
     $(CC) -c $< $(CPPFLAGS) $(CFLAGS) -o $@
 
 # compile unit tests
-$(SCRATCH_DIR)/%_utest.o : $(SUITE_DIR)/%_utest.c $(MOCK_SRC_LIST)
+$(SCRATCH_DIR)/%_utest.o : $(SUITE_DIR)/%_utest.c $(MOCK_HDR_LIST)
     mkdir -p $(SCRATCH_DIR)
     $(CC) -c $< $(CPPFLAGS) $(CFLAGS) -o $@
 
 # compile support files
-$(SCRATCH_DIR)/sf_%.o : $(PROJECT_DIR)/%.c $(MOCK_SRC_LIST)
+$(SCRATCH_DIR)/sf_%.o : $(PROJECT_DIR)/%.c $(MOCK_HDR_LIST)
     mkdir -p $(SCRATCH_DIR)
     $(CC) -c $< $(CPPFLAGS) $(CFLAGS) -o $@
 
 # compile c files that are needed by PROJ but not mocked
-$(SCRATCH_DIR)/dep_%.o : $(KERNEL_DIR)/%.c $(MOCK_SRC_LIST)
+$(SCRATCH_DIR)/dep_%.o : $(KERNEL_DIR)/%.c #$(MOCK_SRC_LIST)
     mkdir -p $(SCRATCH_DIR)
     $(CC) -c $< $(CPPFLAGS) $(CFLAGS) -o $@
 
@@ -175,10 +178,10 @@ $(SCRATCH_DIR)/%_utest_runner.o : $(SCRATCH_DIR)/%_utest_runner.c
 
 # Link the _utest binary $(SCRATCH_DIR)/%_utest_runner.o
 $(EXEC_LIST) : $(BIN_DIR)/$(PROJECT)_%_utest : $(SCRATCH_DIR)/%_utest.o \
-                                              $(SCRATCH_DIR)/%_utest_runner.o \
-                                              $(SF_OBJ_LIST) $(MOCK_OBJ_LIST) \
-                                              $(PROJ_OBJ_LIST) $(LIB_LIST)    \
-                                              $(DEPS_OBJ_LIST)
+                                               $(SCRATCH_DIR)/%_utest_runner.o \
+                                               $(SF_OBJ_LIST) $(MOCK_OBJ_LIST) \
+                                               $(PROJ_OBJ_LIST) $(LIB_LIST)    \
+                                               $(DEPS_OBJ_LIST)
     mkdir -p $(BIN_DIR)
     $(CC) $< $(subst .o,_runner.o,$<) $(SF_OBJ_LIST) $(DEPS_OBJ_LIST) $(MOCK_OBJ_LIST) $(PROJ_OBJ_LIST) $(LDFLAGS) -o $@
 
@@ -203,10 +206,8 @@ $(SCRATCH_DIR)/%_utest.info : $(BIN_DIR)/$(PROJECT)_%_utest $(SCRATCH_DIR)/callg
     -lcov $(LCOV_OPTS) --summary $@
 
     # Remove temporary files
-    rm -f $(PROJ_DIR)/*.gcda
-    rm -f  $(subst .info,.json.gz,$@)
+    rm -f $(subst .info,.json.gz,$@) $(PROJ_DIR)/*.gcda
 
-# # Combine lcov from each test bin into one lcov info file for the suite
-# $(SCRATCH_DIR)/$(COVINFO) : $(COV_LIST)
-#     lcov $(LCOV_OPTS) -o $@ $(foreach cov,$(COV_LIST),--add-tracefile $(cov) )
-#     -lcov $(LCOV_OPTS) --summary $@
+# Combine lcov from each test bin into one lcov info file for the suite
+$(COVINFO) : $(COV_LIST)
+    lcov $(LCOV_OPTS) -o $@ $(foreach cov,$(COV_LIST),--add-tracefile $(cov) )

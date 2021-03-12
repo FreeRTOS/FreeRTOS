@@ -69,6 +69,9 @@ int suiteTearDown( int numFailures )
 
 /* ==============================  Test Cases  ============================== */
 
+void port_allocate_secure_context( BaseType_t stackSize )
+{
+}
 void vPortEnterCritical( void )
 {
 }

@@ -55,7 +55,7 @@
 #define configUSE_16_BIT_TICKS                           0
 #define configIDLE_SHOULD_YIELD                          1
 #define configUSE_MUTEXES                                1
-#define configCHECK_FOR_STACK_OVERFLOW                   0
+#define configCHECK_FOR_STACK_OVERFLOW                   1
 #define configUSE_RECURSIVE_MUTEXES                      1
 #define configQUEUE_REGISTRY_SIZE                        20
 #define configUSE_MALLOC_FAILED_HOOK                     1
@@ -85,6 +85,7 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 #define portGET_RUN_TIME_COUNTER_VALUE()            ulGetRunTimeCounterValue()
 #define portUSING_MPU_WRAPPERS                    0
 #define portHAS_STACK_OVERFLOW_CHECKING           0
+#define configNUM_THREAD_LOCAL_STORAGE_POINTERS   5
 
 /* Co-routine related configuration options. */
 #define configUSE_CO_ROUTINES                     0
@@ -110,7 +111,7 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 #define INCLUDE_vTaskSuspend                      1
 #define INCLUDE_vTaskDelayUntil                   1
 #define INCLUDE_vTaskDelay                        1
-#define INCLUDE_uxTaskGetStackHighWaterMark       1
+#define INCLUDE_uxTaskGetStackHighWaterMark       0
 #define INCLUDE_xTaskGetSchedulerState            1
 #define INCLUDE_xTimerGetTimerDaemonTaskHandle    1
 #define INCLUDE_xTaskGetIdleTaskHandle            1

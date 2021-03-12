@@ -44,38 +44,54 @@
 
 /**
  * @brief Sample size in bytes of the stream buffer used for test.
- * Keep it short enough so that they can be allocated on stack for static stream buffer tests.
+ * The size is kept short enough so that the buffer can be allocated on stack.
  */
 #define TEST_STREAM_BUFFER_SIZE     ( 64U )
 
 /**
  * @brief Sample trigger level in bytes used for stream buffer tests.
+ * When a receiver task is blocked waiting for data, trigger level determines how much bytes should
+ * be available before which receiver task can be unblocked.
  */
 #define TEST_STREAM_BUFFER_TRIGGER_LEVEL   ( 32U )
 
 /**
- * @brief Maximum unsigned long value so as to trigger an integer overflow.
+ * @brief Maximum unsigned long value that can be passed as a stream buffer size so as to
+ * trigger an integer overflow.
  */
 #define TEST_STREAM_BUFFER_MAX_UINT_SIZE    (  ~ ( size_t ) ( 0UL ) )
 
+/**
+ * @brief A value used to test setting and getting stream buffer number.
+ */
+#define TEST_STREAM_BUFFER_NUMBER           ( 0xFFU )
 
 /**
- * @brief Ticks to wait from tests if the stream buffer is full while sending data or
- * below trigger level while receiveing data.
+ * @brief Wait ticks passed into from tests if the stream buffer is full while sending data or
+ * empty while receiveing data.
  */
 #define TEST_STREAM_BUFFER_WAIT_TICKS       (   1000U )
 
 /* ============================  GLOBAL VARIABLES =========================== */
 
+/**
+ * @brief Global counter for the number of assertions in code.
+ */
 static int assertionFailed = 0;
 
+/**
+ * @brief Global counter to keep track of how many times a sender task was woken up by a receiver task reading from the buffer.
+ */
 static int senderTaskWoken = 0;
 
+/**
+ * @brief Global counter to keep track of how many times a receiver task was woken up by a sender task writing to the buffer.
+ */
 static int receiverTaskWoken = 0;
 
-static TaskHandle_t senderTask = ( TaskHandle_t ) ( 0xDEADBEEF );
+static TaskHandle_t senderTask = ( TaskHandle_t ) ( 0xAABBCCDD );
 
-static TaskHandle_t receiverTask = ( TaskHandle_t ) ( 0xDEADC0DE );
+static TaskHandle_t receiverTask = ( TaskHandle_t ) ( 0xABCDEEFF );
 
 static StreamBufferHandle_t xStreamBuffer;
 
@@ -222,6 +238,33 @@ static BaseType_t receiverTaskNotifyWaitCallback( UBaseType_t uxIndexToWaitOn,
     return pdTRUE;
 }
 
+static BaseType_t sendLessThanTriggerLevelBytesCallback( UBaseType_t uxIndexToWaitOn,
+                     uint32_t ulBitsToClearOnEntry,
+                     uint32_t ulBitsToClearOnExit,
+                     uint32_t* pulNotificationValue,
+                     TickType_t xTicksToWait,
+                     int cmock_num_calls )
+{
+
+    uint8_t data[ TEST_STREAM_BUFFER_TRIGGER_LEVEL ] = { 0 };
+    size_t dataSent = 0;
+    BaseType_t receiverTaskWokenFromISR = pdFALSE;
+
+    /* Send enough (trigger level) bytes to stream buffer to wake up receiver Task. */
+    if( fromISR == pdTRUE )
+    {
+        dataSent = xStreamBufferSendFromISR( xStreamBuffer, data, TEST_STREAM_BUFFER_TRIGGER_LEVEL - 1, &receiverTaskWokenFromISR );
+        TEST_ASSERT_EQUAL( pdFALSE, receiverTaskWokenFromISR );
+    }
+    else
+    {
+        dataSent = xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_TRIGGER_LEVEL - 1, 0 );
+    }
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_TRIGGER_LEVEL - 1, dataSent );
+
+    return pdTRUE;
+}
+
 static BaseType_t receiverTaskNotificationFromISRCallback( TaskHandle_t xTaskToNotify,
                     UBaseType_t uxIndexToNotify,
                     uint32_t ulValue,
@@ -283,147 +326,111 @@ int suiteTearDown( int numFailures )
     return numFailures;
 }
 
-static void validate_stream_buffer_empty( StreamBufferHandle_t xStreamBuffer, size_t bufferSize )
+static void validate_stream_buffer_init_state( StreamBufferHandle_t xStreamBuffer, size_t bufferSize )
 {
     TEST_ASSERT_TRUE( xStreamBufferIsEmpty( xStreamBuffer ) );
     TEST_ASSERT_FALSE( xStreamBufferIsFull( xStreamBuffer ) );
     TEST_ASSERT_EQUAL( bufferSize, xStreamBufferSpacesAvailable( xStreamBuffer ) );
     TEST_ASSERT_EQUAL( 0U, xStreamBufferBytesAvailable( xStreamBuffer ) );
+    TEST_ASSERT_EQUAL( 0U, xStreamBufferNextMessageLengthBytes( xStreamBuffer ) );
+    TEST_ASSERT_EQUAL( 0, ucStreamBufferGetStreamBufferType( xStreamBuffer ) );
 }
 
-static void validate_and_clear_assertitions( int numExpectedAssertions )
+static void validate_and_clear_assertitions( void )
 {
-    TEST_ASSERT_EQUAL( numExpectedAssertions, assertionFailed );
+    TEST_ASSERT_EQUAL( 1, assertionFailed );
     assertionFailed = 0;
 }
 
 /* ==============================  Test Cases  ============================== */
 
 /**
- * @brief Validates that stream buffer of sane size is created.
+ * @brief Validates that stream buffer of sample size is created succesfully.
  */
 void test_xStreamBufferCreate_success( void )
 {
-    StreamBufferHandle_t xStreamBuffer = NULL;
-
     xStreamBuffer = xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
     TEST_ASSERT_NOT_EQUAL( NULL, xStreamBuffer );
-    validate_stream_buffer_empty( xStreamBuffer,  TEST_STREAM_BUFFER_SIZE );
+    validate_stream_buffer_init_state( xStreamBuffer,  TEST_STREAM_BUFFER_SIZE );
+
+    /* Set a stream buffer number and get it. */
+    vStreamBufferSetStreamBufferNumber( xStreamBuffer,  TEST_STREAM_BUFFER_NUMBER );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_NUMBER, uxStreamBufferGetStreamBufferNumber( xStreamBuffer ));
+
     vStreamBufferDelete(xStreamBuffer);
 }
 
 /**
- * @brief Asserts stream buffer creation fails if buffer size integer overflows.
+ * @brief Validates stream buffer create fails on passing invalid parameters.
  */
-void test_xStreamBufferCreate_integer_overflow( void )
+void test_xStreamBufferCreate_invalid_params( void )
 {
-    StreamBufferHandle_t xStreamBuffer = NULL;
-
+    /* Returns NULL if there is an integer overflow in the buffer size. */
     xStreamBuffer = xStreamBufferCreate( TEST_STREAM_BUFFER_MAX_UINT_SIZE, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
     TEST_ASSERT_EQUAL( NULL, xStreamBuffer );
-}
 
-/**
- * @brief Asserts stream buffer creation fails if malloc fails.
- */
-void test_xStreamBufferCreate_malloc_failure( void )
-{
-    StreamBufferHandle_t xStreamBuffer = NULL;
-
+    /* Returns NULL if internal memory allocation of the stream buffer fails. */
     UnityMalloc_MakeMallocFailAfterCount(0);
 
     xStreamBuffer = xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
     TEST_ASSERT_EQUAL( NULL, xStreamBuffer );
-}
 
-/**
- * @brief Asserts stream buffer creation fails with an assertion failure if zero length size is passed.
- */
-void test_xStreamBufferCreate_zero_length_buffer( void )
-{ 
+    /* Assertion fails if a zero buffer size is passed as  the parameter. */
     if( TEST_PROTECT() )
     {
         ( void ) xStreamBufferCreate( 0, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
     }
+    validate_and_clear_assertitions();
 
-    validate_and_clear_assertitions( 1 );
-}
-
-/**
- * @brief Asserts stream buffer creation fails with an assertion failure if trigger level is greater than buffer size.
- */
-void test_xStreamBufferCreate_invalid_triggerlevel( void )
-{ 
+    /* Assertion fails if trigger level is greater than the stream buffer size. */
     if( TEST_PROTECT() )
     {
         ( void ) xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, ( TEST_STREAM_BUFFER_SIZE + 1 ) );
     }
-    
-    validate_and_clear_assertitions( 1 );
+    validate_and_clear_assertitions();
 }
 
 /**
- * @brief Validates stream buffer creation through a static buffer allocated by the user.
+ * @brief Validates stream buffer create using a static buffer is successful.
  */
 void test_xStreamBufferCreateStatic_success( void )
 {
     StaticStreamBuffer_t streamBufferStruct = { 0 };
+
     /* The size of stream buffer array should be one greater than the required size of stream buffer. */
     uint8_t streamBufferArray[ TEST_STREAM_BUFFER_SIZE + 1 ] = { 0 };
 
     xStreamBuffer = xStreamBufferCreateStatic( sizeof( streamBufferArray ), TEST_STREAM_BUFFER_TRIGGER_LEVEL, streamBufferArray, &streamBufferStruct );
  
     TEST_ASSERT_NOT_NULL( xStreamBuffer );
-    validate_stream_buffer_empty( xStreamBuffer, TEST_STREAM_BUFFER_SIZE );
+    validate_stream_buffer_init_state( xStreamBuffer, TEST_STREAM_BUFFER_SIZE );
 
     vStreamBufferDelete( xStreamBuffer );
 }
 
 /**
- * @brief Validates stream buffer creation fails and returns a null pointer if a null array is passed.
+ * @brief Validates stream buffer static create fails on passing invalid parameters.
  */
-void test_xStreamBufferCreateStatic_null_array( void )
+void test_xStreamBufferCreateStatic_invalid_params( void )
 {
     StaticStreamBuffer_t streamBufferStruct = { 0 };
     /* The size of stream buffer array should be one greater than the required size of stream buffer. */
     uint8_t streamBufferArray[ TEST_STREAM_BUFFER_SIZE + 1 ] = { 0 };
-    StreamBufferHandle_t streamBuffer = NULL;
     
-    streamBuffer = xStreamBufferCreateStatic( sizeof( streamBufferArray ), TEST_STREAM_BUFFER_TRIGGER_LEVEL, NULL, &streamBufferStruct );
-
-    TEST_ASSERT_NULL( streamBuffer );
-}
-
-/**
- * @brief Validates stream buffer creation fails and returns a null pointer if a null struct is passed.
- */
-void test_xStreamBufferCreateStatic_null_struct( void )
-{
-    /* The size of stream buffer array should be one greater than the required size of stream buffer. */
-    uint8_t streamBufferArray[ TEST_STREAM_BUFFER_SIZE + 1 ] = { 0 };
-    StreamBufferHandle_t streamBuffer = NULL;
+    /* Returns NULL if a NULL pointer is passed as the stream buffer storage area. */
+    xStreamBuffer = xStreamBufferCreateStatic( sizeof( streamBufferArray ), TEST_STREAM_BUFFER_TRIGGER_LEVEL, NULL, &streamBufferStruct );
+    TEST_ASSERT_NULL( xStreamBuffer );
     
-    streamBuffer = xStreamBufferCreateStatic( sizeof( streamBufferArray ), TEST_STREAM_BUFFER_TRIGGER_LEVEL, streamBufferArray, NULL );
- 
-    TEST_ASSERT_NULL( streamBuffer );
-}
+     /* Returns NULL if a NULL struct is passed as a parameter. */
+    xStreamBuffer = xStreamBufferCreateStatic( sizeof( streamBufferArray ), TEST_STREAM_BUFFER_TRIGGER_LEVEL, streamBufferArray, NULL );
+    TEST_ASSERT_NULL( xStreamBuffer );
 
-/**
- * @brief Validates stream buffer creation fails with assertition if trigger level is higher than buffer size
- */
-void test_xStreamBufferCreateStatic_invalid_triggerlevel( void )
-{
-    StaticStreamBuffer_t streamBufferStruct = { 0 };
-
-    /* The size of stream buffer array should be one greater than the required size of stream buffer. */
-    uint8_t streamBufferArray[ TEST_STREAM_BUFFER_SIZE + 1 ] = { 0 };
-
+    /* Assertion fails if the trigger level is invalid. */
     if( TEST_PROTECT() )
     {
         ( void ) xStreamBufferCreateStatic( sizeof( streamBufferArray ), TEST_STREAM_BUFFER_SIZE + 2, streamBufferArray, &streamBufferStruct );
     }
- 
-    validate_and_clear_assertitions( 1 );
+    validate_and_clear_assertitions();
 }
 
 /**
@@ -432,7 +439,7 @@ void test_xStreamBufferCreateStatic_invalid_triggerlevel( void )
 void test_xStreamBufferSend_success( void )
 {
     uint8_t data[ TEST_STREAM_BUFFER_SIZE ]  = { 0 };
-    size_t dataSent = 0;
+    size_t sent = 0;
 
     vTaskSetTimeOutState_Ignore();
     vTaskSuspendAll_Ignore();
@@ -443,22 +450,22 @@ void test_xStreamBufferSend_success( void )
     TEST_ASSERT_NOT_NULL( xStreamBuffer );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferSpacesAvailable( xStreamBuffer ) );
 
-    /* Sending bytes of size  upto to available size should succeed. Sender task should not be in blocked state. */
-    dataSent = xStreamBufferSend( xStreamBuffer, data, sizeof(data), TEST_STREAM_BUFFER_WAIT_TICKS );
-    TEST_ASSERT_EQUAL( sizeof(data), dataSent );
-    TEST_ASSERT_EQUAL( sizeof(data), xStreamBufferBytesAvailable(xStreamBuffer));
+    /* Sending bytes of size upto to available size should succeed without blocking. */
+    sent = xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_WAIT_TICKS );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, sent );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferBytesAvailable(xStreamBuffer));
     TEST_ASSERT_EQUAL( pdFALSE, xStreamBufferIsEmpty(xStreamBuffer) );
 
     vStreamBufferDelete(xStreamBuffer);
 }
 
 /**
- * @brief Validates that sending more than total size will cap the data to total size without blocking.
+ * @brief Validates that sending data more than stream buffer size will cap the data to total size without blocking.
  */
-void test_xStreamBufferSend_max_size_non_blocking( void )
+void test_xStreamBufferSend_larger_than_buffer_size( void )
 {
     uint8_t data[ TEST_STREAM_BUFFER_SIZE + 1 ]  = { 0 };
-    size_t dataSent = 0;
+    size_t sent = 0;
 
     vTaskSetTimeOutState_Ignore();
     vTaskSuspendAll_Ignore();
@@ -470,27 +477,24 @@ void test_xStreamBufferSend_max_size_non_blocking( void )
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferSpacesAvailable( xStreamBuffer ) );
 
     /* Sending bytes beyond the total size caps the length to total size. */
-    dataSent = xStreamBufferSend( xStreamBuffer, data, sizeof(data), TEST_STREAM_BUFFER_WAIT_TICKS );
-    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, dataSent );
+    sent = xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE + 1, TEST_STREAM_BUFFER_WAIT_TICKS );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, sent );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE,  xStreamBufferBytesAvailable( xStreamBuffer ) );
 
     vStreamBufferDelete(xStreamBuffer);
 }
 
 /**
- * @brief Validates that sending more than available size, will return by sending upto available size,
- *  after timeout, blocking for a given wait period.
+ * @brief Validates various cases where stream buffer has insufficient space to store the data.
  */
-void test_xStreamBufferSend_partial( void )
+void test_xStreamBufferSend_blocking( void )
 {
     uint8_t data[ TEST_STREAM_BUFFER_SIZE ]  = { 0 };
-    size_t dataSent = 0;
+    size_t sent = 0;
 
     vTaskSetTimeOutState_Ignore();
     xTaskGenericNotifyStateClear_IgnoreAndReturn( pdTRUE );
     xTaskGetCurrentTaskHandle_IgnoreAndReturn( senderTask );
-    xTaskGenericNotifyWait_ExpectAndReturn( 0, 0, 0, NULL, TEST_STREAM_BUFFER_WAIT_TICKS, pdTRUE );
-    xTaskCheckForTimeOut_IgnoreAndReturn( pdTRUE );
     vTaskSuspendAll_Ignore();
     xTaskResumeAll_IgnoreAndReturn( pdTRUE );
 
@@ -499,55 +503,30 @@ void test_xStreamBufferSend_partial( void )
     TEST_ASSERT_NOT_NULL( xStreamBuffer );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferSpacesAvailable( xStreamBuffer ) );
 
-    /* Sending data upto available space should not block the task */
-    dataSent = xStreamBufferSend( xStreamBuffer,  data, TEST_STREAM_BUFFER_SIZE - 1 , TEST_STREAM_BUFFER_WAIT_TICKS );
-    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE - 1, dataSent );
+    /* Sending less than available space should not block the task */
+    sent = xStreamBufferSend( xStreamBuffer,  data, TEST_STREAM_BUFFER_SIZE - 1 , TEST_STREAM_BUFFER_WAIT_TICKS );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE - 1, sent );
     TEST_ASSERT_EQUAL( 1,  xStreamBufferSpacesAvailable( xStreamBuffer ) );
 
-    /* Sending bytes beyond the available size should cause the task to block by calling xTaskGenericNotifyWait() API and 
-     * then return with partial data after timeout.
+    /* 
+     * Sending bytes larger than available size should make the task block by calling xTaskGenericNotifyWait() API. Task
+     * should timeout after TEST_STREAM_BUFFER_WAIT_TICKS and then return partial data sent.
      */
-    dataSent = xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_WAIT_TICKS );
-    TEST_ASSERT_EQUAL( 1, dataSent );
-    TEST_ASSERT_EQUAL( pdTRUE, xStreamBufferIsFull( xStreamBuffer ));
-    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE,  xStreamBufferBytesAvailable( xStreamBuffer ) );
+     xTaskGenericNotifyWait_ExpectAndReturn( 0, 0, 0, NULL, TEST_STREAM_BUFFER_WAIT_TICKS, pdTRUE );
+     xTaskCheckForTimeOut_IgnoreAndReturn( pdTRUE );
+     sent = xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_WAIT_TICKS );
+     TEST_ASSERT_EQUAL( 1, sent );
+     TEST_ASSERT_EQUAL( pdTRUE, xStreamBufferIsFull( xStreamBuffer ));
 
-    vStreamBufferDelete(xStreamBuffer);
-}
-
-/**
- * @brief Validates that stream buffer blocks and then sends the remaining data only when bytes are read from the buffer.
- */
-void test_xStreamBufferSend_blocking( void )
-{
-    uint8_t data[ TEST_STREAM_BUFFER_SIZE ]  = { 0 };
-    size_t dataSent = 0;
-
-    vTaskSetTimeOutState_Ignore();
-    xTaskGenericNotifyStateClear_IgnoreAndReturn( pdTRUE );
-    xTaskGetCurrentTaskHandle_IgnoreAndReturn( senderTask );
+    /* 
+     * Sending bytes to a full stream buffer, should block the task. Task should be woken up when enough bytes are consumed
+     * from the stream buffer through the callback.
+     */
     xTaskGenericNotifyWait_StubWithCallback( senderTaskNotifyWaitCallback );
     xTaskGenericNotify_StubWithCallback( senderTaskNotificationCallback );
     xTaskCheckForTimeOut_IgnoreAndReturn( pdFALSE );
-    vTaskSuspendAll_Ignore();
-    xTaskResumeAll_IgnoreAndReturn( pdTRUE );
-
-    /* Create a stream buffer of sample size. */
-    xStreamBuffer = xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE , TEST_STREAM_BUFFER_TRIGGER_LEVEL );
-    TEST_ASSERT_NOT_NULL( xStreamBuffer );
-    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferSpacesAvailable( xStreamBuffer ) );
-
-    /* Sending data of sample space should not block the task */
-    dataSent = xStreamBufferSend( xStreamBuffer,  data, TEST_STREAM_BUFFER_SIZE , TEST_STREAM_BUFFER_WAIT_TICKS );
-    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, dataSent );
-    TEST_ASSERT_EQUAL( 0,  xStreamBufferSpacesAvailable( xStreamBuffer ) );
-
-    /* 
-     * Sending data of sample size again should block the task and then send the data once the sample size is consumed
-     * from the buffer and a notification sent from the receiver.
-     */
-    dataSent = xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_WAIT_TICKS );
-    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, dataSent );
+    sent = xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_WAIT_TICKS );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, sent );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE,  xStreamBufferBytesAvailable( xStreamBuffer ) );
     TEST_ASSERT_EQUAL( 1, senderTaskWoken );
 
@@ -661,7 +640,6 @@ void test_xStreamBufferReceive_blocking( void )
     vTaskSetTimeOutState_Ignore();
     xTaskGenericNotifyStateClear_IgnoreAndReturn( pdTRUE );
     xTaskGetCurrentTaskHandle_IgnoreAndReturn( receiverTask );
-    xTaskGenericNotifyWait_StubWithCallback( receiverTaskNotifyWaitCallback );
     xTaskGenericNotify_StubWithCallback( receiverTaskNotificationCallback );
 
     xTaskCheckForTimeOut_IgnoreAndReturn( pdFALSE );
@@ -677,6 +655,8 @@ void test_xStreamBufferReceive_blocking( void )
      * Try to receive from an empty buffer. Task will block until trigger level bytes are added to the buffer
      *  and a notification is sent to the receiver.
      */
+    xTaskGenericNotifyWait_StubWithCallback( receiverTaskNotifyWaitCallback );
+    xTaskCheckForTimeOut_IgnoreAndReturn( pdFALSE );
     receivedBytes = xStreamBufferReceive( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE , TEST_STREAM_BUFFER_WAIT_TICKS );
     TEST_ASSERT_EQUAL( receivedBytes, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
     TEST_ASSERT_EQUAL( 0,  xStreamBufferBytesAvailable( xStreamBuffer ) );
@@ -897,9 +877,7 @@ void test_xStreamBufferSendFromISR_receiver_task_wakeup( void )
      vTaskSetTimeOutState_Ignore();
      xTaskGenericNotifyStateClear_IgnoreAndReturn( pdTRUE );
      xTaskGetCurrentTaskHandle_IgnoreAndReturn( receiverTask );
-     xTaskGenericNotifyWait_StubWithCallback( receiverTaskNotifyWaitCallback );
      xTaskGenericNotifyFromISR_StubWithCallback( receiverTaskNotificationFromISRCallback );
-     xTaskCheckForTimeOut_IgnoreAndReturn( pdFALSE );
      vTaskSuspendAll_Ignore();
      xTaskResumeAll_IgnoreAndReturn( pdTRUE );
 
@@ -908,7 +886,17 @@ void test_xStreamBufferSendFromISR_receiver_task_wakeup( void )
     TEST_ASSERT_NOT_NULL( xStreamBuffer );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferSpacesAvailable( xStreamBuffer ) );
 
-    /* Send full data to an empty stream buffer should succeed without blocking. */
+
+     /* Sending less than trigger level bytes should not wake up the task. */
+    xTaskGenericNotifyWait_StubWithCallback( sendLessThanTriggerLevelBytesCallback );
+    xTaskCheckForTimeOut_IgnoreAndReturn( pdTRUE );
+    receiveBytes = xStreamBufferReceive( xStreamBuffer,  data, TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_WAIT_TICKS );
+    TEST_ASSERT_EQUAL( 0, receiverTaskWoken );
+
+
+     /* Blocking receive should now succeed after sending trigger level bytes. */
+    xTaskGenericNotifyWait_StubWithCallback( receiverTaskNotifyWaitCallback );
+    xTaskCheckForTimeOut_IgnoreAndReturn( pdFALSE );
     receiveBytes = xStreamBufferReceive( xStreamBuffer,  data, TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_WAIT_TICKS );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_TRIGGER_LEVEL, receiveBytes );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE,  xStreamBufferSpacesAvailable( xStreamBuffer ) );
@@ -935,7 +923,7 @@ void test_xStreamBufferReset_success( void )
     TEST_ASSERT_NOT_NULL( xStreamBuffer );
 
     /* Validate stream buffer is empty initially. */
-    validate_stream_buffer_empty( xStreamBuffer, TEST_STREAM_BUFFER_SIZE );
+    validate_stream_buffer_init_state( xStreamBuffer, TEST_STREAM_BUFFER_SIZE );
 
     /* Send maximum size of data to stream buffer. */
     dataSent = xStreamBufferSend( xStreamBuffer, data, sizeof(data), TEST_STREAM_BUFFER_WAIT_TICKS );
@@ -950,7 +938,7 @@ void test_xStreamBufferReset_success( void )
 
 
      /* Validate that stream buffer is empty. */
-    validate_stream_buffer_empty( xStreamBuffer, TEST_STREAM_BUFFER_SIZE );
+    validate_stream_buffer_init_state( xStreamBuffer, TEST_STREAM_BUFFER_SIZE );
 
     vStreamBufferDelete(xStreamBuffer);
 }
@@ -996,7 +984,6 @@ void test_xStreamBufferReset_while_blocked( void )
      */
     sentBytes = xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE , TEST_STREAM_BUFFER_WAIT_TICKS );
     TEST_ASSERT_EQUAL( 0, sentBytes );
-
 
     vStreamBufferDelete(xStreamBuffer);
 }
@@ -1059,6 +1046,24 @@ void test_xStreamBufferSetTrigerLevel_larger_than_buffer_size( void )
     /* Set the trigger level to TEST_STREAM_BUFFER_SIZE + 1. */
     status = xStreamBufferSetTriggerLevel( xStreamBuffer, TEST_STREAM_BUFFER_SIZE + 1 );
     TEST_ASSERT_EQUAL( pdFALSE, status );
+
+    vStreamBufferDelete(xStreamBuffer);
+}
+
+/**
+ * @brief Validates that setting trigger level to zero sets it to one.
+ */
+void test_xStreamBufferSetTrigerLevel_zero( void )
+{
+    BaseType_t status;
+
+    /* Initially create stream buffer with trigger level equal to maximum stream buffer size. */
+    xStreamBuffer = xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
+    TEST_ASSERT_NOT_NULL( xStreamBuffer );
+
+    /* Set the trigger level to TEST_STREAM_BUFFER_SIZE + 1. */
+    status = xStreamBufferSetTriggerLevel( xStreamBuffer, 0 );
+    TEST_ASSERT_EQUAL( pdTRUE, status );
 
     vStreamBufferDelete(xStreamBuffer);
 }
@@ -1167,3 +1172,47 @@ void test_xStreamBufferReceiveCompletedFromISR_sender_task_wakeup( void )
     vStreamBufferDelete(xStreamBuffer);
 }
 
+/**
+ * @brief Validates a task is able to send upto buffer space available without blocking.
+ */
+void test_xStreamBufferSend_WrapOver( void )
+{
+    uint8_t data[ TEST_STREAM_BUFFER_SIZE ]  = { 0xAA };
+    size_t sent = 0, received = 0;
+
+    vTaskSetTimeOutState_Ignore();
+    vTaskSuspendAll_Ignore();
+    xTaskResumeAll_IgnoreAndReturn( pdTRUE );
+
+    /* Create a stream buffer of the default test sample size. */
+    xStreamBuffer = xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
+    TEST_ASSERT_NOT_NULL( xStreamBuffer );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferSpacesAvailable( xStreamBuffer ) );
+
+    /* Sending bytes upto max stream buffer size*/
+    sent = xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_WAIT_TICKS );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, sent );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferBytesAvailable(xStreamBuffer));
+    TEST_ASSERT_EQUAL( 0, xStreamBufferSpacesAvailable(xStreamBuffer) );
+
+    /* Read upto max buffer size - 1 */
+    received = xStreamBufferReceive( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE - 1, TEST_STREAM_BUFFER_WAIT_TICKS );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE - 1, received );
+    TEST_ASSERT_EQUAL( 1, xStreamBufferBytesAvailable(xStreamBuffer));
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE - 1, xStreamBufferSpacesAvailable(xStreamBuffer) );
+
+    /* Send upto max buffer size - 1 so that head wraps over. */
+    sent = xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE - 1, TEST_STREAM_BUFFER_WAIT_TICKS );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE - 1 , sent );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferBytesAvailable(xStreamBuffer));
+    TEST_ASSERT_EQUAL( 0U, xStreamBufferSpacesAvailable(xStreamBuffer) );
+
+
+    /* Read all bytes and verify that tail wraps over as well. */
+    received = xStreamBufferReceive( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_WAIT_TICKS );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, received );
+    TEST_ASSERT_EQUAL( 0, xStreamBufferBytesAvailable(xStreamBuffer));
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferSpacesAvailable(xStreamBuffer) );
+
+    vStreamBufferDelete(xStreamBuffer);
+}

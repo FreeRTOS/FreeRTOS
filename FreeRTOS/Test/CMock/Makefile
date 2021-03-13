@@ -1,19 +1,22 @@
 # indent with spaces
 .RECIPEPREFIX := $(.RECIPEPREFIX) $(.RECIPEPREFIX)
+include makefile.in
 
 # Change to match installed location
 export CC ?= /usr/local/bin/gcc
 export LD ?= /usr/local/bin/ld
 
 # Add units here when adding a new unit test directory with the same name
-UNITS := list
-#UNITS += queue
-#UNITS += timers
+UNITS       +=  list
+#UNITS       +=  queue
+#UNITS       += timers
 
-include makefile.in
+COVINFO     :=  $(BUILD_DIR)/cmock_test.info
+LCOV_LIST   :=  $(foreach unit,$(UNITS),$(GENERATED_DIR)/$(unit).info )
 
 .PHONY: all doc clean $(UNITS) directories coverage zero_coverage \
-        run run_formatted run_col_formatted run_col libs execs
+        run run_formatted run_col_formatted run_col libs execs lcov \
+        help
 
 all: doc coverage
 execs: $(UNITS)
@@ -89,10 +92,25 @@ run_col_formatted : $(UNITS) zero_coverage
     done
 
 zero_coverage :
-    lcov --zerocounters --directory $(BUILD_DIR)
+    lcov --zerocounters --directory $(BUILD_DIR) --config-file $(UT_ROOT_DIR)/lcovrc
 
 coverage : run_col
     lcov --base-directory $(KERNEL_DIR) --directory $(BUILD_DIR) --capture  \
         --config-file $(UT_ROOT_DIR)/lcovrc -o $(BUILD_DIR)/cmock_test.info
     genhtml $(BUILD_DIR)/cmock_test.info --branch-coverage                      \
         --config-file $(UT_ROOT_DIR)/lcovrc --output-directory $(COVERAGE_DIR)
+
+lcov : $(COVINFO)
+
+# Combine lcov from each test bin into one lcov info file for the suite
+$(COVINFO) : $(LCOV_LIST)
+    lcov $(LCOV_OPTS) -o $@ $(foreach cov,$(LCOV_LIST),--add-tracefile $(cov) )
+
+# Generate lcov for each suite
+$(LCOV_LIST) : zero_coverage
+    $(foreach unit,$(UNITS),\
+        make -C $(unit) lcov;)
+
+lcovhtml : $(COVINFO)
+    mkdir -p $(COVERAGE_DIR)
+    genhtml $(COVINFO) $(LCOV_OPTS) --output-directory $(COVERAGE_DIR) --quiet

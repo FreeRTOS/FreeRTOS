@@ -62,5 +62,7 @@ LIBS                +=  libcmock
 LIBS                +=  libunitymemory
 LIBS                +=  libcexception
 
+LCOV_OPTS           :=  --config-file $(UT_ROOT_DIR)/lcovrc
+
 # export everything in this file
 export

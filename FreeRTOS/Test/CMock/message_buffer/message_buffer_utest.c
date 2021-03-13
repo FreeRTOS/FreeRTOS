@@ -46,30 +46,30 @@
  * @brief Sample size in bytes of the message buffer used for test.
  * Keep it short enough so that they can be allocated on stack.
  */
-#define TEST_MESSAGE_BUFFER_SIZE     ( 64U )
+#define TEST_MESSAGE_BUFFER_SIZE             ( 64U )
 
 /**
  * @brief Minimum size required to store the length of the message.
  */
-#define TEST_MESSAGE_METADATA_SIZE    ( sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ) )
+#define TEST_MESSAGE_METADATA_SIZE           ( sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ) )
 
 /**
  * @brief Maximum size of a message that can be sent to a message buffer.
  * Each message stores an associated length of the message as metadata. So maximum message
  * size at any time is total length - size of the variable used to store length.
  */
-#define TEST_MAX_MESSAGE_SIZE  ( TEST_MESSAGE_BUFFER_SIZE - TEST_MESSAGE_METADATA_SIZE )
+#define TEST_MAX_MESSAGE_SIZE                ( TEST_MESSAGE_BUFFER_SIZE - TEST_MESSAGE_METADATA_SIZE )
 
 /**
  * @brief Maximum unsigned long value so as to trigger an integer overflow.
  */
-#define TEST_MESSAGE_BUFFER_MAX_UINT_SIZE    (  ~ ( size_t ) ( 0UL ) )
+#define TEST_MESSAGE_BUFFER_MAX_UINT_SIZE    ( ~( size_t ) ( 0UL ) )
 
 /**
  * @brief Ticks to wait from tests if the message buffer is full while sending data or
  * below trigger level while receiveing data.
  */
-#define TEST_MESSAGE_BUFFER_WAIT_TICKS       (   1000U )
+#define TEST_MESSAGE_BUFFER_WAIT_TICKS       ( 1000U )
 
 /* ============================  GLOBAL VARIABLES =========================== */
 
@@ -96,7 +96,10 @@ void vPortFree( void * pv )
     return unity_free( pv );
 }
 
-static void vFakeAssertStub( bool x, char* file, int line, int cmock_num_calls )
+static void vFakeAssertStub( bool x,
+                             char * file,
+                             int line,
+                             int cmock_num_calls )
 {
     if( !x )
     {
@@ -106,11 +109,11 @@ static void vFakeAssertStub( bool x, char* file, int line, int cmock_num_calls )
 }
 
 static BaseType_t senderTaskNotificationCallback( TaskHandle_t xTaskToNotify,
-                            UBaseType_t uxIndexToNotify,
-                            uint32_t ulValue,
-                            eNotifyAction eAction,
-                            uint32_t* pulPreviousNotificationValue,
-                            int cmock_num_calls )
+                                                  UBaseType_t uxIndexToNotify,
+                                                  uint32_t ulValue,
+                                                  eNotifyAction eAction,
+                                                  uint32_t * pulPreviousNotificationValue,
+                                                  int cmock_num_calls )
 {
     TEST_ASSERT_EQUAL( senderTask, xTaskToNotify );
     senderTaskWoken++;
@@ -118,13 +121,12 @@ static BaseType_t senderTaskNotificationCallback( TaskHandle_t xTaskToNotify,
 }
 
 static BaseType_t messageBufferReceiveFromISRCallback( UBaseType_t uxIndexToWaitOn,
-                     uint32_t ulBitsToClearOnEntry,
-                     uint32_t ulBitsToClearOnExit,
-                     uint32_t* pulNotificationValue,
-                     TickType_t xTicksToWait,
-                     int cmock_num_calls )
+                                                       uint32_t ulBitsToClearOnEntry,
+                                                       uint32_t ulBitsToClearOnExit,
+                                                       uint32_t * pulNotificationValue,
+                                                       TickType_t xTicksToWait,
+                                                       int cmock_num_calls )
 {
-
     uint8_t data[ TEST_MAX_MESSAGE_SIZE ] = { 0 };
     size_t dataReceived = 0;
     BaseType_t senderTaskWokenFromISR = pdFALSE;
@@ -135,13 +137,12 @@ static BaseType_t messageBufferReceiveFromISRCallback( UBaseType_t uxIndexToWait
 }
 
 static BaseType_t messageBufferReceiveCallback( UBaseType_t uxIndexToWaitOn,
-                     uint32_t ulBitsToClearOnEntry,
-                     uint32_t ulBitsToClearOnExit,
-                     uint32_t* pulNotificationValue,
-                     TickType_t xTicksToWait,
-                     int cmock_num_calls )
+                                                uint32_t ulBitsToClearOnEntry,
+                                                uint32_t ulBitsToClearOnExit,
+                                                uint32_t * pulNotificationValue,
+                                                TickType_t xTicksToWait,
+                                                int cmock_num_calls )
 {
-
     uint8_t data[ TEST_MAX_MESSAGE_SIZE ] = { 0 };
     size_t dataReceived = 0;
 
@@ -152,11 +153,11 @@ static BaseType_t messageBufferReceiveCallback( UBaseType_t uxIndexToWaitOn,
 }
 
 static BaseType_t messageBufferSendFromISRCallback( UBaseType_t uxIndexToWaitOn,
-                     uint32_t ulBitsToClearOnEntry,
-                     uint32_t ulBitsToClearOnExit,
-                     uint32_t* pulNotificationValue,
-                     TickType_t xTicksToWait,
-                     int cmock_num_calls )
+                                                    uint32_t ulBitsToClearOnEntry,
+                                                    uint32_t ulBitsToClearOnExit,
+                                                    uint32_t * pulNotificationValue,
+                                                    TickType_t xTicksToWait,
+                                                    int cmock_num_calls )
 {
     BaseType_t receiverTaskWokenFromISR = pdFALSE;
     uint8_t data[ TEST_MAX_MESSAGE_SIZE ] = { 0 };
@@ -168,13 +169,12 @@ static BaseType_t messageBufferSendFromISRCallback( UBaseType_t uxIndexToWaitOn,
 }
 
 static BaseType_t messageBufferSendCallback( UBaseType_t uxIndexToWaitOn,
-                     uint32_t ulBitsToClearOnEntry,
-                     uint32_t ulBitsToClearOnExit,
-                     uint32_t* pulNotificationValue,
-                     TickType_t xTicksToWait,
-                     int cmock_num_calls )
+                                             uint32_t ulBitsToClearOnEntry,
+                                             uint32_t ulBitsToClearOnExit,
+                                             uint32_t * pulNotificationValue,
+                                             TickType_t xTicksToWait,
+                                             int cmock_num_calls )
 {
-
     uint8_t data[ TEST_MAX_MESSAGE_SIZE ] = { 0 };
     size_t dataSent = 0;
 
@@ -185,11 +185,11 @@ static BaseType_t messageBufferSendCallback( UBaseType_t uxIndexToWaitOn,
 }
 
 static BaseType_t receiverTaskNotificationCallback( TaskHandle_t xTaskToNotify,
-                            UBaseType_t uxIndexToNotify,
-                            uint32_t ulValue,
-                            eNotifyAction eAction,
-                            uint32_t* pulPreviousNotificationValue,
-                            int cmock_num_calls )
+                                                    UBaseType_t uxIndexToNotify,
+                                                    uint32_t ulValue,
+                                                    eNotifyAction eAction,
+                                                    uint32_t * pulPreviousNotificationValue,
+                                                    int cmock_num_calls )
 {
     TEST_ASSERT_EQUAL( receiverTask, xTaskToNotify );
     receiverTaskWoken++;
@@ -206,7 +206,7 @@ void setUp( void )
     senderTaskWoken = 0;
     receiverTaskWoken = 0;
 
-    vFakeAssert_StubWithCallback(vFakeAssertStub);
+    vFakeAssert_StubWithCallback( vFakeAssertStub );
     /* Track calls to malloc / free */
     UnityMalloc_StartTest();
 }
@@ -229,12 +229,13 @@ int suiteTearDown( int numFailures )
     return numFailures;
 }
 
-static void validate_message_buffer_init_state( MessageBufferHandle_t xMessageBuffer, size_t bufferSize )
+static void validate_message_buffer_init_state( MessageBufferHandle_t xMessageBuffer,
+                                                size_t bufferSize )
 {
     TEST_ASSERT_TRUE( xMessageBufferIsEmpty( xMessageBuffer ) );
     TEST_ASSERT_FALSE( xMessageBufferIsFull( xMessageBuffer ) );
     TEST_ASSERT_EQUAL( bufferSize, xMessageBufferSpacesAvailable( xMessageBuffer ) );
-    TEST_ASSERT_EQUAL( 0, xStreamBufferNextMessageLengthBytes( xMessageBuffer ));
+    TEST_ASSERT_EQUAL( 0, xStreamBufferNextMessageLengthBytes( xMessageBuffer ) );
     TEST_ASSERT_EQUAL( 1, ucStreamBufferGetStreamBufferType( xMessageBuffer ) );
 }
 
@@ -251,11 +252,10 @@ static void validate_and_clear_assertitions( void )
  */
 void test_xMessageBufferCreate_success( void )
 {
-
     xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
     TEST_ASSERT_NOT_EQUAL( NULL, xMessageBuffer );
-    validate_message_buffer_init_state( xMessageBuffer,  TEST_MESSAGE_BUFFER_SIZE );
-    vMessageBufferDelete(xMessageBuffer);
+    validate_message_buffer_init_state( xMessageBuffer, TEST_MESSAGE_BUFFER_SIZE );
+    vMessageBufferDelete( xMessageBuffer );
 }
 
 /**
@@ -263,13 +263,12 @@ void test_xMessageBufferCreate_success( void )
  */
 void test_xMessageBufferCreate_invalid_params( void )
 {
-
     /* API should fail and return null if there is an integer overflow in message buffer size passed. */
     xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_MAX_UINT_SIZE );
     TEST_ASSERT_EQUAL( NULL, xMessageBuffer );
 
     /* API should fail and return null if the malloc fails. */
-    UnityMalloc_MakeMallocFailAfterCount(0);
+    UnityMalloc_MakeMallocFailAfterCount( 0 );
     xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
     TEST_ASSERT_NULL( xMessageBuffer );
 
@@ -278,6 +277,7 @@ void test_xMessageBufferCreate_invalid_params( void )
     {
         ( void ) xMessageBufferCreate( 0 );
     }
+
     validate_and_clear_assertitions();
 
     /* Should assert if the size passed is less than the minimum size requried to store metadata size. */
@@ -285,6 +285,7 @@ void test_xMessageBufferCreate_invalid_params( void )
     {
         ( void ) xMessageBufferCreate( TEST_MESSAGE_METADATA_SIZE );
     }
+
     validate_and_clear_assertitions();
 }
 
@@ -299,7 +300,7 @@ void test_xMessageBufferCreateStatic_success( void )
 
     xMessageBuffer = xMessageBufferCreateStatic( sizeof( messageBufferArray ), messageBufferArray, &messageBufferStruct );
     TEST_ASSERT_NOT_NULL( xMessageBuffer );
-    
+
     validate_message_buffer_init_state( xMessageBuffer, TEST_MESSAGE_BUFFER_SIZE );
 
     vStreamBufferDelete( xMessageBuffer );
@@ -313,12 +314,12 @@ void test_xMessageBufferCreateStatic_invalid_params( void )
     StaticMessageBuffer_t messageBufferStruct = { 0 };
 
     /* The size of message buffer array should be one greater than the required size of message buffer. */
-     uint8_t messageBufferArray[ TEST_MESSAGE_BUFFER_SIZE + 1 ] = { 0 };
-    
+    uint8_t messageBufferArray[ TEST_MESSAGE_BUFFER_SIZE + 1 ] = { 0 };
+
     /* Returns NULL when NULL storage area is passed as a parameter. */
     xMessageBuffer = xMessageBufferCreateStatic( TEST_MESSAGE_BUFFER_SIZE, NULL, &messageBufferStruct );
     TEST_ASSERT_NULL( xMessageBuffer );
-    
+
     /* Returns NULL when NULL message buffer struct is passed as a parameter. */
     xMessageBuffer = xMessageBufferCreateStatic( sizeof( messageBufferArray ), messageBufferArray, NULL );
     TEST_ASSERT_NULL( xMessageBuffer );
@@ -328,6 +329,7 @@ void test_xMessageBufferCreateStatic_invalid_params( void )
     {
         ( void ) xMessageBufferCreateStatic( TEST_MESSAGE_METADATA_SIZE, messageBufferArray, &messageBufferStruct );
     }
+
     validate_and_clear_assertitions();
 
     /* Should assert if the size passed is zero */
@@ -335,6 +337,7 @@ void test_xMessageBufferCreateStatic_invalid_params( void )
     {
         ( void ) xMessageBufferCreateStatic( 0, messageBufferArray, &messageBufferStruct );
     }
+
     validate_and_clear_assertitions();
 }
 
@@ -343,7 +346,7 @@ void test_xMessageBufferCreateStatic_invalid_params( void )
  */
 void test_xMessageBufferSend_success( void )
 {
-    uint8_t data[ TEST_MAX_MESSAGE_SIZE ]  = { 0 };
+    uint8_t data[ TEST_MAX_MESSAGE_SIZE ] = { 0 };
     size_t dataSent = 0;
 
     vTaskSetTimeOutState_Ignore();
@@ -358,10 +361,10 @@ void test_xMessageBufferSend_success( void )
     /* Sending bytes of size  upto to available size should succeed. Sender task should not be in blocked state. */
     dataSent = xMessageBufferSend( xMessageBuffer, data, TEST_MAX_MESSAGE_SIZE, TEST_MESSAGE_BUFFER_WAIT_TICKS );
     TEST_ASSERT_EQUAL( TEST_MAX_MESSAGE_SIZE, dataSent );
-    TEST_ASSERT_EQUAL( TEST_MAX_MESSAGE_SIZE, xStreamBufferNextMessageLengthBytes( xMessageBuffer ));
-    TEST_ASSERT_EQUAL( pdFALSE, xMessageBufferIsEmpty(xMessageBuffer) );
+    TEST_ASSERT_EQUAL( TEST_MAX_MESSAGE_SIZE, xStreamBufferNextMessageLengthBytes( xMessageBuffer ) );
+    TEST_ASSERT_EQUAL( pdFALSE, xMessageBufferIsEmpty( xMessageBuffer ) );
 
-    vStreamBufferDelete(xMessageBuffer);
+    vStreamBufferDelete( xMessageBuffer );
 }
 
 /**
@@ -369,7 +372,7 @@ void test_xMessageBufferSend_success( void )
  */
 void test_xMessageBufferSend_invalid_params( void )
 {
-    uint8_t message[ TEST_MAX_MESSAGE_SIZE + 1 ]  = { 0 };
+    uint8_t message[ TEST_MAX_MESSAGE_SIZE + 1 ] = { 0 };
     size_t sentBytes = 0;
 
     vTaskSetTimeOutState_Ignore();
@@ -390,6 +393,7 @@ void test_xMessageBufferSend_invalid_params( void )
     {
         ( void ) xMessageBufferSend( xMessageBuffer, NULL, TEST_MAX_MESSAGE_SIZE + 1, TEST_MESSAGE_BUFFER_WAIT_TICKS );
     }
+
     validate_and_clear_assertitions();
 
     /* Sending to a null message buffer should trigger an assert. */
@@ -397,10 +401,11 @@ void test_xMessageBufferSend_invalid_params( void )
     {
         ( void ) xMessageBufferSend( NULL, message, TEST_MAX_MESSAGE_SIZE + 1, TEST_MESSAGE_BUFFER_WAIT_TICKS );
     }
+
     validate_and_clear_assertitions();
 
 
-    vStreamBufferDelete(xMessageBuffer);
+    vStreamBufferDelete( xMessageBuffer );
 }
 
 /**
@@ -409,7 +414,7 @@ void test_xMessageBufferSend_invalid_params( void )
  */
 void test_xMessageBufferSend_blocking( void )
 {
-    uint8_t message[ TEST_MAX_MESSAGE_SIZE ]  = { 0 };
+    uint8_t message[ TEST_MAX_MESSAGE_SIZE ] = { 0 };
     size_t sentBytes = 0;
 
     vTaskSetTimeOutState_Ignore();
@@ -437,7 +442,7 @@ void test_xMessageBufferSend_blocking( void )
     TEST_ASSERT_EQUAL( TEST_MAX_MESSAGE_SIZE, xStreamBufferNextMessageLengthBytes( xMessageBuffer ) );
     TEST_ASSERT_EQUAL( 1, senderTaskWoken );
 
-    vStreamBufferDelete(xMessageBuffer);
+    vStreamBufferDelete( xMessageBuffer );
 }
 
 /**
@@ -445,9 +450,9 @@ void test_xMessageBufferSend_blocking( void )
  */
 void test_xMessageBufferReceive_success( void )
 {
-    uint8_t data[ TEST_MAX_MESSAGE_SIZE ]  = { 0xAA };
+    uint8_t data[ TEST_MAX_MESSAGE_SIZE ] = { 0xAA };
     size_t sent = 0;
-    uint8_t dataReceived[ TEST_MAX_MESSAGE_SIZE + 1]  = { 0x00 };
+    uint8_t dataReceived[ TEST_MAX_MESSAGE_SIZE + 1 ] = { 0x00 };
     size_t received = 0;
 
     vTaskSetTimeOutState_Ignore();
@@ -458,22 +463,22 @@ void test_xMessageBufferReceive_success( void )
     xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
     TEST_ASSERT_NOT_NULL( xMessageBuffer );
     TEST_ASSERT_EQUAL( TEST_MESSAGE_BUFFER_SIZE, xMessageBufferSpacesAvailable( xMessageBuffer ) );
-    
+
     sent = xMessageBufferSend( xMessageBuffer, data, TEST_MAX_MESSAGE_SIZE, TEST_MESSAGE_BUFFER_WAIT_TICKS );
     TEST_ASSERT_EQUAL( TEST_MAX_MESSAGE_SIZE, sent );
-    TEST_ASSERT_EQUAL( TEST_MAX_MESSAGE_SIZE, xStreamBufferNextMessageLengthBytes( xMessageBuffer ));
+    TEST_ASSERT_EQUAL( TEST_MAX_MESSAGE_SIZE, xStreamBufferNextMessageLengthBytes( xMessageBuffer ) );
 
-     /* Receiving bytes of size less than the message length will return 0 bytes. */
+    /* Receiving bytes of size less than the message length will return 0 bytes. */
     received = xMessageBufferReceive( xMessageBuffer, dataReceived, TEST_MAX_MESSAGE_SIZE - 1, TEST_MESSAGE_BUFFER_WAIT_TICKS );
     TEST_ASSERT_EQUAL( 0, received );
-    TEST_ASSERT_EQUAL( TEST_MAX_MESSAGE_SIZE, xStreamBufferNextMessageLengthBytes( xMessageBuffer ));
+    TEST_ASSERT_EQUAL( TEST_MAX_MESSAGE_SIZE, xStreamBufferNextMessageLengthBytes( xMessageBuffer ) );
 
-     /* Receiving bytes of size greater than the message length will return message length bytes. */
+    /* Receiving bytes of size greater than the message length will return message length bytes. */
     received = xMessageBufferReceive( xMessageBuffer, dataReceived, TEST_MAX_MESSAGE_SIZE + 1, TEST_MESSAGE_BUFFER_WAIT_TICKS );
     TEST_ASSERT_EQUAL( TEST_MAX_MESSAGE_SIZE, received );
-    TEST_ASSERT_EQUAL( 0, xStreamBufferNextMessageLengthBytes( xMessageBuffer ));
+    TEST_ASSERT_EQUAL( 0, xStreamBufferNextMessageLengthBytes( xMessageBuffer ) );
 
-    vStreamBufferDelete(xMessageBuffer);
+    vStreamBufferDelete( xMessageBuffer );
 }
 
 /**
@@ -481,7 +486,7 @@ void test_xMessageBufferReceive_success( void )
  */
 void test_xMessageBufferReceive_invalid_params( void )
 {
-    uint8_t message[ TEST_MAX_MESSAGE_SIZE ]  = { 0 };
+    uint8_t message[ TEST_MAX_MESSAGE_SIZE ] = { 0 };
 
     vTaskSetTimeOutState_Ignore();
     vTaskSuspendAll_Ignore();
@@ -496,6 +501,7 @@ void test_xMessageBufferReceive_invalid_params( void )
     {
         ( void ) xMessageBufferReceive( xMessageBuffer, NULL, TEST_MAX_MESSAGE_SIZE, TEST_MESSAGE_BUFFER_WAIT_TICKS );
     }
+
     validate_and_clear_assertitions();
 
     /* Should assert if a null message buffer handle is passed. */
@@ -503,10 +509,11 @@ void test_xMessageBufferReceive_invalid_params( void )
     {
         ( void ) xMessageBufferReceive( NULL, message, TEST_MAX_MESSAGE_SIZE, TEST_MESSAGE_BUFFER_WAIT_TICKS );
     }
+
     validate_and_clear_assertitions();
 
 
-    vStreamBufferDelete(xMessageBuffer);
+    vStreamBufferDelete( xMessageBuffer );
 }
 
 /**
@@ -515,7 +522,7 @@ void test_xMessageBufferReceive_invalid_params( void )
  */
 void test_xMessageBufferReceive_blocking( void )
 {
-    uint8_t message[ TEST_MAX_MESSAGE_SIZE ]  = { 0 };
+    uint8_t message[ TEST_MAX_MESSAGE_SIZE ] = { 0 };
     size_t received = 0;
 
     vTaskSetTimeOutState_Ignore();
@@ -538,7 +545,7 @@ void test_xMessageBufferReceive_blocking( void )
     TEST_ASSERT_EQUAL( 0, xStreamBufferNextMessageLengthBytes( xMessageBuffer ) );
     TEST_ASSERT_EQUAL( 1, receiverTaskWoken );
 
-    vStreamBufferDelete(xMessageBuffer);
+    vStreamBufferDelete( xMessageBuffer );
 }
 
 /**
@@ -546,7 +553,7 @@ void test_xMessageBufferReceive_blocking( void )
  */
 void test_xMessageBufferSendFromISR_success( void )
 {
-    uint8_t message[ TEST_MAX_MESSAGE_SIZE ]  = { 0 };
+    uint8_t message[ TEST_MAX_MESSAGE_SIZE ] = { 0 };
     size_t received = 0, sent = 0;
     BaseType_t highPriorityTaskWoken = pdFALSE;
 
@@ -577,7 +584,7 @@ void test_xMessageBufferSendFromISR_success( void )
     sent = xMessageBufferSendFromISR( xMessageBuffer, message, TEST_MAX_MESSAGE_SIZE, &highPriorityTaskWoken );
     TEST_ASSERT_EQUAL( 0, sent );
 
-    vStreamBufferDelete(xMessageBuffer);
+    vStreamBufferDelete( xMessageBuffer );
 }
 
 /**
@@ -585,7 +592,7 @@ void test_xMessageBufferSendFromISR_success( void )
  */
 void test_xMessageBufferReceiveFromISR_success( void )
 {
-    uint8_t message[ TEST_MAX_MESSAGE_SIZE ]  = { 0 };
+    uint8_t message[ TEST_MAX_MESSAGE_SIZE ] = { 0 };
     size_t sent = 0, received = 0;
     BaseType_t xHighPriorityTaskWoken = pdFALSE;
 
@@ -621,5 +628,5 @@ void test_xMessageBufferReceiveFromISR_success( void )
     sent = xMessageBufferSend( xMessageBuffer, message, TEST_MAX_MESSAGE_SIZE, TEST_MESSAGE_BUFFER_WAIT_TICKS );
     TEST_ASSERT_EQUAL( TEST_MAX_MESSAGE_SIZE, sent );
 
-    vStreamBufferDelete(xMessageBuffer);
+    vStreamBufferDelete( xMessageBuffer );
 }

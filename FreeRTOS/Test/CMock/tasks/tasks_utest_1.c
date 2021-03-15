@@ -1680,7 +1680,6 @@ void test_xTaskDelayUntil_success_gt_tickCount(void)
 
     /* Expectations */
     listLIST_IS_EMPTY_ExpectAndReturn(&xPendingReadyList, pdTRUE);
- //   uxListRemove_ExpectAndReturn(&ptcb->xStateListItem, 0);
     /* API Call */
     ret_xtask_delay = xTaskDelayUntil( &previousWakeTime, 4 );
     /* Validations */
@@ -1693,7 +1692,6 @@ void test_xTaskDelayUntil_success_gt_tickCount_should_delay(void)
     BaseType_t ret_xtask_delay;
     xTickCount  = 1;
     TickType_t previousWakeTime = xTickCount + 3;
-    //TickType_t previousWakeTime =  INT32_MAX + 3;
     TaskHandle_t task_handle;
 
     task_handle = create_task();
@@ -1702,11 +1700,33 @@ void test_xTaskDelayUntil_success_gt_tickCount_should_delay(void)
     uxListRemove_ExpectAndReturn( &pxCurrentTCB->xStateListItem, 0);
     listSET_LIST_ITEM_VALUE_Expect(&pxCurrentTCB->xStateListItem, 3);
     vListInsert_Expect(pxOverflowDelayedTaskList, &ptcb->xStateListItem);
+    /* xTaskResumeAll */
     listLIST_IS_EMPTY_ExpectAndReturn(&xPendingReadyList, pdTRUE);
 
     ret_xtask_delay = xTaskDelayUntil( &previousWakeTime, UINT32_MAX  );
     TEST_ASSERT_EQUAL(pdTRUE, ret_xtask_delay);
 }
+
+void test_xTaskDelayUntil_success_prev_gt_tickCount2(void)
+{
+    BaseType_t ret_xtask_delay;
+    TickType_t previousWakeTime = xTickCount + 5;     /* 500 + 5 = 505 */
+    TaskHandle_t task_handle;
+    TickType_t xTimeIncrement = UINT32_MAX - 5;
+
+    /* Setup */
+    task_handle = create_task();
+    ptcb = ( TCB_t * )task_handle;
+    TEST_ASSERT_EQUAL( pxCurrentTCB, ptcb );
+    /* Expectations */
+    listLIST_IS_EMPTY_ExpectAndReturn(&xPendingReadyList, pdTRUE);
+    /* API Call */
+    ret_xtask_delay = xTaskDelayUntil( &previousWakeTime, xTimeIncrement );
+    /* Validations */
+    ASSERT_PORT_YIELD_CALLED();
+    TEST_ASSERT_FALSE(ret_xtask_delay);
+}
+/* 0 */
 
 
 void test_xTaskDelayUntil_success_lt_tickCount(void)
@@ -1740,6 +1760,74 @@ void test_xTaskDelayUntil_success_lt_tickCount(void)
     /* Validations */
     ASSERT_PORT_YIELD_CALLED();
     TEST_ASSERT_EQUAL(pdTRUE, ret_xtask_delay);
+}
+
+void test_xTaskDelayUntil_success_lt_tickCount1(void)
+{
+    BaseType_t ret_xtask_delay;
+    TickType_t previousWakeTime = xTickCount - 3; /* 500 - 3 = 497 */
+    TaskHandle_t task_handle;
+    TickType_t xTimeIncrement = 3;
+
+    /* Setup */
+    task_handle = create_task();
+    ptcb = ( TCB_t * )task_handle;
+    TEST_ASSERT_EQUAL( pxCurrentTCB, ptcb );
+    /* Expectations */
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdFALSE );
+    listGET_OWNER_OF_HEAD_ENTRY_ExpectAndReturn(&xPendingReadyList, ptcb);
+    uxListRemove_ExpectAndReturn(&ptcb->xEventListItem, pdTRUE);
+    uxListRemove_ExpectAndReturn(&ptcb->xStateListItem, pdTRUE);
+    /* prvAddTaskToReadyList */
+    vListInsertEnd_Expect(&pxReadyTasksLists[ptcb->uxPriority],
+                            & ptcb->xStateListItem);
+    /* back to xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn(&xPendingReadyList, pdTRUE);
+    /* prvResetNextTaskUnblockTime */
+    listLIST_IS_EMPTY_ExpectAndReturn(&xPendingReadyList, pdTRUE);
+    /* API Call */
+    ret_xtask_delay = xTaskDelayUntil( &previousWakeTime, xTimeIncrement );
+    /* Validations */
+    ASSERT_PORT_YIELD_CALLED();
+    TEST_ASSERT_FALSE(ret_xtask_delay);
+}
+
+void test_xTaskDelayUntil_success_lt_tickCount2(void)
+{
+    BaseType_t ret_xtask_delay;
+    TickType_t previousWakeTime = xTickCount - 3; /* 500 - 3 = 497 */
+    TaskHandle_t task_handle;
+    TickType_t xTimeIncrement = UINT32_MAX;
+
+    /* Setup */
+    task_handle = create_task();
+    ptcb = ( TCB_t * )task_handle;
+    TEST_ASSERT_EQUAL( pxCurrentTCB, ptcb );
+    /* Expectations */
+    /* xTaskResumeAll */
+    /* prvResetNextTaskUnblockTime */
+    uxListRemove_ExpectAndReturn( &pxCurrentTCB->xStateListItem, 0);
+    listSET_LIST_ITEM_VALUE_Expect(&pxCurrentTCB->xStateListItem,
+                                    ((previousWakeTime - 1) ));
+    vListInsert_Expect(pxOverflowDelayedTaskList, &ptcb->xStateListItem);
+    /* xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdFALSE );
+    listGET_OWNER_OF_HEAD_ENTRY_ExpectAndReturn(&xPendingReadyList, ptcb);
+    uxListRemove_ExpectAndReturn(&ptcb->xEventListItem, pdTRUE);
+    uxListRemove_ExpectAndReturn(&ptcb->xStateListItem, pdTRUE);
+    /* prvAddTaskToReadyList */
+    vListInsertEnd_Expect(&pxReadyTasksLists[ptcb->uxPriority],
+                            & ptcb->xStateListItem);
+    /* back to xTaskResumeAll */
+    listLIST_IS_EMPTY_ExpectAndReturn(&xPendingReadyList, pdTRUE);
+    /* prvResetNextTaskUnblockTime */
+    listLIST_IS_EMPTY_ExpectAndReturn(&xPendingReadyList, pdTRUE);
+    /* API Call */
+    ret_xtask_delay = xTaskDelayUntil( &previousWakeTime, xTimeIncrement );
+    /* Validations */
+    ASSERT_PORT_YIELD_CALLED();
+    TEST_ASSERT_TRUE(ret_xtask_delay);
 }
 
 

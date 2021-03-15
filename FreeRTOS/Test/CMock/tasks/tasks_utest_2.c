@@ -69,11 +69,64 @@ extern volatile TickType_t xNextTaskUnblockTime;
 extern TaskHandle_t xIdleTaskHandle;
 extern volatile UBaseType_t uxSchedulerSuspended;
 
+
 /* ===========================  GLOBAL VARIABLES  =========================== */
 static StaticTask_t xIdleTaskTCB;
 static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
 
+/* ===========================  Static Functions  =========================== */
+static TaskHandle_t create_task()
+{
+    TaskFunction_t pxTaskCode = NULL;
+    const char * const pcName = { __FUNCTION__ };
+    const uint32_t usStackDepth = 300;
+    void * const pvParameters = NULL;
+    UBaseType_t uxPriority = create_task_priority;
+    TaskHandle_t taskHandle;
+    BaseType_t ret;
+
+    pvPortMalloc_ExpectAndReturn( sizeof( TCB_t ), &tcb[created_tasks] );
+    pvPortMalloc_ExpectAndReturn( usStackDepth * sizeof( StackType_t ), stack );
+
+    vListInitialiseItem_Expect( &( tcb[created_tasks].xStateListItem ) );
+    vListInitialiseItem_Expect( &( tcb[created_tasks].xEventListItem ) );
+    /* TODO: expect set owner */
+    listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
+    /* TODO: expect set owner */
+
+    pxPortInitialiseStack_ExpectAnyArgsAndReturn( stack );
+
+    if( is_first_task )
+    {
+        for( int i = ( UBaseType_t ) 0U; i < ( UBaseType_t ) configMAX_PRIORITIES; i++ )
+        {
+            vListInitialise_ExpectAnyArgs();
+        }
+        /* Delayed Task List 1 */
+        vListInitialise_ExpectAnyArgs();
+        /* Delayed Task List 2 */
+        vListInitialise_ExpectAnyArgs();
+        /* Pending Ready List */
+        vListInitialise_ExpectAnyArgs();
+        /* INCLUDE_vTaskDelete */
+        vListInitialise_ExpectAnyArgs();
+        /* INCLUDE_vTaskSuspend */
+        vListInitialise_ExpectAnyArgs();
+        is_first_task = false;
+    }
+    vListInsertEnd_ExpectAnyArgs();
+    ret = xTaskCreate( pxTaskCode,
+                       pcName,
+                       usStackDepth,
+                       pvParameters,
+                       uxPriority,
+                       &taskHandle );
+    TEST_ASSERT_EQUAL( pdPASS, ret );
+    ASSERT_SETUP_TCB_CALLED();
+    created_tasks++;
+    return taskHandle;
+}
 /* ============================  HOOK FUNCTIONS  ============================ */
 static void dummy_operation()
 {
@@ -272,7 +325,204 @@ int suiteTearDown( int numFailures )
 /*!
  * @brief
  */
-void test_dummy( void )
+void test_xTaskCreateStatic_success( void )
 {
-    TEST_PASS();
+    StackType_t puxStackBuffer[ 300 ];
+    StaticTask_t pxTaskBuffer[ sizeof( TCB_t ) ];
+    TaskFunction_t pxTaskCode = NULL;
+    const char * const pcName = { __FUNCTION__ };
+    const uint32_t ulStackDepth = 300;
+    void * const pvParameters = NULL;
+    UBaseType_t uxPriority = 3;
+    TaskHandle_t ret;
+
+    memset(  puxStackBuffer, 0xa5U, ulStackDepth * sizeof( StackType_t ) );
+
+    vListInitialiseItem_ExpectAnyArgs();
+    vListInitialiseItem_ExpectAnyArgs();
+
+    /* set owner */
+    listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
+    /* set owner */
+    pxPortInitialiseStack_ExpectAnyArgsAndReturn( puxStackBuffer );
+
+    for( int i = ( UBaseType_t ) 0U; i < ( UBaseType_t ) configMAX_PRIORITIES; i++ )
+    {
+        vListInitialise_ExpectAnyArgs();
+    }
+
+    /* Delayed Task List 1 */
+    vListInitialise_ExpectAnyArgs();
+    /* Delayed Task List 2 */
+    vListInitialise_ExpectAnyArgs();
+    /* Pending Ready List */
+    vListInitialise_ExpectAnyArgs();
+    /* INCLUDE_vTaskDelete */
+    vListInitialise_ExpectAnyArgs();
+    /* INCLUDE_vTaskSuspend */
+    vListInitialise_ExpectAnyArgs();
+
+    vListInsertEnd_ExpectAnyArgs();
+
+    ret = xTaskCreateStatic( pxTaskCode,
+                             pcName,
+                             ulStackDepth,
+                             pvParameters,
+                             uxPriority,
+                             puxStackBuffer,
+                             pxTaskBuffer );
+    ptcb = ( TCB_t * ) pxTaskBuffer;
+    TEST_ASSERT_EQUAL_PTR( puxStackBuffer, ptcb->pxStack );
+    TEST_ASSERT_NOT_EQUAL( NULL, ret );
+    TEST_ASSERT_EQUAL( 2, ptcb->ucStaticallyAllocated );
+    TEST_ASSERT_EQUAL( 0,
+                       memcmp( ptcb->pxStack,
+                                 puxStackBuffer,
+                               ulStackDepth * sizeof( StackType_t ) ) );
+
+    TEST_ASSERT_EQUAL( ptcb->pxEndOfStack,
+                       ptcb->pxStack + ( 300 - 1 ) );
+    TEST_ASSERT_EQUAL( 0, memcmp( ptcb->pcTaskName, pcName, configMAX_TASK_NAME_LEN - 1 ) );
+
+    TEST_ASSERT_EQUAL( ptcb->uxPriority, uxPriority );
+
+    TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
+    ASSERT_SETUP_TCB_CALLED();
+}
+
+void test_xTaskCreate_success( void )
+{
+    TaskFunction_t pxTaskCode = NULL;
+    const char * const pcName = NULL;
+    const uint32_t usStackDepth = 300;
+    void * const pvParameters = NULL;
+    UBaseType_t uxPriority = configMAX_PRIORITIES;
+    TaskHandle_t taskHandle;
+    BaseType_t ret;
+    StackType_t stack[ ( ( size_t ) usStackDepth ) * sizeof( StackType_t ) ];
+    TCB_t * tcbPtr;
+
+    pvPortMalloc_ExpectAndReturn( sizeof( TCB_t ), &tcb[0] );
+    pvPortMalloc_ExpectAndReturn( usStackDepth * sizeof( StackType_t ), stack );
+
+    vListInitialiseItem_Expect( &( tcb[0].xStateListItem ) );
+    vListInitialiseItem_Expect( &( tcb[0].xEventListItem ) );
+    /* set owner */
+    listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
+    /* set owner */
+    /* vListInitialiseItem_ExpectAnyArgs(); */
+    /*vListInitialiseItem_ExpectAnyArgs(); */
+
+    pxPortInitialiseStack_ExpectAnyArgsAndReturn( stack );
+
+    for( int i = ( UBaseType_t ) 0U; i < ( UBaseType_t ) configMAX_PRIORITIES; i++ )
+    {
+        vListInitialise_ExpectAnyArgs();
+    }
+
+    /* Delayed Task List 1 */
+    vListInitialise_ExpectAnyArgs();
+    /* Delayed Task List 2 */
+    vListInitialise_ExpectAnyArgs();
+    /* Pending Ready List */
+    vListInitialise_ExpectAnyArgs();
+    /* INCLUDE_vTaskDelete */
+    vListInitialise_ExpectAnyArgs();
+    /* INCLUDE_vTaskSuspend */
+    vListInitialise_ExpectAnyArgs();
+
+    vListInsertEnd_ExpectAnyArgs();
+
+    ret = xTaskCreate( pxTaskCode,
+                       pcName,
+                       usStackDepth,
+                       pvParameters,
+                       uxPriority,
+                       &taskHandle );
+    ptcb = ( TCB_t * ) taskHandle;
+    TEST_ASSERT_EQUAL( pdPASS, ret );
+    TEST_ASSERT_EQUAL( 0, tcb[0].ucStaticallyAllocated );
+    TEST_ASSERT_EQUAL_PTR( &tcb[0], ptcb );
+    TEST_ASSERT_EQUAL( stack, tcb[0].pxStack );
+    TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
+    TEST_ASSERT_EQUAL( configMAX_PRIORITIES - 1, ptcb->uxPriority );
+    TEST_ASSERT_EQUAL( NULL, ptcb->pcTaskName[0]);
+    ASSERT_SETUP_TCB_CALLED();
+}
+
+void test_xTaskCreate_fail_stack_malloc( void )
+{
+    TaskFunction_t pxTaskCode = NULL;
+    const char * const pcName = { __FUNCTION__ };
+    const uint32_t usStackDepth = 300;
+    void * const pvParameters = NULL;
+    UBaseType_t uxPriority = 3;
+    TaskHandle_t taskHandle;
+    BaseType_t ret;
+
+    pvPortMalloc_ExpectAndReturn( sizeof( TCB_t ), NULL );
+
+    ret = xTaskCreate( pxTaskCode,
+                       pcName,
+                       usStackDepth,
+                       pvParameters,
+                       uxPriority,
+                       &taskHandle );
+    TEST_ASSERT_EQUAL( errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY, ret );
+    TEST_ASSERT_EQUAL( 0, uxCurrentNumberOfTasks );
+    ASSERT_SETUP_TCB_NOT_CALLED();
+}
+
+void test_xTaskCreate_fail_tcb_malloc( void )
+{
+    TaskFunction_t pxTaskCode = NULL;
+    const char * const pcName = { __FUNCTION__ };
+    const uint32_t usStackDepth = 300;
+    void * const pvParameters = NULL;
+    UBaseType_t uxPriority = 3;
+    TaskHandle_t taskHandle;
+    BaseType_t ret;
+
+    pvPortMalloc_ExpectAndReturn( sizeof( TCB_t ), &tcb[0] );
+    pvPortMalloc_ExpectAndReturn( usStackDepth * sizeof( StackType_t ), NULL );
+    vPortFree_Expect( &tcb[0] );
+
+    ret = xTaskCreate( pxTaskCode,
+                       pcName,
+                       usStackDepth,
+                       pvParameters,
+                       uxPriority,
+                       &taskHandle );
+    TEST_ASSERT_EQUAL( errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY, ret );
+    TEST_ASSERT_EQUAL( 0, uxCurrentNumberOfTasks );
+    ASSERT_SETUP_TCB_NOT_CALLED();
+}
+
+void test_vTaskPrioritySet_success_gt_curr_prio(void)
+{
+    TaskHandle_t taskHandle;
+    TaskHandle_t taskHandle2;
+    TCB_t * ptcb;
+    create_task_priority = 3;
+    taskHandle = create_task();
+    create_task_priority = 4;
+    taskHandle2 = create_task();
+    ptcb = (TCB_t*) taskHandle2;
+    TEST_ASSERT_EQUAL_PTR(pxCurrentTCB, taskHandle2);
+    listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn(0);
+    listSET_LIST_ITEM_VALUE_Expect( &(ptcb->xEventListItem),
+                                    configMAX_PRIORITIES  - 5 );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &pxReadyTasksLists [5],
+                                             &( ptcb->xStateListItem ),
+                                             pdTRUE );
+    uxListRemove_ExpectAndReturn(&(ptcb->xStateListItem), 0);
+    /* port Reset ready priority */
+    /* add task to ready list */
+    vListInsertEnd_Expect( &( pxReadyTasksLists[ 5 ] ),
+                           &( ptcb->xStateListItem ) );
+
+    TEST_ASSERT_EQUAL ( 4, ptcb->uxPriority );
+    vTaskPrioritySet( taskHandle2, create_task_priority + 1);
+    TEST_ASSERT_EQUAL ( 4 + 1, ptcb->uxPriority );
+    ASSERT_PORT_YIELD_NOT_CALLED();
 }

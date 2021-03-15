@@ -23,135 +23,26 @@
  * https://github.com/FreeRTOS
  *
  */
-/*! @file tasks_utest.c */
-
-/* C runtime includes. */
-/*#include <stdlib.h> */
-#include <stdbool.h>
-#include <string.h>
-
-/* Test includes. */
-#include "unity.h"
+/*! @file tasks_utest_1.c */
 
 /* Tasks includes */
 #include "FreeRTOS.h"
 #include "FreeRTOSConfig.h"
+#include "task.h"
 
 #include "mock_list.h"
 #include "mock_list_macros.h"
 #include "mock_timers.h"
 #include "mock_portable.h"
 
-#include "task.h"
+/* Test includes. */
+#include "unity.h"
+#include "global_vars.h"
 
-typedef struct tskTaskControlBlock       /* The old naming convention is used to prevent breaking kernel aware debuggers. */
-{
-    volatile StackType_t * pxTopOfStack; /*< Points to the location of the last item placed on the tasks stack.  THIS MUST BE THE FIRST MEMBER OF THE TCB STRUCT. */
+/* C runtime includes. */
+#include <stdbool.h>
+#include <string.h>
 
-    #if ( portUSING_MPU_WRAPPERS == 1 )
-        xMPU_SETTINGS xMPUSettings; /*< The MPU settings are defined as part of the port layer.  THIS MUST BE THE SECOND MEMBER OF THE TCB STRUCT. */
-    #endif
-
-    ListItem_t xStateListItem;                  /*< The list that the state list item of a task is reference from denotes the state of that task (Ready, Blocked, Suspended ). */
-    ListItem_t xEventListItem;                  /*< Used to reference a task from an event list. */
-    UBaseType_t uxPriority;                     /*< The priority of the task.  0 is the lowest priority. */
-    StackType_t * pxStack;                      /*< Points to the start of the stack. */
-    char pcTaskName[ configMAX_TASK_NAME_LEN ]; /*< Descriptive name given to the task when created.  Facilitates debugging only. */ /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
-
-    #if ( ( portSTACK_GROWTH > 0 ) || ( configRECORD_STACK_HIGH_ADDRESS == 1 ) )
-        StackType_t * pxEndOfStack; /*< Points to the highest valid address for the stack. */
-    #endif
-
-    #if ( portCRITICAL_NESTING_IN_TCB == 1 )
-        UBaseType_t uxCriticalNesting; /*< Holds the critical section nesting depth for ports that do not maintain their own count in the port layer. */
-    #endif
-
-    #if ( configUSE_TRACE_FACILITY == 1 )
-        UBaseType_t uxTCBNumber;  /*< Stores a number that increments each time a TCB is created.  It allows debuggers to determine when a task has been deleted and then recreated. */
-        UBaseType_t uxTaskNumber; /*< Stores a number specifically for use by third party trace code. */
-    #endif
-
-    #if ( configUSE_MUTEXES == 1 )
-        UBaseType_t uxBasePriority; /*< The priority last assigned to the task - used by the priority inheritance mechanism. */
-        UBaseType_t uxMutexesHeld;
-    #endif
-
-    #if ( configUSE_APPLICATION_TASK_TAG == 1 )
-        TaskHookFunction_t pxTaskTag;
-    #endif
-
-    #if ( configNUM_THREAD_LOCAL_STORAGE_POINTERS > 0 )
-        void * pvThreadLocalStoragePointers[ configNUM_THREAD_LOCAL_STORAGE_POINTERS ];
-    #endif
-
-    #if ( configGENERATE_RUN_TIME_STATS == 1 )
-        uint32_t ulRunTimeCounter; /*< Stores the amount of time the task has spent in the Running state. */
-    #endif
-
-    #if ( configUSE_NEWLIB_REENTRANT == 1 )
-
-        /* Allocate a Newlib reent structure that is specific to this task.
-         * Note Newlib support has been included by popular demand, but is not
-         * used by the FreeRTOS maintainers themselves.  FreeRTOS is not
-         * responsible for resulting newlib operation.  User must be familiar with
-         * newlib and must provide system-wide implementations of the necessary
-         * stubs. Be warned that (at the time of writing) the current newlib design
-         * implements a system-wide malloc() that must be provided with locks.
-         *
-         * See the third party link http://www.nadler.com/embedded/newlibAndFreeRTOS.html
-         * for additional information. */
-        struct  _reent xNewLib_reent;
-    #endif
-
-    #if ( configUSE_TASK_NOTIFICATIONS == 1 )
-        volatile uint32_t ulNotifiedValue[ configTASK_NOTIFICATION_ARRAY_ENTRIES ];
-        volatile uint8_t ucNotifyState[ configTASK_NOTIFICATION_ARRAY_ENTRIES ];
-    #endif
-
-    /* See the comments in FreeRTOS.h with the definition of
-     * tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE. */
-    #if ( tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE != 0 ) /*lint !e731 !e9029 Macro has been consolidated for readability reasons. */
-        uint8_t ucStaticallyAllocated;                     /*< Set to pdTRUE if the task is a statically allocated to ensure no attempt is made to free the memory. */
-    #endif
-
-    #if ( INCLUDE_xTaskAbortDelay == 1 )
-        uint8_t ucDelayAborted;
-    #endif
-
-    #if ( configUSE_POSIX_ERRNO == 1 )
-        int iTaskErrno;
-    #endif
-} tskTCB;
-
-typedef tskTCB TCB_t;
-
-
-
-/* ===========================  DEFINES CONSTANTS  ========================== */
-typedef void (*port_yield_operation)(void);
-
-/* ===========================  GLOBAL VARIABLES  =========================== */
-
-static TCB_t * ptcb;
-static TCB_t tcb[10]; /* simulate up to 10 tasks: add them if needed */
-StackType_t stack[ ( ( size_t ) 300 ) * sizeof( StackType_t ) ];
-static bool getIddleTaskMemoryValid = false;
-static uint32_t critical_section_counter = 0;
-static bool is_first_task = true;
-static uint32_t created_tasks = 0;
-static uint32_t create_task_priority = 3;
-static port_yield_operation py_operation;
-static bool vTaskDeletePreCalled = false;
-static bool getIddleTaskMemoryCalled = false;
-static bool vApplicationTickHook_Called  = false;
-static bool port_yield_called = false;
-static bool port_setup_tcb_called  = false;
-static bool portClear_Interrupt_called = false;
-static bool portSet_Interrupt_called = false;
-static bool port_invalid_interrupt_called = false;
-static bool vApplicationStackOverflowHook_called = false;
-static bool vApplicationIdleHook_called  = false;
-static bool port_allocate_secure_context_called = false;
 
 /* ===========================  EXTERN VARIABLES  =========================== */
 extern TCB_t * volatile pxCurrentTCB;
@@ -177,123 +68,14 @@ extern UBaseType_t uxTaskNumber;
 extern volatile TickType_t xNextTaskUnblockTime;
 extern TaskHandle_t xIdleTaskHandle;
 extern volatile UBaseType_t uxSchedulerSuspended;
-/* configGENERATE_RUN_TIME_STATS */
-//extern uint32_t ulTaskSwitchedInTime;
-//extern volatile uint32_t ulTotalRunTime;
 
-/* ============================  MACRO FUNCTIONS  ============================ */
-#define ASSERT_SETUP_TCB_CALLED()                                              \
-        do {                                                                   \
-            TEST_ASSERT_EQUAL( true, port_setup_tcb_called );                  \
-            port_setup_tcb_called = false;                                     \
-        } while ( 0 )
-#define ASSERT_SETUP_TCB_NOT_CALLED()                                          \
-        do {                                                                   \
-            TEST_ASSERT_EQUAL( false, port_setup_tcb_called );                 \
-        } while ( 0 )
+/* ===========================  GLOBAL VARIABLES  =========================== */
+static StaticTask_t xIdleTaskTCB;
+static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
-#define ASSERT_PORT_YIELD_CALLED()                                             \
-        do {                                                                   \
-            TEST_ASSERT_EQUAL( true, port_yield_called );                      \
-            port_yield_called = false;                                         \
-        } while ( 0 )
-
-#define ASSERT_PORT_YIELD_NOT_CALLED()                                         \
-        do {                                                                   \
-            TEST_ASSERT_EQUAL( false, port_yield_called );                     \
-        } while ( 0 )
-
-#define ASSERT_TASK_DELETE_CALLED()                                            \
-        do {                                                                   \
-            TEST_ASSERT_EQUAL( true, vTaskDeletePreCalled );                   \
-             vTaskDeletePreCalled = false;                                     \
-        } while ( 0 )
-
-#define ASSERT_TASK_DELETE_NOT_CALLED()                                        \
-        do {                                                                   \
-            TEST_ASSERT_EQUAL( false, vTaskDeletePreCalled );                  \
-        } while ( 0 )
-
-#define ASSERT_APP_TICK_HOOK_CALLED()                                            \
-        do {                                                                   \
-            TEST_ASSERT_EQUAL( true, vApplicationTickHook_Called );                   \
-             vApplicationTickHook_Called = false;                                     \
-        } while ( 0 )
-
-#define  ASSERT_APP_TICK_HOOK_NOT_CALLED()                                        \
-        do {                                                                   \
-            TEST_ASSERT_EQUAL( false, vApplicationTickHook_Called );                  \
-        } while ( 0 )
-
-#define ASSERT_PORT_CLEAR_INTERRUPT_CALLED()                                   \
-        do {                                                                   \
-            TEST_ASSERT_EQUAL( true, portClear_Interrupt_called );             \
-            portClear_Interrupt_called = false;                                \
-        } while ( 0 )
-#define ASSERT_PORT_CLEAR_INTERRUPT_NOT_CALLED()                               \
-        do {                                                                   \
-            TEST_ASSERT_EQUAL( false, portClear_Interrupt_called );            \
-        } while ( 0 )
-
-#define ASSERT_PORT_SET_INTERRUPT_CALLED()                                     \
-        do {                                                                   \
-            TEST_ASSERT_EQUAL( true, portSet_Interrupt_called );               \
-            portSet_Interrupt_called = false;                                  \
-        } while ( 0 )
-#define ASSERT_PORT_SET_INTERRUPT_NOT_CALLED()                                 \
-        do {                                                                   \
-            TEST_ASSERT_EQUAL( false, portSet_Interrupt_called );              \
-        } while ( 0 )
-
-#define ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED()                             \
-        do {                                                                   \
-            TEST_ASSERT_EQUAL(true, port_invalid_interrupt_called);            \
-            port_invalid_interrupt_called = false;                             \
-        } while( 0 )
-
-#define ASSERT_APPLICATION_IDLE_HOOK_CALLED()                                  \
-        do {                                                                   \
-            TEST_ASSERT_EQUAL(true, vApplicationIdleHook_called );             \
-            vApplicationIdleHook_called = false;                               \
-        } while( 0 )
-
-#define ASSERT_APPLICATION_IDLE_HOOK_NOT_CALLED()                              \
-        do {                                                                   \
-            TEST_ASSERT_EQUAL( false, vApplicationIdleHook_called );           \
-        } while ( 0 )
-
-#define ASSERT_PORT_ALLOCATE_SECURE_CONTEXT_CALLED()                           \
-        do {                                                                   \
-            TEST_ASSERT_TRUE( port_allocate_secure_context_called );           \
-            port_allocate_secure_context_called = false;                       \
-        } while( 0 )
-
-#define ASSERT_PORT_ALLOCATE_SECURE_CONTEXT_NOT_CALLED()                       \
-        do {                                                                   \
-            TEST_ASSERT_FALSE( port_allocate_secure_context_called );          \
-        } while ( 0 )
-
-#define ASSERT_APP_STACK_OVERFLOW_HOOK_CALLED()                           \
-        do {                                                                   \
-            TEST_ASSERT_TRUE( vApplicationStackOverflowHook_called );           \
-            vApplicationStackOverflowHook_called = false;                       \
-        } while( 0 )
-
-#define  ASSERT_APP_STACK_OVERFLOW_HOOK_NOT_CALLED()                       \
-        do {                                                                   \
-            TEST_ASSERT_FALSE( vApplicationStackOverflowHook_called );          \
-        } while ( 0 )
 
 /* ============================  HOOK FUNCTIONS  ============================ */
-#define HOOK_DIAG() \
-    do { \
-    printf("%s called\n", __FUNCTION__); \
-    } while (0) 
-#undef HOOK_DIAG
-#define HOOK_DIAG()
-
-
-static void dummy_opration()
+static void dummy_operation()
 {
 }
 
@@ -311,11 +93,9 @@ void vApplicationIdleHook( void )
 
 void vApplicationMallocFailedHook( void )
 {
+    vApplicationMallocFailedHook_called = true;
     HOOK_DIAG();
 }
-
-static StaticTask_t xIdleTaskTCB;
-static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
 void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
                                     StackType_t ** ppxIdleTaskStackBuffer,
@@ -350,11 +130,13 @@ void vConfigureTimerForRunTimeStats( void )
 {
     HOOK_DIAG();
 }
+
 long unsigned int ulGetRunTimeCounterValue( void )
 {
     HOOK_DIAG();
     return 3;
 }
+
 void vApplicationTickHook()
 {
     HOOK_DIAG();
@@ -461,18 +243,13 @@ void setUp( void )
     portSet_Interrupt_called = false;
     port_invalid_interrupt_called = false;
     vApplicationStackOverflowHook_called = false;
-    py_operation = dummy_opration;
+    py_operation = dummy_operation;
 }
 
 /*! called after each testcase */
 void tearDown( void )
 {
     TEST_ASSERT_EQUAL( 0, critical_section_counter );
-
-    /*
-     * vPortEndScheduler_Expect();
-     * vTaskEndScheduler();
-     */
 }
 
 /*! called at the beginning of the whole suite */
@@ -2864,7 +2641,7 @@ void test_xTaskAbortDelay_success_notdelayed(void)
     TEST_ASSERT_TRUE( ptcb->ucDelayAborted );
 }
 
-/* testing INCLUDE_xTaskGetIdleTaskHandle */
+/* ------------------ testing INCLUDE_xTaskGetIdleTaskHandle ---------------- */
 void test_xTaskGetIdleTaskHandle_success(void)
 {
     TaskHandle_t ret_idle_handle;
@@ -2878,7 +2655,7 @@ void test_xTaskGetIdleTaskHandle_success(void)
 }
 
 
-/* testing configUSE_APPLICATION_TASK_TAG */
+/* ----------------testing configUSE_APPLICATION_TASK_TAG ------------------- */
 void test_vTaskSetApplicationTaskTag_current(void)
 {
     create_task();
@@ -3002,9 +2779,7 @@ void test_xTaskCallApplicationTaskHook_fail_no_tag_set(void)
     TEST_ASSERT_EQUAL(pdFAIL, ret_task_hook);
 }
 
-/* end testing configUSE_APPLICATION_TASK_TAG */
-
-
+/* -------------- end testing configUSE_APPLICATION_TASK_TAG ---------------- */
 void test_vTaskSwitchContext( void )
 {
     TaskHandle_t task_handle;
@@ -3074,7 +2849,6 @@ void test_vTaskPlaceOnEventList_success( void )
     create_task_priority = 3;
     task_handle = create_task();
     ptcb = task_handle;
-
 
     /* Expectations */
     vListInsert_Expect(&eventList, &ptcb->xEventListItem);
@@ -3559,7 +3333,6 @@ void test_vTask_Set_Get_ThreadLocalStoragePointer_success( void )
 
 void test_vTask_Set_Get_ThreadLocalStoragePointer_success_null_handle( void )
 {
-    TaskHandle_t task_handle;
     uint32_t i = 454545;
     void* pValue = &i;
     void* ret_pValue;
@@ -3581,7 +3354,6 @@ void test_vTask_Set_ThreadLocalStoragePointer_fail( void )
     TaskHandle_t task_handle;
     uint32_t i = 454545;
     void* pValue = &i;
-    //void* ret_pValue;
 
     /* Setup */
     create_task_priority = 3;
@@ -3606,10 +3378,10 @@ void test_pvTaskGetThreadLocalStoragePointer_fail( void )
                                     configNUM_THREAD_LOCAL_STORAGE_POINTERS + 2);
     TEST_ASSERT_NULL(ret_pValue);
 }
-/* end testing configNUM_THREAD_LOCAL_STORAGE_POINTERS */
+/* ------- end testing configNUM_THREAD_LOCAL_STORAGE_POINTERS -------------- */
 
 
-/* testing INCLUDE_xTaskGetCurrentTaskHandle || configUSE_MUTEXES == 1 */
+/* --- testing INCLUDE_xTaskGetCurrentTaskHandle || configUSE_MUTEXES == 1 -- */
 void test_xTaskGetCurrentTaskHandle( void )
 {
     TaskHandle_t task_handle;
@@ -3624,7 +3396,7 @@ void test_xTaskGetCurrentTaskHandle( void )
     /* Validations */
     TEST_ASSERT_EQUAL_PTR(task_handle, ret_current_handle);
 }
-/* end testing INCLUDE_xTaskGetCurrentTaskHandle || configUSE_MUTEXES == 1 */
+/* - end testing INCLUDE_xTaskGetCurrentTaskHandle || configUSE_MUTEXES == 1 */
 
 /* testing INCLUDE_xTaskGetSchedulerState  configUSE_TIMERS */
 void test_xTaskGetSchedulerState_not_running( void )
@@ -5104,17 +4876,3 @@ void test_ulTaskGenericNotifyValueClear_success_null_handle( )
 }
 /* ---------- end testing configUSE_TASK_NOTIFICATIONS --------------- */
 
-
-
-
-/*
-xtaskdelayuntil
-vtaskdelay
-etaskgetstate
-uxTaskPriorityGet
-uxTaskPriorityGetFromISR
-vTaskSuspend
-set critical nesting in tcb
-*/
-
-/* expected , actual */

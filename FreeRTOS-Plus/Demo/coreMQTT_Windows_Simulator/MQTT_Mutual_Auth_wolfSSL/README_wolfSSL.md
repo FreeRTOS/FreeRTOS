@@ -67,30 +67,24 @@ First of all, activate **democonfigCREDENTIALS_IN_BUFFER** macro.
 ```
 #define democonfigCREDENTIALS_IN_BUFFER
 ```
-Second, prepare a source file to contain the contents of the credentials. As an example, prepare credentials.c file and add it to the demo project. In the file, the contents of each credential need to be
-defined as "**const char***" variable. In this example, **root_ca**, **devide_cert** and **device_priv_key** represent buffers. Open the PEM file for each credential and paste its contents into the variables in the credentials.c file below.
+
+Second, activate following three macros:
 
 ```
-/* credentials.c */
-
-const char* root_ca         = "Paste Root CA here";
-
-const char* device_cert     = "Paste device cert here";
-
-const char* device_priv_key = "Paste device private key here";
+#define democonfigROOT_CA_PEM               "...insert here..."
+#define democonfigCLIENT_CERTIFICATE_PEM    "...insert here..."
+#define democonfigCLIENT_PRIVATE_KEY_PEM    "...insert here..."
+```
+The "...insert here..." portion of each macro should be replaced with corrensponding credential file content data. 
+For exsample, democonfigROOT_CA_PEM macro would be:
 
 ```
-Third, go back to **demo_config.h** to define following macros:
-
-
+#define democonfigROOT_CA_PEM    \
+"-----BEGIN CERTIFICATE-----\n"
+"MIIE0zCCA7ugAwIBAgIQGNrRniZ96LtKIVjNzGs7SjANBgkqhkiG9w0BAQUFADCB\n" \
+    ......
+"-----END CERTIFICATE-----\n"
 ```
-#define democonfigROOT_CA_PEM               root_ca
-#define democonfigCLIENT_CERTIFICATE_PEM    device_cert
-#define democonfigCLIENT_PRIVATE_KEY_PEM    device_priv_key
-```
-Each macro defines variable name defined in credentials.c.
-
-Finally, make those three variables( root_ca, device_cert and device_priv_key ) visible from MutualAuthMQTTExample.c by adding extern declarations to the file.
 
 If you completes above settings, re-build demo to continue with the final setup.
 

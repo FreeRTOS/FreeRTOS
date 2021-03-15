@@ -132,8 +132,8 @@ extern void vLoggingPrintf(const char* pcFormatString,
  *
  *
  * @note This certificate should be PEM-encoded.
- * @note If democonfigCREDENTIALS_IN_BUFFER is defined, define a variable name
- * that contains the contents of the certificate. Otherwise, define the path to the certificate.
+ * @note If democonfigCREDENTIALS_IN_BUFFER is defined, define the certificate data.
+ * Otherwise, define the path to the certificate.
  * @warning If wolfSSL cannot verify the peer when connecting to AWS IoT, try
  * using the root CA of Starfield Services found at
  * https://www.amazontrust.com/repository/SFSRootCAG2.pem.
@@ -151,8 +151,8 @@ extern void vLoggingPrintf(const char* pcFormatString,
  * https://docs.aws.amazon.com/iot/latest/developerguide/client-authentication.html
  *
  * @note This certificate should be PEM-encoded.
- * @note If democonfigCREDENTIALS_IN_BUFFER is defined, define a variable name
- * that contains the contents of the certificate. Otherwise, define the path to the certificate.
+ * @note If democonfigCREDENTIALS_IN_BUFFER is defined, define the certificate data.
+ * Otherwise, define the path to the certificate.
  *
  * #define democonfigCLIENT_CERTIFICATE_PEM    "...insert here..."
  */
@@ -165,8 +165,8 @@ extern void vLoggingPrintf(const char* pcFormatString,
  * https://docs.aws.amazon.com/iot/latest/developerguide/client-authentication.html
  *
  * @note This private key should be PEM-encoded.
- * @note If democonfigCREDENTIALS_IN_BUFFER is defined, define a variable name
- * that contains the contents of the key. Otherwise, define the path to the key file.
+ * @note If democonfigCREDENTIALS_IN_BUFFER is defined, define the key data.
+ * Otherwise, define the path to the key file.
  *
  * #define democonfigCLIENT_PRIVATE_KEY_PEM    "...insert here..."
  */

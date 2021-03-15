@@ -1,0 +1,38 @@
+name: CMock UT
+on: [push]
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone This Repo
+      uses: actions/checkout@v2
+      with:
+        path: ./workspace
+        submodules: 'recursive'
+        fetch-depth: 1
+
+    - name: Setup Python
+      uses: actions/setup-python@master
+      with:
+        python-version: 3.8
+
+    - name: Install packages
+      run: |
+          sudo apt install lcov gcov cflow ruby doxygen build-essential
+
+    - name: Run Unit Tests
+      run: |
+          make -C workspace/FreeRTOS/Test/CMock lcov
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        files: cmock_test.info
+        directory: ./workspace/FreeRTOS/staging/FreeRTOS/Test/CMock/build
+        flags: unittests
+        env_vars: OS,PYTHON
+        name: codecov-umbrella
+        fail_ci_if_error: false
+        path_to_write_report: ./coverage/codecov_report.txt
+        verbose: true

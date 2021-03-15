@@ -117,6 +117,7 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 /* It is a good idea to define configASSERT() while developing.  configASSERT()
  * uses the same semantics as the standard C assert() macro. */
 #define configASSERT( x )
+#define portREMOVE_STATIC_QUALIFIER              1
 
 #define configINCLUDE_MESSAGE_BUFFER_AMP_DEMO    0
 #if ( configINCLUDE_MESSAGE_BUFFER_AMP_DEMO == 1 )

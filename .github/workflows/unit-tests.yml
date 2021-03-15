@@ -19,7 +19,7 @@ jobs:
 
     - name: Install packages
       run: |
-          sudo apt install lcov gcov cflow ruby doxygen build-essential
+          sudo apt install lcov cflow ruby doxygen build-essential
 
     - name: Run Unit Tests
       run: |

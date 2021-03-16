@@ -1,72 +1,41 @@
-# Change according to what your  unit test directory is.
-# For example if testing queue.c your directory should be called queue
-# and the project name should be queue
-# if testing list.c your directory should be called list
-# and the project name should be list
-PROJECT          :=   list
+# indent with spaces
+.RECIPEPREFIX := $(.RECIPEPREFIX) $(.RECIPEPREFIX)
 
-# List the dependency files you wish to mock
-MOCK_FILES_FP    :=
+# Do not move this line below the include
+MAKEFILE_ABSPATH    :=  $(abspath $(lastword $(MAKEFILE_LIST)))
+include ../makefile.in
 
+# PROJECT_SRC lists the .c files under test
+PROJECT_SRC         :=  list.c
 
-# List the options the compilation would need
-CPPFLAGS         +=   -DportUSING_MPU_WRAPPERS=0
+# PROJECT_DEPS_SRC list the .c file that are dependencies of PROJECT_SRC files
+# Files in PROJECT_DEPS_SRC are excluded from coverage measurements
+PROJECT_DEPS_SRC    :=
 
-# Try not to edit beyond this line
-MOCK_FILES       :=   $(notdir $(MOCK_FILES_FP))
-MOCK_OBJ         :=   $(addprefix mock_,$(MOCK_FILES:.h=.o))
-MOCK_SRC         :=   $(addprefix mock_,$(MOCK_FILES:.h=.c))
-EXEC             :=   $(PROJECT)_utest
-PROJECT_DIR      :=   $(abspath .)
-SCRATCH_DIR      :=   $(GENERATED_DIR)/$(PROJECT)
-PROJ_LIB_DIR     :=   $(SCRATCH_DIR)/lib
-MOCK_OBJ_LIST    :=   $(addprefix $(PROJ_LIB_DIR)/,$(MOCK_OBJ))
-MOCKS_DIR        :=   $(SCRATCH_DIR)/mocks
-MOCK_SRC_LIST    :=   $(addprefix $(MOCKS_DIR)/,$(MOCK_SRC))
-CFLAGS           +=   -I$(MOCKS_DIR)
-COVERAGE_OPTS    := -fprofile-arcs -ftest-coverage -fprofile-generate
+# PROJECT_HEADER_DEPS: headers that should be excluded from coverage measurements.
+PROJECT_HEADER_DEPS :=  FreeRTOS.h
 
-ifeq ($(MOCK_FILES_FP),)
-     $(shell mkdir -p  $(MOCKS_DIR))
-     $(shell touch -a $(MOCKS_DIR)/mock_dummy.c)
-endif
+# SUITE_UT_SRC: .c files that contain test cases (must end in _utest.c)
+SUITE_UT_SRC        :=  list_utest.c
 
-$(MOCKS_DIR)/mock_%.c : Makefile $(PROJECT_DIR)/$(PROJECT).yml | directories
-	cd $(SCRATCH_DIR) &&                                                \
-	    ruby $(CMOCK_EXEC_DIR)/cmock.rb -o$(PROJECT_DIR)/$(PROJECT).yml \
-	    $(MOCK_FILES_FP)
+# SUITE_SUPPORT_SRC: .c files used for testing that do not contain test cases.
+# Paths are relative to PROJECT_DIR
+SUITE_SUPPORT_SRC   :=
 
-$(PROJ_LIB_DIR)/mock_%.o : $(MOCKS_DIR)/mock_%.c
-	$(CC) -c $< -fPIC $(CFLAGS) -o $@
+# List the headers used by PROJECT_SRC that you would like to mock
+MOCK_FILES_FP       :=
 
-$(BIN_DIR)/$(EXEC) : $(SCRATCH_DIR)/test_runner.o                           \
-		    $(SCRATCH_DIR)/$(PROJECT).o                             \
-		    $(SCRATCH_DIR)/$(PROJECT)_utest.o                       \
-		    $(MOCK_OBJ_LIST)
-	$(CC) $+ $(LDFLAGS) -o $@
+# List any addiitonal flags needed by the preprocessor
+CPPFLAGS            +=  -DportUSING_MPU_WRAPPERS=0
 
-$(SCRATCH_DIR)/test_runner.o : $(SCRATCH_DIR)/test_runner.c                 \
-                               $(SCRATCH_DIR)/$(PROJECT).o
-	$(CC) -c $< $(CPPFLAGS)  $(CFLAGS) -o $@
+# List any addiitonal flags needed by the compiler
+CFLAGS              +=
 
-$(SCRATCH_DIR)/$(PROJECT)_utest.o : $(PROJECT_DIR)/$(PROJECT)_utest.c       \
-                                    $(MOCKS_DIR)/mock_*.c                   \
-                                    | directories
-	$(CC) -c $< $(CPPFLAGS)  $(CFLAGS) -o $@
+# Try not to edit beyond this line unless necessary.
 
-$(SCRATCH_DIR)/$(PROJECT).o : $(KERNEL_DIR)/$(PROJECT).c
-	$(CC) -c $< $(CPPFLAGS)  $(CFLAGS) $(COVERAGE_OPTS) -o $@
+# Project is determined based on path: $(UT_ROOT_DIR)/$(PROJECT)
+PROJECT         :=  $(lastword $(subst /, ,$(dir $(abspath $(MAKEFILE_ABSPATH)))))
 
-$(SCRATCH_DIR)/test_runner.c : $(SCRATCH_DIR)/$(PROJECT)_utest.o            \
-                               Makefile | directories
-	ruby $(UNITY_BIN_DIR)/generate_test_runner.rb $(EXEC).c             \
-		$(PROJECT_DIR)/$(PROJECT).yml $@
+export
 
-.PHONY: directories
-directories :
-	-mkdir  $(SCRATCH_DIR)
-	-mkdir  $(MOCKS_DIR)
-	-mkdir  $(PROJ_LIB_DIR)
-
-# prevent deletion by chain of implicit rules
-NO_DELETE: $(MOCK_SRC_LIST)
+include ../testdir.mk

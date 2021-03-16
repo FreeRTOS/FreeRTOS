@@ -35,18 +35,20 @@
  * with another MQTT library. This demo requires using the AWS IoT broker as
  * Device Defender is an AWS service.
  *
- * This demo connects to the AWS IoT broker and subscribes to the device
- * defender topics. It then collects metrics for the open ports and sockets on
- * the device using FreeRTOS+TCP, and generates a device defender report. The
+ * This demo subscribes to the device defender topics. It then collects metrics
+ * for the open ports and sockets on the device using FreeRTOS+TCP. Additonally
+ * the stack high water mark and task IDs are collected for custom metrics.
+ * These metrics are used to generate a device defender report. The
  * report is then published, and the demo waits for a response from the device
- * defender service. Upon receiving the response or timing out, the demo
- * finishes.
+ * defender service. Upon receiving an accepted response, the demo finishes.
+ * If the demo receives a rejected response or times out, the demo repeats up to
+ * a maximum of DEFENDER_MAX_DEMO_LOOP_COUNT times.
  *
  * This demo sets the report ID to xTaskGetTickCount(), which may collide if
  * the device is reset. Reports for a Thing with a previously used report ID
  * will be assumed to be duplicates and discarded by the Device Defender
  * service. The report ID needs to be unique per report sent with a given
- * Thing. We recommend using an increasing unique id such as the current
+ * Thing. We recommend using an increasing unique ID such as the current
  * timestamp.
  */
 
@@ -97,7 +99,7 @@
 #define DEFENDER_RESPONSE_WAIT_SECONDS              ( 2 )
 
 /**
- * @brief Name of the report id field in the response from the AWS IoT Device
+ * @brief Name of the report ID field in the response from the AWS IoT Device
  * Defender service.
  */
 #define DEFENDER_RESPONSE_REPORT_ID_FIELD           "reportId"
@@ -133,8 +135,8 @@ typedef enum
     ReportStatusRejected
 } ReportStatus_t;
 
-/** 
- * @brief Each compilation unit that consumes the NetworkContext must define it. 
+/**
+ * @brief Each compilation unit that consumes the NetworkContext must define it.
  * It should contain a single pointer to the type of your desired transport.
  * When using multiple transports in the same compilation unit, define this pointer as void *.
  *
@@ -196,6 +198,16 @@ static uint16_t pusOpenUdpPorts[ democonfigOPEN_UDP_PORTS_ARRAY_SIZE ];
 static Connection_t pxEstablishedConnections[ democonfigESTABLISHED_CONNECTIONS_ARRAY_SIZE ];
 
 /**
+ * @brief Array of task statuses, used to generate custom metrics.
+ */
+static TaskStatus_t pxTaskStatusList[ democonfigCUSTOM_METRICS_TASKS_ARRAY_SIZE ];
+
+/**
+ * @brief Task numbers custom metric array.
+ */
+static uint32_t pulCustomMetricsTaskNumbers[ democonfigCUSTOM_METRICS_TASKS_ARRAY_SIZE ];
+
+/**
  * @brief All the metrics sent in the device defender report.
  */
 static ReportMetrics_t xDeviceMetrics;
@@ -211,9 +223,10 @@ static ReportStatus_t xReportStatus;
 static char pcDeviceMetricsJsonReport[ democonfigDEVICE_METRICS_REPORT_BUFFER_SIZE ];
 
 /**
- * @brief Report Id sent in the defender report.
+ * @brief Report ID sent in the defender report.
  */
 static uint32_t ulReportId = 0UL;
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -463,7 +476,9 @@ static bool prvCollectDeviceMetrics( void )
 {
     bool xStatus = false;
     eMetricsCollectorStatus eMetricsCollectorStatus;
-    uint32_t ulNumOpenTcpPorts = 0UL, ulNumOpenUdpPorts = 0UL, ulNumEstablishedConnections = 0UL;
+    uint32_t ulNumOpenTcpPorts = 0UL, ulNumOpenUdpPorts = 0UL, ulNumEstablishedConnections = 0UL, i;
+    UBaseType_t uxTasksWritten = { 0 };
+    TaskStatus_t pxTaskStatus = { 0 };
 
     /* Collect bytes and packets sent and received. */
     eMetricsCollectorStatus = eGetNetworkStats( &( xNetworkStats ) );
@@ -516,6 +531,36 @@ static bool prvCollectDeviceMetrics( void )
         }
     }
 
+    /* Collect custom metrics. This demo sends this task's stack high water mark
+     * as a number type custom metric and the current task IDs as a list of
+     * numbers type custom metric. */
+    if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
+    {
+        vTaskGetInfo(
+            /* Query this task. */
+            NULL,
+            &pxTaskStatus,
+            /* Include the stack high water mark value. */
+            pdTRUE,
+            /* Don't include the task state in the TaskStatus_t structure. */
+            0 );
+        uxTasksWritten = uxTaskGetSystemState( pxTaskStatusList, democonfigCUSTOM_METRICS_TASKS_ARRAY_SIZE, NULL );
+
+        if( uxTasksWritten == 0 )
+        {
+            eMetricsCollectorStatus = eMetricsCollectorCollectionFailed;
+            LogError( ( "Failed to collect system state. uxTaskGetSystemState() failed due to insufficient buffer space.",
+                        eMetricsCollectorStatus ) );
+        }
+        else
+        {
+            for( i = 0; i < uxTasksWritten; i++ )
+            {
+                pulCustomMetricsTaskNumbers[ i ] = pxTaskStatusList[ i ].xTaskNumber;
+            }
+        }
+    }
+
     /* Populate device metrics. */
     if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
     {
@@ -527,6 +572,9 @@ static bool prvCollectDeviceMetrics( void )
         xDeviceMetrics.ulOpenUdpPortsArrayLength = ulNumOpenUdpPorts;
         xDeviceMetrics.pxEstablishedConnectionsArray = &( pxEstablishedConnections[ 0 ] );
         xDeviceMetrics.ulEstablishedConnectionsArrayLength = ulNumEstablishedConnections;
+        xDeviceMetrics.ulStackHighWaterMark = pxTaskStatus.usStackHighWaterMark;
+        xDeviceMetrics.pulTaskIdArray = pulCustomMetricsTaskNumbers;
+        xDeviceMetrics.ulTaskIdArrayLength = uxTasksWritten;
     }
 
     return xStatus;
@@ -671,14 +719,14 @@ void prvDefenderDemoTask( void * pvParameters )
      * DEFENDER_MAX_DEMO_LOOP_COUNT times. */
     do
     {
-        /* Set a report Id to be used.
+        /* Set a report ID to be used.
          *
          * !!!NOTE!!!
          * This demo sets the report ID to xTaskGetTickCount(), which may collide
          * if the device is reset. Reports for a Thing with a previously used
          * report ID will be assumed to be duplicates and discarded by the Device
          * Defender service. The report ID needs to be unique per report sent with
-         * a given Thing. We recommend using an increasing unique id such as the
+         * a given Thing. We recommend using an increasing unique ID such as the
          * current timestamp. */
         ulReportId = ( uint32_t ) xTaskGetTickCount();
 

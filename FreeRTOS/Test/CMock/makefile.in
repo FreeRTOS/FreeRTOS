@@ -41,20 +41,24 @@ CPPFLAGS    :=
 
 # Compiler flags
 CFLAGS              :=  $(INCLUDE_DIR)  -O0 -ggdb -pthread  --std=c99 -Werror -Wall
-CFLAGS              +=  -fsanitize=address,undefined -fsanitize-recover=address
 CFLAGS              +=  -fstack-protector-all
 CFLAGS              +=  -Wformat -Werror=format-security -Werror=array-bounds
 CFLAGS              +=  -D_FORTIFY_SOURCE=2
+ifdef ENABLE_SANITIZER
+    CFLAGS          +=  -fsanitize=address,undefined -fsanitize-recover=address
+endif
 
 # Linker flags
 LDFLAGS             :=  -L$(LIB_DIR) -Wl,-rpath,$(LIB_DIR)
-LDFLAGS             +=  -fsanitize=address,undefined
 LDFLAGS             +=  -pthread
 LDFLAGS             +=  -lunity
 LDFLAGS             +=  -lunitymemory
 LDFLAGS             +=  -lcexception
 LDFLAGS             +=  -lcmock
 LDFLAGS             +=  -lgcov
+ifdef ENABLE_SANITIZER
+    LDFLAGS         +=  -fsanitize=address,undefined
+endif
 
 # Shared libraries
 LIBS                :=  libunity

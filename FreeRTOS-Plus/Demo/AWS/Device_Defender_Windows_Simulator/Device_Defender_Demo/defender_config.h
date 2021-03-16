@@ -52,4 +52,44 @@
 
 /************ End of logging configuration ****************/
 
+/**
+ * AWS IoT Device Defender Service supports both long and short names for keys
+ * in the report sent by a device. For example,
+ *
+ * A device defender report using long key names:
+ * {
+ *     "header": {
+ *         "report_id": 1530304554,
+ *         "version": "1.0"
+ *     },
+ *     "metrics": {
+ *         "network_stats": {
+ *             "bytes_in": 29358693495,
+ *             "bytes_out": 26485035,
+ *             "packets_in": 10013573555,
+ *             "packets_out": 11382615
+ *         }
+ *     }
+ * }
+ *
+ * An equivalent report using short key names:
+ * {
+ *     "hed": {
+ *         "rid": 1530304554,
+ *         "v": "1.0"
+ *     },
+ *     "met": {
+ *         "ns": {
+ *             "bi": 29358693495,
+ *             "bo": 26485035,
+ *             "pi": 10013573555,
+ *             "po": 11382615
+ *         }
+ *     }
+ * }
+ *
+ * Set to 1 to enable use of long key names in the defender report.
+ */
+#define DEFENDER_USE_LONG_KEYS    0
+
 #endif /* ifndef DEFENDER_CONFIG_H_ */

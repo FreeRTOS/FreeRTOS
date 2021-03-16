@@ -86,11 +86,11 @@ static TaskHandle_t create_task()
     TaskHandle_t taskHandle;
     BaseType_t ret;
 
-    pvPortMalloc_ExpectAndReturn( sizeof( TCB_t ), &tcb[created_tasks] );
+    pvPortMalloc_ExpectAndReturn( sizeof( TCB_t ), &tcb[ created_tasks ] );
     pvPortMalloc_ExpectAndReturn( usStackDepth * sizeof( StackType_t ), stack );
 
-    vListInitialiseItem_Expect( &( tcb[created_tasks].xStateListItem ) );
-    vListInitialiseItem_Expect( &( tcb[created_tasks].xEventListItem ) );
+    vListInitialiseItem_Expect( &( tcb[ created_tasks ].xStateListItem ) );
+    vListInitialiseItem_Expect( &( tcb[ created_tasks ].xEventListItem ) );
     /* TODO: expect set owner */
     listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
     /* TODO: expect set owner */
@@ -103,6 +103,7 @@ static TaskHandle_t create_task()
         {
             vListInitialise_ExpectAnyArgs();
         }
+
         /* Delayed Task List 1 */
         vListInitialise_ExpectAnyArgs();
         /* Delayed Task List 2 */
@@ -115,6 +116,7 @@ static TaskHandle_t create_task()
         vListInitialise_ExpectAnyArgs();
         is_first_task = false;
     }
+
     vListInsertEnd_ExpectAnyArgs();
     ret = xTaskCreate( pxTaskCode,
                        pcName,
@@ -156,6 +158,7 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
                                     uint32_t * pulIdleTaskStackSize )
 {
     HOOK_DIAG();
+
     if( getIddleTaskMemoryValid == true )
     {
         /* Pass out a pointer to the StaticTask_t structure in which the Idle task's
@@ -228,7 +231,7 @@ void portSetupTCB_CB( void * tcb )
     port_setup_tcb_called = true;
 }
 
-void portClear_Interrupt_Mask(UBaseType_t bt)
+void portClear_Interrupt_Mask( UBaseType_t bt )
 {
     HOOK_DIAG();
     portClear_Interrupt_called = true;
@@ -241,12 +244,13 @@ UBaseType_t portSet_Interrupt_Mask( void )
     return 1;
 }
 
-void portAssert_if_int_prio_invalid(void)
+void portAssert_if_int_prio_invalid( void )
 {
     port_invalid_interrupt_called = true;
 }
 
-void vApplicationStackOverflowHook(TaskHandle_t xTask, char* stack)
+void vApplicationStackOverflowHook( TaskHandle_t xTask,
+                                    char * stack )
 {
     vApplicationStackOverflowHook_called = true;
 }
@@ -261,10 +265,11 @@ void setUp( void )
     memset( &pxReadyTasksLists, 0x00, configMAX_PRIORITIES * sizeof( List_t ) );
     memset( &xDelayedTaskList1, 0x00, sizeof( List_t ) );
     memset( &xDelayedTaskList2, 0x00, sizeof( List_t ) );
+
     /*
-    pxDelayedTaskList = NULL;
-    pxOverflowDelayedTaskList = NULL;
-    */
+     * pxDelayedTaskList = NULL;
+     * pxOverflowDelayedTaskList = NULL;
+     */
     memset( &xPendingReadyList, 0x00, sizeof( List_t ) );
 
     memset( &xTasksWaitingTermination, 0x00, sizeof( List_t ) );
@@ -282,15 +287,15 @@ void setUp( void )
     xNextTaskUnblockTime = ( TickType_t ) 0U;
     xIdleTaskHandle = NULL;
     uxSchedulerSuspended = ( UBaseType_t ) 0;
-  //  ulTaskSwitchedInTime = 0UL;
-    //ulTotalRunTime = 0UL;
+    /*  ulTaskSwitchedInTime = 0UL; */
+    /*ulTotalRunTime = 0UL; */
 
-    vApplicationTickHook_Called  = false;
+    vApplicationTickHook_Called = false;
     vTaskDeletePreCalled = false;
     getIddleTaskMemoryCalled = false;
     is_first_task = true;
     created_tasks = 0;
-    port_yield_called  = false;
+    port_yield_called = false;
     port_setup_tcb_called = false;
     portClear_Interrupt_called = false;
     portSet_Interrupt_called = false;
@@ -336,7 +341,7 @@ void test_xTaskCreateStatic_success( void )
     UBaseType_t uxPriority = 3;
     TaskHandle_t ret;
 
-    memset(  puxStackBuffer, 0xa5U, ulStackDepth * sizeof( StackType_t ) );
+    memset( puxStackBuffer, 0xa5U, ulStackDepth * sizeof( StackType_t ) );
 
     vListInitialiseItem_ExpectAnyArgs();
     vListInitialiseItem_ExpectAnyArgs();
@@ -377,7 +382,7 @@ void test_xTaskCreateStatic_success( void )
     TEST_ASSERT_EQUAL( 2, ptcb->ucStaticallyAllocated );
     TEST_ASSERT_EQUAL( 0,
                        memcmp( ptcb->pxStack,
-                                 puxStackBuffer,
+                               puxStackBuffer,
                                ulStackDepth * sizeof( StackType_t ) ) );
 
     TEST_ASSERT_EQUAL( ptcb->pxEndOfStack,
@@ -400,13 +405,12 @@ void test_xTaskCreate_success( void )
     TaskHandle_t taskHandle;
     BaseType_t ret;
     StackType_t stack[ ( ( size_t ) usStackDepth ) * sizeof( StackType_t ) ];
-    TCB_t * tcbPtr;
 
-    pvPortMalloc_ExpectAndReturn( sizeof( TCB_t ), &tcb[0] );
+    pvPortMalloc_ExpectAndReturn( sizeof( TCB_t ), &tcb[ 0 ] );
     pvPortMalloc_ExpectAndReturn( usStackDepth * sizeof( StackType_t ), stack );
 
-    vListInitialiseItem_Expect( &( tcb[0].xStateListItem ) );
-    vListInitialiseItem_Expect( &( tcb[0].xEventListItem ) );
+    vListInitialiseItem_Expect( &( tcb[ 0 ].xStateListItem ) );
+    vListInitialiseItem_Expect( &( tcb[ 0 ].xEventListItem ) );
     /* set owner */
     listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
     /* set owner */
@@ -441,12 +445,12 @@ void test_xTaskCreate_success( void )
                        &taskHandle );
     ptcb = ( TCB_t * ) taskHandle;
     TEST_ASSERT_EQUAL( pdPASS, ret );
-    TEST_ASSERT_EQUAL( 0, tcb[0].ucStaticallyAllocated );
-    TEST_ASSERT_EQUAL_PTR( &tcb[0], ptcb );
-    TEST_ASSERT_EQUAL( stack, tcb[0].pxStack );
+    TEST_ASSERT_EQUAL( 0, tcb[ 0 ].ucStaticallyAllocated );
+    TEST_ASSERT_EQUAL_PTR( &tcb[ 0 ], ptcb );
+    TEST_ASSERT_EQUAL( stack, tcb[ 0 ].pxStack );
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
     TEST_ASSERT_EQUAL( configMAX_PRIORITIES - 1, ptcb->uxPriority );
-    TEST_ASSERT_EQUAL( NULL, ptcb->pcTaskName[0]);
+    TEST_ASSERT_EQUAL( NULL, ptcb->pcTaskName[ 0 ] );
     ASSERT_SETUP_TCB_CALLED();
 }
 
@@ -483,9 +487,9 @@ void test_xTaskCreate_fail_tcb_malloc( void )
     TaskHandle_t taskHandle;
     BaseType_t ret;
 
-    pvPortMalloc_ExpectAndReturn( sizeof( TCB_t ), &tcb[0] );
+    pvPortMalloc_ExpectAndReturn( sizeof( TCB_t ), &tcb[ 0 ] );
     pvPortMalloc_ExpectAndReturn( usStackDepth * sizeof( StackType_t ), NULL );
-    vPortFree_Expect( &tcb[0] );
+    vPortFree_Expect( &tcb[ 0 ] );
 
     ret = xTaskCreate( pxTaskCode,
                        pcName,
@@ -498,31 +502,31 @@ void test_xTaskCreate_fail_tcb_malloc( void )
     ASSERT_SETUP_TCB_NOT_CALLED();
 }
 
-void test_vTaskPrioritySet_success_gt_curr_prio(void)
+void test_vTaskPrioritySet_success_gt_curr_prio( void )
 {
-    TaskHandle_t taskHandle;
     TaskHandle_t taskHandle2;
     TCB_t * ptcb;
+
     create_task_priority = 3;
-    taskHandle = create_task();
+    create_task();
     create_task_priority = 4;
     taskHandle2 = create_task();
-    ptcb = (TCB_t*) taskHandle2;
-    TEST_ASSERT_EQUAL_PTR(pxCurrentTCB, taskHandle2);
-    listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn(0);
-    listSET_LIST_ITEM_VALUE_Expect( &(ptcb->xEventListItem),
-                                    configMAX_PRIORITIES  - 5 );
-    listIS_CONTAINED_WITHIN_ExpectAndReturn( &pxReadyTasksLists [5],
+    ptcb = ( TCB_t * ) taskHandle2;
+    TEST_ASSERT_EQUAL_PTR( pxCurrentTCB, taskHandle2 );
+    listGET_LIST_ITEM_VALUE_ExpectAnyArgsAndReturn( 0 );
+    listSET_LIST_ITEM_VALUE_Expect( &( ptcb->xEventListItem ),
+                                    configMAX_PRIORITIES - 5 );
+    listIS_CONTAINED_WITHIN_ExpectAndReturn( &pxReadyTasksLists[ 5 ],
                                              &( ptcb->xStateListItem ),
                                              pdTRUE );
-    uxListRemove_ExpectAndReturn(&(ptcb->xStateListItem), 0);
+    uxListRemove_ExpectAndReturn( &( ptcb->xStateListItem ), 0 );
     /* port Reset ready priority */
     /* add task to ready list */
     vListInsertEnd_Expect( &( pxReadyTasksLists[ 5 ] ),
                            &( ptcb->xStateListItem ) );
 
-    TEST_ASSERT_EQUAL ( 4, ptcb->uxPriority );
-    vTaskPrioritySet( taskHandle2, create_task_priority + 1);
-    TEST_ASSERT_EQUAL ( 4 + 1, ptcb->uxPriority );
+    TEST_ASSERT_EQUAL( 4, ptcb->uxPriority );
+    vTaskPrioritySet( taskHandle2, create_task_priority + 1 );
+    TEST_ASSERT_EQUAL( 4 + 1, ptcb->uxPriority );
     ASSERT_PORT_YIELD_NOT_CALLED();
 }

@@ -30,7 +30,7 @@ CPPFLAGS         +=
 # List special linker flags for this module
 LDFLAGS          +=
 
-# Makefile Flags (if needed)
+# Makefile Debug Flags (if needed)
 #MAKEFLAGS += -rR
 
 # Try not to edit beyond this line
@@ -103,16 +103,8 @@ $(MOCK_SRC_LIST) : $(CPP_FILES)                                                \
 	    ruby $(CMOCK_EXEC_DIR)/cmock.rb -o$(PROJECT_DIR)/$(PROJECT).yml    \
 	    $(<D)/*
 	cd $(@D) && cd .. &&                                                   \
-	    ruby $(CMOCK_EXEC_DIR)/cmock.rb -o$(PROJECT_DIR)/$(PROJECT)2.yml    \
+	    ruby $(CMOCK_EXEC_DIR)/cmock.rb -o$(PROJECT_DIR)/$(PROJECT)2.yml   \
 	    $(<D)/list_macros.h
-
-# $1 = file to read
-# $2 = 
-define extract_dependency_list
-    gcc -E -I../Test/CMock/config -imacros FreeRTOS.h -fpreprocessed -fdirectives-only -MM -MG -MT $(1) 2>/dev/null;
-endef
-
-DEPENDENCY_LIST :=$(addprefix -imacros,$(gcc -E -I $$INCLUDE ../../Test/CMock/config -I include       \ -imacros FreeRTOS.h  -fpreprocessed -fdirectives-only -MM -MG  $(1) 2>/dev/null)) \
 
 .SECONDARY:
 $(DEP_FILES) : $(MOCK_FILES_FP) | directories
@@ -133,7 +125,6 @@ $(DEP_FILES) : $(MOCK_FILES_FP) | directories
 		done;                                                          \
 	done
 
-#$(eval IMACROS= $$(cat $(@D)/$$(basename $$h_file).d.dep);         \ 
 
 .SECONDARY:
 # Copies the appropriate header file into the private include directory
@@ -146,12 +137,13 @@ $(CPP_FILES) : $(DEP_FILES)  | directories
 	$(eval INCLUDE  +=   -I$(SCRATCH_DIR)/$*/mocks)
 	$(eval INCLUDE  +=   -I$(KERNEL_DIR)/include)
 	for h_file in $(MOCK_FILES_FP) ; do                                    \
-	    IMACROS=$$(cat  $(@D)/$$(basename $$h_file).d.dep);           \
+	    IMACROS=$$(cat  $(@D)/$$(basename $$h_file).d.dep);                \
 	    $(CC) -E $(INCLUDE)                                                \
 	    -imacros FreeRTOSConfig.h -imacros portmacro.h -imacros FreeRTOS.h \
-	    -imacros task.h $(UNDEF_MOCKED_HEADER_MACROS) $$IMACROS \
-		  -fdirectives-only $$h_file $(CPPFLAGS) $(CFLAGS)             \
-	          -fmax-include-depth=0  -o $(@D)/$$(basename $$h_file);       \
+	    -imacros task.h $(UNDEF_MOCKED_HEADER_MACROS) $$IMACROS            \
+	    -fmax-include-depth=0 -fdirectives-only                            \
+		  $$h_file $(CPPFLAGS) $(CFLAGS)                               \
+	          > $(@D)/$$(basename $$h_file);                               \
 	    guard=$$(echo $$(basename $$h_file) |  tr '[:lower:]' '[:upper:]'| \
 			tr '.' '_') ;                                          \
 	    sed -i "1 i\#define $$guard" $(@D)/$$(basename $$h_file);          \
@@ -199,7 +191,7 @@ $(SCRATCH_DIR)/%/$(PROJECT).o : $(KERNEL_DIR)/$(PROJECT).c | directories
 	$(eval INCLUDE = -I$(SCRATCH_DIR)/$*/include)
 	$(eval INCLUDE += -I$(SCRATCH_DIR)/$*/mocks)                           \
 	$(eval INCLUDE += -I$(KERNEL_DIR)/include)                             \
-	$(CC) -c $< $(INCLUDE) $(CPPFLAGS)              \
+	$(CC) -c $< $(INCLUDE) $(CPPFLAGS)                                     \
 	      $(CFLAGS) -include list_macros.h $(COVERAGE_OPTS) -Wno-error -o $@
 
 

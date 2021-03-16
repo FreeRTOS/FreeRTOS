@@ -73,6 +73,28 @@ extern volatile UBaseType_t uxSchedulerSuspended;
 static StaticTask_t xIdleTaskTCB;
 static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
+static TCB_t * ptcb;
+static StackType_t stack[ ( ( size_t ) 300 ) * sizeof( StackType_t ) ];
+static TCB_t tcb[10]; /* simulate up to 10 tasks: add more if needed */
+static bool getIddleTaskMemoryValid = false;
+static uint32_t critical_section_counter = 0;
+static bool is_first_task = true;
+static uint32_t created_tasks = 0;
+static uint32_t create_task_priority = 3;
+static port_yield_operation py_operation;
+static bool vTaskDeletePreCalled = false;
+static bool getIddleTaskMemoryCalled = false;
+static bool vApplicationTickHook_Called  = false;
+static bool port_yield_called = false;
+static bool port_setup_tcb_called  = false;
+static bool portClear_Interrupt_called = false;
+static bool portSet_Interrupt_called = false;
+static bool port_invalid_interrupt_called = false;
+static bool vApplicationStackOverflowHook_called = false;
+static bool vApplicationIdleHook_called  = false;
+static bool port_allocate_secure_context_called = false;
+static bool vApplicationMallocFailedHook_called = false;
+
 
 /* ============================  HOOK FUNCTIONS  ============================ */
 static void dummy_operation()

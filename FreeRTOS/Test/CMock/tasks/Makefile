@@ -117,7 +117,7 @@ $(DEP_FILES) : $(MOCK_FILES_FP) | directories
 	         -imacros FreeRTOS.h                                           \
 		 -fpreprocessed -fdirectives-only -MM -MG                      \
 		 -MT $(SCRATCH_DIR)/$*/cpp/$$(basename $$h_file)               \
-		 -MF $(@D)/$$(basename $$h_file).d ;                           \
+		 -MF $(@D)/$$(basename $$h_file).d 2>/dev/null;                \
 		 sed -i -e '1,2d' $(@D)/$$(basename $$h_file).d;               \
 		 DEP="";                                                       \
 		for line in $$(cat $(@D)/$$(basename $$h_file).d | tr '\\' ' ' ); do  \
@@ -143,7 +143,7 @@ $(CPP_FILES) : $(DEP_FILES)  | directories
 	    -imacros task.h $(UNDEF_MOCKED_HEADER_MACROS) $$IMACROS            \
 	    -fmax-include-depth=0 -fdirectives-only                            \
 		  $$h_file $(CPPFLAGS) $(CFLAGS)                               \
-	          > $(@D)/$$(basename $$h_file);                               \
+	          > $(@D)/$$(basename $$h_file) 2>/dev/null;                   \
 	    guard=$$(echo $$(basename $$h_file) |  tr '[:lower:]' '[:upper:]'| \
 			tr '.' '_') ;                                          \
 	    sed -i "1 i\#define $$guard" $(@D)/$$(basename $$h_file);          \

@@ -23,7 +23,7 @@
  * https://github.com/FreeRTOS
  *
  */
-/*! @file queue_utest.c */
+/*! @file stream_buffer_utest.c */
 
 /* C runtime includes. */
 #include <stdlib.h>

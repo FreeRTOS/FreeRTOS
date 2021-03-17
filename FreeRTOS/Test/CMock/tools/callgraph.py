@@ -24,6 +24,7 @@
 # https://www.FreeRTOS.org
 # https://github.com/FreeRTOS
 ###############################################################################
+import argparse
 import json
 import os
 import re
@@ -31,12 +32,29 @@ import subprocess
 import sys
 from typing import Dict, List, Set
 
-target_files = sys.argv[1:]
+arg_parser = argparse.ArgumentParser(
+    description="Parse each input .c file and generate a callgraph.json containing"
+    " a map from each function name to a list of the other functions which the first"
+    " function calls."
+)
+
+arg_parser.add_argument(
+    "-o", "--out", required=True, help="Output callgraph.json file path."
+)
+
+arg_parser.add_argument("in_files", nargs="+", help="Input .c files to be parsed.")
+args = arg_parser.parse_args()
+
+if vars(args)["out"] and not os.path.isdir(os.path.dirname(vars(args)["out"])):
+    print("The output directory does not exist.", file=sys.stderr)
+    sys.exit(1)
+
+target_files = args.in_files
 
 for f in target_files:
     if not os.path.isfile(f):
         print("ERROR: Input file {} does not exist.".format(f))
-        exit(1)
+        sys.exit(1)
 
 includes = ""
 # Get INCLUDE_DIR from envrionment
@@ -111,4 +129,5 @@ for key in callmap:
     temp_list = list(callmap[key])
     callmap_list[key] = temp_list
 
-print(json.dumps(callmap_list))
+with open(args.out, "w") as outfile:
+    json.dump(callmap_list, outfile)

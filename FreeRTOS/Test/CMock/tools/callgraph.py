@@ -38,6 +38,13 @@ for f in target_files:
         print("ERROR: Input file {} does not exist.".format(f))
         exit(1)
 
+includes = ""
+# Get INCLUDE_DIR from envrionment
+if "INCLUDE_DIR" in os.environ:
+    includes = os.environ["INCLUDE_DIR"]
+else:
+    print("WARNING: INCLUDE_DIR variable was not found in the envrionment.")
+
 ret = subprocess.run(
     [
         "cflow",
@@ -46,6 +53,7 @@ ret = subprocess.run(
         "--omit-arguments",
         "--omit-symbol-names",
         "--all",
+        includes,
     ]
     + target_files,
     capture_output=True,

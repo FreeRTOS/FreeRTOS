@@ -8,6 +8,7 @@ PROJECT          :=   stream_buffer
 # List the dependency files you wish to mock
 MOCK_FILES_FP    :=  $(KERNEL_DIR)/include/task.h
 MOCK_FILES_FP    +=  $(UT_ROOT_DIR)/config/fake_assert.h
+MOCK_FILES_FP    +=  $(UT_ROOT_DIR)/config/fake_port.h
 
 # List the options the compilation would need
 CPPFLAGS         +=   -DportUSING_MPU_WRAPPERS=0

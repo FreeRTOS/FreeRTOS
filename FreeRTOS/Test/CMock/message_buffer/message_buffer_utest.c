@@ -41,6 +41,7 @@
 /* Mock includes. */
 #include "mock_task.h"
 #include "mock_fake_assert.h"
+#include "mock_fake_port.h"
 
 /**
  * @brief Sample size in bytes of the message buffer used for test.
@@ -73,17 +74,40 @@
 
 /* ============================  GLOBAL VARIABLES =========================== */
 
+/**
+ * @brief Global counter for the number of assertions in code.
+ */
 static int assertionFailed = 0;
 
+/**
+ * @brief Global counter to keep track of how many times a sender task was woken up by a task receiving from the stream buffer.
+ */
 static int senderTaskWoken = 0;
 
+/**
+ * @brief Global counter to keep track of how many times a receiver task was woken up by a task sending to the buffer.
+ */
 static int receiverTaskWoken = 0;
 
+/**
+ * @brief Dummy sender task handle to which the stream buffer receive APIs will send notification.
+ */
 static TaskHandle_t senderTask = ( TaskHandle_t ) ( 0xAABBCCDD );
 
-static TaskHandle_t receiverTask = ( TaskHandle_t ) ( 0xABABCDEF );
+/**
+ * @brief Dummy receiver task handle to which the stream buffer send APIs will send notifications.
+ */
+static TaskHandle_t receiverTask = ( TaskHandle_t ) ( 0xABCDEEFF );
 
+/**
+ * @brief Global message buffer handle used for tests.
+ */
 static MessageBufferHandle_t xMessageBuffer;
+
+/**
+ * @brief Flag which denotes if test need to abort on assertion.
+ */
+static BaseType_t shouldAbortOnAssertion;
 
 /* ==========================  CALLBACK FUNCTIONS =========================== */
 
@@ -104,7 +128,11 @@ static void vFakeAssertStub( bool x,
     if( !x )
     {
         assertionFailed++;
-        TEST_ABORT();
+
+        if( shouldAbortOnAssertion == pdTRUE )
+        {
+            TEST_ABORT();
+        }
     }
 }
 
@@ -205,7 +233,12 @@ void setUp( void )
     xMessageBuffer = NULL;
     senderTaskWoken = 0;
     receiverTaskWoken = 0;
+    shouldAbortOnAssertion = pdTRUE;
 
+    vFakePortEnterCriticalSection_Ignore();
+    vFakePortExitCriticalSection_Ignore();
+    ulFakePortSetInterruptMaskFromISR_IgnoreAndReturn( 0U );
+    vFakePortClearInterruptMaskFromISR_Ignore();
     vFakeAssert_StubWithCallback( vFakeAssertStub );
     /* Track calls to malloc / free */
     UnityMalloc_StartTest();
@@ -316,15 +349,20 @@ void test_xMessageBufferCreateStatic_invalid_params( void )
     /* The size of message buffer array should be one greater than the required size of message buffer. */
     uint8_t messageBufferArray[ TEST_MESSAGE_BUFFER_SIZE + 1 ] = { 0 };
 
+    /* Tests should abort if assertion is enabled or return NULL. */
+    shouldAbortOnAssertion = pdFALSE;
+
     /* Returns NULL when NULL storage area is passed as a parameter. */
     xMessageBuffer = xMessageBufferCreateStatic( TEST_MESSAGE_BUFFER_SIZE, NULL, &messageBufferStruct );
     TEST_ASSERT_NULL( xMessageBuffer );
+    validate_and_clear_assertitions();
 
     /* Returns NULL when NULL message buffer struct is passed as a parameter. */
     xMessageBuffer = xMessageBufferCreateStatic( sizeof( messageBufferArray ), messageBufferArray, NULL );
     TEST_ASSERT_NULL( xMessageBuffer );
+    validate_and_clear_assertitions();
 
-    /* Should assert if the size passed is less than the minimum size requried to store metadata size. */
+    /* Should only assert if the size passed is less than the minimum size requried to store metadata size. */
     if( TEST_PROTECT() )
     {
         ( void ) xMessageBufferCreateStatic( TEST_MESSAGE_METADATA_SIZE, messageBufferArray, &messageBufferStruct );

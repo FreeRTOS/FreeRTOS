@@ -263,7 +263,8 @@ FREERTOS_IGNORED_FILES = [
     'mbedtls_config.h',
     'requirements.txt',
     'run-cbmc-proofs.py',
-    '.editorconfig'
+    '.editorconfig',
+    'htif.c', 'htif.h'
 ]
 
 FREERTOS_HEADER = [

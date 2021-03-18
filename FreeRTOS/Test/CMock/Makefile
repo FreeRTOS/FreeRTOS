@@ -94,7 +94,8 @@ run : $(UNITS) | directories
 
 run_col : $(UNITS) zero_coverage | directories
     for f in $(BIN_DIR)/*; do \
-        ruby -r $(UNITY_BIN_DIR)/colour_reporter.rb  -e "report('`$${f}`')"; done
+        ruby -r $(UNITY_BIN_DIR)/colour_reporter.rb  -e "report('`$${f}`')";   \
+    done
 
 run_formatted :  $(UNITS) zero_coverage | directories
     for f in $(BIN_DIR)/*; do                                                  \

@@ -636,6 +636,10 @@ void test_vTaskPrioritySet_success_gt_curr_prio( void )
     ASSERT_PORT_YIELD_NOT_CALLED();
 }
 /* -----------------  testing portCRITICAL_NESTING_IN_TCB ------------------- */
+
+void vTaskEnterCritical( void );
+void vTaskExitCritical( void );
+
 void test_vTaskExitCritical_succes( void )
 {
     TaskHandle_t task_handle;

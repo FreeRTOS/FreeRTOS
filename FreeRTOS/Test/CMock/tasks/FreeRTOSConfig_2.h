@@ -24,9 +24,16 @@
  *
  */
 
-
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
+
+/* XXX: this file will be processed by unifdef  to generate new header files
+ * that can be mocked according to the configurations desired
+ * it has a few limitations on the format of this file such as:
+ * no config that spans more than one line
+ * no strings in config names
+ * for more info please check the man file with $ man unifdef
+ */
 
 /*-----------------------------------------------------------
 * Application specific definitions.
@@ -119,11 +126,7 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
  * uses the same semantics as the standard C assert() macro. */
 #define configASSERT( x )
 #define portREMOVE_STATIC_QUALIFIER              1
+#define configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES 0
 
-#define configINCLUDE_MESSAGE_BUFFER_AMP_DEMO    0
-#if ( configINCLUDE_MESSAGE_BUFFER_AMP_DEMO == 1 )
-    extern void vGenerateCoreBInterrupt( void * xUpdatedMessageBuffer );
-    #define sbSEND_COMPLETED( pxStreamBuffer )    vGenerateCoreBInterrupt( pxStreamBuffer )
-#endif /* configINCLUDE_MESSAGE_BUFFER_AMP_DEMO */
 
 #endif /* FREERTOS_CONFIG_H */

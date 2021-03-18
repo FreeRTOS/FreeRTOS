@@ -107,49 +107,18 @@ $(MOCK_SRC_LIST) : $(CPP_FILES)                                                \
 	    $(<D)/list_macros.h
 
 .SECONDARY:
-$(DEP_FILES) : $(MOCK_FILES_FP) | directories
-	$(eval INCLUDE  =   -I$(SCRATCH_DIR)/$*/include)
-	$(eval INCLUDE  +=  -I$(SCRATCH_DIR)/$*/mocks)
-	$(eval INCLUDE  +=  -I$(KERNEL_DIR)/include)
+$(CPP_FILES) : | directories
+	echo "executing this rule"
+	cp $(PROJECT_DIR)/FreeRTOSConfig_$*.h $(SCRATCH_DIR)/$*/include/FreeRTOSConfig.h
+	cp $(PROJECT_DIR)/FreeRTOSConfig_$*.h $(SCRATCH_DIR)/$*/include/FreeRTOSConfig.def
+	sed -i '/#ifndef FREERTOS_CONFIG_H/d' $(SCRATCH_DIR)/$*/include/FreeRTOSConfig.def 
+	sed -i '/#define FREERTOS_CONFIG_H/d' $(SCRATCH_DIR)/$*/include/FreeRTOSConfig.def 
+	sed -i '/#endif/d' $(SCRATCH_DIR)/$*/include/FreeRTOSConfig.def 
 	for h_file in $(MOCK_FILES_FP) ; do                                    \
-	    $(CC) $$h_file -E -D INC_FREERTOS_H -I $(INCLUDE) $(CFLAGS)        \
-	         -imacros FreeRTOSConfig.h -imacros portmacro.h                \
-	         -imacros FreeRTOS.h                                           \
-		 -fpreprocessed -fdirectives-only -MM -MG                      \
-		 -MT $(SCRATCH_DIR)/$*/cpp/$$(basename $$h_file)               \
-		 -MF $(@D)/$$(basename $$h_file).d 2>/dev/null;                \
-		 sed -i -e '1,2d' $(@D)/$$(basename $$h_file).d;               \
-		 DEP="";                                                       \
-		for line in $$(cat $(@D)/$$(basename $$h_file).d | tr '\\' ' ' ); do  \
-		    DEP+="-imacros $$(basename $$line) " ;                     \
-		done;                                                          \
+		echo "execuring rule ";                                        \
+		unifdef -f $(SCRATCH_DIR)/$*/include/FreeRTOSConfig.def $$h_file \
+		> $(SCRATCH_DIR)/$*/cpp/$$(basename $$h_file) ;                \
 	done
-
-
-.SECONDARY:
-# Copies the appropriate header file into the private include directory
-# Pre-process ALL the headers in the cpp directory
-# This target is called ONLY once per configuration pattern (%)
-$(CPP_FILES) : $(DEP_FILES)  | directories
-	cp $(PROJECT_DIR)/FreeRTOSConfig_$*.h                                  \
-	   $(SCRATCH_DIR)/$*/include/FreeRTOSConfig.h
-	$(eval INCLUDE  =    -I$(SCRATCH_DIR)/$*/include)
-	$(eval INCLUDE  +=   -I$(SCRATCH_DIR)/$*/mocks)
-	$(eval INCLUDE  +=   -I$(KERNEL_DIR)/include)
-	for h_file in $(MOCK_FILES_FP) ; do                                    \
-	    IMACROS=$$(cat  $(@D)/$$(basename $$h_file).d.dep);                \
-	    $(CC) -E $(INCLUDE)                                                \
-	    -imacros FreeRTOSConfig.h -imacros portmacro.h -imacros FreeRTOS.h \
-	    -imacros task.h $(UNDEF_MOCKED_HEADER_MACROS) $$IMACROS            \
-	    -fmax-include-depth=0 -fdirectives-only                            \
-		  $$h_file $(CPPFLAGS) $(CFLAGS)                               \
-	          > $(@D)/$$(basename $$h_file) 2>/dev/null;                   \
-	    guard=$$(echo $$(basename $$h_file) |  tr '[:lower:]' '[:upper:]'| \
-			tr '.' '_') ;                                          \
-	    sed -i "1 i\#define $$guard" $(@D)/$$(basename $$h_file);          \
-	    sed -i "1 i\#ifndef $$guard" $(@D)/$$(basename $$h_file);          \
-	    sed -i -e '$$a#endif' $(@D)/$$(basename $$h_file);                 \
-        done
 
 .SECONDARY:
 # Build ALL the mock objects for the config

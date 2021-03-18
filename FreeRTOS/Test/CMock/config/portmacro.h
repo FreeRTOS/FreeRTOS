@@ -91,13 +91,13 @@ typedef unsigned long    UBaseType_t;
 /*-----------------------------------------------------------*/
 
 /* Requires definition of UBaseType_t */
-    #include "fake_port.h"
+#include "fake_port.h"
 
 /* Hardware specifics. */
-    #define portSTACK_GROWTH      ( -1 )
-    #define portTICK_PERIOD_MS    ( ( TickType_t ) 1000 / configTICK_RATE_HZ )
-    #define portBYTE_ALIGNMENT    8
-    #define portNOP()    __asm volatile ( "NOP" )
+//#define portSTACK_GROWTH      ( -1 )
+#define portTICK_PERIOD_MS    ( ( TickType_t ) 1000 / configTICK_RATE_HZ )
+#define portBYTE_ALIGNMENT    8
+#define portNOP()    __asm volatile ( "NOP" )
 
 /*
  * These define the timer to use for generating the tick interrupt.
@@ -121,35 +121,30 @@ typedef unsigned long    UBaseType_t;
 #define portRESTORE_CONTEXT()
 /*-----------------------------------------------------------*/
 
-    #define portSAVE_CONTEXT()
-    #define portYIELD()                      vFakePortYield()
-    #define portYIELD_WITHIN_API()           vFakePortYieldWithinAPI()
-    #define portYIELD_FROM_ISR()             vFakePortYieldFromISR()
+#define portSAVE_CONTEXT()
+#define portYIELD()                      vFakePortYield()
+#define portYIELD_WITHIN_API()           vFakePortYieldWithinAPI()
+#define portYIELD_FROM_ISR()             vFakePortYieldFromISR()
 
 /* Critical section handling. */
-    #define portDISABLE_INTERRUPTS()         vFakePortDisableInterrupts()
-    #define portENABLE_INTERRUPTS()          vFakePortEnableInterrupts()
-    #define portCLEAR_INTERRUPT_MASK_FROM_ISR( x ) \
-    vFakePortClearInterruptMaskFromISR( x )
-    #define portSET_INTERRUPT_MASK_FROM_ISR() \
-    ulFakePortSetInterruptMaskFromISR()
-    #define portSET_INTERRUPT_MASK()         ulFakePortSetInterruptMask()
-    #define portCLEAR_INTERRUPT_MASK( x )    vFakePortClearInterruptMask( x )
-    #define portASSERT_IF_INTERRUPT_PRIORITY_INVALID() \
-    vFakePortAssertIfInterruptPriorityInvalid()
+#define portDISABLE_INTERRUPTS()         vFakePortDisableInterrupts()
+#define portENABLE_INTERRUPTS()          vFakePortEnableInterrupts()
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR( x ) \
+        vFakePortClearInterruptMaskFromISR( x )
+#define portSET_INTERRUPT_MASK_FROM_ISR() \
+        ulFakePortSetInterruptMaskFromISR()
+#define portSET_INTERRUPT_MASK()         ulFakePortSetInterruptMask()
+#define portCLEAR_INTERRUPT_MASK( x )    vFakePortClearInterruptMask( x )
+#define portASSERT_IF_INTERRUPT_PRIORITY_INVALID() \
+        vFakePortAssertIfInterruptPriorityInvalid()
+#define portENTER_CRITICAL()             vFakePortEnterCriticalSection()
+#define portEXIT_CRITICAL()              vFakePortExitCriticalSection()
 
-    #define portENTER_CRITICAL()             vFakePortEnterCriticalSection()
-    #define portEXIT_CRITICAL()              vFakePortExitCriticalSection()
+#define portPRE_TASK_DELETE_HOOK( pvTaskToDelete, pxPendYield ) \
+        vPortCurrentTaskDying( ( pvTaskToDelete ), ( pxPendYield ) )
+#define portSETUP_TCB( pxTCB )    portSetupTCB_CB(pxTCB);
+#define  portASSERT_IF_IN_ISR() vFakePortAssertIfISR();
 
-extern void portClear_Interrupt_Mask(UBaseType_t bt);
-#define portCLEAR_INTERRUPT_MASK_FROM_ISR(X)   portClear_Interrupt_Mask(X)
-
-extern void portAssert_if_int_prio_invalid(void);
-#define  portASSERT_IF_INTERRUPT_PRIORITY_INVALID() portAssert_if_int_prio_invalid()
-#define configMINIMAL_SECURE_STACK_SIZE   400
-void port_allocate_secure_context( BaseType_t stackSize );
-#define portALLOCATE_SECURE_CONTEXT( configMINIMAL_SECURE_STACK_SIZE )  \
-        port_allocate_secure_context( configMINIMAL_SECURE_STACK_SIZE )
 
 static inline uint8_t ucPortCountLeadingZeros( uint32_t ulBitmap )
 {

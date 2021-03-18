@@ -61,7 +61,7 @@ $(LIB_DIR)/libcmock.so : $(CMOCK_SRC_DIR)/cmock.c                              \
                          $(CMOCK_SRC_DIR)/cmock.h                              \
                          $(LIB_DIR)/libunity.so                                \
                          Makefile | directories
-        $(CC) -o $@ -shared -fPIC $<  $(INCLUDE_DIR)
+    $(CC) -o $@ -shared -fPIC $<  $(INCLUDE_DIR)
 
 
 $(LIB_DIR)/libunity.so : $(UNITY_SRC_DIR)/unity.c                              \
@@ -73,10 +73,11 @@ $(LIB_DIR)/libunitymemory.so: ${UNITY_MEM_DIR}/unity_memory.c                  \
                               ${UNITY_MEM_DIR}/unity_memory.h                  \
                               ${LIB_DIR}/libunity.so                           \
                               Makefile | directories
-    ${CC} -o $@ -shared -fPIC $< ${INCLUDE_DIR}Makefile
+    ${CC} -o $@ -shared -fPIC $< ${INCLUDE_DIR}
 
 $(LIB_DIR)/libcexception.so: ${C_EXCEPTION_SRC_DIR}/CException.c               \
-                             ${C_EXCEPTION_SRC_DIR}/CException.h | directories
+                             ${C_EXCEPTION_SRC_DIR}/CException.h               \
+                             Makefile | directories
    ${CC} -o $@ -shared -fPIC $< ${INCLUDE_DIR}
 
 run : $(UNITS) | directories

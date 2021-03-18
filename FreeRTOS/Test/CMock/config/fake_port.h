@@ -45,6 +45,6 @@ void vFakePortExitCriticalSection( void );
 void vPortCurrentTaskDying( void * pxTaskToDelete,
                             volatile BaseType_t * pxPendYield );
 void portSetupTCB_CB( void * tcb );
-void vFakePortAssertIfISR( );
+void vFakePortAssertIfISR();
 
 #endif /* FAKE_PORT_H */

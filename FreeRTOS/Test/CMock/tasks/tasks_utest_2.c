@@ -76,7 +76,7 @@ static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
 static TCB_t * ptcb;
 static StackType_t stack[ ( ( size_t ) 300 ) * sizeof( StackType_t ) ];
-static TCB_t tcb[10]; /* simulate up to 10 tasks: add more if needed */
+static TCB_t tcb[ 10 ]; /* simulate up to 10 tasks: add more if needed */
 static bool getIddleTaskMemoryValid = false;
 static uint32_t critical_section_counter = 0;
 static bool is_first_task = true;
@@ -85,21 +85,21 @@ static uint32_t create_task_priority = 3;
 static port_yield_operation py_operation;
 static bool vTaskDeletePre_called = false;
 static bool getIddleTaskMemory_called = false;
-static bool vApplicationTickHook_called  = false;
+static bool vApplicationTickHook_called = false;
 static bool port_yield_called = false;
 static bool port_enable_interrupts_called = false;
 static bool port_disable_interrupts_called = false;
 static bool port_yield_within_api_called = false;
-static bool port_setup_tcb_called  = false;
+static bool port_setup_tcb_called = false;
 static bool portClear_Interrupt_called = false;
 static bool portSet_Interrupt_called = false;
 static bool portClear_Interrupt_from_isr_called = false;
 static bool portSet_Interrupt_from_isr_called = false;
 static bool port_invalid_interrupt_called = false;
 static bool vApplicationStackOverflowHook_called = false;
-static bool vApplicationIdleHook_called  = false;
+static bool vApplicationIdleHook_called = false;
 static bool port_allocate_secure_context_called = false;
-static bool port_assert_if_in_isr_called  = false;
+static bool port_assert_if_in_isr_called = false;
 static bool vApplicationMallocFailedHook_called = false;
 
 
@@ -117,6 +117,7 @@ static void start_scheduler()
     if( is_first_task )
     {
         is_first_task = false;
+
         for( int i = ( UBaseType_t ) 0U; i < ( UBaseType_t ) configMAX_PRIORITIES; i++ )
         {
             vListInitialise_ExpectAnyArgs();
@@ -204,7 +205,7 @@ static void dummy_operation()
     HOOK_DIAG();
 }
 
-void vFakePortAssertIfISR(void)
+void vFakePortAssertIfISR( void )
 {
     port_assert_if_in_isr_called = true;
     HOOK_DIAG();
@@ -353,7 +354,7 @@ void vFakePortClearInterruptMaskFromISR( UBaseType_t bt )
 UBaseType_t ulFakePortSetInterruptMaskFromISR( void )
 {
     HOOK_DIAG();
-    portSet_Interrupt_from_isr_called  = true;
+    portSet_Interrupt_from_isr_called = true;
     return 1;
 }
 
@@ -454,10 +455,12 @@ void test_xTaskCreateStatic_success( void )
 
     listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
     pxPortInitialiseStack_ExpectAnyArgsAndReturn( puxStackBuffer );
+
     for( int i = ( UBaseType_t ) 0U; i < ( UBaseType_t ) configMAX_PRIORITIES; i++ )
     {
         vListInitialise_ExpectAnyArgs();
     }
+
     /* Delayed Task List 1 */
     vListInitialise_ExpectAnyArgs();
     /* Delayed Task List 2 */
@@ -518,10 +521,12 @@ void test_xTaskCreate_success( void )
     vListInitialiseItem_Expect( &( tcb[ 0 ].xEventListItem ) );
     listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
     pxPortInitialiseStack_ExpectAnyArgsAndReturn( stack );
+
     for( int i = ( UBaseType_t ) 0U; i < ( UBaseType_t ) configMAX_PRIORITIES; i++ )
     {
         vListInitialise_ExpectAnyArgs();
     }
+
     /* Delayed Task List 1 */
     vListInitialise_ExpectAnyArgs();
     /* Delayed Task List 2 */
@@ -631,9 +636,10 @@ void test_vTaskPrioritySet_success_gt_curr_prio( void )
     ASSERT_PORT_YIELD_NOT_CALLED();
 }
 /* -----------------  testing portCRITICAL_NESTING_IN_TCB ------------------- */
-void test_vTaskExitCritical_succes(void)
+void test_vTaskExitCritical_succes( void )
 {
     TaskHandle_t task_handle;
+
     /* Setup */
     task_handle = create_task();
     start_scheduler();
@@ -645,9 +651,10 @@ void test_vTaskExitCritical_succes(void)
     ASSERT_PORT_ENABLE_INTERRUPT_NOT_CALLED();
 }
 
-void test_vTaskExitCritical_success_enable_interrupts(void)
+void test_vTaskExitCritical_success_enable_interrupts( void )
 {
     TaskHandle_t task_handle;
+
     /* Setup */
     task_handle = create_task();
     start_scheduler();
@@ -661,9 +668,10 @@ void test_vTaskExitCritical_success_enable_interrupts(void)
     ASSERT_PORT_ENABLE_INTERRUPT_CALLED();
 }
 
-void test_vTaskExitCritical_success_enable_too_many_nests(void)
+void test_vTaskExitCritical_success_enable_too_many_nests( void )
 {
     TaskHandle_t task_handle;
+
     /* Setup */
     task_handle = create_task();
     start_scheduler();
@@ -678,9 +686,10 @@ void test_vTaskExitCritical_success_enable_too_many_nests(void)
     ASSERT_PORT_ENABLE_INTERRUPT_NOT_CALLED();
 }
 
-void test_vTaskExitCritical_scheduler_off(void)
+void test_vTaskExitCritical_scheduler_off( void )
 {
     TaskHandle_t task_handle;
+
     /* Setup */
     task_handle = create_task();
     /* Expectations */
@@ -691,9 +700,10 @@ void test_vTaskExitCritical_scheduler_off(void)
     ASSERT_PORT_ENABLE_INTERRUPT_NOT_CALLED();
 }
 
-void test_vTaskEnterCritical_succes(void)
+void test_vTaskEnterCritical_succes( void )
 {
     TaskHandle_t task_handle;
+
     /* Setup */
     task_handle = create_task();
     start_scheduler();
@@ -705,9 +715,10 @@ void test_vTaskEnterCritical_succes(void)
     ASSERT_IF_IN_ISR_CALLED();
 }
 
-void test_vTaskEnterCritical_succes_twice(void)
+void test_vTaskEnterCritical_succes_twice( void )
 {
     TaskHandle_t task_handle;
+
     /* Setup */
     task_handle = create_task();
     start_scheduler();
@@ -721,9 +732,10 @@ void test_vTaskEnterCritical_succes_twice(void)
     ASSERT_IF_IN_ISR_NOT_CALLED();
 }
 
-void test_vTaskEnterCritical_no_op_no_sched(void)
+void test_vTaskEnterCritical_no_op_no_sched( void )
 {
     TaskHandle_t task_handle;
+
     /* Setup */
     task_handle = create_task();
     /* Expectations */
@@ -733,5 +745,3 @@ void test_vTaskEnterCritical_no_op_no_sched(void)
     TEST_ASSERT_EQUAL( 0, task_handle->uxCriticalNesting );
     ASSERT_IF_IN_ISR_NOT_CALLED();
 }
-
-

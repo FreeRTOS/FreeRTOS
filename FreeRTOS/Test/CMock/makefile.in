@@ -41,6 +41,9 @@ CPPFLAGS    :=
 
 # Compiler flags
 CFLAGS              :=  $(INCLUDE_DIR)  -O0 -ggdb -pthread  --std=c99 -Werror -Wall
+CFLAGS              +=  -Wformat -Werror=format-security -Werror=array-bounds
+CFLAGS              +=  -D_FORTIFY_SOURCE=0
+
 ifeq ($(ENABLE_SANITIZER),1)
     CFLAGS          +=  -fstack-protector-all
     CFLAGS          +=  -Wformat -Werror=format-security -Werror=array-bounds

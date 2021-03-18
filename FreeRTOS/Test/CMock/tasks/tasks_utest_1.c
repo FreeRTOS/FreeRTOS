@@ -28,6 +28,7 @@
 /* Tasks includes */
 #include "FreeRTOS.h"
 #include "FreeRTOSConfig.h"
+#include "fake_port.h"
 #include "task.h"
 
 #include "mock_list.h"
@@ -69,6 +70,42 @@ extern volatile TickType_t xNextTaskUnblockTime;
 extern TaskHandle_t xIdleTaskHandle;
 extern volatile UBaseType_t uxSchedulerSuspended;
 
+/* =============================  DEFINES  ================================== */
+#define INITIALIZE_LIST_1E( list, owner )                       \
+    do {                                                        \
+        ListItem_t list_item;                                   \
+        ( list ).xListEnd.pxNext = &( list_item );              \
+        ( list ).xListEnd.pxPrevious = &( list_item );          \
+        ( list ).pxIndex = ( ListItem_t * ) &( list ).xListEnd; \
+        ( list ).uxNumberOfItems = 1;                           \
+        ( list_item ).pxNext = ( list ).pxIndex;                \
+        ( list_item ).pxPrevious = ( list ).pxIndex;            \
+        ( list_item ).pvOwner = ( owner );                      \
+        ( list_item ).pxContainer = &( list );                  \
+    } while( 0 )
+
+#define INITIALIZE_LIST_2E( list, owner, owner2 )               \
+    do {                                                        \
+        ListItem_t list_item;                                   \
+        ListItem_t list_item2;                                  \
+        ( list ).xListEnd.pxNext = &( list_item );              \
+        ( list ).xListEnd.pxPrevious = &( list_item2 );         \
+        ( list ).pxIndex = ( ListItem_t * ) &( list ).xListEnd; \
+        ( list ).uxNumberOfItems = 2;                           \
+        ( list_item ).pxNext = &( list_item2 );                 \
+        ( list_item ).pxPrevious = ( list ).pxIndex;            \
+        ( list_item ).pvOwner = ( owner );                      \
+        ( list_item ).pxContainer = &( list );                  \
+        ( list_item2 ).pxNext = ( list ).pxIndex;               \
+        ( list_item2 ).pxPrevious = &( list_item );             \
+        ( list_item2 ).pvOwner = ( owner2 );                    \
+        ( list_item2 ).pxContainer = &( list );                 \
+    } while( 0 )
+
+#define taskNOT_WAITING_NOTIFICATION    ( ( uint8_t ) 0 )
+#define taskWAITING_NOTIFICATION        ( ( uint8_t ) 1 )
+#define taskNOTIFICATION_RECEIVED       ( ( uint8_t ) 2 )
+
 /* ===========================  GLOBAL VARIABLES  =========================== */
 static StaticTask_t xIdleTaskTCB;
 static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
@@ -82,23 +119,36 @@ static bool is_first_task = true;
 static uint32_t created_tasks = 0;
 static uint32_t create_task_priority = 3;
 static port_yield_operation py_operation;
-static bool vTaskDeletePreCalled = false;
-static bool getIddleTaskMemoryCalled = false;
-static bool vApplicationTickHook_Called  = false;
+
+static bool vTaskDeletePre_called= false;
+static bool getIddleTaskMemory_called= false;
+static bool vApplicationTickHook_called  = false;
 static bool port_yield_called = false;
+static bool port_enable_interrupts_called = false;
+static bool port_disable_interrupts_called = false;
+static bool port_yield_within_api_called = false;
 static bool port_setup_tcb_called  = false;
 static bool portClear_Interrupt_called = false;
 static bool portSet_Interrupt_called = false;
+static bool portClear_Interrupt_from_isr_called = false;
+static bool portSet_Interrupt_from_isr_called = false;
 static bool port_invalid_interrupt_called = false;
 static bool vApplicationStackOverflowHook_called = false;
 static bool vApplicationIdleHook_called  = false;
 static bool port_allocate_secure_context_called = false;
+static bool port_assert_if_in_isr_called = false;
 static bool vApplicationMallocFailedHook_called = false;
 
 
 /* ============================  HOOK FUNCTIONS  ============================ */
 static void dummy_operation()
 {
+}
+
+void vFakePortAssertIfISR(void)
+{
+    port_assert_if_in_isr_called = true;
+    HOOK_DIAG();
 }
 
 void port_allocate_secure_context( BaseType_t stackSize )
@@ -146,7 +196,7 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
         *pulIdleTaskStackSize = 0;
     }
 
-    getIddleTaskMemoryCalled = true;
+    getIddleTaskMemory_called= true;
 }
 
 void vConfigureTimerForRunTimeStats( void )
@@ -163,29 +213,53 @@ long unsigned int ulGetRunTimeCounterValue( void )
 void vApplicationTickHook()
 {
     HOOK_DIAG();
-    vApplicationTickHook_Called = true;
+    vApplicationTickHook_called = true;
 }
 
 void vPortCurrentTaskDying( void * pvTaskToDelete,
                             volatile BaseType_t * pxPendYield )
 {
     HOOK_DIAG();
-    vTaskDeletePreCalled = true;
+    vTaskDeletePre_called= true;
 }
 
-void vPortEnterCritical( void )
+void vFakePortEnterCriticalSection( void )
 {
     HOOK_DIAG();
     critical_section_counter++;
 }
 
-void vPortExitCritical( void )
+void vFakePortExitCriticalSection( void )
 {
     HOOK_DIAG();
     critical_section_counter--;
 }
 
-void port_yield_cb()
+void vFakePortYieldWithinAPI()
+{
+    HOOK_DIAG();
+    port_yield_within_api_called = true;
+    py_operation();
+}
+
+void vFakePortYieldFromISR()
+{
+    HOOK_DIAG();
+}
+
+void vFakePortDisableInterrupts()
+{
+    port_disable_interrupts_called = true;
+    HOOK_DIAG();
+}
+
+void vFakePortEnableInterrupts()
+{
+    port_enable_interrupts_called = true;
+    HOOK_DIAG();
+}
+
+void vFakePortYield()
 {
     HOOK_DIAG();
     port_yield_called = true;
@@ -198,27 +272,42 @@ void portSetupTCB_CB( void * tcb )
     port_setup_tcb_called = true;
 }
 
-void portClear_Interrupt_Mask( UBaseType_t bt )
+void vFakePortClearInterruptMask( UBaseType_t bt )
 {
     HOOK_DIAG();
     portClear_Interrupt_called = true;
 }
 
-UBaseType_t portSet_Interrupt_Mask( void )
+UBaseType_t ulFakePortSetInterruptMask( void )
 {
     HOOK_DIAG();
     portSet_Interrupt_called = true;
     return 1;
 }
 
-void portAssert_if_int_prio_invalid( void )
+void vFakePortClearInterruptMaskFromISR( UBaseType_t bt )
 {
+    HOOK_DIAG();
+    portClear_Interrupt_from_isr_called = true;
+}
+
+UBaseType_t ulFakePortSetInterruptMaskFromISR( void )
+{
+    HOOK_DIAG();
+    portSet_Interrupt_from_isr_called  = true;
+    return 1;
+}
+
+void vFakePortAssertIfInterruptPriorityInvalid( void )
+{
+    HOOK_DIAG();
     port_invalid_interrupt_called = true;
 }
 
 void vApplicationStackOverflowHook( TaskHandle_t xTask,
                                     char * stack )
 {
+    HOOK_DIAG();
     vApplicationStackOverflowHook_called = true;
 }
 
@@ -226,6 +315,7 @@ void vApplicationStackOverflowHook( TaskHandle_t xTask,
 /*! called before each testcase */
 void setUp( void )
 {
+    RESET_ALL_HOOKS();
     pxCurrentTCB = NULL;
     memset( &tcb, 0x00, sizeof( TCB_t ) );
     ptcb = NULL;
@@ -254,20 +344,9 @@ void setUp( void )
     xNextTaskUnblockTime = ( TickType_t ) 0U;
     xIdleTaskHandle = NULL;
     uxSchedulerSuspended = ( UBaseType_t ) 0;
-    /*  ulTaskSwitchedInTime = 0UL; */
-    /*ulTotalRunTime = 0UL; */
-
-    vApplicationTickHook_Called = false;
-    vTaskDeletePreCalled = false;
-    getIddleTaskMemoryCalled = false;
     is_first_task = true;
     created_tasks = 0;
-    port_yield_called = false;
-    port_setup_tcb_called = false;
-    portClear_Interrupt_called = false;
-    portSet_Interrupt_called = false;
-    port_invalid_interrupt_called = false;
-    vApplicationStackOverflowHook_called = false;
+
     py_operation = dummy_operation;
 }
 
@@ -309,6 +388,7 @@ static void start_scheduler()
 
     if( is_first_task )
     {
+        is_first_task = false;
         for( int i = ( UBaseType_t ) 0U; i < ( UBaseType_t ) configMAX_PRIORITIES; i++ )
         {
             vListInitialise_ExpectAnyArgs();
@@ -332,7 +412,7 @@ static void start_scheduler()
     xPortStartScheduler_ExpectAndReturn( pdTRUE );
     getIddleTaskMemoryValid = true;
     vTaskStartScheduler();
-    TEST_ASSERT_EQUAL( true, getIddleTaskMemoryCalled );
+    ASSERT_GET_IDLE_TASK_MEMORY_CALLED();
     TEST_ASSERT_TRUE( xSchedulerRunning );
     TEST_ASSERT_EQUAL( configINITIAL_TICK_COUNT, xTickCount );
     TEST_ASSERT_EQUAL( portMAX_DELAY, xNextTaskUnblockTime );
@@ -633,7 +713,7 @@ void test_xTaskCreate_success_sched_running( void )
     TEST_ASSERT_EQUAL( configMAX_PRIORITIES - 1, ptcb->uxPriority );
     TEST_ASSERT_EQUAL( NULL, ptcb->pcTaskName[ 0 ] );
     ASSERT_SETUP_TCB_CALLED();
-    ASSERT_PORT_YIELD_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
 }
 
 void test_xTaskCreate_success_null_task_handle( void )
@@ -683,7 +763,7 @@ void test_xTaskCreate_success_null_task_handle( void )
     TEST_ASSERT_EQUAL( stack, tcb[ 0 ].pxStack );
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
     ASSERT_SETUP_TCB_CALLED();
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 
@@ -761,8 +841,8 @@ void test_vTaskDelete_sucess_current_task_ready_empty( void )
 {
     TCB_t * tcbPtr;
 
+    /* Setup */
     tcbPtr = ( TCB_t * ) create_task();
-
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
 
     /* Expectations */
@@ -816,7 +896,7 @@ void test_vTaskDelete_sucess_current_task_yield( void )
     vTaskDelete( tcbPtr );
     /* Validations */
     ASSERT_TASK_DELETE_CALLED();
-    ASSERT_PORT_YIELD_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
     TEST_ASSERT_EQUAL( 1, uxDeletedTasksWaitingCleanUp );
 }
@@ -866,7 +946,7 @@ void test_vTaskDelete_sucess_not_current_task_no_yield( void )
     /* Validations */
     TEST_ASSERT_EQUAL( 0, uxCurrentNumberOfTasks );
     TEST_ASSERT_EQUAL( 0, uxDeletedTasksWaitingCleanUp );
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 
@@ -903,7 +983,7 @@ void test_vTaskStartScheduler_success( void )
     getIddleTaskMemoryValid = true;
     vTaskStartScheduler();
 
-    TEST_ASSERT_EQUAL( true, getIddleTaskMemoryCalled );
+    ASSERT_GET_IDLE_TASK_MEMORY_CALLED();
     /* should be 2 the idle task and timer task, but the timer task is a mock */
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
     TEST_ASSERT_EQUAL( pdTRUE, xSchedulerRunning );
@@ -914,7 +994,7 @@ void test_vTaskStartScheduler_idle_fail( void )
     getIddleTaskMemoryValid = false;
     vTaskStartScheduler();
 
-    TEST_ASSERT_EQUAL( true, getIddleTaskMemoryCalled );
+    ASSERT_GET_IDLE_TASK_MEMORY_CALLED();
     /* should be 2 the idle task and timer task, but the timer task is a mock */
     TEST_ASSERT_EQUAL( 0, uxCurrentNumberOfTasks );
     TEST_ASSERT_EQUAL( pdFALSE, xSchedulerRunning );
@@ -1128,7 +1208,7 @@ void test_vTaskPrioritySet_success_gt_curr_prio( void )
     vTaskPrioritySet( taskHandle, create_task_priority + 1 );
     TEST_ASSERT_EQUAL( 4 + 1, ptcb->uxBasePriority );
     TEST_ASSERT_EQUAL( 4 + 1, ptcb->uxPriority );
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 void test_vTaskPrioritySet_success_gt_curr_prio_curr_tcb( void )
@@ -1161,7 +1241,7 @@ void test_vTaskPrioritySet_success_gt_curr_prio_curr_tcb( void )
     vTaskPrioritySet( taskHandle, create_task_priority + 3 );
     TEST_ASSERT_EQUAL( 4 + 3, ptcb->uxBasePriority );
     TEST_ASSERT_EQUAL( 4 + 3, ptcb->uxPriority );
-    ASSERT_PORT_YIELD_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
 }
 
 
@@ -1188,7 +1268,7 @@ void test_vTaskPrioritySet_success_gt_max_prio( void )
 
     /* validations */
     TEST_ASSERT_EQUAL( configMAX_PRIORITIES - 1, ptcb->uxBasePriority );
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 void test_vTaskPrioritySet_success_call_current_null( void )
@@ -1214,7 +1294,7 @@ void test_vTaskPrioritySet_success_call_current_null( void )
 
     /* validations */
     TEST_ASSERT_EQUAL( 4, ptcb->uxBasePriority );
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 /* ensures that setting the same priority for a tasks changes nothing */
 void test_vTaskPrioritySet_success_same_prio( void )
@@ -1234,7 +1314,7 @@ void test_vTaskPrioritySet_success_same_prio( void )
     /* Validations */
     TEST_ASSERT_EQUAL( 3, ptcb->uxBasePriority );
     TEST_ASSERT_EQUAL( 3, ptcb->uxPriority );
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 
@@ -1266,7 +1346,7 @@ void test_vTaskPrioritySet_success_lt_curr_prio_curr_task( void )
 
     /* Validations */
     TEST_ASSERT_EQUAL( 2, ptcb->uxBasePriority );
-    ASSERT_PORT_YIELD_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
 }
 
 /* ensures if the set priority is less thatn the current priority and it is not
@@ -1296,7 +1376,7 @@ void test_vTaskPrioritySet_success_lt_curr_prio_not_curr_task( void )
 
     /* Validations */
     TEST_ASSERT_EQUAL( 2, ptcb->uxBasePriority );
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 /* This test ensures that if the base priority is different greater than that the current
@@ -1337,7 +1417,7 @@ void test_vTaskPrioritySet_success_gt_curr_prio_diff_base( void )
     /* Validations */
     TEST_ASSERT_EQUAL( 5, ptcb->uxBasePriority );
     TEST_ASSERT_EQUAL( 4, ptcb->uxPriority );
-    ASSERT_PORT_YIELD_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
 }
 
 /* This test ensures that if the base priority is different less than that the current
@@ -1377,7 +1457,7 @@ void test_vTaskPrioritySet_success_lt_curr_prio_diff_base( void )
     /* Validations */
     TEST_ASSERT_EQUAL( 5, ptcb->uxBasePriority );
     TEST_ASSERT_EQUAL( 6, ptcb->uxPriority );
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 /* testing INCLUDE_uxTaskPriorityGet */
 /* Ensures the correct priority is returned */
@@ -1432,8 +1512,8 @@ void test_uxTaskPriorityGetFromISR_success( void )
     ret_priority = uxTaskPriorityGetFromISR( taskHandle );
 
     TEST_ASSERT_EQUAL( 3, ret_priority );
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
 }
 
@@ -1450,8 +1530,8 @@ void test_uxTaskPriorityGetFromISR_success_null_handle( void )
     ret_priority = uxTaskPriorityGetFromISR( NULL );
 
     TEST_ASSERT_EQUAL( 3, ret_priority );
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
 }
 
@@ -1475,7 +1555,7 @@ void test_vTaskDelay_success_gt_0_yield_called( void )
     /* API call */
     vTaskDelay( delay );
     /* Validations */
-    ASSERT_PORT_YIELD_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
 }
 
 void test_vTaskDelay_success_gt_0_yield_not_called( void )
@@ -1506,18 +1586,20 @@ void test_vTaskDelay_success_gt_0_yield_not_called( void )
     /* prvResetNextTaskUnblockTime */
     listLIST_IS_EMPTY_ExpectAndReturn( &xPendingReadyList, pdTRUE );
 
-    /* API call */
+    /* API Call */
     vTaskDelay( delay );
     /* Validations */
-    ASSERT_PORT_YIELD_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
 }
 
 /* ensures that with a delay of zero no other operation or sleeping is done, the
  * task in only yielded */
 void test_vTaskDelay_success_eq_0( void )
 {
+    /* API Call */
     vTaskDelay( 0 );
-    ASSERT_PORT_YIELD_CALLED();
+    /* Validations */
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
 }
 
 /* --------------------- testing INCLUDE_eTaskGetState ---------------------- */
@@ -1771,7 +1853,7 @@ void test_xTaskDelayUntil_success_prev_gt_tickCount2( void )
     /* API Call */
     ret_xtask_delay = xTaskDelayUntil( &previousWakeTime, xTimeIncrement );
     /* Validations */
-    ASSERT_PORT_YIELD_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
     TEST_ASSERT_FALSE( ret_xtask_delay );
 }
 /* 0 */
@@ -1806,7 +1888,7 @@ void test_xTaskDelayUntil_success_lt_tickCount( void )
     /* API Call */
     ret_xtask_delay = xTaskDelayUntil( &previousWakeTime, 5 );
     /* Validations */
-    ASSERT_PORT_YIELD_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
     TEST_ASSERT_EQUAL( pdTRUE, ret_xtask_delay );
 }
 
@@ -1837,7 +1919,7 @@ void test_xTaskDelayUntil_success_lt_tickCount1( void )
     /* API Call */
     ret_xtask_delay = xTaskDelayUntil( &previousWakeTime, xTimeIncrement );
     /* Validations */
-    ASSERT_PORT_YIELD_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
     TEST_ASSERT_FALSE( ret_xtask_delay );
 }
 
@@ -1874,7 +1956,7 @@ void test_xTaskDelayUntil_success_lt_tickCount2( void )
     /* API Call */
     ret_xtask_delay = xTaskDelayUntil( &previousWakeTime, xTimeIncrement );
     /* Validations */
-    ASSERT_PORT_YIELD_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
     TEST_ASSERT_TRUE( ret_xtask_delay );
 }
 
@@ -1902,7 +1984,7 @@ void test_vTaskSuspend_success( void )
     vTaskSuspend( task_handle );
     /* Validations */
     TEST_ASSERT_EQUAL_PTR( NULL, pxCurrentTCB );
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 void test_vTaskSuspend_success_shced_running( void )
@@ -1927,7 +2009,7 @@ void test_vTaskSuspend_success_shced_running( void )
     vTaskSuspend( task_handle );
     /* Validations */
     TEST_ASSERT_EQUAL( portMAX_DELAY, xNextTaskUnblockTime );
-    ASSERT_PORT_YIELD_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
 }
 
 void test_vTaskSuspend_success_shced_running_not_curr( void )
@@ -1955,7 +2037,7 @@ void test_vTaskSuspend_success_shced_running_not_curr( void )
     vTaskSuspend( task_handle );
     /* Validations */
     TEST_ASSERT_EQUAL( portMAX_DELAY, xNextTaskUnblockTime );
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 void test_vTaskSuspend_success_switch_context( void )
@@ -1979,21 +2061,21 @@ void test_vTaskSuspend_success_switch_context( void )
     /* API Call */
     vTaskSuspend( NULL );
     /* Validations */
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
     TEST_ASSERT_EQUAL( 0, ptcb->ucNotifyState[ 0 ] );
 }
 
 void test_vTaskResume_fail_null_handle( void )
 {
     vTaskResume( NULL );
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 void test_vTaskResume_fail_current_tcb_null( void )
 {
     create_task();
     vTaskResume( NULL );
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 void test_vTaskResume_fail_current_tcb( void )
@@ -2002,7 +2084,7 @@ void test_vTaskResume_fail_current_tcb( void )
 
     task_handle = create_task();
     vTaskResume( task_handle );
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 void test_vTaskResume_fail_task_not_suspended( void )
@@ -2022,7 +2104,7 @@ void test_vTaskResume_fail_task_not_suspended( void )
     /* API Call */
     vTaskResume( task_handle ); /* not current tcb */
     /* Validations */
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 void test_vTaskResume_fail_task_ready( void )
@@ -2045,7 +2127,7 @@ void test_vTaskResume_fail_task_ready( void )
     /* API Call */
     vTaskResume( task_handle ); /* not current tcb */
     /* Validations */
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 void test_vTaskResume_fail_task_event_list_not_orphan( void )
@@ -2071,7 +2153,7 @@ void test_vTaskResume_fail_task_event_list_not_orphan( void )
     /* API Call */
     vTaskResume( task_handle ); /* not current tcb */
     /* Validations */
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 void test_vTaskResume_success_task_event_list_orphan( void )
@@ -2102,7 +2184,7 @@ void test_vTaskResume_success_task_event_list_orphan( void )
     /* API Call */
     vTaskResume( task_handle ); /* not current tcb */
     /* Validations */
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 void test_vTaskResume_success_yield( void )
@@ -2133,7 +2215,7 @@ void test_vTaskResume_success_yield( void )
     /* API Call */
     vTaskResume( task_handle ); /* not current tcb */
     /* Validations */
-    ASSERT_PORT_YIELD_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
 }
 
 void test_xTaskResumeFromISR_success( void )
@@ -2166,8 +2248,8 @@ void test_xTaskResumeFromISR_success( void )
     /* Validations */
     TEST_ASSERT_EQUAL( pdTRUE, ret_task_resume );
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
 }
 
 void test_xTaskResumeFromISR_success_sched_suspended( void )
@@ -2198,8 +2280,8 @@ void test_xTaskResumeFromISR_success_sched_suspended( void )
     /* Validations */
     TEST_ASSERT_EQUAL( pdFALSE, ret_task_resume );
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
 }
 
 void test_xTaskResumeFromISR_success_task_suspended( void )
@@ -2222,8 +2304,8 @@ void test_xTaskResumeFromISR_success_task_suspended( void )
     /* Validations */
     TEST_ASSERT_EQUAL( pdFALSE, ret_task_resume );
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
 }
 
 void test_xTaskResumeFromISR_success_curr_prio_lt_suspended_task( void )
@@ -2259,42 +2341,12 @@ void test_xTaskResumeFromISR_success_curr_prio_lt_suspended_task( void )
     /* Validations */
     TEST_ASSERT_EQUAL( pdFALSE, ret_task_resume );
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
 }
 
 /* testing INCLUDE_xTaskGetHandle */
 
-#define INITIALIZE_LIST_1E( list, owner )                       \
-    do {                                                        \
-        ListItem_t list_item;                                   \
-        ( list ).xListEnd.pxNext = &( list_item );              \
-        ( list ).xListEnd.pxPrevious = &( list_item );          \
-        ( list ).pxIndex = ( ListItem_t * ) &( list ).xListEnd; \
-        ( list ).uxNumberOfItems = 1;                           \
-        ( list_item ).pxNext = ( list ).pxIndex;                \
-        ( list_item ).pxPrevious = ( list ).pxIndex;            \
-        ( list_item ).pvOwner = ( owner );                      \
-        ( list_item ).pxContainer = &( list );                  \
-    } while( 0 )
-
-#define INITIALIZE_LIST_2E( list, owner, owner2 )               \
-    do {                                                        \
-        ListItem_t list_item;                                   \
-        ListItem_t list_item2;                                  \
-        ( list ).xListEnd.pxNext = &( list_item );              \
-        ( list ).xListEnd.pxPrevious = &( list_item2 );         \
-        ( list ).pxIndex = ( ListItem_t * ) &( list ).xListEnd; \
-        ( list ).uxNumberOfItems = 2;                           \
-        ( list_item ).pxNext = &( list_item2 );                 \
-        ( list_item ).pxPrevious = ( list ).pxIndex;            \
-        ( list_item ).pvOwner = ( owner );                      \
-        ( list_item ).pxContainer = &( list );                  \
-        ( list_item2 ).pxNext = ( list ).pxIndex;               \
-        ( list_item2 ).pxPrevious = &( list_item );             \
-        ( list_item2 ).pvOwner = ( owner2 );                    \
-        ( list_item2 ).pxContainer = &( list );                 \
-    } while( 0 )
 
 void test_xtaskGetHandle_success( void )
 {
@@ -2434,15 +2486,16 @@ void test_xTaskGetTickCount_sucess( void )
 void test_xTaskGetTickCountFromISR_success( void )
 {
     TickType_t ret_get_tick_count;
-
+    /* Setup */
     xTickCount = 565656;
-
+    /* Expectations */
+    /* API Call */
     ret_get_tick_count = xTaskGetTickCountFromISR();
-
+    /* Validations */
     TEST_ASSERT_EQUAL( 565656, ret_get_tick_count );
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
 }
 
 void test_uxTaskGetNumberOfTasks_success( void )
@@ -2880,8 +2933,8 @@ void test_xTaskGetApplicationTaskTagFromISR_success( void )
     hook_function = xTaskGetApplicationTaskTagFromISR( task_handle );
 
     TEST_ASSERT_EQUAL( &pxHookFunction, hook_function );
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
 }
 
 void test_xTaskGetApplicationTaskTagFromISR_null_handle( void )
@@ -2895,8 +2948,8 @@ void test_xTaskGetApplicationTaskTagFromISR_null_handle( void )
     hook_function = xTaskGetApplicationTaskTagFromISR( NULL );
 
     TEST_ASSERT_EQUAL( &pxHookFunction, hook_function );
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
 }
 
 void test_xTaskCallApplicationTaskHook_success( void )
@@ -4041,7 +4094,7 @@ void test_ulTaskGenericNotifyTake_sucess( void )
     /* Validations */
     TEST_ASSERT_EQUAL( 0, ret_gen_notify_take );
     TEST_ASSERT_EQUAL( 0, task_handle->ucNotifyState[ uxIndexToWait ] );
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 void test_ulTaskGenericNotifyTake_sucess2( void )
@@ -4061,7 +4114,7 @@ void test_ulTaskGenericNotifyTake_sucess2( void )
     /* Validations */
     TEST_ASSERT_EQUAL( 2, ret_gen_notify_take );
     TEST_ASSERT_EQUAL( 0, task_handle->ucNotifyState[ uxIndexToWait ] );
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 void test_ulTaskGenericNotifyTake_sucess_clear_count( void )
@@ -4081,7 +4134,7 @@ void test_ulTaskGenericNotifyTake_sucess_clear_count( void )
     /* Validations */
     TEST_ASSERT_EQUAL( 5, ret_gen_notify_take );
     TEST_ASSERT_EQUAL( 0, task_handle->ucNotifyState[ uxIndexToWait ] );
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 void test_ulTaskGenericNotifyTake_sucess_yield( void )
@@ -4106,7 +4159,7 @@ void test_ulTaskGenericNotifyTake_sucess_yield( void )
     /* Validations */
     TEST_ASSERT_EQUAL( 0, ret_gen_notify_take );
     TEST_ASSERT_EQUAL( 0, task_handle->ucNotifyState[ uxIndexToWait ] );
-    ASSERT_PORT_YIELD_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
 }
 
 void test_xTaskGenericNotify_success( void )
@@ -4134,9 +4187,6 @@ void test_xTaskGenericNotify_success( void )
     TEST_ASSERT_EQUAL( 32, pulPreviousNotificationValue );
 }
 
-#define taskNOT_WAITING_NOTIFICATION    ( ( uint8_t ) 0 )
-#define taskWAITING_NOTIFICATION        ( ( uint8_t ) 1 )
-#define taskNOTIFICATION_RECEIVED       ( ( uint8_t ) 2 )
 
 void test_xTaskGenericNotify_success_null_pull( void )
 {
@@ -4354,12 +4404,9 @@ void test_xTaskGenericNotify_success_default( void )
     TEST_ASSERT_EQUAL( pdTRUE, ret_task_notify );
     TEST_ASSERT_EQUAL( 15, ptcb->ulNotifiedValue[ uxIndexToNotify ] );
     TEST_ASSERT_EQUAL( 2, ptcb->ucNotifyState[ uxIndexToNotify ] );
-    ASSERT_PORT_YIELD_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
 }
 
-#define taskNOT_WAITING_NOTIFICATION    ( ( uint8_t ) 0 )
-#define taskWAITING_NOTIFICATION        ( ( uint8_t ) 1 )
-#define taskNOTIFICATION_RECEIVED       ( ( uint8_t ) 2 )
 void test_xTaskGenericNotify_success_ISR( void )
 {
     BaseType_t ret_task_notify;
@@ -4385,8 +4432,8 @@ void test_xTaskGenericNotify_success_ISR( void )
     /* Validations */
     TEST_ASSERT_EQUAL( 1, ret_task_notify );
     TEST_ASSERT_EQUAL( 32, pulPreviousNotificationValue );
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
 }
 
@@ -4419,8 +4466,8 @@ void test_xTaskGenericNotify_success_null_pull_ISR( void )
     TEST_ASSERT_EQUAL( 1, ret_task_notify );
     TEST_ASSERT_EQUAL( 1 | 2, ptcb->ulNotifiedValue[ uxIndexToNotify ] );
     TEST_ASSERT_EQUAL( 2, ptcb->ucNotifyState[ uxIndexToNotify ] );
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
 }
 
@@ -4454,8 +4501,8 @@ void test_xTaskGenericNotify_success_eIncrement_ISR( void )
     TEST_ASSERT_EQUAL( 1, ret_task_notify );
     TEST_ASSERT_EQUAL( 11, ptcb->ulNotifiedValue[ uxIndexToNotify ] );
     TEST_ASSERT_EQUAL( 2, ptcb->ucNotifyState[ uxIndexToNotify ] );
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
 }
 
@@ -4489,8 +4536,8 @@ void test_xTaskGenericNotify_success_eSetValueWithOverwrite_ISR( void )
     TEST_ASSERT_EQUAL( 1, ret_task_notify );
     TEST_ASSERT_EQUAL( 5, ptcb->ulNotifiedValue[ uxIndexToNotify ] );
     TEST_ASSERT_EQUAL( 2, ptcb->ucNotifyState[ uxIndexToNotify ] );
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
 }
 
@@ -4525,8 +4572,8 @@ void test_xTaskGenericNotify_success_eSetValueWithoutOverwrite_ISR( void )
     TEST_ASSERT_EQUAL( 5, ptcb->ulNotifiedValue[ uxIndexToNotify ] );
     TEST_ASSERT_EQUAL( 2, ptcb->ucNotifyState[ uxIndexToNotify ] );
     TEST_ASSERT_FALSE( pxHigherPriorityTaskWoken );
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
 }
 
@@ -4557,8 +4604,8 @@ void test_xTaskGenericNotify_success_eSetValueWithoutOverwrite_not_rec_ISR( void
     TEST_ASSERT_EQUAL( 11, ptcb->ulNotifiedValue[ uxIndexToNotify ] );
     TEST_ASSERT_EQUAL( 2, ptcb->ucNotifyState[ uxIndexToNotify ] );
     TEST_ASSERT_FALSE( pxHigherPriorityTaskWoken );
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
 }
 
@@ -4589,8 +4636,8 @@ void test_xTaskGenericNotify_success_eNoAction_ISR( void )
     TEST_ASSERT_EQUAL( 15, ptcb->ulNotifiedValue[ uxIndexToNotify ] );
     TEST_ASSERT_EQUAL( 2, ptcb->ucNotifyState[ uxIndexToNotify ] );
     TEST_ASSERT_FALSE( pxHigherPriorityTaskWoken );
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
 }
 
@@ -4633,8 +4680,8 @@ void test_xTaskGenericNotify_success_default_ISR( void )
     TEST_ASSERT_EQUAL( 2, ptcb->ucNotifyState[ uxIndexToNotify ] );
     TEST_ASSERT_TRUE( pxHigherPriorityTaskWoken );
     TEST_ASSERT_TRUE( xYieldPending );
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
 }
 
@@ -4675,8 +4722,8 @@ void test_xTaskGenericNotify_success_default_ISR_task_woken_null( void )
     TEST_ASSERT_EQUAL( 15, ptcb->ulNotifiedValue[ uxIndexToNotify ] );
     TEST_ASSERT_EQUAL( 2, ptcb->ucNotifyState[ uxIndexToNotify ] );
     TEST_ASSERT_TRUE( xYieldPending );
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
 }
 
@@ -4705,7 +4752,7 @@ void test_xTaskGenericNotifyWait_success_notif_recieved( void )
                                   xTicksToWait );
     TEST_ASSERT_EQUAL( pdTRUE, ret );
     TEST_ASSERT_EQUAL( 5, pullNotificationValue );
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 void test_xTaskGenericNotifyWait_success_notif_not_recieved( void )
@@ -4739,7 +4786,7 @@ void test_xTaskGenericNotifyWait_success_notif_not_recieved( void )
     /* Validations */
     TEST_ASSERT_EQUAL( pdFALSE, ret );
     TEST_ASSERT_EQUAL( 5, pullNotificationValue );
-    ASSERT_PORT_YIELD_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
 }
 
 void test_xTaskGenericNotifyWait_success_notif_not_recieved_no_wait( void )
@@ -4769,7 +4816,7 @@ void test_xTaskGenericNotifyWait_success_notif_not_recieved_no_wait( void )
     /* Validations */
     TEST_ASSERT_EQUAL( pdFALSE, ret );
     TEST_ASSERT_EQUAL( 5, pullNotificationValue );
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 void test_xTaskGenericNotifyWait_success_notif_not_recieved_pull_null( void )
@@ -4796,8 +4843,8 @@ void test_xTaskGenericNotifyWait_success_notif_not_recieved_pull_null( void )
                                   NULL,
                                   xTicksToWait );
     /* Validations */
-    TEST_ASSERT_EQUAL( pdFALSE, ret );
-    ASSERT_PORT_YIELD_NOT_CALLED();
+    TEST_ASSERT_FALSE( ret );
+    ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED();
 }
 
 void test_xTaskGenericNotifyWait_success_notif_recieved_while_waiting( void )
@@ -4831,7 +4878,7 @@ void test_xTaskGenericNotifyWait_success_notif_recieved_while_waiting( void )
     /* Validations */
     TEST_ASSERT_EQUAL( pdTRUE, ret );
     TEST_ASSERT_EQUAL( 5, pullNotificationValue );
-    ASSERT_PORT_YIELD_CALLED();
+    ASSERT_PORT_YIELD_WITHIN_API_CALLED();
 }
 
 void test_vTaskGenericNotifyGiveFromISR_success( void )
@@ -4854,8 +4901,8 @@ void test_vTaskGenericNotifyGiveFromISR_success( void )
     /* Validations */
     TEST_ASSERT_FALSE( xYieldPending );
     TEST_ASSERT_FALSE( pxHigherPriorityTaskWoken );
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
 }
 
@@ -4879,8 +4926,8 @@ void test_vTaskGenericNotifyGiveFromISR_success_scheduler_suspended( void )
     /* Validations */
     TEST_ASSERT_FALSE( xYieldPending );
     TEST_ASSERT_FALSE( pxHigherPriorityTaskWoken );
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
 }
 
@@ -4912,8 +4959,8 @@ void test_vTaskGenericNotifyGiveFromISR_success_yield_pending( void )
     /* Validations */
     TEST_ASSERT_TRUE( xYieldPending );
     TEST_ASSERT_TRUE( pxHigherPriorityTaskWoken );
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
 }
 
@@ -4943,8 +4990,8 @@ void test_vTaskGenericNotifyGiveFromISR_success_null_higherpriority_task( void )
                                    NULL );
     /* Validations */
     TEST_ASSERT_TRUE( xYieldPending );
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
 }
 
@@ -4966,8 +5013,8 @@ void test_vTaskGenericNotifyGiveFromISR_success_not_waiting( void )
     /* Validations */
     TEST_ASSERT_FALSE( xYieldPending );
     TEST_ASSERT_FALSE( pxHigherPriorityTaskWoken );
-    ASSERT_PORT_CLEAR_INTERRUPT_CALLED();
-    ASSERT_PORT_SET_INTERRUPT_CALLED();
+    ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED();
+    ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED();
     ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED();
 }
 

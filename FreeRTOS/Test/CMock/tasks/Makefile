@@ -60,17 +60,17 @@ DEP_FILES        :=   $(addsuffix .d,$(addprefix $(SCRATCH_DIR)/%/cpp/,$(notdir 
 # tasks_utest_1.c   tasks_utest_2.c ...
 SOURCES          :=   $(sort $(wildcard $(PROJECT)_utest_*.c))
 
-# 1 2 3...
-PROJECT_NUMBERS  :=   $(subst .c,,$(subst $(PROJECT)_utest_,,$(SOURCES)))
+# 1 2 3 config1 assert ...
+DISCRIMINATOR  :=   $(subst .c,,$(subst $(PROJECT)_utest_,,$(SOURCES)))
 
 # tasks/1/mocks   tasks/2/mocks
-MOCK_DIRS        :=   $(addsuffix /mocks,$(addprefix $(SCRATCH_DIR)/,$(PROJECT_NUMBERS)))
+MOCK_DIRS        :=   $(addsuffix /mocks,$(addprefix $(SCRATCH_DIR)/,$(DISCRIMINATOR)))
 # queue/1/cpp   queue/2/cpp
-CPP_DIRS         :=   $(addsuffix /cpp,$(addprefix $(SCRATCH_DIR)/,$(PROJECT_NUMBERS)))
+CPP_DIRS         :=   $(addsuffix /cpp,$(addprefix $(SCRATCH_DIR)/,$(DISCRIMINATOR)))
 # tasks/1/include   tasks/2/include
-INCLUDE_DIRS     :=   $(addsuffix /include,$(addprefix $(SCRATCH_DIR)/,$(PROJECT_NUMBERS)))
+INCLUDE_DIRS     :=   $(addsuffix /include,$(addprefix $(SCRATCH_DIR)/,$(DISCRIMINATOR)))
 #list/1   list/2 ....
-CONFIG_DIRS := $(addprefix $(SCRATCH_DIR)/,$(PROJECT_NUMBERS))
+CONFIG_DIRS := $(addprefix $(SCRATCH_DIR)/,$(DISCRIMINATOR))
 
 ifeq ($(MOCK_FILES_FP),)
      $(shell mkdir -p  $(MOCK_DIRS))

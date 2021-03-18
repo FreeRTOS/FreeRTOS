@@ -83,21 +83,68 @@ static bool is_first_task = true;
 static uint32_t created_tasks = 0;
 static uint32_t create_task_priority = 3;
 static port_yield_operation py_operation;
-static bool vTaskDeletePreCalled = false;
-static bool getIddleTaskMemoryCalled = false;
-static bool vApplicationTickHook_Called  = false;
+static bool vTaskDeletePre_called = false;
+static bool getIddleTaskMemory_called = false;
+static bool vApplicationTickHook_called  = false;
 static bool port_yield_called = false;
+static bool port_enable_interrupts_called = false;
+static bool port_disable_interrupts_called = false;
+static bool port_yield_within_api_called = false;
 static bool port_setup_tcb_called  = false;
 static bool portClear_Interrupt_called = false;
 static bool portSet_Interrupt_called = false;
+static bool portClear_Interrupt_from_isr_called = false;
+static bool portSet_Interrupt_from_isr_called = false;
 static bool port_invalid_interrupt_called = false;
 static bool vApplicationStackOverflowHook_called = false;
 static bool vApplicationIdleHook_called  = false;
 static bool port_allocate_secure_context_called = false;
+static bool port_assert_if_in_isr_called  = false;
 static bool vApplicationMallocFailedHook_called = false;
 
 
 /* ===========================  Static Functions  =========================== */
+static void start_scheduler()
+{
+    vListInitialiseItem_ExpectAnyArgs();
+    vListInitialiseItem_ExpectAnyArgs();
+    /* set owner */
+    listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
+    /* set owner */
+
+    pxPortInitialiseStack_ExpectAnyArgsAndReturn( uxIdleTaskStack );
+
+    if( is_first_task )
+    {
+        is_first_task = false;
+        for( int i = ( UBaseType_t ) 0U; i < ( UBaseType_t ) configMAX_PRIORITIES; i++ )
+        {
+            vListInitialise_ExpectAnyArgs();
+        }
+
+        /* Delayed Task List 1 */
+        vListInitialise_ExpectAnyArgs();
+        /* Delayed Task List 2 */
+        vListInitialise_ExpectAnyArgs();
+        /* Pending Ready List */
+        vListInitialise_ExpectAnyArgs();
+        /* INCLUDE_vTaskDelete */
+        vListInitialise_ExpectAnyArgs();
+        /* INCLUDE_vTaskSuspend */
+        vListInitialise_ExpectAnyArgs();
+    }
+
+    vListInsertEnd_ExpectAnyArgs();
+
+    xTimerCreateTimerTask_ExpectAndReturn( pdPASS );
+    xPortStartScheduler_ExpectAndReturn( pdTRUE );
+    getIddleTaskMemoryValid = true;
+    vTaskStartScheduler();
+    ASSERT_GET_IDLE_TASK_MEMORY_CALLED();
+    TEST_ASSERT_TRUE( xSchedulerRunning );
+    TEST_ASSERT_EQUAL( configINITIAL_TICK_COUNT, xTickCount );
+    TEST_ASSERT_EQUAL( portMAX_DELAY, xNextTaskUnblockTime );
+}
 static TaskHandle_t create_task()
 {
     TaskFunction_t pxTaskCode = NULL;
@@ -154,6 +201,13 @@ static TaskHandle_t create_task()
 /* ============================  HOOK FUNCTIONS  ============================ */
 static void dummy_operation()
 {
+    HOOK_DIAG();
+}
+
+void vFakePortAssertIfISR(void)
+{
+    port_assert_if_in_isr_called = true;
+    HOOK_DIAG();
 }
 
 void port_allocate_secure_context( BaseType_t stackSize )
@@ -173,7 +227,6 @@ void vApplicationMallocFailedHook( void )
     vApplicationMallocFailedHook_called = true;
     HOOK_DIAG();
 }
-
 
 void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
                                     StackType_t ** ppxIdleTaskStackBuffer,
@@ -202,13 +255,14 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
         *pulIdleTaskStackSize = 0;
     }
 
-    getIddleTaskMemoryCalled = true;
+    getIddleTaskMemory_called = true;
 }
 
 void vConfigureTimerForRunTimeStats( void )
 {
     HOOK_DIAG();
 }
+
 long unsigned int ulGetRunTimeCounterValue( void )
 {
     HOOK_DIAG();
@@ -218,29 +272,53 @@ long unsigned int ulGetRunTimeCounterValue( void )
 void vApplicationTickHook()
 {
     HOOK_DIAG();
-    vApplicationTickHook_Called = true;
+    vApplicationTickHook_called = true;
 }
 
 void vPortCurrentTaskDying( void * pvTaskToDelete,
                             volatile BaseType_t * pxPendYield )
 {
     HOOK_DIAG();
-    vTaskDeletePreCalled = true;
+    vTaskDeletePre_called = true;
 }
 
-void vPortEnterCritical( void )
+void vFakePortEnterCriticalSection( void )
 {
     HOOK_DIAG();
     critical_section_counter++;
 }
 
-void vPortExitCritical( void )
+void vFakePortExitCriticalSection( void )
 {
     HOOK_DIAG();
     critical_section_counter--;
 }
 
-void port_yield_cb()
+void vFakePortYieldWithinAPI()
+{
+    HOOK_DIAG();
+    port_yield_within_api_called = true;
+    py_operation();
+}
+
+void vFakePortYieldFromISR()
+{
+    HOOK_DIAG();
+}
+
+void vFakePortDisableInterrupts()
+{
+    port_disable_interrupts_called = true;
+    HOOK_DIAG();
+}
+
+void vFakePortEnableInterrupts()
+{
+    port_enable_interrupts_called = true;
+    HOOK_DIAG();
+}
+
+void vFakePortYield()
 {
     HOOK_DIAG();
     port_yield_called = true;
@@ -253,27 +331,42 @@ void portSetupTCB_CB( void * tcb )
     port_setup_tcb_called = true;
 }
 
-void portClear_Interrupt_Mask( UBaseType_t bt )
+void vFakePortClearInterruptMask( UBaseType_t bt )
 {
     HOOK_DIAG();
     portClear_Interrupt_called = true;
 }
 
-UBaseType_t portSet_Interrupt_Mask( void )
+UBaseType_t ulFakePortSetInterruptMask( void )
 {
     HOOK_DIAG();
     portSet_Interrupt_called = true;
     return 1;
 }
 
-void portAssert_if_int_prio_invalid( void )
+void vFakePortClearInterruptMaskFromISR( UBaseType_t bt )
 {
+    HOOK_DIAG();
+    portClear_Interrupt_from_isr_called = true;
+}
+
+UBaseType_t ulFakePortSetInterruptMaskFromISR( void )
+{
+    HOOK_DIAG();
+    portSet_Interrupt_from_isr_called  = true;
+    return 1;
+}
+
+void vFakePortAssertIfInterruptPriorityInvalid( void )
+{
+    HOOK_DIAG();
     port_invalid_interrupt_called = true;
 }
 
 void vApplicationStackOverflowHook( TaskHandle_t xTask,
                                     char * stack )
 {
+    HOOK_DIAG();
     vApplicationStackOverflowHook_called = true;
 }
 
@@ -281,6 +374,8 @@ void vApplicationStackOverflowHook( TaskHandle_t xTask,
 /*! called before each testcase */
 void setUp( void )
 {
+    RESET_ALL_HOOKS();
+
     pxCurrentTCB = NULL;
     memset( &tcb, 0x00, sizeof( TCB_t ) );
     ptcb = NULL;
@@ -311,18 +406,9 @@ void setUp( void )
     uxSchedulerSuspended = ( UBaseType_t ) 0;
     /*  ulTaskSwitchedInTime = 0UL; */
     /*ulTotalRunTime = 0UL; */
-
-    vApplicationTickHook_Called = false;
-    vTaskDeletePreCalled = false;
-    getIddleTaskMemoryCalled = false;
     is_first_task = true;
     created_tasks = 0;
-    port_yield_called = false;
-    port_setup_tcb_called = false;
-    portClear_Interrupt_called = false;
-    portSet_Interrupt_called = false;
-    port_invalid_interrupt_called = false;
-    vApplicationStackOverflowHook_called = false;
+
     py_operation = dummy_operation;
 }
 
@@ -343,14 +429,10 @@ int suiteTearDown( int numFailures )
     return numFailures;
 }
 
-/* ===========================  Static Functions  =========================== */
-
-
-
 /* ==============================  Test Cases  ============================== */
 
 /*!
- * @brief
+ * @brief create a static new task with a success path
  */
 void test_xTaskCreateStatic_success( void )
 {
@@ -363,21 +445,19 @@ void test_xTaskCreateStatic_success( void )
     UBaseType_t uxPriority = 3;
     TaskHandle_t ret;
 
+    /* Setup */
     memset( puxStackBuffer, 0xa5U, ulStackDepth * sizeof( StackType_t ) );
 
+    /* Expectations */
     vListInitialiseItem_ExpectAnyArgs();
     vListInitialiseItem_ExpectAnyArgs();
 
-    /* set owner */
     listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
-    /* set owner */
     pxPortInitialiseStack_ExpectAnyArgsAndReturn( puxStackBuffer );
-
     for( int i = ( UBaseType_t ) 0U; i < ( UBaseType_t ) configMAX_PRIORITIES; i++ )
     {
         vListInitialise_ExpectAnyArgs();
     }
-
     /* Delayed Task List 1 */
     vListInitialise_ExpectAnyArgs();
     /* Delayed Task List 2 */
@@ -390,7 +470,7 @@ void test_xTaskCreateStatic_success( void )
     vListInitialise_ExpectAnyArgs();
 
     vListInsertEnd_ExpectAnyArgs();
-
+    /* API Call */
     ret = xTaskCreateStatic( pxTaskCode,
                              pcName,
                              ulStackDepth,
@@ -399,6 +479,7 @@ void test_xTaskCreateStatic_success( void )
                              puxStackBuffer,
                              pxTaskBuffer );
     ptcb = ( TCB_t * ) pxTaskBuffer;
+    /* Validations */
     TEST_ASSERT_EQUAL_PTR( puxStackBuffer, ptcb->pxStack );
     TEST_ASSERT_NOT_EQUAL( NULL, ret );
     TEST_ASSERT_EQUAL( 2, ptcb->ucStaticallyAllocated );
@@ -428,24 +509,19 @@ void test_xTaskCreate_success( void )
     BaseType_t ret;
     StackType_t stack[ ( ( size_t ) usStackDepth ) * sizeof( StackType_t ) ];
 
+    /* Setup */
+    /* Expectations */
     pvPortMalloc_ExpectAndReturn( sizeof( TCB_t ), &tcb[ 0 ] );
     pvPortMalloc_ExpectAndReturn( usStackDepth * sizeof( StackType_t ), stack );
 
     vListInitialiseItem_Expect( &( tcb[ 0 ].xStateListItem ) );
     vListInitialiseItem_Expect( &( tcb[ 0 ].xEventListItem ) );
-    /* set owner */
     listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
-    /* set owner */
-    /* vListInitialiseItem_ExpectAnyArgs(); */
-    /*vListInitialiseItem_ExpectAnyArgs(); */
-
     pxPortInitialiseStack_ExpectAnyArgsAndReturn( stack );
-
     for( int i = ( UBaseType_t ) 0U; i < ( UBaseType_t ) configMAX_PRIORITIES; i++ )
     {
         vListInitialise_ExpectAnyArgs();
     }
-
     /* Delayed Task List 1 */
     vListInitialise_ExpectAnyArgs();
     /* Delayed Task List 2 */
@@ -459,12 +535,14 @@ void test_xTaskCreate_success( void )
 
     vListInsertEnd_ExpectAnyArgs();
 
+    /* API Call */
     ret = xTaskCreate( pxTaskCode,
                        pcName,
                        usStackDepth,
                        pvParameters,
                        uxPriority,
                        &taskHandle );
+    /* Validations */
     ptcb = ( TCB_t * ) taskHandle;
     TEST_ASSERT_EQUAL( pdPASS, ret );
     TEST_ASSERT_EQUAL( 0, tcb[ 0 ].ucStaticallyAllocated );
@@ -552,3 +630,108 @@ void test_vTaskPrioritySet_success_gt_curr_prio( void )
     TEST_ASSERT_EQUAL( 4 + 1, ptcb->uxPriority );
     ASSERT_PORT_YIELD_NOT_CALLED();
 }
+/* -----------------  testing portCRITICAL_NESTING_IN_TCB ------------------- */
+void test_vTaskExitCritical_succes(void)
+{
+    TaskHandle_t task_handle;
+    /* Setup */
+    task_handle = create_task();
+    start_scheduler();
+    /* Expectations */
+    /* API Call */
+    vTaskExitCritical();
+    /* Validations */
+    TEST_ASSERT_EQUAL( 0, task_handle->uxCriticalNesting );
+    ASSERT_PORT_ENABLE_INTERRUPT_NOT_CALLED();
+}
+
+void test_vTaskExitCritical_success_enable_interrupts(void)
+{
+    TaskHandle_t task_handle;
+    /* Setup */
+    task_handle = create_task();
+    start_scheduler();
+    vTaskEnterCritical();
+    ASSERT_IF_IN_ISR_CALLED();
+    /* Expectations */
+    /* API Call */
+    vTaskExitCritical();
+    /* Validations */
+    TEST_ASSERT_EQUAL( 0, task_handle->uxCriticalNesting );
+    ASSERT_PORT_ENABLE_INTERRUPT_CALLED();
+}
+
+void test_vTaskExitCritical_success_enable_too_many_nests(void)
+{
+    TaskHandle_t task_handle;
+    /* Setup */
+    task_handle = create_task();
+    start_scheduler();
+    vTaskEnterCritical();
+    ASSERT_IF_IN_ISR_CALLED();
+    vTaskEnterCritical();
+    /* Expectations */
+    /* API Call */
+    vTaskExitCritical();
+    /* Validations */
+    TEST_ASSERT_EQUAL( 1, task_handle->uxCriticalNesting );
+    ASSERT_PORT_ENABLE_INTERRUPT_NOT_CALLED();
+}
+
+void test_vTaskExitCritical_scheduler_off(void)
+{
+    TaskHandle_t task_handle;
+    /* Setup */
+    task_handle = create_task();
+    /* Expectations */
+    /* API Call */
+    vTaskExitCritical();
+    /* Validations */
+    TEST_ASSERT_EQUAL( 0, task_handle->uxCriticalNesting );
+    ASSERT_PORT_ENABLE_INTERRUPT_NOT_CALLED();
+}
+
+void test_vTaskEnterCritical_succes(void)
+{
+    TaskHandle_t task_handle;
+    /* Setup */
+    task_handle = create_task();
+    start_scheduler();
+    /* Expectations */
+    /* API Call */
+    vTaskEnterCritical();
+    /* Validations */
+    TEST_ASSERT_EQUAL( 1, task_handle->uxCriticalNesting );
+    ASSERT_IF_IN_ISR_CALLED();
+}
+
+void test_vTaskEnterCritical_succes_twice(void)
+{
+    TaskHandle_t task_handle;
+    /* Setup */
+    task_handle = create_task();
+    start_scheduler();
+    /* Expectations */
+    /* API Call */
+    vTaskEnterCritical();
+    ASSERT_IF_IN_ISR_CALLED();
+    vTaskEnterCritical();
+    /* Validations */
+    TEST_ASSERT_EQUAL( 2, task_handle->uxCriticalNesting );
+    ASSERT_IF_IN_ISR_NOT_CALLED();
+}
+
+void test_vTaskEnterCritical_no_op_no_sched(void)
+{
+    TaskHandle_t task_handle;
+    /* Setup */
+    task_handle = create_task();
+    /* Expectations */
+    /* API Call */
+    vTaskEnterCritical();
+    /* Validations */
+    TEST_ASSERT_EQUAL( 0, task_handle->uxCriticalNesting );
+    ASSERT_IF_IN_ISR_NOT_CALLED();
+}
+
+

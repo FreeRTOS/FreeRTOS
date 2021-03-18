@@ -112,226 +112,225 @@ typedef struct tskTaskControlBlock       /* The old naming convention is used to
 
 /* ===========================  DEFINES CONSTANTS  ========================== */
 typedef tskTCB TCB_t;
-typedef void (*port_yield_operation)(void);
+typedef void (* port_yield_operation)( void );
 
 /* ===========================  GLOBAL VARIABLES  =========================== */
 
 
 /* ============================  MACRO FUNCTIONS  ============================ */
-#define ASSERT_IF_IN_ISR_CALLED()                                              \
-        do {                                                                   \
-            TEST_ASSERT_TRUE( port_assert_if_in_isr_called );                  \
-            port_assert_if_in_isr_called = false;                              \
-        } while ( 0 )
-#define ASSERT_IF_IN_ISR_NOT_CALLED()                                          \
-        do {                                                                   \
-            TEST_ASSERT_FALSE( port_assert_if_in_isr_called );                 \
-        } while ( 0 )
+#define ASSERT_IF_IN_ISR_CALLED()                         \
+    do {                                                  \
+        TEST_ASSERT_TRUE( port_assert_if_in_isr_called ); \
+        port_assert_if_in_isr_called = false;             \
+    } while( 0 )
+#define ASSERT_IF_IN_ISR_NOT_CALLED()                      \
+    do {                                                   \
+        TEST_ASSERT_FALSE( port_assert_if_in_isr_called ); \
+    } while( 0 )
 
-#define ASSERT_SETUP_TCB_CALLED()                                              \
-        do {                                                                   \
-            TEST_ASSERT_TRUE( port_setup_tcb_called );                         \
-            port_setup_tcb_called = false;                                     \
-        } while ( 0 )
-#define ASSERT_SETUP_TCB_NOT_CALLED()                                          \
-        do {                                                                   \
-            TEST_ASSERT_FALSE( port_setup_tcb_called );                        \
-        } while ( 0 )
+#define ASSERT_SETUP_TCB_CALLED()                  \
+    do {                                           \
+        TEST_ASSERT_TRUE( port_setup_tcb_called ); \
+        port_setup_tcb_called = false;             \
+    } while( 0 )
+#define ASSERT_SETUP_TCB_NOT_CALLED()               \
+    do {                                            \
+        TEST_ASSERT_FALSE( port_setup_tcb_called ); \
+    } while( 0 )
 
-#define ASSERT_PORT_YIELD_CALLED()                                             \
-        do {                                                                   \
-            TEST_ASSERT_TRUE( port_yield_called );                             \
-            port_yield_called = false;                                         \
-        } while ( 0 )
+#define ASSERT_PORT_YIELD_CALLED()             \
+    do {                                       \
+        TEST_ASSERT_TRUE( port_yield_called ); \
+        port_yield_called = false;             \
+    } while( 0 )
 
-#define ASSERT_PORT_YIELD_NOT_CALLED()                                         \
-        do {                                                                   \
-            TEST_ASSERT_FALSE( port_yield_called );                            \
-        } while ( 0 )
+#define ASSERT_PORT_YIELD_NOT_CALLED()          \
+    do {                                        \
+        TEST_ASSERT_FALSE( port_yield_called ); \
+    } while( 0 )
 
-#define ASSERT_PORT_ENABLE_INTERRUPT_CALLED()                                  \
-        do {                                                                   \
-            TEST_ASSERT_TRUE(port_enable_interrupts_called );                  \
-            port_enable_interrupts_called = false;                             \
-        } while ( 0 )
+#define ASSERT_PORT_ENABLE_INTERRUPT_CALLED()              \
+    do {                                                   \
+        TEST_ASSERT_TRUE( port_enable_interrupts_called ); \
+        port_enable_interrupts_called = false;             \
+    } while( 0 )
 
-#define ASSERT_PORT_ENABLE_INTERRUPT_NOT_CALLED()                              \
-        do {                                                                   \
-            TEST_ASSERT_FALSE( port_enable_interrupts_called );                \
-        } while ( 0 )
+#define ASSERT_PORT_ENABLE_INTERRUPT_NOT_CALLED()           \
+    do {                                                    \
+        TEST_ASSERT_FALSE( port_enable_interrupts_called ); \
+    } while( 0 )
 
-#define ASSERT_PORT_DISABLE_INTERRUPT_CALLED()                                 \
-        do {                                                                   \
-            TEST_ASSERT_TRUE( port_disable_interrupts_called );                \
-            port_disable_interrupts_called = false;                            \
-        } while ( 0 )
+#define ASSERT_PORT_DISABLE_INTERRUPT_CALLED()              \
+    do {                                                    \
+        TEST_ASSERT_TRUE( port_disable_interrupts_called ); \
+        port_disable_interrupts_called = false;             \
+    } while( 0 )
 
-#define ASSERT_PORT_DISABLE_INTERRUPT_NOT_CALLED()                             \
-        do {                                                                   \
-            TEST_ASSERT_FALSE( port_disable_interrupts_called );               \
-        } while ( 0 )
+#define ASSERT_PORT_DISABLE_INTERRUPT_NOT_CALLED()           \
+    do {                                                     \
+        TEST_ASSERT_FALSE( port_disable_interrupts_called ); \
+    } while( 0 )
 
-#define ASSERT_PORT_YIELD_WITHIN_API_CALLED()                                  \
-        do {                                                                   \
-            TEST_ASSERT_TRUE(port_yield_within_api_called );                   \
-            port_yield_within_api_called = false;                              \
-        } while ( 0 )
+#define ASSERT_PORT_YIELD_WITHIN_API_CALLED()             \
+    do {                                                  \
+        TEST_ASSERT_TRUE( port_yield_within_api_called ); \
+        port_yield_within_api_called = false;             \
+    } while( 0 )
 
-#define ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED()                              \
-        do {                                                                   \
-            TEST_ASSERT_FALSE( port_yield_within_api_called );                 \
-        } while ( 0 )
+#define ASSERT_PORT_YIELD_WITHIN_API_NOT_CALLED()          \
+    do {                                                   \
+        TEST_ASSERT_FALSE( port_yield_within_api_called ); \
+    } while( 0 )
 
-#define ASSERT_TASK_DELETE_CALLED()                                            \
-        do {                                                                   \
-            TEST_ASSERT_TRUE( vTaskDeletePre_called );                          \
-             vTaskDeletePre_called = false;                                     \
-        } while ( 0 )
+#define ASSERT_TASK_DELETE_CALLED()                \
+    do {                                           \
+        TEST_ASSERT_TRUE( vTaskDeletePre_called ); \
+        vTaskDeletePre_called = false;             \
+    } while( 0 )
 
-#define ASSERT_TASK_DELETE_NOT_CALLED()                                        \
-        do {                                                                   \
-            TEST_ASSERT_FALSE( vTaskDeletePre_called );                         \
-        } while ( 0 )
+#define ASSERT_TASK_DELETE_NOT_CALLED()             \
+    do {                                            \
+        TEST_ASSERT_FALSE( vTaskDeletePre_called ); \
+    } while( 0 )
 
-#define ASSERT_APP_TICK_HOOK_CALLED()                                          \
-        do {                                                                   \
-            TEST_ASSERT_TRUE( vApplicationTickHook_called );                   \
-             vApplicationTickHook_called = false;                              \
-        } while ( 0 )
+#define ASSERT_APP_TICK_HOOK_CALLED()                    \
+    do {                                                 \
+        TEST_ASSERT_TRUE( vApplicationTickHook_called ); \
+        vApplicationTickHook_called = false;             \
+    } while( 0 )
 
-#define  ASSERT_APP_TICK_HOOK_NOT_CALLED()                                     \
-        do {                                                                   \
-            TEST_ASSERT_FALSE( vApplicationTickHook_called );                  \
-        } while ( 0 )
+#define  ASSERT_APP_TICK_HOOK_NOT_CALLED()                \
+    do {                                                  \
+        TEST_ASSERT_FALSE( vApplicationTickHook_called ); \
+    } while( 0 )
 
-#define ASSERT_PORT_CLEAR_INTERRUPT_CALLED()                                   \
-        do {                                                                   \
-            TEST_ASSERT_TRUE( portClear_Interrupt_called );                    \
-            portClear_Interrupt_called = false;                                \
-        } while ( 0 )
-#define ASSERT_PORT_CLEAR_INTERRUPT_NOT_CALLED()                               \
-        do {                                                                   \
-            TEST_ASSERT_FALSE( portClear_Interrupt_called );                   \
-        } while ( 0 )
+#define ASSERT_PORT_CLEAR_INTERRUPT_CALLED()            \
+    do {                                                \
+        TEST_ASSERT_TRUE( portClear_Interrupt_called ); \
+        portClear_Interrupt_called = false;             \
+    } while( 0 )
+#define ASSERT_PORT_CLEAR_INTERRUPT_NOT_CALLED()         \
+    do {                                                 \
+        TEST_ASSERT_FALSE( portClear_Interrupt_called ); \
+    } while( 0 )
 
-#define ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED()                          \
-        do {                                                                   \
-            TEST_ASSERT_TRUE( portClear_Interrupt_from_isr_called );           \
-            portClear_Interrupt_from_isr_called = false;                       \
-        } while ( 0 )
-#define ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_NOT_CALLED()                      \
-        do {                                                                   \
-            TEST_ASSERT_FALSE( portClear_Interrupt_from_isr_called );          \
-        } while ( 0 )
+#define ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_CALLED()            \
+    do {                                                         \
+        TEST_ASSERT_TRUE( portClear_Interrupt_from_isr_called ); \
+        portClear_Interrupt_from_isr_called = false;             \
+    } while( 0 )
+#define ASSERT_PORT_CLEAR_INTERRUPT_FROM_ISR_NOT_CALLED()         \
+    do {                                                          \
+        TEST_ASSERT_FALSE( portClear_Interrupt_from_isr_called ); \
+    } while( 0 )
 
-#define ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED()                            \
-        do {                                                                   \
-            TEST_ASSERT_TRUE( portSet_Interrupt_from_isr_called );             \
-            portSet_Interrupt_from_isr_called = false;                         \
-        } while ( 0 )
-#define ASSERT_PORT_SET_INTERRUPT_FROM_ISR_NOT_CALLED()                        \
-        do {                                                                   \
-            TEST_ASSERT_FALSE( portSet_Interrupt_from_isr_called );            \
-        } while ( 0 )
+#define ASSERT_PORT_SET_INTERRUPT_FROM_ISR_CALLED()            \
+    do {                                                       \
+        TEST_ASSERT_TRUE( portSet_Interrupt_from_isr_called ); \
+        portSet_Interrupt_from_isr_called = false;             \
+    } while( 0 )
+#define ASSERT_PORT_SET_INTERRUPT_FROM_ISR_NOT_CALLED()         \
+    do {                                                        \
+        TEST_ASSERT_FALSE( portSet_Interrupt_from_isr_called ); \
+    } while( 0 )
 
-#define ASSERT_PORT_SET_INTERRUPT_CALLED()                                     \
-        do {                                                                   \
-            TEST_ASSERT_TRUE( portSet_Interrupt_called );                      \
-            portSet_Interrupt_called = false;                                  \
-        } while ( 0 )
-#define ASSERT_PORT_SET_INTERRUPT_NOT_CALLED()                                 \
-        do {                                                                   \
-            TEST_ASSERT_FALSE( portSet_Interrupt_called );                     \
-        } while ( 0 )
+#define ASSERT_PORT_SET_INTERRUPT_CALLED()            \
+    do {                                              \
+        TEST_ASSERT_TRUE( portSet_Interrupt_called ); \
+        portSet_Interrupt_called = false;             \
+    } while( 0 )
+#define ASSERT_PORT_SET_INTERRUPT_NOT_CALLED()         \
+    do {                                               \
+        TEST_ASSERT_FALSE( portSet_Interrupt_called ); \
+    } while( 0 )
 
-#define ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED()                             \
-        do {                                                                   \
-            TEST_ASSERT_TRUE( port_invalid_interrupt_called);                  \
-            port_invalid_interrupt_called = false;                             \
-        } while( 0 )
+#define ASSERT_INVALID_INTERRUPT_PRIORITY_CALLED()         \
+    do {                                                   \
+        TEST_ASSERT_TRUE( port_invalid_interrupt_called ); \
+        port_invalid_interrupt_called = false;             \
+    } while( 0 )
 
-#define ASSERT_APPLICATION_IDLE_HOOK_CALLED()                                  \
-        do {                                                                   \
-            TEST_ASSERT_TRUE( vApplicationIdleHook_called );                   \
-            vApplicationIdleHook_called = false;                               \
-        } while( 0 )
+#define ASSERT_APPLICATION_IDLE_HOOK_CALLED()            \
+    do {                                                 \
+        TEST_ASSERT_TRUE( vApplicationIdleHook_called ); \
+        vApplicationIdleHook_called = false;             \
+    } while( 0 )
 
-#define ASSERT_APPLICATION_IDLE_HOOK_NOT_CALLED()                              \
-        do {                                                                   \
-            TEST_ASSERT_FALSE( vApplicationIdleHook_called );                  \
-        } while ( 0 )
+#define ASSERT_APPLICATION_IDLE_HOOK_NOT_CALLED()         \
+    do {                                                  \
+        TEST_ASSERT_FALSE( vApplicationIdleHook_called ); \
+    } while( 0 )
 
-#define ASSERT_APPLICATION_MALLOC_FAILED_HOOK_CALLED()                         \
-        do {                                                                   \
-            TEST_ASSERT_TRUE(vApplicationMallocFailedHook_called );            \
-            vApplicationMallocFailedHook_called = false;                       \
-        } while( 0 )
+#define ASSERT_APPLICATION_MALLOC_FAILED_HOOK_CALLED()           \
+    do {                                                         \
+        TEST_ASSERT_TRUE( vApplicationMallocFailedHook_called ); \
+        vApplicationMallocFailedHook_called = false;             \
+    } while( 0 )
 
-#define ASSERT_APPLICATION_MALLOC_FAILED_HOOK_NOT_CALLED()                     \
-        do {                                                                   \
-            TEST_ASSERT_FALSE( vApplicationMallocFailedHook_called );          \
-        } while ( 0 )
+#define ASSERT_APPLICATION_MALLOC_FAILED_HOOK_NOT_CALLED()        \
+    do {                                                          \
+        TEST_ASSERT_FALSE( vApplicationMallocFailedHook_called ); \
+    } while( 0 )
 
-#define ASSERT_PORT_ALLOCATE_SECURE_CONTEXT_CALLED()                           \
-        do {                                                                   \
-            TEST_ASSERT_TRUE( port_allocate_secure_context_called );           \
-            port_allocate_secure_context_called = false;                       \
-        } while( 0 )
+#define ASSERT_PORT_ALLOCATE_SECURE_CONTEXT_CALLED()             \
+    do {                                                         \
+        TEST_ASSERT_TRUE( port_allocate_secure_context_called ); \
+        port_allocate_secure_context_called = false;             \
+    } while( 0 )
 
-#define ASSERT_PORT_ALLOCATE_SECURE_CONTEXT_NOT_CALLED()                       \
-        do {                                                                   \
-            TEST_ASSERT_FALSE( port_allocate_secure_context_called );          \
-        } while ( 0 )
+#define ASSERT_PORT_ALLOCATE_SECURE_CONTEXT_NOT_CALLED()          \
+    do {                                                          \
+        TEST_ASSERT_FALSE( port_allocate_secure_context_called ); \
+    } while( 0 )
 
-#define ASSERT_APP_STACK_OVERFLOW_HOOK_CALLED()                                \
-        do {                                                                   \
-            TEST_ASSERT_TRUE( vApplicationStackOverflowHook_called );          \
-            vApplicationStackOverflowHook_called = false;                      \
-        } while( 0 )
+#define ASSERT_APP_STACK_OVERFLOW_HOOK_CALLED()                   \
+    do {                                                          \
+        TEST_ASSERT_TRUE( vApplicationStackOverflowHook_called ); \
+        vApplicationStackOverflowHook_called = false;             \
+    } while( 0 )
 
-#define  ASSERT_APP_STACK_OVERFLOW_HOOK_NOT_CALLED()                           \
-        do {                                                                   \
-            TEST_ASSERT_FALSE( vApplicationStackOverflowHook_called );         \
-        } while ( 0 )
+#define  ASSERT_APP_STACK_OVERFLOW_HOOK_NOT_CALLED()               \
+    do {                                                           \
+        TEST_ASSERT_FALSE( vApplicationStackOverflowHook_called ); \
+    } while( 0 )
 
-#define ASSERT_GET_IDLE_TASK_MEMORY_CALLED()                                   \
-        do {                                                                   \
-            TEST_ASSERT_TRUE( getIddleTaskMemory_called );                     \
-            getIddleTaskMemory_called = false;                                 \
-        } while( 0 )
+#define ASSERT_GET_IDLE_TASK_MEMORY_CALLED()           \
+    do {                                               \
+        TEST_ASSERT_TRUE( getIddleTaskMemory_called ); \
+        getIddleTaskMemory_called = false;             \
+    } while( 0 )
 
-#define ASSERT_GET_IDLE_TASK_MEMORY_NOT_CALLED()                               \
-        do {                                                                   \
-            TEST_ASSERT_FALSE( getIddleTaskMemory_called );                    \
-        } while( 0 )
+#define ASSERT_GET_IDLE_TASK_MEMORY_NOT_CALLED()        \
+    do {                                                \
+        TEST_ASSERT_FALSE( getIddleTaskMemory_called ); \
+    } while( 0 )
 
-#define RESET_ALL_HOOKS()                                                      \
-    do {                                                                       \
-    vApplicationTickHook_called = false;                                       \
-    vTaskDeletePre_called = false;                                             \
-    getIddleTaskMemory_called = false;                                         \
-    port_yield_called = false;                                                 \
-    port_enable_interrupts_called = false;                                     \
-    port_disable_interrupts_called = false;                                    \
-    port_yield_within_api_called = false;                                      \
-    port_setup_tcb_called = false;                                             \
-    portClear_Interrupt_called = false;                                        \
-    portSet_Interrupt_called = false;                                          \
-    portClear_Interrupt_from_isr_called = false;                               \
-    portSet_Interrupt_from_isr_called = false;                                 \
-    port_invalid_interrupt_called = false;                                     \
-    vApplicationStackOverflowHook_called = false;                              \
-    port_allocate_secure_context_called = false;                               \
-    port_assert_if_in_isr_called  = false;                                     \
-    } while (0)
+#define RESET_ALL_HOOKS()                             \
+    do {                                              \
+        vApplicationTickHook_called = false;          \
+        vTaskDeletePre_called = false;                \
+        getIddleTaskMemory_called = false;            \
+        port_yield_called = false;                    \
+        port_enable_interrupts_called = false;        \
+        port_disable_interrupts_called = false;       \
+        port_yield_within_api_called = false;         \
+        port_setup_tcb_called = false;                \
+        portClear_Interrupt_called = false;           \
+        portSet_Interrupt_called = false;             \
+        portClear_Interrupt_from_isr_called = false;  \
+        portSet_Interrupt_from_isr_called = false;    \
+        port_invalid_interrupt_called = false;        \
+        vApplicationStackOverflowHook_called = false; \
+        port_allocate_secure_context_called = false;  \
+        port_assert_if_in_isr_called = false;         \
+    } while( 0 )
 
-#define HOOK_DIAG()                                                            \
-    do {                                                                       \
-    printf("%s Called\n", __FUNCTION__);                                       \
-    } while (0) 
+#define HOOK_DIAG()                            \
+    do {                                       \
+        printf( "%s Called\n", __FUNCTION__ ); \
+    } while( 0 )
 
 #undef HOOK_DIAG
 #define HOOK_DIAG()
 
-#endif
-
+#endif /* ifndef GBLOBAL_VARS_H */

@@ -94,7 +94,7 @@ typedef unsigned long    UBaseType_t;
 #include "fake_port.h"
 
 /* Hardware specifics. */
-//#define portSTACK_GROWTH      ( -1 )
+/*#define portSTACK_GROWTH      ( -1 ) */
 #define portTICK_PERIOD_MS    ( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portBYTE_ALIGNMENT    8
 #define portNOP()    __asm volatile ( "NOP" )
@@ -130,20 +130,20 @@ typedef unsigned long    UBaseType_t;
 #define portDISABLE_INTERRUPTS()         vFakePortDisableInterrupts()
 #define portENABLE_INTERRUPTS()          vFakePortEnableInterrupts()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR( x ) \
-        vFakePortClearInterruptMaskFromISR( x )
+    vFakePortClearInterruptMaskFromISR( x )
 #define portSET_INTERRUPT_MASK_FROM_ISR() \
-        ulFakePortSetInterruptMaskFromISR()
+    ulFakePortSetInterruptMaskFromISR()
 #define portSET_INTERRUPT_MASK()         ulFakePortSetInterruptMask()
 #define portCLEAR_INTERRUPT_MASK( x )    vFakePortClearInterruptMask( x )
 #define portASSERT_IF_INTERRUPT_PRIORITY_INVALID() \
-        vFakePortAssertIfInterruptPriorityInvalid()
+    vFakePortAssertIfInterruptPriorityInvalid()
 #define portENTER_CRITICAL()             vFakePortEnterCriticalSection()
 #define portEXIT_CRITICAL()              vFakePortExitCriticalSection()
 
 #define portPRE_TASK_DELETE_HOOK( pvTaskToDelete, pxPendYield ) \
-        vPortCurrentTaskDying( ( pvTaskToDelete ), ( pxPendYield ) )
-#define portSETUP_TCB( pxTCB )    portSetupTCB_CB(pxTCB);
-#define  portASSERT_IF_IN_ISR() vFakePortAssertIfISR();
+    vPortCurrentTaskDying( ( pvTaskToDelete ), ( pxPendYield ) )
+#define portSETUP_TCB( pxTCB )           portSetupTCB_CB( pxTCB );
+#define  portASSERT_IF_IN_ISR()          vFakePortAssertIfISR();
 
 
 static inline uint8_t ucPortCountLeadingZeros( uint32_t ulBitmap )
@@ -164,10 +164,10 @@ static inline uint8_t ucPortCountLeadingZeros( uint32_t ulBitmap )
 
 /* Task function macros as described on the FreeRTOS.org WEB site. */
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) \
-    void vFunction( void * (pvParameters) )
+    void vFunction( void * ( pvParameters ) )
 
 #define portTASK_FUNCTION( vFunction, pvParameters ) \
-    void vFunction( void * (pvParameters) )
+    void vFunction( void * ( pvParameters ) )
 
 /*-----------------------------------------------------------*/
 

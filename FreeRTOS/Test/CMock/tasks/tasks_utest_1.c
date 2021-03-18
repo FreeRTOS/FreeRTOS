@@ -112,7 +112,7 @@ static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
 static TCB_t * ptcb;
 static StackType_t stack[ ( ( size_t ) 300 ) * sizeof( StackType_t ) ];
-static TCB_t tcb[10]; /* simulate up to 10 tasks: add more if needed */
+static TCB_t tcb[ 10 ]; /* simulate up to 10 tasks: add more if needed */
 static bool getIddleTaskMemoryValid = false;
 static uint32_t critical_section_counter = 0;
 static bool is_first_task = true;
@@ -120,21 +120,21 @@ static uint32_t created_tasks = 0;
 static uint32_t create_task_priority = 3;
 static port_yield_operation py_operation;
 
-static bool vTaskDeletePre_called= false;
-static bool getIddleTaskMemory_called= false;
-static bool vApplicationTickHook_called  = false;
+static bool vTaskDeletePre_called = false;
+static bool getIddleTaskMemory_called = false;
+static bool vApplicationTickHook_called = false;
 static bool port_yield_called = false;
 static bool port_enable_interrupts_called = false;
 static bool port_disable_interrupts_called = false;
 static bool port_yield_within_api_called = false;
-static bool port_setup_tcb_called  = false;
+static bool port_setup_tcb_called = false;
 static bool portClear_Interrupt_called = false;
 static bool portSet_Interrupt_called = false;
 static bool portClear_Interrupt_from_isr_called = false;
 static bool portSet_Interrupt_from_isr_called = false;
 static bool port_invalid_interrupt_called = false;
 static bool vApplicationStackOverflowHook_called = false;
-static bool vApplicationIdleHook_called  = false;
+static bool vApplicationIdleHook_called = false;
 static bool port_allocate_secure_context_called = false;
 static bool port_assert_if_in_isr_called = false;
 static bool vApplicationMallocFailedHook_called = false;
@@ -145,7 +145,7 @@ static void dummy_operation()
 {
 }
 
-void vFakePortAssertIfISR(void)
+void vFakePortAssertIfISR( void )
 {
     port_assert_if_in_isr_called = true;
     HOOK_DIAG();
@@ -196,7 +196,7 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
         *pulIdleTaskStackSize = 0;
     }
 
-    getIddleTaskMemory_called= true;
+    getIddleTaskMemory_called = true;
 }
 
 void vConfigureTimerForRunTimeStats( void )
@@ -220,7 +220,7 @@ void vPortCurrentTaskDying( void * pvTaskToDelete,
                             volatile BaseType_t * pxPendYield )
 {
     HOOK_DIAG();
-    vTaskDeletePre_called= true;
+    vTaskDeletePre_called = true;
 }
 
 void vFakePortEnterCriticalSection( void )
@@ -294,7 +294,7 @@ void vFakePortClearInterruptMaskFromISR( UBaseType_t bt )
 UBaseType_t ulFakePortSetInterruptMaskFromISR( void )
 {
     HOOK_DIAG();
-    portSet_Interrupt_from_isr_called  = true;
+    portSet_Interrupt_from_isr_called = true;
     return 1;
 }
 
@@ -389,6 +389,7 @@ static void start_scheduler()
     if( is_first_task )
     {
         is_first_task = false;
+
         for( int i = ( UBaseType_t ) 0U; i < ( UBaseType_t ) configMAX_PRIORITIES; i++ )
         {
             vListInitialise_ExpectAnyArgs();
@@ -2486,6 +2487,7 @@ void test_xTaskGetTickCount_sucess( void )
 void test_xTaskGetTickCountFromISR_success( void )
 {
     TickType_t ret_get_tick_count;
+
     /* Setup */
     xTickCount = 565656;
     /* Expectations */

@@ -175,6 +175,7 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.properties',
     '.ps1',
     '.ptf',
+    '.py',
     '.r79',
     '.rapp',
     '.rc',
@@ -264,6 +265,7 @@ FREERTOS_IGNORED_FILES = [
     'requirements.txt',
     'run-cbmc-proofs.py',
     '.editorconfig',
+    'lcovrc',
     'htif.c', 'htif.h'
 ]
 

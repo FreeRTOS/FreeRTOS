@@ -102,9 +102,6 @@ $(MOCK_SRC_LIST) : $(CPP_FILES)                                                \
 	cd $(@D) && cd .. &&                                                   \
 	    ruby $(CMOCK_EXEC_DIR)/cmock.rb -o$(PROJECT_DIR)/$(PROJECT).yml    \
 	    $(<D)/*
-	cd $(@D) && cd .. &&                                                   \
-	    ruby $(CMOCK_EXEC_DIR)/cmock.rb -o$(PROJECT_DIR)/$(PROJECT)2.yml   \
-	    $(<D)/list_macros.h
 
 .SECONDARY:
 $(CPP_FILES) : | directories

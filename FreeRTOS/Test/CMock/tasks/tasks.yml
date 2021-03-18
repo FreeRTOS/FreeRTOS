@@ -30,5 +30,3 @@
   :strippables:
     - PRIVILEGED_FUNCTION
     - portDONT_DISCARD
-    - '(?:listLIST_IS_EMPTY\s*\(+.*?\)+)'
-    - listLIST_IS_EMPTY

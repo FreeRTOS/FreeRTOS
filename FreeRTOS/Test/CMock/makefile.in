@@ -48,7 +48,7 @@ ifeq ($(ENABLE_SANITIZER),1)
     CFLAGS          +=  -fsanitize=address,undefined -fsanitize-recover=address
     CFLAGS              +=  -O3 -D_FORTIFY_SOURCE=2
 else
-    CFLAGS              :=  $(INCLUDE_DIR)  -O0 -ggdb 
+    CFLAGS              +=  $(INCLUDE_DIR)  -O0 -ggdb 
 endif
 
 # Linker flags

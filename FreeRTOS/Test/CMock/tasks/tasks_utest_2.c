@@ -23,6 +23,14 @@
  * https://github.com/FreeRTOS
  *
  */
+
+/*
+ * @coverage vTaskStartScheduler  xTaskCreate xTaskCreateStatic
+ * @coverage vTaskExitCritical vApplicationGetIdleTaskMemory
+ * @coverage vTaskEnterCritical xTimerCreateTimerTask prvInitialiseNewTask
+ * @coverage prvAddNewTaskToReadyList
+ */
+
 /*! @file tasks_utest_2.c */
 
 /* Tasks includes */

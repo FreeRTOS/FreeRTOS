@@ -1103,6 +1103,7 @@ void test_xTaskResumeAll_success_2_tasks_running_increment_ticks( void )
     TaskHandle_t task_handle;
     TaskHandle_t task_handle2;
 
+    /* Setup */
     xPendedTicks = 2;
 
     create_task_priority = 2;
@@ -1130,7 +1131,6 @@ void test_xTaskResumeAll_success_2_tasks_running_increment_ticks( void )
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
     /* xTaskIncrementTick */
-    listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ pxCurrentTCB->uxPriority ],
                                              0 );
     /* xTaskIncrementTick */
@@ -1138,6 +1138,7 @@ void test_xTaskResumeAll_success_2_tasks_running_increment_ticks( void )
                                              0 );
     /* API Call */
     ret = xTaskResumeAll();
+    /* Expectations */
     TEST_ASSERT_FALSE( ret );
     TEST_ASSERT_EQUAL( 0, uxSchedulerSuspended );
     TEST_ASSERT_FALSE( xYieldPending );
@@ -2572,7 +2573,7 @@ void test_xTaskIncrementTick_success_tickCount_overlow( void )
     uxSchedulerSuspended = pdFALSE;
     delayed = pxDelayedTaskList;
     overflow = pxOverflowDelayedTaskList;
-    xTickCount = 0; /* overflowed */
+    xTickCount = UINT32_MAX; /* overflowed */
     create_task();
 
     /* Expectations */
@@ -2626,6 +2627,7 @@ void test_xTaskIncrementTick_success_switch( void )
     task_handle = create_task();
     ptcb = task_handle;
     xPendedTicks = 3;
+    xTickCount = UINT32_MAX;
 
     /* Expectations */
     listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );

@@ -84,6 +84,7 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 #define portGET_RUN_TIME_COUNTER_VALUE()            ulGetRunTimeCounterValue()
 #define portUSING_MPU_WRAPPERS                    0
 #define portHAS_STACK_OVERFLOW_CHECKING           1
+#define configENABLE_MPU                          0
 
 /* Co-routine related configuration options. */
 #define configUSE_CO_ROUTINES                     0

@@ -90,6 +90,7 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()    vConfigureTimerForRunTimeStats()
 #define portGET_RUN_TIME_COUNTER_VALUE()            ulGetRunTimeCounterValue()
 #define portUSING_MPU_WRAPPERS                     0
+#define configENABLE_MPU                           0
 #define portHAS_STACK_OVERFLOW_CHECKING            0
 #define configNUM_THREAD_LOCAL_STORAGE_POINTERS    5
 

@@ -106,6 +106,7 @@ typedef unsigned long    UBaseType_t;
 #define portTIMER_REG_BASE_PTR
 #define portTIMER_CLK_ENABLE_BIT
 #define portTIMER_AIC_CHANNEL
+
 /*-----------------------------------------------------------*/
 
 /* Task utilities. */

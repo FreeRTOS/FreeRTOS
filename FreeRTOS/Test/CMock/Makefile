@@ -9,8 +9,8 @@ export LD ?= /usr/local/bin/ld
 # Add units here when adding a new unit test directory with the same name
 UNITS       +=  list
 #UNITS       +=  queue
-#UNITS       += timers
-UNITS += tasks
+#UNITS       +=  timers
+UNITS       +=  tasks
 
 .PHONY: makefile.in
 
@@ -33,7 +33,6 @@ Makefile : ;
 makefile.in : ;
 
 SHARED_LIBS := $(addprefix $(LIB_DIR)/,$(addsuffix .so,$(LIBS)))
-$(info shared libs are $(SHARED_LIBS) )
 
 libs : $(SHARED_LIBS)
 

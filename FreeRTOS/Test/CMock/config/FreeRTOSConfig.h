@@ -28,7 +28,7 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
-//#include "fake_assert.h"
+#include "fake_assert.h"
 
 /*-----------------------------------------------------------
 * Application specific definitions.

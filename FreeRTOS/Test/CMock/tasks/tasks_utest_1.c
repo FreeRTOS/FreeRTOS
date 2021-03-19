@@ -634,12 +634,7 @@ void test_xTaskCreate_success( void )
 
     vListInitialiseItem_Expect( &( tcb[ 0 ].xStateListItem ) );
     vListInitialiseItem_Expect( &( tcb[ 0 ].xEventListItem ) );
-    /* set owner */
     listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
-    /* set owner */
-    /* vListInitialiseItem_ExpectAnyArgs(); */
-    /*vListInitialiseItem_ExpectAnyArgs(); */
-
     pxPortInitialiseStack_ExpectAnyArgsAndReturn( stack );
 
     for( int i = ( UBaseType_t ) 0U; i < ( UBaseType_t ) configMAX_PRIORITIES; i++ )

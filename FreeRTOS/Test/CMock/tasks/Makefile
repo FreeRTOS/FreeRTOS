@@ -151,7 +151,7 @@ $(SCRATCH_DIR)/%/$(PROJECT)_utest.o : $(PROJECT_DIR)/$(PROJECT)_utest_%.c      \
 	$(CC) -c $< $(INCLUDE) $(CPPFLAGS)  $(CFLAGS) -Wno-error -o $@
 
 .SECONDARY:
-# Build tasks.so from tasks.c with the custom FreeRTOSConfig.h and place it in
+# Build tasks.o from tasks.c with the custom FreeRTOSConfig.h and place it in
 # its configuration directory
 $(SCRATCH_DIR)/%/$(PROJECT).o : $(KERNEL_DIR)/$(PROJECT).c | directories
 	$(eval INCLUDE = -I$(SCRATCH_DIR)/$*/include)

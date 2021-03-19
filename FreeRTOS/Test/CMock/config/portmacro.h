@@ -94,7 +94,6 @@ typedef unsigned long    UBaseType_t;
 #include "fake_port.h"
 
 /* Hardware specifics. */
-/*#define portSTACK_GROWTH      ( -1 ) */
 #define portTICK_PERIOD_MS    ( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portBYTE_ALIGNMENT    8
 #define portNOP()    __asm volatile ( "NOP" )

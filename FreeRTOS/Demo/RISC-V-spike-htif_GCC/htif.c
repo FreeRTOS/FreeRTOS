@@ -5,7 +5,7 @@
  * (Regents).  All Rights Reserved.
  */
 
-#include "htif.h"
+#include <htif.h>
 
 #define HTIF_DATA_BITS		48
 #define HTIF_DATA_MASK		((1ULL << HTIF_DATA_BITS) - 1)
@@ -23,10 +23,16 @@
 #define HTIF_CONSOLE_CMD_GETC	0
 #define HTIF_CONSOLE_CMD_PUTC	1
 
-#define TOHOST_CMD(dev, cmd, payload) \
+#if __riscv_xlen == 64
+# define TOHOST_CMD(dev, cmd, payload) \
 	(((uint64_t)(dev) << HTIF_DEV_SHIFT) | \
 	 ((uint64_t)(cmd) << HTIF_CMD_SHIFT) | \
 	 (uint64_t)(payload))
+#else
+# define TOHOST_CMD(dev, cmd, payload) ({ \
+  if ((dev) || (cmd)) __builtin_trap(); \
+  (payload); })
+#endif
 #define FROMHOST_DEV(fromhost_value) \
 	((uint64_t)((fromhost_value) >> HTIF_DEV_SHIFT) & HTIF_DEV_MASK)
 #define FROMHOST_CMD(fromhost_value) \
@@ -61,38 +67,56 @@ static void __check_fromhost()
 	}
 }
 
-static int initialized = 0;
 static void __set_tohost(uint64_t dev, uint64_t cmd, uint64_t data)
 {
-	if (!initialized) {
-		tohost = 0;
-		initialized = 1;
-	}
 	while (tohost)
 		__check_fromhost();
-	uint64_t tohost_cmd = TOHOST_CMD(dev, cmd, data);
-#if __riscv_xlen == 32
-	/* Technically this isn't supported by spike, but in practice it works
-	 * almost all the time. See
-	 * https://github.com/riscv/riscv-isa-sim/issues/364 */
+	tohost = TOHOST_CMD(dev, cmd, data);
+}
 
-	/* Make sure to write the most-significant word first. */
-	/* Assume little-endian. */
-	((uint32_t *) &tohost)[1] = tohost_cmd >> 32;
-	((uint32_t *) &tohost)[0] = tohost_cmd & 0xffffffff;
-#else
-	tohost = tohost_cmd;
-#endif
+#if __riscv_xlen == 32
+static void do_tohost_fromhost(uint64_t dev, uint64_t cmd, uint64_t data)
+{
+	__set_tohost(HTIF_DEV_SYSTEM, cmd, data);
+
+	while (1) {
+		uint64_t fh = fromhost;
+		if (fh) {
+			if (FROMHOST_DEV(fh) == HTIF_DEV_SYSTEM &&
+			    FROMHOST_CMD(fh) == cmd) {
+				fromhost = 0;
+				break;
+			}
+			__check_fromhost();
+		}
+	}
 }
 
 void htif_putc(char ch)
 {
+	/* HTIF devices are not supported on RV32, so do a proxy write call */
+	volatile uint64_t magic_mem[8];
+	magic_mem[0] = PK_SYS_write;
+	magic_mem[1] = HTIF_DEV_CONSOLE;
+	magic_mem[2] = (uint64_t)(uintptr_t)&ch;
+	magic_mem[3] = HTIF_CONSOLE_CMD_PUTC;
+	do_tohost_fromhost(HTIF_DEV_SYSTEM, 0, (uint64_t)(uintptr_t)magic_mem);
+}
+#else
+void htif_putc(char ch)
+{
 	__set_tohost(HTIF_DEV_CONSOLE, HTIF_CONSOLE_CMD_PUTC, ch);
 }
+#endif
 
 int htif_getc(void)
 {
 	int ch;
+
+#if __riscv_xlen == 32
+	/* HTIF devices are not supported on RV32 */
+	return -1;
+#endif
 
 	__check_fromhost();
 	ch = htif_console_buf;

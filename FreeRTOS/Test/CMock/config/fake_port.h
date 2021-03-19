@@ -24,31 +24,23 @@
  *
  */
 
-#include "proof/queue.h"
+#ifndef FAKE_PORT_H
+#define FAKE_PORT_H
 
-BaseType_t xQueueIsQueueFullFromISR( const QueueHandle_t xQueue )
-/*@requires queue(xQueue, ?Storage, ?N, ?M, ?W, ?R, ?K, ?is_locked, ?abs);@*/
-/*@ensures queue(xQueue, Storage, N, M, W, R, K, is_locked, abs) &*&
-    result == ((K == N) ? pdTRUE : pdFALSE);@*/
-{
-    BaseType_t xReturn;
+void vFakePortYield( void );
+void vFakePortYieldFromISR( void );
+void vFakePortYieldWithinAPI( void );
 
-#ifdef VERIFAST /*< const pointer declaration */
-    Queue_t * pxQueue = xQueue;
-#else
-    Queue_t * const pxQueue = xQueue;
-#endif
+void vFakePortDisableInterrupts( void );
+void vFakePortEnableInterrupts( void );
+void vFakePortClearInterruptMaskFromISR( UBaseType_t uxNewMaskValue );
+void vFakePortClearInterruptMask( UBaseType_t uxNewMaskValue );
+UBaseType_t ulFakePortSetInterruptMaskFromISR( void );
+UBaseType_t ulFakePortSetInterruptMask( void );
 
-    configASSERT( pxQueue );
+void vFakePortAssertIfInterruptPriorityInvalid( void );
 
-    if( pxQueue->uxMessagesWaiting == pxQueue->uxLength )
-    {
-        xReturn = pdTRUE;
-    }
-    else
-    {
-        xReturn = pdFALSE;
-    }
+void vFakePortEnterCriticalSection( void );
+void vFakePortExitCriticalSection( void );
 
-    return xReturn;
-} /*lint !e818 xQueue could not be pointer to const because it is a typedef. */
+#endif /* FAKE_PORT_H */

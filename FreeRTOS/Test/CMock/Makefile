@@ -5,18 +5,20 @@ include makefile.in
 # Change to match installed location
 export CC ?= /usr/local/bin/gcc
 export LD ?= /usr/local/bin/ld
-#
+
 # Add units here when adding a new unit test directory with the same name
+UNITS       :=  timers
+UNITS       +=  tasks
 UNITS       +=  list
 UNITS       +=  queue
-UNITS       +=  timers
-UNITS       +=  tasks
 UNITS       +=  stream_buffer
 UNITS       +=  message_buffer
 UNITS       +=  event_groups
 
 .PHONY: makefile.in
 
+UNITY_OPTIONS    :=  -DUNITY_USE_COMMAND_LINE_ARGS
+UNITY_OPTIONS    +=  -DUNITY_OUTPUT_COLOR -DUNITY_INCLUDE_PRINT_FORMATTED
 COVINFO     :=  $(BUILD_DIR)/cmock_test.info
 LCOV_LIST   :=  $(foreach unit,$(UNITS),$(GENERATED_DIR)/$(unit).info )
 
@@ -31,12 +33,12 @@ execs: $(UNITS) | directories
 
 $(UNITS) : libs | directories
     $(MAKE) -C $@
+
 Makefile : ;
 
 makefile.in : ;
 
 SHARED_LIBS := $(addprefix $(LIB_DIR)/,$(addsuffix .so,$(LIBS)))
-$(info shared libs are $(SHARED_LIBS) )
 
 libs : $(SHARED_LIBS)
 
@@ -70,7 +72,7 @@ $(LIB_DIR)/libcmock.so : $(CMOCK_SRC_DIR)/cmock.c                              \
 $(LIB_DIR)/libunity.so : $(UNITY_SRC_DIR)/unity.c                              \
                          $(UNITY_SRC_DIR)/unity.h                              \
                          Makefile | directories
-    ${CC} -o $@ -shared -fPIC  $<
+    ${CC} -o $@ $(UNITY_OPTIONS) -shared -fPIC  $<
 
 $(LIB_DIR)/libunitymemory.so: ${UNITY_MEM_DIR}/unity_memory.c                  \
                               ${UNITY_MEM_DIR}/unity_memory.h                  \
@@ -87,7 +89,7 @@ run : $(UNITS) | directories
     -rm -f $(BUILD_DIR)/unit_test_report.txt
     for f in $(BIN_DIR)/*; do                                                  \
         $${f} | tee -a $(BUILD_DIR)/unit_test_report.txt ;                     \
-    done 
+    done
     cd $(BUILD_DIR) &&                                                         \
     ruby $(UNITY_BIN_DIR)/parse_output.rb                                      \
         -xml $(BUILD_DIR)/unit_test_report.txt
@@ -121,8 +123,8 @@ zero_coverage :
 
 coverage : run_col
     lcov --base-directory $(KERNEL_DIR) --directory $(BUILD_DIR) --capture     \
-        --config-file $(UT_ROOT_DIR)/lcovrc -o $(BUILD_DIR)/cmock_test.info
-    genhtml $(BUILD_DIR)/cmock_test.info --branch-coverage                     \
+        --config-file $(UT_ROOT_DIR)/lcovrc -o $(COVINFO)
+    genhtml $(COVINFO) --branch-coverage                                       \
         --config-file $(UT_ROOT_DIR)/lcovrc --output-directory $(COVERAGE_DIR)
 
 lcov : $(COVINFO)
@@ -135,5 +137,5 @@ $(COVINFO) : $(LCOV_LIST)
 $(LCOV_LIST) : zero_coverage
     make -C $(subst .info,,$(@F)) lcov
 
-lcovhtml : $(COVINFO) | directory
+lcovhtml : $(COVINFO) | directories
     genhtml $(COVINFO) $(LCOV_OPTS) --output-directory $(COVERAGE_DIR) --quiet

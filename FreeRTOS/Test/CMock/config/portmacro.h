@@ -83,18 +83,18 @@ typedef unsigned long    UBaseType_t;
 
 #if ( configUSE_16_BIT_TICKS == 1 )
     typedef uint16_t     TickType_t;
-    #define portMAX_DELAY    ( TickType_t ) 0xffff
+    #define portMAX_DELAY        ( TickType_t ) 0xffff
 #else
     typedef uint32_t     TickType_t;
-    #define portMAX_DELAY    ( TickType_t ) 0xffffffffUL
+    #define portMAX_DELAY        ( TickType_t ) 0xffffffffUL
 #endif
+#define portPOINTER_SIZE_TYPE    uint64_t
 /*-----------------------------------------------------------*/
 
 /* Requires definition of UBaseType_t */
 #include "fake_port.h"
 
 /* Hardware specifics. */
-/*#define portSTACK_GROWTH      ( -1 ) */
 #define portTICK_PERIOD_MS    ( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portBYTE_ALIGNMENT    8
 #define portNOP()    __asm volatile ( "NOP" )
@@ -107,6 +107,7 @@ typedef unsigned long    UBaseType_t;
 #define portTIMER_REG_BASE_PTR
 #define portTIMER_CLK_ENABLE_BIT
 #define portTIMER_AIC_CHANNEL
+
 /*-----------------------------------------------------------*/
 
 /* Task utilities. */
@@ -164,9 +165,11 @@ static inline uint8_t ucPortCountLeadingZeros( uint32_t ulBitmap )
 
 /* Task function macros as described on the FreeRTOS.org WEB site. */
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) \
+    volatile int fool_static = 0;                          \
     void vFunction( void * ( pvParameters ) )
 
 #define portTASK_FUNCTION( vFunction, pvParameters ) \
+    volatile int fool_static2 = 0;                   \
     void vFunction( void * ( pvParameters ) )
 
 /*-----------------------------------------------------------*/

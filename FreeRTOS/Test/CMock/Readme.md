@@ -3,7 +3,7 @@
 ## Prerequisites as tested
 GCC
 ```
-gcc (GCC) 11.0.0
+gcc: gcc (GCC) 9.2.0
 ```
 unifdef
 ```

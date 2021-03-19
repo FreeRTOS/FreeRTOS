@@ -23,6 +23,7 @@
  * https://github.com/FreeRTOS
  *
  */
+
 /*! @file tasks_utest_2.c */
 
 /* Tasks includes */
@@ -42,6 +43,7 @@
 /* C runtime includes. */
 #include <stdbool.h>
 #include <string.h>
+#include <stdlib.h>
 
 
 /* ===========================  EXTERN VARIABLES  =========================== */
@@ -135,7 +137,7 @@ static void start_scheduler()
         vListInitialise_ExpectAnyArgs();
     }
 
-    vListInsertEnd_ExpectAnyArgs();
+    listINSERT_END_ExpectAnyArgs();
 
     xTimerCreateTimerTask_ExpectAndReturn( pdPASS );
     xPortStartScheduler_ExpectAndReturn( pdTRUE );
@@ -169,6 +171,7 @@ static TaskHandle_t create_task()
 
     if( is_first_task )
     {
+        /* prvInitialiseTaskLists */
         for( int i = ( UBaseType_t ) 0U; i < ( UBaseType_t ) configMAX_PRIORITIES; i++ )
         {
             vListInitialise_ExpectAnyArgs();
@@ -187,7 +190,8 @@ static TaskHandle_t create_task()
         is_first_task = false;
     }
 
-    vListInsertEnd_ExpectAnyArgs();
+    /* prvAddTaskToReadyList */
+    listINSERT_END_ExpectAnyArgs();
     ret = xTaskCreate( pxTaskCode,
                        pcName,
                        usStackDepth,
@@ -438,7 +442,7 @@ int suiteTearDown( int numFailures )
 void test_xTaskCreateStatic_success( void )
 {
     StackType_t puxStackBuffer[ 300 ];
-    StaticTask_t pxTaskBuffer[ sizeof( TCB_t ) ];
+    StaticTask_t * pxTaskBuffer = malloc( sizeof( TCB_t ) );
     TaskFunction_t pxTaskCode = NULL;
     const char * const pcName = { __FUNCTION__ };
     const uint32_t ulStackDepth = 300;
@@ -472,7 +476,8 @@ void test_xTaskCreateStatic_success( void )
     /* INCLUDE_vTaskSuspend */
     vListInitialise_ExpectAnyArgs();
 
-    vListInsertEnd_ExpectAnyArgs();
+    listINSERT_END_ExpectAnyArgs();
+
     /* API Call */
     ret = xTaskCreateStatic( pxTaskCode,
                              pcName,
@@ -499,6 +504,7 @@ void test_xTaskCreateStatic_success( void )
 
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
     ASSERT_SETUP_TCB_CALLED();
+    free( pxTaskBuffer );
 }
 
 void test_xTaskCreate_success( void )
@@ -538,7 +544,7 @@ void test_xTaskCreate_success( void )
     /* INCLUDE_vTaskSuspend */
     vListInitialise_ExpectAnyArgs();
 
-    vListInsertEnd_ExpectAnyArgs();
+    listINSERT_END_ExpectAnyArgs();
 
     /* API Call */
     ret = xTaskCreate( pxTaskCode,
@@ -626,8 +632,9 @@ void test_vTaskPrioritySet_success_gt_curr_prio( void )
                                              pdTRUE );
     uxListRemove_ExpectAndReturn( &( ptcb->xStateListItem ), 0 );
     /* port Reset ready priority */
-    /* add task to ready list */
-    vListInsertEnd_Expect( &( pxReadyTasksLists[ 5 ] ),
+    /* add task to ready list macro */
+
+    listINSERT_END_Expect( &( pxReadyTasksLists[ 5 ] ),
                            &( ptcb->xStateListItem ) );
 
     TEST_ASSERT_EQUAL( 4, ptcb->uxPriority );

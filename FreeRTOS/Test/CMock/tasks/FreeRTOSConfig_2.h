@@ -85,48 +85,50 @@
 /* Run time stats gathering configuration options. */
 unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
 void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that initialises the run time counter. */
-#define configGENERATE_RUN_TIME_STATS             0
+#define configGENERATE_RUN_TIME_STATS                0
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()    vConfigureTimerForRunTimeStats()
 #define portGET_RUN_TIME_COUNTER_VALUE()            ulGetRunTimeCounterValue()
-#define portUSING_MPU_WRAPPERS                    0
-#define portHAS_STACK_OVERFLOW_CHECKING           1
-#define portCRITICAL_NESTING_IN_TCB               1
+#define portUSING_MPU_WRAPPERS                       0
+#define configENABLE_MPU                             0
+#define portHAS_STACK_OVERFLOW_CHECKING              1
+#define portCRITICAL_NESTING_IN_TCB                  1
 
 /* Co-routine related configuration options. */
-#define configUSE_CO_ROUTINES                     0
-#define configMAX_CO_ROUTINE_PRIORITIES           ( 2 )
+#define configUSE_CO_ROUTINES                        0
+#define configMAX_CO_ROUTINE_PRIORITIES              ( 2 )
 
 /* This demo makes use of one or more example stats formatting functions.  These
  * format the raw data provided by the uxTaskGetSystemState() function in to human
  * readable ASCII form.  See the notes in the implementation of vTaskList() within
  * FreeRTOS/Source/tasks.c for limitations. */
-#define configUSE_STATS_FORMATTING_FUNCTIONS      1
+#define configUSE_STATS_FORMATTING_FUNCTIONS         1
+#define configSTACK_ALLOCATION_FROM_SEPARATE_HEAP    0
 
 /* Set the following definitions to 1 to include the API function, or zero
  * to exclude the API function.  In most cases the linker will remove unused
  * functions anyway. */
-#define INCLUDE_vTaskPrioritySet                  1
-#define INCLUDE_uxTaskPriorityGet                 1
-#define INCLUDE_vTaskDelete                       1
-#define INCLUDE_vTaskCleanUpResources             0
-#define INCLUDE_vTaskSuspend                      1
-#define INCLUDE_vTaskDelayUntil                   1
-#define INCLUDE_vTaskDelay                        1
-#define INCLUDE_uxTaskGetStackHighWaterMark       0
-#define INCLUDE_xTaskGetSchedulerState            1
-#define INCLUDE_xTimerGetTimerDaemonTaskHandle    1
-#define INCLUDE_xTaskGetIdleTaskHandle            1
-#define INCLUDE_xTaskGetHandle                    1
-#define INCLUDE_eTaskGetState                     1
-#define INCLUDE_xSemaphoreGetMutexHolder          1
-#define INCLUDE_xTimerPendFunctionCall            1
-#define INCLUDE_xTaskAbortDelay                   1
+#define INCLUDE_vTaskPrioritySet                     1
+#define INCLUDE_uxTaskPriorityGet                    1
+#define INCLUDE_vTaskDelete                          1
+#define INCLUDE_vTaskCleanUpResources                0
+#define INCLUDE_vTaskSuspend                         1
+#define INCLUDE_vTaskDelayUntil                      1
+#define INCLUDE_vTaskDelay                           1
+#define INCLUDE_uxTaskGetStackHighWaterMark          0
+#define INCLUDE_xTaskGetSchedulerState               1
+#define INCLUDE_xTimerGetTimerDaemonTaskHandle       1
+#define INCLUDE_xTaskGetIdleTaskHandle               1
+#define INCLUDE_xTaskGetHandle                       1
+#define INCLUDE_eTaskGetState                        1
+#define INCLUDE_xSemaphoreGetMutexHolder             1
+#define INCLUDE_xTimerPendFunctionCall               1
+#define INCLUDE_xTaskAbortDelay                      1
 
 /* It is a good idea to define configASSERT() while developing.  configASSERT()
  * uses the same semantics as the standard C assert() macro. */
 #define configASSERT( x )
-#define portREMOVE_STATIC_QUALIFIER              1
-#define configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES 0
+#define portREMOVE_STATIC_QUALIFIER                  1
+#define configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES    0
 
 
 #endif /* FREERTOS_CONFIG_H */

@@ -37,22 +37,19 @@ INCLUDE_DIR         +=  -I$(UNITY_MEM_DIR)
 INCLUDE_DIR         +=  -I$(C_EXCEPTION_SRC_DIR)
 
 # Preprocessor flags
-CPPFLAGS    :=
+CPPFLAGS            := $(INCLUDE_DIR)
 
 # Compiler flags
-CFLAGS              :=  $(INCLUDE_DIR)  -pthread  --std=c99 -Werror -Wall
+CFLAGS              :=  -pthread  --std=c99 -Werror -Wall
 CFLAGS              +=  -fstack-protector-all
 CFLAGS              +=  -Wformat -Werror=format-security -Werror=array-bounds
-CFLAGS              +=  -D_FORTIFY_SOURCE=0
 
 ifeq ($(ENABLE_SANITIZER),1)
-    CFLAGS          +=  -fstack-protector-all
-    CFLAGS          +=  -Wformat -Werror=format-security -Werror=array-bounds
-    CFLAGS          +=  -D_FORTIFY_SOURCE=2
-    CFLAGS          +=  -fsanitize=address,undefined -fsanitize-recover=address
-    CFLAGS              +=  -O3 -D_FORTIFY_SOURCE=2
+   CFLAGS           +=  -fsanitize=address,undefined -fsanitize-recover=address
+   CFLAGS           +=  -O3 -ggdb3
+   CPPFLAGS         +=  -D_FORTIFY_SOURCE=2
 else
-    CFLAGS              +=  $(INCLUDE_DIR)  -O0 -ggdb 
+   CFLAGS           +=  -O0 -ggdb3
 endif
 
 # Linker flags

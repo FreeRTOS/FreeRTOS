@@ -66,8 +66,10 @@ implemented and described in main_full.c. */
 required UART registers. */
 #define UART0_ADDRESS 	( 0x40004000UL )
 #define UART0_DATA		( * ( ( ( uint32_t * )( UART0_ADDRESS + 0UL ) ) ) )
+#define UART0_STATE		( * ( ( ( uint32_t * )( UART0_ADDRESS + 4UL ) ) ) )
 #define UART0_CTRL		( * ( ( ( uint32_t * )( UART0_ADDRESS + 8UL ) ) ) )
 #define UART0_BAUDDIV	( * ( ( ( uint32_t * )( UART0_ADDRESS + 16UL ) ) ) )
+#define TX_BUFFER_MASK	( 1UL )
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -257,25 +259,26 @@ static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
 static void prvUARTInit( void )
 {
-    UART0_BAUDDIV = 16;
-    UART0_CTRL = 1;
+	UART0_BAUDDIV = 16;
+	UART0_CTRL = 1;
 }
 /*-----------------------------------------------------------*/
 
 int __write( int iFile, char *pcString, int iStringLength )
 {
-    uint32_t ulNextChar;
+	uint32_t ulNextChar;
 
 	/* Avoid compiler warnings about unused parameters. */
 	( void ) iFile;
 
 	/* Output the formatted string to the UART. */
-    for( ulNextChar = 0; ulNextChar < iStringLength; ulNextChar++ )
+	for( ulNextChar = 0; ulNextChar < iStringLength; ulNextChar++ )
 	{
-        UART0_DATA = *pcString;
+		while( ( UART0_STATE & TX_BUFFER_MASK ) != 0 );
+		UART0_DATA = *pcString;
 		pcString++;
-    }
+	}
 
-    return iStringLength;
+	return iStringLength;
 }
 

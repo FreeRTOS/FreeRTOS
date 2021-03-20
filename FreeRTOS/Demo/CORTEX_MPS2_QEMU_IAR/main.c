@@ -65,10 +65,10 @@ implemented and described in main_full.c. */
 /* printf() output uses the UART.  These constants define the addresses of the
 required UART registers. */
 #define UART0_ADDRESS 	( 0x40004000UL )
-#define UART0_DATA		( * ( ( ( uint32_t * )( UART0_ADDRESS + 0UL ) ) ) )
-#define UART0_STATE		( * ( ( ( uint32_t * )( UART0_ADDRESS + 4UL ) ) ) )
-#define UART0_CTRL		( * ( ( ( uint32_t * )( UART0_ADDRESS + 8UL ) ) ) )
-#define UART0_BAUDDIV	( * ( ( ( uint32_t * )( UART0_ADDRESS + 16UL ) ) ) )
+#define UART0_DATA		( * ( ( ( volatile uint32_t * )( UART0_ADDRESS + 0UL ) ) ) )
+#define UART0_STATE		( * ( ( ( volatile uint32_t * )( UART0_ADDRESS + 4UL ) ) ) )
+#define UART0_CTRL		( * ( ( ( volatile uint32_t * )( UART0_ADDRESS + 8UL ) ) ) )
+#define UART0_BAUDDIV	( * ( ( ( volatile uint32_t * )( UART0_ADDRESS + 16UL ) ) ) )
 #define TX_BUFFER_MASK	( 1UL )
 
 /*

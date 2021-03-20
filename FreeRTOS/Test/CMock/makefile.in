@@ -44,11 +44,11 @@ CFLAGS              :=  $(INCLUDE_DIR)  -pthread  --std=c99 -Werror -Wall
 CFLAGS              +=  -fstack-protector-all
 CFLAGS              +=  -Wformat -Werror=format-security -Werror=array-bounds
 ifeq ($(ENABLE_SANITIZER),1)
-    CFLAGS          +=  -fsanitize=address,undefined -fsanitize-recover=address
-    CFLAGS              +=  -O3 -D_FORTIFY_SOURCE=2
+   CFLAGS           +=  -fsanitize=address,undefined -fsanitize-recover=address
+   CFLAGS           +=  -O -ggdb3 -D_FORTIFY_SOURCE=2
 else
-    CFLAGS              +=  $(INCLUDE_DIR)  -O0 -ggdb 
-    CFLAGS              +=  -D_FORTIFY_SOURCE=0
+    CFLAGS          +=  $(INCLUDE_DIR)  -O0 -ggdb3 
+    CFLAGS          +=  -D_FORTIFY_SOURCE=0
 endif
 
 # Linker flags
@@ -60,7 +60,7 @@ LDFLAGS             +=  -lcexception
 LDFLAGS             +=  -lcmock
 LDFLAGS             +=  -lgcov
 ifeq ($(ENABLE_SANITIZER),1)
-    LDFLAGS         +=  -fsanitize=address,undefined
+LDFLAGS         +=  -fsanitize=address,undefined
 endif
 
 # Shared libraries

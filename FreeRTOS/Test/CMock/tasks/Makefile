@@ -151,15 +151,24 @@ $(SCRATCH_DIR)/%/$(PROJECT)_utest.o : $(PROJECT_DIR)/$(PROJECT)_utest_%.c      \
 	$(CC) -c $< $(INCLUDE) $(CPPFLAGS)  $(CFLAGS) -Wno-error -o $@
 
 .SECONDARY:
-# Build tasks.o from tasks.c with the custom FreeRTOSConfig.h and place it in
+# Build tasks.o from tasks.i with the custom FreeRTOSConfig.h and place it in
 # its configuration directory
-$(SCRATCH_DIR)/%/$(PROJECT).o : $(KERNEL_DIR)/$(PROJECT).c | directories
+$(SCRATCH_DIR)/%/$(PROJECT).o : $(SCRATCH_DIR)/%/$(PROJECT).i | directories
 	$(eval INCLUDE = -I$(SCRATCH_DIR)/$*/include)
 	$(eval INCLUDE += -I$(SCRATCH_DIR)/$*/mocks)                           \
 	$(eval INCLUDE += -I$(KERNEL_DIR)/include)                             \
 	$(CC) -c $< $(INCLUDE) $(CPPFLAGS)                                     \
 	      $(CFLAGS) -include list_macros.h $(COVERAGE_OPTS) -Wno-error -o $@
 
+.SECONDARY:
+# Build tasks.i from tasks.c with the custom FreeRTOSConfig.h and place it in
+# its configuration directory
+$(SCRATCH_DIR)/%/$(PROJECT).i : $(KERNEL_DIR)/$(PROJECT).c | directories
+	$(eval INCLUDE = -I$(SCRATCH_DIR)/$*/include)
+	$(eval INCLUDE += -I$(SCRATCH_DIR)/$*/mocks)                           \
+	$(eval INCLUDE += -I$(KERNEL_DIR)/include)                             \
+	$(CC) -E $< $(INCLUDE) $(CPPFLAGS)                                     \
+	      $(CFLAGS) -include list_macros.h $(COVERAGE_OPTS) -Wno-error -o $@
 
 .SECONDARY:
 # Generate test_runner.c which contains the main function from the test file

@@ -104,9 +104,8 @@ extern TaskHandle_t xIdleTaskHandle;
 extern volatile UBaseType_t uxSchedulerSuspended;
 
 /* =============================  DEFINES  ================================== */
-#define INITIALIZE_LIST_1E( list, owner )                       \
+#define INITIALIZE_LIST_1E( list, list_item, owner )            \
     do {                                                        \
-        ListItem_t list_item;                                   \
         ( list ).xListEnd.pxNext = &( list_item );              \
         ( list ).xListEnd.pxPrevious = &( list_item );          \
         ( list ).pxIndex = ( ListItem_t * ) &( list ).xListEnd; \
@@ -117,22 +116,20 @@ extern volatile UBaseType_t uxSchedulerSuspended;
         ( list_item ).pxContainer = &( list );                  \
     } while( 0 )
 
-#define INITIALIZE_LIST_2E( list, owner, owner2 )               \
-    do {                                                        \
-        ListItem_t list_item;                                   \
-        ListItem_t list_item2;                                  \
-        ( list ).xListEnd.pxNext = &( list_item );              \
-        ( list ).xListEnd.pxPrevious = &( list_item2 );         \
-        ( list ).pxIndex = ( ListItem_t * ) &( list ).xListEnd; \
-        ( list ).uxNumberOfItems = 2;                           \
-        ( list_item ).pxNext = &( list_item2 );                 \
-        ( list_item ).pxPrevious = ( list ).pxIndex;            \
-        ( list_item ).pvOwner = ( owner );                      \
-        ( list_item ).pxContainer = &( list );                  \
-        ( list_item2 ).pxNext = ( list ).pxIndex;               \
-        ( list_item2 ).pxPrevious = &( list_item );             \
-        ( list_item2 ).pvOwner = ( owner2 );                    \
-        ( list_item2 ).pxContainer = &( list );                 \
+#define INITIALIZE_LIST_2E( list, list_item, list_item2, owner, owner2 ) \
+    do {                                                                 \
+        ( list ).xListEnd.pxNext = &( list_item );                       \
+        ( list ).xListEnd.pxPrevious = &( list_item2 );                  \
+        ( list ).pxIndex = ( ListItem_t * ) &( list ).xListEnd;          \
+        ( list ).uxNumberOfItems = 2;                                    \
+        ( list_item ).pxNext = &( list_item2 );                          \
+        ( list_item ).pxPrevious = ( list ).pxIndex;                     \
+        ( list_item ).pvOwner = ( owner );                               \
+        ( list_item ).pxContainer = &( list );                           \
+        ( list_item2 ).pxNext = ( list ).pxIndex;                        \
+        ( list_item2 ).pxPrevious = &( list_item );                      \
+        ( list_item2 ).pvOwner = ( owner2 );                             \
+        ( list_item2 ).pxContainer = &( list );                          \
     } while( 0 )
 
 #define taskNOT_WAITING_NOTIFICATION    ( ( uint8_t ) 0 )
@@ -580,7 +577,7 @@ void test_xTaskCreateStatic_null_pxTaskBuffer( void )
 void test_xTaskCreateStatic_success( void )
 {
     StackType_t puxStackBuffer[ 300 ];
-    StaticTask_t *pxTaskBuffer = malloc( sizeof( TCB_t ) );
+    StaticTask_t * pxTaskBuffer = malloc( sizeof( TCB_t ) );
     TaskFunction_t pxTaskCode = NULL;
     const char * const pcName = { __FUNCTION__ };
     const uint32_t ulStackDepth = 300;
@@ -945,7 +942,6 @@ void test_vTaskDelete_sucess_not_current_task( void )
 
 void test_vTaskDelete_sucess_not_current_task_no_yield( void )
 {
-
     xSchedulerRunning = pdTRUE;
     ptcb = ( TCB_t * ) create_task();
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
@@ -2353,10 +2349,12 @@ void test_xTaskResumeFromISR_success_curr_prio_lt_suspended_task( void )
 void test_xtaskGetHandle_success( void )
 {
     TaskHandle_t task_handle = NULL, task_handle2;
+    ListItem_t list_item;
 
     task_handle = create_task();
     ptcb = task_handle;
     INITIALIZE_LIST_1E( pxReadyTasksLists[ configMAX_PRIORITIES - 1 ],
+                        list_item,
                         ptcb );
     /* Expectations */
     /*  prvSearchForNameWithinSingleList */
@@ -2374,11 +2372,13 @@ void test_xtaskGetHandle_success( void )
 void test_xtaskGetHandle_success_2elements( void )
 {
     TaskHandle_t task_handle = NULL, task_handle2, ret_task_handle;
+    ListItem_t list_item, list_item2;
 
     task_handle = create_task();
     task_handle2 = create_task();
     ptcb = task_handle;
     INITIALIZE_LIST_2E( pxReadyTasksLists[ configMAX_PRIORITIES - 1 ],
+                        list_item, list_item2,
                         ptcb, task_handle2 );
     /* Expectations */
     /*  prvSearchForNameWithinSingleList */
@@ -2396,14 +2396,20 @@ void test_xtaskGetHandle_success_2elements( void )
 void test_xtaskGetHandle_success_2elements_set_index( void )
 {
     TaskHandle_t task_handle = NULL, task_handle2, ret_task_handle;
+    ListItem_t list_item, list_item2;
 
     task_handle = create_task();
     task_handle2 = create_task();
     ptcb = task_handle;
     INITIALIZE_LIST_2E( pxReadyTasksLists[ configMAX_PRIORITIES - 1 ],
-                        ptcb, task_handle2 );
-    pxReadyTasksLists[ configMAX_PRIORITIES - 1 ].pxIndex = pxReadyTasksLists[ configMAX_PRIORITIES - 1 ].pxIndex->pxNext;
-    pxReadyTasksLists[ configMAX_PRIORITIES - 1 ].pxIndex = pxReadyTasksLists[ configMAX_PRIORITIES - 1 ].pxIndex->pxNext;
+                        list_item, list_item2,
+                        task_handle, task_handle2 );
+    /* advance index */
+    pxReadyTasksLists[ configMAX_PRIORITIES - 1 ].pxIndex =
+        pxReadyTasksLists[ configMAX_PRIORITIES - 1 ].pxIndex->pxNext;
+    /* advance index */
+    pxReadyTasksLists[ configMAX_PRIORITIES - 1 ].pxIndex =
+        pxReadyTasksLists[ configMAX_PRIORITIES - 1 ].pxIndex->pxNext;
     /* Expectations */
     /*  prvSearchForNameWithinSingleList */
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ configMAX_PRIORITIES - 1 ],
@@ -2420,11 +2426,13 @@ void test_xtaskGetHandle_success_2elements_set_index( void )
 void test_xtaskGetHandle_fail_no_task_found( void )
 {
     TaskHandle_t task_handle, task_handle2, ret_task_handle;
+    ListItem_t list_item, list_item2;
 
     task_handle = create_task();
     task_handle2 = create_task();
     ptcb = task_handle;
     INITIALIZE_LIST_2E( pxReadyTasksLists[ configMAX_PRIORITIES - 1 ],
+                        list_item, list_item2,
                         ptcb, task_handle2 );
     /* Expectations */
     /*  prvSearchForNameWithinSingleList */
@@ -2462,7 +2470,7 @@ void test_xtaskGetHandle_fail_no_taks_running( void )
     /*  prvSearchForNameWithinSingleList */
     for( int i = configMAX_PRIORITIES; i > tskIDLE_PRIORITY; --i )
     {
-        listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ i ], 0 );
+        listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ i - 1 ], 0 );
     }
 
     listCURRENT_LIST_LENGTH_ExpectAndReturn( pxDelayedTaskList, 0 );
@@ -3006,6 +3014,8 @@ void test_vTaskSwitchContext( void )
 {
     TaskHandle_t task_handle;
     TaskHandle_t task_handle2;
+    ListItem_t list_item, list_item2;
+    ListItem_t list_item3, list_item4;
 
     create_task_priority = 3;
     task_handle = create_task();
@@ -3014,8 +3024,10 @@ void test_vTaskSwitchContext( void )
     ptcb = task_handle;
 
     INITIALIZE_LIST_2E( pxReadyTasksLists[ 3 ],
+                        list_item, list_item2,
                         ptcb, task_handle2 );
     INITIALIZE_LIST_2E( pxReadyTasksLists[ 4 ],
+                        list_item3, list_item4,
                         ptcb, task_handle2 );
 
     /* Setup */
@@ -3037,6 +3049,8 @@ void test_vTaskSwitchContext_detect_overflow( void )
 {
     TaskHandle_t task_handle;
     TaskHandle_t task_handle2;
+    ListItem_t list_item, list_item2;
+    ListItem_t list_item3, list_item4;
 
     create_task_priority = 3;
     task_handle = create_task();
@@ -3045,8 +3059,10 @@ void test_vTaskSwitchContext_detect_overflow( void )
     ptcb = task_handle;
 
     INITIALIZE_LIST_2E( pxReadyTasksLists[ 3 ],
+                        list_item, list_item2,
                         ptcb, task_handle2 );
     INITIALIZE_LIST_2E( pxReadyTasksLists[ 4 ],
+                        list_item3, list_item4,
                         ptcb, task_handle2 );
 
     /* Setup */

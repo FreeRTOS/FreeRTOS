@@ -446,7 +446,7 @@ int suiteTearDown( int numFailures )
 void test_xTaskCreateStatic_success( void )
 {
     StackType_t puxStackBuffer[ 300 ];
-    StaticTask_t pxTaskBuffer[ sizeof( TCB_t ) ];
+    StaticTask_t *pxTaskBuffer = malloc( sizeof( TCB_t ) );
     TaskFunction_t pxTaskCode = NULL;
     const char * const pcName = { __FUNCTION__ };
     const uint32_t ulStackDepth = 300;
@@ -507,6 +507,7 @@ void test_xTaskCreateStatic_success( void )
 
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
     ASSERT_SETUP_TCB_CALLED();
+    free( pxTaskBuffer );
 }
 
 void test_xTaskCreate_success( void )

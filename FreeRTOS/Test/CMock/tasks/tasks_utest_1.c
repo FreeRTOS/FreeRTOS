@@ -75,6 +75,7 @@
 /* C runtime includes. */
 #include <stdbool.h>
 #include <string.h>
+#include <stdlib.h>
 
 
 /* ===========================  EXTERN VARIABLES  =========================== */
@@ -137,6 +138,7 @@ extern volatile UBaseType_t uxSchedulerSuspended;
 #define taskNOT_WAITING_NOTIFICATION    ( ( uint8_t ) 0 )
 #define taskWAITING_NOTIFICATION        ( ( uint8_t ) 1 )
 #define taskNOTIFICATION_RECEIVED       ( ( uint8_t ) 2 )
+#define TCB_ARRAY                       10 /* simulate up to 10 tasks: add more if needed */
 
 /* ===========================  GLOBAL VARIABLES  =========================== */
 static StaticTask_t xIdleTaskTCB;
@@ -144,7 +146,7 @@ static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
 static TCB_t * ptcb;
 static StackType_t stack[ ( ( size_t ) 300 ) * sizeof( StackType_t ) ];
-static TCB_t tcb[ 10 ]; /* simulate up to 10 tasks: add more if needed */
+static TCB_t tcb[ TCB_ARRAY ];
 static bool getIddleTaskMemoryValid = false;
 static uint32_t critical_section_counter = 0;
 static bool is_first_task = true;
@@ -349,7 +351,7 @@ void setUp( void )
 {
     RESET_ALL_HOOKS();
     pxCurrentTCB = NULL;
-    memset( &tcb, 0x00, sizeof( TCB_t ) );
+    memset( &tcb, 0x00, sizeof( TCB_t ) * TCB_ARRAY );
     ptcb = NULL;
     memset( &pxReadyTasksLists, 0x00, configMAX_PRIORITIES * sizeof( List_t ) );
     memset( &xDelayedTaskList1, 0x00, sizeof( List_t ) );
@@ -481,9 +483,7 @@ static TaskHandle_t create_task()
 
     vListInitialiseItem_Expect( &( tcb[ created_tasks ].xStateListItem ) );
     vListInitialiseItem_Expect( &( tcb[ created_tasks ].xEventListItem ) );
-    /* TODO: expect set owner */
     listSET_LIST_ITEM_VALUE_ExpectAnyArgs();
-    /* TODO: expect set owner */
 
     pxPortInitialiseStack_ExpectAnyArgsAndReturn( stack );
 
@@ -580,7 +580,7 @@ void test_xTaskCreateStatic_null_pxTaskBuffer( void )
 void test_xTaskCreateStatic_success( void )
 {
     StackType_t puxStackBuffer[ 300 ];
-    StaticTask_t pxTaskBuffer[ sizeof( TCB_t ) ];
+    StaticTask_t *pxTaskBuffer = malloc( sizeof( TCB_t ) );
     TaskFunction_t pxTaskCode = NULL;
     const char * const pcName = { __FUNCTION__ };
     const uint32_t ulStackDepth = 300;
@@ -647,6 +647,7 @@ void test_xTaskCreateStatic_success( void )
 
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
     ASSERT_SETUP_TCB_CALLED();
+    free( pxTaskBuffer );
 }
 
 
@@ -847,18 +848,16 @@ void test_xTaskCreate_fail_tcb_malloc( void )
 /* -------------------------- INCLUDE_vTaskDelete --------------------------- */
 void test_vTaskDelete_sucess_current_task( void )
 {
-    TCB_t * tcbPtr;
-
-    tcbPtr = ( TCB_t * ) create_task();
+    ptcb = ( TCB_t * ) create_task();
 
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
 
     /* Expectations */
-    uxListRemove_ExpectAndReturn( &tcbPtr->xStateListItem, pdPASS );
-    listLIST_ITEM_CONTAINER_ExpectAndReturn( &tcbPtr->xEventListItem, NULL );
+    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdPASS );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem, NULL );
     vListInsertEnd_ExpectAnyArgs();
     /* API call */
-    vTaskDelete( tcbPtr );
+    vTaskDelete( ptcb );
     /* Validations */
     ASSERT_TASK_DELETE_CALLED();
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
@@ -867,19 +866,17 @@ void test_vTaskDelete_sucess_current_task( void )
 
 void test_vTaskDelete_sucess_current_task_ready_empty( void )
 {
-    TCB_t * tcbPtr;
-
     /* Setup */
-    tcbPtr = ( TCB_t * ) create_task();
+    ptcb = ( TCB_t * ) create_task();
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
 
     /* Expectations */
-    uxListRemove_ExpectAndReturn( &tcbPtr->xStateListItem, pdFAIL );
-    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ tcbPtr->uxPriority ], 0 );
-    listLIST_ITEM_CONTAINER_ExpectAndReturn( &tcbPtr->xEventListItem, NULL );
+    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdFAIL );
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ ptcb->uxPriority ], 0 );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem, NULL );
     vListInsertEnd_ExpectAnyArgs();
     /* API call */
-    vTaskDelete( tcbPtr );
+    vTaskDelete( ptcb );
     /* Validations */
     ASSERT_TASK_DELETE_CALLED();
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
@@ -888,16 +885,14 @@ void test_vTaskDelete_sucess_current_task_ready_empty( void )
 
 void test_vTaskDelete_sucess_current_task_ready_empty_null_task( void )
 {
-    TCB_t * tcbPtr;
-
-    tcbPtr = ( TCB_t * ) create_task();
+    ptcb = ( TCB_t * ) create_task();
 
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
 
     /* Expectations */
-    uxListRemove_ExpectAndReturn( &tcbPtr->xStateListItem, pdFAIL );
-    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ tcbPtr->uxPriority ], 1 );
-    listLIST_ITEM_CONTAINER_ExpectAndReturn( &tcbPtr->xEventListItem, NULL );
+    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdFAIL );
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ ptcb->uxPriority ], 1 );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem, NULL );
     vListInsertEnd_ExpectAnyArgs();
     /* API call */
     vTaskDelete( NULL );
@@ -909,19 +904,17 @@ void test_vTaskDelete_sucess_current_task_ready_empty_null_task( void )
 
 void test_vTaskDelete_sucess_current_task_yield( void )
 {
-    TCB_t * tcbPtr;
-
     xSchedulerRunning = pdTRUE;
-    tcbPtr = ( TCB_t * ) create_task();
+    ptcb = ( TCB_t * ) create_task();
 
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
 
     /* Expectations */
-    uxListRemove_ExpectAndReturn( &tcbPtr->xStateListItem, pdPASS );
-    listLIST_ITEM_CONTAINER_ExpectAndReturn( &tcbPtr->xEventListItem, NULL );
+    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdPASS );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem, NULL );
     vListInsertEnd_ExpectAnyArgs();
     /* API call */
-    vTaskDelete( tcbPtr );
+    vTaskDelete( ptcb );
     /* Validations */
     ASSERT_TASK_DELETE_CALLED();
     ASSERT_PORT_YIELD_WITHIN_API_CALLED();
@@ -931,22 +924,20 @@ void test_vTaskDelete_sucess_current_task_yield( void )
 
 void test_vTaskDelete_sucess_not_current_task( void )
 {
-    TCB_t * tcbPtr;
-
-    tcbPtr = ( TCB_t * ) create_task();
+    ptcb = ( TCB_t * ) create_task();
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
 
     /* Expectations */
-    uxListRemove_ExpectAndReturn( &tcbPtr->xStateListItem, pdPASS );
-    listLIST_ITEM_CONTAINER_ExpectAndReturn( &tcbPtr->xEventListItem,
+    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdPASS );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
                                              &xPendingReadyList );
-    uxListRemove_ExpectAndReturn( &tcbPtr->xEventListItem, pdTRUE );
+    uxListRemove_ExpectAndReturn( &ptcb->xEventListItem, pdTRUE );
     vPortFree_ExpectAnyArgs();
     vPortFree_ExpectAnyArgs();
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
     pxCurrentTCB = NULL;
     /* API call */
-    vTaskDelete( tcbPtr );
+    vTaskDelete( ptcb );
     /* Validations */
     TEST_ASSERT_EQUAL( 0, uxCurrentNumberOfTasks );
     TEST_ASSERT_EQUAL( 0, uxDeletedTasksWaitingCleanUp );
@@ -954,23 +945,22 @@ void test_vTaskDelete_sucess_not_current_task( void )
 
 void test_vTaskDelete_sucess_not_current_task_no_yield( void )
 {
-    TCB_t * tcbPtr;
 
     xSchedulerRunning = pdTRUE;
-    tcbPtr = ( TCB_t * ) create_task();
+    ptcb = ( TCB_t * ) create_task();
     TEST_ASSERT_EQUAL( 1, uxCurrentNumberOfTasks );
 
     /* Expectations */
-    uxListRemove_ExpectAndReturn( &tcbPtr->xStateListItem, pdPASS );
-    listLIST_ITEM_CONTAINER_ExpectAndReturn( &tcbPtr->xEventListItem,
+    uxListRemove_ExpectAndReturn( &ptcb->xStateListItem, pdPASS );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
                                              &xPendingReadyList );
-    uxListRemove_ExpectAndReturn( &tcbPtr->xEventListItem, pdTRUE );
+    uxListRemove_ExpectAndReturn( &ptcb->xEventListItem, pdTRUE );
     vPortFree_ExpectAnyArgs();
     vPortFree_ExpectAnyArgs();
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
     pxCurrentTCB = NULL;
     /* API call */
-    vTaskDelete( tcbPtr );
+    vTaskDelete( ptcb );
     /* Validations */
     TEST_ASSERT_EQUAL( 0, uxCurrentNumberOfTasks );
     TEST_ASSERT_EQUAL( 0, uxDeletedTasksWaitingCleanUp );
@@ -1069,7 +1059,6 @@ void test_xTaskResumeAll_success_1_task_running( void )
 void test_xTaskResumeAll_success_2_tasks_running( void )
 {
     BaseType_t ret;
-    TCB_t * ptcb;
     TaskHandle_t taskHandle;
 
     taskHandle = create_task();
@@ -1095,7 +1084,6 @@ void test_xTaskResumeAll_success_2_tasks_running( void )
 void test_xTaskResumeAll_success_2_tasks_running_xpendedticks_gt_zero( void )
 {
     BaseType_t ret;
-    TCB_t * ptcb;
     TaskHandle_t taskHandle;
 
     xPendedTicks = 1;
@@ -1126,7 +1114,6 @@ void test_xTaskResumeAll_success_2_tasks_running_xpendedticks_gt_zero( void )
 void test_xTaskResumeAll_success_2_tasks_running_increment_ticks( void )
 {
     BaseType_t ret;
-    TCB_t * ptcb;
     TaskHandle_t task_handle;
     TaskHandle_t task_handle2;
 
@@ -1174,7 +1161,6 @@ void test_xTaskResumeAll_success_2_tasks_running_increment_ticks( void )
 void test_xTaskResumeAll_success_2_tasks_running_no_yield( void )
 {
     BaseType_t ret;
-    TCB_t * ptcb;
     TaskHandle_t task_handle;
     TaskHandle_t task_handle2;
 
@@ -1212,7 +1198,6 @@ void test_xTaskResumeAll_success_2_tasks_running_no_yield( void )
 void test_vTaskPrioritySet_success_gt_curr_prio( void )
 {
     TaskHandle_t taskHandle;
-    TCB_t * ptcb;
 
     create_task_priority = 3;
     create_task();
@@ -1244,7 +1229,6 @@ void test_vTaskPrioritySet_success_gt_curr_prio_curr_tcb( void )
 {
     TaskHandle_t taskHandle;
     TaskHandle_t taskHandle2;
-    TCB_t * ptcb;
 
     create_task_priority = 3;
     taskHandle = create_task();
@@ -1277,7 +1261,6 @@ void test_vTaskPrioritySet_success_gt_curr_prio_curr_tcb( void )
 void test_vTaskPrioritySet_success_gt_max_prio( void )
 {
     TaskHandle_t taskHandle;
-    TCB_t * ptcb;
 
     create_task_priority = 3;
     taskHandle = create_task();
@@ -1303,7 +1286,6 @@ void test_vTaskPrioritySet_success_gt_max_prio( void )
 void test_vTaskPrioritySet_success_call_current_null( void )
 {
     TaskHandle_t taskHandle;
-    TCB_t * ptcb;
 
     create_task_priority = 3;
     taskHandle = create_task();
@@ -1329,7 +1311,6 @@ void test_vTaskPrioritySet_success_call_current_null( void )
 void test_vTaskPrioritySet_success_same_prio( void )
 {
     TaskHandle_t taskHandle;
-    TCB_t * ptcb;
 
     create_task_priority = 3;
     taskHandle = create_task();
@@ -1353,7 +1334,6 @@ void test_vTaskPrioritySet_success_same_prio( void )
 void test_vTaskPrioritySet_success_lt_curr_prio_curr_task( void )
 {
     TaskHandle_t taskHandle;
-    TCB_t * ptcb;
 
     create_task_priority = 3;
     taskHandle = create_task();
@@ -1384,7 +1364,6 @@ void test_vTaskPrioritySet_success_lt_curr_prio_curr_task( void )
 void test_vTaskPrioritySet_success_lt_curr_prio_not_curr_task( void )
 {
     TaskHandle_t taskHandle, taskHandle2;
-    TCB_t * ptcb;
 
     create_task_priority = 3;
     taskHandle = create_task();
@@ -1416,7 +1395,6 @@ void test_vTaskPrioritySet_success_lt_curr_prio_not_curr_task( void )
 void test_vTaskPrioritySet_success_gt_curr_prio_diff_base( void )
 {
     TaskHandle_t taskHandle, taskHandle2;
-    TCB_t * ptcb;
 
     create_task_priority = 3;
     taskHandle = create_task();
@@ -1456,7 +1434,6 @@ void test_vTaskPrioritySet_success_gt_curr_prio_diff_base( void )
 void test_vTaskPrioritySet_success_lt_curr_prio_diff_base( void )
 {
     TaskHandle_t taskHandle, taskHandle2;
-    TCB_t * ptcb;
 
     create_task_priority = 3;
     taskHandle = create_task();
@@ -1494,7 +1471,6 @@ void test_uxTaskPriorityGet_success( void )
 {
     TaskHandle_t taskHandle;
     UBaseType_t ret_priority;
-    TCB_t * ptcb;
 
     create_task_priority = 3;
     taskHandle = create_task();
@@ -1513,7 +1489,6 @@ void test_uxTaskPriorityGet_success_null_handle( void )
 {
     TaskHandle_t taskHandle;
     UBaseType_t ret_priority;
-    TCB_t * ptcb;
 
     create_task_priority = 3;
     taskHandle = create_task();
@@ -1532,7 +1507,6 @@ void test_uxTaskPriorityGetFromISR_success( void )
 {
     TaskHandle_t taskHandle;
     UBaseType_t ret_priority;
-    TCB_t * ptcb;
 
     create_task_priority = 3;
     taskHandle = create_task();
@@ -1550,7 +1524,6 @@ void test_uxTaskPriorityGetFromISR_success_null_handle( void )
 {
     TaskHandle_t taskHandle;
     UBaseType_t ret_priority;
-    TCB_t * ptcb;
 
     create_task_priority = 3;
     taskHandle = create_task();
@@ -4769,7 +4742,6 @@ void test_xTaskGenericNotifyWait_success_notif_recieved( void )
     BaseType_t ret;
 
     TaskHandle_t task_handle;
-    TCB_t * ptcb;
 
     task_handle = create_task();
     ptcb = task_handle;
@@ -4796,7 +4768,6 @@ void test_xTaskGenericNotifyWait_success_notif_not_recieved( void )
     BaseType_t ret;
 
     TaskHandle_t task_handle;
-    TCB_t * ptcb;
 
     task_handle = create_task();
     ptcb = task_handle;
@@ -4830,7 +4801,6 @@ void test_xTaskGenericNotifyWait_success_notif_not_recieved_no_wait( void )
     BaseType_t ret;
 
     TaskHandle_t task_handle;
-    TCB_t * ptcb;
 
     task_handle = create_task();
     ptcb = task_handle;
@@ -4859,7 +4829,6 @@ void test_xTaskGenericNotifyWait_success_notif_not_recieved_pull_null( void )
     BaseType_t ret;
 
     TaskHandle_t task_handle;
-    TCB_t * ptcb;
 
     task_handle = create_task();
     ptcb = task_handle;

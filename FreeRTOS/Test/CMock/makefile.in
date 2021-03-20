@@ -43,12 +43,12 @@ CPPFLAGS    :=
 CFLAGS              :=  $(INCLUDE_DIR)  -pthread  --std=c99 -Werror -Wall
 CFLAGS              +=  -fstack-protector-all
 CFLAGS              +=  -Wformat -Werror=format-security -Werror=array-bounds
-CFLAGS              +=  -D_FORTIFY_SOURCE=0
 ifeq ($(ENABLE_SANITIZER),1)
     CFLAGS          +=  -fsanitize=address,undefined -fsanitize-recover=address
     CFLAGS              +=  -O3 -D_FORTIFY_SOURCE=2
 else
     CFLAGS              +=  $(INCLUDE_DIR)  -O0 -ggdb 
+    CFLAGS              +=  -D_FORTIFY_SOURCE=0
 endif
 
 # Linker flags

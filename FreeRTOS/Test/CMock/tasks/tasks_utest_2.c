@@ -50,6 +50,7 @@
 /* C runtime includes. */
 #include <stdbool.h>
 #include <string.h>
+#include <stdlib.h>
 
 
 /* ===========================  EXTERN VARIABLES  =========================== */

@@ -3611,11 +3611,14 @@ void test_vTask_Set_ThreadLocalStoragePointer_fail( void )
                                        configNUM_THREAD_LOCAL_STORAGE_POINTERS + 2,
                                        pValue );
 
+#pragma GCC diagnostic ignored "-Warray-bounds"
+    void * value = *( ptcb->pvThreadLocalStoragePointers +
+                               configNUM_THREAD_LOCAL_STORAGE_POINTERS + 2 );
+#pragma GCC diagnostic error "-Warray-bounds"
     /* this wall cause a warning, since we are reading past the end of the
      * array, could remove this test case since sanitizers would easily catch it
      * */
-    TEST_ASSERT_NOT_EQUAL( pValue,
-                           ptcb->pvThreadLocalStoragePointers[ configNUM_THREAD_LOCAL_STORAGE_POINTERS + 2 ] );
+    TEST_ASSERT_NOT_EQUAL( pValue, value);
 }
 void test_pvTaskGetThreadLocalStoragePointer_fail( void )
 {

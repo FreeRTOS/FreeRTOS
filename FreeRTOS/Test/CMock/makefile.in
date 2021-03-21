@@ -45,7 +45,7 @@ CFLAGS              +=  -fstack-protector-all
 CFLAGS              +=  -Wformat -Werror=format-security -Werror=array-bounds
 ifeq ($(ENABLE_SANITIZER),1)
    CFLAGS           +=  -fsanitize=address,undefined -fsanitize-recover=address
-   CFLAGS           +=  -O -ggdb3 -D_FORTIFY_SOURCE=2
+   CFLAGS           +=  -O3 -ggdb3 -D_FORTIFY_SOURCE=2
 else
     CFLAGS          +=  $(INCLUDE_DIR)  -O0 -ggdb3 
     CFLAGS          +=  -D_FORTIFY_SOURCE=0

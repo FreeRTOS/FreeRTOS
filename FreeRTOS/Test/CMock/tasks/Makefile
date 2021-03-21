@@ -81,10 +81,9 @@ EXEC_PATH        := $(addprefix $(BIN_DIR)/,$(EXEC))
 
 .PHONY: all Makefile directories
 
-.SECONDEXPANSION:
+.SECONDARY:
 all : directories $(EXECUTABLES)
 
-.SECONDARY:
 # Build the executables 1 per configuration
 $(EXEC_PATH)_% : $(MOCK_OBJS)                                                  \
 		 $(SCRATCH_DIR)/%/test_runner.o                                \
@@ -93,7 +92,6 @@ $(EXEC_PATH)_% : $(MOCK_OBJS)                                                  \
 		 | directories
 	$(CC) $+ $(LDFLAGS) -o $@ 
 
-.SECONDARY:
 # Mock All preprocessed header files
 $(MOCK_SRC_LIST) : $(CPP_FILES)                                                \
 		   Makefile $(PROJECT_DIR)/$(PROJECT).yml | directories
@@ -101,7 +99,6 @@ $(MOCK_SRC_LIST) : $(CPP_FILES)                                                \
 	    ruby $(CMOCK_EXEC_DIR)/cmock.rb -o$(PROJECT_DIR)/$(PROJECT).yml    \
 	    $(<D)/*
 
-.SECONDARY:
 # Copy FreeRTOSConfig_$(DISCRIMINATOR).h to the apropriate directory and remove
 # its guard ( FREERTOS_CONFIG_H ) to be able to be ingested into unifdef
 $(CPP_FILES) : | directories
@@ -115,7 +112,6 @@ $(CPP_FILES) : | directories
 		> $(SCRATCH_DIR)/$*/cpp/$$(basename $$h_file) ;                \
 	done
 
-.SECONDARY:
 # Build ALL the mock objects for the config
 # This target is called ONLY once per configuration pattern (%)
 $(MOCK_OBJS) : $(MOCK_SRC_LIST)
@@ -129,7 +125,6 @@ $(MOCK_OBJS) : $(MOCK_SRC_LIST)
 	          -DUNITY_OUTPUT_CHAR -o $$new_name ;                          \
         done
 
-.SECONDARY:
 # Build test_runner.o from test_runner.c
 $(SCRATCH_DIR)/%/test_runner.o : $(SCRATCH_DIR)/%/test_runner.c                \
                                  $(SCRATCH_DIR)/%/$(PROJECT).o
@@ -138,7 +133,6 @@ $(SCRATCH_DIR)/%/test_runner.o : $(SCRATCH_DIR)/%/test_runner.c                \
 	$(eval INCLUDE += -I$(KERNEL_DIR)/include)
 	$(CC) -c $< $(INCLUDE) $(CPPFLAGS)  $(CFLAGS) -o $@
 
-.SECONDARY:
 # Build tasks_utest.o from tasks_utest_%.c
 $(SCRATCH_DIR)/%/$(PROJECT)_utest.o : $(PROJECT_DIR)/$(PROJECT)_utest_%.c      \
                                       | directories
@@ -147,13 +141,11 @@ $(SCRATCH_DIR)/%/$(PROJECT)_utest.o : $(PROJECT_DIR)/$(PROJECT)_utest_%.c      \
 	$(eval INCLUDE += -I$(KERNEL_DIR)/include)
 	$(CC) -c $< $(INCLUDE) $(CPPFLAGS)  $(CFLAGS) -o $@
 
-.SECONDARY:
 # Build tasks.o from tasks.i with the custom FreeRTOSConfig.h and place it in
 # its configuration directory
 $(SCRATCH_DIR)/%/$(PROJECT).o : $(SCRATCH_DIR)/%/$(PROJECT).i | directories
 	$(CC) -c $< $(CFLAGS) $(COVERAGE_OPTS) -o $@
 
-.SECONDARY:
 # Build tasks.i from tasks.c with the custom FreeRTOSConfig.h and place it in
 # its configuration directory
 $(SCRATCH_DIR)/%/$(PROJECT).i : $(KERNEL_DIR)/$(PROJECT).c | directories
@@ -162,7 +154,6 @@ $(SCRATCH_DIR)/%/$(PROJECT).i : $(KERNEL_DIR)/$(PROJECT).c | directories
 	$(eval INCLUDE += -I$(KERNEL_DIR)/include)                             \
 	$(CC) -E $< $(INCLUDE) $(CPPFLAGS) -include list_macros.h -o $@
 
-.SECONDARY:
 # Generate test_runner.c which contains the main function from the test file
 $(SCRATCH_DIR)/%/test_runner.c : $(PROJECT_DIR)/$(PROJECT)_utest_%.c           \
                                  Makefile | directories
@@ -177,6 +168,3 @@ directories :
 	-mkdir   -p  $(CPP_DIRS)
 	-mkdir   -p  $(INCLUDE_DIRS)
 
-.PRECIOUS: build/%.o
-.PRECIOUS: build/%.c
-.PRECIOUS: build/%.h

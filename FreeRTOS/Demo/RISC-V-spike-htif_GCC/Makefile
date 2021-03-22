@@ -2,7 +2,18 @@ CROSS   = riscv64-unknown-elf-
 CC      = $(CROSS)gcc
 OBJCOPY = $(CROSS)objcopy
 ARCH    = $(CROSS)ar
-DEBUG = 1
+DEBUG ?= 0
+XLEN ?= 32
+
+ifeq ($(XLEN), 64)
+    MARCH = rv64ima
+    MABI = lp64
+	STACK_SIZE = 600
+else
+    MARCH = rv32ima
+    MABI = ilp32
+	STACK_SIZE = 300
+endif
 
 BUILD_DIR       = build
 RTOS_SOURCE_DIR = $(abspath ../../Source)
@@ -15,16 +26,16 @@ CPPFLAGS = \
 	-I $(RTOS_SOURCE_DIR)/include \
 	-I $(RTOS_SOURCE_DIR)/portable/GCC/RISC-V \
 	-I $(RTOS_SOURCE_DIR)/portable/GCC/RISC-V/chip_specific_extensions/RV32I_CLINT_no_extensions
-CFLAGS  = -march=rv32ima -mabi=ilp32 -mcmodel=medany \
+CFLAGS  = -march=$(MARCH) -mabi=$(MABI) -mcmodel=medany \
 	-Wall \
 	-fmessage-length=0 \
 	-ffunction-sections \
 	-fdata-sections \
 	-fno-builtin-printf
-ASFLAGS = -march=rv32ima -mabi=ilp32 -mcmodel=medany
+ASFLAGS = -march=$(MARCH) -mabi=$(MABI) -mcmodel=medany
 LDFLAGS = -nostartfiles -Tfake_rom.lds \
 	-Xlinker --gc-sections \
-	-Xlinker --defsym=__stack_size=300
+	-Xlinker --defsym=__stack_size=$(STACK_SIZE)
 
 ifeq ($(DEBUG), 1)
     CFLAGS += -Og -ggdb3

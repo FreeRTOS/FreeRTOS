@@ -16,11 +16,10 @@ $ cd crosstool-ng
 $ ./bootstrap
 $ ./configure --enable-local
 $ make
-
 $ ./ct-ng menuconfig
 ```
 
-Change the following configs:
+For RV32 builds, change the following configs:
 
 ```
 CT_EXPERIMENTAL=y
@@ -28,6 +27,22 @@ CT_ARCH_RISCV=y
 CT_ARCH_64=y
 CT_ARCH_ARCH=rv32ima
 CT_ARCH_ABI=ilp32
+CT_TARGET_CFLAGS="-mcmodel=medany"
+CT_TARGET_LDFLAGS="-mcmodel=medany"
+CT_MULTILIB=y
+CT_DEBUG_GDB=y
+```
+
+For RV64 builds, change the following configs:
+
+```
+CT_EXPERIMENTAL=y
+CT_ARCH_RISCV=y
+CT_ARCH_64=y
+CT_ARCH_ARCH=rv32ima
+CT_ARCH_ABI=ilp32
+CT_TARGET_CFLAGS="-mcmodel=medany"
+CT_TARGET_LDFLAGS="-mcmodel=medany"
 CT_MULTILIB=y
 CT_DEBUG_GDB=y
 ```
@@ -49,28 +64,24 @@ Add path of toolchain that is described above section.
 $ export PATH=~/x-tools/riscv64-unknown-elf/bin:$PATH
 ```
 
-For release build:
+To build, simply run `make`. If you want a debug build, pass `DEBUG=1`. If
+you want an RV64 build, pass `XLEN=64`.
 
-```
-$ make
-```
-
-For debug build:
-
-```
-$ make DEBUG=1
-```
-
-If success to build, executable file RTOSDemo.axf in ./build directory.
-
+The resulting executable file is ./build/RTOSDemo.axf.
 
 ## How to run
 
+RV32:
 ```
-$ spike -p1 --isa RV32IMAFDCV -m0x80000000:0x10000000 --rbb-port 9824 \
+$ spike -p1 --isa RV32IMA -m0x80000000:0x10000000 --rbb-port 9824 \
         ./build/RTOSDemo.axf
 ```
 
+RV64:
+```
+$ spike -p1 --isa RV64IMA -m0x80000000:0x10000000 --rbb-port 9824 \
+        ./build/RTOSDemo.axf
+```
 
 ## How to debug with gdb
 
@@ -88,7 +99,7 @@ $ riscv64-unknown-elf-gdb ./build/RTOSDemo.axf
 (gdb) info threads
 ```
 
-(As of 3/18/2021 OpenOCD's RISC-V FreeRTOS awareness is still incomplete.)
+(As of 3/22/2021 OpenOCD's RISC-V FreeRTOS awareness is still incomplete.)
 
 ## Description
 

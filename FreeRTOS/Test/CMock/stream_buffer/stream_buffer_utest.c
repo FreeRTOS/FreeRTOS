@@ -351,6 +351,11 @@ void setUp( void )
     receiverTaskWoken = 0;
     shouldAbortOnAssertion = pdTRUE;
 
+
+    mock_task_Init();
+    mock_fake_assert_Init();
+    mock_fake_port_Init();
+
     vFakePortEnterCriticalSection_Ignore();
     vFakePortExitCriticalSection_Ignore();
     ulFakePortSetInterruptMaskFromISR_IgnoreAndReturn( 0U );
@@ -365,6 +370,12 @@ void tearDown( void )
 {
     TEST_ASSERT_EQUAL_MESSAGE( 0, assertionFailed, "Assertion check failed in code." );
     UnityMalloc_EndTest();
+    mock_task_Verify();
+    mock_task_Destroy();
+    mock_fake_assert_Verify();
+    mock_fake_assert_Destroy();
+    mock_fake_port_Verify();
+    mock_fake_port_Destroy();
 }
 
 /*! called at the beginning of the whole suite */
@@ -414,34 +425,47 @@ void test_xStreamBufferCreate_success( void )
 }
 
 /**
- * @brief Validates stream buffer create fails on passing invalid parameters.
+ * Returns NULL if there is an integer overflow in the buffer size.
  */
-void test_xStreamBufferCreate_invalid_params( void )
+void test_xStreamBufferCreate_integer_overflow( void )
 {
-    /* Returns NULL if there is an integer overflow in the buffer size. */
     xStreamBuffer = xStreamBufferCreate( TEST_STREAM_BUFFER_MAX_UINT_SIZE, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
     TEST_ASSERT_EQUAL( NULL, xStreamBuffer );
+}
 
-    /* Returns NULL if internal memory allocation of the stream buffer fails. */
+/**
+ * @brief Returns NULL if internal memory allocation of the stream buffer fails.
+ */
+void test_xStreamBufferCreate_malloc_fail( void )
+{
     UnityMalloc_MakeMallocFailAfterCount( 0 );
 
     xStreamBuffer = xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
     TEST_ASSERT_EQUAL( NULL, xStreamBuffer );
+}
 
-    /* Assertion fails if a zero buffer size is passed as  the parameter. */
+/**
+ * @brief Assertion fails if a zero buffer size is passed as  the parameter.
+ */
+void test_xStreamBufferCreate_zero_buffer_size( void )
+{
+
     if( TEST_PROTECT() )
     {
         ( void ) xStreamBufferCreate( 0, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
     }
-
     validate_and_clear_assertitions();
+}
 
-    /* Assertion fails if trigger level is greater than the stream buffer size. */
+/**
+ * @brief Assertion fails if trigger level is greater than the stream buffer size.
+ */
+void test_xStreamBufferCreate_invalid_trigger_level( void )
+{
     if( TEST_PROTECT() )
     {
         ( void ) xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, ( TEST_STREAM_BUFFER_SIZE + 1 ) );
     }
-
     validate_and_clear_assertitions();
 }
 
@@ -450,7 +474,7 @@ void test_xStreamBufferCreate_invalid_params( void )
  */
 void test_xStreamBufferCreateStatic_success( void )
 {
-    StaticStreamBuffer_t streamBufferStruct = { 0 };
+    StaticStreamBuffer_t streamBufferStruct;
 
     /* The size of stream buffer array should be one greater than the required size of stream buffer. */
     uint8_t streamBufferArray[ TEST_STREAM_BUFFER_SIZE + 1 ] = { 0 };
@@ -464,11 +488,12 @@ void test_xStreamBufferCreateStatic_success( void )
 }
 
 /**
- * @brief Validates stream buffer static create fails on passing invalid parameters.
+ * @brief Validates stream buffer static create fails if NULL array is passed.
  */
-void test_xStreamBufferCreateStatic_invalid_params( void )
+void test_xStreamBufferCreateStatic_null_array( void )
 {
-    StaticStreamBuffer_t streamBufferStruct = { 0 };
+    StaticStreamBuffer_t streamBufferStruct;
+
     /* The size of stream buffer array should be one greater than the required size of stream buffer. */
     uint8_t streamBufferArray[ TEST_STREAM_BUFFER_SIZE + 1 ] = { 0 };
 
@@ -479,13 +504,34 @@ void test_xStreamBufferCreateStatic_invalid_params( void )
     xStreamBuffer = xStreamBufferCreateStatic( sizeof( streamBufferArray ), TEST_STREAM_BUFFER_TRIGGER_LEVEL, NULL, &streamBufferStruct );
     TEST_ASSERT_NULL( xStreamBuffer );
     validate_and_clear_assertitions();
+}
+
+/**
+ * @brief Validates stream buffer static create fails if NULL struct is passed.
+ */
+void test_xStreamBufferCreateStatic_invalid_null_struct( void )
+{
+    /* The size of stream buffer array should be one greater than the required size of stream buffer. */
+    uint8_t streamBufferArray[ TEST_STREAM_BUFFER_SIZE + 1 ] = { 0 };
+
+    /* Tests should abort if assertion is enabled or return NULL. */
+    shouldAbortOnAssertion = pdFALSE;
 
     /* Returns NULL if a NULL struct is passed as a parameter. */
     xStreamBuffer = xStreamBufferCreateStatic( sizeof( streamBufferArray ), TEST_STREAM_BUFFER_TRIGGER_LEVEL, streamBufferArray, NULL );
     TEST_ASSERT_NULL( xStreamBuffer );
     validate_and_clear_assertitions();
+}
 
-    /* Assertion fails if the trigger level is invalid. */
+/**
+ * @brief Validates stream buffer static create fails on passing invalid trigger level
+ */
+void test_xStreamBufferCreateStatic_invalid_trigger_level( void )
+{
+    StaticStreamBuffer_t streamBufferStruct;
+    /* The size of stream buffer array should be one greater than the required size of stream buffer. */
+    uint8_t streamBufferArray[ TEST_STREAM_BUFFER_SIZE + 1 ] = { 0 };
+
     if( TEST_PROTECT() )
     {
         ( void ) xStreamBufferCreateStatic( sizeof( streamBufferArray ), TEST_STREAM_BUFFER_SIZE + 2, streamBufferArray, &streamBufferStruct );

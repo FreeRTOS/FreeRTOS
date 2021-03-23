@@ -235,6 +235,10 @@ void setUp( void )
     receiverTaskWoken = 0;
     shouldAbortOnAssertion = pdTRUE;
 
+    mock_task_Init();
+    mock_fake_assert_Init();
+    mock_fake_port_Init();
+
     vFakePortEnterCriticalSection_Ignore();
     vFakePortExitCriticalSection_Ignore();
     ulFakePortSetInterruptMaskFromISR_IgnoreAndReturn( 0U );
@@ -249,6 +253,15 @@ void tearDown( void )
 {
     TEST_ASSERT_EQUAL_MESSAGE( 0, assertionFailed, "Assertion check failed in code." );
     UnityMalloc_EndTest();
+
+    mock_task_Verify();
+    mock_task_Destroy();
+
+    mock_fake_assert_Verify();
+    mock_fake_assert_Destroy();
+
+    mock_fake_port_Verify();
+    mock_fake_port_Destroy();
 }
 
 /*! called at the beginning of the whole suite */
@@ -292,28 +305,42 @@ void test_xMessageBufferCreate_success( void )
 }
 
 /**
- * @brief Validates message buffer create fails if invalid parameters are passed.
+ * @brief API should fail and return null if there is an integer overflow in message buffer size passed.
  */
-void test_xMessageBufferCreate_invalid_params( void )
+void test_xMessageBufferCreate_integer_overflow( void )
 {
-    /* API should fail and return null if there is an integer overflow in message buffer size passed. */
     xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_MAX_UINT_SIZE );
     TEST_ASSERT_EQUAL( NULL, xMessageBuffer );
+}
 
-    /* API should fail and return null if the malloc fails. */
+/**
+ * @breif API should fail and return null if the malloc fails.
+ */
+void test_xMessageBufferCreate_malloc_fail( void )
+{
     UnityMalloc_MakeMallocFailAfterCount( 0 );
     xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
     TEST_ASSERT_NULL( xMessageBuffer );
+}
 
-    /* Should assert if a zero size is passed to create API. */
+/**
+ * @brief Should assert if a zero size is passed to create API.
+ */
+void test_xMessageBufferCreate_zero_size( void )
+{
     if( TEST_PROTECT() )
     {
         ( void ) xMessageBufferCreate( 0 );
     }
 
     validate_and_clear_assertitions();
+}
 
-    /* Should assert if the size passed is less than the minimum size requried to store metadata size. */
+/**
+ * @brief Should assert if the size passed is less than the minimum size requried to store metadata size.
+ */
+void test_xMessageBufferCreate_invalid_size( void )
+{
     if( TEST_PROTECT() )
     {
         ( void ) xMessageBufferCreate( TEST_MESSAGE_METADATA_SIZE );
@@ -327,7 +354,7 @@ void test_xMessageBufferCreate_invalid_params( void )
  */
 void test_xMessageBufferCreateStatic_success( void )
 {
-    StaticMessageBuffer_t messageBufferStruct = { 0 };
+    StaticMessageBuffer_t messageBufferStruct;
     /* The size of message buffer array should be one greater than the required size of message buffer. */
     uint8_t messageBufferArray[ TEST_MESSAGE_BUFFER_SIZE + 1 ] = { 0 };
 
@@ -340,14 +367,11 @@ void test_xMessageBufferCreateStatic_success( void )
 }
 
 /**
- * @brief Validates message buffer creation fails on various types of invalid parameters passed.
+ * @brief Validates message buffer creation fails if null array is passed.
  */
-void test_xMessageBufferCreateStatic_invalid_params( void )
+void test_xMessageBufferCreateStatic_null_array( void )
 {
-    StaticMessageBuffer_t messageBufferStruct = { 0 };
-
-    /* The size of message buffer array should be one greater than the required size of message buffer. */
-    uint8_t messageBufferArray[ TEST_MESSAGE_BUFFER_SIZE + 1 ] = { 0 };
+    StaticMessageBuffer_t messageBufferStruct;
 
     /* Tests should abort if assertion is enabled or return NULL. */
     shouldAbortOnAssertion = pdFALSE;
@@ -356,21 +380,51 @@ void test_xMessageBufferCreateStatic_invalid_params( void )
     xMessageBuffer = xMessageBufferCreateStatic( TEST_MESSAGE_BUFFER_SIZE, NULL, &messageBufferStruct );
     TEST_ASSERT_NULL( xMessageBuffer );
     validate_and_clear_assertitions();
+}
+
+/**
+ * @brief Validates message buffer creation fails if NULL struct is passed.
+ */
+void test_xMessageBufferCreateStatic_null_struct( void )
+{
+    /* The size of message buffer array should be one greater than the required size of message buffer. */
+    uint8_t messageBufferArray[ TEST_MESSAGE_BUFFER_SIZE + 1 ] = { 0 };
+
+    /* Tests should abort if assertion is enabled or return NULL. */
+    shouldAbortOnAssertion = pdFALSE;
 
     /* Returns NULL when NULL message buffer struct is passed as a parameter. */
     xMessageBuffer = xMessageBufferCreateStatic( sizeof( messageBufferArray ), messageBufferArray, NULL );
     TEST_ASSERT_NULL( xMessageBuffer );
     validate_and_clear_assertitions();
+}
 
-    /* Should only assert if the size passed is less than the minimum size requried to store metadata size. */
+/**
+ * @brief Validates message buffer create assert if the size passed is less than the minimum size requried to store metadata size.
+ */
+void test_xMessageBufferCreateStatic_invalid_size( void )
+{
+    StaticMessageBuffer_t messageBufferStruct;
+    /* The size of message buffer array should be one greater than the required size of message buffer. */
+    uint8_t messageBufferArray[ TEST_MESSAGE_BUFFER_SIZE + 1 ] = { 0 };
+
     if( TEST_PROTECT() )
     {
         ( void ) xMessageBufferCreateStatic( TEST_MESSAGE_METADATA_SIZE, messageBufferArray, &messageBufferStruct );
     }
 
     validate_and_clear_assertitions();
+}
 
-    /* Should assert if the size passed is zero */
+/**
+ * @brief Validate message buffer creation asserts if the size passed is zero.
+ */
+void test_xMessageBufferCreateStatic_zero_size( void )
+{
+    StaticMessageBuffer_t messageBufferStruct;
+    /* The size of message buffer array should be one greater than the required size of message buffer. */
+    uint8_t messageBufferArray[ TEST_MESSAGE_BUFFER_SIZE + 1 ] = { 0 };
+
     if( TEST_PROTECT() )
     {
         ( void ) xMessageBufferCreateStatic( 0, messageBufferArray, &messageBufferStruct );
@@ -520,7 +574,31 @@ void test_xMessageBufferReceive_success( void )
 }
 
 /**
- * @brief Validates xMessageBufferReceive API with invalid params.
+ * @brief Validates xMessageBufferReceive API with null input message.
+ */
+void test_xMessageBufferReceive_null_input_message( void )
+{
+    vTaskSetTimeOutState_Ignore();
+    vTaskSuspendAll_Ignore();
+    xTaskResumeAll_IgnoreAndReturn( pdTRUE );
+
+    /* Create a message buffer of sample size. */
+    xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
+    TEST_ASSERT_NOT_NULL( xMessageBuffer );
+
+    /* Should assert if a null input mssage is passed. */
+    if( TEST_PROTECT() )
+    {
+        ( void ) xMessageBufferReceive( xMessageBuffer, NULL, TEST_MAX_MESSAGE_SIZE, TEST_MESSAGE_BUFFER_WAIT_TICKS );
+    }
+
+    validate_and_clear_assertitions();
+    vStreamBufferDelete( xMessageBuffer );
+}
+
+
+/**
+ * @brief Validates xMessageBufferReceive API with null message buffer handle.
  */
 void test_xMessageBufferReceive_invalid_params( void )
 {
@@ -534,14 +612,6 @@ void test_xMessageBufferReceive_invalid_params( void )
     xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
     TEST_ASSERT_NOT_NULL( xMessageBuffer );
 
-    /* Should assert if a null data buffer is passed. */
-    if( TEST_PROTECT() )
-    {
-        ( void ) xMessageBufferReceive( xMessageBuffer, NULL, TEST_MAX_MESSAGE_SIZE, TEST_MESSAGE_BUFFER_WAIT_TICKS );
-    }
-
-    validate_and_clear_assertitions();
-
     /* Should assert if a null message buffer handle is passed. */
     if( TEST_PROTECT() )
     {
@@ -549,7 +619,6 @@ void test_xMessageBufferReceive_invalid_params( void )
     }
 
     validate_and_clear_assertitions();
-
 
     vStreamBufferDelete( xMessageBuffer );
 }

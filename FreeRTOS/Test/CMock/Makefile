@@ -8,7 +8,7 @@ export LD ?= /usr/local/bin/ld
 
 # Add units here when adding a new unit test directory with the same name
 UNITS       +=  list
-#UNITS       +=  queue
+UNITS       +=  queue
 #UNITS       +=  timers
 UNITS       +=  stream_buffer
 UNITS       +=  message_buffer

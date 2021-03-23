@@ -24,7 +24,7 @@ For RV32 builds, change the following configs:
 ```
 CT_EXPERIMENTAL=y
 CT_ARCH_RISCV=y
-CT_ARCH_64=y
+CT_ARCH_64=n
 CT_ARCH_ARCH=rv32ima
 CT_ARCH_ABI=ilp32
 CT_TARGET_CFLAGS="-mcmodel=medany"

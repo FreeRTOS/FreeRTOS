@@ -1,9 +1,9 @@
-CROSS   = riscv64-unknown-elf-
+XLEN ?= 32
+CROSS   = riscv$(XLEN)-unknown-elf-
 CC      = $(CROSS)gcc
 OBJCOPY = $(CROSS)objcopy
 ARCH    = $(CROSS)ar
 DEBUG ?= 0
-XLEN ?= 32
 
 ifeq ($(XLEN), 64)
     MARCH = rv64ima

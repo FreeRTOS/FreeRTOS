@@ -120,7 +120,7 @@ $(MOCK_HDR_LIST) $(MOCK_SRC_LIST) : $(PROJECT_DIR)/$(PROJECT).yml $(MOCK_FILES_F
 # Generate callgraph for coverage filtering
 $(PROJ_DIR)/callgraph.json : $(PROJ_SRC_LIST)
     mkdir -p $(PROJ_DIR)
-    python3 $(UT_ROOT_DIR)/tools/callgraph.py $^ > $@
+    python3 $(UT_ROOT_DIR)/tools/callgraph.py --out $@ $^
 
 # preprocess proj files to expand macros for coverage
 $(PROJ_DIR)/%.i : $(KERNEL_DIR)/%.c

@@ -107,6 +107,10 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 version. */
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
 
+/* The Win32 target is capable of running all the tests tasks at the same
+ * time. */
+#define configRUN_ADDITIONAL_TESTS				1
+
 /* The test that checks the trigger level on stream buffers requires an
 allowable margin of error on slower processors (slower than the Win32
 machine on which the test is developed). */

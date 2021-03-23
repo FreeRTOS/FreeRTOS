@@ -56,7 +56,7 @@ void listSET_LIST_ITEM_VALUE( ListItem_t * listItem,
 List_t * listLIST_ITEM_CONTAINER( const ListItem_t * listItem );
 
 #undef listCURRENT_LIST_LENGTH
-UBaseType_t listCURRENT_LIST_LENGTH( List_t * list );
+UBaseType_t listCURRENT_LIST_LENGTH( const List_t * list );
 
 #undef listGET_ITEM_VALUE_OF_HEAD_ENTRY
 TickType_t listGET_ITEM_VALUE_OF_HEAD_ENTRY( List_t * list );

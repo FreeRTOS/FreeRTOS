@@ -126,7 +126,7 @@ int suiteTearDown( int numFailures )
 
 /*!
  * @brief validate dynamically creating and deleting a new RTOS event group,
- * @coverage xEventGroupCreate
+ * @coverage xEventGroupCreate vEventGroupDelete
  */
 void test_xEventGroupDynamicCreateAndDelete_Success( void )
 {
@@ -169,7 +169,7 @@ void test_xEventGroupDynamicCreate_FailMalloc( void )
 
 /*!
  * @brief validate statically creating and deleting a new RTOS event group,
- * @coverage xEventGroupCreateStatic
+ * @coverage xEventGroupCreateStatic vEventGroupDelete
  */
 void test_xEventGroupStaticCreate_Success( void )
 {
@@ -196,7 +196,7 @@ void test_xEventGroupStaticCreate_Success( void )
 
 /*!
  * @brief validate setting event bits when not tasked is blocked by that event bits
- * @coverage xEventGroupSetBits
+ * @coverage xEventGroupSetBits xEventGroupCreateStatic
  */
 void test_xEventGroupSetBits_NoTaskBlockedOnBits_Success( void )
 {
@@ -226,7 +226,7 @@ void test_xEventGroupSetBits_NoTaskBlockedOnBits_Success( void )
 
 /*!
  * @brief validate setting event bits when some tasks are blocked by that event bits
- * @coverage xEventGroupSetBits
+ * @coverage xEventGroupSetBits xEventGroupCreateStatic
  */
 void test_xEventGroupSetBits_WithTaskBlockedOnBits_Success( void )
 {
@@ -256,6 +256,10 @@ void test_xEventGroupSetBits_WithTaskBlockedOnBits_Success( void )
     TEST_ASSERT_EQUAL( ( BIT_0 ), uxBits & ( BIT_0 ) );
 }
 
+/*!
+ * @brief validate the callback fucntion of setting event bits
+ * @coverage vEventGroupSetBitsCallback xEventGroupCreateStatic
+ */
 void test_vEventGroupSetBitsCallback_Success( void )
 {
     /* Expectation of Function: xEventGroupCreate */
@@ -285,7 +289,7 @@ void test_vEventGroupSetBitsCallback_Success( void )
 
 /*!
  * @brief validate getting current event bits
- * @coverage xEventGroupGetBits
+ * @coverage xEventGroupGetBits xEventGroupSetBits xEventGroupCreateStatic
  */
 void test_xEventGroupGetBits_Success( void )
 {
@@ -318,6 +322,11 @@ void test_xEventGroupGetBits_Success( void )
     TEST_ASSERT_EQUAL( uxBitsSetVal, uxBitsGetVal );
 }
 
+
+/*!
+ * @brief validate getting current event bits from ISR
+ * @coverage xEventGroupGetBitsFromISR xEventGroupCreateStatic
+ */
 void test_xEventGroupGetBitsFromISR_Success( void )
 {
     /* Expectation of Function: xEventGroupCreate */
@@ -339,7 +348,7 @@ void test_xEventGroupGetBitsFromISR_Success( void )
 
 /*!
  * @brief validate clearing event bits
- * @coverage xEventGroupClearBits
+ * @coverage xEventGroupClearBits xEventGroupSetBits xEventGroupCreateStatic
  */
 void test_xEventGroupClearBits_Success( void )
 {
@@ -371,6 +380,10 @@ void test_xEventGroupClearBits_Success( void )
     TEST_ASSERT_EQUAL( 0, uxBitsGetVal & BIT_4 );
 }
 
+/*!
+ * @brief validate the callback fucntion of clearing event bits
+ * @coverage vEventGroupClearBitsCallback xEventGroupSetBits xEventGroupCreateStatic
+ */
 void test_vEventGroupClearBitsCallback_Success( void )
 {
     /* Expectation of Function: xEventGroupCreate */
@@ -400,10 +413,129 @@ void test_vEventGroupClearBitsCallback_Success( void )
 }
 
 /*!
- * @brief validate waiting on certain event bits
- * @coverage xEventGroupWaitBits
+ * @brief validate waiting on for all bits are set when currently no bits are set. Clear the bit before return.
+ * @coverage xEventGroupWaitBits xEventGroupCreateStatic
  */
-void test_xEventGroupWaitBits_Success( void )
+void test_xEventGroupWaitBits_WhenNoBitWasSet_WaitForBoth_ClearBit_Success( void )
+{
+    /* Expectation of Function: xEventGroupCreate */
+    vListInitialise_Expect( 0 );
+    vListInitialise_IgnoreArg_pxList();
+    vListInitialise_ReturnThruPtr_pxList( pxListTemp );
+   
+    /* Expectation of Function: xEventGroupWaitBits */
+    vTaskSuspendAll_Ignore();
+    xTaskGetSchedulerState_IgnoreAndReturn( taskSCHEDULER_SUSPENDED );
+    vTaskPlaceOnUnorderedEventList_Ignore();
+    xTaskResumeAll_IgnoreAndReturn( 1 );
+    uxTaskResetEventItemValue_IgnoreAndReturn( 0 );
+
+    /* Set-up */
+    EventBits_t uxBitsSetVal, uxBitsGetVal;
+    const TickType_t xTicksToWait = 100 / portTICK_PERIOD_MS;
+    StaticEventGroup_t xCreatedEventGroup = { 0 };
+    xEventGroupHandle = xEventGroupCreateStatic( &xCreatedEventGroup );
+    uxBitsSetVal = xEventGroupGetBits( xEventGroupHandle );
+
+    /* API to Test */
+    uxBitsGetVal = xEventGroupWaitBits(
+        xEventGroupHandle, /* The event group being tested. */
+        BIT_0 | BIT_4,     /* The bits within the event group to wait for. */
+        pdTRUE,            /* BIT_0 & BIT_4 should be cleared before returning. */
+        pdTRUE,            /* Wait for both bits. */
+        xTicksToWait );    /* Wait a maximum of 100ms for either bit to be set. */
+
+    /* Validate: Expect to time-out and BitValue unchanged */
+    TEST_ASSERT_EQUAL( uxBitsSetVal, uxBitsGetVal );
+}
+
+/*!
+ * @brief validate non-block waiting on for either one bits is set when currently no bits are set. 
+ *        Don't clear the bit before return.
+ * @coverage xEventGroupWaitBits xEventGroupCreateStatic
+ */
+void test_xEventGroupWaitBits_WhenNoBitWasSet_NonBlock_WaitForEither_NoClear_Success( void )
+{
+    /* Expectation of Function: xEventGroupCreate */
+    vListInitialise_Expect( 0 );
+    vListInitialise_IgnoreArg_pxList();
+    vListInitialise_ReturnThruPtr_pxList( pxListTemp );
+
+    /* Expectation of Function: xEventGroupWaitBits */
+    vTaskSuspendAll_Ignore();
+    xTaskGetSchedulerState_IgnoreAndReturn( taskSCHEDULER_SUSPENDED );
+    vTaskPlaceOnUnorderedEventList_Ignore();
+    xTaskResumeAll_IgnoreAndReturn( 1 );
+    uxTaskResetEventItemValue_IgnoreAndReturn( 0 );
+
+    /* Set-up */
+    EventBits_t uxBitsSetVal, uxBitsGetVal;
+    StaticEventGroup_t xCreatedEventGroup = { 0 };
+    xEventGroupHandle = xEventGroupCreateStatic( &xCreatedEventGroup );
+    uxBitsSetVal = xEventGroupGetBits( xEventGroupHandle );
+    
+    /* API to Test */
+    uxBitsGetVal = xEventGroupWaitBits(
+        xEventGroupHandle, /* The event group being tested. */
+        BIT_0 | BIT_4,     /* The bits within the event group to wait for. */
+        pdFALSE,           /* BIT_0 & BIT_4 should not be cleared before returning. */
+        pdFALSE,           /* Don't wait for both bits, either bit will do. */
+        0 );               /* Don't block and wait */
+
+    /* Validate: Expect return and BitValue unchanged */
+    TEST_ASSERT_EQUAL( uxBitsSetVal, uxBitsGetVal );
+}
+
+/*!
+ * @brief validate waiting on for either one bits. The function should return when one bits are set. 
+ *        Don't clear the bit before return.
+ * @coverage xEventGroupWaitBits xEventGroupCreateStatic
+ */
+void test_xEventGroupWaitBits_WhenBitWasSet_WaitForEither_NoClear_Success( void )
+{
+    /* Expectation of Function: xEventGroupCreate */
+    vListInitialise_Expect( 0 );
+    vListInitialise_IgnoreArg_pxList();
+    vListInitialise_ReturnThruPtr_pxList( pxListTemp );
+
+    /* Expectation of Function: xEventGroupSetBits */
+    listGET_END_MARKER_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
+    vTaskSuspendAll_Ignore();
+    listGET_NEXT_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
+    listGET_LIST_ITEM_VALUE_IgnoreAndReturn( 0 );
+    xTaskResumeAll_IgnoreAndReturn( 1 );
+
+    /* Expectation of Function: xEventGroupWaitBits */
+    xTaskGetSchedulerState_IgnoreAndReturn( taskSCHEDULER_SUSPENDED );
+    vTaskPlaceOnUnorderedEventList_Ignore();
+    uxTaskResetEventItemValue_IgnoreAndReturn( 0 );
+
+    /* Set-up */
+    EventBits_t uxBitsSetVal, uxBitsGetVal;
+    const TickType_t xTicksToWait = 100 / portTICK_PERIOD_MS;
+    StaticEventGroup_t xCreatedEventGroup = { 0 };
+    xEventGroupHandle = xEventGroupCreateStatic( &xCreatedEventGroup );
+    uxBitsSetVal = xEventGroupSetBits( xEventGroupHandle, BIT_0 );      /* BIT_0 was set */
+
+    /* API to Test */
+    uxBitsSetVal = xEventGroupWaitBits(
+        xEventGroupHandle, /* The event group being tested. */
+        BIT_0 | BIT_4,     /* The bits within the event group to wait for. */
+        pdFALSE,           /* BIT_0 & BIT_4 should not be cleared before returning. */
+        pdFALSE,           /* Don't wait for both bits, either bit will do. */
+        xTicksToWait );    /* Wait a maximum of 100ms for either bit to be set. */
+    uxBitsGetVal = xEventGroupGetBits( xEventGroupHandle );
+
+    /* Validate: Expect to return because BIT_0 was set */
+    TEST_ASSERT_EQUAL( BIT_0, uxBitsSetVal );
+    TEST_ASSERT_EQUAL( BIT_0, uxBitsGetVal & BIT_0 );
+}
+
+/*!
+ * @brief validate waiting on for all bits are set. Don't clear the bit before return.
+ * @coverage xEventGroupWaitBits xEventGroupCreateStatic
+ */
+void test_xEventGroupWaitBits_WhenBitWasSet_WaitForBoth_WithClear_Success( void )
 {
     /* Expectation of Function: xEventGroupCreate */
     vListInitialise_Expect( 0 );
@@ -419,7 +551,6 @@ void test_xEventGroupWaitBits_Success( void )
     listGET_END_MARKER_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
     listGET_NEXT_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
 
-
     /* Expectation of Function: xEventGroupWaitBits */
     xTaskGetSchedulerState_IgnoreAndReturn( taskSCHEDULER_SUSPENDED );
     vTaskPlaceOnUnorderedEventList_Ignore();
@@ -430,46 +561,11 @@ void test_xEventGroupWaitBits_Success( void )
     const TickType_t xTicksToWait = 100 / portTICK_PERIOD_MS;
     StaticEventGroup_t xCreatedEventGroup = { 0 };
     xEventGroupHandle = xEventGroupCreateStatic( &xCreatedEventGroup );
+    uxBitsSetVal = xEventGroupSetBits( xEventGroupHandle, BIT_0 );  /* BIT_0 was set */
+    uxBitsSetVal = xEventGroupSetBits( xEventGroupHandle, BIT_4 );  /* BIT_4 was set */
+    TEST_ASSERT_EQUAL( BIT_0 | BIT_4, uxBitsSetVal );
 
     /* API to Test */
-    /* Test-1: No bit was set */
-    uxBitsSetVal = xEventGroupGetBits( xEventGroupHandle );
-    uxBitsGetVal = xEventGroupWaitBits(
-        xEventGroupHandle, /* The event group being tested. */
-        BIT_0 | BIT_4,     /* The bits within the event group to wait for. */
-        pdTRUE,            /* BIT_0 & BIT_4 should be cleared before returning. */
-        pdTRUE,            /* Wait for both bits. */
-        xTicksToWait );    /* Wait a maximum of 100ms for either bit to be set. */
-
-    /* Validate: Expect to time-out and BitValue unchanged */
-    TEST_ASSERT_EQUAL( uxBitsSetVal, uxBitsGetVal );
-
-    /* Test-2: No bit was set */
-    uxBitsGetVal = xEventGroupWaitBits(
-        xEventGroupHandle, /* The event group being tested. */
-        BIT_0 | BIT_4,     /* The bits within the event group to wait for. */
-        pdFALSE,           /* BIT_0 & BIT_4 should not be cleared before returning. */
-        pdFALSE,           /* Don't wait for both bits, either bit will do. */
-        0 );               /* Don't block and wait */
-    /* Validate: Expect return and BitValue unchanged */
-    TEST_ASSERT_EQUAL( uxBitsSetVal, uxBitsGetVal );
-
-    /* Test-3: BIT_0 was set */
-    uxBitsSetVal = xEventGroupSetBits( xEventGroupHandle, BIT_0 );
-    uxBitsSetVal = xEventGroupWaitBits(
-        xEventGroupHandle, /* The event group being tested. */
-        BIT_0 | BIT_4,     /* The bits within the event group to wait for. */
-        pdFALSE,           /* BIT_0 & BIT_4 should not be cleared before returning. */
-        pdFALSE,           /* Don't wait for both bits, either bit will do. */
-        xTicksToWait );    /* Wait a maximum of 100ms for either bit to be set. */
-    uxBitsGetVal = xEventGroupGetBits( xEventGroupHandle );
-
-    /* Validate: Expect to return because BIT_0 was set */
-    TEST_ASSERT_EQUAL( BIT_0, uxBitsSetVal );
-    TEST_ASSERT_EQUAL( BIT_0, uxBitsGetVal & BIT_0 );
-
-    /* Test-4: BIT_0 and BIT_4 were set */
-    uxBitsSetVal = xEventGroupSetBits( xEventGroupHandle, BIT_4 );
     uxBitsSetVal = xEventGroupWaitBits(
         xEventGroupHandle, /* The event group being tested. */
         BIT_0 | BIT_4,     /* The bits within the event group to wait for. */
@@ -483,31 +579,103 @@ void test_xEventGroupWaitBits_Success( void )
     TEST_ASSERT_EQUAL( 0, uxBitsGetVal & ( BIT_0 | BIT_4 ) );
 }
 
-
 /*!
- * @brief validate tasks sync on event bits
- * @coverage xEventGroupSync
+ * @brief validate tasks sync on event bits:
+ *        Set BIT_0 before reach the sync point and wait for all sync bits are set. 
+ *        Should return due to timeout.
+ * @coverage xEventGroupSync xEventGroupCreateStatic
  */
-void test_xEventGroupSync_Success( void )
+void test_xEventGroupSync_SetBits_BlockWait_NotSynced_Success( void )
 {
     /* Expectation of Function: xEventGroupCreate */
     vListInitialise_Expect( 0 );
     vListInitialise_IgnoreArg_pxList();
     vListInitialise_ReturnThruPtr_pxList( pxListTemp );
 
-    /* Expectation of Function: xEventGroupSetBits x5 */
+    /* Expectation of Function: xEventGroupSetBits */
+    listGET_END_MARKER_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
+    vTaskSuspendAll_Ignore();
+    listGET_NEXT_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
+    xTaskResumeAll_IgnoreAndReturn( 1 );
+    listGET_LIST_ITEM_VALUE_IgnoreAndReturn( 0 );
+    
+    /* Expectation of Function: xEventGroupSync */
+    xTaskGetSchedulerState_IgnoreAndReturn( taskSCHEDULER_SUSPENDED );
+    vTaskPlaceOnUnorderedEventList_Ignore();
+    uxTaskResetEventItemValue_IgnoreAndReturn( 0 );
+
+    /* Set-up */
+    EventBits_t uxReturn;
+    StaticEventGroup_t xCreatedEventGroup = { 0 };
+    xEventGroupHandle = xEventGroupCreateStatic( &xCreatedEventGroup );
+
+    /* API to Test */
+    uxReturn = xEventGroupSync( xEventGroupHandle, BIT_0, ALL_SYNC_BITS, portMAX_DELAY );
+
+    /* Validate: Expect to timeout and BIT_0 was set */
+    TEST_ASSERT_EQUAL( BIT_0, uxReturn );
+}
+
+/*!
+ * @brief validate tasks sync on event bits:
+ *        Non-Block wait for all sync bits are set.
+ *        Should return due to timeout.
+ * @coverage xEventGroupSync xEventGroupCreateStatic
+ */
+void test_xEventGroupSync_NoSetBit_NonBlockWait_NotSynced_Success( void )
+{
+    /* Expectation of Function: xEventGroupCreate */
+    vListInitialise_Expect( 0 );
+    vListInitialise_IgnoreArg_pxList();
+    vListInitialise_ReturnThruPtr_pxList( pxListTemp );
+
+    /* Expectation of Function: xEventGroupSetBits x2 */
     listGET_END_MARKER_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
     vTaskSuspendAll_Ignore();
     listGET_NEXT_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
     xTaskResumeAll_IgnoreAndReturn( 1 );
     listGET_LIST_ITEM_VALUE_IgnoreAndReturn( 0 );
     listGET_END_MARKER_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
+    listGET_NEXT_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
 
-    listGET_NEXT_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
+    /* Expectation of Function: xEventGroupSync */
+    xTaskGetSchedulerState_IgnoreAndReturn( taskSCHEDULER_SUSPENDED );
+    vTaskPlaceOnUnorderedEventList_Ignore();
+    uxTaskResetEventItemValue_IgnoreAndReturn( 0 );
+
+    /* Set-up */
+    EventBits_t uxReturn;
+    StaticEventGroup_t xCreatedEventGroup = { 0 };
+    xEventGroupHandle = xEventGroupCreateStatic( &xCreatedEventGroup );
+    uxReturn = xEventGroupSetBits( xEventGroupHandle, ( BIT_0 | BIT_2 ) );
+    TEST_ASSERT_EQUAL( ( BIT_0 | BIT_2 ), uxReturn );
+
+    /* API to Test */
+    uxReturn = xEventGroupSync( xEventGroupHandle, 0, ALL_SYNC_BITS, 0 );
+
+    /* Validate: Expect to return and BIT_0 and BIT_2 was set */
+    TEST_ASSERT_EQUAL( ( BIT_0 | BIT_2 ), uxReturn );
+}
+
+/*!
+ * @brief validate tasks sync on event bits:
+ *        Set BIT_0 before reach the sync point and wait for all sync bits are set.
+ *        Should return due to reach the sync point.
+ * @coverage xEventGroupSync xEventGroupCreateStatic
+ */
+void test_xEventGroupSync_SetBits_BlockWait_Synced_Success( void )
+{
+    /* Expectation of Function: xEventGroupCreate */
+    vListInitialise_Expect( 0 );
+    vListInitialise_IgnoreArg_pxList();
+    vListInitialise_ReturnThruPtr_pxList( pxListTemp );
+
+    /* Expectation of Function: xEventGroupSetBits x2 */
     listGET_END_MARKER_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
+    vTaskSuspendAll_Ignore();
     listGET_NEXT_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
-    listGET_END_MARKER_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
-    listGET_NEXT_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
+    xTaskResumeAll_IgnoreAndReturn( 1 );
+    listGET_LIST_ITEM_VALUE_IgnoreAndReturn( 0 );
     listGET_END_MARKER_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
     listGET_NEXT_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
 
@@ -522,27 +690,17 @@ void test_xEventGroupSync_Success( void )
     xEventGroupHandle = xEventGroupCreateStatic( &xCreatedEventGroup );
 
     /* API to Test */
-    /* Test-1: Set BIT_0 before reach the sync point and wait for ALL_SYNC_BITS is set */
-    uxReturn = xEventGroupSync( xEventGroupHandle, BIT_0, ALL_SYNC_BITS, portMAX_DELAY );
-
-    /* Validate: Expect to timeout and BIT_0 was set */
-    TEST_ASSERT_EQUAL( BIT_0, uxReturn );
-
-    /* Test-2: BIT_2 was set, no block */
-    uxReturn = xEventGroupSetBits( xEventGroupHandle, BIT_2 );
-    uxReturn = xEventGroupSync( xEventGroupHandle, 0, ALL_SYNC_BITS, 0 );
-
-    /* Validate: Expect to return and BIT_0 and BIT_2 was set */
-    TEST_ASSERT_EQUAL( ( BIT_0 | BIT_2 ), uxReturn );
-
-    /* Test-2: BIT_4 was set, now ALL_SYNC_BITS are set */
-    uxReturn = xEventGroupSetBits( xEventGroupHandle, BIT_4 );
+    uxReturn = xEventGroupSetBits( xEventGroupHandle, ALL_SYNC_BITS );
     uxReturn = xEventGroupSync( xEventGroupHandle, 0, ALL_SYNC_BITS, portMAX_DELAY );
 
     /* Validate: Expect to return and BIT_0 and BIT_2 was set */
-    TEST_ASSERT_EQUAL( ( BIT_0 | BIT_2 | BIT_4 ), uxReturn );
+    TEST_ASSERT_EQUAL( ALL_SYNC_BITS, uxReturn );
 }
 
+/*!
+ * @brief validate getting event group number
+ * @coverage uxEventGroupGetNumber xEventGroupCreateStatic
+ */
 void test_uxEventGroupGetNumber_Success( void )
 {
     /* Expectation of Function: xEventGroupCreate */
@@ -562,6 +720,10 @@ void test_uxEventGroupGetNumber_Success( void )
     TEST_ASSERT_EQUAL( 0, xReturn );
 }
 
+/*!
+ * @brief validate setting event bits.
+ * @coverage vEventGroupSetNumber xEventGroupCreateStatic
+ */
 void test_vEventGroupSetNumber_Success( void )
 {
     /* Expectation of Function: xEventGroupCreate */

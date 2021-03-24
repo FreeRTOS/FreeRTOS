@@ -121,7 +121,6 @@ int suiteTearDown( int numFailures )
 /* ===========================  Static Functions  =========================== */
 
 
-
 /* ==============================  Test Cases  ============================== */
 
 /*!
@@ -166,7 +165,6 @@ void test_xEventGroupDynamicCreate_FailMalloc( void )
     TEST_ASSERT_EQUAL( NULL, xEventGroupHandle );
 }
 
-
 /*!
  * @brief validate statically creating and deleting a new RTOS event group,
  * @coverage xEventGroupCreateStatic vEventGroupDelete
@@ -195,8 +193,37 @@ void test_xEventGroupStaticCreate_Success( void )
 }
 
 /*!
+ * @brief validate statically creating and deleting a new RTOS event group,
+ * 
+ */
+void test_xEventGroupStaticCreate_InvalidInput_Failed( void )
+{
+    /* Expectation of Function: xEventGroupCreateStatic */
+    vListInitialise_Ignore();
+
+    /* API to Test */
+    xEventGroupHandle = xEventGroupCreateStatic( NULL );
+
+    /* Validate */
+    TEST_ASSERT_EQUAL( NULL, xEventGroupHandle );
+}
+
+/*!
+ * @brief validate statically creating and deleting a new RTOS event group,
+ * @coverage xEventGroupCreateStatic vEventGroupDelete
+ */
+void test_vEventGroupDelete_InvalidInput_Failed( void )
+{
+    /* API to Test */
+    vEventGroupDelete( NULL );
+
+    /* Validate */
+    TEST_ASSERT_EQUAL( NULL, xEventGroupHandle );
+}
+
+/*!
  * @brief validate setting event bits when not tasked is blocked by that event bits
- * @coverage xEventGroupSetBits xEventGroupCreateStatic
+ * @coverage xEventGroupSetBits
  */
 void test_xEventGroupSetBits_NoTaskBlockedOnBits_Success( void )
 {
@@ -226,7 +253,7 @@ void test_xEventGroupSetBits_NoTaskBlockedOnBits_Success( void )
 
 /*!
  * @brief validate setting event bits when some tasks are blocked by that event bits
- * @coverage xEventGroupSetBits xEventGroupCreateStatic
+ * @coverage xEventGroupSetBits
  */
 void test_xEventGroupSetBits_WithTaskBlockedOnBits_Success( void )
 {
@@ -258,7 +285,7 @@ void test_xEventGroupSetBits_WithTaskBlockedOnBits_Success( void )
 
 /*!
  * @brief validate the callback fucntion of setting event bits
- * @coverage vEventGroupSetBitsCallback xEventGroupCreateStatic
+ * @coverage vEventGroupSetBitsCallback
  */
 void test_vEventGroupSetBitsCallback_Success( void )
 {
@@ -289,7 +316,7 @@ void test_vEventGroupSetBitsCallback_Success( void )
 
 /*!
  * @brief validate getting current event bits
- * @coverage xEventGroupGetBits xEventGroupSetBits xEventGroupCreateStatic
+ * @coverage xEventGroupGetBits xEventGroupSetBits
  */
 void test_xEventGroupGetBits_Success( void )
 {
@@ -322,10 +349,9 @@ void test_xEventGroupGetBits_Success( void )
     TEST_ASSERT_EQUAL( uxBitsSetVal, uxBitsGetVal );
 }
 
-
 /*!
  * @brief validate getting current event bits from ISR
- * @coverage xEventGroupGetBitsFromISR xEventGroupCreateStatic
+ * @coverage xEventGroupGetBitsFromISR
  */
 void test_xEventGroupGetBitsFromISR_Success( void )
 {
@@ -348,7 +374,7 @@ void test_xEventGroupGetBitsFromISR_Success( void )
 
 /*!
  * @brief validate clearing event bits
- * @coverage xEventGroupClearBits xEventGroupSetBits xEventGroupCreateStatic
+ * @coverage xEventGroupClearBits
  */
 void test_xEventGroupClearBits_Success( void )
 {
@@ -382,7 +408,7 @@ void test_xEventGroupClearBits_Success( void )
 
 /*!
  * @brief validate the callback fucntion of clearing event bits
- * @coverage vEventGroupClearBitsCallback xEventGroupSetBits xEventGroupCreateStatic
+ * @coverage vEventGroupClearBitsCallback
  */
 void test_vEventGroupClearBitsCallback_Success( void )
 {
@@ -414,7 +440,7 @@ void test_vEventGroupClearBitsCallback_Success( void )
 
 /*!
  * @brief validate waiting on for all bits are set when currently no bits are set. Clear the bit before return.
- * @coverage xEventGroupWaitBits xEventGroupCreateStatic
+ * @coverage xEventGroupWaitBits
  */
 void test_xEventGroupWaitBits_WhenNoBitWasSet_WaitForBoth_ClearBit_Success( void )
 {
@@ -452,7 +478,7 @@ void test_xEventGroupWaitBits_WhenNoBitWasSet_WaitForBoth_ClearBit_Success( void
 /*!
  * @brief validate non-block waiting on for either one bits is set when currently no bits are set. 
  *        Don't clear the bit before return.
- * @coverage xEventGroupWaitBits xEventGroupCreateStatic
+ * @coverage xEventGroupWaitBits
  */
 void test_xEventGroupWaitBits_WhenNoBitWasSet_NonBlock_WaitForEither_NoClear_Success( void )
 {
@@ -489,7 +515,7 @@ void test_xEventGroupWaitBits_WhenNoBitWasSet_NonBlock_WaitForEither_NoClear_Suc
 /*!
  * @brief validate waiting on for either one bits. The function should return when one bits are set. 
  *        Don't clear the bit before return.
- * @coverage xEventGroupWaitBits xEventGroupCreateStatic
+ * @coverage xEventGroupWaitBits
  */
 void test_xEventGroupWaitBits_WhenBitWasSet_WaitForEither_NoClear_Success( void )
 {
@@ -533,7 +559,7 @@ void test_xEventGroupWaitBits_WhenBitWasSet_WaitForEither_NoClear_Success( void 
 
 /*!
  * @brief validate waiting on for all bits are set. Don't clear the bit before return.
- * @coverage xEventGroupWaitBits xEventGroupCreateStatic
+ * @coverage xEventGroupWaitBits
  */
 void test_xEventGroupWaitBits_WhenBitWasSet_WaitForBoth_WithClear_Success( void )
 {
@@ -583,7 +609,7 @@ void test_xEventGroupWaitBits_WhenBitWasSet_WaitForBoth_WithClear_Success( void 
  * @brief validate tasks sync on event bits:
  *        Set BIT_0 before reach the sync point and wait for all sync bits are set. 
  *        Should return due to timeout.
- * @coverage xEventGroupSync xEventGroupCreateStatic
+ * @coverage xEventGroupSync
  */
 void test_xEventGroupSync_SetBits_BlockWait_NotSynced_Success( void )
 {
@@ -620,7 +646,7 @@ void test_xEventGroupSync_SetBits_BlockWait_NotSynced_Success( void )
  * @brief validate tasks sync on event bits:
  *        Non-Block wait for all sync bits are set.
  *        Should return due to timeout.
- * @coverage xEventGroupSync xEventGroupCreateStatic
+ * @coverage xEventGroupSync
  */
 void test_xEventGroupSync_NoSetBit_NonBlockWait_NotSynced_Success( void )
 {
@@ -661,7 +687,7 @@ void test_xEventGroupSync_NoSetBit_NonBlockWait_NotSynced_Success( void )
  * @brief validate tasks sync on event bits:
  *        Set BIT_0 before reach the sync point and wait for all sync bits are set.
  *        Should return due to reach the sync point.
- * @coverage xEventGroupSync xEventGroupCreateStatic
+ * @coverage xEventGroupSync
  */
 void test_xEventGroupSync_SetBits_BlockWait_Synced_Success( void )
 {
@@ -699,7 +725,7 @@ void test_xEventGroupSync_SetBits_BlockWait_Synced_Success( void )
 
 /*!
  * @brief validate getting event group number
- * @coverage uxEventGroupGetNumber xEventGroupCreateStatic
+ * @coverage uxEventGroupGetNumber
  */
 void test_uxEventGroupGetNumber_Success( void )
 {
@@ -722,7 +748,7 @@ void test_uxEventGroupGetNumber_Success( void )
 
 /*!
  * @brief validate setting event bits.
- * @coverage vEventGroupSetNumber xEventGroupCreateStatic
+ * @coverage vEventGroupSetNumber
  */
 void test_vEventGroupSetNumber_Success( void )
 {
@@ -744,23 +770,33 @@ void test_vEventGroupSetNumber_Success( void )
     TEST_ASSERT_EQUAL( 3, xReturn );
 }
 
-
-/* --- Below testcase are meaningless, currently just added for code coverage --- */
-
-
+/*!
+ * @brief validate clearing event bits from ISR.
+ * @coverage xEventGroupClearBitsFromISR
+ */
 void test_xEventGroupClearBitsFromISR_Success( void )
 {
     /* Expectation of Function: xEventGroupClearBitsFromISR */
-    xTimerPendFunctionCallFromISR_IgnoreAndReturn( pdPASS );
+    xTimerPendFunctionCallFromISR_ExpectAndReturn( vEventGroupClearBitsCallback, NULL, 1, NULL, pdPASS );
+    xTimerPendFunctionCallFromISR_IgnoreArg_pvParameter1();
+    xTimerPendFunctionCallFromISR_IgnoreArg_ulParameter2();
+    xTimerPendFunctionCallFromISR_IgnoreArg_pxHigherPriorityTaskWoken();
 
     /* API to Test */
     ( void ) xEventGroupClearBitsFromISR( NULL, BIT_0 );
 }
 
+/*!
+ * @brief validate setting event bits from ISR.
+ * @coverage xEventGroupClearBitsFromISR
+ */
 void test_xEventGroupSetBitsFromISR_Success( void )
 {
     /* Expectation of Function: xEventGroupSetBitsFromISR */
-    xTimerPendFunctionCallFromISR_IgnoreAndReturn( pdPASS );
+    xTimerPendFunctionCallFromISR_ExpectAndReturn( vEventGroupSetBitsCallback, NULL, 1, pdFALSE, pdPASS );
+    xTimerPendFunctionCallFromISR_IgnoreArg_pvParameter1();
+    xTimerPendFunctionCallFromISR_IgnoreArg_ulParameter2();
+    xTimerPendFunctionCallFromISR_IgnoreArg_pxHigherPriorityTaskWoken();
 
     /* Set-up */
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;

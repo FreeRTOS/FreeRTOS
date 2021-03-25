@@ -460,9 +460,9 @@ void test_xMessageBufferSend_success( void )
 }
 
 /**
- * @brief Validates xMessageBufferSend API with various invalid params.
+ * Sending a message of size greater than maximum possible size should return zero bytes sent.
  */
-void test_xMessageBufferSend_invalid_params( void )
+void test_xMessageBufferSend_message_size_overflow( void )
 {
     uint8_t message[ TEST_MAX_MESSAGE_SIZE + 1 ] = { 0 };
     size_t sentBytes = 0;
@@ -475,12 +475,26 @@ void test_xMessageBufferSend_invalid_params( void )
     xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
     TEST_ASSERT_NOT_NULL( xMessageBuffer );
 
-    /* Sending a message of size greater than maximum possible size should return zero bytes sent. */
     sentBytes = xMessageBufferSend( xMessageBuffer, message, TEST_MAX_MESSAGE_SIZE + 1, TEST_MESSAGE_BUFFER_WAIT_TICKS );
     TEST_ASSERT_EQUAL( 0, sentBytes );
     TEST_ASSERT_EQUAL( TEST_MESSAGE_BUFFER_SIZE, xMessageBufferSpacesAvailable( xMessageBuffer ) );
 
-    /* Sending null message should trigger an assert. */
+    vStreamBufferDelete( xMessageBuffer );
+}
+
+/**
+ * @brief Sending null message should trigger an assert.
+ */
+void test_xMessageBufferSend_null_message( void )
+{
+    vTaskSetTimeOutState_Ignore();
+    vTaskSuspendAll_Ignore();
+    xTaskResumeAll_IgnoreAndReturn( pdTRUE );
+
+    /* Create a message buffer of sample size. */
+    xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
+    TEST_ASSERT_NOT_NULL( xMessageBuffer );
+
     if( TEST_PROTECT() )
     {
         ( void ) xMessageBufferSend( xMessageBuffer, NULL, TEST_MAX_MESSAGE_SIZE + 1, TEST_MESSAGE_BUFFER_WAIT_TICKS );
@@ -488,14 +502,30 @@ void test_xMessageBufferSend_invalid_params( void )
 
     validate_and_clear_assertitions();
 
-    /* Sending to a null message buffer should trigger an assert. */
+    vStreamBufferDelete( xMessageBuffer );
+}
+
+/**
+ * @brief Sending to a null message buffer should trigger an assert.
+ */
+void test_xMessageBufferSend_null_message_buffer( void )
+{
+    uint8_t message[ TEST_MAX_MESSAGE_SIZE + 1 ] = { 0 };
+
+    vTaskSetTimeOutState_Ignore();
+    vTaskSuspendAll_Ignore();
+    xTaskResumeAll_IgnoreAndReturn( pdTRUE );
+
+    /* Create a message buffer of sample size. */
+    xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
+    TEST_ASSERT_NOT_NULL( xMessageBuffer );
+
     if( TEST_PROTECT() )
     {
         ( void ) xMessageBufferSend( NULL, message, TEST_MAX_MESSAGE_SIZE + 1, TEST_MESSAGE_BUFFER_WAIT_TICKS );
     }
 
     validate_and_clear_assertitions();
-
 
     vStreamBufferDelete( xMessageBuffer );
 }

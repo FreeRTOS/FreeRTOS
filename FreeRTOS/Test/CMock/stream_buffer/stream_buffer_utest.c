@@ -110,10 +110,16 @@ static StreamBufferHandle_t xStreamBuffer;
  */
 static BaseType_t shouldAbortOnAssertion;
 
+/**
+ * @brief Variable used to record the total dynamic size allocated in a test.
+ */
+static size_t dynamicMemoryAllocated = 0;
+
 /* ==========================  CALLBACK FUNCTIONS =========================== */
 
 void * pvPortMalloc( size_t xSize )
 {
+    dynamicMemoryAllocated += xSize;
     return unity_malloc( xSize );
 }
 void vPortFree( void * pv )
@@ -350,6 +356,7 @@ void setUp( void )
     senderTaskWoken = 0;
     receiverTaskWoken = 0;
     shouldAbortOnAssertion = pdTRUE;
+    dynamicMemoryAllocated = 0;
 
 
     mock_task_Init();
@@ -416,6 +423,9 @@ void test_xStreamBufferCreate_success( void )
     xStreamBuffer = xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
     TEST_ASSERT_NOT_EQUAL( NULL, xStreamBuffer );
     validate_stream_buffer_init_state( xStreamBuffer, TEST_STREAM_BUFFER_SIZE );
+
+    /* Verify internal memory allocated is equal to size of the struct + buffer size + 1. */
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE + 1U + sizeof( StaticStreamBuffer_t ), dynamicMemoryAllocated );
 
     /* Set a stream buffer number and get it. */
     vStreamBufferSetStreamBufferNumber( xStreamBuffer, TEST_STREAM_BUFFER_NUMBER );
@@ -1009,7 +1019,7 @@ void test_xStreamBufferSetTrigerLevel_success( void )
 /**
  * @brief Validate setting trigger level with invalid parameters fails.
  */
-void test_xStreamBufferSetTrigerLevel_invalid_params( void )
+void test_xStreamBufferSetTrigerLevel_larger_than_buffer_size( void )
 {
     BaseType_t status;
 
@@ -1021,7 +1031,19 @@ void test_xStreamBufferSetTrigerLevel_invalid_params( void )
     status = xStreamBufferSetTriggerLevel( xStreamBuffer, ( TEST_STREAM_BUFFER_SIZE + 1 ) );
     TEST_ASSERT_EQUAL( pdFALSE, status );
 
-    /* Set the trigger level to 0 should pass but internally set trigger level to 1. */
+    vStreamBufferDelete( xStreamBuffer );
+}
+
+/**
+ * @brief Set the trigger level to 0 should pass but internally set trigger level to 1.
+ */
+void test_xStreamBufferSetTrigerLevel_zero( void )
+{
+    BaseType_t status;
+
+    xStreamBuffer = xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
+    TEST_ASSERT_NOT_NULL( xStreamBuffer );
+
     status = xStreamBufferSetTriggerLevel( xStreamBuffer, 0 );
     TEST_ASSERT_EQUAL( pdTRUE, status );
 

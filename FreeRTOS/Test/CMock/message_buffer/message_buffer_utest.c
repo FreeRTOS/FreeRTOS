@@ -285,7 +285,7 @@ static void validate_message_buffer_init_state( MessageBufferHandle_t xMessageBu
     TEST_ASSERT_EQUAL( 1, ucStreamBufferGetStreamBufferType( xMessageBuffer ) );
 }
 
-static void validate_and_clear_assertitions( void )
+static void validate_and_clear_assertions( void )
 {
     TEST_ASSERT_EQUAL( 1, assertionFailed );
     assertionFailed = 0;
@@ -333,7 +333,7 @@ void test_xMessageBufferCreate_zero_size( void )
         ( void ) xMessageBufferCreate( 0 );
     }
 
-    validate_and_clear_assertitions();
+    validate_and_clear_assertions();
 }
 
 /**
@@ -346,7 +346,7 @@ void test_xMessageBufferCreate_invalid_size( void )
         ( void ) xMessageBufferCreate( TEST_MESSAGE_METADATA_SIZE );
     }
 
-    validate_and_clear_assertitions();
+    validate_and_clear_assertions();
 }
 
 /**
@@ -379,7 +379,7 @@ void test_xMessageBufferCreateStatic_null_array( void )
     /* Returns NULL when NULL storage area is passed as a parameter. */
     xMessageBuffer = xMessageBufferCreateStatic( TEST_MESSAGE_BUFFER_SIZE, NULL, &messageBufferStruct );
     TEST_ASSERT_NULL( xMessageBuffer );
-    validate_and_clear_assertitions();
+    validate_and_clear_assertions();
 }
 
 /**
@@ -396,7 +396,7 @@ void test_xMessageBufferCreateStatic_null_struct( void )
     /* Returns NULL when NULL message buffer struct is passed as a parameter. */
     xMessageBuffer = xMessageBufferCreateStatic( sizeof( messageBufferArray ), messageBufferArray, NULL );
     TEST_ASSERT_NULL( xMessageBuffer );
-    validate_and_clear_assertitions();
+    validate_and_clear_assertions();
 }
 
 /**
@@ -413,7 +413,7 @@ void test_xMessageBufferCreateStatic_invalid_size( void )
         ( void ) xMessageBufferCreateStatic( TEST_MESSAGE_METADATA_SIZE, messageBufferArray, &messageBufferStruct );
     }
 
-    validate_and_clear_assertitions();
+    validate_and_clear_assertions();
 }
 
 /**
@@ -430,7 +430,7 @@ void test_xMessageBufferCreateStatic_zero_size( void )
         ( void ) xMessageBufferCreateStatic( 0, messageBufferArray, &messageBufferStruct );
     }
 
-    validate_and_clear_assertitions();
+    validate_and_clear_assertions();
 }
 
 /**
@@ -460,9 +460,34 @@ void test_xMessageBufferSend_success( void )
 }
 
 /**
- * Sending a message of size greater than maximum possible size should return zero bytes sent.
+ * @brief An integer overflow in message size to be sent should result in an
+ * assertion failure 
  */
-void test_xMessageBufferSend_message_size_overflow( void )
+void test_xMessageBufferSend_message_size_integer_overflow( void )
+{
+    uint8_t data[ TEST_MAX_MESSAGE_SIZE ] = { 0 };
+
+    vTaskSetTimeOutState_Ignore();
+    vTaskSuspendAll_Ignore();
+    xTaskResumeAll_IgnoreAndReturn( pdTRUE );
+
+    /* Create a message buffer of the default test sample size. */
+    xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
+    TEST_ASSERT_NOT_NULL( xMessageBuffer );
+
+    if( TEST_PROTECT() )
+    {
+        ( void ) xMessageBufferSend( xMessageBuffer, data, TEST_MESSAGE_BUFFER_MAX_UINT_SIZE, TEST_MESSAGE_BUFFER_WAIT_TICKS );
+    }
+    validate_and_clear_assertions();
+
+    vStreamBufferDelete( xMessageBuffer );
+}
+
+/**
+ * Sending a message of size greater than available size should return zero bytes sent.
+ */
+void test_xMessageBufferSend_message_larger_than_available_size( void )
 {
     uint8_t message[ TEST_MAX_MESSAGE_SIZE + 1 ] = { 0 };
     size_t sentBytes = 0;
@@ -474,6 +499,7 @@ void test_xMessageBufferSend_message_size_overflow( void )
     /* Create a message buffer of sample size. */
     xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
     TEST_ASSERT_NOT_NULL( xMessageBuffer );
+    TEST_ASSERT_EQUAL( TEST_MESSAGE_BUFFER_SIZE, xMessageBufferSpacesAvailable( xMessageBuffer ) );
 
     sentBytes = xMessageBufferSend( xMessageBuffer, message, TEST_MAX_MESSAGE_SIZE + 1, TEST_MESSAGE_BUFFER_WAIT_TICKS );
     TEST_ASSERT_EQUAL( 0, sentBytes );
@@ -500,7 +526,7 @@ void test_xMessageBufferSend_null_message( void )
         ( void ) xMessageBufferSend( xMessageBuffer, NULL, TEST_MAX_MESSAGE_SIZE + 1, TEST_MESSAGE_BUFFER_WAIT_TICKS );
     }
 
-    validate_and_clear_assertitions();
+    validate_and_clear_assertions();
 
     vStreamBufferDelete( xMessageBuffer );
 }
@@ -525,7 +551,7 @@ void test_xMessageBufferSend_null_message_buffer( void )
         ( void ) xMessageBufferSend( NULL, message, TEST_MAX_MESSAGE_SIZE + 1, TEST_MESSAGE_BUFFER_WAIT_TICKS );
     }
 
-    validate_and_clear_assertitions();
+    validate_and_clear_assertions();
 
     vStreamBufferDelete( xMessageBuffer );
 }
@@ -622,7 +648,7 @@ void test_xMessageBufferReceive_null_input_message( void )
         ( void ) xMessageBufferReceive( xMessageBuffer, NULL, TEST_MAX_MESSAGE_SIZE, TEST_MESSAGE_BUFFER_WAIT_TICKS );
     }
 
-    validate_and_clear_assertitions();
+    validate_and_clear_assertions();
     vStreamBufferDelete( xMessageBuffer );
 }
 
@@ -648,7 +674,7 @@ void test_xMessageBufferReceive_invalid_params( void )
         ( void ) xMessageBufferReceive( NULL, message, TEST_MAX_MESSAGE_SIZE, TEST_MESSAGE_BUFFER_WAIT_TICKS );
     }
 
-    validate_and_clear_assertitions();
+    validate_and_clear_assertions();
 
     vStreamBufferDelete( xMessageBuffer );
 }

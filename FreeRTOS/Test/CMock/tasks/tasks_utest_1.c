@@ -24,37 +24,6 @@
  *
  */
 
-/* @coverage xTaskCreateStatic xTaskCreate prvInitialiseNewTask
- * @coverage prvAddNewTaskToReadyList
- * @coverage vTaskDelete xTaskDelayUntil vTaskDelay eTaskGetState
- * @coverage uxTaskPriorityGet uxTaskPriorityGetFromISR vTaskPrioritySet
- * @coverage vTaskSuspend  prvTaskIsTaskSuspended vTaskResume
- * @coverage xTaskResumeFromISR vTaskStartScheduler vTaskEndScheduler
- * @coverage vTaskSuspendAll xTaskResumeAll
- * @coverage xTaskGetTickCount xTaskGetTickCountFromISR uxTaskGetNumberOfTasks
- * @coverage pcTaskGetName prvSearchForNameWithinSingleList
- * @coverage xTaskGetHandle xTaskGetIdleTaskHandle vTaskStepTick
- * @coverage xTaskCatchUpTicks xTaskAbortDelay xTaskIncrementTick
- * @coverage vTaskSetApplicationTaskTag xTaskGetApplicationTaskTag
- * @coverage xTaskGetApplicationTaskTagFromISR xTaskCallApplicationTaskHook
- * @coverage vTaskSwitchContext vTaskPlaceOnEventList
- * @coverage vTaskPlaceOnUnorderedEventList
- * @coverage vTaskPlaceOnEventListRestricted xTaskRemoveFromEventList
- * @coverage vTaskRemoveFromUnorderedEventList  vTaskSetTimeOutState
- * @coverage vTaskInternalSetTimeOutState  xTaskCheckForTimeOut
- * @coverage vTaskMissedYield  eTaskConfirmSleepModeStatus
- * @coverage vTaskSetThreadLocalStoragePointer pvTaskGetThreadLocalStoragePointer
- * @coverage prvInitialiseTaskLists
- * @coverage prvDeleteTCB prvResetNextTaskUnblockTime xTaskGetCurrentTaskHandle
- * @coverage xTaskGetCurrentTaskHandle xTaskGetSchedulerState
- * @coverage xTaskPriorityInherit xTaskPriorityDisinherit
- * @coverage vTaskPriorityDisinheritAfterTimeout vTaskEnterCritical
- * @coverage uxTaskResetEventItemValue pvTaskIncrementMutexHeldCount
- * @coverage ulTaskGenericNotifyTake xTaskGenericNotifyWait xTaskGenericNotify
- * @coverage xTaskGenericNotifyFromISR vTaskGenericNotifyGiveFromISR
- * @coverage xTaskGenericNotifyStateClear ulTaskGenericNotifyValueClear
- * @coverage prvAddCurrentTaskToDelayedList
- */
 /*! @file tasks_utest_1.c */
 
 /* Tasks includes */

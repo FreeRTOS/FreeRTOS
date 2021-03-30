@@ -209,19 +209,6 @@ void test_xEventGroupStaticCreate_InvalidInput_Failed( void )
 }
 
 /*!
- * @brief validate statically creating and deleting a new RTOS event group,
- * @coverage xEventGroupCreateStatic vEventGroupDelete
- */
-void test_vEventGroupDelete_InvalidInput_Failed( void )
-{
-    /* API to Test */
-    vEventGroupDelete( NULL );
-
-    /* Validate */
-    TEST_ASSERT_EQUAL( NULL, xEventGroupHandle );
-}
-
-/*!
  * @brief validate setting event bits when not tasked is blocked by that event bits
  * @coverage xEventGroupSetBits
  */

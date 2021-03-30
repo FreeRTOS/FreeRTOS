@@ -10,6 +10,8 @@ export LD ?= /usr/local/bin/ld
 UNITS       +=  list
 #UNITS       +=  queue
 #UNITS       += timers
+UNITS       +=  stream_buffer
+UNITS       +=  message_buffer
 
 COVINFO     :=  $(BUILD_DIR)/cmock_test.info
 LCOV_LIST   :=  $(foreach unit,$(UNITS),$(GENERATED_DIR)/$(unit).info )

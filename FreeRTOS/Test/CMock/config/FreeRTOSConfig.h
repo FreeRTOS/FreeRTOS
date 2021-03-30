@@ -79,12 +79,14 @@
 /* Run time stats gathering configuration options. */
 unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
 void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that initialises the run time counter. */
+
 #define configGENERATE_RUN_TIME_STATS             1
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()    vConfigureTimerForRunTimeStats()
 #define portGET_RUN_TIME_COUNTER_VALUE()            ulGetRunTimeCounterValue()
 #define portUSING_MPU_WRAPPERS                    0
 #define portHAS_STACK_OVERFLOW_CHECKING           1
 #define configENABLE_MPU                          0
+
 
 /* Co-routine related configuration options. */
 #define configUSE_CO_ROUTINES                     0
@@ -117,11 +119,21 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 #define INCLUDE_xTaskAbortDelay                   1
 
 /* It is a good idea to define configASSERT() while developing.  configASSERT()
-uses the same semantics as the standard C assert() macro. */
-#define configASSERT( x ) \
-        vFakeAssert( (bool) ( x ), __FILE__, __LINE__)
+ * uses the same semantics as the standard C assert() macro. */
+#define configASSERT( x )                             \
+    do                                                \
+    {                                                 \
+        if( x )                                       \
+        {                                             \
+            vFakeAssert( true, __FILE__, __LINE__ );  \
+        }                                             \
+        else                                          \
+        {                                             \
+            vFakeAssert( false, __FILE__, __LINE__ ); \
+        }                                             \
+    } while ( 0 );
 
-#define mtCOVERAGE_TEST_MARKER() __asm volatile( "NOP" )
+#define mtCOVERAGE_TEST_MARKER()    __asm volatile ( "NOP" )
 
 #define configINCLUDE_MESSAGE_BUFFER_AMP_DEMO    0
 #if ( configINCLUDE_MESSAGE_BUFFER_AMP_DEMO == 1 )

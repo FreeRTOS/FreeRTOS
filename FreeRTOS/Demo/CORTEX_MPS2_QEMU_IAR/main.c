@@ -65,9 +65,9 @@ implemented and described in main_full.c. */
 /* printf() output uses the UART.  These constants define the addresses of the
 required UART registers. */
 #define UART0_ADDRESS 	( 0x40004000UL )
-#define UART0_DATA		( * ( ( ( uint32_t * )( UART0_ADDRESS + 0UL ) ) ) )
-#define UART0_CTRL		( * ( ( ( uint32_t * )( UART0_ADDRESS + 8UL ) ) ) )
-#define UART0_BAUDDIV	( * ( ( ( uint32_t * )( UART0_ADDRESS + 16UL ) ) ) )
+#define UART0_DATA		( * ( ( ( volatile uint32_t * )( UART0_ADDRESS + 0UL ) ) ) )
+#define UART0_CTRL		( * ( ( ( volatile uint32_t * )( UART0_ADDRESS + 8UL ) ) ) )
+#define UART0_BAUDDIV	( * ( ( ( volatile uint32_t * )( UART0_ADDRESS + 16UL ) ) ) )
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -188,7 +188,7 @@ volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 	/* Called if an assertion passed to configASSERT() fails.  See
 	http://www.freertos.org/a00110.html#configASSERT for more information. */
 
-	printf( "ASSERT! Line %ld, file %s\r\n", ulLine, pcFileName );
+	printf( "ASSERT! Line %d, file %s\r\n", ( int ) ulLine, pcFileName );
 
  	taskENTER_CRITICAL();
 	{

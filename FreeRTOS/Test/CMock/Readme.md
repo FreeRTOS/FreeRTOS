@@ -60,6 +60,11 @@ $ make coverage
 Would build all unit tests, runs them one after the other, then generates html code
 coverage and places them in build/coverage with initial file index.html
 
+## Runing tests with Address Sanitizer enabled ##
+The GCC address sanitizer can be enabled by passing in "ENABLE_SANITIZER=1" when calling make.
+
+Note: Enabling the address sanitizer will introduce additional branches that may not be possible to get test coverage of. For this reason, the address sanitizer is not enabled by default. It is recommended that developers enable the address sanitizer when modifying or developing new test cases.
+
 ## Running individual tests
 From each test directory, you can build, run the test, and generate gcov coverage with the default "all" target like so:
 ```

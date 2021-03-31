@@ -11,9 +11,11 @@ UNITS       +=  list
 #UNITS       +=  queue
 #UNITS       +=  timers
 UNITS       +=  tasks
+#UNITS       += timers
+UNITS       +=  stream_buffer
+UNITS       +=  message_buffer
 
 .PHONY: makefile.in
-
 COVINFO     :=  $(BUILD_DIR)/cmock_test.info
 LCOV_LIST   :=  $(foreach unit,$(UNITS),$(GENERATED_DIR)/$(unit).info )
 

@@ -28,8 +28,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "CMSIS/CMSDK_CM3.h"
-#include "CMSIS/core_cm3.h"
 
 extern void vPortSVCHandler( void );
 extern void xPortPendSVHandler( void );

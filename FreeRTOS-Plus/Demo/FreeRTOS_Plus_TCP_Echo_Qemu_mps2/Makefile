@@ -30,7 +30,7 @@ FREERTOS_TCP = ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP
 INCLUDE_DIRS += -I${FREERTOS_TCP}/include/
 INCLUDE_DIRS += -I${FREERTOS_TCP}/portable/Compiler/GCC/
 
-INCLUDE_DIRS += -I${FREERTOS_TCP}/portable/NetworkInterface/MPS2/CMSIS
+INCLUDE_DIRS += -I${FREERTOS_TCP}/portable/NetworkInterface/MPS2_AN385/CMSIS
 
 # FreeRTOS networking sources
 SOURCE_FILES +=  main_networking.c
@@ -44,9 +44,9 @@ SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_IP.c
 SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_TCP_IP.c
 SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_UDP_IP.c
 SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_Sockets.c
-SOURCE_FILES += ${FREERTOS_TCP}/portable/NetworkInterface/MPS2/NetworkInterface.c
+SOURCE_FILES += ${FREERTOS_TCP}/portable/NetworkInterface/MPS2_AN385/NetworkInterface.c
 SOURCE_FILES += TCPEchoClient_SingleTasks.c
-SOURCE_FILES += ${FREERTOS_TCP}/portable/NetworkInterface/MPS2/ether_lan9118/smsc9220_eth_drv.c
+SOURCE_FILES += ${FREERTOS_TCP}/portable/NetworkInterface/MPS2_AN385/ether_lan9118/smsc9220_eth_drv.c
 
 # networking specific cflags
 CFLAGS := -DmainCREATE_NETWORKING_DEMO_ONLY=1

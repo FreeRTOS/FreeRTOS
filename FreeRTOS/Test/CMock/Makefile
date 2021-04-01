@@ -7,11 +7,12 @@ export CC ?= /usr/local/bin/gcc
 export LD ?= /usr/local/bin/ld
 
 # Add units here when adding a new unit test directory with the same name
-UNITS       +=  list
+#UNITS       +=  list
 #UNITS       +=  queue
-#UNITS       += timers
-UNITS       +=  stream_buffer
-UNITS       +=  message_buffer
+#UNITS       +=  timers
+#UNITS       +=  stream_buffer
+#UNITS       +=  message_buffer
+UNITS       +=  event_groups
 
 COVINFO     :=  $(BUILD_DIR)/cmock_test.info
 LCOV_LIST   :=  $(foreach unit,$(UNITS),$(GENERATED_DIR)/$(unit).info )

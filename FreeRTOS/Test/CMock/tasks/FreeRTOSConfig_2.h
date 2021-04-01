@@ -24,11 +24,16 @@
  *
  */
 
-
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
-#include "fake_assert.h"
+/* XXX: this file will be processed by unifdef  to generate new header files
+ * that can be mocked according to the configurations desired
+ * it has a few limitations on the format of this file such as:
+ * no config that spans more than one line
+ * no strings in config names
+ * for more info please check the man file with $ man unifdef
+ */
 
 /*-----------------------------------------------------------
 * Application specific definitions.
@@ -41,6 +46,7 @@
 * http://www.freertos.org/a00110.html
 *----------------------------------------------------------*/
 
+#define portSTACK_GROWTH                                 ( 1 )
 #define configUSE_PREEMPTION                             1
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION          1
 #define configUSE_IDLE_HOOK                              1
@@ -50,12 +56,12 @@
 #define configMINIMAL_STACK_SIZE                         ( ( unsigned short ) 70 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the win32 thread. */
 #define configTOTAL_HEAP_SIZE                            ( ( size_t ) ( 52 * 1024 ) )
 #define configMAX_TASK_NAME_LEN                          ( 12 )
-#define configUSE_TRACE_FACILITY                         1
+#define configUSE_TRACE_FACILITY                         0
 #define configUSE_16_BIT_TICKS                           0
 #define configIDLE_SHOULD_YIELD                          1
-#define configUSE_MUTEXES                                1
+#define configUSE_MUTEXES                                0 /* diff config 1 */
 #define configCHECK_FOR_STACK_OVERFLOW                   0
-#define configUSE_RECURSIVE_MUTEXES                      1
+#define configUSE_RECURSIVE_MUTEXES                      0
 #define configQUEUE_REGISTRY_SIZE                        20
 #define configUSE_MALLOC_FAILED_HOOK                     1
 #define configUSE_APPLICATION_TASK_TAG                   1
@@ -79,14 +85,13 @@
 /* Run time stats gathering configuration options. */
 unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
 void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that initialises the run time counter. */
-
-#define configGENERATE_RUN_TIME_STATS             1
+#define configGENERATE_RUN_TIME_STATS             0
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()    vConfigureTimerForRunTimeStats()
 #define portGET_RUN_TIME_COUNTER_VALUE()            ulGetRunTimeCounterValue()
 #define portUSING_MPU_WRAPPERS                    0
-#define portHAS_STACK_OVERFLOW_CHECKING           1
 #define configENABLE_MPU                          0
-
+#define portHAS_STACK_OVERFLOW_CHECKING           1
+#define portCRITICAL_NESTING_IN_TCB               1
 
 /* Co-routine related configuration options. */
 #define configUSE_CO_ROUTINES                     0
@@ -96,7 +101,8 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
  * format the raw data provided by the uxTaskGetSystemState() function in to human
  * readable ASCII form.  See the notes in the implementation of vTaskList() within
  * FreeRTOS/Source/tasks.c for limitations. */
-#define configUSE_STATS_FORMATTING_FUNCTIONS      1
+#define configUSE_STATS_FORMATTING_FUNCTIONS       1
+#define configSTACK_ALLOCATION_FROM_SEPARATE_HEAP  0
 
 /* Set the following definitions to 1 to include the API function, or zero
  * to exclude the API function.  In most cases the linker will remove unused
@@ -108,7 +114,7 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 #define INCLUDE_vTaskSuspend                      1
 #define INCLUDE_vTaskDelayUntil                   1
 #define INCLUDE_vTaskDelay                        1
-#define INCLUDE_uxTaskGetStackHighWaterMark       1
+#define INCLUDE_uxTaskGetStackHighWaterMark       0
 #define INCLUDE_xTaskGetSchedulerState            1
 #define INCLUDE_xTimerGetTimerDaemonTaskHandle    1
 #define INCLUDE_xTaskGetIdleTaskHandle            1
@@ -120,25 +126,9 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 
 /* It is a good idea to define configASSERT() while developing.  configASSERT()
  * uses the same semantics as the standard C assert() macro. */
-#define configASSERT( x )                             \
-    do                                                \
-    {                                                 \
-        if( x )                                       \
-        {                                             \
-            vFakeAssert( true, __FILE__, __LINE__ );  \
-        }                                             \
-        else                                          \
-        {                                             \
-            vFakeAssert( false, __FILE__, __LINE__ ); \
-        }                                             \
-    } while ( 0 );
+#define configASSERT( x )
+#define portREMOVE_STATIC_QUALIFIER              1
+#define configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES 0
 
-#define mtCOVERAGE_TEST_MARKER()    __asm volatile ( "NOP" )
-
-#define configINCLUDE_MESSAGE_BUFFER_AMP_DEMO    0
-#if ( configINCLUDE_MESSAGE_BUFFER_AMP_DEMO == 1 )
-    extern void vGenerateCoreBInterrupt( void * xUpdatedMessageBuffer );
-    #define sbSEND_COMPLETED( pxStreamBuffer )    vGenerateCoreBInterrupt( pxStreamBuffer )
-#endif /* configINCLUDE_MESSAGE_BUFFER_AMP_DEMO */
 
 #endif /* FREERTOS_CONFIG_H */

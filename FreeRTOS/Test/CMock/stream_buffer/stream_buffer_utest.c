@@ -628,7 +628,8 @@ void test_xStreamBufferSend_more_than_buffer_size( void )
 }
 
 /**
- * @brief Sending zero bytes to stream buffer should fail assertion.
+ * @brief Sending zero bytes to stream buffer should return write nothing to the
+ * buffer and return 0.
  */
 void test_xStreamBufferSend_zero_bytes( void )
 {

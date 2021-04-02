@@ -40,21 +40,20 @@ Here, `uxPendedTicks` could return any value, making it impossible to unwind
 (or unroll) this loop in CBMC.  Therefore, we require `uxPendedTicks` to behave
 as a regular variable so that the loop can be unwound.
 
----
 diff --git a/FreeRTOS/Source/tasks.c b/FreeRTOS/Source/tasks.c
-index ff657733..8b57d198 100644
+index c7be57cb2..9f76465d5 100644
 --- a/FreeRTOS/Source/tasks.c
 +++ b/FreeRTOS/Source/tasks.c
-@@ -335,7 +335,7 @@ typedef tskTCB TCB_t;
+@@ -296,7 +296,7 @@ typedef struct tskTaskControlBlock       /* The old naming convention is used to
  
- /*lint -save -e956 A manual analysis and inspection has been used to determine
-  * which static variables must be declared volatile. */
--PRIVILEGED_DATA TCB_t * volatile pxCurrentTCB = NULL;
-+PRIVILEGED_DATA TCB_t * pxCurrentTCB = NULL;
- 
- /* Lists for ready and blocked tasks. --------------------
-  * xDelayedTaskList1 and xDelayedTaskList2 could be move to function scople but
-@@ -344,8 +344,8 @@ PRIVILEGED_DATA TCB_t * volatile pxCurrentTCB = NULL;
+     #if ( configUSE_NEWLIB_REENTRANT == 1 )
+         /* Allocate a Newlib reent structure that is specific to this task.
+-         * Note Newlib support has been included by popular demand, but is not
++          Note Newlib support has been included by popular demand, but is not
+          * used by the FreeRTOS maintainers themselves.  FreeRTOS is not
+          * responsible for resulting newlib operation.  User must be familiar with
+          * newlib and must provide system-wide implementations of the necessary
+@@ -343,8 +343,8 @@ PRIVILEGED_DATA TCB_t * volatile pxCurrentTCB = NULL;
  PRIVILEGED_DATA static List_t pxReadyTasksLists[ configMAX_PRIORITIES ]; /*< Prioritised ready tasks. */
  PRIVILEGED_DATA static List_t xDelayedTaskList1;                         /*< Delayed tasks. */
  PRIVILEGED_DATA static List_t xDelayedTaskList2;                         /*< Delayed tasks (two lists are used - one for delays that have overflowed the current tick count. */
@@ -65,7 +64,7 @@ index ff657733..8b57d198 100644
  PRIVILEGED_DATA static List_t xPendingReadyList;                         /*< Tasks that have been readied while the scheduler was suspended.  They will be moved to the ready list when the scheduler is resumed. */
  
  #if ( INCLUDE_vTaskDelete == 1 )
-@@ -372,7 +372,7 @@ PRIVILEGED_DATA static volatile UBaseType_t uxCurrentNumberOfTasks = ( UBaseType
+@@ -371,7 +371,7 @@ PRIVILEGED_DATA static volatile UBaseType_t uxCurrentNumberOfTasks = ( UBaseType
  PRIVILEGED_DATA static volatile TickType_t xTickCount = ( TickType_t ) configINITIAL_TICK_COUNT;
  PRIVILEGED_DATA static volatile UBaseType_t uxTopReadyPriority = tskIDLE_PRIORITY;
  PRIVILEGED_DATA static volatile BaseType_t xSchedulerRunning = pdFALSE;

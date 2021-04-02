@@ -619,6 +619,7 @@ void test_xStreamBufferSend_more_than_buffer_size( void )
 void test_xStreamBufferSend_zero_bytes( void )
 {
     uint8_t data[ TEST_STREAM_BUFFER_SIZE + 1 ] = { 0 };
+    size_t bytesWritten;
 
     vTaskSetTimeOutState_Ignore();
     vTaskSuspendAll_Ignore();
@@ -629,11 +630,8 @@ void test_xStreamBufferSend_zero_bytes( void )
     TEST_ASSERT_NOT_NULL( xStreamBuffer );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferSpacesAvailable( xStreamBuffer ) );
 
-    if( TEST_PROTECT() )
-    {
-        ( void ) xStreamBufferSend( xStreamBuffer, data, 0U, TEST_STREAM_BUFFER_WAIT_TICKS );
-    }
-    validate_and_clear_assertions();
+    bytesWritten = xStreamBufferSend( xStreamBuffer, data, 0U, TEST_STREAM_BUFFER_WAIT_TICKS );
+    TEST_ASSERT_EQUAL( 0, bytesWritten );
 
     vStreamBufferDelete( xStreamBuffer );
 }

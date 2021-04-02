@@ -265,7 +265,8 @@ FREERTOS_IGNORED_FILES = [
     'requirements.txt',
     'run-cbmc-proofs.py',
     '.editorconfig',
-    'lcovrc'
+    'lcovrc',
+    'htif.c', 'htif.h'
 ]
 
 FREERTOS_HEADER = [

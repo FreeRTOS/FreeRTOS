@@ -29,7 +29,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-/* Queue includes */
+/* Stream Buffer includes */
 #include "FreeRTOS.h"
 #include "FreeRTOSConfig.h"
 #include "stream_buffer.h"
@@ -37,6 +37,7 @@
 /* Test includes. */
 #include "unity.h"
 #include "unity_memory.h"
+#include "CException.h"
 
 /* Mock includes. */
 #include "mock_task.h"
@@ -72,6 +73,32 @@
  * empty while receiveing data.
  */
 #define TEST_STREAM_BUFFER_WAIT_TICKS       ( 1000U )
+
+/**
+ * @brief CException code for when a configASSERT should be intercepted.
+ */
+#define configASSERT_E                      0xAA101
+
+/**
+ * @brief Expect a configASSERT from the funciton called.
+ *  Break out of the called function when this occurs.
+ * @details Use this macro when the call passsed in as a parameter is expected
+ * to cause invalid memory access.
+ */
+#define EXPECT_ASSERT_BREAK( call )             \
+    do                                          \
+    {                                           \
+        shouldAbortOnAssertion = true;          \
+        CEXCEPTION_T e = CEXCEPTION_NONE;       \
+        Try                                     \
+        {                                       \
+            call;                               \
+            TEST_FAIL();                        \
+        }                                       \
+        Catch( e )                              \
+        TEST_ASSERT_EQUAL( configASSERT_E, e ); \
+    } while ( 0 )
+
 
 /* ============================  GLOBAL VARIABLES =========================== */
 
@@ -138,7 +165,7 @@ static void vFakeAssertStub( bool x,
 
         if( shouldAbortOnAssertion == pdTRUE )
         {
-            TEST_ABORT();
+            Throw( configASSERT_E );
         }
     }
 }
@@ -459,11 +486,7 @@ void test_xStreamBufferCreate_malloc_fail( void )
  */
 void test_xStreamBufferCreate_zero_buffer_size( void )
 {
-
-    if( TEST_PROTECT() )
-    {
-        ( void ) xStreamBufferCreate( 0, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
-    }
+    EXPECT_ASSERT_BREAK( ( void ) xStreamBufferCreate( 0, TEST_STREAM_BUFFER_TRIGGER_LEVEL ) );
     validate_and_clear_assertions();
 }
 
@@ -472,10 +495,7 @@ void test_xStreamBufferCreate_zero_buffer_size( void )
  */
 void test_xStreamBufferCreate_invalid_trigger_level( void )
 {
-    if( TEST_PROTECT() )
-    {
-        ( void ) xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, ( TEST_STREAM_BUFFER_SIZE + 1 ) );
-    }
+    EXPECT_ASSERT_BREAK( ( void ) xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, ( TEST_STREAM_BUFFER_SIZE + 1 ) ) );
     validate_and_clear_assertions();
 }
 
@@ -484,10 +504,7 @@ void test_xStreamBufferCreate_invalid_trigger_level( void )
  */
 void test_xStreamBufferDelete_null_stream_buffer( void )
 {
-    if( TEST_PROTECT() )
-    {
-        vStreamBufferDelete( NULL );
-    }
+    EXPECT_ASSERT_BREAK( vStreamBufferDelete( NULL ) );
     validate_and_clear_assertions();
 }
 
@@ -554,10 +571,7 @@ void test_xStreamBufferCreateStatic_invalid_trigger_level( void )
     /* The size of stream buffer array should be one greater than the required size of stream buffer. */
     uint8_t streamBufferArray[ TEST_STREAM_BUFFER_SIZE + 1 ] = { 0 };
 
-    if( TEST_PROTECT() )
-    {
-        ( void ) xStreamBufferCreateStatic( sizeof( streamBufferArray ), TEST_STREAM_BUFFER_SIZE + 2, streamBufferArray, &streamBufferStruct );
-    }
+    EXPECT_ASSERT_BREAK( ( void ) xStreamBufferCreateStatic( sizeof( streamBufferArray ), TEST_STREAM_BUFFER_SIZE + 2, streamBufferArray, &streamBufferStruct ) );
 
     validate_and_clear_assertions();
 }
@@ -629,11 +643,7 @@ void test_xStreamBufferSend_zero_bytes( void )
     TEST_ASSERT_NOT_NULL( xStreamBuffer );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferSpacesAvailable( xStreamBuffer ) );
 
-    if( TEST_PROTECT() )
-    {
-        ( void ) xStreamBufferSend( xStreamBuffer, data, 0U, TEST_STREAM_BUFFER_WAIT_TICKS );
-    }
-    validate_and_clear_assertions();
+    TEST_ASSERT_EQUAL( pdFALSE, xStreamBufferSend( xStreamBuffer, data, 0U, TEST_STREAM_BUFFER_WAIT_TICKS ) );
 
     vStreamBufferDelete( xStreamBuffer );
 }
@@ -899,37 +909,31 @@ void test_xStreamBufferReceiveFromISR_success( void )
 }
 
 /**
- * @brief Assertion fails if a null stream buffer is passed. 
+ * @brief Assertion fails if a null stream buffer is passed.
  */
 void test_xStreamBufferReceiveFromISR_null_stream_buffer( void )
 {
     uint8_t data[ TEST_STREAM_BUFFER_SIZE ] = { 0xAA };
     BaseType_t xHighPriorityTaskWoken = pdFALSE;
-    
-    if( TEST_PROTECT() )
-    {
-        ( void ) xStreamBufferReceiveFromISR( NULL, data, TEST_STREAM_BUFFER_SIZE, &xHighPriorityTaskWoken );
-    }
+
+    EXPECT_ASSERT_BREAK( ( void ) xStreamBufferReceiveFromISR( NULL, data, TEST_STREAM_BUFFER_SIZE, &xHighPriorityTaskWoken ) );
 
     validate_and_clear_assertions();
 }
 
 /**
- * @brief Assertion fails if a null message is passed. 
+ * @brief Assertion fails if a null message is passed.
  */
 void test_xStreamBufferReceiveFromISR_null_buffer( void )
 {
     BaseType_t xHighPriorityTaskWoken = pdFALSE;
-    
+
     /* Create a stream buffer of sample size. */
     xStreamBuffer = xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
     TEST_ASSERT_NOT_NULL( xStreamBuffer );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferSpacesAvailable( xStreamBuffer ) );
-    
-    if( TEST_PROTECT() )
-    {
-        ( void ) xStreamBufferReceiveFromISR( xStreamBuffer, NULL, TEST_STREAM_BUFFER_SIZE, &xHighPriorityTaskWoken );
-    }
+
+    EXPECT_ASSERT_BREAK( ( void ) xStreamBufferReceiveFromISR( xStreamBuffer, NULL, TEST_STREAM_BUFFER_SIZE, &xHighPriorityTaskWoken ) );
 
     validate_and_clear_assertions();
 
@@ -975,37 +979,31 @@ void test_xStreamBufferSendFromISR_success( void )
 }
 
 /**
- * @brief Assertion fails if a null stream buffer is passed. 
+ * @brief Assertion fails if a null stream buffer is passed.
  */
 void test_xStreamBufferSendFromISR_null_stream_buffer( void )
 {
     uint8_t data[ TEST_STREAM_BUFFER_SIZE ] = { 0xAA };
     BaseType_t xHighPriorityTaskWoken = pdFALSE;
-    
-    if( TEST_PROTECT() )
-    {
-        ( void ) xStreamBufferSendFromISR( NULL, data, TEST_STREAM_BUFFER_SIZE, &xHighPriorityTaskWoken );
-    }
+
+    EXPECT_ASSERT_BREAK( ( void ) xStreamBufferSendFromISR( NULL, data, TEST_STREAM_BUFFER_SIZE, &xHighPriorityTaskWoken ) );
 
     validate_and_clear_assertions();
 }
 
 /**
- * @brief Assertion fails if a null message is passed. 
+ * @brief Assertion fails if a null message is passed.
  */
 void test_xStreamBufferSendFromISR_null_message( void )
 {
     BaseType_t xHighPriorityTaskWoken = pdFALSE;
-    
+
     /* Create a stream buffer of sample size. */
     xStreamBuffer = xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
     TEST_ASSERT_NOT_NULL( xStreamBuffer );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferSpacesAvailable( xStreamBuffer ) );
-    
-    if( TEST_PROTECT() )
-    {
-        ( void ) xStreamBufferSendFromISR( xStreamBuffer, NULL, TEST_STREAM_BUFFER_SIZE, &xHighPriorityTaskWoken );
-    }
+
+    EXPECT_ASSERT_BREAK( ( void ) xStreamBufferSendFromISR( xStreamBuffer, NULL, TEST_STREAM_BUFFER_SIZE, &xHighPriorityTaskWoken ) );
 
     validate_and_clear_assertions();
 
@@ -1058,10 +1056,7 @@ void test_xStreamBufferReset_null_stream_buffer( void )
     vTaskSuspendAll_Ignore();
     xTaskResumeAll_IgnoreAndReturn( pdTRUE );
 
-    if( TEST_PROTECT() )
-    {
-        ( void ) xStreamBufferReset( NULL );
-    }
+    EXPECT_ASSERT_BREAK( ( void ) xStreamBufferReset( NULL ) );
     validate_and_clear_assertions();
 }
 
@@ -1184,10 +1179,7 @@ void test_xStreamBufferSetTrigerLevel_zero( void )
  */
 void test_xStreamBufferSetTriggerLevel_null_stream_buffer( void )
 {
-    if( TEST_PROTECT() )
-    {
-        ( void ) xStreamBufferSetTriggerLevel( NULL, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
-    }
+    EXPECT_ASSERT_BREAK( ( void ) xStreamBufferSetTriggerLevel( NULL, TEST_STREAM_BUFFER_TRIGGER_LEVEL ) );
     validate_and_clear_assertions();
 }
 
@@ -1196,10 +1188,7 @@ void test_xStreamBufferSetTriggerLevel_null_stream_buffer( void )
  */
 void test_xStreamBufferBytesAvailable_null_stream_buffer( void )
 {
-    if( TEST_PROTECT() )
-    {
-        ( void ) xStreamBufferBytesAvailable( NULL );
-    }
+    EXPECT_ASSERT_BREAK( ( void ) xStreamBufferBytesAvailable( NULL ) );
     validate_and_clear_assertions();
 }
 
@@ -1208,10 +1197,7 @@ void test_xStreamBufferBytesAvailable_null_stream_buffer( void )
  */
 void test_xStreamBufferIsFull_null_stream_buffer( void )
 {
-    if( TEST_PROTECT() )
-    {
-        ( void ) xStreamBufferIsFull( NULL );
-    }
+    EXPECT_ASSERT_BREAK( ( void ) xStreamBufferIsFull( NULL ) );
     validate_and_clear_assertions();
 }
 
@@ -1220,10 +1206,7 @@ void test_xStreamBufferIsFull_null_stream_buffer( void )
  */
 void test_xStreamBufferIsEmpty_null_stream_buffer( void )
 {
-    if( TEST_PROTECT() )
-    {
-        ( void ) xStreamBufferIsEmpty( NULL );
-    }
+    EXPECT_ASSERT_BREAK( ( void ) xStreamBufferIsEmpty( NULL ) );
     validate_and_clear_assertions();
 }
 
@@ -1232,10 +1215,7 @@ void test_xStreamBufferIsEmpty_null_stream_buffer( void )
  */
 void test_xStreamBufferSpacesAvailable_null_stream_buffer( void )
 {
-    if( TEST_PROTECT() )
-    {
-        ( void ) xStreamBufferSpacesAvailable( NULL );
-    }
+    EXPECT_ASSERT_BREAK( ( void ) xStreamBufferSpacesAvailable( NULL ) );
     validate_and_clear_assertions();
 }
 
@@ -1245,10 +1225,7 @@ void test_xStreamBufferSpacesAvailable_null_stream_buffer( void )
  */
 void test_xStreamBufferNextMessageLengthBytes_null_stream_buffer( void )
 {
-    if( TEST_PROTECT() )
-    {
-        ( void ) xStreamBufferNextMessageLengthBytes( NULL );
-    }
+    EXPECT_ASSERT_BREAK( ( void ) xStreamBufferNextMessageLengthBytes( NULL ) );
     validate_and_clear_assertions();
 }
 
@@ -1296,10 +1273,7 @@ void test_xStreamBufferSendCompletedFromISR_null_stream_buffer( void )
     BaseType_t highPriorityTaskWoken = pdFALSE;
 
     /* Send completed from ISR without receiver task waiting. */
-    if( TEST_PROTECT() )
-    {
-        ( void ) xStreamBufferSendCompletedFromISR( NULL, &highPriorityTaskWoken );
-    }
+    EXPECT_ASSERT_BREAK( ( void ) xStreamBufferSendCompletedFromISR( NULL, &highPriorityTaskWoken ) );
     validate_and_clear_assertions();
 }
 
@@ -1354,10 +1328,7 @@ void test_xStreamBufferReceiveCompletedFromISR_null_stream_buffer( void )
     BaseType_t highPriorityTaskWoken = pdFALSE;
 
     /* Send completed from ISR without receiver task waiting. */
-    if( TEST_PROTECT() )
-    {
-        ( void ) xStreamBufferReceiveCompletedFromISR( NULL, &highPriorityTaskWoken );
-    }
+    EXPECT_ASSERT_BREAK( ( void ) xStreamBufferReceiveCompletedFromISR( NULL, &highPriorityTaskWoken ) );
     validate_and_clear_assertions();
 }
 

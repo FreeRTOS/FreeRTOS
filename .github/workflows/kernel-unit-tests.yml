@@ -1,8 +1,5 @@
 name: Kernel Unit Tests
-on:
-  push:
-    paths:
-    - 'FreeRTOS/Test/CMock/**'
+on: [push, pull_request]
 
 jobs:
   run:

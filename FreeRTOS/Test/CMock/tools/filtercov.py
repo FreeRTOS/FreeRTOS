@@ -79,10 +79,12 @@ def main():
         print("The test file path does not exist.", file=sys.stderr)
         sys.exit(1)
 
+    skip_target_filtering = False
     tagged_functions = get_tagged_functions_in_file(args.test)
     if len(tagged_functions) == 0:
-        print("No target functions found in test file.")
-        sys.exit(1)
+        print("WARNING: No target functions found in test file.")
+        skip_target_filtering = True
+
     print("Target functions from UT: " + str(tagged_functions), file=sys.stderr)
 
     cov_functions_deps = get_function_deps(args.map, tagged_functions)
@@ -94,7 +96,13 @@ def main():
         covfile_handle = gzip.open(vars(args)["in"], "rb")
     else:
         covfile_handle = open(vars(args)["in"], "r")
-    covdata_out = filter_coverage_file(covfile_handle, cov_functions_deps)
+
+    if skip_target_filtering:
+        print("WARNING: Skipping coverage filtering.")
+        covdata_out = json.load(covfile_handle)
+    else:
+        covdata_out = filter_coverage_file(covfile_handle, cov_functions_deps)
+
     covfile_handle.close()
 
     filter_excluded_lines(covdata_out)
@@ -300,7 +308,7 @@ def convert_to_lcov_info(args, covdata, outfile):
             # Handle branch data
             for target_branch in target_line["branches"]:
                 branch_count = "-"
-                if target_line["unexecuted_block"] or target_line["count"] == 0:
+                if target_line["unexecuted_block"] and target_line["count"] == 0:
                     branch_count = "-"
                 elif "count" in target_branch:
                     branch_count = target_branch["count"]

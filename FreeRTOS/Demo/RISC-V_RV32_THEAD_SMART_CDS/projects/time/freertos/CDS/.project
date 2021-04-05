@@ -400,9 +400,9 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Demo/RISC-V_RV32_THEAD_SMART_CDS/projects/time/main.c</locationURI>
 		</link>
 		<link>
-			<name>projects/time/task_test.c</name>
+			<name>projects/time/time_test.c</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/task_test.c</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/time_test.c</locationURI>
 		</link>
 		<link>
 			<name>projects/time/test_kernel.h</name>

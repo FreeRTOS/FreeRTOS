@@ -32,7 +32,7 @@
 									<listOptionValue builtIn="false" value="../../../../../csi_kernel/freertosv10.3.1/include/"/>
 									<listOptionValue builtIn="false" value="../../../../../../../Source/include"/>
 									<listOptionValue builtIn="false" value="../../../../../../../Source/portable/GCC/RISC-V"/>
-									<listOptionValue builtIn="false" value="../../../../../../../Source/portable/GCC/RISC-V/chip_specific_extensions/aa"/>
+									<listOptionValue builtIn="false" value="../../../../../../../Source/portable/GCC/RISC-V/chip_specific_extensions/THEAD_RV32"/>
 								</option>
 								<inputType id="cds.managedbuild.tool.ckcoregcc.assembler.input2.1963154724" superClass="cds.managedbuild.tool.ckcoregcc.assembler.input2"/>
 								<inputType id="cds.managedbuild.tool.ckcoregcc.assembler.input1.245242782" superClass="cds.managedbuild.tool.ckcoregcc.assembler.input1"/>
@@ -74,7 +74,7 @@
 									<listOptionValue builtIn="false" value="../../../../../csi_kernel/freertosv10.3.1/include/"/>
 									<listOptionValue builtIn="false" value="../../../../../../../Source/include"/>
 									<listOptionValue builtIn="false" value="../../../../../../../Source/portable/GCC/RISC-V"/>
-									<listOptionValue builtIn="false" value="../../../../../../../Source/portable/GCC/RISC-V/chip_specific_extensions/aa"/>
+									<listOptionValue builtIn="false" value="../../../../../../../Source/portable/GCC/RISC-V/chip_specific_extensions/THEAD_RV32"/>
 								</option>
 								<option id="ckcoregcc.c.compiler.option.other.riscv64.other.20776496" name="Other flags" superClass="ckcoregcc.c.compiler.option.other.riscv64.other" useByScannerDiscovery="false" value="-c" valueType="string"/>
 								<option id="ckcoregcc.c.compiler.category.other.riscv64.static.503253397" name="compiler with static libraries(-static)" superClass="ckcoregcc.c.compiler.category.other.riscv64.static" useByScannerDiscovery="false" value="false" valueType="boolean"/>

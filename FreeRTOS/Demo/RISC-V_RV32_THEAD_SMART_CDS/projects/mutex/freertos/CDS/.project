@@ -400,9 +400,9 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Demo/RISC-V_RV32_THEAD_SMART_CDS/projects/mutex/main.c</locationURI>
 		</link>
 		<link>
-			<name>projects/mutex/task_test.c</name>
+			<name>projects/mutex/mutex_test.c</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/task_test.c</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/mutex_test.c</locationURI>
 		</link>
 		<link>
 			<name>projects/mutex/test_kernel.h</name>

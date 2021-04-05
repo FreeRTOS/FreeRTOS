@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project Name="smartl_e906fd-freertos-mutex" Version="1" Language="C">
+  <Description/>
+  <Dependencies Name="Debug"/>
+  <DebugSessions>
+    <watchExpressions/>
+    <memoryExpressions>;;;</memoryExpressions>
+    <statistics>;;MHZ</statistics>
+  </DebugSessions>
+  <VirtualDirectory Name="board">
+    <VirtualDirectory Name="smartl_e906_evb">
+      <File Name="../../../../../../board/smartl_e906_evb/board_init.c"/>
+      <File Name="../../../../../../board/smartl_e906_evb/gcc_csky.ld"/>
+      <VirtualDirectory Name="include">
+        <File Name="../../../../../../board/smartl_e906_evb/include/pin.h"/>
+        <File Name="../../../../../../board/smartl_e906_evb/include/test_driver_config.h"/>
+        <File Name="../../../../../../board/smartl_e906_evb/include/test_kernel_config.h"/>
+      </VirtualDirectory>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <VirtualDirectory Name="csi_core">
+    <VirtualDirectory Name="include">
+      <File Name="../../../../../../csi_core/include/core_rv32.h"/>
+      <File Name="../../../../../../csi_core/include/csi_core.h"/>
+      <File Name="../../../../../../csi_core/include/csi_rv32_gcc.h"/>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <VirtualDirectory Name="csi_driver">
+    <VirtualDirectory Name="include">
+      <File Name="../../../../../../csi_driver/include/drv_aes.h"/>
+      <File Name="../../../../../../csi_driver/include/drv_common.h"/>
+      <File Name="../../../../../../csi_driver/include/drv_crc.h"/>
+      <File Name="../../../../../../csi_driver/include/drv_dmac.h"/>
+      <File Name="../../../../../../csi_driver/include/drv_eflash.h"/>
+      <File Name="../../../../../../csi_driver/include/drv_errno.h"/>
+      <File Name="../../../../../../csi_driver/include/drv_gpio.h"/>
+      <File Name="../../../../../../csi_driver/include/drv_i2s.h"/>
+      <File Name="../../../../../../csi_driver/include/drv_iic.h"/>
+      <File Name="../../../../../../csi_driver/include/drv_intc.h"/>
+      <File Name="../../../../../../csi_driver/include/drv_irq.h"/>
+      <File Name="../../../../../../csi_driver/include/drv_pmu.h"/>
+      <File Name="../../../../../../csi_driver/include/drv_pwm.h"/>
+      <File Name="../../../../../../csi_driver/include/drv_rsa.h"/>
+      <File Name="../../../../../../csi_driver/include/drv_rtc.h"/>
+      <File Name="../../../../../../csi_driver/include/drv_sha.h"/>
+      <File Name="../../../../../../csi_driver/include/drv_spi.h"/>
+      <File Name="../../../../../../csi_driver/include/drv_spiflash.h"/>
+      <File Name="../../../../../../csi_driver/include/drv_timer.h"/>
+      <File Name="../../../../../../csi_driver/include/drv_trng.h"/>
+      <File Name="../../../../../../csi_driver/include/drv_usart.h"/>
+      <File Name="../../../../../../csi_driver/include/drv_wdt.h"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="smartl_rv32">
+      <File Name="../../../../../../csi_driver/smartl_rv32/ck_irq.c"/>
+      <File Name="../../../../../../csi_driver/smartl_rv32/ck_usart.c"/>
+      <File Name="../../../../../../csi_driver/smartl_rv32/devices.c"/>
+      <File Name="../../../../../../csi_driver/smartl_rv32/dw_gpio.c"/>
+      <File Name="../../../../../../csi_driver/smartl_rv32/dw_timer.c"/>
+      <VirtualDirectory Name="include">
+        <File Name="../../../../../../csi_driver/smartl_rv32/include/ck_usart.h"/>
+        <File Name="../../../../../../csi_driver/smartl_rv32/include/dw_gpio.h"/>
+        <File Name="../../../../../../csi_driver/smartl_rv32/include/dw_timer.h"/>
+        <File Name="../../../../../../csi_driver/smartl_rv32/include/pin_name.h"/>
+        <File Name="../../../../../../csi_driver/smartl_rv32/include/pinmux.h"/>
+        <File Name="../../../../../../csi_driver/smartl_rv32/include/soc.h"/>
+        <File Name="../../../../../../csi_driver/smartl_rv32/include/sys_freq.h"/>
+      </VirtualDirectory>
+      <File Name="../../../../../../csi_driver/smartl_rv32/isr.c"/>
+      <File Name="../../../../../../csi_driver/smartl_rv32/lib.c"/>
+      <File Name="../../../../../../csi_driver/smartl_rv32/novic_irq_tbl.c"/>
+      <File Name="../../../../../../csi_driver/smartl_rv32/pinmux.c"/>
+      <File Name="../../../../../../csi_driver/smartl_rv32/startup.S"/>
+      <File Name="../../../../../../csi_driver/smartl_rv32/sys_freq.c"/>
+      <File Name="../../../../../../csi_driver/smartl_rv32/system.c"/>
+      <File Name="../../../../../../csi_driver/smartl_rv32/trap_c.c"/>
+      <File Name="../../../../../../csi_driver/smartl_rv32/vectors.S"/>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <VirtualDirectory Name="csi_kernel">
+    <VirtualDirectory Name="freertosv8.2.3">
+      <VirtualDirectory Name="FreeRTOS">
+        <VirtualDirectory Name="Source">
+          <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/croutine.c"/>
+          <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/event_groups.c"/>
+          <VirtualDirectory Name="include">
+            <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/include/FreeRTOS.h"/>
+            <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/include/StackMacros.h"/>
+            <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/include/croutine.h"/>
+            <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/include/deprecated_definitions.h"/>
+            <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/include/event_groups.h"/>
+            <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/include/list.h"/>
+            <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/include/mpu_wrappers.h"/>
+            <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/include/portable.h"/>
+            <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/include/projdefs.h"/>
+            <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/include/queue.h"/>
+            <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/include/semphr.h"/>
+            <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/include/task.h"/>
+            <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/include/timers.h"/>
+          </VirtualDirectory>
+          <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/list.c"/>
+          <VirtualDirectory Name="portable">
+            <VirtualDirectory Name="GCC">
+              <VirtualDirectory Name="riscv">
+                <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/portable/GCC/riscv/cpu_task_sw.S"/>
+                <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/portable/GCC/riscv/port.c"/>
+                <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/portable/GCC/riscv/portmacro.h"/>
+              </VirtualDirectory>
+            </VirtualDirectory>
+            <VirtualDirectory Name="MemMang">
+              <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/portable/MemMang/heap_4.c"/>
+            </VirtualDirectory>
+          </VirtualDirectory>
+          <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/queue.c"/>
+          <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/readme.txt"/>
+          <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/tasks.c"/>
+          <File Name="../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/timers.c"/>
+        </VirtualDirectory>
+      </VirtualDirectory>
+      <VirtualDirectory Name="License">
+        <File Name="../../../../../../csi_kernel/freertosv8.2.3/License/license.txt"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="adapter">
+        <File Name="../../../../../../csi_kernel/freertosv8.2.3/adapter/csi_freertos.c"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="include">
+        <File Name="../../../../../../csi_kernel/freertosv8.2.3/include/FreeRTOSConfig.h"/>
+      </VirtualDirectory>
+      <File Name="../../../../../../csi_kernel/freertosv8.2.3/readme.txt"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="include">
+      <File Name="../../../../../../csi_kernel/include/csi_kernel.h"/>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <VirtualDirectory Name="libs">
+    <VirtualDirectory Name="include">
+      <File Name="../../../../../../libs/include/errno.h"/>
+      <File Name="../../../../../../libs/include/mm.h"/>
+      <File Name="../../../../../../libs/include/mm_queue.h"/>
+      <VirtualDirectory Name="ringbuffer">
+        <File Name="../../../../../../libs/include/ringbuffer/ringbuffer.h"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="sys">
+        <File Name="../../../../../../libs/include/sys/_stdint.h"/>
+      </VirtualDirectory>
+      <File Name="../../../../../../libs/include/syslog.h"/>
+      <File Name="../../../../../../libs/include/time.h"/>
+      <File Name="../../../../../../libs/include/umm_heap.h"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="libc">
+      <File Name="../../../../../../libs/libc/_init.c"/>
+      <File Name="../../../../../../libs/libc/clock_gettime.c"/>
+      <File Name="../../../../../../libs/libc/malloc.c"/>
+      <File Name="../../../../../../libs/libc/minilibc_port.c"/>
+      <File Name="../../../../../../libs/libc/printf.c"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="mm">
+      <File Name="../../../../../../libs/mm/dq_addlast.c"/>
+      <File Name="../../../../../../libs/mm/dq_rem.c"/>
+      <File Name="../../../../../../libs/mm/lib_mallinfo.c"/>
+      <File Name="../../../../../../libs/mm/mm_addfreechunk.c"/>
+      <File Name="../../../../../../libs/mm/mm_free.c"/>
+      <File Name="../../../../../../libs/mm/mm_initialize.c"/>
+      <File Name="../../../../../../libs/mm/mm_leak.c"/>
+      <File Name="../../../../../../libs/mm/mm_mallinfo.c"/>
+      <File Name="../../../../../../libs/mm/mm_malloc.c"/>
+      <File Name="../../../../../../libs/mm/mm_size2ndx.c"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="ringbuffer">
+      <File Name="../../../../../../libs/ringbuffer/ringbuffer.c"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="syslog">
+      <File Name="../../../../../../libs/syslog/syslog.c"/>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <VirtualDirectory Name="projects">
+    <VirtualDirectory Name="examples">
+      <VirtualDirectory Name="kernel">
+        <VirtualDirectory Name="mutex">
+          <VirtualDirectory Name="freertos">
+            <VirtualDirectory Name="configs">
+              <File Name="../../../../../../projects/examples/kernel/mutex/freertos/configs/csi_config.h"/>
+            </VirtualDirectory>
+          </VirtualDirectory>
+          <File Name="../../../../../../projects/examples/kernel/mutex/main.c"/>
+          <File Name="../../../../../../projects/examples/kernel/mutex/mutex_test.c"/>
+          <File Name="../../../../../../projects/examples/kernel/mutex/test_kernel.h"/>
+        </VirtualDirectory>
+      </VirtualDirectory>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <BuildConfigs>
+    <BuildConfig Name="BuildSet">
+      <Target>
+        <ROMBank Selected="1">
+          <ROM1>
+            <InUse>no</InUse>
+            <Start/>
+            <Size/>
+          </ROM1>
+          <ROM2>
+            <InUse>no</InUse>
+            <Start/>
+            <Size/>
+          </ROM2>
+          <ROM3>
+            <InUse>no</InUse>
+            <Start/>
+            <Size/>
+          </ROM3>
+          <ROM4>
+            <InUse>no</InUse>
+            <Start/>
+            <Size/>
+          </ROM4>
+          <ROM5>
+            <InUse>no</InUse>
+            <Start/>
+            <Size/>
+          </ROM5>
+        </ROMBank>
+        <RAMBank>
+          <RAM1>
+            <InUse>no</InUse>
+            <Start/>
+            <Size/>
+            <Init>yes</Init>
+          </RAM1>
+          <RAM2>
+            <InUse>no</InUse>
+            <Start/>
+            <Size/>
+            <Init>yes</Init>
+          </RAM2>
+          <RAM3>
+            <InUse>no</InUse>
+            <Start/>
+            <Size/>
+            <Init>yes</Init>
+          </RAM3>
+          <RAM4>
+            <InUse>no</InUse>
+            <Start/>
+            <Size/>
+            <Init>yes</Init>
+          </RAM4>
+          <RAM5>
+            <InUse>no</InUse>
+            <Start/>
+            <Size/>
+            <Init>yes</Init>
+          </RAM5>
+        </RAMBank>
+        <CPU>e906fd</CPU>
+        <UseMiniLib>yes</UseMiniLib>
+        <Endian>little</Endian>
+        <UseHardFloat>no</UseHardFloat>
+        <UseEnhancedLRW>no</UseEnhancedLRW>
+      </Target>
+      <Output>
+        <OutputName>$(ProjectName)</OutputName>
+        <Type>Executable</Type>
+        <CreateHexFile>no</CreateHexFile>
+        <Preprocessor>no</Preprocessor>
+        <Disasm>no</Disasm>
+        <CallGraph>no</CallGraph>
+        <Map>no</Map>
+      </Output>
+      <User>
+        <BeforeCompile>
+          <RunUserProg>no</RunUserProg>
+          <UserProgName/>
+        </BeforeCompile>
+        <BeforeMake>
+          <RunUserProg>no</RunUserProg>
+          <UserProgName/>
+        </BeforeMake>
+        <AfterMake>
+          <RunUserProg>yes</RunUserProg>
+          <UserProgName>"$(ProjectPath)/../../../../../../utilities//aft_build.sh"</UserProgName>
+        </AfterMake>
+      </User>
+      <Compiler>
+        <Define/>
+        <Undefine/>
+        <Optim>Optimize size (-Os)</Optim>
+        <DebugLevel>Maximum (-g3)</DebugLevel>
+        <IncludePath>$(ProjectPath);$(ProjectPath)/../../../../../../csi_core/include;$(ProjectPath)/../../../../../../csi_driver/include;$(ProjectPath)/../../../../../../libs/include;$(ProjectPath)/../../../../../../csi_driver/smartl_rv32/include;$(ProjectPath)/../../../../../../csi_kernel/include;$(ProjectPath)/../../../../../../csi_kernel/freertosv8.2.3/include/;$(ProjectPath)/../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/include;$(ProjectPath)/../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/portable/GCC/riscv;$(ProjectPath)/../../../../../../board/smartl_e906_evb/include;;;;;;;;;$(ProjectPath)/../../../../../../projects/examples/kernel/mutex/freertos/configs</IncludePath>
+        <OtherFlags>-ffunction-sections -fdata-sections</OtherFlags>
+        <Verbose>no</Verbose>
+        <Ansi>no</Ansi>
+        <Syntax>no</Syntax>
+        <Pedantic>no</Pedantic>
+        <PedanticErr>no</PedanticErr>
+        <InhibitWarn>no</InhibitWarn>
+        <AllWarn>yes</AllWarn>
+        <WarnErr>no</WarnErr>
+        <OneElfS>no</OneElfS>
+        <Fstrict>no</Fstrict>
+      </Compiler>
+      <Asm>
+        <Define/>
+        <Undefine/>
+        <IncludePath>$(ProjectPath);$(ProjectPath)/../../../../../../csi_kernel/freertosv8.2.3/include/;$(ProjectPath)/../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/include;$(ProjectPath)/../../../../../../csi_kernel/freertosv8.2.3/FreeRTOS/Source/portable/GCC/riscv;$(ProjectPath)/../../../../../../projects/examples/kernel/mutex/freertos/configs</IncludePath>
+        <OtherFlags></OtherFlags>
+        <DebugLevel>gdwarf2</DebugLevel>
+      </Asm>
+      <Linker>
+        <Garbage>yes</Garbage>
+        <LDFile>$(ProjectPath)/../../../../../../board/smartl_e906_evb/gcc_csky.ld</LDFile>
+        <LibName>m</LibName>
+        <LibPath/>
+        <OtherFlags>-Wl,-zmax-page-size=1024</OtherFlags>
+        <AutoLDFile>no</AutoLDFile>
+      </Linker>
+      <Debug>
+        <LoadApplicationAtStartup>yes</LoadApplicationAtStartup>
+        <Connector>ICE</Connector>
+        <StopAt>yes</StopAt>
+        <StopAtText>main</StopAtText>
+        <InitFile>$(ProjectPath)/../../../../../../utilities/gdb.init</InitFile>
+        <AutoRun>yes</AutoRun>
+        <ResetType>Hard Reset</ResetType>
+        <SoftResetVal>0</SoftResetVal>
+        <ResetAfterLoad>no</ResetAfterLoad>
+        <ConfigICE>
+          <IP>localhost</IP>
+          <PORT>1025</PORT>
+          <Clock>12000</Clock>
+          <Delay>10</Delay>
+          <DDC>yes</DDC>
+          <TRST>no</TRST>
+          <Connect>Normal</Connect>
+          <ResetType>soft</ResetType>
+          <SoftResetVal>0</SoftResetVal>
+          <RTOSType>None</RTOSType>
+          <DownloadToFlash>no</DownloadToFlash>
+          <ResetAfterConnect>yes</ResetAfterConnect>
+        </ConfigICE>
+        <ConfigSIM>
+          <SIMTarget/>
+          <OtherFlags/>
+          <NoGraphic>yes</NoGraphic>
+          <Log>no</Log>
+        </ConfigSIM>
+      </Debug>
+      <Flash>
+        <InitFile>$(ProjectPath)/../../../../../../utilities//flash.init</InitFile>
+        <Erase>Erase Sectors</Erase>
+        <Algorithms Path=""/>
+        <Program>yes</Program>
+        <Verify>no</Verify>
+        <ResetAndRun>no</ResetAndRun>
+      </Flash>
+    </BuildConfig>
+  </BuildConfigs>
+</Project>

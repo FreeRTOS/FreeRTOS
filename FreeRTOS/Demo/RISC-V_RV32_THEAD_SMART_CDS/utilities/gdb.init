@@ -1,0 +1,10 @@
+tar rem 192.168.137.1:1025
+set $mhcr=0
+set *(int *)0x0=0x6f
+si
+reset
+set *(int *)0x40011008=0x0
+set *(int *)0x4001101c=0x0
+
+b Default_Handler
+lo

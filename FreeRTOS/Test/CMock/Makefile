@@ -111,8 +111,7 @@ $(COVINFO) : $(LCOV_LIST)
 
 # Generate lcov for each suite
 $(LCOV_LIST) : zero_coverage
-    $(foreach unit,$(UNITS),\
-        make -C $(unit) lcov;)
+    make -C $(subst .info,,$(@F)) lcov
 
 lcovhtml : $(COVINFO)
     mkdir -p $(COVERAGE_DIR)

@@ -340,7 +340,7 @@ void test_xMessageBufferCreate_integer_overflow( void )
 }
 
 /**
- * @breif API should fail and return null if the malloc fails.
+ * @brief API should fail and return null if the malloc fails.
  */
 void test_xMessageBufferCreate_malloc_fail( void )
 {

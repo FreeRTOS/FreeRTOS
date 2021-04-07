@@ -70,7 +70,7 @@
 
 /**
  * @brief Wait ticks passed into from tests if the stream buffer is full while sending data or
- * empty while receiveing data.
+ * empty while receiving data.
  */
 #define TEST_STREAM_BUFFER_WAIT_TICKS       ( 1000U )
 
@@ -80,23 +80,25 @@
 #define configASSERT_E                      0xAA101
 
 /**
- * @brief Expect a configASSERT from the funciton called.
+ * @brief Expect a configASSERT from the function called.
  *  Break out of the called function when this occurs.
- * @details Use this macro when the call passsed in as a parameter is expected
+ * @details Use this macro when the call passed in as a parameter is expected
  * to cause invalid memory access.
  */
-#define EXPECT_ASSERT_BREAK( call )             \
-    do                                          \
-    {                                           \
-        shouldAbortOnAssertion = true;          \
-        CEXCEPTION_T e = CEXCEPTION_NONE;       \
-        Try                                     \
-        {                                       \
-            call;                               \
-            TEST_FAIL();                        \
-        }                                       \
-        Catch( e )                              \
-        TEST_ASSERT_EQUAL( configASSERT_E, e ); \
+#define EXPECT_ASSERT_BREAK( call )                 \
+    do                                              \
+    {                                               \
+        shouldAbortOnAssertion = true;              \
+        CEXCEPTION_T e = CEXCEPTION_NONE;           \
+        Try                                         \
+        {                                           \
+            call;                                   \
+            TEST_FAIL();                            \
+        }                                           \
+        Catch( e )                                  \
+        {                                           \
+            TEST_ASSERT_EQUAL( configASSERT_E, e ); \
+        }                                           \
     } while ( 0 )
 
 
@@ -399,7 +401,7 @@ void setUp( void )
     UnityMalloc_StartTest();
 }
 
-/*! called before each testcase */
+/*! called before each test case */
 void tearDown( void )
 {
     TEST_ASSERT_EQUAL_MESSAGE( 0, assertionFailed, "Assertion check failed in code." );
@@ -443,7 +445,7 @@ static void validate_and_clear_assertions( void )
 /* ==============================  Test Cases  ============================== */
 
 /**
- * @brief Validates that stream buffer of sample size is created succesfully.
+ * @brief Validates that stream buffer of sample size is created successfully.
  */
 void test_xStreamBufferCreate_success( void )
 {
@@ -776,7 +778,7 @@ void test_xStreamBufferReceive_success( void )
 }
 
 /**
- * @brief Validates receiving from an empty stream buffer will block untill atleast trigger level bytes are
+ * @brief Validates receiving from an empty stream buffer will block until at least trigger level bytes are
  * sent to the buffer.
  */
 void test_xStreamBufferReceive_blocking( void )
@@ -808,7 +810,7 @@ void test_xStreamBufferReceive_blocking( void )
     TEST_ASSERT_EQUAL( 0, receivedBytes );
 
     /*
-     * Sending atleast trigger level bytes, should notify and wake up the receiver task.
+     * Sending at least trigger level bytes, should notify and wake up the receiver task.
      */
     xTaskGenericNotifyWait_StubWithCallback( streamBufferSendCallback );
     xTaskCheckForTimeOut_IgnoreAndReturn( pdFALSE );
@@ -818,7 +820,7 @@ void test_xStreamBufferReceive_blocking( void )
     TEST_ASSERT_EQUAL( 0, xStreamBufferBytesAvailable( xStreamBuffer ) );
 
     /*
-     * Sending atleast trigger level bytes from ISR, should notify and wake up the receiver task.
+     * Sending at least trigger level bytes from ISR, should notify and wake up the receiver task.
      */
     xTaskGenericNotifyWait_StubWithCallback( streamBufferSendFromISRCallback );
     xTaskGenericNotifyFromISR_StubWithCallback( receiverTaskNotificationFromISRCallback );
@@ -890,7 +892,7 @@ void test_xStreamBufferReceiveFromISR_success( void )
     TEST_ASSERT_NOT_NULL( xStreamBuffer );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferSpacesAvailable( xStreamBuffer ) );
 
-    /* Send data of atmost capacity to the stream buffer. */
+    /* Send data to fill the stream buffer to maximum capacity. */
     sentBytes = xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_WAIT_TICKS );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, sentBytes );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferBytesAvailable( xStreamBuffer ) );
@@ -1194,7 +1196,7 @@ void test_xStreamBufferBytesAvailable_null_stream_buffer( void )
 }
 
 /**
- * @brief Checking if strem buffer is full for a null stream buffer should fail assertion.
+ * @brief Checking if stream buffer is full for a null stream buffer should fail assertion.
  */
 void test_xStreamBufferIsFull_null_stream_buffer( void )
 {
@@ -1203,7 +1205,7 @@ void test_xStreamBufferIsFull_null_stream_buffer( void )
 }
 
 /**
- * @brief Checking if strem buffer is empty for a null stream buffer should fail assertion.
+ * @brief Checking if stream buffer is empty for a null stream buffer should fail assertion.
  */
 void test_xStreamBufferIsEmpty_null_stream_buffer( void )
 {

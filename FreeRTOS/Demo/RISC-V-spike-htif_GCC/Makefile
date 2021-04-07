@@ -62,17 +62,17 @@ SRCS = main.c main_blinky.c riscv-virt.c htif.c \
 ASMS = start.S \
 	$(RTOS_SOURCE_DIR)/portable/GCC/RISC-V/portASM.S
 
-OBJS = $(SRCS:%.c=$(BUILD_DIR)/%.o) $(ASMS:%.S=$(BUILD_DIR)/%.o)
-DEPS = $(SRCS:%.c=$(BUILD_DIR)/%.d) $(ASMS:%.S=$(BUILD_DIR)/%.d)
+OBJS = $(SRCS:%.c=$(BUILD_DIR)/%$(XLEN).o) $(ASMS:%.S=$(BUILD_DIR)/%$(XLEN).o)
+DEPS = $(SRCS:%.c=$(BUILD_DIR)/%$(XLEN).d) $(ASMS:%.S=$(BUILD_DIR)/%$(XLEN).d)
 
-$(BUILD_DIR)/RTOSDemo.axf: $(OBJS) fake_rom.lds Makefile
+$(BUILD_DIR)/RTOSDemo$(XLEN).axf: $(OBJS) fake_rom.lds Makefile
 	$(CC) $(LDFLAGS) $(OBJS) -o $@
 
-$(BUILD_DIR)/%.o: %.c Makefile
+$(BUILD_DIR)/%$(XLEN).o: %.c Makefile
 	@mkdir -p $(@D)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
 
-$(BUILD_DIR)/%.o: %.S Makefile
+$(BUILD_DIR)/%$(XLEN).o: %.S Makefile
 	@mkdir -p $(@D)
 	$(CC) $(CPPFLAGS) $(ASFLAGS) -MMD -MP -c $< -o $@
 

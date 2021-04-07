@@ -69,7 +69,7 @@
 
 /**
  * @brief Ticks to wait from tests if the message buffer is full while sending data or
- * below trigger level while receiveing data.
+ * below trigger level while receiving data.
  */
 #define TEST_MESSAGE_BUFFER_WAIT_TICKS       ( 1000U )
 
@@ -79,23 +79,25 @@
 #define configASSERT_E                       0xAA101
 
 /**
- * @brief Expect a configASSERT from the funciton called.
+ * @brief Expect a configASSERT from the function called.
  *  Break out of the called function when this occurs.
- * @details Use this macro when the call passsed in as a parameter is expected
+ * @details Use this macro when the call passed in as a parameter is expected
  * to cause invalid memory access.
  */
-#define EXPECT_ASSERT_BREAK( call )             \
-    do                                          \
-    {                                           \
-        shouldAbortOnAssertion = true;          \
-        CEXCEPTION_T e = CEXCEPTION_NONE;       \
-        Try                                     \
-        {                                       \
-            call;                               \
-            TEST_FAIL();                        \
-        }                                       \
-        Catch( e )                              \
-        TEST_ASSERT_EQUAL( configASSERT_E, e ); \
+#define EXPECT_ASSERT_BREAK( call )                 \
+    do                                              \
+    {                                               \
+        shouldAbortOnAssertion = true;              \
+        CEXCEPTION_T e = CEXCEPTION_NONE;           \
+        Try                                         \
+        {                                           \
+            call;                                   \
+            TEST_FAIL();                            \
+        }                                           \
+        Catch( e )                                  \
+        {                                           \
+            TEST_ASSERT_EQUAL( configASSERT_E, e ); \
+        }                                           \
     } while ( 0 )
 
 /* ============================  GLOBAL VARIABLES =========================== */
@@ -274,7 +276,7 @@ void setUp( void )
     UnityMalloc_StartTest();
 }
 
-/*! called before each testcase */
+/*! called before each test case */
 void tearDown( void )
 {
     TEST_ASSERT_EQUAL_MESSAGE( 0, assertionFailed, "Assertion check failed in code." );
@@ -360,7 +362,7 @@ void test_xMessageBufferCreate_zero_size( void )
 }
 
 /**
- * @brief Should assert if the size passed is less than the minimum size requried to store metadata size.
+ * @brief Should assert if the size passed is less than the minimum size required to store metadata size.
  */
 void test_xMessageBufferCreate_invalid_size( void )
 {
@@ -422,7 +424,7 @@ void test_xMessageBufferCreateStatic_null_struct( void )
 }
 
 /**
- * @brief Validates message buffer create assert if the size passed is less than the minimum size requried to store metadata size.
+ * @brief Validates message buffer create assert if the size passed is less than the minimum size required to store metadata size.
  */
 void test_xMessageBufferCreateStatic_invalid_size( void )
 {
@@ -650,7 +652,7 @@ void test_xMessageBufferReceive_null_input_message( void )
     xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
     TEST_ASSERT_NOT_NULL( xMessageBuffer );
 
-    /* Should assert if a null input mssage is passed. */
+    /* Should assert if a null input message is passed. */
     EXPECT_ASSERT_BREAK( ( void ) xMessageBufferReceive( xMessageBuffer, NULL, TEST_MAX_MESSAGE_SIZE, TEST_MESSAGE_BUFFER_WAIT_TICKS ) );
 
     validate_and_clear_assertions();

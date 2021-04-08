@@ -30,7 +30,8 @@
 
 void vStartTimerDemoTask( TickType_t xBaseFrequencyIn );
 BaseType_t xAreTimerDemoTasksStillRunning( TickType_t xCycleFrequency );
-void vTimerPeriodicISRTests( void );
+void vTimerPeriodicISRTests( void ); 
+void vTimerDemoIncludeBacklogTests( BaseType_t includeBacklogTests );
 
 #endif /* TIMER_DEMO_H */
 

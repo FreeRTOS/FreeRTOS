@@ -29,7 +29,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-/* Queue includes */
+/* Message Buffer includes */
 #include "FreeRTOS.h"
 #include "FreeRTOSConfig.h"
 #include "message_buffer.h"
@@ -37,6 +37,7 @@
 /* Test includes. */
 #include "unity.h"
 #include "unity_memory.h"
+#include "CException.h"
 
 /* Mock includes. */
 #include "mock_task.h"
@@ -68,9 +69,36 @@
 
 /**
  * @brief Ticks to wait from tests if the message buffer is full while sending data or
- * below trigger level while receiveing data.
+ * below trigger level while receiving data.
  */
 #define TEST_MESSAGE_BUFFER_WAIT_TICKS       ( 1000U )
+
+/**
+ * @brief CException code for when a configASSERT should be intercepted.
+ */
+#define configASSERT_E                       0xAA101
+
+/**
+ * @brief Expect a configASSERT from the function called.
+ *  Break out of the called function when this occurs.
+ * @details Use this macro when the call passed in as a parameter is expected
+ * to cause invalid memory access.
+ */
+#define EXPECT_ASSERT_BREAK( call )                 \
+    do                                              \
+    {                                               \
+        shouldAbortOnAssertion = true;              \
+        CEXCEPTION_T e = CEXCEPTION_NONE;           \
+        Try                                         \
+        {                                           \
+            call;                                   \
+            TEST_FAIL();                            \
+        }                                           \
+        Catch( e )                                  \
+        {                                           \
+            TEST_ASSERT_EQUAL( configASSERT_E, e ); \
+        }                                           \
+    } while ( 0 )
 
 /* ============================  GLOBAL VARIABLES =========================== */
 
@@ -131,7 +159,7 @@ static void vFakeAssertStub( bool x,
 
         if( shouldAbortOnAssertion == pdTRUE )
         {
-            TEST_ABORT();
+            Throw( configASSERT_E );
         }
     }
 }
@@ -248,7 +276,7 @@ void setUp( void )
     UnityMalloc_StartTest();
 }
 
-/*! called before each testcase */
+/*! called before each test case */
 void tearDown( void )
 {
     TEST_ASSERT_EQUAL_MESSAGE( 0, assertionFailed, "Assertion check failed in code." );
@@ -314,7 +342,7 @@ void test_xMessageBufferCreate_integer_overflow( void )
 }
 
 /**
- * @breif API should fail and return null if the malloc fails.
+ * @brief API should fail and return null if the malloc fails.
  */
 void test_xMessageBufferCreate_malloc_fail( void )
 {
@@ -328,23 +356,17 @@ void test_xMessageBufferCreate_malloc_fail( void )
  */
 void test_xMessageBufferCreate_zero_size( void )
 {
-    if( TEST_PROTECT() )
-    {
-        ( void ) xMessageBufferCreate( 0 );
-    }
+    EXPECT_ASSERT_BREAK( ( void ) xMessageBufferCreate( 0 ) );
 
     validate_and_clear_assertions();
 }
 
 /**
- * @brief Should assert if the size passed is less than the minimum size requried to store metadata size.
+ * @brief Should assert if the size passed is less than the minimum size required to store metadata size.
  */
 void test_xMessageBufferCreate_invalid_size( void )
 {
-    if( TEST_PROTECT() )
-    {
-        ( void ) xMessageBufferCreate( TEST_MESSAGE_METADATA_SIZE );
-    }
+    EXPECT_ASSERT_BREAK( ( void ) xMessageBufferCreate( TEST_MESSAGE_METADATA_SIZE ) );
 
     validate_and_clear_assertions();
 }
@@ -379,6 +401,7 @@ void test_xMessageBufferCreateStatic_null_array( void )
     /* Returns NULL when NULL storage area is passed as a parameter. */
     xMessageBuffer = xMessageBufferCreateStatic( TEST_MESSAGE_BUFFER_SIZE, NULL, &messageBufferStruct );
     TEST_ASSERT_NULL( xMessageBuffer );
+
     validate_and_clear_assertions();
 }
 
@@ -396,11 +419,12 @@ void test_xMessageBufferCreateStatic_null_struct( void )
     /* Returns NULL when NULL message buffer struct is passed as a parameter. */
     xMessageBuffer = xMessageBufferCreateStatic( sizeof( messageBufferArray ), messageBufferArray, NULL );
     TEST_ASSERT_NULL( xMessageBuffer );
+
     validate_and_clear_assertions();
 }
 
 /**
- * @brief Validates message buffer create assert if the size passed is less than the minimum size requried to store metadata size.
+ * @brief Validates message buffer create assert if the size passed is less than the minimum size required to store metadata size.
  */
 void test_xMessageBufferCreateStatic_invalid_size( void )
 {
@@ -408,10 +432,7 @@ void test_xMessageBufferCreateStatic_invalid_size( void )
     /* The size of message buffer array should be one greater than the required size of message buffer. */
     uint8_t messageBufferArray[ TEST_MESSAGE_BUFFER_SIZE + 1 ] = { 0 };
 
-    if( TEST_PROTECT() )
-    {
-        ( void ) xMessageBufferCreateStatic( TEST_MESSAGE_METADATA_SIZE, messageBufferArray, &messageBufferStruct );
-    }
+    EXPECT_ASSERT_BREAK( ( void ) xMessageBufferCreateStatic( TEST_MESSAGE_METADATA_SIZE, messageBufferArray, &messageBufferStruct ) );
 
     validate_and_clear_assertions();
 }
@@ -425,10 +446,7 @@ void test_xMessageBufferCreateStatic_zero_size( void )
     /* The size of message buffer array should be one greater than the required size of message buffer. */
     uint8_t messageBufferArray[ TEST_MESSAGE_BUFFER_SIZE + 1 ] = { 0 };
 
-    if( TEST_PROTECT() )
-    {
-        ( void ) xMessageBufferCreateStatic( 0, messageBufferArray, &messageBufferStruct );
-    }
+    EXPECT_ASSERT_BREAK( ( void ) xMessageBufferCreateStatic( 0, messageBufferArray, &messageBufferStruct ) );
 
     validate_and_clear_assertions();
 }
@@ -461,7 +479,7 @@ void test_xMessageBufferSend_success( void )
 
 /**
  * @brief An integer overflow in message size to be sent should result in an
- * assertion failure 
+ * assertion failure
  */
 void test_xMessageBufferSend_message_size_integer_overflow( void )
 {
@@ -475,10 +493,8 @@ void test_xMessageBufferSend_message_size_integer_overflow( void )
     xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
     TEST_ASSERT_NOT_NULL( xMessageBuffer );
 
-    if( TEST_PROTECT() )
-    {
-        ( void ) xMessageBufferSend( xMessageBuffer, data, TEST_MESSAGE_BUFFER_MAX_UINT_SIZE, TEST_MESSAGE_BUFFER_WAIT_TICKS );
-    }
+    EXPECT_ASSERT_BREAK( ( void ) xMessageBufferSend( xMessageBuffer, data, TEST_MESSAGE_BUFFER_MAX_UINT_SIZE, TEST_MESSAGE_BUFFER_WAIT_TICKS ) );
+
     validate_and_clear_assertions();
 
     vStreamBufferDelete( xMessageBuffer );
@@ -521,10 +537,7 @@ void test_xMessageBufferSend_null_message( void )
     xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
     TEST_ASSERT_NOT_NULL( xMessageBuffer );
 
-    if( TEST_PROTECT() )
-    {
-        ( void ) xMessageBufferSend( xMessageBuffer, NULL, TEST_MAX_MESSAGE_SIZE + 1, TEST_MESSAGE_BUFFER_WAIT_TICKS );
-    }
+    EXPECT_ASSERT_BREAK( ( void ) xMessageBufferSend( xMessageBuffer, NULL, TEST_MAX_MESSAGE_SIZE + 1, TEST_MESSAGE_BUFFER_WAIT_TICKS ) );
 
     validate_and_clear_assertions();
 
@@ -546,10 +559,7 @@ void test_xMessageBufferSend_null_message_buffer( void )
     xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
     TEST_ASSERT_NOT_NULL( xMessageBuffer );
 
-    if( TEST_PROTECT() )
-    {
-        ( void ) xMessageBufferSend( NULL, message, TEST_MAX_MESSAGE_SIZE + 1, TEST_MESSAGE_BUFFER_WAIT_TICKS );
-    }
+    EXPECT_ASSERT_BREAK( ( void ) xMessageBufferSend( NULL, message, TEST_MAX_MESSAGE_SIZE + 1, TEST_MESSAGE_BUFFER_WAIT_TICKS ) );
 
     validate_and_clear_assertions();
 
@@ -642,13 +652,11 @@ void test_xMessageBufferReceive_null_input_message( void )
     xMessageBuffer = xMessageBufferCreate( TEST_MESSAGE_BUFFER_SIZE );
     TEST_ASSERT_NOT_NULL( xMessageBuffer );
 
-    /* Should assert if a null input mssage is passed. */
-    if( TEST_PROTECT() )
-    {
-        ( void ) xMessageBufferReceive( xMessageBuffer, NULL, TEST_MAX_MESSAGE_SIZE, TEST_MESSAGE_BUFFER_WAIT_TICKS );
-    }
+    /* Should assert if a null input message is passed. */
+    EXPECT_ASSERT_BREAK( ( void ) xMessageBufferReceive( xMessageBuffer, NULL, TEST_MAX_MESSAGE_SIZE, TEST_MESSAGE_BUFFER_WAIT_TICKS ) );
 
     validate_and_clear_assertions();
+
     vStreamBufferDelete( xMessageBuffer );
 }
 
@@ -669,10 +677,7 @@ void test_xMessageBufferReceive_invalid_params( void )
     TEST_ASSERT_NOT_NULL( xMessageBuffer );
 
     /* Should assert if a null message buffer handle is passed. */
-    if( TEST_PROTECT() )
-    {
-        ( void ) xMessageBufferReceive( NULL, message, TEST_MAX_MESSAGE_SIZE, TEST_MESSAGE_BUFFER_WAIT_TICKS );
-    }
+    EXPECT_ASSERT_BREAK( ( void ) xMessageBufferReceive( NULL, message, TEST_MAX_MESSAGE_SIZE, TEST_MESSAGE_BUFFER_WAIT_TICKS ) );
 
     validate_and_clear_assertions();
 

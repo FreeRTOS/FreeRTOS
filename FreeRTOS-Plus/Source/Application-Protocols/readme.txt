@@ -9,6 +9,9 @@ Directories:
 + coreMQTT contains the implementation of the coreMQTT library.  See:
   https://www.freertos.org/mqtt
 
++ coreMQTT-Agent contains the implementation of the coreMQTT Agent library.  See:
+  https://www.freertos.org/mqtt/mqtt-agent-demo
+
 + network_transport contains the transport interface definition.  See the
   comment above and https://www.freertos.org/network-interface.html
   

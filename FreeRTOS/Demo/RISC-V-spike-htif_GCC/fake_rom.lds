@@ -4,8 +4,9 @@ ENTRY( _start )
 MEMORY
 {
 	/* Fake ROM area */
-	rom (rxa) : ORIGIN = 0x80000000, LENGTH = 512K
-	ram (wxa) : ORIGIN = 0x80080000, LENGTH = 512K
+        /* BASE_ADDRESS is replaced with the real value by the Makefile. */
+	rom (rxa) : ORIGIN = BASE_ADDRESS, LENGTH = 512K
+	ram (wxa) : ORIGIN = BASE_ADDRESS + 512K, LENGTH = 512K
 }
 
 SECTIONS

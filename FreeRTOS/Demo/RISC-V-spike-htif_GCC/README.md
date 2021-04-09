@@ -67,20 +67,20 @@ $ export PATH=~/x-tools/riscv64-unknown-elf/bin:$PATH
 To build, simply run `make`. If you want a debug build, pass `DEBUG=1`. If
 you want an RV64 build, pass `XLEN=64`.
 
-The resulting executable file is ./build/RTOSDemo.axf.
+The resulting executable file is ./build/RTOSDemo32.axf or ./build/RTOSDemo64.axf.
 
 ## How to run
 
 RV32:
 ```
 $ spike -p1 --isa RV32IMA -m0x80000000:0x10000000 --rbb-port 9824 \
-        ./build/RTOSDemo.axf
+        ./build/RTOSDemo32.axf
 ```
 
 RV64:
 ```
 $ spike -p1 --isa RV64IMA -m0x80000000:0x10000000 --rbb-port 9824 \
-        ./build/RTOSDemo.axf
+        ./build/RTOSDemo64.axf
 ```
 
 ## How to debug with gdb

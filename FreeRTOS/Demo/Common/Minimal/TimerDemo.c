@@ -696,18 +696,15 @@ static void prvTest7_CheckBacklogBehaviour( void )
 		configASSERT( xTestStatus );
 	}
 
-	ucAutoReloadTimerCounters[ 0 ] = ( uint8_t ) 0;
-
 	/* Prompt the callback function to stop the timer. */
 	ucIsStopNeededInTimerZeroCallback = ( uint8_t ) pdTRUE;
 
 	/* Now start the timer.  This will appear to happen immediately to
 	this task because this task is running at a priority below the timer
-	service task.  Use a timer period small enough that the call to
-	xTaskCatchUpTicks() below has a small impact on other tests that might
-	be running, but large enough that other tests won't cause an extra
-	(unexpected) timer expiry. */
-	#define tmrdemoBACKLOG_TIMER_PERIOD		( ( TickType_t ) 5 )
+	service task.  Use a timer period of one tick so the call to
+	xTaskCatchUpTicks() below has minimal impact on other tests that might
+	be running. */
+	#define tmrdemoBACKLOG_TIMER_PERIOD		( ( TickType_t ) 1 )
 	xTimerChangePeriod( xAutoReloadTimers[ 0 ], tmrdemoBACKLOG_TIMER_PERIOD, tmrdemoDONT_BLOCK );
 
 	/* The timer should now be active. */
@@ -725,13 +722,6 @@ static void prvTest7_CheckBacklogBehaviour( void )
 
 	/* The timer should now be inactive. */
 	if( xTimerIsTimerActive( xAutoReloadTimers[ 0 ] ) != pdFALSE )
-	{
-		xTestStatus = pdFAIL;
-		configASSERT( xTestStatus );
-	}
-
-	/* Verify the backlog cleared properly. */
-	if( ucAutoReloadTimerCounters[ 0 ] != ( uint8_t ) tmrdemoEXPECTED_BACKLOG_EXPIRIES )
 	{
 		xTestStatus = pdFAIL;
 		configASSERT( xTestStatus );

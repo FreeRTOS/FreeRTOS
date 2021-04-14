@@ -12,6 +12,11 @@ This repo uses [Git Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodu
 
 **Note:** If you download the ZIP file provided by the GitHub UI, you will not get the contents of the submodules. (The ZIP file is also not a valid git repository)
 
+If using Windows, set `core.symlinks` to true since copying a directory with symlinks may cause hangups:
+```
+git config --global core.symlinks true
+```
+
 To clone using HTTPS:
 ```
 git clone https://github.com/FreeRTOS/FreeRTOS.git --recurse-submodules

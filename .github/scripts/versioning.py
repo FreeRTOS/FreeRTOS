@@ -69,7 +69,7 @@ def ask_yes_no_question(question):
     return answer
 
 
-def list_files_in_a_component(component, afr_path, exclude_dirs=[], ext_filter=['.c', '.h'], exclude_hidden=True):
+def list_files_in_a_component(component, afr_path, exclude_dirs=['.git'], ext_filter=['.c', '.h'], exclude_hidden=True):
     '''
     Returns a list of all the files in a component.
     '''
@@ -80,6 +80,9 @@ def list_files_in_a_component(component, afr_path, exclude_dirs=[], ext_filter=[
         # Current root is an excluded dir so skip
         if root in exclude_dirs:
             continue
+
+        # Prune excluded dirs
+        dirs[:] = [d for d in dirs if d not in exclude_dirs]
 
         for f in files:
             if exclude_hidden and f[0] == '.':

@@ -77,4 +77,26 @@ extern void vLoggingPrintf( const char * pcFormatString,
  */
 #define MQTT_STATE_ARRAY_MAX_COUNT    20U
 
+/**
+ * @brief The maximum number of pending acknowledgments to track for a single
+ * connection.
+ *
+ * @note The MQTT agent tracks MQTT commands (such as PUBLISH and SUBSCRIBE) th
+ * at are still waiting to be acknowledged.  MQTT_AGENT_MAX_OUTSTANDING_ACKS set
+ * the maximum number of acknowledgments that can be outstanding at any one time.
+ * The higher this number is the greater the agent's RAM consumption will be.
+ */
+#define MQTT_AGENT_MAX_OUTSTANDING_ACKS    ( 20U )
+
+/**
+ * @brief Time in MS that the MQTT agent task will wait in the Blocked state (so
+ * not using any CPU time) for a command to arrive in its command queue before
+ * exiting the blocked state so it can call MQTT_ProcessLoop().
+ *
+ * @note It is important MQTT_ProcessLoop() is called often if there is known
+ * MQTT traffic, but calling it too often can take processing time away from
+ * lower priority tasks and waste CPU time and power.
+ */
+#define MQTT_AGENT_MAX_EVENT_QUEUE_WAIT_TIME    ( 1000 )
+
 #endif /* ifndef CORE_MQTT_CONFIG_H */

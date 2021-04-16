@@ -112,6 +112,13 @@
     #define MQTT_AGENT_NETWORK_BUFFER_SIZE    ( 5000 )
 #endif
 
+/**
+ * @brief The length of the queue used to hold commands for the agent.
+ */
+#ifndef MQTT_AGENT_COMMAND_QUEUE_LENGTH
+    #define MQTT_AGENT_COMMAND_QUEUE_LENGTH   ( 10 )
+#endif
+
 
 /**
  * These configuration settings are required to run the demo.
@@ -161,6 +168,24 @@
  */
 #define mqttexampleMILLISECONDS_PER_SECOND           ( 1000U )
 #define mqttexampleMILLISECONDS_PER_TICK             ( mqttexampleMILLISECONDS_PER_SECOND / configTICK_RATE_HZ )
+
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief Each compilation unit that consumes the NetworkContext must define it.
+ * It should contain a single pointer to the type of your desired transport.
+ * When using multiple transports in the same compilation unit, define this pointer as void *.
+ *
+ * @note Transport stacks are defined in FreeRTOS-Plus/Source/Application-Protocols/network_transport.
+ */
+struct NetworkContext
+{
+    #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
+        TlsTransportParams_t * pParams;
+    #else
+        PlaintextTransportParams_t * pParams;
+    #endif
+};
 
 /*-----------------------------------------------------------*/
 
@@ -688,13 +713,13 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
     /* Set the socket wakeup callback and ensure the read block time. */
     if( xConnected )
     {
-        ( void ) FreeRTOS_setsockopt( pxNetworkContext->tcpSocket,
+        ( void ) FreeRTOS_setsockopt( pxNetworkContext->pParams->tcpSocket,
                                       0, /* Level - Unused. */
                                       FREERTOS_SO_WAKEUP_CALLBACK,
                                       ( void * ) prvMQTTClientSocketWakeupCallback,
                                       sizeof( &( prvMQTTClientSocketWakeupCallback ) ) );
 
-        ( void ) FreeRTOS_setsockopt( pxNetworkContext->tcpSocket,
+        ( void ) FreeRTOS_setsockopt( pxNetworkContext->pParams->tcpSocket,
                                       0,
                                       FREERTOS_SO_RCVTIMEO,
                                       &xTransportTimeout,
@@ -711,7 +736,7 @@ static BaseType_t prvSocketDisconnect( NetworkContext_t * pxNetworkContext )
     BaseType_t xDisconnected = pdFAIL;
 
     /* Set the wakeup callback to NULL since the socket will disconnect. */
-    ( void ) FreeRTOS_setsockopt( pxNetworkContext->tcpSocket,
+    ( void ) FreeRTOS_setsockopt( pxNetworkContext->pParams->tcpSocket,
                                   0, /* Level - Unused. */
                                   FREERTOS_SO_WAKEUP_CALLBACK,
                                   ( void * ) NULL,

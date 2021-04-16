@@ -99,4 +99,10 @@ extern void vLoggingPrintf( const char * pcFormatString,
  */
 #define MQTT_AGENT_MAX_EVENT_QUEUE_WAIT_TIME    ( 1000 )
 
+/**
+ * @brief The number of command structures to allocate in the pool
+ * for the agent.
+ */
+#define MQTT_COMMAND_CONTEXTS_POOL_SIZE 10
+
 #endif /* ifndef CORE_MQTT_CONFIG_H */

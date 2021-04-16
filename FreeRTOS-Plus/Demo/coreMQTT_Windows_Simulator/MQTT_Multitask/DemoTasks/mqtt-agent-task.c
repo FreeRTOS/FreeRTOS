@@ -807,18 +807,6 @@ static void prvIncomingPublishCallback( MQTTAgentContext_t * pMqttAgentContext,
     xPublishHandled = handleIncomingPublishes( ( SubscriptionElement_t * ) pMqttAgentContext->pIncomingCallbackContext,
                                                pxPublishInfo );
 
-
-    #if ( democonfigCREATE_CODE_SIGNING_OTA_DEMO == 1 )
-
-        /*
-         * Check if the incoming publish is for OTA agent.
-         */
-        if( xPublishHandled != true )
-        {
-            xPublishHandled = vOTAProcessMessage( pMqttAgentContext->pIncomingCallbackContext, pxPublishInfo );
-        }
-    #endif
-
     /* If there are no callbacks to handle the incoming publishes,
      * handle it as an unsolicited publish. */
     if( xPublishHandled != true )
@@ -854,20 +842,23 @@ static void prvMQTTAgentTask( void * pvParameters )
 
         /* Success is returned for disconnect or termination. The socket should
          * be disconnected. */
-        if( xMQTTStatus == MQTTSuccess )
+        if( ( xMQTTStatus == MQTTSuccess ) && ( xGlobalMqttAgentContext.mqttContext.connectStatus == MQTTNotConnected ) )
         {
             /* MQTT Disconnect. Disconnect the socket. */
             xNetworkResult = prvSocketDisconnect( &xNetworkContext );
+            configASSERT( xNetworkResult == pdPASS );
+        }
+        else if( xMQTTStatus == MQTTSuccess )
+        {
+            /* MQTTAgent_Terminate() was called, but MQTT was not disconnected. */
+            xMQTTStatus = MQTT_Disconnect( &( xGlobalMqttAgentContext.mqttContext ) );
+            configASSERT( xMQTTStatus == MQTTSuccess );
+            xNetworkResult = prvSocketDisconnect( &xNetworkContext );
+            configASSERT( xNetworkResult == pdPASS );
         }
         /* Error. */
         else
         {
-            #if ( democonfigCREATE_CODE_SIGNING_OTA_DEMO == 1 )
-                {
-                    vSuspendOTACodeSigningDemo();
-                }
-            #endif
-
             /* Reconnect TCP. */
             xNetworkResult = prvSocketDisconnect( &xNetworkContext );
             configASSERT( xNetworkResult == pdPASS );
@@ -877,15 +868,6 @@ static void prvMQTTAgentTask( void * pvParameters )
             /* MQTT Connect with a persistent session. */
             xConnectStatus = prvMQTTConnect( false );
             configASSERT( xConnectStatus == MQTTSuccess );
-
-            #if ( democonfigCREATE_CODE_SIGNING_OTA_DEMO == 1 )
-                {
-                    if( xMQTTStatus == MQTTSuccess )
-                    {
-                        vResumeOTACodeSigningDemo();
-                    }
-                }
-            #endif
         }
     } while( xMQTTStatus != MQTTSuccess );
 }

@@ -75,7 +75,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * macro sets the limit on how many simultaneous PUBLISH states an MQTT
  * context maintains.
  */
-#define MQTT_STATE_ARRAY_MAX_COUNT    20U
+#define MQTT_STATE_ARRAY_MAX_COUNT              20U
 
 /**
  * @brief The maximum number of pending acknowledgments to track for a single
@@ -86,7 +86,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * the maximum number of acknowledgments that can be outstanding at any one time.
  * The higher this number is the greater the agent's RAM consumption will be.
  */
-#define MQTT_AGENT_MAX_OUTSTANDING_ACKS    ( 20U )
+#define MQTT_AGENT_MAX_OUTSTANDING_ACKS         ( 20U )
 
 /**
  * @brief Time in MS that the MQTT agent task will wait in the Blocked state (so
@@ -103,6 +103,6 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @brief The number of command structures to allocate in the pool
  * for the agent.
  */
-#define MQTT_COMMAND_CONTEXTS_POOL_SIZE 10
+#define MQTT_COMMAND_CONTEXTS_POOL_SIZE         10
 
 #endif /* ifndef CORE_MQTT_CONFIG_H */

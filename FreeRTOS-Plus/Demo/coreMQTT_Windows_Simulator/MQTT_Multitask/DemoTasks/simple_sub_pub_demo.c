@@ -509,7 +509,7 @@ static void prvSimpleSubscribePublishTask( void * pvParameters )
                    ulValueToNotify ) );
         prvWaitForCommandAcknowledgment( &ulNotification );
 
-        /* The value received by the callback that executed when the publish was 
+        /* The value received by the callback that executed when the publish was
          * acked came from the context passed into MQTTAgent_Publish() above, so
          * should match the value set in the context above.  However QoS 0 does
          * not provide guaranteed delivery so it is ok for the values not to match
@@ -530,7 +530,6 @@ static void prvSimpleSubscribePublishTask( void * pvParameters )
 
             LogInfo( ( "Error - Timed out or didn't receive ack from publishing to topic %s",
                        pcTopicBuffer ) );
-
         }
 
         /* Add a little randomness into the delay so the tasks don't remain

@@ -1,5 +1,5 @@
 /*
- * Lab-Project-coreMQTT-Agent 201215
+ * FreeRTOS V202012.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -95,44 +95,12 @@
 /* This demo uses compile time options to select the demo tasks to created.
  * Ensure the compile time options are defined.  These should be defined in
  * demo_config.h. */
-#ifndef democonfigCREATE_LARGE_MESSAGE_SUB_PUB_TASK
-    #error Please define democonfigCREATE_LARGE_MESSAGE_SUB_PUB_TASK to 1 or 0 in demo_config.h - determines if vStartLargeMessageSubscribePublishTask() gets called or not.
-#endif
-
-#if ( democonfigCREATE_LARGE_MESSAGE_SUB_PUB_TASK != 0 ) && !defined( democonfigLARGE_MESSAGE_SUB_PUB_TASK_STACK_SIZE )
-    #error Please define democonfigLARGE_MESSAGE_SUB_PUB_TASK_STACK_SIZE in demo_config.h to set the stack size (in words, not bytes) for the task created by vStartLargeMessageSubscribePublishTask().
-#endif
-
 #ifndef democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE
     #error Please set democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE to the number of tasks to create in vStartSimpleSubscribePublishTask().  Can be zero.
 #endif
 
 #if ( democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE > 0 ) && !defined( democonfigSIMPLE_SUB_PUB_TASK_STACK_SIZE )
     #error Please define democonfigSIMPLE_SUB_PUB_TASK_STACK_SIZE in demo_config.h to set the stack size (in words, not bytes) for the tasks created by vStartSimpleSubscribePublishTask().
-#endif
-
-#ifndef democonfigCREATE_CODE_SIGNING_OTA_DEMO
-    #error Please define democonfigCREATE_CODE_SIGNING_OTA_DEMO to 1 or 0 in demo_config.h - determines if vStartOTACodeSigningDemo() gets called or not.
-#endif
-
-#if ( democonfigCREATE_CODE_SIGNING_OTA_DEMO != 0 ) && !defined( democonfigCODE_SIGNING_OTA_TASK_STACK_SIZE )
-    #error Please define democonfigCODE_SIGNING_OTA_TASK_STACK_SIZE in demo_config.h to set the stack size (in words, not bytes) for the task created by vStartOTACodeSigningDemo().
-#endif
-
-#ifndef democonfigCREATE_DEFENDER_DEMO
-    #error Please define democonfigCREATE_DEFENDER_DEMO to 1 or 0 in demo_config.h - determines if vStartDefenderDemo() gets called or not.
-#endif
-
-#if ( democonfigCREATE_DEFENDER_DEMO != 0 ) && !defined( democonfigDEFENDER_TASK_STACK_SIZE )
-    #error Please define democonfigDEFENDER_TASK_STACK_SIZE in demo_config.h to set the stack size (in words, not bytes) for the task created by vStartDefenderDemo().
-#endif
-
-#ifndef democonfigCREATE_SHADOW_DEMO
-    #error Please define democonfigCREATE_SHADOW_DEMO to 1 or 0 in demo_config.h - determines if vStartShadowDemo() gets called or not.
-#endif
-
-#if ( democonfigCREATE_SHADOW_DEMO != 0 ) && !defined( democonfigSHADOW_TASK_STACK_SIZE )
-    #error Please define democonfigSHADOW_TASK_STACK_SIZE in demo_config.h to set the stack size (in words, not bytes) for the tasks created by vStartShadowDemo().
 #endif
 
 /**
@@ -193,12 +161,6 @@
  */
 #define mqttexampleMILLISECONDS_PER_SECOND           ( 1000U )
 #define mqttexampleMILLISECONDS_PER_TICK             ( mqttexampleMILLISECONDS_PER_SECOND / configTICK_RATE_HZ )
-
-/**
- * @brief The MQTT agent manages the MQTT contexts.  This set the handle to the
- * context used by this demo.
- */
-#define mqttexampleMQTT_CONTEXT_HANDLE               ( ( MQTTContextHandle_t ) 0 )
 
 /*-----------------------------------------------------------*/
 
@@ -336,24 +298,10 @@ static void prvConnectToMQTTBroker( void );
  * Functions that start the tasks demonstrated by this project.
  */
 
-extern void vStartLargeMessageSubscribePublishTask( configSTACK_DEPTH_TYPE uxStackSize,
-                                                    UBaseType_t uxPriority );
 extern void vStartSimpleSubscribePublishTask( uint32_t ulTaskNumber,
                                               configSTACK_DEPTH_TYPE uxStackSize,
                                               UBaseType_t uxPriority );
 
-extern void vStartOTACodeSigningDemo( configSTACK_DEPTH_TYPE uxStackSize,
-                                      UBaseType_t uxPriority );
-extern void vSuspendOTACodeSigningDemo( void );
-extern void vResumeOTACodeSigningDemo( void );
-extern bool vOTAProcessMessage( void * pvIncomingPublishCallbackContext,
-                                MQTTPublishInfo_t * pxPublishInfo );
-
-extern void vStartDefenderDemo( configSTACK_DEPTH_TYPE uxStackSize,
-                                UBaseType_t uxPriority );
-
-extern void vStartShadowDemo( configSTACK_DEPTH_TYPE uxStackSize,
-                              UBaseType_t uxPriority );
 /*-----------------------------------------------------------*/
 
 /**
@@ -933,12 +881,6 @@ static void prvConnectAndCreateDemoTasks( void * pvParameters )
     prvConnectToMQTTBroker();
 
     /* Selectively create demo tasks as per the compile time constant settings. */
-    #if ( democonfigCREATE_LARGE_MESSAGE_SUB_PUB_TASK == 1 )
-        {
-            vStartLargeMessageSubscribePublishTask( democonfigLARGE_MESSAGE_SUB_PUB_TASK_STACK_SIZE,
-                                                    tskIDLE_PRIORITY );
-        }
-    #endif
 
     #if ( democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE > 0 )
         {
@@ -948,26 +890,6 @@ static void prvConnectAndCreateDemoTasks( void * pvParameters )
         }
     #endif
 
-    #if ( democonfigCREATE_CODE_SIGNING_OTA_DEMO == 1 )
-        {
-            vStartOTACodeSigningDemo( democonfigCODE_SIGNING_OTA_TASK_STACK_SIZE,
-                                      tskIDLE_PRIORITY + 1 );
-        }
-    #endif
-
-    #if ( democonfigCREATE_DEFENDER_DEMO == 1 )
-        {
-            vStartDefenderDemo( democonfigDEFENDER_TASK_STACK_SIZE,
-                                tskIDLE_PRIORITY );
-        }
-    #endif
-
-    #if ( democonfigCREATE_SHADOW_DEMO == 1 )
-        {
-            vStartShadowDemo( democonfigSHADOW_TASK_STACK_SIZE,
-                              tskIDLE_PRIORITY );
-        }
-    #endif
 
     /* This task has nothing left to do, so rather than create the MQTT
      * agent as a separate thread, it simply calls the function that implements

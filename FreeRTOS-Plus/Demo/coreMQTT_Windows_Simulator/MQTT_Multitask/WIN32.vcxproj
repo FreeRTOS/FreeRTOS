@@ -484,7 +484,8 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Demo\Common\Logging\windows\Logging_WinSim.c" />
     <ClCompile Include="..\Common\main.c" />
-    <ClCompile Include="DemoTasks\MultitaskMQTTExample.c" />
+    <ClCompile Include="DemoTasks\mqtt-agent-task.c" />
+    <ClCompile Include="DemoTasks\simple_sub_pub_demo.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\FreeRTOS\Source\include\event_groups.h" />

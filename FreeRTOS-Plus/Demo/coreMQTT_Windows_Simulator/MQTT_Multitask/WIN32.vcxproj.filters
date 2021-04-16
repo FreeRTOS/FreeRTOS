@@ -375,7 +375,7 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Demo\Common\Logging\windows\Logging_WinSim.c" />
     <ClCompile Include="..\Common\main.c" />
-    <ClCompile Include="DemoTasks\MultitaskMQTTExample.c">
+    <ClCompile Include="DemoTasks\mqtt-agent-task.c">
       <Filter>DemoTasks</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c">

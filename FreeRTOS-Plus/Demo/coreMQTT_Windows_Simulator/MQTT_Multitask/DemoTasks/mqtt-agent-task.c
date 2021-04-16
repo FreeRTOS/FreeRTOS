@@ -335,6 +335,20 @@ extern void vStartSimpleSubscribePublishTask( uint32_t ulTaskNumber,
  */
 static NetworkContext_t xNetworkContext;
 
+#if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
+
+/**
+ * @brief The parameters for the network context using a TLS channel.
+ */
+    static TlsTransportParams_t xTlsTransportParams;
+#else
+
+/**
+ * @brief The parameters for the network context using a non-encrypted channel.
+ */
+    static PlaintextTransportParams_t xPlaintextTransportParams;
+#endif
+
 /**
  * @brief Global entry time into the application to use as a reference timestamp
  * in the #prvGetTimeMs function. #prvGetTimeMs will always return the difference
@@ -900,6 +914,13 @@ static void prvConnectAndCreateDemoTasks( void * pvParameters )
 
     /* Miscellaneous initialization. */
     ulGlobalEntryTimeMs = prvGetTimeMs();
+
+    /* Set the pParams member of the network context with desired transport. */
+    #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
+        xNetworkContext.pParams = &xTlsTransportParams;
+    #else
+        xNetworkContext.pParams = &xPlaintextTransportParams;
+    #endif
 
     /* Create the TCP connection to the broker, then the MQTT connection to the
      * same. */

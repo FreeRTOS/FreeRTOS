@@ -269,7 +269,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
 #define democonfigSIMPLE_SUB_PUB_TASK_STACK_SIZE        ( configMINIMAL_STACK_SIZE )
 
 /**
- * @brief The length of the queue used to hold commands for the agent.
+ * @brief The length of the queue used to hold commands for the coreMQTT Agent.
  */
 #define MQTT_AGENT_COMMAND_QUEUE_LENGTH                 10
 

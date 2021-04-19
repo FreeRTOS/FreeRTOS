@@ -24,40 +24,29 @@
  *
  */
 
-#include <stdint.h>
+#ifndef RISCV_VIRT_H_
+#define RISCV_VIRT_H_
 
-/* FreeRTOS includes. */
-#include "FreeRTOS.h"
-#include "task.h"
+#include "riscv-reg.h"
 
-void vNondetSetCurrentTCB( void );
-void vSetGlobalVariables( void );
-void vPrepareTaskLists( void );
-TaskHandle_t *pxNondetSetTaskHandle( void );
-char *pcNondetSetString( size_t xSizeLength );
+#ifdef __ASSEMBLER__
+#define CONS(NUM, TYPE)NUM
+#else
+#define CONS(NUM, TYPE)NUM##TYPE
+#endif /* __ASSEMBLER__ */
 
-void harness()
-{
-	TaskFunction_t pxTaskCode;
-	char * pcName;
-	configSTACK_DEPTH_TYPE usStackDepth = STACK_DEPTH;
-	void * pvParameters;
-	TaskHandle_t * pxCreatedTask;
+#define PRIM_HART			0
 
-	UBaseType_t uxPriority;
-    __CPROVER_assume( uxPriority < configMAX_PRIORITIES );
+#define CLINT_ADDR			CONS(0x02000000, UL)
+#define CLINT_MSIP			CONS(0x0000, UL)
+#define CLINT_MTIMECMP		CONS(0x4000, UL)
+#define CLINT_MTIME			CONS(0xbff8, UL)
 
-	vNondetSetCurrentTCB();
-	vSetGlobalVariables();
-	vPrepareTaskLists();
+#ifndef __ASSEMBLER__
 
-	pxCreatedTask = pxNondetSetTaskHandle();
-	pcName = pcNondetSetString( configMAX_TASK_NAME_LEN );
+int xGetCoreID( void );
+void vSendString( const char * s );
 
-	xTaskCreate(pxTaskCode,
-		    pcName,
-		    usStackDepth,
-		    pvParameters,
-		    uxPriority,
-		    pxCreatedTask );
-}
+#endif /* __ASSEMBLER__ */
+
+#endif /* RISCV_VIRT_H_ */

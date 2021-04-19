@@ -24,40 +24,43 @@
  *
  */
 
-#include <stdint.h>
+#include <FreeRTOS.h>
 
-/* FreeRTOS includes. */
-#include "FreeRTOS.h"
-#include "task.h"
+#include <string.h>
 
-void vNondetSetCurrentTCB( void );
-void vSetGlobalVariables( void );
-void vPrepareTaskLists( void );
-TaskHandle_t *pxNondetSetTaskHandle( void );
-char *pcNondetSetString( size_t xSizeLength );
+#include "riscv-virt.h"
+#include "htif.h"
 
-void harness()
+int xGetCoreID( void )
 {
-	TaskFunction_t pxTaskCode;
-	char * pcName;
-	configSTACK_DEPTH_TYPE usStackDepth = STACK_DEPTH;
-	void * pvParameters;
-	TaskHandle_t * pxCreatedTask;
+	int id;
 
-	UBaseType_t uxPriority;
-    __CPROVER_assume( uxPriority < configMAX_PRIORITIES );
+	__asm ("csrr %0, mhartid" : "=r" ( id ) );
 
-	vNondetSetCurrentTCB();
-	vSetGlobalVariables();
-	vPrepareTaskLists();
+	return id;
+}
 
-	pxCreatedTask = pxNondetSetTaskHandle();
-	pcName = pcNondetSetString( configMAX_TASK_NAME_LEN );
+/* Use a debugger to set this to 0 if this binary was loaded through gdb instead
+ * of spike's ELF loader. HTIF only works if spike's ELF loader was used. */
+volatile int use_htif = 1;
 
-	xTaskCreate(pxTaskCode,
-		    pcName,
-		    usStackDepth,
-		    pvParameters,
-		    uxPriority,
-		    pxCreatedTask );
+void vSendString( const char *s )
+{
+	portENTER_CRITICAL();
+
+	if (use_htif) {
+		while (*s) {
+			htif_putc(*s);
+			s++;
+		}
+		htif_putc('\n');
+	}
+
+	portEXIT_CRITICAL();
+}
+
+void handle_trap(void)
+{
+	while (1)
+		;
 }

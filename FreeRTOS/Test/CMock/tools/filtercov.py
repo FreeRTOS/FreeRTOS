@@ -308,7 +308,7 @@ def convert_to_lcov_info(args, covdata, outfile):
             # Handle branch data
             for target_branch in target_line["branches"]:
                 branch_count = "-"
-                if target_line["unexecuted_block"] or target_line["count"] == 0:
+                if target_line["unexecuted_block"] and target_line["count"] == 0:
                     branch_count = "-"
                 elif "count" in target_branch:
                     branch_count = target_branch["count"]

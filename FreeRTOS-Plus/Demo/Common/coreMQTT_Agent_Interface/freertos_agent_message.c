@@ -24,40 +24,51 @@
  *
  */
 
-#include <stdint.h>
+/**
+ * @file freertos_agent_message.c
+ * @brief Implements functions to interact with queues.
+ */
 
-/* FreeRTOS includes. */
+/* Standard includes. */
+#include <string.h>
+#include <stdio.h>
+
+/* Kernel includes. */
 #include "FreeRTOS.h"
-#include "task.h"
+#include "semphr.h"
 
-void vNondetSetCurrentTCB( void );
-void vSetGlobalVariables( void );
-void vPrepareTaskLists( void );
-TaskHandle_t *pxNondetSetTaskHandle( void );
-char *pcNondetSetString( size_t xSizeLength );
+/* Header include. */
+#include "freertos_agent_message.h"
+#include "agent_message.h"
 
-void harness()
+/*-----------------------------------------------------------*/
+
+bool Agent_MessageSend( const AgentMessageContext_t * pMsgCtx,
+                        const void * pData,
+                        uint32_t blockTimeMs )
 {
-	TaskFunction_t pxTaskCode;
-	char * pcName;
-	configSTACK_DEPTH_TYPE usStackDepth = STACK_DEPTH;
-	void * pvParameters;
-	TaskHandle_t * pxCreatedTask;
+    BaseType_t queueStatus = pdFAIL;
 
-	UBaseType_t uxPriority;
-    __CPROVER_assume( uxPriority < configMAX_PRIORITIES );
+    if( ( pMsgCtx != NULL ) && ( pData != NULL ) )
+    {
+        queueStatus = xQueueSendToBack( pMsgCtx->queue, pData, pdMS_TO_TICKS( blockTimeMs ) );
+    }
 
-	vNondetSetCurrentTCB();
-	vSetGlobalVariables();
-	vPrepareTaskLists();
+    return ( queueStatus == pdPASS ) ? true : false;
+}
 
-	pxCreatedTask = pxNondetSetTaskHandle();
-	pcName = pcNondetSetString( configMAX_TASK_NAME_LEN );
+/*-----------------------------------------------------------*/
 
-	xTaskCreate(pxTaskCode,
-		    pcName,
-		    usStackDepth,
-		    pvParameters,
-		    uxPriority,
-		    pxCreatedTask );
+bool Agent_MessageReceive( const AgentMessageContext_t * pMsgCtx,
+                           void * pBuffer,
+                           uint32_t blockTimeMs )
+{
+    BaseType_t queueStatus = pdFAIL;
+
+    if( ( pMsgCtx != NULL ) && ( pBuffer != NULL ) )
+    {
+        queueStatus = xQueueReceive( pMsgCtx->queue, pBuffer, pdMS_TO_TICKS( blockTimeMs ) );
+    }
+
+    return ( queueStatus == pdPASS ) ? true : false;
 }

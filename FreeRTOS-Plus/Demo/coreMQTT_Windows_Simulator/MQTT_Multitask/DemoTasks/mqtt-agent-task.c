@@ -34,15 +34,13 @@
  * 1) Connects to the MQTT broker.
  * 2) Creates the other demo tasks, in accordance with the #defines set in
  *    demo_config.h.  For example, if demo_config.h contains the following
- *    settings:
+ *    setting:
  *
- *    #define democonfigCREATE_LARGE_MESSAGE_SUB_PUB_TASK     1
  *    #define democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE 3
  *
- *    then the initial task will create the task implemented in
- *    LargeMessageSubScribePublish.c and three instances of the task
- *    implemented in SimpleSubscribePublishT.c.  See the comments at the top
- *    of those files for more information.
+ *    then the initial task will create three instances of the task
+ *    implemented in simple_sub_pub_demo.c.  See the comments at the top
+ *    of that file for more information.
  *
  * 3) After creating the demo tasks the initial task could create the MQTT
  *    agent task.  However, as it has no other operations to perform, rather
@@ -96,8 +94,8 @@
 /* This demo uses compile time options to select the demo tasks to created.
  * Ensure the compile time options are defined.  These should be defined in
  * demo_config.h. */
-#ifndef democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE
-    #error Please set democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE to the number of tasks to create in vStartSimpleSubscribePublishTask().  Can be zero.
+#ifdef !defined( democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE ) || ( democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE < 1 )
+    #error Please set democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE to the number of tasks to create in vStartSimpleSubscribePublishTask().
 #endif
 
 #if ( democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE > 0 ) && !defined( democonfigSIMPLE_SUB_PUB_TASK_STACK_SIZE )
@@ -297,10 +295,9 @@ static void prvMQTTAgentTask( void * pvParameters );
 /**
  * @brief The main task used in the MQTT demo.
  *
- * After creating the publisher and subscriber tasks, this task will enter a
- * loop, processing commands from the command queue and calling the MQTT API.
- * After the termination command is received on the command queue, the task
- * will break from the loop.
+ * This task creates the network connection and all other demo tasks. Then,
+ * rather than create prvMQTTAgentTask() as a separate task, it simply calls
+ * prvMQTTAgentTask() to become the agent task itself.
  *
  * @param[in] pvParameters Parameters as passed at the time of task creation. Not
  * used in this example.

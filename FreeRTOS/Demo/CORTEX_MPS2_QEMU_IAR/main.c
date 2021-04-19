@@ -190,7 +190,7 @@ volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 	/* Called if an assertion passed to configASSERT() fails.  See
 	http://www.freertos.org/a00110.html#configASSERT for more information. */
 
-	printf( "ASSERT! Line %ld, file %s\r\n", ulLine, pcFileName );
+	printf( "ASSERT! Line %d, file %s\r\n", ( int ) ulLine, pcFileName );
 
  	taskENTER_CRITICAL();
 	{

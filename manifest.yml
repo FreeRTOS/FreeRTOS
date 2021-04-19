@@ -46,21 +46,21 @@ dependencies:
       path: "FreeRTOS-Plus/Source/corePKCS11"
 
   - name: "device-defender"
-    version: "v1.0.1"
+    version: "v1.1.0"
     repository:
       type: "git"
       url: "https://github.com/aws/Device-Defender-for-AWS-IoT-embedded-sdk.git"
       path: "FreeRTOS-Plus/Source/AWS/device-defender"
 
   - name: "device-shadow"
-    version: "v1.0.2"
+    version: "v1.1.0"
     repository:
       type: "git"
       url: "https://github.com/aws/Device-Shadow-for-AWS-IoT-embedded-sdk.git"
       path: "FreeRTOS-Plus/Source/AWS/device-shadow"
 
   - name: "jobs"
-    version: "v1.0.0"
+    version: "v1.1.0"
     repository:
       type: "git"
       url: "https://github.com/aws/Jobs-for-AWS-IoT-embedded-sdk.git"

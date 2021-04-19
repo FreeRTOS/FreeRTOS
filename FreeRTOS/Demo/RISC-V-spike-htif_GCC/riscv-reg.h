@@ -24,40 +24,19 @@
  *
  */
 
-#include <stdint.h>
+#ifndef RISCV_REG_H_
+#define RISCV_REG_H_
 
-/* FreeRTOS includes. */
-#include "FreeRTOS.h"
-#include "task.h"
+#if __riscv_xlen == 32
+#define REGSIZE		4
+#define REGSHIFT	2
+#define LOAD		lw
+#define STOR		sw
+#elif __riscv_xlen == 64
+#define REGSIZE		8
+#define REGSHIFT	3
+#define LOAD		ld
+#define STOR		sd
+#endif /* __riscv_xlen */
 
-void vNondetSetCurrentTCB( void );
-void vSetGlobalVariables( void );
-void vPrepareTaskLists( void );
-TaskHandle_t *pxNondetSetTaskHandle( void );
-char *pcNondetSetString( size_t xSizeLength );
-
-void harness()
-{
-	TaskFunction_t pxTaskCode;
-	char * pcName;
-	configSTACK_DEPTH_TYPE usStackDepth = STACK_DEPTH;
-	void * pvParameters;
-	TaskHandle_t * pxCreatedTask;
-
-	UBaseType_t uxPriority;
-    __CPROVER_assume( uxPriority < configMAX_PRIORITIES );
-
-	vNondetSetCurrentTCB();
-	vSetGlobalVariables();
-	vPrepareTaskLists();
-
-	pxCreatedTask = pxNondetSetTaskHandle();
-	pcName = pcNondetSetString( configMAX_TASK_NAME_LEN );
-
-	xTaskCreate(pxTaskCode,
-		    pcName,
-		    usStackDepth,
-		    pvParameters,
-		    uxPriority,
-		    pxCreatedTask );
-}
+#endif /* RISCV_REG_H_ */

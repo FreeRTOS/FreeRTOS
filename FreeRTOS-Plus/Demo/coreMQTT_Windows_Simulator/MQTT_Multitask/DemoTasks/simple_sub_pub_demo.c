@@ -212,19 +212,6 @@ extern MQTTAgentContext_t xGlobalMqttAgentContext;
     static char topicBuf[ 1U ][ mqttexampleSTRING_BUFFER_LENGTH ];
 #endif
 
-/**
- * @brief Pass and fail counts for each created task.
- */
-#if democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE > 0
-    static volatile uint32_t ulQoS0FailCount[ ( democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE + 1 ) / 2 ] = { 0UL },
-                             ulQoS1FailCount[ ( democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE + 1 ) / 2 ] = { 0UL };
-    static volatile uint32_t ulQoS0PassCount[ ( democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE + 1 ) / 2 ] = { 0UL },
-                             ulQoS1PassCount[ ( democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE + 1 ) / 2 ] = { 0UL };
-#else
-    static volatile uint32_t ulQoS0FailCount[ 1 ] = { 0UL }, ulQoS1FailCount[ 1 ] = { 0UL };
-    static volatile uint32_t ulQoS0PassCount[ 1 ] = { 0UL }, ulQoS1PassCount[ 1 ] = { 0UL };
-#endif
-
 /*-----------------------------------------------------------*/
 
 void vStartSimpleSubscribePublishTask( uint32_t ulNumberToCreate,
@@ -362,8 +349,8 @@ static bool prvSubscribeToTopic( MQTTQoS_t xQoS,
     MQTTAgentSubscribeArgs_t xSubscribeArgs;
     MQTTSubscribeInfo_t xSubscribeInfo;
     static int32_t ulNextSubscribeMessageID = 0;
-    CommandContext_t xApplicationDefinedContext = { 0UL };
-    CommandInfo_t xCommandParams = { 0UL };
+    CommandContext_t xApplicationDefinedContext = { 0 };
+    CommandInfo_t xCommandParams = { 0 };
 
     /* Create a unique number of the subscribe that is about to be sent.  The number
      * is used as the command context and is sent back to this task as a notification
@@ -434,12 +421,13 @@ static bool prvSubscribeToTopic( MQTTQoS_t xQoS,
 
     return xCommandAcknowledged;
 }
-/*-----------------------------------------------------------*/
 
+/*-----------------------------------------------------------*/
+volatile uint32_t ulQoS0FailureCount = 0UL;
 static void prvSimpleSubscribePublishTask( void * pvParameters )
 {
     extern UBaseType_t uxRand( void );
-    MQTTPublishInfo_t xPublishInfo = { 0UL };
+    MQTTPublishInfo_t xPublishInfo = { 0 };
     char payloadBuf[ mqttexampleSTRING_BUFFER_LENGTH ];
     char taskName[ mqttexampleSTRING_BUFFER_LENGTH ];
     CommandContext_t xCommandContext;
@@ -448,7 +436,7 @@ static void prvSimpleSubscribePublishTask( void * pvParameters )
     uint32_t ulTaskNumber = ( uint32_t ) pvParameters;
     MQTTQoS_t xQoS;
     TickType_t xTicksToDelay;
-    CommandInfo_t xCommandParams = { 0UL };
+    CommandInfo_t xCommandParams = { 0 };
     char * pcTopicBuffer = topicBuf[ ulTaskNumber ];
 
     /* Have different tasks use different QoS.  0 and 1.  2 can also be used
@@ -524,45 +512,25 @@ static void prvSimpleSubscribePublishTask( void * pvParameters )
 
         /* The value received by the callback that executed when the publish was
          * acked came from the context passed into MQTTAgent_Publish() above, so
-         * should match the value set in the context above. */
+         * should match the value set in the context above.  However QoS 0 does
+         * not provide guaranteed delivery so it is ok for the values not to match
+         * if xQos is 0.*/
+        configASSERT( ( ulNotification == ulValueToNotify ) || ( xQoS == 0 ) );
+
         if( ulNotification == ulValueToNotify )
         {
-            if( xQoS == 0 )
-            {
-                ( ulQoS0PassCount[ ulTaskNumber / 2 ] )++;
-                LogInfo( ( "Rx'ed QoS0 ack from Tx to %s (P%d:F%d).",
-                           pcTopicBuffer,
-                           ( int ) ulQoS0PassCount[ ulTaskNumber / 2 ],
-                           ( int ) ulQoS0FailCount[ ulTaskNumber / 2 ] ) );
-            }
-            else
-            {
-                ( ulQoS1PassCount[ ulTaskNumber / 2 ] )++;
-                LogInfo( ( "Rx'ed QoS1 ack from Tx to %s (P%d:F%d).",
-                           pcTopicBuffer,
-                           ( int ) ulQoS1PassCount[ ulTaskNumber / 2 ],
-                           ( int ) ulQoS1FailCount[ ulTaskNumber / 2] ) );
-            }
-
+            LogInfo( ( "Received ack from publishing to topic %s.",
+                       pcTopicBuffer ) );
         }
         else
         {
             if( xQoS == 0 )
             {
-                ( ulQoS0FailCount[ ulTaskNumber / 2 ] )++;
-                LogError( ( "Timed out Rx'ing QoS0 ack from Tx to %s (P%d:F%d)",
-                           pcTopicBuffer,
-                           ( int ) ulQoS0PassCount[ ulTaskNumber / 2 ],
-                           ( int ) ulQoS0FailCount[ ulTaskNumber / 2 ] ) );
+                ulQoS0FailureCount++;
             }
-            else
-            {
-                ( ulQoS1FailCount[ ulTaskNumber / 2 ] )++;
-                LogError( ( "Timed out Rx'ing QoS1 ack from Tx to %s (P%d:F%d)",
-                           pcTopicBuffer,
-                           ( int ) ulQoS1PassCount[ ulTaskNumber / 2 ],
-                           ( int ) ulQoS1FailCount[ ulTaskNumber / 2 ] ) );
-            }
+
+            LogInfo( ( "Error - Timed out or didn't receive ack from publishing to topic %s",
+                       pcTopicBuffer ) );
         }
 
         /* Add a little randomness into the delay so the tasks don't remain

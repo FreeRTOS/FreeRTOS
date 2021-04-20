@@ -8,7 +8,7 @@ export LD ?= /usr/local/bin/ld
 
 # Add units here when adding a new unit test directory with the same name
 UNITS       +=  list
-#UNITS       +=  queue
+UNITS       +=  queue
 #UNITS       +=  timers
 UNITS       +=  stream_buffer
 UNITS       +=  message_buffer
@@ -111,8 +111,7 @@ $(COVINFO) : $(LCOV_LIST)
 
 # Generate lcov for each suite
 $(LCOV_LIST) : zero_coverage
-    $(foreach unit,$(UNITS),\
-        make -C $(unit) lcov;)
+    make -C $(subst .info,,$(@F)) lcov
 
 lcovhtml : $(COVINFO)
     mkdir -p $(COVERAGE_DIR)

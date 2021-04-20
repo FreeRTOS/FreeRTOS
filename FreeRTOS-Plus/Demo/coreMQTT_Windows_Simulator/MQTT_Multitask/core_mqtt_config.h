@@ -75,6 +75,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * context maintains.
  */
 #define MQTT_STATE_ARRAY_MAX_COUNT              20U
+
 /*********************** coreMQTT Agent Configurations **********************/
 /**
  * @brief The maximum number of pending acknowledgments to track for a single

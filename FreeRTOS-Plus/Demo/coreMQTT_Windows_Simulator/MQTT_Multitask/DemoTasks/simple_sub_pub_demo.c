@@ -507,8 +507,8 @@ static void prvSimpleSubscribePublishTask( void * pvParameters )
         prvWaitForCommandAcknowledgment( &ulNotification );
 
         /* The value received by the callback that executed when the publish was
-         * acked came from the context passed into MQTTAgent_Publish() above, so
-         * should match the value set in the context above. */
+         * completed came from the context passed into MQTTAgent_Publish() above,
+         * so should match the value set in the context above. */
         configASSERT( ulNotification == ulValueToNotify );
 
         /* Log statement to indicate successful reception of publish. */

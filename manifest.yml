@@ -53,7 +53,7 @@ dependencies:
       path: "FreeRTOS-Plus/Source/AWS/device-defender"
 
   - name: "device-shadow"
-    version: "v1.1.0"
+    version: "v1.0.2"
     repository:
       type: "git"
       url: "https://github.com/aws/Device-Shadow-for-AWS-IoT-embedded-sdk.git"

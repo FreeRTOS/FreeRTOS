@@ -1,8 +1,10 @@
 name: CI Checks
+
 on:
   push:
   pull_request:
   workflow_dispatch:
+
 jobs:
   git-secrets:
     runs-on: ubuntu-latest
@@ -22,3 +24,29 @@ jobs:
         run: |
           git-secrets --register-aws
           git-secrets --scan
+  doxygen:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Install Python3
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7.10'
+      - name: Generate doxygen ZIP
+        uses: aggarw13/CI-CD-GitHub-Actions/doxygen@doxygen/add-script-to-generate-zip
+        with:
+          path: ./
+          # List of directories containing libraries whose doxygen output will be generated.
+          libs_parent_dir_path: FreeRTOS-Plus/Source,FreeRTOS-Plus/Source/AWS,FreeRTOS-Plus/Source/Application-Protocols
+          generate_zip: true
+      - name: Upload doxygen artifact if main branch
+        if: success() && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v2
+        with:
+          name: doxygen.zip
+          path: ./doxygen.zip
+          retention-days: 2
+

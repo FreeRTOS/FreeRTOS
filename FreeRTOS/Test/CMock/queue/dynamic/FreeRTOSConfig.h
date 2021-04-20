@@ -50,7 +50,7 @@
 #define configMINIMAL_STACK_SIZE                         ( ( unsigned short ) 70 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the win32 thread. */
 #define configTOTAL_HEAP_SIZE                            ( ( size_t ) ( 52 * 1024 ) )
 #define configMAX_TASK_NAME_LEN                          ( 12 )
-#define configUSE_TRACE_FACILITY                         1
+#define configUSE_TRACE_FACILITY                         0
 #define configUSE_16_BIT_TICKS                           0
 #define configIDLE_SHOULD_YIELD                          1
 #define configUSE_MUTEXES                                1
@@ -61,10 +61,11 @@
 #define configUSE_APPLICATION_TASK_TAG                   1
 #define configUSE_COUNTING_SEMAPHORES                    1
 #define configUSE_ALTERNATIVE_API                        0
-#define configUSE_QUEUE_SETS                             1
+#define configUSE_QUEUE_SETS                             0
 #define configUSE_TASK_NOTIFICATIONS                     1
 #define configTASK_NOTIFICATION_ARRAY_ENTRIES            5
-#define configSUPPORT_STATIC_ALLOCATION                  1
+#define configSUPPORT_STATIC_ALLOCATION                  0
+#define configSUPPORT_DYNAMIC_ALLOCATION                 1
 #define configINITIAL_TICK_COUNT                         ( ( TickType_t ) 0 ) /* For test. */
 #define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN    1                    /* As there are a lot of tasks running. */
 
@@ -127,6 +128,7 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
             vFakeAssert( false, __FILE__, __LINE__ ); \
         }                                             \
     } while ( 0 )
+
 
 #define mtCOVERAGE_TEST_MARKER()    __asm volatile ( "NOP" )
 

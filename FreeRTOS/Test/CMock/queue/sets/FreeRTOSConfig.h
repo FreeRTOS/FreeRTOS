@@ -50,7 +50,7 @@
 #define configMINIMAL_STACK_SIZE                         ( ( unsigned short ) 70 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the win32 thread. */
 #define configTOTAL_HEAP_SIZE                            ( ( size_t ) ( 52 * 1024 ) )
 #define configMAX_TASK_NAME_LEN                          ( 12 )
-#define configUSE_TRACE_FACILITY                         1
+#define configUSE_TRACE_FACILITY                         0
 #define configUSE_16_BIT_TICKS                           0
 #define configIDLE_SHOULD_YIELD                          1
 #define configUSE_MUTEXES                                1
@@ -127,6 +127,7 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
             vFakeAssert( false, __FILE__, __LINE__ ); \
         }                                             \
     } while ( 0 )
+
 
 #define mtCOVERAGE_TEST_MARKER()    __asm volatile ( "NOP" )
 

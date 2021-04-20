@@ -199,7 +199,7 @@ def filter_coverage_file(covfile_handle, cov_functions):
         cur_file["functions"] = cur_functions
         cur_lines = list()
         for line in targetfile["lines"]:
-            if line["function_name"] in cov_functions:
+            if "function_name" in line and line["function_name"] in cov_functions:
                 cur_lines.append(line)
         cur_file["lines"] = cur_lines
         covdata_out["files"].append(cur_file)

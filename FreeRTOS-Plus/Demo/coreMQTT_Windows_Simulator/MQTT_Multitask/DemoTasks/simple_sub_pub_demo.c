@@ -78,9 +78,9 @@
 #define mqttexampleSTRING_BUFFER_LENGTH                   ( 100 )
 
 /**
- * @brief Delay for the synchronous publisher task between publishes.
+ * @brief Delay for each task between publishes.
  */
-#define mqttexampleDELAY_BETWEEN_PUBLISH_OPERATIONS_MS    ( 500U )
+#define mqttexampleDELAY_BETWEEN_PUBLISH_OPERATIONS_MS    ( 1000U )
 
 /**
  * @brief Number of publishes done by each task in this demo.
@@ -206,11 +206,7 @@ extern MQTTAgentContext_t xGlobalMqttAgentContext;
  *
  * @note The topic strings must persist until unsubscribed.
  */
-#if democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE > 0
-    static char topicBuf[ democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE ][ mqttexampleSTRING_BUFFER_LENGTH ];
-#else
-    static char topicBuf[ 1U ][ mqttexampleSTRING_BUFFER_LENGTH ];
-#endif
+static char topicBuf[ democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE ][ mqttexampleSTRING_BUFFER_LENGTH ];
 
 /*-----------------------------------------------------------*/
 
@@ -423,7 +419,7 @@ static bool prvSubscribeToTopic( MQTTQoS_t xQoS,
 }
 
 /*-----------------------------------------------------------*/
-volatile uint32_t ulQoS0FailureCount = 0UL;
+
 static void prvSimpleSubscribePublishTask( void * pvParameters )
 {
     extern UBaseType_t uxRand( void );
@@ -512,26 +508,12 @@ static void prvSimpleSubscribePublishTask( void * pvParameters )
 
         /* The value received by the callback that executed when the publish was
          * acked came from the context passed into MQTTAgent_Publish() above, so
-         * should match the value set in the context above.  However QoS 0 does
-         * not provide guaranteed delivery so it is ok for the values not to match
-         * if xQos is 0.*/
-        configASSERT( ( ulNotification == ulValueToNotify ) || ( xQoS == 0 ) );
+         * should match the value set in the context above. */
+        configASSERT( ulNotification == ulValueToNotify );
 
-        if( ulNotification == ulValueToNotify )
-        {
-            LogInfo( ( "Received ack from publishing to topic %s.",
-                       pcTopicBuffer ) );
-        }
-        else
-        {
-            if( xQoS == 0 )
-            {
-                ulQoS0FailureCount++;
-            }
-
-            LogInfo( ( "Error - Timed out or didn't receive ack from publishing to topic %s",
-                       pcTopicBuffer ) );
-        }
+        /* Log statement to indicate successful reception of publish. */
+        LogInfo( ( "Demo completed successfully.\r\n" ) );
+        LogInfo( ( "Short delay before next publish... \r\n\r\n" ) );
 
         /* Add a little randomness into the delay so the tasks don't remain
          * in lockstep. */

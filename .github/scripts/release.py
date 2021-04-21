@@ -7,58 +7,76 @@ except ImportError:
     from yaml import Loader, Dumper
 from argparse import ArgumentParser
 
+# For interfacing Git REST API
 import re
 import datetime
 from github import Github
 from github.GithubException import *
 from github.InputGitAuthor import InputGitAuthor
 
+# Local interfacing of repo
+from git import Repo
+from git import PushInfo
+
+import zipfile
+
 from versioning import update_version_number_in_freertos_component
 from versioning import update_freertos_version_macros
 
-from packager import download_git_tree
-from packager import update_submodule_pointer
-from packager import commit_git_tree_changes
-from packager import push_git_tree_changes
-from packager import create_package
+from packager import prune_result_tree
 from packager import RELATIVE_FILE_EXCLUDES as FREERTOS_RELATIVE_FILE_EXCLUDES
 
 # PyGithub Git -  https://github.com/PyGithub/PyGithub
 # PyGithub Docs - https://pygithub.readthedocs.io/en/latest/github_objects
 # REST API used by PyGithub - https://developer.github.com/v3/
 
-def info(msg, indent_level=0):
-    print('%s[INFO]: %s' % (' ' * indent_level, str(msg)))
+indent_level = 0
 
-def warning(msg, indent_level=0):
-    print('%s[WARNING]: %s' % (' ' * indent_level, str(msg)))
+def logIndentPush():
+    global indent_level
+    indent_level += 4
 
-def error(msg, indent_level=0):
-    print('%s[ERROR]: %s' % (' ' * indent_level, str(msg)))
+def logIndentPop():
+    global indent_level
+    indent_level -= 4
 
-def debug(msg, indent_level=0):
-    print('%s[DEBUG]: %s' % (' ' * indent_level, str(msg)))
+    if indent_level < 0:
+        indent_level = 0
+
+def info(msg, end='\n'):
+    print('[INFO]: %s%s' % (' ' * indent_level, str(msg)), end=end, flush=True)
+
+def warning(msg):
+    print('[WARNING]: %s%s' % (' ' * indent_level, str(msg)), flush=True)
+
+def error(msg):
+    print('[ERROR]: %s%s' % (' ' * indent_level, str(msg)), flush=True)
+
+def debug(msg):
+    print('[DEBUG]: %s%s' % (' ' * indent_level, str(msg)), flush=True)
+
+# Callback for progress updates. For long spanning gitpython commands
+def printDot(op_code, cur_count, max_count=None, message=''):
+    if max_count == None or cur_count == max_count:
+        print('.', end='')
 
 class BaseRelease:
-    def __init__(self, mGit, version, commit, git_ssh=False, git_org='FreeRTOS'):
+    def __init__(self, mGit, version, commit='HEAD', git_ssh=False, git_org='FreeRTOS', repo_path=None, branch='main'):
         self.version = version
         self.tag_msg = 'Autocreated by FreeRTOS Git Tools.'
         self.commit = commit
         self.git_ssh = git_ssh
         self.git_org = git_org
-        self.repo_path = None
+        self.repo_path = repo_path
+        self.local_repo = None
+        self.branch = branch
         self.commit_msg_prefix = '[AUTO][RELEASE]: '
         self.description = ''
-
         self.mGit = mGit # Save a handle to the authed git session
 
-    def updateFileHeaderVersions(self):
-        '''
-        Updates for all FreeRTOS/FreeRTOS files, not including submodules, to have their file header
-        versions updated to match this release version. It creates the release tag and stores these updates there,
-        at a detached commit (akin to a branch).
-        '''
-        assert False, 'Implement me'
+        if self.repo_path:
+            info('Sourcing "%s" to make local commits' % self.repo_path)
+            self.local_repo = Repo(self.repo_path)
 
     def CheckRelease(self):
         '''
@@ -75,6 +93,13 @@ class BaseRelease:
 
         return False
 
+    def commitChanges(self, msg):
+        assert self.local_repo != None, 'Failed to commit. Git repo uninitialized.'
+
+        info('Committing: "%s"' % msg)
+        self.local_repo.git.add(update=True)
+        commit = self.local_repo.index.commit(msg)
+
     def getRemoteEndpoint(self, repo_name):
         if self.git_ssh:
             return 'git@github.com:%s.git' % repo_name
@@ -86,60 +111,148 @@ class BaseRelease:
         for r in releases:
             print(r)
 
-    def pushAutoCommits(self):
-        rc = push_git_tree_changes(self.repo_path, tag=self.tag, force_tag=True)
-        assert rc == 0, 'Failed to upload git tree changes'
+    def pushLocalCommits(self, force=False):
+        info('Pushing local commits...')
+        push_infos = self.local_repo.remote('origin').push(force=force)
+
+        # Check for any errors
+        for push_info in push_infos:
+            assert 0 == push_info.flags & PushInfo.ERROR, 'Failed to push changes to ' + str(push_info)
+
+    def pushTag(self):
+        # Overwrite existing tags
+        info('Pushing tag "%s"' % self.tag)
+        tag_info = self.local_repo.create_tag(self.tag, message=self.tag_msg, force=True)
+        self.local_repo.git.push(tags=True, force=True)
+
+    def deleteTag(self):
+        # Remove from remote
+        if self.tag in self.local_repo.tags:
+            info('Deleting tag "%s"' % self.tag)
+            self.local_repo.remote('origin').push(':%s' % self.tag)
+        else:
+            info('A tag does not exists for "%s". No need to delete.' % self.tag)
+
+    def updateSubmodulePointer(self, rel_path, ref):
+        submodule = Repo(rel_path)
+        submodule.remote('origin').fetch()
+        submodule.git.checkout(ref)
+
+    def updateFileHeaderVersions(self, old_version_substrings, new_version_string):
+        info('Updating file header versions for "%s"...' % self.version, end='')
+        n_updated = 0
+        n_updated += update_version_number_in_freertos_component(self.repo_path,
+                                                                 '.',
+                                                                 old_version_substrings,
+                                                                 new_version_string,
+                                                                 exclude_hidden=True)
+
+        n_updated += update_version_number_in_freertos_component(os.path.join('.github', 'scripts'),
+                                                                 self.repo_path,
+                                                                 old_version_substrings,
+                                                                 new_version_string,
+                                                                 exclude_hidden=False)
+
+        print('...%d Files updated.' % n_updated)
+
+        self.commitChanges(self.commit_msg_prefix + 'Bump file header version to "%s"' % self.version)
+
+    def deleteGitRelease(self):
+        info('Deleting git release endpoint for "%s"' % self.tag)
+
+        try:
+            self.repo.get_release(self.tag).delete_release()
+        except UnknownObjectException:
+            info('A release endpoint does not exist for "%s". No need to erase.' % self.tag)
+        except:
+            assert False, 'Encountered error while trying to delete git release endpoint'
+
+    def rollbackAutoCommits(self, n_autocommits=2, n_search=25):
+        info('Rolling back "%s" autocommits' % self.tag)
+
+        if self.tag not in self.local_repo.tags:
+            error('Could not find a SHA to rollback to for tag "%s"' % self.tag)
+            return False
+
+        # Search for auto release SHAs that match the release tag SHA
+        tag_commit = self.local_repo.tag('refs/tags/%s' % self.tag).commit
+        prior_commit = self.local_repo.commit(tag_commit.hexsha + '~%d' % n_autocommits)
+        n_commits_searched = 0
+        for commit in self.local_repo.iter_commits():
+            if n_commits_searched > n_search:
+                error('Exhaustively searched but could not find tag commit to rollback')
+                return False
+
+            if (self.commit_msg_prefix in commit.message
+                    and commit.hexsha == tag_commit.hexsha
+                    and self.version in commit.message):
+
+                info('Found matching tag commit %s. Reverting to prior commit %s'
+                        % (tag_commit.hexsha, prior_commit.hexsha))
+
+                # Found the commit prior to this autorelease. Revert back to it then push
+                self.local_repo.git.reset(prior_commit.hexsha, hard=True)
+                self.pushLocalCommits(force=True)
+                return True
+
+            n_commits_searched += 1
+
+        return False
+
+    def restorePriorToRelease(self):
+        info('Restoring "master" to just before autorelease:%s' % self.version)
+
+        self.deleteGitRelease()
+        self.rollbackAutoCommits()
+        self.deleteTag()
+        self.pushLocalCommits(force=True)
+
 
 class KernelRelease(BaseRelease):
-    def __init__(self, mGit, version, commit, git_ssh=False, git_org='FreeRTOS'):
-        super().__init__(mGit, version, commit, git_ssh=git_ssh, git_org=git_org)
+    def __init__(self, mGit, version, commit='HEAD', git_ssh=False, git_org='FreeRTOS', repo_path=None, branch='main'):
+        super().__init__(mGit, version, commit=commit, git_ssh=git_ssh, git_org=git_org, repo_path=repo_path, branch=branch)
 
         self.repo_name = '%s/FreeRTOS-Kernel' % self.git_org
         self.repo = mGit.get_repo(self.repo_name)
         self.tag = 'V%s' % version
 
-        # Download a local git repo for pushing commits
-        remote_name = self.getRemoteEndpoint(self.repo_name)
-        self.repo_path = 'tmp-release-freertos-kernel'
+        # Parent ctor configures local_repo if caller chooses to source local repo from repo_path.
+        if self.repo_path is None:
+            self.repo_path = 'tmp-release-freertos-kernel'
+            if os.path.exists(self.repo_path):
+                shutil.rmtree(self.repo_path)
 
-        # Clean up any old work from previous runs
-        if os.path.exists(self.repo_path):
-            shutil.rmtree(self.repo_path)
+            # Clone the target repo for creating the release autocommits
+            remote_name = self.getRemoteEndpoint(self.repo_name)
+            info('Downloading %s@%s to baseline auto-commits...' % (remote_name, commit), end='')
+            self.local_repo = Repo.clone_from(remote_name, self.repo_path, progress=printDot, branch=self.branch)
 
-        # Download master:HEAD. Update its file header versions and kernel macros
-        self.repo_path = download_git_tree(remote_name, '.', self.repo_path, 'master', 'HEAD')
-        assert self.repo_path != None, 'Failed to download git tree'
+        # In case user gave non-HEAD commit to baseline
+        self.local_repo.git.checkout(commit)
 
-    def updateFileHeaderVersions(self):
-        '''
-        Adds changes for two commits
-            1.) Updates to file headers
-            2.) Update to task.h macros
-        Then tags commit #2 with the new tag version. Notes this will overwrite a tag it already exists
-        Finally pushes all these changes
-        '''
-        target_version_prefixes = ['FreeRTOS Kernel V']
-        update_version_number_in_freertos_component(self.repo_path, '.', target_version_prefixes, 'FreeRTOS Kernel V%s' % self.version)
-        commit_git_tree_changes(self.repo_path, commit_message=self.commit_msg_prefix + 'Bump file header version to "%s"' % self.version)
+        print()
+
 
     def updateVersionMacros(self):
+        info('Updating version macros in task.h for "%s"' % self.version)
+
         (major, minor, build) = self.version.split('.')
         update_freertos_version_macros(os.path.join(self.repo_path, 'include', 'task.h'), major, minor, build)
-        commit_git_tree_changes(self.repo_path, commit_message=self.commit_msg_prefix + 'Bump task.h version macros to "%s"' % self.version)
+
+        self.commitChanges(self.commit_msg_prefix + 'Bump task.h version macros to "%s"' % self.version)
 
     def createGitRelease(self):
         '''
         Creates/Overwrites release identified by target tag
         '''
-
         # If this release already exists, delete it
         try:
             release_queried = self.repo.get_release(self.tag)
 
-            info('Deleting existing release "%s"...' % self.tag)
+            info('Overwriting existing git release endpoint for "%s"...' % self.tag)
             release_queried.delete_release()
         except UnknownObjectException:
-            info('Creating release/tag "%s"...' % self.tag)
+            info('Creating git release endpoint for "%s"...' % self.tag)
 
         # Create the new release endpoint at upload assets
         release = self.repo.create_git_release(tag = self.tag,
@@ -148,43 +261,73 @@ class KernelRelease(BaseRelease):
                                                draft = False,
                                                prerelease = False)
 
+    def autoRelease(self):
+        info('Auto-releasing FreeRTOS Kernel V%s' % self.version)
+
+        self.updateFileHeaderVersions(['FreeRTOS Kernel V'], 'FreeRTOS Kernel V%s' % self.version)
+        self.updateVersionMacros()
+
+        # When baselining off a non-HEAD commit, master is left unchanged by tagging a detached HEAD,
+        # applying the autocommits, tagging, and pushing the new tag data to remote.
+        # However in the detached HEAD state we don't have a branch to push to, so we skip
+        if self.commit == 'HEAD':
+            self.pushLocalCommits()
+
+        self.pushTag()
+        self.createGitRelease()
+
+        info('Kernel release done.')
+
+
+
 class FreertosRelease(BaseRelease):
-    def __init__(self, mGit, version, commit, git_ssh=False, git_org='FreeRTOS'):
-        super().__init__(mGit, version, commit, git_ssh=git_ssh, git_org=git_org)
+    def __init__(self, mGit, version, commit, git_ssh=False, git_org='FreeRTOS', repo_path=None, branch='main'):
+        super().__init__(mGit, version, commit, git_ssh=git_ssh, git_org=git_org, repo_path=repo_path, branch=branch)
 
         self.repo_name = '%s/FreeRTOS' % self.git_org
         self.repo = mGit.get_repo(self.repo_name)
         self.tag = self.version
         self.description = 'Contains source code and example projects for the FreeRTOS Kernel and FreeRTOS+ libraries.'
-        self.zip = None
+        self.zip_path = 'FreeRTOSv%s.zip' % self.version
 
-        remote_name = self.getRemoteEndpoint(self.repo_name)
-        self.repo_path = 'tmp-release-freertos'
+        # Download a fresh copy of local repo for making autocommits, if necessary
+        if self.repo_path is None:
+            self.repo_path = 'tmp-release-freertos'
 
-        # Clean up any old work from previous runs
-        if os.path.exists(self.repo_path):
-            shutil.rmtree(self.repo_path)
+            # Clean up any old work from previous runs
+            if os.path.exists(self.repo_path):
+                shutil.rmtree(self.repo_path)
 
-        # Download master:HEAD. Update its file header versions and kernel submodule pointer
-        self.repo_path = download_git_tree(remote_name, '.', self.repo_path, 'master', 'HEAD')
-        assert self.repo_path != None, 'Failed to download git tree'
+            # Clone the target repo for creating the release autocommits
+            remote_name = self.getRemoteEndpoint(self.repo_name)
+            info('Downloading %s@%s to baseline auto-commits...' % (remote_name, commit), end='')
+            self.local_repo = Repo.clone_from(remote_name, self.repo_path, progress=printDot, branch=self.branch)
 
-    def updateFileHeaderVersions(self):
-        target_version_substrings = ['FreeRTOS Kernel V', 'FreeRTOS V']
-        update_version_number_in_freertos_component(self.repo_path, '.', target_version_substrings, 'FreeRTOS V%s' % self.version)
-        commit_git_tree_changes(self.repo_path, commit_message=self.commit_msg_prefix + 'Bump file header version to "%s"' % self.version)
+        # In support of non-HEAD baselines
+        self.local_repo.git.checkout(commit)
+        print()
+
+    def isValidManifestYML(self, path_yml):
+        assert False, 'Unimplemented'
 
     def updateSubmodulePointers(self):
         '''
         Reads the 'manifest.yml' file from the local FreeRTOS clone that is being used to stage the commits
         '''
+
+        info('Initializing first level of submodules...')
+        self.local_repo.submodule_update(init=True, recursive=False)
+
+        # Read YML file
         path_manifest = os.path.join(self.repo_path, 'manifest.yml')
         assert os.path.exists(path_manifest), 'Missing manifest.yml'
-
         with open(path_manifest, 'r') as fp:
             manifest_data = fp.read()
         yml = load(manifest_data, Loader=Loader)
         assert 'dependencies' in yml, 'Manifest YML parsing error'
+
+        # Update all the submodules per yml
+        logIndentPush()
         for dep in yml['dependencies']:
             assert 'version' in dep, 'Failed to parse submodule tag from manifest'
             assert 'repository' in dep and 'path' in dep['repository'], 'Failed to parse submodule path from manifest'
@@ -192,52 +335,67 @@ class FreertosRelease(BaseRelease):
             submodule_tag  = dep['version']
 
             # Update the submodule to point to version noted in manifest file
-            update_submodule_pointer(self.repo_path, submodule_path, submodule_tag)
+            info('%-20s : %s' % (dep['name'], submodule_tag))
+            self.updateSubmodulePointer(os.path.join(self.repo_path, submodule_path), submodule_tag)
+        logIndentPop()
 
-        commit_git_tree_changes(self.repo_path, commit_message=self.commit_msg_prefix
-                                                               + 'Bump submodules per manifest.yml for V%s' % self.version)
+        self.commitChanges(self.commit_msg_prefix + 'Bump submodules per manifest.yml for V%s' % self.version)
 
     def createReleaseZip(self):
         '''
         At the moment, the only asset we upload is the
         '''
-        remote_name = self.getRemoteEndpoint(self.repo_name)
+        zip_name = 'FreeRTOSv%s' % self.version
+        info('Packaging "%s"' % zip_name)
+        logIndentPush()
 
         # This path name is retained in zip, so we don't name it 'tmp-*' but rather keep it consistent with previous
         # packaging
-        repo_name = 'FreeRTOSv%s' % self.version
-        zip_root_path = repo_name
-        rel_repo_path = os.path.join(zip_root_path, repo_name)
+        rel_repo_path = zip_name
 
         # Clean up any old work from previous runs
-        if os.path.exists(zip_root_path):
-            shutil.rmtree(zip_root_path)
+        if os.path.exists(rel_repo_path):
+            shutil.rmtree(rel_repo_path)
 
-        # To keep consistent with previous packages
-        os.mkdir(zip_root_path)
+        # Download a fresh copy for packaging
+        info('Downloading fresh copy of %s for packing...' % zip_name, end='')
+        packaged_repo = Repo.clone_from(self.getRemoteEndpoint(self.repo_name),
+                                        rel_repo_path,
+                                        multi_options=['--depth=1', '-b%s' % self.tag, '--recurse-submodules'],
+                                        progress=printDot,
+                                        branch=self.branch)
+        print()
 
-        # Download master:HEAD. Update its file header versions and kernel submodule pointer
-        repo_path = download_git_tree(remote_name, '.', rel_repo_path, 'master', self.tag, recurse=True)
-        assert repo_path != None, 'Failed to download git tree'
+        # Prune then zip package
+        info('Pruning from release zip...', end='')
+        files_pruned = prune_result_tree(rel_repo_path, FREERTOS_RELATIVE_FILE_EXCLUDES)
+        print('...%d Files Removed.' % len(files_pruned))
 
-        self.zip = create_package(zip_root_path,
-                                  rel_repo_path,
-                                  'FreeRTOSv%s' % self.version,
-                                  exclude_files=FREERTOS_RELATIVE_FILE_EXCLUDES)
+        info('Compressing "%s"...' % self.zip_path)
+        with zipfile.ZipFile(self.zip_path, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as zip:
+            for root, dirs, files in os.walk(rel_repo_path):
+                for file in files:
+                    # For some strange reason, we have broken symlinks...avoid these
+                    file_path = os.path.join(root, file)
+                    if os.path.islink(file_path) and not os.path.exists(file_path):
+                        warning('Skipping over broken symlink "%s"' % file_path)
+                    else:
+                        zip.write(file_path)
+
+        logIndentPop()
 
     def createGitRelease(self):
         '''
         Creates/Overwrites release identified by target tag
         '''
-
         # If this release already exists, delete it
         try:
             release_queried = self.repo.get_release(self.tag)
 
-            info('Deleting existing release "%s"...' % self.tag)
+            info('Overwriting existing git release endpoint for "%s"...' % self.tag)
             release_queried.delete_release()
         except UnknownObjectException:
-            info('Creating release/tag "%s"...' % self.tag)
+            info('Creating git release endpoint for "%s"...' % self.tag)
 
         # Create the new release endpoind at upload assets
         release = self.repo.create_git_release(tag = self.tag,
@@ -246,25 +404,89 @@ class FreertosRelease(BaseRelease):
                                                draft = False,
                                                prerelease = False)
 
-        release.upload_asset(self.zip, name='FreeRTOSv%s.zip' % self.version, content_type='application/zip')
+        info('Uploading release asssets...')
+        release.upload_asset(self.zip_path, name='FreeRTOSv%s.zip' % self.version, content_type='application/zip')
 
+    def autoRelease(self):
+        info('Auto-releasing FreeRTOS V%s' % self.version)
+
+        self.updateFileHeaderVersions(['FreeRTOS Kernel V', 'FreeRTOS V'], 'FreeRTOS V%s' % self.version)
+        self.updateSubmodulePointers()
+        # When baselining off a non-HEAD commit, master is left unchanged by tagging a detached HEAD,
+        # applying the autocommits, tagging, and pushing the new tag data to remote.
+        # However in the detached HEAD state we don't have a branch to push to, so we skip
+        if self.commit == 'HEAD':
+            self.pushLocalCommits()
+
+        self.pushTag()
+        self.createReleaseZip()
+        self.createGitRelease()
+
+        info('Core release done.')
 
 def configure_argparser():
     parser = ArgumentParser(description='FreeRTOS Release tool')
+
+    parser.add_argument('git_org',
+                        type=str,
+                        metavar='GITHUB_ORG',
+                        help='Git organization owner for FreeRTOS and FreeRTOS-Kernel. (i.e. "<git-org>/FreeRTOS.git")')
+
     parser.add_argument('--new-core-version',
                         default=None,
                         required=False,
-                        help='FreeRTOS-Kernel Version to replace old version. (Ex. "FreeRTOS Kernel V10.4.1")')
+                        help='FreeRTOS Standard Distribution Version to replace old version. (Ex. "FreeRTOS V202012.00")')
+
+    parser.add_argument('--core-commit',
+                        default='HEAD',
+                        required=False,
+                        metavar='GITHUB_SHA',
+                        help='Github SHA to baseline autorelease')
+
+    parser.add_argument('--rollback-core-version',
+                        default=None,
+                        required=False,
+                        help='Reset "master" to state prior to autorelease of given core version')
+
+    parser.add_argument('--core-repo-path',
+                        type=str,
+                        default=None,
+                        required=False,
+                        help='Instead of downloading from git, use existing local repos for autocommits')
+
+    parser.add_argument('--core-repo-branch',
+                        type=str,
+                        default='main',
+                        required=False,
+                        help='Branch of FreeRTOS hub repository to release.')
 
     parser.add_argument('--new-kernel-version',
                         default=None,
                         required=False,
-                        help='FreeRTOS-Kernel Version to replace old version. (Ex. "FreeRTOS Kernel V10.4.1")')
+                        help='Reset "master" to just before the autorelease for the specified kernel version")')
 
-    parser.add_argument('--git-org',
-                        default='FreeRTOS',
+    parser.add_argument('--kernel-commit',
+                        default='HEAD',
                         required=False,
-                        help='Git organization owner for FreeRTOS and FreeRTOS-Kernel. (i.e. "<git-org>/FreeRTOS.git")')
+                        metavar='GITHUB_SHA',
+                        help='Github SHA to baseline autorelease')
+
+    parser.add_argument('--rollback-kernel-version',
+                        default=None,
+                        required=False,
+                        help='Reset "master" to state prior to autorelease of the given kernel version')
+
+    parser.add_argument('--kernel-repo-path',
+                        type=str,
+                        default=None,
+                        required=False,
+                        help='Instead of downloading from git, use existing local repos for autocommits')
+
+    parser.add_argument('--kernel-repo-branch',
+                        type=str,
+                        default='main',
+                        required=False,
+                        help='Branch of FreeRTOS Kernel repository to release.')
 
     parser.add_argument('--use-git-ssh',
                         default=False,
@@ -286,27 +508,46 @@ def main():
     assert 'GITHUB_TOKEN' in os.environ, 'Set env{GITHUB_TOKEN} to an authorized git PAT'
     mGit = Github(os.environ.get('GITHUB_TOKEN'))
 
-    # Create release or test
+    # Unit tests
     if args.unit_test:
         return
 
+    # Create Releases
     if args.new_kernel_version:
-        rel_kernel = KernelRelease(mGit, args.new_kernel_version, None, git_ssh=args.use_git_ssh, git_org=args.git_org)
-        rel_kernel.updateFileHeaderVersions()
-        rel_kernel.updateVersionMacros()
-        rel_kernel.pushAutoCommits()
-        rel_kernel.createGitRelease()
+        info('Starting kernel release...')
+        logIndentPush()
+        rel_kernel = KernelRelease(mGit, args.new_kernel_version, args.kernel_commit, git_ssh=args.use_git_ssh,
+                                   git_org=args.git_org, repo_path=args.kernel_repo_path, branch=args.kernel_repo_branch)
+        rel_kernel.autoRelease()
+        logIndentPop()
 
     if args.new_core_version:
-        rel_freertos = FreertosRelease(mGit, args.new_core_version, None, git_ssh=args.use_git_ssh, git_org=args.git_org)
-        rel_freertos.updateFileHeaderVersions()
-        rel_freertos.updateSubmodulePointers()
-        rel_freertos.pushAutoCommits()
-        rel_freertos.createReleaseZip()
-        rel_freertos.createGitRelease()
+        info('Starting core release...')
+        logIndentPush()
+        rel_freertos = FreertosRelease(mGit, args.new_core_version, args.core_commit, git_ssh=args.use_git_ssh,
+                                       git_org=args.git_org, repo_path=args.core_repo_path, branch=args.core_repo_branch)
+        rel_freertos.autoRelease()
+        logIndentPop()
+
+    # Undo autoreleases
+    if args.rollback_kernel_version:
+        info('Starting kernel rollback...')
+        rel_kernel = KernelRelease(mGit, args.rollback_kernel_version, args.kernel_commit, git_ssh=args.use_git_ssh,
+                                   git_org=args.git_org, repo_path=args.kernel_repo_path, branch=args.kernel_repo_branch)
+        logIndentPush()
+        rel_kernel.restorePriorToRelease()
+        logIndentPop()
+
+    if args.rollback_core_version:
+        info('Starting core rollback...')
+        logIndentPush()
+        rel_freertos = FreertosRelease(mGit, args.rollback_core_version, args.core_commit, git_ssh=args.use_git_ssh,
+                                       git_org=args.git_org, repo_path=args.core_repo_path, branch=args.core_repo_branch)
+        rel_freertos.restorePriorToRelease()
+        logIndentPop()
 
     info('Review script output for any unexpected behaviour.')
-    info('Release done.')
+    info('Done.')
 
 if __name__ == '__main__':
     main()

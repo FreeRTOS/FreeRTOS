@@ -35,7 +35,7 @@ jobs:
       - name: Install Python3
         uses: actions/setup-python@v2
         with:
-          python-version: '3.7.10'
+          python-version: '3.8'
       - name: Download tag dependency of coreMQTT-Agent
         run: |
           # We don't need to generate the coreMQTT docs, we only need the tag file.

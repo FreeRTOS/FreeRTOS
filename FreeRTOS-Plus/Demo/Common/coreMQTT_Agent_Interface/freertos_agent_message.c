@@ -44,14 +44,14 @@
 /*-----------------------------------------------------------*/
 
 bool Agent_MessageSend( const AgentMessageContext_t * pMsgCtx,
-                        const void * pData,
+                        Command_t * const * pCommandToSend,
                         uint32_t blockTimeMs )
 {
     BaseType_t queueStatus = pdFAIL;
 
-    if( ( pMsgCtx != NULL ) && ( pData != NULL ) )
+    if( ( pMsgCtx != NULL ) && ( pCommandToSend != NULL ) )
     {
-        queueStatus = xQueueSendToBack( pMsgCtx->queue, pData, pdMS_TO_TICKS( blockTimeMs ) );
+        queueStatus = xQueueSendToBack( pMsgCtx->queue, pCommandToSend, pdMS_TO_TICKS( blockTimeMs ) );
     }
 
     return ( queueStatus == pdPASS ) ? true : false;
@@ -60,14 +60,14 @@ bool Agent_MessageSend( const AgentMessageContext_t * pMsgCtx,
 /*-----------------------------------------------------------*/
 
 bool Agent_MessageReceive( const AgentMessageContext_t * pMsgCtx,
-                           void * pBuffer,
+                           Command_t ** pReceivedCommand,
                            uint32_t blockTimeMs )
 {
     BaseType_t queueStatus = pdFAIL;
 
-    if( ( pMsgCtx != NULL ) && ( pBuffer != NULL ) )
+    if( ( pMsgCtx != NULL ) && ( pReceivedCommand != NULL ) )
     {
-        queueStatus = xQueueReceive( pMsgCtx->queue, pBuffer, pdMS_TO_TICKS( blockTimeMs ) );
+        queueStatus = xQueueReceive( pMsgCtx->queue, pReceivedCommand, pdMS_TO_TICKS( blockTimeMs ) );
     }
 
     return ( queueStatus == pdPASS ) ? true : false;

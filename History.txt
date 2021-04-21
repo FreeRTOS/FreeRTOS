@@ -1,5 +1,12 @@
 Documentation and download available at https://www.FreeRTOS.org/
 
+Changes after FreeRTOS 202012.00 release
+
+        + Added new coreMQTT Agent library.
+        + Demo Updates
+                - MQTT Agent
+
+
 Changes between FreeRTOS V202011.00 and FreeRTOS V202012.00 released December 2020
 
     + Includes libraries that are part of the FreeRTOS 202012.00 LTS release.

@@ -58,13 +58,13 @@ struct AgentMessageContext
  * Must be thread safe.
  *
  * @param[in] pMsgCtx An #AgentMessageContext_t.
- * @param[in] pData Pointer to element to send to queue.
+ * @param[in] pCommandToSend Pointer to address to send to queue.
  * @param[in] blockTimeMs Block time to wait for a send.
  *
  * @return `true` if send was successful, else `false`.
  */
 bool Agent_MessageSend( const AgentMessageContext_t * pMsgCtx,
-                        const void * pData,
+                        Command_t * const * pCommandToSend,
                         uint32_t blockTimeMs );
 
 /**
@@ -72,13 +72,13 @@ bool Agent_MessageSend( const AgentMessageContext_t * pMsgCtx,
  * Must be thread safe.
  *
  * @param[in] pMsgCtx An #AgentMessageContext_t.
- * @param[in] pBuffer Pointer to buffer to write received data.
+ * @param[in] pReceivedCommand Pointer to write address of received command.
  * @param[in] blockTimeMs Block time to wait for a receive.
  *
  * @return `true` if receive was successful, else `false`.
  */
 bool Agent_MessageReceive( const AgentMessageContext_t * pMsgCtx,
-                           void * pBuffer,
+                           Command_t ** pReceivedCommand,
                            uint32_t blockTimeMs );
 
 #endif /* FREERTOS_AGENT_MESSAGE_H */

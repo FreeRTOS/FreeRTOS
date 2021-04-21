@@ -115,8 +115,9 @@ static void validate_empty_list( const List_t * const pxList )
 
 /*!
  * @brief validate the initilization function of a list
+ * @coverage vListInitialise
  */
-void test_vListInitialisee_Success( void )
+void test_vListInitialise_Success( void )
 {
     List_t pxList;
 
@@ -126,6 +127,7 @@ void test_vListInitialisee_Success( void )
 
 /*!
  * @brief validate the initializatiom function of a list item
+ * @coverage vListInitialiseItem
  */
 void test_vListInitialiseItem_Sucess( void )
 {
@@ -138,6 +140,7 @@ void test_vListInitialiseItem_Sucess( void )
 /*!
  * @brief test vListIntertEnd successful case with only 1 item
  * @details This test ensures the list is sane when 1 item is inserted
+ * @coverage vListInsertEnd
  */
 void test_vListInsertEnd_Success_1_item( void )
 {
@@ -166,6 +169,7 @@ void test_vListInsertEnd_Success_1_item( void )
 /*!
  * @brief test vListIntertEnd successful case with only 2 items
  * @details This test ensures the list is sane when 2 items are inserted
+ * @coverage vListInsertEnd
  */
 void test_vListInsertEnd_Success_2_items( void )
 {
@@ -199,6 +203,7 @@ void test_vListInsertEnd_Success_2_items( void )
 /*!
  * @brief test vListIntertEnd successful case with only 3 items
  * @details This test ensures the list is sane when 3 items are inserted
+ * @coverage vListInsertEnd
  */
 void test_vListInsertEnd_Success_3_items( void )
 {
@@ -238,6 +243,7 @@ void test_vListInsertEnd_Success_3_items( void )
 /*!
  * @brief test vListIntertEnd successful case with multiple items (5000)
  * @details This test ensures the list is sane when 5000 items are inserted
+ * @coverage vListInsertEnd
  */
 void test_vListInsertEnd_success_multiple_items( void )
 {
@@ -284,8 +290,9 @@ void test_vListInsertEnd_success_multiple_items( void )
 /*!
  * @brief test vListIntert successful case with 1 item
  * @details This test ensures the list is sane when 1 item is inserted
+ * @coverage vListInsert
  */
-void test_vListInsert_sucess_1_item( void )
+void test_vListInsert_success_1_item( void )
 {
     List_t pxList;
     ListItem_t pxNewListItem;
@@ -311,6 +318,7 @@ void test_vListInsert_sucess_1_item( void )
 /*!
  * @brief test vListIntert successful case with 2 items
  * @details This test ensures the list is sane when 2 items are inserted
+ * @coverage vListInsert
  */
 void test_vListInsert_sucess_2_items( void )
 {
@@ -346,6 +354,7 @@ void test_vListInsert_sucess_2_items( void )
 /*!
  * @brief test vListIntert successful case with 3 items
  * @details This test ensures the list is sane when 3 items are inserted
+ * @coverage vListInsert
  */
 void test_vListInsert_sucess_3_items( void )
 {
@@ -386,6 +395,7 @@ void test_vListInsert_sucess_3_items( void )
 /*!
  * @brief test vListIntert successful case with multiple items (5000)
  * @details This test ensures the list is sane when multiple items are inserted
+ * @coverage vListInsert
  */
 void test_vListInsert_success_multiple_items( void )
 {
@@ -433,6 +443,7 @@ void test_vListInsert_success_multiple_items( void )
 /*!
  * @brief test uxListRemove successful case with 1 item
  * @details This test ensures the list is sane when 1 item is removed
+ * @coverage vListInsert
  */
 void test_vListInsert_success_vportMAXDELAY( void )
 {
@@ -468,6 +479,7 @@ void test_vListInsert_success_vportMAXDELAY( void )
 /*!
  * @brief test uxListRemove successful case with 1 item
  * @details This test ensures the list is sane when 1 item is removed
+ * @coverage uxListRemove
  */
 void test_uxListRemove_sucesss( void )
 {
@@ -505,6 +517,7 @@ void test_uxListRemove_sucesss( void )
 /*!
  * @brief test uxListRemove successful case with 2 items
  * @details This test ensures the list is sane when 2 items are removed
+ * @coverage uxListRemove
  */
 void test_uxListRemove_multiple( void )
 {
@@ -590,6 +603,7 @@ void test_uxListRemove_multiple( void )
  *        being removed
  * @details This test ensures that the function uxListRemove reassigns the
  *          index to the previous element of the one being removed
+ * @coverage uxListRemove
  */
 void test_uxListRemove_index_item( void )
 {
@@ -740,7 +754,7 @@ void test_macro_listGET_ITEM_VALUE_OF_HEAD_ENTRY( void )
     initialise_list_items( pxNewListItem, 2 );
 
     pxNewListItem[ 0 ].xItemValue = 0;
-    pxNewListItem[ 2 ].xItemValue = 2;
+    pxNewListItem[ 1 ].xItemValue = 1;
 
     vListInsert( &pxList, &pxNewListItem[ 0 ] );
     vListInsert( &pxList, &pxNewListItem[ 1 ] );
@@ -762,7 +776,7 @@ void test_macro_listGET_HEAD_ENTRY( void )
     initialise_list_items( pxNewListItem, 2 );
 
     pxNewListItem[ 0 ].xItemValue = 0;
-    pxNewListItem[ 2 ].xItemValue = 2;
+    pxNewListItem[ 1 ].xItemValue = 1;
 
     vListInsert( &pxList, &pxNewListItem[ 0 ] );
     vListInsert( &pxList, &pxNewListItem[ 1 ] );
@@ -784,7 +798,7 @@ void test_macro_listGET_NEXT( void )
     initialise_list_items( pxNewListItem, 2 );
 
     pxNewListItem[ 0 ].xItemValue = 0;
-    pxNewListItem[ 2 ].xItemValue = 2;
+    pxNewListItem[ 1 ].xItemValue = 1;
 
     vListInsert( &pxList, &pxNewListItem[ 0 ] );
     vListInsert( &pxList, &pxNewListItem[ 1 ] );
@@ -808,7 +822,7 @@ void test_macro_listGET_END_MARKER( void )
     initialise_list_items( pxNewListItem, 2 );
 
     pxNewListItem[ 0 ].xItemValue = 0;
-    pxNewListItem[ 2 ].xItemValue = 2;
+    pxNewListItem[ 1 ].xItemValue = 1;
 
     vListInsert( &pxList, &pxNewListItem[ 0 ] );
     vListInsert( &pxList, &pxNewListItem[ 1 ] );
@@ -858,7 +872,7 @@ void test_macro_listGET_OWNER_OF_HEAD_ENTRY( void )
     initialise_list_items( pxNewListItem, 2 );
 
     pxNewListItem[ 0 ].xItemValue = 0;
-    pxNewListItem[ 2 ].xItemValue = 2;
+    pxNewListItem[ 1 ].xItemValue = 1;
 
     listSET_LIST_ITEM_OWNER( &pxNewListItem[ 0 ], owner1 );
     listSET_LIST_ITEM_OWNER( &pxNewListItem[ 1 ], owner2 );

@@ -175,6 +175,7 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.properties',
     '.ps1',
     '.ptf',
+    '.py',
     '.r79',
     '.rapp',
     '.rc',
@@ -255,14 +256,17 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*/Makefile',
     r'.*/trcConfig\.h.*',
     r'.*/trcConfig\.c.*',
-    r'.*/trcSnapshotConfig\.h.*',
+    r'.*/trcSnapshotConfig\.h.*'
 ]
 
 FREERTOS_IGNORED_FILES = [
     'fyi-another-way-to-ignore-file.txt',
     'mbedtls_config.h',
     'requirements.txt',
-    'run-cbmc-proofs.py'
+    'run-cbmc-proofs.py',
+    '.editorconfig',
+    'lcovrc',
+    'htif.c', 'htif.h'
 ]
 
 FREERTOS_HEADER = [

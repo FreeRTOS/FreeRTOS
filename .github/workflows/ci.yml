@@ -40,8 +40,8 @@ jobs:
         run: |
           # We don't need to generate the coreMQTT docs, we only need the tag file.
           # Therefore, we can just download it.
-          mkdir -p freertos/source/dependency/coreMQTT/docs/doxygen/output
-          wget -O freertos/source/dependency/coreMQTT/docs/doxygen/output/mqtt.tag \
+          mkdir -p freertos/FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent/source/dependency/coreMQTT/docs/doxygen/output
+          wget -O freertos/FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent/source/dependency/coreMQTT/docs/doxygen/output/mqtt.tag \
           "https://freertos.org/Documentation/api-ref/coreMQTT/docs/doxygen/output/mqtt.tag"
       - name: Generate doxygen ZIP
         uses: FreeRTOS/CI-CD-GitHub-Actions/doxygen@main

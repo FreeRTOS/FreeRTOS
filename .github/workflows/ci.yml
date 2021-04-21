@@ -52,9 +52,11 @@ jobs:
           generate_zip: true
       - name: Upload doxygen artifact if main branch
         if: success() && github.ref == 'refs/heads/main'
+        env:
+          GIT_SHA: 
         uses: actions/upload-artifact@v2
         with:
-          name: doxygen.zip
+          name: doxygen.zip-${{ github.sha }}
           path: ./freertos/doxygen.zip
           retention-days: 2
 

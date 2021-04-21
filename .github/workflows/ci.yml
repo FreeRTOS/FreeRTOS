@@ -31,14 +31,22 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
+          path: freertos
       - name: Install Python3
         uses: actions/setup-python@v2
         with:
           python-version: '3.7.10'
+      - name: Download tag dependency of coreMQTT-Agent
+        run: |
+          # We don't need to generate the coreMQTT docs, we only need the tag file.
+          # Therefore, we can just download it.
+          mkdir -p freertos/source/dependency/coreMQTT/docs/doxygen/output
+          wget -O freertos/source/dependency/coreMQTT/docs/doxygen/output/mqtt.tag \
+          "https://freertos.org/Documentation/api-ref/coreMQTT/docs/doxygen/output/mqtt.tag"
       - name: Generate doxygen ZIP
-        uses: aggarw13/CI-CD-GitHub-Actions/doxygen@doxygen/add-script-to-generate-zip
+        uses: FreeRTOS/CI-CD-GitHub-Actions/doxygen@main
         with:
-          path: ./
+          path: ./freertos
           # List of directories containing libraries whose doxygen output will be generated.
           libs_parent_dir_path: FreeRTOS-Plus/Source,FreeRTOS-Plus/Source/AWS,FreeRTOS-Plus/Source/Application-Protocols
           generate_zip: true

@@ -55,6 +55,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: doxygen.zip
-          path: ./doxygen.zip
+          path: ./freertos/doxygen.zip
           retention-days: 2
 

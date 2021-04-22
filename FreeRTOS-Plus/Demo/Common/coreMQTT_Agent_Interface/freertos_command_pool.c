@@ -104,7 +104,6 @@ void Agent_InitializePool( void )
 Command_t * Agent_GetCommand( uint32_t blockTimeMs )
 {
     Command_t * structToUse = NULL;
-    size_t i;
     bool structRetrieved = false;
 
     /* Check queue has been created. */
@@ -125,7 +124,6 @@ Command_t * Agent_GetCommand( uint32_t blockTimeMs )
 
 bool Agent_ReleaseCommand( Command_t * pCommandToRelease )
 {
-    size_t i;
     bool structReturned = false;
 
     configASSERT( initStatus == QUEUE_INITIALIZED );

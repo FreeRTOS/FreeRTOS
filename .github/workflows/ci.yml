@@ -1,8 +1,10 @@
 name: CI Checks
+
 on:
   push:
   pull_request:
   workflow_dispatch:
+
 jobs:
   git-secrets:
     runs-on: ubuntu-latest
@@ -22,3 +24,39 @@ jobs:
         run: |
           git-secrets --register-aws
           git-secrets --scan
+  doxygen:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          path: freertos
+      - name: Install Python3
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: Download tag dependency of coreMQTT-Agent
+        run: |
+          # We don't need to generate the coreMQTT docs, we only need the tag file.
+          # Therefore, we can just download it.
+          mkdir -p freertos/FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent/source/dependency/coreMQTT/docs/doxygen/output
+          wget -O freertos/FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent/source/dependency/coreMQTT/docs/doxygen/output/mqtt.tag \
+          "https://freertos.org/Documentation/api-ref/coreMQTT/docs/doxygen/output/mqtt.tag"
+      - name: Generate doxygen ZIP
+        uses: FreeRTOS/CI-CD-GitHub-Actions/doxygen@main
+        with:
+          path: ./freertos
+          # List of directories containing libraries whose doxygen output will be generated.
+          libs_parent_dir_path: FreeRTOS-Plus/Source,FreeRTOS-Plus/Source/AWS,FreeRTOS-Plus/Source/Application-Protocols
+          generate_zip: true
+      - name: Upload doxygen artifact if main branch
+        if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release-candidate' )
+        env:
+          GIT_SHA: 
+        uses: actions/upload-artifact@v2
+        with:
+          name: doxygen.zip-${{ github.sha }}
+          path: ./freertos/doxygen.zip
+          retention-days: 2
+

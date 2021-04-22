@@ -51,7 +51,7 @@ jobs:
           libs_parent_dir_path: FreeRTOS-Plus/Source,FreeRTOS-Plus/Source/AWS,FreeRTOS-Plus/Source/Application-Protocols
           generate_zip: true
       - name: Upload doxygen artifact if main branch
-        if: success() && github.ref == 'refs/heads/main'
+        if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release-candidate' )
         env:
           GIT_SHA: 
         uses: actions/upload-artifact@v2

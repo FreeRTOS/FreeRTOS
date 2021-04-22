@@ -39,7 +39,7 @@
 
 /* Header include. */
 #include "freertos_agent_message.h"
-#include "agent_message.h"
+#include "core_mqtt_agent_message_interface.h"
 
 /*-----------------------------------------------------------*/
 

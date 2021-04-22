@@ -40,7 +40,7 @@
 #include "queue.h"
 
 /* Include MQTT agent messaging interface. */
-#include "agent_message.h"
+#include "core_mqtt_agent_message_interface.h"
 
 /**
  * @ingroup mqtt_agent_struct_types

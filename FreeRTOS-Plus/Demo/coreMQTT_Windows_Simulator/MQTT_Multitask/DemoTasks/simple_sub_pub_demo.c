@@ -59,7 +59,7 @@
 #include "core_mqtt.h"
 
 /* MQTT agent include. */
-#include "mqtt_agent.h"
+#include "core_mqtt_agent.h"
 
 /* Subscription manager header include. */
 #include "subscription_manager.h"

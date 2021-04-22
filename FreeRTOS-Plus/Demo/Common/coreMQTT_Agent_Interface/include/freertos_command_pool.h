@@ -32,7 +32,7 @@
 #define FREERTOS_COMMAND_POOL_H
 
 /* MQTT agent includes. */
-#include "mqtt_agent.h"
+#include "core_mqtt_agent.h"
 
 /**
  * @brief Initialize the common task pool. Not thread safe.

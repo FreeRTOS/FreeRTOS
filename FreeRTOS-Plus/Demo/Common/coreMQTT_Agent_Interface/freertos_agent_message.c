@@ -43,8 +43,8 @@
 
 /*-----------------------------------------------------------*/
 
-bool Agent_MessageSend( const AgentMessageContext_t * pMsgCtx,
-                        Command_t * const * pCommandToSend,
+bool Agent_MessageSend( const MQTTAgentMessageContext_t * pMsgCtx,
+                        MQTTAgentCommand_t * const * pCommandToSend,
                         uint32_t blockTimeMs )
 {
     BaseType_t queueStatus = pdFAIL;
@@ -59,8 +59,8 @@ bool Agent_MessageSend( const AgentMessageContext_t * pMsgCtx,
 
 /*-----------------------------------------------------------*/
 
-bool Agent_MessageReceive( const AgentMessageContext_t * pMsgCtx,
-                           Command_t ** pReceivedCommand,
+bool Agent_MessageReceive( const MQTTAgentMessageContext_t * pMsgCtx,
+                           MQTTAgentCommand_t ** pReceivedCommand,
                            uint32_t blockTimeMs )
 {
     BaseType_t queueStatus = pdFAIL;

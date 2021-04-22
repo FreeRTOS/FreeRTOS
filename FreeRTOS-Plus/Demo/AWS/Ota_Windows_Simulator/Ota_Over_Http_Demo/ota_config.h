@@ -177,7 +177,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * Enable data over HTTP - ( OTA_DATA_OVER_HTTP)
  * Enable data over both MQTT & HTTP ( OTA_DATA_OVER_MQTT | OTA_DATA_OVER_HTTP )
  */
-#define configENABLED_DATA_PROTOCOLS      ( OTA_DATA_OVER_MQTT )
+#define configENABLED_DATA_PROTOCOLS      ( OTA_DATA_OVER_HTTP )
 
 /**
  * @brief The preferred protocol selected for OTA data operations.
@@ -189,6 +189,6 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * Note - use OTA_DATA_OVER_HTTP for HTTP as primary data protocol.
  */
 
-#define configOTA_PRIMARY_DATA_PROTOCOL    ( OTA_DATA_OVER_MQTT )
+#define configOTA_PRIMARY_DATA_PROTOCOL    ( OTA_DATA_OVER_HTTP )
 
 #endif /* OTA_CONFIG_H_ */

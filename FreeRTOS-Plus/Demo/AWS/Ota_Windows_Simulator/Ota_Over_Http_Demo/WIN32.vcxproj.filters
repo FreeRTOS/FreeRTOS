@@ -119,6 +119,24 @@
     <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\platform\mqtt-agent-interface\include">
       <UniqueIdentifier>{b5277e13-3a7f-46ab-a73d-7a8aa2831f98}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP">
+      <UniqueIdentifier>{6886c3ff-2cf3-4391-827f-6032c74396e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP\include">
+      <UniqueIdentifier>{479f3dc4-b697-4e74-be3e-60c8f84a1e30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\httpparser">
+      <UniqueIdentifier>{f076f8c1-267c-445c-8b4e-432cac57c90e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\httpparser\include">
+      <UniqueIdentifier>{407f38e3-f238-4922-9442-ac843d507077}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="http-utils">
+      <UniqueIdentifier>{d0d4cb81-9ea9-4235-b30c-c112777f0eda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="http-utils\include">
+      <UniqueIdentifier>{48067e94-989e-4056-a173-39b35e17a13f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c">
@@ -446,9 +464,6 @@
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT</Filter>
     </ClCompile>
-    <ClCompile Include="DemoTasks\OtaOverMqttDemoExample.c">
-      <Filter>DemoTasks</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\Source\AWS\ota\source\ota.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\AWS\ota</Filter>
     </ClCompile>
@@ -472,9 +487,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\mqtt_agent_command_functions.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT-Agent</Filter>
-    </ClCompile>
-    <ClCompile Include="subscription-manager\subscription_manager.c">
-      <Filter>subscription-manager</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\Source\AWS\ota\source\portable\os\ota_os_freertos.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\AWS\ota\portable</Filter>
@@ -511,6 +523,21 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Common\coreMQTT_Agent_Interface\freertos_command_pool.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mqtt-agent-interface\include</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\subscription-manager\subscription_manager.c">
+      <Filter>subscription-manager</Filter>
+    </ClCompile>
+    <ClCompile Include="DemoTasks\OtaOverHttpDemoExample.c">
+      <Filter>DemoTasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreHTTP\source\core_http_client.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser\http_parser.c">
+      <Filter>FreeRTOS+\httpparser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\http-utils\http_demo_utils.c">
+      <Filter>http-utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -931,9 +958,6 @@
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include\mqtt_agent_command_functions.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT-Agent\include</Filter>
     </ClInclude>
-    <ClInclude Include="subscription-manager\subscription_manager.h">
-      <Filter>subscription-manager</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\Source\AWS\ota\source\portable\os\ota_os_freertos.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\AWS\ota\portable</Filter>
     </ClInclude>
@@ -963,6 +987,27 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Common\coreMQTT_Agent_Interface\include\freertos_command_pool.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mqtt-agent-interface\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\subscription-manager\subscription_manager.h">
+      <Filter>subscription-manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreHTTP\source\include\core_http_client.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreHTTP\source\include\core_http_client_private.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreHTTP\source\include\core_http_config_defaults.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="core_http_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser\http_parser.h">
+      <Filter>FreeRTOS+\httpparser\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\http-utils\http_demo_utils.h">
+      <Filter>http-utils\include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

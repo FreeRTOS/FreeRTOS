@@ -42,7 +42,7 @@
 
 /* Logging configuration for the Demo. */
 #ifndef LIBRARY_LOG_NAME
-    #define LIBRARY_LOG_NAME    "OtaDemo"
+    #define LIBRARY_LOG_NAME    "OTADemo"
 #endif
 
 #ifndef LIBRARY_LOG_LEVEL
@@ -65,6 +65,17 @@ extern void vLoggingPrintf( const char * pcFormatString,
 #include "logging_stack.h"
 
 /************ End of logging configuration ****************/
+
+/**
+ * @brief The version for the firmware which is running. OTA agent uses this
+ * version number to perform anti-rollback validation. The firmware version for the
+ * download image should be higher than the current version, otherwise the new image is
+ * rejected in self test phase.
+ */
+#define APP_VERSION_MAJOR                     0
+#define APP_VERSION_MINOR                     9
+#define APP_VERSION_BUILD                     2
+
 /**
  * @brief The MQTT client identifier used in this example.  Each client identifier
  * must be unique so edit as required to ensure no two clients connecting to the
@@ -76,7 +87,6 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *!!! hard coded constant.
  *
  */
-#define democonfigCLIENT_IDENTIFIER              "...insert here..."
 
 /**
  * @brief Endpoint of the MQTT broker to connect to.
@@ -92,7 +102,6 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * AWS CLI command line tool).
  *
  */
-#define democonfigMQTT_BROKER_ENDPOINT           "...insert here..."
 
 /**
  * @brief The port to use for the demo.
@@ -171,7 +180,6 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *
  * #define democonfigCLIENT_PRIVATE_KEY_PEM    "...insert here..."
  */
-
 
 /**
  * @brief An option to disable Server Name Indication.

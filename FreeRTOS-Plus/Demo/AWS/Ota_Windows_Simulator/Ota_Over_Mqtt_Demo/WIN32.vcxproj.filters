@@ -473,9 +473,6 @@
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\mqtt_agent_command_functions.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT-Agent</Filter>
     </ClCompile>
-    <ClCompile Include="subscription-manager\subscription_manager.c">
-      <Filter>subscription-manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\Source\AWS\ota\source\portable\os\ota_os_freertos.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\AWS\ota\portable</Filter>
     </ClCompile>
@@ -511,6 +508,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Common\coreMQTT_Agent_Interface\freertos_command_pool.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mqtt-agent-interface\include</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\subscription-manager\subscription_manager.c">
+      <Filter>subscription-manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -931,9 +931,6 @@
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include\mqtt_agent_command_functions.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT-Agent\include</Filter>
     </ClInclude>
-    <ClInclude Include="subscription-manager\subscription_manager.h">
-      <Filter>subscription-manager</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\Source\AWS\ota\source\portable\os\ota_os_freertos.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\AWS\ota\portable</Filter>
     </ClInclude>
@@ -963,6 +960,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Common\coreMQTT_Agent_Interface\include\freertos_command_pool.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mqtt-agent-interface\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\subscription-manager\subscription_manager.h">
+      <Filter>subscription-manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

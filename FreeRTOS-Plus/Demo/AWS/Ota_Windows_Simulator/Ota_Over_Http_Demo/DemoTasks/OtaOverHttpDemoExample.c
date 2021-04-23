@@ -566,7 +566,7 @@ static OtaMqttStatus_t prvMQTTSubscribe( const char * pTopicFilter,
  * subscription from its memory so any future
  * packets on this topic will not be routed to the OTA agent.
  *
- * @param[in] pTopicFilter Topic filter to be unsubscibed.
+ * @param[in] pTopicFilter Topic filter to be unsubscribed.
  * @param[in] topicFilterLength Length of the topic filter.
  * @param[in] ucQos Qos value for the topic.
  * @return OtaMqttSuccess if successful. Appropirate error code otherwise.

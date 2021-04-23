@@ -717,10 +717,6 @@ static void prvOTAEventBufferFree( OtaEventData_t * const pxBuffer )
         pxBuffer->bufferUsed = false;
         ( void ) xSemaphoreGive( xBufferSemaphore );
     }
-    else
-    {
-        LogError( ( "Failed to get buffer semaphore." ) );
-    }
 }
 
 /*-----------------------------------------------------------*/
@@ -743,10 +739,6 @@ static OtaEventData_t * prvOTAEventBufferGet( void )
         }
 
         ( void ) xSemaphoreGive( xBufferSemaphore );
-    }
-    else
-    {
-        LogError( ( "Failed to get buffer semaphore." ) );
     }
 
     return pFreeBuffer;

@@ -70,6 +70,9 @@
 /* Check certificate key usage. */
 #define MBEDTLS_X509_CHECK_KEY_USAGE
 #define MBEDTLS_X509_CHECK_EXTENDED_KEY_USAGE
+#define MBEDTLS_X509_CREATE_C
+#define MBEDTLS_PK_WRITE_C
+#define MBEDTLS_X509_CSR_WRITE_C
 
 /* Disable platform entropy functions. */
 #define MBEDTLS_NO_PLATFORM_ENTROPY

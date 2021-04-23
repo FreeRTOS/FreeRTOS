@@ -28,7 +28,7 @@
  * @file OtaOverMqttDemoExample.c
  * @brief Over The Air Update demo using coreMQTT Agent.
  *
- * The file demonstrates how to perform Over The Air update using OTA agent and coreMQTT
+ * The file demonstrates how to perform Over The Air update using OTA agent and coreMQTT Agent
  * library. It creates an OTA agent task which manages the OTA firmware update
  * for the device. The example also provides implementations to subscribe, publish,
  * and receive data from an MQTT broker. The implementation uses coreMQTT agent which manages

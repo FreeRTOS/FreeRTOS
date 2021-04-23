@@ -880,7 +880,7 @@ static OtaEventData_t * prvOTAEventBufferGet( void )
  * make sure our new firmware does the basic things we think it should do
  * but we will just go ahead and set the image as accepted for demo purposes.
  * The accept function varies depending on your platform. Refer to the OTA
- * PAL implementation for your platform in aws_ota_pal.c to see what it
+ * PAL implementation for your platform in ota_pal.c to see what it
  * does for you.
  *
  * @param[in] event Specify if this demo is running with the AWS IoT

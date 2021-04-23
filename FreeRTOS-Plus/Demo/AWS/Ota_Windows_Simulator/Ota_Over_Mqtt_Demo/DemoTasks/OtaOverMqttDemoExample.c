@@ -445,7 +445,7 @@ static void prvMQTTAgentTask(void* pParam);
  * @param[in] pMsg Message to publish.
  * @param[in] msgSize Size of the message to publish.
  * @param[in] qos Qos for the publish.
- * @return OtaMqttSuccess if successful. Appropirate error code otherwise.
+ * @return OtaMqttSuccess if successful. Appropriate error code otherwise.
  */
 static OtaMqttStatus_t prvMQTTPublish( const char * const pacTopic,
                                        uint16_t topicLen,

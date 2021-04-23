@@ -437,7 +437,7 @@ static void prvMQTTAgentTask(void* pParam);
  * The implementation uses MQTT agent to queue a publish request. It then waits
  * for the request complete notification from the agent. The notification along with result of the
  * operation is sent back to the caller task using xTaksNotify API. For publishes involving QOS 1 and
- * QOS2 the operation is complete once an acknwoledgment (PUBACK) is received. OTA agent uses this function
+ * QOS2 the operation is complete once an acknowledgment (PUBACK) is received. OTA agent uses this function
  * to fetch new job, provide status update and send other control related messges to the MQTT broker.
  *
  * @param[in] pacTopic Topic to publish the control packet to.

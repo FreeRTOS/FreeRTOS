@@ -127,7 +127,7 @@
 /**
  * @brief Wildcard topic filter for job notification.
  * The filter is used to match the constructed job notify topic filter from OTA agent and register
- * appropirate callback for it.
+ * appropriate callback for it.
  */
 #define OTA_JOB_NOTIFY_TOPIC_FILTER                      OTA_TOPIC_PREFIX "jobs/notify-next"
 
@@ -153,7 +153,7 @@
 /**
  * @brief Wildcard topic filter for matching OTA data packets.
  *  The filter is used to match the constructed data stream topic filter from OTA agent and register
- * appropirate callback for it.
+ * appropriate callback for it.
  */
 #define OTA_DATA_STREAM_TOPIC_FILTER           OTA_TOPIC_PREFIX  "streams/#"
 
@@ -467,7 +467,7 @@ static OtaMqttStatus_t prvMQTTPublish( const char * const pacTopic,
  * @param[in] pTopicFilter The topic filter used to subscribe for packets.
  * @param[in] topicFilterLength Length of the topic filter string.
  * @param[in] ucQoS Intended qos value for the messages received on this topic.
- * @return OtaMqttSuccess if successful. Appropirate error code otherwise.
+ * @return OtaMqttSuccess if successful. Appropriate error code otherwise.
  */
 static OtaMqttStatus_t prvMQTTSubscribe( const char * pTopicFilter,
                                          uint16_t topicFilterLength,
@@ -482,10 +482,10 @@ static OtaMqttStatus_t prvMQTTSubscribe( const char * pTopicFilter,
  * subscription from its memory so any future
  * packets on this topic will not be routed to the OTA agent.
  *
- * @param[in] pTopicFilter Topic filter to be unsubscibed.
+ * @param[in] pTopicFilter Topic filter to be unsubscribed.
  * @param[in] topicFilterLength Length of the topic filter.
  * @param[in] ucQos Qos value for the topic.
- * @return OtaMqttSuccess if successful. Appropirate error code otherwise.
+ * @return OtaMqttSuccess if successful. Appropriate error code otherwise.
  *
  */
 static OtaMqttStatus_t prvMQTTUnsubscribe( const char * pTopicFilter,
@@ -566,7 +566,7 @@ static void prvProcessIncomingData( void * pxSubscriptionContext,
  *
  * Callback gets invoked for any OTA job related control messages from the MQTT broker.
  * The function is registered with MQTT agent's subscription manger along with the topic filter for
- * job stream. The function fetches a free event buffer from the pool and queues the appropirate event type
+ * job stream. The function fetches a free event buffer from the pool and queues the appropriate event type
  * based on the control message received.
  *
  * @param[in] pxSubscriptionContext Context which is passed unmodified from the MQTT agent.
@@ -794,7 +794,7 @@ static OtaEventData_t * prvOTAEventBufferGet( void )
  * make sure our new firmware does the basic things we think it should do
  * but we will just go ahead and set the image as accepted for demo purposes.
  * The accept function varies depending on your platform. Refer to the OTA
- * PAL implementation for your platform in aws_ota_pal.c to see what it
+ * PAL implementation for your platform in ota_pal.c to see what it
  * does for you.
  *
  * @param[in] event Specify if this demo is running with the AWS IoT

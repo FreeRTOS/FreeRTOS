@@ -57,7 +57,7 @@ struct MQTTAgentMessageContext
  * @brief Send a message to the specified context.
  * Must be thread safe.
  *
- * @param[in] pMsgCtx An #AgentMessageContext_t.
+ * @param[in] pMsgCtx An #MQTTAgentMessageContext_t.
  * @param[in] pCommandToSend Pointer to address to send to queue.
  * @param[in] blockTimeMs Block time to wait for a send.
  *
@@ -71,7 +71,7 @@ bool Agent_MessageSend( const MQTTAgentMessageContext_t * pMsgCtx,
  * @brief Receive a message from the specified context.
  * Must be thread safe.
  *
- * @param[in] pMsgCtx An #AgentMessageContext_t.
+ * @param[in] pMsgCtx An #MQTTAgentMessageContext_t.
  * @param[in] pReceivedCommand Pointer to write address of received command.
  * @param[in] blockTimeMs Block time to wait for a receive.
  *

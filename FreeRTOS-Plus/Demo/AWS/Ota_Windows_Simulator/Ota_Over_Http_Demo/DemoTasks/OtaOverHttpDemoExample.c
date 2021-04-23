@@ -584,7 +584,7 @@ static OtaMqttStatus_t prvMQTTUnsubscribe( const char * pTopicFilter,
  * within ota_config.h. This function is used to fetch a free buffer from the pool for processing
  * by the OTA agent task. It uses a mutex for thread safe access to the pool.
  *
- * @return A pointer to an unusued buffer. NULL if there are no buffers available.
+ * @return A pointer to an unused buffer. NULL if there are no buffers available.
  */
 static OtaEventData_t * prvOTAEventBufferGet( void );
 

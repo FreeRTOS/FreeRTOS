@@ -1,1 +1,0 @@
-../semaphore/mutex_utest.c

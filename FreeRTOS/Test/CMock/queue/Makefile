@@ -5,12 +5,7 @@ MAKEFILE_ABSPATH     := $(abspath $(lastword $(MAKEFILE_LIST)))
 include ../makefile.in
 
 # SUITES lists the suites contained in subdirectories of this directory
-SUITES	+=	generic
-SUITES	+=	dynamic
-SUITES	+=	static
-SUITES	+=	semaphore
-SUITES	+=	sets
-SUITES	+=	tracing
+SUITES  +=  two_tests
 
 # PROJECT and SUITE variables are determined based on path like so:
 #   $(UT_ROOT_DIR)/$(PROJECT)/$(SUITE)

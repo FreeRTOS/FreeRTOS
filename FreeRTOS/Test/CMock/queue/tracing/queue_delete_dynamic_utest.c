@@ -1,1 +1,0 @@
-../generic/queue_delete_dynamic_utest.c

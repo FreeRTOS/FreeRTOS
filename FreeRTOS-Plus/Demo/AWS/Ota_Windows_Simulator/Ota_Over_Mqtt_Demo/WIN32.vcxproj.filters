@@ -119,6 +119,24 @@
     <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\platform\mqtt-agent-interface\include">
       <UniqueIdentifier>{b5277e13-3a7f-46ab-a73d-7a8aa2831f98}</UniqueIdentifier>
     </Filter>
+    <Filter Include="otapal\code_signature_verification">
+      <UniqueIdentifier>{920f406b-9c90-4ea6-8a0b-6e328d6ff095}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11">
+      <UniqueIdentifier>{729fcedc-4535-4af8-bcdc-3f097126cb42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include">
+      <UniqueIdentifier>{4a949448-81b3-432f-ba79-bc431b04bdfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\portable">
+      <UniqueIdentifier>{9070c1a5-0adc-4659-9211-9ccbc38ed472}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\3rdParty">
+      <UniqueIdentifier>{b40157ec-6471-4c9d-89fb-1221cdb82c31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="otapal\code_signature_verification\include">
+      <UniqueIdentifier>{9d7ce275-011a-4bdc-bba5-ad569f629872}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c">
@@ -511,6 +529,21 @@
     </ClCompile>
     <ClCompile Include="..\Common\subscription-manager\subscription_manager.c">
       <Filter>subscription-manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\corePKCS11\source\core_pkcs11.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\corePKCS11\source\core_pki_utils.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\corePKCS11\source\portable\mbedtls\core_pkcs11_mbedtls.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\portable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Ota_PAL\Win32\Code_Signature_Verification\code_signature_verification_mbedtls_pkcs11.c">
+      <Filter>otapal\code_signature_verification</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\corePKCS11\source\portable\windows\core_pkcs11_pal.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\portable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -963,6 +996,30 @@
     </ClInclude>
     <ClInclude Include="..\Common\subscription-manager\subscription_manager.h">
       <Filter>subscription-manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\include\core_pkcs11.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\include\core_pkcs11_pal.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\include\core_pki_utils.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\3rdParty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11f.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\3rdParty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11t.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\3rdParty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Ota_PAL\Win32\Code_Signature_Verification\code_signature_verification.h">
+      <Filter>otapal\code_signature_verification\include</Filter>
+    </ClInclude>
+    <ClInclude Include="core_pkcs11_config.h">
+      <Filter>Config</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -175,11 +175,13 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * This configurations parameter sets the protocols selected for the data operations
  * like requesting file blocks from the service.
  *
- * Note - Both MQTT and HTTP is supported for data transfer. This configuration parameter
+ * Note - Both MQTT and HTTP is supported for data transfer from service. This configuration parameter
  * can be set to following -
  * Enable data over MQTT - ( OTA_DATA_OVER_MQTT )
  * Enable data over HTTP - ( OTA_DATA_OVER_HTTP)
- * Enable data over both MQTT & HTTP ( OTA_DATA_OVER_MQTT | OTA_DATA_OVER_HTTP )
+ * 
+ * Note - Please check the OTA over HTTP demo which has the HTTP data trasnfer functionality and 
+ * and this configuration is set to OTA_DATA_OVER_HTTP.
  */
 #define configENABLED_DATA_PROTOCOLS      ( OTA_DATA_OVER_MQTT )
 

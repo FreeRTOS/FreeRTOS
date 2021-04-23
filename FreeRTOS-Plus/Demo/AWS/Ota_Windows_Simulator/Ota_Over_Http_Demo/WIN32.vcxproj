@@ -58,7 +58,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\..\..\Common\WinPCap;..\..\..\..\..\FreeRTOS\Source\include;..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp;..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls;..\..\..\..\Source\Utilities\mbedtls_freertos;..\..\..\..\..\Source\mbedtls_utils;..\..\..\..\ThirdParty\mbedtls\include;..\..\..\..\Source\AWS\jobs\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include;..\..\..\..\..\FreeRTOS-Plus\Demo\AWS\Ota_Windows_Simulator\Ota_Over_Http_Demo;..\..\..\..\..\FreeRTOS-Plus\Demo\Common\coreMQTT_Agent_Interface\include;..\..\..\..\..\FreeRTOS-Plus\Source\AWS\ota\source\include;..\..\..\..\..\FreeRTOS-Plus\Demo\AWS\Ota_Windows_Simulator\Common\subscription-manager;..\..\..\..\..\FreeRTOS-Plus\Source\AWS\ota\source\portable\os;..\..\..\..\..\FreeRTOS-Plus\Demo\AWS\Ota_Windows_Simulator\Common\Ota_PAL\Win32;..\..\..\..\..\FreeRTOS-Plus\Source\AWS\ota\source\dependency\3rdparty\tinycbor\src;..\..\..\..\Source\Application-Protocols\coreHTTP\source\include;..\..\..\..\..\FreeRTOS-Plus\Demo\AWS\Ota_Windows_Simulator\Common\http-utils;..\..\..\..\..\FreeRTOS-Plus\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\..\..\Common\WinPCap;..\..\..\..\..\FreeRTOS\Source\include;..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp;..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls;..\..\..\..\Source\Utilities\mbedtls_freertos;..\..\..\..\..\Source\mbedtls_utils;..\..\..\..\ThirdParty\mbedtls\include;..\..\..\..\Source\AWS\jobs\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include;..\..\..\..\..\FreeRTOS-Plus\Demo\AWS\Ota_Windows_Simulator\Ota_Over_Http_Demo;..\..\..\..\..\FreeRTOS-Plus\Demo\Common\coreMQTT_Agent_Interface\include;..\..\..\..\..\FreeRTOS-Plus\Source\AWS\ota\source\include;..\..\..\..\..\FreeRTOS-Plus\Demo\AWS\Ota_Windows_Simulator\Common\subscription-manager;..\..\..\..\..\FreeRTOS-Plus\Source\AWS\ota\source\portable\os;..\..\..\..\..\FreeRTOS-Plus\Demo\AWS\Ota_Windows_Simulator\Common\Ota_PAL\Win32;..\..\..\..\..\FreeRTOS-Plus\Source\AWS\ota\source\dependency\3rdparty\tinycbor\src;..\..\..\..\Source\Application-Protocols\coreHTTP\source\include;..\..\..\..\..\FreeRTOS-Plus\Demo\AWS\Ota_Windows_Simulator\Common\http-utils;..\..\..\..\..\FreeRTOS-Plus\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser;..\..\..\..\..\\FreeRTOS-Plus\Demo\AWS\Ota_Windows_Simulator\Common\Ota_PAL\Win32\Code_Signature_Verification;..\..\..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\include;..\..\..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\dependency\3rdparty\pkcs11;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config.h";WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -176,6 +176,8 @@
     <ClCompile Include="..\..\..\..\Source\AWS\ota\source\ota_interface.c" />
     <ClCompile Include="..\..\..\..\Source\AWS\ota\source\ota_mqtt.c" />
     <ClCompile Include="..\..\..\..\Source\AWS\ota\source\portable\os\ota_os_freertos.c" />
+    <ClCompile Include="..\..\..\..\Source\corePKCS11\source\core_pkcs11.c" />
+    <ClCompile Include="..\..\..\..\Source\corePKCS11\source\core_pki_utils.c" />
     <ClCompile Include="..\..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c" />
     <ClCompile Include="..\..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_error.c" />
     <ClCompile Include="..\..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c" />
@@ -505,6 +507,7 @@
     <ClCompile Include="..\..\..\Common\coreMQTT_Agent_Interface\freertos_agent_message.c" />
     <ClCompile Include="..\..\..\Common\coreMQTT_Agent_Interface\freertos_command_pool.c" />
     <ClCompile Include="..\Common\http-utils\http_demo_utils.c" />
+    <ClCompile Include="..\Common\Ota_PAL\Win32\Code_Signature_Verification\code_signature_verification_mbedtls_pkcs11.c" />
     <ClCompile Include="..\Common\Ota_PAL\Win32\ota_pal.c" />
     <ClCompile Include="..\Common\subscription-manager\subscription_manager.c" />
     <ClCompile Include="DemoTasks\OtaOverHttpDemoExample.c" />
@@ -566,6 +569,12 @@
     <ClInclude Include="..\..\..\..\Source\AWS\ota\source\include\ota_private.h" />
     <ClInclude Include="..\..\..\..\Source\AWS\ota\source\portable\os\ota_os_freertos.h" />
     <ClInclude Include="..\..\..\..\Source\coreJSON\source\include\core_json.h" />
+    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11.h" />
+    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11f.h" />
+    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11t.h" />
+    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\include\core_pkcs11.h" />
+    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\include\core_pkcs11_pal.h" />
+    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\include\core_pki_utils.h" />
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_errno_TCP.h" />
     <ClInclude Include="..\..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_error.h" />
     <ClInclude Include="..\..\..\..\Source\Utilities\mbedtls_freertos\threading_alt.h" />
@@ -658,6 +667,7 @@
     <ClInclude Include="..\..\..\Common\coreMQTT_Agent_Interface\include\freertos_agent_message.h" />
     <ClInclude Include="..\..\..\Common\coreMQTT_Agent_Interface\include\freertos_command_pool.h" />
     <ClInclude Include="..\Common\http-utils\http_demo_utils.h" />
+    <ClInclude Include="..\Common\Ota_PAL\Win32\Code_Signature_Verification\code_signature_verification.h" />
     <ClInclude Include="..\Common\Ota_PAL\Win32\ota_pal.h" />
     <ClInclude Include="..\Common\subscription-manager\subscription_manager.h" />
     <ClInclude Include="core_http_config.h" />

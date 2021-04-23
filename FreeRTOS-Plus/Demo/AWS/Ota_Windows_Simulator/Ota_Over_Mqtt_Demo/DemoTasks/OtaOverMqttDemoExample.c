@@ -55,7 +55,7 @@
 /* Demo config includes. */
 #include "demo_config.h"
 
-/* Demo config includes. */
+/* Library config includes. */
 #include "ota_config.h"
 
 /* MQTT library includes. */
@@ -547,35 +547,6 @@ static void vOtaDemoTask( void  );
 static BaseType_t prvRunOTADemo(void);
 
 /**
- * @brief Callback invoked for firmware image chunks received from MQTT broker.
- *
- * Function gets invoked for the firmware image blocks received on OTA data stream topic.
- * The function is registered with MQTT agent's subscription manger along with the
- * topic filter for data stream. For each packet received, the
- * function fetches a free event buffer from the pool and queues the firmware image chunk for
- * OTA agent task processing.
- *
- * @param[in] pxSubscriptionContext Context which is passed unmodified from the MQTT agent.
- * @param[in] pPublishInfo Pointer to the structure containing the details of the MQTT packet.
- */
-static void prvProcessIncomingData( void * pxSubscriptionContext,
-                                    MQTTPublishInfo_t * pPublishInfo );
-
-/**
- * @brief Callback invoked for job control messages from MQTT broker.
- *
- * Callback gets invoked for any OTA job related control messages from the MQTT broker.
- * The function is registered with MQTT agent's subscription manger along with the topic filter for
- * job stream. The function fetches a free event buffer from the pool and queues the appropriate event type
- * based on the control message received.
- *
- * @param[in] pxSubscriptionContext Context which is passed unmodified from the MQTT agent.
- * @param[in] pPublishInfo Pointer to the structure containing the details of MQTT packet.
- */
-static void prvProcessIncomingJobMessage( void * pxSubscriptionContext,
-                                          MQTTPublishInfo_t * pPublishInfo );
-
-/**
  * @brief Callback registered with the OTA library that notifies the OTA agent
  * of an incoming PUBLISH containing a job document.
  *
@@ -959,74 +930,6 @@ static void prvMqttDataCallback( void * pvIncomingPublishCallbackContext,
         pxData->dataLength = pxPublishInfo->payloadLength;
         eventMsg.eventId = OtaAgentEventReceivedFileBlock;
         eventMsg.pEventData = pxData;
-
-        /* Send job document received event. */
-        OTA_SignalEvent( &eventMsg );
-    }
-    else
-    {
-        LogError( ( "Error: No OTA data buffers available.\r\n" ) );
-    }
-}
-
-/*-----------------------------------------------------------*/
-
-static void prvProcessIncomingData( void * pxSubscriptionContext,
-                                    MQTTPublishInfo_t * pPublishInfo )
-{
-    configASSERT( pPublishInfo != NULL );
-
-    ( void ) pxSubscriptionContext;
-
-    OtaEventData_t * pData;
-    OtaEventMsg_t eventMsg = { 0 };
-
-    LogDebug( ( "Received OTA image block, size %d.\n\n", pPublishInfo->payloadLength ) );
-
-    configASSERT( pPublishInfo->payloadLength <= OTA_DATA_BLOCK_SIZE );
-
-    pData = prvOTAEventBufferGet();
-
-    if( pData != NULL )
-    {
-        memcpy( pData->data, pPublishInfo->pPayload, pPublishInfo->payloadLength );
-        pData->dataLength = pPublishInfo->payloadLength;
-        eventMsg.eventId = OtaAgentEventReceivedFileBlock;
-        eventMsg.pEventData = pData;
-
-        /* Send job document received event. */
-        OTA_SignalEvent( &eventMsg );
-    }
-    else
-    {
-        LogError( ( "Error: No OTA data buffers available.\r\n" ) );
-    }
-}
-
-/*-----------------------------------------------------------*/
-
-static void prvProcessIncomingJobMessage( void * pxSubscriptionContext,
-                                          MQTTPublishInfo_t * pPublishInfo )
-{
-    OtaEventData_t * pData;
-    OtaEventMsg_t eventMsg = { 0 };
-
-    ( void ) pxSubscriptionContext;
-
-    configASSERT( pPublishInfo != NULL );
-
-    LogInfo( ( "Received job message callback, size %d.\n\n", pPublishInfo->payloadLength ) );
-
-    configASSERT( pPublishInfo->payloadLength <= OTA_DATA_BLOCK_SIZE );
-
-    pData = prvOTAEventBufferGet();
-
-    if( pData != NULL )
-    {
-        memcpy( pData->data, pPublishInfo->pPayload, pPublishInfo->payloadLength );
-        pData->dataLength = pPublishInfo->payloadLength;
-        eventMsg.eventId = OtaAgentEventReceivedJobDocument;
-        eventMsg.pEventData = pData;
 
         /* Send job document received event. */
         OTA_SignalEvent( &eventMsg );

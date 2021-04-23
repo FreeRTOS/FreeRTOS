@@ -26,22 +26,26 @@
 
 /* OTA PAL implementation for Windows platform. */
 
+/* Standard includes. */
 #include <stdio.h>
 #include <stdlib.h>
+
+/* Kernel includes. */
 #include "FreeRTOS.h"
+
+/* Library config includes. */
 #include "ota_config.h"
 
+/* OTA Library include. */
 #include "ota.h"
-
-//#include "aws_ota_codesigner_certificate.h"
 #include "ota_pal.h"
+
+#include "code_signature_verification.h"
 
 /* Specify the OTA signature algorithm we support on this platform. */
 const char OTA_JsonFileSignatureKey[ OTA_FILE_SIG_KEY_STR_MAX_LENGTH ] = "sig-sha256-ecdsa";
 
-//static OtaPalMainStatus_t otaPal_CheckFileSignature( OtaFileContext_t * const C );
-//static uint8_t * otaPal_ReadAndAssumeCertificate( const uint8_t * const pucCertName,
-//                                                  uint32_t * const ulSignerCertSize );
+static OtaPalMainStatus_t otaPal_CheckFileSignature( OtaFileContext_t * const C );
 
 /*-----------------------------------------------------------*/
 
@@ -53,9 +57,6 @@ static inline BaseType_t prvContextValidate( OtaFileContext_t* pFileContext )
 
 /* Used to set the high bit of Windows error codes for a negative return value. */
 #define OTA_PAL_INT16_NEGATIVE_MASK    ( 1 << 15 )
-
-/* Size of buffer used in file operations on this platform (Windows). */
-#define OTA_PAL_WIN_BUF_SIZE ( ( size_t ) 4096UL )
 
 /* Attempt to create a new receive file for the file chunks as they come in. */
 
@@ -202,7 +203,7 @@ OtaPalStatus_t otaPal_CloseFile( OtaFileContext_t * const C )
         if( C->pSignature != NULL )
         {
             /* Verify the file signature, close the file and return the signature verification result. */
-            mainErr = OtaPalSuccess/*otaPal_CheckFileSignature( C )*/;
+            mainErr = otaPal_CheckFileSignature( C );
         }
         else
         {
@@ -249,185 +250,29 @@ OtaPalStatus_t otaPal_CloseFile( OtaFileContext_t * const C )
 
 /* Verify the signature of the specified file. */
 
-//static OtaPalMainStatus_t otaPal_CheckFileSignature( OtaFileContext_t * const C )
-//{
-//    OtaPalMainStatus_t eResult = OtaPalSuccess;
-//    uint32_t ulBytesRead;
-//    uint32_t ulSignerCertSize;
-//    uint8_t * pucBuf, * pucSignerCert;
-//    void * pvSigVerifyContext;
-//
-//    if( prvContextValidate( C ) == pdTRUE )
-//    {
-//        /* Verify an ECDSA-SHA256 signature. */
-//        if( pdFALSE == CRYPTO_SignatureVerificationStart( &pvSigVerifyContext, cryptoASYMMETRIC_ALGORITHM_ECDSA, cryptoHASH_ALGORITHM_SHA256 ) )
-//        {
-//            eResult = OtaPalSignatureCheckFailed;
-//        }
-//        else
-//        {
-//            LogInfo( ( "Started %s signature verification, file: %s\r\n",
-//                        OTA_JsonFileSignatureKey, ( const char * ) C->pCertFilepath ) );
-//            pucSignerCert = otaPal_ReadAndAssumeCertificate( ( const uint8_t * const ) C->pCertFilepath, &ulSignerCertSize );
-//
-//            if( pucSignerCert != NULL )
-//            {
-//                pucBuf = pvPortMalloc( OTA_PAL_WIN_BUF_SIZE ); /*lint !e9079 Allow conversion. */
-//
-//                if( pucBuf != NULL )
-//                {
-//                    /* Rewind the received file to the beginning. */
-//                    if( fseek( C->pFile, 0L, SEEK_SET ) == 0 ) /*lint !e586
-//                                                                  * C standard library call is being used for portability. */
-//                    {
-//                        do
-//                        {
-//                            ulBytesRead = fread( pucBuf, 1, OTA_PAL_WIN_BUF_SIZE, C->pFile ); /*lint !e586
-//                                                                                               * C standard library call is being used for portability. */
-//                            /* Include the file chunk in the signature validation. Zero size is OK. */
-//                            CRYPTO_SignatureVerificationUpdate( pvSigVerifyContext, pucBuf, ulBytesRead );
-//                        } while( ulBytesRead > 0UL );
-//
-//                        if( pdFALSE == CRYPTO_SignatureVerificationFinal( pvSigVerifyContext,
-//                                                                          ( char * ) pucSignerCert,
-//                                                                          ( size_t ) ulSignerCertSize,
-//                                                                          C->pSignature->data,
-//                                                                          C->pSignature->size ) ) /*lint !e732 !e9034 Allow comparison in this context. */
-//                        {
-//                            eResult = OtaPalSignatureCheckFailed;
-//                        }
-//                        pvSigVerifyContext = NULL;    /* The context has been freed by CRYPTO_SignatureVerificationFinal(). */
-//                    }
-//                    else
-//                    {
-//                        /* Nothing special to do. */
-//                    }
-//
-//                    /* Free the temporary file page buffer. */
-//                    vPortFree( pucBuf );
-//                }
-//                else
-//                {
-//                    LogError( ( "Failed to allocate buffer memory.\r\n" ) );
-//                    eResult = OtaPalOutOfMemory;
-//                }
-//
-//                /* Free the signer certificate that we now own after prvReadAndAssumeCertificate(). */
-//                vPortFree( pucSignerCert );
-//            }
-//            else
-//            {
-//                eResult = OtaPalBadSignerCert;
-//            }
-//        }
-//    }
-//    else
-//    {
-//        /* FIXME: Invalid error code for a NULL file context. */
-//        LogError( ( "Invalid OTA file context.\r\n" ) );
-//        /* Invalid OTA context or file pointer. */
-//        eResult = OtaPalNullFileContext;
-//    }
-//
-//    return eResult;
-//}
+static OtaPalMainStatus_t otaPal_CheckFileSignature(OtaFileContext_t* const C)
+{
+    OtaPalMainStatus_t eResult = OtaPalSignatureCheckFailed;
 
+    if (prvContextValidate(C) == pdTRUE)
+    {
+        /* Validate the signature of the image. */
+        if (xValidateImageSignature(C->pFilePath,
+            (char*)C->pCertFilepath,
+            C->pSignature->data,
+            C->pSignature->size) == pdTRUE)
+        {
+            eResult = OtaPalSignatureCheckFailed;
+        }
+        else
+        {
+            LogError( ( " OTA image signature is valid. ***** \r\n" ) );
+        }
+    }
 
-/* Read the specified signer certificate from the filesystem into a local buffer. The allocated
- * memory becomes the property of the caller who is responsible for freeing it.
- */
+    return eResult;
 
-//static uint8_t * otaPal_ReadAndAssumeCertificate( const uint8_t * const pucCertName,
-//                                                  uint32_t * const ulSignerCertSize )
-//{
-//    FILE * pFile;
-//    uint8_t * pucSignerCert = NULL;
-//    uint8_t * pucCertData = NULL;
-//    int32_t lSize = 0; /* For MISRA mandatory. */
-//    int32_t lWindowsError;
-//
-//    pFile = fopen( ( const char * ) pucCertName, "rb" ); /*lint !e586
-//                                                            * C standard library call is being used for portability. */
-//
-//    if( pFile != NULL )
-//    {
-//        lWindowsError = fseek( pFile, 0, SEEK_END );         /*lint !e586
-//                                                                * C standard library call is being used for portability. */
-//
-//        if( lWindowsError == 0 )                               /* fseek returns a non-zero value on error. */
-//        {
-//            lSize = (int32_t) ftell( pFile );                  /*lint !e586 Allow call in this context. */
-//
-//            if( lSize != -1L )                                 /* ftell returns -1 on error. */
-//            {
-//                lWindowsError = fseek( pFile, 0, SEEK_SET ); /*lint !e586
-//                                                                * C standard library call is being used for portability. */
-//            }
-//            else /* ftell returned an error, pucSignerCert remains NULL. */
-//            {
-//                lWindowsError = -1L;
-//            }
-//        } /* else fseek returned an error, pucSignerCert remains NULL. */
-//
-//        if( lWindowsError == 0 )
-//        {
-//            /* Allocate memory for the signer certificate plus a terminating zero so we can load and return it to the caller. */
-//            pucSignerCert = pvPortMalloc( lSize + 1 ); /*lint !e732 !e9034 !e9079 Allow conversion. */
-//        }
-//
-//        if( pucSignerCert != NULL )
-//        {
-//            if( fread( pucSignerCert, 1, lSize, pFile ) == ( size_t ) lSize ) /*lint !e586 !e732 !e9034
-//                                                                                 * C standard library call is being used for portability. */
-//            {
-//                /* The crypto code requires the terminating zero to be part of the length so add 1 to the size. */
-//                *ulSignerCertSize = lSize + 1;
-//                pucSignerCert[ lSize ] = 0;
-//            }
-//            else
-//            {   /* There was a problem reading the certificate file so free the memory and abort. */
-//                vPortFree( pucSignerCert );
-//                pucSignerCert = NULL;
-//            }
-//        }
-//        else
-//        {
-//            LogError( ( "Failed to allocate memory for signer cert contents.\r\n" ) );
-//            /* Nothing special to do. */
-//        }
-//
-//        lWindowsError = fclose( pFile ); /*lint !e586
-//                                            * C standard library call is being used for portability. */
-//
-//        if( lWindowsError != 0 )
-//        {
-//            LogError( ( "File pointer operation failed.\r\n" ) );
-//            pucSignerCert = NULL;
-//        }
-//    }
-//    else
-//    {
-//        LogError( ( "No such certificate file: %s. Using aws_ota_codesigner_certificate.h.\r\n",
-//                    ( const char * ) pucCertName ) );
-//
-//        /* Allocate memory for the signer certificate plus a terminating zero so we can copy it and return to the caller. */
-//        lSize = sizeof( signingcredentialSIGNING_CERTIFICATE_PEM );
-//        pucSignerCert = pvPortMalloc( lSize );                           /*lint !e9029 !e9079 !e838 malloc proto requires void*. */
-//        pucCertData = ( uint8_t * ) signingcredentialSIGNING_CERTIFICATE_PEM; /*lint !e9005 we don't modify the cert but it could be set by PKCS11 so it's not const. */
-//
-//        if( pucSignerCert != NULL )
-//        {
-//            memcpy( pucSignerCert, pucCertData, lSize );
-//            *ulSignerCertSize = lSize;
-//        }
-//        else
-//        {
-//            LogError( ( "No memory for certificate of size %d!\r\n", lSize ) );
-//        }
-//    }
-//
-//    return pucSignerCert; /*lint !e480 !e481 fopen and fclose are being used by-design. */
-//}
+}
 
 /*-----------------------------------------------------------*/
 

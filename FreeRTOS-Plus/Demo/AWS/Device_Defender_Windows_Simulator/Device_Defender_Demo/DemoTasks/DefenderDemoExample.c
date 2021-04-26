@@ -28,17 +28,17 @@
  * Demo for showing how to use the Device Defender library's APIs. The Device
  * Defender library provides macros and helper functions for assembling MQTT
  * topics strings, and for determining whether an incoming MQTT message is
- * related to device defender. The Device Defender library does not depend on
+ * related to Device Defender. The Device Defender library does not depend on
  * any particular MQTT library, therefore the code for MQTT operations is
  * placed in another file (mqtt_demo_helpers.c). This demo uses the coreMQTT
  * library. If needed, mqtt_demo_helpers.c can be modified to replace coreMQTT
  * with another MQTT library. This demo requires using the AWS IoT broker as
  * Device Defender is an AWS service.
  *
- * This demo subscribes to the device defender topics. It then collects metrics
+ * This demo subscribes to the Device Defender topics. It then collects metrics
  * for the open ports and sockets on the device using FreeRTOS+TCP. Additonally
  * the stack high water mark and task IDs are collected for custom metrics.
- * These metrics are used to generate a device defender report. The
+ * These metrics are used to generate a Device Defender report. The
  * report is then published, and the demo waits for a response from the device
  * defender service. Upon receiving an accepted response, the demo finishes.
  * If the demo receives a rejected response or times out, the demo repeats up to
@@ -126,7 +126,7 @@
 #define DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS    ( pdMS_TO_TICKS( 5000U ) )
 
 /**
- * @brief Status values of the device defender report.
+ * @brief Status values of the Device Defender report.
  */
 typedef enum
 {
@@ -208,7 +208,7 @@ static TaskStatus_t pxTaskStatusList[ democonfigCUSTOM_METRICS_TASKS_ARRAY_SIZE 
 static uint32_t pulCustomMetricsTaskNumbers[ democonfigCUSTOM_METRICS_TASKS_ARRAY_SIZE ];
 
 /**
- * @brief All the metrics sent in the device defender report.
+ * @brief All the metrics sent in the Device Defender report.
  */
 static ReportMetrics_t xDeviceMetrics;
 
@@ -218,7 +218,7 @@ static ReportMetrics_t xDeviceMetrics;
 static ReportStatus_t xReportStatus;
 
 /**
- * @brief Buffer for generating the device defender report.
+ * @brief Buffer for generating the Device Defender report.
  */
 static char pcDeviceMetricsJsonReport[ democonfigDEVICE_METRICS_REPORT_BUFFER_SIZE ];
 
@@ -241,7 +241,7 @@ static void prvPublishCallback( MQTTContext_t * pxMqttContext,
                                 MQTTDeserializedInfo_t * pxDeserializedInfo );
 
 /**
- * @brief Collect all the metrics to be sent in the device defender report.
+ * @brief Collect all the metrics to be sent in the Device Defender report.
  *
  * @return true if all the metrics are successfully collected;
  * false otherwise.
@@ -249,9 +249,9 @@ static void prvPublishCallback( MQTTContext_t * pxMqttContext,
 static bool prvCollectDeviceMetrics( void );
 
 /**
- * @brief Generate the device defender report.
+ * @brief Generate the Device Defender report.
  *
- * @param[out] pulOutReportLength Length of the device defender report.
+ * @param[out] pulOutReportLength Length of the Device Defender report.
  *
  * @return true if the report is generated successfully;
  * false otherwise.
@@ -259,7 +259,7 @@ static bool prvCollectDeviceMetrics( void );
 static bool prvGenerateDeviceMetricsReport( uint32_t * pulOutReportLength );
 
 /**
- * @brief Subscribe to the device defender topics.
+ * @brief Subscribe to the Device Defender topics.
  *
  * @return true if the subscribe is successful;
  * false otherwise.
@@ -267,7 +267,7 @@ static bool prvGenerateDeviceMetricsReport( uint32_t * pulOutReportLength );
 static bool prvSubscribeToDefenderTopics( void );
 
 /**
- * @brief Unsubscribe from the device defender topics.
+ * @brief Unsubscribe from the Device Defender topics.
  *
  * @return true if the unsubscribe is successful;
  * false otherwise.
@@ -275,9 +275,9 @@ static bool prvSubscribeToDefenderTopics( void );
 static bool prvUnsubscribeFromDefenderTopics( void );
 
 /**
- * @brief Publish the generated device defender report.
+ * @brief Publish the generated Device Defender report.
  *
- * @param[in] ulReportLength Length of the device defender report.
+ * @param[in] ulReportLength Length of the Device Defender report.
  *
  * @return true if the report is published successfully;
  * false otherwise.
@@ -411,7 +411,7 @@ static void prvPublishCallback( MQTTContext_t * pxMqttContext,
 
         pxPublishInfo = pxDeserializedInfo->pPublishInfo;
 
-        /* Verify that the publish is for device defender, and if so get which
+        /* Verify that the publish is for Device Defender, and if so get which
          * defender API it is for */
         xStatus = Defender_MatchTopic( pxPublishInfo->pTopicName,
                                        pxPublishInfo->topicNameLength,
@@ -475,66 +475,66 @@ static void prvPublishCallback( MQTTContext_t * pxMqttContext,
 static bool prvCollectDeviceMetrics( void )
 {
     bool xStatus = false;
-    eMetricsCollectorStatus eMetricsCollectorStatus;
+    eStatus eStatus;
     uint32_t ulNumOpenTcpPorts = 0UL, ulNumOpenUdpPorts = 0UL, ulNumEstablishedConnections = 0UL, i;
     UBaseType_t uxTasksWritten = { 0 };
     TaskStatus_t pxTaskStatus = { 0 };
 
     /* Collect bytes and packets sent and received. */
-    eMetricsCollectorStatus = eGetNetworkStats( &( xNetworkStats ) );
+    eStatus = eGetNetworkStats( &( xNetworkStats ) );
 
-    if( eMetricsCollectorStatus != eMetricsCollectorSuccess )
+    if( eStatus != eMetricsCollectorSuccess )
     {
         LogError( ( "xGetNetworkStats failed. Status: %d.",
-                    eMetricsCollectorStatus ) );
+                    eStatus ) );
     }
 
     /* Collect a list of open TCP ports. */
-    if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
+    if( eStatus == eMetricsCollectorSuccess )
     {
-        eMetricsCollectorStatus = eGetOpenTcpPorts( &( pusOpenTcpPorts[ 0 ] ),
+        eStatus = eGetOpenTcpPorts( &( pusOpenTcpPorts[ 0 ] ),
                                                     democonfigOPEN_TCP_PORTS_ARRAY_SIZE,
                                                     &( ulNumOpenTcpPorts ) );
 
-        if( eMetricsCollectorStatus != eMetricsCollectorSuccess )
+        if( eStatus != eMetricsCollectorSuccess )
         {
             LogError( ( "xGetOpenTcpPorts failed. Status: %d.",
-                        eMetricsCollectorStatus ) );
+                        eStatus ) );
         }
     }
 
     /* Collect a list of open UDP ports. */
-    if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
+    if( eStatus == eMetricsCollectorSuccess )
     {
-        eMetricsCollectorStatus = eGetOpenUdpPorts( &( pusOpenUdpPorts[ 0 ] ),
+        eStatus = eGetOpenUdpPorts( &( pusOpenUdpPorts[ 0 ] ),
                                                     democonfigOPEN_UDP_PORTS_ARRAY_SIZE,
                                                     &( ulNumOpenUdpPorts ) );
 
-        if( eMetricsCollectorStatus != eMetricsCollectorSuccess )
+        if( eStatus != eMetricsCollectorSuccess )
         {
             LogError( ( "xGetOpenUdpPorts failed. Status: %d.",
-                        eMetricsCollectorStatus ) );
+                        eStatus ) );
         }
     }
 
     /* Collect a list of established connections. */
-    if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
+    if( eStatus == eMetricsCollectorSuccess )
     {
-        eMetricsCollectorStatus = eGetEstablishedConnections( &( pxEstablishedConnections[ 0 ] ),
+        eStatus = eGetEstablishedConnections( &( pxEstablishedConnections[ 0 ] ),
                                                               democonfigESTABLISHED_CONNECTIONS_ARRAY_SIZE,
                                                               &( ulNumEstablishedConnections ) );
 
-        if( eMetricsCollectorStatus != eMetricsCollectorSuccess )
+        if( eStatus != eMetricsCollectorSuccess )
         {
             LogError( ( "GetEstablishedConnections failed. Status: %d.",
-                        eMetricsCollectorStatus ) );
+                        eStatus ) );
         }
     }
 
     /* Collect custom metrics. This demo sends this task's stack high water mark
      * as a number type custom metric and the current task IDs as a list of
      * numbers type custom metric. */
-    if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
+    if( eStatus == eMetricsCollectorSuccess )
     {
         vTaskGetInfo(
             /* Query this task. */
@@ -548,9 +548,9 @@ static bool prvCollectDeviceMetrics( void )
 
         if( uxTasksWritten == 0 )
         {
-            eMetricsCollectorStatus = eMetricsCollectorCollectionFailed;
+            eStatus = eMetricsCollectorCollectionFailed;
             LogError( ( "Failed to collect system state. uxTaskGetSystemState() failed due to insufficient buffer space.",
-                        eMetricsCollectorStatus ) );
+                        eStatus ) );
         }
         else
         {
@@ -562,7 +562,7 @@ static bool prvCollectDeviceMetrics( void )
     }
 
     /* Populate device metrics. */
-    if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
+    if( eStatus == eMetricsCollectorSuccess )
     {
         xStatus = true;
         xDeviceMetrics.pxNetworkStats = &( xNetworkStats );
@@ -820,12 +820,12 @@ void prvDefenderDemoTask( void * pvParameters )
          */
         if( xStatus == true )
         {
-            LogInfo( ( "Generating device defender report..." ) );
+            LogInfo( ( "Generating Device Defender report..." ) );
             xStatus = prvGenerateDeviceMetricsReport( &( ulReportLength ) );
 
             if( xStatus != true )
             {
-                LogError( ( "Failed to generate device defender report." ) );
+                LogError( ( "Failed to generate Device Defender report." ) );
             }
         }
 
@@ -838,12 +838,12 @@ void prvDefenderDemoTask( void * pvParameters )
          * run time */
         if( xStatus == true )
         {
-            LogInfo( ( "Publishing device defender report..." ) );
+            LogInfo( ( "Publishing Device Defender report..." ) );
             xStatus = prvPublishDeviceMetricsReport( ulReportLength );
 
             if( xStatus != true )
             {
-                LogError( ( "Failed to publish device defender report." ) );
+                LogError( ( "Failed to publish Device Defender report." ) );
             }
         }
 

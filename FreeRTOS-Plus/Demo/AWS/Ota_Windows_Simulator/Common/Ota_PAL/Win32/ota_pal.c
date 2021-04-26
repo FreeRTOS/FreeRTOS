@@ -24,7 +24,10 @@
  *
  */
 
-/* OTA PAL implementation for Windows platform. */
+/**
+ * @file ota_pal.c
+ * @brief OTA PAL implementation for Windows platform.
+ */
 
 /* Standard includes. */
 #include <stdio.h>
@@ -250,28 +253,20 @@ OtaPalStatus_t otaPal_CloseFile( OtaFileContext_t * const C )
 
 /* Verify the signature of the specified file. */
 
-static OtaPalMainStatus_t otaPal_CheckFileSignature(OtaFileContext_t* const C)
+static OtaPalMainStatus_t otaPal_CheckFileSignature( OtaFileContext_t* const C )
 {
     OtaPalMainStatus_t eResult = OtaPalSignatureCheckFailed;
 
-    if (prvContextValidate(C) == pdTRUE)
+    if ( prvContextValidate( C ) == pdTRUE )
     {
-        /* Validate the signature of the image. */
-        if (xValidateImageSignature(C->pFilePath,
-            (char*)C->pCertFilepath,
-            C->pSignature->data,
-            C->pSignature->size) == pdTRUE)
-        {
-            eResult = OtaPalSignatureCheckFailed;
-        }
-        else
-        {
-            LogError( ( " OTA image signature is valid. ***** \r\n" ) );
-        }
+        eResult = xValidateImageSignature( C );
+    }
+    else
+    {
+        LogError( ( "OTA image signature is invalid.\r\n" ) );
     }
 
     return eResult;
-
 }
 
 /*-----------------------------------------------------------*/

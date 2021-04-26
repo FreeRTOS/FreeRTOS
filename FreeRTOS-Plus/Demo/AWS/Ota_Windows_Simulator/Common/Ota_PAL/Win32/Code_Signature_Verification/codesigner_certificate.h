@@ -25,21 +25,25 @@
  */
 
  /**
-  * @file code_signature_verification.h
-  * @brief Interface for code siganture verfication funtions.
+  * @file codesigner_certificate.h
+  * @brief Code signer certifciate as char array.
   *
+  * Define this char array containing the PEM code signing certificate.
+  * Note -  It is highly recommended to use this for demo pupose and store
+  * certificates in secure location in production devices.
   */
 
-#ifndef CODE_SIGNATURE_VERIFICATION_H
-#define CODE_SIGNATURE_VERIFICATION_H
+#ifndef __CODESIGNER_CERTIFICATE__H__
+#define __CODESIGNER_CERTIFICATE__H__
 
-#include "FreeRTOS.h"
- 
- /**
- * @brief Validate the integrity of the new image to be activated.
- * @param[in] pFileContext pointer to File context
- * @return OtaPalMainStatus_t , OtaPalSuccess if the signature of the image is valid.
+/*
+ * PEM-encoded code signer certificate
+ *
+ * Must include the PEM header and footer:
+ * "-----BEGIN CERTIFICATE-----\n"
+ * "...base64 data...\n"
+ * "-----END CERTIFICATE-----\n";
  */
-OtaPalMainStatus_t xValidateImageSignature( OtaFileContext_t* const pFileContext );
+static const char signingcredentialSIGNING_CERTIFICATE_PEM[] = "...Insert here...";
 
 #endif

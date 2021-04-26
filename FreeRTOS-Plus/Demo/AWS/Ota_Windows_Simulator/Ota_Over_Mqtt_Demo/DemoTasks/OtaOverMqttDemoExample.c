@@ -59,7 +59,7 @@
 #include "ota_config.h"
 
 /* MQTT library includes. */
-#include "mqtt_agent.h"
+#include "core_mqtt_agent.h"
 
 /* MQTT Agent ports. */
 #include "freertos_agent_message.h"
@@ -307,7 +307,7 @@ typedef struct OtaTopicFilterCallback
  * @brief Defines the structure to use as the command callback context in this
  * demo.
  */
-struct CommandContext
+struct MQTTAgentCommandContext
 {
     MQTTStatus_t xReturnStatus;
     TaskHandle_t xTaskToNotify;
@@ -346,7 +346,7 @@ static uint8_t xNetworkBuffer[ MQTT_AGENT_NETWORK_BUFFER_SIZE ];
 /**
  * @brief FreeRTOS blocking queue to be used as MQTT Agent context.
  */
-static AgentMessageContext_t xCommandQueue;
+static MQTTAgentMessageContext_t xCommandQueue;
 
 /**
  * @brief The network context used by the MQTT library transport interface.
@@ -536,8 +536,10 @@ static void prvOTAAgentTask( void * pvParam );
  * The demo task initializes the OTA agent an loops until OTA agent is shutdown.
  * It reports OTA update statistics (which includes number of blocks received, processed and dropped),
  * at regular intervals.
+ * 
+ * @param[in] pvParam Any parameters to be passed to OTA Demo task.
  */
-static void vOtaDemoTask( void  );
+static void vOtaDemoTask( void* pvParam );
 
 /**
  * @brief The function which implements the flow for OTA demo.
@@ -934,7 +936,7 @@ static void prvMqttDataCallback( void * pvIncomingPublishCallbackContext,
 
 /*-----------------------------------------------------------*/
 
-static void prvCommandCallback( CommandContext_t * pxCommandContext,
+static void prvCommandCallback( MQTTAgentCommandContext_t * pxCommandContext,
                                 MQTTAgentReturnInfo_t * pxReturnInfo )
 {
     pxCommandContext->xReturnStatus = pxReturnInfo->returnCode;
@@ -945,8 +947,8 @@ static void prvCommandCallback( CommandContext_t * pxCommandContext,
     }
 }
 
-static void prvMQTTSubscribeCompleteCallback(CommandContext_t* pxCommandContext,
-    MQTTAgentReturnInfo_t* pxReturnInfo)
+static void prvMQTTSubscribeCompleteCallback( MQTTAgentCommandContext_t* pxCommandContext,
+    MQTTAgentReturnInfo_t* pxReturnInfo )
 {
     MQTTAgentSubscribeArgs_t* pSubsribeArgs;
 
@@ -971,23 +973,10 @@ static void prvMQTTSubscribeCompleteCallback(CommandContext_t* pxCommandContext,
 
 /*-----------------------------------------------------------*/
 
-static void prvMQTTUnsubscribeCompleteCallback(CommandContext_t* pxCommandContext,
-    MQTTAgentReturnInfo_t* pxReturnInfo)
+static void prvMQTTUnsubscribeCompleteCallback( MQTTAgentCommandContext_t* pxCommandContext,
+    MQTTAgentReturnInfo_t* pxReturnInfo )
 {
     MQTTAgentSubscribeArgs_t* pSubsribeArgs;
-
-    if (pxReturnInfo->returnCode == MQTTSuccess)
-    {
-        pSubsribeArgs = (MQTTAgentSubscribeArgs_t*)(pxCommandContext->pArgs);
-        /* Add subscription so that incoming publishes are routed to the application callback. */
-        removeSubscription((SubscriptionElement_t*)xGlobalMqttAgentContext.pIncomingCallbackContext,
-            pSubsribeArgs->pSubscribeInfo->pTopicFilter,
-            pSubsribeArgs->pSubscribeInfo->topicFilterLength);
-
-        LogInfo(("Removed registration for topic %.*s.",
-            pSubsribeArgs->pSubscribeInfo->topicFilterLength,
-            pSubsribeArgs->pSubscribeInfo->pTopicFilter));
-    }
 
     /* Store the result in the application defined context so the task that
      * initiated the publish can check the operation's status. */
@@ -1101,7 +1090,7 @@ static MQTTStatus_t prvHandleResubscribe( void )
     /* These variables need to stay in scope until command completes. */
     static MQTTAgentSubscribeArgs_t xSubArgs = { 0 };
     static MQTTSubscribeInfo_t xSubInfo[ SUBSCRIPTION_MANAGER_MAX_SUBSCRIPTIONS ] = { 0 };
-    static CommandInfo_t xCommandParams = { 0 };
+    static MQTTAgentCommandInfo_t xCommandParams = { 0 };
 
     /* Loop through each subscription in the subscription list and add a subscribe
      * command to the command queue. */
@@ -1302,9 +1291,9 @@ static MQTTStatus_t prvMQTTInit( void )
     TransportInterface_t xTransport;
     MQTTStatus_t xReturn;
     MQTTFixedBuffer_t xFixedBuffer = { .pBuffer = xNetworkBuffer, .size = MQTT_AGENT_NETWORK_BUFFER_SIZE };
-    static uint8_t staticQueueStorageArea[ MQTT_AGENT_COMMAND_QUEUE_LENGTH * sizeof( Command_t * ) ];
+    static uint8_t staticQueueStorageArea[ MQTT_AGENT_COMMAND_QUEUE_LENGTH * sizeof( MQTTAgentCommand_t * ) ];
     static StaticQueue_t staticQueueStructure;
-    AgentMessageInterface_t messageInterface =
+    MQTTAgentMessageInterface_t messageInterface =
     {
         .pMsgCtx        = NULL,
         .send           = Agent_MessageSend,
@@ -1315,7 +1304,7 @@ static MQTTStatus_t prvMQTTInit( void )
 
     LogDebug( ( "Creating command queue." ) );
     xCommandQueue.queue = xQueueCreateStatic( MQTT_AGENT_COMMAND_QUEUE_LENGTH,
-                                              sizeof( Command_t * ),
+                                              sizeof( MQTTAgentCommand_t* ),
                                               staticQueueStorageArea,
                                               &staticQueueStructure );
     configASSERT( xCommandQueue.queue );
@@ -1441,8 +1430,8 @@ static void prvConnectToMQTTBroker( void )
 
 static void prvDisconnectFromMQTTBroker( void )
 {
-    CommandContext_t xCommandContext = { 0 };
-    CommandInfo_t xCommandParams = { 0 };
+    MQTTAgentCommandContext_t xCommandContext = { 0 };
+    MQTTAgentCommandInfo_t xCommandParams = { 0 };
     MQTTStatus_t xCommandStatus;
 
     /* Disconnect from broker. */
@@ -1477,8 +1466,8 @@ static OtaMqttStatus_t prvMQTTSubscribe(const char* pTopicFilter,
     MQTTAgentSubscribeArgs_t xSubscribeArgs = { 0 };
     MQTTSubscribeInfo_t xSubscribeInfo = { 0 };
     BaseType_t result;
-    CommandInfo_t xCommandParams = { 0 };
-    CommandContext_t xApplicationDefinedContext = { 0 };
+    MQTTAgentCommandInfo_t xCommandParams = { 0 };
+    MQTTAgentCommandContext_t xApplicationDefinedContext = { 0 };
     OtaMqttStatus_t otaRet = OtaMqttSuccess;
 
     configASSERT(pTopicFilter != NULL);
@@ -1549,8 +1538,8 @@ static OtaMqttStatus_t prvMQTTPublish(const char* const pacTopic,
     BaseType_t result;
     MQTTStatus_t mqttStatus = MQTTBadParameter;
     MQTTPublishInfo_t publishInfo = { 0 };
-    CommandInfo_t xCommandParams = { 0 };
-    CommandContext_t xCommandContext = { 0 };
+    MQTTAgentCommandInfo_t xCommandParams = { 0 };
+    MQTTAgentCommandContext_t xCommandContext = { 0 };
 
     publishInfo.pTopicName = pacTopic;
     publishInfo.topicNameLength = topicLen;
@@ -1611,8 +1600,8 @@ static OtaMqttStatus_t prvMQTTUnsubscribe(const char* pTopicFilter,
     MQTTAgentSubscribeArgs_t xSubscribeArgs = { 0 };
     MQTTSubscribeInfo_t xSubscribeInfo = { 0 };
     BaseType_t result;
-    CommandInfo_t xCommandParams = { 0 };
-    CommandContext_t xApplicationDefinedContext = { 0 };
+    MQTTAgentCommandInfo_t xCommandParams = { 0 };
+    MQTTAgentCommandContext_t xApplicationDefinedContext = { 0 };
     OtaMqttStatus_t otaRet = OtaMqttSuccess;
 
     configASSERT(pTopicFilter != NULL);
@@ -1948,13 +1937,15 @@ static BaseType_t prvRunOTADemo( void )
  * the OTA agent. If not, it is simply ignored.
  *
  */
-void vOtaDemoTask( void )
+static void vOtaDemoTask( void* pvParam )
 {
     /* Return error status. */
     BaseType_t xReturnStatus = pdPASS;
 
     /* Flag for MQTT init status. */
     bool mqttInitialized = false;
+
+    ( void )pvParam;
 
     LogInfo( ( "OTA over MQTT demo, Application version %u.%u.%u",
                appFirmwareVersion.u.x.major,

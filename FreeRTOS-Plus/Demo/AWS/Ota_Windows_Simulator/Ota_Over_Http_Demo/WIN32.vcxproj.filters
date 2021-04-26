@@ -143,15 +143,6 @@
     <Filter Include="otapal\code_signature_verification\include">
       <UniqueIdentifier>{cc758a0a-4533-4cb6-8854-43f3e7f632ca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11">
-      <UniqueIdentifier>{fe33bbbd-5a9f-4c90-b5a7-d18b45c36c3b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include">
-      <UniqueIdentifier>{79d2bdef-6225-4520-81f1-e7c356b49005}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\3rdParty">
-      <UniqueIdentifier>{58b60e4d-3e4c-4065-846d-7e9c6a83421e}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c">
@@ -497,12 +488,6 @@
     <ClCompile Include="..\..\..\..\Source\AWS\ota\source\ota_mqtt.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\AWS\ota</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\mqtt_agent.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT-Agent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\mqtt_agent_command_functions.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT-Agent</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\Source\AWS\ota\source\portable\os\ota_os_freertos.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\AWS\ota\portable</Filter>
     </ClCompile>
@@ -551,17 +536,17 @@
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser\http_parser.c">
       <Filter>FreeRTOS+\httpparser</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\http-utils\http_demo_utils.c">
-      <Filter>http-utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\Ota_PAL\Win32\Code_Signature_Verification\code_signature_verification_mbedtls_pkcs11.c">
+    <ClCompile Include="..\Common\Ota_PAL\Win32\Code_Signature_Verification\code_signature_verification_mbedtls.c">
       <Filter>otapal\code_signature_verification</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\corePKCS11\source\core_pkcs11.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\core_mqtt_agent.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT-Agent</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\corePKCS11\source\core_pki_utils.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\core_mqtt_agent_command_functions.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT-Agent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\HTTP_Utils\http_demo_utils.c">
+      <Filter>http-utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -973,15 +958,6 @@
     <ClInclude Include="ota_config.h">
       <Filter>Config</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include\agent_message.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT-Agent\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include\mqtt_agent.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT-Agent\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include\mqtt_agent_command_functions.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT-Agent\include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\Source\AWS\ota\source\portable\os\ota_os_freertos.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\AWS\ota\portable</Filter>
     </ClInclude>
@@ -1030,29 +1006,20 @@
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser\http_parser.h">
       <Filter>FreeRTOS+\httpparser\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\http-utils\http_demo_utils.h">
-      <Filter>http-utils\include</Filter>
-    </ClInclude>
     <ClInclude Include="..\Common\Ota_PAL\Win32\Code_Signature_Verification\code_signature_verification.h">
       <Filter>otapal\code_signature_verification\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\3rdParty</Filter>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include\core_mqtt_agent.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT-Agent\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11f.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\3rdParty</Filter>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include\core_mqtt_agent_command_functions.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT-Agent\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11t.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\3rdParty</Filter>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include\core_mqtt_agent_message_interface.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT-Agent\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\include\core_pkcs11.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\include\core_pkcs11_pal.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\include\core_pki_utils.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include</Filter>
+    <ClInclude Include="..\Common\HTTP_Utils\http_demo_utils.h">
+      <Filter>http-utils\include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

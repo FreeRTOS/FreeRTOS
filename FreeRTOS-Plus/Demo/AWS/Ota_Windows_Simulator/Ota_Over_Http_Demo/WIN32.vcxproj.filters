@@ -1021,5 +1021,8 @@
     <ClInclude Include="..\Common\HTTP_Utils\http_demo_utils.h">
       <Filter>http-utils\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\Common\Ota_PAL\Win32\Code_Signature_Verification\aws_ota_codesigner_certificate.h">
+      <Filter>otapal\code_signature_verification\include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

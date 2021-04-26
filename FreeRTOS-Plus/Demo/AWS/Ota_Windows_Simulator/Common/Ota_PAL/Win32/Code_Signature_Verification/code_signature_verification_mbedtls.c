@@ -55,7 +55,7 @@
 
 /* Signature verification includes. */
 #include "code_signature_verification.h"
-#include "codesigner_certificate.h"
+#include "aws_ota_codesigner_certificate.h"
 
 /**
  * @brief SHA256 buffer size for storing cryptographic hash computation results.

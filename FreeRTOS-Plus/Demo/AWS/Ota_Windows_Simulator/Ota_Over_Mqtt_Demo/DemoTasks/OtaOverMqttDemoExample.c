@@ -976,7 +976,6 @@ static void prvMQTTSubscribeCompleteCallback( MQTTAgentCommandContext_t* pxComma
 static void prvMQTTUnsubscribeCompleteCallback( MQTTAgentCommandContext_t* pxCommandContext,
     MQTTAgentReturnInfo_t* pxReturnInfo )
 {
-    MQTTAgentSubscribeArgs_t* pSubsribeArgs;
 
     /* Store the result in the application defined context so the task that
      * initiated the publish can check the operation's status. */

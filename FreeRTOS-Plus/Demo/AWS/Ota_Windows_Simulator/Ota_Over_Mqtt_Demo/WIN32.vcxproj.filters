@@ -979,7 +979,7 @@
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include\core_mqtt_agent_message_interface.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT-Agent\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\Ota_PAL\Win32\Code_Signature_Verification\codesigner_certificate.h">
+    <ClInclude Include="..\Common\Ota_PAL\Win32\Code_Signature_Verification\aws_ota_codesigner_certificate.h">
       <Filter>otapal\code_signature_verification\include</Filter>
     </ClInclude>
   </ItemGroup>

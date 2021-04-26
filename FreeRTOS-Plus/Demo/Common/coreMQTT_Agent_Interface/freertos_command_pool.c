@@ -51,15 +51,15 @@
  * as PUBLISH or SUBSCRIBE) between the command being created by an API call and
  * completion of the command by the execution of the command's callback.
  */
-static Command_t commandStructurePool[ MQTT_COMMAND_CONTEXTS_POOL_SIZE ];
+static MQTTAgentCommand_t commandStructurePool[ MQTT_COMMAND_CONTEXTS_POOL_SIZE ];
 
 /**
- * @brief The message context used to guard the pool of Command_t structures.
+ * @brief The message context used to guard the pool of MQTTAgentCommand_t structures.
  * For FreeRTOS, this is implemented with a queue. Structures may be
  * obtained by receiving a pointer from the queue, and returned by
  * sending the pointer back into it.
  */
-static AgentMessageContext_t commandStructMessageCtx;
+static MQTTAgentMessageContext_t commandStructMessageCtx;
 
 /**
  * @brief Initialization status of the queue.
@@ -71,8 +71,8 @@ static volatile uint8_t initStatus = QUEUE_NOT_INITIALIZED;
 void Agent_InitializePool( void )
 {
     size_t i;
-    Command_t * pCommand;
-    static uint8_t staticQueueStorageArea[ MQTT_COMMAND_CONTEXTS_POOL_SIZE * sizeof( Command_t * ) ];
+    MQTTAgentCommand_t * pCommand;
+    static uint8_t staticQueueStorageArea[ MQTT_COMMAND_CONTEXTS_POOL_SIZE * sizeof( MQTTAgentCommand_t * ) ];
     static StaticQueue_t staticQueueStructure;
     bool commandAdded = false;
 
@@ -80,7 +80,7 @@ void Agent_InitializePool( void )
     {
         memset( ( void * ) commandStructurePool, 0x00, sizeof( commandStructurePool ) );
         commandStructMessageCtx.queue = xQueueCreateStatic( MQTT_COMMAND_CONTEXTS_POOL_SIZE,
-                                                       sizeof( Command_t * ),
+                                                       sizeof( MQTTAgentCommand_t * ),
                                                        staticQueueStorageArea,
                                                        &staticQueueStructure );
         configASSERT( commandStructMessageCtx.queue );
@@ -101,9 +101,9 @@ void Agent_InitializePool( void )
 
 /*-----------------------------------------------------------*/
 
-Command_t * Agent_GetCommand( uint32_t blockTimeMs )
+MQTTAgentCommand_t * Agent_GetCommand( uint32_t blockTimeMs )
 {
-    Command_t * structToUse = NULL;
+    MQTTAgentCommand_t * structToUse = NULL;
     bool structRetrieved = false;
 
     /* Check queue has been created. */
@@ -122,7 +122,7 @@ Command_t * Agent_GetCommand( uint32_t blockTimeMs )
 
 /*-----------------------------------------------------------*/
 
-bool Agent_ReleaseCommand( Command_t * pCommandToRelease )
+bool Agent_ReleaseCommand( MQTTAgentCommand_t * pCommandToRelease )
 {
     bool structReturned = false;
 

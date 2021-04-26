@@ -43,3 +43,6 @@
 [submodule "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent"]
 	path = FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent
 	url = https://github.com/FreeRTOS/coreMQTT-Agent.git
+[submodule "FreeRTOS-Plus/Source/AWS/ota"]
+	path = FreeRTOS-Plus/Source/AWS/ota
+	url = https://github.com/aws/ota-for-aws-iot-embedded-sdk.git

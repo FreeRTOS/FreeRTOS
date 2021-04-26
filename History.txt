@@ -10,6 +10,7 @@ Changes after FreeRTOS 202012.00-LTS and 202012.01-LTS releases
                 - Refactored MQTT Multitasking demo to use MQTT Agent
 				- OTA demo over MQTT
 				- OTA demo over HTTP
+				- Added custom metrics to AWS Device Defender demo.
 
 Changes between FreeRTOS V202011.00 and FreeRTOS V202012.00 released December 2020
 
@@ -18,7 +19,7 @@ Changes between FreeRTOS V202011.00 and FreeRTOS V202012.00 released December 20
 	+ Networking support for QEMU MPS2
 	+ Demo Updates
 		- AWS IoT Jobs Library
-		- AWS Defender
+		- AWS Device Defender
 		- HTTP Mutual Auth
 		- HTTP Plaintext
 		- UDP for FreeRTOS+TCP

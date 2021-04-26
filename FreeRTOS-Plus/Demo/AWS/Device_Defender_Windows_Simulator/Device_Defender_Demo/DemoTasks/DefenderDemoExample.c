@@ -475,7 +475,7 @@ static void prvPublishCallback( MQTTContext_t * pxMqttContext,
 static bool prvCollectDeviceMetrics( void )
 {
     bool xStatus = false;
-    eStatus eStatus;
+    eMetricsCollectorStatus eStatus;
     uint32_t ulNumOpenTcpPorts = 0UL, ulNumOpenUdpPorts = 0UL, ulNumEstablishedConnections = 0UL, i;
     UBaseType_t uxTasksWritten = { 0 };
     TaskStatus_t pxTaskStatus = { 0 };

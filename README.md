@@ -1,8 +1,8 @@
-FreeRTOS includes libraries that are part of the [FreeRTOS 202012.01 LTS](https://github.com/FreeRTOS/FreeRTOS-LTS/tree/202012.01-LTS) release. Learn more about the FreeRTOS 202012.00 LTS libraries at [https://freertos.org/lts-libraries.html](https://freertos.org/lts-libraries.html).
+The FreeRTOS 202104.00 introduces new coreMQTT Agent library, and includes all the Long-Term Support (LTS) libraries that are part of the [FreeRTOS-LTS 202012.01-LTS](https://github.com/FreeRTOS/FreeRTOS-LTS/tree/202012.01-LTS) release. Learn more about the FreeRTOS 202012.01 LTS libraries at [https://freertos.org/lts-libraries.html](https://freertos.org/lts-libraries.html).
 
 
 ## Getting started
-The [FreeRTOS.org](https://www.freertos.org) website contains contains a [FreeRTOS Kernel Quick Start Guide](https://www.freertos.org/FreeRTOS-quick-start-guide.html), a [list of supported devices and compilers](https://www.freertos.org/RTOS_ports.html), the [API reference](https://www.freertos.org/a00106.html), and many other resources.
+The [FreeRTOS.org](https://www.freertos.org) website contains a [FreeRTOS Kernel Quick Start Guide](https://www.freertos.org/FreeRTOS-quick-start-guide.html), a [list of supported devices and compilers](https://www.freertos.org/RTOS_ports.html), the [API reference](https://www.freertos.org/a00106.html), and many other resources.
 
 ### Getting help
 You can use your Github login to get support from both the FreeRTOS community and directly from the primary FreeRTOS developers on our [active support forum](https://forums.freertos.org).  The [FAQ](https://www.freertos.org/FAQ.html) provides another support resource.
@@ -32,7 +32,7 @@ git submodule update --init --recursive
 ```
 
 ## Repository structure
-This repository contains the FreeRTOS Kernel, a number of supplementary libraries, and a comprehensive set of example applications.  Many libraries (including the FreeRTOS kernel) are included as Git submodules from their own Git repositories.
+This repository contains the FreeRTOS Kernel, a number of supplementary libraries including the LTS ones, and a comprehensive set of example projects.  Many libraries (including the FreeRTOS kernel) are included as Git submodules from their own Git repositories.
 
 ### Kernel source code and example projects
 ```FreeRTOS/Source``` contains the FreeRTOS kernel source code (submoduled from https://github.com/FreeRTOS/FreeRTOS-Kernel).

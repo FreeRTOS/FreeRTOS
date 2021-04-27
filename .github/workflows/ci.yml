@@ -48,7 +48,7 @@ jobs:
         with:
           path: ./freertos
           # List of directories containing libraries whose doxygen output will be generated.
-          libs_parent_dir_path: FreeRTOS-Plus/Source,FreeRTOS-Plus/Source/AWS,FreeRTOS-Plus/Source/Application-Protocols
+          libs_parent_dir_path: FreeRTOS-Plus/Source,FreeRTOS-Plus/Source/AWS,FreeRTOS-Plus/Source/Application-Protocols,FreeRTOS-Plus/Source/Utilities
           generate_zip: true
       - name: Upload doxygen artifact if main branch
         if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release-candidate' )

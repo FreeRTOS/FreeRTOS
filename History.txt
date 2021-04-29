@@ -1,27 +1,37 @@
 Documentation and download available at https://www.FreeRTOS.org/
 
-Changes after FreeRTOS 202012.00 release
+Changes between FreeRTOS 202012.00 and FreeRTOS 202104.00 released April 2021
 
-        + Added new coreMQTT Agent library.
-        + Demo Updates
-                - MQTT Agent
+	+ Released LTS versions of AWS IoT Device Defender, AWS IoT Jobs and
+	  AWS IoT Over-the-air-Updates (OTA) libraries
+		- AWS IoT Device Defender v1.1.0
+		- AWS IoT Jobs v1.1.0
+		- AWS IoT Over-the-air (OTA) Update v3.0.0
+	+ Added new coreMQTT Agent library.
+	+ Demo Updates
+		- Add basic publish-subscribe demo for coreMQTT Agent library.
+			- For examples of using coreMQTT Agent library to communicate with
+			  multiple AWS IoT services from different tasks using a shared 
+			  MQTT connection, refer to https://github.com/FreeRTOS/coreMQTT-Agent-Demos
+		- OTA demo over MQTT
+		- OTA demo over HTTP
+		- Added custom metrics to AWS Device Defender demo.
 
+Changes between FreeRTOS 202011.00 and FreeRTOS 202012.00 released December 2020
 
-Changes between FreeRTOS V202011.00 and FreeRTOS V202012.00 released December 2020
-
-    + Includes libraries that are part of the FreeRTOS 202012.00 LTS release.
-        - Learn more at https:/freertos.org/lts-libraries.html
+	+ Includes libraries that are part of the FreeRTOS 202012.00 LTS release.
+		- Learn more at https:/freertos.org/lts-libraries.html
 	+ Networking support for QEMU MPS2
 	+ Demo Updates
 		- AWS IoT Jobs Library
-		- AWS Defender
+		- AWS Device Defender
 		- HTTP Mutual Auth
 		- HTTP Plaintext
 		- UDP for FreeRTOS+TCP
 		- S3 Upload & Download
 
 
-Changes between FreeRTOS V10.4.1 and FreeRTOS V202011.00 released November 10 2020
+Changes between FreeRTOS V10.4.1 and FreeRTOS 202011.00 released November 10 2020
 
 	+ Added new coreJSON Library. See https://www.freertos.org/json/
 	+ Added new coreMQTT Library. See https://www.freertos.org/mqtt/

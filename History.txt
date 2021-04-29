@@ -17,7 +17,7 @@ Changes between FreeRTOS 202012.00 and FreeRTOS 202104.00 released April 2021
 		- OTA demo over HTTP
 		- Added custom metrics to AWS Device Defender demo.
 
-Changes between FreeRTOS V202011.00 and FreeRTOS V202012.00 released December 2020
+Changes between FreeRTOS 202011.00 and FreeRTOS 202012.00 released December 2020
 
 	+ Includes libraries that are part of the FreeRTOS 202012.00 LTS release.
 		- Learn more at https:/freertos.org/lts-libraries.html
@@ -31,7 +31,7 @@ Changes between FreeRTOS V202011.00 and FreeRTOS V202012.00 released December 20
 		- S3 Upload & Download
 
 
-Changes between FreeRTOS V10.4.1 and FreeRTOS V202011.00 released November 10 2020
+Changes between FreeRTOS V10.4.1 and FreeRTOS 202011.00 released November 10 2020
 
 	+ Added new coreJSON Library. See https://www.freertos.org/json/
 	+ Added new coreMQTT Library. See https://www.freertos.org/mqtt/

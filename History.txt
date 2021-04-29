@@ -1,12 +1,12 @@
 Documentation and download available at https://www.FreeRTOS.org/
 
-Changes between FreeRTOS 202012.00-LTS and FreeRTOS 202012.01-LTS released April 2021
+Changes between FreeRTOS 202012.00 and FreeRTOS 202104.00 released April 2021
 
 	+ Released LTS versions of AWS IoT Device Defender, AWS IoT Jobs and
 	  AWS IoT Over-the-air-Updates (OTA) libraries
 		- AWS IoT Device Defender v1.1.0
 		- AWS IoT Jobs v1.1.0
-		- AWS IoT Over-the-air-Updates (OTA) v3.0.0
+		- AWS IoT Over-the-air (OTA) Update v3.0.0
 	+ Added new coreMQTT Agent library.
 	+ Demo Updates
 		- Add basic publish-subscribe demo for coreMQTT Agent library.

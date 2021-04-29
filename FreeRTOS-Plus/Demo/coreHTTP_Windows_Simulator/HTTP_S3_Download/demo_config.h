@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -79,8 +79,13 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /**
  * @brief Server's root CA certificate for TLS authentication with S3.
  *
- * The Baltimore Cybertrust Root CA Certificate should be pasted below using the
- * following format:
+ * The Baltimore Cybertrust root CA certificate is often used for authentication
+ * with S3. It can be found at:
+ * https://baltimore-cybertrust-root.chain-demos.digicert.com/info/index.html.
+ *
+ * S3 has started migrating certificates to Amazon Trust Services. If
+ * authentication errors persist, re-attempt the connection with an Amazon root
+ * CA certificate: https://www.amazontrust.com/repository.
  *
  * @note This certificate should be PEM-encoded.
  *

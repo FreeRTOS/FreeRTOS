@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 
@@ -78,6 +77,7 @@ static void	prvTest3_CheckAutoReloadExpireRates( void );
 static void prvTest4_CheckAutoReloadTimersCanBeStopped( void );
 static void prvTest5_CheckBasicOneShotTimerBehaviour( void );
 static void prvTest6_CheckAutoReloadResetBehaviour( void );
+static void prvTest7_CheckBacklogBehaviour( void );
 static void prvResetStartConditionsForNextIteration( void );
 
 /*-----------------------------------------------------------*/
@@ -86,16 +86,24 @@ static void prvResetStartConditionsForNextIteration( void );
 detected in any of the demo tests. */
 static volatile BaseType_t xTestStatus = pdPASS;
 
+/* Flag indicating whether the testing includes the backlog demo.  The backlog
+demo can be disruptive to other demos because the timer backlog is created by
+calling xTaskCatchUpTicks(). */
+static uint8_t ucIsBacklogDemoEnabled = ( uint8_t ) pdFALSE;
+
 /* Counter that is incremented on each cycle of a test.  This is used to
 detect a stalled task - a test that is no longer running. */
 static volatile uint32_t ulLoopCounter = 0;
 
 /* A set of auto-reload timers - each of which use the same callback function.
 The callback function uses the timer ID to index into, and then increment, a
-counter in the ucAutoReloadTimerCounters[] array.  The auto-reload timers
-referenced from xAutoReloadTimers[] are used by the prvTimerTestTask task. */
+counter in the ucAutoReloadTimerCounters[] array.  The callback function stops
+xAutoReloadTimers[0] during its callback if ucIsStopNeededInTimerZeroCallback is
+pdTRUE.  The auto-reload timers referenced from xAutoReloadTimers[] are used by
+the prvTimerTestTask task. */
 static TimerHandle_t xAutoReloadTimers[ configTIMER_QUEUE_LENGTH + 1 ] = { 0 };
 static uint8_t ucAutoReloadTimerCounters[ configTIMER_QUEUE_LENGTH + 1 ] = { 0 };
+static uint8_t ucIsStopNeededInTimerZeroCallback = ( uint8_t ) pdFALSE;
 
 /* The one-shot timer is configured to use a callback function that increments
 ucOneShotTimerCounter each time it gets called. */
@@ -143,6 +151,12 @@ void vStartTimerDemoTask( TickType_t xBasePeriodIn )
 	{
 		xTaskCreate( prvTimerTestTask, "Tmr Tst", tmrTIMER_TEST_TASK_STACK_SIZE, NULL, configTIMER_TASK_PRIORITY - 1, NULL );
 	}
+}
+/*-----------------------------------------------------------*/
+
+void vTimerDemoIncludeBacklogTests( BaseType_t includeBacklogTests )
+{
+	ucIsBacklogDemoEnabled = ( uint8_t ) includeBacklogTests;
 }
 /*-----------------------------------------------------------*/
 
@@ -198,6 +212,12 @@ static void prvTimerTestTask( void *pvParameters )
 
 		/* Check timer reset behaviour. */
 		prvTest6_CheckAutoReloadResetBehaviour();
+
+		/* Check timer behaviour when the timer task gets behind in its work. */
+		if ( ucIsBacklogDemoEnabled == ( uint8_t ) pdTRUE )
+		{
+			prvTest7_CheckBacklogBehaviour();
+		}
 
 		/* Start the timers again to restart all the tests over again. */
 		prvResetStartConditionsForNextIteration();
@@ -664,6 +684,65 @@ uint8_t ucTimer;
 }
 /*-----------------------------------------------------------*/
 
+static void prvTest7_CheckBacklogBehaviour( void )
+{
+	/* Use the first auto-reload timer to test stopping a timer from a
+	backlogged callback. */
+
+	/* The timer has not been started yet! */
+	if( xTimerIsTimerActive( xAutoReloadTimers[ 0 ] ) != pdFALSE )
+	{
+		xTestStatus = pdFAIL;
+		configASSERT( xTestStatus );
+	}
+
+	/* Prompt the callback function to stop the timer. */
+	ucIsStopNeededInTimerZeroCallback = ( uint8_t ) pdTRUE;
+
+	/* Now start the timer.  This will appear to happen immediately to
+	this task because this task is running at a priority below the timer
+	service task.  Use a timer period of one tick so the call to
+	xTaskCatchUpTicks() below has minimal impact on other tests that might
+	be running. */
+	#define tmrdemoBACKLOG_TIMER_PERIOD		( ( TickType_t ) 1 )
+	xTimerChangePeriod( xAutoReloadTimers[ 0 ], tmrdemoBACKLOG_TIMER_PERIOD, tmrdemoDONT_BLOCK );
+
+	/* The timer should now be active. */
+	if( xTimerIsTimerActive( xAutoReloadTimers[ 0 ] ) == pdFALSE )
+	{
+		xTestStatus = pdFAIL;
+		configASSERT( xTestStatus );
+	}
+
+	/* Arrange for the callback to execute late enough that it will execute
+	twice, back-to-back.  The timer must handle the stop request properly
+	in spite of the backlog of callbacks. */
+	#define tmrdemoEXPECTED_BACKLOG_EXPIRIES  ( ( TickType_t ) 2 )
+	xTaskCatchUpTicks( tmrdemoBACKLOG_TIMER_PERIOD * tmrdemoEXPECTED_BACKLOG_EXPIRIES );
+
+	/* The timer should now be inactive. */
+	if( xTimerIsTimerActive( xAutoReloadTimers[ 0 ] ) != pdFALSE )
+	{
+		xTestStatus = pdFAIL;
+		configASSERT( xTestStatus );
+	}
+
+	/* Restore the standard timer period, and leave the timer inactive. */
+	xTimerChangePeriod( xAutoReloadTimers[ 0 ], xBasePeriod, tmrdemoDONT_BLOCK );
+	xTimerStop( xAutoReloadTimers[ 0 ], tmrdemoDONT_BLOCK );
+
+	/* Clear the reload count for the timer used in this test. */
+	ucAutoReloadTimerCounters[ 0 ] = ( uint8_t ) 0;
+
+	if( xTestStatus == pdPASS )
+	{
+		/* No errors have been reported so increment the loop counter so the check
+		task knows this task is still running. */
+		ulLoopCounter++;
+	}
+}
+/*-----------------------------------------------------------*/
+
 static void prvResetStartConditionsForNextIteration( void )
 {
 uint8_t ucTimer;
@@ -1026,6 +1105,13 @@ size_t uxTimerID;
 	if( uxTimerID <= ( configTIMER_QUEUE_LENGTH + 1 ) )
 	{
 		( ucAutoReloadTimerCounters[ uxTimerID ] )++;
+
+		/* Stop timer ID 0 if requested. */
+		if ( ( uxTimerID == ( size_t ) 0 ) && ( ucIsStopNeededInTimerZeroCallback == ( uint8_t ) pdTRUE ) )
+		{
+			xTimerStop( pxExpiredTimer, tmrdemoDONT_BLOCK );
+			ucIsStopNeededInTimerZeroCallback = ( uint8_t ) pdFALSE;
+		}
 	}
 	else
 	{

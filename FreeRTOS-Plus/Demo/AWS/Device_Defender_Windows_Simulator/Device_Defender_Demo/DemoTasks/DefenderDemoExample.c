@@ -561,6 +561,36 @@ static bool prvCollectDeviceMetrics( void )
         }
     }
 
+    /* Collect custom metrics. This demo sends this task's stack high water mark
+     * as a number type custom metric and the current task IDs as a list of
+     * numbers type custom metric. */
+    if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
+    {
+        vTaskGetInfo(
+            /* Query this task. */
+            NULL,
+            &pxTaskStatus,
+            /* Include the stack high water mark value. */
+            pdTRUE,
+            /* Don't include the task state in the TaskStatus_t structure. */
+            0 );
+        uxTasksWritten = uxTaskGetSystemState( pxTaskStatusList, democonfigCUSTOM_METRICS_TASKS_ARRAY_SIZE, NULL );
+
+        if( uxTasksWritten == 0 )
+        {
+            eMetricsCollectorStatus = eMetricsCollectorCollectionFailed;
+            LogError( ( "Failed to collect system state. uxTaskGetSystemState() failed due to insufficient buffer space.",
+                        eMetricsCollectorStatus ) );
+        }
+        else
+        {
+            for( i = 0; i < uxTasksWritten; i++ )
+            {
+                pulCustomMetricsTaskNumbers[ i ] = pxTaskStatusList[ i ].xTaskNumber;
+            }
+        }
+    }
+
     /* Populate device metrics. */
     if( eStatus == eMetricsCollectorSuccess )
     {

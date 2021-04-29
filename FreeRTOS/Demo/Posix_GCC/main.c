@@ -25,8 +25,8 @@
  */
 
 /******************************************************************************
- * This project provides three demo applications.  A simple blinky style project,
- * a more comprehensive test and demo application, and a TCP echo demo.
+ * This project provides two demo applications.  A simple blinky style project,
+ * a more comprehensive test and demo application.
  * The mainSELECTED_APPLICATION setting is used to select between
  * the three
  *
@@ -73,7 +73,6 @@
 /*-----------------------------------------------------------*/
 extern void main_blinky( void );
 extern void main_full( void );
-extern void main_tcp_echo_client_tasks( void );
 static void traceOnEnter( void );
 /*
  * Only the comprehensive demo uses application hook (callback) functions.  See

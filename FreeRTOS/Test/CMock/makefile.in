@@ -1,0 +1,74 @@
+# indent with spaces
+.RECIPEPREFIX := $(.RECIPEPREFIX) $(.RECIPEPREFIX)
+
+# Various directories
+# Note: for this to work in subdirectories, this makefile must be the first one included.
+UT_ROOT_DIR         :=  $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+
+BUILD_DIR           :=  $(UT_ROOT_DIR)/build
+DOC_DIR             :=  $(BUILD_DIR)/doc
+COVERAGE_DIR        :=  $(BUILD_DIR)/coverage
+BIN_DIR             :=  $(BUILD_DIR)/bin
+GENERATED_DIR       :=  $(BUILD_DIR)/generated
+LIB_DIR             :=  $(BUILD_DIR)/lib
+TOOLS_DIR           :=  $(UT_ROOT_DIR)/tools
+
+FREERTOS_DIR        :=  $(abspath $(UT_ROOT_DIR)../../../FreeRTOS)
+KERNEL_DIR          :=  $(abspath $(UT_ROOT_DIR)/../../../FreeRTOS/Source)
+
+CMOCK_DIR           :=  $(UT_ROOT_DIR)/CMock
+CMOCK_SRC_DIR       :=  $(CMOCK_DIR)/src
+UNITY_DIR           :=  $(CMOCK_DIR)/vendor/unity
+UNITY_SRC_DIR       :=  $(UNITY_DIR)/src
+UNITY_INC_DIR       :=  $(UNITY_DIR)/src
+UNITY_BIN_DIR       :=  $(UNITY_DIR)/auto
+UNITY_EXTRAS_DIR    :=  $(UNITY_DIR)/extras
+UNITY_MEM_DIR       :=  $(UNITY_EXTRAS_DIR)/memory/src
+C_EXCEPTION_SRC_DIR :=  $(CMOCK_DIR)/vendor/c_exception/lib
+CMOCK_EXEC_DIR      :=  $(CMOCK_DIR)/lib
+
+# Include directories
+INCLUDE_DIR         :=  -I$(KERNEL_DIR)/include
+INCLUDE_DIR         +=  -I.
+INCLUDE_DIR         +=  -I$(UT_ROOT_DIR)/config
+INCLUDE_DIR         +=  -I$(UNITY_INC_DIR)
+INCLUDE_DIR         +=  -I$(CMOCK_SRC_DIR)
+INCLUDE_DIR         +=  -I$(UNITY_MEM_DIR)
+INCLUDE_DIR         +=  -I$(C_EXCEPTION_SRC_DIR)
+
+# Preprocessor flags
+CPPFLAGS    :=
+
+# Compiler flags
+CFLAGS              :=  $(INCLUDE_DIR)  -O0 -ggdb -pthread  --std=c99 -Werror -Wall
+ifeq ($(ENABLE_SANITIZER),1)
+    CFLAGS          +=  -fstack-protector-all
+    CFLAGS          +=  -Wformat -Werror=format-security -Werror=array-bounds
+    CFLAGS          +=  -D_FORTIFY_SOURCE=2
+    CFLAGS          +=  -fsanitize=address,undefined -fsanitize-recover=address
+else
+    CFLAGS          +=  -U_FORTIFY_SOURCE
+endif
+
+# Linker flags
+LDFLAGS             :=  -L$(LIB_DIR) -Wl,-rpath,$(LIB_DIR)
+LDFLAGS             +=  -pthread
+LDFLAGS             +=  -lunity
+LDFLAGS             +=  -lunitymemory
+LDFLAGS             +=  -lcexception
+LDFLAGS             +=  -lcmock
+LDFLAGS             +=  -lgcov
+ifeq ($(ENABLE_SANITIZER),1)
+    LDFLAGS         +=  -fsanitize=address,undefined
+endif
+
+# Shared libraries
+LIBS                :=  libunity
+LIBS                +=  libcmock
+LIBS                +=  libunitymemory
+LIBS                +=  libcexception
+
+LCOV_OPTS           :=  --config-file $(UT_ROOT_DIR)/lcovrc
+
+# export everything in this file
+export

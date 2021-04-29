@@ -41,7 +41,10 @@ void __attribute__((weak)) EthernetISR (void);
 
 extern uint32_t _estack, _sidata, _sdata, _edata, _sbss, _ebss;
 
-__attribute__((naked)) void Reset_Handler(void)
+/* Prevent optimization so gcc does not replace code with memcpy */
+__attribute__((optimize("O0")))
+__attribute__((naked))
+void Reset_Handler(void)
  {
     // set stack pointer
     __asm volatile ("ldr r0, =_estack");
@@ -147,36 +150,35 @@ void Default_Handler6(void)
 const uint32_t* isr_vector[] __attribute__((section(".isr_vector"))) =
 {
     (uint32_t*)&_estack,
-    (uint32_t*)&Reset_Handler,    // Reset                -15
-    (uint32_t*)&Default_Handler,  // NMI_Handler          -14
-    (uint32_t*)&Default_Handler2, // HardFault_Handler    -13
-    (uint32_t*)&Default_Handler3, // MemManage_Handler    -12
-    (uint32_t*)&Default_Handler4, // BusFault_Handler     -11
-    (uint32_t*)&Default_Handler5, // UsageFault_Handler   -10
-    0, // reserved
-    0, // reserved
-    0, // reserved
-    0, // reserved   -6
-    (uint32_t*)&vPortSVCHandler,  // SVC_Handler              -5
-    (uint32_t*)&Default_Handler6, // DebugMon_Handler         -4
-    0, // reserved
-    (uint32_t*)&xPortPendSVHandler,      // PendSV handler    -2
-    (uint32_t*)&xPortSysTickHandler,     // SysTick_Handler   -1
-    0,                    // uart0 receive 0
-    0,                    // uart0 transmit
-    0,                    // uart1 receive
-    0,                    // uart1 transmit
-    0,                    // uart 2 receive
-    0,                    // uart 2 transmit
-    0,                    // GPIO 0 combined interrupt
-    0,                    // GPIO 2 combined interrupt
-    0,                    // Timer 0
-    0,                    // Timer 1
-    0,                    // Dial Timer
-    0,                    // SPI0 SPI1
-    0,                    // uart overflow 1, 2,3
-    0,                    // Ethernet   13
-
+    (uint32_t*)&Reset_Handler,           // Reset                -15
+    (uint32_t*)&Default_Handler,         // NMI_Handler          -14
+    (uint32_t*)&Default_Handler2,        // HardFault_Handler    -13
+    (uint32_t*)&Default_Handler3,        // MemManage_Handler    -12
+    (uint32_t*)&Default_Handler4,        // BusFault_Handler     -11
+    (uint32_t*)&Default_Handler5,        // UsageFault_Handler   -10
+    0,                                   // reserved
+    0,                                   // reserved
+    0,                                   // reserved
+    0,                                   // reserved             -6
+    (uint32_t*)&vPortSVCHandler,         // SVC_Handler          -5
+    (uint32_t*)&Default_Handler6,        // DebugMon_Handler     -4
+    0,                                   // reserved
+    (uint32_t*)&xPortPendSVHandler,      // PendSV handler       -2
+    (uint32_t*)&xPortSysTickHandler,     // SysTick_Handler      -1
+    0,                                   // uart0 receive         0
+    0,                                   // uart0 transmit
+    0,                                   // uart1 receive
+    0,                                   // uart1 transmit
+    0,                                   // uart 2 receive
+    0,                                   // uart 2 transmit
+    0,                                   // GPIO 0 combined interrupt
+    0,                                   // GPIO 2 combined interrupt
+    0,                                   // Timer 0
+    0,                                   // Timer 1
+    0,                                   // Dial Timer
+    0,                                   // SPI0 SPI1
+    0,                                   // uart overflow 1 2,3   12
+    (uint32_t*)&EthernetISR,             // Ethernet              13
 };
 
 void _start(void)

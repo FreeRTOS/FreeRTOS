@@ -236,7 +236,7 @@ static char base16_hash[WC_SHA256_DIGEST_SIZE*2+1];   /* caclulated hash */
 #endif
 
 #ifndef NO_RNG
-static wolfSSL_Mutex conTestMutex;       /* continous test mutex */
+static wolfSSL_Mutex conTestMutex;       /* contineous test mutex */
 static int           conTestFailure = 0; /* in failure mode */
 #endif
 

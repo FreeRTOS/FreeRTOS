@@ -1313,7 +1313,7 @@ HAL_StatusTypeDef HAL_TIMEx_PWMN_Stop_DMA(TIM_HandleTypeDef *htim, uint32_t Chan
   */
 
 /**
-  * @brief  Starts the TIM One Pulse signal generation on the complemetary 
+  * @brief  Starts the TIM One Pulse signal generation on the complementary 
   *         output.
   * @param  htim: pointer to a TIM_HandleTypeDef structure that contains
   *                the configuration information for TIM module.

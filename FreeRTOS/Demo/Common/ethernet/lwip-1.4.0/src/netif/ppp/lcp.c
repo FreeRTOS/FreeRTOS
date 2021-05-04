@@ -1663,7 +1663,7 @@ lcp_up(fsm *f)
   /*
    * If the asyncmap hasn't been negotiated, we really should
    * set the receive asyncmap to ffffffff, but we set it to 0
-   * for backwards contemptibility.
+   * for backwards compatibility.
    */
   ppp_recv_config(f->unit, (go->neg_mru? LWIP_MAX(wo->mru, go->mru): PPP_MRU),
                  (go->neg_asyncmap? go->asyncmap: 0x00000000),

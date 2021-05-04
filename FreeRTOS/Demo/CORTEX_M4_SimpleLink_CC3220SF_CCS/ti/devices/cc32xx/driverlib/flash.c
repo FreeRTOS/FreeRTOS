@@ -277,9 +277,9 @@ FlashEraseNonBlocking(unsigned long ulAddress)
 
 //*****************************************************************************
 //
-//! Erases a complele flash at shot.
+//! Erases a complete flash at shot.
 //!
-//! This function erases a complele flash at shot
+//! This function erases a complete flash at shot
 //!
 //! \return Returns 0 on success, or -1 if the block is write-protected.
 //
@@ -326,7 +326,7 @@ FlashMassErase()
 
 //*****************************************************************************
 //
-//! Erases a complele flash at shot but does not wait for completion.
+//! Erases a complete flash at shot but does not wait for completion.
 //!
 //!
 //! This function will not return until the Flash has been erased.

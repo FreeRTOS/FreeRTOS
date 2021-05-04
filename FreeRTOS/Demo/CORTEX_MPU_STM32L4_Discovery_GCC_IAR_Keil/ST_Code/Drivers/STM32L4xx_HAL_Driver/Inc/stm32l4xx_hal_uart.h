@@ -1170,7 +1170,7 @@ typedef  void (*pUART_CallbackTypeDef)(UART_HandleTypeDef *huart);  /*!< pointer
   * @{
   */
 #if defined(USART_PRESC_PRESCALER)
-/** @brief  Get UART clok division factor from clock prescaler value.
+/** @brief  Get UART clock division factor from clock prescaler value.
   * @param  __CLOCKPRESCALER__ UART prescaler value.
   * @retval UART clock division factor
   */

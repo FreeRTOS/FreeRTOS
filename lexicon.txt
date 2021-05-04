@@ -2256,7 +2256,6 @@ certhashsigalgo
 certhashsigalgosz
 certid
 certidx
-certifciate
 certificatepolicies
 certificaterequest
 certificateset
@@ -2836,7 +2835,6 @@ clockstypedef
 clockswitch
 clocktimeoutcmd
 clocktype
-clok
 closedir
 closedm
 closefxn
@@ -3098,12 +3096,7 @@ compatibilty
 compatiblity
 compe
 compen
-complele
-complemetary
-complet
 completelevel
-complets
-compliancy
 complsplt
 compm
 compn
@@ -3118,7 +3111,6 @@ compressslot
 compresstype
 compsult
 comptable
-compuitr
 compx
 compxhyst
 compxinsel
@@ -3131,7 +3123,6 @@ comtest
 comwake
 cond
 condi
-conditionaly
 condoreng
 conf
 confack
@@ -3232,8 +3223,6 @@ confmode
 confnak
 confrej
 confreq
-congiguration
-conitguous
 conlen
 connack
 connectcallback
@@ -3259,8 +3248,6 @@ constraintsmask
 constrant
 consumedend
 cont
-containin
-contemptibility
 contentcommitment
 contentdigest
 contentdynamic
@@ -3277,7 +3264,6 @@ contenttype
 contenttypesz
 contestfailure
 contestmutex
-contex
 contextlen
 contextspec
 contians

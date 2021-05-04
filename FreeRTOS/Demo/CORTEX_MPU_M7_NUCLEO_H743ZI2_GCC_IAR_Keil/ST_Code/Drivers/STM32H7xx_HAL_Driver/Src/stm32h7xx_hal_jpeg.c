@@ -3316,7 +3316,7 @@ static uint32_t JPEG_Process(JPEG_HandleTypeDef *hjpeg)
   {
     if (__HAL_JPEG_GET_FLAG(hjpeg, JPEG_FLAG_HPDF) != 0UL)
     {
-      /*Call Header parsing complet callback */
+      /*Call Header parsing complete callback */
       (void) HAL_JPEG_GetInfo(hjpeg, &hjpeg->Conf);
       /* Reset the ImageQuality */
       hjpeg->Conf.ImageQuality = 0;

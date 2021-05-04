@@ -728,7 +728,7 @@ REDSTATUS RedDirEntryRename(
                     REDSTATUS ret2;
 
                     /*  If there was not enough space to branch the parent
-                        directory inode and data block containin the source
+                        directory inode and data block containing the source
                         entry, revert destination directory entry to its
                         previous state.
                     */

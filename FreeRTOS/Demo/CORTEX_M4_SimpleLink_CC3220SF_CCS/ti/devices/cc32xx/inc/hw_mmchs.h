@@ -341,7 +341,7 @@
                                             // contains the hard coded RTL
                                             // vendor revision number the
                                             // version number of SD
-                                            // specification compliancy and a
+                                            // specification compliance and a
                                             // slot status bit. MMCHS_REV[31:16]
                                             // = Host controller version
                                             // MMCHS_REV[15:0] = Slot Interrupt
@@ -861,7 +861,7 @@
                                             // Prior to this command the MMC
                                             // card configuration register (CSD
                                             // and EXT_CSD) must be verified for
-                                            // compliancy with MMC standard
+                                            // compliance with MMC standard
                                             // specification 4.x (see section
                                             // 3.6). 0 1-bit or 4-bit Data width
                                             // (DAT[0] used MMC SD cards) 1

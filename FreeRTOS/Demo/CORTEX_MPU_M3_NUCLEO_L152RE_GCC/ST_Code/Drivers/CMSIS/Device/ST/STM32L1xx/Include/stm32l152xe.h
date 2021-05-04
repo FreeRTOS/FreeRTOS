@@ -4898,7 +4898,7 @@ typedef struct
 #define RCC_CSR_RTCSEL_0                    (0x1UL << RCC_CSR_RTCSEL_Pos)       /*!< 0x00010000 */
 #define RCC_CSR_RTCSEL_1                    (0x2UL << RCC_CSR_RTCSEL_Pos)       /*!< 0x00020000 */
 
-/*!< RTC congiguration */
+/*!< RTC configuration */
 #define RCC_CSR_RTCSEL_NOCLOCK              (0x00000000U)                      /*!< No clock */
 #define RCC_CSR_RTCSEL_LSE_Pos              (16U)                              
 #define RCC_CSR_RTCSEL_LSE_Msk              (0x1UL << RCC_CSR_RTCSEL_LSE_Pos)   /*!< 0x00010000 */

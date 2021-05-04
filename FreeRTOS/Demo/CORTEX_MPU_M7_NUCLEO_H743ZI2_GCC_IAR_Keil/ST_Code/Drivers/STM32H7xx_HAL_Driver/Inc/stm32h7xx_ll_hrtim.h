@@ -7301,7 +7301,7 @@ __STATIC_INLINE void LL_HRTIM_BM_DisablePreload(HRTIM_TypeDef *HRTIMx)
   */
 __STATIC_INLINE uint32_t LL_HRTIM_BM_IsEnabledPreload(HRTIM_TypeDef *HRTIMx)
 {
-  uint32_t temp; /* MISRAC-2012 compliancy */
+  uint32_t temp; /* MISRAC-2012 compliance */
   temp = READ_BIT(HRTIMx->sCommonRegs.BMCR, HRTIM_BMCR_BMPREN);
 
   return ((temp == (HRTIM_BMCR_BMPREN)) ? 1UL : 0UL);

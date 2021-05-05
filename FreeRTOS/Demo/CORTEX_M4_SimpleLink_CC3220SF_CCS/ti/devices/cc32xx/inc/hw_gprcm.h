@@ -970,7 +970,7 @@
 //
 //******************************************************************************
 #define GPRCM_GPRCM_EFUSE_READ_REG12_FUSEFARM_ROW_32_MSW_M \
-                                0x0000FFFF  // This corrsponds to ROW_32
+                                0x0000FFFF  // This corresponds to ROW_32
                                             // [31:16] of the FUSEFARM. SPARE
 
 #define GPRCM_GPRCM_EFUSE_READ_REG12_FUSEFARM_ROW_32_MSW_S 0

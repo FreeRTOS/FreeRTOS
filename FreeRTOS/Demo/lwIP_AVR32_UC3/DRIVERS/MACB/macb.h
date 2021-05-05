@@ -309,7 +309,7 @@ typedef struct _AVR32_TxTdDescriptor {
 /*! Mask for frame used. */
 #define AVR32_OWNERSHIP_BIT   0x00000001
 
-/*! Receive status defintion.
+/*! Receive status definition.
  */
 //! @{
 #define AVR32_BROADCAST_ADDR  ((unsigned int) (1 << 31))  //* Broadcat address detected

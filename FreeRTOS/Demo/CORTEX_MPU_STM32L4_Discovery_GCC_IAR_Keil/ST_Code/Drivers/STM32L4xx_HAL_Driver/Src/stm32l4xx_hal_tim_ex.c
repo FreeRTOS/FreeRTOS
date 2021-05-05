@@ -2078,7 +2078,7 @@ HAL_StatusTypeDef HAL_TIMEx_ConfigBreakInput(TIM_HandleTypeDef *htim,
   *            @arg TIM_TIM16_TI1_LSI:               TIM16 TI1 is connected to LSI
   *            @arg TIM_TIM16_TI1_LSE:               TIM16 TI1 is connected to LSE
   *            @arg TIM_TIM16_TI1_RTC:               TIM16 TI1 is connected to RTC wakeup interrupt
-  *            @arg TIM_TIM16_TI1_MSI:               TIM16 TI1 is connected to MSI  (contraints: MSI clock < 1/4 TIM APB clock)
+  *            @arg TIM_TIM16_TI1_MSI:               TIM16 TI1 is connected to MSI  (constraints: MSI clock < 1/4 TIM APB clock)
   *            @arg TIM_TIM16_TI1_HSE_32:            TIM16 TI1 is connected to HSE div 32  (note that HSE div 32 must be selected as RTC clock source)
   *            @arg TIM_TIM16_TI1_MCO:               TIM16 TI1 is connected to MCO
   *
@@ -2089,7 +2089,7 @@ HAL_StatusTypeDef HAL_TIMEx_ConfigBreakInput(TIM_HandleTypeDef *htim,
   *            @arg TIM_TIM16_TI1_LSI:               TIM16 TI1 is connected to LSI
   *            @arg TIM_TIM16_TI1_LSE:               TIM16 TI1 is connected to LSE
   *            @arg TIM_TIM16_TI1_RTC:               TIM16 TI1 is connected to RTC wakeup interrupt
-  *            @arg TIM_TIM16_TI1_MSI:               TIM16 TI1 is connected to MSI  (contraints: MSI clock < 1/4 TIM APB clock)
+  *            @arg TIM_TIM16_TI1_MSI:               TIM16 TI1 is connected to MSI  (constraints: MSI clock < 1/4 TIM APB clock)
   *            @arg TIM_TIM16_TI1_HSE_32:            TIM16 TI1 is connected to HSE div 32  (note that HSE div 32 must be selected as RTC clock source)
   *            @arg TIM_TIM16_TI1_MCO:               TIM16 TI1 is connected to MCO
   *
@@ -2097,7 +2097,7 @@ HAL_StatusTypeDef HAL_TIMEx_ConfigBreakInput(TIM_HandleTypeDef *htim,
   @if STM32L486xx
   *         For TIM17, the parameter can have the following values:
   *            @arg TIM_TIM17_TI1_GPIO:              TIM17 TI1 is connected to GPIO
-  *            @arg TIM_TIM17_TI1_MSI:               TIM17 TI1 is connected to MSI  (contraints: MSI clock < 1/4 TIM APB clock)
+  *            @arg TIM_TIM17_TI1_MSI:               TIM17 TI1 is connected to MSI  (constraints: MSI clock < 1/4 TIM APB clock)
   *            @arg TIM_TIM17_TI1_HSE_32:            TIM17 TI1 is connected to HSE div 32
   *            @arg TIM_TIM17_TI1_MCO:               TIM17 TI1 is connected to MCO
   @endif

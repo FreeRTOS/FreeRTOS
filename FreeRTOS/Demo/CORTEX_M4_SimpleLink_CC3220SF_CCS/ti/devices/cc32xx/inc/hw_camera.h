@@ -324,7 +324,7 @@
                                             // the configuration phase before
                                             // CC_EN set to '1'. This can be
                                             // used in very high frequency to
-                                            // avoid dependancy to the IO
+                                            // avoid dependency to the IO
                                             // timings. 0 No synchro (most of
                                             // applications) 1 Synchro enabled
                                             // (should never be required)

@@ -384,7 +384,7 @@ typedef enum { MDC_DIV_8 = 0U, MDC_DIV_16, MDC_DIV_32, MDC_DIV_48,
 #define XEMACPS_NWCFG_RESET_MASK       0x00080000U/**< reset value */
 /*@}*/
 
-/** @name network status register bit definitaions
+/** @name network status register bit definition
  * @{
  */
 #define XEMACPS_NWSR_MDIOIDLE_MASK     0x00000004U /**< PHY management idle */

@@ -285,7 +285,7 @@ static int InitSha512(wc_Sha512* sha512)
 
     #endif
 
-    #if defnied(HAVE_INTEL_AVX1)
+    #if defined(HAVE_INTEL_AVX1)
 
       int Transform_Sha512_AVX1() {
           Stitched Message Sched/Round
@@ -293,7 +293,7 @@ static int InitSha512(wc_Sha512* sha512)
 
     #endif
 
-    #if defnied(HAVE_INTEL_AVX2)
+    #if defined(HAVE_INTEL_AVX2)
 
       int Transform_Sha512_AVX2() {
           Stitched Message Sched/Round

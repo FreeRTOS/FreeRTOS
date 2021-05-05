@@ -144,7 +144,7 @@ extern void spi_configure_cs(Spi * spi, uint32_t cs,uint32_t bitrate,
  * \param spi   Pointer to an Spi instance.
  * \param cs  Chip select to configure (0, 1, 2 or 3).
  * \param release_on_last CS controlled by last transfer.
- *                       spi_release_cs() is used to deactive CS.
+ *                       spi_release_cs() is used to deactivate CS.
  */
 extern void spi_configure_cs_mode(Spi * spi, uint32_t cs,
 				uint32_t release_on_last);

@@ -2114,7 +2114,7 @@ WOLFSSL_API const char* wolfSSL_OpenSSL_version(void);
 /* which library version do we have in hex */
 WOLFSSL_API word32 wolfSSL_lib_version_hex(void);
 
-/* do accept or connect depedning on side */
+/* do accept or connect depending on side */
 WOLFSSL_API int wolfSSL_negotiate(WOLFSSL* ssl);
 /* turn on wolfSSL data compression */
 WOLFSSL_API int wolfSSL_set_compression(WOLFSSL* ssl);

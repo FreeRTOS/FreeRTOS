@@ -84,7 +84,7 @@ typedef struct _AT91S_TxTdDescriptor {
 
 #define AT91C_OWNERSHIP_BIT		0x00000001
 
-/* Receive status defintion */
+/* Receive status definition */
 #define AT91C_BROADCAST_ADDR	((unsigned int) (1 << 31))	//* Broadcat address detected
 #define AT91C_MULTICAST_HASH 	((unsigned int) (1 << 30))	//* MultiCast hash match
 #define AT91C_UNICAST_HASH 	    ((unsigned int) (1 << 29))	//* UniCast hash match

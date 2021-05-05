@@ -141,7 +141,7 @@
 #if (REDCONF_TASK_COUNT > 1U) && (REDCONF_API_POSIX == 1)
 /** Cast a TaskHandle_t (a pointer type) to uintptr_t.
 
-    Usage of this macro deivate from MISRA-C:2012 Rule 11.4 (advisory).  This
+    Usage of this macro deviate from MISRA-C:2012 Rule 11.4 (advisory).  This
     macro is used for the FreeRTOS version of RedOsTaskId().  Some RTOSes
     natively use an integer for task IDs; others use pointers.  RedOsTaskId()
     uses integers, FreeRTOS uses pointers; to reconcile this difference, the

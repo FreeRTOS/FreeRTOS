@@ -701,7 +701,7 @@ int_fast16_t Power_sleep(uint_fast16_t sleepState)
         /* restore NVIC registers */
         restoreNVICRegs();
 
-        /* restore clock to those peripherals with dependecy set */
+        /* restore clock to those peripherals with dependency set */
         restorePeriphClocks();
 
         /* call PRCMCC3200MCUInit() for any necessary post-LPDS restore */

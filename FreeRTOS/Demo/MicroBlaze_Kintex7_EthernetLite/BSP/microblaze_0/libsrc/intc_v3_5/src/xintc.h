@@ -112,7 +112,7 @@
 * 1.11a sv   11/21/07 Updated driver to support access through a DCR bridge
 * 2.00a ktn  10/20/09 Updated to use HAL Processor APIs and _m is removed from
 *		      all the macro names/definitions.
-* 2.01a sdm  04/27/10 Updated the tcl so that the defintions are generated in
+* 2.01a sdm  04/27/10 Updated the tcl so that the definitions are generated in
 *		      the xparameters.h to know whether the optional registers
 *		      SIE, CIE and IVR are enabled in the HW - Refer CR 555392.
 *		      This driver doesnot make use of these definitions and does

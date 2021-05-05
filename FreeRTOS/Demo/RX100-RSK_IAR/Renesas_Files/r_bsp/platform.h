@@ -24,7 +24,7 @@
 /***********************************************************************************************************************
 * History : DD.MM.YYYY Version  Description
 *         : 30.11.2011 1.00     First Release
-*         : 13.01.2012 1.10     Moved from having platform defined using macro defintion, to having platform defined
+*         : 13.01.2012 1.10     Moved from having platform defined using macro definition, to having platform defined
 *                               by choosing an include path. This makes this file simpler and cleans up the issue
 *                               where HEW shows all header files for all platforms under 'Dependencies'.
 *         : 14.02.2012 1.20     Added RX210 BSP.

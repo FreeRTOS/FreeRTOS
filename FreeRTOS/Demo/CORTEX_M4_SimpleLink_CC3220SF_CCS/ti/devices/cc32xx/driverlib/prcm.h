@@ -205,7 +205,7 @@ unsigned long ulRstReg;
 #define PRCM_IO_RET_GRP_3       0x00000008
 
 //*****************************************************************************
-// Macros definig the device type
+// Macros defining the device type
 //*****************************************************************************
 #define PRCM_DEV_TYPE_FLAG_R         0x00000001
 #define PRCM_DEV_TYPE_FLAG_F         0x00000002

@@ -45,7 +45,7 @@ decouple library dependencies with standard string, memory and so on.
     /*
      * This struct is used multiple time by other structs and
      * needs to be defined somwhere that all structs can import
-     * (with minimal depencencies).
+     * (with minimal dependencies).
      */
     #if defined(HAVE_EX_DATA) || defined(FORTRESS)
     typedef struct WOLFSSL_CRYPTO_EX_DATA {

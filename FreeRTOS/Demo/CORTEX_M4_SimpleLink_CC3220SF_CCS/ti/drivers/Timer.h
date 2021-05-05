@@ -289,7 +289,7 @@ typedef struct Timer_FxnTable_
 {
     /*! Function to close the specified instance */
     Timer_CloseFxn closeFxn;
-    /*! Function to send contorl commands to the counter for a specific instance */
+    /*! Function to send control commands to the counter for a specific instance */
     Timer_ControlFxn controlFxn;
     /*! Function to get the count of the timer for a specific instance */
     Timer_GetCountFxn getCountFxn;

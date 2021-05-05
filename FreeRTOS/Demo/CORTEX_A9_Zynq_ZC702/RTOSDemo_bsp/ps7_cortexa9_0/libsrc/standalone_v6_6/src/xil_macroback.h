@@ -53,7 +53,7 @@
  *   XWdtTb_mGetTimebaseReg
  *   XWdtTb_mHasReset
  *
- * Please refer the corresonding driver document for replacement.
+ * Please refer the corresponding driver document for replacement.
  *
  *********************************************************************/
 

@@ -46,7 +46,7 @@ Macro definitions
 #define X_IRQ( x )   XX_IRQ( x )
 #define XX_IRQ( x )  _ICU_IRQ##x
 
-/* These macros define which IRQ pins are used for the switches. Note that these defintions cannot have parentheses
+/* These macros define which IRQ pins are used for the switches. Note that these definitions cannot have parentheses
    around them. */
 #if defined(PLATFORM_BOARD_RSKRX111)
     #define SW1_IRQ_NUMBER     0

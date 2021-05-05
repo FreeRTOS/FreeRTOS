@@ -189,7 +189,7 @@ void SPI_ConfigureNPCS( Spi* spi, uint32_t dwNpcs, uint32_t dwConfiguration )
  * \param spi   Pointer to an Spi instance.
  * \param dwNpcs  Chip select to configure (0, 1, 2 or 3).
  * \param bReleaseOnLast CS controlled by last transfer.
- *                       SPI_ReleaseCS() is used to deactive CS. 
+ *                       SPI_ReleaseCS() is used to deactivate CS. 
  */
 void SPI_ConfigureCSMode( Spi* spi, uint32_t dwNpcs, uint32_t bReleaseOnLast )
 {

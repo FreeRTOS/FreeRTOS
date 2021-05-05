@@ -359,7 +359,7 @@ void XWdtPs_DisableOutput(XWdtPs *InstancePtr, u8 Signal)
 * @return	The contents of the requested control field in the Counter
 *		Control Register (XWDTPS_CCR_OFFSET).
 *		If the Control is XWDTPS_CLK_PRESCALE then use the
-*		defintions XWDTEPB_CCR_PSCALE_XXXX.
+*		definitions XWDTEPB_CCR_PSCALE_XXXX.
 *		If the Control is XWDTPS_COUNTER_RESET then the values are
 *		0x0 to 0xFFF. This is the Counter Restart value in the CCR
 *		register.
@@ -423,7 +423,7 @@ u32 XWdtPs_GetControlValue(XWdtPs *InstancePtr, u8 Control)
 *		time.
 * @param	Value is the desired control value.
 *		If the Control is XWDTPS_CLK_PRESCALE then use the
-*		defintions XWDTEPB_CCR_PSCALE_XXXX.
+*		definitions XWDTEPB_CCR_PSCALE_XXXX.
 *		If the Control is XWDTPS_COUNTER_RESET then the valid values
 *		are 0x0 to 0xFFF, this sets the counter restart value of the CCR
 *		register.

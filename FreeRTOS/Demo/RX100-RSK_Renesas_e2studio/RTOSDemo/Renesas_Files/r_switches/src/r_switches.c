@@ -44,7 +44,7 @@ Macro definitions
 #define X_IRQ( x )   XX_IRQ( x )
 #define XX_IRQ( x )  _ICU_IRQ##x
 
-/* These macros define which IRQ pins are used for the switches. Note that these defintions cannot have parentheses
+/* These macros define which IRQ pins are used for the switches. Note that these definitions cannot have parentheses
    around them. */
 #if   defined(PLATFORM_BOARD_RDKRX63N)
     #define SW1_IRQ_NUMBER     8
@@ -121,8 +121,8 @@ void R_SWITCHES_Init (uint32_t detection_hz, uint32_t debounce_counts)
 {
     uint32_t i;
 
-    /* The SW#_XXX defintions are common macros amongst different boards. To see the definitions for these macros
-       see the board defintion file. For example, this file for the RSKRX63N is rskrx63n.h. */
+    /* The SW#_XXX definitions are common macros amongst different boards. To see the definitions for these macros
+       see the board definition file. For example, this file for the RSKRX63N is rskrx63n.h. */
 
 #if defined(MCU_RX62N) || defined(MCU_RX62T) || defined(MCU_RX621) || defined(MCU_RX610)
 

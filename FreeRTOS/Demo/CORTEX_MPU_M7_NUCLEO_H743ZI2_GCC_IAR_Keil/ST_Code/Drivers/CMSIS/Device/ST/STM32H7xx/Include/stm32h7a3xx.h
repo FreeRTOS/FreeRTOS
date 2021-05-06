@@ -9317,7 +9317,7 @@ typedef struct
 
 #define FMC_SDRTR_REIE_Pos         (14U)
 #define FMC_SDRTR_REIE_Msk         (0x1UL << FMC_SDRTR_REIE_Pos)               /*!< 0x00004000 */
-#define FMC_SDRTR_REIE             FMC_SDRTR_REIE_Msk                          /*!<RES interupt enable */
+#define FMC_SDRTR_REIE             FMC_SDRTR_REIE_Msk                          /*!<RES interrupt enable */
 
 /******************  Bit definition for FMC_SDSR register  ******************/
 #define FMC_SDSR_RE_Pos            (0U)

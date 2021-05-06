@@ -72,7 +72,7 @@ void R_ICU_Create(void)
     /* Set IRQ12 Priority */
     VIC.PRL16.LONG = _ICU_PRIORITY_LEVEL3;
 
-    /* Set IRQ12 interupt address */
+    /* Set IRQ12 interrupt address */
     VIC.VAD16.LONG = (uint32_t)r_icu_irq12_interrupt;
 }
 /***********************************************************************************************************************

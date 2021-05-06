@@ -1552,7 +1552,7 @@ if (!(eval)) \
  * TRC_STREAM_PORT_COMMIT_EVENT_BLOCKING
  *
  * The COMMIT macro is used to write a single event record directly to the 
- * streaming inteface, without first storing the event in the internal buffer.
+ * streaming interface, without first storing the event in the internal buffer.
  * This is currently only used in the SEGGER J-Link RTT port. 
  *
  * The BLOCKING version is used when sending the initial trace header, which is

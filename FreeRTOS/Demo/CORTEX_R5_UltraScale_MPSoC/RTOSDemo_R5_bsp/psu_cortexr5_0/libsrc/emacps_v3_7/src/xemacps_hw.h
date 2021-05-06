@@ -148,7 +148,7 @@ typedef enum { MDC_DIV_8 = 0U, MDC_DIV_16, MDC_DIV_32, MDC_DIV_48,
 #define XEMACPS_IDR_OFFSET           0x0000002CU /**< Interrupt Disable reg */
 #define XEMACPS_IMR_OFFSET           0x00000030U /**< Interrupt Mask reg */
 
-#define XEMACPS_PHYMNTNC_OFFSET      0x00000034U /**< Phy Maintaince reg */
+#define XEMACPS_PHYMNTNC_OFFSET      0x00000034U /**< Phy Maintenance reg */
 #define XEMACPS_RXPAUSE_OFFSET       0x00000038U /**< RX Pause Time reg */
 #define XEMACPS_TXPAUSE_OFFSET       0x0000003CU /**< TX Pause Time reg */
 

@@ -1208,7 +1208,7 @@
 //******************************************************************************
 #define APPS_RCM_MCASP_FRAC_CLK_CONFIG1_MCASP_FRAC_DIV_SOFT_RESET \
                                 0x00010000  // 1 - Assert the reset for MCASP
-                                            // Frac-clk div; 0 - Donot assert
+                                            // Frac-clk div; 0 - Do not assert
                                             // the reset for MCASP frac clk-div
 
 #define APPS_RCM_MCASP_FRAC_CLK_CONFIG1_MCASP_FRAC_DIV_PERIOD_M \

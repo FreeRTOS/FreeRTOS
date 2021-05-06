@@ -91,7 +91,7 @@
 // - System clock: 12 * 20 / 1 / 2 = 120MHz
 // ===== Target frequency (USB Clock)
 // - USB clock source: PLLB
-// - USB clock devider: 2 (devided by 2)
+// - USB clock divider: 2 (devided by 2)
 // - PLLB output: XTAL * 16 / 2
 // - USB clock: 12 * 16 / 2 / 2 = 48MHz
 

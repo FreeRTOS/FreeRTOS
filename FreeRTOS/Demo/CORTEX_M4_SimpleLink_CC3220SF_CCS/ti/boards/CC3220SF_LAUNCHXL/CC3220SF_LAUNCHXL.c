@@ -337,7 +337,7 @@ const uint_least8_t I2S_count = CC3220SF_LAUNCHXL_I2SCOUNT;
  * power savings.)  If the pin should be left unparked, specify the state
  * PowerCC32XX_DONT_PARK.  For example, for a UART TX pin, the device
  * will automatically park the pin in a high state during transition to LPDS,
- * so the Power Manager does not need to explictly park the pin.  So the
+ * so the Power Manager does not need to explicitly park the pin.  So the
  * corresponding entries in this table should indicate PowerCC32XX_DONT_PARK.
  */
 PowerCC32XX_ParkInfo parkInfo[] = {

@@ -162,7 +162,7 @@ void XUartPs_ResetHw(u32 BaseAddress)
 	XUartPs_WriteReg(BaseAddress, XUARTPS_RXTOUT_OFFSET,
 				XUARTPS_RXTOUT_DISABLE);
 
-	/* Baud rate generator and dividor reset values */
+	/* Baud rate generator and divider reset values */
 	XUartPs_WriteReg(BaseAddress, XUARTPS_BAUDGEN_OFFSET,
 				XUARTPS_BAUDGEN_RESET_VAL);
 	XUartPs_WriteReg(BaseAddress, XUARTPS_BAUDDIV_OFFSET,

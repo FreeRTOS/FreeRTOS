@@ -1030,10 +1030,7 @@ avgen
 avgenablechmask
 avgmax
 avi
-avilable
-avilalable
 avn
-avoidng
 avos
 avpre
 avpst
@@ -4259,7 +4256,6 @@ dep
 depcfg
 depcmd
 depctln
-dependecy
 depevt
 dephasing
 depol
@@ -4317,7 +4313,6 @@ desenabledma
 deserialize
 deserialized
 desi
-desig
 desination
 desintclear
 desintdisable
@@ -4378,7 +4373,6 @@ devicepublickeyder
 devicesize
 devicesizemul
 devid
-devide
 devider
 devinfo
 devinit
@@ -4698,10 +4692,7 @@ divhs
 divi
 divid
 dividable
-dividor
-dividors
 divint
-divisble
 diviser
 divlen
 divm
@@ -4899,7 +4890,6 @@ donehandler
 doneref
 dong
 donnelly
-donot
 dont
 dontroute
 dontwait
@@ -5231,7 +5221,6 @@ eae
 eafd
 eafnosupport
 eagain
-ealier
 ealign
 ealready
 eamble
@@ -5489,7 +5478,6 @@ elnrng
 eloop
 elor
 elp
-elsewere
 elsr
 emac
 emacps
@@ -5885,7 +5873,6 @@ epvie
 eq
 eqi
 equat
-equests
 equidistribution
 equired
 equirement
@@ -5894,7 +5881,6 @@ equivalant
 er
 eradic
 erange
-erarsed
 eraseallpages
 erasebackup
 erasegrmul
@@ -6197,7 +6183,6 @@ exmin
 exminch
 exocon
 exp
-expaned
 expblocksz
 expecte
 expectedsynccallback
@@ -6206,7 +6191,6 @@ expectems
 expi
 explaination
 explen
-explictly
 expmac
 expr
 expre
@@ -6215,7 +6199,6 @@ exptmod
 exptmodnb
 exptmods
 exset
-exsist
 ext
 extauthinfo
 extauthinfocaissuer
@@ -6320,7 +6303,6 @@ fairn
 fallingedge
 fallocated
 fallthrough
-falure
 fam
 familiy
 faq
@@ -6464,7 +6446,6 @@ ferr
 ferrf
 fes
 fet
-feteched
 feu
 ff
 ffa
@@ -6890,8 +6871,6 @@ fofi
 foldcnt
 foldevtena
 followi
-followig
-follwoing
 fonman
 foo
 foobar
@@ -7138,12 +7117,9 @@ fullname
 fullspeed
 fullver
 func
-funciton
-funcitons
 funcpointer
 funcptr
 funcs
-functinos
 functionali
 functionalmode
 functionalstate
@@ -7154,8 +7130,6 @@ functionn
 functionnal
 functionprototypes
 functionptr
-funtions
-furture
 fusefarm
 fuserom
 fuzzer
@@ -7196,7 +7170,6 @@ galileo
 galios
 galois
 galr
-ganularity
 gatask
 gateacctlclk
 gateacddrclk
@@ -7239,7 +7212,6 @@ geardown
 geerator
 gen
 genact
-genarate
 genbusy
 gener
 generalcall
@@ -7554,7 +7526,6 @@ globext
 globiclass
 globiclassy
 globl
-globlal
 globrc
 globrcr
 globres
@@ -7754,7 +7725,6 @@ gqspi
 gra
 gratuitious
 grea
-greacefully
 grec
 gredler
 gregor
@@ -8558,25 +8528,19 @@ imask
 imcr
 ime
 imen
-imformation
 imgcopylinux
 imgcopywin
 iminline
 imis
 imitialize
 imm
-immediatly
 immplicit
 imode
 impl
-implemenation
 implementatio
 implementationrevision
 implementercode
-implemention
-implemetation
 impo
-impossilby
 impre
 impreciserr
 imr
@@ -8598,8 +8562,6 @@ inbuf
 inc
 incase
 incl
-inclding
-incldued
 inclk
 includemsgs
 inco
@@ -8610,7 +8572,6 @@ incount
 incpltcallback
 incptr
 incr
-increas
 increaseacqcycles
 incrementer
 incrementernum
@@ -8629,7 +8590,6 @@ indicat
 indicatesidmem
 indir
 indirectti
-individully
 indp
 indx
 ine
@@ -8648,7 +8608,6 @@ inet
 inf
 infcs
 infineon
-infinitiy
 inflateinit
 infoarg
 infocb
@@ -8840,7 +8799,6 @@ instructioninterface
 instructionmode
 instructionsusage
 instrumentationresources
-instrunction
 insz
 int
 inta
@@ -8860,7 +8818,6 @@ intdefaulthandler
 intdis
 intdisable
 inte
-inteface
 inteferring
 intege
 integerdivider
@@ -8890,7 +8847,6 @@ interpacket
 interpartition
 interpolator
 interr
-interrrupt
 interruptdisable
 interruptedgeselect
 interruptenable
@@ -8910,12 +8866,6 @@ interrupttable
 interrupttype
 interruptunmapfromcpu
 interruptunmapfromcpubydistaddr
-interttupt
-interupt
-interupts
-interurpt
-interurpts
-interuupts
 intervaltimerinit
 interventio
 interwork
@@ -8925,11 +8875,6 @@ intflags
 intfrch
 intfrcl
 inthandler
-intializ
-intialization
-intialized
-intializes
-intiated
 intid
 intit
 intlinesnum
@@ -8970,8 +8915,6 @@ intrinisic
 intrmask
 intronany
 intrpolarity
-intrrupt
-intrrupts
 intrs
 intrtype
 ints
@@ -10267,8 +10210,6 @@ mainregulator
 mainregulatormode
 mainselected
 mainstackptrlimit
-maintainance
-maintaince
 maintask
 maintimer
 maintype
@@ -10389,7 +10330,6 @@ maxha
 maxidle
 maxidx
 maximumportsize
-maximumum
 maximun
 maxio
 maxlen

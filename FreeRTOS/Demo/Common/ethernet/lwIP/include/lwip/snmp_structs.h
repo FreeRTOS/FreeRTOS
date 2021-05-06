@@ -192,7 +192,7 @@ struct mib_external_node
 
   /* aditional struct members */
   /** points to an extenal (in memory) record of some sort of addressing
-      information, passed to and interpreted by the funtions below */
+      information, passed to and interpreted by the functions below */
   void* addr_inf;
   /** tree levels under this node */
   u8_t tree_levels;

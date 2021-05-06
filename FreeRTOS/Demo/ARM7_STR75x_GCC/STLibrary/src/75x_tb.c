@@ -228,7 +228,7 @@ void TB_SetPrescaler(u16 Prescaler)
 
 /*******************************************************************************
 * Function Name  : TB_ResetCounter
-* Description    : Re-intializes the counter and generates an update of the
+* Description    : Re-initializes the counter and generates an update of the
 *                  registers.
 * Input          : None
 * Output         : None
@@ -236,7 +236,7 @@ void TB_SetPrescaler(u16 Prescaler)
 *******************************************************************************/
 void TB_ResetCounter(void)
 {
-  /* Re-intializes TB counter */
+  /* Re-initializes TB counter */
   TB->CR |= TB_COUNTER_Reset;
 }
 

@@ -189,7 +189,7 @@ extern "C" {
  *  erasing the entire flash page.  If the NVS_WRITE_EXCLUSIVE flag is
  *  set in the flags passed to NVS_write(), the location where the data
  *  will be written to is first checked if it has been modified since the
- *  last time the NVS block was erarsed.  If that is the case, NVS_write()
+ *  last time the NVS block was erased.  If that is the case, NVS_write()
  *  will return an error.
  */
 #define NVS_WRITE_EXCLUSIVE           (0x1)

@@ -144,7 +144,7 @@ void csi_intc_set_prio(int32_t IRQn, uint32_t priority);
 uint32_t csi_intc_get_prio(int32_t IRQn);
 
 /**
-  \brief  funciton is acknowledge the IRQ. this interface is internally used by irq system
+  \brief  function is acknowledge the IRQ. this interface is internally used by irq system
   \param[in]       irq         irq number to operate
   \return          0 on success; -1 on failure
  */

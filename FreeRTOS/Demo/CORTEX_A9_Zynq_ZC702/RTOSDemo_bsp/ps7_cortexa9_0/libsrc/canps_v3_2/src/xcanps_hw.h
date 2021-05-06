@@ -57,7 +57,7 @@
 * 			XCANPS_TXBUF_DLC_OFFSET to XCANPS_TXHPB_DLC_OFFSET
 *			XCANPS_TXBUF_DW1_OFFSET  to XCANPS_TXHPB_DW1_OFFSET
 *			XCANPS_TXBUF_DW2_OFFSET  to XCANPS_TXHPB_DW2_OFFSET
-* 1.02a adk   08/08/13  Updated for inclding the function prototype
+* 1.02a adk   08/08/13  Updated for including the function prototype
 * 3.00  kvn   02/13/15  Modified code for MISRA-C:2012 compliance.
 * </pre>
 *

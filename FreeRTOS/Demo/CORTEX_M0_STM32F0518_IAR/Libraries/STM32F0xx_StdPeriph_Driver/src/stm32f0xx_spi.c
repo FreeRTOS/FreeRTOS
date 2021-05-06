@@ -134,7 +134,7 @@
          void SPI_NSSInternalSoftwareConfig(SPI_TypeDef* SPIx, uint16_t SPI_NSSInternalSoft);
 
     [..] In Master mode, when the Hardware NSS management (SPI_InitStruct->SPI_NSS = SPI_NSS_Hard)
-         is selected, use the follwoing function to enable the NSS output feature.
+         is selected, use the following function to enable the NSS output feature.
          void SPI_SSOutputCmd(SPI_TypeDef* SPIx, FunctionalState NewState);
 
     [..] The NSS pulse mode can be managed by the SPI TI mode when enabling it using the following function:

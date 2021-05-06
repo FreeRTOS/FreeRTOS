@@ -455,7 +455,7 @@ void EMAC_PHYMaintain(Emac      *pEmac,
 }
 
 /**
- * Return PHY maintainance data returned
+ * Return PHY maintenance data returned
  */
 uint16_t EMAC_PHYData(Emac *pEmac)
 {

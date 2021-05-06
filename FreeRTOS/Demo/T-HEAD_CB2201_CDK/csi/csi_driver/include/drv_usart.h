@@ -122,7 +122,7 @@ typedef struct {
   uint32_t ri  : 1;                     ///< RI  state: 1=Active, 0=Inactive
 } usart_modem_stat_t;
 
-/*----- USART Control Codes: on-off intrrupte type-----*/
+/*----- USART Control Codes: on-off interrupte type-----*/
 typedef enum {
     USART_INTR_WRITE,
     USART_INTR_READ

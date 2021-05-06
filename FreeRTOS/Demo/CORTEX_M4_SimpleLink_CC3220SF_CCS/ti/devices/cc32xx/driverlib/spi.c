@@ -61,7 +61,7 @@
 
 //*****************************************************************************
 //
-// A mapping of SPI base address to interupt number.
+// A mapping of SPI base address to interrupt number.
 //
 //*****************************************************************************
 static const unsigned long g_ppulSPIIntMap[][3] =

@@ -952,7 +952,7 @@ static __INLINE uint32_t NVIC_GetPriorityGrouping(void)
 
 /** \brief  Enable External Interrupt
 
-    This function enables a device specific interupt in the NVIC interrupt controller.
+    This function enables a device specific interrupt in the NVIC interrupt controller.
     The interrupt number cannot be a negative value. 
 
     \param [in]      IRQn  Number of the external interrupt to enable
@@ -965,7 +965,7 @@ static __INLINE void NVIC_EnableIRQ(IRQn_Type IRQn)
 
 /** \brief  Disable External Interrupt
 
-    This function disables a device specific interupt in the NVIC interrupt controller.
+    This function disables a device specific interrupt in the NVIC interrupt controller.
     The interrupt number cannot be a negative value. 
 
     \param [in]      IRQn  Number of the external interrupt to disable

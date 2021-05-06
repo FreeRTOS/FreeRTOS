@@ -630,15 +630,15 @@
 
 #define STACK_DIE_CTRL_MISC_CTL_FW_IRQ2 \
                                 0x00000020  // Setting this Will send to
-                                            // interttupt to CM3
+                                            // interrupt to CM3
 
 #define STACK_DIE_CTRL_MISC_CTL_FW_IRQ1 \
                                 0x00000010  // Setting this Will send to
-                                            // interttupt to CM3
+                                            // interrupt to CM3
 
 #define STACK_DIE_CTRL_MISC_CTL_FW_IRQ0 \
                                 0x00000008  // Setting this Will send to
-                                            // interttupt to CM3
+                                            // interrupt to CM3
 
 #define STACK_DIE_CTRL_MISC_CTL_FLB_TEST_MUX_CTL_BK3 \
                                 0x00000004  // While testing Flash Setting this

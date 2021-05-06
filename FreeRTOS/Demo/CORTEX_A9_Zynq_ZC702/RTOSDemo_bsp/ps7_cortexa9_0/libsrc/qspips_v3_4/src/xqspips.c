@@ -497,7 +497,7 @@ s32 XQspiPs_Transfer(XQspiPs *InstancePtr, u8 *SendBufPtr, u8 *RecvBufPtr,
 	XQspiPs_Enable(InstancePtr);
 
 	/*
-	 * Clear all the interrrupts.
+	 * Clear all the interrupts.
 	 */
 	XQspiPs_WriteReg(InstancePtr->Config.BaseAddress, XQSPIPS_SR_OFFSET,
 			XQSPIPS_IXR_WR_TO_CLR_MASK);

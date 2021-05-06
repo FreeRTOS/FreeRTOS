@@ -894,7 +894,7 @@ XStatus XResetPs_ResetPulse(XResetPs *InstancePtr, const XResetPs_RstId ResetID)
 	u32 RegValue;
 	u32 TimeOut;
 
-	/* Ignoring Nodes that donot support pulse reset */
+	/* Ignoring Nodes that do not support pulse reset */
 	if (!XRESETPS_CHK_PULSE_SUPPORT(ResetMap[ResetID].SupportedActions)) {
 			return XST_NO_FEATURE;
 	}
@@ -996,7 +996,7 @@ XStatus XResetPs_ResetStatus(XResetPs *InstancePtr,
 	u32 RegBitmask;
 	u32 RegValue;
 
-	/* Ignoring Nodes that donot support reset status */
+	/* Ignoring Nodes that do not support reset status */
 	if (!XRESETPS_CHK_STATUS_SUPPORT(ResetMap[ResetID].SupportedActions)) {
 			return XST_NO_FEATURE;
 	}

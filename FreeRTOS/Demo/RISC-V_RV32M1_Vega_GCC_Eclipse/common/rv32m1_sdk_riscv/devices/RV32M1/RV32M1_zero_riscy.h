@@ -6728,7 +6728,7 @@ typedef struct {
 #define GENFSK_IRQ_CTRL_PLL_UNLOCK_IRQ(x)        (((uint32_t)(((uint32_t)(x)) << GENFSK_IRQ_CTRL_PLL_UNLOCK_IRQ_SHIFT)) & GENFSK_IRQ_CTRL_PLL_UNLOCK_IRQ_MASK)
 #define GENFSK_IRQ_CTRL_WAKE_IRQ_MASK            (0x80U)
 #define GENFSK_IRQ_CTRL_WAKE_IRQ_SHIFT           (7U)
-/*! WAKE_IRQ - Wake Interrrupt
+/*! WAKE_IRQ - Wake Interrupt
  *  0b0..Wake Interrupt is not asserted.
  *  0b1..Wake Interrupt is asserted.
  */

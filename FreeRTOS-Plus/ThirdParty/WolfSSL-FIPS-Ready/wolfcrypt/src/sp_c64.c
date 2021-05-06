@@ -18290,7 +18290,7 @@ int sp_ecc_check_key_256(mp_int* pX, mp_int* pY, mp_int* privm, void* heap)
         sp_256_from_bin(pub->z, 5, one, (int)sizeof(one));
         sp_256_from_mp(priv, 5, privm);
 
-        /* Check point at infinitiy. */
+        /* Check point at infinity. */
         if ((sp_256_iszero_5(pub->x) != 0) &&
             (sp_256_iszero_5(pub->y) != 0)) {
             err = ECC_INF_E;
@@ -25086,7 +25086,7 @@ int sp_ecc_check_key_384(mp_int* pX, mp_int* pY, mp_int* privm, void* heap)
         sp_384_from_bin(pub->z, 7, one, (int)sizeof(one));
         sp_384_from_mp(priv, 7, privm);
 
-        /* Check point at infinitiy. */
+        /* Check point at infinity. */
         if ((sp_384_iszero_7(pub->x) != 0) &&
             (sp_384_iszero_7(pub->y) != 0)) {
             err = ECC_INF_E;

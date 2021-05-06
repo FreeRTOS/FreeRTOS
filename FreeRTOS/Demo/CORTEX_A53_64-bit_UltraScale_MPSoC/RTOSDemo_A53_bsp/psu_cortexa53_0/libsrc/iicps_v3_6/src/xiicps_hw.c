@@ -69,7 +69,7 @@
 * This function perform the reset sequence to the given I2c interface by
 * configuring the appropriate control bits in the I2c specifc registers
 * the i2cps reset squence involves the following steps
-*	Disable all the interuupts
+*	Disable all the interrupts
 *	Clear the status
 *	Clear FIFO's and disable hold bit
 *	Clear the line status

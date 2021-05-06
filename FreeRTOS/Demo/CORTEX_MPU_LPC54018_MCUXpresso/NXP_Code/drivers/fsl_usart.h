@@ -432,7 +432,7 @@ static inline void USART_EnableCTS(USART_Type *base, bool enable)
 /*!
  * @brief Continuous Clock generation.
  * By default, SCLK is only output while data is being transmitted in synchronous mode.
- * Enable this funciton, SCLK will run continuously in synchronous mode, allowing
+ * Enable this function, SCLK will run continuously in synchronous mode, allowing
  * characters to be received on Un_RxD independently from transmission on Un_TXD).
  *
  * @param base    USART peripheral base address.

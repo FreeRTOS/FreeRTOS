@@ -74,7 +74,7 @@ bool xMaskAssertAndAbort;
 /* =================================  MACROS ================================ */
 
 /**
- * @brief Expect a configASSERT from the funciton called.
+ * @brief Expect a configASSERT from the function called.
  *  Break out of the called function when this occurs.
  * @details Use this macro when the call passsed in as a parameter is expected
  * to cause invalid memory access.
@@ -275,7 +275,7 @@ void td_port_register_stubs( void );
 /**
  * @brief Validate ending state of td_port related variables.
  * @details This function should be called after every test case.
- * It verifies the state of the variables used by td_port funcitons and
+ * It verifies the state of the variables used by td_port functions and
  * frees resources used by CMock.
  */
 void td_port_teardown_check( void );

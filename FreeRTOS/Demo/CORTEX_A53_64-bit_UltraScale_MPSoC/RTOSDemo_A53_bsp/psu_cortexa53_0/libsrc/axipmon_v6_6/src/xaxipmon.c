@@ -1051,7 +1051,7 @@ s32 XAxiPmon_StartCounters(XAxiPmon *InstancePtr, u32 SampleInterval)
 	/* Read current register value */
 	RegValue = XAxiPmon_ReadReg(InstancePtr->Config.BaseAddress,
 							(u32)XAPM_CTL_OFFSET);
-	/* Globlal Clock Counter is present in Advanced mode only */
+	/* Global Clock Counter is present in Advanced mode only */
 	if(InstancePtr->Mode == XAPM_MODE_ADVANCED)
 	{
 		RegValue = RegValue | XAPM_CR_GCC_ENABLE_MASK;
@@ -1102,7 +1102,7 @@ s32 XAxiPmon_StopCounters(XAxiPmon *InstancePtr)
 	/* Read current register value */
 	RegValue = XAxiPmon_ReadReg(InstancePtr->Config.BaseAddress,
 							(u32)XAPM_CTL_OFFSET);
-	/* Globlal Clock Counter is present in Advanced mode only */
+	/* Global Clock Counter is present in Advanced mode only */
 	if(InstancePtr->Mode == XAPM_MODE_ADVANCED)
 	{
 		RegValue = RegValue & ~XAPM_CR_GCC_ENABLE_MASK;

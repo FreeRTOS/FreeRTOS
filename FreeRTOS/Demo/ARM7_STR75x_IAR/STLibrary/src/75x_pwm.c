@@ -581,7 +581,7 @@ void PWM_SetDeadTime(u16 DeadTime)
 
 /*******************************************************************************
 * Function Name  : PWM_ResetCounter
-* Description    : Re-intializes the PWM counter and generates an update of the
+* Description    : Re-initializes the PWM counter and generates an update of the
 *                  registers.
 * Input          : None
 * Output         : None

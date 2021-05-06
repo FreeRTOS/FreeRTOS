@@ -18,7 +18,7 @@
            (#) Supports HDMI-CEC specification 1.4.
            (#) Supports two source clocks(HSI/244 or LSE).
            (#) Works in stop mode(without APB clock, but with CEC clock 32KHz).
-               It can genarate an interrupt in the CEC clock domain that the CPU 
+               It can generate an interrupt in the CEC clock domain that the CPU 
                wakes up from the low power mode.
            (#) Configurable Signal Free Time before of transmission start. The 
                number of nominal data bit periods waited before transmission can be

@@ -638,7 +638,7 @@ void XCsuDma_ClearCheckSum(XCsuDma *InstancePtr)
 *		clk (~2.5ns) cycles
 *			- Range is 0x000(Prescaler enables timer every cycles)
 *			  to 0xFFF(Prescaler enables timer every 4096 cycles)
-*		- MaxOutCmds      Controls the maximumum number of outstanding
+*		- MaxOutCmds      Controls the maximum number of outstanding
 *		AXI read commands issued.
 *			- Range is 0x0(Up to 1 Outstanding Read command
 *			  allowed) to 0x8 (Up to 9 Outstanding Read
@@ -776,7 +776,7 @@ void XCsuDma_SetConfig(XCsuDma *InstancePtr, XCsuDma_Channel Channel,
 *		clk (~2.5ns) cycles
 *			- Range is 0x000(Prescaler enables timer every cycles)
 *			 to 0xFFF(Prescaler enables timer every 4096 cycles)
-*		- MaxOutCmds      Controls the maximumum number of outstanding
+*		- MaxOutCmds      Controls the maximum number of outstanding
 *		AXI read commands issued.
 *			- Range is 0x0(Up to 1 Outstanding Read command
 *			allowed) to 0x8 (Up to 9 Outstanding Read command

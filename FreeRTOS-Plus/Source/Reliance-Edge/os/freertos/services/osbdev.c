@@ -333,7 +333,7 @@ REDSTATUS RedOsBDevFlush(
 #include <api_mdriver.h>
 
 
-/*  This must be declared and initialized elsewere (e.g., in project code) to
+/*  This must be declared and initialized elsewhere (e.g., in project code) to
     point at the initialization function for the F_DRIVER block device.
 */
 extern const F_DRIVERINIT gpfnRedOsBDevInit;

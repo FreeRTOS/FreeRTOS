@@ -196,7 +196,7 @@ extern const UART_FxnTable UARTCC32XX_fxnTable;
  *  circular buffer.
  *
  *  readTaskFxn:    Function called by UART read
- *                  These variables are set and avilalable for use to the
+ *                  These variables are set and available for use to the
  *                  readTaskFxn.
  *                  object->readBuf = buffer; //Pointer to a user buffer
  *                  object->readSize = size;  //Desired no. of bytes to read

@@ -171,7 +171,7 @@
  *    the user's callback function.  In some cases, the UART data transfer
  *    may have been canceled, or a newline may have been received, so the
  *    number of bytes sent/received are passed to the callback function.  Your
- *    implementation of the callback function can use this imformation
+ *    implementation of the callback function can use this information
  *    as needed.  Since the user's callback may be called in the context of an
  *    ISR, the callback function must not make any RTOS blocking calls.
  *

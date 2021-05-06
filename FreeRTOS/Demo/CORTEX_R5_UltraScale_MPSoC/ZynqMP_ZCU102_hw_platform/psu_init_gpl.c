@@ -2354,10 +2354,10 @@ unsigned long psu_ddr_init_data(void)
 
     * If lower bit is enabled the SDRAM initialization routine is skipped. The
     *  upper bit decides what state the controller starts up in when reset is
-    * removed - 00 - SDRAM Intialization routine is run after power-up - 01 -
-    * SDRAM Intialization routine is skipped after power-up. Controller starts
-    *  up in Normal Mode - 11 - SDRAM Intialization routine is skipped after p
-    * ower-up. Controller starts up in Self-refresh Mode - 10 - SDRAM Intializ
+    * removed - 00 - SDRAM Initialization routine is run after power-up - 01 -
+    * SDRAM Initialization routine is skipped after power-up. Controller starts
+    *  up in Normal Mode - 11 - SDRAM Initialization routine is skipped after p
+    * ower-up. Controller starts up in Self-refresh Mode - 10 - SDRAM Initializ
     * ation routine is run after power-up. Note: The only 2'b00 is supported f
     * or LPDDR4 in this version of the uMCTL2.
     *  PSU_DDRC_INIT0_SKIP_DRAM_INIT                               0x0
@@ -3389,15 +3389,15 @@ unsigned long psu_ddr_init_data(void)
     /*
     * Register : DFIUPD1 @ 0XFD0701A4
 
-    * This is the minimum amount of time between uMCTL2 initiated DFI update r
-    * equests (which is executed whenever the uMCTL2 is idle). Set this number
+    * This is the minimum amount of time between uMCTL2 initiated DFI update
+    * requests (which is executed whenever the uMCTL2 is idle). Set this number
     *  higher to reduce the frequency of update requests, which can have a sma
     * ll impact on the latency of the first read request when the uMCTL2 is id
     * le. Unit: 1024 clocks
     *  PSU_DDRC_DFIUPD1_DFI_T_CTRLUPD_INTERVAL_MIN_X1024           0x41
 
-    * This is the maximum amount of time between uMCTL2 initiated DFI update r
-    * equests. This timer resets with each update request; when the timer expi
+    * This is the maximum amount of time between uMCTL2 initiated DFI update
+    * requests. This timer resets with each update request; when the timer expi
     * res dfi_ctrlupd_req is sent and traffic is blocked until the dfi_ctrlupd
     * _ackx is received. PHY can use this idle time to recalibrate the delay l
     * ines to the DLLs. The DFI controller update is also used to reset PHY FI
@@ -21725,7 +21725,7 @@ static int init_serdes(void)
 
 static void init_peripheral(void)
 {
-/*SMMU_REG Interrrupt Enable: Followig register need to be written all the time to properly catch SMMU messages.*/
+/*SMMU_REG Interrupt Enable: Following register need to be written all the time to properly catch SMMU messages.*/
 	PSU_Mask_Write(0xFD5F0018, 0x8000001FU, 0x8000001FU);
 }
 

@@ -180,7 +180,7 @@
     sd_mmc_read_capacity() is ignored.  This is a reasonable action because all
     of the possible error conditions were eliminated by a previous check.
     sd_mmc_read_capacity() fails under the same conditions as
-    sd_mmc_test_unit_ready(), which was checked ealier in the same function.
+    sd_mmc_test_unit_ready(), which was checked earlier in the same function.
 
     In the mutex module, error information returned from the mutex release
     function is ignored when asserts are disabled.  This is a reasonable action

@@ -421,7 +421,7 @@
                                             // GPIO2 Bit [7:6] to configure
                                             // GPIO3 Bit [9:8] to configure
                                             // GPIO4 each GPIO can be
-                                            // individully selected. When â€œ00â€?
+                                            // individually selected. When â€œ00â€?
                                             // GPIO is free resource. When â€œ01â€?
                                             // GPIO is APPS resource. When â€œ10â€?
                                             // GPIO is NWP resource. Writing 11

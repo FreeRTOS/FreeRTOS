@@ -1319,7 +1319,7 @@ void TIM1_EncoderInterfaceConfig(u16 TIM1_EncoderMode, u16 TIM1_IC1Polarity,
 *                       - TIM1_PSCReloadMode_Update: The Prescaler is loaded at
 *                         the update event.
 *                       - TIM1_PSCReloadMode_Immediate: The Prescaler is loaded
-*                         immediatly.
+*                         immediately.
 * Output         : None
 * Return         : None
 *******************************************************************************/

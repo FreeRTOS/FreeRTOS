@@ -36,7 +36,7 @@
 * @addtogroup qspipsu_v1_7
 * @{
 *
-* This file implements funcitons to configure the QSPIPSU component,
+* This file implements functions to configure the QSPIPSU component,
 * specifically some optional settings, clock and flash related information.
 *
 * <pre>
@@ -500,7 +500,7 @@ s32 XQspiPsu_SetClkPrescaler(XQspiPsu *InstancePtr, u8 Prescaler)
 /*****************************************************************************/
 /**
 *
-* This funciton should be used to tell the QSPIPSU driver the HW flash
+* This function should be used to tell the QSPIPSU driver the HW flash
 * configuration being used. This API should be called atleast once in the
 * application. If desired, it can be called multiple times when switching
 * between communicating to different flahs devices/using different configs.
@@ -514,7 +514,7 @@ s32 XQspiPsu_SetClkPrescaler(XQspiPsu *InstancePtr, u8 Prescaler)
 *		- XST_DEVICE_IS_STARTED if the device is already started.
 *		It must be stopped to re-initialize.
 *
-* @note		If this funciton is not called atleast once in the application,
+* @note		If this function is not called atleast once in the application,
 *		the driver assumes there is a single flash connected to the
 *		lower bus and CS line.
 *

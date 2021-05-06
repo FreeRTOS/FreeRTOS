@@ -662,7 +662,7 @@
                                 0x00000001  // 1 - Override the secure-mode
                                             // done for booting up NWP (Wakeup
                                             // NWP on its event independent of
-                                            // CM4 state) ; 0 - Donot override
+                                            // CM4 state) ; 0 - Do not override
                                             // the secure-mode done for NWP boot
                                             // (NWP must be enabled by CM4 only)
 
@@ -1934,7 +1934,7 @@
 #define GPRCM_MEM_TESTCTRL_PD_OPP_CONFIG_mem_sleep_opp_enter_with_testpd_on \
                                 0x00000001  // 1 - Enable sleep-opp (DSLP/LPDS)
                                             // entry even if Test-Pd is kept ON
-                                            // ; 0 - Donot enable sleep-opp
+                                            // ; 0 - Do not enable sleep-opp
                                             // (DSLP/LPDS) entry with Test-Pd
                                             // ON.
 
@@ -1989,7 +1989,7 @@
 #define GPRCM_MEM_MCSPI_SRAM_OFF_REQ_OVERRIDES_mem_mcspi_sram_off_req_override \
                                 0x00000001  // 1 - Request for power-down of
                                             // Autonomous SPI 8k memory ; 0 -
-                                            // Donot request power-down of
+                                            // Do not request power-down of
                                             // Autonomous SPI 8k Memory
 
 //******************************************************************************

@@ -91,7 +91,7 @@ static const unsigned char g_pucOSRAM128x64x4HorizontalInc[] = { 0xA0, 0x52 };
 // the top row in the LSB and the bottom row in the MSB.
 //
 // Note:  This is the same font data that is used in the EK-LM3S811
-// osram96x16x1 driver.  The single bit-per-pixel is expaned in the StringDraw
+// osram96x16x1 driver.  The single bit-per-pixel is expanded in the StringDraw
 // function to the appropriate four bit-per-pixel gray scale format.
 //
 //*****************************************************************************

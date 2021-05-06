@@ -36,7 +36,7 @@
 * @addtogroup qspipsu_v1_7
 * @{
 *
-* This file contains low level access funcitons using the base address
+* This file contains low level access functions using the base address
 * directly without an instance.
 *
 * <pre>

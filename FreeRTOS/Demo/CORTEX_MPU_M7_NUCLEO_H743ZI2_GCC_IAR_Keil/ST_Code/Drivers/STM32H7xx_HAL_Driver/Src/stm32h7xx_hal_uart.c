@@ -3685,7 +3685,7 @@ static void UART_DMARxOnlyAbortCallback(DMA_HandleTypeDef *hdma)
 }
 
 /**
-  * @brief TX interrrupt handler for 7 or 8 bits data word length .
+  * @brief TX interrupt handler for 7 or 8 bits data word length .
   * @note   Function is called under interruption only, once
   *         interruptions have been enabled by HAL_UART_Transmit_IT().
   * @param huart UART handle.
@@ -3714,7 +3714,7 @@ static void UART_TxISR_8BIT(UART_HandleTypeDef *huart)
 }
 
 /**
-  * @brief TX interrrupt handler for 9 bits data word length.
+  * @brief TX interrupt handler for 9 bits data word length.
   * @note   Function is called under interruption only, once
   *         interruptions have been enabled by HAL_UART_Transmit_IT().
   * @param huart UART handle.
@@ -3746,7 +3746,7 @@ static void UART_TxISR_16BIT(UART_HandleTypeDef *huart)
 }
 
 /**
-  * @brief TX interrrupt handler for 7 or 8 bits data word length and FIFO mode is enabled.
+  * @brief TX interrupt handler for 7 or 8 bits data word length and FIFO mode is enabled.
   * @note   Function is called under interruption only, once
   *         interruptions have been enabled by HAL_UART_Transmit_IT().
   * @param huart UART handle.
@@ -3786,7 +3786,7 @@ static void UART_TxISR_8BIT_FIFOEN(UART_HandleTypeDef *huart)
 }
 
 /**
-  * @brief TX interrrupt handler for 9 bits data word length and FIFO mode is enabled.
+  * @brief TX interrupt handler for 9 bits data word length and FIFO mode is enabled.
   * @note   Function is called under interruption only, once
   *         interruptions have been enabled by HAL_UART_Transmit_IT().
   * @param huart UART handle.
@@ -3854,7 +3854,7 @@ static void UART_EndTransmit_IT(UART_HandleTypeDef *huart)
 }
 
 /**
-  * @brief RX interrrupt handler for 7 or 8 bits data word length .
+  * @brief RX interrupt handler for 7 or 8 bits data word length .
   * @param huart UART handle.
   * @retval None
   */
@@ -3902,7 +3902,7 @@ static void UART_RxISR_8BIT(UART_HandleTypeDef *huart)
 }
 
 /**
-  * @brief RX interrrupt handler for 9 bits data word length .
+  * @brief RX interrupt handler for 9 bits data word length .
   * @note   Function is called under interruption only, once
   *         interruptions have been enabled by HAL_UART_Receive_IT()
   * @param huart UART handle.
@@ -3954,7 +3954,7 @@ static void UART_RxISR_16BIT(UART_HandleTypeDef *huart)
 }
 
 /**
-  * @brief RX interrrupt handler for 7 or 8  bits data word length and FIFO mode is enabled.
+  * @brief RX interrupt handler for 7 or 8  bits data word length and FIFO mode is enabled.
   * @note   Function is called under interruption only, once
   *         interruptions have been enabled by HAL_UART_Receive_IT()
   * @param huart UART handle.
@@ -4026,7 +4026,7 @@ static void UART_RxISR_8BIT_FIFOEN(UART_HandleTypeDef *huart)
 }
 
 /**
-  * @brief RX interrrupt handler for 9 bits data word length and FIFO mode is enabled.
+  * @brief RX interrupt handler for 9 bits data word length and FIFO mode is enabled.
   * @note   Function is called under interruption only, once
   *         interruptions have been enabled by HAL_UART_Receive_IT()
   * @param huart UART handle.

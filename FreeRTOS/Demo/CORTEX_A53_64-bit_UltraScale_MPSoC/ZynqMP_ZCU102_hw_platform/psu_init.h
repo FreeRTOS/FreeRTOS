@@ -3048,12 +3048,12 @@
 #define DDRC_MSTR_DDR3_MASK                                    0x00000001U
 
 /*
-* Setting this register bit to 1 triggers a mode register read or write op
-    * eration. When the MR operation is complete, the uMCTL2 automatically cle
-    * ars this bit. The other register fields of this register must be written
-    *  in a separate APB transaction, before setting this mr_wr bit. It is rec
-    * ommended NOT to set this signal if in Init, Deep power-down or MPSM oper
-    * ating modes.
+* Setting this register bit to 1 triggers a mode register read or write
+    * operation. When the MR operation is complete, the uMCTL2 automatically
+    * clears this bit. The other register fields of this register must be written
+    *  in a separate APB transaction, before setting this mr_wr bit. It is
+    * recommended NOT to set this signal if in Init, Deep power-down or MPSM
+    * operating modes.
 */
 #undef DDRC_MRCTRL0_MR_WR_DEFVAL 
 #undef DDRC_MRCTRL0_MR_WR_SHIFT 
@@ -3066,13 +3066,13 @@
 * Address of the mode register that is to be written to. - 0000 - MR0 - 00
     * 01 - MR1 - 0010 - MR2 - 0011 - MR3 - 0100 - MR4 - 0101 - MR5 - 0110 - MR
     * 6 - 0111 - MR7 Don't Care for LPDDR2/LPDDR3/LPDDR4 (see MRCTRL1.mr_data
-    * for mode register addressing in LPDDR2/LPDDR3/LPDDR4) This signal is als
-    * o used for writing to control words of RDIMMs. In that case, it correspo
-    * nds to the bank address bits sent to the RDIMM In case of DDR4, the bit[
-    * 3:2] corresponds to the bank group bits. Therefore, the bit[3] as well a
-    * s the bit[2:0] must be set to an appropriate value which is considered b
-    * oth the Address Mirroring of UDIMMs/RDIMMs and the Output Inversion of R
-    * DIMMs.
+    * for mode register addressing in LPDDR2/LPDDR3/LPDDR4) This signal is also
+    * used for writing to control words of RDIMMs. In that case, it corresponds
+    * to the bank address bits sent to the RDIMM In case of DDR4, the bit[
+    * 3:2] corresponds to the bank group bits. Therefore, the bit[3] as well
+    * as the bit[2:0] must be set to an appropriate value which is considered
+    * both the Address Mirroring of UDIMMs/RDIMMs and the Output Inversion of
+    * RDIMMs.
 */
 #undef DDRC_MRCTRL0_MR_ADDR_DEFVAL 
 #undef DDRC_MRCTRL0_MR_ADDR_SHIFT 
@@ -3083,12 +3083,12 @@
 
 /*
 * Controls which rank is accessed by MRCTRL0.mr_wr. Normally, it is desire
-    * d to access all ranks, so all bits should be set to 1. However, for mult
-    * i-rank UDIMMs/RDIMMs which implement address mirroring, it may be necess
+    * d to access all ranks, so all bits should be set to 1. However, for multi
+    * -rank UDIMMs/RDIMMs which implement address mirroring, it may be necessary
     * ary to access ranks individually. Examples (assume uMCTL2 is configured
     * for 4 ranks): - 0x1 - select rank 0 only - 0x2 - select rank 1 only - 0x
-    * 5 - select ranks 0 and 2 - 0xA - select ranks 1 and 3 - 0xF - select ran
-    * ks 0, 1, 2 and 3
+    * 5 - select ranks 0 and 2 - 0xA - select ranks 1 and 3 - 0xF - select ranks
+    * 0, 1, 2 and 3
 */
 #undef DDRC_MRCTRL0_MR_RANK_DEFVAL 
 #undef DDRC_MRCTRL0_MR_RANK_SHIFT 
@@ -3126,8 +3126,8 @@
 #define DDRC_MRCTRL0_PDA_EN_MASK                               0x00000004U
 
 /*
-* Indicates whether the mode register operation is MRS or WR/RD for MPR (o
-    * nly supported for DDR4) - 0 - MRS - 1 - WR/RD for MPR
+* Indicates whether the mode register operation is MRS or WR/RD for MPR
+    * (only supported for DDR4) - 0 - MRS - 1 - WR/RD for MPR
 */
 #undef DDRC_MRCTRL0_MPR_EN_DEFVAL 
 #undef DDRC_MRCTRL0_MPR_EN_SHIFT 
@@ -3137,8 +3137,8 @@
 #define DDRC_MRCTRL0_MPR_EN_MASK                               0x00000002U
 
 /*
-* Indicates whether the mode register operation is read or write. Only use
-    * d for LPDDR2/LPDDR3/LPDDR4/DDR4. - 0 - Write - 1 - Read
+* Indicates whether the mode register operation is read or write. Only used
+    * for LPDDR2/LPDDR3/LPDDR4/DDR4. - 0 - Write - 1 - Read
 */
 #undef DDRC_MRCTRL0_MR_TYPE_DEFVAL 
 #undef DDRC_MRCTRL0_MR_TYPE_SHIFT 
@@ -3148,11 +3148,11 @@
 #define DDRC_MRCTRL0_MR_TYPE_MASK                              0x00000001U
 
 /*
-* Derate value of tRC for LPDDR4 - 0 - Derating uses +1. - 1 - Derating us
-    * es +2. - 2 - Derating uses +3. - 3 - Derating uses +4. Present only in d
-    * esigns configured to support LPDDR4. The required number of cycles for d
-    * erating can be determined by dividing 3.75ns by the core_ddrc_core_clk p
-    * eriod, and rounding up the next integer.
+* Derate value of tRC for LPDDR4 - 0 - Derating uses +1. - 1 - Derating uses
+    * +2. - 2 - Derating uses +3. - 3 - Derating uses +4. Present only in
+    * designs configured to support LPDDR4. The required number of cycles for
+    * derating can be determined by dividing 3.75ns by the core_ddrc_core_clk
+    * period, and rounding up the next integer.
 */
 #undef DDRC_DERATEEN_RC_DERATE_VALUE_DEFVAL 
 #undef DDRC_DERATEEN_RC_DERATE_VALUE_SHIFT 
@@ -3163,8 +3163,8 @@
 
 /*
 * Derate byte Present only in designs configured to support LPDDR2/LPDDR3/
-    * LPDDR4 Indicates which byte of the MRR data is used for derating. The ma
-    * ximum valid value depends on MEMC_DRAM_TOTAL_DATA_WIDTH.
+    * LPDDR4 Indicates which byte of the MRR data is used for derating. The
+    * maximum valid value depends on MEMC_DRAM_TOTAL_DATA_WIDTH.
 */
 #undef DDRC_DERATEEN_DERATE_BYTE_DEFVAL 
 #undef DDRC_DERATEEN_DERATE_BYTE_SHIFT 
@@ -3174,8 +3174,8 @@
 #define DDRC_DERATEEN_DERATE_BYTE_MASK                         0x000000F0U
 
 /*
-* Derate value - 0 - Derating uses +1. - 1 - Derating uses +2. Present onl
-    * y in designs configured to support LPDDR2/LPDDR3/LPDDR4 Set to 0 for all
+* Derate value - 0 - Derating uses +1. - 1 - Derating uses +2. Present only
+    * in designs configured to support LPDDR2/LPDDR3/LPDDR4 Set to 0 for all
     *  LPDDR2 speed grades as derating value of +1.875 ns is less than a core_
     * ddrc_core_clk period. Can be 0 or 1 for LPDDR3/LPDDR4, depending if +1.8
     * 75 ns is less than a core_ddrc_core_clk period or not.
@@ -3773,10 +3773,10 @@
 /*
 * If lower bit is enabled the SDRAM initialization routine is skipped. The
     *  upper bit decides what state the controller starts up in when reset is
-    * removed - 00 - SDRAM Intialization routine is run after power-up - 01 -
-    * SDRAM Intialization routine is skipped after power-up. Controller starts
-    *  up in Normal Mode - 11 - SDRAM Intialization routine is skipped after p
-    * ower-up. Controller starts up in Self-refresh Mode - 10 - SDRAM Intializ
+    * removed - 00 - SDRAM Initialization routine is run after power-up - 01 -
+    * SDRAM Initialization routine is skipped after power-up. Controller starts
+    *  up in Normal Mode - 11 - SDRAM Initialization routine is skipped after p
+    * ower-up. Controller starts up in Self-refresh Mode - 10 - SDRAM Initializ
     * ation routine is run after power-up. Note: The only 2'b00 is supported f
     * or LPDDR4 in this version of the uMCTL2.
 */
@@ -5247,8 +5247,8 @@
 #define DDRC_DFIUPD0_DFI_T_CTRLUP_MIN_MASK                     0x000003FFU
 
 /*
-* This is the minimum amount of time between uMCTL2 initiated DFI update r
-    * equests (which is executed whenever the uMCTL2 is idle). Set this number
+* This is the minimum amount of time between uMCTL2 initiated DFI update
+    * requests (which is executed whenever the uMCTL2 is idle). Set this number
     *  higher to reduce the frequency of update requests, which can have a sma
     * ll impact on the latency of the first read request when the uMCTL2 is id
     * le. Unit: 1024 clocks
@@ -5261,8 +5261,8 @@
 #define DDRC_DFIUPD1_DFI_T_CTRLUPD_INTERVAL_MIN_X1024_MASK     0x00FF0000U
 
 /*
-* This is the maximum amount of time between uMCTL2 initiated DFI update r
-    * equests. This timer resets with each update request; when the timer expi
+* This is the maximum amount of time between uMCTL2 initiated DFI update
+    * requests. This timer resets with each update request; when the timer expi
     * res dfi_ctrlupd_req is sent and traffic is blocked until the dfi_ctrlupd
     * _ackx is received. PHY can use this idle time to recalibrate the delay l
     * ines to the DLLs. The DFI controller update is also used to reset PHY FI

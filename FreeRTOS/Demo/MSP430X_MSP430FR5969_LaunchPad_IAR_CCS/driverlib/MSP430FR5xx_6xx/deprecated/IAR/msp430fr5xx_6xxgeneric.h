@@ -3629,18 +3629,18 @@ sfrl name   = address;
 #define MPUPW_H              (0xA5)    /* MPU Access Password */
 
 /* MPUCTL1 Control Bits */
-#define MPUSEG1IFG           (0x0001u)  /* MPU Main Memory Segment 1 violation interupt flag */
-#define MPUSEG2IFG           (0x0002u)  /* MPU Main Memory Segment 2 violation interupt flag */
-#define MPUSEG3IFG           (0x0004u)  /* MPU Main Memory Segment 3 violation interupt flag */
-#define MPUSEGIIFG           (0x0008u)  /* MPU Info Memory Segment violation interupt flag */
-#define MPUSEGIPIFG          (0x0010u)  /* MPU IP Memory Segment violation interupt flag */
+#define MPUSEG1IFG           (0x0001u)  /* MPU Main Memory Segment 1 violation interrupt flag */
+#define MPUSEG2IFG           (0x0002u)  /* MPU Main Memory Segment 2 violation interrupt flag */
+#define MPUSEG3IFG           (0x0004u)  /* MPU Main Memory Segment 3 violation interrupt flag */
+#define MPUSEGIIFG           (0x0008u)  /* MPU Info Memory Segment violation interrupt flag */
+#define MPUSEGIPIFG          (0x0010u)  /* MPU IP Memory Segment violation interrupt flag */
 
 /* MPUCTL1 Control Bits */
-#define MPUSEG1IFG_L        (0x0001u)  /* MPU Main Memory Segment 1 violation interupt flag */
-#define MPUSEG2IFG_L        (0x0002u)  /* MPU Main Memory Segment 2 violation interupt flag */
-#define MPUSEG3IFG_L        (0x0004u)  /* MPU Main Memory Segment 3 violation interupt flag */
-#define MPUSEGIIFG_L        (0x0008u)  /* MPU Info Memory Segment violation interupt flag */
-#define MPUSEGIPIFG_L       (0x0010u)  /* MPU IP Memory Segment violation interupt flag */
+#define MPUSEG1IFG_L        (0x0001u)  /* MPU Main Memory Segment 1 violation interrupt flag */
+#define MPUSEG2IFG_L        (0x0002u)  /* MPU Main Memory Segment 2 violation interrupt flag */
+#define MPUSEG3IFG_L        (0x0004u)  /* MPU Main Memory Segment 3 violation interrupt flag */
+#define MPUSEGIIFG_L        (0x0008u)  /* MPU Info Memory Segment violation interrupt flag */
+#define MPUSEGIPIFG_L       (0x0010u)  /* MPU IP Memory Segment violation interrupt flag */
 
 /* MPUSEGB2 Control Bits */
 

@@ -748,7 +748,7 @@ void TIM_SelectInputTrigger(TIM_TypeDef* TIMx, u16 TIM_InputTriggerSource)
 *                       - TIM_PSCReloadMode_Update: The Prescaler is loaded at
 *                         the update event.
 *                       - TIM_PSCReloadMode_Immediate: The Prescaler is loaded
-*                         immediatly.
+*                         immediately.
 * Output         : None
 * Return         : None
 *******************************************************************************/

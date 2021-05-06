@@ -577,7 +577,7 @@ void I2C_FastModeDutyCycleConfig(I2C_TypeDef* I2Cx, uint16_t I2C_DutyCycle);
  *        @note 
  *        For error management, it is advised to use the following functions:
  *          - I2C_ITConfig() to configure and enable the error interrupts (I2C_IT_ERR).
- *          - I2Cx_ER_IRQHandler() which is called when the error interurpt occurs.
+ *          - I2Cx_ER_IRQHandler() which is called when the error interrupt occurs.
  *            Where x is the peripheral instance (I2C1, I2C2 ...)
  *          - I2C_GetFlagStatus() or I2C_GetITStatus() to be called into the I2Cx_ER_IRQHandler() function 
  *            in order to determine which error occured.

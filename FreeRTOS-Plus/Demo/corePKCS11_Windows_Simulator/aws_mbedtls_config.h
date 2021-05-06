@@ -1587,7 +1587,7 @@ extern void vPortFree( void *pv );
  * \def MBEDTLS_SSL_SESSION_TICKETS
  *
  * Enable support for RFC 5077 session tickets in SSL.
- * Client-side, provides full support for session tickets (maintainance of a
+ * Client-side, provides full support for session tickets (maintenance of a
  * session store remains the responsibility of the application, though).
  * Server-side, you also need to provide callbacks for writing and parsing
  * tickets, including authenticated encryption and key management. Example
@@ -1889,7 +1889,7 @@ extern void vPortFree( void *pv );
  *      MBEDTLS_TLS_PSK_WITH_RC4_128_SHA
  *
  * \warning   ARC4 is considered a weak cipher and its use constitutes a
- *            security risk. If possible, we recommend avoidng dependencies on
+ *            security risk. If possible, we recommend avoiding dependencies on
  *            it, and considering stronger ciphers instead.
  *
  */

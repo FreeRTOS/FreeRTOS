@@ -66,7 +66,7 @@ extern void vUART_Handler( void );
 extern void vT32_0_Handler( void );
 extern void vT32_1_Handler( void );
 
-/* Intrrupt vector table.  Note that the proper constructs must be placed on this to  */
+/* Interrupt vector table.  Note that the proper constructs must be placed on this to  */
 /* ensure that it ends up at physical address 0x0000.0000 or at the start of          */
 /* the program if located at a start address other than 0.                            */
 #pragma RETAIN(interruptVectors)

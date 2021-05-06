@@ -6,7 +6,7 @@
   *    
   *          This file overrides the native HAL time base functions (defined as weak)
   *          the TIM time base:
-  *           + Intializes the TIM peripheral generate a Period elapsed Event each 1ms
+  *           + Initializes the TIM peripheral generate a Period elapsed Event each 1ms
   *           + HAL_IncTick is called inside HAL_TIM_PeriodElapsedCallback ie each 1ms
   * 
   ******************************************************************************

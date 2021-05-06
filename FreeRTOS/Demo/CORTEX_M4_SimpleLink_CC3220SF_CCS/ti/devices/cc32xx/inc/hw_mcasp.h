@@ -588,7 +588,7 @@
 #define MCASP_ACLKRCTL_CLKRP    0x00000080  // RCV Clock Polarity 0 1
 #define MCASP_ACLKRCTL_CLKRM    0x00000020  // RCV clock source 0 1
 #define MCASP_ACLKRCTL_CLKRDIV_M \
-                                0x0000001F  // RCV clock devide ratio
+                                0x0000001F  // RCV clock divide ratio
 
 #define MCASP_ACLKRCTL_CLKRDIV_S 0
 //******************************************************************************
@@ -839,7 +839,7 @@
                                             // 1
 #define MCASP_ACLKXCTL_CLKXM    0x00000020  // XMT clock source 0 1
 #define MCASP_ACLKXCTL_CLKXDIV_M \
-                                0x0000001F  // XMT clock devide ratio
+                                0x0000001F  // XMT clock divide ratio
 
 #define MCASP_ACLKXCTL_CLKXDIV_S 0
 //******************************************************************************

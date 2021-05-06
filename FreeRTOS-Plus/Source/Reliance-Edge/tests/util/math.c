@@ -259,7 +259,7 @@ uint64_t RedMulDiv64(
 
         /*  If we get to this point, the above method (#1) cannot be used
             because not enough of the numbers are even long enough to scale the
-            operands down.  We'll see if either multiplicand is evenly divisble
+            operands down.  We'll see if either multiplicand is evenly divisible
             by ulDivisor, and if so, do the divide first, then the multiply.
             (Note that once we get to this point, we will never exercise the
             while{} loop anymore.)

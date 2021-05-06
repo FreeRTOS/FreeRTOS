@@ -902,7 +902,7 @@ HAL_StatusTypeDef HAL_ETH_Stop_IT(ETH_HandleTypeDef *heth)
     /* Set the ETH peripheral state to BUSY */
     heth->gState = HAL_ETH_STATE_BUSY;
 
-    /* Disable intrrupts:
+    /* Disable interrupts:
     - Tx complete interrupt
     - Rx complete interrupt     */
     __HAL_ETH_DMA_DISABLE_IT(heth, (ETH_DMA_NORMAL_IT | ETH_DMA_RX_IT | ETH_DMA_TX_IT));

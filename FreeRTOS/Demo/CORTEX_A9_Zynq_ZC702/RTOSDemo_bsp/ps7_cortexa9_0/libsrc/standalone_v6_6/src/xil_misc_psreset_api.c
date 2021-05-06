@@ -131,7 +131,7 @@ void XSmc_ResetHw(u32 BaseAddress)
 {
 	u32 RegVal;
 
-	/* Clear the interuupts */
+	/* Clear the interrupts */
 	RegVal = Xil_In32(BaseAddress + XSMC_MEMC_CLR_CONFIG_OFFSET);
 	RegVal = RegVal | (u32)XSMC_MEMC_CLR_CONFIG_MASK;
 	Xil_Out32(BaseAddress + XSMC_MEMC_CLR_CONFIG_OFFSET, RegVal);

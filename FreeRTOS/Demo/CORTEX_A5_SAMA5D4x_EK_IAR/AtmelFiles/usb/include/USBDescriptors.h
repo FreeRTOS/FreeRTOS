@@ -454,7 +454,7 @@ typedef struct _USBInterfaceDescriptor {
    uint8_t bInterfaceNumber;
    /** Value to select this alternate interface setting. */
    uint8_t bAlternateSetting;
-   /** Number of endpoints used by the inteface (excluding endpoint 0). */
+   /** Number of endpoints used by the interface (excluding endpoint 0). */
    uint8_t bNumEndpoints;
    /** Interface class code. */
    uint8_t bInterfaceClass;

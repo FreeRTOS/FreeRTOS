@@ -546,7 +546,7 @@ s32 XUartPs_SetBaudRate(XUartPs *InstancePtr, u32 BaudRate)
 	Xil_AssertNonvoid(BaudRate >= (u32)XUARTPS_MIN_RATE);
 
 	/*
-	 * Make sure the baud rate is not impossilby large.
+	 * Make sure the baud rate is not impossibly large.
 	 * Fastest possible baud rate is Input Clock / 2.
 	 */
 	if ((BaudRate * 2) > InstancePtr->Config.InputClockHz) {

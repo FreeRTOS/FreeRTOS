@@ -66,7 +66,7 @@
 * This function perform the reset sequence to the given devcfg interface by
 * configuring the appropriate control bits in the devcfg specifc registers
 * the devcfg reset squence involves the following steps
-*	Disable all the interuupts
+*	Disable all the interrupts
 *	Clear the status
 *	Update relevant config registers with reset values
 *	Disbale the looopback mode and pcap rate enable

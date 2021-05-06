@@ -589,7 +589,7 @@ typedef u32 XEmacPs_Bd[XEMACPS_BD_NUM_WORDS];
 /*****************************************************************************/
 /**
  * Determine if a frame fails to be transmitted due to data can not be
- * feteched in time or buffers are exhausted.
+ * fetched in time or buffers are exhausted.
  *
  * @param  BdPtr is the BD pointer to operate on
  *

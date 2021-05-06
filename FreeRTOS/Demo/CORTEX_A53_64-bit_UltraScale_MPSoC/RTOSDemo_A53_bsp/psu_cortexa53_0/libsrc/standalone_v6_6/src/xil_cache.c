@@ -782,7 +782,7 @@ void Xil_ICacheInvalidateLine(INTPTR  adr)
 /**
 * @brief	Invalidate the instruction cache for the given address range.
 * 			If the instructions specified by the address range are cached by
-* 			the instrunction cache, the cachelines containing those
+* 			the instruction cache, the cachelines containing those
 *			instructions are invalidated.
 *
 * @param	adr: 64bit start address of the range to be invalidated.

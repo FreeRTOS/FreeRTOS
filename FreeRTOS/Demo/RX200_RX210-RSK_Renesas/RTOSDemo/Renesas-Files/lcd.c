@@ -34,7 +34,7 @@ User Includes
 Name:			InitDisplay 
 Parameters:		none				
 Returns:		none
-Description:	Intializes the LCD display. 
+Description:	Initializes the LCD display. 
 *****************************************************************************/
 void InitialiseDisplay( void )
 {

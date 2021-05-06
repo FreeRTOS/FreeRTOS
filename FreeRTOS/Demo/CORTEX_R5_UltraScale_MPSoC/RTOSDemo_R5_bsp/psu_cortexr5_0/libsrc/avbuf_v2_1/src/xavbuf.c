@@ -373,7 +373,7 @@ static int XAVBuf_ConfigureVideo(XAVBuf *InstancePtr, u8 VideoSrc)
 
 /******************************************************************************/
 /**
- * This function intializes the configuration for the AVBuf Instance.
+ * This function initializes the configuration for the AVBuf Instance.
  *
  * @param	InstancePtr is a pointer to the XAVBuf instance.
  * @param	BaseAddr sets the base address of the AVBuf instance

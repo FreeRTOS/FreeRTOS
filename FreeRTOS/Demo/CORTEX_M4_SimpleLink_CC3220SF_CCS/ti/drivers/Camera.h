@@ -57,7 +57,7 @@
  *    - Camera_Params_init():  Initialize a #Camera_Params structure with default
  *      vaules.
  *    - Camera_open():  Open an instance of the Camera driver.
- *    - Camera_control():  Performs implemenation-specific features on a given
+ *    - Camera_control():  Performs implementation-specific features on a given
  *      Camera peripheral.
  *    - Camera_capture():  Capture a frame.
  *    - Camera_close():  De-initialize a given Camera instance.

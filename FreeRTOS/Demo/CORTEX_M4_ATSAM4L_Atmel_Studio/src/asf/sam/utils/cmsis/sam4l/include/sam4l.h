@@ -10311,7 +10311,7 @@ typedef struct {
   RoReg   Reserved8[112];
   RwReg   USBC_UHCON;       /**< \brief (USBC Offset: 0x400) Host General Control Register */
   RoReg   USBC_UHINT;       /**< \brief (USBC Offset: 0x404) Host Global Interrupt Register */
-  WoReg   USBC_UHINTCLR;    /**< \brief (USBC Offset: 0x408) Host Global Interrrupt Clear Register */
+  WoReg   USBC_UHINTCLR;    /**< \brief (USBC Offset: 0x408) Host Global Interrupt Clear Register */
   WoReg   USBC_UHINTSET;    /**< \brief (USBC Offset: 0x40C) Host Global Interrupt Set Register */
   RoReg   USBC_UHINTE;      /**< \brief (USBC Offset: 0x410) Host Global Interrupt Enable Register */
   WoReg   USBC_UHINTECLR;   /**< \brief (USBC Offset: 0x414) Host Global Interrupt Enable Clear Register */
@@ -11447,7 +11447,7 @@ typedef struct {
 #define USBC_UHINT_P4INT            (0x1u << 12) /**< \brief (USBC_UHINT) Pipe 4 Interrupt */
 #define USBC_UHINT_P5INT            (0x1u << 13) /**< \brief (USBC_UHINT) Pipe 5 Interrupt */
 #define USBC_UHINT_P6INT            (0x1u << 14) /**< \brief (USBC_UHINT) Pipe 6 Interrupt */
-/* -------- USBC_UHINTCLR : (USBC Offset: 0x408) Host Global Interrrupt Clear Register -------- */
+/* -------- USBC_UHINTCLR : (USBC Offset: 0x408) Host Global Interrupt Clear Register -------- */
 #define USBC_UHINTCLR_DCONNIC       (0x1u <<  0) /**< \brief (USBC_UHINTCLR) DCONNI Clear */
 #define USBC_UHINTCLR_DDISCIC       (0x1u <<  1) /**< \brief (USBC_UHINTCLR) DDISCI Clear */
 #define USBC_UHINTCLR_RSTIC         (0x1u <<  2) /**< \brief (USBC_UHINTCLR) RSTI Clear */
@@ -13450,7 +13450,7 @@ typedef struct {
 #define REG_USBC_UECON7CLR        REG_ACCESS(WoReg  , 0x400A523CU) /**< \brief (USBC) TXINE Clear */ 
 #define REG_USBC_UHCON            REG_ACCESS(RwReg  , 0x400A5400U) /**< \brief (USBC) Host General Control Register */ 
 #define REG_USBC_UHINT            REG_ACCESS(RoReg  , 0x400A5404U) /**< \brief (USBC) Host Global Interrupt Register */ 
-#define REG_USBC_UHINTCLR         REG_ACCESS(WoReg  , 0x400A5408U) /**< \brief (USBC) Host Global Interrrupt Clear Register */ 
+#define REG_USBC_UHINTCLR         REG_ACCESS(WoReg  , 0x400A5408U) /**< \brief (USBC) Host Global Interrupt Clear Register */ 
 #define REG_USBC_UHINTSET         REG_ACCESS(WoReg  , 0x400A540CU) /**< \brief (USBC) Host Global Interrupt Set Register */ 
 #define REG_USBC_UHINTE           REG_ACCESS(RoReg  , 0x400A5410U) /**< \brief (USBC) Host Global Interrupt Enable Register */ 
 #define REG_USBC_UHINTECLR        REG_ACCESS(WoReg  , 0x400A5414U) /**< \brief (USBC) Host Global Interrupt Enable Clear Register */ 

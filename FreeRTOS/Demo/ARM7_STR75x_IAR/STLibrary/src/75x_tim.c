@@ -758,7 +758,7 @@ void TIM_ForcedOCConfig(TIM_TypeDef* TIMx, u16 TIM_Channel,u16 TIM_ForcedAction)
 
 /*******************************************************************************
 * Function Name  : TIM_ResetCounter
-* Description    : Re-intializes the TIM counter and generates an update of the
+* Description    : Re-initializes the TIM counter and generates an update of the
 *                  registers.
 * Input          : TIMx: where x can be 0, 1 or 2 to select the TIM peripheral
 * Output         : None
@@ -766,7 +766,7 @@ void TIM_ForcedOCConfig(TIM_TypeDef* TIMx, u16 TIM_Channel,u16 TIM_ForcedAction)
 *******************************************************************************/
 void TIM_ResetCounter(TIM_TypeDef* TIMx)
 {
-  /* Re-intialize the TIM counter */
+  /* Re-initialize the TIM counter */
   TIMx->CR |= TIM_COUNTER_Reset;
 }
 

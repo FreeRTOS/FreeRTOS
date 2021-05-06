@@ -184,7 +184,7 @@
 #define HIB3P3_MEM_HIB_REQ_mem_hib_req \
                                 0x00000001  // 1 - Request for hibernate mode
                                             // (This is an auto-clear bit) ; 0 -
-                                            // Donot request for hibernate mode
+                                            // Do not request for hibernate mode
                                             // This register will be reset
                                             // during Hibernate -WO-Clks mode
                                             // (but not during Hibernate-W-Clks
@@ -220,7 +220,7 @@
 #define HIB3P3_MEM_HIB_RTC_TIMER_RESET_reserved_S 1
 #define HIB3P3_MEM_HIB_RTC_TIMER_RESET_mem_hib_rtc_timer_reset \
                                 0x00000001  // 1 - Reset the RTC timer ; 0 -
-                                            // Donot reset the RTC timer. This
+                                            // Do not reset the RTC timer. This
                                             // is an auto-clear bit. This
                                             // register will be reset during
                                             // Hibernate -WO-Clks mode (but not
@@ -576,7 +576,7 @@
 
 #define HIB3P3_MEM_HIB_CONFIG_mem_hib_xtal_enable \
                                 0x00000100  // 1 - Enable the XTAL Clock ; 0 -
-                                            // Donot enable the XTAL Clock. This
+                                            // Do not enable the XTAL Clock. This
                                             // bit has to be programmed to 1 (by
                                             // APPS Devinit F/w), during exit
                                             // from OFF or Hib_wo_clks modes,
@@ -695,7 +695,7 @@
 #define HIB3P3_MEM_PAD_OEN_RET33_CONF_mem_pad_oen_ret33_override_ctrl \
                                 0x00000004  // 1 - Override the OEN33 and RET33
                                             // controls of GPIOs during
-                                            // SOP-Bootdebug mode ; 0 - Donot
+                                            // SOP-Bootdebug mode ; 0 - Do not
                                             // override the OEN33 and RET33
                                             // controls of GPIOs during
                                             // SOP-Bootdebug mode
@@ -715,7 +715,7 @@
 #define HIB3P3_MEM_UART_RTS_OEN_RET33_CONF_mem_uart_nrts_oen_ret33_override_ctrl \
                                 0x00000004  // 1 - Override the OEN33 and RET33
                                             // controls of UART NRTS GPIO during
-                                            // SOP-Bootdebug mode ; 0 - Donot
+                                            // SOP-Bootdebug mode ; 0 - Do not
                                             // override the OEN33 and RET33
                                             // controls of UART NRTS GPIO during
                                             // SOP-Bootdebug mode

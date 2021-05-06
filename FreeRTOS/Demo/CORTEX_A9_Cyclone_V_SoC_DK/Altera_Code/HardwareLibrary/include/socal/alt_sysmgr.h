@@ -23675,7 +23675,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX70_s  ALT_SYSMGR_PINMUX_GPLMUX70
  * 
  * 0 : NAND uses HPS Pins.
  * 
- * 1 : NAND uses the FPGA Inteface.
+ * 1 : NAND uses the FPGA Interface.
  * 
  * Field Access Macros:
  * 
@@ -23746,7 +23746,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_NANDUSEFPGA_s  ALT_SYSMGR_PINMUX_NANDU
  * 
  * 0 : RGMII1 uses HPS Pins.
  * 
- * 1 : RGMII1 uses the FPGA Inteface.
+ * 1 : RGMII1 uses the FPGA Interface.
  * 
  * Field Access Macros:
  * 
@@ -23817,7 +23817,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_RGMII1USEFPGA_s  ALT_SYSMGR_PINMUX_RGM
  * 
  * 0 : I2C0 uses HPS Pins.
  * 
- * 1 : I2C0 uses the FPGA Inteface.
+ * 1 : I2C0 uses the FPGA Interface.
  * 
  * Field Access Macros:
  * 
@@ -23888,7 +23888,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_I2C0USEFPGA_s  ALT_SYSMGR_PINMUX_I2C0U
  * 
  * 0 : RGMII0 uses HPS Pins.
  * 
- * 1 : RGMII0 uses the FPGA Inteface.
+ * 1 : RGMII0 uses the FPGA Interface.
  * 
  * Field Access Macros:
  * 
@@ -23959,7 +23959,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_RGMII0USEFPGA_s  ALT_SYSMGR_PINMUX_RGM
  * 
  * 0 : I2C3 uses HPS Pins.
  * 
- * 1 : I2C3 uses the FPGA Inteface.
+ * 1 : I2C3 uses the FPGA Interface.
  * 
  * Field Access Macros:
  * 
@@ -24030,7 +24030,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_I2C3USEFPGA_s  ALT_SYSMGR_PINMUX_I2C3U
  * 
  * 0 : I2C2 uses HPS Pins.
  * 
- * 1 : I2C2 uses the FPGA Inteface.
+ * 1 : I2C2 uses the FPGA Interface.
  * 
  * Field Access Macros:
  * 
@@ -24101,7 +24101,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_I2C2USEFPGA_s  ALT_SYSMGR_PINMUX_I2C2U
  * 
  * 0 : I2C1 uses HPS Pins.
  * 
- * 1 : I2C1 uses the FPGA Inteface.
+ * 1 : I2C1 uses the FPGA Interface.
  * 
  * Field Access Macros:
  * 
@@ -24172,7 +24172,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_I2C1USEFPGA_s  ALT_SYSMGR_PINMUX_I2C1U
  * 
  * 0 : SPIM1 uses HPS Pins.
  * 
- * 1 : SPIM1 uses the FPGA Inteface.
+ * 1 : SPIM1 uses the FPGA Interface.
  * 
  * Field Access Macros:
  * 
@@ -24243,7 +24243,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_SPIM1USEFPGA_s  ALT_SYSMGR_PINMUX_SPIM
  * 
  * 0 : SPIM0 uses HPS Pins.
  * 
- * 1 : SPIM0 uses the FPGA Inteface.
+ * 1 : SPIM0 uses the FPGA Interface.
  * 
  * Field Access Macros:
  * 

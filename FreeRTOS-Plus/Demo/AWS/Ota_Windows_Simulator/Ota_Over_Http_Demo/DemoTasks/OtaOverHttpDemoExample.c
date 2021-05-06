@@ -431,7 +431,7 @@ static TlsTransportParams_t xTlsTransportParamsHttps;
  * elements are done only from one task at a time. The subscription manager
  * implementation expects that the array of the subscription elements used for
  * storing subscriptions to be initialized to 0. As this is a global array, it
- * will be intialized to 0 by default.
+ * will be initialized to 0 by default.
  */
 static SubscriptionElement_t xGlobalSubscriptionList[ SUBSCRIPTION_MANAGER_MAX_SUBSCRIPTIONS ];
 
@@ -2134,7 +2134,7 @@ static void prvMQTTAgentTask(void* pParam)
         /* Clear Agent queue so that no any pending MQTT operations are processed. */
         xQueueReset(xCommandQueue.queue);
 
-        /* Success is returned for application intiated disconnect or termination. The socket will also be disconnected by the caller. */
+        /* Success is returned for application initiated disconnect or termination. The socket will also be disconnected by the caller. */
         if (xMQTTStatus != MQTTSuccess)
         {
             xResult = prvSuspendOTA();

@@ -296,7 +296,7 @@ void Xil_DCacheInvalidateLine(u32 adr)
 *
 * 			Linux prefers the second one. To have uniform implementation
 * 			(across standalone and Linux), the second option is implemented.
-* 			This being the case, follwoing needs to be taken care of:
+* 			This being the case, following needs to be taken care of:
 * 			1. Whenever possible, the addresses must be cache line aligned.
 * 			Please nore that, not just start address, even the end address must
 * 			be cache line aligned. If that is taken care of, this will always
@@ -639,7 +639,7 @@ void Xil_ICacheInvalidateLine(u32 adr)
 /**
 * @brief	Invalidate the instruction cache for the given address range.
 * 			If the instructions specified by the address range are cached by
-* 			the instrunction cache, the cachelines containing those
+* 			the instruction cache, the cachelines containing those
 *			instructions are invalidated.
 *
 * @param	adr: 32bit start address of the range to be invalidated.

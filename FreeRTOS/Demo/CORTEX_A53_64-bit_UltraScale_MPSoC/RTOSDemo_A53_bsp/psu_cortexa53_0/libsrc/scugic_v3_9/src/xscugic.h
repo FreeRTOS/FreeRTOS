@@ -168,7 +168,7 @@
 *                     generation.
 * 3.7   ms   04/11/17 Modified tcl file to add suffix U for all macro
 *                     definitions of scugic in xparameters.h
-* 3.8   mus  07/05/17 Updated scugic.tcl to add support for intrrupts connected
+* 3.8   mus  07/05/17 Updated scugic.tcl to add support for interrupts connected
 *                     through util_reduced_vector IP(OR gate)
 *       mus  07/05/17 Updated xdefine_zynq_canonical_xpars proc to initialize
 *                     the HandlerTable in XScuGic_ConfigTable to 0, it removes

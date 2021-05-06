@@ -6,7 +6,7 @@
   *
   *          This file override the native HAL time base functions (defined as weak)
   *          to use the RTC ALARM for time base generation:
-  *           + Intializes the RTC peripheral to increment the seconds registers each 1ms
+  *           + Initializes the RTC peripheral to increment the seconds registers each 1ms
   *           + The alarm is configured to assert an interrupt when the RTC reaches 1ms
   *           + HAL_IncTick is called at each Alarm event and the time is reset to 00:00:00
   *           + HSE (default), LSE or LSI can be selected as RTC clock source

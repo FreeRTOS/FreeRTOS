@@ -1640,10 +1640,10 @@ static void TIMx_PWM_Init(TIM_HandleTypeDef *htim)
 static void TIMx_PWM_DeInit(TIM_HandleTypeDef *htim)
 {
   htim->Instance = LCD_TIMx;
-  /* Timer de-intialization */
+  /* Timer de-initialization */
   HAL_TIM_PWM_DeInit(htim);
 
-  /* Timer Msp de-intialization */
+  /* Timer Msp de-initialization */
   TIMx_PWM_MspDeInit(htim);
 }
 

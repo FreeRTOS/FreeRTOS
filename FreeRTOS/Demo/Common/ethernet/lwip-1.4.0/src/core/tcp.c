@@ -2,7 +2,7 @@
  * @file
  * Transmission Control Protocol for IP
  *
- * This file contains common functions for the TCP implementation, such as functinos
+ * This file contains common functions for the TCP implementation, such as functions
  * for manipulating the data structures and the TCP timer functions. TCP functions
  * related to input and output is found in tcp_in.c and tcp_out.c respectively.
  *

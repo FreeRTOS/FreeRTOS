@@ -1027,7 +1027,7 @@ PRCMSRAMRetentionDisable(unsigned long ulSramColSel, unsigned long ulFlags)
 //!
 //! This function enables individual HIB wakeup source(s). The paramter
 //! \e ulHIBWakupSrc is the bit mask of HIB wakeup sources and should be
-//! logical OR of one or more of the follwoing :-
+//! logical OR of one or more of the following :-
 //! -\b PRCM_HIB_SLOW_CLK_CTR
 //! -\b PRCM_HIB_GPIO2
 //! -\b PRCM_HIB_GPIO4
@@ -1206,7 +1206,7 @@ PRCMHibernateIntervalSet(unsigned long long ullTicks)
 //! used to select any combination of 7 pre-defined GPIO(s).
 //!
 //! This function enables individual HIB wakeup source(s). The paramter
-//! \e ulGPIOBitMap should be one of the follwoing :-
+//! \e ulGPIOBitMap should be one of the following :-
 //! -\b PRCM_HIB_GPIO2
 //! -\b PRCM_HIB_GPIO4
 //! -\b PRCM_HIB_GPIO13
@@ -1320,7 +1320,7 @@ PRCMSlowClkCtrGet()
 //! This function is similar to \sa PRCMSlowClkCtrGet() but reads the counter
 //! value from a relatively faster interface using an auto-latch mechainsm.
 //!
-//! \note Due to the nature of implemetation of auto latching, when using this
+//! \note Due to the nature of implementation of auto latching, when using this
 //! API, the recommendation is to read the value thrice and identify the right
 //! value (as 2 out the 3 read values will always be correct and with a max. of
 //! 1 LSB change)

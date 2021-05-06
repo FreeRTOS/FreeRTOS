@@ -1076,7 +1076,7 @@ static __INLINE void NVIC_SetPriorityGrouping(uint32_t priority_grouping)
  * @param  IRQn_Type IRQn specifies the interrupt number
  * @return none 
  *
- * Enable a device specific interupt in the NVIC interrupt controller.
+ * Enable a device specific interrupt in the NVIC interrupt controller.
  * The interrupt number cannot be a negative value.
  */
 static __INLINE void NVIC_EnableIRQ(IRQn_Type IRQn)
@@ -1090,7 +1090,7 @@ static __INLINE void NVIC_EnableIRQ(IRQn_Type IRQn)
  * @param  IRQn_Type IRQn is the positive number of the external interrupt
  * @return  none
  * 
- * Disable a device specific interupt in the NVIC interrupt controller.
+ * Disable a device specific interrupt in the NVIC interrupt controller.
  * The interrupt number cannot be a negative value.
  */
 static __INLINE void NVIC_DisableIRQ(IRQn_Type IRQn)

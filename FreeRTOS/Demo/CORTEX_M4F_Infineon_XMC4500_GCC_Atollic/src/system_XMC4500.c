@@ -225,7 +225,7 @@ static int SystemClockSetup(void)
   {
    /* Enable the OSC_HP*/
    SCU_OSC->OSCHPCTRL = (OSC_HP_MODE<<4);	 
-   /* Setup OSC WDG devider */
+   /* Setup OSC WDG divider */
    SCU_OSC->OSCHPCTRL |= (OSCHPWDGDIV<<16);         
    /* Select external OSC as PLL input */
    SCU_PLL->PLLCON2 &= ~SCU_PLL_PLLCON2_PINSEL_Msk;
@@ -254,7 +254,7 @@ static int SystemClockSetup(void)
 	 /* disconnect OSC_HP to PLL */
    SCU_PLL->PLLCON0 |= SCU_PLL_PLLCON0_FINDIS_Msk;
 
-	 /* Setup devider settings for main PLL */
+	 /* Setup divider settings for main PLL */
    SCU_PLL->PLLCON1 = ((PLL_K1DIV) | (PLL_NDIV<<8) | 
                                      (PLL_K2DIV_STEP_1<<16) | (PLL_PDIV<<24));
 
@@ -306,7 +306,7 @@ static int SystemClockSetup(void)
    SysTick->CTRL  &= ~SysTick_CTRL_ENABLE_Msk;                 
    /********************************/
 
-   /* Setup devider settings for main PLL */
+   /* Setup divider settings for main PLL */
    SCU_PLL->PLLCON1 = ((PLL_K1DIV) | (PLL_NDIV<<8) | 
                                      (PLL_K2DIV_STEP_2<<16) | (PLL_PDIV<<24));
 
@@ -327,7 +327,7 @@ static int SystemClockSetup(void)
    SysTick->CTRL  &= ~SysTick_CTRL_ENABLE_Msk;                 
    /********************************/
 
-   /* Setup devider settings for main PLL */
+   /* Setup divider settings for main PLL */
    SCU_PLL->PLLCON1 = ((PLL_K1DIV) | (PLL_NDIV<<8) | 
 									                    (PLL_K2DIV_STEP_3<<16) | (PLL_PDIV<<24));
 
@@ -348,7 +348,7 @@ static int SystemClockSetup(void)
    SysTick->CTRL  &= ~SysTick_CTRL_ENABLE_Msk;                 
    /********************************/
 
-   /* Setup devider settings for main PLL */
+   /* Setup divider settings for main PLL */
    SCU_PLL->PLLCON1 = ((PLL_K1DIV) | (PLL_NDIV<<8) | (PLL_K2DIV<<16) | 
                                                                (PLL_PDIV<<24));
 
@@ -383,7 +383,7 @@ static void USBClockSetup(void)
 	  {
 	
 	   SCU_OSC->OSCHPCTRL = (OSC_HP_MODE<<4);	 /*enable the OSC_HP*/
-	   /* setup OSC WDG devider */
+	   /* setup OSC WDG divider */
 	   SCU_OSC->OSCHPCTRL |= (OSCHPWDGDIV<<16);         
 	   /* select external OSC as PLL input */
 	   SCU_PLL->PLLCON2 &= ~SCU_PLL_PLLCON2_PINSEL_Msk;
@@ -405,7 +405,7 @@ static void USBClockSetup(void)
    SCU_PLL->USBPLLCON |= SCU_PLL_USBPLLCON_VCOBYP_Msk;
    /* disconnect OSC_FI to PLL */
    SCU_PLL->USBPLLCON |= SCU_PLL_USBPLLCON_FINDIS_Msk;
-   /* Setup devider settings for main PLL */
+   /* Setup divider settings for main PLL */
    SCU_PLL->USBPLLCON = ((USBPLL_NDIV<<8) | (USBPLL_PDIV<<24));
    /* we may have to set OSCDISCDIS */
    SCU_PLL->USBPLLCON |= SCU_PLL_USBPLLCON_OSCDISCDIS_Msk;

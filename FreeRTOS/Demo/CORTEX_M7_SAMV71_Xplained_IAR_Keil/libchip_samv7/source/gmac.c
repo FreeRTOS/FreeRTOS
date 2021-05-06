@@ -77,7 +77,7 @@ void GMAC_PHYMaintain(Gmac      *pGmac,
 }
 
 /**
- * Return PHY maintainance data returned
+ * Return PHY maintenance data returned
  */
 uint16_t GMAC_PHYData(Gmac *pGmac)
 {

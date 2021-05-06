@@ -2512,7 +2512,7 @@ typedef struct {
 #define CS_CTL1_SELS__MODOSC                     ((uint32_t)0x00000040)
 #define CS_CTL1_SELS__HFXTCLK                    ((uint32_t)0x00000050)          /**< when HFXT available, otherwise DCOCLK */
 #define CS_CTL1_SELS__HFXT2CLK                   ((uint32_t)0x00000060)          /**< when HFXT2 available, otherwise DCOCLK */
-#define CS_CTL1_SELS_7                           ((uint32_t)0x00000070)          /**< for furture use. Defaults to DCOCLK. Do not use to ensure future  */
+#define CS_CTL1_SELS_7                           ((uint32_t)0x00000070)          /**< for future use. Defaults to DCOCLK. Do not use to ensure future  */
                                                                                  /* compatibilities. */
 /* CS_CTL1[SELA] Bits */
 #define CS_CTL1_SELA_OFS                         ( 8)                            /**< SELA Bit Offset */

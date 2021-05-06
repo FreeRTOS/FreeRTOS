@@ -401,7 +401,7 @@
                                             // would clear FIFO overflow
                                             // interrupt status in the next
                                             // cycle. if same interrupt is set
-                                            // in the same cycle then interurpt
+                                            // in the same cycle then interrupt
                                             // would be set and clear command
                                             // will be ignored. bit 2: when
                                             // value '1' is written -> would
@@ -429,7 +429,7 @@
                                             // would clear FIFO overflow
                                             // interrupt status in the next
                                             // cycle. if same interrupt is set
-                                            // in the same cycle then interurpt
+                                            // in the same cycle then interrupt
                                             // would be set and clear command
                                             // will be ignored. bit 2: when
                                             // value '1' is written -> would
@@ -457,7 +457,7 @@
                                             // would clear FIFO overflow
                                             // interrupt status in the next
                                             // cycle. if same interrupt is set
-                                            // in the same cycle then interurpt
+                                            // in the same cycle then interrupt
                                             // would be set and clear command
                                             // will be ignored. bit 2: when
                                             // value '1' is written -> would
@@ -485,7 +485,7 @@
                                             // would clear FIFO overflow
                                             // interrupt status in the next
                                             // cycle. if same interrupt is set
-                                            // in the same cycle then interurpt
+                                            // in the same cycle then interrupt
                                             // would be set and clear command
                                             // will be ignored. bit 2: when
                                             // value '1' is written -> would
@@ -513,7 +513,7 @@
                                             // would clear FIFO overflow
                                             // interrupt status in the next
                                             // cycle. if same interrupt is set
-                                            // in the same cycle then interurpt
+                                            // in the same cycle then interrupt
                                             // would be set and clear command
                                             // will be ignored. bit 2: when
                                             // value '1' is written -> would
@@ -541,7 +541,7 @@
                                             // would clear FIFO overflow
                                             // interrupt status in the next
                                             // cycle. if same interrupt is set
-                                            // in the same cycle then interurpt
+                                            // in the same cycle then interrupt
                                             // would be set and clear command
                                             // will be ignored. bit 2: when
                                             // value '1' is written -> would
@@ -569,7 +569,7 @@
                                             // would clear FIFO overflow
                                             // interrupt status in the next
                                             // cycle. if same interrupt is set
-                                            // in the same cycle then interurpt
+                                            // in the same cycle then interrupt
                                             // would be set and clear command
                                             // will be ignored. bit 2: when
                                             // value '1' is written -> would
@@ -597,7 +597,7 @@
                                             // would clear FIFO overflow
                                             // interrupt status in the next
                                             // cycle. if same interrupt is set
-                                            // in the same cycle then interurpt
+                                            // in the same cycle then interrupt
                                             // would be set and clear command
                                             // will be ignored. bit 2: when
                                             // value '1' is written -> would

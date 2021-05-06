@@ -51,7 +51,7 @@
 * line) can be sent, most often to obtain status.
 * This driver does not support multi card slots at present.
 *
-* Intialization:
+* Initialization:
 * This includes initialization on the host controller side to select
 * clock frequency, bus power and default transfer related parameters.
 * The default voltage is 3.3V.

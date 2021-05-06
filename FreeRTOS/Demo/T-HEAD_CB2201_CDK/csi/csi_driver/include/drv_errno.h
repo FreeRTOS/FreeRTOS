@@ -23,7 +23,7 @@
 /******************************************************************************
  * @file
  * @details     Error code field difination
- *              Error number is devided into 4 field:
+ *              Error number is divided into 4 field:
  *              0x8******* : 8  : means < 0
  *              0x*A****** : A  : means type number: bsp(1), driver(2), hal(3), app(4)...
  *              0x**AB**** : AB : means module number: timer(1), rtc(2), ....

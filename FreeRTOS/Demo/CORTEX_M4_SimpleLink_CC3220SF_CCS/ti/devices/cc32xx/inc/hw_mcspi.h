@@ -788,7 +788,7 @@
                                             // MCSPI_CHCONF[CLKD] and
                                             // MCSPI_CHCTRL[EXTCLK] values 0
                                             // Clock granularity of power of two
-                                            // 1 One clock cycle ganularity
+                                            // 1 One clock cycle granularity
 #define MCSPI_CH0CONF_FFER      0x10000000  // FIFO enabled for receive:Only
                                             // one channel can have this bit
                                             // field set. 0 The buffer is not
@@ -1020,7 +1020,7 @@
                                             // MCSPI_CHCONF[CLKD] and
                                             // MCSPI_CHCTRL[EXTCLK] values 0
                                             // Clock granularity of power of two
-                                            // 1 One clock cycle ganularity
+                                            // 1 One clock cycle granularity
 #define MCSPI_CH1CONF_FFER      0x10000000  // FIFO enabled for receive:Only
                                             // one channel can have this bit
                                             // field set. 0 The buffer is not
@@ -1240,7 +1240,7 @@
                                             // MCSPI_CHCONF[CLKD] and
                                             // MCSPI_CHCTRL[EXTCLK] values 0
                                             // Clock granularity of power of two
-                                            // 1 One clock cycle ganularity
+                                            // 1 One clock cycle granularity
 #define MCSPI_CH2CONF_FFER      0x10000000  // FIFO enabled for receive:Only
                                             // one channel can have this bit
                                             // field set. 0 The buffer is not
@@ -1460,7 +1460,7 @@
                                             // MCSPI_CHCONF[CLKD] and
                                             // MCSPI_CHCTRL[EXTCLK] values 0
                                             // Clock granularity of power of two
-                                            // 1 One clock cycle ganularity
+                                            // 1 One clock cycle granularity
 #define MCSPI_CH3CONF_FFER      0x10000000  // FIFO enabled for receive:Only
                                             // one channel can have this bit
                                             // field set. 0 The buffer is not

@@ -68,7 +68,7 @@
  *    - I2C_Params_init():  Initialize an #I2C_Params structure with default
  *      vaules.
  *    - I2C_open():  Open an instance of the I2C driver.
- *    - I2C_control():  Performs implemenation-specific features on a given
+ *    - I2C_control():  Performs implementation-specific features on a given
  *      I2C peripheral.
  *    - I2C_transfer():  Transfer the data.
  *    - I2C_close():  De-initialize the I2C instance.

@@ -4553,7 +4553,7 @@ typedef struct
 
 #define  FMC_SDRTR_COUNT                    ((uint32_t)0x00003FFE)        /*!<COUNT[12:0] bits (Refresh timer count) */
 
-#define  FMC_SDRTR_REIE                     ((uint32_t)0x00004000)        /*!<RES interupt enable */
+#define  FMC_SDRTR_REIE                     ((uint32_t)0x00004000)        /*!<RES interrupt enable */
 
 /******************  Bit definition for FMC_SDSR register  ******************/
 #define  FMC_SDSR_RE                        ((uint32_t)0x00000001)        /*!<Refresh error flag */

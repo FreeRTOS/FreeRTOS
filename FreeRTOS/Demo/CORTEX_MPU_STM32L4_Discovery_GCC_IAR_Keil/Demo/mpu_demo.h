@@ -35,7 +35,7 @@
  * with Read Only access then tries to write to the shared memory which results
  * in a Memory fault. The fault handler examines that it is the fault generated
  * by the task with Read Only access and if so, it recovers from the fault
- * greacefully by moving the Program Counter to the next instruction to the one
+ * gracefully by moving the Program Counter to the next instruction to the one
  * which generated the fault. If any other memory access violation occurs, the
  * fault handler will get stuck in an inifinite loop.
  */

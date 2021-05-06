@@ -680,7 +680,7 @@ s32 XSdPs_Change_BusSpeed(XSdPs *InstancePtr)
 * @return	None
 *
 * @note		This API will change clock frequency to the value less than
-*		or equal to the given value using the permissible dividors.
+*		or equal to the given value using the permissible dividers.
 *
 ******************************************************************************/
 s32 XSdPs_Change_ClkFreq(XSdPs *InstancePtr, u32 SelFreq)

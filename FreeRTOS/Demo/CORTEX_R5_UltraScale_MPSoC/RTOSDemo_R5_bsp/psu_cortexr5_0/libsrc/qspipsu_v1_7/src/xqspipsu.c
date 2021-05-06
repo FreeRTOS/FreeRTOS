@@ -622,7 +622,7 @@ s32 XQspiPsu_InterruptTransfer(XQspiPsu *InstancePtr, XQspiPsu_Msg *Msg,
 /*****************************************************************************/
 /**
 *
-* Handles interrupt based transfers by acting on GENFIFO and DMA interurpts.
+* Handles interrupt based transfers by acting on GENFIFO and DMA interrupts.
 *
 * @param	InstancePtr is a pointer to the XQspiPsu instance.
 *

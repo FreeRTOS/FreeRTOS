@@ -371,7 +371,7 @@ if ((SCU_PLL->PLLCON0 &(SCU_PLL_PLLCON0_VCOPWD_Msk | SCU_PLL_PLLCON0_PLLPWD_Msk)
 
    if (SCU_OSC->OSCHPCTRL & SCU_OSC_OSCHPCTRL_MODE_Msk){
 	   SCU_OSC->OSCHPCTRL &= ~(SCU_OSC_HP_MODE);	 /*enable the OSC_HP*/
-	   /* setup OSC WDG devider */
+	   /* setup OSC WDG divider */
 	   SCU_OSC->OSCHPCTRL |= (SCU_OSCHPWDGDIV<<16);         
 	   /* select external OSC as PLL input */
 	   SCU_PLL->PLLCON2 &= ~SCU_PLL_PLLCON2_PINSEL_Msk;
@@ -497,7 +497,7 @@ if (!(SCU_PLL->PLLSTAT & SCU_PLL_PLLSTAT_VCOLOCK_Msk)){
 		   SCU_PLL->PLLCON0 |= SCU_PLL_PLLCON0_VCOBYP_Msk;
 		   /* disconnect OSC_HP to PLL */
 		   SCU_PLL->PLLCON0 |= SCU_PLL_PLLCON0_FINDIS_Msk;
-		   /* Setup devider settings for main PLL */
+		   /* Setup divider settings for main PLL */
 		   SCU_PLL->PLLCON1 = ((SCU_PLL_K1DIV) | (SCU_PLL_NDIV<<8) | (stepping_K2DIV<<16) | (SCU_PLL_PDIV<<24));
 		   /* we may have to set OSCDISCDIS */
 		   SCU_PLL->PLLCON0 |= SCU_PLL_PLLCON0_OSCDISCDIS_Msk;
@@ -564,12 +564,12 @@ if (!(SCU_PLL->PLLSTAT & SCU_PLL_PLLSTAT_VCOLOCK_Msk)){
 	 
 			 stepping_K2DIV = (VCO/60000000)-1;	
 
-			 /* Setup devider settings for main PLL */
+			 /* Setup divider settings for main PLL */
 				SCU_PLL->PLLCON1 = ((SCU_PLL_K1DIV) | (SCU_PLL_NDIV<<8) | (stepping_K2DIV<<16) | (SCU_PLL_PDIV<<24));
 		 }
 		 else
 		 {
-				/* Setup devider settings for main PLL */
+				/* Setup divider settings for main PLL */
 				SCU_PLL->PLLCON1 = ((SCU_PLL_K1DIV) | (SCU_PLL_NDIV<<8) | (SCU_PLL_K2DIV<<16) | (SCU_PLL_PDIV<<24));
 		    SCU_TRAP->TRAPCLR = SCU_TRAP_TRAPCLR_SOSCWDGT_Msk | SCU_TRAP_TRAPCLR_SVCOLCKT_Msk;  /* clear request for System OCS Watchdog Trap and System VCO Lock Trap  */
 			  return(1);
@@ -598,12 +598,12 @@ if (!(SCU_PLL->PLLSTAT & SCU_PLL_PLLSTAT_VCOLOCK_Msk)){
 
 			 stepping_K2DIV = (VCO/90000000)-1;			
 
-			 /* Setup devider settings for main PLL */
+			 /* Setup divider settings for main PLL */
 				SCU_PLL->PLLCON1 = ((SCU_PLL_K1DIV) | (SCU_PLL_NDIV<<8) | (stepping_K2DIV<<16) | (SCU_PLL_PDIV<<24));
 		 }
 		 else
 		 {
-				/* Setup devider settings for main PLL */
+				/* Setup divider settings for main PLL */
 				SCU_PLL->PLLCON1 = ((SCU_PLL_K1DIV) | (SCU_PLL_NDIV<<8) | (SCU_PLL_K2DIV<<16) | (SCU_PLL_PDIV<<24));
 	      SCU_TRAP->TRAPCLR = SCU_TRAP_TRAPCLR_SOSCWDGT_Msk | SCU_TRAP_TRAPCLR_SVCOLCKT_Msk;  /* clear request for System OCS Watchdog Trap and System VCO Lock Trap  */
 				return(1);
@@ -621,7 +621,7 @@ if (!(SCU_PLL->PLLSTAT & SCU_PLL_PLLSTAT_VCOLOCK_Msk)){
 	   SysTick->CTRL  &= ~SysTick_CTRL_ENABLE_Msk;                 /* Stop SysTick Timer */
 	   /********************************/
 	
-	   /* Setup devider settings for main PLL */
+	   /* Setup divider settings for main PLL */
 	   SCU_PLL->PLLCON1 = ((SCU_PLL_K1DIV) | (SCU_PLL_NDIV<<8) | (SCU_PLL_K2DIV<<16) | (SCU_PLL_PDIV<<24));
 	
 	   SCU_TRAP->TRAPCLR = SCU_TRAP_TRAPCLR_SOSCWDGT_Msk | SCU_TRAP_TRAPCLR_SVCOLCKT_Msk;  /* clear request for System OCS Watchdog Trap and System VCO Lock Trap  */
@@ -658,7 +658,7 @@ if ((SCU_PLL->USBPLLCON &(SCU_PLL_USBPLLCON_VCOPWD_Msk | SCU_PLL_USBPLLCON_PLLPW
   			SCU_PLL->PLLCON0 &= ~(SCU_PLL_PLLCON0_VCOPWD_Msk | SCU_PLL_PLLCON0_PLLPWD_Msk);
 		 }
 	   SCU_OSC->OSCHPCTRL &= ~(SCU_OSC_HP_MODE);	 /*enable the OSC_HP*/
-	   /* setup OSC WDG devider */
+	   /* setup OSC WDG divider */
 	   SCU_OSC->OSCHPCTRL |= (SCU_OSCHPWDGDIV<<16);         
 	   /* restart OSC Watchdog */
 	   SCU_PLL->PLLCON0 &= ~SCU_PLL_PLLCON0_OSCRES_Msk;  
@@ -686,7 +686,7 @@ if ((SCU_PLL->USBPLLCON &(SCU_PLL_USBPLLCON_VCOPWD_Msk | SCU_PLL_USBPLLCON_PLLPW
    SCU_PLL->USBPLLCON |= SCU_PLL_USBPLLCON_VCOBYP_Msk;
    /* disconnect OSC_FI to PLL */
    SCU_PLL->USBPLLCON |= SCU_PLL_USBPLLCON_FINDIS_Msk;
-   /* Setup devider settings for main PLL */
+   /* Setup divider settings for main PLL */
    SCU_PLL->USBPLLCON = ((SCU_USBPLL_NDIV<<8) | (SCU_USBPLL_PDIV<<24));
    /* Setup USBDIV settings USB clock */
    SCU_CLK->USBCLKCR = SCU_USBDIV;

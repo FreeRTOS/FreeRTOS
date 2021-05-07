@@ -167,7 +167,7 @@ static void TI4_Config(TIM_TypeDef* TIMx, uint16_t TIM_ICPolarity, uint16_t TIM_
              TIM_ITConfig(TIMx, TIM_IT_Update). 
          (#) Call the TIM_Cmd(ENABLE) function to enable the TIM counter.
     [..]
-        (@) All other functions can be used seperatly to modify, if needed,
+        (@) All other functions can be used separately to modify, if needed,
             a specific feature of the Timer. 
 
 @endverbatim
@@ -2405,7 +2405,7 @@ void TIM_SelectInputTrigger(TIM_TypeDef* TIMx, uint16_t TIM_InputTriggerSource)
   * @brief  Selects the TIMx Trigger Output Mode.
   * @param  TIMx: where x can be 2, 3, 4, 5, 6, 7 or 9 to select the TIM peripheral.
   * @param  TIM_TRGOSource: specifies the Trigger Output source.
-  *   This paramter can be one of the following values:
+  *   This parameter can be one of the following values:
   *
   *  @param For all TIMx
   *     @arg TIM_TRGOSource_Reset:  The UG bit in the TIM_EGR register is used as the trigger output (TRGO).
@@ -2442,7 +2442,7 @@ void TIM_SelectOutputTrigger(TIM_TypeDef* TIMx, uint16_t TIM_TRGOSource)
   * @brief  Selects the TIMx Slave Mode.
   * @param  TIMx: where x can be 2, 3, 4, 5 or 9 to select the TIM peripheral.
   * @param  TIM_SlaveMode: specifies the Timer Slave Mode.
-  *   This paramter can be one of the following values:
+  *   This parameter can be one of the following values:
   *     @arg TIM_SlaveMode_Reset: Rising edge of the selected trigger signal (TRGI) re-initializes
   *                               the counter and triggers an update of the registers.
   *     @arg TIM_SlaveMode_Gated:     The counter clock is enabled when the trigger signal (TRGI) is high.
@@ -2466,7 +2466,7 @@ void TIM_SelectSlaveMode(TIM_TypeDef* TIMx, uint16_t TIM_SlaveMode)
   * @brief  Sets or Resets the TIMx Master/Slave Mode.
   * @param  TIMx: where x can be 2, 3, 4, 5 or 9 to select the TIM peripheral.
   * @param  TIM_MasterSlaveMode: specifies the Timer Master Slave Mode.
-  *   This paramter can be one of the following values:
+  *   This parameter can be one of the following values:
   *     @arg TIM_MasterSlaveMode_Enable: synchronization between the current timer
   *                                      and its slaves (through TRGO).
   *     @arg TIM_MasterSlaveMode_Disable: No action
@@ -2548,11 +2548,11 @@ void TIM_ETRConfig(TIM_TypeDef* TIMx, uint16_t TIM_ExtTRGPrescaler, uint16_t TIM
   *     @arg TIM_EncoderMode_TI12: Counter counts on both TI1FP1 and TI2FP2 edges depending
   *                                on the level of the other input.
   * @param  TIM_IC1Polarity: specifies the IC1 Polarity.
-  *   This parmeter can be one of the following values:
+  *   This parameter can be one of the following values:
   *     @arg TIM_ICPolarity_Falling: IC Falling edge.
   *     @arg TIM_ICPolarity_Rising: IC Rising edge.
   * @param  TIM_IC2Polarity: specifies the IC2 Polarity
-  *   This parmeter can be one of the following values:
+  *   This parameter can be one of the following values:
   *     @arg TIM_ICPolarity_Falling: IC Falling edge.
   *     @arg TIM_ICPolarity_Rising: IC Rising edge.
   * @retval None

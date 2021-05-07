@@ -7160,7 +7160,7 @@ typedef struct
 #define ETH_MACPFR_DBF                                ETH_MACPFR_DBF_Msk       /* Disable Broadcast Packets */
 #define ETH_MACPFR_PM_Pos                             (4U)
 #define ETH_MACPFR_PM_Msk                             (0x1UL << ETH_MACPFR_PM_Pos) /*!< 0x00000010 */
-#define ETH_MACPFR_PM                                 ETH_MACPFR_PM_Msk        /* Pass all mutlicast */
+#define ETH_MACPFR_PM                                 ETH_MACPFR_PM_Msk        /* Pass all multicast */
 #define ETH_MACPFR_DAIF_Pos                           (3U)
 #define ETH_MACPFR_DAIF_Msk                           (0x1UL << ETH_MACPFR_DAIF_Pos) /*!< 0x00000008 */
 #define ETH_MACPFR_DAIF                               ETH_MACPFR_DAIF_Msk      /* DA Inverse filtering */

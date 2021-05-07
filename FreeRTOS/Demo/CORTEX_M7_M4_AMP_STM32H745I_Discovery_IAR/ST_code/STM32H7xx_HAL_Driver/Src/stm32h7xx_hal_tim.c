@@ -6109,7 +6109,7 @@ void TIM_Base_SetConfig(TIM_TypeDef *TIMx, TIM_Base_InitTypeDef *Structure)
 /**
   * @brief  Timer Output Compare 1 configuration
   * @param  TIMx to select the TIM peripheral
-  * @param  OC_Config The ouput configuration structure
+  * @param  OC_Config The output configuration structure
   * @retval None
   */
 static void TIM_OC1_SetConfig(TIM_TypeDef *TIMx, TIM_OC_InitTypeDef *OC_Config)
@@ -6184,7 +6184,7 @@ static void TIM_OC1_SetConfig(TIM_TypeDef *TIMx, TIM_OC_InitTypeDef *OC_Config)
 /**
   * @brief  Timer Output Compare 2 configuration
   * @param  TIMx to select the TIM peripheral
-  * @param  OC_Config The ouput configuration structure
+  * @param  OC_Config The output configuration structure
   * @retval None
   */
 void TIM_OC2_SetConfig(TIM_TypeDef *TIMx, TIM_OC_InitTypeDef *OC_Config)
@@ -6260,7 +6260,7 @@ void TIM_OC2_SetConfig(TIM_TypeDef *TIMx, TIM_OC_InitTypeDef *OC_Config)
 /**
   * @brief  Timer Output Compare 3 configuration
   * @param  TIMx to select the TIM peripheral
-  * @param  OC_Config The ouput configuration structure
+  * @param  OC_Config The output configuration structure
   * @retval None
   */
 static void TIM_OC3_SetConfig(TIM_TypeDef *TIMx, TIM_OC_InitTypeDef *OC_Config)
@@ -6334,7 +6334,7 @@ static void TIM_OC3_SetConfig(TIM_TypeDef *TIMx, TIM_OC_InitTypeDef *OC_Config)
 /**
   * @brief  Timer Output Compare 4 configuration
   * @param  TIMx to select the TIM peripheral
-  * @param  OC_Config The ouput configuration structure
+  * @param  OC_Config The output configuration structure
   * @retval None
   */
 static void TIM_OC4_SetConfig(TIM_TypeDef *TIMx, TIM_OC_InitTypeDef *OC_Config)
@@ -6394,7 +6394,7 @@ static void TIM_OC4_SetConfig(TIM_TypeDef *TIMx, TIM_OC_InitTypeDef *OC_Config)
 /**
   * @brief  Timer Output Compare 5 configuration
   * @param  TIMx to select the TIM peripheral
-  * @param  OC_Config The ouput configuration structure
+  * @param  OC_Config The output configuration structure
   * @retval None
   */
 static void TIM_OC5_SetConfig(TIM_TypeDef *TIMx,
@@ -6447,7 +6447,7 @@ static void TIM_OC5_SetConfig(TIM_TypeDef *TIMx,
 /**
   * @brief  Timer Output Compare 6 configuration
   * @param  TIMx to select the TIM peripheral
-  * @param  OC_Config The ouput configuration structure
+  * @param  OC_Config The output configuration structure
   * @retval None
   */
 static void TIM_OC6_SetConfig(TIM_TypeDef *TIMx,

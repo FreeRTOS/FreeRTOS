@@ -63,7 +63,7 @@ int __metal_driver_sifive_uart0_getc(struct metal_uart *uart, int *c)
 {
     uint32_t ch;
     long control_base = __metal_driver_sifive_uart0_control_base(uart);
-    /* No seperate status register, we get status and the byte at same time */
+    /* No separate status register, we get status and the byte at same time */
     ch = UART_REGW(METAL_SIFIVE_UART0_RXDATA);;
     if( ch & UART_RXEMPTY ){
       *c = -1; /* aka: EOF in most of the world */

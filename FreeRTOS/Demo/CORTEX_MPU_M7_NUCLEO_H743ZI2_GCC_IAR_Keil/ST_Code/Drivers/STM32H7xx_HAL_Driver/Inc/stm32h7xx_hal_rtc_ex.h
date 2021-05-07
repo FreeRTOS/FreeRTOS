@@ -638,7 +638,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup RTCEx_Tamper_DetectionOutput_Definitions RTC Tamper Detection Ouput Definitions
+/** @defgroup RTCEx_Tamper_DetectionOutput_Definitions RTC Tamper Detection Output Definitions
   * @{
   */
 #if defined(RTC_CR_TAMPOE)

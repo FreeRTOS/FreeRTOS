@@ -220,7 +220,7 @@ a lot of data that needs to be copied, this should be set high. */
 #define IP_FRAG                         1
 #endif
 
-/* IP reassemly default age in seconds */
+/* IP reassembly default age in seconds */
 #ifndef IP_REASS_MAXAGE
 #define IP_REASS_MAXAGE 3
 #endif

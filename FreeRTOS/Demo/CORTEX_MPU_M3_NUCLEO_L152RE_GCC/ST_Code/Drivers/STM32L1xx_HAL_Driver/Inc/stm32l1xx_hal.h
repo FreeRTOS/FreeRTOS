@@ -739,7 +739,7 @@
 /**
   * @brief  Close or open the internal switch COMP1_SW1.
   *         This switch connects I/O pin PC3 (can be used as ADC channel 13)
-  *         and OPAMP3 ouput to ADC switch matrix (ADC channel VCOMP, channel
+  *         and OPAMP3 output to ADC switch matrix (ADC channel VCOMP, channel
   *         26) and COMP1 non-inverting input.
   *         Pin PC3 connection depends on another switch setting, refer to
   *         macro "__HAL_ADC_CHANNEL_SPEED_FAST()".

@@ -3140,7 +3140,7 @@
 //
 //******************************************************************************
 #define OCP_SHARED_SOP_CONF_OVERRIDE_MEM_SOP_CONF_OVERRIDE \
-                                0x00000001  // when '1' : signal will ovberride
+                                0x00000001  // when '1' : signal will override
                                             // SoP setting of JTAG PADS. when
                                             // '0': SoP setting will control
                                             // JTAG PADs [ TDI, TDO, TMS, TCK]

@@ -6765,7 +6765,7 @@ typedef struct {
 #define BSL_SPI_INTERFACE                                  (0x0000A0000)         /* SPI interface */
 #define BSL_I2C_INTERFACE                                  (0x000080000)         /* I2C interface */
 
-#define BSL_INVOKE(x)                                      ((void (*)())BSL_ENTRY_FUNCTION)((uint32_t) x) /* Invoke the BSL with paramters */
+#define BSL_INVOKE(x)                                      ((void (*)())BSL_ENTRY_FUNCTION)((uint32_t) x) /* Invoke the BSL with parameters */
 
 /******************************************************************************
 * ULP Advisor                                                                 *

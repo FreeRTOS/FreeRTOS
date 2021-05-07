@@ -2123,7 +2123,7 @@ u32 ETH_GetTransmitProcessState(void)
 *                     - ETH_DMA_ReceiveProcess_Waiting   : Running - waiting for packet
 *                     - ETH_DMA_ReceiveProcess_Suspended : Suspended - Rx Desciptor unavailable
 *                     - ETH_DMA_ReceiveProcess_Closing   : Running - closing descriptor
-*                     - ETH_DMA_ReceiveProcess_Queuing   : Running - queuing the recieve frame into host memory
+*                     - ETH_DMA_ReceiveProcess_Queuing   : Running - queuing the receive frame into host memory
 *******************************************************************************/
 u32 ETH_GetReceiveProcessState(void)
 {

@@ -4076,9 +4076,9 @@
     * M implementations only). This is not supported for mDDR, LPDDR2, LPDDR3
     * or LPDDR4 SDRAMs. Note: Even if this bit is set it does not take care of
     *  software driven MR commands (via MRCTRL0/MRCTRL1), where software is re
-    * sponsible to send them to seperate ranks as appropriate. - 1 - (DDR4) Se
-    * nd MRS commands to each ranks seperately - 1 - (non-DDR4) Send all comma
-    * nds to even and odd ranks seperately - 0 - Do not stagger accesses
+    * sponsible to send them to separate ranks as appropriate. - 1 - (DDR4) Se
+    * nd MRS commands to each ranks separately - 1 - (non-DDR4) Send all comma
+    * nds to even and odd ranks separately - 0 - Do not stagger accesses
 */
 #undef DDRC_DIMMCTL_DIMM_STAGGER_CS_EN_DEFVAL 
 #undef DDRC_DIMMCTL_DIMM_STAGGER_CS_EN_SHIFT 

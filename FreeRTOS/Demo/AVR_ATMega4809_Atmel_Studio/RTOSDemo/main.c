@@ -83,7 +83,7 @@ hook, uncomment it, and set configCHECK_FOR_STACK_OVERFLOW to 1 in
 //     for( ;; );
 // }
 
-/* vApplicationMallocFailedHook is called when memorry allocation fails.
+/* vApplicationMallocFailedHook is called when memory allocation fails.
 This is usefull in application development, for debugging.  To use this
 hook, uncomment it, and set configUSE_MALLOC_FAILED_HOOK to 1 in
 "FreeRTOSConfig.h" header file. */

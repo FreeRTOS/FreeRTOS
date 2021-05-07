@@ -1248,7 +1248,7 @@ HAL_StatusTypeDef HAL_RCC_ClockConfig(RCC_ClkInitTypeDef  *RCC_ClkInitStruct, ui
     [..]
     This subsection provides a set of functions allowing to:
 
-    (+) Ouput clock to MCO pin.
+    (+) Output clock to MCO pin.
     (+) Retrieve current clock frequencies.
     (+) Enable the Clock Security System.
 

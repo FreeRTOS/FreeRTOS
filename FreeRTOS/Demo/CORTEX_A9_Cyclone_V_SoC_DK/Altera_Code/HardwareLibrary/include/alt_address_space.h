@@ -422,7 +422,7 @@ ALT_STATUS_CODE alt_l2_addr_filter_cfg_set(uint32_t addr_filt_start,
  * support fixed and dynamic modes of operation while output ID 7 supports
  * dynamic mode only.
  *
- * The following table summarizes the usage of the 3-bit ouput ID values by the
+ * The following table summarizes the usage of the 3-bit output ID values by the
  * ACP ID Mapper and their settings at reset.
  *
  *  Output ID  | Usage                                             | Reset State     

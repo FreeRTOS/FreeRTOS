@@ -163,7 +163,7 @@ static BaseType_t prints( struct SStringBuf * apBuf,
     if( xApplicationMemoryPermissions( ( uint32_t ) apString ) == 0 )
     {
         /* The user has probably made a mistake with the parameter
-         * for '%s', the memory is not readbale. */
+         * for '%s', the memory is not readable. */
         apString = "INV_MEM";
     }
 

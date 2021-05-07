@@ -588,7 +588,7 @@ typedef enum ALT_QSPI_CLK_POLARITY_e
 /*!
  * QSPI Controller Timing Configuration
  *
- * This type defines the structure used to configure timing paramaters used by
+ * This type defines the structure used to configure timing parameters used by
  * the QSPI controller to communicate with a target flash device.
  *
  * All timing values are defined in cycles of the SPI master ref clock.

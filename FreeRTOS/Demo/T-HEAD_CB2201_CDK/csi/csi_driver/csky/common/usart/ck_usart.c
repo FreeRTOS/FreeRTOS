@@ -226,7 +226,7 @@ static int32_t dw_usart_set_databit(dw_usart_reg_t *addr, usart_data_bits_e data
 /**
   \brief       get character in query mode.
   \param[in]   instance  usart instance to operate.
-  \param[in]   the pointer to the recieve charater.
+  \param[in]   the pointer to the receive charater.
   \return      error code
 */
 int32_t csi_usart_getchar(usart_handle_t handle, uint8_t *ch)

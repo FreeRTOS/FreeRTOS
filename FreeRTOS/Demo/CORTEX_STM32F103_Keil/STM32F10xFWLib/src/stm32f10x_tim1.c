@@ -343,7 +343,7 @@ void TIM1_OC1Init(TIM1_OCInitTypeDef* TIM1_OCInitStruct)
   /* Reset the Output Compare Bits */
    tmpccmr &= OC13Mode_Mask;
 
-  /* Set the Ouput Compare Mode */
+  /* Set the Output Compare Mode */
   tmpccmr |= TIM1_OCInitStruct->TIM1_OCMode;
 
   TIM1->CCMR1 = tmpccmr;
@@ -400,7 +400,7 @@ void TIM1_OC2Init(TIM1_OCInitTypeDef* TIM1_OCInitStruct)
   /* Reset the Output Compare Bits */
    tmpccmr &= OC24Mode_Mask;
 
-  /* Set the Ouput Compare Mode */
+  /* Set the Output Compare Mode */
   tmpccmr |= (u32)TIM1_OCInitStruct->TIM1_OCMode << 8;
 
   TIM1->CCMR1 = (u16)tmpccmr;
@@ -457,7 +457,7 @@ void TIM1_OC3Init(TIM1_OCInitTypeDef* TIM1_OCInitStruct)
   /* Reset the Output Compare Bits */
    tmpccmr &= OC13Mode_Mask;
 
-  /* Set the Ouput Compare Mode */
+  /* Set the Output Compare Mode */
   tmpccmr |= TIM1_OCInitStruct->TIM1_OCMode;
 
   TIM1->CCMR2 = tmpccmr;
@@ -511,7 +511,7 @@ void TIM1_OC4Init(TIM1_OCInitTypeDef* TIM1_OCInitStruct)
   /* Reset the Output Compare Bits */
    tmpccmr &= OC24Mode_Mask;
 
-  /* Set the Ouput Compare Mode */
+  /* Set the Output Compare Mode */
   tmpccmr |= (u32)TIM1_OCInitStruct->TIM1_OCMode << 8;
 
   TIM1->CCMR2 = (u16)tmpccmr;
@@ -1177,7 +1177,7 @@ void TIM1_SelectOnePulseMode(u16 TIM1_OPMode)
 * Function Name  : TIM1_SelectOutputTrigger
 * Description    : Selects the TIM1 Trigger Output Mode.
 * Input          : - TIM1_TRGOSource: specifies the Trigger Output source.
-*                    This paramter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM1_TRGOSource_Reset
 *                       - TIM1_TRGOSource_Enable
 *                       - TIM1_TRGOSource_Update
@@ -1211,7 +1211,7 @@ void TIM1_SelectOutputTrigger(u16 TIM1_TRGOSource)
 * Function Name  : TIM1_SelectSlaveMode
 * Description    : Selects the TIM1 Slave Mode.
 * Input          : - TIM1_SlaveMode: specifies the TIM1 Slave Mode.
-*                    This paramter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM1_SlaveMode_Reset
 *                       - TIM1_SlaveMode_Gated
 *                       - TIM1_SlaveMode_Trigger
@@ -1241,7 +1241,7 @@ void TIM1_SelectSlaveMode(u16 TIM1_SlaveMode)
 * Function Name  : TIM1_SelectMasterSlaveMode
 * Description    : Sets or Resets the TIM1 Master/Slave Mode.
 * Input          : - TIM1_MasterSlaveMode: specifies the TIM1 Master Slave Mode.
-*                    This paramter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM1_MasterSlaveMode_Enable: synchronization between
 *                         the current timer and its slaves (through TRGO).
 *                       - TIM1_MasterSlaveMode_Disable: No action
@@ -1269,11 +1269,11 @@ void TIM1_SelectMasterSlaveMode(u16 TIM1_MasterSlaveMode)
 *                       - TIM1_EncoderMode_TI12: Counter counts on both TI1FP1 and
 *                         TI2FP2 edges depending on the level of the other input.
 *                  - TIM1_IC1Polarity: specifies the IC1 Polarity
-*                    This parmeter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM1_ICPolarity_Falling
 *                       - TIM1_ICPolarity_Rising
 *                  - TIM1_IC2Polarity: specifies the IC2 Polarity
-*                    This parmeter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM1_ICPolarity_Falling
 *                       - TIM1_ICPolarity_Rising
 * Output         : None
@@ -1315,7 +1315,7 @@ void TIM1_EncoderInterfaceConfig(u16 TIM1_EncoderMode, u16 TIM1_IC1Polarity,
 * Description    : Configures the TIM1 Prescaler.
 * Input          : - Prescaler: specifies the Prescaler Register value
 *                  - TIM1_PSCReloadMode: specifies the TIM1 Prescaler Reload mode.
-*                    This parmeter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM1_PSCReloadMode_Update: The Prescaler is loaded at
 *                         the update event.
 *                       - TIM1_PSCReloadMode_Immediate: The Prescaler is loaded
@@ -1743,7 +1743,7 @@ void TIM1_GenerateEvent(u16 TIM1_EventSource)
 * Function Name  : TIM1_OC1PolarityConfig
 * Description    : Configures the TIM1 Channel 1 polarity.
 * Input          : - TIM1_OCPolarity: specifies the OC1 Polarity
-*                    This parmeter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM1_OCPolarity_High: Output Compare active high
 *                       - TIM1_OCPolarity_Low: Output Compare active low
 * Output         : None
@@ -1762,7 +1762,7 @@ void TIM1_OC1PolarityConfig(u16 TIM1_OCPolarity)
 * Function Name  : TIM1_OC1NPolarityConfig
 * Description    : Configures the TIM1 Channel 1N polarity.
 * Input          : - TIM1_OCPolarity: specifies the OC1N Polarity
-*                    This parmeter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM1_OCPolarity_High: Output Compare active high
 *                       - TIM1_OCPolarity_Low: Output Compare active low
 * Output         : None
@@ -1781,7 +1781,7 @@ void TIM1_OC1NPolarityConfig(u16 TIM1_OCPolarity)
 * Function Name  : TIM1_OC2PolarityConfig
 * Description    : Configures the TIM1 Channel 2 polarity.
 * Input          : - TIM1_OCPolarity: specifies the OC2 Polarity
-*                    This parmeter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM1_OCPolarity_High: Output Compare active high
 *                       - TIM1_OCPolarity_Low: Output Compare active low
 * Output         : None
@@ -1800,7 +1800,7 @@ void TIM1_OC2PolarityConfig(u16 TIM1_OCPolarity)
 * Function Name  : TIM1_OC2NPolarityConfig
 * Description    : Configures the TIM1 Channel 2N polarity.
 * Input          : - TIM1_OCPolarity: specifies the OC2N Polarity
-*                    This parmeter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM1_OCPolarity_High: Output Compare active high
 *                       - TIM1_OCPolarity_Low: Output Compare active low
 * Output         : None
@@ -1819,7 +1819,7 @@ void TIM1_OC2NPolarityConfig(u16 TIM1_OCPolarity)
 * Function Name  : TIM1_OC3PolarityConfig
 * Description    : Configures the TIM1 Channel 3 polarity.
 * Input          : - TIM1_OCPolarity: specifies the OC3 Polarity
-*                    This parmeter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM1_OCPolarity_High: Output Compare active high
 *                       - TIM1_OCPolarity_Low: Output Compare active low
 * Output         : None
@@ -1838,7 +1838,7 @@ void TIM1_OC3PolarityConfig(u16 TIM1_OCPolarity)
 * Function Name  : TIM1_OC3NPolarityConfig
 * Description    : Configures the TIM1 Channel 3N polarity.
 * Input          : - TIM1_OCPolarity: specifies the OC3N Polarity
-*                    This parmeter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM1_OCPolarity_High: Output Compare active high
 *                       - TIM1_OCPolarity_Low: Output Compare active low
 * Output         : None
@@ -1857,7 +1857,7 @@ void TIM1_OC3NPolarityConfig(u16 TIM1_OCPolarity)
 * Function Name  : TIM1_OC4PolarityConfig
 * Description    : Configures the TIM1 Channel 4 polarity.
 * Input          : - TIM1_OCPolarity: specifies the OC4 Polarity
-*                    This parmeter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM1_OCPolarity_High: Output Compare active high
 *                       - TIM1_OCPolarity_Low: Output Compare active low
 * Output         : None
@@ -1876,7 +1876,7 @@ void TIM1_OC4PolarityConfig(u16 TIM1_OCPolarity)
 * Function Name  : TIM1_CCxCmd
 * Description    : Enables or disables the TIM1 Capture Compare Channel x.
 * Input          : - TIM1_Channel: specifies the TIM1 Channel
-*                    This parmeter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM1_Channel1: TIM1 Channel1
 *                       - TIM1_Channel2: TIM1 Channel2
 *                       - TIM1_Channel3: TIM1 Channel3
@@ -1918,7 +1918,7 @@ void TIM1_CCxCmd(u16 TIM1_Channel, FunctionalState Newstate)
 * Function Name  : TIM1_CCxNCmd
 * Description    : Enables or disables the TIM1 Capture Compare Channel xN.
 * Input          : - TIM1_Channel: specifies the TIM1 Channel
-*                    This parmeter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM1_Channel1: TIM1 Channel1
 *                       - TIM1_Channel2: TIM1 Channel2
 *                       - TIM1_Channel3: TIM1 Channel3
@@ -1952,18 +1952,18 @@ void TIM1_CCxNCmd(u16 TIM1_Channel, FunctionalState Newstate)
 
 /*******************************************************************************
 * Function Name  : TIM1_SelectOCxM
-* Description    : Selects the TIM1 Ouput Compare Mode.
+* Description    : Selects the TIM1 Output Compare Mode.
 *                  This function disables the selected channel before changing 
-*                  the Ouput Compare Mode. User has to enable this channel using
+*                  the Output Compare Mode. User has to enable this channel using
 *                  TIM1_CCxCmd and TIM1_CCxNCmd functions.
 * Input          : - TIM1_Channel: specifies the TIM1 Channel
-*                    This parmeter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM1_Channel1: TIM1 Channel1
 *                       - TIM1_Channel2: TIM1 Channel2
 *                       - TIM1_Channel3: TIM1 Channel3
 *                       - TIM1_Channel4: TIM1 Channel4
 *                  - TIM1_OCMode: specifies the TIM1 Output Compare Mode.
-*                    This paramter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM1_OCMode_Timing
 *                       - TIM1_OCMode_Active
 *                       - TIM1_OCMode_Toggle
@@ -1988,7 +1988,7 @@ void TIM1_SelectOCxM(u16 TIM1_Channel, u16 TIM1_OCMode)
     /* Reset the Output Compare Bits */
     TIM1->CCMR1 &= OC13Mode_Mask;
 
-    /* Set the Ouput Compare Mode */
+    /* Set the Output Compare Mode */
     TIM1->CCMR1 |= TIM1_OCMode;
   }
   else if(TIM1_Channel == TIM1_Channel_2)
@@ -1999,7 +1999,7 @@ void TIM1_SelectOCxM(u16 TIM1_Channel, u16 TIM1_OCMode)
     /* Reset the Output Compare Bits */
     TIM1->CCMR1 &= OC24Mode_Mask;
 
-    /* Set the Ouput Compare Mode */
+    /* Set the Output Compare Mode */
     TIM1->CCMR1 |= (u16)((u16)TIM1_OCMode << 8);
   }
   else if(TIM1_Channel == TIM1_Channel_3)
@@ -2010,7 +2010,7 @@ void TIM1_SelectOCxM(u16 TIM1_Channel, u16 TIM1_OCMode)
     /* Reset the Output Compare Bits */
     TIM1->CCMR2 &= OC13Mode_Mask;
 
-    /* Set the Ouput Compare Mode */
+    /* Set the Output Compare Mode */
     TIM1->CCMR2 |= TIM1_OCMode;
   }
   else
@@ -2021,7 +2021,7 @@ void TIM1_SelectOCxM(u16 TIM1_Channel, u16 TIM1_OCMode)
     /* Reset the Output Compare Bits */
     TIM1->CCMR2 &= OC24Mode_Mask;
 
-    /* Set the Ouput Compare Mode */
+    /* Set the Output Compare Mode */
     TIM1->CCMR2 |= (u16)((u16)TIM1_OCMode << 8);
   }
 }

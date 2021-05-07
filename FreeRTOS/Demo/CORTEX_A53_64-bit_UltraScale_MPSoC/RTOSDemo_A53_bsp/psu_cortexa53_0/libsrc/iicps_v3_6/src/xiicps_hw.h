@@ -184,7 +184,7 @@ extern "C" {
 
 #define XIICPS_IXR_ARB_LOST_MASK  0x00000200U	 /**< Arbitration Lost Interrupt
 													mask */
-#define XIICPS_IXR_RX_UNF_MASK    0x00000080U	 /**< FIFO Recieve Underflow
+#define XIICPS_IXR_RX_UNF_MASK    0x00000080U	 /**< FIFO Receive Underflow
 													Interrupt mask */
 #define XIICPS_IXR_TX_OVR_MASK    0x00000040U	 /**< Transmit Overflow
 													Interrupt mask */

@@ -52,7 +52,7 @@
  * This function is used by the other checksum functions.
  *
  * For now, this is not optimized. Must be optimized for the particular processor
- * arcitecture on which it is to run. Preferebly coded in assembler.
+ * arcitecture on which it is to run. Preferably coded in assembler.
  */
 
 static u32_t

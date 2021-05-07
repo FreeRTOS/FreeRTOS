@@ -58,7 +58,7 @@
  *
  *   Implemented LANManager type password response to MS-CHAP challenges.
  *   Now pppd provides both NT style and LANMan style blocks, and the
- *   prefered is set by option "ms-lanman". Default is to use NT.
+ *   preferred is set by option "ms-lanman". Default is to use NT.
  *   The hash text (StdText) was taken from Win95 RASAPI32.DLL.
  *
  *   You should also use DOMAIN\\USERNAME as described in README.MSCHAP80
@@ -159,7 +159,7 @@ void ChapMS(
 #ifdef MSLANMAN
 	ChapMS_LANMan(rchallenge, rchallenge_len, secret, secret_len, &response);
 	
-	/* prefered method is set by option  */
+	/* preferred method is set by option  */
 	response.UseNT = !ms_lanman;
 #else
 	response.UseNT = 1;

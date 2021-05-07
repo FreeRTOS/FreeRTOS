@@ -126,7 +126,7 @@ ALT_16550_HANDLE_t;
  *
  * \param       clock_freq
  *              The clock frequency of the serial clock for the given UART.
- *              For SoCFPGA UARTs, this paramter is ignored.
+ *              For SoCFPGA UARTs, this parameter is ignored.
  *
  * \param       handle
  *              [out] A pointer to a handle that will represent the UART. This
@@ -651,7 +651,7 @@ ALT_16550_BAUDRATE_t;
  *              The UART device handle.
  *
  * \param       baudrate
- *              [out] Pointer to an output paramter that contains the current
+ *              [out] Pointer to an output parameter that contains the current
  *              baudrate of the UART.
  *
  * \retval      ALT_E_SUCCESS   The operation was successful.

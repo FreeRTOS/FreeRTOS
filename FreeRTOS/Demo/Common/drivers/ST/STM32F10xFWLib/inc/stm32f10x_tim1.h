@@ -460,14 +460,14 @@ typedef struct
 #define IS_TIM1_UPDATE_SOURCE(SOURCE) ((SOURCE == TIM1_UpdateSource_Global) || \
                                        (SOURCE == TIM1_UpdateSource_Regular))
 
-/* TIM1 Ouput Compare Preload State ------------------------------------------*/
+/* TIM1 Output Compare Preload State ------------------------------------------*/
 #define TIM1_OCPreload_Enable              ((u16)0x0001)
 #define TIM1_OCPreload_Disable             ((u16)0x0000)
 
 #define IS_TIM1_OCPRELOAD_STATE(STATE) ((STATE == TIM1_OCPreload_Enable) || \
                                         (STATE == TIM1_OCPreload_Disable))
 
-/* TIM1 Ouput Compare Fast State ---------------------------------------------*/
+/* TIM1 Output Compare Fast State ---------------------------------------------*/
 #define TIM1_OCFast_Enable                 ((u16)0x0001)
 #define TIM1_OCFast_Disable                ((u16)0x0000)
 

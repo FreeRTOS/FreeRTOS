@@ -43,7 +43,7 @@
 #include <interrupt.h>
 #include <hw_memmap.h>
 
-/* DriverLib internal GPIO register offset for optimized performace */
+/* DriverLib internal GPIO register offset for optimized performance */
 #define OFS_LIB_PAIN  ((uint32_t)&P1->IN - (uint32_t)P1)
 #define OFS_LIB_PAOUT   ((uint32_t)&P1->OUT - (uint32_t)P1)
 #define OFS_LIB_PADIR   ((uint32_t)&P1->DIR - (uint32_t)P1)

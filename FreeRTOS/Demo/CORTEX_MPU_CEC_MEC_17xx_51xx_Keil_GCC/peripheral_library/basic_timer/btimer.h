@@ -113,7 +113,7 @@ void btimer_init(uint8_t btimer_id,
  * @param count new counter value 
  * @note Timer hardware may implement a 16-bit or 32-bit 
  *       hardware counter. If the timer is 16-bit only the lower
- *       16-bits of the count paramter are used.
+ *       16-bits of the count parameter are used.
  */
 void btimer_count_set(uint8_t btimer_id, uint32_t count);
 

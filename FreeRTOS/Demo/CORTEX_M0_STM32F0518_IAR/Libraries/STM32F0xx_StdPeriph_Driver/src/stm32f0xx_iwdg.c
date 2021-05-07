@@ -36,7 +36,7 @@
     [..] Min-max timeout value @40KHz (LSI): ~0.1ms / ~28.3s
          The IWDG timeout may vary due to LSI frequency dispersion. STM32F0xx
          devices provide the capability to measure the LSI frequency (LSI clock
-         should be seleted as RTC clock which is internally connected to TIM10 CH1
+         should be selected as RTC clock which is internally connected to TIM10 CH1
          input capture). The measured value can be used to have an IWDG timeout with
          an acceptable accuracy. 
          For more information, please refer to the STM32F0xx Reference manual.

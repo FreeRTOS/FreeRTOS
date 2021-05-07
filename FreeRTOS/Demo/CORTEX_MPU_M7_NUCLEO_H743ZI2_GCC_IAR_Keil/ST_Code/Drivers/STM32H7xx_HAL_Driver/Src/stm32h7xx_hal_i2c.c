@@ -103,7 +103,7 @@
       (++) I2C_NEXT_FRAME: Sequential usage, this option allow to manage a sequence with a restart condition, address
                             and with new data to transfer if the direction change or manage only the new data to transfer
                             if no direction change and without a final stop condition in both cases
-      (++) I2C_LAST_FRAME: Sequential usage, this option allow to manage a sequance with a restart condition, address
+      (++) I2C_LAST_FRAME: Sequential usage, this option allow to manage a sequence with a restart condition, address
                             and with new data to transfer if the direction change or manage only the new data to transfer
                             if no direction change and with a final stop condition in both cases
       (++) I2C_LAST_FRAME_NO_STOP: Sequential usage (Master only), this option allow to manage a restart condition after several call of the same master sequential

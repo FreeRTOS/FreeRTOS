@@ -695,7 +695,7 @@ uint32_t usart_fifo_rx_size(Usart *usart)
 }
 
 /**
- * \brief Get the size occupied in the ouput FIFO of USART device.
+ * \brief Get the size occupied in the output FIFO of USART device.
  *
  * \param usart Pointer to an USART instance.
  * \return Size occupied in the output FIFO (not sent yet) in octet

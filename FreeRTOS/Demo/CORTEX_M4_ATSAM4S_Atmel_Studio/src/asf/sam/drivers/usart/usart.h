@@ -276,7 +276,7 @@ void usart_man_disable_drift_compensation(Usart *p_usart);
  * the steps for usage can be copied into, e.g., the main application function.
  *
  * \note Some SAM devices contain both USART and UART modules, with the latter
- *       being a subset in functionality of the former but physically seperate
+ *       being a subset in functionality of the former but physically separate
  *       peripherals. UART modules are compatible with the USART driver, but
  *       only for the functions and modes suported by the base UART driver.
  *

@@ -158,11 +158,11 @@ void             tcp_rexmit_rto  (struct tcp_pcb *pcb);
  * User-settable options (used with setsockopt).
  */
 #define	TCP_NODELAY	   0x01	   /* don't delay send to coalesce packets */
-#define TCP_KEEPALIVE  0x02    /* send KEEPALIVE probes when idle for pcb->keepalive miliseconds */
+#define TCP_KEEPALIVE  0x02    /* send KEEPALIVE probes when idle for pcb->keepalive milliseconds */
 
 /* Keepalive values */
-#define  TCP_KEEPDEFAULT   7200000                       /* KEEPALIVE timer in miliseconds */
-#define  TCP_KEEPINTVL     75000                         /* Time between KEEPALIVE probes in miliseconds */
+#define  TCP_KEEPDEFAULT   7200000                       /* KEEPALIVE timer in milliseconds */
+#define  TCP_KEEPINTVL     75000                         /* Time between KEEPALIVE probes in milliseconds */
 #define  TCP_KEEPCNT       9                             /* Counter for KEEPALIVE probes */
 #define  TCP_MAXIDLE       TCP_KEEPCNT * TCP_KEEPINTVL   /* Maximum KEEPALIVE probe time */
 

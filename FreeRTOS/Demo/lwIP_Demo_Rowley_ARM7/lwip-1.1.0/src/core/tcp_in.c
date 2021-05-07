@@ -867,7 +867,7 @@ tcp_receive(struct tcp_pcb *pcb)
       pcb->sv += m;
       pcb->rto = (pcb->sa >> 3) + pcb->sv;
 
-      LWIP_DEBUGF(TCP_RTO_DEBUG, ("tcp_receive: RTO %u (%u miliseconds)\n",
+      LWIP_DEBUGF(TCP_RTO_DEBUG, ("tcp_receive: RTO %u (%u milliseconds)\n",
                                   pcb->rto, pcb->rto * TCP_SLOW_INTERVAL));
 
       pcb->rttest = 0;

@@ -348,7 +348,7 @@ void ge448_scalarmult_base(ge448_p2* h, const uint8_t* a)
     ge448_scalarmult(h, &ed448_base, a);
 }
 
-/* Perform a scalar multplication of the base point and public point.
+/* Perform a scalar multiplication of the base point and public point.
  *   r = a * p + b * base
  * Uses a sliding window of 5 bits.
  * Not constant time.
@@ -10610,7 +10610,7 @@ void ge448_scalarmult_base(ge448_p2* r, const uint8_t* a)
     }
 }
 
-/* Create to a sliding window for the scalar multiplicaton.
+/* Create to a sliding window for the scalar multiplication.
  *
  * r  [in]  Array of indeces.
  * a  [in]  Scalar to break up.
@@ -10655,7 +10655,7 @@ static void slide(int8_t *r, const uint8_t *a)
     }
 }
 
-/* Perform a scalar multplication of the base point and public point.
+/* Perform a scalar multiplication of the base point and public point.
  *   r = a * p + b * base
  * Uses a sliding window of 5 bits.
  * Not constant time.

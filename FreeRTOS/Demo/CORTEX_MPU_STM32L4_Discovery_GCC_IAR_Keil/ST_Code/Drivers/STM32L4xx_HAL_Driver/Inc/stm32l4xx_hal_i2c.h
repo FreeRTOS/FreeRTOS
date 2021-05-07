@@ -195,7 +195,7 @@ typedef struct __I2C_HandleTypeDef
 
   __IO uint16_t              XferCount;      /*!< I2C transfer counter                      */
 
-  __IO uint32_t              XferOptions;    /*!< I2C sequantial transfer options, this parameter can
+  __IO uint32_t              XferOptions;    /*!< I2C sequential transfer options, this parameter can
                                                   be a value of @ref I2C_XFEROPTIONS */
 
   __IO uint32_t              PreviousState;  /*!< I2C communication Previous state          */

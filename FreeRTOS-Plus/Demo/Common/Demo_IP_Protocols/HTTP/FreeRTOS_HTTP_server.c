@@ -63,7 +63,7 @@
 	#define ARRAY_SIZE(x) ( BaseType_t ) (sizeof( x ) / sizeof( x )[ 0 ] )
 #endif
 
-/* Some defines to make the code more readbale */
+/* Some defines to make the code more readable */
 #define pcCOMMAND_BUFFER	pxClient->pxParent->pcCommandBuffer
 #define pcNEW_DIR			pxClient->pxParent->pcNewDir
 #define pcFILE_BUFFER		pxClient->pxParent->pcFileBuffer

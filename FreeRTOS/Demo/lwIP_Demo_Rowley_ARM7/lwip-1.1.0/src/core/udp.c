@@ -409,7 +409,7 @@ udp_send(struct udp_pcb *pcb, struct pbuf *p)
 
   /* not enough space to add an UDP header to first pbuf in given p chain? */
   if (pbuf_header(p, UDP_HLEN)) {
-    /* allocate header in a seperate new pbuf */
+    /* allocate header in a separate new pbuf */
     q = pbuf_alloc(PBUF_IP, UDP_HLEN, PBUF_RAM);
     /* new header pbuf could not be allocated? */
     if (q == NULL) {
@@ -491,7 +491,7 @@ udp_send(struct udp_pcb *pcb, struct pbuf *p)
   /* TODO: must this be increased even if error occured? */
   snmp_inc_udpoutdatagrams();
 
-  /* did we chain a seperate header pbuf earlier? */
+  /* did we chain a separate header pbuf earlier? */
   if (q != p) {
     /* free the header pbuf */
     pbuf_free(q); q = NULL;

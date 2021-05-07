@@ -124,7 +124,7 @@ typedef enum {
 
 /**
  * This typedef defines resetIDs of peripherals maps to PMUFW resetIDs. This
- * resetIDs are not offseted by 1000 and are relative.
+ * resetIDs are not offset by 1000 and are relative.
  */
 typedef enum {
 	XRESETPS_RSTID_START,

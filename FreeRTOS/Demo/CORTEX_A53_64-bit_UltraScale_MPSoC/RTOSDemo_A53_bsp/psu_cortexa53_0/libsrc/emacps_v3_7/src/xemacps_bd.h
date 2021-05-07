@@ -193,7 +193,7 @@ typedef u32 XEmacPs_Bd[XEMACPS_BD_NUM_WORDS];
  * @param  BdPtr is the BD pointer to operate on
  * @param  Addr  is the value to write to BD's status field.
  *
- * @note : Due to some bits are mixed within recevie BD's address field,
+ * @note : Due to some bits are mixed within receive BD's address field,
  *         read-modify-write is performed.
  *
  * C-style signature:

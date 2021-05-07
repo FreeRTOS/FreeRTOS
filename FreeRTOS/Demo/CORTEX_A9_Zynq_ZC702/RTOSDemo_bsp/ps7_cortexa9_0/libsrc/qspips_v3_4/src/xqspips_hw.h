@@ -291,7 +291,7 @@ extern "C" {
  */
 #define XQSPIPS_LQSPI_CR_LINEAR_MASK	 0x80000000 /**< LQSPI mode enable */
 #define XQSPIPS_LQSPI_CR_TWO_MEM_MASK	 0x40000000 /**< Both memories or one */
-#define XQSPIPS_LQSPI_CR_SEP_BUS_MASK	 0x20000000 /**< Seperate memory bus */
+#define XQSPIPS_LQSPI_CR_SEP_BUS_MASK	 0x20000000 /**< Separate memory bus */
 #define XQSPIPS_LQSPI_CR_U_PAGE_MASK	 0x10000000 /**< Upper memory page */
 #define XQSPIPS_LQSPI_CR_MODE_EN_MASK	 0x02000000 /**< Enable mode bits */
 #define XQSPIPS_LQSPI_CR_MODE_ON_MASK	 0x01000000 /**< Mode on */

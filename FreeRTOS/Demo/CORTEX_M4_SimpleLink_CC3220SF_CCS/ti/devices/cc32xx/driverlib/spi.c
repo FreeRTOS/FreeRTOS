@@ -596,7 +596,7 @@ SPIDisable(unsigned long ulBase)
 
 //*****************************************************************************
 //
-//! Enables the SPI DMA operation for transmitting and/or receving.
+//! Enables the SPI DMA operation for transmitting and/or receiving.
 //!
 //! \param ulBase is the base address of the SPI module
 //! \param ulFlags selectes the DMA signal for transmit and/or receive.
@@ -623,7 +623,7 @@ SPIDmaEnable(unsigned long ulBase, unsigned long ulFlags)
 
 //*****************************************************************************
 //
-//! Disables the SPI DMA operation for transmitting and/or receving.
+//! Disables the SPI DMA operation for transmitting and/or receiving.
 //!
 //! \param ulBase is the base address of the SPI module
 //! \param ulFlags selectes the DMA signal for transmit and/or receive.
@@ -685,7 +685,7 @@ SPIReset(unsigned long ulBase)
 //! \param ulBitRate is the desired bit rate.(master mode)
 //! \param ulMode is the mode of operation.
 //! \param ulSubMode is one of the valid sub-modes.
-//! \param ulConfig is logical OR of configuration paramaters.
+//! \param ulConfig is logical OR of configuration parameters.
 //!
 //! This function configures SPI port for operation in specified sub-mode and
 //! required bit rated as specified by \e ulMode and \e ulBitRate parameters

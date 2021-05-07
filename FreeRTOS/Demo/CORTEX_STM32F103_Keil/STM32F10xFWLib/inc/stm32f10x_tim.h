@@ -57,7 +57,7 @@ typedef struct
 } TIM_ICInitTypeDef;
 
 /* Exported constants -------------------------------------------------------*/
-/* TIM Ouput Compare modes --------------------------------------------------*/
+/* TIM Output Compare modes --------------------------------------------------*/
 #define TIM_OCMode_Timing                 ((u16)0x0000)
 #define TIM_OCMode_Active                 ((u16)0x0010)
 #define TIM_OCMode_Inactive               ((u16)0x0020)
@@ -346,14 +346,14 @@ typedef struct
 #define IS_TIM_UPDATE_SOURCE(SOURCE) ((SOURCE == TIM_UpdateSource_Global) || \
                                       (SOURCE == TIM_UpdateSource_Regular))
 
-/* TIM Ouput Compare Preload State ------------------------------------------*/
+/* TIM Output Compare Preload State ------------------------------------------*/
 #define TIM_OCPreload_Enable              ((u16)0x0008)
 #define TIM_OCPreload_Disable             ((u16)0x0000)
 
 #define IS_TIM_OCPRELOAD_STATE(STATE) ((STATE == TIM_OCPreload_Enable) || \
                                        (STATE == TIM_OCPreload_Disable))
 
-/* TIM Ouput Compare Fast State ---------------------------------------------*/
+/* TIM Output Compare Fast State ---------------------------------------------*/
 #define TIM_OCFast_Enable                 ((u16)0x0004)
 #define TIM_OCFast_Disable                ((u16)0x0000)
 

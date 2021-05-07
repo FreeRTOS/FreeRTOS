@@ -660,7 +660,7 @@ extern void Timer_A_configureUpDownMode(uint32_t timer,
 //!         timer captureComapre interrupt. Valid values are
 //!      - \b TIMER_A_CAPTURECOMPARE_INTERRUPT_DISABLE [Default value]
 //!      - \b TIMER_A_CAPTURECOMPARE_INTERRUPT_ENABLE
-//! \param captureOutputMode specifies the ouput mode. Valid values are
+//! \param captureOutputMode specifies the output mode. Valid values are
 //!      - \b TIMER_A_OUTPUTMODE_OUTBITVALUE [Default value],
 //!      - \b TIMER_A_OUTPUTMODE_SET,
 //!      - \b TIMER_A_OUTPUTMODE_TOGGLE_RESET,
@@ -776,7 +776,7 @@ extern uint_fast8_t Timer_A_getSynchronizedCaptureCompareInput(uint32_t timer,
 
 //*****************************************************************************
 //
-//! Get ouput bit for output mode
+//! Get output bit for output mode
 //!
 //! \param timer is the instance of the Timer_A module. Valid parameters
 //! vary from part to part, but can include:
@@ -833,7 +833,7 @@ extern uint_fast16_t Timer_A_getCaptureCompareCount(uint32_t timer,
 
 //*****************************************************************************
 //
-//! Set ouput bit for output mode
+//! Set output bit for output mode
 //!
 //! \param timer is the instance of the Timer_A module. Valid parameters
 //! vary from part to part, but can include:
@@ -919,7 +919,7 @@ extern void Timer_A_setOutputForOutputModeOutBitValue(uint32_t timer,
 //!   - \b TIMER_A_CAPTURECOMPARE_REGISTER_6
 //!    <br>\n Refer to datasheet to ensure the device has the capture compare
 //!    register being used
-//! \param compareOutputMode specifies the ouput mode. Valid values are:
+//! \param compareOutputMode specifies the output mode. Valid values are:
 //!      - \b TIMER_A_OUTPUTMODE_OUTBITVALUE,
 //!      - \b TIMER_A_OUTPUTMODE_SET,
 //!      - \b TIMER_A_OUTPUTMODE_TOGGLE_RESET,

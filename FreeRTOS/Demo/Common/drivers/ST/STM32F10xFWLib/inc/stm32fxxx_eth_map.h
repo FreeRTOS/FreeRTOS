@@ -154,7 +154,7 @@ typedef struct
   #define ETH_MACFFR_PCF_ForwardAll              ((u32)0x00000080)  /* MAC forwards all control frames to application even if they fail the Address Filter */
   #define ETH_MACFFR_PCF_ForwardPassedAddrFilter ((u32)0x000000C0)  /* MAC forwards control frames that pass the Address Filter. */
 #define ETH_MACFFR_BFD    ((u32)0x00000020)  /* Broadcast frame disable */
-#define ETH_MACFFR_PAM 	  ((u32)0x00000010)  /* Pass all mutlicast */
+#define ETH_MACFFR_PAM 	  ((u32)0x00000010)  /* Pass all multicast */
 #define ETH_MACFFR_DAIF   ((u32)0x00000008)  /* DA Inverse filtering */
 #define ETH_MACFFR_HM     ((u32)0x00000004)  /* Hash multicast */
 #define ETH_MACFFR_HU     ((u32)0x00000002)  /* Hash unicast */
@@ -447,7 +447,7 @@ typedef struct
   #define ETH_DMASR_RPS_Waiting         ((u32)0x00060000)  /* Running - waiting for packet */
   #define ETH_DMASR_RPS_Suspended       ((u32)0x00080000)  /* Suspended - Rx Descriptor unavailable */
   #define ETH_DMASR_RPS_Closing         ((u32)0x000A0000)  /* Running - closing descriptor */
-  #define ETH_DMASR_RPS_Queuing         ((u32)0x000E0000)  /* Running - queuing the recieve frame into host memory */
+  #define ETH_DMASR_RPS_Queuing         ((u32)0x000E0000)  /* Running - queuing the receive frame into host memory */
 #define ETH_DMASR_NIS        ((u32)0x00010000)  /* Normal interrupt summary */
 #define ETH_DMASR_AIS        ((u32)0x00008000)  /* Abnormal interrupt summary */
 #define ETH_DMASR_ERS        ((u32)0x00004000)  /* Early receive status */

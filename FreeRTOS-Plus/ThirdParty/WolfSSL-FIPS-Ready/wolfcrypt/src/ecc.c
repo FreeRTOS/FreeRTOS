@@ -54,7 +54,7 @@ Possible ECC enable options:
  * USE_ECC_B_PARAM:     Enable ECC curve B param                default: off
                          (on for HAVE_COMP_KEY)
  * WOLFSSL_ECC_CURVE_STATIC:                                    default off (on for windows)
-                        For the ECC curve paramaters `ecc_set_type` use fixed
+                        For the ECC curve parameters `ecc_set_type` use fixed
                         array for hex string
  * WC_ECC_NONBLOCK:     Enable non-blocking support for sign/verify. 
                         Requires SP with WOLFSSL_SP_NONBLOCK

@@ -139,7 +139,7 @@ extern "C" {
 #define XQSPIPSU_LQSPI_CR_OFFSET	0X000000A0U
 #define XQSPIPSU_LQSPI_CR_LINEAR_MASK     0x80000000 /**< LQSPI mode enable */
 #define XQSPIPSU_LQSPI_CR_TWO_MEM_MASK    0x40000000 /**< Both memories or one */
-#define XQSPIPSU_LQSPI_CR_SEP_BUS_MASK    0x20000000 /**< Seperate memory bus */
+#define XQSPIPSU_LQSPI_CR_SEP_BUS_MASK    0x20000000 /**< Separate memory bus */
 #define XQSPIPSU_LQSPI_CR_U_PAGE_MASK     0x10000000 /**< Upper memory page */
 #define XQSPIPSU_LQSPI_CR_ADDR_32BIT_MASK     0x01000000 /**< Upper memory page */
 #define XQSPIPSU_LQSPI_CR_MODE_EN_MASK    0x02000000 /**< Enable mode bits */

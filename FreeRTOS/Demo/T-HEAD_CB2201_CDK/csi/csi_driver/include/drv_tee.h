@@ -265,7 +265,7 @@ int32_t csi_tee_get_manifest_info(uint8_t *out, uint32_t *out_len, char *name);
 int32_t csi_tee_rand_seed(uint32_t seed);
 
 /**
-  \brief       TEE ramdom date generation
+  \brief       TEE random date generation
   \param[out]  out     Pointer to random data buffer
   \param[in]   out_len Data buffer length
   \return      return 0 if successful,otherwise error code

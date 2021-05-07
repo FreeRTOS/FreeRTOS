@@ -1025,7 +1025,7 @@ PRCMSRAMRetentionDisable(unsigned long ulSramColSel, unsigned long ulFlags)
 //!
 //! \param ulHIBWakupSrc is logical OR of valid HIB wakeup sources.
 //!
-//! This function enables individual HIB wakeup source(s). The paramter
+//! This function enables individual HIB wakeup source(s). The parameter
 //! \e ulHIBWakupSrc is the bit mask of HIB wakeup sources and should be
 //! logical OR of one or more of the following :-
 //! -\b PRCM_HIB_SLOW_CLK_CTR
@@ -1082,7 +1082,7 @@ PRCMHibernateWakeupSourceEnable(unsigned long ulHIBWakupSrc)
 //!
 //! \param ulHIBWakupSrc is logical OR of valid HIB wakeup sources.
 //!
-//! This function disable individual HIB wakeup source(s). The paramter
+//! This function disable individual HIB wakeup source(s). The parameter
 //! \e ulHIBWakupSrc is same as bit fileds defined in
 //! PRCMEnableHibernateWakeupSource()
 //!
@@ -1205,7 +1205,7 @@ PRCMHibernateIntervalSet(unsigned long long ullTicks)
 //! This function setects the wakeup GPIO for hibernate and can be
 //! used to select any combination of 7 pre-defined GPIO(s).
 //!
-//! This function enables individual HIB wakeup source(s). The paramter
+//! This function enables individual HIB wakeup source(s). The parameter
 //! \e ulGPIOBitMap should be one of the following :-
 //! -\b PRCM_HIB_GPIO2
 //! -\b PRCM_HIB_GPIO4

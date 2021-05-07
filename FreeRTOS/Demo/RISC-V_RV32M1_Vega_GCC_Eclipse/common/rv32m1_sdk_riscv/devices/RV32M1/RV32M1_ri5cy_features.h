@@ -1283,7 +1283,7 @@
 #define FSL_FEATURE_SIM_FCFG_HAS_PFLSH (0)
 /* @brief Has program flash swapping (register bit FCFG2[SWAPPFLSH]). */
 #define FSL_FEATURE_SIM_FCFG_HAS_PFLSH_SWAP (0)
-/* @brief Has miscellanious control register (register MCR). */
+/* @brief Has miscellaneous control register (register MCR). */
 #define FSL_FEATURE_SIM_HAS_MISC_CONTROLS (0)
 /* @brief Has COP watchdog (registers COPC and SRVCOP). */
 #define FSL_FEATURE_SIM_HAS_COP_WATCHDOG (0)

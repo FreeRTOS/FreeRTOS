@@ -192,14 +192,14 @@ byte TickTimer_SetPeriodMS(word Time);
 **
 **     Description :
 **         This method sets the new period of the generated events.
-**         The period is expressed in miliseconds as a 16-bit
+**         The period is expressed in milliseconds as a 16-bit
 **         unsigned integer number.
 **         This method is available only if runtime setting type
 **         'from interval' is selected in the Timing dialog box in
 **         Runtime setting area.
 **     Parameters  :
 **         NAME            - DESCRIPTION
-**         Time            - Period to set [in miliseconds]
+**         Time            - Period to set [in milliseconds]
 **                      (1 to 20 milliseconds)
 **     Returns     :
 **         ---             - Error code, possible codes:

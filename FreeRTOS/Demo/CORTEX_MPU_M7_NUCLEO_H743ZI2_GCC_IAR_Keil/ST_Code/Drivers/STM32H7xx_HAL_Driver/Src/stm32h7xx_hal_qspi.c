@@ -90,7 +90,7 @@
     *** MDMA functional mode ***
     ====================================
     [..]
-      (#) Configure the SourceInc and DestinationInc of MDMA paramters in the HAL_QSPI_MspInit() function :
+      (#) Configure the SourceInc and DestinationInc of MDMA parameters in the HAL_QSPI_MspInit() function :
          (++) MDMA settings for write operation : 
           (+) The DestinationInc should be MDMA_DEST_INC_DISABLE  
           (+) The SourceInc must be a value of @ref MDMA_Source_increment_mode (Except the MDMA_SRC_INC_DOUBLEWORD).

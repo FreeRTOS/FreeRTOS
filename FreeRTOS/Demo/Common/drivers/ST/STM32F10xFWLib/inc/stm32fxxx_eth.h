@@ -890,7 +890,7 @@ typedef struct  {
 #define ETH_DMA_ReceiveProcess_Waiting      ((u32)0x00060000)  /* Running - waiting for packet */
 #define ETH_DMA_ReceiveProcess_Suspended    ((u32)0x00080000)  /* Suspended - Rx Desciptor unavailable */
 #define ETH_DMA_ReceiveProcess_Closing      ((u32)0x000A0000)  /* Running - closing descriptor */
-#define ETH_DMA_ReceiveProcess_Queuing      ((u32)0x000E0000)  /* Running - queuing the recieve frame into host memory */
+#define ETH_DMA_ReceiveProcess_Queuing      ((u32)0x000E0000)  /* Running - queuing the receive frame into host memory */
 
 /* ETHERNET DMA overflow  --------------------------------------------------------*/
 #define ETH_DMA_Overflow_RxFIFOCounter      ((u32)0x10000000)  /* Overflow bit for FIFO overflow counter */

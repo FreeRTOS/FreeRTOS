@@ -57,7 +57,7 @@
  *
  *  # Usage #
  *
- *  To use the I2S driver for reaading and writing data to the I2S peripheral,
+ *  To use the I2S driver for reading and writing data to the I2S peripheral,
  *  the application calls the following APIs:
  *    - I2S_init(): Initialize the I2S driver.
  *    - I2S_Params_init():  Initialize a #I2S_Params structure with default

@@ -35,7 +35,7 @@ extern "C"
 
 //*****************************************************************************
 //
-// Values that can be passed to QEIConfigure as the ulConfig paramater.
+// Values that can be passed to QEIConfigure as the ulConfig parameter.
 //
 //*****************************************************************************
 #define QEI_CONFIG_CAPTURE_A    0x00000000  // Count on ChA edges only

@@ -239,7 +239,7 @@
                                             // for an interrupt.
 
 #define STACK_DIE_CTRL_O_MISC_CTL \
-                                0x0000005C  // Miscellanious control register.
+                                0x0000005C  // Miscellaneous control register.
 
 #define STACK_DIE_CTRL_O_SW_DFT_CTL \
                                 0x000000FC  // DFT control and status bits

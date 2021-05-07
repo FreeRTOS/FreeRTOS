@@ -1672,7 +1672,7 @@ typedef struct
 #define  COMP_CSR_CMP1OUT                    ((uint32_t)0x00000080)        /*!< Comparator 1 output */
 
 #define  COMP_CSR_SPEED                      ((uint32_t)0x00001000)        /*!< Comparator 2 speed */
-#define  COMP_CSR_CMP2OUT                    ((uint32_t)0x00002000)        /*!< Comparator 2 ouput */
+#define  COMP_CSR_CMP2OUT                    ((uint32_t)0x00002000)        /*!< Comparator 2 output */
 
 #define  COMP_CSR_VREFOUTEN                  ((uint32_t)0x00010000)        /*!< Comparator Vref Enable */
 #define  COMP_CSR_WNDWE                      ((uint32_t)0x00020000)        /*!< Window mode enable */

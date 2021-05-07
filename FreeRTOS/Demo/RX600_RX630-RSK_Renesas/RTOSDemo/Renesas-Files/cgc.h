@@ -101,7 +101,7 @@ void InitCGC(void);
 /*                                = 12M                                      */
 /*      PLL Multipler = 16                                                   */
 /*                                                                           */
-/*      Therefore, ouput of PLL = 12M x 16                                   */
+/*      Therefore, output of PLL = 12M x 16                                   */
 /*                              = 192M                                       */
 /*                                                                           */
 /* NOTE: The maximum XTAL is 20MHz                                           */

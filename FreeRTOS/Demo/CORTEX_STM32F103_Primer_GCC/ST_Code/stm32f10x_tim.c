@@ -1272,11 +1272,11 @@ void TIM_UpdateDisableConfig(TIM_TypeDef* TIMx, FunctionalState Newstate)
 *                       - TIM_EncoderMode_TI12: Counter counts on both TI1FP1 and
 *                         TI2FP2 edges depending on the level of the other input.
 *                  - TIM_IC1Polarity: specifies the IC1 Polarity
-*                    This parmeter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                        - TIM_ICPolarity_Falling
 *                        - TIM_ICPolarity_Rising
 *                  - TIM_IC2Polarity: specifies the IC2 Polarity
-*                    This parmeter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM_ICPolarity_Falling
 *                       - TIM_ICPolarity_Rising
 * Output         : None
@@ -1346,7 +1346,7 @@ void TIM_GenerateEvent(TIM_TypeDef* TIMx, u16 TIM_EventSource)
 * Description    : Configures the TIMx channel 1 polarity.
 * Input          : - TIMx: where x can be 2, 3 or 4 to select the TIM peripheral.
 *                  - TIM_OCPolarity: specifies the OC1 Polarity
-*                    This parmeter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM_OCPolarity_High: Output Compare active high
 *                       - TIM_OCPolarity_Low: Output Compare active low
 * Output         : None
@@ -1373,7 +1373,7 @@ void TIM_OC1PolarityConfig(TIM_TypeDef* TIMx, u16 TIM_OCPolarity)
 * Description    : Configures the TIMx channel 2 polarity.
 * Input          : - TIMx: where x can be 2, 3 or 4 to select the TIM peripheral.
 *                  - TIM_OCPolarity: specifies the OC2 Polarity
-*                    This parmeter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM_OCPolarity_High: Output Compare active high
 *                       - TIM_OCPolarity_Low: Output Compare active low
 * Output         : None
@@ -1400,7 +1400,7 @@ void TIM_OC2PolarityConfig(TIM_TypeDef* TIMx, u16 TIM_OCPolarity)
 * Description    : Configures the TIMx channel 3 polarity.
 * Input          : - TIMx: where x can be 2, 3 or 4 to select the TIM peripheral.
 *                  - TIM_OCPolarity: specifies the OC3 Polarity
-*                    This parmeter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM_OCPolarity_High: Output Compare active high
 *                       - TIM_OCPolarity_Low: Output Compare active low
 * Output         : None
@@ -1427,7 +1427,7 @@ void TIM_OC3PolarityConfig(TIM_TypeDef* TIMx, u16 TIM_OCPolarity)
 * Description    : Configures the TIMx channel 4 polarity.
 * Input          : - TIMx: where x can be 2, 3 or 4 to select the TIM peripheral.
 *                  - TIM_OCPolarity: specifies the OC4 Polarity
-*                    This parmeter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM_OCPolarity_High: Output Compare active high
 *                       - TIM_OCPolarity_Low: Output Compare active low
 * Output         : None
@@ -1542,7 +1542,7 @@ void TIM_SelectOnePulseMode(TIM_TypeDef* TIMx, u16 TIM_OPMode)
 * Description    : Selects the TIMx Trigger Output Mode.
 * Input          : - TIMx: where x can be 2, 3 or 4 to select the TIM peripheral.
 *                  - TIM_TRGOSource: specifies the Trigger Output source.
-*                    This paramter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM_TRGOSource_Reset
 *                       - TIM_TRGOSource_Enable
 *                       - TIM_TRGOSource_Update
@@ -1576,7 +1576,7 @@ void TIM_SelectOutputTrigger(TIM_TypeDef* TIMx, u16 TIM_TRGOSource)
 * Description    : Selects the TIMx Slave Mode.
 * Input          : - TIMx: where x can be 2, 3 or 4 to select the TIM peripheral.
 *                  - TIM_SlaveMode: specifies the Timer Slave Mode.
-*                    This paramter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM_SlaveMode_Reset
 *                       - TIM_SlaveMode_Gated
 *                       - TIM_SlaveMode_Trigger
@@ -1607,7 +1607,7 @@ void TIM_SelectSlaveMode(TIM_TypeDef* TIMx, u16 TIM_SlaveMode)
 * Description    : Sets or Resets the TIMx Master/Slave Mode.
 * Input          : - TIMx: where x can be 2, 3 or 4 to select the TIM peripheral.
 *                  - TIM_MasterSlaveMode: specifies the Timer Master Slave Mode.
-*                    This paramter can be one of the following values:
+*                    This parameter can be one of the following values:
 *                       - TIM_MasterSlaveMode_Enable: synchronization between the
 *                         current timer and its slaves (through TRGO).
 *                       - TIM_MasterSlaveMode_Disable: No action

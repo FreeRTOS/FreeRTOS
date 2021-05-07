@@ -120,7 +120,7 @@ extern char fcharput(char, unsigned char);
 /* Input one character from the file       */
 extern char fcharget(char*, unsigned char);
 /* Open the file */
-/* Specified as the number of register which stored paramter is 3 */
+/* Specified as the number of register which stored parameter is 3 */
 extern char __regparam3 fileopen(char*, unsigned char, unsigned char*);
 /* Close the file */
 extern char fileclose(unsigned char);
@@ -140,7 +140,7 @@ extern char fcharput(char, unsigned char);
 /* Input one character from the file       */
 extern char fcharget(char*, unsigned char);
 /* Open the file */
-/* Specified as the number of register which stored paramter is 3 */
+/* Specified as the number of register which stored parameter is 3 */
 extern char __regparam3 fileopen(char*, unsigned char, unsigned char*);
 /* Close the file */
 extern char fileclose(unsigned char);

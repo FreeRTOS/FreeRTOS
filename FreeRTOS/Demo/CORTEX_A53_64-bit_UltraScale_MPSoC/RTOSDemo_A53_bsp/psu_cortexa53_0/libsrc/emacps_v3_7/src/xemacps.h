@@ -510,7 +510,7 @@ typedef void (*XEmacPs_Handler) (void *CallBackRef);
 /**
  * Callback when an asynchronous error occurs. To set this callback, invoke
  * XEmacPs_SetHandler() with XEMACPS_HANDLER_ERROR in the HandlerType
- * paramter.
+ * parameter.
  *
  * @param CallBackRef is user data assigned when the callback was set.
  * @param Direction defines either receive or transmit error(s) has occurred.

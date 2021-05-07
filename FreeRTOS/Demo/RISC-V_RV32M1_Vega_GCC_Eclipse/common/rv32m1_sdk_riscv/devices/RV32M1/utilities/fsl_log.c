@@ -334,7 +334,7 @@ int LOG_ReadLine(uint8_t *buf, size_t size)
 
     for (i = 0; i < size; i++)
     {
-        /* recieve one char every time */
+        /* receive one char every time */
         if (LOG_ReadOneCharacter(&buf[i]) != kStatus_Success)
         {
             return -1;
@@ -400,7 +400,7 @@ int LOG_ReadCharacter(uint8_t *ch)
 
 static status_t LOG_ReadOneCharacter(uint8_t *ch)
 {
-    /* recieve one char every time */
+    /* receive one char every time */
     if (IO_Transfer(ch, 1U, false) != kStatus_Success)
     {
         return kStatus_Fail;
@@ -418,7 +418,7 @@ static status_t LOG_EchoCharacter(uint8_t *ch, bool isGetChar, int *index)
     /* Due to scanf take \n and \r as end of string,should not echo */
     if (((*ch != '\r') && (*ch != '\n')) || (isGetChar))
     {
-        /* recieve one char every time */
+        /* receive one char every time */
         if (IO_Transfer(ch, 1U, true) != kStatus_Success)
         {
             return kStatus_Fail;

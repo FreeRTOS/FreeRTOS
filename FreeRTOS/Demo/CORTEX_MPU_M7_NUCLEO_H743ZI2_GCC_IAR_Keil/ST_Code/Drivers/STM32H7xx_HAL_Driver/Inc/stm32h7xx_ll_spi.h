@@ -3247,7 +3247,7 @@ __STATIC_INLINE void LL_I2S_EnableMasterClock(SPI_TypeDef *SPIx)
 }
 
 /**
-  * @brief  Disable the Master Clock Ouput (Pin MCK)
+  * @brief  Disable the Master Clock Output (Pin MCK)
   * @rmtoll I2SCFGR      MCKOE         LL_I2S_DisableMasterClock
   * @param  SPIx SPI Handle
   * @retval None

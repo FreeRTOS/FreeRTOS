@@ -10528,7 +10528,6 @@ memmap
 memmove
 memms
 memn
-memorry
 memorybank
 memorybaseaddr
 memorydatasize
@@ -10575,7 +10574,6 @@ messagebuffer
 messagedigest
 messagetype
 messg
-messges
 metadata
 metaharmoniks
 metainformation
@@ -10630,8 +10628,6 @@ midr
 mii
 miiar
 mikko
-mililseconds
-miliseconds
 millieach
 mimr
 min
@@ -10664,7 +10660,6 @@ mirrsts
 mirsa
 mis
 misc
-miscellanious
 miscfgdone
 miserr
 misformatted
@@ -11031,13 +11026,10 @@ multimodeconfigchannel
 multimodegetvalue
 multimodestart
 multimodetypedef
-multipe
-multiplicaton
 multiprocessorex
 multisampleconvert
 multislave
 multithreaded
-multplication
 mults
 multu
 mulx
@@ -11059,7 +11051,6 @@ mutexp
 mutexstatus
 mutext
 mutiple
-mutlicast
 mutualauth
 mutualauthhttpexample
 mux
@@ -11225,7 +11216,6 @@ ne
 nea
 nec
 nece
-necesarily
 necess
 necf
 necnt
@@ -11236,7 +11226,6 @@ nef
 neg
 negativeterminalinput
 negedge
-negociation
 negotiationerror
 nerr
 nessie
@@ -11765,7 +11754,6 @@ offm
 offmask
 offmx
 offsetdirection
-offseted
 offsetvalue
 offstate
 offstateidlemode
@@ -12159,7 +12147,6 @@ outstdg
 outsz
 outx
 ov
-ovberride
 overcapture
 overcurrent
 overfetch
@@ -12186,7 +12173,6 @@ ovrd
 ovrdetection
 ovrdis
 ovrfl
-ovrflow
 ovrie
 ovrmod
 ovrs
@@ -12261,14 +12247,10 @@ parallelizable
 paralleltraceportmode
 parallet
 param
-paramater
-paramaters
 paramblock
 parametres
 params
 paramstatus
-paramter
-paramters
 parbd
 pari
 parin
@@ -12285,7 +12267,6 @@ parkinvformula
 parkpin
 parkpins
 parkstate
-parmeter
 parms
 paroemode
 parsecertrelative
@@ -12647,7 +12628,6 @@ perf
 perfectfilter
 perfecthashtablefilter
 perflpr
-performace
 performmasserase
 perfwr
 peri
@@ -12684,7 +12664,6 @@ periphregs
 periphregslist
 periphresetcmd
 peris
-permanantly
 permisiion
 permittednames
 permost
@@ -13181,7 +13160,6 @@ posixleave
 posoex
 posreturn
 possib
-possiby
 posstatus
 postambl
 postamble
@@ -13374,8 +13352,6 @@ preemptable
 preemptpriority
 pref
 prefen
-preferebly
-prefered
 preferre
 prefetchable
 prefetchabort
@@ -14342,7 +14318,6 @@ radiotap
 ragne
 ramained
 rambar
-ramdom
 ramdtcm
 ramfunc
 ramitcm
@@ -14359,7 +14334,6 @@ randomess
 randomise
 randomnumber
 randoms
-randon
 randpool
 randpoolsz
 rangelower
@@ -14527,13 +14501,11 @@ rdyf
 rdyie
 rdyifg
 rea
-reaading
 reack
 readableregisters
 readaddr
 readback
 readbackupregister
-readbale
 readblocks
 readbuf
 readbuff
@@ -14613,7 +14585,6 @@ reasembly
 reasonflags
 reasonnable
 reass
-reassemly
 reasstmr
 rebootdevice
 rebootreset
@@ -14625,7 +14596,6 @@ recalulate
 recception
 rece
 recei
-receiption
 receiv
 receiveall
 receivebuffer
@@ -14648,8 +14618,6 @@ receivethresholdcontrol
 receivetimeoutms
 receivetimestamp
 receptionfifostatus
-recevie
-receving
 rechallenge
 rechdr
 recieve
@@ -16069,7 +16037,6 @@ selectoutputtrigger
 selectslave
 selectslavemode
 selectthe
-seleted
 selextclk
 selexten
 selfref
@@ -16131,17 +16098,12 @@ sentchangecipher
 sentnotify
 seoul
 sep
-seperate
-seperately
-seperatly
 september
 seq
 seqarray
 seqno
 seqquencer
 seqsz
-sequance
-sequantial
 sequencermode
 sequencerpresent
 ser

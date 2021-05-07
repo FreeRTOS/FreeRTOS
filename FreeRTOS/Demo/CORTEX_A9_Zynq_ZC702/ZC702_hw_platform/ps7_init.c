@@ -13181,7 +13181,7 @@ ps7_init()
 	*(volatile unsigned int*)SCU_GLOBAL_TIMER_COUNT_U32 = 0;
 }
 
-/* Compute mask for given delay in miliseconds*/
+/* Compute mask for given delay in milliseconds*/
 int get_number_of_cycles_for_delay(unsigned int delay) 
 {
   // GTC is always clocked at 1/2 of the CPU frequency (CPU_3x2x)

@@ -513,7 +513,7 @@ etharp_arp_input(struct netif *netif, struct eth_addr *ethaddr, struct pbuf *p)
   case ARP_REQUEST:
     /* ARP request. If it asked for our address, we send out a
      * reply. In any case, we time-stamp any existing ARP entry,
-     * and possiby send out an IP packet that was queued on it. */
+     * and possibly send out an IP packet that was queued on it. */
 
     LWIP_DEBUGF (ETHARP_DEBUG | DBG_TRACE, ("etharp_arp_input: incoming ARP request\n"));
     /* ARP request for our address? */

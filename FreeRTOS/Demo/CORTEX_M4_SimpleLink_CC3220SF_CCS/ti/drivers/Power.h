@@ -304,7 +304,7 @@ int_fast16_t Power_init(void);
  *
  *  Where: eventType identifies the event being signalled, eventArg is an
  *  optional event-specific argument, and clientArg is an abitrary argument
- *  specified by the client at registration.  Note that multipe types of events
+ *  specified by the client at registration.  Note that multiple types of events
  *  can be specified when registering the notification callback function,
  *  but when the callback function is actually called by Power, only a
  *  single eventType will be specified for the callback (i.e., the current

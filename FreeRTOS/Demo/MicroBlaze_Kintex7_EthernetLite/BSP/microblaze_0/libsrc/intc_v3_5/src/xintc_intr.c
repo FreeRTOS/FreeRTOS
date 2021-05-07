@@ -38,7 +38,7 @@
 *
 * This file contains the interrupt processing for the XIntc component which
 * is the driver for the Xilinx Interrupt Controller.  The interrupt
-* processing is partitioned seperately such that users are not required to
+* processing is partitioned separately such that users are not required to
 * use the provided interrupt processing.  This file requires other files of
 * the driver to be linked in also.
 *

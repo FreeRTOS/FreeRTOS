@@ -142,7 +142,7 @@ static void CLOCK_GetAudioPLLOutFromSetupUpdate(pll_setup_t *pSetup);
  * @brief Set fro clock frequency.
  * Due to LPC540xx 0A silicon and LPC540xx 1B silicon have different ROM addresses for set fro
  * frequency api, so add this api to get rom version.
- * @param base romVersion pointer to recieve rom version.
+ * @param base romVersion pointer to receive rom version.
  */
 #if defined(FSL_FROHF_SETTING_API_ADDRESS_DETERMINE_BY_ROM_VERSION) && \
     (FSL_FROHF_SETTING_API_ADDRESS_DETERMINE_BY_ROM_VERSION)

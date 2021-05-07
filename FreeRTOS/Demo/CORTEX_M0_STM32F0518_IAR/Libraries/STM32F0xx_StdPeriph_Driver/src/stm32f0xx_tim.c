@@ -172,7 +172,7 @@ static void TI4_Config(TIM_TypeDef* TIMx, uint16_t TIM_ICPolarity, uint16_t TIM_
              TIM_ITConfig(TIMx, TIM_IT_Update). 
          (#) Call the TIM_Cmd(ENABLE) function to enable the TIM counter.
     [..]
-        (@) All other functions can be used seperatly to modify, if needed,
+        (@) All other functions can be used separately to modify, if needed,
             a specific feature of the Timer. 
 
 @endverbatim
@@ -776,7 +776,7 @@ void TIM_OC1Init(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct)
     /* Set the Output N State */
     tmpccer |= TIM_OCInitStruct->TIM_OutputNState;
     
-    /* Reset the Ouput Compare and Output Compare N IDLE State */
+    /* Reset the Output Compare and Output Compare N IDLE State */
     tmpcr2 &= (uint16_t)(~((uint16_t)TIM_CR2_OIS1));
     tmpcr2 &= (uint16_t)(~((uint16_t)TIM_CR2_OIS1N));
     
@@ -859,7 +859,7 @@ void TIM_OC2Init(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct)
     /* Set the Output N State */
     tmpccer |= (uint16_t)(TIM_OCInitStruct->TIM_OutputNState << 4);
     
-    /* Reset the Ouput Compare and Output Compare N IDLE State */
+    /* Reset the Output Compare and Output Compare N IDLE State */
     tmpcr2 &= (uint16_t)(~((uint16_t)TIM_CR2_OIS2));
     tmpcr2 &= (uint16_t)(~((uint16_t)TIM_CR2_OIS2N));
     
@@ -940,7 +940,7 @@ void TIM_OC3Init(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct)
     
     /* Set the Output N State */
     tmpccer |= (uint16_t)(TIM_OCInitStruct->TIM_OutputNState << 8);
-    /* Reset the Ouput Compare and Output Compare N IDLE State */
+    /* Reset the Output Compare and Output Compare N IDLE State */
     tmpcr2 &= (uint16_t)(~((uint16_t)TIM_CR2_OIS3));
     tmpcr2 &= (uint16_t)(~((uint16_t)TIM_CR2_OIS3N));
     /* Set the Output Idle state */
@@ -1008,7 +1008,7 @@ void TIM_OC4Init(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct)
   if(TIMx == TIM1)
   {
     assert_param(IS_TIM_OCIDLE_STATE(TIM_OCInitStruct->TIM_OCIdleState));
-    /* Reset the Ouput Compare IDLE State */
+    /* Reset the Output Compare IDLE State */
     tmpcr2 &= (uint16_t)(~((uint16_t)TIM_CR2_OIS4));
     /* Set the Output Idle state */
     tmpcr2 |= (uint16_t)(TIM_OCInitStruct->TIM_OCIdleState << 6);
@@ -1614,7 +1614,7 @@ void TIM_ClearOC4Ref(TIM_TypeDef* TIMx, uint16_t TIM_OCClear)
   * @brief  Configures the TIMx channel 1 polarity.
   * @param  TIMx: where x can be 1, 2, 3, 14, 15, 16 or 17 to select the TIM peripheral.
   * @param  TIM_OCPolarity: specifies the OC1 Polarity
-  *   This parmeter can be one of the following values:
+  *   This parameter can be one of the following values:
   *     @arg TIM_OCPolarity_High: Output Compare active high
   *     @arg TIM_OCPolarity_Low: Output Compare active low
   * @retval None
@@ -1639,7 +1639,7 @@ void TIM_OC1PolarityConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCPolarity)
   * @brief  Configures the TIMx Channel 1N polarity.
   * @param  TIMx: where x can be 1, 15, 16 or 17 to select the TIM peripheral.
   * @param  TIM_OCNPolarity: specifies the OC1N Polarity
-  *   This parmeter can be one of the following values:
+  *   This parameter can be one of the following values:
   *     @arg TIM_OCNPolarity_High: Output Compare active high
   *     @arg TIM_OCNPolarity_Low: Output Compare active low
   * @retval None
@@ -1663,7 +1663,7 @@ void TIM_OC1NPolarityConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCNPolarity)
   * @brief  Configures the TIMx channel 2 polarity.
   * @param  TIMx: where x can be 1, 2, 3, or 15 to select the TIM peripheral.
   * @param  TIM_OCPolarity: specifies the OC2 Polarity
-  *   This parmeter can be one of the following values:
+  *   This parameter can be one of the following values:
   *     @arg TIM_OCPolarity_High: Output Compare active high
   *     @arg TIM_OCPolarity_Low: Output Compare active low
   * @retval None
@@ -1688,7 +1688,7 @@ void TIM_OC2PolarityConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCPolarity)
   * @brief  Configures the TIMx Channel 2N polarity.
   * @param  TIMx: where x can be 1 to select the TIM peripheral.
   * @param  TIM_OCNPolarity: specifies the OC2N Polarity
-  *   This parmeter can be one of the following values:
+  *   This parameter can be one of the following values:
   *     @arg TIM_OCNPolarity_High: Output Compare active high
   *     @arg TIM_OCNPolarity_Low: Output Compare active low
   * @retval None
@@ -1712,7 +1712,7 @@ void TIM_OC2NPolarityConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCNPolarity)
   * @brief  Configures the TIMx channel 3 polarity.
   * @param  TIMx: where x can be 1, 2 or 3 to select the TIM peripheral.
   * @param  TIM_OCPolarity: specifies the OC3 Polarity
-  *   This parmeter can be one of the following values:
+  *   This parameter can be one of the following values:
   *     @arg TIM_OCPolarity_High: Output Compare active high
   *     @arg TIM_OCPolarity_Low: Output Compare active low
   * @retval None
@@ -1737,7 +1737,7 @@ void TIM_OC3PolarityConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCPolarity)
   * @brief  Configures the TIMx Channel 3N polarity.
   * @param  TIMx: where x can be 1 to select the TIM peripheral.
   * @param  TIM_OCNPolarity: specifies the OC3N Polarity
-  *   This parmeter can be one of the following values:
+  *   This parameter can be one of the following values:
   *     @arg TIM_OCNPolarity_High: Output Compare active high
   *     @arg TIM_OCNPolarity_Low: Output Compare active low
   * @retval None
@@ -1763,7 +1763,7 @@ void TIM_OC3NPolarityConfig(TIM_TypeDef* TIMx, uint16_t TIM_OCNPolarity)
   * @brief  Configures the TIMx channel 4 polarity.
   * @param  TIMx: where x can be 1, 2 or 3 to select the TIM peripheral.
   * @param  TIM_OCPolarity: specifies the OC4 Polarity
-  *   This parmeter can be one of the following values:
+  *   This parameter can be one of the following values:
   *     @arg TIM_OCPolarity_High: Output Compare active high
   *     @arg TIM_OCPolarity_Low: Output Compare active low
   * @retval None
@@ -1838,7 +1838,7 @@ void TIM_CCxCmd(TIM_TypeDef* TIMx, uint16_t TIM_Channel, uint16_t TIM_CCx)
   * @brief  Enables or disables the TIM Capture Compare Channel xN.
   * @param  TIMx: where x can be 1, 15, 16 or 17 to select the TIM peripheral.
   * @param  TIM_Channel: specifies the TIM Channel
-  *   This parmeter can be one of the following values:
+  *   This parameter can be one of the following values:
   *     @arg TIM_Channel_1: TIM Channel 1
   *     @arg TIM_Channel_2: TIM Channel 2
   *     @arg TIM_Channel_3: TIM Channel 3
@@ -2791,7 +2791,7 @@ void TIM_SelectInputTrigger(TIM_TypeDef* TIMx, uint16_t TIM_InputTriggerSource)
   * @brief  Selects the TIMx Trigger Output Mode.
   * @param  TIMx: where x can be 1, 2, 3, 6, or 15 to select the TIM peripheral.
   * @param  TIM_TRGOSource: specifies the Trigger Output source.
-  *   This paramter can be one of the following values:
+  *   This parameter can be one of the following values:
   *
   *   For all TIMx
   *     @arg TIM_TRGOSource_Reset:  The UG bit in the TIM_EGR register is used as the trigger output (TRGO).
@@ -2824,7 +2824,7 @@ void TIM_SelectOutputTrigger(TIM_TypeDef* TIMx, uint16_t TIM_TRGOSource)
   * @brief  Selects the TIMx Slave Mode.
   * @param  TIMx: where x can be 1, 2, 3 or 15 to select the TIM peripheral.
   * @param  TIM_SlaveMode: specifies the Timer Slave Mode.
-  *   This paramter can be one of the following values:
+  *   This parameter can be one of the following values:
   *     @arg TIM_SlaveMode_Reset: Rising edge of the selected trigger signal (TRGI) re-initializes
   *                               the counter and triggers an update of the registers.
   *     @arg TIM_SlaveMode_Gated:     The counter clock is enabled when the trigger signal (TRGI) is high.
@@ -2848,7 +2848,7 @@ void TIM_SelectSlaveMode(TIM_TypeDef* TIMx, uint16_t TIM_SlaveMode)
   * @brief  Sets or Resets the TIMx Master/Slave Mode.
   * @param  TIMx: where x can be 1, 2, 3, or 15 to select the TIM peripheral.
   * @param  TIM_MasterSlaveMode: specifies the Timer Master Slave Mode.
-  *   This paramter can be one of the following values:
+  *   This parameter can be one of the following values:
   *     @arg TIM_MasterSlaveMode_Enable: synchronization between the current timer
   *                                      and its slaves (through TRGO).
   *     @arg TIM_MasterSlaveMode_Disable: No action
@@ -2930,11 +2930,11 @@ void TIM_ETRConfig(TIM_TypeDef* TIMx, uint16_t TIM_ExtTRGPrescaler, uint16_t TIM
   *     @arg TIM_EncoderMode_TI12: Counter counts on both TI1FP1 and TI2FP2 edges depending
   *                                on the level of the other input.
   * @param  TIM_IC1Polarity: specifies the IC1 Polarity
-  *   This parmeter can be one of the following values:
+  *   This parameter can be one of the following values:
   *     @arg TIM_ICPolarity_Falling: IC Falling edge.
   *     @arg TIM_ICPolarity_Rising: IC Rising edge.
   * @param  TIM_IC2Polarity: specifies the IC2 Polarity
-  *   This parmeter can be one of the following values:
+  *   This parameter can be one of the following values:
   *     @arg TIM_ICPolarity_Falling: IC Falling edge.
   *     @arg TIM_ICPolarity_Rising: IC Rising edge.
   * @retval None

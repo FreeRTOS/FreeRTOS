@@ -273,7 +273,7 @@ Local_Port = 1000;         // This default value will be set if you didn't desig
                            // socket continuously, the port number will be assigned with
                            // incremented by one to Local_Port
 SEQ_NUM.lVal = 4294967293ul;	// Sets the initial SEQ# to be used for TCP communication.
-                           // (It should be ramdom value)
+                           // (It should be random value)
 WRITE_VALUE(COMMAND(0), CSW_RESET);   // Software RESET
 }
 
@@ -303,7 +303,7 @@ WRITE_VALUE(COMMAND(0), CSW_RESET);   // Software RESET
 *              In the range of 8KBytes, the memory size could be allocated dynamically by
 *              each channel
 *              Be attentive to sum of memory size shouldn't exceed 8Kbytes
-*              and to data transmission and receiption from non-allocated channel may cause
+*              and to data transmission and reception from non-allocated channel may cause
 *              some problems.
 *              If 8KBytes memory already is assigned to centain channel, other 3 channels
 *                couldn't be used, for there's no available memory.

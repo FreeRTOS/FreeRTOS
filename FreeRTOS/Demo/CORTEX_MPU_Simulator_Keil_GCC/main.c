@@ -787,7 +787,7 @@ static void prvPendedFunctionCall( void *pvParameter1, uint32_t ulParameter2 )
 {
 uint32_t *pulCounter = ( uint32_t * ) pvParameter1;
 
-	/* Increment the paramater to show the pended function has executed. */
+	/* Increment the parameter to show the pended function has executed. */
 	( *pulCounter )++;
 }
 /*-----------------------------------------------------------*/

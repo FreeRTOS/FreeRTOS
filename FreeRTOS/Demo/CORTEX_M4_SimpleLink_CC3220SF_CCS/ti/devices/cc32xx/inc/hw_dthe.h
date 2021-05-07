@@ -358,7 +358,7 @@
 // DTHE_O_RAND_KEY0 register.
 //
 //******************************************************************************
-#define DTHE_RAND_KEY0_KEY_M  0xFFFFFFFF  // Device Specific Randon key
+#define DTHE_RAND_KEY0_KEY_M  0xFFFFFFFF  // Device Specific Random key
                                             // [31:0]
 #define DTHE_RAND_KEY0_KEY_S  0
 //******************************************************************************
@@ -367,7 +367,7 @@
 // DTHE_O_RAND_KEY1 register.
 //
 //******************************************************************************
-#define DTHE_RAND_KEY1_KEY_M  0xFFFFFFFF  // Device Specific Randon key
+#define DTHE_RAND_KEY1_KEY_M  0xFFFFFFFF  // Device Specific Random key
                                             // [63:32]
 #define DTHE_RAND_KEY1_KEY_S  0
 //******************************************************************************
@@ -376,7 +376,7 @@
 // DTHE_O_RAND_KEY2 register.
 //
 //******************************************************************************
-#define DTHE_RAND_KEY2_KEY_M  0xFFFFFFFF  // Device Specific Randon key
+#define DTHE_RAND_KEY2_KEY_M  0xFFFFFFFF  // Device Specific Random key
                                             // [95:34]
 #define DTHE_RAND_KEY2_KEY_S  0
 //******************************************************************************
@@ -385,7 +385,7 @@
 // DTHE_O_RAND_KEY3 register.
 //
 //******************************************************************************
-#define DTHE_RAND_KEY3_KEY_M  0xFFFFFFFF  // Device Specific Randon key
+#define DTHE_RAND_KEY3_KEY_M  0xFFFFFFFF  // Device Specific Random key
                                             // [127:96]
 #define DTHE_RAND_KEY3_KEY_S  0
 

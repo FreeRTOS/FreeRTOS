@@ -101,7 +101,7 @@ to use an MII interface. */
 /*! Clock definition */
 #define ETHERNET_CONF_SYSTEM_CLOCK         48000000
 
-/*! Use Auto Negociation to get speed and duplex */
+/*! Use Auto Negotiation to get speed and duplex */
 #define ETHERNET_CONF_AN_ENABLE                      1
 
 /*! Do not use auto cross capability */

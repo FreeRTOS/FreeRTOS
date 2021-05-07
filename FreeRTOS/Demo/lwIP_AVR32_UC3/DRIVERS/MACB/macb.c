@@ -756,7 +756,7 @@ volatile unsigned long physID;
       phy_ctrl |= PHYCR_MDIX_FORCE;
     #endif
   #endif
-  // reset auto-negociation capability
+  // reset auto-negotiation capability
   config |= (BMCR_ANRESTART | BMCR_ANENABLE);
 #else
   // disable Auto MDIX

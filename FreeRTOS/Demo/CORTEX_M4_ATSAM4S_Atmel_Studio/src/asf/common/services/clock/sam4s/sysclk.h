@@ -116,7 +116,7 @@
  * This section will present a more advanced use case for the System Clock Management service.
  * This use case will configure the main system clock to 120MHz, using an internal PLL
  * module to multiply the frequency of a crystal attached to the microcontroller. The USB clock
- * will be configured via a seperate PLL module.
+ * will be configured via a separate PLL module.
  *
  * \subsection sysclk_quickstart_use_case_2_prereq Prerequisites
  *  - None

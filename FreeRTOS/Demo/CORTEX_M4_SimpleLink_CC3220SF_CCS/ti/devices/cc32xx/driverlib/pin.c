@@ -763,7 +763,7 @@ void PinLockLevelSet(unsigned long ulPin, unsigned char ucLevel)
 //! the pins are set to drive 0. Default level can be changed using
 //! \sa PinLockLevelSet() API.
 //!
-//! The \e ulOutEnable paramter is bit-packed representation of pins that
+//! The \e ulOutEnable parameter is bit-packed representation of pins that
 //! are required to be enabled as output. If a bit is set 1, the corresponding
 //! pin (as shown below) are set  and locked as output.
 //!

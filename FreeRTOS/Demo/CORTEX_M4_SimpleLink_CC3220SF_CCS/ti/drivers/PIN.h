@@ -965,7 +965,7 @@ extern PIN_Status PIN_setConfig(PIN_Handle handle, PIN_Config bmMask, PIN_Config
 
 
 /** @name IO Port Functions
- *  Functions used to get input values for, set ouput values for and set output
+ *  Functions used to get input values for, set output values for and set output
  *  enables for multiple pins at a time. The size of so-called I/O ports that
  *  allows such multiple-pin operations are highly device dependent. In order to
  *  use the I/O port functions a set of pins that reside in the same I/O port

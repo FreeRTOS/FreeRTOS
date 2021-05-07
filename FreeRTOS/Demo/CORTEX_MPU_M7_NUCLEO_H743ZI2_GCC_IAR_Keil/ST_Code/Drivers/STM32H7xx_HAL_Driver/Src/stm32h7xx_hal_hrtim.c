@@ -6190,7 +6190,7 @@ uint32_t HAL_HRTIM_WaveformGetOutputState(HRTIM_HandleTypeDef * hhrtim,
 
   if ((hhrtim->Instance->sCommonRegs.OENR & output_bit) != (uint32_t)RESET)
   {
-    /* Output is enabled: output in RUN state (whatever ouput disable status is)*/
+    /* Output is enabled: output in RUN state (whatever output disable status is)*/
     output_state = HRTIM_OUTPUTSTATE_RUN;
   }
   else

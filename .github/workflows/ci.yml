@@ -65,6 +65,6 @@ jobs:
       - name: Clone This Repo
         uses: actions/checkout@v2
       - name: Run spellings check
-        uses: FreeRTOS/CI-CD-Github-Actions/spellings@main
+        uses: AniruddhaKanhere/CI-CD-Github-Actions/spellings@main
         with:
           path: ./

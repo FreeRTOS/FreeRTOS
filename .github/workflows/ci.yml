@@ -59,4 +59,16 @@ jobs:
           name: doxygen.zip-${{ github.sha }}
           path: ./freertos/doxygen.zip
           retention-days: 2
+  verify-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Python3
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: Install dependencies
+        run: python3 -m pip install -r .github/scripts/verify_manifest_requirements.txt
+      - name: Run script to verify manifest.yml
+        run: python3 .github/scripts/verify_manifest.py
 

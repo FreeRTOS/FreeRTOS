@@ -69,7 +69,7 @@ if __name__ == '__main__':
     # Convert any relative path (like './') in passed argument to absolute path.
     REPO_PATH = os.path.abspath(args.repo_root_path)
 
-    manifest_list = read_manifest()    
+    libraries_in_manifest_file = read_manifest()    
     git_submodules_list = get_all_submodules()
 
     print(REPO_PATH)
@@ -77,14 +77,14 @@ if __name__ == '__main__':
 
     # Check that manifest.yml contains entries for all submodules 
     # present in repository.
-    if sorted(manifest_list) == sorted(git_submodules_list):
+    if libraries_in_manifest_file == git_submodules_list:
         print('Manifest.yml is verified!')
         sys.exit(0)
     else:
         print('Manifest.yml is missing entries for:')
         # Find list of library submodules missing in manifest.yml
         for git_path in git_submodules_list:
-            if git_path not in manifest_list:
+            if git_path not in libraries_in_manifest_file:
                 print(git_path)
         sys.exit(1)
 

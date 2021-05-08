@@ -85,7 +85,7 @@ typedef void (*Handler)(XUartPs *InstancePtr);
 * @param	InstancePtr is a pointer to the XUartPs instance.
 *
 * @return
-*		The current interrupt mask. The mask indicates which interupts
+*		The current interrupt mask. The mask indicates which interrupts
 *		are enabled.
 *
 * @note		None.
@@ -108,7 +108,7 @@ u32 XUartPs_GetInterruptMask(XUartPs *InstancePtr)
 *
 * @param	InstancePtr is a pointer to the XUartPs instance
 * @param	Mask contains the interrupts to be enabled or disabled.
-*		A '1' enables an interupt, and a '0' disables.
+*		A '1' enables an interrupt, and a '0' disables.
 *
 * @return	None.
 *

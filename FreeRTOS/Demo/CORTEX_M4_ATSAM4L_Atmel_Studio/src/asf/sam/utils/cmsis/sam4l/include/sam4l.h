@@ -316,7 +316,7 @@ typedef struct {
   RwReg   ABDACB_VCR0;        /**< \brief (ABDACB Offset: 0x0C) Volume Control Register 0 */
   RwReg   ABDACB_VCR1;        /**< \brief (ABDACB Offset: 0x10) Volume Control Register 1 */
   WoReg   ABDACB_IER;         /**< \brief (ABDACB Offset: 0x14) Interrupt Enable Register */
-  WoReg   ABDACB_IDR;         /**< \brief (ABDACB Offset: 0x18) Interupt Disable Register */
+  WoReg   ABDACB_IDR;         /**< \brief (ABDACB Offset: 0x18) Interrupt Disable Register */
   RoReg   ABDACB_IMR;         /**< \brief (ABDACB Offset: 0x1C) Interrupt Mask Register */
   RoReg   ABDACB_SR;          /**< \brief (ABDACB Offset: 0x20) Status Register */
   WoReg   ABDACB_SCR;         /**< \brief (ABDACB Offset: 0x24) Status Clear Register */
@@ -366,7 +366,7 @@ typedef struct {
 #define ABDACB_IER_TXUR             (0x1u <<  2) /**< \brief (ABDACB_IER) Transmit Underrun Interrupt Enable */
 #define   ABDACB_IER_TXUR_0         (0x0u <<  2) /**< \brief (ABDACB_IER) No effect */
 #define   ABDACB_IER_TXUR_1         (0x1u <<  2) /**< \brief (ABDACB_IER) Enables the Audio DAC Underrun interrupt */
-/* -------- ABDACB_IDR : (ABDACB Offset: 0x18) Interupt Disable Register -------- */
+/* -------- ABDACB_IDR : (ABDACB Offset: 0x18) Interrupt Disable Register -------- */
 #define ABDACB_IDR_TXRDY            (0x1u <<  1) /**< \brief (ABDACB_IDR) Transmit Ready Interrupt Disable */
 #define   ABDACB_IDR_TXRDY_0        (0x0u <<  1) /**< \brief (ABDACB_IDR) No effect */
 #define   ABDACB_IDR_TXRDY_1        (0x1u <<  1) /**< \brief (ABDACB_IDR) Disable the Audio DAC TX Ready interrupt */
@@ -614,7 +614,7 @@ typedef struct {
 #define ACIFC_CONFW_WFEN            (0x1u << 16) /**< \brief (ACIFC_CONFW) Window Mode Enable */
 /* -------- ACIFC_CONF : (ACIFC Offset: 0xD0) Conf AC Configuration Register -------- */
 #define ACIFC_CONF_IS_Pos           0
-#define ACIFC_CONF_IS_Msk           (0x3u << ACIFC_CONF_IS_Pos) /**< \brief (ACIFC_CONF) Interupt Settings */
+#define ACIFC_CONF_IS_Msk           (0x3u << ACIFC_CONF_IS_Pos) /**< \brief (ACIFC_CONF) Interrupt Settings */
 #define ACIFC_CONF_IS(value)        ((ACIFC_CONF_IS_Msk & ((value) << ACIFC_CONF_IS_Pos)))
 #define ACIFC_CONF_MODE_Pos         4
 #define ACIFC_CONF_MODE_Msk         (0x3u << ACIFC_CONF_MODE_Pos) /**< \brief (ACIFC_CONF) Analog Comparator Mode */
@@ -1107,7 +1107,7 @@ typedef struct {
 #define   AST_IMR_OVF_0             (0x0u <<  0) /**< \brief (AST_IMR) Interrupt is disabled */
 #define   AST_IMR_OVF_1             (0x1u <<  0) /**< \brief (AST_IMR) Interrupt is enabled. */
 #define AST_IMR_ALARM0              (0x1u <<  8) /**< \brief (AST_IMR) Alarm 0 */
-#define   AST_IMR_ALARM0_0          (0x0u <<  8) /**< \brief (AST_IMR) Interupt is disabled */
+#define   AST_IMR_ALARM0_0          (0x0u <<  8) /**< \brief (AST_IMR) Interrupt is disabled */
 #define   AST_IMR_ALARM0_1          (0x1u <<  8) /**< \brief (AST_IMR) Interrupt is enabled */
 #define AST_IMR_ALARM1              (0x1u <<  9) /**< \brief (AST_IMR) Alarm 1 */
 #define   AST_IMR_ALARM1_0          (0x0u <<  9) /**< \brief (AST_IMR) Interrupt is disabled */
@@ -10237,7 +10237,7 @@ typedef struct {
 /** \brief USBC hardware registers */
 typedef struct {
   RwReg   USBC_UDCON;       /**< \brief (USBC Offset: 0x000) Device General Control Register */
-  RoReg   USBC_UDINT;       /**< \brief (USBC Offset: 0x004) Device Global Interupt Register */
+  RoReg   USBC_UDINT;       /**< \brief (USBC Offset: 0x004) Device Global Interrupt Register */
   WoReg   USBC_UDINTCLR;    /**< \brief (USBC Offset: 0x008) Device Global Interrupt Clear Register */
   WoReg   USBC_UDINTSET;    /**< \brief (USBC Offset: 0x00C) Device Global Interrupt Set Regsiter */
   RoReg   USBC_UDINTE;      /**< \brief (USBC Offset: 0x010) Device Global Interrupt Enable Register */
@@ -10422,7 +10422,7 @@ typedef struct {
 #define USBC_UDCON_TSTPCKT          (0x1u << 15) /**< \brief (USBC_UDCON) Test Packet mode */
 #define USBC_UDCON_OPMODE2          (0x1u << 16) /**< \brief (USBC_UDCON) Specific Operational mode */
 #define USBC_UDCON_GNAK             (0x1u << 17) /**< \brief (USBC_UDCON) Global NAK */
-/* -------- USBC_UDINT : (USBC Offset: 0x004) Device Global Interupt Register -------- */
+/* -------- USBC_UDINT : (USBC Offset: 0x004) Device Global Interrupt Register -------- */
 #define USBC_UDINT_SUSP             (0x1u <<  0) /**< \brief (USBC_UDINT) Suspend Interrupt */
 #define USBC_UDINT_MSOF             (0x1u <<  1) /**< \brief (USBC_UDINT) Micro Start of Frame Interrupt */
 #define USBC_UDINT_SOF              (0x1u <<  2) /**< \brief (USBC_UDINT) Start of Frame Interrupt */
@@ -12939,7 +12939,7 @@ typedef struct {
 #define REG_ABDACB_VCR0           REG_ACCESS(RwReg  , 0x4006400CU) /**< \brief (ABDACB) Volume Control Register 0 */ 
 #define REG_ABDACB_VCR1           REG_ACCESS(RwReg  , 0x40064010U) /**< \brief (ABDACB) Volume Control Register 1 */ 
 #define REG_ABDACB_IER            REG_ACCESS(WoReg  , 0x40064014U) /**< \brief (ABDACB) Interrupt Enable Register */ 
-#define REG_ABDACB_IDR            REG_ACCESS(WoReg  , 0x40064018U) /**< \brief (ABDACB) Interupt Disable Register */ 
+#define REG_ABDACB_IDR            REG_ACCESS(WoReg  , 0x40064018U) /**< \brief (ABDACB) Interrupt Disable Register */ 
 #define REG_ABDACB_IMR            REG_ACCESS(RoReg  , 0x4006401CU) /**< \brief (ABDACB) Interrupt Mask Register */ 
 #define REG_ABDACB_SR             REG_ACCESS(RoReg  , 0x40064020U) /**< \brief (ABDACB) Status Register */ 
 #define REG_ABDACB_SCR            REG_ACCESS(WoReg  , 0x40064024U) /**< \brief (ABDACB) Status Clear Register */ 
@@ -13384,7 +13384,7 @@ typedef struct {
 #define REG_CRCCU_VERSION         REG_ACCESS(RoReg  , 0x400A40FCU) /**< \brief (CRCCU) Version Register */ 
 /* ========== Register definition for USBC peripheral ========== */
 #define REG_USBC_UDCON            REG_ACCESS(RwReg  , 0x400A5000U) /**< \brief (USBC) Device General Control Register */ 
-#define REG_USBC_UDINT            REG_ACCESS(RoReg  , 0x400A5004U) /**< \brief (USBC) Device Global Interupt Register */ 
+#define REG_USBC_UDINT            REG_ACCESS(RoReg  , 0x400A5004U) /**< \brief (USBC) Device Global Interrupt Register */ 
 #define REG_USBC_UDINTCLR         REG_ACCESS(WoReg  , 0x400A5008U) /**< \brief (USBC) Device Global Interrupt Clear Register */ 
 #define REG_USBC_UDINTSET         REG_ACCESS(WoReg  , 0x400A500CU) /**< \brief (USBC) Device Global Interrupt Set Regsiter */ 
 #define REG_USBC_UDINTE           REG_ACCESS(RoReg  , 0x400A5010U) /**< \brief (USBC) Device Global Interrupt Enable Register */ 

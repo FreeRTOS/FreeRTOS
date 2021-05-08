@@ -56,7 +56,7 @@ typedef struct
   uint32_t Counter;       /*!< Specifies the WWDG free-running downcounter  value.
                                This parameter must be a number between Min_Data = 0x40 and Max_Data = 0x7F */
 
-  uint32_t EWIMode ;      /*!< Specifies if WWDG Early Wakeup Interupt is enable or not.
+  uint32_t EWIMode ;      /*!< Specifies if WWDG Early Wakeup Interrupt is enable or not.
                                This parameter can be a value of @ref WWDG_EWI_Mode */
 
 } WWDG_InitTypeDef;

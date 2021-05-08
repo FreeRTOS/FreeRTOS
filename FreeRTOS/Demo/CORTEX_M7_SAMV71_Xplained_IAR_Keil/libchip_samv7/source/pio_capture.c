@@ -170,7 +170,7 @@ extern void PIO_CaptureHandler( void )
 
 /*----------------------------------------------------------------------------*/
 /**
- * \brief Disable Interupt of the PIO Capture
+ * \brief Disable Interrupt of the PIO Capture
  * \param itToDisable : Interrupt to disable
  */
 /*----------------------------------------------------------------------------*/
@@ -182,7 +182,7 @@ void PIO_CaptureDisableIt( uint32_t itToDisable )
 
 /*----------------------------------------------------------------------------*/
 /**
- * \brief Enable Interupt of the PIO Capture
+ * \brief Enable Interrupt of the PIO Capture
  * \param itToEnable : Interrupt to enable
  */
 /*----------------------------------------------------------------------------*/

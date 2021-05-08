@@ -297,7 +297,7 @@ uint8_t twi_byte_sent(Twi * pTwi)
 }
 
 /**
- * \brief Check if current transmission is complet.
+ * \brief Check if current transmission is complete.
  * \param twi  Pointer to an Twi instance.
  * \return  1 if the current transmission is complete (the STOP has been sent);
  * otherwise returns 0.

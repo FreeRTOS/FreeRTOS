@@ -8050,7 +8050,7 @@ typedef struct
   #define ETH_MACCR_BL_8     ((uint32_t)0x00000020)  /* k = min (n, 8) */
   #define ETH_MACCR_BL_4     ((uint32_t)0x00000040)  /* k = min (n, 4) */
   #define ETH_MACCR_BL_1     ((uint32_t)0x00000060)  /* k = min (n, 1) */ 
-#define ETH_MACCR_DC      ((uint32_t)0x00000010)  /* Defferal check */
+#define ETH_MACCR_DC      ((uint32_t)0x00000010)  /* Deferral check */
 #define ETH_MACCR_TE      ((uint32_t)0x00000008)  /* Transmitter enable */
 #define ETH_MACCR_RE      ((uint32_t)0x00000004)  /* Receiver enable */
 
@@ -8197,7 +8197,7 @@ typedef struct
 /*                Ethernet MMC Registers bits definition                      */
 /******************************************************************************/
 
-/* Bit definition for Ethernet MMC Contol Register */
+/* Bit definition for Ethernet MMC Control Register */
 #define ETH_MMCCR_MCFHP      ((uint32_t)0x00000020)  /* MMC counter Full-Half preset */
 #define ETH_MMCCR_MCP        ((uint32_t)0x00000010)  /* MMC counter preset */
 #define ETH_MMCCR_MCF        ((uint32_t)0x00000008)  /* MMC Counter Freeze */
@@ -8247,7 +8247,7 @@ typedef struct
 /*               Ethernet PTP Registers bits definition                       */
 /******************************************************************************/
 
-/* Bit definition for Ethernet PTP Time Stamp Contol Register */
+/* Bit definition for Ethernet PTP Time Stamp Control Register */
 #define ETH_PTPTSCR_TSCNT       ((uint32_t)0x00030000)  /* Time stamp clock node type */
 #define ETH_PTPTSSR_TSSMRME     ((uint32_t)0x00008000)  /* Time stamp snapshot for message relevant to master enable */
 #define ETH_PTPTSSR_TSSEME      ((uint32_t)0x00004000)  /* Time stamp snapshot for event message enable */

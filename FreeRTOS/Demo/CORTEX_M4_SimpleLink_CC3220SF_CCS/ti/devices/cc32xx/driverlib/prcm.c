@@ -1476,7 +1476,7 @@ void PRCMOCRRegisterWrite(unsigned char ucIndex, unsigned long ulRegValue)
   unsigned long ulVal;
 
   //
-  // Compuitr the offset
+  // Compute the offset
   //
   ucIndex = ucIndex << 2;
 

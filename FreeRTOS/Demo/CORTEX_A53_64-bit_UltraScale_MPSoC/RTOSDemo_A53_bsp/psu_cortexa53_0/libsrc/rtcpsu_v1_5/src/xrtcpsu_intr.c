@@ -73,7 +73,7 @@
 *
 * @param	InstancePtr is a pointer to the XRtcPsu instance
 * @param	Mask contains the interrupts to be enabled.
-*		A '1' enables an interupt, and a '0' disables.
+*		A '1' enables an interrupt, and a '0' disables.
 *
 * @return	None.
 *

@@ -2099,7 +2099,7 @@ HAL_StatusTypeDef HAL_ADC_Stop_DMA(ADC_HandleTypeDef *hadc)
   /* Disable ADC peripheral if conversions are effectively stopped */
   if (tmp_hal_status == HAL_OK)
   {
-    /* Disable ADC DMA (ADC DMA configuration of contineous requests is kept) */
+    /* Disable ADC DMA (ADC DMA configuration of continuous requests is kept) */
     MODIFY_REG(hadc->Instance->CFGR, ADC_CFGR_DMNGT_0 |ADC_CFGR_DMNGT_1, 0UL);
 
     /* Disable the DMA channel (in case of DMA in circular mode or stop       */

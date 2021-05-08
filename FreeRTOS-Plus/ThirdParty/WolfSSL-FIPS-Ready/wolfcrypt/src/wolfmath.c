@@ -113,7 +113,7 @@ int mp_cond_copy(mp_int* a, int copy, mp_int* b)
         /* When mask 0, b is unchanged2
          * When mask all set, b ^ b ^ a = a
          */
-        /* Conditionaly copy all digits and then number of used diigits.
+        /* Conditionally copy all digits and then number of used diigits.
          * get_digit() returns 0 when index greater than available digit.
          */
         for (i = 0; i < a->used; i++) {

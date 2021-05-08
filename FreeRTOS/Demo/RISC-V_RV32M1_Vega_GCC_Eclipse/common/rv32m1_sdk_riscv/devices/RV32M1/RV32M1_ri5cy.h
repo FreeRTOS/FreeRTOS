@@ -15860,28 +15860,28 @@ typedef struct {
 #define RTC_TIR_LCIE_MASK                        (0x10U)
 #define RTC_TIR_LCIE_SHIFT                       (4U)
 /*! LCIE - Loss of Clock Interrupt Enable
- *  0b0..Interupt disabled.
+ *  0b0..Interrupt disabled.
  *  0b1..An interrupt is generated when the loss of clock flag is set.
  */
 #define RTC_TIR_LCIE(x)                          (((uint32_t)(((uint32_t)(x)) << RTC_TIR_LCIE_SHIFT)) & RTC_TIR_LCIE_MASK)
 #define RTC_TIR_SIE_MASK                         (0x20U)
 #define RTC_TIR_SIE_SHIFT                        (5U)
 /*! SIE - Security Module Interrupt Enable
- *  0b0..Interupt disabled.
+ *  0b0..Interrupt disabled.
  *  0b1..An interrupt is generated when the security module flag is set.
  */
 #define RTC_TIR_SIE(x)                           (((uint32_t)(((uint32_t)(x)) << RTC_TIR_SIE_SHIFT)) & RTC_TIR_SIE_MASK)
 #define RTC_TIR_FSIE_MASK                        (0x40U)
 #define RTC_TIR_FSIE_SHIFT                       (6U)
 /*! FSIE - Flash Security Interrupt Enable
- *  0b0..Interupt disabled.
+ *  0b0..Interrupt disabled.
  *  0b1..An interrupt is generated when the flash security flag is set.
  */
 #define RTC_TIR_FSIE(x)                          (((uint32_t)(((uint32_t)(x)) << RTC_TIR_FSIE_SHIFT)) & RTC_TIR_FSIE_MASK)
 #define RTC_TIR_TMIE_MASK                        (0x80U)
 #define RTC_TIR_TMIE_SHIFT                       (7U)
 /*! TMIE - Test Mode Interrupt Enable
- *  0b0..Interupt disabled.
+ *  0b0..Interrupt disabled.
  *  0b1..An interrupt is generated when the test mode flag is set.
  */
 #define RTC_TIR_TMIE(x)                          (((uint32_t)(((uint32_t)(x)) << RTC_TIR_TMIE_SHIFT)) & RTC_TIR_TMIE_MASK)
@@ -15986,7 +15986,7 @@ typedef struct {
 #define RTC_WAR_IERW_MASK                        (0x80U)
 #define RTC_WAR_IERW_SHIFT                       (7U)
 /*! IERW - Interrupt Enable Register Write
- *  0b0..Writes to the Interupt Enable Register are ignored.
+ *  0b0..Writes to the Interrupt Enable Register are ignored.
  *  0b1..Writes to the Interrupt Enable Register complete as normal.
  */
 #define RTC_WAR_IERW(x)                          (((uint32_t)(((uint32_t)(x)) << RTC_WAR_IERW_SHIFT)) & RTC_WAR_IERW_MASK)

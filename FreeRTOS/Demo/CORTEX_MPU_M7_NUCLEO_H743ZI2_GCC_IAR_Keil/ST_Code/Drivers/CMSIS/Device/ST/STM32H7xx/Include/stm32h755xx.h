@@ -7003,7 +7003,7 @@ typedef struct
 #define ETH_MACCR_BL_1                                (0x3UL << ETH_MACCR_BL_Pos) /*!< 0x00000060 */
 #define ETH_MACCR_DC_Pos                              (4U)
 #define ETH_MACCR_DC_Msk                              (0x1UL << ETH_MACCR_DC_Pos) /*!< 0x00000010 */
-#define ETH_MACCR_DC                                  ETH_MACCR_DC_Msk         /* Defferal check */
+#define ETH_MACCR_DC                                  ETH_MACCR_DC_Msk         /* Deferral check */
 #define ETH_MACCR_PRELEN_Pos                          (2U)
 #define ETH_MACCR_PRELEN_Msk                          (0x3UL << ETH_MACCR_PRELEN_Pos) /*!< 0x0000000C */
 #define ETH_MACCR_PRELEN                              ETH_MACCR_PRELEN_Msk     /* Preamble Length for Transmit packets */

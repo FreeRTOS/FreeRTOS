@@ -140,7 +140,7 @@ typedef struct
   #define ETH_MACCR_BL_8     ((u32)0x00000020)  /* k = min (n, 8) */
   #define ETH_MACCR_BL_4     ((u32)0x00000040)  /* k = min (n, 4) */
   #define ETH_MACCR_BL_1     ((u32)0x00000060)  /* k = min (n, 1) */
-#define ETH_MACCR_DC      ((u32)0x00000010)  /* Defferal check */
+#define ETH_MACCR_DC      ((u32)0x00000010)  /* Deferral check */
 #define ETH_MACCR_TE      ((u32)0x00000008)  /* Transmitter enable */
 #define ETH_MACCR_RE      ((u32)0x00000004)  /* Receiver enable */
 
@@ -285,7 +285,7 @@ typedef struct
 /*                Ethernet MMC Registers bits definition                      */
 /******************************************************************************/
 
-/* Bit definition for Ethernet MMC Contol Register */
+/* Bit definition for Ethernet MMC Control Register */
 #define ETH_MMCCR_MCF        ((u32)0x00000008)  /* MMC Counter Freeze */
 #define ETH_MMCCR_ROR        ((u32)0x00000004)  /* Reset on Read */
 #define ETH_MMCCR_CSR        ((u32)0x00000002)  /* Counter Stop Rollover */
@@ -333,7 +333,7 @@ typedef struct
 /*               Ethernet PTP Registers bits definition                       */
 /******************************************************************************/
 
-/* Bit definition for Ethernet PTP Time Stamp Contol Register */
+/* Bit definition for Ethernet PTP Time Stamp Control Register */
 #define ETH_PTPTSCR_TSARU    ((u32)0x00000020)  /* Addend register update */
 #define ETH_PTPTSCR_TSITE    ((u32)0x00000010)  /* Time stamp interrupt trigger enable */
 #define ETH_PTPTSCR_TSSTU    ((u32)0x00000008)  /* Time stamp update */

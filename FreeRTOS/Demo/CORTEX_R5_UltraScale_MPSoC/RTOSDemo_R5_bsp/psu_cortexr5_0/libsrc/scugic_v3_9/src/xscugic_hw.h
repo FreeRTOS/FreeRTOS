@@ -475,7 +475,7 @@ extern "C" {
 
 /*
  * Highest Pending Interrupt register definitions
- * Identifies the interrupt priority of the highest priority pending interupt
+ * Identifies the interrupt priority of the highest priority pending interrupt
  */
 #define XSCUGIC_PEND_INTID_MASK		0x000003FFU /**< Pending Interrupt ID */
 /*#define XSCUGIC_CPUID_MASK		0x00000C00U */	 /**< CPU ID */

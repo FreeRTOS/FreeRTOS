@@ -298,7 +298,7 @@ void Spurious_Handler( void )
 }
 
 /**
- * \brief Non-secure Interupt Init.
+ * \brief Non-secure Interrupt Init.
  */
 void NonSecureITInit (void)
 {
@@ -393,7 +393,7 @@ void NonSecureITInit (void)
 }
 
 /**
- * \brief Secure Interupt Init.
+ * \brief Secure Interrupt Init.
  */
 void SecureITInit (void)
 {

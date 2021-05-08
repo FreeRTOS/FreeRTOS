@@ -3093,6 +3093,7 @@ compatibilty
 compatiblity
 compe
 compen
+complet
 completelevel
 complsplt
 compm
@@ -3265,6 +3266,7 @@ contextlen
 contextspec
 contians
 contimued
+continous
 continpass
 continuable
 continuationcode
@@ -3477,6 +3479,7 @@ crem
 creset
 crf
 crit
+critica
 crl
 crlbag
 crlcheckall
@@ -4111,6 +4114,7 @@ deachintmsk
 deachmsk
 deact
 deactf
+deactive
 deactivatealarm
 deactivatelpm
 deactivateremotewakeup
@@ -4256,6 +4260,7 @@ dep
 depcfg
 depcmd
 depctln
+dependant
 depevt
 dephasing
 depol
@@ -4313,6 +4318,7 @@ desenabledma
 deserialize
 deserialized
 desi
+desig
 desination
 desintclear
 desintdisable
@@ -8572,6 +8578,7 @@ incount
 incpltcallback
 incptr
 incr
+increas
 increaseacqcycles
 incrementer
 incrementernum
@@ -8636,6 +8643,7 @@ iniresl
 inirtc
 inisr
 init
+initializ
 initailized
 initaites
 inital

@@ -19536,7 +19536,7 @@ unsigned long psu_resetout_init_data(void)
     * Sata PM clock control select
     *  PSU_SIOU_SATA_MISC_CTRL_SATA_PM_CLK_SEL                     0x3
 
-    * Misc Contorls for SATA.This register may only be modified during bootup
+    * Misc Controls for SATA.This register may only be modified during bootup
     * (while SATA block is disabled)
     * (OFFSET, MASK, VALUE)      (0XFD3D0100, 0x00000003U ,0x00000003U)
     */

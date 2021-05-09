@@ -62,6 +62,7 @@ auth
 authmode
 autodetected
 autonegotiation
+autoreload
 avr
 aws
 backlight

@@ -170,7 +170,7 @@ static void vLCDTask( void *pvParameters )
 xLCDMessage xMessage;
 unsigned short usRow = 0;
 
-	/* Remove compiler warnigns. */
+	/* Remove compiler warnings. */
 	( void ) pvParameters;
 
 	/* Initialise the hardware.  This uses delays so must not be called prior

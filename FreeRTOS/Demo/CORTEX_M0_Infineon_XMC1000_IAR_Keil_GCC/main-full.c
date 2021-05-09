@@ -56,7 +56,7 @@
  * "Interrupt semaphore take" task - This task does nothing but block on a
  * semaphore that is 'given' from the tick hook function (which is defined in
  * main.c).  It toggles the fourth LED each time it receives the semaphore.  The
- * Semahore is given every 50ms, so LED 4 toggles every 50ms.
+ * Semaphore is given every 50ms, so LED 4 toggles every 50ms.
  *
  * "Flash timers" - A software timer callback function is defined that does
  * nothing but toggle an LED.  Three software timers are created that each

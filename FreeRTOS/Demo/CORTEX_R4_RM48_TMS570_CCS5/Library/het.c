@@ -45,7 +45,7 @@ void vLedTask(void *pvParameters)
 	unsigned count  = 0;
 	unsigned colour = 0;
 
-	/* Initalise the IO ports that drive the LEDs */
+	/* Initialise the IO ports that drive the LEDs */
 	gioSetDirection(hetPORT, 0xFFFFFFFF);
 	/* switch all leds off */
 	gioSetPort(hetPORT, 0x08110034);

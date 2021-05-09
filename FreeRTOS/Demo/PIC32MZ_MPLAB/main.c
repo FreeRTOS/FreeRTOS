@@ -244,7 +244,7 @@ static enum {
 	EXCEP_Overflow,	/* arithmetic overflow */
 	EXCEP_Trap, 	/* trap (possible divide by zero) */
 	EXCEP_FPE = 15, /* floating point exception */
-	EXCEP_IS1 = 16,	/* implementation specfic 1 */
+	EXCEP_IS1 = 16,	/* implementation specific 1 */
 	EXCEP_CEU, 		/* CorExtend Unuseable */
 	EXCEP_C2E, 		/* coprocessor 2 */
 	EXCEP_DSPDis = 26   /* DSP module disabled */

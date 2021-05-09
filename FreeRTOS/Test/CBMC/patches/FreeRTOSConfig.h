@@ -227,7 +227,7 @@ extern void vAssertCalled( const char * pcFile,
 
 #define configPROFILING                      ( 0 )
 
-/* Pseudo random number generater used by some demo tasks. */
+/* Pseudo random number generator used by some demo tasks. */
 extern uint32_t ulRand();
 #define configRAND32()    ulRand()
 

@@ -256,7 +256,7 @@ void test_pcQueueGetName_null_xQueue( void )
 
 /**
  * @brief Test pcQueueGetName with an xQueue handle that was not registered.
- * @details Verify that a call to pcQueueGetName with an unregisteredd xQueue
+ * @details Verify that a call to pcQueueGetName with an unregistered xQueue
  * returns a NULL pointer.
  * @coverage pcQueueGetName
  **/
@@ -311,7 +311,7 @@ void test_vQueueUnregisterQueue_null_handle( void )
 }
 
 /**
- * @brief Test vQueueUnregisterQueue with an unregisterd xQueue handle
+ * @brief Test vQueueUnregisterQueue with an unregistered xQueue handle
  * @details Verify that calling vQueueUnregisterQueue does not result in an assertion.
  * @coverage vQueueUnregisterQueue
  **/

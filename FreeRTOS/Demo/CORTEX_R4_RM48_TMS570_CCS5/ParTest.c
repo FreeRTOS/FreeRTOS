@@ -59,7 +59,7 @@ void vParTestInitialise( void )
 {
 unsigned long ul;
 
-	/* Initalise the IO ports that drive the LEDs */
+	/* Initialise the IO ports that drive the LEDs */
 	gioSetDirection( hetPORT, 0xFFFFFFFF );
 
 	/* Turn all the LEDs off. */

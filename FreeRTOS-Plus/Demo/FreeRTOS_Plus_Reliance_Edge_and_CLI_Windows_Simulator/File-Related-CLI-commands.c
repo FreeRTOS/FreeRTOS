@@ -1405,7 +1405,7 @@ int32_t lStatus;
 				}
 				else
 				{
-					strcpy( pcWriteBuffer, "Working state changes succesfully aborted." );
+					strcpy( pcWriteBuffer, "Working state changes successfully aborted." );
 				}
 			}
 
@@ -1437,7 +1437,7 @@ FSSTRESSPARAM param;
 	uxOriginalPriority = uxTaskPriorityGet( NULL );
 	vTaskPrioritySet( NULL, configMAX_PRIORITIES - 1 );
 
-	/* Delete all files to avoid inteferring with the test. */
+	/* Delete all files to avoid interfering with the test. */
 	red_umount( "" );
 	red_format( "" );
 	red_mount( "" );

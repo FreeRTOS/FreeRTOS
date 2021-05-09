@@ -74,7 +74,7 @@
 /* The size of the stack given to the Rx task. */
 #define comSTACK_SIZE				configMINIMAL_STACK_SIZE
 
-/* See the comment above the declaraction of the uxBaseLED variable. */
+/* See the comment above the declaration of the uxBaseLED variable. */
 #define comTX_LED_OFFSET			( 0 )
 #define comRX_LED_OFFSET			( 1 )
 

@@ -154,7 +154,7 @@ static void vMemCheckTask( void *pvParameters );
 
 /*
  * Called by the check task following the detection of an error to set the
- * LEDs into a state that shows an error has beeen found.
+ * LEDs into a state that shows an error has been found.
  */
 static void prvIndicateError( void );
 

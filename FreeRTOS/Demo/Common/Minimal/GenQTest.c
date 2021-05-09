@@ -901,7 +901,7 @@ SemaphoreHandle_t xMutex = ( SemaphoreHandle_t ) pvParameters, xLocalMutex;
 		vPrintDisplayMessage( &pcTaskStartMsg );
 	#endif
 
-	/* The local mutex is used to check the 'mutexs held' count. */
+	/* The local mutex is used to check the 'mutex held' count. */
 	xLocalMutex = xSemaphoreCreateMutex();
 	configASSERT( xLocalMutex );
 

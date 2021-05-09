@@ -195,7 +195,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	/* Clear the interrupt. */
 	UARTIntClear( UART0_BASE, ulStatus );
 
-	/* Was an Rx interrpt pending? */
+	/* Was an Rx interrupt pending? */
 	if( ulStatus & UART_INT_RX )
 	{
 		if( ( HWREG(UART0_BASE + UART_O_FR ) & UART_FR_RXFF ) )
@@ -242,12 +242,12 @@ static char cRxedChar, cExpectedChar;
 		/* Wait for a character to be received. */
 		xQueueReceive( xCommsQueue, ( void * ) &cRxedChar, commsRX_DELAY );
 
-		/* Was the character recived (if any) the expected character. */
+		/* Was the character received (if any) the expected character. */
 		if( cRxedChar != cExpectedChar )
 		{
 			/* Got an unexpected character.  This can sometimes occur when
 			reseting the system using the debugger leaving characters already
-			in the UART regsters. */
+			in the UART registers. */
 			uxCommsErrorStatus = pdFAIL;
 
 			/* Resync by waiting for the end of the current string. */

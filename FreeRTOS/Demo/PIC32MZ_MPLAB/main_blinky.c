@@ -179,7 +179,7 @@ static void prvQueueSendTask( void *pvParameters )
 TickType_t xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
 
-	/* Remove compiler warnigns in the case that configASSERT() is not dfined. */
+	/* Remove compiler warnings in the case that configASSERT() is not dfined. */
 	( void ) pvParameters;
 
 	/* Check the task parameter is as expected. */

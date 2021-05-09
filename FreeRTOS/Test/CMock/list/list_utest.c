@@ -68,8 +68,8 @@ int suiteTearDown( int numFailures )
 /* ===========================  Static Functions  =========================== */
 
 /*!
- * @brief initilize a preallocated list of ListItems_t
- * @param listItems list to initilize
+ * @brief initialize a preallocated list of ListItems_t
+ * @param listItems list to initialize
  * @param count the number of listItems in the list
  */
 static void initialise_list_items( ListItem_t * listItems,
@@ -82,9 +82,9 @@ static void initialise_list_items( ListItem_t * listItems,
 }
 
 /*!
- * @brief initilize a preallocated list of ListItems_t initializing each ones
+ * @brief initialize a preallocated list of ListItems_t initializing each ones
  *        value to its position value
- * @param listItems list to initilize
+ * @param listItems list to initialize
  * @param count the number of listItems in the list
  */
 static void initialise_list_items_with_position( ListItem_t * listItems,
@@ -114,7 +114,7 @@ static void validate_empty_list( const List_t * const pxList )
 /* ==============================  Test Cases  ============================== */
 
 /*!
- * @brief validate the initilization function of a list
+ * @brief validate the initialization function of a list
  * @coverage vListInitialise
  */
 void test_vListInitialise_Success( void )
@@ -126,10 +126,10 @@ void test_vListInitialise_Success( void )
 }
 
 /*!
- * @brief validate the initializatiom function of a list item
+ * @brief validate the initialization function of a list item
  * @coverage vListInitialiseItem
  */
-void test_vListInitialiseItem_Sucess( void )
+void test_vListInitialiseItem_Success( void )
 {
     ListItem_t pxItem;
 
@@ -320,7 +320,7 @@ void test_vListInsert_success_1_item( void )
  * @details This test ensures the list is sane when 2 items are inserted
  * @coverage vListInsert
  */
-void test_vListInsert_sucess_2_items( void )
+void test_vListInsert_success_2_items( void )
 {
     List_t pxList;
     ListItem_t pxNewListItem[ 2 ];
@@ -356,7 +356,7 @@ void test_vListInsert_sucess_2_items( void )
  * @details This test ensures the list is sane when 3 items are inserted
  * @coverage vListInsert
  */
-void test_vListInsert_sucess_3_items( void )
+void test_vListInsert_success_3_items( void )
 {
     List_t pxList;
     ListItem_t pxNewListItem[ 3 ];
@@ -481,7 +481,7 @@ void test_vListInsert_success_vportMAXDELAY( void )
  * @details This test ensures the list is sane when 1 item is removed
  * @coverage uxListRemove
  */
-void test_uxListRemove_sucesss( void )
+void test_uxListRemove_success( void )
 {
     List_t pxList;
     ListItem_t pxNewListItem;

@@ -81,7 +81,7 @@ long lEMACSend( char *pcFrom, unsigned long ulLength, long lEndOfFrame );
  * Frames can be read from the EMAC in multiple sections.
  * Read ulSectionLength bytes from the EMAC receive buffers to pcTo.  
  * ulTotalFrameLength is the size of the entire frame.  Generally vEMACRead
- * will be repetedly called until the sum of all the ulSectionLenths totals
+ * will be repeatedly called until the sum of all the ulSectionLenths totals
  * the value of ulTotalFrameLength.
  */
 void vEMACRead( char *pcTo, unsigned long ulSectionLength, unsigned long ulTotalFrameLength );

@@ -371,7 +371,7 @@ void test_macro_xQueueSendFromISR_in_set_high_priority_pending_null_ptr( void )
 /**
  * @brief Test xQueueSendFromISR with a higher priority task waiting on a queue in and Queue Set
  * @details Test xQueueSendFromISR with a higher priority task waiting and
- *  verifies that xHigherPriorityTaskWoken is set accoridngly.
+ *  verifies that xHigherPriorityTaskWoken is set accordingly.
  * @coverage xQueueGenericSendFromISR
  */
 void test_macro_xQueueSendFromISR_in_set_high_priority_pending( void )

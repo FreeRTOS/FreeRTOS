@@ -162,7 +162,7 @@ void test_macro_xQueueCreateStatic_validQueueStorage_zeroItem_zeroLength( void )
 {
     StaticQueue_t queueBuffer;
 
-    /* Expect that xQueueCreateStatic will assert becasue a zero length queue is invalid */
+    /* Expect that xQueueCreateStatic will assert because a zero length queue is invalid */
     fakeAssertExpectFail();
     QueueHandle_t xQueue = xQueueCreateStatic( 0, 0, NULL, &queueBuffer );
 

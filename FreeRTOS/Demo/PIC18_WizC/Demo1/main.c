@@ -43,7 +43,7 @@ Changes from V3.0.1
  * installation. It is also included to demonstrate a minimal project-setup
  * to use FreeRTOS in a wizC environment.
  *
- * Eight independant tasks are created. All tasks share the same taskcode.
+ * Eight independent tasks are created. All tasks share the same taskcode.
  * Each task blinks a different led on portB. The blinkrate for each task
  * is different, but chosen in such a way that portB will show a binary
  * counter pattern. All blinkrates are derived from a single master-rate.

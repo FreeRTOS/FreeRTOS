@@ -70,7 +70,7 @@
 #include "timers.h"
 #include "semphr.h"
 
-/* Microsemi incldues. */
+/* Microsemi includes. */
 #include "core_timer.h"
 #include "riscv_hal.h"
 

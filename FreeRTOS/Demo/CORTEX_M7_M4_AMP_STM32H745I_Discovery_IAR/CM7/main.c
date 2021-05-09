@@ -123,7 +123,7 @@
  * sbRECEIVE_COMPLETED macro only works if the sender and receiver are under the
  * control of the same instance of FreeRTOS and execute on the same core.
  * Therefore, just as the application that executes on the M7 core overrides
- * the default implementation of sbSEND_SOMPLETED(), the application that runs
+ * the default implementation of sbSEND_COMPLETED(), the application that runs
  * on the M4 core overrides the default implementation of sbRECEIVE_COMPLETED()
  * to likewise generate an interrupt in the M7 core - so sbRECEIVE_COMPLETED()
  * executes on the M4 core and generates an interrupt on the M7 core.  To keep
@@ -380,7 +380,7 @@ uint32_t x;
 	}
 
 	/* Normal FreeRTOS "yield from interrupt" semantics, where
-	xHigherPriorityTaskWoken is initialzed to pdFALSE and will then get set to
+	xHigherPriorityTaskWoken is initialized to pdFALSE and will then get set to
 	pdTRUE if the interrupt unblocks a task that has a priority above that of
 	the currently executing task. */
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );

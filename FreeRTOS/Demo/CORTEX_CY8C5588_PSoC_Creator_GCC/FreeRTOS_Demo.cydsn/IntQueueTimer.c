@@ -39,7 +39,7 @@ CY_ISR_PROTO( vHighFrequencySecondISR );
 /*---------------------------------------------------------------------------*/
 
 /**
- * Installs and starts the ISRs that drive the Interupt Queue Tests.
+ * Installs and starts the ISRs that drive the Interrupt Queue Tests.
  */
 void vInitialiseTimerForIntQueueTest( void )
 {

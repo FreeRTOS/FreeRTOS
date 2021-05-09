@@ -215,7 +215,7 @@ void LPIT0_IRQHandler( void )
 BaseType_t xTaskIncrementTick( void );
 void vTaskSwitchContext( void );
 
-#warning requires critical section if interrpt nesting is used.
+#warning requires critical section if interrupt nesting is used.
 
 	/* vPortSetupTimerInterrupt() uses LPIT0 to generate the tick interrupt. */
 	if( xTaskIncrementTick() != 0 )

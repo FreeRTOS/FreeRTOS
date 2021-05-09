@@ -64,7 +64,7 @@ Changes from V1.00:
 
 Changes from V1.01:
 
-	+ The Tx task now waits a pseudo random time between transissions.
+	+ The Tx task now waits a pseudo random time between transmissions.
 	  Previously a fixed period was used but this was not such a good test as
 	  interrupts fired at regular intervals.
 

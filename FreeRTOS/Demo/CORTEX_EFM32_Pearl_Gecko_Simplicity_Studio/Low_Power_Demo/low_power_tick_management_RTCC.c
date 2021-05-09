@@ -25,7 +25,7 @@
  * 1 tab == 4 spaces!
  */
 
-/* Standard inlcludes. */
+/* Standard includes. */
 #include <limits.h>
 
 /* FreeRTOS includes. */
@@ -350,7 +350,7 @@ void RTCC_IRQHandler( void )
 
 	/* Set up a timer that used used to bring the MCU out of sleep mode using
 	an interrupt other than the tick interrupt.  This is done for code coverage
-	puposes only. */
+	purposes only. */
 	void prvSetupTestTimer( void )
 	{
 	static const LETIMER_Init_TypeDef xLETimerInitStruct =

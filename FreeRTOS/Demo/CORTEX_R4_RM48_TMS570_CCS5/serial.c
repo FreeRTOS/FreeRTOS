@@ -125,7 +125,7 @@ xComPortHandle xReturn = ( xComPortHandle ) 0;
 	hardware. */
 	if( ( xRxedChars != serINVALID_QUEUE ) && ( xCharsForTx != serINVALID_QUEUE ) )
 	{
-		/* Initalise SCI1 */
+		/* Initialise SCI1 */
 	    /* Bring SCI out of reset */
 		serialSCI_GCR0_REG = 0x00000001UL;
 	    /* Disable all interrupts */

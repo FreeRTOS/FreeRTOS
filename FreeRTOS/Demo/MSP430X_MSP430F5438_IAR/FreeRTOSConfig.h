@@ -125,7 +125,7 @@ the timer has overflowed. */
 			TA1CTL &= ~TAIFG;													\
 		}																		\
 																				\
-		/* Generate a 32 bit counter value by combinging the current peripheral	\
+		/* Generate a 32 bit counter value by combining the current peripheral	\
 		counter value with the number of overflows. */							\
 		ulCountValue = ( ulStatsOverflowCount << 16UL );						\
 		ulCountValue |= ( unsigned long ) TA1R;									\

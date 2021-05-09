@@ -115,7 +115,7 @@ static void prvQueueSendTask( void *pvParameters );
 void main_blinky( void );
 
 /*
- * The full demo configures the clocks for maximum frequency, wheras this blinky
+ * The full demo configures the clocks for maximum frequency, whereas this blinky
  * demo uses a slower clock as it also uses low power features.
  */
 static void prvConfigureClocks( void );
@@ -140,7 +140,7 @@ void main_blinky( void )
 	the blinky demo) and a tickless RTOS implementation that is tailored
 	specifically to the MSP432. */
 
-	/* The full demo configures the clocks for maximum frequency, wheras this
+	/* The full demo configures the clocks for maximum frequency, whereas this
 	blinky demo uses a slower clock as it also uses low power features. */
 	prvConfigureClocks();
 

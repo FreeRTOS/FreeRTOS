@@ -94,7 +94,7 @@ BaseType_t xStatus;
 XUartPs_Config *pxConfig;
 
 	/* Create the queue used to hold received characters.  NOTE THE COMMENTS AT
-	THE TOP OF THIS FILE REGARDING THE USE OF QUEUES FOR THIS PURPSOE. */
+	THE TOP OF THIS FILE REGARDING THE USE OF QUEUES FOR THIS PURPOSE. */
 	xRxQueue = xQueueCreate( uxQueueLength, sizeof( char ) );
 	configASSERT( xRxQueue );
 
@@ -222,7 +222,7 @@ char cChar;
 		ulChannelStatusRegister = XUartPs_ReadReg( XPAR_PS7_UART_1_BASEADDR, XUARTPS_SR_OFFSET );
 
 		/* Move data from the Rx FIFO to the Rx queue.  NOTE THE COMMENTS AT THE
-		TOP OF THIS FILE ABOUT USING QUEUES FOR THIS PURPSOE. */
+		TOP OF THIS FILE ABOUT USING QUEUES FOR THIS PURPOSE. */
 		while( ( ulChannelStatusRegister & XUARTPS_SR_RXEMPTY ) == 0 )
 		{
 			cChar =	XUartPs_ReadReg( XPAR_PS7_UART_1_BASEADDR, XUARTPS_FIFO_OFFSET );
@@ -245,7 +245,7 @@ char cChar;
 	{
 		if( xUARTInstance.SendBuffer.RemainingBytes == 0 )
 		{
-			/* Give back the semaphore to indicate that the tranmission is
+			/* Give back the semaphore to indicate that the transmission is
 			complete.  If giving the semaphore unblocks a task, and the
 			unblocked task has a priority above the currently running task (the
 			task that this interrupt interrupted), then xHigherPriorityTaskWoken

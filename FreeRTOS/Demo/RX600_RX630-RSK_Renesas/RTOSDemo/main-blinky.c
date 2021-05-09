@@ -133,7 +133,7 @@ unsigned long ulReceivedValue;
 
 	for( ;; )
 	{
-		/* Wait until something arives in the queue - this will block 
+		/* Wait until something arrives in the queue - this will block 
 		indefinitely provided INCLUDE_vTaskSuspend is set to 1 in
 		FreeRTOSConfig.h. */
 		xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );

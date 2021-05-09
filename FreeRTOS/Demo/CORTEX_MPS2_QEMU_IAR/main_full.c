@@ -304,7 +304,7 @@ void vFullDemoTickHookFunction( void )
 	/* Exercise stream buffers from interrupts. */
 	vBasicStreamBufferSendFromISR();
 
-	/* Exercise sempahores from interrupts. */
+	/* Exercise semaphores from interrupts. */
 	vInterruptSemaphorePeriodicTest();
 }
 /*-----------------------------------------------------------*/

@@ -242,7 +242,7 @@ void test_macro_xQueueSend_blocking_success_locked_low_prio_pending( void )
 
 /**
  *  @brief Test xQueueSend with taskSCHEDULER_SUSPENDED and timeout=10
- *  @details This should cause xQueueSend to configASSERT becuase it would
+ *  @details This should cause xQueueSend to configASSERT because it would
  *  block forever when the queue is full.
  * @coverage xQueueGenericSend
  */

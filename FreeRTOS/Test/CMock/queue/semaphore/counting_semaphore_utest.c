@@ -562,7 +562,7 @@ void test_macro_xSemaphoreGive_count_higher_than_max( void )
 
 /**
  *  @brief Test xSemaphoreTake with taskSCHEDULER_SUSPENDED and timeout=10
- *  @details This should cause xSemaphoreTake to configASSERT becuase it would
+ *  @details This should cause xSemaphoreTake to configASSERT because it would
  *  block forever when the semaphore is empty.
  *  @coverage xQueueSemaphoreTake
  */
@@ -592,7 +592,7 @@ void test_xSemaphoreTake_blocking_suspended_assert( void )
 
 /**
  *  @brief Test xSemaphoreTake with taskSCHEDULER_SUSPENDED and timeout=0
- *  @details This should not cause xSemaphoreTake to configASSERT becuase
+ *  @details This should not cause xSemaphoreTake to configASSERT because
  *  xSemaphoreTake is non-blocking when timeout=0.
  *  @coverage xQueueSemaphoreTake
  */
@@ -633,7 +633,7 @@ static BaseType_t blocking_xTaskCheckForTimeOut_cb( TimeOut_t * const pxTimeOut,
  * which becomes available while a call to xSemaphoreTake is blocking.
  * @coverage xQueueSemaphoreTake
  */
-void test_xSemaphoreTake_blocking_sucess( void )
+void test_xSemaphoreTake_blocking_success( void )
 {
     SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( 2, 0 );
 

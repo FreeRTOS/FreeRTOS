@@ -474,7 +474,7 @@ void test_macro_xSemaphoreTake_blocking_mutex_inherit_timeout( void )
 
     for( int i = 0; i < TICKS_TO_WAIT; i++ )
     {
-        /* Return pdTRUE to signify that priority inheritence occurred */
+        /* Return pdTRUE to signify that priority inheritance occurred */
         xTaskPriorityInherit_ExpectAndReturn( ( void * ) xFakeMutexHolder, pdTRUE );
     }
 
@@ -514,7 +514,7 @@ void test_macro_xSemaphoreTake_blocking_mutex_inherit_timeout_high_prio_waiting(
 
     for( int i = 0; i < TICKS_TO_WAIT; i++ )
     {
-        /* Return pdTRUE to signify that priority inheritence occurred */
+        /* Return pdTRUE to signify that priority inheritance occurred */
         xTaskPriorityInherit_ExpectAndReturn( xFakeMutexHolder, pdTRUE );
     }
 
@@ -569,7 +569,7 @@ void test_macro_xSemaphoreTake_blocking_mutex_inherit_disinherit( void )
 
     for( int i = 0; i < NUM_CALLS_TO_INTERCEPT + 1; i++ )
     {
-        /* Return pdTRUE to signify that priority inheritence occurred */
+        /* Return pdTRUE to signify that priority inheritance occurred */
         xTaskPriorityInherit_ExpectAndReturn( xFakeMutexHolder, pdTRUE );
     }
 

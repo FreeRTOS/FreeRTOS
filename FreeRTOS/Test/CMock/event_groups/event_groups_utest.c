@@ -271,7 +271,7 @@ void test_xEventGroupSetBits_WithTaskBlockedOnBits_Success( void )
 }
 
 /*!
- * @brief validate the callback fucntion of setting event bits
+ * @brief validate the callback function of setting event bits
  * @coverage vEventGroupSetBitsCallback
  */
 void test_vEventGroupSetBitsCallback_Success( void )
@@ -394,7 +394,7 @@ void test_xEventGroupClearBits_Success( void )
 }
 
 /*!
- * @brief validate the callback fucntion of clearing event bits
+ * @brief validate the callback function of clearing event bits
  * @coverage vEventGroupClearBitsCallback
  */
 void test_vEventGroupClearBitsCallback_Success( void )

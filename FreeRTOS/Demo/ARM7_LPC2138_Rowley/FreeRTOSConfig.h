@@ -31,7 +31,7 @@
 #include <LPC21xx.h>
 #define vPortYieldProcessor swi_handler
 
-/* For compatability with the LPC2106 header. */
+/* For compatibility with the LPC2106 header. */
 #define T0_IR T0IR
 #define T0_PR T0PR
 #define T0_MR0 T0MR0

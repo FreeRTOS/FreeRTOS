@@ -176,7 +176,7 @@ extern void vUARTCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriori
 void vFullDemoIdleHook( void );
 
 /*
- * The full demo configures the clocks for maximum frequency, wheras the blinky
+ * The full demo configures the clocks for maximum frequency, whereas the blinky
  * demo uses a slower clock as it also uses low power features.
  */
 static void prvConfigureClocks( void );
@@ -401,7 +401,7 @@ static void prvConfigureClocks( void )
 	FlashCtl_setWaitState( FLASH_BANK0, 2 );
 	FlashCtl_setWaitState( FLASH_BANK1, 2 );
 
-	/* The full demo configures the clocks for maximum frequency, wheras the
+	/* The full demo configures the clocks for maximum frequency, whereas the
 	blinky demo uses a slower clock as it also uses low power features.  Maximum
 	freqency also needs more voltage.
 

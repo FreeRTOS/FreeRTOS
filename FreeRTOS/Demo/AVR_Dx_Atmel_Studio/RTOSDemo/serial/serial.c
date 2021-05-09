@@ -58,7 +58,7 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
                      | USART_RS485_OFF_gc       /* RS485 Mode disabled */
                      | 1 << USART_RXCIE_bp;     /* Receive Complete Interrupt Enable: enabled */
 
-        USART1.CTRLB = 1 << USART_RXEN_bp       /* Reciever enable: enabled */
+        USART1.CTRLB = 1 << USART_RXEN_bp       /* Receiver enable: enabled */
                      | USART_RXMODE_NORMAL_gc   /* Normal mode */
                      | 1 << USART_TXEN_bp;      /* Transmitter Enable: enabled */
     }

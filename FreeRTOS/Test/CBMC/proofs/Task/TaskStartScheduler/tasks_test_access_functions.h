@@ -50,7 +50,7 @@ StackType_t  *pxTimerTaskStack;
  * `pxCurrentTCB` allocation is allowed to fail. The global variables above
  * this comment are used in the stubbed functions `vApplicationGetIdleTaskMemory`
  * and `vApplicationGetTimerTaskMemory` (at the end of this file) and buffer allocation
- * must be succesful for the proof to have no errors
+ * must be successful for the proof to have no errors
  */
 BaseType_t xPrepareTasks( void )
 {
@@ -88,7 +88,7 @@ BaseType_t xPrepareTasks( void )
 }
 
 /*
- * The buffers used here have been succesfully allocated before (global variables)
+ * The buffers used here have been successfully allocated before (global variables)
  */
 void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
                                     StackType_t ** ppxIdleTaskStackBuffer,
@@ -100,7 +100,7 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
 }
 
 /*
- * The buffers used here have been succesfully allocated before (global variables)
+ * The buffers used here have been successfully allocated before (global variables)
  */
 void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize )
 {

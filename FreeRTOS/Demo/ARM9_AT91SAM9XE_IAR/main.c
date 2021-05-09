@@ -121,7 +121,7 @@ int main()
 	the control of the kernel. */
 	vTaskStartScheduler();
 	
-	/* Will only get here if there was insufficient heap availale for the
+	/* Will only get here if there was insufficient heap available for the
 	idle task to be created. */
 	for( ;; );
 }

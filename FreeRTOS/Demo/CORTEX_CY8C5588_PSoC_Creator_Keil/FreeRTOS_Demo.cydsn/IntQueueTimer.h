@@ -29,7 +29,7 @@
 #define INT_QUEUE_TIMER_H_
 
 /**
- * Install and start the ISRs that drive the Interupt Queue Tests.
+ * Install and start the ISRs that drive the Interrupt Queue Tests.
  */
 void vInitialiseTimerForIntQueueTest( void );
 

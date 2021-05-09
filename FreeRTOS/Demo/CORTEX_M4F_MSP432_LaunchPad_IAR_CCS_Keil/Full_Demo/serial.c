@@ -90,7 +90,7 @@ const eUSCI_UART_Config xUARTConfig =
 xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned long uxQueueLength )
 {
 	/* Create the queue used to hold received characters.  NOTE THE COMMENTS AT
-	THE TOP OF THIS FILE REGARDING THE USE OF QUEUES FOR THIS PURPSOE. */
+	THE TOP OF THIS FILE REGARDING THE USE OF QUEUES FOR THIS PURPOSE. */
 	xRxQueue = xQueueCreate( uxQueueLength, sizeof( char ) );
 	configASSERT( xRxQueue );
 

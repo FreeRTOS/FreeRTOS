@@ -299,7 +299,7 @@ BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 	}
 
 	/* Normal FreeRTOS yield from interrupt semantics, where
-	xHigherPriorityTaskWoken is initialzed to pdFALSE and will then get set to
+	xHigherPriorityTaskWoken is initialized to pdFALSE and will then get set to
 	pdTRUE if the interrupt safe API unblocks a task that has a priority above
 	that of the currently executing task. */
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );

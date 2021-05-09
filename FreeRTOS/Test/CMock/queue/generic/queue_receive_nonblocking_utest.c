@@ -503,7 +503,7 @@ void test_xQueuePeek_xQueueReceive_waiting_lower_priority( void )
 
 /**
  *  @brief Test xQueuePeek with taskSCHEDULER_SUSPENDED and timeout=0
- *  @details This should not cause xQueuePeek to configASSERT becuase
+ *  @details This should not cause xQueuePeek to configASSERT because
  *  xQueuePeek is non-blocking when timeout=0.
  *  @coverage xQueuePeek
  */
@@ -856,7 +856,7 @@ void test_xQueueReceive_noop_waiting_lower_priority( void )
 
 /**
  *  @brief Test xQueueReceive with taskSCHEDULER_SUSPENDED and timeout=0
- *  @details This should not cause xQueueReceive to configASSERT becuase
+ *  @details This should not cause xQueueReceive to configASSERT because
  *  xQueueReceive is non-blocking when timeout=0.
  *  @coverage xQueueReceive
  */

@@ -137,7 +137,7 @@ void SystemCoreClockUpdate( void );
 	/* Select User Button pin as input source for EXTI Line */
 	SYSCFG_EXTILineConfig( EXTI_PortSourceGPIOA, EXTI_PinSource0 );
 
-	/* Configure EXT1 Line 0 in interrupt mode trigged on Rising edge */
+	/* Configure EXT1 Line 0 in interrupt mode triggered on Rising edge */
 	EXTI_InitStructure.EXTI_Line = EXTI_Line0 ;  /* PA0 for User button AND IDD_WakeUP */
 	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
 	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;

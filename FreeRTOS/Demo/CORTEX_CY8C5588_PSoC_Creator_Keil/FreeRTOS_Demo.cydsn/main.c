@@ -188,7 +188,7 @@ unsigned short usErrorCode = 0;
 unsigned long ulIteration = 0;
 extern unsigned short usMaxJitter;
 
-	/* Intialise the sleeper. */
+	/* Initialise the sleeper. */
 	xDelay = xTaskGetTickCount();
 
 	for( ;; )
@@ -289,7 +289,7 @@ extern unsigned short usMaxJitter;
 
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
-	/* The stack space has been execeeded for a task, considering allocating more. */
+	/* The stack space has been exceeded for a task, considering allocating more. */
 	taskDISABLE_INTERRUPTS();
 	for( ;; );
 }
@@ -297,7 +297,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 
 void vApplicationMallocFailedHook( void )
 {
-	/* The heap space has been execeeded. */
+	/* The heap space has been exceeded. */
 	taskDISABLE_INTERRUPTS();
 	for( ;; );
 }

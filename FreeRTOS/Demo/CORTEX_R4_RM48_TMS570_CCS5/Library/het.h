@@ -49,8 +49,8 @@ typedef volatile struct hetBase
     unsigned OFF2;    /**< 0x0010: Interrupt offset register 2          */
     unsigned INTENAS; /**< 0x0014: Interrupt enable set register        */
     unsigned INTENAC; /**< 0x0018: Interrupt enable clear register      */
-    unsigned EXC1;    /**< 0x001C: Exeption control register 1          */
-    unsigned EXC2;    /**< 0x0020: Exeption control register 2          */
+    unsigned EXC1;    /**< 0x001C: Exception control register 1          */
+    unsigned EXC2;    /**< 0x0020: Exception control register 2          */
     unsigned PRY;     /**< 0x0024: Interrupt priority register          */
     unsigned FLG;     /**< 0x0028: Interrupt flag register              */
     unsigned : 32U;   /**< 0x002C: Reserved                             */

@@ -82,7 +82,7 @@ jobs:
           # Add path to the tool to the environment variable.
           PATH=$PATH:commonCI/spellings/tools
           # Make sure that only Amazon licenced files are checked.
-          sed 's/`find $DIRNAME \\( -iname \\\*\.\[ch\] -o -iname \\\*\.dox \\) -type f`/`grep -ril "copyright \(c\) \[0-9\]\[0-9\]\[0-9\]\[0-9\] amazon.com" | grep "\\.\[ch\]"`/g' commonCI/spellings/tools/find-unknown-comment-words
+          sed -i 's/`find $DIRNAME \\( -iname \\\*\.\[ch\] -o -iname \\\*\.dox \\) -type f`/`grep -ril "copyright \(c\) \[0-9\]\[0-9\]\[0-9\]\[0-9\] amazon.com" | grep "\\.\[ch\]"`/g' commonCI/spellings/tools/find-unknown-comment-words
           # Run the spell check script.
           find-unknown-comment-words --directory FreeRTOS/ --lexicon FreeRTOS/lexicon.txt
           # Check the exit status.

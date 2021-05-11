@@ -22,7 +22,6 @@
  * https://github.com/FreeRTOS
  * https://www.FreeRTOS.org
  *
-!
  */
 
 #ifndef __MPU_DEMO_H__

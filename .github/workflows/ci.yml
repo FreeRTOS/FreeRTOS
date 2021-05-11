@@ -63,12 +63,31 @@ jobs:
   spell-check:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Parent Repo
+        uses: actions/checkout@v2
+        with:
+          ref: main
+          repository: FreeRTOS/CI-CD-Github-Actions
+          path: main
       - name: Clone This Repo
         uses: actions/checkout@v2
-      - name: Run spellings check
-        uses: AniruddhaKanhere/CI-CD-Github-Actions/spellings@main
         with:
-          path: ./
+            path: ./FreeRTOS
+      - name: Install spell
+        run: |
+          sudo apt-get install spell
+          sudo apt-get install util-linux
+      - name: Check spelling
+        run: |
+          PATH=$PATH:main/tools/spell
+          # Make sure that only Amazon licenced files are checked.
+          sed 's/`find $DIRNAME \\( -iname \\\*\.\[ch\] -o -iname \\\*\.dox \\) -type f`/`grep -ril "copyright \(c\) \[0-9\]\[0-9\]\[0-9\]\[0-9\] amazon.com" | grep "\\.\[ch\]"`/g' main/spelling/tools/find-unknown-comment-words
+          find-unknown-comment-words --directory FreeRTOS/ --lexicon FreeRTOS/lexicon.txt
+          if [ "$?" = "0" ]; then
+            exit 0
+          else
+            exit 1
+          fi
 
   verify-manifest:
     runs-on: ubuntu-latest

@@ -67,7 +67,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: main
-          repository: AniruddhaKanhere/CI-CD-Github-Actions
+          repository: FreeRTOS/CI-CD-Github-Actions
           path: commonCI
       - name: Clone This Repo
         uses: actions/checkout@v2

@@ -87,63 +87,63 @@
 #include <metal/drivers/sifive_fe310-g000_prci.h>
 
 /* From clock@0 */
-struct __metal_driver_fixed_clock __metal_dt_clock_0;
+extern struct __metal_driver_fixed_clock __metal_dt_clock_0;
 
 /* From clock@2 */
-struct __metal_driver_fixed_clock __metal_dt_clock_2;
+extern struct __metal_driver_fixed_clock __metal_dt_clock_2;
 
 /* From clock@5 */
-struct __metal_driver_fixed_clock __metal_dt_clock_5;
+extern struct __metal_driver_fixed_clock __metal_dt_clock_5;
 
-struct metal_memory __metal_dt_mem_dtim_80000000;
+extern struct metal_memory __metal_dt_mem_dtim_80000000;
 
-struct metal_memory __metal_dt_mem_spi_10014000;
+extern struct metal_memory __metal_dt_mem_spi_10014000;
 
 /* From clint@2000000 */
-struct __metal_driver_riscv_clint0 __metal_dt_clint_2000000;
+extern struct __metal_driver_riscv_clint0 __metal_dt_clint_2000000;
 
 /* From cpu@0 */
-struct __metal_driver_cpu __metal_dt_cpu_0;
+extern struct __metal_driver_cpu __metal_dt_cpu_0;
 
-struct __metal_driver_riscv_cpu_intc __metal_dt_cpu_0_interrupt_controller;
+extern struct __metal_driver_riscv_cpu_intc __metal_dt_cpu_0_interrupt_controller;
 
 /* From interrupt_controller@c000000 */
-struct __metal_driver_riscv_plic0 __metal_dt_interrupt_controller_c000000;
+extern struct __metal_driver_riscv_plic0 __metal_dt_interrupt_controller_c000000;
 
-struct metal_pmp __metal_dt_pmp;
+extern struct metal_pmp __metal_dt_pmp;
 
 /* From local_external_interrupts_0 */
-struct __metal_driver_sifive_local_external_interrupts0 __metal_dt_local_external_interrupts_0;
+extern struct __metal_driver_sifive_local_external_interrupts0 __metal_dt_local_external_interrupts_0;
 
 /* From gpio@10012000 */
-struct __metal_driver_sifive_gpio0 __metal_dt_gpio_10012000;
+extern struct __metal_driver_sifive_gpio0 __metal_dt_gpio_10012000;
 
 /* From led@0red */
-struct __metal_driver_sifive_gpio_led __metal_dt_led_0red;
+extern struct __metal_driver_sifive_gpio_led __metal_dt_led_0red;
 
 /* From led@0green */
-struct __metal_driver_sifive_gpio_led __metal_dt_led_0green;
+extern struct __metal_driver_sifive_gpio_led __metal_dt_led_0green;
 
 /* From led@0blue */
-struct __metal_driver_sifive_gpio_led __metal_dt_led_0blue;
+extern struct __metal_driver_sifive_gpio_led __metal_dt_led_0blue;
 
 /* From spi@10014000 */
-struct __metal_driver_sifive_spi0 __metal_dt_spi_10014000;
+extern struct __metal_driver_sifive_spi0 __metal_dt_spi_10014000;
 
 /* From serial@10013000 */
-struct __metal_driver_sifive_uart0 __metal_dt_serial_10013000;
+extern struct __metal_driver_sifive_uart0 __metal_dt_serial_10013000;
 
 /* From clock@3 */
-struct __metal_driver_sifive_fe310_g000_hfrosc __metal_dt_clock_3;
+extern struct __metal_driver_sifive_fe310_g000_hfrosc __metal_dt_clock_3;
 
 /* From clock@1 */
-struct __metal_driver_sifive_fe310_g000_hfxosc __metal_dt_clock_1;
+extern struct __metal_driver_sifive_fe310_g000_hfxosc __metal_dt_clock_1;
 
 /* From clock@4 */
-struct __metal_driver_sifive_fe310_g000_pll __metal_dt_clock_4;
+extern struct __metal_driver_sifive_fe310_g000_pll __metal_dt_clock_4;
 
 /* From prci@10008000 */
-struct __metal_driver_sifive_fe310_g000_prci __metal_dt_prci_10008000;
+extern struct __metal_driver_sifive_fe310_g000_prci __metal_dt_prci_10008000;
 
 
 

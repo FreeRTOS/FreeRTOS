@@ -26,7 +26,7 @@
 
 /*
  * Contains sundry tests to exercise code that is not touched by the standard
- * demo tasks (which are predominantly test tasks).  Some tests are incldued
+ * demo tasks (which are predominantly test tasks).  Some tests are included
  * here because they can only be executed when configASSERT() is not defined.
  */
 

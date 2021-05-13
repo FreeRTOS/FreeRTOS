@@ -144,7 +144,7 @@ void vStartTimerDemoTask( TickType_t xBasePeriodIn )
 
 	/* Create the task that will control and monitor the timers.  This is
 	created at a lower priority than the timer service task to ensure, as
-	far as it is concerned, commands on timers are actioned immediately
+	far as it is concerned, commands on timers are acted on immediately
 	(sending a command to the timer service task will unblock the timer service
 	task, which will then preempt this task). */
 	if( xTestStatus != pdFAIL )
@@ -168,7 +168,7 @@ static void prvTimerTestTask( void *pvParameters )
 	is created as an auto-reload timer then converted to a one-shot timer. */
 	xOneShotTimer = xTimerCreate(	"Oneshot Timer",				/* Text name to facilitate debugging.  The kernel does not use this itself. */
 									tmrdemoONE_SHOT_TIMER_PERIOD,	/* The period for the timer. */
-									pdFALSE,						/* Autorealod is false, so created as a one-shot timer. */
+									pdFALSE,						/* Autoreload is false, so created as a one-shot timer. */
 									( void * ) 0,					/* The timer identifier.  Initialise to 0, then increment each time it is called. */
 									prvOneShotTimerCallback );		/* The callback to be called when the timer expires. */
 
@@ -408,7 +408,7 @@ UBaseType_t uxOriginalPriority;
 	function the expected number of times. */
 	for( ucTimer = 0; ucTimer < ( uint8_t ) configTIMER_QUEUE_LENGTH; ucTimer++ )
 	{
-		/* The expected number of expiries is equal to the block period divided
+		/* The expected number of expires is equal to the block period divided
 		by the timer period. */
 		xTimerPeriod = ( ( ( TickType_t ) ucTimer + ( TickType_t ) 1 ) * xBasePeriod );
 		xExpectedNumber = xBlockPeriod / xTimerPeriod;
@@ -717,8 +717,8 @@ static void prvTest7_CheckBacklogBehaviour( void )
 	/* Arrange for the callback to execute late enough that it will execute
 	twice, back-to-back.  The timer must handle the stop request properly
 	in spite of the backlog of callbacks. */
-	#define tmrdemoEXPECTED_BACKLOG_EXPIRIES  ( ( TickType_t ) 2 )
-	xTaskCatchUpTicks( tmrdemoBACKLOG_TIMER_PERIOD * tmrdemoEXPECTED_BACKLOG_EXPIRIES );
+	#define tmrdemoEXPECTED_BACKLOG_EXPIRES  ( ( TickType_t ) 2 )
+	xTaskCatchUpTicks( tmrdemoBACKLOG_TIMER_PERIOD * tmrdemoEXPECTED_BACKLOG_EXPIRES );
 
 	/* The timer should now be inactive. */
 	if( xTimerIsTimerActive( xAutoReloadTimers[ 0 ] ) != pdFALSE )
@@ -803,8 +803,8 @@ static TickType_t uxTick = ( TickType_t ) -1;
 	then this function will not expect the timer to have expired until the
 	kernel's tick count is (102 + xBasePeriod), whereas in reality the timer
 	will expire when the kernel's tick count is (100 + xBasePeriod).  For this
-	reason xMargin is used as an allowable margin for premature timer expiries
-	as well as late timer expiries. */
+	reason xMargin is used as an allowable margin for premature timer expires
+	as well as late timer expires. */
 	#ifdef _WINDOWS_
 		/* Windows is not real real time. */
 		const TickType_t xMargin = 20;

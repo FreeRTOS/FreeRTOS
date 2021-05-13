@@ -28,7 +28,7 @@
  * A set of tasks are created that send TCP echo requests to the standard echo
  * port (port 7) on the IP address set by the configECHO_SERVER_ADDR0 to
  * configECHO_SERVER_ADDR3 constants, then wait for and verify the reply
- * (another demo is avilable that demonstrates the reception being performed in
+ * (another demo is available that demonstrates the reception being performed in
  * a task other than that from with the request was made).
  *
  * See the following web page for essential demo usage and configuration

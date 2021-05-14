@@ -38,6 +38,7 @@
 #include "queue.h"
 
 /* ============================  GLOBAL VARIABLES =========================== */
+extern bool xMaskAssertAndAbort;
 
 /* ==========================  CALLBACK FUNCTIONS =========================== */
 

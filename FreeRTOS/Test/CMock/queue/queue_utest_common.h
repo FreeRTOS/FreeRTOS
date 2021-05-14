@@ -69,7 +69,7 @@
 #define NUM_CALLS_TO_INTERCEPT    TICKS_TO_WAIT / 2
 
 /* ============================  GLOBAL VARIABLES =========================== */
-bool xMaskAssertAndAbort;
+//bool xMaskAssertAndAbort;
 
 /* =================================  MACROS ================================ */
 

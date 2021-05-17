@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /*
@@ -299,7 +298,7 @@ BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 	}
 
 	/* Normal FreeRTOS yield from interrupt semantics, where
-	xHigherPriorityTaskWoken is initialzed to pdFALSE and will then get set to
+	xHigherPriorityTaskWoken is initialized to pdFALSE and will then get set to
 	pdTRUE if the interrupt safe API unblocks a task that has a priority above
 	that of the currently executing task. */
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );

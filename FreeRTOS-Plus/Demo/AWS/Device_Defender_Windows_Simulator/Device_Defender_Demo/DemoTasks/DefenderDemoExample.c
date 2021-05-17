@@ -36,7 +36,7 @@
  * Device Defender is an AWS service.
  *
  * This demo subscribes to the Device Defender topics. It then collects metrics
- * for the open ports and sockets on the device using FreeRTOS+TCP. Additonally
+ * for the open ports and sockets on the device using FreeRTOS+TCP. Additionally
  * the stack high water mark and task IDs are collected for custom metrics.
  * These metrics are used to generate a Device Defender report. The
  * report is then published, and the demo waits for a response from the device

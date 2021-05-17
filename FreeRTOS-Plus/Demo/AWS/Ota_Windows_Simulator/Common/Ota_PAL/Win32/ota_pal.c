@@ -372,7 +372,7 @@ OtaPalImageState_t otaPal_GetPlatformImageState( OtaFileContext_t * const pFileC
         if( 1 != fread( &eSavedAgentState, sizeof(OtaImageState_t), 1, pstPlatformImageState ) ) /*lint !e586 !e9029
                                                                                            * C standard library call is being used for portability. */
         {
-            /* If an error occured reading the file, mark the state as aborted. */
+            /* If an error occurred reading the file, mark the state as aborted. */
             LogError( ( "Unable to read image state file.\r\n" ) );
             ePalState = ( OtaPalImageStateInvalid | (errno & OTA_PAL_ERR_MASK) );
         }

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -343,7 +343,7 @@ void test_macro_xSemaphoreGiveFromISR_high_priority_pending_null_ptr( void )
 /**
  * @brief Test xSemaphoreGiveFromISR with a higher priority task waiting
  * @details Test xSemaphoreGiveFromISR with a higher priority task waiting and
- *  verify that xHigherPriorityTaskWoken is set accoridngly.
+ *  verify that xHigherPriorityTaskWoken is set accordingly.
  * @coverage xQueueGiveFromISR
  */
 void test_macro_xSemaphoreGiveFromISR_high_priority_pending( void )
@@ -567,7 +567,7 @@ void test_xSemaphoreTake_tasks_waiting_lower_priority( void )
 
 /**
  *  @brief Test xSemaphoreTake with taskSCHEDULER_SUSPENDED and timeout=10
- *  @details This should cause xSemaphoreTake to configASSERT becuase it would
+ *  @details This should cause xSemaphoreTake to configASSERT because it would
  *  block forever when the semaphore is empty.
  *  @coverage xQueueSemaphoreTake
  */
@@ -596,7 +596,7 @@ void test_xSemaphoreTake_blocking_suspended_assert( void )
 
 /**
  *  @brief Test xSemaphoreTake with taskSCHEDULER_SUSPENDED and timeout=0
- *  @details This should not cause xSemaphoreTake to configASSERT becuase
+ *  @details This should not cause xSemaphoreTake to configASSERT because
  *  xSemaphoreTake is non-blocking when timeout=0.
  *  @coverage xQueueSemaphoreTake
  */
@@ -635,7 +635,7 @@ static BaseType_t blocking_success_xTaskCheckForTimeOut_cb( TimeOut_t * const px
  * which becomes available while a call to xSemaphoreTake is blocking.
  * @coverage xQueueSemaphoreTake
  */
-void test_xSemaphoreTake_blocking_sucess( void )
+void test_xSemaphoreTake_blocking_success( void )
 {
     SemaphoreHandle_t xSemaphore = xSemaphoreCreateBinary();
 

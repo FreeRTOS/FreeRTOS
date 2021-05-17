@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -348,7 +348,7 @@ void test_macro_xSemaphoreCreateCountingStatic_null_fail( void )
     /* Verify that the returned handle is NULL */
     TEST_ASSERT_EQUAL( NULL, xSemaphore );
 
-    /* check that no call to malloc ocurred */
+    /* check that no call to malloc occurred */
     TEST_ASSERT_EQUAL( 0, getLastMallocSize() );
 }
 
@@ -372,7 +372,7 @@ void test_macro_xSemaphoreCreateCountingStatic_zero_zero_fail( void )
     /* validate returned semaphore handle */
     TEST_ASSERT_NOT_EQUAL( NULL, xSemaphore );
 
-    /* Check that no malloc occured */
+    /* Check that no malloc occurred */
     TEST_ASSERT_EQUAL( 0, getLastMallocSize() );
 
     /* Check that the returned count is zero */

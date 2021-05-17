@@ -89,7 +89,7 @@ def build():
         create_cbmc_yaml_files()
     except CalledProcessError as e:
         logging.error(textwrap.dedent("""\
-            An error occured during cbmc-batch generation.
+            An error occurred during cbmc-batch generation.
             The error message is: {}
             """.format(str(e))))
         exit(1)
@@ -102,7 +102,7 @@ def build():
     #    create_patches(HEADERS)
     #except (DirtyGitError, PatchCreationError) as e:
     #    logging.error(textwrap.dedent("""\
-    #        An error occured during patch creation.
+    #        An error occurred during patch creation.
     #        The error message is: {}
     #        """.format(str(e))))
     #    exit(1)

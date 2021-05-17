@@ -366,7 +366,7 @@ static TlsTransportParams_t xTlsTransportParams;
  * elements are done only from one task at a time. The subscription manager
  * implementation expects that the array of the subscription elements used for
  * storing subscriptions to be initialized to 0. As this is a global array, it
- * will be intialized to 0 by default.
+ * will be initialized to 0 by default.
  */
 static SubscriptionElement_t xGlobalSubscriptionList[ SUBSCRIPTION_MANAGER_MAX_SUBSCRIPTIONS ];
 
@@ -438,7 +438,7 @@ static void prvMQTTAgentTask(void* pParam);
  * for the request complete notification from the agent. The notification along with result of the
  * operation is sent back to the caller task using xTaksNotify API. For publishes involving QOS 1 and
  * QOS2 the operation is complete once an acknowledgment (PUBACK) is received. OTA agent uses this function
- * to fetch new job, provide status update and send other control related messges to the MQTT broker.
+ * to fetch new job, provide status update and send other control related messages to the MQTT broker.
  *
  * @param[in] pacTopic Topic to publish the control packet to.
  * @param[in] topicLen Length of the topic string.
@@ -1727,7 +1727,7 @@ static void prvMQTTAgentTask(void* pParam)
         /* Clear Agent queue so that no any pending MQTT operations are processed. */
         xQueueReset(xCommandQueue.queue);
 
-        /* Success is returned for application intiated disconnect or termination. The socket will also be disconnected by the caller. */
+        /* Success is returned for application initiated disconnect or termination. The socket will also be disconnected by the caller. */
         if (xMQTTStatus != MQTTSuccess)
         {
             xResult = prvSuspendOTA();

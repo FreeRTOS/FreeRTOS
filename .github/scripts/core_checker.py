@@ -269,6 +269,7 @@ FREERTOS_IGNORED_FILES = [
     '.editorconfig',
     'lcovrc',
     'htif.c', 'htif.h',
+    'ethernetif.c'
 ]
 
 FREERTOS_HEADER = [

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -162,7 +162,7 @@ void test_macro_xQueueCreateStatic_validQueueStorage_zeroItem_zeroLength( void )
 {
     StaticQueue_t queueBuffer;
 
-    /* Expect that xQueueCreateStatic will assert becasue a zero length queue is invalid */
+    /* Expect that xQueueCreateStatic will assert because a zero length queue is invalid */
     fakeAssertExpectFail();
     QueueHandle_t xQueue = xQueueCreateStatic( 0, 0, NULL, &queueBuffer );
 

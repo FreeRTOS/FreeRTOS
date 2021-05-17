@@ -55,6 +55,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdarg.h>
+#include <signal.h>
+#include <errno.h>
 
 /* FreeRTOS kernel includes. */
 #include "FreeRTOS.h"
@@ -67,6 +69,12 @@
 #define    FULL_DEMO         1
 
 #define mainSELECTED_APPLICATION BLINKY_DEMO
+
+#ifdef BUILD_DIR
+    #define BUILD BUILD_DIR
+#else
+    #define BUILD "./"
+#endif
 
 /* This demo uses heap_3.c (the libc provided malloc() and free()). */
 
@@ -103,6 +111,12 @@ void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer,
  */
 static void prvSaveTraceFile( void );
 
+/*
+ * Signal handler for Ctrl_C to cause the program to exit, and generate the
+ * profiling info.
+ */
+static void handle_sigint(int signal);
+
 /*-----------------------------------------------------------*/
 
 /* When configSUPPORT_STATIC_ALLOCATION is set to 1 the application writer can
@@ -117,8 +131,13 @@ static BaseType_t xTraceRunning = pdTRUE;
 
 /*-----------------------------------------------------------*/
 
+
+
 int main( void )
 {
+    /* SIGINT is not blocked by the posix port */
+    signal( SIGINT, handle_sigint );
+
     /* Do not include trace code when performing a code coverage analysis. */
     #if ( projCOVERAGE_TEST != 1 )
     {
@@ -231,13 +250,13 @@ void vApplicationTickHook( void )
 
 void traceOnEnter()
 {
-    int ret;
+    int xReturn;
     struct timeval tv = { 0L, 0L };
     fd_set fds;
     FD_ZERO(&fds);
     FD_SET(0, &fds);
-    ret = select(1, &fds, NULL, NULL, &tv);
-    if ( ret > 0 )
+    xReturn = select(1, &fds, NULL, NULL, &tv);
+    if ( xReturn > 0 )
     {
     if( xTraceRunning == pdTRUE )
     {
@@ -385,4 +404,15 @@ the stack and so not exists after this function exits. */
     Note that, as the array is necessarily of type StackType_t,
     configMINIMAL_STACK_SIZE is specified in words, not bytes. */
     *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
+}
+
+void handle_sigint( int signal )
+{
+    int xReturn;
+    xReturn = chdir( BUILD ); /* changing dir to place gmon.out inside build */
+    if( xReturn == -1 )
+    {
+        printf( "chdir into %s error is %d\n", BUILD,  errno );
+    }
+    exit( 1 );
 }

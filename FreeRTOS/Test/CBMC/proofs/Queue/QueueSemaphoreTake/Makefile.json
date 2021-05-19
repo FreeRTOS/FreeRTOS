@@ -35,7 +35,6 @@
   "CBMCFLAGS": [
     "--unwind 2",
     "--signed-overflow-check",
-    "--pointer-overflow-check",
     "--unsigned-overflow-check",
     "--nondet-static",
     "--unwindset prvUnlockQueue.0:{QUEUE_BOUND},prvUnlockQueue.1:{QUEUE_BOUND},xQueueSemaphoreTake.0:3"

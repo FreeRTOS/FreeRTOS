@@ -54,7 +54,7 @@
 									<listOptionValue builtIn="false" value="../../../../../csi_kernel/freertosv10.3.1/include/"/>
 									<listOptionValue builtIn="false" value="../../../../../../../Source/include"/>
 									<listOptionValue builtIn="false" value="../../../../../../../Source/portable/GCC/RISC-V"/>
-									<listOptionValue builtIn="false" value="../../../../../../../Source/portable/GCC/RISC-V/chip_specific_extensions/Thead_E906FD_RV32IMAFDC"/>
+									<listOptionValue builtIn="false" value="../../../../../../../Source/portable/GCC/RISC-V/chip_specific_extensions/Thead_RV32"/>
 								</option>
 							</tool>
 							<tool id="cds.managedbuild.tool.ckcoregcc.c.compiler.base.elf.riscv64.1468555868" name="CSky Elf C Compiler" superClass="cds.managedbuild.tool.ckcoregcc.c.compiler.base.elf.riscv64">

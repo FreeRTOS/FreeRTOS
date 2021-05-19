@@ -580,9 +580,9 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Source/portable/GCC/RISC-V/portmacro.h</locationURI>
 		</link>
 		<link>
-			<name>FreeRTOS/Source/portable/GCC/RISC-V/chip_specific_extensions/Thead_E906FD_RV32IMAFDC/freertos_risc_v_chip_specific_extensions.h</name>
+			<name>FreeRTOS/Source/portable/GCC/RISC-V/chip_specific_extensions/Thead_RV32/freertos_risc_v_chip_specific_extensions.h</name>
 			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC//Source/portable/GCC/RISC-V/chip_specific_extensions/Thead_E906FD_RV32IMAFDC/freertos_risc_v_chip_specific_extensions.h</locationURI>
+			<locationURI>PARENT-6-PROJECT_LOC//Source/portable/GCC/RISC-V/chip_specific_extensions/Thead_RV32/freertos_risc_v_chip_specific_extensions.h</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

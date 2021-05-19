@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -79,15 +79,6 @@ to exclude the API function. */
 #define configUSE_RECURSIVE_MUTEXES             1
 #define configUSE_TIMERS                        1
 #define configTIMER_TASK_STACK_DEPTH            ( configMINIMAL_STACK_SIZE * 2 )
-/*
-#define INCLUDE_vTaskPrioritySet                1
-#define INCLUDE_uxTaskPriorityGet               1
-#define INCLUDE_vTaskDelete                     1
-#define INCLUDE_vTaskCleanUpResources           0
-#define INCLUDE_vTaskSuspend                    0
-#define INCLUDE_vTaskDelayUntil                 1
-#define INCLUDE_vTaskDelay                      1
-*/
 
 #define INCLUDE_vTaskPrioritySet                1
 #define INCLUDE_uxTaskPriorityGet               1
@@ -121,40 +112,9 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 |      9 connected. */
 extern void vLoggingPrintf( const char *pcFormatString, ... );
 
-
-/* Set to 1 to print out debug messages.  If ipconfigHAS_DEBUG_PRINTF is set to
-1 then FreeRTOS_debug_printf should be defined to the function used to print
- out the debugging messages. */
-#define ipconfigHAS_DEBUG_PRINTF   1
-
 #ifdef HEAP3
 #define xPortGetMinimumEverFreeHeapSize (x)
 #define xPortGetFreeHeapSize (x)
-#endif
-
-#if( ipconfigHAS_DEBUG_PRINTF == 1 )
-#include <stdio.h>
-#define FreeRTOS_debug_printf(X)        \
-    printf("%p->%s %d: ",               \
-           xTaskGetCurrentTaskHandle(), \
-           __FUNCTION__,                \
-           __LINE__);                   \
-    vLoggingPrintf X
-#endif
-
-/* Set to 1 to print out non debugging messages, for example the output of the
-   FreeRTOS_netstat() command, and ping replies.  If ipconfigHAS_PRINTF is set to 1
-   then FreeRTOS_printf should be set to the function used to print out the
-   messages.  */
-#define ipconfigHAS_PRINTF      1
-#if( ipconfigHAS_PRINTF == 1 )
-#include <stdio.h>
-#define FreeRTOS_printf(X)                 \
-    printf("%p->%s %d: ",                  \
-           xTaskGetCurrentTaskHandle(),    \
-           __FUNCTION__,                   \
-           __LINE__);                      \
-    vLoggingPrintf X
 #endif
 
 #endif /* FREERTOS_CONFIG_H */

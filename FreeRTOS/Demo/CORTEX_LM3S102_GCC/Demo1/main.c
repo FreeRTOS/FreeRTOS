@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /* 
@@ -57,7 +56,7 @@
  * the string is CORRECTLY received on the UART.  LED seven is latched on should
  * an error be detected in any task or co-routine.
  *
- * In addition the idle task makes repetative calls to 
+ * In addition the idle task makes repetitive calls to 
  * prvSetAndCheckRegisters().  This simply loads the general purpose registers 
  * with a known value, then checks each register to ensure the held value is 
  * still correct.  As a low priority task this checking routine is likely to 
@@ -112,7 +111,7 @@ a character after this time then there must be an error in the transmission or
 the timing of the transmission. */
 #define mainCOMMS_RX_DELAY			( mainMAX_TX_DELAY + 20 )
 
-/* The task priorites. */
+/* The task priorities. */
 #define mainLCD_TASK_PRIORITY		( tskIDLE_PRIORITY )
 #define mainCOMMS_RX_TASK_PRIORITY	( tskIDLE_PRIORITY + 1 )
 
@@ -351,12 +350,12 @@ static char cRxedChar, cExpectedChar;
 		/* Wait for a character to be received. */
 		xQueueReceive( xCommsQueue, ( void * ) &cRxedChar, mainCOMMS_RX_DELAY );
 
-		/* Was the character recived (if any) the expected character. */
+		/* Was the character received (if any) the expected character. */
 		if( cRxedChar != cExpectedChar )
 		{
 			/* Got an unexpected character.  This can sometimes occur when
 			reseting the system using the debugger leaving characters already
-			in the UART regsters. */
+			in the UART registers. */
 			uxErrorStatus = pdFAIL;
 
 			/* Resync by waiting for the end of the current string. */
@@ -489,7 +488,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	/* Clear the interrupt. */
 	UARTIntClear( UART0_BASE, ulStatus );
 
-	/* Was an Rx interrpt pending? */
+	/* Was an Rx interrupt pending? */
 	if( ulStatus & UART_INT_RX )
 	{
 		if( ( HWREG(UART0_BASE + UART_O_FR ) & UART_FR_RXFF ) )

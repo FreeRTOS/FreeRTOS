@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /******************************************************************************
@@ -244,7 +243,7 @@ static enum {
 	EXCEP_Overflow,	/* arithmetic overflow */
 	EXCEP_Trap, 	/* trap (possible divide by zero) */
 	EXCEP_FPE = 15, /* floating point exception */
-	EXCEP_IS1 = 16,	/* implementation specfic 1 */
+	EXCEP_IS1 = 16,	/* implementation specific 1 */
 	EXCEP_CEU, 		/* CorExtend Unuseable */
 	EXCEP_C2E, 		/* coprocessor 2 */
 	EXCEP_DSPDis = 26   /* DSP module disabled */

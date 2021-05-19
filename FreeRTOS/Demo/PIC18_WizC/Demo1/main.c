@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /*
@@ -43,7 +42,7 @@ Changes from V3.0.1
  * installation. It is also included to demonstrate a minimal project-setup
  * to use FreeRTOS in a wizC environment.
  *
- * Eight independant tasks are created. All tasks share the same taskcode.
+ * Eight independent tasks are created. All tasks share the same taskcode.
  * Each task blinks a different led on portB. The blinkrate for each task
  * is different, but chosen in such a way that portB will show a binary
  * counter pattern. All blinkrates are derived from a single master-rate.

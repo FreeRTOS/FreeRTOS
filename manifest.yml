@@ -38,6 +38,13 @@ dependencies:
       url: "https://github.com/FreeRTOS/coreMQTT.git"
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT"
 
+  - name: "coreMQTT Agent"
+    version: "v1.0.0"
+    repository:
+      type: "git"
+      url: "https://github.com/FreeRTOS/coreMQTT-Agent.git"
+      path: "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent"
+
   - name: "corePKCS11"
     version: "v3.0.0"
     repository:
@@ -46,7 +53,7 @@ dependencies:
       path: "FreeRTOS-Plus/Source/corePKCS11"
 
   - name: "device-defender"
-    version: "v1.0.1"
+    version: "v1.1.0"
     repository:
       type: "git"
       url: "https://github.com/aws/Device-Defender-for-AWS-IoT-embedded-sdk.git"
@@ -60,7 +67,7 @@ dependencies:
       path: "FreeRTOS-Plus/Source/AWS/device-shadow"
 
   - name: "jobs"
-    version: "v1.0.0"
+    version: "v1.1.0"
     repository:
       type: "git"
       url: "https://github.com/aws/Jobs-for-AWS-IoT-embedded-sdk.git"
@@ -86,5 +93,12 @@ dependencies:
       type: "git"
       url: "https://github.com/FreeRTOS/backoffAlgorithm"
       path: "FreeRTOS-Plus/Source/Utilities/backoff_algorithm"
+
+  - name: "ota"
+    version: "v3.0.0"
+    repository:
+      type: "git"
+      url: "https://github.com/aws/ota-for-aws-iot-embedded-sdk"
+      path: "FreeRTOS-Plus/Source/AWS/ota"
 
 license: "MIT"

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -81,11 +81,11 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelay              1
 
 
-#define configKERNEL_INTERRUPT_PRIORITY         255
+#define configKERNEL_INTERRUPT_PRIORITY         252
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
 See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY    191 /* equivalent to 0xa0, or priority 5. */
-#define configMAC_INTERRUPT_PRIORITY 5
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY    5 /* equivalent to 0xa0, or priority 5. */
+#define configMAC_INTERRUPT_PRIORITY 2
 
 
 /* networking definitions */
@@ -99,10 +99,10 @@ tasks.
 http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html
 http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/UDP_Echo_Clients.html */
 
-#define configECHO_SERVER_ADDR0 192
-#define configECHO_SERVER_ADDR1 168
-#define configECHO_SERVER_ADDR2 1
-#define configECHO_SERVER_ADDR3 201
+#define configECHO_SERVER_ADDR0 10
+#define configECHO_SERVER_ADDR1 136
+#define configECHO_SERVER_ADDR2 206
+#define configECHO_SERVER_ADDR3 133
 
 /* Default MAC address configuration.  The demo creates a virtual network
 connection that uses this MAC address by accessing the raw Ethernet/WiFi data
@@ -123,7 +123,7 @@ ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
 #define configIP_ADDR0      10
 #define configIP_ADDR1      211
 #define configIP_ADDR2      55
-#define configIP_ADDR3      250
+#define configIP_ADDR3      5
 
 /* Default gateway IP address configuration.  Used in ipconfigUSE_DNS is set to
 0, or ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */

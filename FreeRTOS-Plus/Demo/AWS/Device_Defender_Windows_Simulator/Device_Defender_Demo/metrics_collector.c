@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -42,9 +42,6 @@
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "FreeRTOS_IP.h"
-
-/* FreeRTOS+TCP tcp_netstat utility include. */
-#include "tcp_netstat.h"
 
 /* Demo config. */
 #include "demo_config.h"

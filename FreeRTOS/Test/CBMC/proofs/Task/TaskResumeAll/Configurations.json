@@ -30,6 +30,15 @@
   "ENTRY": "TaskResumeAll",
   "DEF":
   [
+    { "default":
+      [
+        "FREERTOS_MODULE_TEST",
+        "PENDED_TICKS=1",
+        "'mtCOVERAGE_TEST_MARKER()=__CPROVER_assert(1, \"Coverage marker\")'",
+        "configUSE_TRACE_FACILITY=0",
+        "configGENERATE_RUN_TIME_STATS=0"
+      ]
+    },
     { "useTickHook1":
       [
         "FREERTOS_MODULE_TEST",

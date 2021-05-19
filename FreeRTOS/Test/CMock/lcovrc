@@ -1,0 +1,3 @@
+lcov_branch_coverage = 1
+genhtml_branch_coverage = 1
+geninfo_intermediate = auto

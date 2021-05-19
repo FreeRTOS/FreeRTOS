@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 #ifndef CORE_MQTT_CONFIG_H
 #define CORE_MQTT_CONFIG_H
@@ -75,6 +74,35 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * macro sets the limit on how many simultaneous PUBLISH states an MQTT
  * context maintains.
  */
-#define MQTT_STATE_ARRAY_MAX_COUNT    20U
+#define MQTT_STATE_ARRAY_MAX_COUNT              20U
+
+/*********************** coreMQTT Agent Configurations **********************/
+/**
+ * @brief The maximum number of pending acknowledgments to track for a single
+ * connection.
+ *
+ * @note The MQTT agent tracks MQTT commands (such as PUBLISH and SUBSCRIBE) th
+ * at are still waiting to be acknowledged.  MQTT_AGENT_MAX_OUTSTANDING_ACKS set
+ * the maximum number of acknowledgments that can be outstanding at any one time.
+ * The higher this number is the greater the agent's RAM consumption will be.
+ */
+#define MQTT_AGENT_MAX_OUTSTANDING_ACKS         ( 20U )
+
+/**
+ * @brief Time in MS that the MQTT agent task will wait in the Blocked state (so
+ * not using any CPU time) for a command to arrive in its command queue before
+ * exiting the blocked state so it can call MQTT_ProcessLoop().
+ *
+ * @note It is important MQTT_ProcessLoop() is called often if there is known
+ * MQTT traffic, but calling it too often can take processing time away from
+ * lower priority tasks and waste CPU time and power.
+ */
+#define MQTT_AGENT_MAX_EVENT_QUEUE_WAIT_TIME    ( 1000 )
+
+/**
+ * @brief The number of command structures to allocate in the pool
+ * for the agent.
+ */
+#define MQTT_COMMAND_CONTEXTS_POOL_SIZE         10
 
 #endif /* ifndef CORE_MQTT_CONFIG_H */

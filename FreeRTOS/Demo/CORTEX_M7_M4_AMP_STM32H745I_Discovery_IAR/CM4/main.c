@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /*
@@ -123,7 +122,7 @@
  * sbRECEIVE_COMPLETED macro only works if the sender and receiver are under the
  * control of the same instance of FreeRTOS and execute on the same core.
  * Therefore, just as the application that executes on the M7 core overrides
- * the default implementation of sbSEND_SOMPLETED(), the application that runs
+ * the default implementation of sbSEND_COMPLETED(), the application that runs
  * on the M4 core overrides the default implementation of sbRECEIVE_COMPLETED()
  * to likewise generate an interrupt in the M7 core - so sbRECEIVE_COMPLETED()
  * executes on the M4 core and generates an interrupt on the M7 core.  To keep

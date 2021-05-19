@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -851,7 +851,7 @@ const char * mbedtls_strerror_highlevel( int32_t errnum )
                 break;
 
             case -( MBEDTLS_ERR_X509_FATAL_ERROR ):
-                rc = "X509 - A fatal error occured, eg the chain is too long or the vrfy callback failed";
+                rc = "X509 - A fatal error occurred, eg the chain is too long or the vrfy callback failed";
                 break;
         #endif /* MBEDTLS_X509_USE_C || MBEDTLS_X509_CREATE_C */
 

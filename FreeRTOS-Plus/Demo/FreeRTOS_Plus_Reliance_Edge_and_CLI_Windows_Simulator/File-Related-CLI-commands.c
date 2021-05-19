@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202012.00
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202104.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /* FreeRTOS includes. */
@@ -1405,7 +1404,7 @@ int32_t lStatus;
 				}
 				else
 				{
-					strcpy( pcWriteBuffer, "Working state changes succesfully aborted." );
+					strcpy( pcWriteBuffer, "Working state changes successfully aborted." );
 				}
 			}
 
@@ -1437,7 +1436,7 @@ FSSTRESSPARAM param;
 	uxOriginalPriority = uxTaskPriorityGet( NULL );
 	vTaskPrioritySet( NULL, configMAX_PRIORITIES - 1 );
 
-	/* Delete all files to avoid inteferring with the test. */
+	/* Delete all files to avoid interfering with the test. */
 	red_umount( "" );
 	red_format( "" );
 	red_mount( "" );

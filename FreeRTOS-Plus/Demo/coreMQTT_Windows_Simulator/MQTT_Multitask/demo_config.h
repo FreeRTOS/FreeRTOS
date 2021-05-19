@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -246,13 +246,13 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * symbol.
  */
 #include "core_mqtt.h" /* Include coreMQTT header for MQTT_LIBRARY_VERSION macro. */
-#define democonfigMQTT_LIB          "core-mqtt@"MQTT_LIBRARY_VERSION
+#define democonfigMQTT_LIB                              "core-mqtt@"MQTT_LIBRARY_VERSION
 
 /**
  * @brief Whether to use mutual authentication. If this macro is not set to 1
  * or not defined, then plaintext TCP will be used instead of TLS over TCP.
  */
-#define democonfigUSE_TLS           1
+#define democonfigUSE_TLS                               1
 
 /**
  * @brief Set the stack size of the main demo task.
@@ -260,7 +260,18 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * In the Windows port, this stack only holds a structure. The actual
  * stack is created by an operating system thread.
  */
-#define democonfigDEMO_STACKSIZE    configMINIMAL_STACK_SIZE
+#define democonfigDEMO_STACKSIZE                        configMINIMAL_STACK_SIZE
+
+/**
+ * @brief The number of simple sub-pub tasks to create.
+ */
+#define democonfigNUM_SIMPLE_SUB_PUB_TASKS_TO_CREATE    2
+#define democonfigSIMPLE_SUB_PUB_TASK_STACK_SIZE        ( configMINIMAL_STACK_SIZE )
+
+/**
+ * @brief The length of the queue used to hold commands for the coreMQTT Agent.
+ */
+#define MQTT_AGENT_COMMAND_QUEUE_LENGTH                 10
 
 
 

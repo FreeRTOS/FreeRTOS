@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /******************************************************************************
@@ -56,7 +55,7 @@
  * "Interrupt semaphore take" task - This task does nothing but block on a
  * semaphore that is 'given' from the tick hook function (which is defined in
  * main.c).  It toggles the fourth LED each time it receives the semaphore.  The
- * Semahore is given every 50ms, so LED 4 toggles every 50ms.
+ * Semaphore is given every 50ms, so LED 4 toggles every 50ms.
  *
  * "Flash timers" - A software timer callback function is defined that does
  * nothing but toggle an LED.  Three software timers are created that each

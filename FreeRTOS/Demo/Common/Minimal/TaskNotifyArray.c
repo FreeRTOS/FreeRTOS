@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 
@@ -290,7 +289,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 	for( uxIndexToTest = 0; uxIndexToTest < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToTest++ )
 	{
 		/* Send notifications to all indexes with the array of task
-		notificaitons other than the one on which this task will block. */
+		notifications other than the one on which this task will block. */
 		for( uxOtherIndexes = 0; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
 		{
 			if( uxOtherIndexes != uxIndexToTest )
@@ -1109,7 +1108,7 @@ const TickType_t xDontBlock = 0;
 		ulReceivedValue = ulTaskNotifyTakeIndexed( uxIndexToNotify, pdTRUE, portMAX_DELAY );
 
 		/* Interrupt should have reset xSendNotificationFromISR after it sent
-		the notificatino. */
+		the notification. */
 		configASSERT( xSendNotificationFromISR == pdFALSE );
 
 		/* The notification value was initially zero, and should have been

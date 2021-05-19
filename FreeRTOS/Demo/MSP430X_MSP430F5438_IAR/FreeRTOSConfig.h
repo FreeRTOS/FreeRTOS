@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 #ifndef FREERTOS_CONFIG_H
@@ -125,7 +124,7 @@ the timer has overflowed. */
 			TA1CTL &= ~TAIFG;													\
 		}																		\
 																				\
-		/* Generate a 32 bit counter value by combinging the current peripheral	\
+		/* Generate a 32 bit counter value by combining the current peripheral	\
 		counter value with the number of overflows. */							\
 		ulCountValue = ( ulStatsOverflowCount << 16UL );						\
 		ulCountValue |= ( unsigned long ) TA1R;									\

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -26,7 +26,7 @@
 
 /*
  * Contains sundry tests to exercise code that is not touched by the standard
- * demo tasks (which are predominantly test tasks).  Some tests are incldued
+ * demo tasks (which are predominantly test tasks).  Some tests are included
  * here because they can only be executed when configASSERT() is not defined.
  */
 

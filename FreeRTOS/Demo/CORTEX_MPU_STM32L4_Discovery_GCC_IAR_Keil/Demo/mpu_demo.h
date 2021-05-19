@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -37,7 +37,7 @@
  * by the task with Read Only access and if so, it recovers from the fault
  * greacefully by moving the Program Counter to the next instruction to the one
  * which generated the fault. If any other memory access violation occurs, the
- * fault handler will get stuck in an inifinite loop.
+ * fault handler will get stuck in an infinite loop.
  */
 void vStartMPUDemo( void );
 

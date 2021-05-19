@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /*
@@ -195,7 +194,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	/* Clear the interrupt. */
 	UARTIntClear( UART0_BASE, ulStatus );
 
-	/* Was an Rx interrpt pending? */
+	/* Was an Rx interrupt pending? */
 	if( ulStatus & UART_INT_RX )
 	{
 		if( ( HWREG(UART0_BASE + UART_O_FR ) & UART_FR_RXFF ) )
@@ -242,12 +241,12 @@ static char cRxedChar, cExpectedChar;
 		/* Wait for a character to be received. */
 		xQueueReceive( xCommsQueue, ( void * ) &cRxedChar, commsRX_DELAY );
 
-		/* Was the character recived (if any) the expected character. */
+		/* Was the character received (if any) the expected character. */
 		if( cRxedChar != cExpectedChar )
 		{
 			/* Got an unexpected character.  This can sometimes occur when
 			reseting the system using the debugger leaving characters already
-			in the UART regsters. */
+			in the UART registers. */
 			uxCommsErrorStatus = pdFAIL;
 
 			/* Resync by waiting for the end of the current string. */

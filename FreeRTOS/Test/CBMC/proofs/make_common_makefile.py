@@ -107,7 +107,7 @@ def get_arguments():
 # Variable definitions
 #
 # JSON files give variable definitions for common, operating system,
-# and harness specfic values
+# and harness specific values
 #
 
 def read_variable_definitions(filename):

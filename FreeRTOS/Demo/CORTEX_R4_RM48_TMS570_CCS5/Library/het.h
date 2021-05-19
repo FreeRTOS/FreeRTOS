@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 #ifndef __HET_H__
@@ -49,8 +48,8 @@ typedef volatile struct hetBase
     unsigned OFF2;    /**< 0x0010: Interrupt offset register 2          */
     unsigned INTENAS; /**< 0x0014: Interrupt enable set register        */
     unsigned INTENAC; /**< 0x0018: Interrupt enable clear register      */
-    unsigned EXC1;    /**< 0x001C: Exeption control register 1          */
-    unsigned EXC2;    /**< 0x0020: Exeption control register 2          */
+    unsigned EXC1;    /**< 0x001C: Exception control register 1          */
+    unsigned EXC2;    /**< 0x0020: Exception control register 2          */
     unsigned PRY;     /**< 0x0024: Interrupt priority register          */
     unsigned FLG;     /**< 0x0028: Interrupt flag register              */
     unsigned : 32U;   /**< 0x002C: Reserved                             */

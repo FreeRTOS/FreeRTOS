@@ -18,7 +18,7 @@ all: queue list
 
 .PHONY: queue
 queue:
-	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/create.c                    | $(call check_coverage,324)
+	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/create.c                    | $(call check_coverage,325)
 	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/prvCopyDataFromQueue.c      | $(call check_coverage,308)
 	@$(VERIFAST) $(VERIFAST_ARGS) -disable_overflow_check queue/prvCopyDataToQueue.c        | $(call check_coverage,336)
 	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/prvIsQueueEmpty.c           | $(call check_coverage,289)
@@ -52,10 +52,10 @@ proof_changes:
 
 GIT?=git
 NO_CHANGE_CHECKOUT_DIR=no-change-check-freertos-kernel
-NO_CHANGE_EXPECTED_HASH_QUEUE        = 3604527e3b3
-NO_CHANGE_EXPECTED_HASH_QUEUE_HEADER = d428209d018
-NO_CHANGE_EXPECTED_HASH_LIST         = 3604527e3b3
-NO_CHANGE_EXPECTED_HASH_LIST_HEADER  = 3604527e3b3
+NO_CHANGE_EXPECTED_HASH_QUEUE        = ec62f69dab7
+NO_CHANGE_EXPECTED_HASH_QUEUE_HEADER = ec62f69dab7
+NO_CHANGE_EXPECTED_HASH_LIST         = ec62f69dab7
+NO_CHANGE_EXPECTED_HASH_LIST_HEADER  = ec62f69dab7
 .PHONY: synced_with_source_check
 synced_with_source_check:
 	@rm -rf $(NO_CHANGE_CHECKOUT_DIR)

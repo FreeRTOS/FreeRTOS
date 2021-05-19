@@ -40,3 +40,12 @@
 [submodule "FreeRTOS-Plus/ThirdParty/wolfSSL"]
 	path = FreeRTOS-Plus/ThirdParty/wolfSSL
 	url = https://github.com/wolfSSL/wolfssl.git
+[submodule "FreeRTOS/Test/aws-build-accumulator"]
+	path = FreeRTOS/Test/litani
+	url = https://github.com/awslabs/aws-build-accumulator.git
+[submodule "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent"]
+	path = FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent
+	url = https://github.com/FreeRTOS/coreMQTT-Agent.git
+[submodule "FreeRTOS-Plus/Source/AWS/ota"]
+	path = FreeRTOS-Plus/Source/AWS/ota
+	url = https://github.com/aws/ota-for-aws-iot-embedded-sdk.git

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /* FreeRTOS includes. */
@@ -182,7 +181,7 @@ unsigned portBASE_TYPE uxOriginalPriority;
  *
  * @note Returning ERR_MEM here if a DMA queue of your MAC is full can lead to
  *	   strange results. You might consider waiting for space in the DMA queue
- *	   to become availale since the stack doesn't retry to send a packet
+ *	   to become available since the stack doesn't retry to send a packet
  *	   dropped because of memory failure (except for the TCP timers).
  */
 

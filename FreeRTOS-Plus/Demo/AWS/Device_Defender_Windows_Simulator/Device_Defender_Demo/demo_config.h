@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -260,6 +260,13 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * defender report.
  */
 #define democonfigESTABLISHED_CONNECTIONS_ARRAY_SIZE     10
+
+/**
+ * @brief Size of the task numbers array.
+ *
+ * This must be at least the number of tasks used.
+ */
+#define democonfigCUSTOM_METRICS_TASKS_ARRAY_SIZE        10
 
 /**
  * @brief Size of the buffer which contains the generated device defender report.

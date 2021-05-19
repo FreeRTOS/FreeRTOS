@@ -36,6 +36,7 @@ All required settings have been set in the user_settings.h header file included 
 2. Run the RTOSDemo.exe 
 
 You will see a console that pops up, and it shows output like the following:
+
 # Self Test Explanation
 ```
 Starting Power On Self Test

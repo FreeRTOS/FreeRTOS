@@ -1,6 +1,19 @@
 /*
- * Copyright (C) 2017-2019 Alibaba Group Holding Limited
+ * Copyright (C) 2017-2019 Alibaba Group Holding Limited. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
  /******************************************************************************
  * @file     vectors.S
  * @brief    define default vector handlers. Should use with
@@ -45,6 +58,7 @@ irq_mstatus_fs_flag:
 Default_IRQHandler:
     ipush
 
+#if (__riscv_flen == 64)
     csrr    t1, mstatus
     srli    t1, t1, 13
     andi    t1, t1, 0x3
@@ -52,7 +66,6 @@ Default_IRQHandler:
     sw      t1, (t3)
     li      t0, 0x3
     bne     t1, t0,  .F_RegNotSave1
-
 
     addi    sp,  sp, -160
     fsd     ft0, (0 +0 )(sp)
@@ -76,6 +89,7 @@ Default_IRQHandler:
     fsd     ft10,(72+72)(sp)
     fsd     ft11,(76+76)(sp)
 .F_RegNotSave1:
+#endif
 
     csrr    t1, mcause
     andi    t1, t1, 0x3FF
@@ -87,7 +101,8 @@ Default_IRQHandler:
 
     li      t0, MSTATUS_PRV1
     csrs    mstatus, t0
-    
+
+ #if (__riscv_flen == 64)
     la      t0, irq_mstatus_fs_flag
     lw      t1, (t0)
     li      t0, 0x3
@@ -115,6 +130,7 @@ Default_IRQHandler:
     fld     ft11,(76+76)(sp)
     addi    sp, sp, 160
 .F_RegNotLoad:
+#endif
 
     ipop
 
@@ -192,106 +208,5 @@ trap:
     .global Default_Handler
     .type   Default_Handler, %function
 Default_Handler:
-    /* Check for nmi */
-    addi    sp, sp, -8
-    sw      t0, 0x0(sp)
-    sw      t1, 0x4(sp)
-    csrr    t0, mcause
-    andi    t0, t0, 0x3FF
-    li      t1, 24
-    beq     t0, t1, .NMI_Handler
-    lw      t0, 0x0(sp)
-    lw      t1, 0x4(sp)
-    addi    sp, sp, 8
     j      trap
-
-.NMI_Handler:
-    lw      t0, 0x0(sp)
-    lw      t1, 0x4(sp)
-    addi    sp, sp, 8
-    
-    addi    sp, sp, -64
-    sw      ra, 0(sp)
-    sw      t0, 4(sp)
-    sw      t1, 8(sp)
-    sw      t2, 12(sp)
-    sw      a0, 16(sp)
-    sw      a1, 20(sp)
-    sw      a2, 24(sp)
-    sw      a3, 28(sp)
-    sw      a4, 32(sp)
-    sw      a5, 36(sp)
-    sw      a6, 40(sp)
-    sw      a7, 44(sp)
-    sw      t3, 48(sp)
-    sw      t4, 52(sp)
-    sw      t5, 56(sp)
-    sw      t6, 60(sp)
-
-    addi    sp,  sp, -160
-    fsd     ft0, (0 +0 )(sp)
-    fsd     ft1, (4 +4 )(sp)
-    fsd     ft2, (8 +8 )(sp)
-    fsd     ft3, (12+12)(sp)
-    fsd     ft4, (16+16)(sp)
-    fsd     ft5, (20+20)(sp)
-    fsd     ft6, (24+24)(sp)
-    fsd     ft7, (28+28)(sp)
-    fsd     fa0, (32+32)(sp)
-    fsd     fa1, (36+36)(sp)
-    fsd     fa2, (40+40)(sp)
-    fsd     fa3, (44+44)(sp)
-    fsd     fa4, (48+48)(sp)
-    fsd     fa5, (52+52)(sp)
-    fsd     fa6, (56+56)(sp)
-    fsd     fa7, (60+60)(sp)
-    fsd     ft8, (64+64)(sp)
-    fsd     ft9, (68+68)(sp)
-    fsd     ft10,(72+72)(sp)
-    fsd     ft11,(76+76)(sp)
-
-    la      t0, g_nmivector
-    lw      t0, (t0)
-    jalr    t0
-
-    fld     ft0, (0 +0 )(sp)
-    fld     ft1, (4 +4 )(sp)
-    fld     ft2, (8 +8 )(sp)
-    fld     ft3, (12+12)(sp)
-    fld     ft4, (16+16)(sp)
-    fld     ft5, (20+20)(sp)
-    fld     ft6, (24+24)(sp)
-    fld     ft7, (28+28)(sp)
-    fld     fa0, (32+32)(sp)
-    fld     fa1, (36+36)(sp)
-    fld     fa2, (40+40)(sp)
-    fld     fa3, (44+44)(sp)
-    fld     fa4, (48+48)(sp)
-    fld     fa5, (52+52)(sp)
-    fld     fa6, (56+56)(sp)
-    fld     fa7, (60+60)(sp)
-    fld     ft8, (64+64)(sp)
-    fld     ft9, (68+68)(sp)
-    fld     ft10,(72+72)(sp)
-    fld     ft11,(76+76)(sp)
-    addi    sp, sp, 160
-
-    lw      ra, 0(sp)
-    lw      t0, 4(sp)
-    lw      t1, 8(sp)
-    lw      t2, 12(sp)
-    lw      a0, 16(sp)
-    lw      a1, 20(sp)
-    lw      a2, 24(sp)
-    lw      a3, 28(sp)
-    lw      a4, 32(sp)
-    lw      a5, 36(sp)
-    lw      a6, 40(sp)
-    lw      a7, 44(sp)
-    lw      t3, 48(sp)
-    lw      t4, 52(sp)
-    lw      t5, 56(sp)
-    lw      t6, 60(sp)
-    addi    sp, sp, 64
-    mret
 

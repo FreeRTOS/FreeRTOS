@@ -1,5 +1,4 @@
-tar rem 192.168.137.1:1025
-set $mhcr=0
+target remote 172.16.201.64:1025
 set *(int *)0x0=0x6f
 si
 reset

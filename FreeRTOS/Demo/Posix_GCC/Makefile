@@ -63,7 +63,7 @@ SOURCE_FILES          += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamp
 
 CFLAGS                :=    -ggdb3 -DprojCOVERAGE_TEST=0 -D_WINDOWS_
 LDFLAGS               :=    -ggdb3 -pthread
-CPPFLAGS              :=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\" 
+CPPFLAGS              :=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
 
 ifdef PROFILE
   CFLAGS              +=   -pg  -O0

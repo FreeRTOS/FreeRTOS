@@ -36,7 +36,7 @@
  * Device Defender is an AWS service.
  *
  * This demo subscribes to the Device Defender topics. It then collects metrics
- * for the open ports and sockets on the device using FreeRTOS+TCP. Additonally
+ * for the open ports and sockets on the device using FreeRTOS+TCP. Additionally
  * the stack high water mark and task IDs are collected for custom metrics.
  * These metrics are used to generate a Device Defender report. The
  * report is then published, and the demo waits for a response from the device
@@ -564,7 +564,7 @@ static bool prvCollectDeviceMetrics( void )
     /* Collect custom metrics. This demo sends this task's stack high water mark
      * as a number type custom metric and the current task IDs as a list of
      * numbers type custom metric. */
-    if( eMetricsCollectorStatus == eMetricsCollectorSuccess )
+    if( eStatus == eMetricsCollectorSuccess )
     {
         vTaskGetInfo(
             /* Query this task. */
@@ -578,9 +578,9 @@ static bool prvCollectDeviceMetrics( void )
 
         if( uxTasksWritten == 0 )
         {
-            eMetricsCollectorStatus = eMetricsCollectorCollectionFailed;
+            eStatus = eMetricsCollectorCollectionFailed;
             LogError( ( "Failed to collect system state. uxTaskGetSystemState() failed due to insufficient buffer space.",
-                        eMetricsCollectorStatus ) );
+                        eStatus ) );
         }
         else
         {

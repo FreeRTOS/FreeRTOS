@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -88,7 +88,7 @@ void test_vQueueDelete_empty( void )
     void * queueData = malloc( 6 * sizeof( uint32_t ) );
     QueueHandle_t xQueue = xQueueCreateStatic( 6, sizeof( uint32_t ), queueData, queueBuffer );
 
-    /* Verify that no call to malloc occured */
+    /* Verify that no call to malloc occurred */
     TEST_ASSERT_EQUAL( 0, getLastMallocSize() );
 
     vQueueDelete( xQueue );
@@ -108,7 +108,7 @@ void test_vQueueDelete_half_full( void )
     void * queueData = malloc( 6 * sizeof( uint32_t ) );
     QueueHandle_t xQueue = xQueueCreateStatic( 6, sizeof( uint32_t ), queueData, queueBuffer );
 
-    /* Verify that no call to malloc occured */
+    /* Verify that no call to malloc occurred */
     TEST_ASSERT_EQUAL( 0, getLastMallocSize() );
 
     for( uint32_t i = 0; i < 3; i++ )
@@ -134,7 +134,7 @@ void test_vQueueDelete_full( void )
     void * queueData = malloc( 6 * sizeof( uint32_t ) );
     QueueHandle_t xQueue = xQueueCreateStatic( 6, sizeof( uint32_t ), queueData, queueBuffer );
 
-    /* Verify that no call to malloc occured */
+    /* Verify that no call to malloc occurred */
     TEST_ASSERT_EQUAL( 0, getLastMallocSize() );
 
     for( uint32_t i = 0; i < 6; i++ )

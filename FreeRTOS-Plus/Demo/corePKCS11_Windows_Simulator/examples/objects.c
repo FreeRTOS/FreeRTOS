@@ -319,7 +319,7 @@ static void prvObjectGeneration( void )
     CK_BYTE pucPublicKeyLabel[] = { pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS };
     CK_BYTE pucPrivateKeyLabel[] = { pkcs11configLABEL_DEVICE_PUBLIC_KEY_FOR_TLS };
 
-    /* CK_ATTTRIBUTE's contain an attribute type, a value, and the length of
+    /* CK_ATTRIBUTE's contain an attribute type, a value, and the length of
      * the value. An array of CK_ATTRIBUTEs is called a template. They are used
      * for creating, searching, and manipulating for objects. The order of the
      * template does not matter.

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -115,7 +115,7 @@ void vPortFree( void * pv );
  *          provided assertion is false and the fakeAssertExpectFail()
  *          function was not called prior to the assertion.
  * @param assertion Boolean assertion passed into the configASSERT() macro
- * @param file Name of the file in which the assert occured
+ * @param file Name of the file in which the assert occurred
  * @param line Line number of the assertion
  * @param num_calls Number of times configASSERT() was called
  */
@@ -185,7 +185,7 @@ void fakeAssertExpectFail( void );
 
 /**
  * @brief Determine if a configASSERT occurred and clear the assertion flag.
- * @return true if an assert occureed since the start of the test suite or
+ * @return true if an assert occurred since the start of the test suite or
  *  the last call to fakeAssertGetFlagAndClear.
  * @return false if no assert was triggered.
  */
@@ -247,7 +247,7 @@ void vSetQueueTxLock( QueueHandle_t xQueue,
 BaseType_t fakeAssertGetNumAssertsAndClear( void );
 
 /**
- * @brief Check that the number of failed configASSERTs that have occured in this test case equals the given number.
+ * @brief Check that the number of failed configASSERTs that have occurred in this test case equals the given number.
  */
 void fakeAssertVerifyNumAssertsAndClear( uint32_t ulNumAssertsExpected );
 

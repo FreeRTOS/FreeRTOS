@@ -29,7 +29,7 @@
   * @brief Code signer certificate as char array.
   *
   * Define this char array containing the PEM encode signing certificate.
-  * Note -  It is highly recommended to use this for demo pupose and store
+  * Note -  It is highly recommended to use this for demo purpose and store
   * certificates in secure location in production devices.
   */
 

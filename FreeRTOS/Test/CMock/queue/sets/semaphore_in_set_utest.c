@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -104,7 +104,7 @@ void test_macro_xSemaphoreGiveFromISR_in_set_high_priority_pending_null_ptr( voi
 /**
  * @brief Test xSemaphoreGiveFromISR with a higher priority task waiting on a queue in and Queue Set
  * @details Test xSemaphoreGiveFromISR with a higher priority task waiting and
- *  verifies that xHigherPriorityTaskWoken is set accoridngly.
+ *  verifies that xHigherPriorityTaskWoken is set accordingly.
  * @coverage xQueueGiveFromISR
  */
 void test_macro_xSemaphoreGiveFromISR_in_set_high_priority_pending( void )

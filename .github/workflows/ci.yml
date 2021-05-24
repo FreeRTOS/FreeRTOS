@@ -82,4 +82,3 @@ jobs:
         run: python3 -m pip install -r .github/scripts/verify_manifest_requirements.txt
       - name: Run script to verify manifest.yml
         run: python3 .github/scripts/verify_manifest.py
-

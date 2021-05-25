@@ -120,7 +120,7 @@
     <ClCompile Include="..\..\..\CMock\vendor\unity\extras\memory\src\unity_memory.c">
       <Filter>Unity</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\Logging\logging.c" />
+    <ClCompile Include="..\..\..\..\Demo\Common\Logging\windows\Logging_WinSim.c" />
     <ClCompile Include="Logging\run-time-stats-utils.c">
       <Filter>Application Code</Filter>
     </ClCompile>

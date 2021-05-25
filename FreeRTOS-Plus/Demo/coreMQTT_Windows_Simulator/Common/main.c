@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,14 +19,29 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /***
- * See https://www.FreeRTOS.org/mqtt_lts/index.html for configuration and usage instructions.
+ * See https://www.FreeRTOS.org/coremqtt for configuration and usage instructions,
+ * and https://www.freertos.org/mqtt/mqtt-agent-demo.html? for an alternative
+ * usage model that runs MQTT in an autonomous background agent task.  See the
+ * note below.
+ *
+ * Note: Single Threaded Vs Multi Threaded
+ * There are two coreMQTT usage models, single threaded and multithreaded
+ * (multitasking). Using the MQTT library solely from one thread within an
+ * otherwise multi-threaded application, as the demos in these subdirectories do,
+ * is equivalent to the single threaded use case. Single threaded use cases
+ * require the application writer to make repeated explicit calls into the MQTT
+ * library. Multithreaded use cases can instead execute the MQTT protocol in the
+ * background within an agent (or daemon) task. Executing the MQTT protocol in
+ * an agent task removes the need for the application writer to explicitly
+ * manage any MQTT state or call the MQTT_ProcessLoop() API function. Using an
+ * agent task also enables multiple application tasks to share a single MQTT
+ * connection without the need for synchronization primitives such as mutexes.
  ***/
 
 /* Standard includes. */
@@ -107,7 +122,23 @@ static UBaseType_t ulNextRand;
 int main( void )
 {
     /***
-     * See https://www.FreeRTOS.org/mqtt_lts/index.html for configuration and usage instructions.
+     * See https://www.FreeRTOS.org/coremqtt for configuration and usage instructions,
+     * and https://www.freertos.org/mqtt/mqtt-agent-demo.html? for an alternative
+     * usage model that runs MQTT in an autonomous background agent task.  See the
+     * note below.
+     *
+     * Note: Single Threaded Vs Multi Threaded
+     * There are two coreMQTT usage models, single threaded and multithreaded
+     * (multitasking). Using the MQTT library solely from one thread within an
+     * otherwise multi-threaded application, as the demos in these subdirectories do,
+     * is equivalent to the single threaded use case. Single threaded use cases
+     * require the application writer to make repeated explicit calls into the MQTT
+     * library. Multithreaded use cases can instead execute the MQTT protocol in the
+     * background within an agent (or daemon) task. Executing the MQTT protocol in
+     * an agent task removes the need for the application writer to explicitly
+     * manage any MQTT state or call the MQTT_ProcessLoop() API function. Using an
+     * agent task also enables multiple application tasks to share a single MQTT
+     * connection without the need for synchronization primitives such as mutexes.
      ***/
 
     /* Miscellaneous initialization including preparing the logging and seeding

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.4.1
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /**
@@ -47,8 +46,8 @@
 /*
 Changes from V2.0.0
 
-	+ Delay periods are now specified using variables and constants of
-	  TickType_t rather than unsigned long.
+    + Delay periods are now specified using variables and constants of
+      TickType_t rather than unsigned long.
 */
 
 #include <stdlib.h>
@@ -61,7 +60,7 @@ Changes from V2.0.0
 #include "death.h"
 #include "print.h"
 
-#define deathSTACK_SIZE		( ( unsigned short ) 512 )
+#define deathSTACK_SIZE        ( ( unsigned short ) 512 )
 
 /* The task originally created which is responsible for periodically dynamically 
 creating another four tasks. */
@@ -89,16 +88,16 @@ void vCreateSuicidalTasks( unsigned portBASE_TYPE uxPriority )
 {
 unsigned portBASE_TYPE *puxPriority;
 
-	/* Create the Creator tasks - passing in as a parameter the priority at which 
-	the suicidal tasks should be created. */
-	puxPriority = ( unsigned portBASE_TYPE * ) pvPortMalloc( sizeof( unsigned portBASE_TYPE ) );
-	*puxPriority = uxPriority;
+    /* Create the Creator tasks - passing in as a parameter the priority at which 
+    the suicidal tasks should be created. */
+    puxPriority = ( unsigned portBASE_TYPE * ) pvPortMalloc( sizeof( unsigned portBASE_TYPE ) );
+    *puxPriority = uxPriority;
 
-	xTaskCreate( vCreateTasks, "CREATOR", deathSTACK_SIZE, ( void * ) puxPriority, uxPriority, NULL );
+    xTaskCreate( vCreateTasks, "CREATOR", deathSTACK_SIZE, ( void * ) puxPriority, uxPriority, NULL );
 
-	/* Record the number of tasks that are running now so we know if any of the 
-	suicidal tasks have failed to be killed. */
-	uxTasksRunningAtStart = uxTaskGetNumberOfTasks();
+    /* Record the number of tasks that are running now so we know if any of the 
+    suicidal tasks have failed to be killed. */
+    uxTasksRunningAtStart = uxTaskGetNumberOfTasks();
 }
 /*-----------------------------------------------------------*/
 
@@ -108,36 +107,36 @@ portDOUBLE d1, d2;
 TaskHandle_t xTaskToKill;
 const TickType_t xDelay = ( TickType_t ) 500 / portTICK_PERIOD_MS;
 
-	if( pvParameters != NULL )
-	{
-		/* This task is periodically created four times.  Tow created tasks are 
-		passed a handle to the other task so it can kill it before killing itself.  
-		The other task is passed in null. */
-		xTaskToKill = *( TaskHandle_t* )pvParameters;
-	}
-	else
-	{
-		xTaskToKill = NULL;
-	}
+    if( pvParameters != NULL )
+    {
+        /* This task is periodically created four times.  Tow created tasks are 
+        passed a handle to the other task so it can kill it before killing itself.  
+        The other task is passed in null. */
+        xTaskToKill = *( TaskHandle_t* )pvParameters;
+    }
+    else
+    {
+        xTaskToKill = NULL;
+    }
 
-	for( ;; )
-	{
-		/* Do something random just to use some stack and registers. */
-		d1 = 2.4;
-		d2 = 89.2;
-		d2 *= d1;
-		vTaskDelay( xDelay );
+    for( ;; )
+    {
+        /* Do something random just to use some stack and registers. */
+        d1 = 2.4;
+        d2 = 89.2;
+        d2 *= d1;
+        vTaskDelay( xDelay );
 
-		if( xTaskToKill != NULL )
-		{
-			/* Make sure the other task has a go before we delete it. */
-			vTaskDelay( ( TickType_t ) 0 );
-			/* Kill the other task that was created by vCreateTasks(). */
-			vTaskDelete( xTaskToKill );
-			/* Kill ourselves. */
-			vTaskDelete( NULL );
-		}
-	}
+        if( xTaskToKill != NULL )
+        {
+            /* Make sure the other task has a go before we delete it. */
+            vTaskDelay( ( TickType_t ) 0 );
+            /* Kill the other task that was created by vCreateTasks(). */
+            vTaskDelete( xTaskToKill );
+            /* Kill ourselves. */
+            vTaskDelete( NULL );
+        }
+    }
 }/*lint !e818 !e550 Function prototype must be as per standard for task functions. */
 /*-----------------------------------------------------------*/
 
@@ -147,25 +146,25 @@ const TickType_t xDelay = ( TickType_t ) 1000 / portTICK_PERIOD_MS;
 unsigned portBASE_TYPE uxPriority;
 const char * const pcTaskStartMsg = "Create task started.\r\n";
 
-	/* Queue a message for printing to say the task has started. */
-	vPrintDisplayMessage( &pcTaskStartMsg );
+    /* Queue a message for printing to say the task has started. */
+    vPrintDisplayMessage( &pcTaskStartMsg );
 
-	uxPriority = *( unsigned portBASE_TYPE * ) pvParameters;
-	vPortFree( pvParameters );
+    uxPriority = *( unsigned portBASE_TYPE * ) pvParameters;
+    vPortFree( pvParameters );
 
-	for( ;; )
-	{
-		/* Just loop round, delaying then creating the four suicidal tasks. */
-		vTaskDelay( xDelay );
+    for( ;; )
+    {
+        /* Just loop round, delaying then creating the four suicidal tasks. */
+        vTaskDelay( xDelay );
 
-		xTaskCreate( vSuicidalTask, "SUICIDE1", deathSTACK_SIZE, NULL, uxPriority, &xCreatedTask1 );
-		xTaskCreate( vSuicidalTask, "SUICIDE2", deathSTACK_SIZE, &xCreatedTask1, uxPriority, NULL );
+        xTaskCreate( vSuicidalTask, "SUICIDE1", deathSTACK_SIZE, NULL, uxPriority, &xCreatedTask1 );
+        xTaskCreate( vSuicidalTask, "SUICIDE2", deathSTACK_SIZE, &xCreatedTask1, uxPriority, NULL );
 
-		xTaskCreate( vSuicidalTask, "SUICIDE1", deathSTACK_SIZE, NULL, uxPriority, &xCreatedTask2 );
-		xTaskCreate( vSuicidalTask, "SUICIDE2", deathSTACK_SIZE, &xCreatedTask2, uxPriority, NULL );
+        xTaskCreate( vSuicidalTask, "SUICIDE1", deathSTACK_SIZE, NULL, uxPriority, &xCreatedTask2 );
+        xTaskCreate( vSuicidalTask, "SUICIDE2", deathSTACK_SIZE, &xCreatedTask2, uxPriority, NULL );
 
-		++sCreationCount;
-	}
+        ++sCreationCount;
+    }
 }
 /*-----------------------------------------------------------*/
 
@@ -177,27 +176,28 @@ static short sLastCreationCount = 0;
 short sReturn = pdTRUE;
 unsigned portBASE_TYPE uxTasksRunningNow;
 
-	if( sLastCreationCount == sCreationCount )
-	{
-		sReturn = pdFALSE;
-	}
-	
-	uxTasksRunningNow = uxTaskGetNumberOfTasks();
+    if( sLastCreationCount == sCreationCount )
+    {
+        sReturn = pdFALSE;
+    }
+    sLastCreationCount = sCreationCount;
 
-	if( uxTasksRunningNow < uxTasksRunningAtStart )
-	{
-		sReturn = pdFALSE;
-	}
-	else if( ( uxTasksRunningNow - uxTasksRunningAtStart ) > uxMaxNumberOfExtraTasksRunning )
-	{
-		sReturn = pdFALSE;
-	}
-	else
-	{
-		/* Everything is okay. */
-	}
+    uxTasksRunningNow = uxTaskGetNumberOfTasks();
 
-	return sReturn;
+    if( uxTasksRunningNow < uxTasksRunningAtStart )
+    {
+        sReturn = pdFALSE;
+    }
+    else if( ( uxTasksRunningNow - uxTasksRunningAtStart ) > uxMaxNumberOfExtraTasksRunning )
+    {
+        sReturn = pdFALSE;
+    }
+    else
+    {
+        /* Everything is okay. */
+    }
+
+    return sReturn;
 }
 
 

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS PKCS #11 V1.0.3
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,9 +19,11 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
+
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -185,17 +187,17 @@ static void prvObjectImporting( void )
     /* Specify certificate subject. */
     xCertificateTemplate.xSubject.type = CKA_SUBJECT;
     xCertificateTemplate.xSubject.pValue = xSubject;
-    xCertificateTemplate.xSubject.ulValueLen = strlen( ( const char * ) xSubject );
+    xCertificateTemplate.xSubject.ulValueLen = sizeof( xSubject ) - 1UL;
 
     /* Point to contents of certificate. */
     xCertificateTemplate.xValue.type = CKA_VALUE;
     xCertificateTemplate.xValue.pValue = ( CK_VOID_PTR ) pkcs11demo_RSA_CERTIFICATE;
-    xCertificateTemplate.xValue.ulValueLen = ( CK_ULONG ) sizeof( pkcs11demo_RSA_CERTIFICATE );
+    xCertificateTemplate.xValue.ulValueLen = ( CK_ULONG ) sizeof( pkcs11demo_RSA_CERTIFICATE ) - 1UL;
     
     /* Specify certificate label. */
     xCertificateTemplate.xLabel.type = CKA_LABEL;
     xCertificateTemplate.xLabel.pValue = ( CK_VOID_PTR ) pucLabel;
-    xCertificateTemplate.xLabel.ulValueLen = strlen( ( const char * ) pucLabel );
+    xCertificateTemplate.xLabel.ulValueLen = sizeof( pucLabel ) - 1UL;
     
     /* Specify certificate type as x509. */
     xCertificateTemplate.xCertificateType.type = CKA_CERTIFICATE_TYPE;
@@ -317,7 +319,7 @@ static void prvObjectGeneration( void )
     CK_BYTE pucPublicKeyLabel[] = { pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS };
     CK_BYTE pucPrivateKeyLabel[] = { pkcs11configLABEL_DEVICE_PUBLIC_KEY_FOR_TLS };
 
-    /* CK_ATTTRIBUTE's contain an attribute type, a value, and the length of
+    /* CK_ATTRIBUTE's contain an attribute type, a value, and the length of
      * the value. An array of CK_ATTRIBUTEs is called a template. They are used
      * for creating, searching, and manipulating for objects. The order of the
      * template does not matter.

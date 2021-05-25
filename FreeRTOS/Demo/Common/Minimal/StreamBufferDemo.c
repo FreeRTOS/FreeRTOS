@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.4.1
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /* Standard includes. */
@@ -124,15 +123,15 @@ static void prvInterruptTriggerLevelTest( void *pvParameters );
 	static void prvSenderTask( void *pvParameters );
 
 	static StaticStreamBuffer_t xStaticStreamBuffers[ sbNUMBER_OF_ECHO_CLIENTS ];
-
-	/* The +1 is to make the test logic easier as the function that calculates the
-	free space will return one less than the actual free space - adding a 1 to the
-	actual length makes it appear to the tests as if the free space is returned as
-	it might logically be expected.  Returning 1 less than the actual free space is
-	fine as it can never result in an overrun. */
-	static uint8_t ucBufferStorage[ sbNUMBER_OF_SENDER_TASKS ][ sbSTREAM_BUFFER_LENGTH_BYTES + 1 ];
 	static uint32_t ulSenderLoopCounters[ sbNUMBER_OF_SENDER_TASKS ] = { 0 };
 #endif /* configSUPPORT_STATIC_ALLOCATION */
+
+/* The +1 is to make the test logic easier as the function that calculates the
+free space will return one less than the actual free space - adding a 1 to the
+actual length makes it appear to the tests as if the free space is returned as
+it might logically be expected.  Returning 1 less than the actual free space is
+fine as it can never result in an overrun. */
+static uint8_t ucBufferStorage[ sbNUMBER_OF_SENDER_TASKS ][ sbSTREAM_BUFFER_LENGTH_BYTES + 1 ];
 
 /*-----------------------------------------------------------*/
 
@@ -1240,4 +1239,3 @@ BaseType_t x;
 	return xErrorStatus;
 }
 /*-----------------------------------------------------------*/
-

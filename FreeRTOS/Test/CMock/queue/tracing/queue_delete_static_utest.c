@@ -1,0 +1,1 @@
+../generic/queue_delete_static_utest.c

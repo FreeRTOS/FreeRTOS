@@ -1,0 +1,82 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "make",
+            "args": ["DEBUG=1"],
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": ["relative", "/"],
+                "pattern": [ 
+                    {
+                      "regexp": ".",
+                      "file": 1,
+                      "location": 2,
+                      "message": 3
+                    }
+                ]
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "killallqemu",
+            "type":"shell",
+            "isBackground":true,
+            "command": "killall qemu-system-arm", 
+            "presentation": {
+                "echo": false,
+                "reveal": "never",
+                "focus": false, 
+                "showReuseMessage": false,
+                "clear": true,
+            },
+        },
+        {
+            "label": "qemu",
+            "type":"shell",
+            "isBackground":true,
+            "dependsOn": "build",
+            "runOptions": 
+                {
+                    "instanceLimit": 1
+                },
+            "command": "qemu-system-arm -s -S -machine mps2-an385 -monitor null -semihosting --semihosting-config enable=on,target=native -kernel ./build/RTOSDemo.axf -serial stdio -nographic -d cpu_reset",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true, 
+                "panel": "dedicated",
+                "showReuseMessage": true,
+                "clear": true,
+            },
+            "problemMatcher":
+            {
+                "owner": "external",
+                "pattern": [
+                    {
+                      "regexp": ".",
+                      "file": 1,
+                      "location": 2,
+                      "message": 3
+                    }
+                ],
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": ".",
+                    "endsPattern": "."
+                }  
+            }
+        }
+    ]
+}

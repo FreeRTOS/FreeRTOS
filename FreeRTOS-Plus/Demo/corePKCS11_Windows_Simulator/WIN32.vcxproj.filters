@@ -14,35 +14,47 @@
     <Filter Include="FreeRTOS\Source\include">
       <UniqueIdentifier>{d2dcd641-8d91-492b-852f-5563ffadaec6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="3rdparty">
-      <UniqueIdentifier>{6a7d78a6-4f09-4a5f-a692-ce4791240881}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="3rdparty\pkcs11">
-      <UniqueIdentifier>{e32be358-792b-45ab-b1c5-f87e64315cd3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="examples">
       <UniqueIdentifier>{44f1dc25-5639-4f3f-a6ec-f5c19cb7fe8d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="3rdparty\mbedtls">
-      <UniqueIdentifier>{78a81f37-e1f1-4ef1-b067-bb23c8e1dfe2}</UniqueIdentifier>
+    <Filter Include="FreeRTOS+">
+      <UniqueIdentifier>{2d9c1365-e64a-4601-a3b1-8ba0bb81b467}</UniqueIdentifier>
     </Filter>
-    <Filter Include="3rdparty\mbedtls\include">
-      <UniqueIdentifier>{38512398-609b-4a9b-bc1a-67cab17720ae}</UniqueIdentifier>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries">
+      <UniqueIdentifier>{298a6900-c337-4761-bf8e-0dc27fd153df}</UniqueIdentifier>
     </Filter>
-    <Filter Include="3rdparty\mbedtls_utils">
-      <UniqueIdentifier>{dc5729ea-7c04-484d-babd-d3537c27b7a1}</UniqueIdentifier>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard">
+      <UniqueIdentifier>{44a1af32-9b4f-4bfe-af19-a563c423468e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="corePKCS11">
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11">
       <UniqueIdentifier>{e88d4eab-3fad-4755-a5a4-41c6e4f59089}</UniqueIdentifier>
     </Filter>
-    <Filter Include="corePKCS11\include">
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include">
       <UniqueIdentifier>{817c6143-0ae9-4cac-828f-08f0da380f99}</UniqueIdentifier>
     </Filter>
-    <Filter Include="corePKCS11\source">
-      <UniqueIdentifier>{8ffa2635-7ef9-4c6b-b392-96e0cc935ad3}</UniqueIdentifier>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\platform">
+      <UniqueIdentifier>{a4ecadfb-a03e-4ff6-a1e5-f2b72c0d41aa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common">
-      <UniqueIdentifier>{30af02a1-fc2d-4142-b173-508ece3f033d}</UniqueIdentifier>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\platform\logging">
+      <UniqueIdentifier>{dbf9d53b-40a9-4e96-9aca-32e53595d647}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls">
+      <UniqueIdentifier>{38bd71c0-5f83-42f4-8fa3-06bee800de2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\mbedtls">
+      <UniqueIdentifier>{78a81f37-e1f1-4ef1-b067-bb23c8e1dfe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\mbedtls\include">
+      <UniqueIdentifier>{38512398-609b-4a9b-bc1a-67cab17720ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{f9d1c25b-8be4-4743-84c4-9a620c9e9c4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\3rdparty">
+      <UniqueIdentifier>{6a7d78a6-4f09-4a5f-a692-ce4791240881}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\3rdparty\pkcs11">
+      <UniqueIdentifier>{e32be358-792b-45ab-b1c5-f87e64315cd3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -89,264 +101,278 @@
     <ClCompile Include="examples\sign_and_verify.c">
       <Filter>examples</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\source\portable\mbedtls\core_pkcs11_mbedtls.c">
-      <Filter>corePKCS11\source</Filter>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\aes.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\aesni.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\arc4.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\aria.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\asn1parse.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\asn1write.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\base64.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\bignum.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\blowfish.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\camellia.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ccm.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\certs.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\chacha20.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\chachapoly.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\cipher.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\cipher_wrap.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\cmac.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ctr_drbg.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\debug.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\des.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\dhm.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ecdh.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ecdsa.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ecjpake.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ecp.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ecp_curves.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\entropy.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\entropy_poll.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\error.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\gcm.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\havege.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\hkdf.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\hmac_drbg.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\md.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\md2.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\md4.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\md5.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\memory_buffer_alloc.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\net_sockets.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\nist_kw.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\oid.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\padlock.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\pem.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\pk.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\pk_wrap.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkcs5.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkcs11.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkcs12.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkparse.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkwrite.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\platform.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\platform_util.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\poly1305.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ripemd160.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\rsa.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\rsa_internal.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\sha1.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\sha256.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\sha512.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_cache.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_ciphersuites.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_cli.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_cookie.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_srv.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_ticket.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_tls.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\threading.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\timing.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\version.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\version_features.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509_create.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509_crl.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509_crt.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509_csr.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509write_crt.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509write_csr.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\xtea.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_se.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_slot_management.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_storage.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_its_file.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_msg.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\corePKCS11\source\core_pkcs11.c">
-      <Filter>corePKCS11\source</Filter>
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\source\core_pki_utils.c">
-      <Filter>corePKCS11\source</Filter>
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\mbedtls\core_pkcs11_mbedtls.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\corePKCS11\source\portable\windows\core_pkcs11_pal.c">
-      <Filter>corePKCS11\source</Filter>
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls_utils\mbedtls_error.c">
-      <Filter>3rdparty\mbedtls_utils</Filter>
+    <ClCompile Include="..\..\Source\corePKCS11\source\core_pki_utils.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls_utils\mbedtls_utils.c">
-      <Filter>3rdparty\mbedtls_utils</Filter>
+    <ClCompile Include="..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils\mbedtls_error.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\aes.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\aesni.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\arc4.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\aria.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\asn1parse.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\asn1write.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\base64.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\bignum.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\blowfish.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\camellia.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\ccm.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\certs.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\chacha20.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\chachapoly.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\cipher.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\cipher_wrap.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\cmac.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\ctr_drbg.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\debug.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\des.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\dhm.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\ecdh.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\ecdsa.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\ecjpake.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\ecp.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\ecp_curves.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\entropy.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\entropy_poll.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\error.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\gcm.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\havege.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\hkdf.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\hmac_drbg.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\md.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\md_wrap.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\md2.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\md4.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\md5.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\memory_buffer_alloc.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\net_sockets.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\nist_kw.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\oid.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\padlock.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\pem.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\pk.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\pk_wrap.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\pkcs5.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\pkcs11.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\pkcs12.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\pkparse.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\pkwrite.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\platform.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\platform_util.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\poly1305.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\ripemd160.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\rsa.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\rsa_internal.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\sha1.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\sha256.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\sha512.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\ssl_cache.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\ssl_ciphersuites.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\ssl_cli.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\ssl_cookie.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\ssl_srv.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\ssl_ticket.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\ssl_tls.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\threading.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\timing.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\version.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\version_features.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\x509.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\x509_create.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\x509_crl.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\x509_crt.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\x509_csr.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\x509write_crt.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\x509write_csr.c">
-      <Filter>3rdparty\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\xtea.c">
-      <Filter>3rdparty\mbedtls</Filter>
+    <ClCompile Include="..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils\mbedtls_utils.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FreeRTOSConfig.h" />
     <ClInclude Include="..\..\..\FreeRTOS\Source\include\event_groups.h">
       <Filter>FreeRTOS\Source\include</Filter>
     </ClInclude>
@@ -374,8 +400,6 @@
     <ClInclude Include="..\..\..\FreeRTOS\Source\include\timers.h">
       <Filter>FreeRTOS\Source\include</Filter>
     </ClInclude>
-    <ClInclude Include="aws_mbedtls_config.h" />
-    <ClInclude Include="pkcs11_demo_config.h" />
     <ClInclude Include="examples\pkcs11_demos.h">
       <Filter>examples</Filter>
     </ClInclude>
@@ -383,278 +407,313 @@
       <Filter>examples</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11.h">
-      <Filter>corePKCS11\include</Filter>
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11_pal.h">
-      <Filter>corePKCS11\include</Filter>
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pki_utils.h">
-      <Filter>corePKCS11\include</Filter>
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\source\portable\mbedtls\threading_alt.h">
-      <Filter>corePKCS11\include</Filter>
+    <ClInclude Include="threading_alt.h">
+      <Filter>examples</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\pkcs11\pkcs11.h">
-      <Filter>3rdparty\pkcs11</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\aes.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\pkcs11\pkcs11f.h">
-      <Filter>3rdparty\pkcs11</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\aesni.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\pkcs11\pkcs11t.h">
-      <Filter>3rdparty\pkcs11</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\arc4.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls_utils\mbedtls_error.h">
-      <Filter>3rdparty\mbedtls_utils</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\aria.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\aes.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\asn1.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\aesni.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\asn1write.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\arc4.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\base64.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\aria.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\bignum.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\asn1.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\blowfish.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\asn1write.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\bn_mul.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\base64.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\camellia.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\bignum.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ccm.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\blowfish.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\certs.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\bn_mul.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\chacha20.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\camellia.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\chachapoly.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\ccm.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\check_config.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\certs.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\cipher.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\chacha20.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\cipher_internal.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\chachapoly.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\cmac.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\check_config.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\compat-1.3.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\cipher.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\config.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\cipher_internal.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ctr_drbg.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\cmac.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\debug.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\compat-1.3.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\des.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\config.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\dhm.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\ctr_drbg.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ecdh.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\debug.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ecdsa.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\des.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ecjpake.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\dhm.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ecp.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\ecdh.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ecp_internal.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\ecdsa.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\entropy.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\ecjpake.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\entropy_poll.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\ecp.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\error.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\ecp_internal.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\gcm.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\entropy.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\havege.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\entropy_poll.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\hkdf.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\error.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\hmac_drbg.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\gcm.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\md.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\havege.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\md_internal.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\hkdf.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\md2.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\hmac_drbg.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\md4.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\md.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\md5.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\md_internal.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\memory_buffer_alloc.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\md2.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\net.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\md4.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\net_sockets.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\md5.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\nist_kw.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\memory_buffer_alloc.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\oid.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\net.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\padlock.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\net_sockets.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\pem.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\nist_kw.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\pk.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\oid.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\pk_internal.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\padlock.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\pkcs5.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\pem.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\pkcs11.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\pk.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\pkcs12.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\pk_internal.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\platform.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\pkcs5.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\platform_time.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\pkcs11.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\platform_util.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\pkcs12.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\poly1305.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\platform.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ripemd160.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\platform_time.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\rsa.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\platform_util.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\rsa_internal.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\poly1305.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\sha1.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\ripemd160.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\sha256.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\rsa.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\sha512.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\rsa_internal.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ssl.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\sha1.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ssl_cache.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\sha256.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ssl_ciphersuites.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\sha512.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ssl_cookie.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\ssl.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ssl_internal.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\ssl_cache.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ssl_ticket.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\ssl_ciphersuites.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\threading.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\ssl_cookie.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\timing.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\ssl_internal.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\version.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\ssl_ticket.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\x509.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\threading.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\x509_crl.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\timing.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\x509_crt.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\version.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\x509_csr.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\x509.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\xtea.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\x509_crl.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\3rdparty\pkcs11</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\x509_crt.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11f.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\3rdparty\pkcs11</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\x509_csr.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11t.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\3rdparty\pkcs11</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\3rdparty\mbedtls\include\mbedtls\xtea.h">
-      <Filter>3rdparty\mbedtls\include</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_core.h">
+      <Filter>FreeRTOS+\mbedtls</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\Logging\logging_levels.h">
-      <Filter>Common</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_invasive.h">
+      <Filter>FreeRTOS+\mbedtls</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\Logging\logging_stack.h">
-      <Filter>Common</Filter>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_its.h">
+      <Filter>FreeRTOS+\mbedtls</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\CMakeLists.txt">
-      <Filter>3rdparty\mbedtls</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\Source\corePKCS11\3rdparty\mbedtls\library\Makefile">
-      <Filter>3rdparty\mbedtls</Filter>
-    </None>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_se.h">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_service_integration.h">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_slot_management.h">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_storage.h">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\psa_util.h">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\ssl_invasive.h">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\common.h">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_levels.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_stack.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils\mbedtls_error.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
+    </ClInclude>
+    <ClInclude Include="aws_mbedtls_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeRTOSConfig.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="pkcs11_demo_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="core_pkcs11_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

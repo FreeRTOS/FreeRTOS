@@ -50,16 +50,6 @@ INSTFLAGS = \
 # ____________________________________________________________________
 # Rules
 #
-# Rules for building a:FR object files. These are not harness-specific,
-# and several harnesses might depend on a particular a:FR object, so
-# define them all once here.
-
-@RULE_GOTO@
-	$(GOTO_CC) @COMPILE_ONLY@ @RULE_OUTPUT@ $(INC) $(CFLAGS) @RULE_INPUT@
-
-# ____________________________________________________________________
-# Rules
-#
 # Rules for patching
 
 patch:
@@ -73,14 +63,27 @@ unpatch:
 #
 # Rules for building the CBMC harness
 
-queue_datastructure.h: $(H_OBJS_EXCEPT_HARNESS)
-	python3 @TYPE_HEADER_SCRIPT@ --binary $(FREERTOS)/Source/queue.goto --c-file $(FREERTOS)/Source/queue.c
+C_SOURCES = $(patsubst %.goto,%.c,$(H_OBJS_EXCEPT_HARNESS))
 
-$(ENTRY)_harness.goto: $(ENTRY)_harness.c $(H_GENERATE_HEADER)
+# Build each goto-binary out-of-source (i.e. in a 'gotos' directory
+# underneath each proof directory, to make it safe to build all proofs
+# in parallel
+OOS_OBJS = $(patsubst %.c,gotos/%.goto,$(C_SOURCES))
+
+CWD=$(abspath .)
+
+gotos/%.goto: %.c
+	mkdir -p $(dir $@)
 	$(GOTO_CC) @COMPILE_ONLY@ @RULE_OUTPUT@ $(INC) $(CFLAGS) @RULE_INPUT@
 
-$(ENTRY)1.goto: $(OBJS)
-	$(GOTO_CC) @COMPILE_LINK@ @RULE_OUTPUT@ --function harness $(OBJS)
+queue_datastructure.h: gotos/$(FREERTOS)/Source/queue.goto
+	python3 @TYPE_HEADER_SCRIPT@ --binary $(CWD)/gotos$(FREERTOS)/Source/queue.goto --c-file $(FREERTOS)/Source/queue.c
+
+$(ENTRY)_harness.goto: $(ENTRY)_harness.c $(H_GENERATE_HEADER)
+	$(GOTO_CC) @COMPILE_ONLY@ @RULE_OUTPUT@ $(INC) $(CFLAGS) $(ENTRY)_harness.c
+
+$(ENTRY)1.goto: $(ENTRY)_harness.goto $(OOS_OBJS)
+	$(GOTO_CC) @COMPILE_LINK@ @RULE_OUTPUT@ --function harness @RULE_INPUT@
 
 $(ENTRY)2.goto: $(ENTRY)1.goto
 	 $(GOTO_INSTRUMENT) --add-library @RULE_INPUT@ @RULE_OUTPUT@ \
@@ -111,10 +114,13 @@ $(ENTRY).goto: $(ENTRY)5.goto
 
 goto:
 	$(MAKE) patch
-	$(MAKE) $(ENTRY).goto
+	$(MAKE) -B $(ENTRY).goto
 
+# Ignore the return code for CBMC, so that we can still generate the
+# report if the proof failed. If the proof failed, we separately fail
+# the entire job using the check-cbmc-result rule.
 cbmc.txt: $(ENTRY).goto
-	- cbmc $(CBMCFLAGS) --unwinding-assertions --trace @RULE_INPUT@ > $@ 2>&1
+	-cbmc $(CBMCFLAGS) $(SOLVER) --unwinding-assertions --trace @RULE_INPUT@ > $@ 2>&1
 
 property.xml: $(ENTRY).goto
 	cbmc $(CBMCFLAGS) --unwinding-assertions --show-properties --xml-ui @RULE_INPUT@ > $@ 2>&1
@@ -139,6 +145,13 @@ report: cbmc.txt property.xml coverage.xml
 	--property property.xml \
 	--block coverage.xml
 
+# This rule depends only on cbmc.txt and has no dependents, so it will
+# not block the report from being generated if it fails. This rule is
+# intended to fail if and only if the CBMC safety check that emits
+# cbmc.txt yielded a proof failure.
+check-cbmc-result: cbmc.txt
+	grep -e "^VERIFICATION SUCCESSFUL" $^
+
 # ____________________________________________________________________
 # Rules
 #
@@ -154,6 +167,7 @@ clean:
 
 veryclean: clean
 	@RM_RECURSIVE@ html
+	@RM_RECURSIVE@ gotos
 
 distclean: veryclean
 	cd $(PROOFS)/../patches && ./unpatch.py

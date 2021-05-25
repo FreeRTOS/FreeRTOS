@@ -1,0 +1,51 @@
+name: Auto-Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_id:
+        description: 'Commit ID'
+        required: true
+        default: 'HEAD'
+      version_number:
+        description: 'Version Number (Ex. 202000.00)'
+        required: true
+
+jobs:
+  auto-release:
+    name: Auto Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tool Setup
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7.10
+          architecture:   x64
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Source the release tools from FreeRTOS/FreeRTOS
+      - name: Checkout FreeRTOS Release Tools
+        uses: actions/checkout@v2
+        with:
+          path: tools
+
+      # Simpler git auth if we use checkout action and forward the repo to release script
+      - name: Checkout FreeRTOS
+        uses: actions/checkout@v2
+        with:
+          path: local_core
+          fetch-depth: 0
+
+      - name: Release
+        run: |
+          # Configure repo for push
+          git config --global user.name ${{ github.actor }}
+          git config --global user.email ${{ github.actor }}@users.noreply.github.com
+
+          # Run the release script
+          pip install -r ./tools/.github/scripts/release-requirements.txt
+          ./tools/.github/scripts/release.py FreeRTOS --core-repo-path=local_core --core-commit=${{ github.event.inputs.commit_id }} --new-core-version=${{ github.event.inputs.version_number }}
+          exit $?
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

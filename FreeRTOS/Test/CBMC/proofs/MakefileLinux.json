@@ -10,7 +10,7 @@
 	"-o"
     ],
     "RULE_INPUT": [
-	"$<"
+	"$^"
     ],
     "RULE_OUTPUT": [
 	"$@"

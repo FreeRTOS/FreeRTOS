@@ -58,7 +58,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\Source\FreeRTOS-Plus-FAT\include;..\..\Source\FreeRTOS-Plus-FAT\portable\common;..\..\Source\FreeRTOS-Plus-TCP\protocols\include;..\..\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;.\DemoTasks\include;..\..\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;.\WinPCap;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\Source\FreeRTOS-Plus-CLI;.\TraceMacros\Example1;..\..\Source\FreeRTOS-Plus-TCP\include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Source\FreeRTOS-Plus-FAT\include;..\..\Source\FreeRTOS-Plus-FAT\portable\common;..\..\Source\FreeRTOS-Plus-TCP\protocols\include;..\..\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;.\DemoTasks\include;..\..\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;.\WinPCap;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\Source\FreeRTOS-Plus-CLI;.\TraceMacros\Example1;..\..\Source\FreeRTOS-Plus-TCP\include;..\..\Source\Utilities\logging;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -116,7 +116,7 @@
       <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalIncludeDirectories>..\Common\Utils;..\Common\ethernet\lwip-1.4.0\ports\win32\WinPCap;..\Common\ethernet\lwip-1.4.0\src\include\ipv4;..\Common\ethernet\lwip-1.4.0\src\include;..\..\Source\include;..\..\Source\portable\MSVC-MingW;..\Common\ethernet\lwip-1.4.0\ports\win32\include;..\Common\Include;..\..\Source\Logging;.\lwIP_Apps;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Common\Utils;..\Common\ethernet\lwip-1.4.0\ports\win32\WinPCap;..\Common\ethernet\lwip-1.4.0\src\include\ipv4;..\Common\ethernet\lwip-1.4.0\src\include;..\..\Source\include;..\..\Source\portable\MSVC-MingW;..\Common\ethernet\lwip-1.4.0\ports\win32\include;..\Common\Include;..\..\Source\Utilities\logging;.\lwIP_Apps;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -155,7 +155,7 @@
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_UDP_IP.c" />
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\portable\BufferManagement\BufferAllocation_2.c" />
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\portable\NetworkInterface\WinPCap\NetworkInterface.c" />
-    <ClCompile Include="..\..\Source\Logging\logging.c" />
+    <ClCompile Include="..\..\Demo\Common\Logging\windows\Logging_WinSim.c" />
     <ClCompile Include="DemoTasks\SimpleTCPEchoServer.c" />
     <ClCompile Include="DemoTasks\TCPEchoClient_SingleTasks.c" />
     <ClCompile Include="DemoTasks\SimpleUDPClientAndServer.c" />
@@ -179,6 +179,7 @@
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_ARP.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_DHCP.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_DNS.h" />
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_errno_TCP.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_IP.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_IP_Private.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_Sockets.h" />

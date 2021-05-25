@@ -1,0 +1,106 @@
+name: CI Checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  git-secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Checkout awslabs/git-secrets
+        uses: actions/checkout@v2
+        with:
+          repository: awslabs/git-secrets
+          ref: master
+          path: git-secrets
+      - name: Install git-secrets
+        run: cd git-secrets && sudo make install && cd ..
+      - name: Run git-secrets
+        run: |
+          git-secrets --register-aws
+          git-secrets --scan
+  doxygen:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          path: freertos
+      - name: Install Python3
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: Download tag dependency of coreMQTT-Agent
+        run: |
+          # We don't need to generate the coreMQTT docs, we only need the tag file.
+          # Therefore, we can just download it.
+          mkdir -p freertos/FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent/source/dependency/coreMQTT/docs/doxygen/output
+          wget -O freertos/FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent/source/dependency/coreMQTT/docs/doxygen/output/mqtt.tag \
+          "https://freertos.org/Documentation/api-ref/coreMQTT/docs/doxygen/output/mqtt.tag"
+      - name: Generate doxygen ZIP
+        uses: FreeRTOS/CI-CD-GitHub-Actions/doxygen@main
+        with:
+          path: ./freertos
+          # List of directories containing libraries whose doxygen output will be generated.
+          libs_parent_dir_path: FreeRTOS-Plus/Source,FreeRTOS-Plus/Source/AWS,FreeRTOS-Plus/Source/Application-Protocols,FreeRTOS-Plus/Source/Utilities
+          generate_zip: true
+      - name: Upload doxygen artifact if main branch
+        if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release-candidate' )
+        env:
+          GIT_SHA: 
+        uses: actions/upload-artifact@v2
+        with:
+          name: doxygen.zip-${{ github.sha }}
+          path: ./freertos/doxygen.zip
+          retention-days: 2
+
+  spell-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Parent Repo
+        uses: actions/checkout@v2
+        with:
+          ref: main
+          repository: FreeRTOS/CI-CD-Github-Actions
+          path: commonCI
+      - name: Clone This Repo
+        uses: actions/checkout@v2
+        with:
+            path: ./FreeRTOS
+      - name: Install spell
+        run: |
+          sudo apt-get install spell
+          sudo apt-get install util-linux
+      - name: Check spelling
+        run: |
+          # Add path to the tool to the environment variable.
+          PATH=$PATH:commonCI/spellings/tools
+          # Make sure that only Amazon licenced files are checked.
+          sed -i 's/`find $DIRNAME \\( -iname \\\*\.\[ch\] -o -iname \\\*\.dox \\) -type f`/`grep -ril "copyright \(c\) \[0-9\]\[0-9\]\[0-9\]\[0-9\] amazon.com" | grep "\\.\[ch\]"`/g' commonCI/spellings/tools/find-unknown-comment-words
+          # Run the spell check script.
+          find-unknown-comment-words --directory FreeRTOS/ --lexicon FreeRTOS/lexicon.txt
+          # Check the exit status.
+          if [ "$?" = "0" ]; then
+            exit 0
+          else
+            exit 1
+          fi
+
+  verify-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Python3
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: Install dependencies
+        run: python3 -m pip install -r .github/scripts/verify_manifest_requirements.txt
+      - name: Run script to verify manifest.yml
+        run: python3 .github/scripts/verify_manifest.py

@@ -68,8 +68,10 @@
 #define TICKS_TO_WAIT             10
 #define NUM_CALLS_TO_INTERCEPT    TICKS_TO_WAIT / 2
 
+/* ===========================  FUNCTION PROTOTYPES  ======================== */
+void setxMaskAssertAndAbort( bool mask );
+bool getxMaskAssertAndAbort( );
 /* ============================  GLOBAL VARIABLES =========================== */
-//bool xMaskAssertAndAbort;
 
 /* =================================  MACROS ================================ */
 
@@ -82,7 +84,7 @@
 #define EXPECT_ASSERT_BREAK( call )             \
     do                                          \
     {                                           \
-        xMaskAssertAndAbort = true;             \
+        setxMaskAssertAndAbort( true );         \
         CEXCEPTION_T e = CEXCEPTION_NONE;       \
         Try                                     \
         {                                       \

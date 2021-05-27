@@ -41,7 +41,6 @@
 
 /* ============================  GLOBAL VARIABLES =========================== */
 
-extern bool xMaskAssertAndAbort;
 /* Used to share a QueueHandle_t between a test case and it's callbacks */
 static QueueHandle_t xQueueHandleStatic = NULL;
 static BaseType_t xStubExpectedReturnValue = pdFALSE;

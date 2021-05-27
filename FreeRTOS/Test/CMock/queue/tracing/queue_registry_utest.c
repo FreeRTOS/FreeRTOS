@@ -53,8 +53,6 @@ typedef xQueueRegistryItem QueueRegistryItem_t;
 /* Access the xQueueRegistry to clear between test cases */
 extern PRIVILEGED_DATA QueueRegistryItem_t xQueueRegistry[ configQUEUE_REGISTRY_SIZE ];
 
-extern bool xMaskAssertAndAbort;
-
 /* ==========================  CALLBACK FUNCTIONS =========================== */
 
 /* ============================= Unity Fixtures ============================= */

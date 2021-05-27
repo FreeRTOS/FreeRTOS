@@ -35,7 +35,6 @@
 
 /* ============================  GLOBAL VARIABLES =========================== */
 static SemaphoreHandle_t xSemaphoreHandleStatic = NULL;
-extern bool xMaskAssertAndAbort;
 
 /* ==========================  CALLBACK FUNCTIONS =========================== */
 

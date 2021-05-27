@@ -34,7 +34,6 @@
 
 
 /* ============================  GLOBAL VARIABLES =========================== */
-extern bool xMaskAssertAndAbort;
 
 /* ==========================  CALLBACK FUNCTIONS =========================== */
 

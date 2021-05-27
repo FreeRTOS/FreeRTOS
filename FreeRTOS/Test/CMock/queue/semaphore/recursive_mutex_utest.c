@@ -34,7 +34,6 @@
 #include "mock_fake_port.h"
 
 /* ============================  GLOBAL VARIABLES =========================== */
-extern bool xMaskAssertAndAbort;
 
 /* ==========================  CALLBACK FUNCTIONS =========================== */
 

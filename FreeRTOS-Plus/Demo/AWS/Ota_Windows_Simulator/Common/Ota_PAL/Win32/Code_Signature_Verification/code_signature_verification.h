@@ -26,7 +26,7 @@
 
  /**
   * @file code_signature_verification.h
-  * @brief Interface for code siganture verfication funtions.
+  * @brief Interface for code signature verification functions.
   *
   */
 

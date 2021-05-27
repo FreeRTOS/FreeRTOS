@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -328,7 +328,7 @@ void test_xQueuePeek_blocking_success_locked_low_prio_pending( void )
 
 /**
  *  @brief Test xQueuePeek with taskSCHEDULER_SUSPENDED and timeout=10
- *  @details This should cause xQueuePeek to configASSERT becuase it would
+ *  @details This should cause xQueuePeek to configASSERT because it would
  *  block forever when the queue is empty.
  *  @coverage xQueuePeek
  */
@@ -361,7 +361,7 @@ void test_xQueuePeek_blocking_suspended_assert( void )
 
 /**
  *  @brief Callback which adds and item to it's test queue.
- *  @details Used in test_xQueuePeek_blocking_success and test_xQueueReceive_blocking_sucess.
+ *  @details Used in test_xQueuePeek_blocking_success and test_xQueueReceive_blocking_success.
  */
 static BaseType_t blocking_success_xTaskCheckForTimeOut_cb( TimeOut_t * const pxTimeOut,
                                                             TickType_t * const pxTicksToWait,
@@ -479,7 +479,7 @@ void test_xQueuePeek_blocking_timeout( void )
 
 /**
  *  @brief Test xQueueReceive with taskSCHEDULER_SUSPENDED and timeout=10
- *  @details This should cause xQueueReceive to configASSERT becuase it would
+ *  @details This should cause xQueueReceive to configASSERT because it would
  *  block forever when the queue is empty.
  *  @coverage xQueueReceive
  */

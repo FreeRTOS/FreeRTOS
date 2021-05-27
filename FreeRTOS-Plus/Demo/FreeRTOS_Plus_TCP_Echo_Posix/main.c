@@ -243,14 +243,14 @@ void vAssertCalled( const char * const pcFileName,
 {
 static BaseType_t xPrinted = pdFALSE;
 volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
+/* Copy the parameters to local volatile variables, just for debugging */
+volatile char * pcFile = ( volatile char * ) pcFileName;
+volatile uint32_t ulLineNumber = ulLine;
 
     /* Called if an assertion passed to configASSERT() fails.  See
     http://www.freertos.org/a00110.html#configASSERT for more information. */
 
-    /* Parameters are not used. */
-    ( void ) ulLine;
-    ( void ) pcFileName;
-
+	printf( "vAssertCalled( %s, %u )\n", pcFileName, ulLine );
 
     taskENTER_CRITICAL();
     {

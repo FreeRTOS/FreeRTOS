@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 
@@ -901,7 +900,7 @@ SemaphoreHandle_t xMutex = ( SemaphoreHandle_t ) pvParameters, xLocalMutex;
 		vPrintDisplayMessage( &pcTaskStartMsg );
 	#endif
 
-	/* The local mutex is used to check the 'mutexs held' count. */
+	/* The local mutex is used to check the 'mutex held' count. */
 	xLocalMutex = xSemaphoreCreateMutex();
 	configASSERT( xLocalMutex );
 

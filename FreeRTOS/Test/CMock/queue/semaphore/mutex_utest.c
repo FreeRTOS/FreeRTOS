@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -475,7 +475,7 @@ void test_macro_xSemaphoreTake_blocking_mutex_inherit_timeout( void )
 
     for( int i = 0; i < TICKS_TO_WAIT; i++ )
     {
-        /* Return pdTRUE to signify that priority inheritence occurred */
+        /* Return pdTRUE to signify that priority inheritance occurred */
         xTaskPriorityInherit_ExpectAndReturn( ( void * ) xFakeMutexHolder, pdTRUE );
     }
 
@@ -515,7 +515,7 @@ void test_macro_xSemaphoreTake_blocking_mutex_inherit_timeout_high_prio_waiting(
 
     for( int i = 0; i < TICKS_TO_WAIT; i++ )
     {
-        /* Return pdTRUE to signify that priority inheritence occurred */
+        /* Return pdTRUE to signify that priority inheritance occurred */
         xTaskPriorityInherit_ExpectAndReturn( xFakeMutexHolder, pdTRUE );
     }
 
@@ -570,7 +570,7 @@ void test_macro_xSemaphoreTake_blocking_mutex_inherit_disinherit( void )
 
     for( int i = 0; i < NUM_CALLS_TO_INTERCEPT + 1; i++ )
     {
-        /* Return pdTRUE to signify that priority inheritence occurred */
+        /* Return pdTRUE to signify that priority inheritance occurred */
         xTaskPriorityInherit_ExpectAndReturn( xFakeMutexHolder, pdTRUE );
     }
 

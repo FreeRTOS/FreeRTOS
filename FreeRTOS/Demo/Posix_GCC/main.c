@@ -65,17 +65,20 @@
 /* Local includes. */
 #include "console.h"
 
+#define    BLINKY_DEMO    0
+#define    FULL_DEMO      1
+
 #ifdef BUILD_DIR
-    #define BUILD                   BUILD_DIR
+    #define BUILD         BUILD_DIR
 #else
-    #define BUILD                   "./"
+    #define BUILD         "./"
 #endif
+
+/* Demo type is passed as an argument */
 #ifdef USER_DEMO
-#define     mainSELECTED_APPLICATION USER_DEMO
-#else
-    #define    BLINKY_DEMO       0
-    #define    FULL_DEMO         1
-    #define    mainSELECTED_APPLICATION FULL_DEMO
+    #define     mainSELECTED_APPLICATION    USER_DEMO
+#else /* Default Setting */
+    #define    mainSELECTED_APPLICATION     BLINKY_DEMO
 #endif
 
 /* This demo uses heap_3.c (the libc provided malloc() and free()). */
@@ -237,10 +240,10 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask,
 void vApplicationTickHook( void )
 {
     /* This function will be called by each tick interrupt if
-     * configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
-     * added here, but the tick hook is called from an interrupt context, so
-     * code must not attempt to block, and only the interrupt safe FreeRTOS API
-     * functions can be used (those that end in FromISR()). */
+    * configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
+    * added here, but the tick hook is called from an interrupt context, so
+    * code must not attempt to block, and only the interrupt safe FreeRTOS API
+    * functions can be used (those that end in FromISR()). */
 
     #if ( mainSELECTED_APPLICATION == FULL_DEMO )
         {
@@ -413,10 +416,13 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
 void handle_sigint( int signal )
 {
     int xReturn;
+
     xReturn = chdir( BUILD ); /* changing dir to place gmon.out inside build */
+
     if( xReturn == -1 )
     {
-        printf( "chdir into %s error is %d\n", BUILD,  errno );
+        printf( "chdir into %s error is %d\n", BUILD, errno );
     }
+
     exit( 2 );
 }

@@ -75,11 +75,22 @@ endif
 
 ifdef SANITIZE_ADDRESS
   CFLAGS              +=   -fsanitize=address -fsanitize=alignment
-  LDFLAGS            +=   -fsanitize=address -fsanitize=alignment
+  LDFLAGS             +=   -fsanitize=address -fsanitize=alignment
 endif
 
 ifdef SANITIZE_LEAK
-  LDFLAGS            +=   -fsanitize=leak
+  LDFLAGS             +=   -fsanitize=leak
+endif
+
+ $(info 'checking demo type')
+ifeq ($(USER_DEMO),BLINKY_DEMO)
+ $(info 'blinky demo selected')
+  CPPFLAGS            +=   -DUSER_DEMO=0
+endif
+
+ifeq ($(USER_DEMO),FULL_DEMO)
+ $(info 'full demo selected')
+  CPPFLAGS            +=   -DUSER_DEMO=1
 endif
 
 
@@ -97,7 +108,7 @@ ${BUILD_DIR}/${BIN} : ${OBJ_FILES}
 
 ${BUILD_DIR}/%.o : %.c Makefile
 	-mkdir -p $(@D)
-	$(CC) $(CFLAGS) ${INCLUDE_DIRS} -DUSER_DEMO= -MMD -c $< -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -c $< -o $@
 
 .PHONY: clean
 

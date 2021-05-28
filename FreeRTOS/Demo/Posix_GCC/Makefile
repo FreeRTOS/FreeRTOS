@@ -97,7 +97,7 @@ ${BUILD_DIR}/${BIN} : ${OBJ_FILES}
 
 ${BUILD_DIR}/%.o : %.c Makefile
 	-mkdir -p $(@D)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -c $< -o $@
+	$(CC) $(CFLAGS) ${INCLUDE_DIRS} -DUSER_DEMO= -MMD -c $< -o $@
 
 .PHONY: clean
 
@@ -109,8 +109,4 @@ GPROF_OPTIONS := --directory-path=$(INCLUDE_DIRS)
 profile:
 	gprof -a -p --all-lines $(GPROF_OPTIONS) $(BUILD_DIR)/$(BIN) $(BUILD_DIR)/gmon.out > $(BUILD_DIR)/prof_flat.txt
 	gprof -a --graph $(GPROF_OPTIONS) $(BUILD_DIR)/$(BIN) $(BUILD_DIR)/gmon.out > $(BUILD_DIR)/prof_call_graph.txt
-
-
-
-
 

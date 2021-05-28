@@ -65,15 +65,17 @@
 /* Local includes. */
 #include "console.h"
 
-#define    BLINKY_DEMO              0
-#define    FULL_DEMO                1
-
-#define mainSELECTED_APPLICATION    BLINKY_DEMO
-
 #ifdef BUILD_DIR
     #define BUILD                   BUILD_DIR
 #else
     #define BUILD                   "./"
+#endif
+#ifdef USER_DEMO
+#define     mainSELECTED_APPLICATION USER_DEMO
+#else
+    #define    BLINKY_DEMO       0
+    #define    FULL_DEMO         1
+    #define    mainSELECTED_APPLICATION FULL_DEMO
 #endif
 
 /* This demo uses heap_3.c (the libc provided malloc() and free()). */
@@ -131,8 +133,6 @@ StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 static BaseType_t xTraceRunning = pdTRUE;
 
 /*-----------------------------------------------------------*/
-
-
 
 int main( void )
 {
@@ -418,6 +418,5 @@ void handle_sigint( int signal )
     {
         printf( "chdir into %s error is %d\n", BUILD,  errno );
     }
-
-    exit( 1 );
+    exit( 2 );
 }

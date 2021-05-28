@@ -54,7 +54,16 @@ static size_t uxLastMallocSize = 0;
 static void * pLastFreedAddress = 0;
 static uint32_t ulNumMallocCalls = 0;
 
-/* ==========================  CALLBACK FUNCTIONS =========================== */
+/* ===========================  HELPER FUNCTIONS  =========================== */
+void setxMaskAssertAndAbort( bool mask )
+{
+    xMaskAssertAndAbort  = mask;
+}
+bool getxMaskAssertAndAbort( )
+{
+    return xMaskAssertAndAbort;
+}
+/* ==========================  CALLBACK FUNCTIONS  ========================== */
 
 void * pvPortMalloc( size_t xSize )
 {

@@ -308,11 +308,12 @@ static void prvCheckTask( void * pvParameters )
             pcStatusMessage = "Error:  Notification";
             xErrorCount++;
         }
+
         /* else if( xAreTaskNotificationArrayTasksStillRunning() != pdTRUE )
-         {
-         pcStatusMessage = "Error:  NotificationArray";
-            xErrorCount++;
-        } */
+         * {
+         * pcStatusMessage = "Error:  NotificationArray";
+         *  xErrorCount++;
+         * } */
         else if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
         {
             pcStatusMessage = "Error: IntSem";
@@ -415,7 +416,7 @@ static void prvCheckTask( void * pvParameters )
                 pcStatusMessage = "Error: Queue set polling";
                 xErrorCount++;
             }
-        #endif
+        #endif /* if ( configUSE_QUEUE_SETS == 1 ) */
 
         #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
             else if( xAreStaticAllocationTasksStillRunning() != pdPASS )
@@ -922,7 +923,7 @@ static void prvDemonstrateChangingTimerReloadMode( void * pvParameters )
 
     xTimer = xTimerCreate( pcTimerName,
                            x100ms,
-                           pdFALSE,  /* Created as a one-shot timer. */
+                           pdFALSE, /* Created as a one-shot timer. */
                            0,
                            prvReloadModeTestTimerCallback );
     configASSERT( xTimer );

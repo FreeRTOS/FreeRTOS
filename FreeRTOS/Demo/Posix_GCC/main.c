@@ -57,6 +57,7 @@
 #include <stdarg.h>
 #include <signal.h>
 #include <errno.h>
+#include <sys/select.h>
 
 /* FreeRTOS kernel includes. */
 #include "FreeRTOS.h"
@@ -133,7 +134,11 @@ static void handle_sigint( int signal );
 StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
 /* Notes if the trace is running or not. */
-static BaseType_t xTraceRunning = pdTRUE;
+#if ( projCOVERAGE_TEST == 1 )
+    static BaseType_t xTraceRunning = pdFALSE;
+#else
+    static BaseType_t xTraceRunning = pdTRUE;
+#endif
 
 /*-----------------------------------------------------------*/
 
@@ -152,10 +157,13 @@ int main( void )
             /* Start the trace recording - the recording is written to a file if
              * configASSERT() is called. */
             printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
-            printf( "\r\nThe trace will be dumped to disk if Enter is hit.\r\n" );
+
+            #if ( TRACE_ON_ENTER == 1 )
+                printf( "\r\nThe trace will be dumped to disk if Enter is hit.\r\n" );
+            #endif
             uiTraceStart();
         }
-    #endif
+    #endif /* if ( projCOVERAGE_TEST != 1 ) */
 
     console_init();
     #if ( mainSELECTED_APPLICATION == BLINKY_DEMO )
@@ -254,25 +262,28 @@ void vApplicationTickHook( void )
 
 void traceOnEnter()
 {
-    int xReturn;
-    struct timeval tv = { 0L, 0L };
-    fd_set fds;
+    #if ( TRACE_ON_ENTER == 1 )
+        int xReturn;
+        struct timeval tv = { 0L, 0L };
+        fd_set fds;
 
-    FD_ZERO( &fds );
-    FD_SET( 0, &fds );
-    xReturn = select( 1, &fds, NULL, NULL, &tv );
+        FD_ZERO( &fds );
+        FD_SET( STDIN_FILENO, &fds );
 
-    if( xReturn > 0 )
-    {
-        if( xTraceRunning == pdTRUE )
+        xReturn = select( STDIN_FILENO + 1, &fds, NULL, NULL, &tv );
+
+        if( xReturn > 0 )
         {
-            prvSaveTraceFile();
-        }
+            if( xTraceRunning == pdTRUE )
+            {
+                prvSaveTraceFile();
+            }
 
-        /* clear the buffer */
-        char buffer[ 200 ];
-        read( 1, &buffer, 200 );
-    }
+            /* clear the buffer */
+            char buffer[ 0 ];
+            read( STDIN_FILENO, &buffer, 1 );
+        }
+    #endif /* if ( TRACE_ON_ENTER == 1 ) */
 }
 
 void vLoggingPrintf( const char * pcFormat,

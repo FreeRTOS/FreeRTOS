@@ -82,14 +82,11 @@ ifdef SANITIZE_LEAK
   LDFLAGS             +=   -fsanitize=leak
 endif
 
- $(info 'checking demo type')
 ifeq ($(USER_DEMO),BLINKY_DEMO)
- $(info 'blinky demo selected')
   CPPFLAGS            +=   -DUSER_DEMO=0
 endif
 
 ifeq ($(USER_DEMO),FULL_DEMO)
- $(info 'full demo selected')
   CPPFLAGS            +=   -DUSER_DEMO=1
 endif
 

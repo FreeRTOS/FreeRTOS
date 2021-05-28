@@ -46,8 +46,8 @@
 #ifndef TRC_SNAPSHOT_CONFIG_H
 #define TRC_SNAPSHOT_CONFIG_H
 
-#define TRC_SNAPSHOT_MODE_RING_BUFFER		(0x01)
-#define TRC_SNAPSHOT_MODE_STOP_WHEN_FULL	(0x02)
+#define TRC_SNAPSHOT_MODE_RING_BUFFER       ( 0x01 )
+#define TRC_SNAPSHOT_MODE_STOP_WHEN_FULL    ( 0x02 )
 
 /******************************************************************************
  * TRC_CFG_SNAPSHOT_MODE
@@ -67,7 +67,7 @@
  * recording is stopped when the buffer becomes full. This is useful for
  * recording events following a specific state, e.g., the startup sequence.
  *****************************************************************************/
-#define TRC_CFG_SNAPSHOT_MODE TRC_SNAPSHOT_MODE_RING_BUFFER
+#define TRC_CFG_SNAPSHOT_MODE               TRC_SNAPSHOT_MODE_RING_BUFFER
 
 /*******************************************************************************
  * TRC_CFG_EVENT_BUFFER_SIZE
@@ -82,7 +82,7 @@
  * Default value is 1000, which means that 4000 bytes is allocated for the
  * event buffer.
  ******************************************************************************/
-#define TRC_CFG_EVENT_BUFFER_SIZE 32000
+#define TRC_CFG_EVENT_BUFFER_SIZE           32000
 
 /*******************************************************************************
  * TRC_CFG_NTASK, TRC_CFG_NISR, TRC_CFG_NQUEUE, TRC_CFG_NSEMAPHORE...
@@ -106,15 +106,15 @@
  * check the actual usage by selecting View menu -> Trace Details ->
  * Resource Usage -> Object Table.
  ******************************************************************************/
-#define TRC_CFG_NTASK			150
-#define TRC_CFG_NISR			90
-#define TRC_CFG_NQUEUE			90
-#define TRC_CFG_NSEMAPHORE		90
-#define TRC_CFG_NMUTEX			90
-#define TRC_CFG_NTIMER			250
-#define TRC_CFG_NEVENTGROUP		90
-#define TRC_CFG_NSTREAMBUFFER	100
-#define TRC_CFG_NMESSAGEBUFFER	100
+#define TRC_CFG_NTASK                       150
+#define TRC_CFG_NISR                        90
+#define TRC_CFG_NQUEUE                      90
+#define TRC_CFG_NSEMAPHORE                  90
+#define TRC_CFG_NMUTEX                      90
+#define TRC_CFG_NTIMER                      250
+#define TRC_CFG_NEVENTGROUP                 90
+#define TRC_CFG_NSTREAMBUFFER               100
+#define TRC_CFG_NMESSAGEBUFFER              100
 
 
 /******************************************************************************
@@ -133,7 +133,7 @@
  *
  * Default value is 0.
  *****************************************************************************/
-#define TRC_CFG_INCLUDE_FLOAT_SUPPORT 0
+#define TRC_CFG_INCLUDE_FLOAT_SUPPORT    0
 
 /*******************************************************************************
  * TRC_CFG_SYMBOL_TABLE_SIZE
@@ -149,10 +149,10 @@
  *
  * Default value is 800.
  ******************************************************************************/
-#define TRC_CFG_SYMBOL_TABLE_SIZE 32000
+#define TRC_CFG_SYMBOL_TABLE_SIZE        32000
 
-#if (TRC_CFG_SYMBOL_TABLE_SIZE == 0)
-#error "TRC_CFG_SYMBOL_TABLE_SIZE may not be zero!"
+#if ( TRC_CFG_SYMBOL_TABLE_SIZE == 0 )
+    #error "TRC_CFG_SYMBOL_TABLE_SIZE may not be zero!"
 #endif
 
 /******************************************************************************
@@ -162,15 +162,15 @@
  * kernel objects, such as tasks and queues. If longer names are used, they will
  * be truncated when stored in the recorder.
  *****************************************************************************/
-#define TRC_CFG_NAME_LEN_TASK			15
-#define TRC_CFG_NAME_LEN_ISR			15
-#define TRC_CFG_NAME_LEN_QUEUE			15
-#define TRC_CFG_NAME_LEN_SEMAPHORE		15
-#define TRC_CFG_NAME_LEN_MUTEX			15
-#define TRC_CFG_NAME_LEN_TIMER			15
-#define TRC_CFG_NAME_LEN_EVENTGROUP 	15
-#define TRC_CFG_NAME_LEN_STREAMBUFFER 	15
-#define TRC_CFG_NAME_LEN_MESSAGEBUFFER 	15
+#define TRC_CFG_NAME_LEN_TASK             15
+#define TRC_CFG_NAME_LEN_ISR              15
+#define TRC_CFG_NAME_LEN_QUEUE            15
+#define TRC_CFG_NAME_LEN_SEMAPHORE        15
+#define TRC_CFG_NAME_LEN_MUTEX            15
+#define TRC_CFG_NAME_LEN_TIMER            15
+#define TRC_CFG_NAME_LEN_EVENTGROUP       15
+#define TRC_CFG_NAME_LEN_STREAMBUFFER     15
+#define TRC_CFG_NAME_LEN_MESSAGEBUFFER    15
 
 /******************************************************************************
  *** ADVANCED SETTINGS ********************************************************
@@ -190,7 +190,7 @@
 *
 * Default value is 0.
 ******************************************************************************/
-#define TRC_CFG_HEAP_SIZE_BELOW_16M 0
+#define TRC_CFG_HEAP_SIZE_BELOW_16M                0
 
 /******************************************************************************
  * TRC_CFG_USE_IMPLICIT_IFE_RULES
@@ -222,7 +222,7 @@
  * For details, see trcSnapshotKernelPort.h and look for references to the
  * macro trcKERNEL_HOOKS_SET_TASK_INSTANCE_FINISHED.
  *****************************************************************************/
-#define TRC_CFG_USE_IMPLICIT_IFE_RULES 1
+#define TRC_CFG_USE_IMPLICIT_IFE_RULES             1
 
 /******************************************************************************
  * TRC_CFG_USE_16BIT_OBJECT_HANDLES
@@ -246,7 +246,7 @@
  * the event buffer whenever the object is referenced. Moreover, some internal
  * tables in the recorder gets slightly larger when using 16-bit handles.
  *****************************************************************************/
-#define TRC_CFG_USE_16BIT_OBJECT_HANDLES 0
+#define TRC_CFG_USE_16BIT_OBJECT_HANDLES           0
 
 /******************************************************************************
  * TRC_CFG_USE_TRACE_ASSERT
@@ -264,7 +264,7 @@
  * parameters. Can be switched off to reduce the footprint of the tracing, but
  * we recommend to have it enabled initially.
  *****************************************************************************/
-#define TRC_CFG_USE_TRACE_ASSERT 1
+#define TRC_CFG_USE_TRACE_ASSERT                   1
 
 /*******************************************************************************
  * TRC_CFG_USE_SEPARATE_USER_EVENT_BUFFER
@@ -320,9 +320,9 @@
  *
  *  // Finds the existing UB channel
  *  vTracePrintF(chn2, "%Z: %d", value2);
-
+ *
  ******************************************************************************/
-#define TRC_CFG_USE_SEPARATE_USER_EVENT_BUFFER 0
+#define TRC_CFG_USE_SEPARATE_USER_EVENT_BUFFER     0
 
 /*******************************************************************************
  * TRC_CFG_SEPARATE_USER_EVENT_BUFFER_SIZE
@@ -334,7 +334,7 @@
  *
  * Only applicable if TRC_CFG_USE_SEPARATE_USER_EVENT_BUFFER is 1.
  ******************************************************************************/
-#define TRC_CFG_SEPARATE_USER_EVENT_BUFFER_SIZE 200
+#define TRC_CFG_SEPARATE_USER_EVENT_BUFFER_SIZE    200
 
 /*******************************************************************************
  * TRC_CFG_UB_CHANNELS
@@ -348,7 +348,7 @@
  *
  * Only applicable if TRC_CFG_USE_SEPARATE_USER_EVENT_BUFFER is 1.
  ******************************************************************************/
-#define TRC_CFG_UB_CHANNELS 32
+#define TRC_CFG_UB_CHANNELS                        32
 
 /*******************************************************************************
  * TRC_CFG_ISR_TAILCHAINING_THRESHOLD
@@ -373,6 +373,6 @@
  * Note: This setting has separate definitions in trcSnapshotConfig.h and
  * trcStreamingConfig.h, since it is affected by the recorder mode.
  ******************************************************************************/
-#define TRC_CFG_ISR_TAILCHAINING_THRESHOLD 0
+#define TRC_CFG_ISR_TAILCHAINING_THRESHOLD         0
 
 #endif /*TRC_SNAPSHOT_CONFIG_H*/

@@ -204,6 +204,7 @@ cg
 ch
 chacha
 chachapoly
+chdir
 checklogin
 checknullarg
 checktimer
@@ -777,6 +778,7 @@ gir
 girq
 girqm
 github
+gmon
 gnd
 gnuc
 googleapis
@@ -2158,6 +2160,7 @@ shouldn
 shtml
 sice
 sifive
+sigint
 signalled
 signatureverificationstate
 signatureverificationstateptr

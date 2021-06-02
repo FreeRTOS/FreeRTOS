@@ -2939,6 +2939,7 @@ xeb
 xechoserveraddress
 xemaclite
 xend
+xerrorcount
 xerrordetected
 xerrorline
 xerrorstatus

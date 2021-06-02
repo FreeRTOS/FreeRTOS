@@ -75,11 +75,19 @@ endif
 
 ifdef SANITIZE_ADDRESS
   CFLAGS              +=   -fsanitize=address -fsanitize=alignment
-  LDFLAGS            +=   -fsanitize=address -fsanitize=alignment
+  LDFLAGS             +=   -fsanitize=address -fsanitize=alignment
 endif
 
 ifdef SANITIZE_LEAK
-  LDFLAGS            +=   -fsanitize=leak
+  LDFLAGS             +=   -fsanitize=leak
+endif
+
+ifeq ($(USER_DEMO),BLINKY_DEMO)
+  CPPFLAGS            +=   -DUSER_DEMO=0
+endif
+
+ifeq ($(USER_DEMO),FULL_DEMO)
+  CPPFLAGS            +=   -DUSER_DEMO=1
 endif
 
 
@@ -109,8 +117,4 @@ GPROF_OPTIONS := --directory-path=$(INCLUDE_DIRS)
 profile:
 	gprof -a -p --all-lines $(GPROF_OPTIONS) $(BUILD_DIR)/$(BIN) $(BUILD_DIR)/gmon.out > $(BUILD_DIR)/prof_flat.txt
 	gprof -a --graph $(GPROF_OPTIONS) $(BUILD_DIR)/$(BIN) $(BUILD_DIR)/gmon.out > $(BUILD_DIR)/prof_call_graph.txt
-
-
-
-
 

@@ -10,5 +10,5 @@ PyJWT==1.7.1
 PyYAML==5.4
 requests
 smmap==3.0.4
-urllib3==1.26.4
+urllib3==1.26.5
 wrapt==1.12.1

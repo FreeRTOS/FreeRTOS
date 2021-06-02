@@ -99,7 +99,7 @@ void test_macro_xQueueCreateStatic_null_QueueStorage_fail( void )
     QueueHandle_t xQueue = xQueueCreateStatic( MAX_QUEUE_ITEMS, sizeof( uint32_t ), NULL, &queueBuffer );
 
     /* Validate the queue handle */
-    TEST_ASSERT_EQUAL( &queueBuffer, xQueue );
+    TEST_ASSERT_EQUAL( NULL, xQueue );
 
     TEST_ASSERT_EQUAL( true, fakeAssertGetFlagAndClear() );
 }
@@ -121,8 +121,8 @@ void test_macro_xQueueCreateStatic_null_queueBuffer_fail( void )
     /* Validate that the queue handle is NULL */
     TEST_ASSERT_EQUAL( NULL, xQueue );
 
-    /* Check that configASSERT was called */
-    TEST_ASSERT_EQUAL( true, fakeAssertGetFlagAndClear() );
+    /* Check that configASSERT was called twice */
+    fakeAssertVerifyNumAssertsAndClear( 2 );
 }
 
 /**
@@ -170,20 +170,12 @@ void test_macro_xQueueCreateStatic_validQueueStorage_zeroItem_zeroLength( void )
     TEST_ASSERT_EQUAL( true, fakeAssertGetFlagAndClear() );
 
     /* validate returned queue handle */
-    TEST_ASSERT_NOT_EQUAL( NULL, xQueue );
-
-    /* Veify that new queue is empty */
-    TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
-
-    /* Valdiate that the queue has 0 space remaining */
-    TEST_ASSERT_EQUAL( 0, uxQueueSpacesAvailable( xQueue ) );
-
-    vQueueDelete( xQueue );
+    TEST_ASSERT_EQUAL( NULL, xQueue );
 }
 
 /**
  * @brief Test xQueueCreateStatic with a valid buffer, uxQueueLength=1, uxItemSize=0
- * @details This configuration is equivalent to a binary semaphore.
+ * @details This configuration is invalid and causes a configASSERT.
  * @coverage xQueueGenericCreateStatic
  */
 void test_macro_xQueueCreateStatic_validQueueStorage_oneItem_zeroLength( void )
@@ -191,8 +183,8 @@ void test_macro_xQueueCreateStatic_validQueueStorage_oneItem_zeroLength( void )
     StaticQueue_t queueBuffer;
     uint32_t queueData;
 
-    /* Expect that xQueueCreateStatic will assert because data storage is not
-     *   necessary for a zero itemLength queue */
+    /* Expect that xQueueCreateStatic will assert because data storage is
+     *   prohibited for a zero itemLength queue */
     fakeAssertExpectFail();
     QueueHandle_t xQueue = xQueueCreateStatic( 1, 0, ( void * ) &queueData, &queueBuffer );
 
@@ -200,21 +192,7 @@ void test_macro_xQueueCreateStatic_validQueueStorage_oneItem_zeroLength( void )
     TEST_ASSERT_EQUAL( true, fakeAssertGetFlagAndClear() );
 
     /* validate returned queue handle */
-    TEST_ASSERT_NOT_EQUAL( NULL, xQueue );
-
-    /* Veify that new queue is empty */
-    TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
-
-    /* Valdiate that the queue has 1 space remaining */
-    TEST_ASSERT_EQUAL( 1, uxQueueSpacesAvailable( xQueue ) );
-
-    /* Send a test value */
-    TEST_ASSERT_EQUAL( pdTRUE, xQueueSend( xQueue, NULL, 0 ) );
-
-    /* Test receive */
-    TEST_ASSERT_EQUAL( pdTRUE, xQueueReceive( xQueue, NULL, 0 ) );
-
-    vQueueDelete( xQueue );
+    TEST_ASSERT_EQUAL( NULL, xQueue );
 }
 
 /**

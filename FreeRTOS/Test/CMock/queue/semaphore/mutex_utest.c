@@ -114,8 +114,8 @@ void test_macro_xSemaphoreCreateMutexStatic_nullptr( void )
 
     xSemaphore = xSemaphoreCreateMutexStatic( NULL );
 
-    /* verify that configASSERT was called */
-    TEST_ASSERT_EQUAL( true, fakeAssertGetFlagAndClear() );
+    /* Check that configASSERT was called twice */
+    fakeAssertVerifyNumAssertsAndClear( 2 );
 
     TEST_ASSERT_EQUAL( NULL, xSemaphore );
     TEST_ASSERT_EQUAL( 0, getLastMallocSize() );

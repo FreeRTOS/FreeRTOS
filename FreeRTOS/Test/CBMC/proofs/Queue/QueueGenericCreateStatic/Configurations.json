@@ -37,7 +37,6 @@
   "CBMCFLAGS": [
     "--unwind 1",
     "--signed-overflow-check",
-    "--pointer-overflow-check",
     "--unsigned-overflow-check"
   ],
   "OBJS": [
@@ -48,8 +47,8 @@
   "DEF": [
     {
       "QeueuGenericCreateStatic_DynamicAllocation": [
-	"CBMC_OBJECT_BITS={CBMC_OBJECT_BITS}",
-	"CBMC_OBJECT_MAX_SIZE={CBMC_OBJECT_MAX_SIZE}",
+        "CBMC_OBJECT_BITS={CBMC_OBJECT_BITS}",
+        "CBMC_OBJECT_MAX_SIZE={CBMC_OBJECT_MAX_SIZE}",
         "configUSE_TRACE_FACILITY=0",
         "configGENERATE_RUN_TIME_STATS=0",
         "configSUPPORT_STATIC_ALLOCATION=1",
@@ -58,8 +57,8 @@
     },
     {
       "QeueuGenericCreateStatic_NoDynamicAllocation": [
-	"CBMC_OBJECT_BITS={CBMC_OBJECT_BITS}",
-	"CBMC_OBJECT_MAX_SIZE={CBMC_OBJECT_MAX_SIZE}",
+        "CBMC_OBJECT_BITS={CBMC_OBJECT_BITS}",
+        "CBMC_OBJECT_MAX_SIZE={CBMC_OBJECT_MAX_SIZE}",
         "configUSE_TRACE_FACILITY=0",
         "configGENERATE_RUN_TIME_STATS=0",
         "configSUPPORT_STATIC_ALLOCATION=1",

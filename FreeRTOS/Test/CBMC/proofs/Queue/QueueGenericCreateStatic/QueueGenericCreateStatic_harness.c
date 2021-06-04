@@ -31,32 +31,22 @@
 #include "queue_datastructure.h"
 #include "cbmc.h"
 
-void harness(){
+void harness()
+{
     UBaseType_t uxQueueLength;
     UBaseType_t uxItemSize;
-
-    size_t uxQueueStorageSize;
-    uint8_t *pucQueueStorage = (uint8_t *) pvPortMalloc(uxQueueStorageSize);
-
-    StaticQueue_t *pxStaticQueue =
-      (StaticQueue_t *) pvPortMalloc(sizeof(StaticQueue_t));
-
     uint8_t ucQueueType;
+    size_t storageSize;
 
-    __CPROVER_assume(uxQueueStorageSize < (UINT32_MAX>>8));
+    /* Allow CBMC to run in a reasonable amount of time. */
+    __CPROVER_assume( ( uxQueueLength == QUEUE_LENGTH ) || ( uxItemSize == QUEUE_ITEM_SIZE ) );
 
-    // QueueGenericReset does not check for multiplication overflow
-    __CPROVER_assume(uxItemSize < uxQueueStorageSize/uxQueueLength);
+    /* Prevent overflow in this harness. */
+    __CPROVER_assume( ( uxQueueLength > 0 ) && ( ( storageSize / uxQueueLength ) == uxItemSize ) );
 
-    // QueueGenericCreateStatic asserts positive queue length
-    __CPROVER_assume(uxQueueLength > ( UBaseType_t ) 0);
+    uint8_t * pucQueueStorage = ( uint8_t * ) pvPortMalloc( storageSize );
 
-    // QueueGenericCreateStatic asserts the following equivalence
-    __CPROVER_assume( ( pucQueueStorage && uxItemSize ) ||
-                      ( !pucQueueStorage && !uxItemSize ) );
-
-    // QueueGenericCreateStatic asserts nonnull pointer
-    __CPROVER_assume(pxStaticQueue);
+    StaticQueue_t * pxStaticQueue = ( StaticQueue_t * ) pvPortMalloc( sizeof( StaticQueue_t ) );
 
     xQueueGenericCreateStatic( uxQueueLength, uxItemSize, pucQueueStorage, pxStaticQueue, ucQueueType );
 }

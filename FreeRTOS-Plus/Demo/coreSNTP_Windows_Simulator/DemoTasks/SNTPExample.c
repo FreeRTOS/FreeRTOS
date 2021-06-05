@@ -177,23 +177,31 @@ static void calculateCurrentTime( UTCTime_t * pBaseTime,
                                   uint32_t slewRate,
                                   UTCTime_t * pCurrentTime )
 {
-    uint32_t ulMsecs = pBaseTime->msecs;
-    uint32_t slewCorrectionsMs = ( slewRate * ( ( xTaskGetTickCount() - lastSyncTickCount ) * MILLISECONDS_PER_TICK ) / 1000 );
+    uint64_t totalOffsetMs = 0;
+    TickType_t totalNoOfTicks = xTaskGetTickCount() - lastSyncTickCount;
 
-    /* Calculate current time based on the slew rate and the time elapsed since
-     * the previous time synchronization. */
-    ulMsecs += slewCorrectionsMs + ( ( xTaskGetTickCount() - lastSyncTickCount ) * MILLISECONDS_PER_TICK );
+    /* If slew rate is set, then calculate the offset only based on the slew rate. */
+    if (slewRate > 0)
+    {
+        totalOffsetMs = (uint64_t) slewRate * (uint64_t) totalNoOfTicks * MILLISECONDS_PER_TICK;
+    }
+    /* Without a slew correction rate, calculate the time based solely on tick counts. */
+    else
+    {
+        totalOffsetMs = totalNoOfTicks * MILLISECONDS_PER_TICK;
+    }
 
     /* Set the current UTC time in the output parameter. */
-    if( ulMsecs >= 1000 )
+    if(totalOffsetMs >= 1000 )
     {
-        pCurrentTime->secs = pBaseTime->secs + ulMsecs / 1000;
-        pCurrentTime->msecs = ulMsecs % 1000;
+        uint32_t totalOffsetSec = totalOffsetMs / 1000;
+        pCurrentTime->secs = pBaseTime->secs + totalOffsetSec;
+        pCurrentTime->msecs = totalOffsetMs % 1000;
     }
     else
     {
         pCurrentTime->secs = pBaseTime->secs;
-        pCurrentTime->msecs = ulMsecs;
+        pCurrentTime->msecs = totalOffsetMs;
     }
 }
 
@@ -213,6 +221,10 @@ static bool ResolveDns( const SntpServerInfo_t * pServerAddr,
         status = true;
 
         *pIpV4Addr = resolvedAddr;
+
+        uint8_t pcIpAddr[ 16 ];
+        FreeRTOS_inet_ntoa( resolvedAddr, pcIpAddr );
+        LogInfo( ( "Resolved time server as %s", pcIpAddr ) );
     }
 
     return status;
@@ -234,10 +246,7 @@ int32_t UdpTransport_Send( NetworkContext_t * pNetworkContext,
     int32_t iReturned;
 
     /* TODO - Is this required? */
-    xDestinationAddress.sin_addr = FreeRTOS_inet_addr_quick( serverAddr >> 24,
-                                                             ( serverAddr >> 16 ) & 0x000000FF,
-                                                             ( serverAddr >> 8 ) & 0x000000FF,
-                                                             serverAddr && 0x000000FF );
+    xDestinationAddress.sin_addr = serverAddr;
     xDestinationAddress.sin_port = FreeRTOS_htons( serverPort );
 
     /* Send the buffer with ulFlags set to 0, so the FREERTOS_ZERO_COPY bit
@@ -278,37 +287,32 @@ static int32_t UdpTransport_Recv( NetworkContext_t * pNetworkContext,
      * task for the duration of the read block time and therefore negatively
      * impact performance.  So if bytesToRecv is 1 then don't call recv unless
      * it is known that bytes are already available. */
-    if( bytesToRecv == 1 )
-    {
-        iReturned = ( int32_t ) FreeRTOS_recvcount( pNetworkContext->xSocket );
-    }
+    /*TODO - Add logic to for non-blocking read for single byte read request by changing */
+    /* socket timeout config temporarily. */
 
-    if( iReturned > 0 )
-    {
-        /* Receive into the buffer with ulFlags set to 0, so the FREERTOS_ZERO_COPY bit
-         * is clear. */
-        iReturned = FreeRTOS_recvfrom( /* The socket data is being received on. */
-            pNetworkContext->xSocket,
+    /* Receive into the buffer with ulFlags set to 0, so the FREERTOS_ZERO_COPY bit
+     * is clear. */
+    iReturned = FreeRTOS_recvfrom( /* The socket data is being received on. */
+        pNetworkContext->xSocket,
 
-            /* The buffer into which received data will be
-             * copied. */
-            pBuffer,
+        /* The buffer into which received data will be
+         * copied. */
+        pBuffer,
 
-            /* The length of the buffer into which data will be
-             * copied. */
-            bytesToRecv,
-            /* ulFlags with the FREERTOS_ZERO_COPY bit clear. */
-            0,
-            /* Will get set to the source of the received data. */
-            &xSourceAddress,
-            /* Not used but should be set as shown. */
-            &xAddressLength
-            );
-    }
+        /* The length of the buffer into which data will be
+         * copied. */
+        bytesToRecv,
+        /* ulFlags with the FREERTOS_ZERO_COPY bit clear. */
+        0,
+        /* Will get set to the source of the received data. */
+        &xSourceAddress,
+        /* Not used but should be set as shown. */
+        &xAddressLength
+        );
 
     /* If data is received from the network, discard the data if  received from a different source than
      * the server. */
-    if( ( iReturned > 0 ) && ( ( FreeRTOS_ntohl( xSourceAddress.sin_addr ) != serverAddr ) ||
+    if( ( iReturned > 0 ) && ( ( xSourceAddress.sin_addr != serverAddr ) ||
                                ( FreeRTOS_ntohs( xSourceAddress.sin_port ) != serverPort ) ) )
     {
         iReturned = 0;
@@ -320,6 +324,13 @@ static int32_t UdpTransport_Recv( NetworkContext_t * pNetworkContext,
         /* Log about reception of packet from unexpected sender. */
         LogWarn( ( "Received UDP packet from unexpected source: Addr=%s Port=%u",
                    stringAddr, FreeRTOS_ntohs( xSourceAddress.sin_port ) ) );
+    }
+
+    /* Translate the return code of timeout to the UDP transport interface expected
+     * code to indicate read retry. */
+    else if( iReturned == -pdFREERTOS_ERRNO_EWOULDBLOCK )
+    {
+        iReturned = 0;
     }
 
     return iReturned;
@@ -362,8 +373,9 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
     {
         /* Immediately correct the base time of the system clock. */
         baseTime.secs = pServerTime->seconds;
-        baseTime.msecs = ( pServerTime->fractions / 1000 * SNTP_FRACTION_VALUE_PER_MICROSECOND );
+        baseTime.msecs = ( pServerTime->fractions / (1000 * SNTP_FRACTION_VALUE_PER_MICROSECOND ));
 
+        /* Reset slew rate to zero as the time has been immediately corrected to server time. */
         slewRate = 0;
 
         lastSyncTickCount = xTaskGetTickCount();
@@ -378,7 +390,7 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
         calculateCurrentTime( &baseTime, lastSyncTickCount, slewRate, &baseTime );
 
         /* Calculate the new slew rate as offset in milliseconds per second. */
-        slewRate = clockOffsetSec * 1000 / pollPeriod;
+        slewRate = clockOffsetSec / pollPeriod;
 
         lastSyncTickCount = xTaskGetTickCount();
     }
@@ -458,6 +470,15 @@ static void sntpTask( void * parameters )
     static uint8_t contextBuffer[ democonfigCONTEXT_BUFFER_SIZE ];
     struct freertos_sockaddr xBindAddress;
 
+    /* Populate the list of time servers. */
+    SntpServerInfo_t * pServers = pvPortMalloc( sizeof( SntpServerInfo_t ) * numOfServers );
+
+    for( int8_t index = 0; index < numOfServers; index++ )
+    {
+        pServers[ index ].pServerName = pTimeServers[ index ];
+        pServers[ index ].port = SNTP_DEFAULT_SERVER_PORT;
+    }
+
     /* Calculate Poll interval of SNTP client based on desired accuracy and clock tolerance of the system. */
     status = Sntp_CalculatePollInterval( democonfigSYSTEM_CLOCK_TOLERANCE_PPM,
                                          democonfigDESIRED_CLOCK_ACCURACY_MS,
@@ -480,6 +501,7 @@ static void sntpTask( void * parameters )
 
         if( FreeRTOS_bind( udpContext.xSocket, &xBindAddress, sizeof( xBindAddress ) ) == 0 )
         {
+            LogDebug( ( "UDP socket has been bound to port %lu", SNTP_DEFAULT_SERVER_PORT ) );
             /* The bind was successful. */
         }
     }
@@ -497,7 +519,7 @@ static void sntpTask( void * parameters )
 
     /* Initialize context. */
     Sntp_Init( &clientContext,
-               pTimeServers,
+               pServers,
                numOfServers,
                democonfigSERVER_RESPONSE_TIMEOUT_MS,
                contextBuffer,

@@ -47,7 +47,7 @@
 #endif
 
 #ifndef LIBRARY_LOG_LEVEL
-    #define LIBRARY_LOG_LEVEL    LOG_INFO
+    #define LIBRARY_LOG_LEVEL    LOG_DEBUG
 #endif
 
 /* Prototype for the function used to print to console on Windows simulator
@@ -78,13 +78,13 @@ extern void vLoggingPrintf( const char * pcFormatString,
 
 #define democonfigDESIRED_CLOCK_ACCURACY_MS     ( 1000 )
 
-#define democonfigSYSTEM_CLOCK_TOLERANCE_PPM    ( 32000 )
+#define democonfigSYSTEM_CLOCK_TOLERANCE_PPM    ( 64000 )
 
-#define democonfigLIST_OF_TIME_SERVERS          "pool.ntp.org"
+#define democonfigLIST_OF_TIME_SERVERS          "time.cloudflare.com", "pool.ntp.org"
 
 #define democonfigSYSTEM_START_YEAR             ( 2021 )
 
-#define democonfigSERVER_RESPONSE_TIMEOUT_MS    ( 1000 )
+#define democonfigSERVER_RESPONSE_TIMEOUT_MS    ( 5000 )
 
 #define democonfigCONTEXT_BUFFER_SIZE           ( SNTP_PACKET_BASE_SIZE )
 

@@ -72,7 +72,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * performed, for example FreeRTOS_send() and FreeRTOS_recv().  The timeouts can be
  * set per socket, using setsockopt().  If not set, the times below will be
  * used as defaults. */
-#define ipconfigSOCK_DEFAULT_RECEIVE_BLOCK_TIME    ( 2000 )
+#define ipconfigSOCK_DEFAULT_RECEIVE_BLOCK_TIME    ( 5000 )
 #define ipconfigSOCK_DEFAULT_SEND_BLOCK_TIME       ( 5000 )
 
 /* Include support for LLMNR: Link-local Multicast Name Resolution

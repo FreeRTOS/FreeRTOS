@@ -161,7 +161,8 @@
     <ClCompile Include="..\..\Source\Application-Protocols\coreSNTP\source\core_sntp_client.c" />
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Demo\Common\Logging\windows\Logging_WinSim.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="DemoTasks\SNTPExample.c" />
+    <ClCompile Include="DemoTasks\SNTPClientTask.c" />
+    <ClCompile Include="DemoTasks\SampleAppTask.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\FreeRTOS\Source\include\event_groups.h" />
@@ -195,6 +196,7 @@
     <ClInclude Include="..\..\Source\Application-Protocols\coreSNTP\source\include\core_sntp_serializer.h" />
     <ClInclude Include="..\..\Source\Application-Protocols\coreSNTP\source\include\core_sntp_client.h" />
     <ClInclude Include="demo_config.h" />
+    <ClInclude Include="common_demo_include.h" />
     <ClInclude Include="FreeRTOSConfig.h" />
     <ClInclude Include="FreeRTOSIPConfig.h" />
     <ClInclude Include="core_sntp_config.h" />

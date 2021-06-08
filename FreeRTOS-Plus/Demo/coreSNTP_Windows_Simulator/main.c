@@ -49,7 +49,7 @@
 
 /* Demo Specific configs. */
 #include "demo_config.h"
-
+#include "common_demo_include.h"
 
 /*
  * Prototypes for the demos that can be started from this project.  Note the
@@ -57,7 +57,7 @@
  * indicated by vApplicationIPNetworkEventHook() executing - hence
  * prvStartSimpleSNTPDemo() is called from inside vApplicationIPNetworkEventHook().
  */
-extern void vStartSntpDemo( void );
+static void vStartSntpDemo( void );
 
 /*
  * Just seeds the simple pseudo random number generator.
@@ -137,6 +137,37 @@ int main( void )
         __debugbreak();
     }
 }
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief Entry point of the demo that creates 2 tasks:
+ * 1. One task represents the SNTP client that periodically synchronizes system time with
+ * time from time servers.
+ * 2. The other task represents a sample application time that queries the system time
+ * periodically and prints it in human readable form of the YYYY-MM-DD hh:mm:ss.
+ */
+void vStartSntpDemo( void )
+{
+    initializeSystemClock();
+
+    /* Create the SNTP client task that is reponsible for synchronizing system time with the time servers
+     * periodically. This is created as a high priority task to keep the SNTP client operation uninhindered. */
+    xTaskCreate( sntpTask,                 /* Function that implements the task. */
+                 "SntpClientTask",         /* Text name for the task - only used for debugging. */
+                 democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
+                 NULL,                     /* Task parameter - not used in this case. */
+                 configMAX_PRIORITIES - 1, /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
+                 NULL );
+
+    /* Create the task that represents an application needing wall-clock time. */
+    xTaskCreate( sampleAppTask,            /* Function that implements the task. */
+                 "SampleApp",              /* Text name for the task - only used for debugging. */
+                 democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
+                 NULL,                     /* Task parameter - not used in this case. */
+                 tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
+                 NULL );                   /* Used to pass out a handle to the created task - not used in this case. */
+}
+
 /*-----------------------------------------------------------*/
 
 /* Called by FreeRTOS+TCP when the network connects or disconnects.  Disconnect

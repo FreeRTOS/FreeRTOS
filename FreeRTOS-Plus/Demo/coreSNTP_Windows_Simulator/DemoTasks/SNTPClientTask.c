@@ -25,13 +25,15 @@
  */
 
 /*
- * Demo for showing use of the coreSNTP library for synchronizing system time
- * with the internet and maintaining correct wall-clock time.
+ * This file is part of the demo project that shows use of the coreSNTP library to create
+ * an SNTP client (deamon) task for synchronizing system time with internet time and
+ * maintaining Coordinated Universal Time (UTC) (or wall-clock time) in the system.
  *
- * The example shown below shows how an SNTP client task can be created using
- * the coreSNTP library to periodically synchronize system clock with SNTP/NTP
- * servers, and how an separate task (like an application task) query current
- * time from the system.
+ * This file contains the SNTP client (deamon) task as well as functionality for
+ * maintaining wall-clock or UTC time in RAM. The SNTP client periodically synchronizes
+ * system clock with an SNTP/NTP servers. Any other task running an application in the
+ * system can query the system time. For an example of an application task querying time
+ * from the system, refer to the SampleAppTask.c file in this project.
  *
  * !!! NOTE !!!
  * This SNTP demo does not authenticate the server nor the client.
@@ -48,10 +50,10 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-/* Demo Specific configs. */
-#include "demo_config.h"
+/* Demo include. */
+#include "common_demo_include.h"
 
-/* SNTP library includes. */
+/* SNTP library include. */
 #include "core_sntp_client.h"
 
 /* Synchronization primitive include. */
@@ -106,40 +108,29 @@
 
 /**
  * @brief The constant for storing the number of milliseconds per FreeRTOS tick in the system.
+ * @note This value represents the time duration per tick from the perspective of the
+ * of Windows Simulator based FreeRTOS system that carries lagging clock drift in relation to
+ * internet time or UTC time. Thus, the actual time duration value per tick of the system will be
+ * larger from the perspective of internet time.
  */
 #define MILLISECONDS_PER_TICK               ( 1000 / configTICK_RATE_HZ )
 
 /**
- * @brief Utility macro to convert years to seconds. This utility does account for leap years.
+ * @brief Utility macro to convert years since 1st Jan 1900 00h:00m:00s to seconds.
+ * This utility does account for leap years.
  */
-#define YEARS_TO_SECONDS( years )                      ( ( years * 365 + years / 4 ) * 24 * 3600 )
+#define YEARS_TO_SECONDS( years )                                         \
+    ( ( years <= 100 ) ?                                                  \
+      ( ( years * 365 + years / 4 ) * 24 * 3600 ) :                       \
+/* Handle the special case for year 2000 that doesn't have a leap day. */ \
+      ( ( years * 365 + years / 4 - 1 ) * 24 * 3600 ) )
 
 /**
  * @brief Utility macro to convert the fractions part of SNTP timestamp to milliseconds.
  */
 #define SNTP_FRACTIONS_TO_MILLISECONDS( fractions )    ( fractions / ( 1000 * SNTP_FRACTION_VALUE_PER_MICROSECOND ) )
 
-/**
- * @brief Utility macro to convert milliseconds to the fractions value of an SNTP timestamp.
- * @note The fractions value MUST be less than 1000 as duration of seconds is not represented
- * as fractions part of SNTP timestamp.
- */
-#define MILLISECONDS_TO_SNTP_FRACTIONS( ms )           ( ms * 1000 * SNTP_FRACTION_VALUE_PER_MICROSECOND )
-
 /*-----------------------------------------------------------*/
-
-/**
- * @brief Type representing system time in Coordinated Univeral Time (UTC)
- * zone as time since 1st January 1900 00h:00m:00s.
- *
- * @note This demo uses RAM-based mathematical model to represent UTC time
- * in system.
- */
-typedef struct UTCTime
-{
-    uint32_t secs;
-    uint32_t msecs;
-} UTCTime_t;
 
 /**
  * @brief The definition of the @ref NetworkContext_t structure for the demo.
@@ -162,9 +153,9 @@ struct NetworkContext
  * @note This demo uses the following mathematical model to represent current
  * time in RAM.
  *
- *  Total Time Elapsed since  =   (No. of FreeRTOS ticks since last time
- *  last SNTP synchronization     synchronization * Time Duration between consecutive
- *                                ticks)
+ *  Total Time Elapsed since last SNTP synchronization =
+ *      No. of FreeRTOS ticks since last time synchronization *
+ *      Time Duration between consecutive ticks
  *
  *  Slew Adjustment = (Slew Rate * Total Time Elapsed Since Last Tine Synchronization)
  *
@@ -196,44 +187,21 @@ static StaticSemaphore_t xSemaphoreMutex;
 /*-----------------------------------------------------------*/
 
 /**
- * @brief The demo function for an application to query wall-clock
- * time as Coordinated Universal Time (UTC) from the system.
+ * @brief Calculates the current time from the system clock parameters
+ * of slew rate and tick count since last time synchronization.
  *
- * @note This demo showcases a RAM-based mathematical model for
- * representing current UTC time in the system.
- *
- * @param[out] pTime This will be populated with the current time
- * in the system as total time since 1st January 1900 00h:00m:00s.
+ * @param[in] pBaseTime The base time in the system clock parameters.
+ * @param[in] lastSyncTickCount The tick count at the last time synchronization
+ * with a time server.
+ * @param[in] slewRate The slew rate as seconds of clock adjustment per FreeRTOS
+ * system time second.
+ * @param[out] pCurrentTime This will be populated with the calculated current
+ * UTC time in the system.
  */
-static void systemGetWallClockTime( UTCTime_t * pTime );
-
-/**
- * @brief The task function for a sample application that queries
- * system time periodically.
- */
-static void prvSampleAppTask( void * pvParameters );
-
-/**
- * @brief The task function that represents a daemon SNTP client task
- * that is responsible for periodically synchronizing system time with
- * time servers from the list of configured time servers in
- * democonfigLIST_OF_TIME_SERVERS.
- *
- * @note The usage of the coreSNTP library API is encapsulated within
- * this task. The rest of the FreeRTOS tasks/application does not need
- * to be aware of the SNTP client as they can query time from the
- * @ref systemGetWallClockTime() function.
- */
-static void sntpTask( void * parameters );
-
-/**
- * @brief Utility function to print the system time as both UNIX time (i.e.
- * time since 1st January 1970 00h:00m:00s) and human-readable time (in the
- * YYYY-MM-DD dd:mm:ss format).
- *
- * @param[in] pTime The system time to be printed.
- */
-static void printTime( const UTCTime_t * pTime );
+static void calculateCurrentTime( UTCTime_t * pBaseTime,
+                                  TickType_t lastSyncTickCount,
+                                  uint32_t slewRate,
+                                  UTCTime_t * pCurrentTime );
 
 /**
  * @brief The demo implementation of the @ref SntpResolveDns_t interface to
@@ -334,39 +302,14 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
                                 int32_t clockOffsetSec,
                                 SntpLeapSecondInfo_t leapSecondInfo );
 
+
+
 /*------------------------------------------------------------------------------*/
 
-static void printTime( const UTCTime_t * pTime )
-{
-    struct tm * currTime;
-    time_t time;
-    SntpTimestamp_t ntpTime;
-    SntpStatus_t status;
-    uint32_t unixTimeSecs;
-    uint32_t unixTimeMicroSecs;
-
-    /* Represent system time as NTP time. */
-    ntpTime.seconds = pTime->secs;
-    ntpTime.fractions = MILLISECONDS_TO_SNTP_FRACTIONS( pTime->msecs );
-
-    /* Convert from NTP to UNIX time representation. */
-    status = Sntp_ConvertToUnixTime( &ntpTime, &unixTimeSecs, &unixTimeMicroSecs );
-
-    /* Obtain the broken-down UTC representation of the current system time. */
-    time = unixTimeSecs;
-    currTime = gmtime( &time );
-
-    /* Log the time as both UNIX timestamp and Human Readable time. */
-    LogInfo( ( "Time:\nUNIX=%lusecs %lums\nHuman Readable=%lu-%02lu-%02lu %02luh:%02lum:%02lus",
-               unixTimeSecs, unixTimeMicroSecs / 1000,
-               currTime->tm_year + 1900, currTime->tm_mon + 1, currTime->tm_mday,
-               currTime->tm_hour, currTime->tm_min, currTime->tm_sec ) );
-}
-
-static void calculateCurrentTime( UTCTime_t * pBaseTime,
-                                  TickType_t lastSyncTickCount,
-                                  uint32_t slewRate,
-                                  UTCTime_t * pCurrentTime )
+void calculateCurrentTime( UTCTime_t * pBaseTime,
+                           TickType_t lastSyncTickCount,
+                           uint32_t slewRate,
+                           UTCTime_t * pCurrentTime )
 {
     uint64_t totalOffsetMs = 0;
     TickType_t totalNoOfTicks = xTaskGetTickCount() - lastSyncTickCount;
@@ -543,7 +486,7 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
     xSemaphoreTake( xMutex, portMAX_DELAY );
 
     /* Use "step" approach if:
-     * The system clock has drifted ahead of server time
+     * The system clock has drifted ahead of server time.
      *                         OR
      * This is the first time of time synchronized with NTP server since device boot-up.
      */
@@ -587,16 +530,9 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
 
 /*************************************************************************************/
 
-/**
- * @brief Entry point of the demo that creates 2 tasks:
- * 1. One task represents the SNTP client that periodically synchronizes system time with
- * time from time servers.
- * 2. The other task represents a sample application time that queries the system time
- * periodically and prints it in human readable form of the YYYY-MM-DD hh:mm:ss.
- */
-void vStartSntpDemo( void )
+void initializeSystemClock( void )
 {
-    /* On boot-up initialize the system time as the first second in the configured year. */
+/* On boot-up initialize the system time as the first second in the configured year. */
     int32_t lNoOfYearsSince1900 = democonfigSYSTEM_START_YEAR - 1900;
     int64_t llnoOfSecondsSince1900 = YEARS_TO_SECONDS( lNoOfYearsSince1900 );
 
@@ -619,43 +555,11 @@ void vStartSntpDemo( void )
     /* Clear the first time sync completed flag of the system clock object so that a "step" correction
      * of system time is utilized for the first time synchronization from a time server. */
     systemClock.firstTimeSyncDone = false;
-
-    /* Create the SNTP client task that is reponsible for synchronizing system time with the time servers
-     * periodically. This is created as a high priority task to keep the SNTP client operation uninhindered. */
-    xTaskCreate( sntpTask,                 /* Function that implements the task. */
-                 "SntpClientTask",         /* Text name for the task - only used for debugging. */
-                 democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
-                 NULL,                     /* Task parameter - not used in this case. */
-                 configMAX_PRIORITIES - 1, /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
-                 NULL );
-
-    /* Create the task that represents an application needing wall-clock time. */
-    xTaskCreate( prvSampleAppTask,         /* Function that implements the task. */
-                 "SampleApp",              /* Text name for the task - only used for debugging. */
-                 democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
-                 NULL,                     /* Task parameter - not used in this case. */
-                 tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
-                 NULL );                   /* Used to pass out a handle to the created task - not used in this case. */
-}
-/*-----------------------------------------------------------*/
-
-/* Sample application task that will query and log system time every second. */
-static void prvSampleAppTask( void * pvParameters )
-{
-    UTCTime_t systemTime;
-
-    while( 1 )
-    {
-        systemGetWallClockTime( &systemTime );
-
-        printTime( &systemTime );
-
-        vTaskDelay( pdMS_TO_TICKS( CLOCK_QUERY_TASK_DELAY_MS ) );
-    }
 }
 
 /*-----------------------------------------------------------*/
-static void sntpTask( void * parameters )
+
+void sntpTask( void * parameters )
 {
     UdpTransportInterface_t udpTransportIntf;
     NetworkContext_t udpContext;
@@ -751,7 +655,7 @@ static void sntpTask( void * parameters )
 
 /*-----------------------------------------------------------*/
 
-static void systemGetWallClockTime( UTCTime_t * pTime )
+void systemGetWallClockTime( UTCTime_t * pTime )
 {
     TickType_t xTickCount = 0;
     uint32_t ulTimeMs = 0UL;

@@ -62,6 +62,7 @@
 #define configNUM_THREAD_LOCAL_STORAGE_POINTERS    0
 #define configENABLE_BACKWARD_COMPATIBILITY        1
 #define configSUPPORT_STATIC_ALLOCATION            1
+#define configUSE_STATS_FORMATTING_FUNCTIONS       0
 
 /* Hook function related definitions. */
 #define configUSE_TICK_HOOK                        0
@@ -103,15 +104,6 @@
 #define INCLUDE_xEventGroupSetBitsFromISR          1
 #define INCLUDE_xTimerPendFunctionCall             1
 #define INCLUDE_pcTaskGetTaskName                  1
-
-/* This demo makes use of one or more example stats formatting functions.  These
- * format the raw data provided by the uxTaskGetSystemState() function in to human
- * readable ASCII form.  See the notes in the implementation of vTaskList() within
- * FreeRTOS/Source/tasks.c for limitations.  configUSE_STATS_FORMATTING_FUNCTIONS
- * is set to 2 so the formatting functions are included without the stdio.h being
- * included in tasks.c.  That is because this project defines its own sprintf()
- * functions. */
-#define configUSE_STATS_FORMATTING_FUNCTIONS       1
 
 /* Assert call defined for debug builds. */
 #ifdef _DEBUG

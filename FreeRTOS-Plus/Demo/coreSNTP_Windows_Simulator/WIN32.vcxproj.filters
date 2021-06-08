@@ -123,7 +123,8 @@
     </ClCompile>
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Demo\Common\Logging\windows\Logging_WinSim.c" />
     <ClCompile Include="..\Common\main.c" />
-    <ClCompile Include="DemoTasks\SNTPExample.c">
+    <ClCompile Include="DemoTasks\SNTPClientTask.c">
+    <ClCompile Include="DemoTasks\SampleAppTask.c">
       <Filter>DemoTasks</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreSNTP\source\core_sntp_client.c">
@@ -237,6 +238,9 @@
       <Filter>Config</Filter>
     </ClInclude>
     <ClInclude Include="demo_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="common_demo_include.h">
       <Filter>Config</Filter>
     </ClInclude>
   </ItemGroup>

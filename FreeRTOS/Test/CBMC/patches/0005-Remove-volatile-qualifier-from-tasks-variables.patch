@@ -44,15 +44,6 @@ diff --git a/FreeRTOS/Source/tasks.c b/FreeRTOS/Source/tasks.c
 index c7be57cb2..9f76465d5 100644
 --- a/FreeRTOS/Source/tasks.c
 +++ b/FreeRTOS/Source/tasks.c
-@@ -296,7 +296,7 @@ typedef struct tskTaskControlBlock       /* The old naming convention is used to
- 
-     #if ( configUSE_NEWLIB_REENTRANT == 1 )
-         /* Allocate a Newlib reent structure that is specific to this task.
--         * Note Newlib support has been included by popular demand, but is not
-+          Note Newlib support has been included by popular demand, but is not
-          * used by the FreeRTOS maintainers themselves.  FreeRTOS is not
-          * responsible for resulting newlib operation.  User must be familiar with
-          * newlib and must provide system-wide implementations of the necessary
 @@ -343,8 +343,8 @@ PRIVILEGED_DATA TCB_t * volatile pxCurrentTCB = NULL;
  PRIVILEGED_DATA static List_t pxReadyTasksLists[ configMAX_PRIORITIES ]; /*< Prioritised ready tasks. */
  PRIVILEGED_DATA static List_t xDelayedTaskList1;                         /*< Delayed tasks. */

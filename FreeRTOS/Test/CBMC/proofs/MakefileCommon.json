@@ -3,18 +3,20 @@
     "PROOFS": [ "." ],
 
     "DEF ": [
-	"_DEBUG",
-	"__free_rtos__",
-	"_CONSOLE",
-	"_WIN32_WINNT=0x0500",
-	"WINVER=0x400",
-	"_CRT_SECURE_NO_WARNINGS",
-	"__PRETTY_FUNCTION__=__FUNCTION__",
+        "_DEBUG",
+        "__free_rtos__",
+        "_CONSOLE",
+        "_WIN32_WINNT=0x0500",
+        "WINVER=0x400",
+        "_CRT_SECURE_NO_WARNINGS",
+        "__PRETTY_FUNCTION__=__FUNCTION__",
          "CBMC",
-	"'configASSERT(X)=__CPROVER_assert(X,\"Assertion Error\")'",
-    	"'configPRECONDITION(X)=__CPROVER_assume(X)'",
-	"'_static='",
-	"'_volatile='"
+        "'configASSERT(X)='",
+        "'configPRECONDITION(X)=__CPROVER_assume(X)'",
+        "'_static='",
+        "'_volatile='",
+        "QUEUE_LENGTH=15",
+        "QUEUE_ITEM_SIZE=990"
     ],
 
     "INC ": [
@@ -31,10 +33,10 @@
     ],
 
     "CBMCFLAGS ": [
-	"--object-bits 7",
-	"--32",
-	"--bounds-check",
-	"--pointer-check"
+        "--object-bits 7",
+        "--32",
+        "--bounds-check",
+        "--pointer-check"
     ],
 
     "FORWARD_SLASH": ["/"],

@@ -22,8 +22,8 @@
  * http://www.FreeRTOS.org
  * http://aws.amazon.com/freertos
  */
-#ifndef CORE_MQTT_CONFIG_H
-#define CORE_MQTT_CONFIG_H
+#ifndef CORE_SNTP_CONFIG_H
+#define CORE_SNTP_CONFIG_H
 
 /**************************************************/
 /******* DO NOT CHANGE the following order ********/
@@ -32,13 +32,13 @@
 /* Include logging header files and define logging macros in the following order:
  * 1. Include the header file "logging_levels.h".
  * 2. Define the LIBRARY_LOG_NAME and LIBRARY_LOG_LEVEL macros depending on
- * the logging configuration for MQTT.
- * 3. Include the header file "logging_stack.h", if logging is enabled for MQTT.
+ * the logging configuration for SNTP.
+ * 3. Include the header file "logging_stack.h", if logging is enabled for SNTP.
  */
 
 #include "logging_levels.h"
 
-/* Logging configuration for the MQTT library. */
+/* Logging configuration for the SNTP library. */
 #ifndef LIBRARY_LOG_NAME
     #define LIBRARY_LOG_NAME    "SNTP"
 #endif
@@ -63,4 +63,4 @@ extern void vLoggingPrintf( const char * pcFormatString,
 #include "logging_stack.h"
 /************ End of logging configuration ****************/
 
-#endif /* ifndef CORE_MQTT_CONFIG_H */
+#endif /* ifndef CORE_SNTP_CONFIG_H */

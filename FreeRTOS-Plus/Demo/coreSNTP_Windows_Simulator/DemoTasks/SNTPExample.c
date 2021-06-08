@@ -588,8 +588,11 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
 /*************************************************************************************/
 
 /**
- * @brief Create the task that demonstrates the MQTT API over a plaintext TCP
- * connection.
+ * @brief Entry point of the demo that creates 2 tasks:
+ * 1. One task represents the SNTP client that periodically synchronizes system time with
+ * time from time servers.
+ * 2. The other task represents a sample application time that queries the system time
+ * periodically and prints it in human readable form of the YYYY-MM-DD hh:mm:ss.
  */
 void vStartSntpDemo( void )
 {

@@ -34,12 +34,11 @@
 
 struct QueueDefinition;
 
-void harness() {
-	BaseType_t xNewQueue;
+void harness()
+{
+    BaseType_t xNewQueue;
 
-	QueueHandle_t xQueue = xUnconstrainedQueue();
-	if(xQueue != NULL)
-	{
-		xQueueGenericReset(xQueue, xNewQueue);
-	}
+    QueueHandle_t xQueue = xUnconstrainedQueue();
+
+    xQueueGenericReset( xQueue, xNewQueue );
 }

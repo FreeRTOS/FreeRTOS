@@ -31,11 +31,10 @@
 #include "cbmc.h"
 
 
-void harness(){
+void harness()
+{
     uint8_t ucQueueType;
+    StaticQueue_t * pxStaticQueue = ( StaticQueue_t * ) pvPortMalloc( sizeof( StaticQueue_t ) );
 
-    //The mutex storage is assumed to be not null.
-    StaticQueue_t xStaticQueue;
-
-    xQueueCreateMutexStatic( ucQueueType, &xStaticQueue );
+    xQueueCreateMutexStatic( ucQueueType, pxStaticQueue );
 }

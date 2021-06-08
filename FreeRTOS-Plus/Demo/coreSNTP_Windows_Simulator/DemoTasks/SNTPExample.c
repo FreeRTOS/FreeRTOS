@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202104.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -28,14 +28,13 @@
  * Demo for showing use of the coreSNTP library for synchronizing system time
  * with the internet and maintaining correct wall-clock time.
  *
- * The Example shown below uses this API to create MQTT messages and
- * send them over the connection established using FreeRTOS sockets.
- * The example is single threaded and uses statically allocated memory;
- * it uses QOS0 and therefore does not implement any retransmission
- * mechanism for Publish messages.
+ * The example shown below shows how an SNTP client task can be created using
+ * the coreSNTP library to periodically synchronize system clock with SNTP/NTP
+ * servers, and how an separate task (like an application task) query current
+ * time from the system.
  *
  * !!! NOTE !!!
- * This MQTT demo does not authenticate the server nor the client.
+ * This SNTP demo does not authenticate the server nor the client.
  * Hence, this demo should not be used as production ready code.
  */
 
@@ -66,108 +65,300 @@
 /*-----------------------------------------------------------*/
 
 /* Compile time error for undefined configs. */
+
 #ifndef democonfigLIST_OF_TIME_SERVERS
-    #error "Define the config democonfigLIST_OF_TIME_SERVERS by following the instructions in file demo_config.h."
+    #error "Define the democonfigLIST_OF_TIME_SERVERS config by following the instructions in demo_config.h file."
 #endif
 
-/*-----------------------------------------------------------*/
-
-/* Default value of the clock accuracy as 100 milliseconds. */
 #ifndef democonfigDESIRED_CLOCK_ACCURACY_MS
-    #define democonfigDESIRED_CLOCK_ACCURACY_MS    ( 100 )
+    #error "Define the democonfigDESIRED_CLOCK_ACCURACY_MS config by following instructions in demo_config.h file."
 #endif
 
-#ifndef democonfigCONTEXT_BUFFER_SIZE
-    #define democonfigCONTEXT_BUFFER_SIZE    ( SNTP_PACKET_BASE_SIZE )
+#ifndef democonfigSYSTEM_CLOCK_TOLERANCE_PPM
+    #error "Define the democonfigSYSTEM_CLOCK_TOLERANCE_PPM config by following instructions in demo_config.h file."
 #endif
 
-#define YEARS_TO_SECONDS( years ) \
-    ( ( years * 365 + years / 4 ) * 24 * 3600 )
+#ifndef democonfigSYSTEM_START_YEAR
+    #error "Define the democonfigSYSTEM_START_YEAR config by following instructions in demo_config.h file."
+#endif
 
-#define CLOCK_QUERY_TASK_DELAY_MS    ( 1000 )
+/*-----------------------------------------------------------*/
+/* Default values for configuration . */
 
-#define MILLISECONDS_PER_SECOND      ( 1000U )                                        /**< @brief Milliseconds per second. */
-#define MILLISECONDS_PER_TICK        ( MILLISECONDS_PER_SECOND / configTICK_RATE_HZ ) /**< Milliseconds per FreeRTOS tick. */
+#ifndef democonfigSERVER_RESPONSE_TIMEOUT_MS
+    #define democonfigSERVER_RESPONSE_TIMEOUT_MS    ( 5000 )
+#endif
 
+/**
+ * @brief The size for network buffer that is allocated for initializing the coreSNTP library in the
+ * demo.
+ *
+ * @note The size of the buffer MUST be large enough to hold an entire SNTP packet, which includes the standard SNTP
+ * packet data of 48 bytes and authentication data for security mechanism, if used, in communication with time server.
+ */
+#define SNTP_CONTEXT_NETWORK_BUFFER_SIZE    ( SNTP_PACKET_BASE_SIZE )
+
+/**
+ * @brief The periodicity of the application task in query and logging system time. This is the time
+ * interval between consecutive system clock time queries in the sample application task.
+ */
+#define CLOCK_QUERY_TASK_DELAY_MS           ( 1000 )
+
+/**
+ * @brief The constant for storing the number of milliseconds per FreeRTOS tick in the system.
+ */
+#define MILLISECONDS_PER_TICK               ( 1000 / configTICK_RATE_HZ )
+
+/**
+ * @brief Utility macro to convert years to seconds. This utility does account for leap years.
+ */
+#define YEARS_TO_SECONDS( years )                      ( ( years * 365 + years / 4 ) * 24 * 3600 )
+
+/**
+ * @brief Utility macro to convert the fractions part of SNTP timestamp to milliseconds.
+ */
+#define SNTP_FRACTIONS_TO_MILLISECONDS( fractions )    ( fractions / ( 1000 * SNTP_FRACTION_VALUE_PER_MICROSECOND ) )
+
+/**
+ * @brief Utility macro to convert milliseconds to the fractions value of an SNTP timestamp.
+ * @note The fractions value MUST be less than 1000 as duration of seconds is not represented
+ * as fractions part of SNTP timestamp.
+ */
+#define MILLISECONDS_TO_SNTP_FRACTIONS( ms )           ( ms * 1000 * SNTP_FRACTION_VALUE_PER_MICROSECOND )
 
 /*-----------------------------------------------------------*/
 
-/* Type representing UTC time. */
+/**
+ * @brief Type representing system time in Coordinated Univeral Time (UTC)
+ * zone as time since 1st January 1900 00h:00m:00s.
+ *
+ * @note This demo uses RAM-based mathematical model to represent UTC time
+ * in system.
+ */
 typedef struct UTCTime
 {
     uint32_t secs;
     uint32_t msecs;
 } UTCTime_t;
 
+/**
+ * @brief The definition of the @ref NetworkContext_t structure for the demo.
+ * The structure wraps a FreeRTOS+TCP socket that is used for UDP communication
+ * with time servers.
+ *
+ * @note The context is used in the @ref UdpTransportInterface_t interface required
+ * by the coreSNTP library.
+ *
+ */
 struct NetworkContext
 {
     Socket_t xSocket;
 };
 
+/**
+ * @brief Structure aggregating state variables for RAM-based wall-clock time
+ * in Coordinated Universal Time (UTC) for system.
+ *
+ * @note This demo uses the following mathematical model to represent current
+ * time in RAM.
+ *
+ *  Total Time Elapsed since  =   (No. of FreeRTOS ticks since last time
+ *  last SNTP synchronization     synchronization * Time Duration between consecutive
+ *                                ticks)
+ *
+ *  Slew Adjustment = (Slew Rate * Total Time Elapsed Since Last Tine Synchronization)
+ *
+ *  Current Time = Base Time +
+ *                 Time Elapsed Since Last synchronization +
+ *                 Slew Adjustment
+ */
+typedef struct SystemClock
+{
+    UTCTime_t baseTime;
+    TickType_t lastSyncTickCount;
+    uint32_t pollPeriod;
+    uint32_t slewRate; /* Seconds/Seconds */
+    bool firstTimeSyncDone;
+} SystemClock_t;
 
-/* Shared global variables for representing UTC/wall-clock time in system. */
-/* TODO - Group all system clock variables in a struct. */
-static UTCTime_t baseTime;
-static TickType_t lastSyncTickCount;
-static uint32_t pollPeriod;
-static uint32_t slewRate; /* Milliseconds/second */
+/**
+ * @brief Shared global variables for representing UTC/wall-clock time in system.
+ */
+static SystemClock_t systemClock;
 
-SemaphoreHandle_t xMutex = NULL;
-StaticSemaphore_t xSemaphoreMutex;
-
-/* Global variable representing the SNTP client context. */
-static SntpContext_t context;
-
-static const char * pTimeServers[] = { democonfigLIST_OF_TIME_SERVERS };
-static const size_t numOfServers = sizeof( pTimeServers ) / sizeof( char * );
+/**
+ * @brief Global variables of mutex protecting access to the shared memory of the
+ * system clock parameters.
+ */
+static SemaphoreHandle_t xMutex = NULL;
+static StaticSemaphore_t xSemaphoreMutex;
 
 /*-----------------------------------------------------------*/
-static void getTime( UTCTime_t * pTime );
-static void prvClockQueryTask( void * pvParameters );
+
+/**
+ * @brief The demo function for an application to query wall-clock
+ * time as Coordinated Universal Time (UTC) from the system.
+ *
+ * @note This demo showcases a RAM-based mathematical model for
+ * representing current UTC time in the system.
+ *
+ * @param[out] pTime This will be populated with the current time
+ * in the system as total time since 1st January 1900 00h:00m:00s.
+ */
+static void systemGetWallClockTime( UTCTime_t * pTime );
+
+/**
+ * @brief The task function for a sample application that queries
+ * system time periodically.
+ */
+static void prvSampleAppTask( void * pvParameters );
+
+/**
+ * @brief The task function that represents a daemon SNTP client task
+ * that is responsible for periodically synchronizing system time with
+ * time servers from the list of configured time servers in
+ * democonfigLIST_OF_TIME_SERVERS.
+ *
+ * @note The usage of the coreSNTP library API is encapsulated within
+ * this task. The rest of the FreeRTOS tasks/application does not need
+ * to be aware of the SNTP client as they can query time from the
+ * @ref systemGetWallClockTime() function.
+ */
 static void sntpTask( void * parameters );
-static void printTime( UTCTime_t * pTime );
-static bool ResolveDns( const SntpServerInfo_t * pServerAddr,
+
+/**
+ * @brief Utility function to print the system time as both UNIX time (i.e.
+ * time since 1st January 1970 00h:00m:00s) and human-readable time (in the
+ * YYYY-MM-DD dd:mm:ss format).
+ *
+ * @param[in] pTime The system time to be printed.
+ */
+static void printTime( const UTCTime_t * pTime );
+
+/**
+ * @brief The demo implementation of the @ref SntpResolveDns_t interface to
+ * allow the coreSNTP library to resolve DNS name of a time server being
+ * used for requesting time from.
+ *
+ * @param[in] pTimeServer The time-server whose IPv4 address is to be resolved.
+ * @param[out] pIpV4Addr This is filled with the resolved IPv4 address of
+ * @p pTimeServer.
+ */
+static bool resolveDns( const SntpServerInfo_t * pServerAddr,
                         uint32_t * pIpV4Addr );
+
+/**
+ * @brief The demo implementation of the @ref UdpTransportSendTo_t function
+ * of the UDP transport interface to allow the coreSNTP library to perform
+ * network operation of sending time request over UDP to the provided time server.
+ *
+ * @param[in] pNetworkContext This will be the NetworkContext_t context object
+ * representing the FreeRTOS UDP socket to use for network send operation.
+ * @param[in] serverAddr The IPv4 address of the time server which will be sent
+ * time request to.
+ * @param[in] serverPort The port of the server to send data to.
+ * @param[in] pBuffer The demo-supplied network buffer of size, SNTP_CONTEXT_NETWORK_BUFFER_SIZE,
+ * containing the data to send over the network.
+ * @param[in] bytesToSend The size of data in @p pBuffer to send.
+ *
+ * @return Returns the return code of FreeRTOS UDP send API, FreeRTOS_sendto, which returns
+ * 0 for error or timeout OR the number of bytes sent over the network.
+ */
 static int32_t UdpTransport_Send( NetworkContext_t * pNetworkContext,
                                   uint32_t serverAddr,
                                   uint16_t serverPort,
                                   const void * pBuffer,
                                   size_t bytesToSend );
+
+/**
+ * @brief The demo implementation of the @ref UdpTransportRecvFrom_t function
+ * of the UDP transport interface to allow the coreSNTP library to perform
+ * network operation of reading expected time response over UDP from
+ * provided time server.
+ *
+ * @param[in] pNetworkContext This will be the NetworkContext_t context object
+ * representing the FreeRTOS UDP socket to use for network send operation.
+ * @param[in] pTimeServer The IPv4 address of the time server to receive data from.
+ * @param[in] serverPort The port of the server to receive data from.
+ * @param[out] pBuffer The demo-supplied network buffer of size, SNTP_CONTEXT_NETWORK_BUFFER_SIZE,
+ * that will be filled with data received from the network.
+ * @param[in] bytesToRecv The expected number of bytes to receive from the network
+ * for the server response server.
+ *
+ * @return Returns one of the following:
+ * - 0 for timeout in receiving any data from the network (by translating the
+ * -pdFREERTOS_ERRNO_EWOULDBLOCK return code from FreeRTOS_recvfrom API )
+ *                         OR
+ * - The number of bytes read from the network.
+ */
 static int32_t UdpTransport_Recv( NetworkContext_t * pNetworkContext,
                                   uint32_t serverAddr,
                                   uint16_t serverPort,
                                   void * pBuffer,
                                   size_t bytesToRecv );
+
+/**
+ * @brief The demo implementation of the @ref SntpGetTime_t interface
+ * for obtaining system clock time for the coreSNTP library.
+ *
+ * @param[out] pTime This will be populated with the current time from
+ * the system.
+ */
 static void sntpClient_GetTime( SntpTimestamp_t * pCurrentTime );
+
+/**
+ * @brief The demo implementation of the @ref SntpSetTime_t interface
+ * for correcting the system clock time based on the  time received
+ * from the server response and the clock-offset value calculated by
+ * the coreSNTP library.
+ *
+ * @note This demo uses either the "slew" OR "step" methodology of system
+ * clock correction based on the use-case:
+ * 1. "Step" correction is used if:
+ *   - System time is ahead of server time so that system time is immediately
+ *     corrected instead of potentially receding back in time with a "slew"
+ *     correction approach.
+ *     OR
+ *   - It is the first time synchronization for the system since boot-up. Using
+ *     "step" approach immediately corrects the system if it is far away from the
+ *     server time on device startup instead of slowly correcting over time with
+ *     the "slew" approach.
+ *
+ * 2. The "slew" correction approach is used for all cases other than the above
+ *    as they represent regular time synchronization during device runtime where
+ *    the system time may have drifted behind the server time, and can be corrected
+ *    gradually over the SNTP client's polling interval period.
+ */
 static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
                                 const SntpTimestamp_t * pServerTime,
                                 int32_t clockOffsetSec,
                                 SntpLeapSecondInfo_t leapSecondInfo );
 
-static void printTime( UTCTime_t * pTime )
+/*------------------------------------------------------------------------------*/
+
+static void printTime( const UTCTime_t * pTime )
 {
     struct tm * currTime;
     time_t time;
     SntpTimestamp_t ntpTime;
     SntpStatus_t status;
-    UTCTime_t unixTime;
-
+    uint32_t unixTimeSecs;
+    uint32_t unixTimeMicroSecs;
 
     /* Represent system time as NTP time. */
     ntpTime.seconds = pTime->secs;
-    ntpTime.fractions = pTime->msecs * 1000 * SNTP_FRACTION_VALUE_PER_MICROSECOND;
+    ntpTime.fractions = MILLISECONDS_TO_SNTP_FRACTIONS( pTime->msecs );
 
     /* Convert from NTP to UNIX time representation. */
-    status = Sntp_ConvertToUnixTime( &ntpTime, &unixTime.secs, &unixTime.msecs );
-    unixTime.msecs /= 1000;
+    status = Sntp_ConvertToUnixTime( &ntpTime, &unixTimeSecs, &unixTimeMicroSecs );
 
     /* Obtain the broken-down UTC representation of the current system time. */
-    time = unixTime.secs;
+    time = unixTimeSecs;
     currTime = gmtime( &time );
 
     /* Log the time as both UNIX timestamp and Human Readable time. */
-    LogInfo( ( "Time\nUNIX=%lusecs %lums\nHuman Readable= %lu-%02lu-%02lu %02luh:%02lum:%02lus",
-               unixTime.secs, unixTime.msecs,
+    LogInfo( ( "Time:\nUNIX=%lusecs %lums\nHuman Readable=%lu-%02lu-%02lu %02luh:%02lum:%02lus",
+               unixTimeSecs, unixTimeMicroSecs / 1000,
                currTime->tm_year + 1900, currTime->tm_mon + 1, currTime->tm_mday,
                currTime->tm_hour, currTime->tm_min, currTime->tm_sec ) );
 }
@@ -180,22 +371,20 @@ static void calculateCurrentTime( UTCTime_t * pBaseTime,
     uint64_t totalOffsetMs = 0;
     TickType_t totalNoOfTicks = xTaskGetTickCount() - lastSyncTickCount;
 
-    /* If slew rate is set, then calculate the offset only based on the slew rate. */
-    if (slewRate > 0)
+    /* Calculate time elapsed since last synchronization according to the number
+     * of system ticks passed. */
+    totalOffsetMs = totalNoOfTicks * MILLISECONDS_PER_TICK;
+
+    /* If slew rate is set, then apply the slew-based clock adjustment for the elapsed time. */
+    if( slewRate > 0 )
     {
-        totalOffsetMs = (uint64_t) slewRate * (uint64_t) totalNoOfTicks * MILLISECONDS_PER_TICK;
-    }
-    /* Without a slew correction rate, calculate the time based solely on tick counts. */
-    else
-    {
-        totalOffsetMs = totalNoOfTicks * MILLISECONDS_PER_TICK;
+        totalOffsetMs += ( uint64_t ) slewRate * ( uint64_t ) totalNoOfTicks * MILLISECONDS_PER_TICK;
     }
 
     /* Set the current UTC time in the output parameter. */
-    if(totalOffsetMs >= 1000 )
+    if( totalOffsetMs >= 1000 )
     {
-        uint32_t totalOffsetSec = totalOffsetMs / 1000;
-        pCurrentTime->secs = pBaseTime->secs + totalOffsetSec;
+        pCurrentTime->secs = pBaseTime->secs + totalOffsetMs / 1000;
         pCurrentTime->msecs = totalOffsetMs % 1000;
     }
     else
@@ -206,7 +395,7 @@ static void calculateCurrentTime( UTCTime_t * pBaseTime,
 }
 
 /********************** DNS Resolution Interface *******************************/
-static bool ResolveDns( const SntpServerInfo_t * pServerAddr,
+static bool resolveDns( const SntpServerInfo_t * pServerAddr,
                         uint32_t * pIpV4Addr )
 {
     uint32_t resolvedAddr = 0;
@@ -231,11 +420,6 @@ static bool ResolveDns( const SntpServerInfo_t * pServerAddr,
 }
 
 /********************** UDP Interface definition *******************************/
-/* TODO - Consider efficiency improvements of: */
-/* 1. Returning immediately if TX buffer is full to avoid blocking for default send timeout? */
-/*    Can use FreeRTOS_maywrite API */
-/* 2. Storing source address and UDP port for validation of reverse information in UDP */
-/* packer received from server in receive function. */
 int32_t UdpTransport_Send( NetworkContext_t * pNetworkContext,
                            uint32_t serverAddr,
                            uint16_t serverPort,
@@ -245,7 +429,6 @@ int32_t UdpTransport_Send( NetworkContext_t * pNetworkContext,
     struct freertos_sockaddr xDestinationAddress;
     int32_t iReturned;
 
-    /* TODO - Is this required? */
     xDestinationAddress.sin_addr = serverAddr;
     xDestinationAddress.sin_port = FreeRTOS_htons( serverPort );
 
@@ -277,18 +460,6 @@ static int32_t UdpTransport_Recv( NetworkContext_t * pNetworkContext,
     struct freertos_sockaddr xSourceAddress;
     int32_t iReturned;
     socklen_t xAddressLength = sizeof( struct freertos_sockaddr );
-
-    /* The UDP socket may have a receive block time.  If bytesToRecv is greater
-     * than 1 then a frame is likely already part way through reception and
-     * blocking to wait for the desired number of bytes to be available is the
-     * most efficient thing to do.  If bytesToRecv is 1 then this may be a
-     * speculative call to read to find the start of a new frame, in which case
-     * blocking is not desirable as it could block an entire protocol agent
-     * task for the duration of the read block time and therefore negatively
-     * impact performance.  So if bytesToRecv is 1 then don't call recv unless
-     * it is known that bytes are already available. */
-    /*TODO - Add logic to for non-blocking read for single byte read request by changing */
-    /* socket timeout config temporarily. */
 
     /* Receive into the buffer with ulFlags set to 0, so the FREERTOS_ZERO_COPY bit
      * is clear. */
@@ -345,11 +516,14 @@ static void sntpClient_GetTime( SntpTimestamp_t * pCurrentTime )
     /* Obtain mutex for accessing system clock variables */
     xSemaphoreTake( xMutex, portMAX_DELAY );
 
-    calculateCurrentTime( &baseTime, lastSyncTickCount, slewRate, &currentTime );
+    calculateCurrentTime( &systemClock.baseTime,
+                          systemClock.lastSyncTickCount,
+                          systemClock.slewRate,
+                          &currentTime );
 
     /* Convert UTC time to SNTP timestamp format. */
     pCurrentTime->seconds = currentTime.secs;
-    pCurrentTime->fractions = currentTime.msecs * 1000 * SNTP_FRACTION_VALUE_PER_MICROSECOND;
+    pCurrentTime->fractions = MILLISECONDS_TO_SNTP_FRACTIONS( currentTime.msecs );
 
     /* Release mutex. */
     xSemaphoreGive( xMutex );
@@ -368,17 +542,27 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
     /* Obtain the mutext for accessing system clock variables. */
     xSemaphoreTake( xMutex, portMAX_DELAY );
 
-    /* Use "step" approach if the system clock has drifted ahead of server time. */
-    if( clockOffsetSec < 0 )
+    /* Use "step" approach if:
+     * The system clock has drifted ahead of server time
+     *                         OR
+     * This is the first time of time synchronized with NTP server since device boot-up.
+     */
+    if( ( clockOffsetSec < 0 ) || ( systemClock.firstTimeSyncDone == false ) )
     {
         /* Immediately correct the base time of the system clock. */
-        baseTime.secs = pServerTime->seconds;
-        baseTime.msecs = ( pServerTime->fractions / (1000 * SNTP_FRACTION_VALUE_PER_MICROSECOND ));
+        systemClock.baseTime.secs = pServerTime->seconds;
+        systemClock.baseTime.msecs = SNTP_FRACTIONS_TO_MILLISECONDS( pServerTime->fractions );
 
         /* Reset slew rate to zero as the time has been immediately corrected to server time. */
-        slewRate = 0;
+        systemClock.slewRate = 0;
 
-        lastSyncTickCount = xTaskGetTickCount();
+        systemClock.lastSyncTickCount = xTaskGetTickCount();
+
+        /* Set the system clock flag that indicates completion of the first time synchronization since device boot-up. */
+        if( systemClock.firstTimeSyncDone == false )
+        {
+            systemClock.firstTimeSyncDone = true;
+        }
     }
 
     /* As the system clock is behind server time, we will use a "slew" approach to gradually
@@ -387,12 +571,15 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
     {
         /* Update the base time based on the previous slew rate and the time period transpired
          * since last time synchronization. */
-        calculateCurrentTime( &baseTime, lastSyncTickCount, slewRate, &baseTime );
+        calculateCurrentTime( &systemClock.baseTime,
+                              systemClock.lastSyncTickCount,
+                              systemClock.slewRate,
+                              &systemClock.baseTime );
 
-        /* Calculate the new slew rate as offset in milliseconds per second. */
-        slewRate = clockOffsetSec / pollPeriod;
+        /* Calculate the new slew rate as offset in seconds of adjustment per second. */
+        systemClock.slewRate = clockOffsetSec / systemClock.pollPeriod;
 
-        lastSyncTickCount = xTaskGetTickCount();
+        systemClock.lastSyncTickCount = xTaskGetTickCount();
     }
 
     xSemaphoreGive( xMutex );
@@ -412,19 +599,23 @@ void vStartSntpDemo( void )
 
     if( llnoOfSecondsSince1900 <= UINT32_MAX )
     {
-        baseTime.secs = llnoOfSecondsSince1900;
+        systemClock.baseTime.secs = llnoOfSecondsSince1900;
     }
     else
     {
-        baseTime.secs = ( uint32_t ) llnoOfSecondsSince1900 - UINT32_MAX - 1UL;
+        systemClock.baseTime.secs = ( uint32_t ) llnoOfSecondsSince1900 - UINT32_MAX - 1UL;
     }
 
     LogInfo( ( "System time has been initialized to the year %u", democonfigSYSTEM_START_YEAR ) );
-    printTime( &baseTime );
+    printTime( &systemClock.baseTime );
 
     /* Initialize sempahore for guarding access to system clock variables. */
     xMutex = xSemaphoreCreateMutexStatic( &xSemaphoreMutex );
     configASSERT( xMutex );
+
+    /* Clear the first time sync completed flag of the system clock object so that a "step" correction
+     * of system time is utilized for the first time synchronization from a time server. */
+    systemClock.firstTimeSyncDone = false;
 
     /* Create the SNTP client task that is reponsible for synchronizing system time with the time servers
      * periodically. This is created as a high priority task to keep the SNTP client operation uninhindered. */
@@ -436,7 +627,7 @@ void vStartSntpDemo( void )
                  NULL );
 
     /* Create the task that represents an application needing wall-clock time. */
-    xTaskCreate( prvClockQueryTask,        /* Function that implements the task. */
+    xTaskCreate( prvSampleAppTask,         /* Function that implements the task. */
                  "SampleApp",              /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
                  NULL,                     /* Task parameter - not used in this case. */
@@ -445,14 +636,14 @@ void vStartSntpDemo( void )
 }
 /*-----------------------------------------------------------*/
 
-/* Task that will query and log system time every second. */
-static void prvClockQueryTask( void * pvParameters )
+/* Sample application task that will query and log system time every second. */
+static void prvSampleAppTask( void * pvParameters )
 {
     UTCTime_t systemTime;
 
     while( 1 )
     {
-        getTime( &systemTime );
+        systemGetWallClockTime( &systemTime );
 
         printTime( &systemTime );
 
@@ -467,8 +658,14 @@ static void sntpTask( void * parameters )
     NetworkContext_t udpContext;
     SntpStatus_t status;
     SntpContext_t clientContext;
-    static uint8_t contextBuffer[ democonfigCONTEXT_BUFFER_SIZE ];
+    static uint8_t contextBuffer[ SNTP_CONTEXT_NETWORK_BUFFER_SIZE ];
     struct freertos_sockaddr xBindAddress;
+
+    /* Global variable representing the SNTP client context. */
+    static SntpContext_t context;
+
+    static const char * pTimeServers[] = { democonfigLIST_OF_TIME_SERVERS };
+    static const size_t numOfServers = sizeof( pTimeServers ) / sizeof( char * );
 
     /* Populate the list of time servers. */
     SntpServerInfo_t * pServers = pvPortMalloc( sizeof( SntpServerInfo_t ) * numOfServers );
@@ -482,10 +679,10 @@ static void sntpTask( void * parameters )
     /* Calculate Poll interval of SNTP client based on desired accuracy and clock tolerance of the system. */
     status = Sntp_CalculatePollInterval( democonfigSYSTEM_CLOCK_TOLERANCE_PPM,
                                          democonfigDESIRED_CLOCK_ACCURACY_MS,
-                                         &pollPeriod );
+                                         &systemClock.pollPeriod );
     configASSERT( status == SntpSuccess );
 
-    LogInfo( ( "Calculated poll interval: %lus", pollPeriod ) );
+    LogInfo( ( "Calculated poll interval: %lus", systemClock.pollPeriod ) );
 
     /* Create a UDP socket for network I/O with server. */
     udpContext.xSocket = FreeRTOS_socket( FREERTOS_AF_INET,
@@ -524,7 +721,7 @@ static void sntpTask( void * parameters )
                democonfigSERVER_RESPONSE_TIMEOUT_MS,
                contextBuffer,
                sizeof( contextBuffer ),
-               ResolveDns,
+               resolveDns,
                sntpClient_GetTime,
                sntpClient_SetTime,
                &udpTransportIntf,
@@ -545,13 +742,13 @@ static void sntpTask( void * parameters )
         } while( status == SntpNoResponseReceived );
 
         /* Wait for the poll interval period before the next iteration of time synchronization. */
-        vTaskDelay( pdMS_TO_TICKS( pollPeriod * 1000 ) );
+        vTaskDelay( pdMS_TO_TICKS( systemClock.pollPeriod * 1000 ) );
     }
 }
 
 /*-----------------------------------------------------------*/
 
-static void getTime( UTCTime_t * pTime )
+static void systemGetWallClockTime( UTCTime_t * pTime )
 {
     TickType_t xTickCount = 0;
     uint32_t ulTimeMs = 0UL;
@@ -561,7 +758,10 @@ static void getTime( UTCTime_t * pTime )
 
     /* Calculate the current RAM-based time using a mathematical formula using
      * system clock state parameters and the time transpired since last synchronization. */
-    calculateCurrentTime( &baseTime, lastSyncTickCount, slewRate, pTime );
+    calculateCurrentTime( &systemClock.baseTime,
+                          systemClock.lastSyncTickCount,
+                          systemClock.slewRate,
+                          pTime );
 
     xSemaphoreGive( xMutex );
 }

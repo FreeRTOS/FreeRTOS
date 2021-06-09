@@ -47,7 +47,7 @@
 #endif
 
 #ifndef LIBRARY_LOG_LEVEL
-    #define LIBRARY_LOG_LEVEL    LOG_DEBUG
+    #define LIBRARY_LOG_LEVEL    LOG_INFO
 #endif
 
 /* Prototype for the function used to print to console on Windows simulator
@@ -90,10 +90,8 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @brief The set of time servers, in decreasing order of priority, for configuring the SNTP client.
  * The servers SHOULD be listed as comma-separated list of strings. For example, the following
  * can be a configuration used:
- *
- * #define democonfigLIST_OF_TIME_SERVERS          "0.pool.ntp.org", "1.pool.ntp.org"
  */
-#define democonfigLIST_OF_TIME_SERVERS          "35.161.23.91", "time.cloudflare.com", "pool.ntp.org"
+#define democonfigLIST_OF_TIME_SERVERS          "time.cloudflare.com", "pool.ntp.org"
 
 /**
  * @brief The year to bake in the demo application for initializing the system clock with.

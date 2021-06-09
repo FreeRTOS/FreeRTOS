@@ -2595,7 +2595,6 @@ unicast
 uninitialised
 unityconfigurationguide
 unityprint
-univeral
 unix
 unk
 unrecognised

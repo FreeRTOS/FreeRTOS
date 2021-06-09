@@ -287,7 +287,8 @@ static void sntpClient_GetTime( SntpTimestamp_t * pCurrentTime );
  * 1. "Step" correction is used if:
  *   - System time is ahead of server time so that system time is immediately
  *     corrected instead of potentially receding back in time with a "slew"
- *     correction approach.
+ *     correction approach when the system time is ahead by a large margin in the
+ *     order of days, months or more.
  *     OR
  *   - It is the first time synchronization for the system since boot-up. Using
  *     "step" approach immediately corrects the system if it is far away from the
@@ -298,12 +299,19 @@ static void sntpClient_GetTime( SntpTimestamp_t * pCurrentTime );
  *    as they represent regular time synchronization during device runtime where
  *    the system time may have drifted behind the server time, and can be corrected
  *    gradually over the SNTP client's polling interval period.
+ *
+ * @note The above system clock correction algorithm is just one example of a correction
+ * approach. It can be modified to suit your application needs. Examples include:
+ * - Always using "slew" correction if the device is always within a small time offset from
+ *   server and your application is sensitive to non-abrupt changes in time (that could occur
+ *   with "step" approach) for use-cases like logging events in correct order
+ * - Always using a "step" approach for a simplicity if your application is not sensitive to
+ *   abrupt changes/progress in time.
  */
 static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
                                 const SntpTimestamp_t * pServerTime,
                                 int32_t clockOffsetSec,
                                 SntpLeapSecondInfo_t leapSecondInfo );
-
 
 
 /*------------------------------------------------------------------------------*/

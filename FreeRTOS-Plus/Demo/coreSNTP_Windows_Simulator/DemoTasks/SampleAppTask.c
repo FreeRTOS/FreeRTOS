@@ -46,10 +46,6 @@
 /* Demo includes. */
 #include "common_demo_include.h"
 
-/* SNTP library include. */
-#include "core_sntp_client.h"
-
-
 /*-----------------------------------------------------------*/
 
 /**

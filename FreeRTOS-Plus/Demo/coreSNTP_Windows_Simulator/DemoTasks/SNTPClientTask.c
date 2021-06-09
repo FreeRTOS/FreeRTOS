@@ -116,16 +116,6 @@
 #define MILLISECONDS_PER_TICK               ( 1000 / configTICK_RATE_HZ )
 
 /**
- * @brief Utility macro to convert years since 1st Jan 1900 00h:00m:00s to seconds.
- * This utility does account for leap years.
- */
-#define YEARS_TO_SECONDS( years )                                         \
-    ( ( years <= 100 ) ?                                                  \
-      ( ( years * 365 + years / 4 ) * 24 * 3600 ) :                       \
-/* Handle the special case for year 2000 that doesn't have a leap day. */ \
-      ( ( years * 365 + years / 4 - 1 ) * 24 * 3600 ) )
-
-/**
  * @brief Utility macro to convert the fractions part of SNTP timestamp to milliseconds.
  */
 #define SNTP_FRACTIONS_TO_MILLISECONDS( fractions )    ( fractions / ( 1000 * SNTP_FRACTION_VALUE_PER_MICROSECOND ) )
@@ -185,6 +175,18 @@ static SemaphoreHandle_t xMutex = NULL;
 static StaticSemaphore_t xSemaphoreMutex;
 
 /*-----------------------------------------------------------*/
+
+/**
+ * @brief Utility function to convert the year to UNIX time representation of seconds
+ * since 1st Jan 1970 00h:00m:00s seconds.
+ * This utility does account for leap years.
+ *
+ * @note The time represented by the passed year is the
+ * first second on 1st January of the year.
+ *
+ * @param[in] The year to translate.
+ */
+static uint32_t translateYearToUnixSeconds( uint16_t year );
 
 /**
  * @brief Calculates the current time from the system clock parameters
@@ -305,6 +307,26 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
 
 
 /*------------------------------------------------------------------------------*/
+
+static uint32_t translateYearToUnixSeconds( uint16_t year )
+{
+    configASSERT( year >= 1970 );
+
+    uint32_t numOfDaysSince1970 = ( year - 1970 ) * 365;
+
+    /* Count leap years from the year 1972 onwards. Only the
+     * year of 1973 and above cover the extra day in leap year of
+     * 1972. */
+    if( year >= 1973 )
+    {
+        /* Calculate the extra day of February 29 in leap years
+         * including the day for the year 1972. By subtracting from
+         * the year 1969, the extra day in 1972 is covered. */
+        numOfDaysSince1970 += ( ( year - 1969 ) / 4 );
+    }
+
+    return( numOfDaysSince1970 * 24 * 3600 );
+}
 
 void calculateCurrentTime( UTCTime_t * pBaseTime,
                            TickType_t lastSyncTickCount,
@@ -455,6 +477,7 @@ static int32_t UdpTransport_Recv( NetworkContext_t * pNetworkContext,
 static void sntpClient_GetTime( SntpTimestamp_t * pCurrentTime )
 {
     UTCTime_t currentTime;
+    uint64_t ntpSecs;
 
     /* Obtain mutex for accessing system clock variables */
     xSemaphoreTake( xMutex, portMAX_DELAY );
@@ -464,8 +487,23 @@ static void sntpClient_GetTime( SntpTimestamp_t * pCurrentTime )
                           systemClock.slewRate,
                           &currentTime );
 
-    /* Convert UTC time to SNTP timestamp format. */
-    pCurrentTime->seconds = currentTime.secs;
+    /* Convert UTC time from UNIX timescale to SNTP timestamp format. */
+    ntpSecs = currentTime.secs + SNTP_TIME_AT_UNIX_EPOCH_SECS;
+
+    /* Support case of SNTP timestamp rollover on 7 February 2036 when
+     * converting from UNIX time to SNTP timestamp. */
+    if( ntpSecs > UINT32_MAX )
+    {
+        /* Subtract an extra second as timestamp 0 represents the epoch for
+         * NTP era 1. */
+        pCurrentTime->seconds = ntpSecs - UINT32_MAX - 1;
+    }
+    else
+    {
+        pCurrentTime->seconds = ntpSecs;
+    }
+
+    pCurrentTime->seconds = currentTime.secs + SNTP_TIME_AT_UNIX_EPOCH_SECS;
     pCurrentTime->fractions = MILLISECONDS_TO_SNTP_FRACTIONS( currentTime.msecs );
 
     /* Release mutex. */
@@ -492,13 +530,20 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
      */
     if( ( clockOffsetSec < 0 ) || ( systemClock.firstTimeSyncDone == false ) )
     {
+        SntpStatus_t status;
+
         /* Immediately correct the base time of the system clock. */
-        systemClock.baseTime.secs = pServerTime->seconds;
-        systemClock.baseTime.msecs = SNTP_FRACTIONS_TO_MILLISECONDS( pServerTime->fractions );
+        status = Sntp_ConvertToUnixTime( pServerTime,
+                                         &systemClock.baseTime.secs,
+                                         &systemClock.baseTime.msecs );
+        configASSERT( status == SntpSuccess );
+
+        systemClock.baseTime.msecs /= 1000;
 
         /* Reset slew rate to zero as the time has been immediately corrected to server time. */
         systemClock.slewRate = 0;
 
+        /* Store the tick count of the current time synchronization in the system clock. */
         systemClock.lastSyncTickCount = xTaskGetTickCount();
 
         /* Set the system clock flag that indicates completion of the first time synchronization since device boot-up. */
@@ -522,6 +567,7 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
         /* Calculate the new slew rate as offset in seconds of adjustment per second. */
         systemClock.slewRate = clockOffsetSec / systemClock.pollPeriod;
 
+        /* Store the tick count of the current time synchronization in the system clock. */
         systemClock.lastSyncTickCount = xTaskGetTickCount();
     }
 
@@ -532,18 +578,11 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
 
 void initializeSystemClock( void )
 {
-/* On boot-up initialize the system time as the first second in the configured year. */
-    int32_t lNoOfYearsSince1900 = democonfigSYSTEM_START_YEAR - 1900;
-    int64_t llnoOfSecondsSince1900 = YEARS_TO_SECONDS( lNoOfYearsSince1900 );
+    /* On boot-up initialize the system time as the first second in the configured year. */
+    int64_t llnoOfSecondsSince1970 = translateYearToUnixSeconds( democonfigSYSTEM_START_YEAR );
 
-    if( llnoOfSecondsSince1900 <= UINT32_MAX )
-    {
-        systemClock.baseTime.secs = llnoOfSecondsSince1900;
-    }
-    else
-    {
-        systemClock.baseTime.secs = ( uint32_t ) llnoOfSecondsSince1900 - UINT32_MAX - 1UL;
-    }
+    systemClock.baseTime.secs = llnoOfSecondsSince1970;
+    systemClock.baseTime.msecs = 0;
 
     LogInfo( ( "System time has been initialized to the year %u", democonfigSYSTEM_START_YEAR ) );
     printTime( &systemClock.baseTime );

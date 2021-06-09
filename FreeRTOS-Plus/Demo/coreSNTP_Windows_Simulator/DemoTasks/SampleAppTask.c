@@ -69,29 +69,18 @@
 
 /*-----------------------------------------------------------*/
 
-void printTime( const UTCTime_t * pTime )
+void printTime( const UTCTime_t * pUnixTime )
 {
     struct tm * currTime;
     time_t time;
-    SntpTimestamp_t ntpTime;
-    SntpStatus_t status;
-    uint32_t unixTimeSecs;
-    uint32_t unixTimeMicroSecs;
-
-    /* Represent system time as NTP time. */
-    ntpTime.seconds = pTime->secs;
-    ntpTime.fractions = MILLISECONDS_TO_SNTP_FRACTIONS( pTime->msecs );
-
-    /* Convert from NTP to UNIX time representation. */
-    status = Sntp_ConvertToUnixTime( &ntpTime, &unixTimeSecs, &unixTimeMicroSecs );
 
     /* Obtain the broken-down UTC representation of the current system time. */
-    time = unixTimeSecs;
+    time = pUnixTime->secs;
     currTime = gmtime( &time );
 
     /* Log the time as both UNIX timestamp and Human Readable time. */
     LogInfo( ( "Time:\nUNIX=%lusecs %lums\nHuman Readable=%lu-%02lu-%02lu %02luh:%02lum:%02lus",
-               unixTimeSecs, unixTimeMicroSecs / 1000,
+               pUnixTime->secs, pUnixTime->msecs,
                currTime->tm_year + 1900, currTime->tm_mon + 1, currTime->tm_mday,
                currTime->tm_hour, currTime->tm_min, currTime->tm_sec ) );
 }

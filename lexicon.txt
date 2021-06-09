@@ -679,6 +679,7 @@ fcs
 fd
 fde
 fe
+february
 fec
 ferr
 ff
@@ -2064,6 +2065,7 @@ rng
 rnto
 ro
 robotronics
+rollover
 rom
 rootca
 rootcasize

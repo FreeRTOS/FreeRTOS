@@ -26,10 +26,10 @@
 
 /*
  * This file is part of the demo project that shows use of the coreSNTP library to create
- * an SNTP client (deamon) task for synchronizing system time with internet time and
+ * an SNTP client (daemon) task for synchronizing system time with internet time and
  * maintaining Coordinated Universal Time (UTC) (or wall-clock time) in the system.
  *
- * This file contains the SNTP client (deamon) task as well as functionality for
+ * This file contains the SNTP client (daemon) task as well as functionality for
  * maintaining wall-clock or UTC time in RAM. The SNTP client periodically synchronizes
  * system clock with an SNTP/NTP servers. Any other task running an application in the
  * system can query the system time. For an example of an application task querying time
@@ -587,7 +587,7 @@ void initializeSystemClock( void )
     LogInfo( ( "System time has been initialized to the year %u", democonfigSYSTEM_START_YEAR ) );
     printTime( &systemClock.baseTime );
 
-    /* Initialize sempahore for guarding access to system clock variables. */
+    /* Initialize semaphore for guarding access to system clock variables. */
     xMutex = xSemaphoreCreateMutexStatic( &xSemaphoreMutex );
     configASSERT( xMutex );
 

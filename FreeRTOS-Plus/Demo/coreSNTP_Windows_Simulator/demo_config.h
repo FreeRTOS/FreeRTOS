@@ -93,11 +93,11 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *
  * #define democonfigLIST_OF_TIME_SERVERS          "0.pool.ntp.org", "1.pool.ntp.org"
  */
-#define democonfigLIST_OF_TIME_SERVERS          "time.cloudflare.com", "pool.ntp.org"
+#define democonfigLIST_OF_TIME_SERVERS          "35.161.23.91", "time.cloudflare.com", "pool.ntp.org"
 
 /**
  * @brief The year to bake in the demo application for initializing the system clock with.
- * The demo initializes the system clock time for the starting second of the 1st Janurary of
+ * The demo initializes the system clock time for the starting second of the 1st January of
  * the configured year. So for example, with a configuration of year 2021, the demo will
  * initialize the system clock time as 1st January 2021 00h:00m:00s.
  *

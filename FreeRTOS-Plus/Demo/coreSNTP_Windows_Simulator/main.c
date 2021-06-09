@@ -150,8 +150,8 @@ void vStartSntpDemo( void )
 {
     initializeSystemClock();
 
-    /* Create the SNTP client task that is reponsible for synchronizing system time with the time servers
-     * periodically. This is created as a high priority task to keep the SNTP client operation uninhindered. */
+    /* Create the SNTP client task that is responsible for synchronizing system time with the time servers
+     * periodically. This is created as a high priority task to keep the SNTP client operation unhindered. */
     xTaskCreate( sntpTask,                 /* Function that implements the task. */
                  "SntpClientTask",         /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */

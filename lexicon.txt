@@ -445,7 +445,6 @@ dd
 ddr
 ddrb
 de
-deamon
 deathc
 debounce
 debouncing
@@ -987,7 +986,6 @@ itu
 ivr
 jan
 january
-janurary
 javascript
 jefferson
 jitp
@@ -2029,7 +2027,6 @@ reneable
 renesas
 repl
 repo
-reponsible
 reportbuilderbadparameter
 reportbuilderbuffertoosmall
 reportbuildersuccess
@@ -2141,7 +2138,6 @@ selpll
 sem
 semaphorehandle
 semihosting
-sempahore
 semtest
 semtestc
 sendb
@@ -2596,7 +2592,6 @@ unblockes
 unconfigured
 unferenced
 unicast
-uninhindered
 uninitialised
 unityconfigurationguide
 unityprint

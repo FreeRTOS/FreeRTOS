@@ -35,8 +35,8 @@
 #define MILLISECONDS_TO_SNTP_FRACTIONS( ms )    ( ms * 1000 * SNTP_FRACTION_VALUE_PER_MICROSECOND )
 
 /**
- * @brief Type representing system time in Coordinated Univeral Time (UTC)
- * zone as time since 1st January 1900 00h:00m:00s.
+ * @brief Type representing system time in Coordinated Universal Time (UTC)
+ * zone as time since 1st January 1970 00h:00m:00s.
  *
  * @note This demo uses RAM-based mathematical model to represent UTC time
  * in system.

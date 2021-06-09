@@ -2550,6 +2550,7 @@ ulstartingperiodms
 ulstatsoverflowcount
 ulstringlength
 ultaskendtrace
+ultaskgetidleruntimepercent
 ultasknotifytake
 ultasknotifytakeindexed
 ultasknotifyvalueclearindexed

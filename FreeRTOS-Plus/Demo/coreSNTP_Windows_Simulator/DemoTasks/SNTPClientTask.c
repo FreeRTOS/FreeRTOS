@@ -322,16 +322,10 @@ static uint32_t translateYearToUnixSeconds( uint16_t year )
 
     uint32_t numOfDaysSince1970 = ( year - 1970 ) * 365;
 
-    /* Count leap years from the year 1972 onwards. Only the
-     * year of 1973 and above cover the extra day in leap year of
-     * 1972. */
-    if( year >= 1973 )
-    {
-        /* Calculate the extra day of February 29 in leap years
-         * including the day for the year 1972. By subtracting from
-         * the year 1969, the extra day in 1972 is covered. */
-        numOfDaysSince1970 += ( ( year - 1969 ) / 4 );
-    }
+    /* Calculate the extra days in leap years (for February 29) over the time
+    * period from 1st Jan 1970 to 1st Jan of the passed year.
+    * By subtracting from the year 1969, the extra day in 1972 is covered. */
+    numOfDaysSince1970 += ( ( year - 1969 ) / 4 );
 
     return( numOfDaysSince1970 * 24 * 3600 );
 }

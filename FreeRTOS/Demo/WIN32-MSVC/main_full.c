@@ -390,12 +390,13 @@ HeapStats_t xHeapStats;
 		configASSERT( xHeapStats.xAvailableHeapSpaceInBytes == xPortGetFreeHeapSize() );
 		configASSERT( xHeapStats.xMinimumEverFreeBytesRemaining == xPortGetMinimumEverFreeHeapSize() );
 
-		printf( "%s - tick count %zu - free heap %zu - min free heap %zu - largest free block %zu \r\n",
+		printf( "%s - tick count %zu - free heap %zu - min free heap %zu - largest free block %zu - idle time %llu%%\r\n",
 			pcStatusMessage,
 			xTaskGetTickCount(),
 			xHeapStats.xAvailableHeapSpaceInBytes,
 			xHeapStats.xMinimumEverFreeBytesRemaining,
-			xHeapStats.xSizeOfLargestFreeBlockInBytes );
+			xHeapStats.xSizeOfLargestFreeBlockInBytes,
+			ulTaskGetIdleRunTimePercent() );
 	}
 }
 /*-----------------------------------------------------------*/

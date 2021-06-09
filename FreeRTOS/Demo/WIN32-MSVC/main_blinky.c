@@ -246,7 +246,7 @@ uint32_t ulReceivedValue;
 		console output) from a FreeRTOS task. */
 		if( ulReceivedValue == mainVALUE_SENT_FROM_TASK )
 		{
-			printf( "Message received from task\r\n" );
+			printf( "Message received from task - idle time %llu%%\r\n", ulTaskGetIdleRunTimePercent() );
 		}
 		else if( ulReceivedValue == mainVALUE_SENT_FROM_TIMER )
 		{

@@ -365,6 +365,7 @@ copybrief
 corehttp
 coremqtt
 corepkcs
+coresntp
 coretasks
 corextend
 correctl
@@ -444,6 +445,7 @@ dd
 ddr
 ddrb
 de
+deamon
 deathc
 debounce
 debouncing
@@ -807,6 +809,7 @@ hetreg
 hfclk
 hfrco
 hfxo
+hh
 hidef
 hifive
 hkdf
@@ -955,6 +958,7 @@ iproduct
 iram
 irda
 iret
+ireturned
 irom
 irq
 irqchannelpreemptionpriority
@@ -980,6 +984,9 @@ itm
 itteratio
 itu
 ivr
+jan
+january
+janurary
 javascript
 jefferson
 jitp
@@ -1005,6 +1012,7 @@ kickstart
 knowns
 kx
 lapic
+lastsynctickcount
 latestversion
 lathclr
 lathinv
@@ -1385,6 +1393,7 @@ pasv
 pathlen
 payloadlength
 pb
+pbasetime
 pbclk
 pbuf
 pbuffer
@@ -1465,6 +1474,7 @@ pctransmittedstring
 pctxbuffer
 pcurl
 pcurldata
+pcurrenttime
 pcwritebuffer
 pd
 pdata
@@ -1759,6 +1769,7 @@ prvsimplezerocopyudpclienttask
 prvsingletasktests
 prvskipnamefield
 prvstartsimplemqttdemo
+prvstartsimplesntpdemo
 prvstartstoptracecommand
 prvstatcommand
 prvstatfscommand
@@ -1810,6 +1821,8 @@ ptal
 ptcpsocket
 pth
 pthingname
+ptime
+ptimeserver
 ptm
 ptopicfilter
 ptp
@@ -2015,6 +2028,7 @@ reneable
 renesas
 repl
 repo
+reponsible
 reportbuilderbadparameter
 reportbuilderbuffertoosmall
 reportbuildersuccess
@@ -2097,6 +2111,8 @@ safertos
 sam
 sama
 samd
+sampleapp
+sampleapptask
 santity
 sarecomtesttasksstillrunning
 saveall
@@ -2123,6 +2139,7 @@ selpll
 sem
 semaphorehandle
 semihosting
+sempahore
 semtest
 semtestc
 sendb
@@ -2141,7 +2158,9 @@ serinterrupt
 serput
 sersource
 sertx
+serveraddr
 serverhost
+serverport
 setbaudratevalue
 setfaketaskpriority
 setimagestate
@@ -2177,6 +2196,7 @@ simultaniously
 singletasks
 sizeof
 sk
+slewrate
 slibxr
 smc
 smclk
@@ -2185,6 +2205,9 @@ smt
 snextcheckvariable
 sni
 snprintf
+sntp
+sntpclienttask
+sntptask
 soc
 sockaddr
 socketauto
@@ -2201,6 +2224,7 @@ sr
 sram
 src
 sren
+ss
 sscanf
 ssi
 ssitask
@@ -2268,6 +2292,7 @@ sysclk
 sysinit
 syst
 systemcoreclock
+systemgetwallclocktime
 systeminit
 systeminithook
 systemirqhandler
@@ -2569,9 +2594,11 @@ unblockes
 unconfigured
 unferenced
 unicast
+uninhindered
 uninitialised
 unityconfigurationguide
 unityprint
+univeral
 unix
 unk
 unrecognised
@@ -2625,6 +2652,7 @@ usthingnamelength
 ustopicfilterlength
 ustotallength
 utalised
+utc
 utest
 util
 utilise
@@ -3316,6 +3344,7 @@ xyieldpending
 xyieldrequired
 yrdkrl
 yrpbrl
+yyyy
 yyyymmddhhmmss
 zc
 zer

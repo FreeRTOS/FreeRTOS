@@ -71,6 +71,7 @@ backoffalgorithm
 balternatesetting
 baltimore
 barry
+basetime
 basetype
 bauddiv
 baudrate
@@ -158,6 +159,10 @@ burtcmodeem
 busfault
 buttonisr
 bvic
+bytesreceived
+bytesreceived 
+bytessent
+bytessent 
 bytestorecv
 bytestosend
 bytestring
@@ -365,6 +370,7 @@ copybrief
 corehttp
 coremqtt
 corepkcs
+coresntp
 coretasks
 corextend
 correctl
@@ -677,6 +683,7 @@ fcs
 fd
 fde
 fe
+february
 fec
 ferr
 ff
@@ -807,6 +814,7 @@ hetreg
 hfclk
 hfrco
 hfxo
+hh
 hidef
 hifive
 hkdf
@@ -955,6 +963,7 @@ iproduct
 iram
 irda
 iret
+ireturned
 irom
 irq
 irqchannelpreemptionpriority
@@ -980,6 +989,8 @@ itm
 itteratio
 itu
 ivr
+jan
+january
 javascript
 jefferson
 jitp
@@ -1005,6 +1016,7 @@ kickstart
 knowns
 kx
 lapic
+lastsynctickcount
 latestversion
 lathclr
 lathinv
@@ -1308,6 +1320,7 @@ nullptr
 num
 numaker
 numberofitems
+numofservers
 nvic
 nvs
 ocd
@@ -1385,6 +1398,7 @@ pasv
 pathlen
 payloadlength
 pb
+pbasetime
 pbclk
 pbuf
 pbuffer
@@ -1439,6 +1453,7 @@ pcnewdir
 pcommandtorelease
 pcommandtosend
 pcontext
+pcontextbuffer
 pcoverflowedtask
 pcpath
 pcpayload
@@ -1465,6 +1480,7 @@ pctransmittedstring
 pctxbuffer
 pcurl
 pcurldata
+pcurrenttime
 pcwritebuffer
 pd
 pdata
@@ -1759,6 +1775,7 @@ prvsimplezerocopyudpclienttask
 prvsingletasktests
 prvskipnamefield
 prvstartsimplemqttdemo
+prvstartsimplesntpdemo
 prvstartstoptracecommand
 prvstatcommand
 prvstatfscommand
@@ -1810,6 +1827,9 @@ ptal
 ptcpsocket
 pth
 pthingname
+ptime
+ptimeserver
+ptimeservers
 ptm
 ptopicfilter
 ptp
@@ -1843,6 +1863,7 @@ pucstreambufferstoragearea
 pucstring
 puctxbuffer
 pucudppayloadbuffer
+pudpcontext
 pul
 pulcount
 puldigestlen
@@ -2050,6 +2071,7 @@ rng
 rnto
 ro
 robotronics
+rollover
 rom
 rootca
 rootcasize
@@ -2097,6 +2119,8 @@ safertos
 sam
 sama
 samd
+sampleapp
+sampleapptask
 santity
 sarecomtesttasksstillrunning
 saveall
@@ -2141,7 +2165,9 @@ serinterrupt
 serput
 sersource
 sertx
+serveraddr
 serverhost
+serverport
 setbaudratevalue
 setfaketaskpriority
 setimagestate
@@ -2177,6 +2203,7 @@ simultaniously
 singletasks
 sizeof
 sk
+slewrate
 slibxr
 smc
 smclk
@@ -2185,6 +2212,9 @@ smt
 snextcheckvariable
 sni
 snprintf
+sntp
+sntpclienttask
+sntptask
 soc
 sockaddr
 socketauto
@@ -2201,6 +2231,7 @@ sr
 sram
 src
 sren
+ss
 sscanf
 ssi
 ssitask
@@ -2268,6 +2299,7 @@ sysclk
 sysinit
 syst
 systemcoreclock
+systemgetwallclocktime
 systeminit
 systeminithook
 systemirqhandler
@@ -2625,6 +2657,7 @@ usthingnamelength
 ustopicfilterlength
 ustotallength
 utalised
+utc
 utest
 util
 utilise
@@ -3316,6 +3349,7 @@ xyieldpending
 xyieldrequired
 yrdkrl
 yrpbrl
+yyyy
 yyyymmddhhmmss
 zc
 zer

@@ -1315,6 +1315,7 @@ nullptr
 num
 numaker
 numberofitems
+numofservers
 nvic
 nvs
 ocd
@@ -1447,6 +1448,7 @@ pcnewdir
 pcommandtorelease
 pcommandtosend
 pcontext
+pcontextbuffer
 pcoverflowedtask
 pcpath
 pcpayload
@@ -1822,6 +1824,7 @@ pth
 pthingname
 ptime
 ptimeserver
+ptimeservers
 ptm
 ptopicfilter
 ptp
@@ -1855,6 +1858,7 @@ pucstreambufferstoragearea
 pucstring
 puctxbuffer
 pucudppayloadbuffer
+pudpcontext 
 pul
 pulcount
 puldigestlen

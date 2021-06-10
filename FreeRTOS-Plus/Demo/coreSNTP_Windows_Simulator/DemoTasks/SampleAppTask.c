@@ -54,15 +54,6 @@
  */
 #define CLOCK_QUERY_TASK_DELAY_MS    ( 1000 )
 
-/**
- * @brief The constant for storing the number of milliseconds per FreeRTOS tick in the system.
- * @note This value represents the time duration per tick from the perspective of the
- * of Windows Simulator based FreeRTOS system that carries lagging clock drift in relation to
- * internet time or UTC time. Thus, the actual time duration value per tick of the system will be
- * larger from the perspective of internet time.
- */
-#define MILLISECONDS_PER_TICK        ( 1000 / configTICK_RATE_HZ )
-
 /*-----------------------------------------------------------*/
 
 void printTime( const UTCTime_t * pUnixTime )

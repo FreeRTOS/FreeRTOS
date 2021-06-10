@@ -215,7 +215,7 @@ static void calculateCurrentTime( UTCTime_t * pBaseTime,
  *
  * @param[in, out] pContext The memory for the SNTP client context that will be initialized with
  * Sntp_Init API.
- * @param[in] pTimeSevers The list of time servers configured through the democonfigLIST_OF_TIME_SERVERS
+ * @param[in] pTimeServers The list of time servers configured through the democonfigLIST_OF_TIME_SERVERS
  * macro in demo_config.h.
  * @param[in] numOfServers The number of time servers configured in democonfigLIST_OF_TIME_SERVERS.
  * @param[in] pContextBuffer The allocated network buffer that will be initialized in the SNTP context.
@@ -419,15 +419,15 @@ int32_t UdpTransport_Send( NetworkContext_t * pNetworkContext,
                            const void * pBuffer,
                            size_t bytesToSend )
 {
-    struct freertos_sockaddr xDestinationAddress;
-    int32_t iReturned;
+    struct freertos_sockaddr destinationAddress;
+    int32_t bytesSent;
 
-    xDestinationAddress.sin_addr = serverAddr;
-    xDestinationAddress.sin_port = FreeRTOS_htons( serverPort );
+    destinationAddress.sin_addr = serverAddr;
+    destinationAddress.sin_port = FreeRTOS_htons( serverPort );
 
     /* Send the buffer with ulFlags set to 0, so the FREERTOS_ZERO_COPY bit
      * is clear. */
-    iReturned = FreeRTOS_sendto( /* The socket being send to. */
+    bytesSent = FreeRTOS_sendto( /* The socket being send to. */
         pNetworkContext->socket,
         /* The data being sent. */
         pBuffer,
@@ -436,12 +436,12 @@ int32_t UdpTransport_Send( NetworkContext_t * pNetworkContext,
         /* ulFlags with the FREERTOS_ZERO_COPY bit clear. */
         0,
         /* Where the data is being sent. */
-        &xDestinationAddress,
+        &destinationAddress,
         /* Not used but should be set as shown. */
-        sizeof( xDestinationAddress )
+        sizeof( destinationAddress )
         );
 
-    return iReturned;
+    return bytesSent;
 }
 
 static int32_t UdpTransport_Recv( NetworkContext_t * pNetworkContext,
@@ -451,12 +451,12 @@ static int32_t UdpTransport_Recv( NetworkContext_t * pNetworkContext,
                                   size_t bytesToRecv )
 {
     struct freertos_sockaddr sourceAddress;
-    int32_t iReturned;
+    int32_t bytesReceived;
     socklen_t addressLength = sizeof( struct freertos_sockaddr );
 
     /* Receive into the buffer with ulFlags set to 0, so the FREERTOS_ZERO_COPY bit
      * is clear. */
-    iReturned = FreeRTOS_recvfrom( /* The socket data is being received on. */
+    bytesReceived = FreeRTOS_recvfrom( /* The socket data is being received on. */
         pNetworkContext->socket,
 
         /* The buffer into which received data will be
@@ -476,10 +476,10 @@ static int32_t UdpTransport_Recv( NetworkContext_t * pNetworkContext,
 
     /* If data is received from the network, discard the data if  received from a different source than
      * the server. */
-    if( ( iReturned > 0 ) && ( ( sourceAddress.sin_addr != serverAddr ) ||
-                               ( FreeRTOS_ntohs( sourceAddress.sin_port ) != serverPort ) ) )
+    if( ( bytesReceived > 0 ) && ( ( sourceAddress.sin_addr != serverAddr ) ||
+                                   ( FreeRTOS_ntohs( sourceAddress.sin_port ) != serverPort ) ) )
     {
-        iReturned = 0;
+        bytesReceived = 0;
 
         #if defined( LIBRARY_LOG_LEVEL ) && ( LIBRARY_LOG_LEVEL != LOG_NONE )
             /* Convert the IP address of the sender's address to string for logging. */
@@ -494,12 +494,12 @@ static int32_t UdpTransport_Recv( NetworkContext_t * pNetworkContext,
 
     /* Translate the return code of timeout to the UDP transport interface expected
      * code to indicate read retry. */
-    else if( iReturned == -pdFREERTOS_ERRNO_EWOULDBLOCK )
+    else if( bytesReceived == -pdFREERTOS_ERRNO_EWOULDBLOCK )
     {
-        iReturned = 0;
+        bytesReceived = 0;
     }
 
-    return iReturned;
+    return bytesReceived;
 }
 
 
@@ -612,9 +612,9 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
 void initializeSystemClock( void )
 {
     /* On boot-up initialize the system time as the first second in the configured year. */
-    int64_t llnoOfSecondsSince1970 = translateYearToUnixSeconds( democonfigSYSTEM_START_YEAR );
+    int64_t startupTimeInUnixSecs = translateYearToUnixSeconds( democonfigSYSTEM_START_YEAR );
 
-    systemClock.baseTime.secs = llnoOfSecondsSince1970;
+    systemClock.baseTime.secs = startupTimeInUnixSecs;
     systemClock.baseTime.msecs = 0;
 
     LogInfo( ( "System time has been initialized to the year %u", democonfigSYSTEM_START_YEAR ) );
@@ -767,6 +767,15 @@ void sntpTask( void * pParameters )
             /* Wait for the poll interval period before the next iteration of time synchronization. */
             vTaskDelay( pdMS_TO_TICKS( systemClock.pollPeriod * 1000 ) );
         }
+    }
+    else
+    {
+        configASSERT( false );
+
+        /* Terminate the task as the SNTP client failed to be run. */
+        LogError( ( "Failed to initialize SNTP client. Terminating SNTP client task.." ) );
+
+        vTaskDelete( NULL );
     }
 }
 

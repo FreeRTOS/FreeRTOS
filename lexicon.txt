@@ -71,6 +71,7 @@ backoffalgorithm
 balternatesetting
 baltimore
 barry
+basetime
 basetype
 bauddiv
 baudrate
@@ -158,6 +159,10 @@ burtcmodeem
 busfault
 buttonisr
 bvic
+bytesreceived
+bytesreceived 
+bytessent
+bytessent 
 bytestorecv
 bytestosend
 bytestring
@@ -1858,7 +1863,7 @@ pucstreambufferstoragearea
 pucstring
 puctxbuffer
 pucudppayloadbuffer
-pudpcontext 
+pudpcontext
 pul
 pulcount
 puldigestlen

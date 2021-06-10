@@ -54,16 +54,29 @@ SOURCE_FILES          += ${FREERTOS_DIR}/Demo/Common/Minimal/StreamBufferInterru
 SOURCE_FILES          += ${FREERTOS_DIR}/Demo/Common/Minimal/TaskNotify.c
 SOURCE_FILES          += ${FREERTOS_DIR}/Demo/Common/Minimal/TimerDemo.c
 
-# Trace library.
-SOURCE_FILES          += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/trcKernelPort.c
-SOURCE_FILES          += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/trcSnapshotRecorder.c
-SOURCE_FILES          += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/trcStreamingRecorder.c
-SOURCE_FILES          += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/File/trcStreamingPort.c
 
 
-CFLAGS                :=    -ggdb3 -DprojCOVERAGE_TEST=0 -D_WINDOWS_
+CFLAGS                :=    -ggdb3
 LDFLAGS               :=    -ggdb3 -pthread
 CPPFLAGS              :=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
+CPPFLAGS              +=    -D_WINDOWS_
+
+ifeq ($(TRACE_ON_ENTER),1)
+  CPPFLAGS              += -DTRACE_ON_ENTER=1
+else
+  CPPFLAGS              += -DTRACE_ON_ENTER=0
+endif
+
+ifeq ($(COVERAGE_TEST),1)
+  CPPFLAGS              += -DprojCOVERAGE_TEST=1
+else
+  CPPFLAGS              += -DprojCOVERAGE_TEST=0
+# Trace library.
+  SOURCE_FILES          += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/trcKernelPort.c
+  SOURCE_FILES          += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/trcSnapshotRecorder.c
+  SOURCE_FILES          += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/trcStreamingRecorder.c
+  SOURCE_FILES          += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/File/trcStreamingPort.c
+endif
 
 ifdef PROFILE
   CFLAGS              +=   -pg  -O0

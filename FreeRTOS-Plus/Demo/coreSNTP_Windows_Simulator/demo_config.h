@@ -118,6 +118,27 @@ extern void vLoggingPrintf( const char * pcFormatString,
 #define democonfigSERVER_RESPONSE_TIMEOUT_MS    ( 5000 )
 
 /**
+ * @brief The 128-bit (or 16 bytes) symmetric key for generating authentication code in client request to NTP/SNTP server
+ * as well as validating server from the time response received.
+ * 
+ * This demo shows use of AES-128-CMAC algorithm for a mutual authentication mechanism in the SNTP communication
+ * between the NTP/SNTP server and client. The demo generates a Message Authentication Code (MAC) using
+ * the algorithm and appends it to the client request packet before the coreSNTP library sends it over
+ * the network to the server. The server validates the client from the request from the authentication code 
+ * present in the request packet. Similarly, this demo validates the server from the response received on
+ * the network by verifying the authentication code present in the response packet.
+ * 
+ * It is RECOMMENDED to use an authentication mechanism for protecting devices against server spoofing
+ * attacks.
+ * 
+ * @note Please provide the 128-bit key as a hexadecimal string.
+ * 
+ * @note Use of the AES-128-CMAC based authentication scheme in the demo requires that the symmetric key 
+ * is shared safely between the time server and the client device. 
+ */ 
+#define democonfigAES_CMAC_AUTHENTICATION_SYMMETRIC_KEY   "CB0F2EC7680743DC8C5E07C244F82A00"
+
+/**
  * @brief Set the stack size of the main demo task.
  *
  * In the Windows port, this stack only holds a structure. The actual

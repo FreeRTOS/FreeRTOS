@@ -45,6 +45,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <time.h>
+#include <math.h>
 
 /* Kernel includes. */
 #include "FreeRTOS.h"
@@ -63,6 +64,11 @@
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_UDP_IP.h"
 #include "FreeRTOS_Sockets.h"
+
+/* PKCS11 includes. */
+#include "core_pki_utils.h"
+#include "core_pkcs11_config.h"
+#include "core_pkcs11.h"
 
 /*-----------------------------------------------------------*/
 
@@ -109,6 +115,12 @@
  */
 #define MILLISECONDS_PER_TICK               ( 1000 / configTICK_RATE_HZ )
 
+/**
+ * @brief The fixed size of the key for the AES-128-CMAC algorithm used for authenticating communication
+ * between the time server and the client.
+ */
+#define AES_CMAC_AUTHENTICATION_KEY_SIZE    ( 16 )
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -118,11 +130,24 @@
  *
  * @note The context is used in the @ref UdpTransportInterface_t interface required
  * by the coreSNTP library.
- *
  */
 struct NetworkContext
 {
     Socket_t socket;
+};
+
+/**
+ * @brief The definition of the @ref SntpAuthContext_t structure for the demo.
+ * This structure represents the key for the AES-128-CMAC algorithm based
+ * authentication mechanism shown in the demo for securing SNTP communication
+ * between client and time server.
+ *
+ * @note The context is used in the @ref SntpAuthInterface_t interface required
+ * by the coreSNTP library for enabling authentication.
+ */
+struct SntpAuthContext
+{
+    uint8_t pAuthKey[ AES_CMAC_AUTHENTICATION_KEY_SIZE ];
 };
 
 /**
@@ -229,7 +254,8 @@ static bool initializeSntpClient( SntpContext_t * pContext,
                                   size_t numOfServers,
                                   uint8_t * pContextBuffer,
                                   size_t contextBufferSize,
-                                  NetworkContext_t * pUdpContext );
+                                  NetworkContext_t * pUdpContext,
+                                  SntpAuthContext_t * pAuthContext );
 
 /**
  * @brief The demo implementation of the @ref SntpResolveDns_t interface to
@@ -607,6 +633,136 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
     xSemaphoreGive( xMutex );
 }
 
+SntpStatus_t addClientAuthCode( SntpAuthContext_t * pContext,
+                                const SntpServerInfo_t * pTimeServer,
+                                void * pBuffer,
+                                size_t bufferSize,
+                                size_t * pAuthCodeSize )
+{
+    CK_RV result;
+    CK_FUNCTION_LIST_PTR functionList;
+    CK_SESSION_HANDLE pkcs11Session = 0;
+
+    CK_BYTE label[] = pkcs11configLABEL_CMAC_KEY;
+    CK_KEY_TYPE cmacKeyType = CKK_AES;
+    CK_OBJECT_CLASS cmacKeyClass = CKO_SECRET_KEY;
+    CK_BBOOL trueObject = CK_TRUE;
+
+    CK_OBJECT_HANDLE cMacKey;
+    size_t macBytesWritten = 0;
+
+
+    result = xInitializePKCS11();
+
+    if( result != CKR_CRYPTOKI_ALREADY_INITIALIZED )
+    {
+        LogError( ( "Failed to initialize PKCS #11 module." ) );
+    }
+
+    if( result == CKR_OK )
+    {
+        result = xInitializePkcs11Session( &pkcs11Session );
+
+        if( result != CKR_OK )
+        {
+            LogError( ( "Failed to open PKCS #11 session." ) );
+        }
+    }
+
+    CK_MECHANISM mechanism =
+    {
+        CKM_AES_CMAC, NULL_PTR, 0
+    };
+
+    /* Generated with: */
+    /* $ echo -n "Hello world" | openssl dgst -mac cmac -macopt cipher:aes-128-ecb -macopt hexkey:11223344112233441122334411223344 */
+    const char * testString = "Hello world";
+
+    if( result == CKR_OK )
+    {
+        result = C_GetFunctionList( &functionList );
+
+        if( result != CKR_OK )
+        {
+            LogError( ( "Failed to get PKCS #11 function list." ) );
+        }
+    }
+
+    CK_ATTRIBUTE aes_cmac_template[] =
+    {
+        { CKA_CLASS,    &cmacKeyClass,      sizeof( CK_OBJECT_CLASS )    },
+        { CKA_KEY_TYPE, &cmacKeyType,       sizeof( CK_KEY_TYPE )        },
+        { CKA_LABEL,    label,              sizeof( label ) - 1          },
+        { CKA_TOKEN,    &trueObject,        sizeof( CK_BBOOL )           },
+        { CKA_SIGN,     &trueObject,        sizeof( CK_BBOOL )           },
+        { CKA_VERIFY,   &trueObject,        sizeof( CK_BBOOL )           },
+        { CKA_VALUE,    pContext->pAuthKey, sizeof( pContext->pAuthKey ) }
+    };
+
+    if( result == CKR_OK )
+    {
+        /* Create the template objects */
+        result = functionList->C_CreateObject( pkcs11Session,
+                                               ( CK_ATTRIBUTE_PTR ) &aes_cmac_template,
+                                               sizeof( aes_cmac_template ) / sizeof( CK_ATTRIBUTE ),
+                                               &cMacKey );
+
+        if( result != CKR_OK )
+        {
+            LogError( ( "Failed to create AES CMAC object." ) );
+        }
+    }
+
+    /*TEST_ASSERT_NOT_EQUAL_MESSAGE( CK_INVALID_HANDLE, cMacKey, "AES CMAC key is invalid." ); */
+
+    if( result == CKR_OK )
+    {
+        /* Test SignInit and Sign */
+        result = functionList->C_SignInit( pkcs11Session, &mechanism, cMacKey );
+
+        if( result != CKR_OK )
+        {
+            LogError( ( "Failed to C_SignInit AES CMAC." ) );
+        }
+    }
+
+    if( result == CKR_OK )
+    {
+        result = functionList->C_Sign( pkcs11Session,
+                                       ( CK_BYTE * ) testString,
+                                       strlen( testString ),
+                                       ( CK_BYTE * ) pBuffer + SNTP_PACKET_BASE_SIZE,
+                                       &macBytesWritten );
+
+        if( result != CKR_OK )
+        {
+            LogError( ( "Failed to generate client auth code: Failed to generate AES-128-CMAC signature of SNTP request packet." ) );
+        }
+    }
+
+    if( result == CKR_OK )
+    {
+        result = functionList->C_CloseSession( pkcs11Session );
+
+        if( result != CKR_CRYPTOKI_NOT_INITIALIZED )
+        {
+            /*TEST_ASSERT_EQUAL_MESSAGE( CKR_OK, result, "Failed to close session." ); */
+
+            result = functionList->C_Finalize( NULL );
+            /*TEST_ASSERT_EQUAL_MESSAGE( CKR_OK, result, "Failed to finalize session." ); */
+        }
+    }
+
+    return SntpErrorAuthFailure;
+}
+
+SntpStatus_t validateServerAuth( SntpAuthContext_t * pContext,
+                                 const SntpServerInfo_t * pTimeServer,
+                                 const void * pResponseData,
+                                 size_t responseSize )
+{
+}
+
 /*************************************************************************************/
 
 void initializeSystemClock( void )
@@ -636,7 +792,8 @@ static bool initializeSntpClient( SntpContext_t * pContext,
                                   size_t numOfServers,
                                   uint8_t * pContextBuffer,
                                   size_t contextBufferSize,
-                                  NetworkContext_t * pUdpContext )
+                                  NetworkContext_t * pUdpContext,
+                                  SntpAuthContext_t * pAuthContext )
 {
     bool initStatus = false;
 
@@ -649,7 +806,7 @@ static bool initializeSntpClient( SntpContext_t * pContext,
     }
     else
     {
-        for( int8_t index = 0; index < numOfServers; index++ )
+        for( uint8_t index = 0; index < numOfServers; index++ )
         {
             pServers[ index ].pServerName = pTimeServers[ index ];
             pServers[ index ].port = SNTP_DEFAULT_SERVER_PORT;
@@ -675,6 +832,7 @@ static bool initializeSntpClient( SntpContext_t * pContext,
         {
             struct freertos_sockaddr bindAddress;
             UdpTransportInterface_t udpTransportIntf;
+            SntpAuthenticationInterface_t symmetricKeyAuthIntf;
 
             bindAddress.sin_port = FreeRTOS_htons( SNTP_DEFAULT_SERVER_PORT );
 
@@ -689,6 +847,10 @@ static bool initializeSntpClient( SntpContext_t * pContext,
             udpTransportIntf.sendTo = UdpTransport_Send;
             udpTransportIntf.recvFrom = UdpTransport_Recv;
 
+            /* Set the authentication interface object. */
+            symmetricKeyAuthIntf.pAuthContext = pAuthContext;
+            symmetricKeyAuthIntf.generateClientAuth = addClientAuthCode;
+
             /* Initialize context. */
             Sntp_Init( pContext,
                        pServers,
@@ -700,7 +862,7 @@ static bool initializeSntpClient( SntpContext_t * pContext,
                        sntpClient_GetTime,
                        sntpClient_SetTime,
                        &udpTransportIntf,
-                       NULL );
+                       &symmetricKeyAuthIntf );
 
             initStatus = true;
         }
@@ -720,7 +882,7 @@ void sntpTask( void * pParameters )
     static SntpContext_t context;
 
     /* Memory for the SNTP packet buffer in the SNTP context. */
-    static uint8_t contextBuffer[ SNTP_CONTEXT_NETWORK_BUFFER_SIZE ];
+    static uint8_t contextBuffer[ SNTP_CONTEXT_NETWORK_BUFFER_SIZE + pkcs11AES_CMAC_SIGNATURE_LENGTH ];
 
     /* Memory for the network context representing the UDP socket that will be
      * passed to the SNTP client context. */
@@ -730,12 +892,30 @@ void sntpTask( void * pParameters )
     static const char * pTimeServers[] = { democonfigLIST_OF_TIME_SERVERS };
     const size_t numOfServers = sizeof( pTimeServers ) / sizeof( char * );
 
+    /* Verify that the configured authentication key is 128 bits or 16 bytes in size. As
+     * the input format is a hex string, the string length should be 32 bytes. */
+    static const char * pAesCmacAuthKey = democonfigAES_CMAC_AUTHENTICATION_SYMMETRIC_KEY;
+
+    configASSERT( strlen( pAesCmacAuthKey ) == 2 * AES_CMAC_AUTHENTICATION_KEY_SIZE );
+
+    /* Store the configured AES-128-CMAC key for authentication in the SntpAuthContext_t context
+     * after converting it from hex string to binary. */
+    static SntpAuthContext_t authKeyContext;
+
+    for( uint8_t index = 0; index < strlen( pAesCmacAuthKey ); index += 2 )
+    {
+        char byteString[3] = {pAesCmacAuthKey[ index ], pAesCmacAuthKey[ index + 1], '\0'};
+         uint8_t byteVal = strtoul( byteString, NULL, 16 );
+        authKeyContext.pAuthKey[ index / 2 ] = byteVal;
+    }
+
     initStatus = initializeSntpClient( &clientContext,
                                        pTimeServers,
                                        numOfServers,
                                        contextBuffer,
                                        sizeof( contextBuffer ),
-                                       &udpContext );
+                                       &udpContext,
+                                       &authKeyContext );
 
     if( initStatus == true )
     {
@@ -755,7 +935,11 @@ void sntpTask( void * pParameters )
         {
             /* TODO - Generate random number with corePKCS11. */
             status = Sntp_SendTimeRequest( &clientContext, 100 );
-            configASSERT( status == SntpSuccess );
+            //configASSERT( status == SntpSuccess );
+            if (status != SntpSuccess)
+            {
+                continue;
+            }
 
             /* Wait till the server response is not received. */
             do

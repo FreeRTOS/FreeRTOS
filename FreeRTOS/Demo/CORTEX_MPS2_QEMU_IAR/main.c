@@ -141,6 +141,13 @@ void vApplicationIdleHook( void )
 	that vApplicationIdleHook() is permitted to return to its calling function,
 	because it is the responsibility of the idle task to clean up memory
 	allocated by the kernel to any task that has since deleted itself. */
+	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0 )
+	{
+		extern void vFullDemoIdleHookFunction( void );
+
+		vFullDemoIdleHookFunction();
+	}
+	#endif
 }
 /*-----------------------------------------------------------*/
 

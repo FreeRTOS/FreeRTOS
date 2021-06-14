@@ -110,6 +110,23 @@
  * described at the top of this file. */
 static void prvCheckTask( void *pvParameters );
 
+/*
+ * Called by the Idle task hook function.
+ */
+void vFullDemoIdleHook( void );
+
+/*
+ * Indirectly exercises the xTaskMemoryAllocated() and xTaskMemoryFreed()
+ * functions.
+ */
+static void prvExerciseTaskHeapAllocationStats( void );
+
+/*-----------------------------------------------------------*/
+
+/* Holds the string that is output by the check task.  Initialised to pass, but
+ * updated to hold an error message if an error is detected. */
+static const char * volatile pcStatusMessage = "PASS";
+
 /*-----------------------------------------------------------*/
 
 void main_full( void )
@@ -160,7 +177,6 @@ void main_full( void )
 /* See the comments at the top of this file. */
 static void prvCheckTask( void *pvParameters )
 {
-static const char * pcMessage = "PASS";
 const TickType_t xTaskPeriod = pdMS_TO_TICKS( 5000UL );
 TickType_t xPreviousWakeTime;
 extern uint32_t ulNestCount;
@@ -174,104 +190,104 @@ extern uint32_t ulNestCount;
 		/* Has an error been found in any task? */
 		if( xAreStreamBufferTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreStreamBufferTasksStillRunning() returned false";
+			pcStatusMessage = "xAreStreamBufferTasksStillRunning() returned false";
 		}
 		else if( xAreMessageBufferTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreMessageBufferTasksStillRunning() returned false";
+			pcStatusMessage = "xAreMessageBufferTasksStillRunning() returned false";
 		}
 		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreGenericQueueTasksStillRunning() returned false";
+			pcStatusMessage = "xAreGenericQueueTasksStillRunning() returned false";
 		}
 	    else if( xIsCreateTaskStillRunning() != pdTRUE )
 	    {
-	        pcMessage = "xIsCreateTaskStillRunning() returned false";
+	        pcStatusMessage = "xIsCreateTaskStillRunning() returned false";
 	    }
 		else if( xAreIntQueueTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreIntQueueTasksStillRunning() returned false";
+			pcStatusMessage = "xAreIntQueueTasksStillRunning() returned false";
 		}
 		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreBlockTimeTestTasksStillRunning() returned false";
+			pcStatusMessage = "xAreBlockTimeTestTasksStillRunning() returned false";
 		}
 		else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreSemaphoreTasksStillRunning() returned false";
+			pcStatusMessage = "xAreSemaphoreTasksStillRunning() returned false";
 		}
 		else if( xArePollingQueuesStillRunning() != pdTRUE )
 		{
-			pcMessage = "xArePollingQueuesStillRunning() returned false";
+			pcStatusMessage = "xArePollingQueuesStillRunning() returned false";
 		}
 		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreQueuePeekTasksStillRunning() returned false";
+			pcStatusMessage = "xAreQueuePeekTasksStillRunning() returned false";
 		}
 		else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreRecursiveMutexTasksStillRunning() returned false";
+			pcStatusMessage = "xAreRecursiveMutexTasksStillRunning() returned false";
 		}
 		else if( xAreQueueSetTasksStillRunning() != pdPASS )
 		{
-			pcMessage = "xAreQueueSetTasksStillRunning() returned false";
+			pcStatusMessage = "xAreQueueSetTasksStillRunning() returned false";
 		}
 		else if( xAreEventGroupTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreEventGroupTasksStillRunning() returned false";
+			pcStatusMessage = "xAreEventGroupTasksStillRunning() returned false";
 		}
 		else if( xAreAbortDelayTestTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreAbortDelayTestTasksStillRunning() returned false";
+			pcStatusMessage = "xAreAbortDelayTestTasksStillRunning() returned false";
 		}
 		else if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreCountingSemaphoreTasksStillRunning() returned false";
+			pcStatusMessage = "xAreCountingSemaphoreTasksStillRunning() returned false";
 		}
 		else if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreDynamicPriorityTasksStillRunning() returned false";
+			pcStatusMessage = "xAreDynamicPriorityTasksStillRunning() returned false";
 		}
 		else if( xAreMessageBufferAMPTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreMessageBufferAMPTasksStillRunning() returned false";
+			pcStatusMessage = "xAreMessageBufferAMPTasksStillRunning() returned false";
 		}
 		else if( xIsQueueOverwriteTaskStillRunning() != pdTRUE )
 		{
-			pcMessage = "xIsQueueOverwriteTaskStillRunning() returned false";
+			pcStatusMessage = "xIsQueueOverwriteTaskStillRunning() returned false";
 		}
 		else if( xAreQueueSetPollTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreQueueSetPollTasksStillRunning() returned false";
+			pcStatusMessage = "xAreQueueSetPollTasksStillRunning() returned false";
 		}
 		else if( xAreStaticAllocationTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreStaticAllocationTasksStillRunning() returned false";
+			pcStatusMessage = "xAreStaticAllocationTasksStillRunning() returned false";
 		}
 		else if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreTaskNotificationTasksStillRunning() returned false";
+			pcStatusMessage = "xAreTaskNotificationTasksStillRunning() returned false";
 		}
 		else if( xAreTaskNotificationArrayTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreTaskNotificationArrayTasksStillRunning() returned false";
+			pcStatusMessage = "xAreTaskNotificationArrayTasksStillRunning() returned false";
 		}
 		else if( xAreTimerDemoTasksStillRunning( xTaskPeriod ) != pdTRUE )
 		{
-			pcMessage = "xAreTimerDemoTasksStillRunning() returned false";
+			pcStatusMessage = "xAreTimerDemoTasksStillRunning() returned false";
 		}
 		else if( xIsInterruptStreamBufferDemoStillRunning() != pdTRUE )
 		{
-			pcMessage = "xIsInterruptStreamBufferDemoStillRunning() returned false";
+			pcStatusMessage = "xIsInterruptStreamBufferDemoStillRunning() returned false";
 		}
 		else if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreInterruptSemaphoreTasksStillRunning() returned false";
+			pcStatusMessage = "xAreInterruptSemaphoreTasksStillRunning() returned false";
 		}
 
 		/* It is normally not good to call printf() from an embedded system,
 		although it is ok in this simulated case. */
-		printf( "%s : %d (%d)\r\n", pcMessage, (int) xTaskGetTickCount(), ulNestCount );
+		printf( "%s : %d (%d)\r\n", pcStatusMessage, (int) xTaskGetTickCount(), ulNestCount );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -309,3 +325,97 @@ void vFullDemoTickHookFunction( void )
 }
 /*-----------------------------------------------------------*/
 
+void vFullDemoIdleHookFunction( void )
+{
+	prvExerciseTaskHeapAllocationStats();
+}
+/*-----------------------------------------------------------*/
+
+static void prvExerciseTaskHeapAllocationStats( void )
+{
+TaskStatus_t xTaskInfo;
+uint32_t ulOriginalNumberOfAllocations, ulOriginalNumberOfFrees;
+size_t xOriginalHighWaterMark;
+const size_t xBytesToAllocate = ( size_t ) 100;
+void *pvAllocatedMemory;
+TaskHandle_t xIdleTaskHandle;
+static uint32_t ulCallCount = 0UL;
+const uint32_t ulMaxCallCount = 0xfffffff0UL;
+
+	/* Test will fail once the number of allocations and frees cannot be
+	 * incremented without resulting in an overflow. */
+	if( ulCallCount < ulMaxCallCount )
+	{
+		xIdleTaskHandle = xTaskGetCurrentTaskHandle();
+
+		vTaskGetInfo( xIdleTaskHandle,	/* The task being queried. */
+						  &xTaskInfo,	/* The structure into which information on the task will be written. */
+						  pdTRUE,		/* Include the task's high watermark in the structure. */
+						  eInvalid );	/* Include the task state in the structure. */
+
+		/* The idle task does not otherwise allocate any memory. */
+		if( ( xTaskInfo.eCurrentState != eRunning )								||
+			( xTaskInfo.xHeapBytesCurrentlyHeld != ( size_t ) 0 ) )
+		{
+			pcStatusMessage = "Error:  vTaskGetInfo() returned incorrect information about heap allocated by idle task.\r\n";
+		}
+
+		/* Remember the current heap stats for the idle task, allocate some memory,
+		 * then ensure the heap stats are updated as expected. */
+		ulOriginalNumberOfAllocations = xTaskInfo.ulNumberOfHeapAllocations;
+		ulOriginalNumberOfFrees = xTaskInfo.ulNumberOfHeapFrees;
+		xOriginalHighWaterMark = xTaskInfo.xMaxHeapBytesEverHeld;
+
+		pvAllocatedMemory = pvPortMalloc( xBytesToAllocate );
+		configASSERT( pvAllocatedMemory );
+
+		vTaskGetInfo( xIdleTaskHandle,	/* The task being queried. */
+						  &xTaskInfo,	/* The structure into which information on the task will be written. */
+						  pdTRUE,		/* Include the task's high watermark in the structure. */
+						  eInvalid );	/* Include the task state in the structure. */
+
+		if( ( xTaskInfo.ulNumberOfHeapAllocations != ( ulOriginalNumberOfAllocations + 1UL ) ||
+			( xTaskInfo.ulNumberOfHeapFrees != ulOriginalNumberOfFrees ) ||
+			( xTaskInfo.xHeapBytesCurrentlyHeld != xBytesToAllocate ) ) )
+		{
+			pcStatusMessage = "Error:  vTaskGetInfo() returned incorrect information after allocating memory in the idle task.\r\n";
+		}
+
+		/* If this is the first time through the high water mark should have
+		 * increased by the amount of memory allocated, otherwise it should have
+		 * stayed the same. */
+		if( ulCallCount == 0 )
+		{
+			if( xTaskInfo.xMaxHeapBytesEverHeld != xBytesToAllocate )
+			{
+				pcStatusMessage = "Error:  vTaskGetInfo() returned incorrect heap allocation high water mark for the idle task, first pass.\r\n";
+			}
+		}
+		else
+		{
+			if( xTaskInfo.xMaxHeapBytesEverHeld != xOriginalHighWaterMark )
+			{
+				pcStatusMessage = "Error:  vTaskGetInfo() returned incorrect heap allocation high water mark for the idle task, not first pass.\r\n";
+			}
+		}
+
+		/* Likewise free the memory just allocated and double check the task's heap
+		 * stats once more. */
+		vPortFree( pvAllocatedMemory );
+
+		vTaskGetInfo( xIdleTaskHandle,	/* The task being queried. */
+						  &xTaskInfo,	/* The structure into which information on the task will be written. */
+						  pdTRUE,		/* Include the task's high watermark in the structure. */
+						  eInvalid );	/* Include the task state in the structure. */
+
+		if( ( xTaskInfo.ulNumberOfHeapAllocations != ( ulOriginalNumberOfAllocations + 1UL ) ||
+			( xTaskInfo.ulNumberOfHeapFrees != ( ulOriginalNumberOfFrees + 1 ) ) ||
+			( xTaskInfo.xHeapBytesCurrentlyHeld != ( size_t ) 0 ) ) )
+		{
+			pcStatusMessage = "Error:  vTaskGetInfo() returned incorrect information after freeing memory in the idle task.\r\n";
+		}
+
+		ulCallCount++;
+	}
+}
+/*-----------------------------------------------------------*/

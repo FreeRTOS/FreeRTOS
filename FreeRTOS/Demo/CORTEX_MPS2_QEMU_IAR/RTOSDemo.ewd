@@ -88,7 +88,7 @@
                 </option>
                 <option>
                     <name>OCLastSavedByProductVersion</name>
-                    <state>8.42.1.23869</state>
+                    <state>8.50.6.28950</state>
                 </option>
                 <option>
                     <name>UseFlashLoader</name>
@@ -1007,7 +1007,7 @@
             <name>STLINK_ID</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>6</version>
+                <version>7</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>

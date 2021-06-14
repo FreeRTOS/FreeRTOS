@@ -104,7 +104,7 @@
  * @note The size of the buffer MUST be large enough to hold an entire SNTP packet, which includes the standard SNTP
  * packet data of 48 bytes and authentication data for security mechanism, if used, in communication with time server.
  */
-#define SNTP_CONTEXT_NETWORK_BUFFER_SIZE    ( SNTP_PACKET_BASE_SIZE )
+#define SNTP_CONTEXT_NETWORK_BUFFER_SIZE       ( SNTP_PACKET_BASE_SIZE )
 
 /**
  * @brief The constant for storing the number of milliseconds per FreeRTOS tick in the system.
@@ -113,13 +113,17 @@
  * internet time or UTC time. Thus, the actual time duration value per tick of the system will be
  * larger from the perspective of internet time.
  */
-#define MILLISECONDS_PER_TICK               ( 1000 / configTICK_RATE_HZ )
+#define MILLISECONDS_PER_TICK                  ( 1000 / configTICK_RATE_HZ )
 
 /**
  * @brief The fixed size of the key for the AES-128-CMAC algorithm used for authenticating communication
  * between the time server and the client.
  */
-#define AES_CMAC_AUTHENTICATION_KEY_SIZE    ( 16 )
+#define AES_CMAC_AUTHENTICATION_KEY_SIZE       ( 16 )
+
+#define SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH    4
+
+#define SNTP_PACKET_SYMMETRIC_KEY_ID_OFFSET    SNTP_PACKET_BASE_SIZE
 
 /*-----------------------------------------------------------*/
 
@@ -147,6 +151,7 @@ struct NetworkContext
  */
 struct SntpAuthContext
 {
+    uint32_t keyId;
     uint8_t pAuthKey[ AES_CMAC_AUTHENTICATION_KEY_SIZE ];
 };
 
@@ -193,6 +198,12 @@ static SystemClock_t systemClock;
  */
 static SemaphoreHandle_t xMutex = NULL;
 static StaticSemaphore_t xSemaphoreMutex;
+
+static SntpAuthContext_t authKeyContext =
+{
+    .keyId    = democonfigAES_CMAC_AUTHENTICATION_KEY_ID,
+    .pAuthKey = NULL
+};
 
 /*-----------------------------------------------------------*/
 
@@ -633,6 +644,71 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
     xSemaphoreGive( xMutex );
 }
 
+static CK_RV setupPkcs11ObjectForAesCmac( SntpAuthContext_t * pAuthContext,
+                                          CK_SESSION_HANDLE * pPkcs11Session,
+                                          CK_FUNCTION_LIST_PTR * pFunctionList,
+                                          CK_OBJECT_HANDLE * pCmacKey )
+{
+    CK_RV result;
+
+    static CK_BYTE label[] = pkcs11configLABEL_CMAC_KEY;
+    static CK_KEY_TYPE cmacKeyType = CKK_AES;
+    static CK_OBJECT_CLASS cmacKeyClass = CKO_SECRET_KEY;
+    static CK_BBOOL trueObject = CK_TRUE;
+
+    static CK_ATTRIBUTE aes_cmac_template[] =
+    {
+        { CKA_CLASS,    &cmacKeyClass, sizeof( CK_OBJECT_CLASS ) },
+        { CKA_KEY_TYPE, &cmacKeyType,  sizeof( CK_KEY_TYPE )     },
+        { CKA_LABEL,    label,         sizeof( label ) - 1       },
+        { CKA_TOKEN,    &trueObject,   sizeof( CK_BBOOL )        },
+        { CKA_SIGN,     &trueObject,   sizeof( CK_BBOOL )        },
+        { CKA_VERIFY,   &trueObject,   sizeof( CK_BBOOL )        },
+        { CKA_VALUE,    NULL,          0                         }
+    };
+
+    aes_cmac_template[ 6 ].pValue = pAuthContext->pAuthKey;
+    aes_cmac_template[ 6 ].ulValueLen = sizeof( pAuthContext->pAuthKey );
+
+    result = xInitializePkcs11Session( pPkcs11Session );
+
+    if( result != CKR_OK )
+    {
+        LogError( ( "Failed to open PKCS #11 session." ) );
+    }
+
+    /* Generated with: */
+    /* $ echo -n "Hello world" | openssl dgst -mac cmac -macopt cipher:aes-128-ecb -macopt hexkey:11223344112233441122334411223344 */
+
+    if( result == CKR_OK )
+    {
+        result = C_GetFunctionList( pFunctionList );
+
+        if( result != CKR_OK )
+        {
+            LogError( ( "Failed to get PKCS #11 function list." ) );
+        }
+    }
+
+    if( result == CKR_OK )
+    {
+        /* Create the template objects */
+        result = ( *pFunctionList )->C_CreateObject( *pPkcs11Session,
+                                                     ( CK_ATTRIBUTE_PTR ) &aes_cmac_template,
+                                                     sizeof( aes_cmac_template ) / sizeof( CK_ATTRIBUTE ),
+                                                     pCmacKey );
+
+        if( result != CKR_OK )
+        {
+            LogError( ( "Failed to create AES CMAC object." ) );
+        }
+
+        configASSERT( *pCmacKey != CK_INVALID_HANDLE );
+    }
+
+    return result;
+}
+
 SntpStatus_t addClientAuthCode( SntpAuthContext_t * pContext,
                                 const SntpServerInfo_t * pTimeServer,
                                 void * pBuffer,
@@ -643,77 +719,18 @@ SntpStatus_t addClientAuthCode( SntpAuthContext_t * pContext,
     CK_FUNCTION_LIST_PTR functionList;
     CK_SESSION_HANDLE pkcs11Session = 0;
 
-    CK_BYTE label[] = pkcs11configLABEL_CMAC_KEY;
-    CK_KEY_TYPE cmacKeyType = CKK_AES;
-    CK_OBJECT_CLASS cmacKeyClass = CKO_SECRET_KEY;
-    CK_BBOOL trueObject = CK_TRUE;
-
     CK_OBJECT_HANDLE cMacKey;
-    size_t macBytesWritten = 0;
-
-
-    result = xInitializePKCS11();
-
-    if( result != CKR_CRYPTOKI_ALREADY_INITIALIZED )
-    {
-        LogError( ( "Failed to initialize PKCS #11 module." ) );
-    }
-
-    if( result == CKR_OK )
-    {
-        result = xInitializePkcs11Session( &pkcs11Session );
-
-        if( result != CKR_OK )
-        {
-            LogError( ( "Failed to open PKCS #11 session." ) );
-        }
-    }
+    size_t macBytesWritten = pkcs11AES_CMAC_SIGNATURE_LENGTH;
 
     CK_MECHANISM mechanism =
     {
         CKM_AES_CMAC, NULL_PTR, 0
     };
 
-    /* Generated with: */
-    /* $ echo -n "Hello world" | openssl dgst -mac cmac -macopt cipher:aes-128-ecb -macopt hexkey:11223344112233441122334411223344 */
-    const char * testString = "Hello world";
-
-    if( result == CKR_OK )
-    {
-        result = C_GetFunctionList( &functionList );
-
-        if( result != CKR_OK )
-        {
-            LogError( ( "Failed to get PKCS #11 function list." ) );
-        }
-    }
-
-    CK_ATTRIBUTE aes_cmac_template[] =
-    {
-        { CKA_CLASS,    &cmacKeyClass,      sizeof( CK_OBJECT_CLASS )    },
-        { CKA_KEY_TYPE, &cmacKeyType,       sizeof( CK_KEY_TYPE )        },
-        { CKA_LABEL,    label,              sizeof( label ) - 1          },
-        { CKA_TOKEN,    &trueObject,        sizeof( CK_BBOOL )           },
-        { CKA_SIGN,     &trueObject,        sizeof( CK_BBOOL )           },
-        { CKA_VERIFY,   &trueObject,        sizeof( CK_BBOOL )           },
-        { CKA_VALUE,    pContext->pAuthKey, sizeof( pContext->pAuthKey ) }
-    };
-
-    if( result == CKR_OK )
-    {
-        /* Create the template objects */
-        result = functionList->C_CreateObject( pkcs11Session,
-                                               ( CK_ATTRIBUTE_PTR ) &aes_cmac_template,
-                                               sizeof( aes_cmac_template ) / sizeof( CK_ATTRIBUTE ),
-                                               &cMacKey );
-
-        if( result != CKR_OK )
-        {
-            LogError( ( "Failed to create AES CMAC object." ) );
-        }
-    }
-
-    /*TEST_ASSERT_NOT_EQUAL_MESSAGE( CK_INVALID_HANDLE, cMacKey, "AES CMAC key is invalid." ); */
+    result = setupPkcs11ObjectForAesCmac( pContext,
+                                          &pkcs11Session,
+                                          &functionList,
+                                          &cMacKey );
 
     if( result == CKR_OK )
     {
@@ -726,12 +743,17 @@ SntpStatus_t addClientAuthCode( SntpAuthContext_t * pContext,
         }
     }
 
+    /* Append the Key ID of the signing key before appending the signature to the buffer. */
+    *( uint32_t * ) ( ( uint8_t * ) pBuffer + SNTP_PACKET_SYMMETRIC_KEY_ID_OFFSET ) = FreeRTOS_htonl( pContext->keyId );
+
+    /* Generate the authentication code as the signature of the time request packet
+     * with the configured key. */
     if( result == CKR_OK )
     {
         result = functionList->C_Sign( pkcs11Session,
-                                       ( CK_BYTE * ) testString,
-                                       strlen( testString ),
-                                       ( CK_BYTE * ) pBuffer + SNTP_PACKET_BASE_SIZE,
+                                       ( CK_BYTE_PTR ) pBuffer,
+                                       SNTP_PACKET_BASE_SIZE,
+                                       ( CK_BYTE_PTR ) pBuffer + SNTP_PACKET_BASE_SIZE + SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH,
                                        &macBytesWritten );
 
         if( result != CKR_OK )
@@ -753,7 +775,12 @@ SntpStatus_t addClientAuthCode( SntpAuthContext_t * pContext,
         }
     }
 
-    return SntpErrorAuthFailure;
+    if( result == CKR_OK )
+    {
+        *pAuthCodeSize = SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH + pkcs11AES_CMAC_SIGNATURE_LENGTH;
+    }
+
+    return ( result == CKR_OK ) ? SntpSuccess : SntpErrorAuthFailure;
 }
 
 SntpStatus_t validateServerAuth( SntpAuthContext_t * pContext,
@@ -761,6 +788,64 @@ SntpStatus_t validateServerAuth( SntpAuthContext_t * pContext,
                                  const void * pResponseData,
                                  size_t responseSize )
 {
+    CK_RV result;
+    CK_FUNCTION_LIST_PTR functionList;
+    CK_SESSION_HANDLE pkcs11Session = 0;
+
+    CK_OBJECT_HANDLE cMacKey;
+    size_t macBytesWritten = pkcs11AES_CMAC_SIGNATURE_LENGTH;
+
+    CK_MECHANISM mechanism =
+    {
+        CKM_AES_CMAC, NULL_PTR, 0
+    };
+
+    result = setupPkcs11ObjectForAesCmac( pContext,
+                                          &pkcs11Session,
+                                          &functionList,
+                                          &cMacKey );
+
+    if( result == CKR_OK )
+    {
+        /* Test SignInit and Sign */
+        result = functionList->C_VerifyInit( pkcs11Session, &mechanism, cMacKey );
+
+        if( result != CKR_OK )
+        {
+            LogError( ( "Failed to C_VerifyInit AES CMAC." ) );
+        }
+    }
+
+    /* Generate the authentication code as the signature of the time request packet
+     * with the configured key. */
+    if( result == CKR_OK )
+    {
+        result = functionList->C_Verify( pkcs11Session,
+                                         ( CK_BYTE_PTR ) pResponseData,
+                                         SNTP_PACKET_BASE_SIZE,
+                                         ( CK_BYTE_PTR ) pResponseData + SNTP_PACKET_SYMMETRIC_KEY_ID_OFFSET + SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH,
+                                         pkcs11AES_CMAC_SIGNATURE_LENGTH );
+
+        if( result != CKR_OK )
+        {
+            LogError( ( "Server cannot be validated from received response: AES-128-CMAC signature in response packet does not match expected." ) );
+        }
+    }
+
+    if( result == CKR_OK )
+    {
+        result = functionList->C_CloseSession( pkcs11Session );
+
+        if( result != CKR_CRYPTOKI_NOT_INITIALIZED )
+        {
+            /*TEST_ASSERT_EQUAL_MESSAGE( CKR_OK, result, "Failed to close session." ); */
+
+            result = functionList->C_Finalize( NULL );
+            /*TEST_ASSERT_EQUAL_MESSAGE( CKR_OK, result, "Failed to finalize session." ); */
+        }
+    }
+
+    return ( result == CKR_OK ) ? SntpSuccess : SntpErrorAuthFailure;
 }
 
 /*************************************************************************************/
@@ -850,6 +935,7 @@ static bool initializeSntpClient( SntpContext_t * pContext,
             /* Set the authentication interface object. */
             symmetricKeyAuthIntf.pAuthContext = pAuthContext;
             symmetricKeyAuthIntf.generateClientAuth = addClientAuthCode;
+            symmetricKeyAuthIntf.validateServerAuth = validateServerAuth;
 
             /* Initialize context. */
             Sntp_Init( pContext,
@@ -877,12 +963,13 @@ void sntpTask( void * pParameters )
 {
     SntpContext_t clientContext;
     bool initStatus = false;
+    CK_RV pkcs11Status;
 
     /* Variable representing the SNTP client context. */
     static SntpContext_t context;
 
     /* Memory for the SNTP packet buffer in the SNTP context. */
-    static uint8_t contextBuffer[ SNTP_CONTEXT_NETWORK_BUFFER_SIZE + pkcs11AES_CMAC_SIGNATURE_LENGTH ];
+    static uint8_t contextBuffer[ SNTP_CONTEXT_NETWORK_BUFFER_SIZE + SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH + pkcs11AES_CMAC_SIGNATURE_LENGTH ];
 
     /* Memory for the network context representing the UDP socket that will be
      * passed to the SNTP client context. */
@@ -892,20 +979,23 @@ void sntpTask( void * pParameters )
     static const char * pTimeServers[] = { democonfigLIST_OF_TIME_SERVERS };
     const size_t numOfServers = sizeof( pTimeServers ) / sizeof( char * );
 
+    /* Initialize PKCS11 module for cyrpotographic operations of AES-128-CMAC show
+     * shown in this demo for authentication mechanism in SNTP communication with server. */
+    pkcs11Status = xInitializePKCS11();
+    configASSERT( pkcs11Status == CKR_OK );
+
     /* Verify that the configured authentication key is 128 bits or 16 bytes in size. As
      * the input format is a hex string, the string length should be 32 bytes. */
-    static const char * pAesCmacAuthKey = democonfigAES_CMAC_AUTHENTICATION_SYMMETRIC_KEY;
+    const char * pAesCmacAuthKey = democonfigAES_CMAC_AUTHENTICATION_SYMMETRIC_KEY;
 
     configASSERT( strlen( pAesCmacAuthKey ) == 2 * AES_CMAC_AUTHENTICATION_KEY_SIZE );
 
     /* Store the configured AES-128-CMAC key for authentication in the SntpAuthContext_t context
      * after converting it from hex string to binary. */
-    static SntpAuthContext_t authKeyContext;
-
     for( uint8_t index = 0; index < strlen( pAesCmacAuthKey ); index += 2 )
     {
-        char byteString[3] = {pAesCmacAuthKey[ index ], pAesCmacAuthKey[ index + 1], '\0'};
-         uint8_t byteVal = strtoul( byteString, NULL, 16 );
+        char byteString[ 3 ] = { pAesCmacAuthKey[ index ], pAesCmacAuthKey[ index + 1 ], '\0' };
+        uint8_t byteVal = strtoul( byteString, NULL, 16 );
         authKeyContext.pAuthKey[ index / 2 ] = byteVal;
     }
 
@@ -935,8 +1025,9 @@ void sntpTask( void * pParameters )
         {
             /* TODO - Generate random number with corePKCS11. */
             status = Sntp_SendTimeRequest( &clientContext, 100 );
-            //configASSERT( status == SntpSuccess );
-            if (status != SntpSuccess)
+
+            /*configASSERT( status == SntpSuccess ); */
+            if( status != SntpSuccess )
             {
                 continue;
             }

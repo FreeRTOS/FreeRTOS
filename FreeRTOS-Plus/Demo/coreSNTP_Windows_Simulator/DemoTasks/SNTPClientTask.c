@@ -520,7 +520,7 @@ static SntpStatus_t addClientAuthCode( SntpAuthContext_t * pAuthContext,
  * received by the SNTP client. This SHOULD match the time server information carried by the authentication context.
  * @param[in] pResponseData The buffer representing the SNTP response packet, received from the server, @p pTimeServer,
  * which contains the server authentication code, if the server supports authentication. The authentication code, if present,
- * is verified using corePKCS11 to be the expected AES-128-CMACM signature using the standard 48 bytes of SNTP packet data
+ * is verified using corePKCS11 to be the expected AES-128-CMAC signature using the standard 48 bytes of SNTP packet data
  * present in the buffer and the secret symmetric key configured for the server.
  * @param[in] responseSize The total buffer size of the @p pResponseData for the SNTP response packet.
  *

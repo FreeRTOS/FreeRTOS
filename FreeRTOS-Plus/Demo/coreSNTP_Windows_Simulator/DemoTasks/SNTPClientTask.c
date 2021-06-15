@@ -463,6 +463,82 @@ static bool populateAuthContextForServer( const char * pServer,
                                           SntpAuthContext_t * pAuthContext );
 
 /**
+ * @brief The demo implementation of the @ref SntpGenerateClientAuth_t function of the authentication
+ * interface required by the coreSNTP library to execute functionality of generating client-side
+ * message authentication code and appending it to the time request before sending to a time server.
+ *
+ * This function first determines whether the passed time server has an authentication key configured
+ * in the demo. If the time server supports authentication, the function utilizes the corePKCS11 library
+ * to generate the client authentication code as a signature using the AES-128-CMAC algorithm, and append
+ * it to the passed SNTP request packet buffer, @p pRequestBuffer.
+ *
+ * @note If the time server supports authentication, this function writes the "Key Identifier" and "Message
+ * Digest" fields of an SNTP packet.
+ *
+ * @param[in, out] pAuthContext The authentication context representing the time server and its authentication
+ * credentials. If the coreSNTP library rotated the time server of use, then this function updates the context
+ * to carry authentication information for the new server.
+ * @param[in] pTimeServer The current time server being used for sending time queries by the SNTP client.
+ * This is used to determine whether the @p pAuthContext carries stale information of a previously used server,
+ * and thus, needs to be updated with information of the current server, @p pTimeServer.
+ * @param[in, out] pRequestBuffer The buffer representing the SNTP request packet, which is already populated with
+ * the standard 48 bytes of packet data. If the time server supports authentication, then the 48 bytes of data
+ * and the authentication key are used to generated AES-128-CMAC signature, and the "Key Identifier" and "Message
+ * Digest" fields of the packet are filled in the buffer.
+ * @param[in] bufferSize The total buffer size of the @p pRequestBuffer for the SNTP request packet.
+ * @param[out] pAuthCodeSize This will be populated with the total bytes for authentication data written to the
+ * @p pRequestBuffer when
+ *
+ * @return Returns one of the following:
+ * - SntpSuccess if EITHER no authentication key information has been configured for the time
+ * server, and thus, no AES-CMAC operation was performed OR the time server supports authentication and
+ * the corePKCS11 operations are successful in generating and appending authentication information to the
+ * @p pRequestBuffer.
+ * - SntpErrorAuthFailure if there is failure in PKCS#11 operations in generating and appending the AES-128-CMAC
+ * signature as the authentication code to the @p pRequestBuffer.
+ */
+static SntpStatus_t addClientAuthCode( SntpAuthContext_t * pAuthContext,
+                                       const SntpServerInfo_t * pTimeServer,
+                                       void * pRequestBuffer,
+                                       size_t bufferSize,
+                                       size_t * pAuthCodeSize );
+
+
+/**
+ * @brief The demo implementation of the @ref SntpValidateServerAuth_t function of the authentication
+ * interface required by the coreSNTP library to execute validation of server as the source of the
+ * received SNTP response by verifying the authentication information present in the packet.
+ *
+ * This function first checks whether the passed time server has authentication key information configured
+ * in the demo to determine if the server supports authentication. If the time server supports authentication,
+ * the function utilizes the corePKCS11 library to verify the AES-128-CMAC signature in the packet, @p pResponseData
+ * that represents the server authentication code.
+ *
+ * @param[in] pAuthContext The authentication context representing the time server of use and its authentication
+ * credentials.
+ * @param[in] pTimeServer The current time server of use from which the response data, @p pResponseData has been
+ * received by the SNTP client. This SHOULD match the time server information carried by the authentication context.
+ * @param[in] pResponseData The buffer representing the SNTP response packet, received from the server, @p pTimeServer,
+ * which contains the server authentication code, if the server supports authentication. The authentication code, if present,
+ * is verified using corePKCS11 to be the expected AES-128-CMACM signature using the standard 48 bytes of SNTP packet data
+ * present in the buffer and the secret symmetric key configured for the server.
+ * @param[in] responseSize The total buffer size of the @p pResponseData for the SNTP response packet.
+ *
+ * @return Returns one of the following:
+ * - SntpSuccess if EITHER no authentication key information has been configured for the time server, and thus,
+ * no AES-CMAC validation operation is performed OR the time server supports authentication and the authentication
+ * code has been successfully validated @p pBuffer.
+ * - SntpErrorAuthFailure if there is internal failure in PKCS#11 operations in validating the server authentication code as
+ * as the AES-128-CMAC for the information present in the response packet, @p pResponseData.
+ * - SntpServerNotAuthenticated if the server is not validated from the response due to the authentication code not matching
+ * the expected AES-128-CMAC signature.
+ */
+static SntpStatus_t validateServerAuth( SntpAuthContext_t * pAuthContext,
+                                        const SntpServerInfo_t * pTimeServer,
+                                        const void * pResponseData,
+                                        size_t responseSize );
+
+/**
  * @brief Generates a random number using PKCS#11.
  *
  * @note It is RECOMMENDED to generate a random number for the call to Sntp_SendTimeRequest API
@@ -861,9 +937,9 @@ static CK_RV setupPkcs11ObjectForAesCmac( const SntpAuthContext_t * pAuthContext
     return result;
 }
 
-SntpStatus_t addClientAuthCode( SntpAuthContext_t * pContext,
+SntpStatus_t addClientAuthCode( SntpAuthContext_t * pAuthContext,
                                 const SntpServerInfo_t * pTimeServer,
-                                void * pBuffer,
+                                void * pRequestBuffer,
                                 size_t bufferSize,
                                 size_t * pAuthCodeSize )
 {
@@ -886,20 +962,24 @@ SntpStatus_t addClientAuthCode( SntpAuthContext_t * pContext,
      * time request. In such a case of rotating time server, the application (or user of the coreSNTP
      * library) is required to necessary updates to the authentication context to reflect the new
      * time server being used for SNTP communication by the SNTP client.*/
-    if( ( strlen( pTimeServer->pServerName ) != strlen( pContext->pServer ) ) ||
-        ( strncmp( pTimeServer->pServerName, pContext->pServer, strlen( pContext->pServer ) ) != 0 ) )
+    if( ( strlen( pTimeServer->pServerName ) != strlen( pAuthContext->pServer ) ) ||
+        ( strncmp( pTimeServer->pServerName, pAuthContext->pServer, strlen( pAuthContext->pServer ) ) != 0 ) )
     {
         /* Update the authentication context to represent the new time server of usage for
          *  time requests. */
-        populateAuthContextForServer( pTimeServer->pServerName, pContext );
+        populateAuthContextForServer( pTimeServer->pServerName, pAuthContext );
     }
 
     /* Check if the time server supports AES-128-CMAC authentication scheme in communication.
      * If the time server supports authentication, then proceed with operation of generating client
      * authentication code from the SNTP request packet and appending it to the request buffer.  */
-    if( pContext->keyId != -1 )
+    if( pAuthContext->keyId != -1 )
     {
-        result = setupPkcs11ObjectForAesCmac( pContext,
+        /* Ensure that the buffer is large enough to hold the "Key Identifier" and "Message Digest" fields
+         * for authentication information of the SNTP time request packet. */
+        configASSERT( bufferSize >= SNTP_PACKET_AUTHENTICATED_MODE_SIZE );
+
+        result = setupPkcs11ObjectForAesCmac( pAuthContext,
                                               &pkcs11Session,
                                               &functionList,
                                               &cMacKey );
@@ -916,16 +996,16 @@ SntpStatus_t addClientAuthCode( SntpAuthContext_t * pContext,
         }
 
         /* Append the Key ID of the signing key before appending the signature to the buffer. */
-        *( uint32_t * ) ( ( uint8_t * ) pBuffer + SNTP_PACKET_SYMMETRIC_KEY_ID_OFFSET ) = FreeRTOS_htonl( pContext->keyId );
+        *( uint32_t * ) ( ( uint8_t * ) pRequestBuffer + SNTP_PACKET_SYMMETRIC_KEY_ID_OFFSET ) = FreeRTOS_htonl( pAuthContext->keyId );
 
         /* Generate the authentication code as the signature of the time request packet
          * with the configured key. */
         if( result == CKR_OK )
         {
             result = functionList->C_Sign( pkcs11Session,
-                                           ( CK_BYTE_PTR ) pBuffer,
+                                           ( CK_BYTE_PTR ) pRequestBuffer,
                                            SNTP_PACKET_BASE_SIZE,
-                                           ( CK_BYTE_PTR ) pBuffer + SNTP_PACKET_BASE_SIZE + SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH,
+                                           ( CK_BYTE_PTR ) pRequestBuffer + SNTP_PACKET_BASE_SIZE + SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH,
                                            &macBytesWritten );
 
             if( result != CKR_OK )
@@ -945,11 +1025,17 @@ SntpStatus_t addClientAuthCode( SntpAuthContext_t * pContext,
             *pAuthCodeSize = SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH + pkcs11AES_CMAC_SIGNATURE_LENGTH;
         }
     }
+    else
+    {
+        /* Server has not been configured with authentication key information, thus, no data was appended to the
+         * request packet buffer. */
+        *pAuthCodeSize = 0;
+    }
 
     return ( result == CKR_OK ) ? SntpSuccess : SntpErrorAuthFailure;
 }
 
-SntpStatus_t validateServerAuth( SntpAuthContext_t * pContext,
+SntpStatus_t validateServerAuth( SntpAuthContext_t * pAuthContext,
                                  const SntpServerInfo_t * pTimeServer,
                                  const void * pResponseData,
                                  size_t responseSize )
@@ -957,6 +1043,7 @@ SntpStatus_t validateServerAuth( SntpAuthContext_t * pContext,
     CK_RV result = CKR_OK;
     CK_FUNCTION_LIST_PTR functionList;
     CK_SESSION_HANDLE pkcs11Session = 0;
+    SntpStatus_t returnStatus = SntpSuccess;
 
     CK_OBJECT_HANDLE cMacKey;
     size_t macBytesWritten = pkcs11AES_CMAC_SIGNATURE_LENGTH;
@@ -966,16 +1053,24 @@ SntpStatus_t validateServerAuth( SntpAuthContext_t * pContext,
         CKM_AES_CMAC, NULL_PTR, 0
     };
 
+    /* The time server information in the authentication context, managed by this demo application, and the
+     * pTimeServer parameter, passed by the coreSNTP library, MUST be the same.
+     * Note: The addClientAuthCode() function
+     * is responsible for updating the authentication context to represent the time server being currently used
+     * by the coreSNTP library for time querying. */
+    configASSERT( ( strlen( pTimeServer->pServerName ) == strlen( pAuthContext->pServer ) ) &&
+                  ( strncmp( pTimeServer->pServerName, pAuthContext->pServer, strlen( pAuthContext->pServer ) ) == 0 ) );
+
     /* Check if the time server supports AES-128-CMAC authentication scheme in communication.
      * If the time server supports authentication, then proceed with operation of validating server
      * from the authentication code in the response payload.  */
-    if( pContext->keyId != -1 )
+    if( pAuthContext->keyId != -1 )
     {
         /* As the server supports authentication mode of communication, the server response size
          * SHOULD contain the authentication code. */
-        configASSERT( responseSize == ( SNTP_PACKET_AUTHENTICATED_MODE_SIZE ) );
+        configASSERT( responseSize >= ( SNTP_PACKET_AUTHENTICATED_MODE_SIZE ) );
 
-        result = setupPkcs11ObjectForAesCmac( pContext,
+        result = setupPkcs11ObjectForAesCmac( pAuthContext,
                                               &pkcs11Session,
                                               &functionList,
                                               &cMacKey );
@@ -987,8 +1082,13 @@ SntpStatus_t validateServerAuth( SntpAuthContext_t * pContext,
 
             if( result != CKR_OK )
             {
+                returnStatus = SntpErrorAuthFailure;
                 LogError( ( "Failed to C_VerifyInit AES CMAC." ) );
             }
+        }
+        else
+        {
+            returnStatus = SntpErrorAuthFailure;
         }
 
         /* Generate the authentication code as the signature of the time request packet
@@ -1003,18 +1103,16 @@ SntpStatus_t validateServerAuth( SntpAuthContext_t * pContext,
 
             if( result != CKR_OK )
             {
+                returnStatus = SntpServerNotAuthenticated;
                 LogError( ( "Server cannot be validated from received response: AES-128-CMAC signature in response packet does not match expected." ) );
             }
         }
 
-        if( result == CKR_OK )
-        {
-            result = functionList->C_CloseSession( pkcs11Session );
-            configASSERT( result == CKR_OK );
-        }
+        result = functionList->C_CloseSession( pkcs11Session );
+        configASSERT( result == CKR_OK );
     }
 
-    return ( result == CKR_OK ) ? SntpSuccess : SntpErrorAuthFailure;
+    return returnStatus;
 }
 
 
@@ -1245,7 +1343,6 @@ void sntpTask( void * pParameters )
         /* SNTP Client loop of sending and receiving SNTP packets for time synchronization at poll intervals */
         while( 1 )
         {
-            /* TODO - Generate random number with corePKCS11. */
             status = Sntp_SendTimeRequest( &clientContext, generateRandomNumber() );
 
             /*configASSERT( status == SntpSuccess ); */

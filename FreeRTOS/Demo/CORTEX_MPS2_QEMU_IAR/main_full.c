@@ -164,6 +164,12 @@ static const char * pcMessage = "PASS";
 const TickType_t xTaskPeriod = pdMS_TO_TICKS( 5000UL );
 TickType_t xPreviousWakeTime;
 extern uint32_t ulNestCount;
+static char pcBuffer[ 200 ];
+int iCharacters;
+extern int __write( int iFile, char *pcString, int iStringLength );
+
+	/* Remove warnings about unused parameters. */
+	( void ) pvParameters;
 
 	xPreviousWakeTime = xTaskGetTickCount();
 
@@ -269,9 +275,14 @@ extern uint32_t ulNestCount;
 			pcMessage = "xAreInterruptSemaphoreTasksStillRunning() returned false";
 		}
 
-		/* It is normally not good to call printf() from an embedded system,
-		although it is ok in this simulated case. */
-		printf( "%s : %d (%d)\r\n", pcMessage, (int) xTaskGetTickCount(), ulNestCount );
+		/* Calling printf() directly causes an exception when using GCC, so
+		 * format and call __write() separately for now. */
+		iCharacters = snprintf( pcBuffer, sizeof( pcBuffer ), "%s : %d (%u)\r\n", pcMessage, (int) xTaskGetTickCount(), ( unsigned int ) ulNestCount );
+		if( iCharacters >= ( int ) sizeof( pcBuffer ) )
+		{
+			iCharacters = sizeof( pcBuffer );
+		}
+		__write( 0, pcBuffer, iCharacters );
 	}
 }
 /*-----------------------------------------------------------*/

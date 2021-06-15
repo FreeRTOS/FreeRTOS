@@ -44,8 +44,8 @@
 #define configUSE_TICK_HOOK				1
 #define configCPU_CLOCK_HZ				( ( unsigned long ) 25000000 )
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
-#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 50 * 1024 ) )
+#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 110 )
+#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 70 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 12 )
 #define configUSE_TRACE_FACILITY		0
 #define configUSE_16_BIT_TICKS			0
@@ -116,7 +116,7 @@ allowable margin of error on slower processors (slower than the Win32
 machine on which the test is developed). */
 #define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN   4
 
-#ifdef __ICCARM__ /* Prevent C code being included in asm files. */
+#ifndef __IASMARM__ /* Prevent C code being included in asm files. */
 	void vAssertCalled( const char *pcFileName, uint32_t ulLine );
 	#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __FILE__, __LINE__ );
 #endif

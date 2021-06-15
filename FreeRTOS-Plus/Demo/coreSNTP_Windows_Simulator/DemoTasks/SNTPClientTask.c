@@ -130,7 +130,7 @@
 #define AES_CMAC_AUTHENTICATION_KEY_SIZE       ( 16 )
 
 /**
- * @brief The size of the "Key Identifier" field in the SNTP packet when symmetric key authetication mode as
+ * @brief The size of the "Key Identifier" field in the SNTP packet when symmetric key authentication mode as
  * security mechanism in communicating with time server.
  *
  * The "Key Identifier" field appears immediately after the 48 bytes of standard SNTP packet created by the coreSNTP
@@ -742,7 +742,7 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
     xSemaphoreGive( xMutex );
 }
 
-/**************************** Authentication Utilites and Interface Functions ***********************************************/
+/**************************** Authentication Utilities and Interface Functions ***********************************************/
 static bool populateAuthContextForServer( const char * pServer,
                                           SntpAuthContext_t * pAuthContext )
 
@@ -937,14 +937,7 @@ SntpStatus_t addClientAuthCode( SntpAuthContext_t * pContext,
         if( result == CKR_OK )
         {
             result = functionList->C_CloseSession( pkcs11Session );
-
-            if( result != CKR_CRYPTOKI_NOT_INITIALIZED )
-            {
-                /*TEST_ASSERT_EQUAL_MESSAGE( CKR_OK, result, "Failed to close session." ); */
-
-                result = functionList->C_Finalize( NULL );
-                /*TEST_ASSERT_EQUAL_MESSAGE( CKR_OK, result, "Failed to finalize session." ); */
-            }
+            configASSERT( result == CKR_OK );
         }
 
         if( result == CKR_OK )
@@ -1017,14 +1010,7 @@ SntpStatus_t validateServerAuth( SntpAuthContext_t * pContext,
         if( result == CKR_OK )
         {
             result = functionList->C_CloseSession( pkcs11Session );
-
-            if( result != CKR_CRYPTOKI_NOT_INITIALIZED )
-            {
-                /*TEST_ASSERT_EQUAL_MESSAGE( CKR_OK, result, "Failed to close session." ); */
-
-                result = functionList->C_Finalize( NULL );
-                /*TEST_ASSERT_EQUAL_MESSAGE( CKR_OK, result, "Failed to finalize session." ); */
-            }
+            configASSERT( result == CKR_OK );
         }
     }
 
@@ -1220,7 +1206,7 @@ void sntpTask( void * pParameters )
      * passed to the SNTP client context. */
     static NetworkContext_t udpContext;
 
-    /* Initialize PKCS11 module for cyrpotographic operations of AES-128-CMAC show
+    /* Initialize PKCS11 module for cryptographic operations of AES-128-CMAC show
      * shown in this demo for authentication mechanism in SNTP communication with server. */
     pkcs11Status = xInitializePKCS11();
     configASSERT( pkcs11Status == CKR_OK );

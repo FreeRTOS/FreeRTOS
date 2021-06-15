@@ -441,6 +441,7 @@ dap
 dat
 datashee
 datasheet
+datatracker
 dbe
 dcdc
 dclr
@@ -811,6 +812,7 @@ het
 hetbase
 hetport
 hetreg
+hexstring
 hfclk
 hfrco
 hfxo
@@ -1396,6 +1398,7 @@ passsed
 passwordsize
 pasv
 pathlen
+pauthcontext
 payloadlength
 pb
 pbasetime
@@ -1445,6 +1448,7 @@ pclientcert
 pclk
 pclkb
 pclwipappsblockinggettxbuffer
+pcmackey
 pcmethod
 pcmyreply
 pcname
@@ -1511,6 +1515,7 @@ pfm
 pfr
 pfs
 pfswe
+pfunctionlist
 phostname
 php
 phy
@@ -1812,6 +1817,7 @@ ps
 psc
 pscheckvariable
 psel
+pserver
 pserverinfo
 psignature
 psl
@@ -2214,6 +2220,7 @@ sni
 snprintf
 sntp
 sntpclienttask
+sntpsuccess
 sntptask
 soc
 sockaddr
@@ -2370,6 +2377,7 @@ tim
 timeguard
 timertest
 timertimer
+timeserver
 tls
 tmr
 tmrdemoone

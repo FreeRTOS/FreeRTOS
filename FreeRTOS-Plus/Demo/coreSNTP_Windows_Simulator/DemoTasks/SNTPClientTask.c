@@ -1014,9 +1014,13 @@ SntpStatus_t addClientAuthCode( SntpAuthContext_t * pAuthContext,
             }
         }
 
+        /* Close the PKCS #11 session as the AES-CMAC operation is completed. */
         if( result == CKR_OK )
         {
             result = functionList->C_CloseSession( pkcs11Session );
+            configASSERT( result == CKR_OK );
+
+            result = functionList->C_Finalize( NULL );
             configASSERT( result == CKR_OK );
         }
 
@@ -1108,8 +1112,15 @@ SntpStatus_t validateServerAuth( SntpAuthContext_t * pAuthContext,
             }
         }
 
-        result = functionList->C_CloseSession( pkcs11Session );
-        configASSERT( result == CKR_OK );
+        /* Close the PKCS #11 session as the AES-CMAC operation is completed. */
+        if( result == CKR_OK )
+        {
+            result = functionList->C_CloseSession( pkcs11Session );
+            configASSERT( result == CKR_OK );
+
+            result = functionList->C_Finalize( NULL );
+            configASSERT( result == CKR_OK );
+        }
     }
 
     return returnStatus;

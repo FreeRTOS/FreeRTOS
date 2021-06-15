@@ -78,6 +78,14 @@
     #error "Define the democonfigLIST_OF_TIME_SERVERS config by following the instructions in demo_config.h file."
 #endif
 
+#ifndef democonfigLIST_OF_AUTHENTICATION_SYMMETRIC_KEYS
+    #error "Define the democonfigLIST_OF_AUTHENTICATION_SYMMETRIC_KEYS config by following the instructions in demo_config.h file."
+#endif
+
+#ifndef democonfigLIST_OF_AUTHENTICATION_KEY_IDS
+    #error "Define the democonfigLIST_OF_AUTHENTICATION_KEY_IDS config by following the instructions in demo_config.h file."
+#endif
+
 #ifndef democonfigDESIRED_CLOCK_ACCURACY_MS
     #error "Define the democonfigDESIRED_CLOCK_ACCURACY_MS config by following instructions in demo_config.h file."
 #endif
@@ -121,9 +129,38 @@
  */
 #define AES_CMAC_AUTHENTICATION_KEY_SIZE       ( 16 )
 
+/**
+ * @brief The size of the "Key Identifier" field in the SNTP packet when symmetric key authetication mode as
+ * security mechanism in communicating with time server.
+ *
+ * The "Key Identifier" field appears immediately after the 48 bytes of standard SNTP packet created by the coreSNTP
+ * library. For more information, refer to the SNTPv4 specification: https://datatracker.ietf.org/doc/html/rfc4330#page-8
+ *
+ * @note This demo uses the "Key Identifier" field to communicate with time servers that support authentication mechanism.
+ * This field is stored with the Key ID of the AES-128-CMAC based authentication key stored in the time server.
+ */
 #define SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH    4
 
+/**
+ * @brief The offset for the starting byte of the "Key Identifier" field in an SNTPv4/NTPv4 packet.
+ * This field is only used when symmetric key authentication mode is used for communicating with time server.
+ *
+ * For more information of the SNTP packet format, refer to the SNTPv4 specification
+ * https://datatracker.ietf.org/doc/html/rfc4330#page-8
+ */
 #define SNTP_PACKET_SYMMETRIC_KEY_ID_OFFSET    SNTP_PACKET_BASE_SIZE
+
+/**
+ * @brief The total size of an SNTP packet (which remains same for both client request and server response in SNTP communication)
+ * when using symmetric key based authentication mechanism.
+ *
+ * This value includes size of the 48 bytes of standard SNTP packet, and the "Key Identifier" and "Message Digest" fields
+ * that are used for authentication information in SNTP communication between client and server.
+ *
+ * For more information of the SNTP packet format, refer to the SNTPv4 specification
+ * https://datatracker.ietf.org/doc/html/rfc4330#page-8
+ */
+#define SNTP_PACKET_AUTHENTICATED_MODE_SIZE    ( SNTP_PACKET_BASE_SIZE + SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH + pkcs11AES_CMAC_SIGNATURE_LENGTH )
 
 /*-----------------------------------------------------------*/
 
@@ -142,7 +179,7 @@ struct NetworkContext
 
 /**
  * @brief The definition of the @ref SntpAuthContext_t structure for the demo.
- * This structure represents the key for the AES-128-CMAC algorithm based
+ * This structure represents the symmetric key for the AES-128-CMAC algorithm based
  * authentication mechanism shown in the demo for securing SNTP communication
  * between client and time server.
  *
@@ -151,7 +188,8 @@ struct NetworkContext
  */
 struct SntpAuthContext
 {
-    uint32_t keyId;
+    const char * pServer;
+    int32_t keyId;
     uint8_t pAuthKey[ AES_CMAC_AUTHENTICATION_KEY_SIZE ];
 };
 
@@ -199,11 +237,24 @@ static SystemClock_t systemClock;
 static SemaphoreHandle_t xMutex = NULL;
 static StaticSemaphore_t xSemaphoreMutex;
 
-static SntpAuthContext_t authKeyContext =
-{
-    .keyId    = democonfigAES_CMAC_AUTHENTICATION_KEY_ID,
-    .pAuthKey = NULL
-};
+
+/*
+ * @brief Stores the configured time servers in an array.
+ */
+static const char * pTimeServers[] = { democonfigLIST_OF_TIME_SERVERS };
+const size_t numOfServers = sizeof( pTimeServers ) / sizeof( char * );
+
+/**
+ * @brief Stores the list of configured AES-128-CMAC symmetric keys for authentication
+ * mechanism for corresponding time servers in democonfigLIST_OF_TIME_SERVERS.
+ */
+static const char * pAESCMACAuthKeys[] = { democonfigLIST_OF_AUTHENTICATION_SYMMETRIC_KEYS };
+
+/**
+ * @brief Stores list of Key IDs corresponding to the authentication keys configured
+ * in democonfigLIST_OF_TIME_SERVERS.
+ */
+static const int32_t pAuthKeyIds[] = { democonfigLIST_OF_AUTHENTICATION_KEY_IDS };
 
 /*-----------------------------------------------------------*/
 
@@ -374,6 +425,53 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
                                 int32_t clockOffsetSec,
                                 SntpLeapSecondInfo_t leapSecondInfo );
 
+/**
+ * @brief Utility function to create a PKCS11 session and a PKCS11 object, and obtain the PKCS11
+ * global function list for performing 128 bit AES-CMAC operations.
+ * This function is called by the definitions of both the authentication interface functions,
+ * @ref SntpGenerateAuthCode_t and @ref SntpValidateServerAuth_t, in this demo for the
+ * AES-CMAC operations.
+ *
+ * @param[in] pAuthContext The context representing the symmetric key for the AES-CMAC operation.
+ * @param[out] pPkcs11Session This is populated with the created PKCS11 session.
+ * @param[out] pFunctionList This is populated with the function list obtained from the created
+ * PKCS11 session.
+ * @param[out] pCmacKey This is populated with the created PKCS11 object handle for AES-CMAC
+ * operations.
+ *
+ * @return The return status code of PKCS11 API calls.
+ */
+static CK_RV setupPkcs11ObjectForAesCmac( const SntpAuthContext_t * pAuthContext,
+                                          CK_SESSION_HANDLE * pPkcs11Session,
+                                          CK_FUNCTION_LIST_PTR * pFunctionList,
+                                          CK_OBJECT_HANDLE * pCmacKey );
+
+/**
+ * @brief Utility function for filling the authentication context with the time server and
+ * its associated authentication key information from the democonfigLIST_OF_AUTHENTICATION_SYMMETRIC_KEYS
+ * and democonfigLIST_OF_AUTHENTICATION_KEY_IDS configuration lists.
+ *
+ * The authentication context represents the server and its authentication key information being
+ * used by the SNTP client at a time for time query. This function is called to update the context
+ * at the time of SNTP client initialization as well as whenever the SNTP client rotates the time
+ * server of use.
+ *
+ * @param[in] pServer The time server whose information is filled in the context.
+ * @param[out] pAuthContext The authentication context to update with information about the @p pServer.
+ */
+static bool populateAuthContextForServer( const char * pServer,
+                                          SntpAuthContext_t * pAuthContext );
+
+/**
+ * @brief Generates a random number using PKCS#11.
+ *
+ * @note It is RECOMMENDED to generate a random number for the call to Sntp_SendTimeRequest API
+ * of coreSNTP library to protect against server response spoofing attacks from "network off-path"
+ * attackers.
+ *
+ * @return The generated random number.
+ */
+static uint32_t generateRandomNumber();
 
 /*------------------------------------------------------------------------------*/
 
@@ -644,7 +742,63 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
     xSemaphoreGive( xMutex );
 }
 
-static CK_RV setupPkcs11ObjectForAesCmac( SntpAuthContext_t * pAuthContext,
+/**************************** Authentication Utilites and Interface Functions ***********************************************/
+static bool populateAuthContextForServer( const char * pServer,
+                                          SntpAuthContext_t * pAuthContext )
+
+{
+    size_t index = 0;
+
+    /* Look for the server in the list of configured servers to determine the
+     * index position of the server so that the server's corresponding information of credentials
+     * can be found from democonfigLIST_OF_AUTHENTICATION_SYMMETRIC_KEYS and democonfigLIST_OF_AUTHENTICATION_KEY_IDS
+     * lists. */
+    for( index = 0; index < numOfServers; index++ )
+    {
+        if( ( strlen( pServer ) == strlen( pTimeServers[ index ] ) ) && ( strncmp( pServer, pTimeServers[ index ], strlen( pServer ) ) == 0 ) )
+        {
+            /* The records for server in the demo configuration lists have been found. */
+            break;
+        }
+    }
+
+    /* Make sure that record for server has been found. */
+    configASSERT( index != numOfServers );
+
+    /* Fill the time server in the authentication context. */
+    pAuthContext->pServer = pServer;
+
+    /* Determine if the time server has been configured to use authentication mechanism. */
+    if( ( pAESCMACAuthKeys[ index ] != NULL ) && ( pAuthKeyIds[ index ] != -1 ) )
+    {
+        const char * pKeyHexString = pAESCMACAuthKeys[ index ];
+
+        /* Verify that the configured authentication key is 128 bits or 16 bytes in size. As
+         * the input format is a hex string, the string length should be 32 bytes. */
+        configASSERT( strlen( pKeyHexString ) == 2 * AES_CMAC_AUTHENTICATION_KEY_SIZE );
+
+        /* Set the key ID in the context. */
+        pAuthContext->keyId = pAuthKeyIds[ index ];
+
+        /* Store the configured AES-128-CMAC key for authentication in the SntpAuthContext_t context
+         * after converting it from hex string to binary. */
+        for( index = 0; index < strlen( pKeyHexString ); index += 2 )
+        {
+            char byteString[ 3 ] = { pKeyHexString[ index ], pKeyHexString[ index + 1 ], '\0' };
+            uint8_t byteVal = strtoul( byteString, NULL, 16 );
+            pAuthContext->pAuthKey[ index / 2 ] = byteVal;
+        }
+    }
+    else
+    {
+        /* No key information has been configured for the time server. Thus, communication with the time
+         * server will not use authentication mechanism. */
+        memset( pAuthContext->pAuthKey, 0, sizeof( pAuthContext->pAuthKey ) );
+        pAuthContext->keyId = -1;
+    }
+}
+
+static CK_RV setupPkcs11ObjectForAesCmac( const SntpAuthContext_t * pAuthContext,
                                           CK_SESSION_HANDLE * pPkcs11Session,
                                           CK_FUNCTION_LIST_PTR * pFunctionList,
                                           CK_OBJECT_HANDLE * pCmacKey )
@@ -667,6 +821,7 @@ static CK_RV setupPkcs11ObjectForAesCmac( SntpAuthContext_t * pAuthContext,
         { CKA_VALUE,    NULL,          0                         }
     };
 
+    /* Update the attributes array with the key of AES-CMAC operation. */
     aes_cmac_template[ 6 ].pValue = pAuthContext->pAuthKey;
     aes_cmac_template[ 6 ].ulValueLen = sizeof( pAuthContext->pAuthKey );
 
@@ -676,9 +831,6 @@ static CK_RV setupPkcs11ObjectForAesCmac( SntpAuthContext_t * pAuthContext,
     {
         LogError( ( "Failed to open PKCS #11 session." ) );
     }
-
-    /* Generated with: */
-    /* $ echo -n "Hello world" | openssl dgst -mac cmac -macopt cipher:aes-128-ecb -macopt hexkey:11223344112233441122334411223344 */
 
     if( result == CKR_OK )
     {
@@ -715,7 +867,7 @@ SntpStatus_t addClientAuthCode( SntpAuthContext_t * pContext,
                                 size_t bufferSize,
                                 size_t * pAuthCodeSize )
 {
-    CK_RV result;
+    CK_RV result = CKR_OK;
     CK_FUNCTION_LIST_PTR functionList;
     CK_SESSION_HANDLE pkcs11Session = 0;
 
@@ -727,57 +879,78 @@ SntpStatus_t addClientAuthCode( SntpAuthContext_t * pContext,
         CKM_AES_CMAC, NULL_PTR, 0
     };
 
-    result = setupPkcs11ObjectForAesCmac( pContext,
-                                          &pkcs11Session,
-                                          &functionList,
-                                          &cMacKey );
-
-    if( result == CKR_OK )
+    /* Determine whether the authentication context information needs to be updated to match
+     * the passed time server that is to be used for querying time.
+     * Note: The coreSNTP library will rotate the time server of use for communication to the next
+     * in the list if either the time server rejects a time request OR times out in its response to the
+     * time request. In such a case of rotating time server, the application (or user of the coreSNTP
+     * library) is required to necessary updates to the authentication context to reflect the new
+     * time server being used for SNTP communication by the SNTP client.*/
+    if( ( strlen( pTimeServer->pServerName ) != strlen( pContext->pServer ) ) ||
+        ( strncmp( pTimeServer->pServerName, pContext->pServer, strlen( pContext->pServer ) ) != 0 ) )
     {
-        /* Test SignInit and Sign */
-        result = functionList->C_SignInit( pkcs11Session, &mechanism, cMacKey );
-
-        if( result != CKR_OK )
-        {
-            LogError( ( "Failed to C_SignInit AES CMAC." ) );
-        }
+        /* Update the authentication context to represent the new time server of usage for
+         *  time requests. */
+        populateAuthContextForServer( pTimeServer->pServerName, pContext );
     }
 
-    /* Append the Key ID of the signing key before appending the signature to the buffer. */
-    *( uint32_t * ) ( ( uint8_t * ) pBuffer + SNTP_PACKET_SYMMETRIC_KEY_ID_OFFSET ) = FreeRTOS_htonl( pContext->keyId );
-
-    /* Generate the authentication code as the signature of the time request packet
-     * with the configured key. */
-    if( result == CKR_OK )
+    /* Check if the time server supports AES-128-CMAC authentication scheme in communication.
+     * If the time server supports authentication, then proceed with operation of generating client
+     * authentication code from the SNTP request packet and appending it to the request buffer.  */
+    if( pContext->keyId != -1 )
     {
-        result = functionList->C_Sign( pkcs11Session,
-                                       ( CK_BYTE_PTR ) pBuffer,
-                                       SNTP_PACKET_BASE_SIZE,
-                                       ( CK_BYTE_PTR ) pBuffer + SNTP_PACKET_BASE_SIZE + SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH,
-                                       &macBytesWritten );
+        result = setupPkcs11ObjectForAesCmac( pContext,
+                                              &pkcs11Session,
+                                              &functionList,
+                                              &cMacKey );
 
-        if( result != CKR_OK )
+        if( result == CKR_OK )
         {
-            LogError( ( "Failed to generate client auth code: Failed to generate AES-128-CMAC signature of SNTP request packet." ) );
+            /* Test SignInit and Sign */
+            result = functionList->C_SignInit( pkcs11Session, &mechanism, cMacKey );
+
+            if( result != CKR_OK )
+            {
+                LogError( ( "Failed to C_SignInit AES CMAC." ) );
+            }
         }
-    }
 
-    if( result == CKR_OK )
-    {
-        result = functionList->C_CloseSession( pkcs11Session );
+        /* Append the Key ID of the signing key before appending the signature to the buffer. */
+        *( uint32_t * ) ( ( uint8_t * ) pBuffer + SNTP_PACKET_SYMMETRIC_KEY_ID_OFFSET ) = FreeRTOS_htonl( pContext->keyId );
 
-        if( result != CKR_CRYPTOKI_NOT_INITIALIZED )
+        /* Generate the authentication code as the signature of the time request packet
+         * with the configured key. */
+        if( result == CKR_OK )
         {
-            /*TEST_ASSERT_EQUAL_MESSAGE( CKR_OK, result, "Failed to close session." ); */
+            result = functionList->C_Sign( pkcs11Session,
+                                           ( CK_BYTE_PTR ) pBuffer,
+                                           SNTP_PACKET_BASE_SIZE,
+                                           ( CK_BYTE_PTR ) pBuffer + SNTP_PACKET_BASE_SIZE + SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH,
+                                           &macBytesWritten );
 
-            result = functionList->C_Finalize( NULL );
-            /*TEST_ASSERT_EQUAL_MESSAGE( CKR_OK, result, "Failed to finalize session." ); */
+            if( result != CKR_OK )
+            {
+                LogError( ( "Failed to generate client auth code: Failed to generate AES-128-CMAC signature of SNTP request packet." ) );
+            }
         }
-    }
 
-    if( result == CKR_OK )
-    {
-        *pAuthCodeSize = SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH + pkcs11AES_CMAC_SIGNATURE_LENGTH;
+        if( result == CKR_OK )
+        {
+            result = functionList->C_CloseSession( pkcs11Session );
+
+            if( result != CKR_CRYPTOKI_NOT_INITIALIZED )
+            {
+                /*TEST_ASSERT_EQUAL_MESSAGE( CKR_OK, result, "Failed to close session." ); */
+
+                result = functionList->C_Finalize( NULL );
+                /*TEST_ASSERT_EQUAL_MESSAGE( CKR_OK, result, "Failed to finalize session." ); */
+            }
+        }
+
+        if( result == CKR_OK )
+        {
+            *pAuthCodeSize = SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH + pkcs11AES_CMAC_SIGNATURE_LENGTH;
+        }
     }
 
     return ( result == CKR_OK ) ? SntpSuccess : SntpErrorAuthFailure;
@@ -788,7 +961,7 @@ SntpStatus_t validateServerAuth( SntpAuthContext_t * pContext,
                                  const void * pResponseData,
                                  size_t responseSize )
 {
-    CK_RV result;
+    CK_RV result = CKR_OK;
     CK_FUNCTION_LIST_PTR functionList;
     CK_SESSION_HANDLE pkcs11Session = 0;
 
@@ -800,53 +973,120 @@ SntpStatus_t validateServerAuth( SntpAuthContext_t * pContext,
         CKM_AES_CMAC, NULL_PTR, 0
     };
 
-    result = setupPkcs11ObjectForAesCmac( pContext,
-                                          &pkcs11Session,
-                                          &functionList,
-                                          &cMacKey );
-
-    if( result == CKR_OK )
+    /* Check if the time server supports AES-128-CMAC authentication scheme in communication.
+     * If the time server supports authentication, then proceed with operation of validating server
+     * from the authentication code in the response payload.  */
+    if( pContext->keyId != -1 )
     {
-        /* Test SignInit and Sign */
-        result = functionList->C_VerifyInit( pkcs11Session, &mechanism, cMacKey );
+        /* As the server supports authentication mode of communication, the server response size
+         * SHOULD contain the authentication code. */
+        configASSERT( responseSize == ( SNTP_PACKET_AUTHENTICATED_MODE_SIZE ) );
 
-        if( result != CKR_OK )
+        result = setupPkcs11ObjectForAesCmac( pContext,
+                                              &pkcs11Session,
+                                              &functionList,
+                                              &cMacKey );
+
+        if( result == CKR_OK )
         {
-            LogError( ( "Failed to C_VerifyInit AES CMAC." ) );
+            /* Test SignInit and Sign */
+            result = functionList->C_VerifyInit( pkcs11Session, &mechanism, cMacKey );
+
+            if( result != CKR_OK )
+            {
+                LogError( ( "Failed to C_VerifyInit AES CMAC." ) );
+            }
         }
-    }
 
-    /* Generate the authentication code as the signature of the time request packet
-     * with the configured key. */
-    if( result == CKR_OK )
-    {
-        result = functionList->C_Verify( pkcs11Session,
-                                         ( CK_BYTE_PTR ) pResponseData,
-                                         SNTP_PACKET_BASE_SIZE,
-                                         ( CK_BYTE_PTR ) pResponseData + SNTP_PACKET_SYMMETRIC_KEY_ID_OFFSET + SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH,
-                                         pkcs11AES_CMAC_SIGNATURE_LENGTH );
-
-        if( result != CKR_OK )
+        /* Generate the authentication code as the signature of the time request packet
+         * with the configured key. */
+        if( result == CKR_OK )
         {
-            LogError( ( "Server cannot be validated from received response: AES-128-CMAC signature in response packet does not match expected." ) );
+            result = functionList->C_Verify( pkcs11Session,
+                                             ( CK_BYTE_PTR ) pResponseData,
+                                             SNTP_PACKET_BASE_SIZE,
+                                             ( CK_BYTE_PTR ) pResponseData + SNTP_PACKET_SYMMETRIC_KEY_ID_OFFSET + SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH,
+                                             pkcs11AES_CMAC_SIGNATURE_LENGTH );
+
+            if( result != CKR_OK )
+            {
+                LogError( ( "Server cannot be validated from received response: AES-128-CMAC signature in response packet does not match expected." ) );
+            }
         }
-    }
 
-    if( result == CKR_OK )
-    {
-        result = functionList->C_CloseSession( pkcs11Session );
-
-        if( result != CKR_CRYPTOKI_NOT_INITIALIZED )
+        if( result == CKR_OK )
         {
-            /*TEST_ASSERT_EQUAL_MESSAGE( CKR_OK, result, "Failed to close session." ); */
+            result = functionList->C_CloseSession( pkcs11Session );
 
-            result = functionList->C_Finalize( NULL );
-            /*TEST_ASSERT_EQUAL_MESSAGE( CKR_OK, result, "Failed to finalize session." ); */
+            if( result != CKR_CRYPTOKI_NOT_INITIALIZED )
+            {
+                /*TEST_ASSERT_EQUAL_MESSAGE( CKR_OK, result, "Failed to close session." ); */
+
+                result = functionList->C_Finalize( NULL );
+                /*TEST_ASSERT_EQUAL_MESSAGE( CKR_OK, result, "Failed to finalize session." ); */
+            }
         }
     }
 
     return ( result == CKR_OK ) ? SntpSuccess : SntpErrorAuthFailure;
 }
+
+
+/*************************************************************************************/
+
+static uint32_t generateRandomNumber()
+{
+    CK_RV pkcs11Status = CKR_OK;
+    CK_FUNCTION_LIST_PTR pFunctionList = NULL;
+    CK_SESSION_HANDLE session = CK_INVALID_HANDLE;
+    uint32_t randomNum = 0;
+
+    /* Get list of functions supported by the PKCS #11 port. */
+    pkcs11Status = C_GetFunctionList( &pFunctionList );
+
+    if( pkcs11Status != CKR_OK )
+    {
+        configASSERT( pFunctionList != NULL );
+        LogError( ( "Failed to generate random number. "
+                    "PKCS #11 API, C_GetFunctionList, failed." ) );
+    }
+
+    if( pkcs11Status == CKR_OK )
+    {
+        /* Initialize PKCS #11 module and create a new session. */
+        pkcs11Status = xInitializePkcs11Session( &session );
+
+        if( pkcs11Status != CKR_OK )
+        {
+            configASSERT( session != CK_INVALID_HANDLE );
+
+            LogError( ( "Failed to generate random number. "
+                        "Failed to initialize PKCS #11 session." ) );
+        }
+    }
+
+    if( pkcs11Status == CKR_OK )
+    {
+        if( pFunctionList->C_GenerateRandom( session,
+                                             &randomNum,
+                                             sizeof( randomNum ) ) != CKR_OK )
+        {
+            LogError( ( "Failed to generate random number. "
+                        "PKCS #11 API, C_GenerateRandom, failed to generate random number." ) );
+        }
+    }
+
+    if( pkcs11Status == CKR_OK )
+    {
+        if( pFunctionList->C_CloseSession( session ) != CKR_OK )
+        {
+            LogError( ( " Failed to close PKCS #11 session after generating random number." ) );
+        }
+    }
+
+    return randomNum;
+}
+
 
 /*************************************************************************************/
 
@@ -965,39 +1205,35 @@ void sntpTask( void * pParameters )
     bool initStatus = false;
     CK_RV pkcs11Status;
 
+    /* Validate that the configured lists of time servers, authentication keys and key IDs
+     * are of the same length. */
+    configASSERT( numOfServers == ( sizeof( pAESCMACAuthKeys ) / sizeof( pAESCMACAuthKeys[ 0 ] ) ) );
+    configASSERT( numOfServers == sizeof( pAuthKeyIds ) / sizeof( pAuthKeyIds[ 0 ] ) );
+
     /* Variable representing the SNTP client context. */
     static SntpContext_t context;
 
     /* Memory for the SNTP packet buffer in the SNTP context. */
-    static uint8_t contextBuffer[ SNTP_CONTEXT_NETWORK_BUFFER_SIZE + SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH + pkcs11AES_CMAC_SIGNATURE_LENGTH ];
+    static uint8_t contextBuffer[ SNTP_PACKET_AUTHENTICATED_MODE_SIZE ];
 
     /* Memory for the network context representing the UDP socket that will be
      * passed to the SNTP client context. */
     static NetworkContext_t udpContext;
-
-    /* Store the configured time servers in an array. */
-    static const char * pTimeServers[] = { democonfigLIST_OF_TIME_SERVERS };
-    const size_t numOfServers = sizeof( pTimeServers ) / sizeof( char * );
 
     /* Initialize PKCS11 module for cyrpotographic operations of AES-128-CMAC show
      * shown in this demo for authentication mechanism in SNTP communication with server. */
     pkcs11Status = xInitializePKCS11();
     configASSERT( pkcs11Status == CKR_OK );
 
-    /* Verify that the configured authentication key is 128 bits or 16 bytes in size. As
-     * the input format is a hex string, the string length should be 32 bytes. */
-    const char * pAesCmacAuthKey = democonfigAES_CMAC_AUTHENTICATION_SYMMETRIC_KEY;
+    /* Memory for authentication context that will be passed to  the SNTP client context through
+     * the authentication interface. This represents a combination of the time server and
+     * its authentication key information that will be utilized for authentication communication
+     * between client and server, if the server supports authentication. */
+    static SntpAuthContext_t authContext;
 
-    configASSERT( strlen( pAesCmacAuthKey ) == 2 * AES_CMAC_AUTHENTICATION_KEY_SIZE );
-
-    /* Store the configured AES-128-CMAC key for authentication in the SntpAuthContext_t context
-     * after converting it from hex string to binary. */
-    for( uint8_t index = 0; index < strlen( pAesCmacAuthKey ); index += 2 )
-    {
-        char byteString[ 3 ] = { pAesCmacAuthKey[ index ], pAesCmacAuthKey[ index + 1 ], '\0' };
-        uint8_t byteVal = strtoul( byteString, NULL, 16 );
-        authKeyContext.pAuthKey[ index / 2 ] = byteVal;
-    }
+    /* Initialize the authentication context for information for the first time server and its
+     * keys configured in the demo. */
+    populateAuthContextForServer( pTimeServers[ 0 ], &authContext );
 
     initStatus = initializeSntpClient( &clientContext,
                                        pTimeServers,
@@ -1005,7 +1241,7 @@ void sntpTask( void * pParameters )
                                        contextBuffer,
                                        sizeof( contextBuffer ),
                                        &udpContext,
-                                       &authKeyContext );
+                                       &authContext );
 
     if( initStatus == true )
     {
@@ -1024,7 +1260,7 @@ void sntpTask( void * pParameters )
         while( 1 )
         {
             /* TODO - Generate random number with corePKCS11. */
-            status = Sntp_SendTimeRequest( &clientContext, 100 );
+            status = Sntp_SendTimeRequest( &clientContext, generateRandomNumber() );
 
             /*configASSERT( status == SntpSuccess ); */
             if( status != SntpSuccess )

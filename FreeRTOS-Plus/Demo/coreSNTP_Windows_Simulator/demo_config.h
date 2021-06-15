@@ -71,7 +71,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @brief The desired accuracy (in milliseconds) of system clock in relation with internet time.
  * In other words, this is the maximum tolerance desired for clock drift in the system.
  */
-#define democonfigDESIRED_CLOCK_ACCURACY_MS                ( 1000 )
+#define democonfigDESIRED_CLOCK_ACCURACY_MS     ( 1000 )
 
 /**
  * @brief The system clock tolerance (in parts per million) that represents the rate of clock
@@ -84,14 +84,55 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * ONLY provides the user to view the impact of the settings for "Clock Tolerance" and "Desired
  * Clock Accuracy" configurations on the calculated "SNTP polling period".
  */
-#define democonfigSYSTEM_CLOCK_TOLERANCE_PPM               ( 32000 )
+#define democonfigSYSTEM_CLOCK_TOLERANCE_PPM    ( 32000 )
 
 /**
  * @brief The set of time servers, in decreasing order of priority, for configuring the SNTP client.
  * The servers SHOULD be listed as comma-separated list of strings. For example, the following
  * can be a configuration used:
+ *
+ * #define democonfigLIST_OF_TIME_SERVERS          "<custom-timeserver-1>", "<custom-timeserver-2>", "pool.ntp.org"
  */
-#define democonfigLIST_OF_TIME_SERVERS                    "35.161.23.91", "time.cloudflare.com", "pool.ntp.org"
+
+/**
+ * @brief The list of 128-bit (or 16 bytes) symmetric keys for authenticating communication with the NTP/SNTP time servers
+ * corresponding to the list in democonfigLIST_OF_TIME_SERVERS. A symmetric key is used for generating authentication code
+ * in client request to related NTP/SNTP server as well as validating server from the time response received.
+ *
+ * This demo shows use of AES-128-CMAC algorithm for a mutual authentication mechanism in the SNTP communication
+ * between the NTP/SNTP server and client. The demo generates a Message Authentication Code (MAC) using
+ * the algorithm and appends it to the client request packet before the coreSNTP library sends it over
+ * the network to the server. The server validates the client from the request from the authentication code
+ * present in the request packet. Similarly, this demo validates the server from the response received on
+ * the network by verifying the authentication code present in the response packet.
+ *
+ * It is RECOMMENDED to use an authentication mechanism for protecting devices against server spoofing
+ * attacks.
+ *
+ * @note Please provide the 128-bit keys as comma separated list of hexadecimal strings in the order matching
+ * the list of time servers configured in democonfigLIST_OF_TIME_SERVERS configuration. If a time server does
+ * not support authentication, then NULL should be used to indicate use of no authentication mechanism for the
+ * time server.
+ *
+ * @note Use of the AES-128-CMAC based authentication scheme in the demo requires that the symmetric key
+ * is shared safely between the time server and the client device.
+ *
+ * #define democonfigAES_CMAC_AUTHENTICATION_SYMMETRIC_KEY  "<hexstring-key-1>", "<hexstring-key-2>", NULL
+ */
+
+/**
+ * @brief The list of key IDs of the shared @ref democonfigLIST_OF_AUTHENTICATION_SYMMETRIC_KEYS keys between
+ * the client and the corresponding NTP/SNTP servers, in democonfigLIST_OF_TIME_SERVERS, for authenticating
+ * the SNTP communication between the client and server.
+ *
+ * The ID for a key usually represents the ID used to reference the symmetric key in the NTP/SNTP server system.
+ *
+ * @note This Key IDs should be configured as a comma-separated list of integer Key IDs that match the order of
+ * keys in democonfigdemoconfigLIST_OF_AUTHENTICATION_SYMMETRIC_KEYS. If there is a NULL (or no key) in the list
+ * of keys, then -1 can be used as the corresponding key ID.
+ *
+ * #define democonfigLIST_OF_AUTHENTICATION_KEY_IDS    <key-ID-1>, <key-ID-2>, -1
+ */
 
 /**
  * @brief The year to bake in the demo application for initializing the system clock with.
@@ -109,43 +150,13 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *     OR
  *  * Using the same firmware baked-in starting time of device for every boot-up.
  */
-#define democonfigSYSTEM_START_YEAR                        ( 2021 )
+#define democonfigSYSTEM_START_YEAR             ( 2021 )
 
 /**
  * @brief The timeout (in milliseconds) for the time response to a time request made to a
  * time server.
  */
-#define democonfigSERVER_RESPONSE_TIMEOUT_MS               ( 5000 )
-
-/**
- * @brief The 128-bit (or 16 bytes) symmetric key for generating authentication code in client request to NTP/SNTP server
- * as well as validating server from the time response received.
- *
- * This demo shows use of AES-128-CMAC algorithm for a mutual authentication mechanism in the SNTP communication
- * between the NTP/SNTP server and client. The demo generates a Message Authentication Code (MAC) using
- * the algorithm and appends it to the client request packet before the coreSNTP library sends it over
- * the network to the server. The server validates the client from the request from the authentication code
- * present in the request packet. Similarly, this demo validates the server from the response received on
- * the network by verifying the authentication code present in the response packet.
- *
- * It is RECOMMENDED to use an authentication mechanism for protecting devices against server spoofing
- * attacks.
- *
- * @note Please provide the 128-bit key as a hexadecimal string.
- *
- * @note Use of the AES-128-CMAC based authentication scheme in the demo requires that the symmetric key
- * is shared safely between the time server and the client device.
- */
-#define democonfigAES_CMAC_AUTHENTICATION_SYMMETRIC_KEY    "CB0F2EC7680743DC8C5E07C244F82A00"
-
-/**
- * @brief The key ID of the shared @ref democonfigAES_CMAC_AUTHENTICATION_SYMMETRIC_KEY key between
- * the client and NTP/SNTP for authenticating the SNTP communication.
- *
- * This configuration value should be the Key ID present in the server for referencing the symmetric key
- * in its system.
- */
-#define democonfigAES_CMAC_AUTHENTICATION_KEY_ID           3
+#define democonfigSERVER_RESPONSE_TIMEOUT_MS    ( 5000 )
 
 /**
  * @brief Set the stack size of the main demo task.
@@ -153,6 +164,6 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * In the Windows port, this stack only holds a structure. The actual
  * stack is created by an operating system thread.
  */
-#define democonfigDEMO_STACKSIZE                           configMINIMAL_STACK_SIZE
+#define democonfigDEMO_STACKSIZE                configMINIMAL_STACK_SIZE
 
 #endif /* DEMO_CONFIG_H */

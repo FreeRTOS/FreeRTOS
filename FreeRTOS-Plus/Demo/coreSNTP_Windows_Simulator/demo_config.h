@@ -90,8 +90,49 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @brief The set of time servers, in decreasing order of priority, for configuring the SNTP client.
  * The servers SHOULD be listed as comma-separated list of strings. For example, the following
  * can be a configuration used:
+ *
+ * #define democonfigLIST_OF_TIME_SERVERS          "<custom-timeserver-1>", "<custom-timeserver-2>", "pool.ntp.org"
  */
-#define democonfigLIST_OF_TIME_SERVERS          "time.cloudflare.com", "pool.ntp.org"
+
+/**
+ * @brief The list of 128-bit (or 16 bytes) symmetric keys for authenticating communication with the NTP/SNTP time servers
+ * corresponding to the list in democonfigLIST_OF_TIME_SERVERS. A symmetric key is used for generating authentication code
+ * in client request to related NTP/SNTP server as well as validating server from the time response received.
+ *
+ * This demo shows use of AES-128-CMAC algorithm for a mutual authentication mechanism in the SNTP communication
+ * between the NTP/SNTP server and client. The demo generates a Message Authentication Code (MAC) using
+ * the algorithm and appends it to the client request packet before the coreSNTP library sends it over
+ * the network to the server. The server validates the client from the request from the authentication code
+ * present in the request packet. Similarly, this demo validates the server from the response received on
+ * the network by verifying the authentication code present in the response packet.
+ *
+ * It is RECOMMENDED to use an authentication mechanism for protecting devices against server spoofing
+ * attacks.
+ *
+ * @note Please provide the 128-bit keys as comma separated list of hexadecimal strings in the order matching
+ * the list of time servers configured in democonfigLIST_OF_TIME_SERVERS configuration. If a time server does
+ * not support authentication, then NULL should be used to indicate use of no authentication mechanism for the
+ * time server.
+ *
+ * @note Use of the AES-128-CMAC based authentication scheme in the demo requires that the symmetric key
+ * is shared safely between the time server and the client device.
+ *
+ * #define democonfigAES_CMAC_AUTHENTICATION_SYMMETRIC_KEY  "<hexstring-key-1>", "<hexstring-key-2>", NULL
+ */
+
+/**
+ * @brief The list of key IDs of the shared @ref democonfigLIST_OF_AUTHENTICATION_SYMMETRIC_KEYS keys between
+ * the client and the corresponding NTP/SNTP servers, in democonfigLIST_OF_TIME_SERVERS, for authenticating
+ * the SNTP communication between the client and server.
+ *
+ * The ID for a key usually represents the ID used to reference the symmetric key in the NTP/SNTP server system.
+ *
+ * @note This Key IDs should be configured as a comma-separated list of integer Key IDs that match the order of
+ * keys in democonfigdemoconfigLIST_OF_AUTHENTICATION_SYMMETRIC_KEYS. If there is a NULL (or no key) in the list
+ * of keys, then -1 can be used as the corresponding key ID.
+ *
+ * #define democonfigLIST_OF_AUTHENTICATION_KEY_IDS    <key-ID-1>, <key-ID-2>, -1
+ */
 
 /**
  * @brief The year to bake in the demo application for initializing the system clock with.

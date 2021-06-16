@@ -47,6 +47,11 @@
 /* Demo logging includes. */
 #include "logging.h"
 
+/* mbedTLS include for configuring
+ * threading functions. */
+#include "mbedtls/threading.h"
+#include "threading_alt.h"
+
 /* Demo Specific configs. */
 #include "demo_config.h"
 #include "common_demo_include.h"
@@ -149,6 +154,12 @@ int main( void )
 void vStartSntpDemo( void )
 {
     initializeSystemClock();
+
+    /* Configure mbedTLS to use FreeRTOS specific threading function. */
+    mbedtls_threading_set_alt( mbedtls_platform_mutex_init,
+                               mbedtls_platform_mutex_free,
+                               mbedtls_platform_mutex_lock,
+                               mbedtls_platform_mutex_unlock );
 
     /* Create the SNTP client task that is responsible for synchronizing system time with the time servers
      * periodically. This is created as a high priority task to keep the SNTP client operation unhindered. */

@@ -7,6 +7,7 @@ aclk
 acm
 adc
 adcclk
+addclientauthcode
 adden
 addfaketaskwaitingtoreceivefromqueue
 addfaketaskwaitingtosendtoqueue
@@ -151,6 +152,7 @@ bss
 btimer
 btn
 buf
+buffersize
 bufsize
 burtc
 burtcclkdiv
@@ -441,6 +443,7 @@ dap
 dat
 datashee
 datasheet
+datatracker
 dbe
 dcdc
 dclr
@@ -811,6 +814,7 @@ het
 hetbase
 hetport
 hetreg
+hexstring
 hfclk
 hfrco
 hfxo
@@ -1396,6 +1400,8 @@ passsed
 passwordsize
 pasv
 pathlen
+pauthcodesize
+pauthcontext
 payloadlength
 pb
 pbasetime
@@ -1445,6 +1451,7 @@ pclientcert
 pclk
 pclkb
 pclwipappsblockinggettxbuffer
+pcmackey
 pcmethod
 pcmyreply
 pcname
@@ -1511,6 +1518,7 @@ pfm
 pfr
 pfs
 pfswe
+pfunctionlist
 phostname
 php
 phy
@@ -1609,11 +1617,13 @@ preceivedcommand
 predivide
 prefen
 premain
+prequestbuffer
 prescale
 prescaled
 prescaler
 presense
 presigned
+presponsedata
 prev
 printc
 printf
@@ -1812,6 +1822,7 @@ ps
 psc
 pscheckvariable
 psel
+pserver
 pserverinfo
 psignature
 psl
@@ -2048,6 +2059,7 @@ resetart
 resetprg
 resoltion
 resp
+responsesize
 resubscribe
 resubscribes
 resync
@@ -2214,6 +2226,9 @@ sni
 snprintf
 sntp
 sntpclienttask
+sntperrorauthfailure
+sntpservernotauthenticated
+sntpsuccess
 sntptask
 soc
 sockaddr
@@ -2370,6 +2385,7 @@ tim
 timeguard
 timertest
 timertimer
+timeserver
 tls
 tmr
 tmrdemoone

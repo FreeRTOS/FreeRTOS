@@ -185,7 +185,7 @@ unsigned char ucByte;
 }
 /*-----------------------------------------------------------*/
 
-SIGNAL( SIG_UART_RECV )
+SIGNAL( USART_RXC_vect )
 {
 signed char cChar;
 signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
@@ -204,7 +204,7 @@ signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-SIGNAL( SIG_UART_DATA )
+SIGNAL( USART_UDRE_vect )
 {
 signed char cChar, cTaskWoken;
 

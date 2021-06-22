@@ -141,7 +141,7 @@ extern void vAssertCalled( const char * const pcFileName,
 
 /* To test builds that remove the static qualifier for debug builds. */
     #define portREMOVE_STATIC_QUALIFIER
-#else  /* if ( projCOVERAGE_TEST == 1 ) */
+#else /* if ( projCOVERAGE_TEST == 1 ) */
 
 /* It is a good idea to define configASSERT() while developing.  configASSERT()
  * uses the same semantics as the standard C assert() macro.  Don't define

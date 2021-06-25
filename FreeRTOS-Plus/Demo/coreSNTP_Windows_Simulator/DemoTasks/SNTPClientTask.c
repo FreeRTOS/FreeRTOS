@@ -99,10 +99,18 @@
 #endif
 
 /*-----------------------------------------------------------*/
-/* Default values for configuration . */
+/* Default values for timeout configurations . */
 
 #ifndef democonfigSERVER_RESPONSE_TIMEOUT_MS
     #define democonfigSERVER_RESPONSE_TIMEOUT_MS    ( 5000 )
+#endif
+
+#ifndef democonfigSEND_TIME_REQUEST_TIMEOUT_MS
+    #define democonfigSEND_TIME_REQUEST_TIMEOUT_MS    ( 50 )
+#endif
+
+#ifndef democonfigRECEIVE_SERVER_RESPONSE_BLOCK_TIME_MS
+    #define democonfigRECEIVE_SERVER_RESPONSE_BLOCK_TIME_MS    ( 200 )
 #endif
 
 /**
@@ -201,7 +209,7 @@ struct SntpAuthContext
  * time in RAM.
  *
  *  BaseTime = Time set at boot or the last synchronized time
- *  Slew Rate = Number of seconds to adjust per system time second
+ *  Slew Rate = Number of milliseconds to adjust per system time second
  *  No. of ticks since last SNTP sync = Current FreeRTOS Tick Count -
  *                                      Tick count at last SNTP sync
  *
@@ -220,7 +228,7 @@ typedef struct SystemClock
     UTCTime_t baseTime;
     TickType_t lastSyncTickCount;
     uint32_t pollPeriod;
-    uint32_t slewRate; /* Seconds/Seconds */
+    uint64_t slewRate; /* Milliseconds/Seconds */
     bool firstTimeSyncDone;
 } SystemClock_t;
 
@@ -274,7 +282,7 @@ static uint32_t translateYearToUnixSeconds( uint16_t year );
  * It calculates the current time as:
  *
  *   BaseTime = Time set at device boot or the last synchronized time
- *   SlewRate = Number of seconds to adjust per system time second
+ *   SlewRate = Number of milliseconds to adjust per system time second
  *
  *   Current Time = Base Time +
  *                  Time since last SNTP Synchronization +
@@ -291,7 +299,7 @@ static uint32_t translateYearToUnixSeconds( uint16_t year );
  */
 static void calculateCurrentTime( UTCTime_t * pBaseTime,
                                   TickType_t lastSyncTickCount,
-                                  uint32_t slewRate,
+                                  uint64_t slewRate,
                                   UTCTime_t * pCurrentTime );
 
 /**
@@ -351,7 +359,7 @@ static int32_t UdpTransport_Send( NetworkContext_t * pNetworkContext,
                                   uint32_t serverAddr,
                                   uint16_t serverPort,
                                   const void * pBuffer,
-                                  size_t bytesToSend );
+                                  uint16_t bytesToSend );
 
 /**
  * @brief The demo implementation of the @ref UdpTransportRecvFrom_t function
@@ -378,7 +386,7 @@ static int32_t UdpTransport_Recv( NetworkContext_t * pNetworkContext,
                                   uint32_t serverAddr,
                                   uint16_t serverPort,
                                   void * pBuffer,
-                                  size_t bytesToRecv );
+                                  uint16_t bytesToRecv );
 
 /**
  * @brief The demo implementation of the @ref SntpGetTime_t interface
@@ -419,10 +427,24 @@ static void sntpClient_GetTime( SntpTimestamp_t * pCurrentTime );
  *   with "step" approach) for use-cases like logging events in correct order
  * - Always using a "step" approach for a simplicity if your application is not sensitive to
  *   abrupt changes/progress in time.
+ *
+ * @param[in] pTimeServer The time server from whom the time has been received.
+ * @param[in] pServerTime The most recent time of the server, @p pTimeServer, sent in its
+ * time response.
+ * @param[in] clockOffsetMs The value, in milliseconds, of system clock offset relative
+ * to the server time calculated by the coreSNTP library. If the value is positive, then
+ * the system is BEHIND the server time, and a "slew" clock correction approach is used in
+ * this demo. If the value is negative, then the system time is AHEAD of the server time,
+ * and a "step" clock correction approach is used in this demo.
+ * @param[in] leapSecondInfo This indicates whether there is an upcoming leap second insertion
+ * or deletion (according to astronomical time) the last minute of the end of the month that the
+ * system time needs to adjust for. Leap second adjustment is valuable for applications that
+ * require non-abrupt increment of time for use cases like logging. This demo DOES NOT showcase
+ * leap second adjustment in system clock.
  */
 static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
                                 const SntpTimestamp_t * pServerTime,
-                                int32_t clockOffsetSec,
+                                int64_t clockOffsetMs,
                                 SntpLeapSecondInfo_t leapSecondInfo );
 
 /**
@@ -500,8 +522,8 @@ static bool populateAuthContextForServer( const char * pServer,
 static SntpStatus_t addClientAuthCode( SntpAuthContext_t * pAuthContext,
                                        const SntpServerInfo_t * pTimeServer,
                                        void * pRequestBuffer,
-                                       size_t bufferSize,
-                                       size_t * pAuthCodeSize );
+                                       uint16_t bufferSize,
+                                       uint16_t * pAuthCodeSize );
 
 
 /**
@@ -567,7 +589,7 @@ static uint32_t translateYearToUnixSeconds( uint16_t year )
 
 void calculateCurrentTime( UTCTime_t * pBaseTime,
                            TickType_t lastSyncTickCount,
-                           uint32_t slewRate,
+                           uint64_t slewRate,
                            UTCTime_t * pCurrentTime )
 {
     uint64_t msElapsedSinceLastSync = 0;
@@ -580,7 +602,10 @@ void calculateCurrentTime( UTCTime_t * pBaseTime,
     /* If slew rate is set, then apply the slew-based clock adjustment for the elapsed time. */
     if( slewRate > 0 )
     {
-        msElapsedSinceLastSync += ( uint64_t ) slewRate * msElapsedSinceLastSync;
+        /* Slew Adjustment = Slew Rate ( Milliseconds/seconds )
+         *                                      x
+         *                   No. of seconds since last synchronization. */
+        msElapsedSinceLastSync += slewRate * ( msElapsedSinceLastSync / 1000 );
     }
 
     /* Set the current UTC time in the output parameter. */
@@ -611,7 +636,7 @@ static bool resolveDns( const SntpServerInfo_t * pServerAddr,
         /* DNS Look up succeeded. */
         status = true;
 
-        *pIpV4Addr = resolvedAddr;
+        *pIpV4Addr = FreeRTOS_ntohl( resolvedAddr );
 
         #if defined( LIBRARY_LOG_LEVEL ) && ( LIBRARY_LOG_LEVEL != LOG_NONE )
             uint8_t stringAddr[ 16 ];
@@ -628,12 +653,12 @@ int32_t UdpTransport_Send( NetworkContext_t * pNetworkContext,
                            uint32_t serverAddr,
                            uint16_t serverPort,
                            const void * pBuffer,
-                           size_t bytesToSend )
+                           uint16_t bytesToSend )
 {
     struct freertos_sockaddr destinationAddress;
     int32_t bytesSent;
 
-    destinationAddress.sin_addr = serverAddr;
+    destinationAddress.sin_addr = FreeRTOS_htonl( serverAddr );
     destinationAddress.sin_port = FreeRTOS_htons( serverPort );
 
     /* Send the buffer with ulFlags set to 0, so the FREERTOS_ZERO_COPY bit
@@ -659,7 +684,7 @@ static int32_t UdpTransport_Recv( NetworkContext_t * pNetworkContext,
                                   uint32_t serverAddr,
                                   uint16_t serverPort,
                                   void * pBuffer,
-                                  size_t bytesToRecv )
+                                  uint16_t bytesToRecv )
 {
     struct freertos_sockaddr sourceAddress;
     int32_t bytesReceived;
@@ -687,7 +712,7 @@ static int32_t UdpTransport_Recv( NetworkContext_t * pNetworkContext,
 
     /* If data is received from the network, discard the data if  received from a different source than
      * the server. */
-    if( ( bytesReceived > 0 ) && ( ( sourceAddress.sin_addr != serverAddr ) ||
+    if( ( bytesReceived > 0 ) && ( ( FreeRTOS_ntohl( sourceAddress.sin_addr ) != serverAddr ) ||
                                    ( FreeRTOS_ntohs( sourceAddress.sin_port ) != serverPort ) ) )
     {
         bytesReceived = 0;
@@ -752,13 +777,21 @@ static void sntpClient_GetTime( SntpTimestamp_t * pCurrentTime )
 
 static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
                                 const SntpTimestamp_t * pServerTime,
-                                int32_t clockOffsetSec,
+                                int64_t clockOffsetMs,
                                 SntpLeapSecondInfo_t leapSecondInfo )
 {
-    /* TODO - Handle leap second. */
+    /* Note: This demo DOES NOT show adjustment of leap second in system time,
+     * if an upcoming leap second adjustment is mentioned in server response.
+     * Leap second adjustment occurs at low frequency (only for the last minute of June
+     * or December) and can be useful for applications that require smooth system
+     * time continuum ALWAYS including the time of the leap second adjustment.
+     *
+     * For more information on leap seconds, refer to
+     * https://www.nist.gov/pml/time-and-frequency-division/leap-seconds-faqs.
+     */
     ( void ) leapSecondInfo;
 
-    ( void ) pTimeServer;
+    LogInfo( ( "Received time from time server: %s", pTimeServer->pServerName ) );
 
     /* Obtain the mutext for accessing system clock variables. */
     xSemaphoreTake( xMutex, portMAX_DELAY );
@@ -768,7 +801,7 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
      *                         OR
      * This is the first time synchronization with NTP server since device boot-up.
      */
-    if( ( clockOffsetSec < 0 ) || ( systemClock.firstTimeSyncDone == false ) )
+    if( ( clockOffsetMs < 0 ) || ( systemClock.firstTimeSyncDone == false ) )
     {
         SntpStatus_t status;
         uint32_t unixSecs;
@@ -808,8 +841,8 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
                               systemClock.slewRate,
                               &systemClock.baseTime );
 
-        /* Calculate the new slew rate as offset in seconds of adjustment per second. */
-        systemClock.slewRate = clockOffsetSec / systemClock.pollPeriod;
+        /* Calculate the new slew rate as offset in milliseconds of adjustment per second. */
+        systemClock.slewRate = clockOffsetMs / systemClock.pollPeriod;
 
         /* Store the tick count of the current time synchronization in the system clock. */
         systemClock.lastSyncTickCount = xTaskGetTickCount();
@@ -940,8 +973,8 @@ static CK_RV setupPkcs11ObjectForAesCmac( const SntpAuthContext_t * pAuthContext
 SntpStatus_t addClientAuthCode( SntpAuthContext_t * pAuthContext,
                                 const SntpServerInfo_t * pTimeServer,
                                 void * pRequestBuffer,
-                                size_t bufferSize,
-                                size_t * pAuthCodeSize )
+                                uint16_t bufferSize,
+                                uint16_t * pAuthCodeSize )
 {
     CK_RV result = CKR_OK;
     CK_FUNCTION_LIST_PTR functionList;
@@ -1042,7 +1075,7 @@ SntpStatus_t addClientAuthCode( SntpAuthContext_t * pAuthContext,
 SntpStatus_t validateServerAuth( SntpAuthContext_t * pAuthContext,
                                  const SntpServerInfo_t * pTimeServer,
                                  const void * pResponseData,
-                                 size_t responseSize )
+                                 uint16_t responseSize )
 {
     CK_RV result = CKR_OK;
     CK_FUNCTION_LIST_PTR functionList;
@@ -1354,7 +1387,7 @@ void sntpTask( void * pParameters )
         /* SNTP Client loop of sending and receiving SNTP packets for time synchronization at poll intervals */
         while( 1 )
         {
-            status = Sntp_SendTimeRequest( &clientContext, generateRandomNumber() );
+            status = Sntp_SendTimeRequest( &clientContext, generateRandomNumber(), democonfigSEND_TIME_REQUEST_TIMEOUT_MS );
 
             /*configASSERT( status == SntpSuccess ); */
             if( status != SntpSuccess )
@@ -1365,8 +1398,9 @@ void sntpTask( void * pParameters )
             /* Wait till the server response is not received. */
             do
             {
-                /* Attempt to receive server response each time for 200 ms. */
-                status = Sntp_ReceiveTimeResponse( &clientContext, 200 );
+                /* Attempt to receive server response each time for a smaller block time
+                 * than the total duration for the server response to time out. */
+                status = Sntp_ReceiveTimeResponse( &clientContext, democonfigRECEIVE_SERVER_RESPONSE_BLOCK_TIME_MS );
             } while( status == SntpNoResponseReceived );
 
             /* Wait for the poll interval period before the next iteration of time synchronization. */

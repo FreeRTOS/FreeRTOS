@@ -291,7 +291,7 @@ static uint32_t translateYearToUnixSeconds( uint16_t year );
  */
 static void calculateCurrentTime( UTCTime_t * pBaseTime,
                                   TickType_t lastSyncTickCount,
-                                  uint32_t slewRate,
+                                  uint64_t slewRate,
                                   UTCTime_t * pCurrentTime );
 
 /**
@@ -351,7 +351,7 @@ static int32_t UdpTransport_Send( NetworkContext_t * pNetworkContext,
                                   uint32_t serverAddr,
                                   uint16_t serverPort,
                                   const void * pBuffer,
-                                  size_t bytesToSend );
+                                  uint16_t bytesToSend );
 
 /**
  * @brief The demo implementation of the @ref UdpTransportRecvFrom_t function
@@ -378,7 +378,7 @@ static int32_t UdpTransport_Recv( NetworkContext_t * pNetworkContext,
                                   uint32_t serverAddr,
                                   uint16_t serverPort,
                                   void * pBuffer,
-                                  size_t bytesToRecv );
+                                  uint16_t bytesToRecv );
 
 /**
  * @brief The demo implementation of the @ref SntpGetTime_t interface
@@ -514,8 +514,8 @@ static bool populateAuthContextForServer( const char * pServer,
 static SntpStatus_t addClientAuthCode( SntpAuthContext_t * pAuthContext,
                                        const SntpServerInfo_t * pTimeServer,
                                        void * pRequestBuffer,
-                                       size_t bufferSize,
-                                       size_t * pAuthCodeSize );
+                                       uint16_t bufferSize,
+                                       uint16_t * pAuthCodeSize );
 
 
 /**
@@ -581,7 +581,7 @@ static uint32_t translateYearToUnixSeconds( uint16_t year )
 
 void calculateCurrentTime( UTCTime_t * pBaseTime,
                            TickType_t lastSyncTickCount,
-                           uint32_t slewRate,
+                           uint64_t slewRate,
                            UTCTime_t * pCurrentTime )
 {
     uint64_t msElapsedSinceLastSync = 0;
@@ -594,7 +594,7 @@ void calculateCurrentTime( UTCTime_t * pBaseTime,
     /* If slew rate is set, then apply the slew-based clock adjustment for the elapsed time. */
     if( slewRate > 0 )
     {
-        msElapsedSinceLastSync += slewRate * msElapsedSinceLastSync;
+        msElapsedSinceLastSync += slewRate * (msElapsedSinceLastSync / 1000);
     }
 
     /* Set the current UTC time in the output parameter. */
@@ -642,7 +642,7 @@ int32_t UdpTransport_Send( NetworkContext_t * pNetworkContext,
                            uint32_t serverAddr,
                            uint16_t serverPort,
                            const void * pBuffer,
-                           size_t bytesToSend )
+                           uint16_t bytesToSend )
 {
     struct freertos_sockaddr destinationAddress;
     int32_t bytesSent;
@@ -673,7 +673,7 @@ static int32_t UdpTransport_Recv( NetworkContext_t * pNetworkContext,
                                   uint32_t serverAddr,
                                   uint16_t serverPort,
                                   void * pBuffer,
-                                  size_t bytesToRecv )
+                                  uint16_t bytesToRecv )
 {
     struct freertos_sockaddr sourceAddress;
     int32_t bytesReceived;
@@ -962,8 +962,8 @@ static CK_RV setupPkcs11ObjectForAesCmac( const SntpAuthContext_t * pAuthContext
 SntpStatus_t addClientAuthCode( SntpAuthContext_t * pAuthContext,
                                 const SntpServerInfo_t * pTimeServer,
                                 void * pRequestBuffer,
-                                size_t bufferSize,
-                                size_t * pAuthCodeSize )
+                                uint16_t bufferSize,
+                                uint16_t * pAuthCodeSize )
 {
     CK_RV result = CKR_OK;
     CK_FUNCTION_LIST_PTR functionList;
@@ -1064,7 +1064,7 @@ SntpStatus_t addClientAuthCode( SntpAuthContext_t * pAuthContext,
 SntpStatus_t validateServerAuth( SntpAuthContext_t * pAuthContext,
                                  const SntpServerInfo_t * pTimeServer,
                                  const void * pResponseData,
-                                 size_t responseSize )
+                                 uint16_t responseSize )
 {
     CK_RV result = CKR_OK;
     CK_FUNCTION_LIST_PTR functionList;
@@ -1376,7 +1376,7 @@ void sntpTask( void * pParameters )
         /* SNTP Client loop of sending and receiving SNTP packets for time synchronization at poll intervals */
         while( 1 )
         {
-            status = Sntp_SendTimeRequest( &clientContext, generateRandomNumber() );
+            status = Sntp_SendTimeRequest( &clientContext, generateRandomNumber(), 10);
 
             /*configASSERT( status == SntpSuccess ); */
             if( status != SntpSuccess )

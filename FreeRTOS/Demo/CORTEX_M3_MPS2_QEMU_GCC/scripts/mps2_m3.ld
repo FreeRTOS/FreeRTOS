@@ -54,9 +54,6 @@ SECTIONS
         KEEP (*(.fini))
         KEEP(*(.eh_frame))
         *(.rodata*)
-        . = ALIGN(4);
-        _etext = .;
-        _sidata = _etext;
     } > FLASH
 
 	.ARM.extab :
@@ -74,6 +71,10 @@ SECTIONS
 		__exidx_end = .;
 		. = ALIGN(4);
 	} >FLASH
+
+	. = ALIGN(4);
+	_etext = .;
+	_sidata = _etext;
 
     .interrupts_ram :
     {

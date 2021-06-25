@@ -150,19 +150,19 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *     OR
  *  * Using the same firmware baked-in starting time of device for every boot-up.
  */
-#define democonfigSYSTEM_START_YEAR               ( 2021 )
+#define democonfigSYSTEM_START_YEAR                        ( 2021 )
 
 /**
  * @brief The timeout (in milliseconds) for the time response to a time request made to a
  * time server.
  */
-#define democonfigSERVER_RESPONSE_TIMEOUT_MS      ( 5000 )
+#define democonfigSERVER_RESPONSE_TIMEOUT_MS               ( 5000 )
 
 /**
  * @brief The maximum block time (in milliseconds) for an attempt to send time request over the network
  * to a time server when through the Sntp_SendTimeRequest API.
  */
-#define democonfigSEND_TIME_REQUEST_TIMEOUT_MS    ( 50 )
+#define democonfigSEND_TIME_REQUEST_TIMEOUT_MS             ( 50 )
 
 /**
  * @brief The maximum block time (in milliseconds) for an attempt to read server response (to a time request)
@@ -174,7 +174,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * that is orders of degree shorter than the response timeout value) to check whether an expected server response
  * has been received as well as performing other application logic in the same thread context.
  */
-#define democonfigSERVER_RESPONSE_TIMEOUT_MS      ( 200 )
+#define democonfigRECEIVE_SERVER_RESPONSE_BLOCK_TIME_MS    ( 200 )
 
 /**
  * @brief Set the stack size of the main demo task.
@@ -182,7 +182,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * In the Windows port, this stack only holds a structure. The actual
  * stack is created by an operating system thread.
  */
-#define democonfigDEMO_STACKSIZE                  configMINIMAL_STACK_SIZE
+#define democonfigDEMO_STACKSIZE                           configMINIMAL_STACK_SIZE
 
 
 #endif /* DEMO_CONFIG_H */

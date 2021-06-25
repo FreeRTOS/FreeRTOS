@@ -106,11 +106,11 @@
 #endif
 
 #ifndef democonfigSEND_TIME_REQUEST_TIMEOUT_MS
-    #define democonfigSERVER_RESPONSE_TIMEOUT_MS    ( 50 )
+    #define democonfigSEND_TIME_REQUEST_TIMEOUT_MS    ( 50 )
 #endif
 
 #ifndef democonfigRECEIVE_SERVER_RESPONSE_BLOCK_TIME_MS
-    #define democonfigSERVER_RESPONSE_TIMEOUT_MS    ( 200 )
+    #define democonfigRECEIVE_SERVER_RESPONSE_BLOCK_TIME_MS    ( 200 )
 #endif
 
 /**

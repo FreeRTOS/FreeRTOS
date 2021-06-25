@@ -56,7 +56,6 @@ SECTIONS
         *(.rodata*)
         . = ALIGN(4);
         _etext = .;
-        _sidata = _etext;
     } > FLASH
 
 	.ARM.extab :
@@ -74,6 +73,9 @@ SECTIONS
 		__exidx_end = .;
 		. = ALIGN(4);
 	} >FLASH
+
+    /* used by the startup to initialize data */
+    _sidata = LOADADDR(.data);
 
     .interrupts_ram :
     {

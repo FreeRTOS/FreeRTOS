@@ -99,10 +99,18 @@
 #endif
 
 /*-----------------------------------------------------------*/
-/* Default values for configuration . */
+/* Default values for timeout configurations . */
 
 #ifndef democonfigSERVER_RESPONSE_TIMEOUT_MS
     #define democonfigSERVER_RESPONSE_TIMEOUT_MS    ( 5000 )
+#endif
+
+#ifndef democonfigSEND_TIME_REQUEST_TIMEOUT_MS
+    #define democonfigSERVER_RESPONSE_TIMEOUT_MS    ( 50 )
+#endif
+
+#ifndef democonfigRECEIVE_SERVER_RESPONSE_BLOCK_TIME_MS
+    #define democonfigSERVER_RESPONSE_TIMEOUT_MS    ( 200 )
 #endif
 
 /**
@@ -201,7 +209,7 @@ struct SntpAuthContext
  * time in RAM.
  *
  *  BaseTime = Time set at boot or the last synchronized time
- *  Slew Rate = Number of seconds to adjust per system time second
+ *  Slew Rate = Number of milliseconds to adjust per system time second
  *  No. of ticks since last SNTP sync = Current FreeRTOS Tick Count -
  *                                      Tick count at last SNTP sync
  *
@@ -274,7 +282,7 @@ static uint32_t translateYearToUnixSeconds( uint16_t year );
  * It calculates the current time as:
  *
  *   BaseTime = Time set at device boot or the last synchronized time
- *   SlewRate = Number of seconds to adjust per system time second
+ *   SlewRate = Number of milliseconds to adjust per system time second
  *
  *   Current Time = Base Time +
  *                  Time since last SNTP Synchronization +
@@ -594,7 +602,10 @@ void calculateCurrentTime( UTCTime_t * pBaseTime,
     /* If slew rate is set, then apply the slew-based clock adjustment for the elapsed time. */
     if( slewRate > 0 )
     {
-        msElapsedSinceLastSync += slewRate * (msElapsedSinceLastSync / 1000);
+        /* Slew Adjustment = Slew Rate ( Milliseconds/seconds )
+         *                                      x
+         *                   No. of seconds since last synchronization. */
+        msElapsedSinceLastSync += slewRate * ( msElapsedSinceLastSync / 1000 );
     }
 
     /* Set the current UTC time in the output parameter. */
@@ -1376,7 +1387,7 @@ void sntpTask( void * pParameters )
         /* SNTP Client loop of sending and receiving SNTP packets for time synchronization at poll intervals */
         while( 1 )
         {
-            status = Sntp_SendTimeRequest( &clientContext, generateRandomNumber(), 10);
+            status = Sntp_SendTimeRequest( &clientContext, generateRandomNumber(), democonfigSEND_TIME_REQUEST_TIMEOUT_MS );
 
             /*configASSERT( status == SntpSuccess ); */
             if( status != SntpSuccess )
@@ -1387,8 +1398,9 @@ void sntpTask( void * pParameters )
             /* Wait till the server response is not received. */
             do
             {
-                /* Attempt to receive server response each time for 200 ms. */
-                status = Sntp_ReceiveTimeResponse( &clientContext, 200 );
+                /* Attempt to receive server response each time for a smaller block time
+                 * than the total duration for the server response to time out. */
+                status = Sntp_ReceiveTimeResponse( &clientContext, democonfigRECEIVE_SERVER_RESPONSE_BLOCK_TIME_MS );
             } while( status == SntpNoResponseReceived );
 
             /* Wait for the poll interval period before the next iteration of time synchronization. */

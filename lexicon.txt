@@ -162,9 +162,9 @@ busfault
 buttonisr
 bvic
 bytesreceived
-bytesreceived 
+bytesreceived
 bytessent
-bytessent 
+bytessent
 bytestorecv
 bytestosend
 bytestring
@@ -243,6 +243,7 @@ cliprocesscommand
 clk
 clkdiv
 clksel
+clockoffsetms
 clocksource
 closesession
 cmac
@@ -792,6 +793,7 @@ gmon
 gnd
 gnuc
 googleapis
+gov
 gpio
 gpioa
 gpiob
@@ -1010,6 +1012,7 @@ js
 json
 jtag
 jtvic
+june
 juse
 katy
 kbhit
@@ -1044,6 +1047,7 @@ ldi
 ldo
 ldr
 le
+leapsecondinfo
 ledflash
 ledio
 leds
@@ -1297,6 +1301,7 @@ networkcredentials
 nextjobexecutionchanged
 nic
 nirq
+nist
 nmemb
 nmi
 nnnn
@@ -1547,6 +1552,7 @@ pllon
 plls
 pm
 pmc
+pml
 pmp
 pmqttagentcontext
 pmsg
@@ -1824,6 +1830,7 @@ pscheckvariable
 psel
 pserver
 pserverinfo
+pservertime
 psignature
 psl
 pslotlist

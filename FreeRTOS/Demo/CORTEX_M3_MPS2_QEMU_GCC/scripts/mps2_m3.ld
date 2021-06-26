@@ -74,7 +74,6 @@ SECTIONS
 		. = ALIGN(4);
 	} >FLASH
 
-    /* used by the startup to initialize data */
     _sidata = LOADADDR(.data);
 
     .interrupts_ram :

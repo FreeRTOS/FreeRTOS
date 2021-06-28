@@ -125,9 +125,9 @@ $ sudo qemu-system-arm -machine mps2-an385 -monitor null -semihosting \
         -kernel ./build/RTOSDemo.axf \
         -serial stdio -nographic -s -S
 ```
-The options:
-`-s` allows gdb to be attached to the process remotely at port 1234
-`-S` starts the program in the paused state.
+The options: <br>
+`-s` allows gdb to be attached to the process remotely at port 1234<br>
+`-S` starts the program in the paused state.<br>
 
 3. Open another terminal to run GDB and connect to the process:
 ```

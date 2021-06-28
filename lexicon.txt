@@ -7,6 +7,7 @@ aclk
 acm
 adc
 adcclk
+addclientauthcode
 adden
 addfaketaskwaitingtoreceivefromqueue
 addfaketaskwaitingtosendtoqueue
@@ -71,6 +72,7 @@ backoffalgorithm
 balternatesetting
 baltimore
 barry
+basetime
 basetype
 bauddiv
 baudrate
@@ -150,6 +152,7 @@ bss
 btimer
 btn
 buf
+buffersize
 bufsize
 burtc
 burtcclkdiv
@@ -158,6 +161,10 @@ burtcmodeem
 busfault
 buttonisr
 bvic
+bytesreceived
+bytesreceived
+bytessent
+bytessent
 bytestorecv
 bytestosend
 bytestring
@@ -204,6 +211,7 @@ cg
 ch
 chacha
 chachapoly
+chdir
 checklogin
 checknullarg
 checktimer
@@ -235,6 +243,7 @@ cliprocesscommand
 clk
 clkdiv
 clksel
+clockoffsetms
 clocksource
 closesession
 cmac
@@ -364,6 +373,7 @@ copybrief
 corehttp
 coremqtt
 corepkcs
+coresntp
 coretasks
 corextend
 correctl
@@ -434,6 +444,7 @@ dap
 dat
 datashee
 datasheet
+datatracker
 dbe
 dcdc
 dclr
@@ -676,6 +687,7 @@ fcs
 fd
 fde
 fe
+february
 fec
 ferr
 ff
@@ -777,9 +789,11 @@ gir
 girq
 girqm
 github
+gmon
 gnd
 gnuc
 googleapis
+gov
 gpio
 gpioa
 gpiob
@@ -802,9 +816,11 @@ het
 hetbase
 hetport
 hetreg
+hexstring
 hfclk
 hfrco
 hfxo
+hh
 hidef
 hifive
 hkdf
@@ -953,6 +969,7 @@ iproduct
 iram
 irda
 iret
+ireturned
 irom
 irq
 irqchannelpreemptionpriority
@@ -978,6 +995,8 @@ itm
 itteratio
 itu
 ivr
+jan
+january
 javascript
 jefferson
 jitp
@@ -993,6 +1012,7 @@ js
 json
 jtag
 jtvic
+june
 juse
 katy
 kbhit
@@ -1003,6 +1023,7 @@ kickstart
 knowns
 kx
 lapic
+lastsynctickcount
 latestversion
 lathclr
 lathinv
@@ -1026,6 +1047,7 @@ ldi
 ldo
 ldr
 le
+leapsecondinfo
 ledflash
 ledio
 leds
@@ -1279,6 +1301,7 @@ networkcredentials
 nextjobexecutionchanged
 nic
 nirq
+nist
 nmemb
 nmi
 nnnn
@@ -1306,6 +1329,7 @@ nullptr
 num
 numaker
 numberofitems
+numofservers
 nvic
 nvs
 ocd
@@ -1381,8 +1405,11 @@ passsed
 passwordsize
 pasv
 pathlen
+pauthcodesize
+pauthcontext
 payloadlength
 pb
+pbasetime
 pbclk
 pbuf
 pbuffer
@@ -1429,6 +1456,7 @@ pclientcert
 pclk
 pclkb
 pclwipappsblockinggettxbuffer
+pcmackey
 pcmethod
 pcmyreply
 pcname
@@ -1437,6 +1465,7 @@ pcnewdir
 pcommandtorelease
 pcommandtosend
 pcontext
+pcontextbuffer
 pcoverflowedtask
 pcpath
 pcpayload
@@ -1463,6 +1492,7 @@ pctransmittedstring
 pctxbuffer
 pcurl
 pcurldata
+pcurrenttime
 pcwritebuffer
 pd
 pdata
@@ -1493,6 +1523,7 @@ pfm
 pfr
 pfs
 pfswe
+pfunctionlist
 phostname
 php
 phy
@@ -1521,6 +1552,7 @@ pllon
 plls
 pm
 pmc
+pml
 pmp
 pmqttagentcontext
 pmsg
@@ -1591,11 +1623,13 @@ preceivedcommand
 predivide
 prefen
 premain
+prequestbuffer
 prescale
 prescaled
 prescaler
 presense
 presigned
+presponsedata
 prev
 printc
 printf
@@ -1757,6 +1791,7 @@ prvsimplezerocopyudpclienttask
 prvsingletasktests
 prvskipnamefield
 prvstartsimplemqttdemo
+prvstartsimplesntpdemo
 prvstartstoptracecommand
 prvstatcommand
 prvstatfscommand
@@ -1793,7 +1828,9 @@ ps
 psc
 pscheckvariable
 psel
+pserver
 pserverinfo
+pservertime
 psignature
 psl
 pslotlist
@@ -1808,6 +1845,9 @@ ptal
 ptcpsocket
 pth
 pthingname
+ptime
+ptimeserver
+ptimeservers
 ptm
 ptopicfilter
 ptp
@@ -1841,6 +1881,7 @@ pucstreambufferstoragearea
 pucstring
 puctxbuffer
 pucudppayloadbuffer
+pudpcontext
 pul
 pulcount
 puldigestlen
@@ -2025,6 +2066,7 @@ resetart
 resetprg
 resoltion
 resp
+responsesize
 resubscribe
 resubscribes
 resync
@@ -2048,6 +2090,7 @@ rng
 rnto
 ro
 robotronics
+rollover
 rom
 rootca
 rootcasize
@@ -2095,6 +2138,8 @@ safertos
 sam
 sama
 samd
+sampleapp
+sampleapptask
 santity
 sarecomtesttasksstillrunning
 saveall
@@ -2139,7 +2184,9 @@ serinterrupt
 serput
 sersource
 sertx
+serveraddr
 serverhost
+serverport
 setbaudratevalue
 setfaketaskpriority
 setimagestate
@@ -2158,6 +2205,7 @@ shouldn
 shtml
 sice
 sifive
+sigint
 signalled
 signatureverificationstate
 signatureverificationstateptr
@@ -2174,6 +2222,7 @@ simultaniously
 singletasks
 sizeof
 sk
+slewrate
 slibxr
 smc
 smclk
@@ -2182,6 +2231,12 @@ smt
 snextcheckvariable
 sni
 snprintf
+sntp
+sntpclienttask
+sntperrorauthfailure
+sntpservernotauthenticated
+sntpsuccess
+sntptask
 soc
 sockaddr
 socketauto
@@ -2198,6 +2253,7 @@ sr
 sram
 src
 sren
+ss
 sscanf
 ssi
 ssitask
@@ -2265,6 +2321,7 @@ sysclk
 sysinit
 syst
 systemcoreclock
+systemgetwallclocktime
 systeminit
 systeminithook
 systemirqhandler
@@ -2335,6 +2392,7 @@ tim
 timeguard
 timertest
 timertimer
+timeserver
 tls
 tmr
 tmrdemoone
@@ -2622,6 +2680,7 @@ usthingnamelength
 ustopicfilterlength
 ustotallength
 utalised
+utc
 utest
 util
 utilise
@@ -2936,6 +2995,7 @@ xeb
 xechoserveraddress
 xemaclite
 xend
+xerrorcount
 xerrordetected
 xerrorline
 xerrorstatus
@@ -3312,6 +3372,7 @@ xyieldpending
 xyieldrequired
 yrdkrl
 yrpbrl
+yyyy
 yyyymmddhhmmss
 zc
 zer

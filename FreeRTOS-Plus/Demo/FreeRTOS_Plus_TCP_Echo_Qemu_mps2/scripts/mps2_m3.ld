@@ -56,7 +56,6 @@ SECTIONS
         *(.rodata*)
         . = ALIGN(4);
         _etext = .;
-        _sidata = _etext;
     } > FLASH
 
 	.ARM.extab :
@@ -85,7 +84,9 @@ SECTIONS
         __interrupts_ram_end = .;
 
     } > RAM
-    
+
+    _sidata = LOADADDR(.data);
+
     .data : /* AT ( _sidata ) */
     {
         . = ALIGN(4);

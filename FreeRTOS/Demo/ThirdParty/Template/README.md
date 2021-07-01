@@ -2,7 +2,7 @@
 
 ## Initial Setup
 
-1. Create a new directory in the `FreeRTOS/Demo/ThirdParty/Partner-Supported` directory. The
+1. Create a new directory in the `FreeRTOS/Demo/ThirdParty/Partner-Supported` or `FreeRTOS/Demo/ThirdParty/Community-Supported` directory. The
 suggested name for the directory is `<hardware_name>_<compiler_name>`.
 2. Create a project for your hardware and tool-chain in this directory.
 3. Copy all the files in the `FreeRTOS/Demo/ThirdParty/Template` directory to

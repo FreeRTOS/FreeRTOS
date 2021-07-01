@@ -1,1 +1,1 @@
-This directory contains tests projects for FreeRTOS third party Tier 1 ports.
+This directory contains tests projects for FreeRTOS third party Community Supported ports.

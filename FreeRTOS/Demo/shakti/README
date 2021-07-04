@@ -1,0 +1,53 @@
+steps run demo applications
+===========================
+
+1. git clone https://github.com/FreeRTOS/FreeRTOS.git --recurse-submodules
+
+2. Please ensure, you installed the risc-v toolchain and exported them to 'PATH' variable. 
+   Please refer documentation section in https://shakti.org.in/sp2020-shakti.html for more details.
+   https://shakti.org.in/docs/shakti-soc-user-manual.pdf has the steps to setup the board, install tool-chain and write applications.
+
+Demo for vajra SoC
+==================
+Read the temperature and pressure from the surrounding environment. Store the value in internal SPI flash.
+Based on the temperature, decide to control Fan and Air conditioner.
+
+GPIO0 - Control to AC
+GPIO7 - Control to Full Fan rotation.
+GPIO8 - Control to Half Speed Fan rotation.
+ 
+Connections of the BMP280 sensor:
+
+    VCC to 3.3V
+    GND to GND
+    SCL to SCL of board
+    SDA to SDA of board
+    CSB to 3.3V
+    SDO to GND
+
+Refer pin map in the [document]{https://shakti.org.in/docs/shakti-soc-user-manual.pdf}
+ 
+cd FreeRTOS/FreeRTOS/Demo/shakti/vajra
+make
+
+Demo for parashu SoC
+====================
+
+Application same as above
+
+cd FreeRTOS/FreeRTOS/Demo/shakti/parashu
+make
+
+Demo for pinaka SoC
+===================
+
+Read the value from GPIO0 port. Based on this value control the led connected to GPIO1.
+
+Refer pin map in the [document]{https://shakti.org.in/docs/shakti-soc-user-manual.pdf}
+
+cd FreeRTOS/FreeRTOS/Demo/shakti/pinaka
+make
+
+
+
+

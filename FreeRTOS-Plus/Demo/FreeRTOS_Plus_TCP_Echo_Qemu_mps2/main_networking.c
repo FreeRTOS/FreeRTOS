@@ -44,9 +44,6 @@
 /* Demo application includes. */
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
-/*#include "SimpleUDPClientAndServer.h" */
-/*#include "SimpleTCPEchoServer.h" */
-/*#include "logging.h" */
 #include "TCPEchoClient_SingleTasks.h"
 
 /* Simple UDP client and server task parameters. */

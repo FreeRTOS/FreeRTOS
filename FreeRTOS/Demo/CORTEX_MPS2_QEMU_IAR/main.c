@@ -38,7 +38,7 @@
  *
  * Use the following command to start the application running in a way that
  * enables the IAR IDE to connect and debug:
- * qemu-system-arm -machine mps2-an385 -cpu cortex-m3 -kernel [path-to]/RTOSDemo.out -nographic -serial stdio -semihosting -semihosting-config enable=on,target=native -s -S
+ * qemu-system-arm -machine mps2-an385 -cpu cortex-m3 -kernel [path-to]/RTOSDemo.elf -nographic -serial stdio -semihosting -semihosting-config enable=on,target=native -s -S
  * and set IAR connect GDB server to "localhost,1234" in project debug options.
  */
 
@@ -89,6 +89,11 @@ void vFullDemoIdleFunction( void );
  * Printf() output is sent to the serial port.  Initialise the serial hardware.
  */
 static void prvUARTInit( void );
+
+/*
+ * Output to the UART.
+ */
+int __write( int iFile, const char * pcString, int iStringLength );
 
 /*-----------------------------------------------------------*/
 
@@ -146,13 +151,17 @@ void vApplicationIdleHook( void )
 
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
+	const char * pcStackOverflowMessage = "Stack overflow in task ";
 	( void ) pcTaskName;
 	( void ) pxTask;
 
 	/* Run time stack overflow checking is performed if
 	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
 	function is called if a stack overflow is detected. */
-	vAssertCalled( __FILE__, __LINE__ );
+	taskDISABLE_INTERRUPTS();
+	__write( 0, pcStackOverflowMessage, strlen( pcStackOverflowMessage ) );
+	__write( 0, pcTaskName, strlen( pcTaskName ) );
+	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
@@ -264,15 +273,16 @@ static void prvUARTInit( void )
 }
 /*-----------------------------------------------------------*/
 
-int __write( int iFile, char *pcString, int iStringLength )
+/* For IAR build. */
+int __write( int iFile, const char * pcString, int iStringLength )
 {
-	uint32_t ulNextChar;
+	int iNextChar;
 
 	/* Avoid compiler warnings about unused parameters. */
 	( void ) iFile;
 
 	/* Output the formatted string to the UART. */
-	for( ulNextChar = 0; ulNextChar < iStringLength; ulNextChar++ )
+	for( iNextChar = 0; iNextChar < iStringLength; iNextChar++ )
 	{
 		while( ( UART0_STATE & TX_BUFFER_MASK ) != 0 );
 		UART0_DATA = *pcString;
@@ -281,4 +291,23 @@ int __write( int iFile, char *pcString, int iStringLength )
 
 	return iStringLength;
 }
+/*-----------------------------------------------------------*/
 
+/* For GCC build. */
+extern void vOutputChar( const char cChar,
+						 const TickType_t xTicksToWait )
+{
+	/* Avoid compiler warnings about unused parameters. */
+	( void ) xTicksToWait;
+
+	while( ( UART0_STATE & TX_BUFFER_MASK ) != 0 );
+	UART0_DATA = cChar;
+}
+/*-----------------------------------------------------------*/
+
+/* Used within the small printf implementation. */
+BaseType_t xApplicationMemoryPermissions( uint32_t aAddress )
+{
+	( void ) aAddress;
+	return 3; /* 3 means both read and write. */
+}

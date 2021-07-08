@@ -161,6 +161,12 @@ static void prvTestTimerCallback( TimerHandle_t xTimer );
 static void prvDemoQueueSpaceFunctions( void *pvParameters );
 
 /*
+ * Indirectly exercises the xTaskMemoryAllocated() and xTaskMemoryFreed()
+ * functions.
+ */
+static void prvExerciseTaskHeapAllocationStats( TaskHandle_t xIdleTaskHandle );
+
+/*
  * Tasks that ensure indefinite delays are truly indefinite.
  */
 static void prvPermanentlyBlockingSemaphoreTask( void *pvParameters );
@@ -428,10 +434,6 @@ void *pvAllocated;
 	tasks waiting to be terminated by the idle task. */
 	Sleep( ulMSToSleep );
 
-	/* Demonstrate a few utility functions that are not demonstrated by any of
-	the standard demo tasks. */
-	prvDemonstrateTaskStateAndHandleGetFunctions();
-
 	/* Demonstrate the use of xTimerPendFunctionCall(), which is not
 	demonstrated by any of the standard demo tasks. */
 	prvDemonstratePendingFunctionCall();
@@ -465,6 +467,10 @@ void *pvAllocated;
 	allocations so there is no need to test here. */
 	pvAllocated = pvPortMalloc( ( rand() % 500 ) + 1 );
 	vPortFree( pvAllocated );
+
+	/* Demonstrate a few utility functions that are not demonstrated by any of
+	the standard demo tasks. */
+	prvDemonstrateTaskStateAndHandleGetFunctions();
 }
 /*-----------------------------------------------------------*/
 
@@ -597,6 +603,93 @@ const TickType_t xDontBlock = 0; /* This is called from the idle task so must *n
 }
 /*-----------------------------------------------------------*/
 
+static void prvExerciseTaskHeapAllocationStats( TaskHandle_t xIdleTaskHandle )
+{
+TaskStatus_t xTaskInfo;
+uint32_t ulOriginalNumberOfAllocations, ulOriginalNumberOfFrees;
+size_t xOriginalHighWaterMark;
+const size_t xBytesToAllocate = ( size_t ) 100;
+void *pvAllocatedMemory;
+static uint32_t ulCallCount = 0UL;
+const uint32_t ulMaxCallCount = 0xfffffff0UL;
+
+	/* Test will fail once the number of allocations and frees cannot be
+	 * incremented without resulting in an overflow. */
+	if( ulCallCount < ulMaxCallCount )
+	{
+		vTaskGetInfo( xIdleTaskHandle,	/* The task being queried. */
+						  &xTaskInfo,	/* The structure into which information on the task will be written. */
+						  pdTRUE,		/* Include the task's high watermark in the structure. */
+						  eInvalid );	/* Include the task state in the structure. */
+
+		/* The idle task creates one timer, so expects allocation to be the size
+		 * of the timer. */
+		if( ( xTaskInfo.eCurrentState != eRunning )								||
+			( xTaskInfo.xHeapBytesCurrentlyHeld != sizeof( StaticTimer_t ) ) )
+		{
+			pcStatusMessage = "Error:  vTaskGetInfo() returned incorrect information about heap allocated by idle task.\r\n";
+		}
+
+		/* Remember the current heap stats for the idle task, allocate some memory,
+		 * then ensure the heap stats are updated as expected. */
+		ulOriginalNumberOfAllocations = xTaskInfo.ulNumberOfHeapAllocations;
+		ulOriginalNumberOfFrees = xTaskInfo.ulNumberOfHeapFrees;
+		xOriginalHighWaterMark = xTaskInfo.xMaxHeapBytesEverHeld;
+
+		pvAllocatedMemory = pvPortMalloc( xBytesToAllocate );
+		configASSERT( pvAllocatedMemory );
+
+		vTaskGetInfo( xIdleTaskHandle,	/* The task being queried. */
+						  &xTaskInfo,	/* The structure into which information on the task will be written. */
+						  pdTRUE,		/* Include the task's high watermark in the structure. */
+						  eInvalid );	/* Include the task state in the structure. */
+
+		if( ( xTaskInfo.ulNumberOfHeapAllocations != ( ulOriginalNumberOfAllocations + 1UL ) ||
+			( xTaskInfo.ulNumberOfHeapFrees != ulOriginalNumberOfFrees ) ||
+			( xTaskInfo.xHeapBytesCurrentlyHeld != ( sizeof( StaticTimer_t )  + xBytesToAllocate ) ) ) )
+		{
+			pcStatusMessage = "Error:  vTaskGetInfo() returned incorrect information after allocating memory in the idle task.\r\n";
+		}
+
+		/* If this is the first time through the high water mark should have
+		 * increased by the amount of memory allocated, otherwise it should have
+		 * stayed the same. */
+		if( ulCallCount == 0 )
+		{
+			if( xTaskInfo.xMaxHeapBytesEverHeld != ( sizeof( StaticTimer_t ) + xBytesToAllocate ) )
+			{
+				pcStatusMessage = "Error:  vTaskGetInfo() returned incorrect heap allocation high water mark for the idle task, first pass.\r\n";
+			}
+		}
+		else
+		{
+			if( xTaskInfo.xMaxHeapBytesEverHeld != xOriginalHighWaterMark )
+			{
+				pcStatusMessage = "Error:  vTaskGetInfo() returned incorrect heap allocation high water mark for the idle task, not first pass.\r\n";
+			}
+		}
+
+		/* Likewise free the memory just allocated and double check the task's heap
+		 * stats once more. */
+		vPortFree( pvAllocatedMemory );
+
+		vTaskGetInfo( xIdleTaskHandle,	/* The task being queried. */
+						  &xTaskInfo,	/* The structure into which information on the task will be written. */
+						  pdTRUE,		/* Include the task's high watermark in the structure. */
+						  eInvalid );	/* Include the task state in the structure. */
+
+		if( ( xTaskInfo.ulNumberOfHeapAllocations != ( ulOriginalNumberOfAllocations + 1UL ) ||
+			( xTaskInfo.ulNumberOfHeapFrees != ( ulOriginalNumberOfFrees + 1 ) ) ||
+			( xTaskInfo.xHeapBytesCurrentlyHeld != sizeof( StaticTimer_t ) ) ) )
+		{
+			pcStatusMessage = "Error:  vTaskGetInfo() returned incorrect information after freeing memory in the idle task.\r\n";
+		}
+
+		ulCallCount++;
+	}
+}
+/*-----------------------------------------------------------*/
+
 static void prvDemonstrateTaskStateAndHandleGetFunctions( void )
 {
 TaskHandle_t xIdleTaskHandle, xTimerTaskHandle;
@@ -657,19 +750,23 @@ extern StackType_t uxTimerTaskStack[];
 
 	/* Also with the vTaskGetInfo() function. */
 	vTaskGetInfo( xTimerTaskHandle, /* The task being queried. */
-					  &xTaskInfo,		/* The structure into which information on the task will be written. */
-					  pdTRUE,			/* Include the task's high watermark in the structure. */
-					  eInvalid );		/* Include the task state in the structure. */
+					  &xTaskInfo,	/* The structure into which information on the task will be written. */
+					  pdTRUE,		/* Include the task's high watermark in the structure. */
+					  eInvalid );	/* Include the task state in the structure. */
 
-	/* Check the information returned by vTaskGetInfo() is as expected. */
+	/* Check the information returned by vTaskGetInfo() is as expected.  In
+	 * application the timer task frees memory but never allocates it. */
 	if( ( xTaskInfo.eCurrentState != eBlocked )						 ||
 		( strcmp( xTaskInfo.pcTaskName, "Tmr Svc" ) != 0 )			 ||
 		( xTaskInfo.uxCurrentPriority != configTIMER_TASK_PRIORITY ) ||
 		( xTaskInfo.pxStackBase != uxTimerTaskStack )				 ||
-		( xTaskInfo.xHandle != xTimerTaskHandle ) )
+		( xTaskInfo.xHandle != xTimerTaskHandle ) 					 ||
+		( xTaskInfo.ulNumberOfHeapAllocations != 0UL ) )
 	{
-		pcStatusMessage = "Error:  vTaskGetInfo() returned incorrect information about the timer task";
+		pcStatusMessage = "Error:  vTaskGetInfo() returned incorrect information about the timer task\r\n";
 	}
+
+	prvExerciseTaskHeapAllocationStats( xIdleTaskHandle );
 
 	/* Other tests that should only be performed once follow.  The test task
 	is not created on each iteration because to do so would cause the death

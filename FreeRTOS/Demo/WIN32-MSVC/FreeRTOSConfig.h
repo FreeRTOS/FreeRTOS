@@ -81,6 +81,8 @@ void vConfigureTimerForRunTimeStats( void );	/* Prototype of function that initi
 #define configGENERATE_RUN_TIME_STATS			1
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats()
 #define portGET_RUN_TIME_COUNTER_VALUE() ulGetRunTimeCounterValue()
+#define configTRACK_TASK_MEMORY_ALLOCATIONS		1
+
 
 /* Co-routine related configuration options. */
 #define configUSE_CO_ROUTINES 					1

@@ -40,14 +40,14 @@
  *----------------------------------------------------------*/
 
 #define configUSE_PREEMPTION			1
-#define configUSE_IDLE_HOOK				0
+#define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				1
 #define configCPU_CLOCK_HZ				( ( unsigned long ) 25000000 )
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 50 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 12 )
-#define configUSE_TRACE_FACILITY		0
+#define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			0
 #define configUSE_CO_ROUTINES 			0
@@ -92,11 +92,9 @@ to exclude the API function. */
 #define INCLUDE_xTaskAbortDelay					1
 #define INCLUDE_xTaskGetHandle					1
 
-/* This demo makes use of one or more example stats formatting functions.  These
-format the raw data provided by the uxTaskGetSystemState() function in to human
-readable ASCII form.  See the notes in the implementation of vTaskList() within
-FreeRTOS/Source/tasks.c for limitations. */
-#define configUSE_STATS_FORMATTING_FUNCTIONS	1
+/* This demo checks the operation of the functions that track memory allocated
+by tasks calling pvPortMalloc() and vPortFree. */
+#define configTRACK_TASK_MEMORY_ALLOCATIONS		1
 
 #define configKERNEL_INTERRUPT_PRIORITY 		( 255 )	/* All eight bits as QEMU doesn't model the priority bits. */
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!

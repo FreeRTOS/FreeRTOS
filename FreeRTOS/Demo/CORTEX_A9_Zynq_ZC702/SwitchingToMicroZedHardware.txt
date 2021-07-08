@@ -1,0 +1,31 @@
+The Zynq project is provided pre-configured to run on the ZC702 hardware.  This
+file describes how to run the project on the MicroZed.
+
+1) Import the projects as described on the documentation page linked to by
+the Instructions_Readme file, but importing all four projects rather than the
+three described in the instructions.  The forth project is MicroZed_hw_platform.
+
+2) Select "File->New-Board Support Package" XSDK (Eclipse) IDE's File menu.  In
+the pop up window, call the BSP project MicroZed_bsp, save the bsp in a convenient
+location, IMPORTANTLY ensure MicroZed_hw_platform is selected as the hardware
+platform and standalone is selected as the bsp type.  Then click Finish to close
+the pop up window.  The board support package settings window can then also be
+closed without any changes from the default values.
+
+3) Right click the RTOSDemo project in the XSDK's project explorer window and
+select "Change referenced BSP" from the pop up window.  Select MicroZed_bsp as
+the referenced BSP.
+
+4) Change the definition of partstLED_OUTPUT from 10 to 47 in
+RTOSDemo/src/ParTest.c - that changes the output used to toggle the LED to be
+correct for the MicroZed hardware.
+
+5) Select Clean and then from the XSDK's project menu.
+
+6) Right click the RTOSDemo project again, and select Refresh from the pop up
+menu, before finally right clicking the project one final time and clicking
+Build.
+
+7) Select MicroZed_hw_platform as the hardware platform in the "Target Setup"
+tab of the debug configuration.
+

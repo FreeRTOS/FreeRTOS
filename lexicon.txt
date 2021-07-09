@@ -2230,6 +2230,7 @@ slewrate
 slibxr
 smc
 smclk
+smp
 smr
 smt
 snextcheckvariable

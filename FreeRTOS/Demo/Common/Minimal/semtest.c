@@ -231,7 +231,11 @@ short sError = pdFALSE, sCheckVariableToUse;
 			a cycle	(deliberately so to test the guarding) so will be starving
 			out lower priority tasks.  Block for some time to allow give lower
 			priority tasks some processor time. */
-			vTaskDelay( pxParameters->xBlockTime * semtstDELAY_FACTOR );
+			if( pxParameters->xBlockTime != ( TickType_t ) 0 )
+			{
+				vTaskDelay( pxParameters->xBlockTime * semtstDELAY_FACTOR );
+			}
+
 		}
 		else
 		{
@@ -265,5 +269,4 @@ BaseType_t xTask, xReturn = pdTRUE;
 
 	return xReturn;
 }
-
 

@@ -64,10 +64,6 @@ extern void vLoggingPrintf( const char * pcFormatString,
 #include "logging_stack.h"
 
 
-#if defined(_MSC_VER)
-    #define strncasecmp    _strnicmp
-#endif
-
 /************ End of logging configuration ****************/
 
 #endif /* ifndef CORE_HTTP_CONFIG_H_ */

@@ -162,9 +162,9 @@ busfault
 buttonisr
 bvic
 bytesreceived
-bytesreceived 
+bytesreceived
 bytessent
-bytessent 
+bytessent
 bytestorecv
 bytestosend
 bytestring
@@ -243,6 +243,7 @@ cliprocesscommand
 clk
 clkdiv
 clksel
+clockoffsetms
 clocksource
 closesession
 cmac
@@ -792,6 +793,7 @@ gmon
 gnd
 gnuc
 googleapis
+gov
 gpio
 gpioa
 gpiob
@@ -1010,6 +1012,7 @@ js
 json
 jtag
 jtvic
+june
 juse
 katy
 kbhit
@@ -1044,6 +1047,7 @@ ldi
 ldo
 ldr
 le
+leapsecondinfo
 ledflash
 ledio
 leds
@@ -1297,6 +1301,7 @@ networkcredentials
 nextjobexecutionchanged
 nic
 nirq
+nist
 nmemb
 nmi
 nnnn
@@ -1473,6 +1478,7 @@ pcrestcommand
 pcrootdir
 pcrxbuffer
 pcrxedchar
+pcshadowname
 pcsource
 pcstatusmessage
 pcstring
@@ -1547,6 +1553,7 @@ pllon
 plls
 pm
 pmc
+pml
 pmp
 pmqttagentcontext
 pmsg
@@ -1824,6 +1831,7 @@ pscheckvariable
 psel
 pserver
 pserverinfo
+pservertime
 psignature
 psl
 pslotlist
@@ -2191,6 +2199,9 @@ sfprld
 sfr
 sfsrootcag
 sha
+shadow
+shadowname
+shadownamelength
 shadowstatus
 shasum
 shigherprioritytaskwoken
@@ -2219,6 +2230,7 @@ slewrate
 slibxr
 smc
 smclk
+smp
 smr
 smt
 snextcheckvariable
@@ -2366,6 +2378,7 @@ testcases
 testloop
 testrunnerafqp
 testrunnerfull
+testshadowname
 testthingname
 testval
 tex
@@ -2444,6 +2457,7 @@ uartcommandconsole
 uartlite
 uarts
 ubasetype
+uc
 uca
 ucautoreloadtimercounters
 ucbaddnsresponseh
@@ -2479,6 +2493,7 @@ ucrequest
 ucrequesttype
 ucrotaskfaulttracker
 ucsha
+ucshadownamelength
 ucsharedbuffer
 ucsharedmemory
 ucsharedmemoryn
@@ -2486,6 +2501,7 @@ ucslaveaddress
 ucsrb
 ucsrc
 uctempbuffer
+ucthingnamelength
 ucxbrf
 ucxbrs
 udp

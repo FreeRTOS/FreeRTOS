@@ -236,4 +236,13 @@ extern void vLoggingPrintf( const char * pcFormatString,
  */
 #define democonfigNETWORK_BUFFER_SIZE    ( 1024U )
 
+/**
+ * @brief Predefined shadow name.
+ *
+ * Defaults to unnamed "Classic" shadow. Change to a custom string to use a named shadow.
+ */
+#ifndef democonfigSHADOW_NAME
+    #define democonfigSHADOW_NAME    SHADOW_NAME_CLASSIC
+#endif
+
 #endif /* DEMO_CONFIG_H */

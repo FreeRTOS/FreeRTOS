@@ -56,24 +56,23 @@ SECTIONS
         *(.rodata*)
         . = ALIGN(4);
         _etext = .;
-        _sidata = _etext;
     } > FLASH
 
-	.ARM.extab :
-	{
-		. = ALIGN(4);
-		*(.ARM.extab* .gnu.linkonce.armextab.*)
-		. = ALIGN(4);
-	} >FLASH
+    .ARM.extab :
+    {
+        . = ALIGN(4);
+        *(.ARM.extab* .gnu.linkonce.armextab.*)
+        . = ALIGN(4);
+    } >FLASH
 
-	.ARM :
-	{
-		. = ALIGN(4);
-		__exidx_start = .;
-		*(.ARM.exidx* .gnu.linkonce.armexidx.*)
-		__exidx_end = .;
-		. = ALIGN(4);
-	} >FLASH
+    .ARM :
+    {
+        . = ALIGN(4);
+        __exidx_start = .;
+        *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+        __exidx_end = .;
+        . = ALIGN(4);
+    } >FLASH
 
     .interrupts_ram :
     {
@@ -83,9 +82,10 @@ SECTIONS
         . += M_VECTOR_RAM_SIZE;
         . = ALIGN(4);
         __interrupts_ram_end = .;
-
     } > RAM
-    
+
+    _sidata = LOADADDR(.data);
+
     .data : /* AT ( _sidata ) */
     {
         . = ALIGN(4);

@@ -1,0 +1,10 @@
+set architecture riscv:rv32
+tar rem:8809
+
+#b freertos_risc_v_trap_handler
+b *0x00004006
+#b Default_IRQHandler
+b *0x0
+
+
+

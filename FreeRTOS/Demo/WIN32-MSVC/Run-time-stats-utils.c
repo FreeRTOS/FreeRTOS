@@ -72,10 +72,10 @@ LARGE_INTEGER liPerformanceCounterFrequency, liInitialRunTimeValue;
 }
 /*-----------------------------------------------------------*/
 
-unsigned long ulGetRunTimeCounterValue( void )
+configRUN_TIME_COUNTER_TYPE ulGetRunTimeCounterValue( void )
 {
 LARGE_INTEGER liCurrentCount;
-unsigned long ulReturn;
+configRUN_TIME_COUNTER_TYPE ulReturn;
 
 	/* What is the performance counter value now? */
 	QueryPerformanceCounter( &liCurrentCount );
@@ -91,7 +91,7 @@ unsigned long ulReturn;
 	}
 	else
 	{
-		ulReturn = ( unsigned long ) ( ( liCurrentCount.QuadPart - llInitialRunTimeCounterValue ) / llTicksPerHundedthMillisecond );
+		ulReturn = ( configRUN_TIME_COUNTER_TYPE ) ( ( liCurrentCount.QuadPart - llInitialRunTimeCounterValue ) / llTicksPerHundedthMillisecond );
 	}
 
 	return ulReturn;

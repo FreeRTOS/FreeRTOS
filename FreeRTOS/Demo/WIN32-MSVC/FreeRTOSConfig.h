@@ -47,7 +47,7 @@
 #define configUSE_DAEMON_TASK_STARTUP_HOOK		1
 #define configTICK_RATE_HZ						( 1000 ) /* In this non-real time simulated environment the tick frequency has to be at least a multiple of the Win32 tick frequency, and therefore very slow. */
 #define configMINIMAL_STACK_SIZE				( ( unsigned short ) 70 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the win32 thread. */
-#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 52 * 1024 ) )
+#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 52 * 1024 ) ) /* This demo tests heap_5 so places multiple blocks within this total heap size.  See mainREGION_1_SIZE to mainREGION_3_SIZE definitions in main.c. */
 #define configMAX_TASK_NAME_LEN					( 12 )
 #define configUSE_TRACE_FACILITY				1
 #define configUSE_16_BIT_TICKS					0
@@ -76,7 +76,8 @@
 #define configMAX_PRIORITIES					( 7 )
 
 /* Run time stats gathering configuration options. */
-unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
+#define configRUN_TIME_COUNTER_TYPE				uint64_t
+configRUN_TIME_COUNTER_TYPE ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
 void vConfigureTimerForRunTimeStats( void );	/* Prototype of function that initialises the run time counter. */
 #define configGENERATE_RUN_TIME_STATS			1
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats()

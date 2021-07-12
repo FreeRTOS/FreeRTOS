@@ -24,12 +24,13 @@
  *
  */
 #ifdef __cplusplus
-extern "C" {
+    extern "C" {
 #endif
 
 #include <sys/types.h>
 
-typedef struct UART_t {
+typedef struct UART_t
+{
     volatile uint32_t DATA;
     volatile uint32_t STATE;
     volatile uint32_t CTRL;
@@ -37,19 +38,19 @@ typedef struct UART_t {
     volatile uint32_t BAUDDIV;
 } UART_t;
 
-#define UART0_ADDR ((UART_t *)(0x40004000))
-#define UART_DR(baseaddr) (*(unsigned int *)(baseaddr))
+#define UART0_ADDR           ( ( UART_t * ) ( 0x40004000 ) )
+#define UART_DR( baseaddr )    ( *( unsigned int * ) ( baseaddr ) )
 
-#define UART_STATE_TXFULL (1 << 0)
-#define UART_CTRL_TX_EN (1 << 0)
-#define UART_CTRL_RX_EN (1 << 1)
+#define UART_STATE_TXFULL    ( 1 << 0 )
+#define UART_CTRL_TX_EN      ( 1 << 0 )
+#define UART_CTRL_RX_EN      ( 1 << 1 )
 
 
 extern unsigned long _heap_bottom;
 extern unsigned long _heap_top;
 extern unsigned long g_ulBase;
 
-static void *heap_end = 0;
+static void * heap_end = 0;
 
 /**
  * @brief initializes the UART emulated hardware
@@ -65,7 +66,7 @@ void uart_init()
  * @todo  implement if necessary
  *
  */
-int _fstat(int file)
+int _fstat( int file )
 {
     return 0;
 }
@@ -75,9 +76,11 @@ int _fstat(int file)
  * @todo  implement if necessary
  *
  */
-int _read(int file, char *buf, int len)
+int _read( int file,
+           char * buf,
+           int len )
 {
-     return -1;
+    return -1;
 }
 
 /**
@@ -88,13 +91,17 @@ int _read(int file, char *buf, int len)
  * @param [in] len   length of the buffer
  * @returns the number of bytes written
  */
-int _write(int file, char *buf, int len)
+int _write( int file,
+            char * buf,
+            int len )
 {
     int todo;
 
-    for (todo = 0; todo < len; todo++){
-        UART_DR(UART0_ADDR) = *buf++;
+    for( todo = 0; todo < len; todo++ )
+    {
+        UART_DR( UART0_ADDR ) = *buf++;
     }
+
     return len;
 }
 
@@ -104,20 +111,20 @@ int _write(int file, char *buf, int len)
  * @returns the previous top of the heap
  * @note uses a global variable <b>heap_end</b> to keep track of the previous top
  */
-void* _sbrk(int incr)
+void * _sbrk( int incr )
 {
-    char *prev_heap_end;
+    char * prev_heap_end;
 
-    if (heap_end == 0)
+    if( heap_end == 0 )
     {
-        heap_end = (void*) &_heap_bottom;
+        heap_end = ( void * ) &_heap_bottom;
     }
 
     prev_heap_end = heap_end;
 
-    if ((heap_end + incr) > (void*)&_heap_top)
+    if( ( heap_end + incr ) > ( void * ) &_heap_top )
     {
-        return (void*)-1;
+        return ( void * ) -1;
     }
 
     heap_end += incr;
@@ -126,5 +133,5 @@ void* _sbrk(int incr)
 }
 
 #ifdef __cplusplus
-}
+    }
 #endif

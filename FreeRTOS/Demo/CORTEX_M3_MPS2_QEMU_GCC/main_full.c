@@ -185,7 +185,9 @@ static void prvReloadModeTestTimerCallback( TimerHandle_t xTimer );
 
 /* The variable into which error messages are latched. */
 static char * pcStatusMessage = "OK: No errors";
+
 int xErrorCount = 1;
+
 
 /* This semaphore is created purely to test using the vSemaphoreDelete() and
  * semaphore tracing API functions.  It has no other purpose. */
@@ -308,7 +310,6 @@ static void prvCheckTask( void * pvParameters )
             pcStatusMessage = "Error:  Notification";
             xErrorCount++;
         }
-
         /*
          * else if( xAreTaskNotificationArrayTasksStillRunning() != pdTRUE )
          * {
@@ -435,7 +436,6 @@ static void prvCheckTask( void * pvParameters )
         {
             exit( 1 );
         }
-
         /* Reset the error condition */
         pcStatusMessage = "OK: No errors";
     }

@@ -1478,6 +1478,7 @@ pcrestcommand
 pcrootdir
 pcrxbuffer
 pcrxedchar
+pcshadowname
 pcsource
 pcstatusmessage
 pcstring
@@ -2198,6 +2199,9 @@ sfprld
 sfr
 sfsrootcag
 sha
+shadow
+shadowname
+shadownamelength
 shadowstatus
 shasum
 shigherprioritytaskwoken
@@ -2226,6 +2230,7 @@ slewrate
 slibxr
 smc
 smclk
+smp
 smr
 smt
 snextcheckvariable
@@ -2373,6 +2378,7 @@ testcases
 testloop
 testrunnerafqp
 testrunnerfull
+testshadowname
 testthingname
 testval
 tex
@@ -2451,6 +2457,7 @@ uartcommandconsole
 uartlite
 uarts
 ubasetype
+uc
 uca
 ucautoreloadtimercounters
 ucbaddnsresponseh
@@ -2486,6 +2493,7 @@ ucrequest
 ucrequesttype
 ucrotaskfaulttracker
 ucsha
+ucshadownamelength
 ucsharedbuffer
 ucsharedmemory
 ucsharedmemoryn
@@ -2493,6 +2501,7 @@ ucslaveaddress
 ucsrb
 ucsrc
 uctempbuffer
+ucthingnamelength
 ucxbrf
 ucxbrs
 udp

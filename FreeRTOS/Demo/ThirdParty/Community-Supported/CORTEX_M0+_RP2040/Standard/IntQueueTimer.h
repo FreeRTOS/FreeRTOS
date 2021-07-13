@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202104.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,33 +19,18 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * http://www.FreeRTOS.org
+ * http://aws.amazon.com/freertos
  *
+ * 1 tab == 4 spaces!
  */
 
-#ifndef CONSOLE_H
-#define CONSOLE_H
+#ifndef INT_QUEUE_TIMER_H
+#define INT_QUEUE_TIMER_H
 
-/* *INDENT-OFF* */
-#ifdef __cplusplus
-    extern "C" {
+void vInitialiseTimerForIntQueueTest( void );
+portBASE_TYPE xTimer0Handler( void );
+portBASE_TYPE xTimer1Handler( void );
+
 #endif
-/* *INDENT-ON* */
 
-
-/*-----------------------------------------------------------
-* Example console I/O wrappers.
-*----------------------------------------------------------*/
-
-void console_init( void );
-void console_print( const char * fmt,
-                    ... );
-
-/* *INDENT-OFF* */
-#ifdef __cplusplus
-    }
-#endif
-/* *INDENT-ON* */
-
-#endif /* CONSOLE_H */

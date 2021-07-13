@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS Kernel V10.4.3
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -22,30 +22,44 @@
  * https://www.FreeRTOS.org
  * https://github.com/FreeRTOS
  *
+ * 1 tab == 4 spaces!
  */
 
-#ifndef CONSOLE_H
-#define CONSOLE_H
+#ifndef MAIN_H
+#define MAIN_H
 
-/* *INDENT-OFF* */
-#ifdef __cplusplus
-    extern "C" {
+#define mainRUN_ON_CORE 0
+
+
+/* These tests should work in all modes */
+#define mainENABLE_COUNTING_SEMAPHORE 1
+#define mainENABLE_DEATH 1
+
+/* TODO: This still seems flaky on SMP */
+#if ( portSUPPORT_SMP == 0)
+    #define mainENABLE_INTERRUPT_QUEUE 1
 #endif
-/* *INDENT-ON* */
+#define mainENABLE_MATH 1
+#define mainENABLE_QUEUE_OVERWRITE 1
+#define mainENABLE_REG_TEST 1
+#define mainENABLE_SEMAPHORE 1
+#define mainENABLE_TASK_NOTIFY 1
 
+#if configNUM_CORES != 2 || configRUN_MULTIPLE_PRIORITIES == 0
 
-/*-----------------------------------------------------------
-* Example console I/O wrappers.
-*----------------------------------------------------------*/
-
-void console_init( void );
-void console_print( const char * fmt,
-                    ... );
-
-/* *INDENT-OFF* */
-#ifdef __cplusplus
-    }
+/* These tests assume that a higher priority task will block a lower priority tax from running */
+#define mainENABLE_BLOCK_TIME 1
+#define mainENABLE_BLOCKING_QUEUE 1
+#define mainENABLE_GENERIC_QUEUE 1
+#define mainENABLE_INTERRUPT_SEMAPHORE 1
+#define mainENABLE_EVENT_GROUP 1
+#define mainENABLE_RECURSIVE_MUTEX 1
+#define mainENABLE_TIMER_DEMO 1
 #endif
-/* *INDENT-ON* */
 
-#endif /* CONSOLE_H */
+#if configNUM_CORES != 2
+/* This test just expects two tasks not to run concurrently */
+#define mainENABLE_DYNAMIC_PRIORITY 1
+#endif
+
+#endif /* MAIN_H */

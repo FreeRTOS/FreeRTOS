@@ -256,7 +256,9 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*/Makefile',
     r'.*/trcConfig\.h.*',
     r'.*/trcConfig\.c.*',
-    r'.*/trcSnapshotConfig\.h.*'
+    r'.*/trcSnapshotConfig\.h.*',
+    r'.*/RISC-V_RV32_SiFive_HiFive1-RevB_FreedomStudio/bsp',
+    r'.*/RISC-V_RV32_SiFive_HiFive1-RevB_FreedomStudio/freedom-metal'
 ]
 
 FREERTOS_IGNORED_FILES = [

@@ -1343,7 +1343,7 @@ static bool createUdpSocket( Socket_t * pSocket )
     else
     {
         /* Use a random UDP port for SNTP communication with server for protection against
-         *  spoofing vulnerability from "network off-path" attackers. */
+         * spoofing vulnerability from "network off-path" attackers. */
         uint16_t randomPort = ( generateRandomNumber() % UINT16_MAX );
         bindAddress.sin_port = FreeRTOS_htons( randomPort );
 

@@ -21,4 +21,7 @@ struct __metal_driver_riscv_clint0 {
 };
 #undef __METAL_MACHINE_MACROS
 
+int __metal_driver_riscv_clint0_command_request(
+    struct metal_interrupt *controller, int command, void *data);
+
 #endif

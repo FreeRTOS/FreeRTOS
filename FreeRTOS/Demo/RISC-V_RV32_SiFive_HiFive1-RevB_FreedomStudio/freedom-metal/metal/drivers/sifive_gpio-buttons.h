@@ -4,12 +4,12 @@
 #ifndef METAL__DRIVERS__SIFIVE_GPIO_BUTTONS_H
 #define METAL__DRIVERS__SIFIVE_GPIO_BUTTONS_H
 
-#include <string.h>
 #include <metal/button.h>
 #include <metal/compiler.h>
+#include <string.h>
 
 struct __metal_driver_vtable_sifive_button {
-  struct metal_button_vtable button_vtable;
+    struct metal_button_vtable button_vtable;
 };
 
 __METAL_DECLARE_VTABLE(__metal_driver_vtable_sifive_button)

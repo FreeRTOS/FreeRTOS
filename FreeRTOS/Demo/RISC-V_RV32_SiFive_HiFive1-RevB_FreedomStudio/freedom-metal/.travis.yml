@@ -1,0 +1,35 @@
+sudo: required
+
+# Travis doesn't provide a wide variety of host environments to run on, so we
+# rely on Docker to provide these instead.
+services:
+  - docker
+
+# It is not really needed, other than for showing correct language tag in
+# Travis CI build log.
+language: c
+
+# The matrix of targets that we're interested in.
+env:
+  - HOST="ubuntu:16.04"
+
+# Before running the install phase we need to set up docker container that runs
+# the target machine.
+before_install:
+  - docker run -d --name host -v $(pwd):/travis $HOST tail -f /dev/null
+  - docker ps
+
+# Update the container and install dependencies
+install:
+  - docker exec -t host bash -c "yes | apt-get update"
+  - docker exec -t host bash -c "yes | apt-get upgrade"
+  - docker exec -t host bash -c "yes | apt-get install git clang-format-6.0"
+  - sudo curl -L -o /tmp/wake.deb https://github.com/sifive/wake/releases/download/v0.19.0/ubuntu-16-04-wake_0.19.0-1_amd64.deb
+  - sudo apt install /tmp/wake.deb
+
+# Here's where we actually run the test.
+script:
+# Check source code formatting
+  - docker exec -t host bash -c "cd /travis && ./scripts/check-format"
+# Run dummy Wake program in order to run Wake type checker.
+  - wake --init . && wake -x Unit

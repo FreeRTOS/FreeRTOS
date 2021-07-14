@@ -1,15 +1,14 @@
 /* Copyright 2018 SiFive, Inc */
 /* SPDX-License-Identifier: Apache-2.0 */
 
+#include <metal/cpu.h>
 #include <metal/machine.h>
 #include <metal/pmp.h>
-#include <metal/cpu.h>
 
-#define CONFIG_TO_INT(_config) (*((char *) &(_config)))
-#define INT_TO_CONFIG(_int) (*((struct metal_pmp_config *)(char *) &(_int)))
+#define CONFIG_TO_INT(_config) (*((char *)&(_config)))
+#define INT_TO_CONFIG(_int) (*((struct metal_pmp_config *)(char *)&(_int)))
 
-struct metal_pmp *metal_pmp_get_device(void)
-{
+struct metal_pmp *metal_pmp_get_device(void) {
 #ifdef __METAL_DT_PMP_HANDLE
     return __METAL_DT_PMP_HANDLE;
 #else
@@ -28,13 +27,13 @@ struct metal_pmp *metal_pmp_get_device(void)
  * in a detected granularity of 2^(10 + 2) = 4096.
  */
 static uintptr_t _get_detected_granularity(uintptr_t address) {
-    if(address == 0) {
-        return (uintptr_t) -1;
+    if (address == 0) {
+        return (uintptr_t)-1;
     }
 
     /* Get the index of the least significant set bit */
     int index = 0;
-    while(((address >> index) & 0x1) == 0) {
+    while (((address >> index) & 0x1) == 0) {
         index += 1;
     }
 
@@ -55,7 +54,7 @@ static uintptr_t _get_detected_granularity(uintptr_t address) {
 static uintptr_t _get_pmpaddr_granularity(uintptr_t address) {
     /* Get the index of the least significant unset bit */
     int index = 0;
-    while(((address >> index) & 0x1) == 1) {
+    while (((address >> index) & 0x1) == 1) {
         index += 1;
     }
 
@@ -64,8 +63,7 @@ static uintptr_t _get_pmpaddr_granularity(uintptr_t address) {
 }
 
 /* Get the number of pmp regions for the given hart */
-int metal_pmp_num_regions(int hartid)
-{
+int metal_pmp_num_regions(int hartid) {
     struct metal_cpu *cpu = metal_cpu_get(hartid);
 
     return __metal_driver_cpu_num_pmp_regions(cpu);
@@ -77,7 +75,7 @@ static unsigned int _pmp_regions() {
 }
 
 void metal_pmp_init(struct metal_pmp *pmp) {
-    if(!pmp) {
+    if (!pmp) {
         return;
     }
 
@@ -89,196 +87,167 @@ void metal_pmp_init(struct metal_pmp *pmp) {
         .R = 0,
     };
 
-    for(unsigned int i = 0; i < _pmp_regions(); i++) {
+    for (unsigned int i = 0; i < _pmp_regions(); i++) {
         metal_pmp_set_region(pmp, i, init_config, 0);
     }
 
     /* Detect the region granularity by writing all 1s to pmpaddr0 while
      * pmpcfg0 = 0. */
-    if(metal_pmp_set_address(pmp, 0, -1) != 0) {
+    if (metal_pmp_set_address(pmp, 0, -1) != 0) {
         /* Failed to detect granularity */
         return;
     }
 
     /* Calculate the granularity based on the value that pmpaddr0 takes on */
-    pmp->_granularity[metal_cpu_get_current_hartid()] = _get_detected_granularity(metal_pmp_get_address(pmp, 0));
+    pmp->_granularity[metal_cpu_get_current_hartid()] =
+        _get_detected_granularity(metal_pmp_get_address(pmp, 0));
 
     /* Clear pmpaddr0 */
     metal_pmp_set_address(pmp, 0, 0);
 }
 
-int metal_pmp_set_region(struct metal_pmp *pmp,
-                       unsigned int region,
-                       struct metal_pmp_config config,
-                       size_t address)
-{
+int metal_pmp_set_region(struct metal_pmp *pmp, unsigned int region,
+                         struct metal_pmp_config config, size_t address) {
     struct metal_pmp_config old_config;
     size_t old_address;
     size_t cfgmask;
     size_t pmpcfg;
     int rc = 0;
 
-    if(!pmp) {
+    if (!pmp) {
         /* Device handle cannot be NULL */
         return 1;
     }
 
-    if(region > _pmp_regions()) {
+    if (region > _pmp_regions()) {
         /* Region outside of supported range */
         return 2;
     }
 
-    if(config.A == METAL_PMP_NA4 && pmp->_granularity[metal_cpu_get_current_hartid()] > 4) {
+    if (config.A == METAL_PMP_NA4 &&
+        pmp->_granularity[metal_cpu_get_current_hartid()] > 4) {
         /* The requested granularity is too small */
         return 3;
     }
 
-    if(config.A == METAL_PMP_NAPOT &&
-       pmp->_granularity[metal_cpu_get_current_hartid()] > _get_pmpaddr_granularity(address))
-    {
+    if (config.A == METAL_PMP_NAPOT &&
+        pmp->_granularity[metal_cpu_get_current_hartid()] >
+            _get_pmpaddr_granularity(address)) {
         /* The requested granularity is too small */
         return 3;
     }
 
     rc = metal_pmp_get_region(pmp, region, &old_config, &old_address);
-    if(rc) {
+    if (rc) {
         /* Error reading region */
         return rc;
     }
 
-    if(old_config.L == METAL_PMP_LOCKED) {
+    if (old_config.L == METAL_PMP_LOCKED) {
         /* Cannot modify locked region */
         return 4;
     }
 
     /* Update the address first, because if the region is being locked we won't
      * be able to modify it after we set the config */
-    if(old_address != address) {
-        switch(region) {
+    if (old_address != address) {
+        switch (region) {
         case 0:
-            __asm__("csrw pmpaddr0, %[addr]"
-                    :: [addr] "r" (address) :);
+            __asm__("csrw pmpaddr0, %[addr]" ::[addr] "r"(address) :);
             break;
         case 1:
-            __asm__("csrw pmpaddr1, %[addr]"
-                    :: [addr] "r" (address) :);
+            __asm__("csrw pmpaddr1, %[addr]" ::[addr] "r"(address) :);
             break;
         case 2:
-            __asm__("csrw pmpaddr2, %[addr]"
-                    :: [addr] "r" (address) :);
+            __asm__("csrw pmpaddr2, %[addr]" ::[addr] "r"(address) :);
             break;
         case 3:
-            __asm__("csrw pmpaddr3, %[addr]"
-                    :: [addr] "r" (address) :);
+            __asm__("csrw pmpaddr3, %[addr]" ::[addr] "r"(address) :);
             break;
         case 4:
-            __asm__("csrw pmpaddr4, %[addr]"
-                    :: [addr] "r" (address) :);
+            __asm__("csrw pmpaddr4, %[addr]" ::[addr] "r"(address) :);
             break;
         case 5:
-            __asm__("csrw pmpaddr5, %[addr]"
-                    :: [addr] "r" (address) :);
+            __asm__("csrw pmpaddr5, %[addr]" ::[addr] "r"(address) :);
             break;
         case 6:
-            __asm__("csrw pmpaddr6, %[addr]"
-                    :: [addr] "r" (address) :);
+            __asm__("csrw pmpaddr6, %[addr]" ::[addr] "r"(address) :);
             break;
         case 7:
-            __asm__("csrw pmpaddr7, %[addr]"
-                    :: [addr] "r" (address) :);
+            __asm__("csrw pmpaddr7, %[addr]" ::[addr] "r"(address) :);
             break;
         case 8:
-            __asm__("csrw pmpaddr8, %[addr]"
-                    :: [addr] "r" (address) :);
+            __asm__("csrw pmpaddr8, %[addr]" ::[addr] "r"(address) :);
             break;
         case 9:
-            __asm__("csrw pmpaddr9, %[addr]"
-                    :: [addr] "r" (address) :);
+            __asm__("csrw pmpaddr9, %[addr]" ::[addr] "r"(address) :);
             break;
         case 10:
-            __asm__("csrw pmpaddr10, %[addr]"
-                    :: [addr] "r" (address) :);
+            __asm__("csrw pmpaddr10, %[addr]" ::[addr] "r"(address) :);
             break;
         case 11:
-            __asm__("csrw pmpaddr11, %[addr]"
-                    :: [addr] "r" (address) :);
+            __asm__("csrw pmpaddr11, %[addr]" ::[addr] "r"(address) :);
             break;
         case 12:
-            __asm__("csrw pmpaddr12, %[addr]"
-                    :: [addr] "r" (address) :);
+            __asm__("csrw pmpaddr12, %[addr]" ::[addr] "r"(address) :);
             break;
         case 13:
-            __asm__("csrw pmpaddr13, %[addr]"
-                    :: [addr] "r" (address) :);
+            __asm__("csrw pmpaddr13, %[addr]" ::[addr] "r"(address) :);
             break;
         case 14:
-            __asm__("csrw pmpaddr14, %[addr]"
-                    :: [addr] "r" (address) :);
+            __asm__("csrw pmpaddr14, %[addr]" ::[addr] "r"(address) :);
             break;
         case 15:
-            __asm__("csrw pmpaddr15, %[addr]"
-                    :: [addr] "r" (address) :);
+            __asm__("csrw pmpaddr15, %[addr]" ::[addr] "r"(address) :);
             break;
         }
     }
 
-#if __riscv_xlen==32
-    if(CONFIG_TO_INT(old_config) != CONFIG_TO_INT(config)) {
+#if __riscv_xlen == 32
+    if (CONFIG_TO_INT(old_config) != CONFIG_TO_INT(config)) {
         /* Mask to clear old pmpcfg */
-        cfgmask = (0xFF << (8 * (region % 4)) );
-        pmpcfg = (CONFIG_TO_INT(config) << (8 * (region % 4)) );
-        
-        switch(region / 4) {
-        case 0:
-            __asm__("csrc pmpcfg0, %[mask]"
-                    :: [mask] "r" (cfgmask) :);
+        cfgmask = (0xFF << (8 * (region % 4)));
+        pmpcfg = (CONFIG_TO_INT(config) << (8 * (region % 4)));
 
-            __asm__("csrs pmpcfg0, %[cfg]"
-                    :: [cfg] "r" (pmpcfg) :);
+        switch (region / 4) {
+        case 0:
+            __asm__("csrc pmpcfg0, %[mask]" ::[mask] "r"(cfgmask) :);
+
+            __asm__("csrs pmpcfg0, %[cfg]" ::[cfg] "r"(pmpcfg) :);
             break;
         case 1:
-            __asm__("csrc pmpcfg1, %[mask]"
-                    :: [mask] "r" (cfgmask) :);
+            __asm__("csrc pmpcfg1, %[mask]" ::[mask] "r"(cfgmask) :);
 
-            __asm__("csrs pmpcfg1, %[cfg]"
-                    :: [cfg] "r" (pmpcfg) :);
+            __asm__("csrs pmpcfg1, %[cfg]" ::[cfg] "r"(pmpcfg) :);
             break;
         case 2:
-            __asm__("csrc pmpcfg2, %[mask]"
-                    :: [mask] "r" (cfgmask) :);
+            __asm__("csrc pmpcfg2, %[mask]" ::[mask] "r"(cfgmask) :);
 
-            __asm__("csrs pmpcfg2, %[cfg]"
-                    :: [cfg] "r" (pmpcfg) :);
+            __asm__("csrs pmpcfg2, %[cfg]" ::[cfg] "r"(pmpcfg) :);
             break;
         case 3:
-            __asm__("csrc pmpcfg3, %[mask]"
-                    :: [mask] "r" (cfgmask) :);
+            __asm__("csrc pmpcfg3, %[mask]" ::[mask] "r"(cfgmask) :);
 
-            __asm__("csrs pmpcfg3, %[cfg]"
-                    :: [cfg] "r" (pmpcfg) :);
+            __asm__("csrs pmpcfg3, %[cfg]" ::[cfg] "r"(pmpcfg) :);
             break;
         }
     }
-#elif __riscv_xlen==64
-    if(CONFIG_TO_INT(old_config) != CONFIG_TO_INT(config)) {
+#elif __riscv_xlen == 64
+    if (CONFIG_TO_INT(old_config) != CONFIG_TO_INT(config)) {
         /* Mask to clear old pmpcfg */
-        cfgmask = (0xFF << (8 * (region % 8)) );
-        pmpcfg = (CONFIG_TO_INT(config) << (8 * (region % 8)) );
-        
-        switch(region / 8) {
-        case 0:
-            __asm__("csrc pmpcfg0, %[mask]"
-                    :: [mask] "r" (cfgmask) :);
+        cfgmask = (0xFF << (8 * (region % 8)));
+        pmpcfg = (CONFIG_TO_INT(config) << (8 * (region % 8)));
 
-            __asm__("csrs pmpcfg0, %[cfg]"
-                    :: [cfg] "r" (pmpcfg) :);
+        switch (region / 8) {
+        case 0:
+            __asm__("csrc pmpcfg0, %[mask]" ::[mask] "r"(cfgmask) :);
+
+            __asm__("csrs pmpcfg0, %[cfg]" ::[cfg] "r"(pmpcfg) :);
             break;
         case 1:
-            __asm__("csrc pmpcfg2, %[mask]"
-                    :: [mask] "r" (cfgmask) :);
+            __asm__("csrc pmpcfg2, %[mask]" ::[mask] "r"(cfgmask) :);
 
-            __asm__("csrs pmpcfg2, %[cfg]"
-                    :: [cfg] "r" (pmpcfg) :);
+            __asm__("csrs pmpcfg2, %[cfg]" ::[cfg] "r"(pmpcfg) :);
             break;
         }
     }
@@ -289,59 +258,50 @@ int metal_pmp_set_region(struct metal_pmp *pmp,
     return 0;
 }
 
-int metal_pmp_get_region(struct metal_pmp *pmp,
-                       unsigned int region,
-                       struct metal_pmp_config *config,
-                       size_t *address)
-{
+int metal_pmp_get_region(struct metal_pmp *pmp, unsigned int region,
+                         struct metal_pmp_config *config, size_t *address) {
     size_t pmpcfg = 0;
     char *pmpcfg_convert = (char *)&pmpcfg;
 
-    if(!pmp || !config || !address) {
+    if (!pmp || !config || !address) {
         /* NULL pointers are invalid arguments */
         return 1;
     }
 
-    if(region > _pmp_regions()) {
+    if (region > _pmp_regions()) {
         /* Region outside of supported range */
         return 2;
     }
 
-#if __riscv_xlen==32
-    switch(region / 4) {
+#if __riscv_xlen == 32
+    switch (region / 4) {
     case 0:
-        __asm__("csrr %[cfg], pmpcfg0"
-                : [cfg] "=r" (pmpcfg) ::);
+        __asm__("csrr %[cfg], pmpcfg0" : [cfg] "=r"(pmpcfg)::);
         break;
     case 1:
-        __asm__("csrr %[cfg], pmpcfg1"
-                : [cfg] "=r" (pmpcfg) ::);
+        __asm__("csrr %[cfg], pmpcfg1" : [cfg] "=r"(pmpcfg)::);
         break;
     case 2:
-        __asm__("csrr %[cfg], pmpcfg2"
-                : [cfg] "=r" (pmpcfg) ::);
+        __asm__("csrr %[cfg], pmpcfg2" : [cfg] "=r"(pmpcfg)::);
         break;
     case 3:
-        __asm__("csrr %[cfg], pmpcfg3"
-                : [cfg] "=r" (pmpcfg) ::);
+        __asm__("csrr %[cfg], pmpcfg3" : [cfg] "=r"(pmpcfg)::);
         break;
     }
 
-    pmpcfg = (0xFF & (pmpcfg >> (8 * (region % 4)) ) );
+    pmpcfg = (0xFF & (pmpcfg >> (8 * (region % 4))));
 
-#elif __riscv_xlen==64
-    switch(region / 8) {
+#elif __riscv_xlen == 64
+    switch (region / 8) {
     case 0:
-        __asm__("csrr %[cfg], pmpcfg0"
-                : [cfg] "=r" (pmpcfg) ::);
+        __asm__("csrr %[cfg], pmpcfg0" : [cfg] "=r"(pmpcfg)::);
         break;
     case 1:
-        __asm__("csrr %[cfg], pmpcfg2"
-                : [cfg] "=r" (pmpcfg) ::);
+        __asm__("csrr %[cfg], pmpcfg2" : [cfg] "=r"(pmpcfg)::);
         break;
     }
 
-    pmpcfg = (0xFF & (pmpcfg >> (8 * (region % 8)) ) );
+    pmpcfg = (0xFF & (pmpcfg >> (8 * (region % 8))));
 
 #else
 #error XLEN is not set to supported value for PMP driver
@@ -349,88 +309,71 @@ int metal_pmp_get_region(struct metal_pmp *pmp,
 
     *config = INT_TO_CONFIG(*pmpcfg_convert);
 
-    switch(region) {
+    switch (region) {
     case 0:
-        __asm__("csrr %[addr], pmpaddr0"
-                : [addr] "=r" (*address) ::);
+        __asm__("csrr %[addr], pmpaddr0" : [addr] "=r"(*address)::);
         break;
     case 1:
-        __asm__("csrr %[addr], pmpaddr1"
-                : [addr] "=r" (*address) ::);
+        __asm__("csrr %[addr], pmpaddr1" : [addr] "=r"(*address)::);
         break;
     case 2:
-        __asm__("csrr %[addr], pmpaddr2"
-                : [addr] "=r" (*address) ::);
+        __asm__("csrr %[addr], pmpaddr2" : [addr] "=r"(*address)::);
         break;
     case 3:
-        __asm__("csrr %[addr], pmpaddr3"
-                : [addr] "=r" (*address) ::);
+        __asm__("csrr %[addr], pmpaddr3" : [addr] "=r"(*address)::);
         break;
     case 4:
-        __asm__("csrr %[addr], pmpaddr4"
-                : [addr] "=r" (*address) ::);
+        __asm__("csrr %[addr], pmpaddr4" : [addr] "=r"(*address)::);
         break;
     case 5:
-        __asm__("csrr %[addr], pmpaddr5"
-                : [addr] "=r" (*address) ::);
+        __asm__("csrr %[addr], pmpaddr5" : [addr] "=r"(*address)::);
         break;
     case 6:
-        __asm__("csrr %[addr], pmpaddr6"
-                : [addr] "=r" (*address) ::);
+        __asm__("csrr %[addr], pmpaddr6" : [addr] "=r"(*address)::);
         break;
     case 7:
-        __asm__("csrr %[addr], pmpaddr7"
-                : [addr] "=r" (*address) ::);
+        __asm__("csrr %[addr], pmpaddr7" : [addr] "=r"(*address)::);
         break;
     case 8:
-        __asm__("csrr %[addr], pmpaddr8"
-                : [addr] "=r" (*address) ::);
+        __asm__("csrr %[addr], pmpaddr8" : [addr] "=r"(*address)::);
         break;
     case 9:
-        __asm__("csrr %[addr], pmpaddr9"
-                : [addr] "=r" (*address) ::);
+        __asm__("csrr %[addr], pmpaddr9" : [addr] "=r"(*address)::);
         break;
     case 10:
-        __asm__("csrr %[addr], pmpaddr10"
-                : [addr] "=r" (*address) ::);
+        __asm__("csrr %[addr], pmpaddr10" : [addr] "=r"(*address)::);
         break;
     case 11:
-        __asm__("csrr %[addr], pmpaddr11"
-                : [addr] "=r" (*address) ::);
+        __asm__("csrr %[addr], pmpaddr11" : [addr] "=r"(*address)::);
         break;
     case 12:
-        __asm__("csrr %[addr], pmpaddr12"
-                : [addr] "=r" (*address) ::);
+        __asm__("csrr %[addr], pmpaddr12" : [addr] "=r"(*address)::);
         break;
     case 13:
-        __asm__("csrr %[addr], pmpaddr13"
-                : [addr] "=r" (*address) ::);
+        __asm__("csrr %[addr], pmpaddr13" : [addr] "=r"(*address)::);
         break;
     case 14:
-        __asm__("csrr %[addr], pmpaddr14"
-                : [addr] "=r" (*address) ::);
+        __asm__("csrr %[addr], pmpaddr14" : [addr] "=r"(*address)::);
         break;
     case 15:
-        __asm__("csrr %[addr], pmpaddr15"
-                : [addr] "=r" (*address) ::);
+        __asm__("csrr %[addr], pmpaddr15" : [addr] "=r"(*address)::);
         break;
     }
 
     return 0;
 }
 
-int metal_pmp_lock(struct metal_pmp *pmp, unsigned int region)
-{
+int metal_pmp_lock(struct metal_pmp *pmp, unsigned int region) {
     struct metal_pmp_config config;
     size_t address;
     int rc = 0;
 
     rc = metal_pmp_get_region(pmp, region, &config, &address);
-    if(rc) {
+    if (rc) {
         return rc;
     }
 
-    if(config.L == METAL_PMP_LOCKED) {
+    if (config.L == METAL_PMP_LOCKED) {
         return 0;
     }
 
@@ -441,15 +384,14 @@ int metal_pmp_lock(struct metal_pmp *pmp, unsigned int region)
     return rc;
 }
 
-
-int metal_pmp_set_address(struct metal_pmp *pmp, unsigned int region, size_t address)
-{
+int metal_pmp_set_address(struct metal_pmp *pmp, unsigned int region,
+                          size_t address) {
     struct metal_pmp_config config;
     size_t old_address;
     int rc = 0;
 
     rc = metal_pmp_get_region(pmp, region, &config, &old_address);
-    if(rc) {
+    if (rc) {
         return rc;
     }
 
@@ -458,8 +400,7 @@ int metal_pmp_set_address(struct metal_pmp *pmp, unsigned int region, size_t add
     return rc;
 }
 
-size_t metal_pmp_get_address(struct metal_pmp *pmp, unsigned int region)
-{
+size_t metal_pmp_get_address(struct metal_pmp *pmp, unsigned int region) {
     struct metal_pmp_config config;
     size_t address = 0;
 
@@ -468,15 +409,14 @@ size_t metal_pmp_get_address(struct metal_pmp *pmp, unsigned int region)
     return address;
 }
 
-
-int metal_pmp_set_address_mode(struct metal_pmp *pmp, unsigned int region, enum metal_pmp_address_mode mode)
-{
+int metal_pmp_set_address_mode(struct metal_pmp *pmp, unsigned int region,
+                               enum metal_pmp_address_mode mode) {
     struct metal_pmp_config config;
     size_t address;
     int rc = 0;
 
     rc = metal_pmp_get_region(pmp, region, &config, &address);
-    if(rc) {
+    if (rc) {
         return rc;
     }
 
@@ -487,8 +427,8 @@ int metal_pmp_set_address_mode(struct metal_pmp *pmp, unsigned int region, enum 
     return rc;
 }
 
-enum metal_pmp_address_mode metal_pmp_get_address_mode(struct metal_pmp *pmp, unsigned int region)
-{
+enum metal_pmp_address_mode metal_pmp_get_address_mode(struct metal_pmp *pmp,
+                                                       unsigned int region) {
     struct metal_pmp_config config;
     size_t address = 0;
 
@@ -497,15 +437,14 @@ enum metal_pmp_address_mode metal_pmp_get_address_mode(struct metal_pmp *pmp, un
     return config.A;
 }
 
-
-int metal_pmp_set_executable(struct metal_pmp *pmp, unsigned int region, int X)
-{
+int metal_pmp_set_executable(struct metal_pmp *pmp, unsigned int region,
+                             int X) {
     struct metal_pmp_config config;
     size_t address;
     int rc = 0;
 
     rc = metal_pmp_get_region(pmp, region, &config, &address);
-    if(rc) {
+    if (rc) {
         return rc;
     }
 
@@ -516,8 +455,7 @@ int metal_pmp_set_executable(struct metal_pmp *pmp, unsigned int region, int X)
     return rc;
 }
 
-int metal_pmp_get_executable(struct metal_pmp *pmp, unsigned int region)
-{
+int metal_pmp_get_executable(struct metal_pmp *pmp, unsigned int region) {
     struct metal_pmp_config config;
     size_t address = 0;
 
@@ -526,15 +464,13 @@ int metal_pmp_get_executable(struct metal_pmp *pmp, unsigned int region)
     return config.X;
 }
 
-
-int metal_pmp_set_writeable(struct metal_pmp *pmp, unsigned int region, int W)
-{
+int metal_pmp_set_writeable(struct metal_pmp *pmp, unsigned int region, int W) {
     struct metal_pmp_config config;
     size_t address;
     int rc = 0;
 
     rc = metal_pmp_get_region(pmp, region, &config, &address);
-    if(rc) {
+    if (rc) {
         return rc;
     }
 
@@ -545,8 +481,7 @@ int metal_pmp_set_writeable(struct metal_pmp *pmp, unsigned int region, int W)
     return rc;
 }
 
-int metal_pmp_get_writeable(struct metal_pmp *pmp, unsigned int region)
-{
+int metal_pmp_get_writeable(struct metal_pmp *pmp, unsigned int region) {
     struct metal_pmp_config config;
     size_t address = 0;
 
@@ -555,15 +490,13 @@ int metal_pmp_get_writeable(struct metal_pmp *pmp, unsigned int region)
     return config.W;
 }
 
-
-int metal_pmp_set_readable(struct metal_pmp *pmp, unsigned int region, int R)
-{
+int metal_pmp_set_readable(struct metal_pmp *pmp, unsigned int region, int R) {
     struct metal_pmp_config config;
     size_t address;
     int rc = 0;
 
     rc = metal_pmp_get_region(pmp, region, &config, &address);
-    if(rc) {
+    if (rc) {
         return rc;
     }
 
@@ -574,8 +507,7 @@ int metal_pmp_set_readable(struct metal_pmp *pmp, unsigned int region, int R)
     return rc;
 }
 
-int metal_pmp_get_readable(struct metal_pmp *pmp, unsigned int region)
-{
+int metal_pmp_get_readable(struct metal_pmp *pmp, unsigned int region) {
     struct metal_pmp_config config;
     size_t address = 0;
 
@@ -583,4 +515,3 @@ int metal_pmp_get_readable(struct metal_pmp *pmp, unsigned int region)
 
     return config.R;
 }
-

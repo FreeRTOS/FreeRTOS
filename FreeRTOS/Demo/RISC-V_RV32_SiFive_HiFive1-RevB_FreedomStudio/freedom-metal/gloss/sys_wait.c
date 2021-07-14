@@ -1,7 +1,6 @@
 #include <errno.h>
 
-int _wait(int *status)
-{
-  errno = ENOSYS;
-  return -1;
+int _wait(int *status) {
+    errno = ENOSYS;
+    return -1;
 }

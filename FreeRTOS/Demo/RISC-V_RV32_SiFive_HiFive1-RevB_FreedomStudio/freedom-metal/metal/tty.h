@@ -15,27 +15,10 @@
  * Write a character to the default output device, which for most
  * targets is the UART serial port.
  *
- * putc() does CR/LF mapping.
- * putc_raw() does not.
- *
  * @param c The character to write to the terminal
  * @return 0 on success, or -1 on failure.
  */
 int metal_tty_putc(int c);
-
-/*!
- * @brief Write a raw character to the default output device
- *
- * Write a character to the default output device, which for most
- * targets is the UART serial port.
- *
- * putc() does CR/LF mapping.
- * putc_raw() does not.
- *
- * @param c The character to write to the terminal
- * @return 0 on success, or -1 on failure.
- */
-int metal_tty_putc_raw(int c);
 
 /*!
  * @brief Get a byte from the default output device

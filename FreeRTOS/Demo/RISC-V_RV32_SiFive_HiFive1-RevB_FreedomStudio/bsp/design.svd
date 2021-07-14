@@ -1,0 +1,3169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<device schemaVersion="1.3" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="CMSIS-SVD.xsd">
+  <name>sifive_hifive1_revb</name>
+  <version>0.1</version>
+  <description>From sifive,hifive1-revb,model device generator</description>
+  <addressUnitBits>8</addressUnitBits>
+  <width>32</width>
+  <size>32</size>
+  <access>read-write</access>
+  <peripherals>
+    <peripheral>
+      <name>riscv_clint0_0</name>
+      <description>From riscv,clint0,control peripheral generator</description>
+      <baseAddress>0x2000000</baseAddress>
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x10000</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>msip_0</name>
+          <description>MSIP Register for hart 0</description>
+          <addressOffset>0x0</addressOffset>
+        </register>
+        <register>
+          <name>mtimecmp_0</name>
+          <description>MTIMECMP Register for hart 0</description>
+          <addressOffset>0x4000</addressOffset>
+          <size>64</size>
+        </register>
+        <register>
+          <name>mtime</name>
+          <description>MTIME Register</description>
+          <addressOffset>0xBFF8</addressOffset>
+          <size>64</size>
+        </register>
+      </registers>
+    </peripheral>
+    <peripheral>
+      <name>riscv_plic0_0</name>
+      <description>From riscv,plic0,control peripheral generator</description>
+      <baseAddress>0xC000000</baseAddress>
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x4000000</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>priority_1</name>
+          <description>PRIORITY Register for interrupt id 1</description>
+          <addressOffset>0x4</addressOffset>
+        </register>
+        <register>
+          <name>priority_2</name>
+          <description>PRIORITY Register for interrupt id 2</description>
+          <addressOffset>0x8</addressOffset>
+        </register>
+        <register>
+          <name>priority_3</name>
+          <description>PRIORITY Register for interrupt id 3</description>
+          <addressOffset>0xC</addressOffset>
+        </register>
+        <register>
+          <name>priority_4</name>
+          <description>PRIORITY Register for interrupt id 4</description>
+          <addressOffset>0x10</addressOffset>
+        </register>
+        <register>
+          <name>priority_5</name>
+          <description>PRIORITY Register for interrupt id 5</description>
+          <addressOffset>0x14</addressOffset>
+        </register>
+        <register>
+          <name>priority_6</name>
+          <description>PRIORITY Register for interrupt id 6</description>
+          <addressOffset>0x18</addressOffset>
+        </register>
+        <register>
+          <name>priority_7</name>
+          <description>PRIORITY Register for interrupt id 7</description>
+          <addressOffset>0x1C</addressOffset>
+        </register>
+        <register>
+          <name>priority_8</name>
+          <description>PRIORITY Register for interrupt id 8</description>
+          <addressOffset>0x20</addressOffset>
+        </register>
+        <register>
+          <name>priority_9</name>
+          <description>PRIORITY Register for interrupt id 9</description>
+          <addressOffset>0x24</addressOffset>
+        </register>
+        <register>
+          <name>priority_10</name>
+          <description>PRIORITY Register for interrupt id 10</description>
+          <addressOffset>0x28</addressOffset>
+        </register>
+        <register>
+          <name>priority_11</name>
+          <description>PRIORITY Register for interrupt id 11</description>
+          <addressOffset>0x2C</addressOffset>
+        </register>
+        <register>
+          <name>priority_12</name>
+          <description>PRIORITY Register for interrupt id 12</description>
+          <addressOffset>0x30</addressOffset>
+        </register>
+        <register>
+          <name>priority_13</name>
+          <description>PRIORITY Register for interrupt id 13</description>
+          <addressOffset>0x34</addressOffset>
+        </register>
+        <register>
+          <name>priority_14</name>
+          <description>PRIORITY Register for interrupt id 14</description>
+          <addressOffset>0x38</addressOffset>
+        </register>
+        <register>
+          <name>priority_15</name>
+          <description>PRIORITY Register for interrupt id 15</description>
+          <addressOffset>0x3C</addressOffset>
+        </register>
+        <register>
+          <name>priority_16</name>
+          <description>PRIORITY Register for interrupt id 16</description>
+          <addressOffset>0x40</addressOffset>
+        </register>
+        <register>
+          <name>priority_17</name>
+          <description>PRIORITY Register for interrupt id 17</description>
+          <addressOffset>0x44</addressOffset>
+        </register>
+        <register>
+          <name>priority_18</name>
+          <description>PRIORITY Register for interrupt id 18</description>
+          <addressOffset>0x48</addressOffset>
+        </register>
+        <register>
+          <name>priority_19</name>
+          <description>PRIORITY Register for interrupt id 19</description>
+          <addressOffset>0x4C</addressOffset>
+        </register>
+        <register>
+          <name>priority_20</name>
+          <description>PRIORITY Register for interrupt id 20</description>
+          <addressOffset>0x50</addressOffset>
+        </register>
+        <register>
+          <name>priority_21</name>
+          <description>PRIORITY Register for interrupt id 21</description>
+          <addressOffset>0x54</addressOffset>
+        </register>
+        <register>
+          <name>priority_22</name>
+          <description>PRIORITY Register for interrupt id 22</description>
+          <addressOffset>0x58</addressOffset>
+        </register>
+        <register>
+          <name>priority_23</name>
+          <description>PRIORITY Register for interrupt id 23</description>
+          <addressOffset>0x5C</addressOffset>
+        </register>
+        <register>
+          <name>priority_24</name>
+          <description>PRIORITY Register for interrupt id 24</description>
+          <addressOffset>0x60</addressOffset>
+        </register>
+        <register>
+          <name>priority_25</name>
+          <description>PRIORITY Register for interrupt id 25</description>
+          <addressOffset>0x64</addressOffset>
+        </register>
+        <register>
+          <name>priority_26</name>
+          <description>PRIORITY Register for interrupt id 26</description>
+          <addressOffset>0x68</addressOffset>
+        </register>
+        <register>
+          <name>priority_27</name>
+          <description>PRIORITY Register for interrupt id 27</description>
+          <addressOffset>0x6C</addressOffset>
+        </register>
+        <register>
+          <name>priority_28</name>
+          <description>PRIORITY Register for interrupt id 28</description>
+          <addressOffset>0x70</addressOffset>
+        </register>
+        <register>
+          <name>priority_29</name>
+          <description>PRIORITY Register for interrupt id 29</description>
+          <addressOffset>0x74</addressOffset>
+        </register>
+        <register>
+          <name>priority_30</name>
+          <description>PRIORITY Register for interrupt id 30</description>
+          <addressOffset>0x78</addressOffset>
+        </register>
+        <register>
+          <name>priority_31</name>
+          <description>PRIORITY Register for interrupt id 31</description>
+          <addressOffset>0x7C</addressOffset>
+        </register>
+        <register>
+          <name>priority_32</name>
+          <description>PRIORITY Register for interrupt id 32</description>
+          <addressOffset>0x80</addressOffset>
+        </register>
+        <register>
+          <name>priority_33</name>
+          <description>PRIORITY Register for interrupt id 33</description>
+          <addressOffset>0x84</addressOffset>
+        </register>
+        <register>
+          <name>priority_34</name>
+          <description>PRIORITY Register for interrupt id 34</description>
+          <addressOffset>0x88</addressOffset>
+        </register>
+        <register>
+          <name>priority_35</name>
+          <description>PRIORITY Register for interrupt id 35</description>
+          <addressOffset>0x8C</addressOffset>
+        </register>
+        <register>
+          <name>priority_36</name>
+          <description>PRIORITY Register for interrupt id 36</description>
+          <addressOffset>0x90</addressOffset>
+        </register>
+        <register>
+          <name>priority_37</name>
+          <description>PRIORITY Register for interrupt id 37</description>
+          <addressOffset>0x94</addressOffset>
+        </register>
+        <register>
+          <name>priority_38</name>
+          <description>PRIORITY Register for interrupt id 38</description>
+          <addressOffset>0x98</addressOffset>
+        </register>
+        <register>
+          <name>priority_39</name>
+          <description>PRIORITY Register for interrupt id 39</description>
+          <addressOffset>0x9C</addressOffset>
+        </register>
+        <register>
+          <name>priority_40</name>
+          <description>PRIORITY Register for interrupt id 40</description>
+          <addressOffset>0xA0</addressOffset>
+        </register>
+        <register>
+          <name>priority_41</name>
+          <description>PRIORITY Register for interrupt id 41</description>
+          <addressOffset>0xA4</addressOffset>
+        </register>
+        <register>
+          <name>priority_42</name>
+          <description>PRIORITY Register for interrupt id 42</description>
+          <addressOffset>0xA8</addressOffset>
+        </register>
+        <register>
+          <name>priority_43</name>
+          <description>PRIORITY Register for interrupt id 43</description>
+          <addressOffset>0xAC</addressOffset>
+        </register>
+        <register>
+          <name>priority_44</name>
+          <description>PRIORITY Register for interrupt id 44</description>
+          <addressOffset>0xB0</addressOffset>
+        </register>
+        <register>
+          <name>priority_45</name>
+          <description>PRIORITY Register for interrupt id 45</description>
+          <addressOffset>0xB4</addressOffset>
+        </register>
+        <register>
+          <name>priority_46</name>
+          <description>PRIORITY Register for interrupt id 46</description>
+          <addressOffset>0xB8</addressOffset>
+        </register>
+        <register>
+          <name>priority_47</name>
+          <description>PRIORITY Register for interrupt id 47</description>
+          <addressOffset>0xBC</addressOffset>
+        </register>
+        <register>
+          <name>priority_48</name>
+          <description>PRIORITY Register for interrupt id 48</description>
+          <addressOffset>0xC0</addressOffset>
+        </register>
+        <register>
+          <name>priority_49</name>
+          <description>PRIORITY Register for interrupt id 49</description>
+          <addressOffset>0xC4</addressOffset>
+        </register>
+        <register>
+          <name>priority_50</name>
+          <description>PRIORITY Register for interrupt id 50</description>
+          <addressOffset>0xC8</addressOffset>
+        </register>
+        <register>
+          <name>priority_51</name>
+          <description>PRIORITY Register for interrupt id 51</description>
+          <addressOffset>0xCC</addressOffset>
+        </register>
+        <register>
+          <name>priority_52</name>
+          <description>PRIORITY Register for interrupt id 52</description>
+          <addressOffset>0xD0</addressOffset>
+        </register>
+        <register>
+          <name>pending_0</name>
+          <description>PENDING Register for interrupt ids 31 to 0</description>
+          <addressOffset>0x1000</addressOffset>
+        </register>
+        <register>
+          <name>pending_1</name>
+          <description>PENDING Register for interrupt ids 52 to 32</description>
+          <addressOffset>0x1004</addressOffset>
+        </register>
+        <register>
+          <name>enable_0_0</name>
+          <description>ENABLE Register for interrupt ids 31 to 0 for hart 0</description>
+          <addressOffset>0x2000</addressOffset>
+        </register>
+        <register>
+          <name>enable_1_0</name>
+          <description>ENABLE Register for interrupt ids 52 to 32 for hart 0</description>
+          <addressOffset>0x2004</addressOffset>
+        </register>
+        <register>
+          <name>threshold_0</name>
+          <description>PRIORITY THRESHOLD Register for hart 0</description>
+          <addressOffset>0x200000</addressOffset>
+        </register>
+        <register>
+          <name>claimplete_0</name>
+          <description>CLAIM and COMPLETE Register for hart 0</description>
+          <addressOffset>0x200004</addressOffset>
+        </register>
+      </registers>
+    </peripheral>
+    <peripheral>
+      <name>sifive_aon0_0</name>
+      <description>From sifive,aon0,mem peripheral generator</description>
+      <baseAddress>0x10000000</baseAddress>
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x8000</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>backup_0</name>
+          <description>Backup Register 0</description>
+          <addressOffset>0x80</addressOffset>
+        </register>
+        <register>
+          <name>backup_1</name>
+          <description>Backup Register 1</description>
+          <addressOffset>0x84</addressOffset>
+        </register>
+        <register>
+          <name>backup_2</name>
+          <description>Backup Register 2</description>
+          <addressOffset>0x88</addressOffset>
+        </register>
+        <register>
+          <name>backup_3</name>
+          <description>Backup Register 3</description>
+          <addressOffset>0x8C</addressOffset>
+        </register>
+        <register>
+          <name>backup_4</name>
+          <description>Backup Register 4</description>
+          <addressOffset>0x90</addressOffset>
+        </register>
+        <register>
+          <name>backup_5</name>
+          <description>Backup Register 5</description>
+          <addressOffset>0x94</addressOffset>
+        </register>
+        <register>
+          <name>backup_6</name>
+          <description>Backup Register 6</description>
+          <addressOffset>0x98</addressOffset>
+        </register>
+        <register>
+          <name>backup_7</name>
+          <description>Backup Register 7</description>
+          <addressOffset>0x9C</addressOffset>
+        </register>
+        <register>
+          <name>backup_8</name>
+          <description>Backup Register 8</description>
+          <addressOffset>0xA0</addressOffset>
+        </register>
+        <register>
+          <name>backup_9</name>
+          <description>Backup Register 9</description>
+          <addressOffset>0xA4</addressOffset>
+        </register>
+        <register>
+          <name>backup_10</name>
+          <description>Backup Register 10</description>
+          <addressOffset>0xA8</addressOffset>
+        </register>
+        <register>
+          <name>backup_11</name>
+          <description>Backup Register 11</description>
+          <addressOffset>0xAC</addressOffset>
+        </register>
+        <register>
+          <name>backup_12</name>
+          <description>Backup Register 12</description>
+          <addressOffset>0xB0</addressOffset>
+        </register>
+        <register>
+          <name>backup_13</name>
+          <description>Backup Register 13</description>
+          <addressOffset>0xB4</addressOffset>
+        </register>
+        <register>
+          <name>backup_14</name>
+          <description>Backup Register 14</description>
+          <addressOffset>0xB8</addressOffset>
+        </register>
+        <register>
+          <name>backup_15</name>
+          <description>Backup Register 15</description>
+          <addressOffset>0xBC</addressOffset>
+        </register>
+        <register>
+          <name>wdogcfg</name>
+          <description>wdog Configuration</description>
+          <addressOffset>0x0</addressOffset>
+          <fields>
+            <field>
+              <name>wdogscale</name>
+              <description>Counter scale value.</description>
+              <bitRange>[3:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>wdogrsten</name>
+              <description>Controls whether the comparator output can set the wdogrst bit and hence cause a full reset.</description>
+              <bitRange>[8:8]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>wdogzerocmp</name>
+              <description>Reset counter to zero after match.</description>
+              <bitRange>[9:9]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>wdogenalways</name>
+              <description>Enable Always - run continuously</description>
+              <bitRange>[12:12]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>wdogcoreawake</name>
+              <description>Increment the watchdog counter if the processor is not asleep</description>
+              <bitRange>[13:13]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>wdogip0</name>
+              <description>Interrupt 0 Pending</description>
+              <bitRange>[28:28]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>wdogcount</name>
+          <description>Counter Register</description>
+          <addressOffset>0x8</addressOffset>
+        </register>
+        <register>
+          <name>wdogs</name>
+          <description>Scaled value of Counter</description>
+          <addressOffset>0x10</addressOffset>
+        </register>
+        <register>
+          <name>wdogfeed</name>
+          <description>Feed register</description>
+          <addressOffset>0x18</addressOffset>
+        </register>
+        <register>
+          <name>wdogkey</name>
+          <description>Key Register</description>
+          <addressOffset>0x1C</addressOffset>
+        </register>
+        <register>
+          <name>wdogcmp0</name>
+          <description>Comparator 0</description>
+          <addressOffset>0x20</addressOffset>
+        </register>
+        <register>
+          <name>rtccfg</name>
+          <description>rtc Configuration</description>
+          <addressOffset>0x40</addressOffset>
+          <fields>
+            <field>
+              <name>rtcscale</name>
+              <description>Counter scale value.</description>
+              <bitRange>[3:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>rtcenalways</name>
+              <description>Enable Always - run continuously</description>
+              <bitRange>[12:12]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>rtcip0</name>
+              <description>Interrupt 0 Pending</description>
+              <bitRange>[28:28]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>rtccountlo</name>
+          <description>Low bits of Counter</description>
+          <addressOffset>0x48</addressOffset>
+        </register>
+        <register>
+          <name>rtccounthi</name>
+          <description>High bits of Counter</description>
+          <addressOffset>0x4C</addressOffset>
+        </register>
+        <register>
+          <name>rtcs</name>
+          <description>Scaled value of Counter</description>
+          <addressOffset>0x50</addressOffset>
+        </register>
+        <register>
+          <name>rtccmp0</name>
+          <description>Comparator 0</description>
+          <addressOffset>0x60</addressOffset>
+        </register>
+        <register>
+          <name>pmuwakeupi0</name>
+          <description>Wakeup program instruction 0</description>
+          <addressOffset>0x100</addressOffset>
+        </register>
+        <register>
+          <name>pmuwakeupi1</name>
+          <description>Wakeup program instruction 1</description>
+          <addressOffset>0x104</addressOffset>
+        </register>
+        <register>
+          <name>pmuwakeupi2</name>
+          <description>Wakeup program instruction 2</description>
+          <addressOffset>0x108</addressOffset>
+        </register>
+        <register>
+          <name>pmuwakeupi3</name>
+          <description>Wakeup program instruction 3</description>
+          <addressOffset>0x10C</addressOffset>
+        </register>
+        <register>
+          <name>pmuwakeupi4</name>
+          <description>Wakeup program instruction 4</description>
+          <addressOffset>0x110</addressOffset>
+        </register>
+        <register>
+          <name>pmuwakeupi5</name>
+          <description>Wakeup program instruction 5</description>
+          <addressOffset>0x114</addressOffset>
+        </register>
+        <register>
+          <name>pmuwakeupi6</name>
+          <description>Wakeup program instruction 6</description>
+          <addressOffset>0x118</addressOffset>
+        </register>
+        <register>
+          <name>pmuwakeupi7</name>
+          <description>Wakeup program instruction 7</description>
+          <addressOffset>0x11C</addressOffset>
+        </register>
+        <register>
+          <name>pmusleepi0</name>
+          <description>Sleep program instruction 0</description>
+          <addressOffset>0x120</addressOffset>
+        </register>
+        <register>
+          <name>pmusleepi1</name>
+          <description>Sleep program instruction 1</description>
+          <addressOffset>0x124</addressOffset>
+        </register>
+        <register>
+          <name>pmusleepi2</name>
+          <description>Sleep program instruction 2</description>
+          <addressOffset>0x128</addressOffset>
+        </register>
+        <register>
+          <name>pmusleepi3</name>
+          <description>Sleep program instruction 3</description>
+          <addressOffset>0x12C</addressOffset>
+        </register>
+        <register>
+          <name>pmusleepi4</name>
+          <description>Sleep program instruction 4</description>
+          <addressOffset>0x130</addressOffset>
+        </register>
+        <register>
+          <name>pmusleepi5</name>
+          <description>Sleep program instruction 5</description>
+          <addressOffset>0x134</addressOffset>
+        </register>
+        <register>
+          <name>pmusleepi6</name>
+          <description>Sleep program instruction 6</description>
+          <addressOffset>0x138</addressOffset>
+        </register>
+        <register>
+          <name>pmusleepi7</name>
+          <description>Sleep program instruction 7</description>
+          <addressOffset>0x13C</addressOffset>
+        </register>
+        <register>
+          <name>pmuie</name>
+          <description>PMU Interrupt Enables</description>
+          <addressOffset>0x140</addressOffset>
+        </register>
+        <register>
+          <name>pmucause</name>
+          <description>PMU Wakeup Cause</description>
+          <addressOffset>0x144</addressOffset>
+        </register>
+        <register>
+          <name>pmusleep</name>
+          <description>Initiate PMU Sleep Sequence</description>
+          <addressOffset>0x148</addressOffset>
+        </register>
+        <register>
+          <name>pmukey</name>
+          <description>PMU Key. Reads as 1 when PMU is unlocked</description>
+          <addressOffset>0x14C</addressOffset>
+        </register>
+        <register>
+          <name>aoncfg</name>
+          <description>AON Block Configuration Information</description>
+          <addressOffset>0x300</addressOffset>
+          <fields>
+            <field>
+              <name>has_bandgap</name>
+              <description>Bandgap feature is present</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>has_bod</name>
+              <description>Brownout detector feature is present</description>
+              <bitRange>[1:1]</bitRange>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>has_lfrosc</name>
+              <description>Low Frequency Ring Oscillator feature is present</description>
+              <bitRange>[2:2]</bitRange>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>has_lfrcosc</name>
+              <description>Low Frequency RC Oscillator feature is present</description>
+              <bitRange>[3:3]</bitRange>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>has_lfxosc</name>
+              <description>Low Frequency Crystal Oscillator feature is present</description>
+              <bitRange>[4:4]</bitRange>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>has_por</name>
+              <description>Power-On-Reset feature is present</description>
+              <bitRange>[5:5]</bitRange>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>has_ldo</name>
+              <description>Low Dropout Regulator feature is present</description>
+              <bitRange>[6:6]</bitRange>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>lfrosccfg</name>
+          <description>Ring Oscillator Configuration and Status</description>
+          <addressOffset>0x70</addressOffset>
+          <fields>
+            <field>
+              <name>lfroscdiv</name>
+              <description>Ring Oscillator Divider Register</description>
+              <bitRange>[5:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>lfrosctrim</name>
+              <description>Ring Oscillator Trim Register</description>
+              <bitRange>[20:16]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>lfroscen</name>
+              <description>Ring Oscillator Enable</description>
+              <bitRange>[30:30]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>lfroscrdy</name>
+              <description>Ring Oscillator Ready</description>
+              <bitRange>[31:31]</bitRange>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>lfclkmux</name>
+          <description>Low-Frequency Clock Mux Control and Status</description>
+          <addressOffset>0x7C</addressOffset>
+          <fields>
+            <field>
+              <name>lfextclk_sel</name>
+              <description>Low Frequency Clock Source Selector</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>internal</name>
+                  <description>Use internal LF clock source</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>external</name>
+                  <description>Use external LF clock source</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>lfextclk_mux_status</name>
+              <description>Setting of the aon_lfclksel pin</description>
+              <bitRange>[31:31]</bitRange>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>external</name>
+                  <description>Use external LF clock source</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>sw</name>
+                  <description>Use clock source selected by lfextclk_sel</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+      </registers>
+    </peripheral>
+    <peripheral>
+      <name>sifive_fe310_g000_prci_0</name>
+      <description>From sifive,fe310-g000,prci,mem peripheral generator</description>
+      <baseAddress>0x10008000</baseAddress>
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x8000</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>hfrosccfg</name>
+          <description>Ring Oscillator Configuration and Status</description>
+          <addressOffset>0x0</addressOffset>
+          <fields>
+            <field>
+              <name>hfroscdiv</name>
+              <description>Ring Oscillator Divider Register</description>
+              <bitRange>[5:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>hfrosctrim</name>
+              <description>Ring Oscillator Trim Register</description>
+              <bitRange>[20:16]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>hfroscen</name>
+              <description>Ring Oscillator Enable</description>
+              <bitRange>[30:30]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>hfroscrdy</name>
+              <description>Ring Oscillator Ready</description>
+              <bitRange>[31:31]</bitRange>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>hfxosccfg</name>
+          <description>Crystal Oscillator Configuration and Status</description>
+          <addressOffset>0x4</addressOffset>
+          <fields>
+            <field>
+              <name>hfxoscen</name>
+              <description>Crystal Oscillator Enable</description>
+              <bitRange>[30:30]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>hfxoscrdy</name>
+              <description>Crystal Oscillator Ready</description>
+              <bitRange>[31:31]</bitRange>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>pllcfg</name>
+          <description>PLL Configuration and Status</description>
+          <addressOffset>0x8</addressOffset>
+          <fields>
+            <field>
+              <name>pllr</name>
+              <description>PLL R Value</description>
+              <bitRange>[2:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pllf</name>
+              <description>PLL F Value</description>
+              <bitRange>[9:4]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pllq</name>
+              <description>PLL Q Value</description>
+              <bitRange>[11:10]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pllsel</name>
+              <description>PLL Select</description>
+              <bitRange>[16:16]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pllrefsel</name>
+              <description>PLL Reference Select</description>
+              <bitRange>[17:17]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pllbypass</name>
+              <description>PLL Bypass</description>
+              <bitRange>[18:18]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>plllock</name>
+              <description>PLL Lock</description>
+              <bitRange>[31:31]</bitRange>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>plloutdiv</name>
+          <description>PLL Final Divide Configuration</description>
+          <addressOffset>0xC</addressOffset>
+          <fields>
+            <field>
+              <name>plloutdiv</name>
+              <description>PLL Final Divider Value</description>
+              <bitRange>[5:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>plloutdivby1</name>
+              <description>PLL Final Divide By 1</description>
+              <bitRange>[13:8]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>procmoncfg</name>
+          <description>Process Monitor Configuration and Status</description>
+          <addressOffset>0xF0</addressOffset>
+          <fields>
+            <field>
+              <name>procmon_div_sel</name>
+              <description>Proccess Monitor Divider</description>
+              <bitRange>[4:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>procmon_delay_sel</name>
+              <description>Process Monitor Delay Selector</description>
+              <bitRange>[12:8]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>procmon_en</name>
+              <description>Process Monitor Enable</description>
+              <bitRange>[16:16]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>procomon_sel</name>
+              <description>Process Monitor Select</description>
+              <bitRange>[25:24]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+      </registers>
+    </peripheral>
+    <peripheral>
+      <name>sifive_gpio0_0</name>
+      <description>From sifive,gpio0,control peripheral generator</description>
+      <baseAddress>0x10012000</baseAddress>
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>input_val</name>
+          <description>Pin value</description>
+          <addressOffset>0x0</addressOffset>
+        </register>
+        <register>
+          <name>input_en</name>
+          <description>Pin input enable</description>
+          <addressOffset>0x4</addressOffset>
+        </register>
+        <register>
+          <name>output_en</name>
+          <description>Pin output enable</description>
+          <addressOffset>0x8</addressOffset>
+        </register>
+        <register>
+          <name>output_val</name>
+          <description>Output value</description>
+          <addressOffset>0xC</addressOffset>
+        </register>
+        <register>
+          <name>pue</name>
+          <description>Internal pull-up enable</description>
+          <addressOffset>0x10</addressOffset>
+        </register>
+        <register>
+          <name>ds</name>
+          <description>Pin drive strength</description>
+          <addressOffset>0x14</addressOffset>
+        </register>
+        <register>
+          <name>rise_ie</name>
+          <description>Rise interrupt enable</description>
+          <addressOffset>0x18</addressOffset>
+        </register>
+        <register>
+          <name>rise_ip</name>
+          <description>Rise interrupt pending</description>
+          <addressOffset>0x1C</addressOffset>
+        </register>
+        <register>
+          <name>fall_ie</name>
+          <description>Fall interrupt enable</description>
+          <addressOffset>0x20</addressOffset>
+        </register>
+        <register>
+          <name>fall_ip</name>
+          <description>Fall interrupt pending</description>
+          <addressOffset>0x24</addressOffset>
+        </register>
+        <register>
+          <name>high_ie</name>
+          <description>High interrupt enable</description>
+          <addressOffset>0x28</addressOffset>
+        </register>
+        <register>
+          <name>high_ip</name>
+          <description>High interrupt pending</description>
+          <addressOffset>0x2C</addressOffset>
+        </register>
+        <register>
+          <name>low_ie</name>
+          <description>Low interrupt enable</description>
+          <addressOffset>0x30</addressOffset>
+        </register>
+        <register>
+          <name>low_ip</name>
+          <description>Low interrupt pending</description>
+          <addressOffset>0x34</addressOffset>
+        </register>
+        <register>
+          <name>iof_en</name>
+          <description>I/O function enable</description>
+          <addressOffset>0x38</addressOffset>
+        </register>
+        <register>
+          <name>iof_sel</name>
+          <description>I/O function select</description>
+          <addressOffset>0x3C</addressOffset>
+        </register>
+        <register>
+          <name>out_xor</name>
+          <description>Output XOR (invert)</description>
+          <addressOffset>0x40</addressOffset>
+        </register>
+      </registers>
+    </peripheral>
+    <peripheral>
+      <name>sifive_uart0_0</name>
+      <description>From sifive,uart0,control peripheral generator</description>
+      <baseAddress>0x10013000</baseAddress>
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>txdata</name>
+          <description>Transmit data register</description>
+          <addressOffset>0x0</addressOffset>
+          <fields>
+            <field>
+              <name>data</name>
+              <description>Transmit data</description>
+              <bitRange>[7:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>full</name>
+              <description>Transmit FIFO full</description>
+              <bitRange>[31:31]</bitRange>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>rxdata</name>
+          <description>Receive data register</description>
+          <addressOffset>0x4</addressOffset>
+          <fields>
+            <field>
+              <name>data</name>
+              <description>Received data</description>
+              <bitRange>[7:0]</bitRange>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>empty</name>
+              <description>Receive FIFO empty</description>
+              <bitRange>[31:31]</bitRange>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>txctrl</name>
+          <description>Transmit control register</description>
+          <addressOffset>0x8</addressOffset>
+          <fields>
+            <field>
+              <name>txen</name>
+              <description>Transmit enable</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>nstop</name>
+              <description>Number of stop bits</description>
+              <bitRange>[1:1]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>txcnt</name>
+              <description>Transmit watermark level</description>
+              <bitRange>[18:16]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>rxctrl</name>
+          <description>Receive control register</description>
+          <addressOffset>0xC</addressOffset>
+          <fields>
+            <field>
+              <name>rxen</name>
+              <description>Receive enable</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>rxcnt</name>
+              <description>Receive watermark level</description>
+              <bitRange>[18:16]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>ie</name>
+          <description>UART interrupt enable</description>
+          <addressOffset>0x10</addressOffset>
+          <fields>
+            <field>
+              <name>txwm</name>
+              <description>Transmit watermark interrupt enable</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>rxwm</name>
+              <description>Receive watermark interrupt enable</description>
+              <bitRange>[1:1]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>ip</name>
+          <description>UART interrupt pending</description>
+          <addressOffset>0x14</addressOffset>
+          <fields>
+            <field>
+              <name>txwm</name>
+              <description>Transmit watermark interrupt pending</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>rxwm</name>
+              <description>Receive watermark interrupt pending</description>
+              <bitRange>[1:1]</bitRange>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>div</name>
+          <description>Baud rate divisor</description>
+          <addressOffset>0x18</addressOffset>
+          <fields>
+            <field>
+              <name>div</name>
+              <description>Baud rate divisor.</description>
+              <bitRange>[15:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+      </registers>
+    </peripheral>
+    <peripheral>
+      <name>sifive_spi0_0</name>
+      <description>From sifive,spi0,control peripheral generator</description>
+      <baseAddress>0x10014000</baseAddress>
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>sckdiv</name>
+          <description>Serial clock divisor</description>
+          <addressOffset>0x0</addressOffset>
+          <fields>
+            <field>
+              <name>div</name>
+              <description>Divisor for serial clock.</description>
+              <bitRange>[11:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>sckmode</name>
+          <description>Serial clock mode</description>
+          <addressOffset>0x4</addressOffset>
+          <fields>
+            <field>
+              <name>pha</name>
+              <description>Serial clock phase</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pol</name>
+              <description>Serial clock polarity</description>
+              <bitRange>[1:1]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>csid</name>
+          <description>Chip select ID</description>
+          <addressOffset>0x10</addressOffset>
+          <fields>
+            <field>
+              <name>csid</name>
+              <description>Chip select ID.</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>csdef</name>
+          <description>Chip select default</description>
+          <addressOffset>0x14</addressOffset>
+          <fields>
+            <field>
+              <name>csdef</name>
+              <description>Chip select default value. Reset to all-1s.</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>csmode</name>
+          <description>Chip select mode</description>
+          <addressOffset>0x18</addressOffset>
+          <fields>
+            <field>
+              <name>mode</name>
+              <description>Chip select mode</description>
+              <bitRange>[1:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>delay0</name>
+          <description>Delay control 0</description>
+          <addressOffset>0x28</addressOffset>
+          <fields>
+            <field>
+              <name>cssck</name>
+              <description>CS to SCK Delay</description>
+              <bitRange>[7:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>sckcs</name>
+              <description>SCK to CS Delay</description>
+              <bitRange>[23:16]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>delay1</name>
+          <description>Delay control 1</description>
+          <addressOffset>0x2C</addressOffset>
+          <fields>
+            <field>
+              <name>intercs</name>
+              <description>Minimum CS inactive time</description>
+              <bitRange>[7:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>interxfr</name>
+              <description>Maximum interframe delay</description>
+              <bitRange>[23:16]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>extradel</name>
+          <description>SPI extra sampling delay to increase the SPI frequency</description>
+          <addressOffset>0x38</addressOffset>
+          <fields>
+            <field>
+              <name>coarse</name>
+              <description>Coarse grain sample delay (multiples of system clocks)</description>
+              <bitRange>[11:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>fine</name>
+              <description>Fine grain sample delay (multiples of process-specific buffer delay)</description>
+              <bitRange>[16:12]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>sampledel</name>
+          <description>Number of delay stages from slave to the SPI controller</description>
+          <addressOffset>0x3C</addressOffset>
+          <fields>
+            <field>
+              <name>sd</name>
+              <description>Number of delay stages from slave to SPI controller</description>
+              <bitRange>[4:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>fmt</name>
+          <description>Frame format</description>
+          <addressOffset>0x40</addressOffset>
+          <fields>
+            <field>
+              <name>proto</name>
+              <description>SPI protocol</description>
+              <bitRange>[1:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>endian</name>
+              <description>SPI endianness</description>
+              <bitRange>[2:2]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>dir</name>
+              <description>SPI I/O direction. This is reset to 1 for flash-enabled SPI controllers, 0 otherwise.</description>
+              <bitRange>[3:3]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>len</name>
+              <description>Number of bits per frame</description>
+              <bitRange>[19:16]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>txdata</name>
+          <description>Tx FIFO Data</description>
+          <addressOffset>0x48</addressOffset>
+          <fields>
+            <field>
+              <name>data</name>
+              <description>Transmit data</description>
+              <bitRange>[7:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>full</name>
+              <description>FIFO full flag</description>
+              <bitRange>[31:31]</bitRange>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>rxdata</name>
+          <description>Rx FIFO data</description>
+          <addressOffset>0x4C</addressOffset>
+          <fields>
+            <field>
+              <name>data</name>
+              <description>Received data</description>
+              <bitRange>[7:0]</bitRange>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>empty</name>
+              <description>FIFO empty flag</description>
+              <bitRange>[31:31]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>txmark</name>
+          <description>Tx FIFO watermark</description>
+          <addressOffset>0x50</addressOffset>
+          <fields>
+            <field>
+              <name>txmark</name>
+              <description>Transmit watermark. The reset value is 1 for flash-enabled controllers, 0 otherwise.</description>
+              <bitRange>[2:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>rxmark</name>
+          <description>Rx FIFO watermark</description>
+          <addressOffset>0x54</addressOffset>
+          <fields>
+            <field>
+              <name>rxmark</name>
+              <description>Receive watermark</description>
+              <bitRange>[2:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>fctrl</name>
+          <description>SPI flash interface control</description>
+          <addressOffset>0x60</addressOffset>
+          <fields>
+            <field>
+              <name>en</name>
+              <description>SPI Flash Mode Select</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>ffmt</name>
+          <description>SPI flash instruction format</description>
+          <addressOffset>0x64</addressOffset>
+          <fields>
+            <field>
+              <name>cmd_en</name>
+              <description>Enable sending of command</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>addr_len</name>
+              <description>Number of address bytes (0 to 4)</description>
+              <bitRange>[3:1]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pad_cnt</name>
+              <description>Number of dummy cycles</description>
+              <bitRange>[7:4]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>cmd_proto</name>
+              <description>Protocol for transmitting command</description>
+              <bitRange>[9:8]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>addr_proto</name>
+              <description>Protocol for transmitting address and padding</description>
+              <bitRange>[11:10]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>data_proto</name>
+              <description>Protocol for receiving data bytes</description>
+              <bitRange>[13:12]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>cmd_code</name>
+              <description>Value of command byte</description>
+              <bitRange>[23:16]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pad_code</name>
+              <description>First 8 bits to transmit during dummy cycles</description>
+              <bitRange>[31:24]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>ie</name>
+          <description>SPI interrupt enable</description>
+          <addressOffset>0x70</addressOffset>
+          <fields>
+            <field>
+              <name>txwm</name>
+              <description>Transmit watermark enable</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>rxwm</name>
+              <description>Receive watermark enable</description>
+              <bitRange>[1:1]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>ip</name>
+          <description>SPI interrupt pending</description>
+          <addressOffset>0x74</addressOffset>
+          <fields>
+            <field>
+              <name>txwm</name>
+              <description>Transmit watermark pending</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>rxwm</name>
+              <description>Receive watermark pending</description>
+              <bitRange>[1:1]</bitRange>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+      </registers>
+    </peripheral>
+    <peripheral>
+      <name>sifive_pwm0_0</name>
+      <description>From sifive,pwm0,control peripheral generator</description>
+      <baseAddress>0x10015000</baseAddress>
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>pwmcfg</name>
+          <description>PWM configuration register</description>
+          <addressOffset>0x0</addressOffset>
+          <fields>
+            <field>
+              <name>pwmscale</name>
+              <description>PWM Counter scale</description>
+              <bitRange>[3:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmsticky</name>
+              <description>PWM Sticky - disallow clearing pwmcmpXip bits</description>
+              <bitRange>[8:8]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmzerocmp</name>
+              <description>PWM Zero - counter resets to zero after match</description>
+              <bitRange>[9:9]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmdeglitch</name>
+              <description>PWM Deglitch - latch pwmcmpXip within same cycle</description>
+              <bitRange>[10:10]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmenalways</name>
+              <description>PWM enable always - run continuously</description>
+              <bitRange>[12:12]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmenoneshot</name>
+              <description>PWM enable one shot - run one cycle</description>
+              <bitRange>[13:13]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp0center</name>
+              <description>PWM0 Compare Center</description>
+              <bitRange>[16:16]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp1center</name>
+              <description>PWM1 Compare Center</description>
+              <bitRange>[17:17]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp2center</name>
+              <description>PWM2 Compare Center</description>
+              <bitRange>[18:18]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp3center</name>
+              <description>PWM3 Compare Center</description>
+              <bitRange>[19:19]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp0invert</name>
+              <description>PWM0 Invert</description>
+              <bitRange>[20:20]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp1invert</name>
+              <description>PWM1 Invert</description>
+              <bitRange>[21:21]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp2invert</name>
+              <description>PWM2 Invert</description>
+              <bitRange>[22:22]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp3invert</name>
+              <description>PWM3 Invert</description>
+              <bitRange>[23:23]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp0gang</name>
+              <description>PWM0/PWM1 Compare Gang</description>
+              <bitRange>[24:24]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp1gang</name>
+              <description>PWM1/PWM2 Compare Gang</description>
+              <bitRange>[25:25]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp2gang</name>
+              <description>PWM2/PWM3 Compare Gang</description>
+              <bitRange>[26:26]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp3gang</name>
+              <description>PWM3/PWM0 Compare Gang</description>
+              <bitRange>[27:27]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp0ip</name>
+              <description>PWM0 Interrupt Pending</description>
+              <bitRange>[28:28]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp1ip</name>
+              <description>PWM1 Interrupt Pending</description>
+              <bitRange>[29:29]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp2ip</name>
+              <description>PWM2 Interrupt Pending</description>
+              <bitRange>[30:30]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp3ip</name>
+              <description>PWM3 Interrupt Pending</description>
+              <bitRange>[31:31]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>pwmcount</name>
+          <description>PWM count register</description>
+          <addressOffset>0x8</addressOffset>
+          <fields>
+            <field>
+              <name>pwmcount</name>
+              <description>PWM count register.</description>
+              <bitRange>[30:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>pwms</name>
+          <description>Scaled PWM count register</description>
+          <addressOffset>0x10</addressOffset>
+          <fields>
+            <field>
+              <name>pwms</name>
+              <description>Scaled PWM count register.</description>
+              <bitRange>[15:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>pwmcmp0</name>
+          <description>PWM 0 compare register</description>
+          <addressOffset>0x20</addressOffset>
+          <fields>
+            <field>
+              <name>pwmcmp0</name>
+              <description>PWM 0 Compare Value</description>
+              <bitRange>[15:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>pwmcmp1</name>
+          <description>PWM 1 compare register</description>
+          <addressOffset>0x24</addressOffset>
+          <fields>
+            <field>
+              <name>pwmcmp1</name>
+              <description>PWM 1 Compare Value</description>
+              <bitRange>[15:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>pwmcmp2</name>
+          <description>PWM 2 compare register</description>
+          <addressOffset>0x28</addressOffset>
+          <fields>
+            <field>
+              <name>pwmcmp2</name>
+              <description>PWM 2 Compare Value</description>
+              <bitRange>[15:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>pwmcmp3</name>
+          <description>PWM 3 compare register</description>
+          <addressOffset>0x2C</addressOffset>
+          <fields>
+            <field>
+              <name>pwmcmp3</name>
+              <description>PWM 3 Compare Value</description>
+              <bitRange>[15:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+      </registers>
+    </peripheral>
+    <peripheral>
+      <name>sifive_i2c0_0</name>
+      <description>From sifive,i2c0,control peripheral generator</description>
+      <baseAddress>0x10016000</baseAddress>
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>prescale_low</name>
+          <description>Clock Prescale register lo-byte</description>
+          <addressOffset>0x0</addressOffset>
+        </register>
+        <register>
+          <name>prescale_high</name>
+          <description>Clock Prescale register hi-byte</description>
+          <addressOffset>0x4</addressOffset>
+        </register>
+        <register>
+          <name>control</name>
+          <description>Control register</description>
+          <addressOffset>0x8</addressOffset>
+          <fields>
+            <field>
+              <name>en</name>
+              <description>I2C core enable bit</description>
+              <bitRange>[6:6]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>ien</name>
+              <description>I2C core interrupt enable bit</description>
+              <bitRange>[7:7]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>transmit__receive</name>
+          <description>Transmit and receive data byte register</description>
+          <addressOffset>0xC</addressOffset>
+        </register>
+        <register>
+          <name>command__status</name>
+          <description>Command write and status read register</description>
+          <addressOffset>0x10</addressOffset>
+          <fields>
+            <field>
+              <name>wr_iack__rd_if</name>
+              <description>Clear interrupt and Interrupt pending</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>wr_res__rd_tip</name>
+              <description>Reserved and Transfer in progress</description>
+              <bitRange>[1:1]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>wr_res__rd_res</name>
+              <description>Reserved and Reserved</description>
+              <bitRange>[2:2]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>wr_ack__rd_res</name>
+              <description>Send ACK/NACK and Reserved</description>
+              <bitRange>[3:3]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>wr_txd__rd_res</name>
+              <description>Transmit data and Reserved</description>
+              <bitRange>[4:4]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>wr_rxd__rd_al</name>
+              <description>Receive data and Arbitration lost</description>
+              <bitRange>[5:5]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>wr_sto__rd_busy</name>
+              <description>Generate stop and I2C bus busy</description>
+              <bitRange>[6:6]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>wr_sta__rd_rxack</name>
+              <description>Generate start and Got ACK/NACK</description>
+              <bitRange>[7:7]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+      </registers>
+    </peripheral>
+    <peripheral>
+      <name>sifive_uart0_1</name>
+      <description>From sifive,uart0,control peripheral generator</description>
+      <baseAddress>0x10023000</baseAddress>
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>txdata</name>
+          <description>Transmit data register</description>
+          <addressOffset>0x0</addressOffset>
+          <fields>
+            <field>
+              <name>data</name>
+              <description>Transmit data</description>
+              <bitRange>[7:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>full</name>
+              <description>Transmit FIFO full</description>
+              <bitRange>[31:31]</bitRange>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>rxdata</name>
+          <description>Receive data register</description>
+          <addressOffset>0x4</addressOffset>
+          <fields>
+            <field>
+              <name>data</name>
+              <description>Received data</description>
+              <bitRange>[7:0]</bitRange>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>empty</name>
+              <description>Receive FIFO empty</description>
+              <bitRange>[31:31]</bitRange>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>txctrl</name>
+          <description>Transmit control register</description>
+          <addressOffset>0x8</addressOffset>
+          <fields>
+            <field>
+              <name>txen</name>
+              <description>Transmit enable</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>nstop</name>
+              <description>Number of stop bits</description>
+              <bitRange>[1:1]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>txcnt</name>
+              <description>Transmit watermark level</description>
+              <bitRange>[18:16]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>rxctrl</name>
+          <description>Receive control register</description>
+          <addressOffset>0xC</addressOffset>
+          <fields>
+            <field>
+              <name>rxen</name>
+              <description>Receive enable</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>rxcnt</name>
+              <description>Receive watermark level</description>
+              <bitRange>[18:16]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>ie</name>
+          <description>UART interrupt enable</description>
+          <addressOffset>0x10</addressOffset>
+          <fields>
+            <field>
+              <name>txwm</name>
+              <description>Transmit watermark interrupt enable</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>rxwm</name>
+              <description>Receive watermark interrupt enable</description>
+              <bitRange>[1:1]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>ip</name>
+          <description>UART interrupt pending</description>
+          <addressOffset>0x14</addressOffset>
+          <fields>
+            <field>
+              <name>txwm</name>
+              <description>Transmit watermark interrupt pending</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>rxwm</name>
+              <description>Receive watermark interrupt pending</description>
+              <bitRange>[1:1]</bitRange>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>div</name>
+          <description>Baud rate divisor</description>
+          <addressOffset>0x18</addressOffset>
+          <fields>
+            <field>
+              <name>div</name>
+              <description>Baud rate divisor.</description>
+              <bitRange>[15:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+      </registers>
+    </peripheral>
+    <peripheral>
+      <name>sifive_spi0_1</name>
+      <description>From sifive,spi0,control peripheral generator</description>
+      <baseAddress>0x10024000</baseAddress>
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>sckdiv</name>
+          <description>Serial clock divisor</description>
+          <addressOffset>0x0</addressOffset>
+          <fields>
+            <field>
+              <name>div</name>
+              <description>Divisor for serial clock.</description>
+              <bitRange>[11:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>sckmode</name>
+          <description>Serial clock mode</description>
+          <addressOffset>0x4</addressOffset>
+          <fields>
+            <field>
+              <name>pha</name>
+              <description>Serial clock phase</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pol</name>
+              <description>Serial clock polarity</description>
+              <bitRange>[1:1]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>csid</name>
+          <description>Chip select ID</description>
+          <addressOffset>0x10</addressOffset>
+          <fields>
+            <field>
+              <name>csid</name>
+              <description>Chip select ID.</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>csdef</name>
+          <description>Chip select default</description>
+          <addressOffset>0x14</addressOffset>
+          <fields>
+            <field>
+              <name>csdef</name>
+              <description>Chip select default value. Reset to all-1s.</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>csmode</name>
+          <description>Chip select mode</description>
+          <addressOffset>0x18</addressOffset>
+          <fields>
+            <field>
+              <name>mode</name>
+              <description>Chip select mode</description>
+              <bitRange>[1:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>delay0</name>
+          <description>Delay control 0</description>
+          <addressOffset>0x28</addressOffset>
+          <fields>
+            <field>
+              <name>cssck</name>
+              <description>CS to SCK Delay</description>
+              <bitRange>[7:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>sckcs</name>
+              <description>SCK to CS Delay</description>
+              <bitRange>[23:16]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>delay1</name>
+          <description>Delay control 1</description>
+          <addressOffset>0x2C</addressOffset>
+          <fields>
+            <field>
+              <name>intercs</name>
+              <description>Minimum CS inactive time</description>
+              <bitRange>[7:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>interxfr</name>
+              <description>Maximum interframe delay</description>
+              <bitRange>[23:16]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>extradel</name>
+          <description>SPI extra sampling delay to increase the SPI frequency</description>
+          <addressOffset>0x38</addressOffset>
+          <fields>
+            <field>
+              <name>coarse</name>
+              <description>Coarse grain sample delay (multiples of system clocks)</description>
+              <bitRange>[11:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>fine</name>
+              <description>Fine grain sample delay (multiples of process-specific buffer delay)</description>
+              <bitRange>[16:12]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>sampledel</name>
+          <description>Number of delay stages from slave to the SPI controller</description>
+          <addressOffset>0x3C</addressOffset>
+          <fields>
+            <field>
+              <name>sd</name>
+              <description>Number of delay stages from slave to SPI controller</description>
+              <bitRange>[4:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>fmt</name>
+          <description>Frame format</description>
+          <addressOffset>0x40</addressOffset>
+          <fields>
+            <field>
+              <name>proto</name>
+              <description>SPI protocol</description>
+              <bitRange>[1:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>endian</name>
+              <description>SPI endianness</description>
+              <bitRange>[2:2]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>dir</name>
+              <description>SPI I/O direction. This is reset to 1 for flash-enabled SPI controllers, 0 otherwise.</description>
+              <bitRange>[3:3]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>len</name>
+              <description>Number of bits per frame</description>
+              <bitRange>[19:16]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>txdata</name>
+          <description>Tx FIFO Data</description>
+          <addressOffset>0x48</addressOffset>
+          <fields>
+            <field>
+              <name>data</name>
+              <description>Transmit data</description>
+              <bitRange>[7:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>full</name>
+              <description>FIFO full flag</description>
+              <bitRange>[31:31]</bitRange>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>rxdata</name>
+          <description>Rx FIFO data</description>
+          <addressOffset>0x4C</addressOffset>
+          <fields>
+            <field>
+              <name>data</name>
+              <description>Received data</description>
+              <bitRange>[7:0]</bitRange>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>empty</name>
+              <description>FIFO empty flag</description>
+              <bitRange>[31:31]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>txmark</name>
+          <description>Tx FIFO watermark</description>
+          <addressOffset>0x50</addressOffset>
+          <fields>
+            <field>
+              <name>txmark</name>
+              <description>Transmit watermark. The reset value is 1 for flash-enabled controllers, 0 otherwise.</description>
+              <bitRange>[2:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>rxmark</name>
+          <description>Rx FIFO watermark</description>
+          <addressOffset>0x54</addressOffset>
+          <fields>
+            <field>
+              <name>rxmark</name>
+              <description>Receive watermark</description>
+              <bitRange>[2:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>fctrl</name>
+          <description>SPI flash interface control</description>
+          <addressOffset>0x60</addressOffset>
+          <fields>
+            <field>
+              <name>en</name>
+              <description>SPI Flash Mode Select</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>ffmt</name>
+          <description>SPI flash instruction format</description>
+          <addressOffset>0x64</addressOffset>
+          <fields>
+            <field>
+              <name>cmd_en</name>
+              <description>Enable sending of command</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>addr_len</name>
+              <description>Number of address bytes (0 to 4)</description>
+              <bitRange>[3:1]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pad_cnt</name>
+              <description>Number of dummy cycles</description>
+              <bitRange>[7:4]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>cmd_proto</name>
+              <description>Protocol for transmitting command</description>
+              <bitRange>[9:8]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>addr_proto</name>
+              <description>Protocol for transmitting address and padding</description>
+              <bitRange>[11:10]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>data_proto</name>
+              <description>Protocol for receiving data bytes</description>
+              <bitRange>[13:12]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>cmd_code</name>
+              <description>Value of command byte</description>
+              <bitRange>[23:16]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pad_code</name>
+              <description>First 8 bits to transmit during dummy cycles</description>
+              <bitRange>[31:24]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>ie</name>
+          <description>SPI interrupt enable</description>
+          <addressOffset>0x70</addressOffset>
+          <fields>
+            <field>
+              <name>txwm</name>
+              <description>Transmit watermark enable</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>rxwm</name>
+              <description>Receive watermark enable</description>
+              <bitRange>[1:1]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>ip</name>
+          <description>SPI interrupt pending</description>
+          <addressOffset>0x74</addressOffset>
+          <fields>
+            <field>
+              <name>txwm</name>
+              <description>Transmit watermark pending</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>rxwm</name>
+              <description>Receive watermark pending</description>
+              <bitRange>[1:1]</bitRange>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+      </registers>
+    </peripheral>
+    <peripheral>
+      <name>sifive_pwm0_1</name>
+      <description>From sifive,pwm0,control peripheral generator</description>
+      <baseAddress>0x10025000</baseAddress>
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>pwmcfg</name>
+          <description>PWM configuration register</description>
+          <addressOffset>0x0</addressOffset>
+          <fields>
+            <field>
+              <name>pwmscale</name>
+              <description>PWM Counter scale</description>
+              <bitRange>[3:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmsticky</name>
+              <description>PWM Sticky - disallow clearing pwmcmpXip bits</description>
+              <bitRange>[8:8]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmzerocmp</name>
+              <description>PWM Zero - counter resets to zero after match</description>
+              <bitRange>[9:9]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmdeglitch</name>
+              <description>PWM Deglitch - latch pwmcmpXip within same cycle</description>
+              <bitRange>[10:10]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmenalways</name>
+              <description>PWM enable always - run continuously</description>
+              <bitRange>[12:12]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmenoneshot</name>
+              <description>PWM enable one shot - run one cycle</description>
+              <bitRange>[13:13]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp0center</name>
+              <description>PWM0 Compare Center</description>
+              <bitRange>[16:16]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp1center</name>
+              <description>PWM1 Compare Center</description>
+              <bitRange>[17:17]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp2center</name>
+              <description>PWM2 Compare Center</description>
+              <bitRange>[18:18]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp3center</name>
+              <description>PWM3 Compare Center</description>
+              <bitRange>[19:19]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp0invert</name>
+              <description>PWM0 Invert</description>
+              <bitRange>[20:20]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp1invert</name>
+              <description>PWM1 Invert</description>
+              <bitRange>[21:21]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp2invert</name>
+              <description>PWM2 Invert</description>
+              <bitRange>[22:22]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp3invert</name>
+              <description>PWM3 Invert</description>
+              <bitRange>[23:23]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp0gang</name>
+              <description>PWM0/PWM1 Compare Gang</description>
+              <bitRange>[24:24]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp1gang</name>
+              <description>PWM1/PWM2 Compare Gang</description>
+              <bitRange>[25:25]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp2gang</name>
+              <description>PWM2/PWM3 Compare Gang</description>
+              <bitRange>[26:26]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp3gang</name>
+              <description>PWM3/PWM0 Compare Gang</description>
+              <bitRange>[27:27]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp0ip</name>
+              <description>PWM0 Interrupt Pending</description>
+              <bitRange>[28:28]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp1ip</name>
+              <description>PWM1 Interrupt Pending</description>
+              <bitRange>[29:29]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp2ip</name>
+              <description>PWM2 Interrupt Pending</description>
+              <bitRange>[30:30]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp3ip</name>
+              <description>PWM3 Interrupt Pending</description>
+              <bitRange>[31:31]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>pwmcount</name>
+          <description>PWM count register</description>
+          <addressOffset>0x8</addressOffset>
+          <fields>
+            <field>
+              <name>pwmcount</name>
+              <description>PWM count register.</description>
+              <bitRange>[30:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>pwms</name>
+          <description>Scaled PWM count register</description>
+          <addressOffset>0x10</addressOffset>
+          <fields>
+            <field>
+              <name>pwms</name>
+              <description>Scaled PWM count register.</description>
+              <bitRange>[15:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>pwmcmp0</name>
+          <description>PWM 0 compare register</description>
+          <addressOffset>0x20</addressOffset>
+          <fields>
+            <field>
+              <name>pwmcmp0</name>
+              <description>PWM 0 Compare Value</description>
+              <bitRange>[15:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>pwmcmp1</name>
+          <description>PWM 1 compare register</description>
+          <addressOffset>0x24</addressOffset>
+          <fields>
+            <field>
+              <name>pwmcmp1</name>
+              <description>PWM 1 Compare Value</description>
+              <bitRange>[15:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>pwmcmp2</name>
+          <description>PWM 2 compare register</description>
+          <addressOffset>0x28</addressOffset>
+          <fields>
+            <field>
+              <name>pwmcmp2</name>
+              <description>PWM 2 Compare Value</description>
+              <bitRange>[15:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>pwmcmp3</name>
+          <description>PWM 3 compare register</description>
+          <addressOffset>0x2C</addressOffset>
+          <fields>
+            <field>
+              <name>pwmcmp3</name>
+              <description>PWM 3 Compare Value</description>
+              <bitRange>[15:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+      </registers>
+    </peripheral>
+    <peripheral>
+      <name>sifive_spi0_2</name>
+      <description>From sifive,spi0,control peripheral generator</description>
+      <baseAddress>0x10034000</baseAddress>
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>sckdiv</name>
+          <description>Serial clock divisor</description>
+          <addressOffset>0x0</addressOffset>
+          <fields>
+            <field>
+              <name>div</name>
+              <description>Divisor for serial clock.</description>
+              <bitRange>[11:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>sckmode</name>
+          <description>Serial clock mode</description>
+          <addressOffset>0x4</addressOffset>
+          <fields>
+            <field>
+              <name>pha</name>
+              <description>Serial clock phase</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pol</name>
+              <description>Serial clock polarity</description>
+              <bitRange>[1:1]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>csid</name>
+          <description>Chip select ID</description>
+          <addressOffset>0x10</addressOffset>
+          <fields>
+            <field>
+              <name>csid</name>
+              <description>Chip select ID.</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>csdef</name>
+          <description>Chip select default</description>
+          <addressOffset>0x14</addressOffset>
+          <fields>
+            <field>
+              <name>csdef</name>
+              <description>Chip select default value. Reset to all-1s.</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>csmode</name>
+          <description>Chip select mode</description>
+          <addressOffset>0x18</addressOffset>
+          <fields>
+            <field>
+              <name>mode</name>
+              <description>Chip select mode</description>
+              <bitRange>[1:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>delay0</name>
+          <description>Delay control 0</description>
+          <addressOffset>0x28</addressOffset>
+          <fields>
+            <field>
+              <name>cssck</name>
+              <description>CS to SCK Delay</description>
+              <bitRange>[7:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>sckcs</name>
+              <description>SCK to CS Delay</description>
+              <bitRange>[23:16]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>delay1</name>
+          <description>Delay control 1</description>
+          <addressOffset>0x2C</addressOffset>
+          <fields>
+            <field>
+              <name>intercs</name>
+              <description>Minimum CS inactive time</description>
+              <bitRange>[7:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>interxfr</name>
+              <description>Maximum interframe delay</description>
+              <bitRange>[23:16]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>extradel</name>
+          <description>SPI extra sampling delay to increase the SPI frequency</description>
+          <addressOffset>0x38</addressOffset>
+          <fields>
+            <field>
+              <name>coarse</name>
+              <description>Coarse grain sample delay (multiples of system clocks)</description>
+              <bitRange>[11:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>fine</name>
+              <description>Fine grain sample delay (multiples of process-specific buffer delay)</description>
+              <bitRange>[16:12]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>sampledel</name>
+          <description>Number of delay stages from slave to the SPI controller</description>
+          <addressOffset>0x3C</addressOffset>
+          <fields>
+            <field>
+              <name>sd</name>
+              <description>Number of delay stages from slave to SPI controller</description>
+              <bitRange>[4:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>fmt</name>
+          <description>Frame format</description>
+          <addressOffset>0x40</addressOffset>
+          <fields>
+            <field>
+              <name>proto</name>
+              <description>SPI protocol</description>
+              <bitRange>[1:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>endian</name>
+              <description>SPI endianness</description>
+              <bitRange>[2:2]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>dir</name>
+              <description>SPI I/O direction. This is reset to 1 for flash-enabled SPI controllers, 0 otherwise.</description>
+              <bitRange>[3:3]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>len</name>
+              <description>Number of bits per frame</description>
+              <bitRange>[19:16]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>txdata</name>
+          <description>Tx FIFO Data</description>
+          <addressOffset>0x48</addressOffset>
+          <fields>
+            <field>
+              <name>data</name>
+              <description>Transmit data</description>
+              <bitRange>[7:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>full</name>
+              <description>FIFO full flag</description>
+              <bitRange>[31:31]</bitRange>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>rxdata</name>
+          <description>Rx FIFO data</description>
+          <addressOffset>0x4C</addressOffset>
+          <fields>
+            <field>
+              <name>data</name>
+              <description>Received data</description>
+              <bitRange>[7:0]</bitRange>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>empty</name>
+              <description>FIFO empty flag</description>
+              <bitRange>[31:31]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>txmark</name>
+          <description>Tx FIFO watermark</description>
+          <addressOffset>0x50</addressOffset>
+          <fields>
+            <field>
+              <name>txmark</name>
+              <description>Transmit watermark. The reset value is 1 for flash-enabled controllers, 0 otherwise.</description>
+              <bitRange>[2:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>rxmark</name>
+          <description>Rx FIFO watermark</description>
+          <addressOffset>0x54</addressOffset>
+          <fields>
+            <field>
+              <name>rxmark</name>
+              <description>Receive watermark</description>
+              <bitRange>[2:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>fctrl</name>
+          <description>SPI flash interface control</description>
+          <addressOffset>0x60</addressOffset>
+          <fields>
+            <field>
+              <name>en</name>
+              <description>SPI Flash Mode Select</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>ffmt</name>
+          <description>SPI flash instruction format</description>
+          <addressOffset>0x64</addressOffset>
+          <fields>
+            <field>
+              <name>cmd_en</name>
+              <description>Enable sending of command</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>addr_len</name>
+              <description>Number of address bytes (0 to 4)</description>
+              <bitRange>[3:1]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pad_cnt</name>
+              <description>Number of dummy cycles</description>
+              <bitRange>[7:4]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>cmd_proto</name>
+              <description>Protocol for transmitting command</description>
+              <bitRange>[9:8]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>addr_proto</name>
+              <description>Protocol for transmitting address and padding</description>
+              <bitRange>[11:10]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>data_proto</name>
+              <description>Protocol for receiving data bytes</description>
+              <bitRange>[13:12]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>cmd_code</name>
+              <description>Value of command byte</description>
+              <bitRange>[23:16]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pad_code</name>
+              <description>First 8 bits to transmit during dummy cycles</description>
+              <bitRange>[31:24]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>ie</name>
+          <description>SPI interrupt enable</description>
+          <addressOffset>0x70</addressOffset>
+          <fields>
+            <field>
+              <name>txwm</name>
+              <description>Transmit watermark enable</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>rxwm</name>
+              <description>Receive watermark enable</description>
+              <bitRange>[1:1]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>ip</name>
+          <description>SPI interrupt pending</description>
+          <addressOffset>0x74</addressOffset>
+          <fields>
+            <field>
+              <name>txwm</name>
+              <description>Transmit watermark pending</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>rxwm</name>
+              <description>Receive watermark pending</description>
+              <bitRange>[1:1]</bitRange>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+      </registers>
+    </peripheral>
+    <peripheral>
+      <name>sifive_pwm0_2</name>
+      <description>From sifive,pwm0,control peripheral generator</description>
+      <baseAddress>0x10035000</baseAddress>
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>pwmcfg</name>
+          <description>PWM configuration register</description>
+          <addressOffset>0x0</addressOffset>
+          <fields>
+            <field>
+              <name>pwmscale</name>
+              <description>PWM Counter scale</description>
+              <bitRange>[3:0]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmsticky</name>
+              <description>PWM Sticky - disallow clearing pwmcmpXip bits</description>
+              <bitRange>[8:8]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmzerocmp</name>
+              <description>PWM Zero - counter resets to zero after match</description>
+              <bitRange>[9:9]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmdeglitch</name>
+              <description>PWM Deglitch - latch pwmcmpXip within same cycle</description>
+              <bitRange>[10:10]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmenalways</name>
+              <description>PWM enable always - run continuously</description>
+              <bitRange>[12:12]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmenoneshot</name>
+              <description>PWM enable one shot - run one cycle</description>
+              <bitRange>[13:13]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp0center</name>
+              <description>PWM0 Compare Center</description>
+              <bitRange>[16:16]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp1center</name>
+              <description>PWM1 Compare Center</description>
+              <bitRange>[17:17]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp2center</name>
+              <description>PWM2 Compare Center</description>
+              <bitRange>[18:18]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp3center</name>
+              <description>PWM3 Compare Center</description>
+              <bitRange>[19:19]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp0invert</name>
+              <description>PWM0 Invert</description>
+              <bitRange>[20:20]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp1invert</name>
+              <description>PWM1 Invert</description>
+              <bitRange>[21:21]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp2invert</name>
+              <description>PWM2 Invert</description>
+              <bitRange>[22:22]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp3invert</name>
+              <description>PWM3 Invert</description>
+              <bitRange>[23:23]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp0gang</name>
+              <description>PWM0/PWM1 Compare Gang</description>
+              <bitRange>[24:24]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp1gang</name>
+              <description>PWM1/PWM2 Compare Gang</description>
+              <bitRange>[25:25]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp2gang</name>
+              <description>PWM2/PWM3 Compare Gang</description>
+              <bitRange>[26:26]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp3gang</name>
+              <description>PWM3/PWM0 Compare Gang</description>
+              <bitRange>[27:27]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp0ip</name>
+              <description>PWM0 Interrupt Pending</description>
+              <bitRange>[28:28]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp1ip</name>
+              <description>PWM1 Interrupt Pending</description>
+              <bitRange>[29:29]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp2ip</name>
+              <description>PWM2 Interrupt Pending</description>
+              <bitRange>[30:30]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>pwmcmp3ip</name>
+              <description>PWM3 Interrupt Pending</description>
+              <bitRange>[31:31]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>pwmcount</name>
+          <description>PWM count register</description>
+          <addressOffset>0x8</addressOffset>
+          <fields>
+            <field>
+              <name>pwmcount</name>
+              <description>PWM count register.</description>
+              <bitRange>[30:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>pwms</name>
+          <description>Scaled PWM count register</description>
+          <addressOffset>0x10</addressOffset>
+          <fields>
+            <field>
+              <name>pwms</name>
+              <description>Scaled PWM count register.</description>
+              <bitRange>[15:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>pwmcmp0</name>
+          <description>PWM 0 compare register</description>
+          <addressOffset>0x20</addressOffset>
+          <fields>
+            <field>
+              <name>pwmcmp0</name>
+              <description>PWM 0 Compare Value</description>
+              <bitRange>[15:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>pwmcmp1</name>
+          <description>PWM 1 compare register</description>
+          <addressOffset>0x24</addressOffset>
+          <fields>
+            <field>
+              <name>pwmcmp1</name>
+              <description>PWM 1 Compare Value</description>
+              <bitRange>[15:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>pwmcmp2</name>
+          <description>PWM 2 compare register</description>
+          <addressOffset>0x28</addressOffset>
+          <fields>
+            <field>
+              <name>pwmcmp2</name>
+              <description>PWM 2 Compare Value</description>
+              <bitRange>[15:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>pwmcmp3</name>
+          <description>PWM 3 compare register</description>
+          <addressOffset>0x2C</addressOffset>
+          <fields>
+            <field>
+              <name>pwmcmp3</name>
+              <description>PWM 3 Compare Value</description>
+              <bitRange>[15:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+      </registers>
+    </peripheral>
+  </peripherals>
+</device>

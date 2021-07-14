@@ -17,5 +17,4 @@ struct __metal_driver_sifive_test0 {
     struct __metal_shutdown shutdown;
 };
 
-
 #endif

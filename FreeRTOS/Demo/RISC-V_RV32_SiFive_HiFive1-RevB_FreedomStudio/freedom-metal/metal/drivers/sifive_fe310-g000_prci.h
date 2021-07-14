@@ -10,8 +10,10 @@
 struct __metal_driver_sifive_fe310_g000_prci;
 
 struct __metal_driver_vtable_sifive_fe310_g000_prci {
-    long (*get_reg)(const struct __metal_driver_sifive_fe310_g000_prci *, long offset);
-    long (*set_reg)(const struct __metal_driver_sifive_fe310_g000_prci *, long offset, long value);
+    long (*get_reg)(const struct __metal_driver_sifive_fe310_g000_prci *,
+                    long offset);
+    long (*set_reg)(const struct __metal_driver_sifive_fe310_g000_prci *,
+                    long offset, long value);
 };
 
 __METAL_DECLARE_VTABLE(__metal_driver_vtable_sifive_fe310_g000_prci)
@@ -21,4 +23,3 @@ struct __metal_driver_sifive_fe310_g000_prci {
 };
 
 #endif
-

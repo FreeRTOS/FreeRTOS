@@ -12,15 +12,20 @@
 struct __metal_shutdown;
 
 struct __metal_shutdown_vtable {
-    void (*exit)(const struct __metal_shutdown *sd, int code) __attribute__((noreturn));
+    void (*exit)(const struct __metal_shutdown *sd, int code)
+        __attribute__((noreturn));
 };
 
 struct __metal_shutdown {
     const struct __metal_shutdown_vtable *vtable;
 };
 
-__inline__ void __metal_shutdown_exit(const struct __metal_shutdown *sd, int code) __attribute__((noreturn));
-__inline__ void __metal_shutdown_exit(const struct __metal_shutdown *sd, int code) { sd->vtable->exit(sd, code); }
+__inline__ void __metal_shutdown_exit(const struct __metal_shutdown *sd,
+                                      int code) __attribute__((noreturn));
+__inline__ void __metal_shutdown_exit(const struct __metal_shutdown *sd,
+                                      int code) {
+    sd->vtable->exit(sd, code);
+}
 
 /*!
  * @brief The public METAL shutdown interface

@@ -4,9 +4,9 @@
 #ifndef METAL__DRIVERS__SIFIVE_SPI0_H
 #define METAL__DRIVERS__SIFIVE_SPI0_H
 
-#include <metal/drivers/sifive_gpio0.h>
 #include <metal/clock.h>
 #include <metal/compiler.h>
+#include <metal/drivers/sifive_gpio0.h>
 #include <metal/io.h>
 #include <metal/spi.h>
 
@@ -19,6 +19,8 @@ __METAL_DECLARE_VTABLE(__metal_driver_vtable_sifive_spi0)
 struct __metal_driver_sifive_spi0 {
     struct metal_spi spi;
     unsigned long baud_rate;
+    metal_clock_callback pre_rate_change_callback;
+    metal_clock_callback post_rate_change_callback;
 };
 
 #endif

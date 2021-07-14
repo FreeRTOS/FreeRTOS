@@ -9,13 +9,12 @@
  * API for manipulating ITIM allocation
  */
 
-
 /*! @def METAL_PLACE_IN_ITIM
  * @brief Link a function into the ITIM
  *
  * Link a function into the ITIM (Instruction Tightly Integrated
  * Memory) if the ITIM is present on the target device.
  */
-#define METAL_PLACE_IN_ITIM	__attribute__((section(".itim")))
+#define METAL_PLACE_IN_ITIM __attribute__((section(".itim")))
 
 #endif

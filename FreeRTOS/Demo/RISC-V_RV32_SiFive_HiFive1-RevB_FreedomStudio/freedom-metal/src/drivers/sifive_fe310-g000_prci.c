@@ -8,12 +8,15 @@
 #include <metal/drivers/sifive_fe310-g000_prci.h>
 #include <metal/machine.h>
 
-long __metal_driver_sifive_fe310_g000_prci_get_reg(const struct __metal_driver_sifive_fe310_g000_prci *prci, long offset) {
+long __metal_driver_sifive_fe310_g000_prci_get_reg(
+    const struct __metal_driver_sifive_fe310_g000_prci *prci, long offset) {
     unsigned long base = __metal_driver_sifive_fe310_g000_prci_base();
     return __METAL_ACCESS_ONCE((__metal_io_u32 *)(base + offset));
 }
 
-long __metal_driver_sifive_fe310_g000_prci_set_reg(const struct __metal_driver_sifive_fe310_g000_prci *prci, long offset, long value) {
+long __metal_driver_sifive_fe310_g000_prci_set_reg(
+    const struct __metal_driver_sifive_fe310_g000_prci *prci, long offset,
+    long value) {
     unsigned long base = __metal_driver_sifive_fe310_g000_prci_base();
     return __METAL_ACCESS_ONCE((__metal_io_u32 *)(base + offset)) = value;
 }

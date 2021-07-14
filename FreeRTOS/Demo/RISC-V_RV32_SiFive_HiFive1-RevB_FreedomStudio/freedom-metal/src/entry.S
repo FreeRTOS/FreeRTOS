@@ -24,23 +24,48 @@ _enter:
     la gp, __global_pointer$
 .option pop
 
+    /* trap over the chicken bit register clearing, aloe & fe310 dont have it */
+    la t0, 1f
+    csrw mtvec, t0
+    /* chicken bit is enable if core are sifive series. */
+    la t0, __metal_chicken_bit
+    beqz t0, 1f
+    /* If set, always clear the feature disable register for all cores series */
+    csrwi 0x7C1, 0
+.align 4
+1:
     /* Set up a simple trap vector to catch anything that goes wrong early in
      * the boot process. */
     la t0, early_trap_vector
     csrw mtvec, t0
-    /* enable chicken bit if core is bullet series*/
-    la t0, __metal_chicken_bit
-    beqz t0, 1f
-    csrwi 0x7C1, 0
-1:
 
     /* There may be pre-initialization routines inside the MBI code that run in
-     * C, so here we set up a C environment.  First we set up a stack pointer,
+     * C, so here we set up a C environment. First we set up a stack pointer,
      * which is left as a weak reference in order to allow initialization
      * routines that do not need a stack to be set up to transparently be
      * called. */
     .weak __metal_stack_pointer
     la sp, __metal_stack_pointer
+
+   /* The METAL is designed for a bare-metal environment and therefore is expected
+    * to define its own stack pointer. We also align the stack pointer here
+    * because the only RISC-V ABI that's currently defined, mandates 16-byte
+    * stack alignment. */
+
+    bne sp, zero, 1f
+    la sp, _sp
+1:
+    /* Increment by hartid number of stack sizes */
+    csrr a0, mhartid
+    li t0, 0
+    la t1, __stack_size
+1:
+    andi sp, sp, -16
+    beq t0, a0, 1f
+    add sp, sp, t1
+    addi t0, t0, 1
+    j 1b
+1:
 
     /* Check for an initialization routine and call it if one exists, otherwise
      * just skip over the call entirely.   Note that __metal_initialize isn't
@@ -48,7 +73,6 @@ _enter:
      * segments having been initialized.  This is done to avoid putting a
      * burden on systems that can be initialized without having a C environment
      * set up. */
-    .weak __metal_before_start
     la ra, __metal_before_start
     beqz ra, 1f
     jalr ra
@@ -78,18 +102,6 @@ _enter:
      lw t1, 0(x0)
      j 1b
 
-    .cfi_endproc
-
-/* For sanity's sake we set up an early trap vector that just does nothing.  If
- * you end up here then there's a bug in the early boot code somewhere. */
-.section .text.metal.init.trapvec
-.align 2
-early_trap_vector:
-    .cfi_startproc
-    csrr t0, mcause
-    csrr t1, mepc
-    csrr t2, mtval
-    j early_trap_vector
     .cfi_endproc
 
 /* The GCC port might not emit a __register_frame_info symbol, which eventually

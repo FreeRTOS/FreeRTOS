@@ -1,0 +1,8 @@
+#!/bin/sh
+
+CLANG_FORMAT=clang-format-6.0
+
+TOP_LEVEL=$(git rev-parse --show-toplevel)
+
+# Run clang-format in-place on all *.c and *.h files in the repository
+cd $TOP_LEVEL && $CLANG_FORMAT -i $(git ls-tree -r HEAD --name-only | grep -E "^\S+\.[ch]$")

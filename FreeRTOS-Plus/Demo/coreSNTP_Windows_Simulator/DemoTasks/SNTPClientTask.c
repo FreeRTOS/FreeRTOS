@@ -571,6 +571,28 @@ static SntpStatus_t validateServerAuth( SntpAuthContext_t * pAuthContext,
  */
 static uint32_t generateRandomNumber();
 
+/**
+ * @brief Utility to create a new FreeRTOS UDP socket and bind a random
+ * port to it.
+ * A random port is used for the created UDP socket as a protection mechanism
+ * against spoofing attacks from malicious actors that are off the network
+ * path of the client-server communication.
+ *
+ * @param[out] This will be populated with a new FreeRTOS UDP socket
+ * that is bound to a random port.
+ *
+ * @return Returns #true for successful creation of UDP socket; #false
+ * otherwise for failure.
+ */
+static bool createUdpSocket( Socket_t * pSocket );
+
+/**
+ * @brief Utility to close the passed FreeRTOS UDP socket.
+ *
+ * @param pSocket The UDP socket to close.
+ */
+static void closeUdpSocket( Socket_t * pSocket );
+
 /*------------------------------------------------------------------------------*/
 
 static uint32_t translateYearToUnixSeconds( uint16_t year )
@@ -1259,70 +1281,100 @@ static bool initializeSntpClient( SntpContext_t * pContext,
     }
     else
     {
+        UdpTransportInterface_t udpTransportIntf;
+        SntpAuthenticationInterface_t symmetricKeyAuthIntf;
+
         for( uint8_t index = 0; index < numOfServers; index++ )
         {
             pServers[ index ].pServerName = pTimeServers[ index ];
             pServers[ index ].port = SNTP_DEFAULT_SERVER_PORT;
         }
 
-        LogInfo( ( "Calculated poll interval: %lus", systemClock.pollPeriod ) );
+        /* Set the UDP transport interface object. */
+        udpTransportIntf.pUserContext = pUdpContext;
+        udpTransportIntf.sendTo = UdpTransport_Send;
+        udpTransportIntf.recvFrom = UdpTransport_Recv;
 
-        /* Create a UDP socket for network I/O with server. */
-        pUdpContext->socket = FreeRTOS_socket( FREERTOS_AF_INET,
-                                               FREERTOS_SOCK_DGRAM,
-                                               FREERTOS_IPPROTO_UDP );
+        /* Set the authentication interface object. */
+        symmetricKeyAuthIntf.pAuthContext = pAuthContext;
+        symmetricKeyAuthIntf.generateClientAuth = addClientAuthCode;
+        symmetricKeyAuthIntf.validateServerAuth = validateServerAuth;
 
-        /* Check the socket was created successfully. */
-        /* TODO - Consider using random port assigned by FreeRTOS for better protection */
-        /* against "off-path" attacker. */
-        if( pUdpContext->socket == FREERTOS_INVALID_SOCKET )
-        {
-            /* There was insufficient FreeRTOS heap memory available for the socket
-             * to be created. */
-            LogError( ( "Failed to create UDP socket for SNTP client due to insufficient memory." ) );
-        }
-        else
-        {
-            struct freertos_sockaddr bindAddress;
-            UdpTransportInterface_t udpTransportIntf;
-            SntpAuthenticationInterface_t symmetricKeyAuthIntf;
+        /* Initialize context. */
+        Sntp_Init( pContext,
+                   pServers,
+                   numOfServers,
+                   democonfigSERVER_RESPONSE_TIMEOUT_MS,
+                   pContextBuffer,
+                   contextBufferSize,
+                   resolveDns,
+                   sntpClient_GetTime,
+                   sntpClient_SetTime,
+                   &udpTransportIntf,
+                   &symmetricKeyAuthIntf );
 
-            bindAddress.sin_port = FreeRTOS_htons( SNTP_DEFAULT_SERVER_PORT );
-
-            if( FreeRTOS_bind( pUdpContext->socket, &bindAddress, sizeof( bindAddress ) ) == 0 )
-            {
-                /* The bind was successful. */
-                LogDebug( ( "UDP socket has been bound to port %lu", SNTP_DEFAULT_SERVER_PORT ) );
-            }
-
-            /* Set the UDP transport interface object. */
-            udpTransportIntf.pUserContext = pUdpContext;
-            udpTransportIntf.sendTo = UdpTransport_Send;
-            udpTransportIntf.recvFrom = UdpTransport_Recv;
-
-            /* Set the authentication interface object. */
-            symmetricKeyAuthIntf.pAuthContext = pAuthContext;
-            symmetricKeyAuthIntf.generateClientAuth = addClientAuthCode;
-            symmetricKeyAuthIntf.validateServerAuth = validateServerAuth;
-
-            /* Initialize context. */
-            Sntp_Init( pContext,
-                       pServers,
-                       numOfServers,
-                       democonfigSERVER_RESPONSE_TIMEOUT_MS,
-                       pContextBuffer,
-                       contextBufferSize,
-                       resolveDns,
-                       sntpClient_GetTime,
-                       sntpClient_SetTime,
-                       &udpTransportIntf,
-                       &symmetricKeyAuthIntf );
-
-            initStatus = true;
-        }
+        initStatus = true;
     }
 
     return initStatus;
+}
+
+/*-----------------------------------------------------------*/
+
+static bool createUdpSocket( Socket_t * pSocket )
+{
+    bool status = false;
+    struct freertos_sockaddr bindAddress;
+
+    configASSERT( pSocket != NULL );
+
+    /* Call the FreeRTOS+TCP API to create a UDP socket. */
+    *pSocket = FreeRTOS_socket( FREERTOS_AF_INET,
+                                FREERTOS_SOCK_DGRAM,
+                                FREERTOS_IPPROTO_UDP );
+
+    /* Check the socket was created successfully. */
+    if( *pSocket == FREERTOS_INVALID_SOCKET )
+    {
+        /* There was insufficient FreeRTOS heap memory available for the socket
+         * to be created. */
+        LogError( ( "Failed to create UDP socket for SNTP client due to insufficient memory." ) );
+    }
+    else
+    {
+        /* Use a random UDP port for SNTP communication with server for protection against
+         *  spoofing vulnerability from "network off-path" attackers. */
+        uint16_t randomPort = ( generateRandomNumber() % UINT16_MAX );
+        bindAddress.sin_port = FreeRTOS_htons( randomPort );
+
+        if( FreeRTOS_bind( *pSocket, &bindAddress, sizeof( bindAddress ) ) == 0 )
+        {
+            /* The bind was successful. */
+            LogDebug( ( "UDP socket has been bound to port %u", randomPort ) );
+            status = true;
+        }
+        else
+        {
+            LogError( ( "Failed to bind UDP socket to port %u", randomPort ) );
+        }
+    }
+
+    return status;
+}
+
+/*-----------------------------------------------------------*/
+
+static void closeUdpSocket( Socket_t * pSocket )
+{
+    bool status = false;
+    struct freertos_sockaddr bindAddress;
+
+    configASSERT( pSocket != NULL );
+
+    FreeRTOS_shutdown( *pSocket, FREERTOS_SHUT_RDWR );
+
+    /* Close the socket again. */
+    FreeRTOS_closesocket( *pSocket );
 }
 
 /*-----------------------------------------------------------*/
@@ -1381,21 +1433,34 @@ void sntpTask( void * pParameters )
                                              &systemClock.pollPeriod );
         configASSERT( status == SntpSuccess );
 
-        LogInfo( ( "Initialized SNTP Client context. Starting the SNTP client loop for time synchronization every %lu seconds",
+        LogDebug( ( "SNTP client polling interval calculated as %lus", systemClock.pollPeriod ) );
+
+        LogInfo( ( "Initialized SNTP Client context. Starting SNTP client loop to poll time every %lu seconds",
                    systemClock.pollPeriod ) );
 
-        /* SNTP Client loop of sending and receiving SNTP packets for time synchronization at poll intervals */
+        /* The loop of the SNTP Client task that synchronizes system time with a time server (in the configured list of time servers)
+         * periodically at intervals of polling period. Each iteration of time synchronization is performed by calling the coreSNTP
+         * APIs for sending time request to the server and receiving time response from the server. */
         while( 1 )
         {
+            /* For security, this demo keeps a UDP socket open only for one iteration of SNTP request-response cycle.
+             * There is a security risk of a UDP socket being flooded with invalid or malicious server response packets
+             * when a UDP socket is kept open across multiple time polling cycles. In such a scenario where the UDP
+             * socket buffer has received multiple server response packets from a single time request, the extraneous
+             * server response present in the UDP socket buffer will prevent the SNTP client application from correctly
+             * reading network data of server responses that correspond to future time requests.
+             * By closing the UDP socket after receiving the first acceptable server response (within the server response
+             * timeout window), any extraneous or malicious server response packets for the same time request will be
+             * ignored by the demo. */
+
+            /* Create a UDP socket for the current iteration of time polling. */
+            bool socketStatus = createUdpSocket( &udpContext.socket );
+            configASSERT( socketStatus == true );
+
             status = Sntp_SendTimeRequest( &clientContext, generateRandomNumber(), democonfigSEND_TIME_REQUEST_TIMEOUT_MS );
+            configASSERT( status == SntpSuccess );
 
-            /*configASSERT( status == SntpSuccess ); */
-            if( status != SntpSuccess )
-            {
-                continue;
-            }
-
-            /* Wait till the server response is not received. */
+            /* Wait for server response for a maximum time of server response timeout. */
             do
             {
                 /* Attempt to receive server response each time for a smaller block time
@@ -1403,8 +1468,27 @@ void sntpTask( void * pParameters )
                 status = Sntp_ReceiveTimeResponse( &clientContext, democonfigRECEIVE_SERVER_RESPONSE_BLOCK_TIME_MS );
             } while( status == SntpNoResponseReceived );
 
-            /* Wait for the poll interval period before the next iteration of time synchronization. */
-            vTaskDelay( pdMS_TO_TICKS( systemClock.pollPeriod * 1000 ) );
+            /* Close the UDP socket irrespective of whether a server response is received. */
+            closeUdpSocket( &udpContext.socket );
+
+            /* Apply back-off delay before the next poll iteration if the demo has been configured with only
+             * a single time server. */
+            if( ( status == SntpRejectedResponse ) && ( numOfServers == 1 ) )
+            {
+                LogInfo( ( "The single configured time server, %s, rejected time request. Backing-off before ",
+                           "next time poll....", strlen( pTimeServers[ 0 ] ) ) );
+
+                /* Add exponential back-off to polling period. */
+                systemClock.pollPeriod *= 2;
+
+                /* Wait for the increased poll interval before retrying request for time from server. */
+                vTaskDelay( pdMS_TO_TICKS( systemClock.pollPeriod * 1000 ) );
+            }
+            else
+            {
+                /* Wait for the poll interval period before the next iteration of time synchronization. */
+                vTaskDelay( pdMS_TO_TICKS( systemClock.pollPeriod * 1000 ) );
+            }
         }
     }
     else

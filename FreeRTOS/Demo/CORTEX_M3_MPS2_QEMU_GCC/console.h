@@ -26,11 +26,13 @@
 
 #ifndef CONSOLE_H
 #define CONSOLE_H
+
 /* *INDENT-OFF* */
 #ifdef __cplusplus
     extern "C" {
 #endif
 /* *INDENT-ON* */
+
 
 /*-----------------------------------------------------------
 * Example console I/O wrappers.

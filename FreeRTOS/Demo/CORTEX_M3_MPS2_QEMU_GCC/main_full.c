@@ -186,6 +186,9 @@ static void prvReloadModeTestTimerCallback( TimerHandle_t xTimer );
 /* The variable into which error messages are latched. */
 static char * pcStatusMessage = "OK: No errors";
 
+int xErrorCount = 1;
+
+
 /* This semaphore is created purely to test using the vSemaphoreDelete() and
  * semaphore tracing API functions.  It has no other purpose. */
 static SemaphoreHandle_t xMutexToDelete = NULL;
@@ -287,6 +290,7 @@ static void prvCheckTask( void * pvParameters )
                 if( xAreTimerDemoTasksStillRunning( xCycleFrequency ) != pdTRUE )
                 {
                     pcStatusMessage = "Error: TimerDemo";
+                    xErrorCount++;
                 }
             }
         #endif
@@ -294,106 +298,132 @@ static void prvCheckTask( void * pvParameters )
         if( xAreStreamBufferTasksStillRunning() != pdTRUE )
         {
             pcStatusMessage = "Error:  StreamBuffer";
+            xErrorCount++;
         }
         else if( xAreMessageBufferTasksStillRunning() != pdTRUE )
         {
             pcStatusMessage = "Error:  MessageBuffer";
+            xErrorCount++;
         }
         else if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
         {
             pcStatusMessage = "Error:  Notification";
+            xErrorCount++;
         }
-        /* else if( xAreTaskNotificationArrayTasksStillRunning() != pdTRUE ) */
-        /* { */
-        /*  pcStatusMessage = "Error:  NotificationArray"; */
-        /* } */
+        /*
+         * else if( xAreTaskNotificationArrayTasksStillRunning() != pdTRUE )
+         * {
+         *              pcStatusMessage = "Error:  NotificationArray";
+         * }
+         */
         else if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
         {
             pcStatusMessage = "Error: IntSem";
+            xErrorCount++;
         }
         else if( xAreEventGroupTasksStillRunning() != pdTRUE )
         {
             pcStatusMessage = "Error: EventGroup";
+            xErrorCount++;
         }
         else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
         {
             pcStatusMessage = "Error: IntMath";
+            xErrorCount++;
         }
         else if( xAreGenericQueueTasksStillRunning() != pdTRUE )
         {
             pcStatusMessage = "Error: GenQueue";
+            xErrorCount++;
         }
         else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
         {
             pcStatusMessage = "Error: QueuePeek";
+            xErrorCount++;
         }
         else if( xAreBlockingQueuesStillRunning() != pdTRUE )
         {
             pcStatusMessage = "Error: BlockQueue";
+            xErrorCount++;
         }
         else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
         {
             pcStatusMessage = "Error: SemTest";
+            xErrorCount++;
         }
         else if( xArePollingQueuesStillRunning() != pdTRUE )
         {
             pcStatusMessage = "Error: PollQueue";
+            xErrorCount++;
         }
         else if( xAreMathsTaskStillRunning() != pdPASS )
         {
             pcStatusMessage = "Error: Flop";
+            xErrorCount++;
         }
         else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
         {
             pcStatusMessage = "Error: RecMutex";
+            xErrorCount++;
         }
         else if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
         {
             pcStatusMessage = "Error: CountSem";
+            xErrorCount++;
         }
         else if( xIsCreateTaskStillRunning() != pdTRUE )
         {
             pcStatusMessage = "Error: Death";
+            xErrorCount++;
         }
         else if( xAreDynamicPriorityTasksStillRunning() != pdPASS )
         {
             pcStatusMessage = "Error: Dynamic";
+            xErrorCount++;
         }
         else if( xIsQueueOverwriteTaskStillRunning() != pdPASS )
         {
             pcStatusMessage = "Error: Queue overwrite";
+            xErrorCount++;
         }
         else if( xAreBlockTimeTestTasksStillRunning() != pdPASS )
         {
             pcStatusMessage = "Error: Block time";
+            xErrorCount++;
         }
         else if( xAreAbortDelayTestTasksStillRunning() != pdPASS )
         {
             pcStatusMessage = "Error: Abort delay";
+            xErrorCount++;
         }
         else if( xIsInterruptStreamBufferDemoStillRunning() != pdPASS )
         {
             pcStatusMessage = "Error: Stream buffer interrupt";
+            xErrorCount++;
         }
         else if( xAreMessageBufferAMPTasksStillRunning() != pdPASS )
         {
             pcStatusMessage = "Error: Message buffer AMP";
+            xErrorCount++;
         }
 
         #if ( configUSE_QUEUE_SETS == 1 )
             else if( xAreQueueSetTasksStillRunning() != pdPASS )
             {
                 pcStatusMessage = "Error: Queue set";
+                xErrorCount++;
             }
             else if( xAreQueueSetPollTasksStillRunning() != pdPASS )
             {
                 pcStatusMessage = "Error: Queue set polling";
+                xErrorCount++;
             }
-        #endif
+        #endif /* if ( configUSE_QUEUE_SETS == 1 ) */
 
         #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
             else if( xAreStaticAllocationTasksStillRunning() != pdPASS )
             {
+                xErrorCount++;
                 pcStatusMessage = "Error: Static allocation";
             }
         #endif /* configSUPPORT_STATIC_ALLOCATION */
@@ -402,6 +432,10 @@ static void prvCheckTask( void * pvParameters )
                 pcStatusMessage,
                 xTaskGetTickCount() );
 
+        if( xErrorCount != 0 )
+        {
+            exit( 1 );
+        }
         /* Reset the error condition */
         pcStatusMessage = "OK: No errors";
     }
@@ -483,6 +517,7 @@ void vFullDemoIdleFunction( void )
             if( xRunCodeCoverageTestAdditions() != pdPASS )
             {
                 pcStatusMessage = "Code coverage additions failed.\r\n";
+                xErrorCount++;
             }
 
             if( ( xTaskGetTickCount() - configINITIAL_TICK_COUNT ) >= xMaxRunTime )
@@ -649,6 +684,7 @@ static void prvDemonstrateTaskStateAndHandleGetFunctions( void )
     if( xTaskGetCurrentTaskHandle() != xIdleTaskHandle )
     {
         pcStatusMessage = "Error:  Returned idle task handle was incorrect";
+        xErrorCount++;
     }
 
     /* Check the same handle is obtained using the idle task's name.  First try
@@ -656,11 +692,13 @@ static void prvDemonstrateTaskStateAndHandleGetFunctions( void )
     if( xTaskGetHandle( "Idle" ) == xIdleTaskHandle )
     {
         pcStatusMessage = "Error:  Returned handle for name Idle was incorrect";
+        xErrorCount++;
     }
 
     if( xTaskGetHandle( "IDLE" ) != xIdleTaskHandle )
     {
         pcStatusMessage = "Error:  Returned handle for name Idle was incorrect";
+        xErrorCount++;
     }
 
     /* Check the timer task handle was returned correctly. */
@@ -669,23 +707,27 @@ static void prvDemonstrateTaskStateAndHandleGetFunctions( void )
     if( strcmp( pcTaskName, "Tmr Svc" ) != 0 )
     {
         pcStatusMessage = "Error:  Returned timer task handle was incorrect";
+        xErrorCount++;
     }
 
     if( xTaskGetHandle( "Tmr Svc" ) != xTimerTaskHandle )
     {
         pcStatusMessage = "Error:  Returned handle for name Tmr Svc was incorrect";
+        xErrorCount++;
     }
 
     /* This task is running, make sure it's state is returned as running. */
     if( eTaskStateGet( xIdleTaskHandle ) != eRunning )
     {
         pcStatusMessage = "Error:  Returned idle task state was incorrect";
+        xErrorCount++;
     }
 
     /* If this task is running, then the timer task must be blocked. */
     if( eTaskStateGet( xTimerTaskHandle ) != eBlocked )
     {
         pcStatusMessage = "Error:  Returned timer task state was incorrect";
+        xErrorCount++;
     }
 
     /* Also with the vTaskGetInfo() function. */
@@ -702,6 +744,7 @@ static void prvDemonstrateTaskStateAndHandleGetFunctions( void )
         ( xTaskInfo.xHandle != xTimerTaskHandle ) )
     {
         pcStatusMessage = "Error:  vTaskGetInfo() returned incorrect information about the timer task";
+        xErrorCount++;
     }
 
     /* Other tests that should only be performed once follow.  The test task
@@ -719,6 +762,7 @@ static void prvDemonstrateTaskStateAndHandleGetFunctions( void )
             if( eTaskStateGet( xTestTask ) != eReady )
             {
                 pcStatusMessage = "Error: Returned test task state was incorrect 1";
+                xErrorCount++;
             }
 
             /* Now suspend the test task and check its state is reported correctly. */
@@ -727,6 +771,7 @@ static void prvDemonstrateTaskStateAndHandleGetFunctions( void )
             if( eTaskStateGet( xTestTask ) != eSuspended )
             {
                 pcStatusMessage = "Error: Returned test task state was incorrect 2";
+                xErrorCount++;
             }
 
             /* Now delete the task and check its state is reported correctly. */
@@ -735,6 +780,7 @@ static void prvDemonstrateTaskStateAndHandleGetFunctions( void )
             if( eTaskStateGet( xTestTask ) != eDeleted )
             {
                 pcStatusMessage = "Error: Returned test task state was incorrect 3";
+                xErrorCount++;
             }
         }
     }
@@ -871,7 +917,7 @@ static void prvDemonstrateChangingTimerReloadMode( void * pvParameters )
 
     xTimer = xTimerCreate( pcTimerName,
                            x100ms,
-                           pdFALSE,  /* Created as a one-shot timer. */
+                           pdFALSE, /* Created as a one-shot timer. */
                            0,
                            prvReloadModeTestTimerCallback );
     configASSERT( xTimer );

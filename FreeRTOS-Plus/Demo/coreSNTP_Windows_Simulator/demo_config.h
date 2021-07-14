@@ -109,6 +109,13 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * It is RECOMMENDED to use an authentication mechanism for protecting devices against server spoofing
  * attacks.
  *
+ * @note Even though this demo shows the use of AES-128-CMAC, a symmetric-key cyrptographic based
+ * solution, for authenticating SNTP communication between the demo (SNTP client) and
+ * SNTP/NTP server, we instead RECOMMEND that production devices use the most secure authentication
+ * mechanism alternative available with the Network Time Security (NTS) protocol, an asymmetric-key
+ * cryptographic protocol. For more information, refer to the NTS specification here:
+ * https://datatracker.ietf.org/doc/html/rfc8915
+ *
  * @note Please provide the 128-bit keys as comma separated list of hexadecimal strings in the order matching
  * the list of time servers configured in democonfigLIST_OF_TIME_SERVERS configuration. If a time server does
  * not support authentication, then NULL should be used to indicate use of no authentication mechanism for the

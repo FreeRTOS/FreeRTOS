@@ -31,13 +31,22 @@
  *
  * This file contains the SNTP client (daemon) task as well as functionality for
  * maintaining wall-clock or UTC time in RAM. The SNTP client periodically synchronizes
- * system clock with an SNTP/NTP servers. Any other task running an application in the
+ * system clock with SNTP/NTP server(s). Any other task running an application in the
  * system can query the system time. For an example of an application task querying time
  * from the system, refer to the SampleAppTask.c file in this project.
  *
- * !!! NOTE !!!
- * This SNTP demo does not authenticate the server nor the client.
- * Hence, this demo should not be used as production ready code.
+ * This demo shows how the coreSNTP library can be used to communicate with SNTP/NTP
+ * servers in a mutually authenticated through the use of symmetric-key based AES-128-CMAC
+ * algorithm. To run this demo with an SNTP/NTP server in authenticated mode, the AES-128-CMACM
+ * symmetric key needs to be pre-shared between the client (i.e. this demo) and the server.
+ *
+ * !!!Note!!!: 
+ * Even though this demo shows the use of AES-128-CMAC, a symmetric-key cyrptographic based
+ * solution, for authenticating SNTP communication between the demo (SNTP client) and
+ * SNTP/NTP server, we instead RECOMMEND that production devices use the most secure authentication
+ * mechanism alternative available with the Network Time Security (NTS) protocol, an asymmetric-key
+ * cryptographic protocol. For more information, refer to the NTS specification here:
+ * https://datatracker.ietf.org/doc/html/rfc8915
  */
 
 /* Standard includes. */

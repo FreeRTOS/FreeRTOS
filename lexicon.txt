@@ -1836,6 +1836,7 @@ psignature
 psl
 pslotlist
 psoc
+psocket
 psr
 psslcontext
 pstplatformimagestate

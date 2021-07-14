@@ -23,9 +23,10 @@ int metal_timer_get_cyclecount(int hartid, unsigned long long *cyclecount);
  * @param timebase The variable to hold the value
  * @return 0 upon success
  */
-int metal_timer_get_timebase_frequency(int hartid, unsigned long long *timebase);
+int metal_timer_get_timebase_frequency(int hartid,
+                                       unsigned long long *timebase);
 
-/*! 
+/*!
  * @brief Set the machine timer tick interval in seconds
  * @param hartid The hart ID to read the timebase of
  * @param second The number of seconds to set the tick interval to

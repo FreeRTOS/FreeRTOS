@@ -102,6 +102,9 @@ comments at the top of this file. */
 /* Size of the stacks to allocated for the register check tasks. */
 #define mainREG_TEST_STACK_SIZE_WORDS 90
 
+/* Output messages. These are used by the CI - do not change. */
+#define mainDEMO_START_MESSAGE			"FreeRTOS Demo Start\r\n"
+#define mainDEMO_SUCCESS_MESSAGE		"FreeRTOS Demo SUCCESS\r\n"
 /*-----------------------------------------------------------*/
 
 /*
@@ -145,6 +148,8 @@ volatile uint32_t *pulRegTest2LoopCounter = &ulRegTest2LoopCounter;
 
 void main_full( void )
 {
+const char * const pcDemoStartMessage = mainDEMO_START_MESSAGE;
+
 	/* Start all the other standard demo/test tasks.  They have no particular
 	functionality, but do demonstrate how to use the FreeRTOS API and test the
 	kernel port. */
@@ -168,6 +173,8 @@ void main_full( void )
 	the top of this file. */
 	xTaskCreate( prvCheckTask, "Check", mainCHECK_TASK_STACK_SIZE_WORDS, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
+	write( STDOUT_FILENO, pcDemoStartMessage, strlen( pcDemoStartMessage ) );
+
 	/* Start the scheduler. */
 	vTaskStartScheduler();
 
@@ -186,7 +193,7 @@ static void prvCheckTask( void *pvParameters )
 TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
 TickType_t xLastExecutionTime;
 uint32_t ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
-char * const pcPassMessage = ".";
+char * const pcPassMessage = mainDEMO_SUCCESS_MESSAGE;
 char * pcStatusMessage = pcPassMessage;
 extern void vToggleLED( void );
 
@@ -254,6 +261,8 @@ extern void vToggleLED( void );
 		{
 			xDelayPeriod = mainERROR_CHECK_TASK_PERIOD;
 		}
+
+		write( STDOUT_FILENO, pcStatusMessage, strlen( pcStatusMessage ) );
 	}
 }
 /*-----------------------------------------------------------*/

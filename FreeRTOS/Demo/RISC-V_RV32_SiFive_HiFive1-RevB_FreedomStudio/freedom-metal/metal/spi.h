@@ -9,11 +9,7 @@ struct metal_spi;
 /*! @brief The configuration for a SPI transfer */
 struct metal_spi_config {
     /*! @brief The protocol for the SPI transfer */
-    enum {
-        METAL_SPI_SINGLE,
-        METAL_SPI_DUAL,
-        METAL_SPI_QUAD
-    } protocol;
+    enum { METAL_SPI_SINGLE, METAL_SPI_DUAL, METAL_SPI_QUAD } protocol;
 
     /*! @brief The polarity of the SPI transfer, equivalent to CPOL */
     unsigned int polarity : 1;
@@ -41,7 +37,8 @@ struct metal_spi_config {
 
 struct metal_spi_vtable {
     void (*init)(struct metal_spi *spi, int baud_rate);
-    int (*transfer)(struct metal_spi *spi, struct metal_spi_config *config, size_t len, char *tx_buf, char *rx_buf);
+    int (*transfer)(struct metal_spi *spi, struct metal_spi_config *config,
+                    size_t len, char *tx_buf, char *rx_buf);
     int (*get_baud_rate)(struct metal_spi *spi);
     int (*set_baud_rate)(struct metal_spi *spi, int baud_rate);
 };
@@ -60,17 +57,23 @@ struct metal_spi *metal_spi_get_device(unsigned int device_num);
  * @param spi The handle for the SPI device to initialize
  * @param baud_rate The baud rate to set the SPI device to
  */
-__inline__ void metal_spi_init(struct metal_spi *spi, int baud_rate) { spi->vtable->init(spi, baud_rate); }
+__inline__ void metal_spi_init(struct metal_spi *spi, int baud_rate) {
+    spi->vtable->init(spi, baud_rate);
+}
 
 /*! @brief Perform a SPI transfer
  * @param spi The handle for the SPI device to perform the transfer
  * @param config The configuration for the SPI transfer.
  * @param len The number of bytes to transfer
- * @param tx_buf The buffer to send over the SPI bus. Must be len bytes long. If NULL, the SPI will transfer the value 0.
- * @param rx_buf The buffer to receive data into. Must be len bytes long. If NULL, the SPI will ignore received bytes.
+ * @param tx_buf The buffer to send over the SPI bus. Must be len bytes long. If
+ * NULL, the SPI will transfer the value 0.
+ * @param rx_buf The buffer to receive data into. Must be len bytes long. If
+ * NULL, the SPI will ignore received bytes.
  * @return 0 if the transfer succeeds
  */
-__inline__ int metal_spi_transfer(struct metal_spi *spi, struct metal_spi_config *config, size_t len, char *tx_buf, char *rx_buf) {
+__inline__ int metal_spi_transfer(struct metal_spi *spi,
+                                  struct metal_spi_config *config, size_t len,
+                                  char *tx_buf, char *rx_buf) {
     return spi->vtable->transfer(spi, config, len, tx_buf, rx_buf);
 }
 
@@ -78,13 +81,17 @@ __inline__ int metal_spi_transfer(struct metal_spi *spi, struct metal_spi_config
  * @param spi The handle for the SPI device
  * @return The baud rate in Hz
  */
-__inline__ int metal_spi_get_baud_rate(struct metal_spi *spi) { return spi->vtable->get_baud_rate(spi); }
+__inline__ int metal_spi_get_baud_rate(struct metal_spi *spi) {
+    return spi->vtable->get_baud_rate(spi);
+}
 
 /*! @brief Set the current baud rate of the SPI device
  * @param spi The handle for the SPI device
  * @param baud_rate The desired baud rate of the SPI device
  * @return 0 if the baud rate is successfully changed
  */
-__inline__ int metal_spi_set_baud_rate(struct metal_spi *spi, int baud_rate) { return spi->vtable->set_baud_rate(spi, baud_rate); }
+__inline__ int metal_spi_set_baud_rate(struct metal_spi *spi, int baud_rate) {
+    return spi->vtable->set_baud_rate(spi, baud_rate);
+}
 
 #endif

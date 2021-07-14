@@ -1,0 +1,21 @@
+#!/bin/bash
+
+version='v0.1.2'
+
+if test -d .git
+then
+    gv=`git describe`
+    if [[ "$?" == "0" ]]
+    then
+        if [[ "$(echo "${gv}" | cut -d'-' -f1)" != "$version" ]]
+        then
+    	    echo "$0 has mismatched version" >&2
+            echo "${gv}-ERROR"
+    	    exit 1
+        fi
+
+        version="$(echo ${gv} | cut -c2-)"
+    fi
+fi
+
+echo "${version}"

@@ -53,11 +53,11 @@ typedef struct ReportMetrics
 {
     NetworkStats_t * pxNetworkStats;
     uint16_t * pusOpenTcpPortsArray;
-    uint32_t ulOpenTcpPortsArrayLength;
+    size_t xOpenTcpPortsArrayLength;
     uint16_t * pusOpenUdpPortsArray;
-    uint32_t ulOpenUdpPortsArrayLength;
+    size_t xOpenUdpPortsArrayLength;
     Connection_t * pxEstablishedConnectionsArray;
-    uint32_t ulEstablishedConnectionsArrayLength;
+    size_t xEstablishedConnectionsArrayLength;
     /* Custom metrics */
     uint32_t ulStackHighWaterMark;
     uint32_t * pulTaskIdArray;

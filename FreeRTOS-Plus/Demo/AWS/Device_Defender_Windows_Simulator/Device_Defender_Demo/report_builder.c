@@ -483,7 +483,7 @@ eReportBuilderStatus eGenerateJsonReport( char * pcBuffer,
         eStatus = prvWritePortsArray( pcCurrentWritePos,
                                       ulRemainingBufferLength,
                                       pxMetrics->pusOpenTcpPortsArray,
-                                      pxMetrics->ulOpenTcpPortsArrayLength,
+                                      pxMetrics->xOpenTcpPortsArrayLength,
                                       &( bufferWritten ) );
 
         if( eStatus == eReportBuilderSuccess )
@@ -503,7 +503,7 @@ eReportBuilderStatus eGenerateJsonReport( char * pcBuffer,
         lCharactersWritten = snprintf( pcCurrentWritePos,
                                        ulRemainingBufferLength,
                                        reportbuilderJSON_REPORT_FORMAT_PART2,
-                                       pxMetrics->ulOpenTcpPortsArrayLength );
+                                       pxMetrics->xOpenTcpPortsArrayLength );
 
         if( !reportbuilderSNPRINTF_SUCCESS( lCharactersWritten, ulRemainingBufferLength ) )
         {
@@ -523,7 +523,7 @@ eReportBuilderStatus eGenerateJsonReport( char * pcBuffer,
         eStatus = prvWritePortsArray( pcCurrentWritePos,
                                       ulRemainingBufferLength,
                                       pxMetrics->pusOpenUdpPortsArray,
-                                      pxMetrics->ulOpenUdpPortsArrayLength,
+                                      pxMetrics->xOpenUdpPortsArrayLength,
                                       &( bufferWritten ) );
 
         if( eStatus == eReportBuilderSuccess )
@@ -543,7 +543,7 @@ eReportBuilderStatus eGenerateJsonReport( char * pcBuffer,
         lCharactersWritten = snprintf( pcCurrentWritePos,
                                        ulRemainingBufferLength,
                                        reportbuilderJSON_REPORT_FORMAT_PART3,
-                                       pxMetrics->ulOpenUdpPortsArrayLength,
+                                       pxMetrics->xOpenUdpPortsArrayLength,
                                        pxMetrics->pxNetworkStats->ulBytesReceived,
                                        pxMetrics->pxNetworkStats->ulBytesSent,
                                        pxMetrics->pxNetworkStats->ulPacketsReceived,
@@ -568,7 +568,7 @@ eReportBuilderStatus eGenerateJsonReport( char * pcBuffer,
         eStatus = prvWriteConnectionsArray( pcCurrentWritePos,
                                             ulRemainingBufferLength,
                                             pxMetrics->pxEstablishedConnectionsArray,
-                                            pxMetrics->ulEstablishedConnectionsArrayLength,
+                                            pxMetrics->xEstablishedConnectionsArrayLength,
                                             &( bufferWritten ) );
 
         if( eStatus == eReportBuilderSuccess )
@@ -588,7 +588,7 @@ eReportBuilderStatus eGenerateJsonReport( char * pcBuffer,
         lCharactersWritten = snprintf( pcCurrentWritePos,
                                        ulRemainingBufferLength,
                                        reportbuilderJSON_REPORT_FORMAT_PART4,
-                                       pxMetrics->ulEstablishedConnectionsArrayLength,
+                                       pxMetrics->xEstablishedConnectionsArrayLength,
                                        pxMetrics->ulStackHighWaterMark );
 
         if( !reportbuilderSNPRINTF_SUCCESS( lCharactersWritten, ulRemainingBufferLength ) )

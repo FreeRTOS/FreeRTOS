@@ -251,12 +251,12 @@ static bool prvCollectDeviceMetrics( void );
 /**
  * @brief Generate the Device Defender report.
  *
- * @param[out] pulOutReportLength Length of the Device Defender report.
+ * @param[out] pxOutReportLength Length of the Device Defender report.
  *
  * @return true if the report is generated successfully;
  * false otherwise.
  */
-static bool prvGenerateDeviceMetricsReport( uint32_t * pulOutReportLength );
+static bool prvGenerateDeviceMetricsReport( size_t * pxOutReportLength );
 
 /**
  * @brief Subscribe to the Device Defender topics.
@@ -277,12 +277,12 @@ static bool prvUnsubscribeFromDefenderTopics( void );
 /**
  * @brief Publish the generated Device Defender report.
  *
- * @param[in] ulReportLength Length of the Device Defender report.
+ * @param[in] xReportLength Length of the Device Defender report.
  *
  * @return true if the report is published successfully;
  * false otherwise.
  */
-static bool prvPublishDeviceMetricsReport( uint32_t ulReportLength );
+static bool prvPublishDeviceMetricsReport( size_t xReportLength );
 
 /**
  * @brief Validate the response received from the AWS IoT Device Defender Service.
@@ -291,13 +291,13 @@ static bool prvPublishDeviceMetricsReport( uint32_t ulReportLength );
  * is same as was sent in the published report.
  *
  * @param[in] pcDefenderResponse The defender response to validate.
- * @param[in] ulDefenderResponseLength Length of the defender response.
+ * @param[in] xDefenderResponseLength Length of the defender response.
  *
  * @return true if the response is valid;
  * false otherwise.
  */
 static bool prvValidateDefenderResponse( const char * pcDefenderResponse,
-                                         uint32_t ulDefenderResponseLength );
+                                         size_t xDefenderResponseLength );
 
 /**
  * @brief The task used to demonstrate the Defender API.
@@ -316,7 +316,7 @@ static void prvDefenderDemoTask( void * pvParameters );
 /*-----------------------------------------------------------*/
 
 static bool prvValidateDefenderResponse( const char * pcDefenderResponse,
-                                         uint32_t ulDefenderResponseLength )
+                                         size_t xDefenderResponseLength )
 {
     bool xStatus = false;
     JSONStatus_t eJsonResult = JSONSuccess;
@@ -327,12 +327,12 @@ static bool prvValidateDefenderResponse( const char * pcDefenderResponse,
     configASSERT( pcDefenderResponse != NULL );
 
     /* Is the response a valid JSON? */
-    eJsonResult = JSON_Validate( pcDefenderResponse, ulDefenderResponseLength );
+    eJsonResult = JSON_Validate( pcDefenderResponse, xDefenderResponseLength );
 
     if( eJsonResult != JSONSuccess )
     {
         LogError( ( "Invalid response from AWS IoT Device Defender Service: %.*s.",
-                    ( int ) ulDefenderResponseLength,
+                    ( int ) xDefenderResponseLength,
                     pcDefenderResponse ) );
     }
 
@@ -340,7 +340,7 @@ static bool prvValidateDefenderResponse( const char * pcDefenderResponse,
     {
         /* Search the ReportId key in the response. */
         eJsonResult = JSON_Search( ( char * ) pcDefenderResponse,
-                                   ulDefenderResponseLength,
+                                   xDefenderResponseLength,
                                    DEFENDER_RESPONSE_REPORT_ID_FIELD,
                                    DEFENDER_RESPONSE_REPORT_ID_FIELD_LENGTH,
                                    &( ucReportIdString ),
@@ -351,7 +351,7 @@ static bool prvValidateDefenderResponse( const char * pcDefenderResponse,
             LogError( ( "%s key not found in the response from the"
                         "AWS IoT Device Defender Service: %.*s.",
                         DEFENDER_RESPONSE_REPORT_ID_FIELD,
-                        ( int ) ulDefenderResponseLength,
+                        ( int ) xDefenderResponseLength,
                         pcDefenderResponse ) );
         }
     }
@@ -376,7 +376,7 @@ static bool prvValidateDefenderResponse( const char * pcDefenderResponse,
                         DEFENDER_RESPONSE_REPORT_ID_FIELD,
                         ulReportId,
                         ulReportIdInResponse,
-                        ( int ) ulDefenderResponseLength,
+                        ( int ) xDefenderResponseLength,
                         pcDefenderResponse ) );
         }
     }
@@ -476,9 +476,11 @@ static bool prvCollectDeviceMetrics( void )
 {
     bool xStatus = false;
     eMetricsCollectorStatus eStatus;
-    uint32_t ulNumOpenTcpPorts = 0UL, ulNumOpenUdpPorts = 0UL, ulNumEstablishedConnections = 0UL, i;
+    size_t xNumOpenTcpPorts = 0UL, xNumOpenUdpPorts = 0UL, xNumEstablishedConnections = 0UL, i;
     UBaseType_t uxTasksWritten = { 0 };
+    UBaseType_t uxNumTasksRunning;
     TaskStatus_t pxTaskStatus = { 0 };
+    TaskStatus_t * pxTaskStatusList = NULL;
 
     /* Collect bytes and packets sent and received. */
     eStatus = eGetNetworkStats( &( xNetworkStats ) );
@@ -494,7 +496,7 @@ static bool prvCollectDeviceMetrics( void )
     {
         eStatus = eGetOpenTcpPorts( &( pusOpenTcpPorts[ 0 ] ),
                                                     democonfigOPEN_TCP_PORTS_ARRAY_SIZE,
-                                                    &( ulNumOpenTcpPorts ) );
+                                                    &( xNumOpenTcpPorts ) );
 
         if( eStatus != eMetricsCollectorSuccess )
         {
@@ -508,7 +510,7 @@ static bool prvCollectDeviceMetrics( void )
     {
         eStatus = eGetOpenUdpPorts( &( pusOpenUdpPorts[ 0 ] ),
                                                     democonfigOPEN_UDP_PORTS_ARRAY_SIZE,
-                                                    &( ulNumOpenUdpPorts ) );
+                                                    &( xNumOpenUdpPorts ) );
 
         if( eStatus != eMetricsCollectorSuccess )
         {
@@ -522,7 +524,7 @@ static bool prvCollectDeviceMetrics( void )
     {
         eStatus = eGetEstablishedConnections( &( pxEstablishedConnections[ 0 ] ),
                                                               democonfigESTABLISHED_CONNECTIONS_ARRAY_SIZE,
-                                                              &( ulNumEstablishedConnections ) );
+                                                              &( xNumEstablishedConnections ) );
 
         if( eStatus != eMetricsCollectorSuccess )
         {
@@ -597,11 +599,11 @@ static bool prvCollectDeviceMetrics( void )
         xStatus = true;
         xDeviceMetrics.pxNetworkStats = &( xNetworkStats );
         xDeviceMetrics.pusOpenTcpPortsArray = &( pusOpenTcpPorts[ 0 ] );
-        xDeviceMetrics.ulOpenTcpPortsArrayLength = ulNumOpenTcpPorts;
+        xDeviceMetrics.xOpenTcpPortsArrayLength = xNumOpenTcpPorts;
         xDeviceMetrics.pusOpenUdpPortsArray = &( pusOpenUdpPorts[ 0 ] );
-        xDeviceMetrics.ulOpenUdpPortsArrayLength = ulNumOpenUdpPorts;
+        xDeviceMetrics.xOpenUdpPortsArrayLength = xNumOpenUdpPorts;
         xDeviceMetrics.pxEstablishedConnectionsArray = &( pxEstablishedConnections[ 0 ] );
-        xDeviceMetrics.ulEstablishedConnectionsArrayLength = ulNumEstablishedConnections;
+        xDeviceMetrics.xEstablishedConnectionsArrayLength = xNumEstablishedConnections;
         xDeviceMetrics.ulStackHighWaterMark = pxTaskStatus.usStackHighWaterMark;
         xDeviceMetrics.pulTaskIdArray = pulCustomMetricsTaskNumbers;
         xDeviceMetrics.ulTaskIdArrayLength = uxTasksWritten;
@@ -611,7 +613,7 @@ static bool prvCollectDeviceMetrics( void )
 }
 /*-----------------------------------------------------------*/
 
-static bool prvGenerateDeviceMetricsReport( uint32_t * pulOutReportLength )
+static bool prvGenerateDeviceMetricsReport( size_t * pxOutReportLength )
 {
     bool xStatus = false;
     eReportBuilderStatus eReportBuilderStatus;
@@ -624,7 +626,7 @@ static bool prvGenerateDeviceMetricsReport( uint32_t * pulOutReportLength )
                                                 democonfigDEVICE_METRICS_REPORT_MAJOR_VERSION,
                                                 democonfigDEVICE_METRICS_REPORT_MINOR_VERSION,
                                                 ulReportId,
-                                                pulOutReportLength );
+                                                pxOutReportLength );
 
     if( eReportBuilderStatus != eReportBuilderSuccess )
     {
@@ -634,7 +636,7 @@ static bool prvGenerateDeviceMetricsReport( uint32_t * pulOutReportLength )
     else
     {
         LogDebug( ( "Generated Report: %.*s.",
-                    *pulOutReportLength,
+                    *pxOutReportLength,
                     &( pcDeviceMetricsJsonReport[ 0 ] ) ) );
         xStatus = true;
     }
@@ -699,13 +701,13 @@ static bool prvUnsubscribeFromDefenderTopics( void )
 }
 /*-----------------------------------------------------------*/
 
-static bool prvPublishDeviceMetricsReport( uint32_t reportLength )
+static bool prvPublishDeviceMetricsReport( size_t xReportLength )
 {
     return xPublishToTopic( &xMqttContext,
                             DEFENDER_API_JSON_PUBLISH( democonfigTHING_NAME ),
                             DEFENDER_API_LENGTH_JSON_PUBLISH( THING_NAME_LENGTH ),
                             &( pcDeviceMetricsJsonReport[ 0 ] ),
-                            reportLength );
+                            xReportLength );
 }
 /*-----------------------------------------------------------*/
 

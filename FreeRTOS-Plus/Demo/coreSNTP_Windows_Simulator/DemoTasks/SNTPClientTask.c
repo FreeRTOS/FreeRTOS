@@ -40,7 +40,7 @@
  * algorithm. To run this demo with an SNTP/NTP server in authenticated mode, the AES-128-CMACM
  * symmetric key needs to be pre-shared between the client (i.e. this demo) and the server.
  *
- * !!!Note!!!: 
+ * !!!Note!!!:
  * Even though this demo shows the use of AES-128-CMAC, a symmetric-key cyrptographic based
  * solution, for authenticating SNTP communication between the demo (SNTP client) and
  * SNTP/NTP server, we instead RECOMMEND that production devices use the most secure authentication
@@ -78,6 +78,9 @@
 #include "core_pki_utils.h"
 #include "core_pkcs11_config.h"
 #include "core_pkcs11.h"
+
+/* Backoff Algorithm include. */
+#include "backoff_algorithm.h"
 
 /*-----------------------------------------------------------*/
 
@@ -129,7 +132,7 @@
  * @note The size of the buffer MUST be large enough to hold an entire SNTP packet, which includes the standard SNTP
  * packet data of 48 bytes and authentication data for security mechanism, if used, in communication with time server.
  */
-#define SNTP_CONTEXT_NETWORK_BUFFER_SIZE       ( SNTP_PACKET_BASE_SIZE )
+#define SNTP_CONTEXT_NETWORK_BUFFER_SIZE        ( SNTP_PACKET_BASE_SIZE )
 
 /**
  * @brief The constant for storing the number of milliseconds per FreeRTOS tick in the system.
@@ -138,13 +141,13 @@
  * internet time or UTC time. Thus, the actual time duration value per tick of the system will be
  * larger from the perspective of internet time.
  */
-#define MILLISECONDS_PER_TICK                  ( 1000 / configTICK_RATE_HZ )
+#define MILLISECONDS_PER_TICK                   ( 1000 / configTICK_RATE_HZ )
 
 /**
  * @brief The fixed size of the key for the AES-128-CMAC algorithm used for authenticating communication
  * between the time server and the client.
  */
-#define AES_CMAC_AUTHENTICATION_KEY_SIZE       ( 16 )
+#define AES_CMAC_AUTHENTICATION_KEY_SIZE        ( 16 )
 
 /**
  * @brief The size of the "Key Identifier" field in the SNTP packet when symmetric key authentication mode as
@@ -156,7 +159,7 @@
  * @note This demo uses the "Key Identifier" field to communicate with time servers that support authentication mechanism.
  * This field is stored with the Key ID of the AES-128-CMAC based authentication key stored in the time server.
  */
-#define SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH    4
+#define SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH     4
 
 /**
  * @brief The offset for the starting byte of the "Key Identifier" field in an SNTPv4/NTPv4 packet.
@@ -165,7 +168,7 @@
  * For more information of the SNTP packet format, refer to the SNTPv4 specification
  * https://datatracker.ietf.org/doc/html/rfc4330#page-8
  */
-#define SNTP_PACKET_SYMMETRIC_KEY_ID_OFFSET    SNTP_PACKET_BASE_SIZE
+#define SNTP_PACKET_SYMMETRIC_KEY_ID_OFFSET     SNTP_PACKET_BASE_SIZE
 
 /**
  * @brief The total size of an SNTP packet (which remains same for both client request and server response in SNTP communication)
@@ -177,7 +180,26 @@
  * For more information of the SNTP packet format, refer to the SNTPv4 specification
  * https://datatracker.ietf.org/doc/html/rfc4330#page-8
  */
-#define SNTP_PACKET_AUTHENTICATED_MODE_SIZE    ( SNTP_PACKET_BASE_SIZE + SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH + pkcs11AES_CMAC_SIGNATURE_LENGTH )
+#define SNTP_PACKET_AUTHENTICATED_MODE_SIZE     ( SNTP_PACKET_BASE_SIZE + SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH + pkcs11AES_CMAC_SIGNATURE_LENGTH )
+
+/**
+ * @brief The maximum poll period that the SNTP client can use as back-off on receiving a rejection from a time server.
+ *
+ * @note This demo performs back-off in polling rate from time server ONLY for the case when a single time server being
+ * is configured through the democonfigLIST_OF_TIME_SERVERS macro.
+ * This is because when more than one time server is configured, the coreSNTP library automatically handles the case
+ * of server rejection of time request by rotating to the next configured server for subsequent time polling requests.
+ */
+#define SNTP_DEMO_POLL_MAX_BACKOFF_DELAY_SEC    UINT16_MAX
+
+/**
+ * @brief The maximum number of times of retrying time requests at exponentially backed-off polling frequency
+ * from a server that rejects time requests.
+ *
+ * @note This macro is only relevant for the case when a single time server is configured in
+ * the demo through, democonfigLIST_OF_TIME_SERVERS.
+ */
+#define SNTP_DEMO_MAX_SERVER_BACKOFF_RETRIES    10
 
 /*-----------------------------------------------------------*/
 
@@ -601,6 +623,27 @@ static bool createUdpSocket( Socket_t * pSocket );
  * @param pSocket The UDP socket to close.
  */
 static void closeUdpSocket( Socket_t * pSocket );
+
+/**
+ * @brief Utility to calculate new poll period with exponential backoff and jitter
+ * algorithm.
+ *
+ * @note The demo applies time polling frequency backoff only when a single time server
+ * is configured, through the democonfigLIST_OF_SERVERS macro, and the single server
+ * rejects time requests.
+ *
+ * @param[in] firstBackoffAttempt Flag to indicate if this is first attempt backoff is being
+ * calculated in a sequence of retrying server rejections of time request.
+ * @param[in] minPollPeriod The minimum poll period
+ * @param[in] pPollPeriod The new calculated poll period.
+ *
+ * @return Return #true if a new poll interval is calculated to retry time request
+ * from the server; #false otherwise to indicate exhaustion of time request retry attempts
+ * with the server.
+ */
+static bool calculateBackoffForNextPoll( bool firstBackoffAttempt,
+                                         uint32_t minPollPeriod,
+                                         uint32_t * pPollPeriod );
 
 /*------------------------------------------------------------------------------*/
 
@@ -1388,6 +1431,45 @@ static void closeUdpSocket( Socket_t * pSocket )
 
 /*-----------------------------------------------------------*/
 
+static bool calculateBackoffForNextPoll( bool firstBackoffAttempt,
+                                         uint32_t minPollPeriod,
+                                         uint32_t * pPollPeriod )
+{
+    uint16_t newPollPeriod = 0U;
+    BackoffAlgorithmStatus_t status;
+    static BackoffAlgorithmContext_t backoffParams;
+
+    configASSERT( pPollPeriod != NULL );
+
+    if( firstBackoffAttempt == true )
+    {
+        /* Initialize reconnect attempts and interval.*/
+        BackoffAlgorithm_InitializeParams( &backoffParams,
+                                           minPollPeriod,
+                                           SNTP_DEMO_POLL_MAX_BACKOFF_DELAY_SEC,
+                                           SNTP_DEMO_MAX_SERVER_BACKOFF_RETRIES );
+    }
+
+    /* Generate a random number and calculate the new backoff poll period to wait before the next
+     * time poll attempt. */
+    status = BackoffAlgorithm_GetNextBackoff( &backoffParams, generateRandomNumber(), &newPollPeriod );
+
+    if( status == BackoffAlgorithmRetriesExhausted )
+    {
+        LogError( ( "All backed-off attempts of polling time server have expired: MaxAttempts=%d",
+                    SNTP_DEMO_MAX_SERVER_BACKOFF_RETRIES ) );
+    }
+    else
+    {
+        /* Store the calculated backoff period as the new poll period. */
+        *pPollPeriod = newPollPeriod;
+    }
+
+    return( status == BackoffAlgorithmSuccess );
+}
+
+/*-----------------------------------------------------------*/
+
 void sntpTask( void * pParameters )
 {
     SntpContext_t clientContext;
@@ -1435,6 +1517,7 @@ void sntpTask( void * pParameters )
     if( initStatus == true )
     {
         SntpStatus_t status;
+        bool backoffModeFlag = false;
 
         /* Calculate Poll interval of SNTP client based on desired accuracy and clock tolerance of the system. */
         status = Sntp_CalculatePollInterval( democonfigSYSTEM_CLOCK_TOLERANCE_PPM,
@@ -1442,7 +1525,7 @@ void sntpTask( void * pParameters )
                                              &systemClock.pollPeriod );
         configASSERT( status == SntpSuccess );
 
-        LogDebug( ( "SNTP client polling interval calculated as %lus", systemClock.pollPeriod ) );
+        LogDebug( ( "Minimum SNTP client polling interval calculated as %lus", systemClock.pollPeriod ) );
 
         LogInfo( ( "Initialized SNTP Client context. Starting SNTP client loop to poll time every %lu seconds",
                    systemClock.pollPeriod ) );
@@ -1484,17 +1567,37 @@ void sntpTask( void * pParameters )
              * a single time server. */
             if( ( status == SntpRejectedResponse ) && ( numOfServers == 1 ) )
             {
+                bool backoffStatus = false;
+
+                /* Determine if this is the first back-off attempt we are making since the most recent server rejection
+                 * for time request. */
+                bool firstBackoffAttempt = false;
+
+                if( backoffModeFlag == false )
+                {
+                    firstBackoffAttempt = true;
+
+                    /* Set the flag to indicate we are in back-off retry mode for requesting time from the server. */
+                    backoffModeFlag = true;
+                }
+
                 LogInfo( ( "The single configured time server, %s, rejected time request. Backing-off before ",
                            "next time poll....", strlen( pTimeServers[ 0 ] ) ) );
 
                 /* Add exponential back-off to polling period. */
-                systemClock.pollPeriod *= 2;
+                backoffStatus = calculateBackoffForNextPoll( firstBackoffAttempt,
+                                                             systemClock.pollPeriod,
+                                                             &systemClock.pollPeriod );
+                configASSERT( backoffStatus == true );
 
                 /* Wait for the increased poll interval before retrying request for time from server. */
                 vTaskDelay( pdMS_TO_TICKS( systemClock.pollPeriod * 1000 ) );
             }
             else
             {
+                /* Reset flag to indicate that we are not backing-off for the next time poll. */
+                backoffModeFlag = false;
+
                 /* Wait for the poll interval period before the next iteration of time synchronization. */
                 vTaskDelay( pdMS_TO_TICKS( systemClock.pollPeriod * 1000 ) );
             }

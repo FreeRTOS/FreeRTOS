@@ -186,7 +186,7 @@ static void prvReloadModeTestTimerCallback( TimerHandle_t xTimer );
 /* The variable into which error messages are latched. */
 static char * pcStatusMessage = "OK: No errors";
 
-static int xErrorCount = 1;
+static int xErrorCount = 0;
 
 
 /* This semaphore is created purely to test using the vSemaphoreDelete() and

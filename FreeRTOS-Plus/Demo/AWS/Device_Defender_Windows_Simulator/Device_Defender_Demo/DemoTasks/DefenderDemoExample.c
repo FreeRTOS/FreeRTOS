@@ -713,7 +713,8 @@ void prvDefenderDemoTask( void * pvParameters )
 {
     bool xStatus = false;
     BaseType_t xExitStatus = EXIT_FAILURE;
-    uint32_t ulReportLength = 0UL, i, ulMqttSessionEstablished = 0UL;
+    uint32_t ulReportLength = 0UL, i;
+    bool xMqttSessionEstablished = false;
     UBaseType_t uxDemoRunCount = 0UL;
 
     /* Remove compiler warnings about unused parameters. */
@@ -758,7 +759,7 @@ void prvDefenderDemoTask( void * pvParameters )
         }
         else
         {
-            ulMqttSessionEstablished = 1;
+            xMqttSessionEstablished = true;
         }
 
         /******************** Subscribe to Defender topics. *******************/
@@ -896,7 +897,7 @@ void prvDefenderDemoTask( void * pvParameters )
          * protocol spec, it is okay to send UNSUBSCRIBE even if no corresponding
          * subscription exists on the broker. Therefore, it is okay to attempt
          * unsubscribe even if one more subscribe failed earlier. */
-        if( ulMqttSessionEstablished == 1 )
+        if( xMqttSessionEstablished )
         {
             LogInfo( ( "Unsubscribing from defender topics..." ) );
             xStatus = prvUnsubscribeFromDefenderTopics();

@@ -606,7 +606,7 @@ static bool prvCollectDeviceMetrics( void )
         xDeviceMetrics.xEstablishedConnectionsArrayLength = xNumEstablishedConnections;
         xDeviceMetrics.ulStackHighWaterMark = pxTaskStatus.usStackHighWaterMark;
         xDeviceMetrics.pulTaskIdArray = pulCustomMetricsTaskNumbers;
-        xDeviceMetrics.ulTaskIdArrayLength = uxTasksWritten;
+        xDeviceMetrics.xTaskIdArrayLength = uxTasksWritten;
     }
 
     return xStatus;

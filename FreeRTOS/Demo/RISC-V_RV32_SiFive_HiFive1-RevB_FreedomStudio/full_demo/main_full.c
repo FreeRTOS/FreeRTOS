@@ -217,35 +217,35 @@ extern void vToggleLED( void );
 		that they are all still running, and that none have detected an error. */
 		if( xAreDynamicPriorityTasksStillRunning() == pdFALSE )
 		{
-			pcStatusMessage = "ERROR: Dynamic priority demo/tests.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Dynamic priority demo/tests.\r\n";
 		}
 
 		if( xAreBlockTimeTestTasksStillRunning() == pdFALSE )
 		{
-			pcStatusMessage = "ERROR: Block time demo/tests.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Block time demo/tests.\r\n";
 		}
 
 		if( xAreTimerDemoTasksStillRunning( ( TickType_t ) xDelayPeriod ) == pdFALSE )
 		{
-			pcStatusMessage = "ERROR: Timer demo/tests.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Timer demo/tests.\r\n";
 		}
 
 		if( xAreTaskNotificationTasksStillRunning() == pdFALSE )
 		{
-			pcStatusMessage = "ERROR: Task notification demo/tests.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Task notification demo/tests.\r\n";
 		}
 
 		/* Check that the register test 1 task is still running. */
 		if( ulLastRegTest1Value == ulRegTest1LoopCounter )
 		{
-			pcStatusMessage = "ERROR: Register test 1.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Register test 1.\r\n";
 		}
 		ulLastRegTest1Value = ulRegTest1LoopCounter;
 
 		/* Check that the register test 2 task is still running. */
 		if( ulLastRegTest2Value == ulRegTest2LoopCounter )
 		{
-			pcStatusMessage = "ERROR: Register test 2.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Register test 2.\r\n";
 		}
 		ulLastRegTest2Value = ulRegTest2LoopCounter;
 

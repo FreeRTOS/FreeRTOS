@@ -37,11 +37,11 @@
  *
  * This demo shows how the coreSNTP library can be used to communicate with SNTP/NTP
  * servers in a mutually authenticated through the use of symmetric-key based AES-128-CMAC
- * algorithm. To run this demo with an SNTP/NTP server in authenticated mode, the AES-128-CMACM
+ * algorithm. To run this demo with an SNTP/NTP server in authenticated mode, the AES-128-CMAC
  * symmetric key needs to be pre-shared between the client (i.e. this demo) and the server.
  *
  * !!!Note!!!:
- * Even though this demo shows the use of AES-128-CMAC, a symmetric-key cyrptographic based
+ * Even though this demo shows the use of AES-128-CMAC, a symmetric-key cryptographic based
  * solution, for authenticating SNTP communication between the demo (SNTP client) and
  * SNTP/NTP server, we instead RECOMMEND that production devices use the most secure authentication
  * mechanism alternative available with the Network Time Security (NTS) protocol, an asymmetric-key

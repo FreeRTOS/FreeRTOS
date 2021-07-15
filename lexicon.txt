@@ -705,6 +705,7 @@ filteration
 findfirst
 findobjects
 fips
+firstbackoffattempt 
 fixme
 flase
 flasg
@@ -1226,6 +1227,7 @@ mingw
 minilistitem
 minimise
 minimised
+minpollperiod 
 mips
 misc
 misra
@@ -1325,6 +1327,7 @@ nsec
 nt
 ntp
 ntpdemo
+nts
 nullptr
 num
 numaker
@@ -1611,6 +1614,7 @@ ppass
 ppassword
 ppc
 ppcmessagetodisplay
+ppollperiod 
 ppr
 pprivatekey
 ppublishinfo

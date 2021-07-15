@@ -109,7 +109,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * It is RECOMMENDED to use an authentication mechanism for protecting devices against server spoofing
  * attacks.
  *
- * @note Even though this demo shows the use of AES-128-CMAC, a symmetric-key cyrptographic based
+ * @note Even though this demo shows the use of AES-128-CMAC, a symmetric-key cryptographic based
  * solution, for authenticating SNTP communication between the demo (SNTP client) and
  * SNTP/NTP server, we instead RECOMMEND that production devices use the most secure authentication
  * mechanism alternative available with the Network Time Security (NTS) protocol, an asymmetric-key

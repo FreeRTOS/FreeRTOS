@@ -632,8 +632,11 @@ static void closeUdpSocket( Socket_t * pSocket );
  * is configured, through the democonfigLIST_OF_SERVERS macro, and the single server
  * rejects time requests.
  *
- * @param[in] firstBackoffAttempt Flag to indicate if this is first attempt backoff is being
- * calculated in a sequence of retrying server rejections of time request.
+ * @param[in, out] pContext The context representing the back-off parameters. This
+ * context is initialized by the function whenever the caller indicates it with the
+ * @p shouldInitializeContext flag.
+ * @param[in] shouldInitializeContext Flag to indicate if the passed context should be
+ * initialized to start a new sequence of backed-off time request retries.
  * @param[in] minPollPeriod The minimum poll period
  * @param[in] pPollPeriod The new calculated poll period.
  *
@@ -641,7 +644,8 @@ static void closeUdpSocket( Socket_t * pSocket );
  * from the server; #false otherwise to indicate exhaustion of time request retry attempts
  * with the server.
  */
-static bool calculateBackoffForNextPoll( bool firstBackoffAttempt,
+static bool calculateBackoffForNextPoll( BackoffAlgorithmContext_t * pContext,
+                                         bool shouldInitializeContext,
                                          uint32_t minPollPeriod,
                                          uint32_t * pPollPeriod );
 
@@ -1431,20 +1435,21 @@ static void closeUdpSocket( Socket_t * pSocket )
 
 /*-----------------------------------------------------------*/
 
-static bool calculateBackoffForNextPoll( bool firstBackoffAttempt,
+static bool calculateBackoffForNextPoll( BackoffAlgorithmContext_t * pBackoffContext,
+                                         bool shouldInitializeContext,
                                          uint32_t minPollPeriod,
                                          uint32_t * pPollPeriod )
 {
     uint16_t newPollPeriod = 0U;
     BackoffAlgorithmStatus_t status;
-    static BackoffAlgorithmContext_t backoffParams;
 
+    configASSERT( pBackoffContext != NULL );
     configASSERT( pPollPeriod != NULL );
 
-    if( firstBackoffAttempt == true )
+    if( shouldInitializeContext == true )
     {
         /* Initialize reconnect attempts and interval.*/
-        BackoffAlgorithm_InitializeParams( &backoffParams,
+        BackoffAlgorithm_InitializeParams( &pBackoffContext,
                                            minPollPeriod,
                                            SNTP_DEMO_POLL_MAX_BACKOFF_DELAY_SEC,
                                            SNTP_DEMO_MAX_SERVER_BACKOFF_RETRIES );
@@ -1452,7 +1457,7 @@ static bool calculateBackoffForNextPoll( bool firstBackoffAttempt,
 
     /* Generate a random number and calculate the new backoff poll period to wait before the next
      * time poll attempt. */
-    status = BackoffAlgorithm_GetNextBackoff( &backoffParams, generateRandomNumber(), &newPollPeriod );
+    status = BackoffAlgorithm_GetNextBackoff( &pBackoffContext, generateRandomNumber(), &newPollPeriod );
 
     if( status == BackoffAlgorithmRetriesExhausted )
     {
@@ -1501,6 +1506,13 @@ void sntpTask( void * pParameters )
      * its authentication key information that will be utilized for authentication communication
      * between client and server, if the server supports authentication. */
     static SntpAuthContext_t authContext;
+
+    /* Context used for calculating backoff that is applied to polling interval when the configured
+     * time server rejects time request.
+     * Note: Backoff is applied to polling interval ONLY when a single server is configured in the demo
+     * because in the case of multiple server configurations, the coreSNTP library handles server
+     * rejection by rotating server. */
+    static BackoffAlgorithmContext_t backoffContext;
 
     /* Initialize the authentication context for information for the first time server and its
      * keys configured in the demo. */
@@ -1585,7 +1597,8 @@ void sntpTask( void * pParameters )
                            "next time poll....", strlen( pTimeServers[ 0 ] ) ) );
 
                 /* Add exponential back-off to polling period. */
-                backoffStatus = calculateBackoffForNextPoll( firstBackoffAttempt,
+                backoffStatus = calculateBackoffForNextPoll( &backoffContext,
+                                                             firstBackoffAttempt,
                                                              systemClock.pollPeriod,
                                                              &systemClock.pollPeriod );
                 configASSERT( backoffStatus == true );

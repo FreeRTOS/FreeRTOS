@@ -170,8 +170,6 @@ void main_full( void )
 	the top of this file. */
 	xTaskCreate( prvCheckTask, "Check", mainCHECK_TASK_STACK_SIZE_WORDS, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
-	configPRINT_STRING( "FreeRTOS Demo Start\r\n" );
-
 	/* Start the scheduler. */
 	vTaskStartScheduler();
 
@@ -196,6 +194,9 @@ extern void vToggleLED( void );
 
 	/* Just to stop compiler warnings. */
 	( void ) pvParameters;
+
+	/* Demo start marker. */
+	configPRINT_STRING( "FreeRTOS Demo Start\r\n" );
 
 	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
 	works correctly. */

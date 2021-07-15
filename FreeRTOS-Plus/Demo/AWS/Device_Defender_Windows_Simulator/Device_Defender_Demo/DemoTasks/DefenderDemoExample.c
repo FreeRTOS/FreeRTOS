@@ -545,6 +545,9 @@ static bool prvCollectDeviceMetrics( void )
      * numbers type custom metric. */
     if( eStatus == eMetricsCollectorSuccess )
     {
+        /* Get the current task's status information. The usStackHighWaterMark
+        * field of the task status will be included in the report as a "number"
+        * custom metric. */
         vTaskGetInfo(
             /* Query this task. */
             NULL,
@@ -553,10 +556,16 @@ static bool prvCollectDeviceMetrics( void )
             pdTRUE,
             /* Don't include the task state in the TaskStatus_t structure. */
             0 );
+        /* Get the task status information for all running tasks. The task IDs
+         * of each task is then extracted to include in the report as a "list of
+         * numbers" custom metric */
         uxTasksWritten = uxTaskGetSystemState( pxTaskStatusArray, uxNumTasksRunning, NULL );
 
         if( uxTasksWritten == 0 )
         {
+            /* If 0 is returned, the buffer was too small. This line is reached
+             * when we hit the race condition where tasks have been added since
+             * we got the result of uxTaskGetNumberOfTasks() */
             eStatus = eMetricsCollectorCollectionFailed;
             LogError( ( "Failed to collect system state. uxTaskGetSystemState() failed due to insufficient buffer space.",
                         eStatus ) );

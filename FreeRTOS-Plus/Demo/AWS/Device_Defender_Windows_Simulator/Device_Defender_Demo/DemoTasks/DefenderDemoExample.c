@@ -198,16 +198,6 @@ static uint16_t pusOpenUdpPorts[ democonfigOPEN_UDP_PORTS_ARRAY_SIZE ];
 static Connection_t pxEstablishedConnections[ democonfigESTABLISHED_CONNECTIONS_ARRAY_SIZE ];
 
 /**
- * @brief Array of task statuses, used to generate custom metrics.
- */
-static TaskStatus_t pxTaskStatusList[ democonfigCUSTOM_METRICS_TASKS_ARRAY_SIZE ];
-
-/**
- * @brief Task numbers custom metric array.
- */
-static uint32_t pulCustomMetricsTaskNumbers[ democonfigCUSTOM_METRICS_TASKS_ARRAY_SIZE ];
-
-/**
  * @brief All the metrics sent in the Device Defender report.
  */
 static ReportMetrics_t xDeviceMetrics;
@@ -242,6 +232,8 @@ static void prvPublishCallback( MQTTContext_t * pxMqttContext,
 
 /**
  * @brief Collect all the metrics to be sent in the Device Defender report.
+ *
+ * On success, caller is responsible for freeing xDeviceMetrics.pxTaskStatusArray.
  *
  * @return true if all the metrics are successfully collected;
  * false otherwise.
@@ -480,7 +472,7 @@ static bool prvCollectDeviceMetrics( void )
     UBaseType_t uxTasksWritten = { 0 };
     UBaseType_t uxNumTasksRunning;
     TaskStatus_t pxTaskStatus = { 0 };
-    TaskStatus_t * pxTaskStatusList = NULL;
+    TaskStatus_t * pxTaskStatusArray = NULL;
 
     /* Collect bytes and packets sent and received. */
     eStatus = eGetNetworkStats( &( xNetworkStats ) );
@@ -533,33 +525,18 @@ static bool prvCollectDeviceMetrics( void )
         }
     }
 
-    /* Collect custom metrics. This demo sends this task's stack high water mark
-     * as a number type custom metric and the current task IDs as a list of
-     * numbers type custom metric. */
     if( eStatus == eMetricsCollectorSuccess )
     {
-        vTaskGetInfo(
-            /* Query this task. */
-            NULL,
-            &pxTaskStatus,
-            /* Include the stack high water mark value. */
-            pdTRUE,
-            /* Don't include the task state in the TaskStatus_t structure. */
-            0 );
-        uxTasksWritten = uxTaskGetSystemState( pxTaskStatusList, democonfigCUSTOM_METRICS_TASKS_ARRAY_SIZE, NULL );
+        /* Get task count */
+        uxNumTasksRunning = uxTaskGetNumberOfTasks();
 
-        if( uxTasksWritten == 0 )
+        /* Allocate pxTaskStatusArray */
+        pxTaskStatusArray = pvPortMalloc( uxNumTasksRunning * sizeof( TaskStatus_t ) );
+
+        if( pxTaskStatusArray == NULL )
         {
+            LogError( ( "Cannot allocate memory for pxTaskStatusArray: pvPortMalloc() failed." ) );
             eStatus = eMetricsCollectorCollectionFailed;
-            LogError( ( "Failed to collect system state. uxTaskGetSystemState() failed due to insufficient buffer space.",
-                        eStatus ) );
-        }
-        else
-        {
-            for( i = 0; i < uxTasksWritten; i++ )
-            {
-                pulCustomMetricsTaskNumbers[ i ] = pxTaskStatusList[ i ].xTaskNumber;
-            }
         }
     }
 
@@ -576,20 +553,13 @@ static bool prvCollectDeviceMetrics( void )
             pdTRUE,
             /* Don't include the task state in the TaskStatus_t structure. */
             0 );
-        uxTasksWritten = uxTaskGetSystemState( pxTaskStatusList, democonfigCUSTOM_METRICS_TASKS_ARRAY_SIZE, NULL );
+        uxTasksWritten = uxTaskGetSystemState( pxTaskStatusArray, uxNumTasksRunning, NULL );
 
         if( uxTasksWritten == 0 )
         {
             eStatus = eMetricsCollectorCollectionFailed;
             LogError( ( "Failed to collect system state. uxTaskGetSystemState() failed due to insufficient buffer space.",
                         eStatus ) );
-        }
-        else
-        {
-            for( i = 0; i < uxTasksWritten; i++ )
-            {
-                pulCustomMetricsTaskNumbers[ i ] = pxTaskStatusList[ i ].xTaskNumber;
-            }
         }
     }
 
@@ -605,8 +575,17 @@ static bool prvCollectDeviceMetrics( void )
         xDeviceMetrics.pxEstablishedConnectionsArray = &( pxEstablishedConnections[ 0 ] );
         xDeviceMetrics.xEstablishedConnectionsArrayLength = xNumEstablishedConnections;
         xDeviceMetrics.ulStackHighWaterMark = pxTaskStatus.usStackHighWaterMark;
-        xDeviceMetrics.pulTaskIdArray = pulCustomMetricsTaskNumbers;
-        xDeviceMetrics.xTaskIdArrayLength = uxTasksWritten;
+        xDeviceMetrics.pxTaskStatusArray = pxTaskStatusArray;
+        xDeviceMetrics.xTaskStatusArrayLength = uxTasksWritten;
+    }
+    else
+    {
+        /* Free pxTaskStatusArray if we allocated it but did not add it to the
+         * deviceMetrics stuct. */
+        if( pxTaskStatusArray != NULL )
+        {
+            vPortFree( pxTaskStatusArray );
+        }
     }
 
     return xStatus;
@@ -854,6 +833,13 @@ void prvDefenderDemoTask( void * pvParameters )
         {
             LogInfo( ( "Generating Device Defender report..." ) );
             xStatus = prvGenerateDeviceMetricsReport( &( ulReportLength ) );
+
+            /* Free the allocated array in xDeviceMetrics struct which is not
+             * used anymore after generateDeviceMetricsReport(). This code is
+             * only reached when collectDeviceMetrics succeeded, so
+             * deviceMetrics.pTaskStatusArray is a valid allocation that needs
+             * to be freed. */
+            vPortFree( xDeviceMetrics.pxTaskStatusArray );
 
             if( xStatus != true )
             {

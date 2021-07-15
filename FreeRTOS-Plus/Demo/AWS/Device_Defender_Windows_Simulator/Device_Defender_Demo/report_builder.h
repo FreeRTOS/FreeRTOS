@@ -60,8 +60,8 @@ typedef struct ReportMetrics
     size_t xEstablishedConnectionsArrayLength;
     /* Custom metrics */
     uint32_t ulStackHighWaterMark;
-    uint32_t * pulTaskIdArray;
-    size_t xTaskIdArrayLength;
+    TaskStatus_t * pxTaskStatusArray;
+    size_t xTaskStatusArrayLength;
 } ReportMetrics_t;
 
 /**

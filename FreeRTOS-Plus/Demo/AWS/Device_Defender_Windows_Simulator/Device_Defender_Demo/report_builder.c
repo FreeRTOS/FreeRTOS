@@ -182,8 +182,8 @@ static eReportBuilderStatus prvWriteConnectionsArray( char * pcBuffer,
  *
  * @param[in] pcBuffer The buffer to write the array of task IDs.
  * @param[in] xBufferLength The length of the buffer.
- * @param[in] pulTaskIdArray The array containing the task IDs.
- * @param[in] xTaskIdArrayLength Length of the pxTaskIdsArray array.
+ * @param[in] pxTaskStatusArray The array containing the task statuses.
+ * @param[in] xTaskStatusArrayLength Length of the pxTaskStatusArray array.
  * @param[out] pxOutCharsWritten Number of characters written to the buffer.
  *
  * @return #ReportBuilderSuccess if the array is successfully written;
@@ -191,8 +191,8 @@ static eReportBuilderStatus prvWriteConnectionsArray( char * pcBuffer,
  */
 static eReportBuilderStatus prvWriteTaskIdArray( char * pcBuffer,
                                                  size_t xBufferLength,
-                                                 const uint32_t * pulTaskIdArray,
-                                                 size_t xTaskIdArrayLength,
+                                                 const TaskStatus_t * pxTaskStatusArray,
+                                                 size_t xTaskStatusArrayLength,
                                                  size_t * pxOutCharsWritten );
 /*-----------------------------------------------------------*/
 
@@ -353,8 +353,8 @@ static eReportBuilderStatus prvWriteConnectionsArray( char * pcBuffer,
 
 static eReportBuilderStatus prvWriteTaskIdArray( char * pcBuffer,
                                                  size_t xBufferLength,
-                                                 const uint32_t * pulTaskIdArray,
-                                                 size_t xTaskIdArrayLength,
+                                                 const TaskStatus_t * pxTaskStatusArray,
+                                                 size_t xTaskStatusArrayLength,
                                                  size_t * pxOutCharsWritten )
 {
     char * pcCurrentWritePos = pcBuffer;
@@ -364,7 +364,7 @@ static eReportBuilderStatus prvWriteTaskIdArray( char * pcBuffer,
     eReportBuilderStatus eStatus = eReportBuilderSuccess;
 
     configASSERT( pcBuffer != NULL );
-    configASSERT( pulTaskIdArray != NULL );
+    configASSERT( pxTaskStatusArray != NULL );
     configASSERT( pxOutCharsWritten != NULL );
 
     /* Write the JSON array open marker. */
@@ -380,12 +380,12 @@ static eReportBuilderStatus prvWriteTaskIdArray( char * pcBuffer,
     }
 
     /* Write the array elements. */
-    for( i = 0; ( ( i < xTaskIdArrayLength ) && ( eStatus == eReportBuilderSuccess ) ); i++ )
+    for( i = 0; ( ( i < xTaskStatusArrayLength ) && ( eStatus == eReportBuilderSuccess ) ); i++ )
     {
         lCharactersWritten = snprintf( pcCurrentWritePos,
                                        xRemainingBufferLength,
                                        "%u,",
-                                       pulTaskIdArray[ i ] );
+                                       pxTaskStatusArray[ i ].xTaskNumber );
 
         if( !reportbuilderSNPRINTF_SUCCESS( lCharactersWritten, xRemainingBufferLength ) )
         {
@@ -401,7 +401,7 @@ static eReportBuilderStatus prvWriteTaskIdArray( char * pcBuffer,
     if( eStatus == eReportBuilderSuccess )
     {
         /* Discard the last comma. */
-        if( xTaskIdArrayLength > 0 )
+        if( xTaskStatusArrayLength > 0 )
         {
             pcCurrentWritePos -= 1;
             xRemainingBufferLength += 1;
@@ -610,10 +610,10 @@ eReportBuilderStatus eGenerateJsonReport( char * pcBuffer,
     if( eStatus == eReportBuilderSuccess )
     {
         eStatus = prvWriteTaskIdArray( pcCurrentWritePos,
-                                        xRemainingBufferLength,
-                                        pxMetrics->pulTaskIdArray,
-                                        pxMetrics->xTaskIdArrayLength,
-                                        &( bufferWritten ) );
+                                       xRemainingBufferLength,
+                                       pxMetrics->pxTaskStatusArray,
+                                       pxMetrics->xTaskStatusArrayLength,
+                                       &( bufferWritten ) );
 
         if( eStatus == eReportBuilderSuccess )
         {

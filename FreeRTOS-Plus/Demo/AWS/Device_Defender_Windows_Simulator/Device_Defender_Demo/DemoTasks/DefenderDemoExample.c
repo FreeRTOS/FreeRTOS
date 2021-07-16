@@ -590,7 +590,7 @@ static bool prvCollectDeviceMetrics( void )
     else
     {
         /* Free pxTaskStatusArray if we allocated it but did not add it to the
-         * deviceMetrics stuct. */
+         * xDeviceMetrics struct. */
         if( pxTaskStatusArray != NULL )
         {
             vPortFree( pxTaskStatusArray );
@@ -845,9 +845,9 @@ void prvDefenderDemoTask( void * pvParameters )
             xStatus = prvGenerateDeviceMetricsReport( &( ulReportLength ) );
 
             /* Free the allocated array in xDeviceMetrics struct which is not
-             * used anymore after generateDeviceMetricsReport(). This code is
-             * only reached when collectDeviceMetrics succeeded, so
-             * deviceMetrics.pTaskStatusArray is a valid allocation that needs
+             * used anymore after prvGenerateDeviceMetricsReport(). This code is
+             * only reached when prvCollectDeviceMetrics succeeded, so
+             * xDeviceMetrics.pxTaskStatusArray is a valid allocation that needs
              * to be freed. */
             vPortFree( xDeviceMetrics.pxTaskStatusArray );
 

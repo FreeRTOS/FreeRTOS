@@ -102,6 +102,8 @@ comments at the top of this file. */
 /* Size of the stacks to allocated for the register check tasks. */
 #define mainREG_TEST_STACK_SIZE_WORDS 90
 
+/* Success output messages. This is used by the CI - do not change. */
+#define mainDEMO_SUCCESS_MESSAGE		"FreeRTOS Demo SUCCESS\r\n"
 /*-----------------------------------------------------------*/
 
 /*
@@ -186,12 +188,15 @@ static void prvCheckTask( void *pvParameters )
 TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
 TickType_t xLastExecutionTime;
 uint32_t ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
-char * const pcPassMessage = ".";
+char * const pcPassMessage = mainDEMO_SUCCESS_MESSAGE;
 char * pcStatusMessage = pcPassMessage;
 extern void vToggleLED( void );
 
 	/* Just to stop compiler warnings. */
 	( void ) pvParameters;
+
+	/* Demo start marker. */
+	configPRINT_STRING( "FreeRTOS Demo Start\r\n" );
 
 	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
 	works correctly. */
@@ -212,35 +217,35 @@ extern void vToggleLED( void );
 		that they are all still running, and that none have detected an error. */
 		if( xAreDynamicPriorityTasksStillRunning() == pdFALSE )
 		{
-			pcStatusMessage = "ERROR: Dynamic priority demo/tests.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Dynamic priority demo/tests.\r\n";
 		}
 
 		if( xAreBlockTimeTestTasksStillRunning() == pdFALSE )
 		{
-			pcStatusMessage = "ERROR: Block time demo/tests.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Block time demo/tests.\r\n";
 		}
 
 		if( xAreTimerDemoTasksStillRunning( ( TickType_t ) xDelayPeriod ) == pdFALSE )
 		{
-			pcStatusMessage = "ERROR: Timer demo/tests.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Timer demo/tests.\r\n";
 		}
 
 		if( xAreTaskNotificationTasksStillRunning() == pdFALSE )
 		{
-			pcStatusMessage = "ERROR: Task notification demo/tests.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Task notification demo/tests.\r\n";
 		}
 
 		/* Check that the register test 1 task is still running. */
 		if( ulLastRegTest1Value == ulRegTest1LoopCounter )
 		{
-			pcStatusMessage = "ERROR: Register test 1.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Register test 1.\r\n";
 		}
 		ulLastRegTest1Value = ulRegTest1LoopCounter;
 
 		/* Check that the register test 2 task is still running. */
 		if( ulLastRegTest2Value == ulRegTest2LoopCounter )
 		{
-			pcStatusMessage = "ERROR: Register test 2.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Register test 2.\r\n";
 		}
 		ulLastRegTest2Value = ulRegTest2LoopCounter;
 
@@ -254,6 +259,8 @@ extern void vToggleLED( void );
 		{
 			xDelayPeriod = mainERROR_CHECK_TASK_PERIOD;
 		}
+
+		configPRINT_STRING( pcStatusMessage );
 	}
 }
 /*-----------------------------------------------------------*/

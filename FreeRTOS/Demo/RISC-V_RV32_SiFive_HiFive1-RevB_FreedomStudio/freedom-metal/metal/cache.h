@@ -1,4 +1,4 @@
-/* Copyright 2018 SiFive, Inc */
+/* Copyright 2020 SiFive, Inc */
 /* SPDX-License-Identifier: Apache-2.0 */
 
 #ifndef METAL__CACHE_H
@@ -11,20 +11,35 @@
  */
 #include <stdint.h>
 
-struct metal_cache;
-
-struct __metal_cache_vtable {
-	void (*init)(struct metal_cache *cache, int ways);
-	int (*get_enabled_ways)(struct metal_cache *cache);
-	int (*set_enabled_ways)(struct metal_cache *cache, int ways);
+/*!
+ * @brief a handle for a cache
+ * Note: To be deprecated in next release.
+ */
+struct metal_cache {
+    uint8_t __no_empty_structs;
 };
 
 /*!
- * @brief a handle for a cache
+ * @brief Initialize L2 cache controller.
+ *        Enables all available cache ways.
+ * @param None
+ * @return 0 If no error
  */
-struct metal_cache {
-	const struct __metal_cache_vtable *vtable;
-};
+int metal_l2cache_init(void);
+
+/*!
+ * @brief Get the current number of enabled L2 cache ways
+ * @param None
+ * @return The current number of enabled L2 cache ways
+ */
+int metal_l2cache_get_enabled_ways(void);
+
+/*!
+ * @brief Enable the requested number of L2 cache ways
+ * @param ways Number of ways to enable
+ * @return 0 if the ways are successfully enabled
+ */
+int metal_l2cache_set_enabled_ways(int ways);
 
 /*!
  * @brief Initialize a cache
@@ -32,18 +47,20 @@ struct metal_cache {
  * @param ways The number of ways to enable
  *
  * Initializes a cache with the requested number of ways enabled.
+ * Note: API to be deprecated in next release.
  */
 __inline__ void metal_cache_init(struct metal_cache *cache, int ways) {
-	cache->vtable->init(cache, ways);
+    metal_l2cache_init();
 }
 
 /*!
  * @brief Get the current number of enabled cache ways
  * @param cache The handle for the cache
  * @return The current number of enabled cache ways
+ * Note: API to be deprecated in next release.
  */
 __inline__ int metal_cache_get_enabled_ways(struct metal_cache *cache) {
-	return cache->vtable->get_enabled_ways(cache);
+    return metal_l2cache_get_enabled_ways();
 }
 
 /*!
@@ -51,9 +68,11 @@ __inline__ int metal_cache_get_enabled_ways(struct metal_cache *cache) {
  * @param cache The handle for the cache
  * @param ways The number of ways to enabled
  * @return 0 if the ways are successfully enabled
+ * Note: API to be deprecated in next release.
  */
-__inline__ int metal_cache_set_enabled_ways(struct metal_cache *cache, int ways) {
-	return cache->vtable->set_enabled_ways(cache, ways);
+__inline__ int metal_cache_set_enabled_ways(struct metal_cache *cache,
+                                            int ways) {
+    return metal_l2cache_set_enabled_ways(ways);
 }
 
 /*!
@@ -85,12 +104,5 @@ void metal_dcache_l1_discard(int hartid, uintptr_t address);
  * @return 1 if icache is present
  */
 int metal_icache_l1_available(int hartid);
-
-/*!
- * @brief Flush icache for L1 on the requested core
- * @param hartid  The core to flush
- * @return None
- */
-void metal_icache_l1_flush(int hartid);
 
 #endif

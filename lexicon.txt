@@ -218,6 +218,7 @@ checktimer
 checkval
 checkvalue
 checon
+ci
 ciconfiguration
 circleos
 ck

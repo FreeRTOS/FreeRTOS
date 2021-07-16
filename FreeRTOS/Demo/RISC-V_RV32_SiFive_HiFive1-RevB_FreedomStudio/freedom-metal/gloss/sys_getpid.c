@@ -1,7 +1,3 @@
 #include <errno.h>
 
-int
-_getpid()
-{
-  return 1;
-}
+int _getpid() { return 1; }

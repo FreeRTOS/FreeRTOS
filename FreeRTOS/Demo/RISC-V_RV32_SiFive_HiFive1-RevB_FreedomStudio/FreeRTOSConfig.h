@@ -99,4 +99,7 @@ header file. */
 void vAssertCalled( void );
 #define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled()
 
+/* Map to the platform write function. */
+#define configPRINT_STRING( pcString )		write( STDOUT_FILENO, pcString, strlen( pcString ) )
+
 #endif /* FREERTOS_CONFIG_H */

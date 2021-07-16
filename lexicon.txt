@@ -1675,6 +1675,7 @@ prvcheckothertasksarestillrunning
 prvchecktask
 prvchecktaskcounters
 prvchecktimercallback
+prvcollectdevicemetrics
 prvcomtxtimercallback
 prvconnectandcreatedemotasks
 prvcopycommand
@@ -1703,6 +1704,7 @@ prvfirstregtesttask
 prvflashcoroutine
 prvflashtimercallback
 prvformatcommand
+prvgeneratedevicemetricsreport
 prvgetdisinheritpriorityaftertimeout
 prvgetnextdelaytime
 prvgettcbfromhandle
@@ -1970,7 +1972,9 @@ pxoutconnectionsarray
 pxoutnetworkstats
 pxoutnumestablishedconnections
 pxoutnumtcpopenports
+pxoutnumudpopenports
 pxoutreportlength
+pxoutreprotlength
 pxpacketinfo
 pxpathlen
 pxport

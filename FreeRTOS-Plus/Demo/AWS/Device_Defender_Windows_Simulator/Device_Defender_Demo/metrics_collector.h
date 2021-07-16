@@ -136,7 +136,7 @@ eMetricsCollectorStatus eGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
  * @param[in] xConnectionsArrayLength Length of the pxOutConnectionsArray, if it
  * is not NULL.
  * @param[out] pxOutNumEstablishedConnections Number of established connections if @p
- * pusOutNumEstablishedConnections NULL, else number of established connections written.
+ * pxOutNumEstablishedConnections NULL, else number of established connections written.
  *
  * @return #eMetricsCollectorSuccess if established connections are successfully obtained;
  * #eMetricsCollectorBadParameter if invalid parameters are passed;

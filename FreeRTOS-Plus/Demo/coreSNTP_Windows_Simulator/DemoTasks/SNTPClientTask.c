@@ -31,13 +31,22 @@
  *
  * This file contains the SNTP client (daemon) task as well as functionality for
  * maintaining wall-clock or UTC time in RAM. The SNTP client periodically synchronizes
- * system clock with an SNTP/NTP servers. Any other task running an application in the
+ * system clock with SNTP/NTP server(s). Any other task running an application in the
  * system can query the system time. For an example of an application task querying time
  * from the system, refer to the SampleAppTask.c file in this project.
  *
- * !!! NOTE !!!
- * This SNTP demo does not authenticate the server nor the client.
- * Hence, this demo should not be used as production ready code.
+ * This demo shows how the coreSNTP library can be used to communicate with SNTP/NTP
+ * servers in a mutually authenticated through the use of symmetric-key based AES-128-CMAC
+ * algorithm. To run this demo with an SNTP/NTP server in authenticated mode, the AES-128-CMAC
+ * symmetric key needs to be pre-shared between the client (i.e. this demo) and the server.
+ *
+ * !!!Note!!!:
+ * Even though this demo shows the use of AES-128-CMAC, a symmetric-key cryptographic based
+ * solution, for authenticating SNTP communication between the demo (SNTP client) and
+ * SNTP/NTP server, we instead RECOMMEND that production devices use the most secure authentication
+ * mechanism alternative available with the Network Time Security (NTS) protocol, an asymmetric-key
+ * cryptographic protocol. For more information, refer to the NTS specification here:
+ * https://datatracker.ietf.org/doc/html/rfc8915
  */
 
 /* Standard includes. */
@@ -69,6 +78,9 @@
 #include "core_pki_utils.h"
 #include "core_pkcs11_config.h"
 #include "core_pkcs11.h"
+
+/* Backoff Algorithm include. */
+#include "backoff_algorithm.h"
 
 /*-----------------------------------------------------------*/
 
@@ -120,7 +132,7 @@
  * @note The size of the buffer MUST be large enough to hold an entire SNTP packet, which includes the standard SNTP
  * packet data of 48 bytes and authentication data for security mechanism, if used, in communication with time server.
  */
-#define SNTP_CONTEXT_NETWORK_BUFFER_SIZE       ( SNTP_PACKET_BASE_SIZE )
+#define SNTP_CONTEXT_NETWORK_BUFFER_SIZE        ( SNTP_PACKET_BASE_SIZE )
 
 /**
  * @brief The constant for storing the number of milliseconds per FreeRTOS tick in the system.
@@ -129,13 +141,13 @@
  * internet time or UTC time. Thus, the actual time duration value per tick of the system will be
  * larger from the perspective of internet time.
  */
-#define MILLISECONDS_PER_TICK                  ( 1000 / configTICK_RATE_HZ )
+#define MILLISECONDS_PER_TICK                   ( 1000 / configTICK_RATE_HZ )
 
 /**
  * @brief The fixed size of the key for the AES-128-CMAC algorithm used for authenticating communication
  * between the time server and the client.
  */
-#define AES_CMAC_AUTHENTICATION_KEY_SIZE       ( 16 )
+#define AES_CMAC_AUTHENTICATION_KEY_SIZE        ( 16 )
 
 /**
  * @brief The size of the "Key Identifier" field in the SNTP packet when symmetric key authentication mode as
@@ -147,7 +159,7 @@
  * @note This demo uses the "Key Identifier" field to communicate with time servers that support authentication mechanism.
  * This field is stored with the Key ID of the AES-128-CMAC based authentication key stored in the time server.
  */
-#define SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH    4
+#define SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH     4
 
 /**
  * @brief The offset for the starting byte of the "Key Identifier" field in an SNTPv4/NTPv4 packet.
@@ -156,7 +168,7 @@
  * For more information of the SNTP packet format, refer to the SNTPv4 specification
  * https://datatracker.ietf.org/doc/html/rfc4330#page-8
  */
-#define SNTP_PACKET_SYMMETRIC_KEY_ID_OFFSET    SNTP_PACKET_BASE_SIZE
+#define SNTP_PACKET_SYMMETRIC_KEY_ID_OFFSET     SNTP_PACKET_BASE_SIZE
 
 /**
  * @brief The total size of an SNTP packet (which remains same for both client request and server response in SNTP communication)
@@ -168,7 +180,26 @@
  * For more information of the SNTP packet format, refer to the SNTPv4 specification
  * https://datatracker.ietf.org/doc/html/rfc4330#page-8
  */
-#define SNTP_PACKET_AUTHENTICATED_MODE_SIZE    ( SNTP_PACKET_BASE_SIZE + SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH + pkcs11AES_CMAC_SIGNATURE_LENGTH )
+#define SNTP_PACKET_AUTHENTICATED_MODE_SIZE     ( SNTP_PACKET_BASE_SIZE + SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH + pkcs11AES_CMAC_SIGNATURE_LENGTH )
+
+/**
+ * @brief The maximum poll period that the SNTP client can use as back-off on receiving a rejection from a time server.
+ *
+ * @note This demo performs back-off in polling rate from time server ONLY for the case when a single time server being
+ * is configured through the democonfigLIST_OF_TIME_SERVERS macro.
+ * This is because when more than one time server is configured, the coreSNTP library automatically handles the case
+ * of server rejection of time request by rotating to the next configured server for subsequent time polling requests.
+ */
+#define SNTP_DEMO_POLL_MAX_BACKOFF_DELAY_SEC    UINT16_MAX
+
+/**
+ * @brief The maximum number of times of retrying time requests at exponentially backed-off polling frequency
+ * from a server that rejects time requests.
+ *
+ * @note This macro is only relevant for the case when a single time server is configured in
+ * the demo through, democonfigLIST_OF_TIME_SERVERS.
+ */
+#define SNTP_DEMO_MAX_SERVER_BACKOFF_RETRIES    10
 
 /*-----------------------------------------------------------*/
 
@@ -570,6 +601,53 @@ static SntpStatus_t validateServerAuth( SntpAuthContext_t * pAuthContext,
  * @return The generated random number.
  */
 static uint32_t generateRandomNumber();
+
+/**
+ * @brief Utility to create a new FreeRTOS UDP socket and bind a random
+ * port to it.
+ * A random port is used for the created UDP socket as a protection mechanism
+ * against spoofing attacks from malicious actors that are off the network
+ * path of the client-server communication.
+ *
+ * @param[out] This will be populated with a new FreeRTOS UDP socket
+ * that is bound to a random port.
+ *
+ * @return Returns #true for successful creation of UDP socket; #false
+ * otherwise for failure.
+ */
+static bool createUdpSocket( Socket_t * pSocket );
+
+/**
+ * @brief Utility to close the passed FreeRTOS UDP socket.
+ *
+ * @param pSocket The UDP socket to close.
+ */
+static void closeUdpSocket( Socket_t * pSocket );
+
+/**
+ * @brief Utility to calculate new poll period with exponential backoff and jitter
+ * algorithm.
+ *
+ * @note The demo applies time polling frequency backoff only when a single time server
+ * is configured, through the democonfigLIST_OF_SERVERS macro, and the single server
+ * rejects time requests.
+ *
+ * @param[in, out] pContext The context representing the back-off parameters. This
+ * context is initialized by the function whenever the caller indicates it with the
+ * @p shouldInitializeContext flag.
+ * @param[in] shouldInitializeContext Flag to indicate if the passed context should be
+ * initialized to start a new sequence of backed-off time request retries.
+ * @param[in] minPollPeriod The minimum poll period
+ * @param[in] pPollPeriod The new calculated poll period.
+ *
+ * @return Return #true if a new poll interval is calculated to retry time request
+ * from the server; #false otherwise to indicate exhaustion of time request retry attempts
+ * with the server.
+ */
+static bool calculateBackoffForNextPoll( BackoffAlgorithmContext_t * pContext,
+                                         bool shouldInitializeContext,
+                                         uint32_t minPollPeriod,
+                                         uint32_t * pPollPeriod );
 
 /*------------------------------------------------------------------------------*/
 
@@ -1259,70 +1337,140 @@ static bool initializeSntpClient( SntpContext_t * pContext,
     }
     else
     {
+        UdpTransportInterface_t udpTransportIntf;
+        SntpAuthenticationInterface_t symmetricKeyAuthIntf;
+
         for( uint8_t index = 0; index < numOfServers; index++ )
         {
             pServers[ index ].pServerName = pTimeServers[ index ];
             pServers[ index ].port = SNTP_DEFAULT_SERVER_PORT;
         }
 
-        LogInfo( ( "Calculated poll interval: %lus", systemClock.pollPeriod ) );
+        /* Set the UDP transport interface object. */
+        udpTransportIntf.pUserContext = pUdpContext;
+        udpTransportIntf.sendTo = UdpTransport_Send;
+        udpTransportIntf.recvFrom = UdpTransport_Recv;
 
-        /* Create a UDP socket for network I/O with server. */
-        pUdpContext->socket = FreeRTOS_socket( FREERTOS_AF_INET,
-                                               FREERTOS_SOCK_DGRAM,
-                                               FREERTOS_IPPROTO_UDP );
+        /* Set the authentication interface object. */
+        symmetricKeyAuthIntf.pAuthContext = pAuthContext;
+        symmetricKeyAuthIntf.generateClientAuth = addClientAuthCode;
+        symmetricKeyAuthIntf.validateServerAuth = validateServerAuth;
 
-        /* Check the socket was created successfully. */
-        /* TODO - Consider using random port assigned by FreeRTOS for better protection */
-        /* against "off-path" attacker. */
-        if( pUdpContext->socket == FREERTOS_INVALID_SOCKET )
-        {
-            /* There was insufficient FreeRTOS heap memory available for the socket
-             * to be created. */
-            LogError( ( "Failed to create UDP socket for SNTP client due to insufficient memory." ) );
-        }
-        else
-        {
-            struct freertos_sockaddr bindAddress;
-            UdpTransportInterface_t udpTransportIntf;
-            SntpAuthenticationInterface_t symmetricKeyAuthIntf;
+        /* Initialize context. */
+        Sntp_Init( pContext,
+                   pServers,
+                   numOfServers,
+                   democonfigSERVER_RESPONSE_TIMEOUT_MS,
+                   pContextBuffer,
+                   contextBufferSize,
+                   resolveDns,
+                   sntpClient_GetTime,
+                   sntpClient_SetTime,
+                   &udpTransportIntf,
+                   &symmetricKeyAuthIntf );
 
-            bindAddress.sin_port = FreeRTOS_htons( SNTP_DEFAULT_SERVER_PORT );
-
-            if( FreeRTOS_bind( pUdpContext->socket, &bindAddress, sizeof( bindAddress ) ) == 0 )
-            {
-                /* The bind was successful. */
-                LogDebug( ( "UDP socket has been bound to port %lu", SNTP_DEFAULT_SERVER_PORT ) );
-            }
-
-            /* Set the UDP transport interface object. */
-            udpTransportIntf.pUserContext = pUdpContext;
-            udpTransportIntf.sendTo = UdpTransport_Send;
-            udpTransportIntf.recvFrom = UdpTransport_Recv;
-
-            /* Set the authentication interface object. */
-            symmetricKeyAuthIntf.pAuthContext = pAuthContext;
-            symmetricKeyAuthIntf.generateClientAuth = addClientAuthCode;
-            symmetricKeyAuthIntf.validateServerAuth = validateServerAuth;
-
-            /* Initialize context. */
-            Sntp_Init( pContext,
-                       pServers,
-                       numOfServers,
-                       democonfigSERVER_RESPONSE_TIMEOUT_MS,
-                       pContextBuffer,
-                       contextBufferSize,
-                       resolveDns,
-                       sntpClient_GetTime,
-                       sntpClient_SetTime,
-                       &udpTransportIntf,
-                       &symmetricKeyAuthIntf );
-
-            initStatus = true;
-        }
+        initStatus = true;
     }
 
     return initStatus;
+}
+
+/*-----------------------------------------------------------*/
+
+static bool createUdpSocket( Socket_t * pSocket )
+{
+    bool status = false;
+    struct freertos_sockaddr bindAddress;
+
+    configASSERT( pSocket != NULL );
+
+    /* Call the FreeRTOS+TCP API to create a UDP socket. */
+    *pSocket = FreeRTOS_socket( FREERTOS_AF_INET,
+                                FREERTOS_SOCK_DGRAM,
+                                FREERTOS_IPPROTO_UDP );
+
+    /* Check the socket was created successfully. */
+    if( *pSocket == FREERTOS_INVALID_SOCKET )
+    {
+        /* There was insufficient FreeRTOS heap memory available for the socket
+         * to be created. */
+        LogError( ( "Failed to create UDP socket for SNTP client due to insufficient memory." ) );
+    }
+    else
+    {
+        /* Use a random UDP port for SNTP communication with server for protection against
+         * spoofing vulnerability from "network off-path" attackers. */
+        uint16_t randomPort = ( generateRandomNumber() % UINT16_MAX );
+        bindAddress.sin_port = FreeRTOS_htons( randomPort );
+
+        if( FreeRTOS_bind( *pSocket, &bindAddress, sizeof( bindAddress ) ) == 0 )
+        {
+            /* The bind was successful. */
+            LogDebug( ( "UDP socket has been bound to port %u", randomPort ) );
+            status = true;
+        }
+        else
+        {
+            LogError( ( "Failed to bind UDP socket to port %u", randomPort ) );
+        }
+    }
+
+    return status;
+}
+
+/*-----------------------------------------------------------*/
+
+static void closeUdpSocket( Socket_t * pSocket )
+{
+    bool status = false;
+    struct freertos_sockaddr bindAddress;
+
+    configASSERT( pSocket != NULL );
+
+    FreeRTOS_shutdown( *pSocket, FREERTOS_SHUT_RDWR );
+
+    /* Close the socket again. */
+    FreeRTOS_closesocket( *pSocket );
+}
+
+/*-----------------------------------------------------------*/
+
+static bool calculateBackoffForNextPoll( BackoffAlgorithmContext_t * pBackoffContext,
+                                         bool shouldInitializeContext,
+                                         uint32_t minPollPeriod,
+                                         uint32_t * pPollPeriod )
+{
+    uint16_t newPollPeriod = 0U;
+    BackoffAlgorithmStatus_t status;
+
+    configASSERT( pBackoffContext != NULL );
+    configASSERT( pPollPeriod != NULL );
+
+    if( shouldInitializeContext == true )
+    {
+        /* Initialize reconnect attempts and interval.*/
+        BackoffAlgorithm_InitializeParams( &pBackoffContext,
+                                           minPollPeriod,
+                                           SNTP_DEMO_POLL_MAX_BACKOFF_DELAY_SEC,
+                                           SNTP_DEMO_MAX_SERVER_BACKOFF_RETRIES );
+    }
+
+    /* Generate a random number and calculate the new backoff poll period to wait before the next
+     * time poll attempt. */
+    status = BackoffAlgorithm_GetNextBackoff( &pBackoffContext, generateRandomNumber(), &newPollPeriod );
+
+    if( status == BackoffAlgorithmRetriesExhausted )
+    {
+        LogError( ( "All backed-off attempts of polling time server have expired: MaxAttempts=%d",
+                    SNTP_DEMO_MAX_SERVER_BACKOFF_RETRIES ) );
+    }
+    else
+    {
+        /* Store the calculated backoff period as the new poll period. */
+        *pPollPeriod = newPollPeriod;
+    }
+
+    return( status == BackoffAlgorithmSuccess );
 }
 
 /*-----------------------------------------------------------*/
@@ -1359,6 +1507,13 @@ void sntpTask( void * pParameters )
      * between client and server, if the server supports authentication. */
     static SntpAuthContext_t authContext;
 
+    /* Context used for calculating backoff that is applied to polling interval when the configured
+     * time server rejects time request.
+     * Note: Backoff is applied to polling interval ONLY when a single server is configured in the demo
+     * because in the case of multiple server configurations, the coreSNTP library handles server
+     * rejection by rotating server. */
+    static BackoffAlgorithmContext_t backoffContext;
+
     /* Initialize the authentication context for information for the first time server and its
      * keys configured in the demo. */
     populateAuthContextForServer( pTimeServers[ 0 ], &authContext );
@@ -1374,6 +1529,7 @@ void sntpTask( void * pParameters )
     if( initStatus == true )
     {
         SntpStatus_t status;
+        bool backoffModeFlag = false;
 
         /* Calculate Poll interval of SNTP client based on desired accuracy and clock tolerance of the system. */
         status = Sntp_CalculatePollInterval( democonfigSYSTEM_CLOCK_TOLERANCE_PPM,
@@ -1381,21 +1537,34 @@ void sntpTask( void * pParameters )
                                              &systemClock.pollPeriod );
         configASSERT( status == SntpSuccess );
 
-        LogInfo( ( "Initialized SNTP Client context. Starting the SNTP client loop for time synchronization every %lu seconds",
+        LogDebug( ( "Minimum SNTP client polling interval calculated as %lus", systemClock.pollPeriod ) );
+
+        LogInfo( ( "Initialized SNTP Client context. Starting SNTP client loop to poll time every %lu seconds",
                    systemClock.pollPeriod ) );
 
-        /* SNTP Client loop of sending and receiving SNTP packets for time synchronization at poll intervals */
+        /* The loop of the SNTP Client task that synchronizes system time with a time server (in the configured list of time servers)
+         * periodically at intervals of polling period. Each iteration of time synchronization is performed by calling the coreSNTP
+         * APIs for sending time request to the server and receiving time response from the server. */
         while( 1 )
         {
+            /* For security, this demo keeps a UDP socket open only for one iteration of SNTP request-response cycle.
+             * There is a security risk of a UDP socket being flooded with invalid or malicious server response packets
+             * when a UDP socket is kept open across multiple time polling cycles. In such a scenario where the UDP
+             * socket buffer has received multiple server response packets from a single time request, the extraneous
+             * server response present in the UDP socket buffer will prevent the SNTP client application from correctly
+             * reading network data of server responses that correspond to future time requests.
+             * By closing the UDP socket after receiving the first acceptable server response (within the server response
+             * timeout window), any extraneous or malicious server response packets for the same time request will be
+             * ignored by the demo. */
+
+            /* Create a UDP socket for the current iteration of time polling. */
+            bool socketStatus = createUdpSocket( &udpContext.socket );
+            configASSERT( socketStatus == true );
+
             status = Sntp_SendTimeRequest( &clientContext, generateRandomNumber(), democonfigSEND_TIME_REQUEST_TIMEOUT_MS );
+            configASSERT( status == SntpSuccess );
 
-            /*configASSERT( status == SntpSuccess ); */
-            if( status != SntpSuccess )
-            {
-                continue;
-            }
-
-            /* Wait till the server response is not received. */
+            /* Wait for server response for a maximum time of server response timeout. */
             do
             {
                 /* Attempt to receive server response each time for a smaller block time
@@ -1403,8 +1572,48 @@ void sntpTask( void * pParameters )
                 status = Sntp_ReceiveTimeResponse( &clientContext, democonfigRECEIVE_SERVER_RESPONSE_BLOCK_TIME_MS );
             } while( status == SntpNoResponseReceived );
 
-            /* Wait for the poll interval period before the next iteration of time synchronization. */
-            vTaskDelay( pdMS_TO_TICKS( systemClock.pollPeriod * 1000 ) );
+            /* Close the UDP socket irrespective of whether a server response is received. */
+            closeUdpSocket( &udpContext.socket );
+
+            /* Apply back-off delay before the next poll iteration if the demo has been configured with only
+             * a single time server. */
+            if( ( status == SntpRejectedResponse ) && ( numOfServers == 1 ) )
+            {
+                bool backoffStatus = false;
+
+                /* Determine if this is the first back-off attempt we are making since the most recent server rejection
+                 * for time request. */
+                bool firstBackoffAttempt = false;
+
+                if( backoffModeFlag == false )
+                {
+                    firstBackoffAttempt = true;
+
+                    /* Set the flag to indicate we are in back-off retry mode for requesting time from the server. */
+                    backoffModeFlag = true;
+                }
+
+                LogInfo( ( "The single configured time server, %s, rejected time request. Backing-off before ",
+                           "next time poll....", strlen( pTimeServers[ 0 ] ) ) );
+
+                /* Add exponential back-off to polling period. */
+                backoffStatus = calculateBackoffForNextPoll( &backoffContext,
+                                                             firstBackoffAttempt,
+                                                             systemClock.pollPeriod,
+                                                             &systemClock.pollPeriod );
+                configASSERT( backoffStatus == true );
+
+                /* Wait for the increased poll interval before retrying request for time from server. */
+                vTaskDelay( pdMS_TO_TICKS( systemClock.pollPeriod * 1000 ) );
+            }
+            else
+            {
+                /* Reset flag to indicate that we are not backing-off for the next time poll. */
+                backoffModeFlag = false;
+
+                /* Wait for the poll interval period before the next iteration of time synchronization. */
+                vTaskDelay( pdMS_TO_TICKS( systemClock.pollPeriod * 1000 ) );
+            }
         }
     }
     else

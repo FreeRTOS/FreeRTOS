@@ -3003,6 +3003,7 @@ xdeletetaskstack
 xdeltams
 xdemotimer
 xdestinationaddress
+xdevicemetrics
 xdigitcountertimer
 xdirectprint
 xdolisten

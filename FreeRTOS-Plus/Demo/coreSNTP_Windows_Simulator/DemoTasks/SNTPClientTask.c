@@ -98,12 +98,8 @@
     #error "Define the democonfigLIST_OF_AUTHENTICATION_KEY_IDS config by following the instructions in demo_config.h file."
 #endif
 
-#ifndef democonfigDESIRED_CLOCK_ACCURACY_MS
-    #error "Define the democonfigDESIRED_CLOCK_ACCURACY_MS config by following instructions in demo_config.h file."
-#endif
-
-#ifndef democonfigSYSTEM_CLOCK_TOLERANCE_PPM
-    #error "Define the democonfigSYSTEM_CLOCK_TOLERANCE_PPM config by following instructions in demo_config.h file."
+#ifndef democonfigSNTP_CLIENT_POLLING_INTERVAL_SECONDS
+    #error "Define the democonfigSNTP_CLIENT_POLLING_INTERVAL_SECONDS config by following instructions in demo_config.h file."
 #endif
 
 #ifndef democonfigSYSTEM_START_YEAR
@@ -434,30 +430,33 @@ static void sntpClient_GetTime( SntpTimestamp_t * pCurrentTime );
  * from the server response and the clock-offset value calculated by
  * the coreSNTP library.
  *
- * @note This demo uses either the "slew" OR "step" methodology of system
- * clock correction based on the use-case:
- * 1. "Step" correction is used if:
- *   - System time is ahead of server time so that system time is immediately
- *     corrected instead of potentially receding back in time with a "slew"
- *     correction approach.
- *                                      OR
- *   - It is the first time synchronization for the system since boot-up. Using
- *     "step" approach immediately corrects the system if it is far away from the
- *     server time on device startup instead of slowly correcting over time with
- *     the "slew" approach.
+ * @note This demo uses a combination of "step" AND "slew" methodology
+ * for system clock correction.
+ * 1. "Step" correction is ALWAYS used to immediately correct the system clock
+ *    to match server time on every successful time synchronization with a
+ *    time server (that occurs periodically on the poll interval gaps).
  *
- * 2. The "slew" correction approach is used for all cases other than the above
- *    as they represent regular time synchronization during device runtime where
- *    the system time may have drifted behind the server time, and can be corrected
- *    gradually over the SNTP client's polling interval period.
+ * 2. "Slew" correction approach is used for compensating system clock drift
+ *    during the poll interval period between time synchronization attempts with
+ *    time server(s) when latest time server is not known. The "slew rate" is
+ *    calculated ONLY once on the occassion of the second successful time
+ *    synchronization with a time server. This is because the demo initializes
+ *    system time with (the first second of) the democonfigSYSTEM_START_YEAR
+ *    configuration, and thus, the the actual system clock drift over a period
+ *    of time ca be calculated only AFTER the demo system time has been synchronized
+ *    with server time once. Thus, after the first time period of poll interval has
+ *    transpired, the system clock drift is calculated correctly on the subsequent
+ *    successful time synchronization with a time server.
  *
  * @note The above system clock correction algorithm is just one example of a correction
- * approach. It can be modified to suit your application needs. Examples include:
- * - Always using "slew" correction if the device is always within a small time offset from
- *   server and your application is sensitive to non-abrupt changes in time (that could occur
- *   with "step" approach) for use-cases like logging events in correct order
- * - Always using a "step" approach for a simplicity if your application is not sensitive to
- *   abrupt changes/progress in time.
+ * approach. It can be modified to suit your application needs. For example, your
+ * application can use ONLY the "step" correction methodology for simplicity of system clock
+ * time calculation logic if the application is not sensitive to abrupt time changes
+ * (that occur at the instances of periodic time synchronization attempts). In such a case,
+ * the Sntp_CalculatePollInterval() API of coreSNTP library can be used to calculate 
+ * the optimum time polling period for your application based on the factors of your
+ * system's clock drift rate and the maximum clock drift tolerable by your application.
+ *
  *
  * @param[in] pTimeServer The time server from whom the time has been received.
  * @param[in] pServerTime The most recent time of the server, @p pTimeServer, sent in its
@@ -874,57 +873,41 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
     /* Obtain the mutext for accessing system clock variables. */
     xSemaphoreTake( xMutex, portMAX_DELAY );
 
-    /* Use "step" approach if:
-     * The system clock has drifted ahead of server time.
-     *                         OR
-     * This is the first time synchronization with NTP server since device boot-up.
-     */
-    if( ( clockOffsetMs < 0 ) || ( systemClock.firstTimeSyncDone == false ) )
+    /* Always correct the system base time on receiving time from server.*/
+    SntpStatus_t status;
+    uint32_t unixSecs;
+    uint32_t unixMicroSecs;
+
+    /* Convert server time from NTP timestamp to UNIX format. */
+    status = Sntp_ConvertToUnixTime( pServerTime,
+                                     &unixSecs,
+                                     &unixMicroSecs );
+    configASSERT( status == SntpSuccess );
+
+    /* Always correct the base time of the system clock as the time received from the server. */
+    systemClock.baseTime.secs = unixSecs;
+    systemClock.baseTime.msecs = unixMicroSecs / 1000;
+
+    /* Set the clock adjustment "slew" rate of system clock if it wasn't set already and this is NOT
+     * the first clock synchronization since device boot-up. */
+    if( ( systemClock.firstTimeSyncDone == true ) && ( systemClock.slewRate == 0 ) )
     {
-        SntpStatus_t status;
-        uint32_t unixSecs;
-        uint32_t unixMicroSecs;
+        /* We will use a "slew" correction approach to compensate for system clock
+         * drift over poll interval period that exists between consecutive time synchronizations
+         * with time server. */
 
-        /* Convert server time from NTP timestamp to UNIX format. */
-        status = Sntp_ConvertToUnixTime( pServerTime,
-                                         &unixSecs,
-                                         &unixMicroSecs );
-        configASSERT( status == SntpSuccess );
-
-        /* Immediately correct the base time of the system clock as server time. */
-        systemClock.baseTime.secs = unixSecs;
-        systemClock.baseTime.msecs = unixMicroSecs / 1000;
-
-        /* Reset slew rate to zero as the time has been immediately corrected to server time. */
-        systemClock.slewRate = 0;
-
-        /* Store the tick count of the current time synchronization in the system clock. */
-        systemClock.lastSyncTickCount = xTaskGetTickCount();
-
-        /* Set the system clock flag that indicates completion of the first time synchronization since device boot-up. */
-        if( systemClock.firstTimeSyncDone == false )
-        {
-            systemClock.firstTimeSyncDone = true;
-        }
-    }
-
-    /* As the system clock is behind server time, we will use a "slew" approach to gradually
-     * correct system time over the poll interval period. */
-    else
-    {
-        /* Update the base time based on the previous slew rate and the time period transpired
-         * since last time synchronization. */
-        calculateCurrentTime( &systemClock.baseTime,
-                              systemClock.lastSyncTickCount,
-                              systemClock.slewRate,
-                              &systemClock.baseTime );
-
-        /* Calculate the new slew rate as offset in milliseconds of adjustment per second. */
+        /* Calculate the "slew" rate for system clock as milliseconds of adjustment needed per second. */
         systemClock.slewRate = clockOffsetMs / systemClock.pollPeriod;
-
-        /* Store the tick count of the current time synchronization in the system clock. */
-        systemClock.lastSyncTickCount = xTaskGetTickCount();
     }
+
+    /* Set the system clock flag that indicates completion of the first time synchronization since device boot-up. */
+    if( systemClock.firstTimeSyncDone == false )
+    {
+        systemClock.firstTimeSyncDone = true;
+    }
+
+    /* Store the tick count of the current time synchronization in the system clock. */
+    systemClock.lastSyncTickCount = xTaskGetTickCount();
 
     xSemaphoreGive( xMutex );
 }
@@ -1531,11 +1514,8 @@ void sntpTask( void * pParameters )
         SntpStatus_t status;
         bool backoffModeFlag = false;
 
-        /* Calculate Poll interval of SNTP client based on desired accuracy and clock tolerance of the system. */
-        status = Sntp_CalculatePollInterval( democonfigSYSTEM_CLOCK_TOLERANCE_PPM,
-                                             democonfigDESIRED_CLOCK_ACCURACY_MS,
-                                             &systemClock.pollPeriod );
-        configASSERT( status == SntpSuccess );
+        /* Set the polling interval for periodic time sychronization attempts by the SNTP client. */
+        systemClock.pollPeriod = democonfigSNTP_CLIENT_POLLING_INTERVAL_SECONDS;
 
         LogDebug( ( "Minimum SNTP client polling interval calculated as %lus", systemClock.pollPeriod ) );
 

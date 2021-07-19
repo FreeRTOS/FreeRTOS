@@ -2137,7 +2137,7 @@ extern void vPortFree( void *pv );
  * Requires: MBEDTLS_AES_C or MBEDTLS_DES_C
  *
  */
-//#define MBEDTLS_CMAC_C
+#define MBEDTLS_CMAC_C
 
 /**
  * \def MBEDTLS_CTR_DRBG_C

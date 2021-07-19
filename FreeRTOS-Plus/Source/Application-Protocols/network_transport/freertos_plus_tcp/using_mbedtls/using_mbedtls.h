@@ -82,6 +82,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
 #include "mbedtls/ssl.h"
 #include "mbedtls/threading.h"
 #include "mbedtls/x509.h"
+#include "mbedtls/error.h"
 
 /**
  * @brief Secured connection context.

@@ -443,7 +443,7 @@ static void sntpClient_GetTime( SntpTimestamp_t * pCurrentTime );
  *    synchronization with a time server. This is because the demo initializes
  *    system time with (the first second of) the democonfigSYSTEM_START_YEAR
  *    configuration, and thus, the the actual system clock drift over a period
- *    of time ca be calculated only AFTER the demo system time has been synchronized
+ *    of time can be calculated only AFTER the demo system time has been synchronized
  *    with server time once. Thus, after the first time period of poll interval has
  *    transpired, the system clock drift is calculated correctly on the subsequent
  *    successful time synchronization with a time server.

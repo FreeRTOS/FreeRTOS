@@ -1675,6 +1675,7 @@ prvcheckothertasksarestillrunning
 prvchecktask
 prvchecktaskcounters
 prvchecktimercallback
+prvcollectdevicemetrics
 prvcomtxtimercallback
 prvconnectandcreatedemotasks
 prvcopycommand
@@ -1703,6 +1704,7 @@ prvfirstregtesttask
 prvflashcoroutine
 prvflashtimercallback
 prvformatcommand
+prvgeneratedevicemetricsreport
 prvgetdisinheritpriorityaftertimeout
 prvgetnextdelaytime
 prvgettcbfromhandle
@@ -1899,11 +1901,8 @@ pulmemchecktaskrunningcounter
 pulnotification
 pulnotifiedvalue
 pulnumber
-puloutcharswritten
 puloutnumestablishedconnections
-puloutnumtcpopenports
 puloutnumudpopenports
-puloutreportlength
 puloutreprotlength
 pulstandardperipheralregister
 pulsystemperipheralregister
@@ -1912,7 +1911,6 @@ pultaskidarraylength
 pultaskidsarray
 pusername
 pusopenportsarray
-pusoutnumestablishedconnections
 pusouttcpportsarray
 pusoutudpportsarray
 putc
@@ -1969,8 +1967,14 @@ pxnetworkcontext
 pxnetworkcredentials
 pxnext
 pxopenedinterfacehandle
+pxoutcharswritten
 pxoutconnectionsarray
 pxoutnetworkstats
+pxoutnumestablishedconnections
+pxoutnumtcpopenports
+pxoutnumudpopenports
+pxoutreportlength
+pxoutreprotlength
 pxpacketinfo
 pxpathlen
 pxport
@@ -1987,6 +1991,7 @@ pxstaticstreambuffer
 pxstreambuffer
 pxsubscriptionlist
 pxtaskbuffer
+pxtaskstatusarray
 pxtcb
 pxtickstowait
 pxtimeout
@@ -2532,14 +2537,12 @@ ulbytesreceived
 ulbytessent
 ulcalculatedvalue
 ulcallcount
-ulconnectionsarraylength
 ulcoursecyclecounter
 ulcurrentversion
 ulcyclecount
 ulcyclecounter
 ulcyclecounters
 uldata
-uldefenderresponselength
 uldemosoftwaretimercounter
 uldigestlength
 uldirection
@@ -2590,7 +2593,6 @@ ulnotificationvalue
 ulnotifiedvalue
 uloffset
 ulong
-ulopenportsarraylength
 ulpacketsreceived
 ulpacketssent
 ulport
@@ -2605,7 +2607,6 @@ ulreloadvalue
 ulreloadvalueforonehighresolutiontick
 ulremoteipaddress
 ulreportid
-ulreportlength
 ulrestartoffset
 ulreturned
 ulsecondnotificationvalueconst
@@ -2624,14 +2625,12 @@ ultaskendtrace
 ultasknotifytake
 ultasknotifytakeindexed
 ultasknotifyvalueclearindexed
-ultcpportsarraylength
 ultim
 ultimeoutms
 ultimer
 ultotalframelength
 ultrascale
 ultx
-uludpportsarraylength
 ulvaluetosend
 ulwantedbaud
 umount
@@ -2690,6 +2689,7 @@ usport
 usportnumber
 usremoteport
 usstackdepth
+usstackhighwatermark
 usstacksize
 ustaskstacksize
 usthingnamelength
@@ -2987,6 +2987,7 @@ xcommand
 xcommandqueue
 xcomporthandle
 xconnectedsocket
+xconnectionsarraylength
 xcontrolmessagebuffer
 xcorebmessagebuffers
 xcreatedtask
@@ -2995,12 +2996,14 @@ xcurbyte
 xdatalength
 xdatamessagebuffers
 xdb
+xdefenderresponselength
 xdelayticks
 xdeleteresponsereceived
 xdeletetaskstack
 xdeltams
 xdemotimer
 xdestinationaddress
+xdevicemetrics
 xdigitcountertimer
 xdirectprint
 xdolisten
@@ -3130,6 +3133,7 @@ xnumbytessenttotal
 xnumreqbytes
 xoktogivemutex
 xoneshottimer
+xopenportsarraylength
 xoptionlength
 xor
 xosel
@@ -3225,6 +3229,7 @@ xregtesterror
 xregteststacksize
 xregteststatus
 xregulatoroffidletime
+xreportlength
 xreportstatus
 xrequest
 xresponsecount
@@ -3328,12 +3333,14 @@ xtaskresumeall
 xtaskresumeallcallback
 xtaskresumeallstub
 xtasksocket
+xtaskstatusarraylength
 xtaskswaitingtoreceive
 xtaskswaitingtosend
 xtasktodelete
 xtasktonotify
 xtcbbuffer
 xtcp
+xtcpportsarraylength
 xtcptestechoclientstaskparams
 xtea
 xtensa
@@ -3369,6 +3376,7 @@ xtxdescriptors
 xtxhasended
 xtxmessages
 xtxtcbbuffer
+xudpportsarraylength
 xupdatedmessagebuffer
 xurllen
 xurlparser

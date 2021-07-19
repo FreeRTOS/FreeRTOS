@@ -230,7 +230,7 @@
     <ClCompile Include="..\..\thirdparty\mbedtls\library\x509_crt.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509_csr.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\xtea.c" />
-    <ClCompile Include="..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils\mbedtls_error.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\error.c" />
     <ClCompile Include="..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils\mbedtls_utils.c" />
     <ClCompile Include="..\..\Source\corePKCS11\source\core_pkcs11.c" />
     <ClCompile Include="..\..\Source\corePKCS11\source\core_pki_utils.c" />
@@ -372,7 +372,7 @@
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_slot_management.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_storage.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\ssl_invasive.h" />
-    <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils\mbedtls_error.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11f.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11t.h" />

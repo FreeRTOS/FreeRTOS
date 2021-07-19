@@ -396,7 +396,7 @@
     <ClCompile Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_error.c">
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
@@ -803,7 +803,7 @@
     <ClInclude Include="mbedtls_config.h">
       <Filter>Config</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_error.h">
+    <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include\agent_message.h">

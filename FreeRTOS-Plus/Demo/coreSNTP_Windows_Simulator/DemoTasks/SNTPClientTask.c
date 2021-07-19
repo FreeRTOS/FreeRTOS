@@ -439,7 +439,7 @@ static void sntpClient_GetTime( SntpTimestamp_t * pCurrentTime );
  * 2. "Slew" correction approach is used for compensating system clock drift
  *    during the poll interval period between time synchronization attempts with
  *    time server(s) when latest time server is not known. The "slew rate" is
- *    calculated ONLY once on the occassion of the second successful time
+ *    calculated ONLY once on the occasion of the second successful time
  *    synchronization with a time server. This is because the demo initializes
  *    system time with (the first second of) the democonfigSYSTEM_START_YEAR
  *    configuration, and thus, the the actual system clock drift over a period
@@ -453,7 +453,7 @@ static void sntpClient_GetTime( SntpTimestamp_t * pCurrentTime );
  * application can use ONLY the "step" correction methodology for simplicity of system clock
  * time calculation logic if the application is not sensitive to abrupt time changes
  * (that occur at the instances of periodic time synchronization attempts). In such a case,
- * the Sntp_CalculatePollInterval() API of coreSNTP library can be used to calculate 
+ * the Sntp_CalculatePollInterval() API of coreSNTP library can be used to calculate
  * the optimum time polling period for your application based on the factors of your
  * system's clock drift rate and the maximum clock drift tolerable by your application.
  *
@@ -1514,7 +1514,7 @@ void sntpTask( void * pParameters )
         SntpStatus_t status;
         bool backoffModeFlag = false;
 
-        /* Set the polling interval for periodic time sychronization attempts by the SNTP client. */
+        /* Set the polling interval for periodic time synchronization attempts by the SNTP client. */
         systemClock.pollPeriod = democonfigSNTP_CLIENT_POLLING_INTERVAL_SECONDS;
 
         LogDebug( ( "Minimum SNTP client polling interval calculated as %lus", systemClock.pollPeriod ) );

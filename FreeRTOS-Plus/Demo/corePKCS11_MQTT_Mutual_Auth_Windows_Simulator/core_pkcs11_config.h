@@ -193,4 +193,14 @@ extern void vLoggingPrintf( const char * pcFormatString,
  */
 #define pkcs11configLABEL_ROOT_CERTIFICATE                 ( "Root Cert" )
 
+/**
+ * @brief The PKCS #11 label for the object to be used for HMAC operations.
+ */
+#define pkcs11configLABEL_HMAC_KEY                         "HMAC Key"
+
+ /**
+  * @brief The PKCS #11 label for the object to be used for CMAC operations.
+  */
+#define pkcs11configLABEL_CMAC_KEY                         "CMAC Key"
+
 #endif /* _CORE_PKCS11_CONFIG_H_ include guard. */

@@ -2,11 +2,12 @@
 
 ## Initial Setup
 
-1. Create a new directory in the `FreeRTOS/Demo/ThirdParty/Partner-Supported` or `FreeRTOS/Demo/ThirdParty/Community-Supported` directory. The
-suggested name for the directory is `<hardware_name>_<compiler_name>`.
+1. Create a new directory in the [FreeRTOS Partner Supported Demos Repository](https://github.com/FreeRTOS/FreeRTOS-Partner-Supported-Demos/tree/main)
+   or [FreeRTOS Community Supported Demos Repository](https://github.com/FreeRTOS/FreeRTOS-Community-Supported-Demos/tree/main).
+   The suggested name for the directory is `<hardware_name>_<compiler_name>`.
 2. Create a project for your hardware and tool-chain in this directory.
-3. Copy all the files in the `FreeRTOS/Demo/ThirdParty/Template` directory to
-   your project directory:
+3. Copy all the files in the [FreeRTOS/Demo/ThirdParty/Template](https://github.com/FreeRTOS/FreeRTOS/tree/main/FreeRTOS/Demo/ThirdParty/Template)
+   directory to your project directory:
    * `IntQueueTimer.h`
    * `IntQueueTimer.c`
    * `TestRunner.h`
@@ -17,7 +18,7 @@ suggested name for the directory is `<hardware_name>_<compiler_name>`.
 ## Project Configuration
 
 1. Compile the following additional files in your project:
-   * All files in the `FreeRTOS/Demo/Common/Minimal` directory except
+   * All files in the [FreeRTOS/Demo/Common/Minimal](https://github.com/FreeRTOS/FreeRTOS/tree/main/FreeRTOS/Demo/Common/Minimal) directory except
      `comtest_strings.c`, `crhook.c` , `comtest.c` ,`crflash.c`,`flash.c`, `flash_timer.c` and `sp_flop.c`.
 2. Add the following paths to your include search path:
    * `FreeRTOS/Demo/Common/include`.

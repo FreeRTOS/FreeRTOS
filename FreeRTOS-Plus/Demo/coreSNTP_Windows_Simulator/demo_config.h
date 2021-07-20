@@ -116,7 +116,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @note Use of the AES-128-CMAC based authentication scheme in the demo requires that the symmetric key
  * is shared safely between the time server and the client device.
  *
- * #define democonfigAES_CMAC_AUTHENTICATION_SYMMETRIC_KEY  "<hexstring-key-1>", "<hexstring-key-2>", NULL
+ * #define democonfigLIST_OF_AUTHENTICATION_SYMMETRIC_KEYS  "<hexstring-key-1>", "<hexstring-key-2>", NULL
  */
 
 /**
@@ -127,8 +127,8 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * The ID for a key usually represents the ID used to reference the symmetric key in the NTP/SNTP server system.
  *
  * @note This Key IDs should be configured as a comma-separated list of integer Key IDs that match the order of
- * keys in democonfigdemoconfigLIST_OF_AUTHENTICATION_SYMMETRIC_KEYS. If there is a NULL (or no key) in the list
- * of keys, then -1 can be used as the corresponding key ID.
+ * keys in democonfigLIST_OF_AUTHENTICATION_SYMMETRIC_KEYS. If there is a NULL (or no key) in the list of keys,
+ * then -1 can be used as the corresponding key ID.
  *
  * #define democonfigLIST_OF_AUTHENTICATION_KEY_IDS    <key-ID-1>, <key-ID-2>, -1
  */

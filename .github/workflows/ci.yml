@@ -24,6 +24,28 @@ jobs:
         run: |
           git-secrets --register-aws
           git-secrets --scan
+
+  formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Uncrustify
+        run: sudo apt-get install uncrustify
+      - name: Run Uncrustify
+        run: |
+          uncrustify --version
+          find FreeRTOS/Demo FreeRTOS/Test . -iname "*.[hc]" -exec uncrustify --check -c tools/uncrustify.cfg {} +
+      - name: Check For Trailing Whitespace
+        run: |
+          set +e
+          grep --exclude="README.md" -rnI -e "[[:blank:]]$" .
+          if [ "$?" = "0" ]; then
+            echo "Files have trailing whitespace."
+            exit 1
+          else
+            exit 0
+          fi
+
   doxygen:
     runs-on: ubuntu-20.04
     steps:

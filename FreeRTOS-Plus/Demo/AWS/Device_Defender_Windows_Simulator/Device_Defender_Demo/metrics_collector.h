@@ -89,9 +89,9 @@ eMetricsCollectorStatus eGetNetworkStats( NetworkStats_t * pxOutNetworkStats );
  *
  * @param[out] pusOutTcpPortsArray The array to write the open TCP ports into. This
  * can be NULL, if only the number of open ports is needed.
- * @param[in] ulTcpPortsArrayLength Length of the pusOutTcpPortsArray, if it is not
+ * @param[in] xTcpPortsArrayLength Length of the pusOutTcpPortsArray, if it is not
  * NULL.
- * @param[out] pulOutNumTcpOpenPorts Number of open TCP ports if @p
+ * @param[out] pxOutNumTcpOpenPorts Number of open TCP ports if @p
  * pusOutTcpPortsArray NULL, else number of TCP ports written.
  *
  * @return #eMetricsCollectorSuccess if open TCP ports are successfully obtained;
@@ -99,8 +99,8 @@ eMetricsCollectorStatus eGetNetworkStats( NetworkStats_t * pxOutNetworkStats );
  * #eMetricsCollectorCollectionFailed if the collection methods failed.
  */
 eMetricsCollectorStatus eGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
-                                          uint32_t ulTcpPortsArrayLength,
-                                          uint32_t * pulOutNumTcpOpenPorts );
+                                          size_t xTcpPortsArrayLength,
+                                          size_t * pxOutNumTcpOpenPorts );
 
 /**
  * @brief Get a list of the open UDP ports.
@@ -110,9 +110,9 @@ eMetricsCollectorStatus eGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
  *
  * @param[out] pusOutUdpPortsArray The array to write the open UDP ports into. Can
  * be NULL, if only number of open ports is needed.
- * @param[in] ulUdpPortsArrayLength Length of the pusOutUdpPortsArray, if it is not
+ * @param[in] xUdpPortsArrayLength Length of the pusOutUdpPortsArray, if it is not
  * NULL.
- * @param[out] pulOutNumUdpOpenPorts Number of open UDP ports if @p
+ * @param[out] pxOutNumUdpOpenPorts Number of open UDP ports if @p
  * pusOutUdpPortsArray NULL, else number of UDP ports written.
  *
  * @return #eMetricsCollectorSuccess if open UDP ports are successfully obtained;
@@ -120,8 +120,8 @@ eMetricsCollectorStatus eGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
  * #eMetricsCollectorCollectionFailed if the collection methods failed.
  */
 eMetricsCollectorStatus eGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
-                                          uint32_t ulUdpPortsArrayLength,
-                                          uint32_t * pulOutNumUdpOpenPorts );
+                                          size_t xUdpPortsArrayLength,
+                                          size_t * pxOutNumUdpOpenPorts );
 
 /**
  * @brief Get a list of established connections.
@@ -133,17 +133,17 @@ eMetricsCollectorStatus eGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
  * @param[out] pxOutConnectionsArray The array to write the established connections
  * into. This can be NULL, if only the number of established connections is
  * needed.
- * @param[in] ulConnectionsArrayLength Length of the pxOutConnectionsArray, if it
+ * @param[in] xConnectionsArrayLength Length of the pxOutConnectionsArray, if it
  * is not NULL.
- * @param[out] pulOutNumEstablishedConnections Number of established connections if @p
- * pusOutNumEstablishedConnections NULL, else number of established connections written.
+ * @param[out] pxOutNumEstablishedConnections Number of established connections if @p
+ * pxOutNumEstablishedConnections NULL, else number of established connections written.
  *
  * @return #eMetricsCollectorSuccess if established connections are successfully obtained;
  * #eMetricsCollectorBadParameter if invalid parameters are passed;
  * #eMetricsCollectorCollectionFailed if the collection methods failed.
  */
 eMetricsCollectorStatus eGetEstablishedConnections( Connection_t * pxOutConnectionsArray,
-                                                    uint32_t ulConnectionsArrayLength,
-                                                    uint32_t * pulOutNumEstablishedConnections );
+                                                    size_t xConnectionsArrayLength,
+                                                    size_t * pxOutNumEstablishedConnections );
 
 #endif /* ifndef METRICS_COLLECTOR_H_ */

@@ -87,6 +87,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
 #include "mbedtls/x509.h"
 #include "mbedtls/pk.h"
 #include "mbedtls/pk_internal.h"
+#include "mbedtls/error.h"
 
 /* PKCS #11 includes. */
 #include "core_pkcs11.h"

@@ -68,23 +68,15 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /************ End of logging configuration ****************/
 
 /**
- * @brief The desired accuracy (in milliseconds) of system clock in relation with internet time.
- * In other words, this is the maximum tolerance desired for clock drift in the system.
- */
-#define democonfigDESIRED_CLOCK_ACCURACY_MS     ( 1000 )
-
-/**
- * @brief The system clock tolerance (in parts per million) that represents the rate of clock
- * drift of the system. The rate can be viewed as the system clock drift that occurs as milliseconds
- * per second.
+ * @brief The time period between consecutive time polling requests that are sent by the
+ * SNTP client in the demo application.
  *
- * @note In systems with a HW oscillator based clock, the frequency tolerance can be obtained from the
- * hardware specification of the clock oscillator.
- * @note This demo DOES NOT use a hardware clock oscillator as it runs on Windows Simulator. The configuration
- * ONLY provides the user to view the impact of the settings for "Clock Tolerance" and "Desired
- * Clock Accuracy" configurations on the calculated "SNTP polling period".
+ * @note According to the SNTPv4 specification, the polling interval MUST NOT be less
+ * than 15 seconds for responsible use of time servers by SNTP clients.
+ * 
+ * 
+ * #define democonfigSNTP_CLIENT_POLLING_INTERVAL_SECONDS                  ( 16 )
  */
-#define democonfigSYSTEM_CLOCK_TOLERANCE_PPM    ( 32000 )
 
 /**
  * @brief The set of time servers, in decreasing order of priority, for configuring the SNTP client.
@@ -108,6 +100,13 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *
  * It is RECOMMENDED to use an authentication mechanism for protecting devices against server spoofing
  * attacks.
+ *
+ * @note Even though this demo shows the use of AES-128-CMAC, a symmetric-key cryptographic based
+ * solution, for authenticating SNTP communication between the demo (SNTP client) and
+ * SNTP/NTP server, we instead RECOMMEND that production devices use the most secure authentication
+ * mechanism alternative available with the Network Time Security (NTS) protocol, an asymmetric-key
+ * cryptographic protocol. For more information, refer to the NTS specification here:
+ * https://datatracker.ietf.org/doc/html/rfc8915
  *
  * @note Please provide the 128-bit keys as comma separated list of hexadecimal strings in the order matching
  * the list of time servers configured in democonfigLIST_OF_TIME_SERVERS configuration. If a time server does

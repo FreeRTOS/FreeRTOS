@@ -31,13 +31,22 @@
  *
  * This file contains the SNTP client (daemon) task as well as functionality for
  * maintaining wall-clock or UTC time in RAM. The SNTP client periodically synchronizes
- * system clock with an SNTP/NTP servers. Any other task running an application in the
+ * system clock with SNTP/NTP server(s). Any other task running an application in the
  * system can query the system time. For an example of an application task querying time
  * from the system, refer to the SampleAppTask.c file in this project.
  *
- * !!! NOTE !!!
- * This SNTP demo does not authenticate the server nor the client.
- * Hence, this demo should not be used as production ready code.
+ * This demo shows how the coreSNTP library can be used to communicate with SNTP/NTP
+ * servers in a mutually authenticated through the use of symmetric-key based AES-128-CMAC
+ * algorithm. To run this demo with an SNTP/NTP server in authenticated mode, the AES-128-CMAC
+ * symmetric key needs to be pre-shared between the client (i.e. this demo) and the server.
+ *
+ * !!!Note!!!:
+ * Even though this demo shows the use of AES-128-CMAC, a symmetric-key cryptographic based
+ * solution, for authenticating SNTP communication between the demo (SNTP client) and
+ * SNTP/NTP server, we instead RECOMMEND that production devices use the most secure authentication
+ * mechanism alternative available with the Network Time Security (NTS) protocol, an asymmetric-key
+ * cryptographic protocol. For more information, refer to the NTS specification here:
+ * https://datatracker.ietf.org/doc/html/rfc8915
  */
 
 /* Standard includes. */
@@ -70,6 +79,9 @@
 #include "core_pkcs11_config.h"
 #include "core_pkcs11.h"
 
+/* Backoff Algorithm include. */
+#include "backoff_algorithm.h"
+
 /*-----------------------------------------------------------*/
 
 /* Compile time error for undefined configs. */
@@ -86,12 +98,8 @@
     #error "Define the democonfigLIST_OF_AUTHENTICATION_KEY_IDS config by following the instructions in demo_config.h file."
 #endif
 
-#ifndef democonfigDESIRED_CLOCK_ACCURACY_MS
-    #error "Define the democonfigDESIRED_CLOCK_ACCURACY_MS config by following instructions in demo_config.h file."
-#endif
-
-#ifndef democonfigSYSTEM_CLOCK_TOLERANCE_PPM
-    #error "Define the democonfigSYSTEM_CLOCK_TOLERANCE_PPM config by following instructions in demo_config.h file."
+#ifndef democonfigSNTP_CLIENT_POLLING_INTERVAL_SECONDS
+    #error "Define the democonfigSNTP_CLIENT_POLLING_INTERVAL_SECONDS config by following instructions in demo_config.h file."
 #endif
 
 #ifndef democonfigSYSTEM_START_YEAR
@@ -120,7 +128,7 @@
  * @note The size of the buffer MUST be large enough to hold an entire SNTP packet, which includes the standard SNTP
  * packet data of 48 bytes and authentication data for security mechanism, if used, in communication with time server.
  */
-#define SNTP_CONTEXT_NETWORK_BUFFER_SIZE       ( SNTP_PACKET_BASE_SIZE )
+#define SNTP_CONTEXT_NETWORK_BUFFER_SIZE        ( SNTP_PACKET_BASE_SIZE )
 
 /**
  * @brief The constant for storing the number of milliseconds per FreeRTOS tick in the system.
@@ -129,13 +137,13 @@
  * internet time or UTC time. Thus, the actual time duration value per tick of the system will be
  * larger from the perspective of internet time.
  */
-#define MILLISECONDS_PER_TICK                  ( 1000 / configTICK_RATE_HZ )
+#define MILLISECONDS_PER_TICK                   ( 1000 / configTICK_RATE_HZ )
 
 /**
  * @brief The fixed size of the key for the AES-128-CMAC algorithm used for authenticating communication
  * between the time server and the client.
  */
-#define AES_CMAC_AUTHENTICATION_KEY_SIZE       ( 16 )
+#define AES_CMAC_AUTHENTICATION_KEY_SIZE        ( 16 )
 
 /**
  * @brief The size of the "Key Identifier" field in the SNTP packet when symmetric key authentication mode as
@@ -147,7 +155,7 @@
  * @note This demo uses the "Key Identifier" field to communicate with time servers that support authentication mechanism.
  * This field is stored with the Key ID of the AES-128-CMAC based authentication key stored in the time server.
  */
-#define SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH    4
+#define SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH     4
 
 /**
  * @brief The offset for the starting byte of the "Key Identifier" field in an SNTPv4/NTPv4 packet.
@@ -156,7 +164,7 @@
  * For more information of the SNTP packet format, refer to the SNTPv4 specification
  * https://datatracker.ietf.org/doc/html/rfc4330#page-8
  */
-#define SNTP_PACKET_SYMMETRIC_KEY_ID_OFFSET    SNTP_PACKET_BASE_SIZE
+#define SNTP_PACKET_SYMMETRIC_KEY_ID_OFFSET     SNTP_PACKET_BASE_SIZE
 
 /**
  * @brief The total size of an SNTP packet (which remains same for both client request and server response in SNTP communication)
@@ -168,7 +176,26 @@
  * For more information of the SNTP packet format, refer to the SNTPv4 specification
  * https://datatracker.ietf.org/doc/html/rfc4330#page-8
  */
-#define SNTP_PACKET_AUTHENTICATED_MODE_SIZE    ( SNTP_PACKET_BASE_SIZE + SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH + pkcs11AES_CMAC_SIGNATURE_LENGTH )
+#define SNTP_PACKET_AUTHENTICATED_MODE_SIZE     ( SNTP_PACKET_BASE_SIZE + SNTP_PACKET_SYMMETRIC_KEY_ID_LENGTH + pkcs11AES_CMAC_SIGNATURE_LENGTH )
+
+/**
+ * @brief The maximum poll period that the SNTP client can use as back-off on receiving a rejection from a time server.
+ *
+ * @note This demo performs back-off in polling rate from time server ONLY for the case when a single time server being
+ * is configured through the democonfigLIST_OF_TIME_SERVERS macro.
+ * This is because when more than one time server is configured, the coreSNTP library automatically handles the case
+ * of server rejection of time request by rotating to the next configured server for subsequent time polling requests.
+ */
+#define SNTP_DEMO_POLL_MAX_BACKOFF_DELAY_SEC    UINT16_MAX
+
+/**
+ * @brief The maximum number of times of retrying time requests at exponentially backed-off polling frequency
+ * from a server that rejects time requests.
+ *
+ * @note This macro is only relevant for the case when a single time server is configured in
+ * the demo through, democonfigLIST_OF_TIME_SERVERS.
+ */
+#define SNTP_DEMO_MAX_SERVER_BACKOFF_RETRIES    10
 
 /*-----------------------------------------------------------*/
 
@@ -403,30 +430,33 @@ static void sntpClient_GetTime( SntpTimestamp_t * pCurrentTime );
  * from the server response and the clock-offset value calculated by
  * the coreSNTP library.
  *
- * @note This demo uses either the "slew" OR "step" methodology of system
- * clock correction based on the use-case:
- * 1. "Step" correction is used if:
- *   - System time is ahead of server time so that system time is immediately
- *     corrected instead of potentially receding back in time with a "slew"
- *     correction approach.
- *                                      OR
- *   - It is the first time synchronization for the system since boot-up. Using
- *     "step" approach immediately corrects the system if it is far away from the
- *     server time on device startup instead of slowly correcting over time with
- *     the "slew" approach.
+ * @note This demo uses a combination of "step" AND "slew" methodology
+ * for system clock correction.
+ * 1. "Step" correction is ALWAYS used to immediately correct the system clock
+ *    to match server time on every successful time synchronization with a
+ *    time server (that occurs periodically on the poll interval gaps).
  *
- * 2. The "slew" correction approach is used for all cases other than the above
- *    as they represent regular time synchronization during device runtime where
- *    the system time may have drifted behind the server time, and can be corrected
- *    gradually over the SNTP client's polling interval period.
+ * 2. "Slew" correction approach is used for compensating system clock drift
+ *    during the poll interval period between time synchronization attempts with
+ *    time server(s) when latest time server is not known. The "slew rate" is
+ *    calculated ONLY once on the occasion of the second successful time
+ *    synchronization with a time server. This is because the demo initializes
+ *    system time with (the first second of) the democonfigSYSTEM_START_YEAR
+ *    configuration, and thus, the the actual system clock drift over a period
+ *    of time can be calculated only AFTER the demo system time has been synchronized
+ *    with server time once. Thus, after the first time period of poll interval has
+ *    transpired, the system clock drift is calculated correctly on the subsequent
+ *    successful time synchronization with a time server.
  *
  * @note The above system clock correction algorithm is just one example of a correction
- * approach. It can be modified to suit your application needs. Examples include:
- * - Always using "slew" correction if the device is always within a small time offset from
- *   server and your application is sensitive to non-abrupt changes in time (that could occur
- *   with "step" approach) for use-cases like logging events in correct order
- * - Always using a "step" approach for a simplicity if your application is not sensitive to
- *   abrupt changes/progress in time.
+ * approach. It can be modified to suit your application needs. For example, your
+ * application can use ONLY the "step" correction methodology for simplicity of system clock
+ * time calculation logic if the application is not sensitive to abrupt time changes
+ * (that occur at the instances of periodic time synchronization attempts). In such a case,
+ * the Sntp_CalculatePollInterval() API of coreSNTP library can be used to calculate
+ * the optimum time polling period for your application based on the factors of your
+ * system's clock drift rate and the maximum clock drift tolerable by your application.
+ *
  *
  * @param[in] pTimeServer The time server from whom the time has been received.
  * @param[in] pServerTime The most recent time of the server, @p pTimeServer, sent in its
@@ -592,6 +622,31 @@ static bool createUdpSocket( Socket_t * pSocket );
  * @param pSocket The UDP socket to close.
  */
 static void closeUdpSocket( Socket_t * pSocket );
+
+/**
+ * @brief Utility to calculate new poll period with exponential backoff and jitter
+ * algorithm.
+ *
+ * @note The demo applies time polling frequency backoff only when a single time server
+ * is configured, through the democonfigLIST_OF_SERVERS macro, and the single server
+ * rejects time requests.
+ *
+ * @param[in, out] pContext The context representing the back-off parameters. This
+ * context is initialized by the function whenever the caller indicates it with the
+ * @p shouldInitializeContext flag.
+ * @param[in] shouldInitializeContext Flag to indicate if the passed context should be
+ * initialized to start a new sequence of backed-off time request retries.
+ * @param[in] minPollPeriod The minimum poll period
+ * @param[in] pPollPeriod The new calculated poll period.
+ *
+ * @return Return #true if a new poll interval is calculated to retry time request
+ * from the server; #false otherwise to indicate exhaustion of time request retry attempts
+ * with the server.
+ */
+static bool calculateBackoffForNextPoll( BackoffAlgorithmContext_t * pContext,
+                                         bool shouldInitializeContext,
+                                         uint32_t minPollPeriod,
+                                         uint32_t * pPollPeriod );
 
 /*------------------------------------------------------------------------------*/
 
@@ -818,57 +873,41 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
     /* Obtain the mutext for accessing system clock variables. */
     xSemaphoreTake( xMutex, portMAX_DELAY );
 
-    /* Use "step" approach if:
-     * The system clock has drifted ahead of server time.
-     *                         OR
-     * This is the first time synchronization with NTP server since device boot-up.
-     */
-    if( ( clockOffsetMs < 0 ) || ( systemClock.firstTimeSyncDone == false ) )
+    /* Always correct the system base time on receiving time from server.*/
+    SntpStatus_t status;
+    uint32_t unixSecs;
+    uint32_t unixMicroSecs;
+
+    /* Convert server time from NTP timestamp to UNIX format. */
+    status = Sntp_ConvertToUnixTime( pServerTime,
+                                     &unixSecs,
+                                     &unixMicroSecs );
+    configASSERT( status == SntpSuccess );
+
+    /* Always correct the base time of the system clock as the time received from the server. */
+    systemClock.baseTime.secs = unixSecs;
+    systemClock.baseTime.msecs = unixMicroSecs / 1000;
+
+    /* Set the clock adjustment "slew" rate of system clock if it wasn't set already and this is NOT
+     * the first clock synchronization since device boot-up. */
+    if( ( systemClock.firstTimeSyncDone == true ) && ( systemClock.slewRate == 0 ) )
     {
-        SntpStatus_t status;
-        uint32_t unixSecs;
-        uint32_t unixMicroSecs;
+        /* We will use a "slew" correction approach to compensate for system clock
+         * drift over poll interval period that exists between consecutive time synchronizations
+         * with time server. */
 
-        /* Convert server time from NTP timestamp to UNIX format. */
-        status = Sntp_ConvertToUnixTime( pServerTime,
-                                         &unixSecs,
-                                         &unixMicroSecs );
-        configASSERT( status == SntpSuccess );
-
-        /* Immediately correct the base time of the system clock as server time. */
-        systemClock.baseTime.secs = unixSecs;
-        systemClock.baseTime.msecs = unixMicroSecs / 1000;
-
-        /* Reset slew rate to zero as the time has been immediately corrected to server time. */
-        systemClock.slewRate = 0;
-
-        /* Store the tick count of the current time synchronization in the system clock. */
-        systemClock.lastSyncTickCount = xTaskGetTickCount();
-
-        /* Set the system clock flag that indicates completion of the first time synchronization since device boot-up. */
-        if( systemClock.firstTimeSyncDone == false )
-        {
-            systemClock.firstTimeSyncDone = true;
-        }
-    }
-
-    /* As the system clock is behind server time, we will use a "slew" approach to gradually
-     * correct system time over the poll interval period. */
-    else
-    {
-        /* Update the base time based on the previous slew rate and the time period transpired
-         * since last time synchronization. */
-        calculateCurrentTime( &systemClock.baseTime,
-                              systemClock.lastSyncTickCount,
-                              systemClock.slewRate,
-                              &systemClock.baseTime );
-
-        /* Calculate the new slew rate as offset in milliseconds of adjustment per second. */
+        /* Calculate the "slew" rate for system clock as milliseconds of adjustment needed per second. */
         systemClock.slewRate = clockOffsetMs / systemClock.pollPeriod;
-
-        /* Store the tick count of the current time synchronization in the system clock. */
-        systemClock.lastSyncTickCount = xTaskGetTickCount();
     }
+
+    /* Set the system clock flag that indicates completion of the first time synchronization since device boot-up. */
+    if( systemClock.firstTimeSyncDone == false )
+    {
+        systemClock.firstTimeSyncDone = true;
+    }
+
+    /* Store the tick count of the current time synchronization in the system clock. */
+    systemClock.lastSyncTickCount = xTaskGetTickCount();
 
     xSemaphoreGive( xMutex );
 }
@@ -1379,6 +1418,46 @@ static void closeUdpSocket( Socket_t * pSocket )
 
 /*-----------------------------------------------------------*/
 
+static bool calculateBackoffForNextPoll( BackoffAlgorithmContext_t * pBackoffContext,
+                                         bool shouldInitializeContext,
+                                         uint32_t minPollPeriod,
+                                         uint32_t * pPollPeriod )
+{
+    uint16_t newPollPeriod = 0U;
+    BackoffAlgorithmStatus_t status;
+
+    configASSERT( pBackoffContext != NULL );
+    configASSERT( pPollPeriod != NULL );
+
+    if( shouldInitializeContext == true )
+    {
+        /* Initialize reconnect attempts and interval.*/
+        BackoffAlgorithm_InitializeParams( &pBackoffContext,
+                                           minPollPeriod,
+                                           SNTP_DEMO_POLL_MAX_BACKOFF_DELAY_SEC,
+                                           SNTP_DEMO_MAX_SERVER_BACKOFF_RETRIES );
+    }
+
+    /* Generate a random number and calculate the new backoff poll period to wait before the next
+     * time poll attempt. */
+    status = BackoffAlgorithm_GetNextBackoff( &pBackoffContext, generateRandomNumber(), &newPollPeriod );
+
+    if( status == BackoffAlgorithmRetriesExhausted )
+    {
+        LogError( ( "All backed-off attempts of polling time server have expired: MaxAttempts=%d",
+                    SNTP_DEMO_MAX_SERVER_BACKOFF_RETRIES ) );
+    }
+    else
+    {
+        /* Store the calculated backoff period as the new poll period. */
+        *pPollPeriod = newPollPeriod;
+    }
+
+    return( status == BackoffAlgorithmSuccess );
+}
+
+/*-----------------------------------------------------------*/
+
 void sntpTask( void * pParameters )
 {
     SntpContext_t clientContext;
@@ -1411,6 +1490,13 @@ void sntpTask( void * pParameters )
      * between client and server, if the server supports authentication. */
     static SntpAuthContext_t authContext;
 
+    /* Context used for calculating backoff that is applied to polling interval when the configured
+     * time server rejects time request.
+     * Note: Backoff is applied to polling interval ONLY when a single server is configured in the demo
+     * because in the case of multiple server configurations, the coreSNTP library handles server
+     * rejection by rotating server. */
+    static BackoffAlgorithmContext_t backoffContext;
+
     /* Initialize the authentication context for information for the first time server and its
      * keys configured in the demo. */
     populateAuthContextForServer( pTimeServers[ 0 ], &authContext );
@@ -1426,14 +1512,12 @@ void sntpTask( void * pParameters )
     if( initStatus == true )
     {
         SntpStatus_t status;
+        bool backoffModeFlag = false;
 
-        /* Calculate Poll interval of SNTP client based on desired accuracy and clock tolerance of the system. */
-        status = Sntp_CalculatePollInterval( democonfigSYSTEM_CLOCK_TOLERANCE_PPM,
-                                             democonfigDESIRED_CLOCK_ACCURACY_MS,
-                                             &systemClock.pollPeriod );
-        configASSERT( status == SntpSuccess );
+        /* Set the polling interval for periodic time synchronization attempts by the SNTP client. */
+        systemClock.pollPeriod = democonfigSNTP_CLIENT_POLLING_INTERVAL_SECONDS;
 
-        LogDebug( ( "SNTP client polling interval calculated as %lus", systemClock.pollPeriod ) );
+        LogDebug( ( "Minimum SNTP client polling interval calculated as %lus", systemClock.pollPeriod ) );
 
         LogInfo( ( "Initialized SNTP Client context. Starting SNTP client loop to poll time every %lu seconds",
                    systemClock.pollPeriod ) );
@@ -1475,17 +1559,38 @@ void sntpTask( void * pParameters )
              * a single time server. */
             if( ( status == SntpRejectedResponse ) && ( numOfServers == 1 ) )
             {
+                bool backoffStatus = false;
+
+                /* Determine if this is the first back-off attempt we are making since the most recent server rejection
+                 * for time request. */
+                bool firstBackoffAttempt = false;
+
+                if( backoffModeFlag == false )
+                {
+                    firstBackoffAttempt = true;
+
+                    /* Set the flag to indicate we are in back-off retry mode for requesting time from the server. */
+                    backoffModeFlag = true;
+                }
+
                 LogInfo( ( "The single configured time server, %s, rejected time request. Backing-off before ",
                            "next time poll....", strlen( pTimeServers[ 0 ] ) ) );
 
                 /* Add exponential back-off to polling period. */
-                systemClock.pollPeriod *= 2;
+                backoffStatus = calculateBackoffForNextPoll( &backoffContext,
+                                                             firstBackoffAttempt,
+                                                             systemClock.pollPeriod,
+                                                             &systemClock.pollPeriod );
+                configASSERT( backoffStatus == true );
 
                 /* Wait for the increased poll interval before retrying request for time from server. */
                 vTaskDelay( pdMS_TO_TICKS( systemClock.pollPeriod * 1000 ) );
             }
             else
             {
+                /* Reset flag to indicate that we are not backing-off for the next time poll. */
+                backoffModeFlag = false;
+
                 /* Wait for the poll interval period before the next iteration of time synchronization. */
                 vTaskDelay( pdMS_TO_TICKS( systemClock.pollPeriod * 1000 ) );
             }

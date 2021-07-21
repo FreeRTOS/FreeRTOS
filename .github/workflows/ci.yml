@@ -34,7 +34,7 @@ jobs:
       - name: Run Uncrustify
         run: |
           uncrustify --version
-          find FreeRTOS/Demo FreeRTOS/Test \( -name CMSIS -o -name ST_Code  \) -prune -false -o -iname "*.[hc]" -exec uncrustify --check -c tools/uncrustify.cfg {} +
+          find FreeRTOS/Demo/Common FreeRTOS/Test \( -name ethernet -o -name drivers -o -path 'FreeRTOS/Test/CMock/CMock' \) -prune -false -o -name "*.[hc]" -exec uncrustify --check -c tools/uncrustify.cfg {} +
       - name: Check For Trailing Whitespace
         run: |
           set +e

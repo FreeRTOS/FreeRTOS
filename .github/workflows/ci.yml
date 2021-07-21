@@ -39,13 +39,13 @@ jobs:
         run: |
           set +e
           ERROR=0
-          grep --exclude="README.md" --exclude-dir="FreeRTOS-Plus" --exclude-dir="FreeRTOS/Test/CMock/CMock/" --exclude-dir="FreeRTOS/Demo" -rnI -e "[[:blank:]]$" .
+          find .  \( -name '.git' -o -path "./FreeRTOS/Test/CBMC/patches" -o -path "./FreeRTOS-Plus" -o -path "./FreeRTOS/Source"  -o  -path "./FreeRTOS/Test/CMock/CMock"  -o -path "./FreeRTOS/Demo" \) -prune -false -o -type f -a -name "*" -exec grep --color=yes -In -e "[[:blank:]]$" {} \; -print
           if [ "$?" = "0" ]; then
             echo "Files have trailing whitespace."
             ERROR=1
           fi
 
-          grep -rnI -e "[[:blank:]]$" FreeRTOS/Demo/Common
+          find FreeRTOS/Demo/Common   \( -name "ethernet" \) -prune -o -false -o -type f -a -name "*" -exec grep --color=yes -In -e "[[:blank:]]$" {} \; -print
           if [ "$?" = "0" ]; then
             echo "Files have trailing whitespace."
             exit 1

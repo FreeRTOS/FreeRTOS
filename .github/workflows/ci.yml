@@ -38,11 +38,21 @@ jobs:
       - name: Check For Trailing Whitespace
         run: |
           set +e
+          ERROR=0
           grep --exclude="README.md" --exclude-dir="FreeRTOS-Plus" --exclude-dir="FreeRTOS/Test/CMock/CMock/" -rnI -e "[[:blank:]]$" .
+          if [ "$?" = "0" ]; then
+            echo "Files have trailing whitespace."
+            ERROR=1
+          fi
+
+          grep -rnI -e "[[:blank:]]$" FreeRTOS/Demo/Common
           if [ "$?" = "0" ]; then
             echo "Files have trailing whitespace."
             exit 1
           else
+            if [ "$ERROR" -eq "1" ]; then
+              exit 1
+            fi
             exit 0
           fi
 

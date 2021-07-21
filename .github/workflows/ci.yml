@@ -38,7 +38,7 @@ jobs:
       - name: Check For Trailing Whitespace
         run: |
           set +e
-          grep --exclude="README.md" -rnI -e "[[:blank:]]$" .
+          grep --exclude="README.md" --exclude-dir="FreeRTOS-Plus" --exclude-dir="FreeRTOS/Test/CMock/CMock/" -rnI -e "[[:blank:]]$" .
           if [ "$?" = "0" ]; then
             echo "Files have trailing whitespace."
             exit 1

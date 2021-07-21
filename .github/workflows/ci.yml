@@ -39,13 +39,13 @@ jobs:
         run: |
           set +e
           ERROR=0
-          find .  \( -name '.git' -o -path "./FreeRTOS/Test/CBMC/patches" -o -path "./FreeRTOS-Plus" -o -path "./FreeRTOS/Source"  -o  -path "./FreeRTOS/Test/CMock/CMock"  -o -path "./FreeRTOS/Demo" \) -prune -false -o -type f -a -name "*" -exec grep --color=yes -In -e "[[:blank:]]$" {} \; -print
+          find .  \( -name '.git' -o -path "./FreeRTOS/Test/CBMC/patches" -o -path "./FreeRTOS-Plus" -o -path "./FreeRTOS/Source"  -o  -path "./FreeRTOS/Test/CMock/CMock"  -o -path "./FreeRTOS/Demo" \) -prune -false -o -type f -a -name "*" -exec grep  -In -e "[[:blank:]]$" {} +
           if [ "$?" = "0" ]; then
             echo "Files have trailing whitespace."
             ERROR=1
           fi
 
-          find FreeRTOS/Demo/Common   \( -name "ethernet" \) -prune -o -false -o -type f -a -name "*" -exec grep --color=yes -In -e "[[:blank:]]$" {} \; -print
+          find FreeRTOS/Demo/Common   \( -name "ethernet" \) -prune -o -false -o -type f -a -name "*" -exec grep --color=yes -In -e "[[:blank:]]$" {} +
           if [ "$?" = "0" ]; then
             echo "Files have trailing whitespace."
             exit 1

@@ -32,5 +32,3 @@ void vStartBlockingQueueTasks( UBaseType_t uxPriority );
 BaseType_t xAreBlockingQueuesStillRunning( void );
 
 #endif
-
-

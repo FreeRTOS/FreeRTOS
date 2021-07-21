@@ -32,5 +32,3 @@ void vCreateSuicidalTasks( UBaseType_t uxPriority );
 BaseType_t xIsCreateTaskStillRunning( void );
 
 #endif
-
-

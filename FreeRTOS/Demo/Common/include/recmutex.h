@@ -32,4 +32,3 @@ void vStartRecursiveMutexTasks( void );
 BaseType_t xAreRecursiveMutexTasksStillRunning( void );
 
 #endif
-

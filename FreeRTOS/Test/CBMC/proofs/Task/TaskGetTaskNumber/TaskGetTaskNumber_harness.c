@@ -40,10 +40,10 @@ void vPrepareTask( TaskHandle_t * xTask );
  */
 void harness()
 {
-	TaskHandle_t xTask;
-	UBaseType_t uxTaskNumber;
+    TaskHandle_t xTask;
+    UBaseType_t uxTaskNumber;
 
-	vPrepareTask( &xTask );
+    vPrepareTask( &xTask );
 
-	uxTaskNumber = uxTaskGetTaskNumber( xTask );
+    uxTaskNumber = uxTaskGetTaskNumber( xTask );
 }

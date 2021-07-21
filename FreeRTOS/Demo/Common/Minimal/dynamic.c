@@ -106,29 +106,29 @@ static portTASK_FUNCTION_PROTO( vQueueSendWhenSuspendedTask, pvParameters );
 
 /* Demo task specific constants. */
 #ifndef priSUSPENDED_RX_TASK_STACK_SIZE
-	#define priSUSPENDED_RX_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE )
+    #define priSUSPENDED_RX_TASK_STACK_SIZE    ( configMINIMAL_STACK_SIZE )
 #endif
-#define priSTACK_SIZE				( configMINIMAL_STACK_SIZE )
-#define priSLEEP_TIME				pdMS_TO_TICKS( 128 )
-#define priLOOPS					( 5 )
-#define priMAX_COUNT				( ( uint32_t ) 0xff )
-#define priNO_BLOCK					( ( TickType_t ) 0 )
-#define priSUSPENDED_QUEUE_LENGTH	( 1 )
+#define priSTACK_SIZE                          ( configMINIMAL_STACK_SIZE )
+#define priSLEEP_TIME                          pdMS_TO_TICKS( 128 )
+#define priLOOPS                               ( 5 )
+#define priMAX_COUNT                           ( ( uint32_t ) 0xff )
+#define priNO_BLOCK                            ( ( TickType_t ) 0 )
+#define priSUSPENDED_QUEUE_LENGTH              ( 1 )
 
 /*-----------------------------------------------------------*/
 
 /* Handles to the two counter tasks.  These could be passed in as parameters
-to the controller task to prevent them having to be file scope. */
+ * to the controller task to prevent them having to be file scope. */
 static TaskHandle_t xContinuousIncrementHandle, xLimitedIncrementHandle;
 
 /* The shared counter variable.  This is passed in as a parameter to the two
-counter variables for demonstration purposes. */
+ * counter variables for demonstration purposes. */
 static uint32_t ulCounter;
 
 /* Variables used to check that the tasks are still operating without error.
-Each complete iteration of the controller task increments this variable
-provided no errors have been found.  The variable maintaining the same value
-is therefore indication of an error. */
+ * Each complete iteration of the controller task increments this variable
+ * provided no errors have been found.  The variable maintaining the same value
+ * is therefore indication of an error. */
 static volatile uint16_t usCheckVariable = ( uint16_t ) 0;
 static volatile BaseType_t xSuspendedQueueSendError = pdFALSE;
 static volatile BaseType_t xSuspendedQueueReceiveError = pdFALSE;
@@ -137,35 +137,36 @@ static volatile BaseType_t xSuspendedQueueReceiveError = pdFALSE;
 QueueHandle_t xSuspendedTestQueue;
 
 /* The value the queue receive task expects to receive next.  This is file
-scope so xAreDynamicPriorityTasksStillRunning() can ensure it is still
-incrementing. */
+ * scope so xAreDynamicPriorityTasksStillRunning() can ensure it is still
+ * incrementing. */
 static uint32_t ulExpectedValue = ( uint32_t ) 0;
 
 /*-----------------------------------------------------------*/
+
 /*
  * Start the three tasks as described at the top of the file.
  * Note that the limited count task is given a higher priority.
  */
 void vStartDynamicPriorityTasks( void )
 {
-	xSuspendedTestQueue = xQueueCreate( priSUSPENDED_QUEUE_LENGTH, sizeof( uint32_t ) );
+    xSuspendedTestQueue = xQueueCreate( priSUSPENDED_QUEUE_LENGTH, sizeof( uint32_t ) );
 
-	if( xSuspendedTestQueue != NULL )
-	{
-		/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
-		in use.  The queue registry is provided as a means for kernel aware
-		debuggers to locate queues and has no purpose if a kernel aware debugger
-		is not being used.  The call to vQueueAddToRegistry() will be removed
-		by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is
-		defined to be less than 1. */
-		vQueueAddToRegistry( xSuspendedTestQueue, "Suspended_Test_Queue" );
+    if( xSuspendedTestQueue != NULL )
+    {
+        /* vQueueAddToRegistry() adds the queue to the queue registry, if one is
+         * in use.  The queue registry is provided as a means for kernel aware
+         * debuggers to locate queues and has no purpose if a kernel aware debugger
+         * is not being used.  The call to vQueueAddToRegistry() will be removed
+         * by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is
+         * defined to be less than 1. */
+        vQueueAddToRegistry( xSuspendedTestQueue, "Suspended_Test_Queue" );
 
-		xTaskCreate( vContinuousIncrementTask, "CNT_INC", priSTACK_SIZE, ( void * ) &ulCounter, tskIDLE_PRIORITY, &xContinuousIncrementHandle );
-		xTaskCreate( vLimitedIncrementTask, "LIM_INC", priSTACK_SIZE, ( void * ) &ulCounter, tskIDLE_PRIORITY + 1, &xLimitedIncrementHandle );
-		xTaskCreate( vCounterControlTask, "C_CTRL", priSUSPENDED_RX_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-		xTaskCreate( vQueueSendWhenSuspendedTask, "SUSP_TX", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-		xTaskCreate( vQueueReceiveWhenSuspendedTask, "SUSP_RX", priSUSPENDED_RX_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	}
+        xTaskCreate( vContinuousIncrementTask, "CNT_INC", priSTACK_SIZE, ( void * ) &ulCounter, tskIDLE_PRIORITY, &xContinuousIncrementHandle );
+        xTaskCreate( vLimitedIncrementTask, "LIM_INC", priSTACK_SIZE, ( void * ) &ulCounter, tskIDLE_PRIORITY + 1, &xLimitedIncrementHandle );
+        xTaskCreate( vCounterControlTask, "C_CTRL", priSUSPENDED_RX_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+        xTaskCreate( vQueueSendWhenSuspendedTask, "SUSP_TX", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+        xTaskCreate( vQueueReceiveWhenSuspendedTask, "SUSP_RX", priSUSPENDED_RX_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+    }
 }
 /*-----------------------------------------------------------*/
 
@@ -175,26 +176,26 @@ void vStartDynamicPriorityTasks( void )
  */
 static portTASK_FUNCTION( vLimitedIncrementTask, pvParameters )
 {
-volatile uint32_t *pulCounter;
+    volatile uint32_t * pulCounter;
 
-	/* Take a pointer to the shared variable from the parameters passed into
-	the task. */
-	pulCounter = ( volatile uint32_t * ) pvParameters;
+    /* Take a pointer to the shared variable from the parameters passed into
+     * the task. */
+    pulCounter = ( volatile uint32_t * ) pvParameters;
 
-	/* This will run before the control task, so the first thing it does is
-	suspend - the control task will resume it when ready. */
-	vTaskSuspend( NULL );
+    /* This will run before the control task, so the first thing it does is
+     * suspend - the control task will resume it when ready. */
+    vTaskSuspend( NULL );
 
-	for( ;; )
-	{
-		/* Just count up to a value then suspend. */
-		( *pulCounter )++;
+    for( ; ; )
+    {
+        /* Just count up to a value then suspend. */
+        ( *pulCounter )++;
 
-		if( *pulCounter >= priMAX_COUNT )
-		{
-			vTaskSuspend( NULL );
-		}
-	}
+        if( *pulCounter >= priMAX_COUNT )
+        {
+            vTaskSuspend( NULL );
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
@@ -204,34 +205,34 @@ volatile uint32_t *pulCounter;
  */
 static portTASK_FUNCTION( vContinuousIncrementTask, pvParameters )
 {
-volatile uint32_t *pulCounter;
-UBaseType_t uxOurPriority;
+    volatile uint32_t * pulCounter;
+    UBaseType_t uxOurPriority;
 
-	/* Take a pointer to the shared variable from the parameters passed into
-	the task. */
-	pulCounter = ( volatile uint32_t * ) pvParameters;
+    /* Take a pointer to the shared variable from the parameters passed into
+     * the task. */
+    pulCounter = ( volatile uint32_t * ) pvParameters;
 
-	/* Query our priority so we can raise it when exclusive access to the
-	shared variable is required. */
-	uxOurPriority = uxTaskPriorityGet( NULL );
+    /* Query our priority so we can raise it when exclusive access to the
+     * shared variable is required. */
+    uxOurPriority = uxTaskPriorityGet( NULL );
 
-	for( ;; )
-	{
-		/* Raise the priority above the controller task to ensure a context
-		switch does not occur while the variable is being accessed. */
-		vTaskPrioritySet( NULL, uxOurPriority + 1 );
-		{
-			configASSERT( ( uxTaskPriorityGet( NULL ) == ( uxOurPriority + 1 ) ) );
-			( *pulCounter )++;
-		}
-		vTaskPrioritySet( NULL, uxOurPriority );
+    for( ; ; )
+    {
+        /* Raise the priority above the controller task to ensure a context
+         * switch does not occur while the variable is being accessed. */
+        vTaskPrioritySet( NULL, uxOurPriority + 1 );
+        {
+            configASSERT( ( uxTaskPriorityGet( NULL ) == ( uxOurPriority + 1 ) ) );
+            ( *pulCounter )++;
+        }
+        vTaskPrioritySet( NULL, uxOurPriority );
 
-		#if( configUSE_PREEMPTION == 0 )
-			taskYIELD();
-		#endif
+        #if ( configUSE_PREEMPTION == 0 )
+            taskYIELD();
+        #endif
 
-		configASSERT( ( uxTaskPriorityGet( NULL ) == uxOurPriority ) );
-	}
+        configASSERT( ( uxTaskPriorityGet( NULL ) == uxOurPriority ) );
+    }
 }
 /*-----------------------------------------------------------*/
 
@@ -240,200 +241,200 @@ UBaseType_t uxOurPriority;
  */
 static portTASK_FUNCTION( vCounterControlTask, pvParameters )
 {
-uint32_t ulLastCounter;
-short sLoops;
-short sError = pdFALSE;
+    uint32_t ulLastCounter;
+    short sLoops;
+    short sError = pdFALSE;
 
-	/* Just to stop warning messages. */
-	( void ) pvParameters;
+    /* Just to stop warning messages. */
+    ( void ) pvParameters;
 
-	for( ;; )
-	{
-		/* Start with the counter at zero. */
-		ulCounter = ( uint32_t ) 0;
+    for( ; ; )
+    {
+        /* Start with the counter at zero. */
+        ulCounter = ( uint32_t ) 0;
 
-		/* First section : */
+        /* First section : */
 
-		/* Check the continuous count task is running. */
-		for( sLoops = 0; sLoops < priLOOPS; sLoops++ )
-		{
-			/* Suspend the continuous count task so we can take a mirror of the
-			shared variable without risk of corruption.  This is not really
-			needed as the other task raises its priority above this task's
-			priority. */
-			vTaskSuspend( xContinuousIncrementHandle );
-			{
-				#if( INCLUDE_eTaskGetState == 1 )
-				{
-					configASSERT( eTaskGetState( xContinuousIncrementHandle ) == eSuspended );
-				}
-				#endif /* INCLUDE_eTaskGetState */
+        /* Check the continuous count task is running. */
+        for( sLoops = 0; sLoops < priLOOPS; sLoops++ )
+        {
+            /* Suspend the continuous count task so we can take a mirror of the
+             * shared variable without risk of corruption.  This is not really
+             * needed as the other task raises its priority above this task's
+             * priority. */
+            vTaskSuspend( xContinuousIncrementHandle );
+            {
+                #if ( INCLUDE_eTaskGetState == 1 )
+                    {
+                        configASSERT( eTaskGetState( xContinuousIncrementHandle ) == eSuspended );
+                    }
+                #endif /* INCLUDE_eTaskGetState */
 
-				ulLastCounter = ulCounter;
-			}
-			vTaskResume( xContinuousIncrementHandle );
+                ulLastCounter = ulCounter;
+            }
+            vTaskResume( xContinuousIncrementHandle );
 
-			#if( configUSE_PREEMPTION == 0 )
-				taskYIELD();
-			#endif
+            #if ( configUSE_PREEMPTION == 0 )
+                taskYIELD();
+            #endif
 
-			#if( INCLUDE_eTaskGetState == 1 )
-			{
-				configASSERT( eTaskGetState( xContinuousIncrementHandle ) == eReady );
-			}
-			#endif /* INCLUDE_eTaskGetState */
+            #if ( INCLUDE_eTaskGetState == 1 )
+                {
+                    configASSERT( eTaskGetState( xContinuousIncrementHandle ) == eReady );
+                }
+            #endif /* INCLUDE_eTaskGetState */
 
-			/* Now delay to ensure the other task has processor time. */
-			vTaskDelay( priSLEEP_TIME );
+            /* Now delay to ensure the other task has processor time. */
+            vTaskDelay( priSLEEP_TIME );
 
-			/* Check the shared variable again.  This time to ensure mutual
-			exclusion the whole scheduler will be locked.  This is just for
-			demo purposes! */
-			vTaskSuspendAll();
-			{
-				if( ulLastCounter == ulCounter )
-				{
-					/* The shared variable has not changed.  There is a problem
-					with the continuous count task so flag an error. */
-					sError = pdTRUE;
-				}
-			}
-			xTaskResumeAll();
-		}
+            /* Check the shared variable again.  This time to ensure mutual
+             * exclusion the whole scheduler will be locked.  This is just for
+             * demo purposes! */
+            vTaskSuspendAll();
+            {
+                if( ulLastCounter == ulCounter )
+                {
+                    /* The shared variable has not changed.  There is a problem
+                     * with the continuous count task so flag an error. */
+                    sError = pdTRUE;
+                }
+            }
+            xTaskResumeAll();
+        }
 
-		/* Second section: */
+        /* Second section: */
 
-		/* Suspend the continuous counter task so it stops accessing the shared
-		variable. */
-		vTaskSuspend( xContinuousIncrementHandle );
+        /* Suspend the continuous counter task so it stops accessing the shared
+         * variable. */
+        vTaskSuspend( xContinuousIncrementHandle );
 
-		/* Reset the variable. */
-		ulCounter = ( uint32_t ) 0;
+        /* Reset the variable. */
+        ulCounter = ( uint32_t ) 0;
 
-		#if( INCLUDE_eTaskGetState == 1 )
-		{
-			configASSERT( eTaskGetState( xLimitedIncrementHandle ) == eSuspended );
-		}
-		#endif /* INCLUDE_eTaskGetState */
+        #if ( INCLUDE_eTaskGetState == 1 )
+            {
+                configASSERT( eTaskGetState( xLimitedIncrementHandle ) == eSuspended );
+            }
+        #endif /* INCLUDE_eTaskGetState */
 
-		/* Resume the limited count task which has a higher priority than us.
-		We should therefore not return from this call until the limited count
-		task has suspended itself with a known value in the counter variable. */
-		vTaskResume( xLimitedIncrementHandle );
+        /* Resume the limited count task which has a higher priority than us.
+         * We should therefore not return from this call until the limited count
+         * task has suspended itself with a known value in the counter variable. */
+        vTaskResume( xLimitedIncrementHandle );
 
-		#if( configUSE_PREEMPTION == 0 )
-			taskYIELD();
-		#endif
+        #if ( configUSE_PREEMPTION == 0 )
+            taskYIELD();
+        #endif
 
-		/* This task should not run again until xLimitedIncrementHandle has
-		suspended itself. */
-		#if( INCLUDE_eTaskGetState == 1 )
-		{
-			configASSERT( eTaskGetState( xLimitedIncrementHandle ) == eSuspended );
-		}
-		#endif /* INCLUDE_eTaskGetState */
+        /* This task should not run again until xLimitedIncrementHandle has
+         * suspended itself. */
+        #if ( INCLUDE_eTaskGetState == 1 )
+            {
+                configASSERT( eTaskGetState( xLimitedIncrementHandle ) == eSuspended );
+            }
+        #endif /* INCLUDE_eTaskGetState */
 
-		/* Does the counter variable have the expected value? */
-		if( ulCounter != priMAX_COUNT )
-		{
-			sError = pdTRUE;
-		}
+        /* Does the counter variable have the expected value? */
+        if( ulCounter != priMAX_COUNT )
+        {
+            sError = pdTRUE;
+        }
 
-		if( sError == pdFALSE )
-		{
-			/* If no errors have occurred then increment the check variable. */
-			portENTER_CRITICAL();
-				usCheckVariable++;
-			portEXIT_CRITICAL();
-		}
+        if( sError == pdFALSE )
+        {
+            /* If no errors have occurred then increment the check variable. */
+            portENTER_CRITICAL();
+            usCheckVariable++;
+            portEXIT_CRITICAL();
+        }
 
-		/* Resume the continuous count task and do it all again. */
-		vTaskResume( xContinuousIncrementHandle );
+        /* Resume the continuous count task and do it all again. */
+        vTaskResume( xContinuousIncrementHandle );
 
-		#if( configUSE_PREEMPTION == 0 )
-			taskYIELD();
-		#endif
-	}
+        #if ( configUSE_PREEMPTION == 0 )
+            taskYIELD();
+        #endif
+    }
 }
 /*-----------------------------------------------------------*/
 
 static portTASK_FUNCTION( vQueueSendWhenSuspendedTask, pvParameters )
 {
-static uint32_t ulValueToSend = ( uint32_t ) 0;
+    static uint32_t ulValueToSend = ( uint32_t ) 0;
 
-	/* Just to stop warning messages. */
-	( void ) pvParameters;
+    /* Just to stop warning messages. */
+    ( void ) pvParameters;
 
-	for( ;; )
-	{
-		vTaskSuspendAll();
-		{
-			/* We must not block while the scheduler is suspended! */
-			if( xQueueSend( xSuspendedTestQueue, ( void * ) &ulValueToSend, priNO_BLOCK ) != pdTRUE )
-			{
-				xSuspendedQueueSendError = pdTRUE;
-			}
-		}
-		xTaskResumeAll();
+    for( ; ; )
+    {
+        vTaskSuspendAll();
+        {
+            /* We must not block while the scheduler is suspended! */
+            if( xQueueSend( xSuspendedTestQueue, ( void * ) &ulValueToSend, priNO_BLOCK ) != pdTRUE )
+            {
+                xSuspendedQueueSendError = pdTRUE;
+            }
+        }
+        xTaskResumeAll();
 
-		vTaskDelay( priSLEEP_TIME );
+        vTaskDelay( priSLEEP_TIME );
 
-		++ulValueToSend;
-	}
+        ++ulValueToSend;
+    }
 }
 /*-----------------------------------------------------------*/
 
 static portTASK_FUNCTION( vQueueReceiveWhenSuspendedTask, pvParameters )
 {
-uint32_t ulReceivedValue;
-BaseType_t xGotValue;
+    uint32_t ulReceivedValue;
+    BaseType_t xGotValue;
 
-	/* Just to stop warning messages. */
-	( void ) pvParameters;
+    /* Just to stop warning messages. */
+    ( void ) pvParameters;
 
-	for( ;; )
-	{
-		do
-		{
-			/* Suspending the scheduler here is fairly pointless and
-			undesirable for a normal application.  It is done here purely
-			to test the scheduler.  The inner xTaskResumeAll() should
-			never return pdTRUE as the scheduler is still locked by the
-			outer call. */
-			vTaskSuspendAll();
-			{
-				vTaskSuspendAll();
-				{
-					xGotValue = xQueueReceive( xSuspendedTestQueue, ( void * ) &ulReceivedValue, priNO_BLOCK );
-				}
-				if( xTaskResumeAll() != pdFALSE )
-				{
-					xSuspendedQueueReceiveError = pdTRUE;
-				}
-			}
-			xTaskResumeAll();
+    for( ; ; )
+    {
+        do
+        {
+            /* Suspending the scheduler here is fairly pointless and
+             * undesirable for a normal application.  It is done here purely
+             * to test the scheduler.  The inner xTaskResumeAll() should
+             * never return pdTRUE as the scheduler is still locked by the
+             * outer call. */
+            vTaskSuspendAll();
+            {
+                vTaskSuspendAll();
+                {
+                    xGotValue = xQueueReceive( xSuspendedTestQueue, ( void * ) &ulReceivedValue, priNO_BLOCK );
+                }
 
-			#if configUSE_PREEMPTION == 0
-			{
-				taskYIELD();
-			}
-			#endif
+                if( xTaskResumeAll() != pdFALSE )
+                {
+                    xSuspendedQueueReceiveError = pdTRUE;
+                }
+            }
+            xTaskResumeAll();
 
-		} while( xGotValue == pdFALSE );
+            #if configUSE_PREEMPTION == 0
+                {
+                    taskYIELD();
+                }
+            #endif
+        } while( xGotValue == pdFALSE );
 
-		if( ulReceivedValue != ulExpectedValue )
-		{
-			xSuspendedQueueReceiveError = pdTRUE;
-		}
+        if( ulReceivedValue != ulExpectedValue )
+        {
+            xSuspendedQueueReceiveError = pdTRUE;
+        }
 
-		if( xSuspendedQueueReceiveError != pdTRUE )
-		{
-			/* Only increment the variable if an error has not occurred.  This
-			allows xAreDynamicPriorityTasksStillRunning() to check for stalled
-			tasks as well as explicit errors. */
-			++ulExpectedValue;
-		}
-	}
+        if( xSuspendedQueueReceiveError != pdTRUE )
+        {
+            /* Only increment the variable if an error has not occurred.  This
+             * allows xAreDynamicPriorityTasksStillRunning() to check for stalled
+             * tasks as well as explicit errors. */
+            ++ulExpectedValue;
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
@@ -441,39 +442,39 @@ BaseType_t xGotValue;
 BaseType_t xAreDynamicPriorityTasksStillRunning( void )
 {
 /* Keep a history of the check variables so we know if it has been incremented
-since the last call. */
-static uint16_t usLastTaskCheck = ( uint16_t ) 0;
-static uint32_t ulLastExpectedValue = ( uint32_t ) 0U;
-BaseType_t xReturn = pdTRUE;
+ * since the last call. */
+    static uint16_t usLastTaskCheck = ( uint16_t ) 0;
+    static uint32_t ulLastExpectedValue = ( uint32_t ) 0U;
+    BaseType_t xReturn = pdTRUE;
 
-	/* Check the tasks are still running by ensuring the check variable
-	is still incrementing. */
+    /* Check the tasks are still running by ensuring the check variable
+     * is still incrementing. */
 
-	if( usCheckVariable == usLastTaskCheck )
-	{
-		/* The check has not incremented so an error exists. */
-		xReturn = pdFALSE;
-	}
+    if( usCheckVariable == usLastTaskCheck )
+    {
+        /* The check has not incremented so an error exists. */
+        xReturn = pdFALSE;
+    }
 
-	if( ulExpectedValue == ulLastExpectedValue )
-	{
-		/* The value being received by the queue receive task has not
-		incremented so an error exists. */
-		xReturn = pdFALSE;
-	}
+    if( ulExpectedValue == ulLastExpectedValue )
+    {
+        /* The value being received by the queue receive task has not
+         * incremented so an error exists. */
+        xReturn = pdFALSE;
+    }
 
-	if( xSuspendedQueueSendError == pdTRUE )
-	{
-		xReturn = pdFALSE;
-	}
+    if( xSuspendedQueueSendError == pdTRUE )
+    {
+        xReturn = pdFALSE;
+    }
 
-	if( xSuspendedQueueReceiveError == pdTRUE )
-	{
-		xReturn = pdFALSE;
-	}
+    if( xSuspendedQueueReceiveError == pdTRUE )
+    {
+        xReturn = pdFALSE;
+    }
 
-	usLastTaskCheck = usCheckVariable;
-	ulLastExpectedValue = ulExpectedValue;
+    usLastTaskCheck = usCheckVariable;
+    ulLastExpectedValue = ulExpectedValue;
 
-	return xReturn;
+    return xReturn;
 }

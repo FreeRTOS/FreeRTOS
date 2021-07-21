@@ -30,45 +30,49 @@
 BaseType_t xQueuePeek( QueueHandle_t xQueue,
                        void * const pvBuffer,
                        TickType_t xTicksToWait )
+
 /*@requires [1/2]queuehandle(xQueue, ?N, ?M, ?is_isr) &*& is_isr == false &*&
-    [1/2]queuesuspend(xQueue) &*&
-    chars(pvBuffer, M, ?x);@*/
+ *  [1/2]queuesuspend(xQueue) &*&
+ *  chars(pvBuffer, M, ?x);@*/
+
 /*@ensures [1/2]queuehandle(xQueue, N, M, is_isr) &*&
-    [1/2]queuesuspend(xQueue) &*&
-    (result == pdPASS ? chars(pvBuffer, M, _) : chars(pvBuffer, M, x));@*/
+ *  [1/2]queuesuspend(xQueue) &*&
+ *  (result == pdPASS ? chars(pvBuffer, M, _) : chars(pvBuffer, M, x));@*/
 {
     BaseType_t xEntryTimeSet = pdFALSE;
     TimeOut_t xTimeOut;
     int8_t * pcOriginalReadPosition;
-#ifdef VERIFAST /*< const pointer declaration */
-    Queue_t * pxQueue = xQueue;
-#else
-    Queue_t * const pxQueue = xQueue;
 
-    /* Check the pointer is not NULL. */
-    configASSERT( ( pxQueue ) );
+    #ifdef VERIFAST /*< const pointer declaration */
+        Queue_t * pxQueue = xQueue;
+    #else
+        Queue_t * const pxQueue = xQueue;
 
-    /* The buffer into which data is received can only be NULL if the data size
-     * is zero (so no data is copied into the buffer. */
-    configASSERT( !( ( ( pvBuffer ) == NULL ) && ( ( pxQueue )->uxItemSize != ( UBaseType_t ) 0U ) ) );
+        /* Check the pointer is not NULL. */
+        configASSERT( ( pxQueue ) );
 
-    /* Cannot block if the scheduler is suspended. */
-    #if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
-        {
-            configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
-        }
-    #endif
-#endif
+        /* The buffer into which data is received can only be NULL if the data size
+         * is zero (so no data is copied into the buffer. */
+        configASSERT( !( ( ( pvBuffer ) == NULL ) && ( ( pxQueue )->uxItemSize != ( UBaseType_t ) 0U ) ) );
+
+        /* Cannot block if the scheduler is suspended. */
+        #if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
+            {
+                configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
+            }
+        #endif
+    #endif /* ifdef VERIFAST */
 
     /*lint -save -e904  This function relaxes the coding standard somewhat to
      * allow return statements within the function itself.  This is done in the
      * interest of execution time efficiency. */
     for( ; ; )
+
     /*@invariant [1/2]queuehandle(xQueue, N, M, is_isr) &*&
-        [1/2]queuesuspend(xQueue) &*&
-        chars(pvBuffer, M, x) &*&
-        u_integer(&xTicksToWait, _) &*&
-        xTIME_OUT(&xTimeOut);@*/
+     *  [1/2]queuesuspend(xQueue) &*&
+     *  chars(pvBuffer, M, x) &*&
+     *  u_integer(&xTicksToWait, _) &*&
+     *  xTIME_OUT(&xTimeOut);@*/
     {
         taskENTER_CRITICAL();
         /*@assert queue(pxQueue, ?Storage, N, M, ?W, ?R, ?K, ?is_locked, ?abs);@*/
@@ -178,12 +182,12 @@ BaseType_t xQueuePeek( QueueHandle_t xQueue,
                 /* There is data in the queue now, so don't enter the blocked
                  * state, instead return to try and obtain the data. */
                 prvUnlockQueue( pxQueue );
-#ifdef VERIFAST /*< void cast of unused return value */
-                /*@close exists<QueueHandle_t>(pxQueue);@*/
-                xTaskResumeAll();
-#else
-                ( void ) xTaskResumeAll();
-#endif
+                #ifdef VERIFAST /*< void cast of unused return value */
+                    /*@close exists<QueueHandle_t>(pxQueue);@*/
+                    xTaskResumeAll();
+                #else
+                    ( void ) xTaskResumeAll();
+                #endif
             }
         }
         else
@@ -191,12 +195,12 @@ BaseType_t xQueuePeek( QueueHandle_t xQueue,
             /* The timeout has expired.  If there is still no data in the queue
              * exit, otherwise go back and try to read the data again. */
             prvUnlockQueue( pxQueue );
-#ifdef VERIFAST /*< void cast of unused return value */
-            /*@close exists<QueueHandle_t>(pxQueue);@*/
-            xTaskResumeAll();
-#else
-            ( void ) xTaskResumeAll();
-#endif
+            #ifdef VERIFAST /*< void cast of unused return value */
+                /*@close exists<QueueHandle_t>(pxQueue);@*/
+                xTaskResumeAll();
+            #else
+                ( void ) xTaskResumeAll();
+            #endif
 
             if( prvIsQueueEmpty( pxQueue ) != pdFALSE )
             {

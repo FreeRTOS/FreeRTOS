@@ -36,36 +36,42 @@ QueueHandle_t xMutex;
 
 void vTaskInternalSetTimeOutState( TimeOut_t * const pxTimeOut )
 {
-	/* QueueSemaphoreTake might be blocked to wait for
-	   another process to release a token to the semaphore.
-	   This is currently not in the CBMC model. Anyhow,
-	   vTaskInternalSetTimeOutState is set a timeout for
-	   QueueSemaphoreTake operation. We use this to model a successful
-	   release during wait time. */
-	UBaseType_t bound;
-	__CPROVER_assume((bound >= 0 && xMutex->uxLength >= bound));
-	xMutex->uxMessagesWaiting = bound;
+    /* QueueSemaphoreTake might be blocked to wait for
+     * another process to release a token to the semaphore.
+     * This is currently not in the CBMC model. Anyhow,
+     * vTaskInternalSetTimeOutState is set a timeout for
+     * QueueSemaphoreTake operation. We use this to model a successful
+     * release during wait time. */
+    UBaseType_t bound;
+
+    __CPROVER_assume( ( bound >= 0 && xMutex->uxLength >= bound ) );
+    xMutex->uxMessagesWaiting = bound;
 }
 
-BaseType_t xTaskGetSchedulerState( void ) {
-	BaseType_t ret;
-	__CPROVER_assume(ret != taskSCHEDULER_SUSPENDED);
-	return ret;
+BaseType_t xTaskGetSchedulerState( void )
+{
+    BaseType_t ret;
+
+    __CPROVER_assume( ret != taskSCHEDULER_SUSPENDED );
+    return ret;
 }
 
-void harness() {
-	uint8_t ucQueueType;
-	xMutex = xQueueCreateMutex(ucQueueType);
-	TickType_t xTicksToWait;
+void harness()
+{
+    uint8_t ucQueueType;
 
-	/* Init task stub to make sure that the QueueSemaphoreTake_BOUND - 1
-	   loop iteration simulates a time out */
- 	vInitTaskCheckForTimeOut(0, QueueSemaphoreTake_BOUND - 1);
+    xMutex = xQueueCreateMutex( ucQueueType );
+    TickType_t xTicksToWait;
 
-	if(xMutex){
-		xMutex->cTxLock = PRV_UNLOCK_UNWINDING_BOUND - 1;
-		xMutex->cRxLock = PRV_UNLOCK_UNWINDING_BOUND - 1;
-		xMutex->uxMessagesWaiting = nondet_UBaseType_t();
-		xQueueTakeMutexRecursive(xMutex, xTicksToWait);
-	}
+    /* Init task stub to make sure that the QueueSemaphoreTake_BOUND - 1
+     * loop iteration simulates a time out */
+    vInitTaskCheckForTimeOut( 0, QueueSemaphoreTake_BOUND - 1 );
+
+    if( xMutex )
+    {
+        xMutex->cTxLock = PRV_UNLOCK_UNWINDING_BOUND - 1;
+        xMutex->cRxLock = PRV_UNLOCK_UNWINDING_BOUND - 1;
+        xMutex->uxMessagesWaiting = nondet_UBaseType_t();
+        xQueueTakeMutexRecursive( xMutex, xTicksToWait );
+    }
 }

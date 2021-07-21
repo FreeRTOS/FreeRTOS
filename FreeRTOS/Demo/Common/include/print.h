@@ -30,8 +30,6 @@
 
 void vPrintInitialise( void );
 void vPrintDisplayMessage( const char * const * pcMessageToSend );
-const char *pcPrintGetNextMessage( TickType_t xPrintRate );
+const char * pcPrintGetNextMessage( TickType_t xPrintRate );
 
 #endif
-
-

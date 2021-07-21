@@ -70,7 +70,7 @@
 
 /* ===========================  FUNCTION PROTOTYPES  ======================== */
 void setxMaskAssertAndAbort( bool mask );
-bool getxMaskAssertAndAbort( );
+bool getxMaskAssertAndAbort();
 /* ============================  GLOBAL VARIABLES =========================== */
 
 /* =================================  MACROS ================================ */
@@ -93,7 +93,7 @@ bool getxMaskAssertAndAbort( );
         }                                       \
         Catch( e )                              \
         TEST_ASSERT_EQUAL( configASSERT_E, e ); \
-    } while ( 0 )
+    } while( 0 )
 
 /* ==========================  CALLBACK FUNCTIONS =========================== */
 

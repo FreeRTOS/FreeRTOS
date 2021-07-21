@@ -32,6 +32,6 @@
  */
 void vSetGlobalVariables( void )
 {
-	xSchedulerRunning = nondet_basetype();
-	uxSchedulerSuspended = nondet_ubasetype();
+    xSchedulerRunning = nondet_basetype();
+    uxSchedulerSuspended = nondet_ubasetype();
 }

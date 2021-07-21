@@ -5,6 +5,7 @@
 #include "task.h"
 
 BaseType_t xState;
-void vInitTaskCheckForTimeOut(BaseType_t maxCounter, BaseType_t maxCounter_limit);
+void vInitTaskCheckForTimeOut( BaseType_t maxCounter,
+                               BaseType_t maxCounter_limit );
 
 #endif /* INC_TASK_STUBS_H */

@@ -33,52 +33,56 @@
  */
 TaskHandle_t xUnconstrainedTCB( void )
 {
-	TCB_t * pxTCB = pvPortMalloc(sizeof(TCB_t));
+    TCB_t * pxTCB = pvPortMalloc( sizeof( TCB_t ) );
 
-	if ( pxTCB == NULL )
-		return NULL;
+    if( pxTCB == NULL )
+    {
+        return NULL;
+    }
 
-	__CPROVER_assume( pxTCB->uxPriority < configMAX_PRIORITIES );
+    __CPROVER_assume( pxTCB->uxPriority < configMAX_PRIORITIES );
 
-	vListInitialiseItem( &( pxTCB->xStateListItem ) );
-	vListInitialiseItem( &( pxTCB->xEventListItem ) );
+    vListInitialiseItem( &( pxTCB->xStateListItem ) );
+    vListInitialiseItem( &( pxTCB->xEventListItem ) );
 
-	listSET_LIST_ITEM_OWNER( &( pxTCB->xStateListItem ), pxTCB );
-	listSET_LIST_ITEM_OWNER( &( pxTCB->xEventListItem ), pxTCB );
+    listSET_LIST_ITEM_OWNER( &( pxTCB->xStateListItem ), pxTCB );
+    listSET_LIST_ITEM_OWNER( &( pxTCB->xEventListItem ), pxTCB );
 
-	if ( nondet_bool() )
-	{
-		listSET_LIST_ITEM_VALUE( &( pxTCB->xStateListItem ), pxTCB->uxPriority );
-	}
-	else
-	{
-		listSET_LIST_ITEM_VALUE( &( pxTCB->xStateListItem ), portMAX_DELAY );
-	}
+    if( nondet_bool() )
+    {
+        listSET_LIST_ITEM_VALUE( &( pxTCB->xStateListItem ), pxTCB->uxPriority );
+    }
+    else
+    {
+        listSET_LIST_ITEM_VALUE( &( pxTCB->xStateListItem ), portMAX_DELAY );
+    }
 
-	if ( nondet_bool() )
-	{
-		listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) pxTCB->uxPriority );
-	}
-	else
-	{
-		listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), portMAX_DELAY );
-	}
-	return pxTCB;
+    if( nondet_bool() )
+    {
+        listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) pxTCB->uxPriority );
+    }
+    else
+    {
+        listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), portMAX_DELAY );
+    }
+
+    return pxTCB;
 }
 
 /*
  * We set xPendedTicks since __CPROVER_assume does not work
  * well with statically initialised variables
  */
-void vSetGlobalVariables( void ) {
-	UBaseType_t uxNonZeroValue;
+void vSetGlobalVariables( void )
+{
+    UBaseType_t uxNonZeroValue;
 
-	__CPROVER_assume( uxNonZeroValue != 0 );
+    __CPROVER_assume( uxNonZeroValue != 0 );
 
-	uxSchedulerSuspended = uxNonZeroValue;
-	xPendedTicks = nondet_bool() ? PENDED_TICKS : 0;
-	uxCurrentNumberOfTasks = nondet_ubasetype();
-	xTickCount = nondet_ticktype();
+    uxSchedulerSuspended = uxNonZeroValue;
+    xPendedTicks = nondet_bool() ? PENDED_TICKS : 0;
+    uxCurrentNumberOfTasks = nondet_ubasetype();
+    xTickCount = nondet_ticktype();
 }
 
 /*
@@ -88,51 +92,59 @@ void vSetGlobalVariables( void ) {
  */
 BaseType_t xPrepareTaskLists( void )
 {
-	TCB_t * pxTCB = NULL;
+    TCB_t * pxTCB = NULL;
 
-	__CPROVER_assert_zero_allocation();
+    __CPROVER_assert_zero_allocation();
 
-	prvInitialiseTaskLists();
+    prvInitialiseTaskLists();
 
-	/* This task will be moved to a ready list, granting coverage
-	 * on lines 2780-2786 (tasks.c) */
-	pxTCB = xUnconstrainedTCB();
-	if ( pxTCB == NULL )
-	{
-		return pdFAIL;
-	}
-	vListInsert( pxOverflowDelayedTaskList, &( pxTCB->xStateListItem ) );
+    /* This task will be moved to a ready list, granting coverage
+     * on lines 2780-2786 (tasks.c) */
+    pxTCB = xUnconstrainedTCB();
 
-	/* Use of this macro ensures coverage on line 185 (list.c) */
-	listGET_OWNER_OF_NEXT_ENTRY( pxTCB , pxOverflowDelayedTaskList );
+    if( pxTCB == NULL )
+    {
+        return pdFAIL;
+    }
 
-	pxTCB = xUnconstrainedTCB();
-	if ( pxTCB == NULL )
-	{
-		return pdFAIL;
-	}
-	vListInsert( &xPendingReadyList, &( pxTCB->xStateListItem ) );
-	vListInsert( pxOverflowDelayedTaskList, &( pxTCB->xEventListItem ) );
+    vListInsert( pxOverflowDelayedTaskList, &( pxTCB->xStateListItem ) );
 
-	pxTCB = xUnconstrainedTCB();
-	if ( pxTCB == NULL )
-	{
-		return pdFAIL;
-	}
-	vListInsert( pxOverflowDelayedTaskList, &( pxTCB->xStateListItem ) );
+    /* Use of this macro ensures coverage on line 185 (list.c) */
+    listGET_OWNER_OF_NEXT_ENTRY( pxTCB, pxOverflowDelayedTaskList );
 
-	/* This nondeterministic choice ensure coverage in line 2746 (tasks.c) */
-	if ( nondet_bool() )
-	{
-		vListInsert( pxOverflowDelayedTaskList, &( pxTCB->xEventListItem ) );
-	}
+    pxTCB = xUnconstrainedTCB();
 
-	pxCurrentTCB = xUnconstrainedTCB();
-	if ( pxCurrentTCB == NULL )
-	{
-		return pdFAIL;
-	}
-	vListInsert( &pxReadyTasksLists[ pxCurrentTCB->uxPriority ], &( pxCurrentTCB->xStateListItem ) );
+    if( pxTCB == NULL )
+    {
+        return pdFAIL;
+    }
 
-	return pdPASS;
+    vListInsert( &xPendingReadyList, &( pxTCB->xStateListItem ) );
+    vListInsert( pxOverflowDelayedTaskList, &( pxTCB->xEventListItem ) );
+
+    pxTCB = xUnconstrainedTCB();
+
+    if( pxTCB == NULL )
+    {
+        return pdFAIL;
+    }
+
+    vListInsert( pxOverflowDelayedTaskList, &( pxTCB->xStateListItem ) );
+
+    /* This nondeterministic choice ensure coverage in line 2746 (tasks.c) */
+    if( nondet_bool() )
+    {
+        vListInsert( pxOverflowDelayedTaskList, &( pxTCB->xEventListItem ) );
+    }
+
+    pxCurrentTCB = xUnconstrainedTCB();
+
+    if( pxCurrentTCB == NULL )
+    {
+        return pdFAIL;
+    }
+
+    vListInsert( &pxReadyTasksLists[ pxCurrentTCB->uxPriority ], &( pxCurrentTCB->xStateListItem ) );
+
+    return pdPASS;
 }

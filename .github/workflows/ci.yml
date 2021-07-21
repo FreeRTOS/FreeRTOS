@@ -39,7 +39,7 @@ jobs:
         run: |
           set +e
           ERROR=0
-          grep --exclude="README.md" --exclude-dir="FreeRTOS-Plus" --exclude-dir="FreeRTOS/Test/CMock/CMock/" -rnI -e "[[:blank:]]$" .
+          grep --exclude="README.md" --exclude-dir="FreeRTOS-Plus" --exclude-dir="FreeRTOS/Test/CMock/CMock/" --exclude-dir="FreeRTOS/Demo" -rnI -e "[[:blank:]]$" .
           if [ "$?" = "0" ]; then
             echo "Files have trailing whitespace."
             ERROR=1
@@ -85,7 +85,7 @@ jobs:
       - name: Upload doxygen artifact if main branch
         if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release-candidate' )
         env:
-          GIT_SHA: 
+          GIT_SHA:
         uses: actions/upload-artifact@v2
         with:
           name: doxygen.zip-${{ github.sha }}

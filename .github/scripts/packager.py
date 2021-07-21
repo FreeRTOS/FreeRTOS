@@ -211,7 +211,7 @@ def configure_argparser():
                         type = str,
                         default = 'HEAD',
                         help = 'Commit ID of FreeRTOS repo to package')
-    
+
     return parser
 
 def sanitize_cmd_args(args):
@@ -254,13 +254,13 @@ def main():
                                                                 FREERTOS_GIT_LINK,
                                                                 core_package_name,
                                                                 commit_id=args.freertos_commit)
-    
+
     if path_core_out_tree == None:
         print('Failed to prepare repo for zipping')
         exit(1);
-    
+
     core_outzip = create_package(path_core_out_tree, core_package_name, RELATIVE_FILE_EXCLUDES)
-    
+
     # Create FreeRTOS-Labs package
     labs_package_name = 'FreeRTOS-Labs'
     (path_labs_in_tree, path_labs_out_tree) = create_file_trees(DIR_INPUT_TREES,
@@ -271,7 +271,7 @@ def main():
     if path_labs_out_tree == None:
         print('Failed to prepare repo for zipping')
         exit(1);
-    
+
     labs_outzip = create_package(path_labs_out_tree, labs_package_name, LABS_RELATIVE_EXCLUDE_FILES)
 
     # Package summaries

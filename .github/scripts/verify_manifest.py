@@ -10,7 +10,7 @@ from argparse import ArgumentParser
 REPO_PATH=''
 
 # List of submodules excluded from manifest.yml file
-IGNORE_SUBMODULES_LIST = [ 
+IGNORE_SUBMODULES_LIST = [
     'FreeRTOS-Plus/Test/CMock',
     'FreeRTOS/Test/CMock/CMock',
     'FreeRTOS/Test/litani'
@@ -19,7 +19,7 @@ IGNORE_SUBMODULES_LIST = [
 # Obtain submodule path of all entries in manifest.yml file.
 def read_manifest():
     path_list = []
-    
+
     # Read YML file
     path_manifest = os.path.join(REPO_PATH, 'manifest.yml')
     assert os.path.exists(path_manifest), 'Missing manifest.yml'
@@ -53,7 +53,7 @@ def get_all_submodules():
         path = submodule.abspath.replace(REPO_PATH+'/', '')
         if path not in IGNORE_SUBMODULES_LIST:
             path_list.append(path)
-    
+
     return sorted(path_list)
 
 if __name__ == '__main__':
@@ -69,13 +69,13 @@ if __name__ == '__main__':
     # Convert any relative path (like './') in passed argument to absolute path.
     REPO_PATH = os.path.abspath(args.repo_root_path)
 
-    libraries_in_manifest_file = read_manifest()    
+    libraries_in_manifest_file = read_manifest()
     git_submodules_list = get_all_submodules()
 
     print(REPO_PATH)
     print(git_submodules_list)
 
-    # Check that manifest.yml contains entries for all submodules 
+    # Check that manifest.yml contains entries for all submodules
     # present in repository.
     if libraries_in_manifest_file == git_submodules_list:
         print('Manifest.yml is verified!')

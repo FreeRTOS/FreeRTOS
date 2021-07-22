@@ -41,14 +41,14 @@ BaseType_t xPrepareTaskLists( TaskHandle_t * xTask );
  */
 void harness()
 {
-	TaskHandle_t xTaskToDelete;
-	BaseType_t xTasksPrepared;
+    TaskHandle_t xTaskToDelete;
+    BaseType_t xTasksPrepared;
 
-	vSetGlobalVariables();
-	xTasksPrepared = xPrepareTaskLists( &xTaskToDelete );
+    vSetGlobalVariables();
+    xTasksPrepared = xPrepareTaskLists( &xTaskToDelete );
 
-	if ( xTasksPrepared != pdFAIL )
-	{
-		vTaskDelete( xTaskToDelete );
-	}
+    if( xTasksPrepared != pdFAIL )
+    {
+        vTaskDelete( xTaskToDelete );
+    }
 }

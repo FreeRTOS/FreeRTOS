@@ -32,4 +32,3 @@ void vStartCountingSemaphoreTasks( void );
 BaseType_t xAreCountingSemaphoreTasksStillRunning( void );
 
 #endif
-

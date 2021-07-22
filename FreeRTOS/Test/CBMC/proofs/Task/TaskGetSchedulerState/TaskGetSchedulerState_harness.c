@@ -40,9 +40,9 @@ void vSetGlobalVariables( void );
  */
 void harness()
 {
-	BaseType_t xResult;
+    BaseType_t xResult;
 
-	vSetGlobalVariables();
+    vSetGlobalVariables();
 
-	xResult = xTaskGetSchedulerState();
+    xResult = xTaskGetSchedulerState();
 }

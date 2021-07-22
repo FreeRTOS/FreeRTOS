@@ -28,10 +28,7 @@
 #ifndef STATIC_ALLOCATION_H
 #define STATIC_ALLOCATION_H
 
-void vStartStaticallyAllocatedTasks( void  );
+void vStartStaticallyAllocatedTasks( void );
 BaseType_t xAreStaticAllocationTasksStillRunning( void );
 
 #endif /* STATIC_ALLOCATION_H */
-
-
-

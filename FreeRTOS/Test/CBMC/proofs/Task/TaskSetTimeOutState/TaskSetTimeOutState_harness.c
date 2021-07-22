@@ -38,7 +38,7 @@
  */
 void harness()
 {
-	TimeOut_t xTime;
+    TimeOut_t xTime;
 
-	vTaskSetTimeOutState( &xTime );
+    vTaskSetTimeOutState( &xTime );
 }

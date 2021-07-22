@@ -41,4 +41,3 @@ BaseType_t xAreEventGroupTasksStillRunning( void );
 void vPeriodicEventGroupsProcessing( void );
 
 #endif /* EVENT_GROUPS_DEMO_H */
-

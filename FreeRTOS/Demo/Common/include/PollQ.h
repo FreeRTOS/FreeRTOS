@@ -32,5 +32,3 @@ void vStartPolledQueueTasks( UBaseType_t uxPriority );
 BaseType_t xArePollingQueuesStillRunning( void );
 
 #endif
-
-

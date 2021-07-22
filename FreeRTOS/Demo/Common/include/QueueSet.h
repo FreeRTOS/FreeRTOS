@@ -33,5 +33,3 @@ BaseType_t xAreQueueSetTasksStillRunning( void );
 void vQueueSetAccessQueueSetFromISR( void );
 
 #endif /* QUEUE_WAIT_MULTIPLE_H */
-
-

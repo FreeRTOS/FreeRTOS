@@ -33,6 +33,3 @@ void vTimerPeriodicISRTests( void );
 void vTimerDemoIncludeBacklogTests( BaseType_t includeBacklogTests );
 
 #endif /* TIMER_DEMO_H */
-
-
-

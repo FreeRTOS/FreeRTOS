@@ -32,6 +32,3 @@ void vStartQueuePeekTasks( void );
 BaseType_t xAreQueuePeekTasksStillRunning( void );
 
 #endif /* Q_PEEK_TEST_H */
-
-
-

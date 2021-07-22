@@ -28,11 +28,8 @@
 #ifndef TASK_NOTIFY_H
 #define TASK_NOTIFY_H
 
-void vStartTaskNotifyTask( void  );
+void vStartTaskNotifyTask( void );
 BaseType_t xAreTaskNotificationTasksStillRunning( void );
 void xNotifyTaskFromISR( void );
 
 #endif /* TASK_NOTIFY_H */
-
-
-

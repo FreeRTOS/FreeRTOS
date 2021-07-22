@@ -32,5 +32,3 @@ void vStartMultiEventTasks( void );
 BaseType_t xAreMultiEventTasksStillRunning( void );
 
 #endif
-
-

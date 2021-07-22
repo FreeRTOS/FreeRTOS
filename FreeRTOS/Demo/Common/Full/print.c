@@ -26,22 +26,22 @@
  */
 
 /**
- * Manages a queue of strings that are waiting to be displayed.  This is used to 
+ * Manages a queue of strings that are waiting to be displayed.  This is used to
  * ensure mutual exclusion of console output.
  *
- * A task wishing to display a message will call vPrintDisplayMessage (), with a 
- * pointer to the string as the parameter. The pointer is posted onto the 
+ * A task wishing to display a message will call vPrintDisplayMessage (), with a
+ * pointer to the string as the parameter. The pointer is posted onto the
  * xPrintQueue queue.
  *
- * The task spawned in main. c blocks on xPrintQueue.  When a message becomes 
- * available it calls pcPrintGetNextMessage () to obtain a pointer to the next 
- * string, then uses the functions defined in the portable layer FileIO. c to 
+ * The task spawned in main. c blocks on xPrintQueue.  When a message becomes
+ * available it calls pcPrintGetNextMessage () to obtain a pointer to the next
+ * string, then uses the functions defined in the portable layer FileIO. c to
  * display the message.
  *
  * <b>NOTE:</b>
- * Using console IO can disrupt real time performance - depending on the port.  
- * Standard C IO routines are not designed for real time applications.  While 
- * standard IO is useful for demonstration and debugging an alternative method 
+ * Using console IO can disrupt real time performance - depending on the port.
+ * Standard C IO routines are not designed for real time applications.  While
+ * standard IO is useful for demonstration and debugging an alternative method
  * should be used if you actually require console IO as part of your application.
  *
  * \page PrintC print.c
@@ -50,11 +50,11 @@
  */
 
 /*
-Changes from V2.0.0
-
-	+ Delay periods are now specified using variables and constants of
-	  TickType_t rather than unsigned long.
-*/
+ * Changes from V2.0.0
+ *
+ + Delay periods are now specified using variables and constants of
+ +    TickType_t rather than unsigned long.
+ */
 
 #include <stdlib.h>
 
@@ -71,36 +71,34 @@ static QueueHandle_t xPrintQueue;
 
 void vPrintInitialise( void )
 {
-const unsigned portBASE_TYPE uxQueueSize = 20;
+    const unsigned portBASE_TYPE uxQueueSize = 20;
 
-	/* Create the queue on which errors will be reported. */
-	xPrintQueue = xQueueCreate( uxQueueSize, ( unsigned portBASE_TYPE ) sizeof( char * ) );
+    /* Create the queue on which errors will be reported. */
+    xPrintQueue = xQueueCreate( uxQueueSize, ( unsigned portBASE_TYPE ) sizeof( char * ) );
 }
 /*-----------------------------------------------------------*/
 
 void vPrintDisplayMessage( const char * const * ppcMessageToSend )
 {
-	#ifdef USE_STDIO
-		xQueueSend( xPrintQueue, ( void * ) ppcMessageToSend, ( TickType_t ) 0 );
-	#else
-    	/* Stop warnings. */
-		( void ) ppcMessageToSend;
-	#endif
+    #ifdef USE_STDIO
+        xQueueSend( xPrintQueue, ( void * ) ppcMessageToSend, ( TickType_t ) 0 );
+    #else
+        /* Stop warnings. */
+        ( void ) ppcMessageToSend;
+    #endif
 }
 /*-----------------------------------------------------------*/
 
-const char *pcPrintGetNextMessage( TickType_t xPrintRate )
+const char * pcPrintGetNextMessage( TickType_t xPrintRate )
 {
-char *pcMessage;
+    char * pcMessage;
 
-	if( xQueueReceive( xPrintQueue, &pcMessage, xPrintRate ) == pdPASS )
-	{
-		return pcMessage;
-	}
-	else
-	{
-		return NULL;
-	}
+    if( xQueueReceive( xPrintQueue, &pcMessage, xPrintRate ) == pdPASS )
+    {
+        return pcMessage;
+    }
+    else
+    {
+        return NULL;
+    }
 }
-
-

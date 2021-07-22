@@ -28,11 +28,8 @@
 #ifndef TASK_NOTIFY_ARRAY_H
 #define TASK_NOTIFY_ARRAY_H
 
-void vStartTaskNotifyArrayTask( void  );
+void vStartTaskNotifyArrayTask( void );
 BaseType_t xAreTaskNotificationArrayTasksStillRunning( void );
 void xNotifyArrayTaskFromISR( void );
 
 #endif /* TASK_NOTIFY_ARRAY_H */
-
-
-

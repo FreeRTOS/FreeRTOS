@@ -33,6 +33,3 @@ BaseType_t xAreGenericQueueTasksStillRunning( void );
 void vMutexISRInteractionTest( void );
 
 #endif /* GEN_Q_TEST_H */
-
-
-

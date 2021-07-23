@@ -429,9 +429,6 @@
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\FreeRTOS-Plus\ThirdParty\mbedtls\library\error.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\NetworkInterface.h">

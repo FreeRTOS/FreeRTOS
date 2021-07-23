@@ -32,4 +32,3 @@ void vStartSemaphoreTasks( UBaseType_t uxPriority );
 BaseType_t xAreSemaphoreTasksStillRunning( void );
 
 #endif
-

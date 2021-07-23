@@ -126,7 +126,7 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
         {                                             \
             vFakeAssert( false, __FILE__, __LINE__ ); \
         }                                             \
-    } while ( 0 )
+    } while( 0 )
 
 
 #define mtCOVERAGE_TEST_MARKER()    __asm volatile ( "NOP" )

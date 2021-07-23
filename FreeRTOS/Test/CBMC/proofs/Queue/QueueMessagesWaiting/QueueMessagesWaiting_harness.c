@@ -32,10 +32,12 @@
 
 #include "cbmc.h"
 
-void harness(){
-	QueueHandle_t xQueue = pvPortMalloc(sizeof(Queue_t));
+void harness()
+{
+    QueueHandle_t xQueue = pvPortMalloc( sizeof( Queue_t ) );
 
-	if(xQueue){
-		uxQueueMessagesWaiting( xQueue );
-	}
+    if( xQueue )
+    {
+        uxQueueMessagesWaiting( xQueue );
+    }
 }

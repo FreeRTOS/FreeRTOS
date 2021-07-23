@@ -40,8 +40,9 @@ BaseType_t xTaskResumeAllStub( void );
  * This is a trick to overcome the "redefined twice" error
  * when stubbing out the `xTaskResumeAll` function in the header
  */
-BaseType_t xTaskResumeAll( void ) {
-	return xTaskResumeAllStub();
+BaseType_t xTaskResumeAll( void )
+{
+    return xTaskResumeAllStub();
 }
 
 /*
@@ -50,16 +51,14 @@ BaseType_t xTaskResumeAll( void ) {
  */
 void harness()
 {
-	TickType_t xTicksToDelay;
-	BaseType_t xTasksPrepared;
+    TickType_t xTicksToDelay;
+    BaseType_t xTasksPrepared;
 
-	vSetGlobalVariables();
-	xTasksPrepared = xPrepareTaskLists();
+    vSetGlobalVariables();
+    xTasksPrepared = xPrepareTaskLists();
 
-	if ( xTasksPrepared != pdFAIL )
-	{
-		vTaskDelay( xTicksToDelay );
-	}
+    if( xTasksPrepared != pdFAIL )
+    {
+        vTaskDelay( xTicksToDelay );
+    }
 }
-
-

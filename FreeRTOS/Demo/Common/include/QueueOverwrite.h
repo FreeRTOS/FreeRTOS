@@ -33,5 +33,3 @@ BaseType_t xIsQueueOverwriteTaskStillRunning( void );
 void vQueueOverwritePeriodicISRDemo( void );
 
 #endif /* QUEUE_OVERWRITE_H */
-
-

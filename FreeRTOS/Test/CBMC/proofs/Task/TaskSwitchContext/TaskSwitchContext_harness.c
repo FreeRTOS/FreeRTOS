@@ -42,13 +42,13 @@ BaseType_t xPrepareTaskLists( void );
  */
 void harness()
 {
-	BaseType_t xTasksPrepared;
+    BaseType_t xTasksPrepared;
 
-	vSetGlobalVariables();
-	xTasksPrepared = xPrepareTaskLists();
+    vSetGlobalVariables();
+    xTasksPrepared = xPrepareTaskLists();
 
-	if ( xTasksPrepared != pdFAIL )
-	{
-		vTaskSwitchContext();
-	}
+    if( xTasksPrepared != pdFAIL )
+    {
+        vTaskSwitchContext();
+    }
 }

@@ -32,5 +32,3 @@ void vStartMathTasks( UBaseType_t uxPriority );
 BaseType_t xAreMathsTaskStillRunning( void );
 
 #endif
-
-

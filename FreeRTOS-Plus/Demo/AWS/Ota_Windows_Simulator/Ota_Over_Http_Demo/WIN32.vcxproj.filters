@@ -205,9 +205,6 @@
     <ClCompile Include="..\..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\error.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\backoff_algorithm</Filter>
     </ClCompile>

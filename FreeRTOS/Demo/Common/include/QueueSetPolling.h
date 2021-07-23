@@ -33,5 +33,3 @@ BaseType_t xAreQueueSetPollTasksStillRunning( void );
 void vQueueSetPollingInterruptAccess( void );
 
 #endif /* QUEUE_SET_POLLING_H */
-
-

@@ -32,5 +32,3 @@ void vCreateAbortDelayTasks( void );
 BaseType_t xAreAbortDelayTestTasksStillRunning( void );
 
 #endif
-
-

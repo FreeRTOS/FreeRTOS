@@ -46,7 +46,7 @@ dependencies:
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent"
 
   - name: "corePKCS11"
-    version: "v3.0.2"
+    version: "v3.1.0"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/corePKCS11.git"

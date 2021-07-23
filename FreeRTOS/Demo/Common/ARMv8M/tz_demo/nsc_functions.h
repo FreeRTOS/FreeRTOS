@@ -33,7 +33,7 @@
 /**
  * @brief Callback function pointer definition.
  */
-typedef void ( *Callback_t ) ( void );
+typedef void ( * Callback_t ) ( void );
 
 /**
  * @brief Invokes the supplied callback which is on the non-secure side.

@@ -32,5 +32,3 @@ void vCreateBlockTimeTasks( void );
 BaseType_t xAreBlockTimeTestTasksStillRunning( void );
 
 #endif
-
-

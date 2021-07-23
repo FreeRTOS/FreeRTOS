@@ -68,6 +68,7 @@ int main()
             #error "Invalid Selection...\nPlease Select a Demo application from the main command"
         }
     #endif /* if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 ) */
+        snprint
     return 0;
 }
 

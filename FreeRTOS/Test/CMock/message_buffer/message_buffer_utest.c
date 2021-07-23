@@ -98,7 +98,7 @@
         {                                           \
             TEST_ASSERT_EQUAL( configASSERT_E, e ); \
         }                                           \
-    } while ( 0 )
+    } while( 0 )
 
 /* ============================  GLOBAL VARIABLES =========================== */
 

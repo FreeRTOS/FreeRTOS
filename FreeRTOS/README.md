@@ -10,10 +10,10 @@ FreeRTOS port, and contains its own readme file.
 
 See [FreeRTOS/SourceOrganization](http://www.freertos.org/a00017.html) for full details of the directory structure and information on locating the files you require.
 
-The easiest way to use FreeRTOS is to start with one of the pre-configured demo 
-application projects (found in the FreeRTOS/Demo directory).  That way you will
+The easiest way to use FreeRTOS is to start with one of the pre-configured demo
+ application projects (found in the FreeRTOS/Demo directory).  That way you will
 have the correct FreeRTOS source files included, and the correct include paths
-configured.  
+configured.
 Once a demo application is building and executing you can remove
 the demo application file, and start to add in your own application source
 files.

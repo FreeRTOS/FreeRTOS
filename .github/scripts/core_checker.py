@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# python >= 3.4 
+# python >= 3.4
 
 import os
 from common.header_checker import HeaderChecker

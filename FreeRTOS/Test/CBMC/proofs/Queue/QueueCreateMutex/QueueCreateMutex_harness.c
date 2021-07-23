@@ -31,8 +31,9 @@
 
 #include "cbmc.h"
 
-void harness() {
-  uint8_t ucQueueType;
+void harness()
+{
+    uint8_t ucQueueType;
 
-  xQueueCreateMutex(ucQueueType);
+    xQueueCreateMutex( ucQueueType );
 }

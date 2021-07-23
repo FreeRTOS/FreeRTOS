@@ -706,7 +706,7 @@ filteration
 findfirst
 findobjects
 fips
-firstbackoffattempt 
+firstbackoffattempt
 fixme
 flase
 flasg
@@ -1228,7 +1228,7 @@ mingw
 minilistitem
 minimise
 minimised
-minpollperiod 
+minpollperiod
 mips
 misc
 misra
@@ -1615,7 +1615,7 @@ ppass
 ppassword
 ppc
 ppcmessagetodisplay
-ppollperiod 
+ppollperiod
 ppr
 pprivatekey
 ppublishinfo

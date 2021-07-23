@@ -57,9 +57,9 @@ static uint32_t ulNumMallocCalls = 0;
 /* ===========================  HELPER FUNCTIONS  =========================== */
 void setxMaskAssertAndAbort( bool mask )
 {
-    xMaskAssertAndAbort  = mask;
+    xMaskAssertAndAbort = mask;
 }
-bool getxMaskAssertAndAbort( )
+bool getxMaskAssertAndAbort()
 {
     return xMaskAssertAndAbort;
 }

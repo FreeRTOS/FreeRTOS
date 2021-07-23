@@ -32,5 +32,3 @@ void vStartDynamicPriorityTasks( void );
 BaseType_t xAreDynamicPriorityTasksStillRunning( void );
 
 #endif
-
-

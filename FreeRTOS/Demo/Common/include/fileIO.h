@@ -30,7 +30,7 @@
 
 void vDisplayMessage( const char * const pcMessageToPrint );
 void vWriteMessageToDisk( const char * const pcMessage );
-void vWriteBufferToDisk( const char * const pcBuffer, uint32_t ulBufferLength );
+void vWriteBufferToDisk( const char * const pcBuffer,
+                         uint32_t ulBufferLength );
 
 #endif
-

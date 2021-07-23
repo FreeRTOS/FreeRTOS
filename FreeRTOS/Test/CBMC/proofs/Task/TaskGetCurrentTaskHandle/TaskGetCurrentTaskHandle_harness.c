@@ -40,15 +40,15 @@ BaseType_t xPrepareCurrentTCB( void );
  */
 void harness()
 {
-	TaskHandle_t xTask;
-	BaseType_t xTasksPrepared;
+    TaskHandle_t xTask;
+    BaseType_t xTasksPrepared;
 
-	xTasksPrepared = xPrepareCurrentTCB();
+    xTasksPrepared = xPrepareCurrentTCB();
 
-	if ( xTasksPrepared != pdFAIL )
-	{
-		xTask = xTaskGetCurrentTaskHandle();
+    if( xTasksPrepared != pdFAIL )
+    {
+        xTask = xTaskGetCurrentTaskHandle();
 
-		__CPROVER_assert( xTask != NULL , "Current task handle is NULL!");
-	}
+        __CPROVER_assert( xTask != NULL, "Current task handle is NULL!" );
+    }
 }

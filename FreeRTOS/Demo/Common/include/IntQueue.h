@@ -34,9 +34,3 @@ BaseType_t xFirstTimerHandler( void );
 BaseType_t xSecondTimerHandler( void );
 
 #endif /* QUEUE_ACCESS_TEST */
-
-
-
-
-
-

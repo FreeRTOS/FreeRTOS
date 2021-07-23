@@ -7,6 +7,8 @@ Changes between FreeRTOS 202104.00 and FreeRTOS 202107.00 released July 2021
 	  synchronizing demo system time with time servers.
 	+ Demo Updates
 		- Update Device Shadow demo to use Named Shadow feature.
+	+ Fixed MISRA violations of Rule 10.4 and Rule 10.7 in backoffAlgorithm.
+
 
 Changes between FreeRTOS 202012.00 and FreeRTOS 202104.00 released April 2021
 

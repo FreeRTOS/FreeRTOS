@@ -4,7 +4,7 @@ interface definition to ensure they are not dependent on the underlying TCP/IP
 stack.  This directory collects together the application protocols that all use
 the same transport interface definition.
 
-Directories: 
+Directories:
 
 + coreMQTT contains the implementation of the coreMQTT library. 
 + coreMQTT-Agent contains the implementation of the coreMQTT Agent library.

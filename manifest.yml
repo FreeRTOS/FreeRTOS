@@ -1,5 +1,5 @@
 name : "FreeRTOS"
-version: "202012.00"
+version: "202107.00"
 description: "This is the standard distribution of FreeRTOS."
 
 dependencies:
@@ -107,19 +107,5 @@ dependencies:
       type: "git"
       url: "https://github.com/FreeRTOS/coreSNTP"
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreSNTP"
-
-  - name: "FreeRTOS-Community-Supported-Demos"
-    version: "e21b617"
-    repository:
-      type: "git"
-      url: "https://github.com/FreeRTOS/FreeRTOS-Community-Supported-Demos"
-      path: "FreeRTOS/Demo/ThirdParty/Community-Supported-Demos"
-
-  - name: "FreeRTOS-Partner-Supported-Demos"
-    version: "109ef4d"
-    repository:
-      type: "git"
-      url: "https://github.com/FreeRTOS/FreeRTOS-Partner-Supported-Demos"
-      path: "FreeRTOS/Demo/ThirdParty/Partner-Supported-Demos"
 
 license: "MIT"

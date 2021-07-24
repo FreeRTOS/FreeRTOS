@@ -8,6 +8,7 @@ Changes between FreeRTOS 202104.00 and FreeRTOS 202107.00 released July 2021
 	+ Demo Updates
 		- Update Device Shadow demo to use Named Shadow feature.
 
+
 Changes between FreeRTOS 202012.00 and FreeRTOS 202104.00 released April 2021
 
 	+ Released LTS versions of AWS IoT Device Defender, AWS IoT Jobs and

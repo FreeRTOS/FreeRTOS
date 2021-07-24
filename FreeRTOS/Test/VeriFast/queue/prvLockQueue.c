@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of

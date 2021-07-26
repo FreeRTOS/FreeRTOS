@@ -155,8 +155,8 @@ jobs:
           path: tools
       - name: Run script to generate JSON memory statistics
         run: tools/memory_statistics/memory_statistics.py --json_report --config tools/memory_statistics/paths.json --output freertos_lts_memory_estimates.json
-      - name: Upload memory statistics as artifact
-        if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/ci/add-memory-estimates' )
+      - name: Upload memory size report as artifact (for main and release-candidate ONLY)
+        if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release-candidate' )
         uses: actions/upload-artifact@v2
         with:
           name: freertos-memory-estimates

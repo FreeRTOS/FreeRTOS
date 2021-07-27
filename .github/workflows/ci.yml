@@ -148,6 +148,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
+      - name: Clone mbedTLS submodule from corePKCS11
+        run: git submodule update --init --recursive --checkout -- FreeRTOS-Plus/Source/corePKCS11
       - name: Clone CI-CD-Github-Actions repository
         uses: actions/checkout@v2
         with:

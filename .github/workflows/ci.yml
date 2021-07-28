@@ -131,11 +131,13 @@ jobs:
       - name: Install Python3
         uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
-      - name: Install dependencies
-        run: python3 -m pip install -r .github/scripts/verify_manifest_requirements.txt
-      - name: Run script to verify manifest.yml
-        run: python3 .github/scripts/verify_manifest.py
+          python-version: '3.x'
+      - name: Run manifest verifier
+        uses: FreeRTOS/CI-CD-Github-Actions/manifest-verifier@main
+        with:
+          path: ./
+          exclude-submodules: FreeRTOS-Plus/Test/CMock,FreeRTOS/Test/CMock/CMock,FreeRTOS/Test/litani
+          fail-on-incorrect-version: true
 
   memory-statistics:
     runs-on: ubuntu-latest

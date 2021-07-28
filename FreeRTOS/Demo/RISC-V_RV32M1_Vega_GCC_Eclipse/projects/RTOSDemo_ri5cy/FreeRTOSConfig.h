@@ -72,6 +72,7 @@
 #define FREERTOS_CONFIG_H
 
 #include "clock_config.h"
+#include "fsl_debug_console.h"
 
 /*-----------------------------------------------------------
  * Application specific definitions.
@@ -148,5 +149,7 @@ header file. */
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
 #define configKERNEL_INTERRUPT_PRIORITY 7
 
+/* Map to the platform printf function. */
+#define configPRINT_STRING( pcString )  PRINTF( pcString )
 
 #endif /* FREERTOS_CONFIG_H */

@@ -21,6 +21,13 @@
                 <sourceRootElem>../Common/Full</sourceRootElem>
                 <sourceRootElem>../Common/include</sourceRootElem>
                 <sourceRootElem>../Common/Minimal</sourceRootElem>
+                <sourceRootElem>./cli</sourceRootElem>
+                <sourceRootElem>TraceRecorder</sourceRootElem>
+                <sourceRootElem>TraceRecorder/config</sourceRootElem>
+                <sourceRootElem>TraceRecorder/include</sourceRootElem>
+                <sourceRootElem>TraceRecorder/streamports</sourceRootElem>
+                <sourceRootElem>TraceRecorder/streamports/AVR_USART/include</sourceRootElem>
+                <sourceRootElem>TraceRecorder/streamports/AVR_USART</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

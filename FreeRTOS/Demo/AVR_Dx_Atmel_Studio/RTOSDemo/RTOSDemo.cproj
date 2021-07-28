@@ -41,7 +41,7 @@
       </framework-data>
     </AsfFrameworkConfig>
     <avrtool>com.atmel.avrdbg.tool.nedbg</avrtool>
-    <avrtoolserialnumber>MCHP3280031800000581</avrtoolserialnumber>
+    <avrtoolserialnumber>MCHP3280031800000820</avrtoolserialnumber>
     <avrdeviceexpectedsignature>0x1E9708</avrdeviceexpectedsignature>
     <avrtoolinterface>UPDI</avrtoolinterface>
     <com_atmel_avrdbg_tool_nedbg>
@@ -52,7 +52,7 @@
         <InterfaceName>UPDI</InterfaceName>
       </ToolOptions>
       <ToolType>com.atmel.avrdbg.tool.nedbg</ToolType>
-      <ToolNumber>MCHP3280031800000581</ToolNumber>
+      <ToolNumber>MCHP3280031800000820</ToolNumber>
       <ToolName>nEDBG</ToolName>
     </com_atmel_avrdbg_tool_nedbg>
     <avrtoolinterfaceclock>750000</avrtoolinterfaceclock>
@@ -60,92 +60,115 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
       <AvrGcc>
-  <avrgcc.common.Device>-mmcu=avr128da48 -B "%24(PackRepoDir)\Atmel\AVR-Dx_DFP\1.2.56\gcc\dev\avr128da48"</avrgcc.common.Device>
-  <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
-  <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
-  <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
-  <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
-  <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
-  <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
-  <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
-  <avrgcc.compiler.symbols.DefSymbols>
-    <ListValues>
-      <Value>NDEBUG</Value>
-    </ListValues>
-  </avrgcc.compiler.symbols.DefSymbols>
-  <avrgcc.compiler.directories.IncludePaths>
-    <ListValues>
-      <Value>%24(PackRepoDir)\Atmel\AVR-Dx_DFP\1.2.56\include</Value>
-    </ListValues>
-  </avrgcc.compiler.directories.IncludePaths>
-  <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
-  <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
-  <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
-  <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
-  <avrgcc.linker.libraries.Libraries>
-    <ListValues>
-      <Value>libm</Value>
-    </ListValues>
-  </avrgcc.linker.libraries.Libraries>
-  <avrgcc.assembler.general.IncludePaths>
-    <ListValues>
-      <Value>%24(PackRepoDir)\Atmel\AVR-Dx_DFP\1.2.56\include</Value>
-    </ListValues>
-  </avrgcc.assembler.general.IncludePaths>
-</AvrGcc>
+        <avrgcc.common.Device>-mmcu=avr128da48 -B "%24(PackRepoDir)\Atmel\AVR-Dx_DFP\1.7.85\gcc\dev\avr128da48"</avrgcc.common.Device>
+        <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
+        <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
+        <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
+        <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
+        <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
+        <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
+        <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
+        <avrgcc.compiler.symbols.DefSymbols>
+          <ListValues>
+            <Value>NDEBUG</Value>
+          </ListValues>
+        </avrgcc.compiler.symbols.DefSymbols>
+        <avrgcc.compiler.directories.IncludePaths>
+          <ListValues>
+            <Value>%24(PackRepoDir)\Atmel\AVR-Dx_DFP\1.7.85\include\</Value>
+          </ListValues>
+        </avrgcc.compiler.directories.IncludePaths>
+        <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
+        <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
+        <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
+        <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
+        <avrgcc.linker.libraries.Libraries>
+          <ListValues>
+            <Value>libm</Value>
+          </ListValues>
+        </avrgcc.linker.libraries.Libraries>
+        <avrgcc.assembler.general.IncludePaths>
+          <ListValues>
+            <Value>%24(PackRepoDir)\Atmel\AVR-Dx_DFP\1.7.85\include\</Value>
+          </ListValues>
+        </avrgcc.assembler.general.IncludePaths>
+      </AvrGcc>
     </ToolchainSettings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <ToolchainSettings>
       <AvrGcc>
-  <avrgcc.common.Device>-mmcu=avr128da48 -B "%24(PackRepoDir)\Atmel\AVR-Dx_DFP\1.2.56\gcc\dev\avr128da48"</avrgcc.common.Device>
-  <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
-  <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
-  <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
-  <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
-  <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
-  <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
-  <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
-  <avrgcc.compiler.symbols.DefSymbols>
-    <ListValues>
-      <Value>DEBUG</Value>
-    </ListValues>
-  </avrgcc.compiler.symbols.DefSymbols>
-  <avrgcc.compiler.directories.IncludePaths>
-    <ListValues>
-      <Value>../../../../Source</Value>
-      <Value>../../../../Source/portable/MemMang</Value>
-      <Value>../../../../Source/portable/GCC/AVR_AVRDx</Value>
-      <Value>../../../../Source/include</Value>
-      <Value>../../../Common/include</Value>
-      <Value>../../../Common/Minimal</Value>
-      <Value>../../../Common/Full</Value>
-      <Value>../ParTest</Value>
-      <Value>../serial</Value>
-      <Value>..</Value>
-      <Value>%24(PackRepoDir)\Atmel\AVR-Dx_DFP\1.2.56\include</Value>
-    </ListValues>
-  </avrgcc.compiler.directories.IncludePaths>
-  <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
-  <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
-  <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
-  <avrgcc.compiler.optimization.DebugLevel>Default (-g2)</avrgcc.compiler.optimization.DebugLevel>
-  <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
-  <avrgcc.linker.libraries.Libraries>
-    <ListValues>
-      <Value>libm</Value>
-    </ListValues>
-  </avrgcc.linker.libraries.Libraries>
-  <avrgcc.assembler.general.IncludePaths>
-    <ListValues>
-      <Value>%24(PackRepoDir)\Atmel\AVR-Dx_DFP\1.2.56\include</Value>
-    </ListValues>
-  </avrgcc.assembler.general.IncludePaths>
-  <avrgcc.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcc.assembler.debugging.DebugLevel>
-</AvrGcc>
+        <avrgcc.common.Device>-mmcu=avr128da48 -B "%24(PackRepoDir)\Atmel\AVR-Dx_DFP\1.7.85\gcc\dev\avr128da48"</avrgcc.common.Device>
+        <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
+        <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
+        <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
+        <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
+        <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
+        <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
+        <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
+        <avrgcc.compiler.symbols.DefSymbols>
+          <ListValues>
+            <Value>DEBUG</Value>
+          </ListValues>
+        </avrgcc.compiler.symbols.DefSymbols>
+        <avrgcc.compiler.directories.IncludePaths>
+          <ListValues>
+            <Value>../../../../Source</Value>
+            <Value>../../../../Source/portable/MemMang</Value>
+            <Value>../../../../Source/portable/GCC/AVR_AVRDx</Value>
+            <Value>../../../../Source/include</Value>
+            <Value>../../../Common/include</Value>
+            <Value>../../../Common/Minimal</Value>
+            <Value>../../../Common/Full</Value>
+            <Value>../ParTest</Value>
+            <Value>../serial</Value>
+            <Value>..</Value>
+            <Value>%24(PackRepoDir)\Atmel\AVR-Dx_DFP\1.7.85\include\</Value>
+            <Value>../cli</Value>
+            <Value>../timers</Value>
+            <Value>../TraceRecorder</Value>
+            <Value>../TraceRecorder/config</Value>
+            <Value>../TraceRecorder/include</Value>
+            <Value>../TraceRecorder/streamports</Value>
+            <Value>../TraceRecorder/streamports/AVR_USART</Value>
+            <Value>../TraceRecorder/streamports/AVR_USART/include</Value>
+          </ListValues>
+        </avrgcc.compiler.directories.IncludePaths>
+        <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
+        <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
+        <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
+        <avrgcc.compiler.optimization.DebugLevel>Default (-g2)</avrgcc.compiler.optimization.DebugLevel>
+        <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
+        <avrgcc.linker.libraries.Libraries>
+          <ListValues>
+            <Value>libm</Value>
+          </ListValues>
+        </avrgcc.linker.libraries.Libraries>
+        <avrgcc.assembler.general.IncludePaths>
+          <ListValues>
+            <Value>%24(PackRepoDir)\Atmel\AVR-Dx_DFP\1.7.85\include\</Value>
+          </ListValues>
+        </avrgcc.assembler.general.IncludePaths>
+        <avrgcc.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcc.assembler.debugging.DebugLevel>
+      </AvrGcc>
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="cli\FreeRTOS_CLI.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="cli\FreeRTOS_CLI.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="cli\Sample-CLI-commands.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="cli\UARTCommandConsole.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="cli\UARTCommandConsole.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="clk_config.h">
       <SubType>compile</SubType>
     </Compile>
@@ -268,16 +291,43 @@
       <SubType>compile</SubType>
       <Link>freeRTOS\include\timers.h</Link>
     </Compile>
+    <Compile Include="FreeRTOSConfig_blinky.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FreeRTOSConfig_cli.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FreeRTOSConfig_full.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FreeRTOSConfig_minimal.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FreeRTOSConfig_tickless.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FreeRTOSConfig_trace.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main_blinky.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="main_cli.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main_full.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main_minimal.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="main_tickless.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="main_trace.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="ParTest\partest.c">
@@ -364,8 +414,60 @@
       <SubType>compile</SubType>
       <Link>Common\Full\print.c</Link>
     </Compile>
+    <Compile Include="serial\usart.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="serial\usart.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\config\trcConfig.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\config\trcSnapshotConfig.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\config\trcStreamingConfig.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\include\aws_secure_sockets.tzext.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\include\aws_wifi.tzext.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\include\trcExtensions.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\include\trcHardwarePort.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\include\trcKernelPort.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\include\trcPortDefines.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\include\trcRecorder.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\streamports\AVR_USART\include\trcStreamingPort.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\streamports\AVR_USART\trcStreamingPort.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\trcKernelPort.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\trcSnapshotRecorder.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\trcStreamingRecorder.c">
+      <SubType>compile</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="cli\" />
     <Folder Include="freeRTOS\" />
     <Folder Include="freeRTOS\include" />
     <Folder Include="freeRTOS\portable" />
@@ -378,6 +480,17 @@
     <Folder Include="Common\include" />
     <Folder Include="Common\Minimal" />
     <Folder Include="Common\Full" />
+    <Folder Include="TraceRecorder\" />
+    <Folder Include="TraceRecorder\config\" />
+    <Folder Include="TraceRecorder\include\" />
+    <Folder Include="TraceRecorder\streamports\" />
+    <Folder Include="TraceRecorder\streamports\AVR_USART\" />
+    <Folder Include="TraceRecorder\streamports\AVR_USART\include\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TraceRecorder\tracealyzer_readme.txt">
+      <SubType>compile</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

@@ -3,3 +3,4 @@ dist
 debug
 nbproject/*
 !nbproject/*.xml
+.generated_files

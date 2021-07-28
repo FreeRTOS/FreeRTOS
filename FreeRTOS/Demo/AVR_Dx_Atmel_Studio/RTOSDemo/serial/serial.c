@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202107.00
+ * FreeRTOS Kernel V10.3.1
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,9 +19,10 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * https://www.FreeRTOS.org
- * https://github.com/FreeRTOS
+ * http://www.FreeRTOS.org
+ * http://aws.amazon.com/freertos
  *
+ * 1 tab == 4 spaces!
  */
 
 
@@ -33,37 +34,22 @@
 #include "task.h"
 #include "serial.h"
 #include <avr/interrupt.h>
+#include "usart.h"
 
-#define USART_BAUD_RATE(BAUD_RATE) ((float)(configCPU_CLOCK_HZ * 64 / (16 * (float)BAUD_RATE)) + 0.5)
- 
-static QueueHandle_t xRxedChars;
-static QueueHandle_t xCharsForTx;
+#define RX_BUFFER_SIZE 128
+#define TX_BUFFER_SIZE 128
 
-#define vInterruptOn() USART1.CTRLA |= (1 << USART_DREIE_bp)
-
-#define vInterruptOff() USART1.CTRLA &= ~(1 << USART_DREIE_bp)
+static uint8_t rxbuf[RX_BUFFER_SIZE];
+static uint8_t txbuf[TX_BUFFER_SIZE];
 
 xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
     portENTER_CRITICAL();
     {
-        /* Create the queues used by the com test task. */
-        xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
-        xCharsForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
-
-        USART1.BAUD = (uint16_t)USART_BAUD_RATE(ulWantedBaud); /* set baud rate register */
-
-        USART1.CTRLA = 1 << USART_LBME_bp       /* Loop-back Mode Enable: enabled */
-                     | USART_RS485_OFF_gc       /* RS485 Mode disabled */
-                     | 1 << USART_RXCIE_bp;     /* Receive Complete Interrupt Enable: enabled */
-
-        USART1.CTRLB = 1 << USART_RXEN_bp       /* Receiver enable: enabled */
-                     | USART_RXMODE_NORMAL_gc   /* Normal mode */
-                     | 1 << USART_TXEN_bp;      /* Transmitter Enable: enabled */
+        USART_initialize(rxbuf, RX_BUFFER_SIZE, txbuf, TX_BUFFER_SIZE, ulWantedBaud);
     }
-    
     portEXIT_CRITICAL();
-    
+
     /* Unlike other ports, this serial code does not allow for more than one
     com port.  We therefore don't return a pointer to a port structure and can
     instead just return NULL. */
@@ -73,30 +59,52 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
 
 signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
-    /* Get the next character from the buffer.  Return false if no characters
-    are available, or arrive before xBlockTime expires. */
-    if( xQueueReceive( xRxedChars, pcRxedChar, xBlockTime ) )
+    volatile TickType_t currentTick;
+    
+    currentTick = xTaskGetTickCount();
+    
+    while(((xTaskGetTickCount() - currentTick) < xBlockTime) && !(USART_isRxReady()))
     {
+        vTaskDelay(1);
+    };
+
+    if (USART_isRxReady())
+    {
+        *pcRxedChar = USART_read();
         return pdTRUE;
     }
-    else
-    {
-        return pdFALSE;
-    }
+    return pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
 signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
-    /* Return false if after the block time there is no room on the Tx queue. */
-    if( xQueueSend( xCharsForTx, &cOutChar, xBlockTime ) != pdPASS )
+    volatile TickType_t currentTick;
+    
+    currentTick = xTaskGetTickCount();
+    
+    while(((xTaskGetTickCount() - currentTick) < xBlockTime) && !(USART_isTxReady()))
     {
-        return pdFAIL;
+        vTaskDelay(1);
+    };
+    if (USART_isTxReady())
+    {
+        USART_write( cOutChar);
+        return pdTRUE;
     }
+    /* Return false if after the block time there is no room on the Tx buffer. */
+    return pdFALSE;
+}
+/*-----------------------------------------------------------*/
+
+void vSerialPutString(xComPortHandle pxPort, const signed char * const pcBuffer, unsigned short xBufferLength )
+{
+    size_t cByteToSend;
     
-    vInterruptOn();
-    
-    return pdPASS;
+    for( cByteToSend = 0; cByteToSend < xBufferLength; cByteToSend++ )
+    {
+        xSerialPutChar(pxPort, pcBuffer[cByteToSend], portMAX_DELAY);
+    }
 }
 /*-----------------------------------------------------------*/
 
@@ -106,44 +114,8 @@ void vSerialClose( xComPortHandle xPort )
     re-install the original ISR. */
 
     portENTER_CRITICAL();
-    {
-        vInterruptOff();
-        USART1.CTRLB &= (1 << USART_RXEN_bp);
+    {      
+        USART_close();
     }
     portEXIT_CRITICAL();
-}
-/*-----------------------------------------------------------*/
-
-ISR(USART1_RXC_vect)
-{
-signed char ucChar, xHigherPriorityTaskWoken = pdFALSE;
-
-    /* Get the character and post it on the queue of Rxed characters.
-    If the post causes a task to wake force a context switch as the woken task
-    may have a higher priority than the task we have interrupted. */
-    ucChar = USART1.RXDATAL;
-
-    xQueueSendFromISR( xRxedChars, &ucChar, &xHigherPriorityTaskWoken );
-
-    if( xHigherPriorityTaskWoken != pdFALSE )
-    {
-        portYIELD_FROM_ISR();
-    }
-        
-}
-
-ISR(USART1_DRE_vect)
-{
-signed char cChar, cTaskWoken = pdFALSE;
-
-    if( xQueueReceiveFromISR( xCharsForTx, &cChar, &cTaskWoken ) == pdTRUE )
-    {
-        /* Send the next character queued for Tx. */
-        USART1.TXDATAL = cChar;
-    }
-    else
-    {
-        /* Queue empty, nothing to send. */
-        vInterruptOff();
-    }
 }

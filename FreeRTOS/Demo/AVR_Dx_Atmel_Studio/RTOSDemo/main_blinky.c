@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202107.00
+ * FreeRTOS V202012.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -53,9 +53,9 @@
  */
 
 #include <avr/io.h>
-
 /* Scheduler include files. */
 #include "FreeRTOS.h"
+#if ( mainSELECTED_APPLICATION == BLINKY_DEMO )
 #include "task.h"
 #include "semphr.h"
 
@@ -74,9 +74,7 @@ the queue empty. */
 
 /*-----------------------------------------------------------*/
 
-/*
- * The tasks as described in the comments at the top of this file.
- */
+/* The tasks as described in the comments at the top of this file. */
 static void prvQueueReceiveTask( void *pvParameters );
 static void prvQueueSendTask( void *pvParameters );
 
@@ -94,13 +92,7 @@ void main_blinky( void )
     {
         /* Start the two tasks as described in the comments at the top of this
         file. */
-        xTaskCreate( prvQueueReceiveTask,               /* The function that implements the task. */
-                    "Rx",                               /* The text name assigned to the task - for debug only as it is not used by the kernel. */
-                    configMINIMAL_STACK_SIZE,           /* The size of the stack to allocate to the task. */
-                    NULL,                               /* The parameter passed to the task - not used in this case. */
-                    mainQUEUE_RECEIVE_TASK_PRIORITY,    /* The priority assigned to the task. */
-                    NULL );                             /* The task handle is not required, so NULL is passed. */
-
+        xTaskCreate( prvQueueReceiveTask, "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
         xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
         /* Start the tasks and timer running. */
@@ -175,3 +167,4 @@ const unsigned long ulExpectedValue = 100UL;
     }
 }
 
+#endif

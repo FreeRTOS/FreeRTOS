@@ -100,8 +100,41 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <logicalFolder name="f1" displayName="cli" projectFiles="true">
+        <itemPath>cli/FreeRTOS_CLI.h</itemPath>
+        <itemPath>cli/UARTCommandConsole.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="TraceRecorder" projectFiles="true">
+        <logicalFolder name="f1" displayName="config" projectFiles="true">
+          <itemPath>TraceRecorder/config/trcConfig.h</itemPath>
+          <itemPath>TraceRecorder/config/trcSnapshotConfig.h</itemPath>
+          <itemPath>TraceRecorder/config/trcStreamingConfig.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="include" projectFiles="true">
+          <itemPath>TraceRecorder/include/trcExtensions.h</itemPath>
+          <itemPath>TraceRecorder/include/trcHardwarePort.h</itemPath>
+          <itemPath>TraceRecorder/include/trcKernelPort.h</itemPath>
+          <itemPath>TraceRecorder/include/trcPortDefines.h</itemPath>
+          <itemPath>TraceRecorder/include/trcRecorder.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f3" displayName="streamports" projectFiles="true">
+          <logicalFolder name="f1" displayName="AVR_USART" projectFiles="true">
+            <logicalFolder name="f1" displayName="include" projectFiles="true">
+              <itemPath>TraceRecorder/streamports/AVR_USART/include/trcStreamingPort.h</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
       <itemPath>regtest.h</itemPath>
       <itemPath>clk_config.h</itemPath>
+      <itemPath>FreeRTOSConfig.h</itemPath>
+      <itemPath>FreeRTOSConfig_blinky.h</itemPath>
+      <itemPath>FreeRTOSConfig_full.h</itemPath>
+      <itemPath>FreeRTOSConfig_minimal.h</itemPath>
+      <itemPath>FreeRTOSConfig_cli.h</itemPath>
+      <itemPath>FreeRTOSConfig_tickless.h</itemPath>
+      <itemPath>FreeRTOSConfig_trace.h</itemPath>
+      <itemPath>serial/usart.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -110,7 +143,21 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>FreeRTOSConfig.h</itemPath>
+      <logicalFolder name="f1" displayName="cli" projectFiles="true">
+        <itemPath>cli/FreeRTOS_CLI.c</itemPath>
+        <itemPath>cli/Sample-CLI-commands.c</itemPath>
+        <itemPath>cli/UARTCommandConsole.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="TraceRecorder" projectFiles="true">
+        <logicalFolder name="f1" displayName="streamports" projectFiles="true">
+          <logicalFolder name="f1" displayName="AVR_USART" projectFiles="true">
+            <itemPath>TraceRecorder/streamports/AVR_USART/trcStreamingPort.c</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+        <itemPath>TraceRecorder/trcKernelPort.c</itemPath>
+        <itemPath>TraceRecorder/trcSnapshotRecorder.c</itemPath>
+        <itemPath>TraceRecorder/trcStreamingRecorder.c</itemPath>
+      </logicalFolder>
       <itemPath>main.c</itemPath>
       <itemPath>main_blinky.c</itemPath>
       <itemPath>main_full.c</itemPath>
@@ -118,6 +165,10 @@
       <itemPath>regtest.c</itemPath>
       <itemPath>serial/serial.c</itemPath>
       <itemPath>ParTest/ParTest.c</itemPath>
+      <itemPath>main_cli.c</itemPath>
+      <itemPath>main_trace.c</itemPath>
+      <itemPath>main_tickless.c</itemPath>
+      <itemPath>serial/usart.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -128,12 +179,19 @@
   <sourceRootList>
     <Elem>.</Elem>
     <Elem>../../Source</Elem>
-    <Elem>../Common/include</Elem>
-    <Elem>../Common/Full</Elem>
-    <Elem>../Common/Minimal</Elem>
-    <Elem>../../Source/portable/MemMang</Elem>
     <Elem>../../Source/include</Elem>
     <Elem>../../Source/portable/GCC/AVR_Mega0</Elem>
+    <Elem>../../Source/portable/MemMang</Elem>
+    <Elem>../Common/Full</Elem>
+    <Elem>../Common/include</Elem>
+    <Elem>../Common/Minimal</Elem>
+    <Elem>./cli</Elem>
+    <Elem>TraceRecorder</Elem>
+    <Elem>TraceRecorder/config</Elem>
+    <Elem>TraceRecorder/include</Elem>
+    <Elem>TraceRecorder/streamports</Elem>
+    <Elem>TraceRecorder/streamports/AVR_USART/include</Elem>
+    <Elem>TraceRecorder/streamports/AVR_USART</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -145,11 +203,11 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>nEdbgTool</platformTool>
         <languageToolchain>XC8</languageToolchain>
-        <languageToolchainVersion>2.20</languageToolchainVersion>
+        <languageToolchainVersion>2.32</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="ATmega_DFP" vendor="Microchip" version="2.2.108"/>
+        <pack name="ATmega_DFP" vendor="Microchip" version="2.3.126"/>
       </packs>
       <ScriptingSettings>
       </ScriptingSettings>
@@ -170,6 +228,7 @@
       </compileType>
       <makeCustomizationType>
         <makeCustomizationPreStepEnabled>false</makeCustomizationPreStepEnabled>
+        <makeUseCleanTarget>false</makeUseCleanTarget>
         <makeCustomizationPreStep></makeCustomizationPreStep>
         <makeCustomizationPostStepEnabled>false</makeCustomizationPostStepEnabled>
         <makeCustomizationPostStep></makeCustomizationPostStep>
@@ -186,7 +245,7 @@
         <property key="define-macros" value=""/>
         <property key="disable-optimizations" value="false"/>
         <property key="extra-include-directories"
-                  value="..\Common\include;..\..\Source\include;..\..\Source\portable\MemMang;..\..\Source;.;..\..\Source\portable\GCC\AVR_Mega0;..\Common\include"/>
+                  value="..\Common\include;..\..\Source\include;..\..\Source\portable\GCC\AVR_Mega0;..\..\Source\portable\MemMang;..\..\Source;ParTest;serial;.;TraceRecorder;TraceRecorder\include;TraceRecorder\config;TraceRecorder\streamports\AVR_USART\include;cli"/>
         <property key="favor-optimization-for" value="-speed,+space"/>
         <property key="garbage-collect-data" value="true"/>
         <property key="garbage-collect-functions" value="true"/>
@@ -206,7 +265,7 @@
         <property key="preprocess-assembler" value="true"/>
         <property key="short-enums" value="true"/>
         <property key="undefine-macros" value=""/>
-        <property key="use-cci" value="false"/>
+        <property key="use-cci" value="true"/>
         <property key="use-iar" value="false"/>
         <property key="verbose" value="false"/>
         <property key="warning-level" value="-3"/>
@@ -275,6 +334,7 @@
         <property key="stack-size-main" value="auto"/>
         <property key="stack-type" value="compiled"/>
         <property key="user-pack-device-support" value=""/>
+        <property key="wpo-lto" value="false"/>
       </XC8-config-global>
       <nEdbgTool>
         <property key="AutoSelectMemRanges" value="auto"/>
@@ -287,6 +347,7 @@
         <property key="firmware.toolpack"
                   value="Press to select which tool pack to use"/>
         <property key="firmware.update.action" value="firmware.update.use.latest"/>
+        <property key="freeze.timers" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>
         <property key="memories.configurationmemory" value="true"/>
@@ -300,7 +361,10 @@
                   value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-ffff"/>
+        <property key="memories.rww" value="true"/>
         <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmerToGoFilePath"
+                  value="C:/SyncFreeRTOS/freertos/FreeRTOS/Demo/AVR_ATMega4809_MPLAB.X/debug/default/AVR_ATMega4809_MPLAB_ptg"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.preservedataflash" value="false"/>
         <property key="programoptions.preservedataflash.ranges"

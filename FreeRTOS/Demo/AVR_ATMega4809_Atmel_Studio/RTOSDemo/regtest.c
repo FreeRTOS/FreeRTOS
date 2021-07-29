@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202107.00
+ * FreeRTOS V202012.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -38,12 +38,13 @@ static void prvRegisterCheck1( void *pvParameters );
 static void prvRegisterCheck2( void *pvParameters );
 
 /* Set to a non zero value should an error be found. */
-portBASE_TYPE xRegTestError = pdFALSE;
+portBASE_TYPE xRegTestError;
 
 /*-----------------------------------------------------------*/
 
 void vStartRegTestTasks( void )
 {
+    xRegTestError = pdFALSE;
     xTaskCreate( prvRegisterCheck1, "Reg1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
     xTaskCreate( prvRegisterCheck2, "Reg2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 }

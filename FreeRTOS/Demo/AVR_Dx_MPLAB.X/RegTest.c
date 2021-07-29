@@ -44,6 +44,7 @@ portBASE_TYPE __attribute__((used)) xRegTestError;
 
 void vStartRegTestTasks( void )
 {
+    xRegTestError = pdFALSE;
     xTaskCreate( prvRegisterCheck1, "Reg1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
     xTaskCreate( prvRegisterCheck2, "Reg2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 }

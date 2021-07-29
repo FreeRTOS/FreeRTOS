@@ -15,12 +15,19 @@
             <sourceRootList>
                 <sourceRootElem>.</sourceRootElem>
                 <sourceRootElem>../../Source</sourceRootElem>
-                <sourceRootElem>../Common/include</sourceRootElem>
-                <sourceRootElem>../Common/Full</sourceRootElem>
-                <sourceRootElem>../Common/Minimal</sourceRootElem>
-                <sourceRootElem>../../Source/portable/MemMang</sourceRootElem>
                 <sourceRootElem>../../Source/include</sourceRootElem>
                 <sourceRootElem>../../Source/portable/GCC/AVR_Mega0</sourceRootElem>
+                <sourceRootElem>../../Source/portable/MemMang</sourceRootElem>
+                <sourceRootElem>../Common/Full</sourceRootElem>
+                <sourceRootElem>../Common/include</sourceRootElem>
+                <sourceRootElem>../Common/Minimal</sourceRootElem>
+                <sourceRootElem>./cli</sourceRootElem>
+                <sourceRootElem>TraceRecorder</sourceRootElem>
+                <sourceRootElem>TraceRecorder/config</sourceRootElem>
+                <sourceRootElem>TraceRecorder/include</sourceRootElem>
+                <sourceRootElem>TraceRecorder/streamports</sourceRootElem>
+                <sourceRootElem>TraceRecorder/streamports/AVR_USART/include</sourceRootElem>
+                <sourceRootElem>TraceRecorder/streamports/AVR_USART</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

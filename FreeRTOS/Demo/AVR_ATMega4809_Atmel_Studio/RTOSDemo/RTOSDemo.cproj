@@ -41,7 +41,7 @@
       </framework-data>
     </AsfFrameworkConfig>
     <avrtool>com.atmel.avrdbg.tool.nedbg</avrtool>
-    <avrtoolserialnumber>ATML3094051800001616</avrtoolserialnumber>
+    <avrtoolserialnumber>MCHP3094071800004329</avrtoolserialnumber>
     <avrdeviceexpectedsignature>0x1E9651</avrdeviceexpectedsignature>
     <avrtoolinterface>UPDI</avrtoolinterface>
     <com_atmel_avrdbg_tool_nedbg>
@@ -52,7 +52,7 @@
         <InterfaceName>UPDI</InterfaceName>
       </ToolOptions>
       <ToolType>com.atmel.avrdbg.tool.nedbg</ToolType>
-      <ToolNumber>ATML3094051800001616</ToolNumber>
+      <ToolNumber>MCHP3094071800004329</ToolNumber>
       <ToolName>nEDBG</ToolName>
     </com_atmel_avrdbg_tool_nedbg>
     <avrtoolinterfaceclock>750000</avrtoolinterfaceclock>
@@ -60,7 +60,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
       <AvrGcc>
-        <avrgcc.common.Device>-mmcu=atmega4809 -B "%24(PackRepoDir)\Atmel\ATmega_DFP\1.4.351\gcc\dev\atmega4809"</avrgcc.common.Device>
+        <avrgcc.common.Device>-mmcu=atmega4809 -B "%24(PackRepoDir)\atmel\ATmega_DFP\1.6.364\gcc\dev\atmega4809"</avrgcc.common.Device>
         <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
         <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
         <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
@@ -75,7 +75,7 @@
         </avrgcc.compiler.symbols.DefSymbols>
         <avrgcc.compiler.directories.IncludePaths>
           <ListValues>
-            <Value>%24(PackRepoDir)\Atmel\ATmega_DFP\1.4.351\include</Value>
+            <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.6.364\include\</Value>
           </ListValues>
         </avrgcc.compiler.directories.IncludePaths>
         <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
@@ -89,7 +89,7 @@
         </avrgcc.linker.libraries.Libraries>
         <avrgcc.assembler.general.IncludePaths>
           <ListValues>
-            <Value>%24(PackRepoDir)\Atmel\ATmega_DFP\1.4.351\include</Value>
+            <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.6.364\include\</Value>
           </ListValues>
         </avrgcc.assembler.general.IncludePaths>
       </AvrGcc>
@@ -98,7 +98,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <ToolchainSettings>
       <AvrGcc>
-        <avrgcc.common.Device>-mmcu=atmega4809 -B "%24(PackRepoDir)\Atmel\ATmega_DFP\1.4.351\gcc\dev\atmega4809"</avrgcc.common.Device>
+        <avrgcc.common.Device>-mmcu=atmega4809 -B "%24(PackRepoDir)\atmel\ATmega_DFP\1.6.364\gcc\dev\atmega4809"</avrgcc.common.Device>
         <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
         <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
         <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
@@ -120,6 +120,11 @@
             <Value>../../../../Source/portable/MemMang</Value>
             <Value>../../../../Source/portable/GCC/AVR_Mega0</Value>
             <Value>../../../Common/include</Value>
+            <Value>../cli</Value>
+            <Value>../TraceRecorder/include</Value>
+            <Value>../TraceRecorder/config</Value>
+            <Value>../TraceRecorder/streamports/AVR_USART/include</Value>
+            <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.6.364\include\</Value>
           </ListValues>
         </avrgcc.compiler.directories.IncludePaths>
         <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
@@ -135,6 +140,7 @@
         <avrgcc.assembler.general.IncludePaths>
           <ListValues>
             <Value>%24(PackRepoDir)\Atmel\ATmega_DFP\1.4.351\include</Value>
+            <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.6.364\include\</Value>
           </ListValues>
         </avrgcc.assembler.general.IncludePaths>
         <avrgcc.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcc.assembler.debugging.DebugLevel>
@@ -146,10 +152,43 @@
       <SubType>compile</SubType>
       <Link>Source\include\FreeRTOS.h</Link>
     </Compile>
+    <Compile Include="cli\FreeRTOS_CLI.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="cli\FreeRTOS_CLI.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="cli\Sample-CLI-commands.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="cli\UARTCommandConsole.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="cli\UARTCommandConsole.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="clk_config.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="FreeRTOSConfig.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FreeRTOSConfig_blinky.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FreeRTOSConfig_cli.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FreeRTOSConfig_full.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FreeRTOSConfig_minimal.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FreeRTOSConfig_tickless.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FreeRTOSConfig_trace.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main.c">
@@ -270,10 +309,19 @@
     <Compile Include="main_blinky.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="main_cli.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main_full.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main_minimal.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="main_tickless.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="main_trace.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="ParTest\ParTest.c">
@@ -352,8 +400,54 @@
       <SubType>compile</SubType>
       <Link>Common\Full\print.c</Link>
     </Compile>
+    <Compile Include="serial\usart.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="serial\usart.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\config\trcConfig.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\config\trcSnapshotConfig.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\config\trcStreamingConfig.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\include\trcExtensions.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\include\trcHardwarePort.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\include\trcKernelPort.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\include\trcPortDefines.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\include\trcRecorder.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\streamports\AVR_USART\include\trcStreamingPort.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\streamports\AVR_USART\trcStreamingPort.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\trcKernelPort.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\trcSnapshotRecorder.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TraceRecorder\trcStreamingRecorder.c">
+      <SubType>compile</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="cli\" />
     <Folder Include="Source" />
     <Folder Include="Source\include" />
     <Folder Include="Source\portable" />
@@ -367,6 +461,17 @@
     <Folder Include="Common\include" />
     <Folder Include="Common\Minimal" />
     <Folder Include="Common\Full" />
+    <Folder Include="TraceRecorder\" />
+    <Folder Include="TraceRecorder\config\" />
+    <Folder Include="TraceRecorder\include\" />
+    <Folder Include="TraceRecorder\streamports\" />
+    <Folder Include="TraceRecorder\streamports\AVR_USART\" />
+    <Folder Include="TraceRecorder\streamports\AVR_USART\include\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TraceRecorder\tracealyzer_readme.txt">
+      <SubType>compile</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

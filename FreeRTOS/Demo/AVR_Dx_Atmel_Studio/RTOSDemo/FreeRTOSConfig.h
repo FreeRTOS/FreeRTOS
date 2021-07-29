@@ -153,7 +153,7 @@ Note that some compilers not allow arrays with size 0. */
 #define TICKLESS_DEMO        4
 #define TRACE_DEMO           5
 
-#define mainSELECTED_APPLICATION  CLI_DEMO
+#define mainSELECTED_APPLICATION  BLINKY_DEMO
 
 #if ( mainSELECTED_APPLICATION == BLINKY_DEMO )
     #include "FreeRTOSConfig_blinky.h"

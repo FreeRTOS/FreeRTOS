@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -33,31 +33,32 @@
 void vNondetSetCurrentTCB( void );
 void vSetGlobalVariables( void );
 void vPrepareTaskLists( void );
-TaskHandle_t *pxNondetSetTaskHandle( void );
-char *pcNondetSetString( size_t xSizeLength );
+TaskHandle_t * pxNondetSetTaskHandle( void );
+char * pcNondetSetString( size_t xSizeLength );
 
 void harness()
 {
-	TaskFunction_t pxTaskCode;
-	char * pcName;
-	configSTACK_DEPTH_TYPE usStackDepth = STACK_DEPTH;
-	void * pvParameters;
-	TaskHandle_t * pxCreatedTask;
+    TaskFunction_t pxTaskCode;
+    char * pcName;
+    configSTACK_DEPTH_TYPE usStackDepth = STACK_DEPTH;
+    void * pvParameters;
+    TaskHandle_t * pxCreatedTask;
 
-	UBaseType_t uxPriority;
+    UBaseType_t uxPriority;
+
     __CPROVER_assume( uxPriority < configMAX_PRIORITIES );
 
-	vNondetSetCurrentTCB();
-	vSetGlobalVariables();
-	vPrepareTaskLists();
+    vNondetSetCurrentTCB();
+    vSetGlobalVariables();
+    vPrepareTaskLists();
 
-	pxCreatedTask = pxNondetSetTaskHandle();
-	pcName = pcNondetSetString( configMAX_TASK_NAME_LEN );
+    pxCreatedTask = pxNondetSetTaskHandle();
+    pcName = pcNondetSetString( configMAX_TASK_NAME_LEN );
 
-	xTaskCreate(pxTaskCode,
-		    pcName,
-		    usStackDepth,
-		    pvParameters,
-		    uxPriority,
-		    pxCreatedTask );
+    xTaskCreate( pxTaskCode,
+                 pcName,
+                 usStackDepth,
+                 pvParameters,
+                 uxPriority,
+                 pxCreatedTask );
 }

@@ -18,5 +18,4 @@ struct __metal_driver_sifive_local_external_interrupts0 {
     int init_done;
 };
 
-
 #endif

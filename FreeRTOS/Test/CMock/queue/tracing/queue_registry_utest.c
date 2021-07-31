@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -175,7 +175,7 @@ void test_vQueueAddToRegistry_twice( void )
     const char * pcFakeString1 = ( char * ) ( BaseType_t ) getNextMonotonicTestValue();
     const char * pcFakeString2 = ( char * ) ( BaseType_t ) getNextMonotonicTestValue();
 
-    /* Add an item to the registry **/
+    /* Add an item to the registry */
     vQueueAddToRegistry( xFakeHandle, pcFakeString1 );
 
     TEST_ASSERT_TRUE( helper_find_in_queue_registry( xFakeHandle, pcFakeString1 ) );

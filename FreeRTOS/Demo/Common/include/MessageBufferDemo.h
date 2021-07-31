@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -28,10 +28,7 @@
 #ifndef MESSAGE_BUFFER_TEST_H
 #define MESSAGE_BUFFER_TEST_H
 
-void vStartMessageBufferTasks( configSTACK_DEPTH_TYPE xStackSize  );
+void vStartMessageBufferTasks( configSTACK_DEPTH_TYPE xStackSize );
 BaseType_t xAreMessageBufferTasksStillRunning( void );
 
 #endif /* MESSAGE_BUFFER_TEST_H */
-
-
-

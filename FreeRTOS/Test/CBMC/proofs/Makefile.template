@@ -138,12 +138,11 @@ report: cbmc.txt property.xml coverage.xml
 	$(VIEWER) \
 	--goto $(ENTRY).goto \
 	--srcdir $(FREERTOS) \
-	--blddir $(FREERTOS) \
-	--htmldir html \
-	--srcexclude "(.@FORWARD_SLASH@Demo)" \
+	--reportdir html \
+	--exclude "(.@FORWARD_SLASH@Demo)" \
 	--result cbmc.txt \
 	--property property.xml \
-	--block coverage.xml
+	--coverage coverage.xml
 
 # This rule depends only on cbmc.txt and has no dependents, so it will
 # not block the report from being generated if it fails. This rule is

@@ -41,13 +41,13 @@ BaseType_t xPrepareTaskLists( void );
  */
 void harness()
 {
-	BaseType_t xTasksPrepared;
+    BaseType_t xTasksPrepared;
 
-	vSetGlobalVariables();
-	xTasksPrepared = xPrepareTaskLists();
+    vSetGlobalVariables();
+    xTasksPrepared = xPrepareTaskLists();
 
-	if ( xTasksPrepared != pdFAIL )
-	{
-		xTaskIncrementTick();
-	}
+    if( xTasksPrepared != pdFAIL )
+    {
+        xTaskIncrementTick();
+    }
 }

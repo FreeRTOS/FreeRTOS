@@ -41,14 +41,14 @@ BaseType_t xPrepareCurrentTCB( void );
  */
 void harness()
 {
-        UBaseType_t xTasksPrepared;
-        TimeOut_t pxTimeOut;
-        TickType_t pxTicksToWait;
+    UBaseType_t xTasksPrepared;
+    TimeOut_t pxTimeOut;
+    TickType_t pxTicksToWait;
 
-        xTasksPrepared = xPrepareCurrentTCB();
+    xTasksPrepared = xPrepareCurrentTCB();
 
-        if ( xTasksPrepared != pdFAIL )
-        {
-                xTaskCheckForTimeOut( &pxTimeOut, &pxTicksToWait );
-        }
+    if( xTasksPrepared != pdFAIL )
+    {
+        xTaskCheckForTimeOut( &pxTimeOut, &pxTicksToWait );
+    }
 }

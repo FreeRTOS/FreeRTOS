@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -175,7 +175,6 @@ unsigned long ulReceivedValue;
 const unsigned long ulExpectedValue = 100UL;
 const char * const pcPassMessage = "Blink\r\n";
 const char * const pcFailMessage = "Unexpected value received\r\n";
-extern void vSendString( const char * const pcString );
 extern void vToggleLED( void );
 
 	/* Remove compiler warning about unused parameter. */
@@ -192,13 +191,13 @@ extern void vToggleLED( void );
 		is it the expected value?  If it is, toggle the LED. */
 		if( ulReceivedValue == ulExpectedValue )
 		{
-			vSendString( pcPassMessage );
+			configPRINT_STRING( pcPassMessage );
 			vToggleLED();
 			ulReceivedValue = 0U;
 		}
 		else
 		{
-			vSendString( pcFailMessage );
+			configPRINT_STRING( pcFailMessage );
 		}
 	}
 }

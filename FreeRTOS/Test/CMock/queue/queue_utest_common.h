@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -68,8 +68,10 @@
 #define TICKS_TO_WAIT             10
 #define NUM_CALLS_TO_INTERCEPT    TICKS_TO_WAIT / 2
 
+/* ===========================  FUNCTION PROTOTYPES  ======================== */
+void setxMaskAssertAndAbort( bool mask );
+bool getxMaskAssertAndAbort();
 /* ============================  GLOBAL VARIABLES =========================== */
-bool xMaskAssertAndAbort;
 
 /* =================================  MACROS ================================ */
 
@@ -82,7 +84,7 @@ bool xMaskAssertAndAbort;
 #define EXPECT_ASSERT_BREAK( call )             \
     do                                          \
     {                                           \
-        xMaskAssertAndAbort = true;             \
+        setxMaskAssertAndAbort( true );         \
         CEXCEPTION_T e = CEXCEPTION_NONE;       \
         Try                                     \
         {                                       \
@@ -91,7 +93,7 @@ bool xMaskAssertAndAbort;
         }                                       \
         Catch( e )                              \
         TEST_ASSERT_EQUAL( configASSERT_E, e ); \
-    } while ( 0 )
+    } while( 0 )
 
 /* ==========================  CALLBACK FUNCTIONS =========================== */
 

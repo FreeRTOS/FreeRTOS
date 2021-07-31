@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -126,7 +126,7 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
         {                                             \
             vFakeAssert( false, __FILE__, __LINE__ ); \
         }                                             \
-    } while ( 0 )
+    } while( 0 )
 
 #define mtCOVERAGE_TEST_MARKER()    __asm volatile ( "NOP" )
 

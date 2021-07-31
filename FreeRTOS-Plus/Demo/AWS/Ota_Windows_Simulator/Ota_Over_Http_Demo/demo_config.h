@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -86,6 +86,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *!!! be read by software, such as a production serial number, instead of a
  *!!! hard coded constant.
  *
+ * #define democonfigCLIENT_IDENTIFIER              "...insert here..."
  */
 #define democonfigCLIENT_IDENTIFIER              "...insert here..."
 
@@ -102,6 +103,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * Settings/Custom Endpoint, or using the describe-endpoint REST API (with
  * AWS CLI command line tool).
  *
+ * #define democonfigMQTT_BROKER_ENDPOINT           "...insert here..."
  */
 #define democonfigMQTT_BROKER_ENDPOINT           "...insert here..."
 

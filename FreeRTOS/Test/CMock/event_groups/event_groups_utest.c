@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -194,7 +194,7 @@ void test_xEventGroupStaticCreate_Success( void )
 
 /*!
  * @brief validate statically creating and deleting a new RTOS event group,
- * 
+ *
  */
 void test_xEventGroupStaticCreate_InvalidInput_Failed( void )
 {
@@ -435,7 +435,7 @@ void test_xEventGroupWaitBits_WhenNoBitWasSet_WaitForBoth_ClearBit_Success( void
     vListInitialise_Expect( 0 );
     vListInitialise_IgnoreArg_pxList();
     vListInitialise_ReturnThruPtr_pxList( pxListTemp );
-   
+
     /* Expectation of Function: xEventGroupWaitBits */
     vTaskSuspendAll_Ignore();
     xTaskGetSchedulerState_IgnoreAndReturn( taskSCHEDULER_SUSPENDED );
@@ -463,7 +463,7 @@ void test_xEventGroupWaitBits_WhenNoBitWasSet_WaitForBoth_ClearBit_Success( void
 }
 
 /*!
- * @brief validate non-block waiting on for either one bits is set when currently no bits are set. 
+ * @brief validate non-block waiting on for either one bits is set when currently no bits are set.
  *        Don't clear the bit before return.
  * @coverage xEventGroupWaitBits
  */
@@ -486,7 +486,7 @@ void test_xEventGroupWaitBits_WhenNoBitWasSet_NonBlock_WaitForEither_NoClear_Suc
     StaticEventGroup_t xCreatedEventGroup = { 0 };
     xEventGroupHandle = xEventGroupCreateStatic( &xCreatedEventGroup );
     uxBitsSetVal = xEventGroupGetBits( xEventGroupHandle );
-    
+
     /* API to Test */
     uxBitsGetVal = xEventGroupWaitBits(
         xEventGroupHandle, /* The event group being tested. */
@@ -500,7 +500,7 @@ void test_xEventGroupWaitBits_WhenNoBitWasSet_NonBlock_WaitForEither_NoClear_Suc
 }
 
 /*!
- * @brief validate waiting on for either one bits. The function should return when one bits are set. 
+ * @brief validate waiting on for either one bits. The function should return when one bits are set.
  *        Don't clear the bit before return.
  * @coverage xEventGroupWaitBits
  */
@@ -528,7 +528,7 @@ void test_xEventGroupWaitBits_WhenBitWasSet_WaitForEither_NoClear_Success( void 
     const TickType_t xTicksToWait = 100 / portTICK_PERIOD_MS;
     StaticEventGroup_t xCreatedEventGroup = { 0 };
     xEventGroupHandle = xEventGroupCreateStatic( &xCreatedEventGroup );
-    uxBitsSetVal = xEventGroupSetBits( xEventGroupHandle, BIT_0 );      /* BIT_0 was set */
+    uxBitsSetVal = xEventGroupSetBits( xEventGroupHandle, BIT_0 ); /* BIT_0 was set */
 
     /* API to Test */
     uxBitsSetVal = xEventGroupWaitBits(
@@ -574,8 +574,8 @@ void test_xEventGroupWaitBits_WhenBitWasSet_WaitForBoth_WithClear_Success( void 
     const TickType_t xTicksToWait = 100 / portTICK_PERIOD_MS;
     StaticEventGroup_t xCreatedEventGroup = { 0 };
     xEventGroupHandle = xEventGroupCreateStatic( &xCreatedEventGroup );
-    uxBitsSetVal = xEventGroupSetBits( xEventGroupHandle, BIT_0 );  /* BIT_0 was set */
-    uxBitsSetVal = xEventGroupSetBits( xEventGroupHandle, BIT_4 );  /* BIT_4 was set */
+    uxBitsSetVal = xEventGroupSetBits( xEventGroupHandle, BIT_0 ); /* BIT_0 was set */
+    uxBitsSetVal = xEventGroupSetBits( xEventGroupHandle, BIT_4 ); /* BIT_4 was set */
     TEST_ASSERT_EQUAL( BIT_0 | BIT_4, uxBitsSetVal );
 
     /* API to Test */
@@ -594,7 +594,7 @@ void test_xEventGroupWaitBits_WhenBitWasSet_WaitForBoth_WithClear_Success( void 
 
 /*!
  * @brief validate tasks sync on event bits:
- *        Set BIT_0 before reach the sync point and wait for all sync bits are set. 
+ *        Set BIT_0 before reach the sync point and wait for all sync bits are set.
  *        Should return due to timeout.
  * @coverage xEventGroupSync
  */
@@ -611,7 +611,7 @@ void test_xEventGroupSync_SetBits_BlockWait_NotSynced_Success( void )
     listGET_NEXT_ExpectAnyArgsAndReturn( ( ListItem_t * ) NULL );
     xTaskResumeAll_IgnoreAndReturn( 1 );
     listGET_LIST_ITEM_VALUE_IgnoreAndReturn( 0 );
-    
+
     /* Expectation of Function: xEventGroupSync */
     xTaskGetSchedulerState_IgnoreAndReturn( taskSCHEDULER_SUSPENDED );
     vTaskPlaceOnUnorderedEventList_Ignore();

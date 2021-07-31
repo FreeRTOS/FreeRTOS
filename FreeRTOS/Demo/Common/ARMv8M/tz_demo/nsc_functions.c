@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -37,23 +37,23 @@ static uint32_t ulSecureCounter = 0;
 /**
  * @brief typedef for non-secure callback.
  */
-typedef void ( *NonSecureCallback_t ) ( void ) __attribute__( ( cmse_nonsecure_call ) );
+typedef void ( *NonSecureCallback_t )( void ) __attribute__( ( cmse_nonsecure_call ) );
 /*-----------------------------------------------------------*/
 
 secureportNON_SECURE_CALLABLE uint32_t NSCFunction( Callback_t pxCallback )
 {
-NonSecureCallback_t pxNonSecureCallback;
+    NonSecureCallback_t pxNonSecureCallback;
 
-	/* Return function pointer with cleared LSB. */
-	pxNonSecureCallback = ( NonSecureCallback_t ) cmse_nsfptr_create( pxCallback );
+    /* Return function pointer with cleared LSB. */
+    pxNonSecureCallback = ( NonSecureCallback_t ) cmse_nsfptr_create( pxCallback );
 
-	/* Invoke the supplied callback. */
-	pxNonSecureCallback();
+    /* Invoke the supplied callback. */
+    pxNonSecureCallback();
 
-	/* Increment the secure side counter. */
-	ulSecureCounter += 1;
+    /* Increment the secure side counter. */
+    ulSecureCounter += 1;
 
-	/* Return the secure side counter. */
-	return ulSecureCounter;
+    /* Return the secure side counter. */
+    return ulSecureCounter;
 }
 /*-----------------------------------------------------------*/

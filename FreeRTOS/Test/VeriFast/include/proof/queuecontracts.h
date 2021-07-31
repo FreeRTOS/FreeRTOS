@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -29,26 +29,32 @@
 
 #include "queue.h"
 
-void prvCopyDataFromQueue( Queue_t * const pxQueue, void * const pvBuffer );
+void prvCopyDataFromQueue( Queue_t * const pxQueue,
+                           void * const pvBuffer );
 /*@requires queue(pxQueue, ?Storage, ?N, ?M, ?W, ?R, ?K, ?is_locked, ?abs) &*& 0 < K &*& chars(pvBuffer, M, _);@*/
-/*@ensures queue_after_prvCopyDataFromQueue(pxQueue, Storage, N, M, W, (R+1)%N, K, is_locked, abs) &*&
-    chars(pvBuffer, M, head(abs));@*/
 
-BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvItemToQueue, const BaseType_t xPosition );
+/*@ensures queue_after_prvCopyDataFromQueue(pxQueue, Storage, N, M, W, (R+1)%N, K, is_locked, abs) &*&
+ *  chars(pvBuffer, M, head(abs));@*/
+
+BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue,
+                               const void * pvItemToQueue,
+                               const BaseType_t xPosition );
+
 /*@requires queue(pxQueue, ?Storage, ?N, ?M, ?W, ?R, ?K, ?is_locked, ?abs) &*&
-    (K < N || xPosition == queueOVERWRITE) &*&
-    chars(pvItemToQueue, M, ?x) &*&
-    (xPosition == queueSEND_TO_BACK || xPosition == queueSEND_TO_FRONT || (xPosition == queueOVERWRITE && N == 1));@*/
+ *  (K < N || xPosition == queueOVERWRITE) &*&
+ *  chars(pvItemToQueue, M, ?x) &*&
+ *  (xPosition == queueSEND_TO_BACK || xPosition == queueSEND_TO_FRONT || (xPosition == queueOVERWRITE && N == 1));@*/
+
 /*@ensures
-    (xPosition == queueSEND_TO_BACK
-        ? queue(pxQueue, Storage, N, M, (W+1)%N, R, (K+1), is_locked, append(abs, singleton(x)))
-        : (xPosition == queueSEND_TO_FRONT
-            ? (R == 0
-                ? queue(pxQueue, Storage, N, M, W, (N-1), (K+1), is_locked, cons(x, abs))
-                : queue(pxQueue, Storage, N, M, W, (R-1), (K+1), is_locked, cons(x, abs)))
-            : xPosition == queueOVERWRITE &*& queue(pxQueue, Storage, N, M, W, R, 1, is_locked, singleton(x)))
-    ) &*&
-    chars(pvItemToQueue, M, x);@*/
+ *  (xPosition == queueSEND_TO_BACK
+ *      ? queue(pxQueue, Storage, N, M, (W+1)%N, R, (K+1), is_locked, append(abs, singleton(x)))
+ *      : (xPosition == queueSEND_TO_FRONT
+ *          ? (R == 0
+ *              ? queue(pxQueue, Storage, N, M, W, (N-1), (K+1), is_locked, cons(x, abs))
+ *              : queue(pxQueue, Storage, N, M, W, (R-1), (K+1), is_locked, cons(x, abs)))
+ *          : xPosition == queueOVERWRITE &*& queue(pxQueue, Storage, N, M, W, R, 1, is_locked, singleton(x)))
+ *  ) &*&
+ *  chars(pvItemToQueue, M, x);@*/
 
 BaseType_t prvIsQueueEmpty( Queue_t * pxQueue );
 /*@requires [1/2]queuehandle(pxQueue, ?N, ?M, ?is_isr) &*& is_isr == false;@*/

@@ -32,10 +32,13 @@
 
 #include "cbmc.h"
 
-void harness() {
-  QueueHandle_t xSemaphore = xUnconstrainedQueue();
-  if (xSemaphore) {
-    xSemaphore->uxQueueType = nondet_uint8_t();
-    xQueueGetMutexHolder(xSemaphore);
-  }
+void harness()
+{
+    QueueHandle_t xSemaphore = xUnconstrainedQueue();
+
+    if( xSemaphore )
+    {
+        xSemaphore->uxQueueType = nondet_uint8_t();
+        xQueueGetMutexHolder( xSemaphore );
+    }
 }

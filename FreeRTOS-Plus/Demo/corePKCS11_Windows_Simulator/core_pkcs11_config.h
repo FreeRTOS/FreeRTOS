@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -138,6 +138,16 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * they are accessed via headers compiled into the code.
  */
 #define pkcs11configJITP_CODEVERIFY_ROOT_CERT_SUPPORTED    0
+
+/**
+ * @brief The PKCS #11 label for the object to be used for HMAC operations.
+ */
+#define pkcs11configLABEL_HMAC_KEY                         "HMAC Key"
+
+/**
+ * @brief The PKCS #11 label for the object to be used for CMAC operations.
+ */
+#define pkcs11configLABEL_CMAC_KEY                         "CMAC Key"
 
 /**
  * @brief The PKCS #11 label for device private key.

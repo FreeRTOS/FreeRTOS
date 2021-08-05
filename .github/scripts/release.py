@@ -61,7 +61,7 @@ def printDot(op_code, cur_count, max_count=None, message=''):
         print('.', end='')
 
 class BaseRelease:
-    def __init__(self, mGit, version, commit='HEAD', git_ssh=False, git_org='FreeRTOS', repo_path=None, branch='main'):
+    def __init__(self, mGit, version, commit='HEAD', git_ssh=False, git_org='FreeRTOS', repo_path=None, branch='main', do_not_push=False):
         self.version = version
         self.tag_msg = 'Autocreated by FreeRTOS Git Tools.'
         self.commit = commit
@@ -73,6 +73,7 @@ class BaseRelease:
         self.commit_msg_prefix = '[AUTO][RELEASE]: '
         self.description = ''
         self.mGit = mGit # Save a handle to the authed git session
+        self.do_not_push = do_not_push
 
         if self.repo_path:
             info('Sourcing "%s" to make local commits' % self.repo_path)
@@ -112,18 +113,24 @@ class BaseRelease:
             print(r)
 
     def pushLocalCommits(self, force=False):
-        info('Pushing local commits...')
-        push_infos = self.local_repo.remote('origin').push(force=force)
+        if self.do_not_push:
+            info('Skipping to push local commits...')
+        else:
+            info('Pushing local commits...')
+            push_infos = self.local_repo.remote('origin').push(force=force)
 
-        # Check for any errors
-        for push_info in push_infos:
-            assert 0 == push_info.flags & PushInfo.ERROR, 'Failed to push changes to ' + str(push_info)
+            # Check for any errors
+            for push_info in push_infos:
+                assert 0 == push_info.flags & PushInfo.ERROR, 'Failed to push changes to ' + str(push_info)
 
     def pushTag(self):
-        # Overwrite existing tags
-        info('Pushing tag "%s"' % self.tag)
-        tag_info = self.local_repo.create_tag(self.tag, message=self.tag_msg, force=True)
-        self.local_repo.git.push(tags=True, force=True)
+        if self.do_not_push:
+            info('Skipping to push tag "%s"' % self.tag)
+        else:
+            # Overwrite existing tags
+            info('Pushing tag "%s"' % self.tag)
+            tag_info = self.local_repo.create_tag(self.tag, message=self.tag_msg, force=True)
+            self.local_repo.git.push(tags=True, force=True)
 
     def deleteTag(self):
         # Remove from remote
@@ -209,8 +216,8 @@ class BaseRelease:
 
 
 class KernelRelease(BaseRelease):
-    def __init__(self, mGit, version, commit='HEAD', git_ssh=False, git_org='FreeRTOS', repo_path=None, branch='main', main_br_version=''):
-        super().__init__(mGit, version, commit=commit, git_ssh=git_ssh, git_org=git_org, repo_path=repo_path, branch=branch)
+    def __init__(self, mGit, version, commit='HEAD', git_ssh=False, git_org='FreeRTOS', repo_path=None, branch='main', main_br_version='',do_not_push=False):
+        super().__init__(mGit, version, commit=commit, git_ssh=git_ssh, git_org=git_org, repo_path=repo_path, branch=branch, do_not_push=do_not_push)
 
         self.repo_name = '%s/FreeRTOS-Kernel' % self.git_org
         self.repo = mGit.get_repo(self.repo_name)
@@ -246,21 +253,24 @@ class KernelRelease(BaseRelease):
         '''
         Creates/Overwrites release identified by target tag
         '''
-        # If this release already exists, delete it
-        try:
-            release_queried = self.repo.get_release(self.tag)
+        if self.do_not_push:
+            info('Skipping creating git release endpoint for "%s"...' % self.tag)
+        else:
+            # If this release already exists, delete it
+            try:
+                release_queried = self.repo.get_release(self.tag)
 
-            info('Overwriting existing git release endpoint for "%s"...' % self.tag)
-            release_queried.delete_release()
-        except UnknownObjectException:
-            info('Creating git release endpoint for "%s"...' % self.tag)
+                info('Overwriting existing git release endpoint for "%s"...' % self.tag)
+                release_queried.delete_release()
+            except UnknownObjectException:
+                info('Creating git release endpoint for "%s"...' % self.tag)
 
-        # Create the new release endpoint at upload assets
-        release = self.repo.create_git_release(tag = self.tag,
-                                               name = 'V%s' % (self.version),
-                                               message = self.description,
-                                               draft = False,
-                                               prerelease = False)
+            # Create the new release endpoint at upload assets
+            release = self.repo.create_git_release(tag = self.tag,
+                                                name = 'V%s' % (self.version),
+                                                message = self.description,
+                                                draft = False,
+                                                prerelease = False)
 
     def autoRelease(self):
         info('Auto-releasing FreeRTOS Kernel V%s' % self.version)
@@ -299,8 +309,8 @@ class KernelRelease(BaseRelease):
 
 
 class FreertosRelease(BaseRelease):
-    def __init__(self, mGit, version, commit, git_ssh=False, git_org='FreeRTOS', repo_path=None, branch='main'):
-        super().__init__(mGit, version, commit, git_ssh=git_ssh, git_org=git_org, repo_path=repo_path, branch=branch)
+    def __init__(self, mGit, version, commit, git_ssh=False, git_org='FreeRTOS', repo_path=None, branch='main',do_not_push=False):
+        super().__init__(mGit, version, commit, git_ssh=git_ssh, git_org=git_org, repo_path=repo_path, branch=branch, do_not_push=do_not_push)
 
         self.repo_name = '%s/FreeRTOS' % self.git_org
         self.repo = mGit.get_repo(self.repo_name)
@@ -406,24 +416,27 @@ class FreertosRelease(BaseRelease):
         '''
         Creates/Overwrites release identified by target tag
         '''
-        # If this release already exists, delete it
-        try:
-            release_queried = self.repo.get_release(self.tag)
+        if self.do_not_push:
+            info('Skipping creating git release endpoint for "%s"...' % self.tag)
+        else:
+            # If this release already exists, delete it
+            try:
+                release_queried = self.repo.get_release(self.tag)
 
-            info('Overwriting existing git release endpoint for "%s"...' % self.tag)
-            release_queried.delete_release()
-        except UnknownObjectException:
-            info('Creating git release endpoint for "%s"...' % self.tag)
+                info('Overwriting existing git release endpoint for "%s"...' % self.tag)
+                release_queried.delete_release()
+            except UnknownObjectException:
+                info('Creating git release endpoint for "%s"...' % self.tag)
 
-        # Create the new release endpoind at upload assets
-        release = self.repo.create_git_release(tag = self.tag,
-                                               name = 'FreeRTOSv%s' % (self.version),
-                                               message = self.description,
-                                               draft = False,
-                                               prerelease = False)
+            # Create the new release endpoind at upload assets
+            release = self.repo.create_git_release(tag = self.tag,
+                                                name = 'FreeRTOSv%s' % (self.version),
+                                                message = self.description,
+                                                draft = False,
+                                                prerelease = False)
 
-        info('Uploading release asssets...')
-        release.upload_asset(self.zip_path, name='FreeRTOSv%s.zip' % self.version, content_type='application/zip')
+            info('Uploading release asssets...')
+            release.upload_asset(self.zip_path, name='FreeRTOSv%s.zip' % self.version, content_type='application/zip')
 
     def autoRelease(self):
         info('Auto-releasing FreeRTOS V%s' % self.version)
@@ -521,6 +534,11 @@ def configure_argparser():
                         default=False,
                         help='Run unit tests.')
 
+    parser.add_argument('--do-not-push',
+                        action='store_true',
+                        default=False,
+                        help='Do not push the changes but only make local commits.')
+
     return parser
 
 def main():
@@ -528,7 +546,8 @@ def main():
     args = cmd.parse_args()
 
     # Auth
-    assert 'GITHUB_TOKEN' in os.environ, 'Set env{GITHUB_TOKEN} to an authorized git PAT'
+    if not args.do_not_push:
+        assert 'GITHUB_TOKEN' in os.environ, 'Set env{GITHUB_TOKEN} to an authorized git PAT'
     mGit = Github(os.environ.get('GITHUB_TOKEN'))
 
     # Unit tests
@@ -541,7 +560,7 @@ def main():
         logIndentPush()
         rel_kernel = KernelRelease(mGit, args.new_kernel_version, args.kernel_commit, git_ssh=args.use_git_ssh,
                                    git_org=args.git_org, repo_path=args.kernel_repo_path, branch=args.kernel_repo_branch,
-                                   main_br_version=args.new_kernel_main_br_version)
+                                   main_br_version=args.new_kernel_main_br_version, do_not_push=args.do_not_push)
         rel_kernel.autoRelease()
         logIndentPop()
 
@@ -549,7 +568,8 @@ def main():
         info('Starting core release...')
         logIndentPush()
         rel_freertos = FreertosRelease(mGit, args.new_core_version, args.core_commit, git_ssh=args.use_git_ssh,
-                                       git_org=args.git_org, repo_path=args.core_repo_path, branch=args.core_repo_branch)
+                                       git_org=args.git_org, repo_path=args.core_repo_path, branch=args.core_repo_branch,
+                                       do_not_push=args.do_not_push)
         rel_freertos.autoRelease()
         logIndentPop()
 
@@ -557,7 +577,8 @@ def main():
     if args.rollback_kernel_version:
         info('Starting kernel rollback...')
         rel_kernel = KernelRelease(mGit, args.rollback_kernel_version, args.kernel_commit, git_ssh=args.use_git_ssh,
-                                   git_org=args.git_org, repo_path=args.kernel_repo_path, branch=args.kernel_repo_branch)
+                                   git_org=args.git_org, repo_path=args.kernel_repo_path, branch=args.kernel_repo_branch,
+                                   do_not_push=args.do_not_push)
         logIndentPush()
         rel_kernel.restorePriorToRelease()
         logIndentPop()
@@ -566,7 +587,8 @@ def main():
         info('Starting core rollback...')
         logIndentPush()
         rel_freertos = FreertosRelease(mGit, args.rollback_core_version, args.core_commit, git_ssh=args.use_git_ssh,
-                                       git_org=args.git_org, repo_path=args.core_repo_path, branch=args.core_repo_branch)
+                                       git_org=args.git_org, repo_path=args.core_repo_path, branch=args.core_repo_branch,
+                                       do_not_push=args.do_not_push)
         rel_freertos.restorePriorToRelease()
         logIndentPop()
 

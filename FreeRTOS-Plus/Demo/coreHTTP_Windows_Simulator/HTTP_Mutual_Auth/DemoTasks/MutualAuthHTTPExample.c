@@ -120,10 +120,10 @@
  *
  * @note When using ALPN, port 443 must be used to connect to AWS IoT Core.
  */
-#define IOT_CORE_ALPN_PROTOCOL_NAME    "\x0ex-amzn-http-ca"
+#define IOT_CORE_ALPN_PROTOCOL_NAME    "x-amzn-http-ca"
 
-/** 
- * @brief Each compilation unit that consumes the NetworkContext must define it. 
+/**
+ * @brief Each compilation unit that consumes the NetworkContext must define it.
  * It should contain a single pointer to the type of your desired transport.
  * When using multiple transports in the same compilation unit, define this pointer as void *.
  *

@@ -220,7 +220,7 @@
  * in the link below.
  * https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/
  */
-#define AWS_IOT_MQTT_ALPN                                 "\x0ex-amzn-mqtt-ca"
+#define AWS_IOT_MQTT_ALPN                                 "x-amzn-mqtt-ca"
 
 /**
  * @brief This is the ALPN (Application-Layer Protocol Negotiation) string

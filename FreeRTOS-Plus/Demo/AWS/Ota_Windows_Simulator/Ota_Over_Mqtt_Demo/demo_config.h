@@ -54,7 +54,7 @@
  * The function prints to the console before the network is connected;
  * then a UDP port after the network has connected. */
 extern void vLoggingPrintf( const char * pcFormatString,
-                             ... );
+                            ... );
 
 /* Map the SdkLog macro to the logging function to enable logging
  * on Windows simulator. */
@@ -72,9 +72,9 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * download image should be higher than the current version, otherwise the new image is
  * rejected in self test phase.
  */
-#define APP_VERSION_MAJOR                     0
-#define APP_VERSION_MINOR                     9
-#define APP_VERSION_BUILD                     2
+#define APP_VERSION_MAJOR                 0
+#define APP_VERSION_MINOR                 9
+#define APP_VERSION_BUILD                 2
 
 /**
  * @brief The MQTT client identifier used in this example.  Each client identifier
@@ -88,7 +88,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *
  * #define democonfigCLIENT_IDENTIFIER              "...insert here..."
  */
-#define democonfigCLIENT_IDENTIFIER              "...insert here..."
+#define democonfigCLIENT_IDENTIFIER       "...insert here..."
 
 /**
  * @brief Endpoint of the MQTT broker to connect to.
@@ -105,7 +105,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *
  * #define democonfigMQTT_BROKER_ENDPOINT           "...insert here..."
  */
-#define democonfigMQTT_BROKER_ENDPOINT           "...insert here..."
+#define democonfigMQTT_BROKER_ENDPOINT    "...insert here..."
 
 /**
  * @brief The port to use for the demo.
@@ -349,7 +349,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * in the link below.
  * https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/
  */
-#define AWS_IOT_MQTT_ALPN           "\x0ex-amzn-mqtt-ca"
+#define AWS_IOT_MQTT_ALPN           "x-amzn-mqtt-ca"
 
 /**
  * @brief This is the ALPN (Application-Layer Protocol Negotiation) string

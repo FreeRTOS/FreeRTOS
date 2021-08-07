@@ -178,7 +178,7 @@
  * in the link below.
  * https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/
  */
-#define AWS_IOT_MQTT_ALPN                "\x0ex-amzn-mqtt-ca"
+#define AWS_IOT_MQTT_ALPN                "x-amzn-mqtt-ca"
 
 
 /*-----------------------------------------------------------*/
@@ -202,8 +202,8 @@ typedef struct PublishPackets
 
 /*-----------------------------------------------------------*/
 
-/** 
- * @brief Each compilation unit that consumes the NetworkContext must define it. 
+/**
+ * @brief Each compilation unit that consumes the NetworkContext must define it.
  * It should contain a single pointer to the type of your desired transport.
  * When using multiple transports in the same compilation unit, define this pointer as void *.
  *

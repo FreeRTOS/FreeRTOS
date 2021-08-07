@@ -406,7 +406,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @brief This is the ALPN (Application-Layer Protocol Negotiation) string
  * required by AWS IoT for password-based authentication using TCP port 443.
  */
-#define AWS_IOT_CUSTOM_AUTH_ALPN    "\x04mqtt"
+#define AWS_IOT_CUSTOM_AUTH_ALPN    "mqtt"
 
 /**
  * Provide default values for undefined configuration settings.

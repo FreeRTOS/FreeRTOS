@@ -28,6 +28,12 @@
 #ifndef COMMAND_INTERPRETER_H
 #define COMMAND_INTERPRETER_H
 
+/* *INDENT-OFF* */
+#ifdef __cplusplus
+    extern "C" {
+#endif
+/* *INDENT-ON* */
+
 /* The prototype to which callback functions used to process command line
 commands must comply.  pcWriteBuffer is a buffer into which the output from
 executing the command can be written, xWriteBufferLen is the length, in bytes of
@@ -88,6 +94,12 @@ char *FreeRTOS_CLIGetOutputBuffer( void );
  * Return a pointer to the xParameterNumber'th word in pcCommandString.
  */
 const char *FreeRTOS_CLIGetParameter( const char *pcCommandString, UBaseType_t uxWantedParameter, BaseType_t *pxParameterStringLength );
+
+/* *INDENT-OFF* */
+#ifdef __cplusplus
+    }
+#endif
+/* *INDENT-ON* */
 
 #endif /* COMMAND_INTERPRETER_H */
 

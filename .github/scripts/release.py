@@ -23,7 +23,7 @@ import zipfile
 from versioning import update_version_number_in_freertos_component
 from versioning import update_freertos_version_macros
 
-from packager import prune_result_tree
+from packager import prune_result_tree, prune_result_tree_v2
 from packager import RELATIVE_FILE_EXCLUDES as FREERTOS_RELATIVE_FILE_EXCLUDES
 
 # PyGithub Git -  https://github.com/PyGithub/PyGithub
@@ -31,6 +31,14 @@ from packager import RELATIVE_FILE_EXCLUDES as FREERTOS_RELATIVE_FILE_EXCLUDES
 # REST API used by PyGithub - https://developer.github.com/v3/
 
 indent_level = 0
+
+# Files/Directories not to be included in the FreeRTOS-Kernel release.
+KERNEL_RELEASE_EXCLUDE_FILES = [
+    '.git',
+    '.github',
+    '.gitignore',
+    '.gitmodules'
+]
 
 def logIndentPush():
     global indent_level
@@ -216,12 +224,14 @@ class BaseRelease:
 
 
 class KernelRelease(BaseRelease):
-    def __init__(self, mGit, version, commit='HEAD', git_ssh=False, git_org='FreeRTOS', repo_path=None, branch='main', main_br_version='',do_not_push=False):
+    def __init__(self, mGit, version, commit='HEAD', git_ssh=False, git_org='FreeRTOS', repo_path=None, branch='main', main_br_version='', do_not_push=False):
         super().__init__(mGit, version, commit=commit, git_ssh=git_ssh, git_org=git_org, repo_path=repo_path, branch=branch, do_not_push=do_not_push)
 
         self.repo_name = '%s/FreeRTOS-Kernel' % self.git_org
         self.repo = mGit.get_repo(self.repo_name)
         self.tag = 'V%s' % version
+        self.description = 'Contains source code for the FreeRTOS Kernel.'
+        self.zip_path = 'FreeRTOS-KernelV%s.zip' % self.version
         self.main_br_version = main_br_version
 
         # Parent ctor configures local_repo if caller chooses to source local repo from repo_path.
@@ -249,6 +259,49 @@ class KernelRelease(BaseRelease):
 
         self.commitChanges(self.commit_msg_prefix + 'Bump task.h version macros to "%s"' % version_str)
 
+    def createReleaseZip(self):
+        '''
+        At the moment, the only asset we upload is the source code.
+        '''
+        zip_name = 'FreeRTOS-KernelV%s' % self.version
+        info('Packaging "%s"' % zip_name)
+        logIndentPush()
+
+        # This path name is retained in zip, so we don't name it 'tmp-*' but
+        # rather keep it consistent.
+        rel_repo_path = zip_name
+
+        # Clean up any old work from previous runs.
+        if os.path.exists(rel_repo_path):
+            shutil.rmtree(rel_repo_path)
+
+        # Download a fresh copy for packaging.
+        info('Downloading fresh copy of %s for packing...' % zip_name, end='')
+        packaged_repo = Repo.clone_from(self.getRemoteEndpoint(self.repo_name),
+                                        rel_repo_path,
+                                        multi_options=['--depth=1', '-b%s' % self.tag, '--recurse-submodules'],
+                                        progress=printDot,
+                                        branch=self.branch)
+        print()
+
+        # Prune then zip package.
+        info('Pruning from release zip...', end='')
+        files_pruned = prune_result_tree_v2(rel_repo_path, KERNEL_RELEASE_EXCLUDE_FILES)
+        print('...%d Files Removed.' % len(files_pruned))
+
+        info('Compressing "%s"...' % self.zip_path)
+        with zipfile.ZipFile(self.zip_path, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as zip:
+            for root, dirs, files in os.walk(rel_repo_path):
+                for file in files:
+                    # For some strange reason, we have broken symlinks...avoid these.
+                    file_path = os.path.join(root, file)
+                    if os.path.islink(file_path) and not os.path.exists(file_path):
+                        warning('Skipping over broken symlink "%s"' % file_path)
+                    else:
+                        zip.write(file_path)
+
+        logIndentPop()
+
     def createGitRelease(self):
         '''
         Creates/Overwrites release identified by target tag
@@ -265,12 +318,17 @@ class KernelRelease(BaseRelease):
             except UnknownObjectException:
                 info('Creating git release endpoint for "%s"...' % self.tag)
 
+            # Create the release asset to upload.
+            self.createReleaseZip()
+
             # Create the new release endpoint at upload assets
             release = self.repo.create_git_release(tag = self.tag,
                                                 name = 'V%s' % (self.version),
                                                 message = self.description,
                                                 draft = False,
                                                 prerelease = False)
+            info('Uploading release asssets...')
+            release.upload_asset(self.zip_path, name='FreeRTOS-KernelV%s.zip' % self.version, content_type='application/zip')
 
     def autoRelease(self):
         info('Auto-releasing FreeRTOS Kernel V%s' % self.version)
@@ -309,7 +367,7 @@ class KernelRelease(BaseRelease):
 
 
 class FreertosRelease(BaseRelease):
-    def __init__(self, mGit, version, commit, git_ssh=False, git_org='FreeRTOS', repo_path=None, branch='main',do_not_push=False):
+    def __init__(self, mGit, version, commit, git_ssh=False, git_org='FreeRTOS', repo_path=None, branch='main', do_not_push=False):
         super().__init__(mGit, version, commit, git_ssh=git_ssh, git_org=git_org, repo_path=repo_path, branch=branch, do_not_push=do_not_push)
 
         self.repo_name = '%s/FreeRTOS' % self.git_org

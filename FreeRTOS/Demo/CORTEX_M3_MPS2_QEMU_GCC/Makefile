@@ -64,7 +64,6 @@ else
     CFLAGS := -DmainCREATE_SIMPLE_BLINKY_DEMO_ONLY=1
 endif
 
-#DEFINES := -DprojCOVERAGE_TEST -DQEMU_SOC_MPS2 -DHEAP3
 DEFINES :=  -DQEMU_SOC_MPS2 -DHEAP3
 
 LDFLAGS = -T ./scripts/mps2_m3.ld -specs=nano.specs --specs=rdimon.specs -lc -lrdimon

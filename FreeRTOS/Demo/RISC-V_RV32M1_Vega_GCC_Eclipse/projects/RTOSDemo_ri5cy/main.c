@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -89,9 +89,6 @@ void vApplicationTickHook( void );
 /* Prepare hardware to run the demo. */
 static void prvSetupHardware( void );
 
-/* Send a message to the UART initialised in prvSetupHardware. */
-void vSendString( const char * const pcString );
-
 /*-----------------------------------------------------------*/
 
 void main( void )
@@ -131,12 +128,6 @@ gpio_pin_config_t mGpioPinConfigStruct;
 void vToggleLED( void )
 {
 	GPIO_TogglePinsOutput( BOARD_LED1_GPIO, 1U << BOARD_LED1_GPIO_PIN );
-}
-/*-----------------------------------------------------------*/
-
-void vSendString( const char * const pcString )
-{
-	PRINTF( pcString );
 }
 /*-----------------------------------------------------------*/
 

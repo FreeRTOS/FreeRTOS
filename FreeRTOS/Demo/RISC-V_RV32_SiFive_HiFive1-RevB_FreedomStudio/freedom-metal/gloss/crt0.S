@@ -44,22 +44,7 @@ _start:
   la gp, __global_pointer$
 .option pop
 
-  /* The METAL is designed for a bare-metal environment and therefor is expected
-   * to define its own stack pointer.  We also align the stack pointer here
-   * because the only RISC-V ABI that's currently defined mandates 16-byte
-   * stack alignment. */
-  la sp, _sp
-
-  /* Increment by hartid number of stack sizes */
-  li t0, 0
-  la t1, __stack_size
-1:
-  beq t0, a0, 1f
-  add sp, sp, t1
-  addi t0, t0, 1
-  j 1b
-1:
-  andi sp, sp, -16
+  /* Stack pointer is expected to be initialized before _start */
 
   /* If we're not hart 0, skip the initialization work */
   la t0, __metal_boot_hart
@@ -123,6 +108,36 @@ _start:
      complete */
   fence.i
 
+2:
+
+  /* Copy the LIM section */
+  la t0, metal_segment_lim_source_start
+  la t1, metal_segment_lim_target_start
+  la t2, metal_segment_lim_target_end
+
+  beq t0, t1, 2f
+  bge t1, t2, 2f
+
+1:
+#if __riscv_xlen == 32
+  lw   a0, 0(t0)
+  addi t0, t0, 4
+  sw   a0, 0(t1)
+  addi t1, t1, 4
+  blt  t1, t2, 1b
+#else
+  ld   a0, 0(t0)
+  addi t0, t0, 8
+  sd   a0, 0(t1)
+  addi t1, t1, 8
+  blt  t1, t2, 1b
+#endif
+2:
+
+  /* Fence all subsequent instruction fetches until after the LIM writes
+     complete */
+  fence.i
+
   /* Zero the BSS segment. */
   la t1, metal_segment_bss_target_start
   la t2, metal_segment_bss_target_end
@@ -141,6 +156,10 @@ _start:
 #endif
 2:
 
+  /* Set TLS pointer */
+  .weak __tls_base	
+  la tp, __tls_base
+
   /* At this point we're in an environment that can execute C code.  The first
    * thing to do is to make the callback to the parent environment if it's been
    * requested to do so. */
@@ -153,14 +172,41 @@ _start:
   call atexit
   call __libc_init_array
 
+  /* Register metal_fini_run as a destructor and call metal_init_run to
+   * run and setup Metal constructors */
+  la a0, metal_fini_run
+  call atexit
+  call metal_init_run
+
 _skip_init:
 
   /* Synchronize harts so that secondary harts wait until hart 0 finishes
      initializing */
   call __metal_synchronize_harts
 
-  /* Check RISC-V isa and enable FS bits if Floating Point architecture. */
+  /* Disable and clear all interrupt sources */
+  li   a3, -1
+  csrc mie, a3
+  csrc mip, a3
+
+  /* The delegation CSRs exist if user mode interrupts (N extension) or
+   * supervisor mode (S extension) are supported */
   csrr a5, misa
+  lui  a4, 0x42
+  and  a4, a4, a5
+  beqz a4, 1f
+  csrc mideleg, a3
+  csrc medeleg, a3
+1:
+
+  /* The satp CSR exists if supervisor mode (S extension) is supported */
+  lui  a4, 0x40
+  and  a4, a4, a5
+  beqz a4, 1f
+  csrc satp, a3
+1:
+
+  /* Check RISC-V isa and enable FS bits if Floating Point architecture. */
   li   a4, 0x10028
   and  a5, a5, a4
   beqz a5, 1f
@@ -169,6 +215,16 @@ _skip_init:
   or   a5, a5, a4
   csrw mstatus, a5
   csrwi fcsr, 0
+1:
+
+  /* Check for vector extension support and enable it if found */
+  csrr a5, misa
+  li a4, 0x200000
+  and a5, a5, a4
+  beqz a5, 1f
+  csrr a5, mstatus
+  ori a5, a5, 0x200
+  csrw mstatus, a5
 1:
 
   /* This is a C runtime, so main() is defined to have some arguments.  Since

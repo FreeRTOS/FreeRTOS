@@ -160,9 +160,6 @@
     <ClCompile Include="..\..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_error.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\backoff_algorithm</Filter>
     </ClCompile>
@@ -518,7 +515,7 @@
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_error.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\Source\Utilities\mbedtls_freertos\threading_alt.h">

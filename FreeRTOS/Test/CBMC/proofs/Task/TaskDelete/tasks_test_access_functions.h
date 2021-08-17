@@ -33,50 +33,53 @@
  */
 TaskHandle_t xUnconstrainedTCB( void )
 {
-	TCB_t * pxTCB = pvPortMalloc(sizeof(TCB_t));
-	uint8_t ucStaticAllocationFlag;
+    TCB_t * pxTCB = pvPortMalloc( sizeof( TCB_t ) );
+    uint8_t ucStaticAllocationFlag;
 
-	if ( pxTCB == NULL )
-		return NULL;
+    if( pxTCB == NULL )
+    {
+        return NULL;
+    }
 
-	__CPROVER_assume( pxTCB->uxPriority < configMAX_PRIORITIES );
+    __CPROVER_assume( pxTCB->uxPriority < configMAX_PRIORITIES );
 
-	vListInitialiseItem( &( pxTCB->xStateListItem ) );
-	vListInitialiseItem( &( pxTCB->xEventListItem ) );
+    vListInitialiseItem( &( pxTCB->xStateListItem ) );
+    vListInitialiseItem( &( pxTCB->xEventListItem ) );
 
-	listSET_LIST_ITEM_OWNER( &( pxTCB->xStateListItem ), pxTCB );
-	listSET_LIST_ITEM_OWNER( &( pxTCB->xEventListItem ), pxTCB );
+    listSET_LIST_ITEM_OWNER( &( pxTCB->xStateListItem ), pxTCB );
+    listSET_LIST_ITEM_OWNER( &( pxTCB->xEventListItem ), pxTCB );
 
-	if ( nondet_bool() )
-	{
-		listSET_LIST_ITEM_VALUE( &( pxTCB->xStateListItem ), pxTCB->uxPriority );
-	}
-	else
-	{
-		listSET_LIST_ITEM_VALUE( &( pxTCB->xStateListItem ), portMAX_DELAY );
-	}
+    if( nondet_bool() )
+    {
+        listSET_LIST_ITEM_VALUE( &( pxTCB->xStateListItem ), pxTCB->uxPriority );
+    }
+    else
+    {
+        listSET_LIST_ITEM_VALUE( &( pxTCB->xStateListItem ), portMAX_DELAY );
+    }
 
-	if ( nondet_bool() )
-	{
-		listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) pxTCB->uxPriority );
-	}
-	else
-	{
-		listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), portMAX_DELAY );
-	}
+    if( nondet_bool() )
+    {
+        listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) pxTCB->uxPriority );
+    }
+    else
+    {
+        listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), portMAX_DELAY );
+    }
 
-	pxTCB->pxStack = ( StackType_t * ) pvPortMalloc( ( ( ( size_t ) STACK_DEPTH ) * sizeof( StackType_t ) ) );
-	if ( pxTCB->pxStack == NULL )
-	{
-		vPortFree( pxTCB );
-		return NULL;
-	}
+    pxTCB->pxStack = ( StackType_t * ) pvPortMalloc( ( ( ( size_t ) STACK_DEPTH ) * sizeof( StackType_t ) ) );
 
-	__CPROVER_assume( ucStaticAllocationFlag <= tskSTATICALLY_ALLOCATED_STACK_AND_TCB );
-	__CPROVER_assume( ucStaticAllocationFlag >= tskDYNAMICALLY_ALLOCATED_STACK_AND_TCB );
-	pxTCB->ucStaticallyAllocated = ucStaticAllocationFlag;
+    if( pxTCB->pxStack == NULL )
+    {
+        vPortFree( pxTCB );
+        return NULL;
+    }
 
-	return pxTCB;
+    __CPROVER_assume( ucStaticAllocationFlag <= tskSTATICALLY_ALLOCATED_STACK_AND_TCB );
+    __CPROVER_assume( ucStaticAllocationFlag >= tskDYNAMICALLY_ALLOCATED_STACK_AND_TCB );
+    pxTCB->ucStaticallyAllocated = ucStaticAllocationFlag;
+
+    return pxTCB;
 }
 
 /*
@@ -85,7 +88,7 @@ TaskHandle_t xUnconstrainedTCB( void )
  */
 void vSetGlobalVariables()
 {
-	xSchedulerRunning = nondet_basetype();
+    xSchedulerRunning = nondet_basetype();
 }
 
 /*
@@ -95,78 +98,84 @@ void vSetGlobalVariables()
  */
 BaseType_t xPrepareTaskLists( TaskHandle_t * xTask )
 {
-	TCB_t * pxTCB = NULL;
+    TCB_t * pxTCB = NULL;
 
-	__CPROVER_assert_zero_allocation();
+    __CPROVER_assert_zero_allocation();
 
-	prvInitialiseTaskLists();
+    prvInitialiseTaskLists();
 
-	/*
-	 * The task handle passed to TaskDelete can be NULL. In that case, the
-	 * task to delete is the one in `pxCurrentTCB`, see the macro `prvGetTCBFromHandle`
-	 * in line 1165 (tasks.c) for reference. For that reason, we provide a similar
-	 * initialization for an arbitrary task `pxTCB` and `pxCurrentTCB`.
-	 */
+    /*
+     * The task handle passed to TaskDelete can be NULL. In that case, the
+     * task to delete is the one in `pxCurrentTCB`, see the macro `prvGetTCBFromHandle`
+     * in line 1165 (tasks.c) for reference. For that reason, we provide a similar
+     * initialization for an arbitrary task `pxTCB` and `pxCurrentTCB`.
+     */
 
-	pxTCB = xUnconstrainedTCB();
-	if ( pxTCB != NULL )
-	{
-		if ( nondet_bool() )
-		{
-			TCB_t * pxOtherTCB;
-			pxOtherTCB = xUnconstrainedTCB();
-			/*
-			 * Nondeterministic insertion of another TCB in the same list
-			 * to guarantee coverage in line 1174 (tasks.c)
-			 */
-			if ( pxOtherTCB != NULL )
-			{
-				vListInsert( &xPendingReadyList, &( pxOtherTCB->xStateListItem ) );
-			}
-		}
-		vListInsert( &xPendingReadyList, &( pxTCB->xStateListItem ) );
+    pxTCB = xUnconstrainedTCB();
 
-		/*
-		 * Nondeterministic insertion of an event list item to guarantee
-		 * coverage in lines 1180-1184 (tasks.c)
-		 */
-		if ( nondet_bool() )
-		{
-			vListInsert( pxDelayedTaskList, &( pxTCB->xEventListItem ) );
-		}
-	}
+    if( pxTCB != NULL )
+    {
+        if( nondet_bool() )
+        {
+            TCB_t * pxOtherTCB;
+            pxOtherTCB = xUnconstrainedTCB();
 
-	/* Note that `*xTask = NULL` can happen here, but this is fine -- `pxCurrentTCB` will be used instead */
-	*xTask = pxTCB;
+            /*
+             * Nondeterministic insertion of another TCB in the same list
+             * to guarantee coverage in line 1174 (tasks.c)
+             */
+            if( pxOtherTCB != NULL )
+            {
+                vListInsert( &xPendingReadyList, &( pxOtherTCB->xStateListItem ) );
+            }
+        }
 
-	/*
-	 * `pxCurrentTCB` must be initialized the same way as the previous task, but an
-	 * allocation failure cannot happen in this case (i.e., if the previous task is NULL)
-	 */
-	pxCurrentTCB = xUnconstrainedTCB();
-	if ( pxCurrentTCB == NULL )
-	{
-		return pdFAIL;
-	}
+        vListInsert( &xPendingReadyList, &( pxTCB->xStateListItem ) );
 
-	if ( nondet_bool() )
-	{
-		TCB_t * pxOtherTCB;
-		pxOtherTCB = xUnconstrainedTCB();
-		if ( pxOtherTCB != NULL )
-		{
-			vListInsert( &pxReadyTasksLists[ pxOtherTCB->uxPriority ], &( pxOtherTCB->xStateListItem ) );
-		}
-	}
-	vListInsert( &pxReadyTasksLists[ pxCurrentTCB->uxPriority ], &( pxCurrentTCB->xStateListItem ) );
+        /*
+         * Nondeterministic insertion of an event list item to guarantee
+         * coverage in lines 1180-1184 (tasks.c)
+         */
+        if( nondet_bool() )
+        {
+            vListInsert( pxDelayedTaskList, &( pxTCB->xEventListItem ) );
+        }
+    }
 
-	/* Use of this macro ensures coverage on line 185 (list.c) */
-	listGET_OWNER_OF_NEXT_ENTRY( pxCurrentTCB , &pxReadyTasksLists[ pxCurrentTCB->uxPriority ] );
+    /* Note that `*xTask = NULL` can happen here, but this is fine -- `pxCurrentTCB` will be used instead */
+    *xTask = pxTCB;
 
-	if ( nondet_bool() )
-	{
-		vListInsert( pxDelayedTaskList, &( pxCurrentTCB->xEventListItem ) );
-	}
+    /*
+     * `pxCurrentTCB` must be initialized the same way as the previous task, but an
+     * allocation failure cannot happen in this case (i.e., if the previous task is NULL)
+     */
+    pxCurrentTCB = xUnconstrainedTCB();
 
-	return pdPASS;
+    if( pxCurrentTCB == NULL )
+    {
+        return pdFAIL;
+    }
+
+    if( nondet_bool() )
+    {
+        TCB_t * pxOtherTCB;
+        pxOtherTCB = xUnconstrainedTCB();
+
+        if( pxOtherTCB != NULL )
+        {
+            vListInsert( &pxReadyTasksLists[ pxOtherTCB->uxPriority ], &( pxOtherTCB->xStateListItem ) );
+        }
+    }
+
+    vListInsert( &pxReadyTasksLists[ pxCurrentTCB->uxPriority ], &( pxCurrentTCB->xStateListItem ) );
+
+    /* Use of this macro ensures coverage on line 185 (list.c) */
+    listGET_OWNER_OF_NEXT_ENTRY( pxCurrentTCB, &pxReadyTasksLists[ pxCurrentTCB->uxPriority ] );
+
+    if( nondet_bool() )
+    {
+        vListInsert( pxDelayedTaskList, &( pxCurrentTCB->xEventListItem ) );
+    }
+
+    return pdPASS;
 }

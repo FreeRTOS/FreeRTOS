@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -112,6 +112,8 @@ stack. */
 /* Size of the stacks to allocated for the register check tasks. */
 #define mainREG_TEST_STACK_SIZE_WORDS 150
 
+/* Success output messages. This is used by the CI - do not change. */
+#define mainDEMO_SUCCESS_MESSAGE		"FreeRTOS Demo SUCCESS\r\n"
 /*-----------------------------------------------------------*/
 
 /*
@@ -217,17 +219,15 @@ static void prvCheckTask( void *pvParameters )
 TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
 TickType_t xLastExecutionTime;
 uint32_t ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
-char * const pcPassMessage = ".";
+char * const pcPassMessage = mainDEMO_SUCCESS_MESSAGE;
 char * pcStatusMessage = pcPassMessage;
-extern void vSendString( const char * const pcString );
 extern void vToggleLED( void );
 
 	/* Just to stop compiler warnings. */
 	( void ) pvParameters;
 
-	/* Output "pass", then an additional '.' character for each successful
-	loop. */
-	vSendString( "Pass" );
+	/* Demo start marker. */
+	configPRINT_STRING( "FreeRTOS Demo Start\r\n" );
 
 	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
 	works correctly. */
@@ -248,86 +248,86 @@ extern void vToggleLED( void );
 		that they are all still running, and that none have detected an error. */
 		if( xAreDynamicPriorityTasksStillRunning() == pdFALSE )
 		{
-			pcStatusMessage = "ERROR: Dynamic priority demo/tests.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Dynamic priority demo/tests.\r\n";
 		}
 
 		if( xAreBlockTimeTestTasksStillRunning() == pdFALSE )
 		{
-			pcStatusMessage = "ERROR: Block time demo/tests.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Block time demo/tests.\r\n";
 		}
 
 		if( xAreGenericQueueTasksStillRunning() == pdFALSE )
 		{
-			pcStatusMessage = "ERROR: Generic queue demo/tests.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Generic queue demo/tests.\r\n";
 		}
 
 		if( xAreRecursiveMutexTasksStillRunning() == pdFALSE )
 		{
-			pcStatusMessage = "ERROR: Recursive mutex demo/tests.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Recursive mutex demo/tests.\r\n";
 		}
 
 		if( xAreTimerDemoTasksStillRunning( ( TickType_t ) xDelayPeriod ) == pdFALSE )
 		{
-			pcStatusMessage = "ERROR: Timer demo/tests.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Timer demo/tests.\r\n";
 		}
 
 		if( xAreEventGroupTasksStillRunning() == pdFALSE )
 		{
-			pcStatusMessage = "ERROR: Event group demo/tests.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Event group demo/tests.\r\n";
 		}
 
 		if( xAreTaskNotificationTasksStillRunning() == pdFALSE )
 		{
-			pcStatusMessage = "ERROR: Task notification demo/tests.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Task notification demo/tests.\r\n";
 		}
 
 		if( xAreAbortDelayTestTasksStillRunning() == pdFALSE )
 		{
-			pcStatusMessage = "ERROR: Abort delay.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Abort delay.\r\n";
 		}
 
 		if( xAreCountingSemaphoreTasksStillRunning() == pdFALSE )
 		{
-			pcStatusMessage = "ERROR: Counting semaphores.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Counting semaphores.\r\n";
 		}
 
 		if( xIsCreateTaskStillRunning() == pdFALSE )
 		{
-			pcStatusMessage = "ERROR: Suicide tasks.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Suicide tasks.\r\n";
 		}
 
 		if( xAreMessageBufferTasksStillRunning() == pdFALSE )
 		{
-			pcStatusMessage = "ERROR: Message buffer.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Message buffer.\r\n";
 		}
 
 		if( xAreStreamBufferTasksStillRunning() == pdFALSE )
 		{
-			pcStatusMessage = "ERROR: Stream buffer.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Stream buffer.\r\n";
 		}
 
 		if( xIsInterruptStreamBufferDemoStillRunning() == pdFALSE )
 		{
-			pcStatusMessage = "ERROR: Stream buffer interrupt.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Stream buffer interrupt.\r\n";
 		}
 
 		/* Check that the register test 1 task is still running. */
 		if( ulLastRegTest1Value == ulRegTest1LoopCounter )
 		{
-			pcStatusMessage = "ERROR: Register test 1.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Register test 1.\r\n";
 		}
 		ulLastRegTest1Value = ulRegTest1LoopCounter;
 
 		/* Check that the register test 2 task is still running. */
 		if( ulLastRegTest2Value == ulRegTest2LoopCounter )
 		{
-			pcStatusMessage = "ERROR: Register test 2.\r\n";
+			pcStatusMessage = "FreeRTOS Demo ERROR: Register test 2.\r\n";
 		}
 		ulLastRegTest2Value = ulRegTest2LoopCounter;
 
 		/* Write the status message to the UART. */
 		vToggleLED();
-		vSendString( pcStatusMessage );
+		configPRINT_STRING( pcStatusMessage );
 
 		/* If an error has been found then increase the LED toggle rate by
 		increasing the cycle frequency. */

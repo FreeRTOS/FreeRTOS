@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -56,7 +56,6 @@ SECTIONS
         *(.rodata*)
         . = ALIGN(4);
         _etext = .;
-        _sidata = _etext;
     } > FLASH
 
 	.ARM.extab :
@@ -85,7 +84,9 @@ SECTIONS
         __interrupts_ram_end = .;
 
     } > RAM
-    
+
+    _sidata = LOADADDR(.data);
+
     .data : /* AT ( _sidata ) */
     {
         . = ALIGN(4);

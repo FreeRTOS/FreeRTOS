@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# python >= 3.4 
+# python >= 3.4
 
 import os
 from common.header_checker import HeaderChecker
@@ -272,7 +272,7 @@ FREERTOS_IGNORED_FILES = [
 
 FREERTOS_HEADER = [
     '/*\n',
-    ' * FreeRTOS V202104.00\n',
+    ' * FreeRTOS V202107.00\n',
     ' * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.\n',
     ' *\n',
     ' * Permission is hereby granted, free of charge, to any person obtaining a copy of\n',

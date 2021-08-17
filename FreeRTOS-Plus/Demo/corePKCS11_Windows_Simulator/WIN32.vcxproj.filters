@@ -365,9 +365,6 @@
     <ClCompile Include="..\..\Source\corePKCS11\source\core_pki_utils.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils\mbedtls_error.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils\mbedtls_utils.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
     </ClCompile>
@@ -700,7 +697,7 @@
     <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_stack.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\logging</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils\mbedtls_error.h">
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\error.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
     </ClInclude>
     <ClInclude Include="aws_mbedtls_config.h">

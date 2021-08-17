@@ -7,10 +7,10 @@
 #include <metal/compiler.h>
 #include <metal/drivers/riscv_cpu.h>
 
-#define METAL_PLIC_SOURCE_MASK            0x1F
-#define METAL_PLIC_SOURCE_SHIFT           5
-#define METAL_PLIC_SOURCE_PRIORITY_SHIFT  2
-#define METAL_PLIC_SOURCE_PENDING_SHIFT   0
+#define METAL_PLIC_SOURCE_MASK 0x1F
+#define METAL_PLIC_SOURCE_SHIFT 5
+#define METAL_PLIC_SOURCE_PRIORITY_SHIFT 2
+#define METAL_PLIC_SOURCE_PENDING_SHIFT 0
 
 struct __metal_driver_vtable_riscv_plic0 {
     struct metal_interrupt_vtable plic_vtable;

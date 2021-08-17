@@ -51,3 +51,18 @@ _metal_trap:
     /* Jump to mtvec */
     jr t0
 
+
+/*
+ * For sanity's sake we set up an early trap vector that just does nothing.
+ * If you end up here then there's a bug in the early boot code somewhere.
+ */
+.section .text.metal.init.trapvec
+.global early_trap_vector
+.align 2
+early_trap_vector:
+    .cfi_startproc
+    csrr t0, mcause
+    csrr t1, mepc
+    csrr t2, mtval
+    j early_trap_vector
+    .cfi_endproc

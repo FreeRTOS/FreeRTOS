@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -115,8 +115,8 @@ void test_macro_xSemaphoreCreateBinaryStatic_fail( void )
 
     xSemaphore = xSemaphoreCreateBinaryStatic( NULL );
 
-    /* verify that configASSERT was called */
-    TEST_ASSERT_EQUAL( true, fakeAssertGetFlagAndClear() );
+    /* verify that configASSERT was called twice */
+    fakeAssertVerifyNumAssertsAndClear( 2 );
 
     TEST_ASSERT_EQUAL( NULL, xSemaphore );
     TEST_ASSERT_EQUAL( 0, getLastMallocSize() );
@@ -216,14 +216,34 @@ void test_macro_xSemaphoreCreateCounting_one_two( void )
     fakeAssertGetFlagAndClear();
 
     /* validate returned semaphore handle */
-    TEST_ASSERT_NOT_EQUAL( NULL, xSemaphore );
+    TEST_ASSERT_EQUAL( NULL, xSemaphore );
 
-    TEST_ASSERT_EQUAL( QUEUE_T_SIZE, getLastMallocSize() );
+    /* Check that no call to malloc occurred */
+    TEST_ASSERT_EQUAL( 0, getLastMallocSize() );
+}
 
-    /* Check that the count was initialized correctly */
-    TEST_ASSERT_EQUAL( 2, uxSemaphoreGetCount( xSemaphore ) );
+/**
+ * @brief Test xSemaphoreCreateCounting with uxMaxCount=UINT64_MAX - 1 and uxInitialCount=UINT64_MAX
+ * @details This is an invalid initial condition for a counting semaphore since
+ *  uxMaxCount >= uxInitialCount.
+ * @coverage xQueueCreateCountingSemaphore
+ */
+void test_macro_xSemaphoreCreateCounting_over_upper_bound( void )
+{
+    /* Expect that xSemaphoreCreateCounting will configASSERT because
+     *  uxInitialCount > xMaxCount is invalid */
+    fakeAssertExpectFail();
 
-    vSemaphoreDelete( xSemaphore );
+    SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( UINT64_MAX - 1, UINT64_MAX );
+
+    /* verify that configASSERT was called */
+    TEST_ASSERT_EQUAL( true, fakeAssertGetFlagAndClear() );
+
+    /* validate returned semaphore handle */
+    TEST_ASSERT_EQUAL( NULL, xSemaphore );
+
+    /* Check that no call to malloc occurred */
+    TEST_ASSERT_EQUAL( 0, getLastMallocSize() );
 }
 
 /**
@@ -259,16 +279,14 @@ void test_macro_xSemaphoreCreateCounting_zero_zero( void )
 
     SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( 0, 0 );
 
-    fakeAssertVerifyNumAssertsAndClear( 2 );
+    /* verify that configASSERT was called */
+    TEST_ASSERT_EQUAL( true, fakeAssertGetFlagAndClear() );
 
     /* validate returned semaphore handle */
-    TEST_ASSERT_NOT_EQUAL( NULL, xSemaphore );
+    TEST_ASSERT_EQUAL( NULL, xSemaphore );
 
-    TEST_ASSERT_EQUAL( QUEUE_T_SIZE, getLastMallocSize() );
-
-    TEST_ASSERT_EQUAL( 0, uxSemaphoreGetCount( xSemaphore ) );
-
-    vSemaphoreDelete( xSemaphore );
+    /* Check that no call to malloc occurred */
+    TEST_ASSERT_EQUAL( 0, getLastMallocSize() );
 }
 
 /**
@@ -342,8 +360,8 @@ void test_macro_xSemaphoreCreateCountingStatic_null_fail( void )
 
     xSemaphore = xSemaphoreCreateCountingStatic( 2, 1, NULL );
 
-    /* Verify that configASSERT was called due to the null buffer */
-    TEST_ASSERT_EQUAL( true, fakeAssertGetFlagAndClear() );
+    /* verify that configASSERT was called twice */
+    fakeAssertVerifyNumAssertsAndClear( 2 );
 
     /* Verify that the returned handle is NULL */
     TEST_ASSERT_EQUAL( NULL, xSemaphore );
@@ -367,18 +385,14 @@ void test_macro_xSemaphoreCreateCountingStatic_zero_zero_fail( void )
 
     xSemaphore = xSemaphoreCreateCountingStatic( 0, 0, &xSemaphoreBuffer );
 
-    fakeAssertVerifyNumAssertsAndClear( 2 );
+    /* verify that configASSERT was called */
+    TEST_ASSERT_EQUAL( true, fakeAssertGetFlagAndClear() );
 
     /* validate returned semaphore handle */
-    TEST_ASSERT_NOT_EQUAL( NULL, xSemaphore );
+    TEST_ASSERT_EQUAL( NULL, xSemaphore );
 
     /* Check that no malloc occurred */
     TEST_ASSERT_EQUAL( 0, getLastMallocSize() );
-
-    /* Check that the returned count is zero */
-    TEST_ASSERT_EQUAL( 0, uxSemaphoreGetCount( xSemaphore ) );
-
-    vSemaphoreDelete( xSemaphore );
 }
 
 /**
@@ -401,15 +415,10 @@ void test_macro_xSemaphoreCreateCountingStatic_one_two( void )
     fakeAssertGetFlagAndClear();
 
     /* validate returned semaphore handle */
-    TEST_ASSERT_NOT_EQUAL( NULL, xSemaphore );
+    TEST_ASSERT_EQUAL( NULL, xSemaphore );
 
     /* verify that no heap memory allocation occurred */
     TEST_ASSERT_EQUAL( 0, getLastMallocSize() );
-
-    /* Check that the count was initialized correctly */
-    TEST_ASSERT_EQUAL( 2, uxSemaphoreGetCount( xSemaphore ) );
-
-    vSemaphoreDelete( xSemaphore );
 }
 
 /**

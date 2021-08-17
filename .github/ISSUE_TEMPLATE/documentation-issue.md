@@ -11,7 +11,7 @@ assignees: ''
 Please describe the issue and expected clarification in concise language.
 
 **Reference**
-Please attach the URL at which you are experiencing the issue. 
+Please attach the URL at which you are experiencing the issue.
 
 **Screenshot**
 If applicable, please attach screenshot.

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -235,5 +235,14 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @brief Size of the network buffer for MQTT packets.
  */
 #define democonfigNETWORK_BUFFER_SIZE    ( 1024U )
+
+/**
+ * @brief Predefined shadow name.
+ *
+ * Defaults to unnamed "Classic" shadow. Change to a custom string to use a named shadow.
+ */
+#ifndef democonfigSHADOW_NAME
+    #define democonfigSHADOW_NAME    SHADOW_NAME_CLASSIC
+#endif
 
 #endif /* DEMO_CONFIG_H */

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -54,7 +54,16 @@ static size_t uxLastMallocSize = 0;
 static void * pLastFreedAddress = 0;
 static uint32_t ulNumMallocCalls = 0;
 
-/* ==========================  CALLBACK FUNCTIONS =========================== */
+/* ===========================  HELPER FUNCTIONS  =========================== */
+void setxMaskAssertAndAbort( bool mask )
+{
+    xMaskAssertAndAbort = mask;
+}
+bool getxMaskAssertAndAbort()
+{
+    return xMaskAssertAndAbort;
+}
+/* ==========================  CALLBACK FUNCTIONS  ========================== */
 
 void * pvPortMalloc( size_t xSize )
 {

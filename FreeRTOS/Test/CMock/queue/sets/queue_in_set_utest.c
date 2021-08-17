@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -74,47 +74,6 @@ int suiteTearDown( int numFailures )
 
 /* ==============================  Test Cases =============================== */
 
-
-/**
- * @brief Test xQueueSend on a member Queue (size 1) of a QueueSet (size 0)
- * @details: In this case, sending to the queue causes a configASSERT, but returns pdTRUE.
- * @coverage xQueueGenericSend
- */
-void test_macro_xQueueSend_QueueSet_Fail( void )
-{
-    /* Expect that xQueueCreateSet will assert because a length of 0 is invalid */
-    fakeAssertExpectFail();
-
-    QueueSetHandle_t xQueueSet = xQueueCreateSet( 0 );
-
-    fakeAssertGetFlagAndClear();
-
-    QueueHandle_t xQueue = xQueueCreate( 1, sizeof( uint32_t ) );
-
-    TEST_ASSERT_EQUAL( pdTRUE, xQueueAddToSet( xQueue, xQueueSet ) );
-
-    /* Expect that xQueueSend / prvNotifyQueueSetContainer will assert because
-     *  a QueueSet length of 0 is invalid */
-    fakeAssertExpectFail();
-
-    uint32_t testValue = getNextMonotonicTestValue();
-    TEST_ASSERT_EQUAL( pdTRUE, xQueueSend( xQueue, &testValue, 0 ) );
-
-    TEST_ASSERT_EQUAL( pdTRUE, fakeAssertGetFlagAndClear() );
-
-    QueueHandle_t xQueue2 = xQueueSelectFromSet( xQueueSet, 0 );
-
-    TEST_ASSERT_EQUAL( NULL, xQueue2 );
-
-    uint32_t checkValue = INVALID_UINT32;
-
-    TEST_ASSERT_EQUAL( pdTRUE, xQueueReceive( xQueue, &checkValue, 0 ) );
-
-    TEST_ASSERT_EQUAL( testValue, checkValue );
-
-    vQueueDelete( xQueueSet );
-    vQueueDelete( xQueue );
-}
 
 /**
  * @brief Test xQueueSend on a member Queue (size 1) of a QueueSet (size 1)

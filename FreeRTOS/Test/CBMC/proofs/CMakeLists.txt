@@ -17,7 +17,7 @@ list(APPEND cbmc_compile_includes
     ${CMAKE_SOURCE_DIR}/Source/include
     ${CMAKE_SOURCE_DIR}/Source/portable/MSVC-MingW
 	${CMAKE_SOURCE_DIR}/Source/../../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/portable/BufferManagement
-	${CMAKE_SOURCE_DIR}/Source/../../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/include    
+	${CMAKE_SOURCE_DIR}/Source/../../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/include
     ${CMAKE_SOURCE_DIR}/Source/../../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/portable/Compiler/MSVC
     ${cbmc_dir}/include
     ${cbmc_dir}/windows

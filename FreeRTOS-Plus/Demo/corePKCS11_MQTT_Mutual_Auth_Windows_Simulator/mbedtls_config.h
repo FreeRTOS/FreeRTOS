@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -86,6 +86,7 @@
 #define MBEDTLS_ECDSA_C
 #define MBEDTLS_ECP_C
 #define MBEDTLS_ENTROPY_C
+#define MBEDTLS_ERROR_C
 #define MBEDTLS_ENTROPY_HARDWARE_ALT
 
 #define MBEDTLS_GCM_C
@@ -106,6 +107,7 @@
 #define MBEDTLS_THREADING_C
 #define MBEDTLS_X509_USE_C
 #define MBEDTLS_X509_CRT_PARSE_C
+#define MBEDTLS_CMAC_C
 
 /* Set the memory allocation functions on FreeRTOS. */
 void * mbedtls_platform_calloc( size_t nmemb,

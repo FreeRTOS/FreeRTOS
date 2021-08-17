@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -32,12 +32,14 @@
  * decrementing `cTxLock` and `cRxLock`. */
 
 static void prvUnlockQueue( Queue_t * const pxQueue )
+
 /*@requires [1/2]queuehandle(pxQueue, ?N, ?M, ?is_isr) &*& is_isr == false &*&
-    [1/2]pxQueue->locked |-> ?m &*&
-    mutex_held(m, queue_locked_invariant(pxQueue), currentThread, 1/2) &*&
-    queue_locked_invariant(pxQueue)();@*/
+ *  [1/2]pxQueue->locked |-> ?m &*&
+ *  mutex_held(m, queue_locked_invariant(pxQueue), currentThread, 1/2) &*&
+ *  queue_locked_invariant(pxQueue)();@*/
+
 /*@ensures [1/2]queuehandle(pxQueue, N, M, is_isr) &*&
-    [1/2]queuelock(pxQueue);@*/
+ *  [1/2]queuelock(pxQueue);@*/
 {
     /* THIS FUNCTION MUST BE CALLED WITH THE SCHEDULER SUSPENDED. */
 
@@ -125,12 +127,12 @@ static void prvUnlockQueue( Queue_t * const pxQueue )
 
         pxQueue->cTxLock = queueUNLOCKED;
     }
-#ifndef VERIFAST /*< ***merge cTxLock and cRxLock critical regions*** */
-    taskEXIT_CRITICAL();
+    #ifndef VERIFAST /*< ***merge cTxLock and cRxLock critical regions*** */
+        taskEXIT_CRITICAL();
 
-    /* Do the same for the Rx lock. */
-    taskENTER_CRITICAL();
-#endif
+        /* Do the same for the Rx lock. */
+        taskENTER_CRITICAL();
+    #endif
     {
         int8_t cRxLock = pxQueue->cRxLock;
 
@@ -160,7 +162,7 @@ static void prvUnlockQueue( Queue_t * const pxQueue )
     }
     /*@close queue(pxQueue, Storage, N, M, W, R, K, false, abs);@*/
     taskEXIT_CRITICAL();
-#ifdef VERIFAST /*< ghost action */
-    mutex_release( pxQueue->locked );
-#endif
+    #ifdef VERIFAST /*< ghost action */
+        mutex_release( pxQueue->locked );
+    #endif
 }

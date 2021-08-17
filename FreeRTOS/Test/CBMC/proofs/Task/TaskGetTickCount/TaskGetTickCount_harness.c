@@ -34,7 +34,7 @@
 
 void harness()
 {
-	TickType_t xTickCount;
+    TickType_t xTickCount;
 
-	xTickCount = xTaskGetTickCount();
+    xTickCount = xTaskGetTickCount();
 }

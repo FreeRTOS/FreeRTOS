@@ -711,7 +711,7 @@ static void prvTest7_CheckBacklogBehaviour( void )
      * service task.  Use a timer period of one tick so the call to
      * xTaskCatchUpTicks() below has minimal impact on other tests that might
      * be running. */
-    #define tmrdemoBACKLOG_TIMER_PERIOD     ( ( TickType_t ) 1 )
+#define tmrdemoBACKLOG_TIMER_PERIOD    ( ( TickType_t ) 1 )
     xTimerChangePeriod( xAutoReloadTimers[ 0 ], tmrdemoBACKLOG_TIMER_PERIOD, tmrdemoDONT_BLOCK );
 
     /* The timer should now be active. */
@@ -724,7 +724,7 @@ static void prvTest7_CheckBacklogBehaviour( void )
     /* Arrange for the callback to execute late enough that it will execute
      * twice, back-to-back.  The timer must handle the stop request properly
      * in spite of the backlog of callbacks. */
-    #define tmrdemoEXPECTED_BACKLOG_EXPIRES  ( ( TickType_t ) 2 )
+#define tmrdemoEXPECTED_BACKLOG_EXPIRES    ( ( TickType_t ) 2 )
     xTaskCatchUpTicks( tmrdemoBACKLOG_TIMER_PERIOD * tmrdemoEXPECTED_BACKLOG_EXPIRES );
 
     /* The timer should now be inactive. */

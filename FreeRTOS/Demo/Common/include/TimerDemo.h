@@ -31,7 +31,7 @@ void vStartTimerDemoTask( TickType_t xBaseFrequencyIn );
 BaseType_t xAreTimerDemoTasksStillRunning( TickType_t xCycleFrequency );
 void vTimerPeriodicISRTests( void );
 
-/* 
+/*
  * Test the behavior of backlogged timers.  The backlog tests should not be
  * included while other demos are running concurrently with the timer demo.  The
  * backlog tests utilize xTaskCatchUpTicks(), which is logically equivalent to

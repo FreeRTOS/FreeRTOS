@@ -253,8 +253,9 @@ class KernelRelease(BaseRelease):
     def updateVersionMacros(self, version_str):
         info('Updating version macros in task.h for "%s"' % version_str)
 
-        # Strip out any non-numeric or '.' characters before setting major / minor / build
-        (major, minor, build) = re.sub("[^0-9.]", "", version_str).split('.')
+        # Extract major / minor / build from the version string.
+        ver = re.search(r'([\d.]+)', version_str).group(1)
+        (major, minor, build) = ver.split('.')
         update_freertos_version_macros(os.path.join(self.repo_path, 'include', 'task.h'), version_str, major, minor, build)
 
         self.commitChanges(self.commit_msg_prefix + 'Bump task.h version macros to "%s"' % version_str)

@@ -154,6 +154,26 @@ def prune_result_tree(path_root, exclude_files=[], dry_run=False):
 
     return files_removed
 
+def prune_result_tree_v2(tree_root, exclude_files=[], dry_run=False):
+    '''
+    Remove all files in 'exclude_files' from file tree.
+    '''
+    files_removed = []
+    for root, dirs, files in os.walk(tree_root):
+        for dir in dirs:
+            if dir in exclude_files:
+                path_full = os.path.join(root, dir)
+                if not dry_run:
+                    shutil.rmtree(path_full)
+                files_removed.append(path_full)
+        for file in files:
+            if file in exclude_files:
+                path_full = os.path.join(root, file)
+                if not dry_run:
+                    os.remove(path_full)
+                files_removed.append(path_full)
+    return files_removed
+
 def zip_result_tree(path_tree, path_outzip):
     '''
     Zip file tree rooted at 'path_root', using same compression as 7z at max compression,

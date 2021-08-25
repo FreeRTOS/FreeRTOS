@@ -76,9 +76,9 @@
 #define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 
-/* The rate at which data is sent to the queue.  The 200ms value is converted
+/* The rate at which data is sent to the queue.  The 3000ms value is converted
 to ticks using the pdMS_TO_TICKS() macro. */
-#define mainQUEUE_SEND_FREQUENCY_MS			pdMS_TO_TICKS( 1000 )
+#define mainQUEUE_SEND_FREQUENCY_MS			pdMS_TO_TICKS( 3000 )
 
 /* The maximum number items the queue can hold.  The priority of the receiving
 task is above the priority of the sending task, so the receiving task will
@@ -112,7 +112,7 @@ static QueueHandle_t xQueue = NULL;
 void main_blinky( void )
 {
 	/* Create the queue. */
-	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( uint32_t ) );
+	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
 
 	if( xQueue != NULL )
 	{
@@ -190,7 +190,7 @@ TickType_t tickCount;
 		if( ulReceivedValue == ulExpectedValue )
 		{
 		    tickCount = xTaskGetTickCount();
-			//vToggleLED();
+			vToggleLED();
 			ulReceivedValue = 0U;
 		}
 	}

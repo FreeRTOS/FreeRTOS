@@ -1,1 +1,0 @@
-contains files relating to configuration of third party modules

@@ -322,7 +322,9 @@ SECTIONS
         . += STACK_SIZE_U54_4_APPLICATION;
         PROVIDE(__app_stack_top_h4 = .);
         PROVIDE(__stack_top_h4$ = .);
-        
+
+        PROVIDE(__freertos_irq_stack_top = .);
+
         /* place __start_of_free_lim$ after last allocation of l2_lim */
         . = ALIGN(0x10);
         PROVIDE(__start_of_free_lim$ = .);

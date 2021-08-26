@@ -267,6 +267,8 @@ SECTIONS
         PROVIDE(__app_stack_top_h0 = .);
         PROVIDE(__stack_top_h0$ = .);
 
+        PROVIDE(__freertos_irq_stack_top = .);
+
         PROVIDE(__stack_bottom_h1$ = .);
         PROVIDE(__app_stack_bottom_h1$ = .);
         . += STACK_SIZE_U54_1_APPLICATION;
@@ -290,8 +292,6 @@ SECTIONS
         . += STACK_SIZE_U54_4_APPLICATION;
         PROVIDE(__app_stack_top_h4 = .);
         PROVIDE(__stack_top_h4$ = .);
-
-        PROVIDE(__freertos_irq_stack_top = .);
 
     } > l2lim
     

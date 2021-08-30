@@ -299,7 +299,7 @@ SECTIONS
         PROVIDE(__app_stack_top_h0 = .);
         PROVIDE(__stack_top_h0$ = .);
 
-        ROVIDE(__freertos_irq_stack_top = .);
+        PROVIDE(__freertos_irq_stack_top = .);
 
         PROVIDE(__stack_bottom_h1$ = .);
         PROVIDE(__app_stack_bottom_h1$ = .);

@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202107.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -72,8 +72,8 @@ vRegTest1Implementation:
 reg1_loop:
 
     /* Check each register still contains the expected known value.
-    vRegTest1Implementation uses x31 as the temporary, vRegTest2Implementation
-    uses x5 as the temporary. */
+     * vRegTest1Implementation uses x31 as the temporary, vRegTest2Implementation
+     * uses x5 as the temporary. */
     li x31, 0x5
     bne x31, x5, reg1_error_loop
     li x31, 0x6
@@ -144,7 +144,7 @@ reg1_loop:
 
 reg1_error_loop:
     /* Jump here if a register contains an uxpected value.  This stops the loop
-    counter being incremented so the check task knows an error was found. */
+     * counter being incremented so the check task knows an error was found. */
     ebreak
     jal reg1_error_loop
 
@@ -187,8 +187,8 @@ vRegTest2Implementation:
 Reg2_loop:
 
     /* Check each register still contains the expected known value.
-    vRegTest2Implementation uses x5 as the temporary, vRegTest1Implementation
-    uses x31 as the temporary. */
+     * vRegTest2Implementation uses x5 as the temporary, vRegTest1Implementation
+     * uses x31 as the temporary. */
     li x5, 0x61
     bne x5, x6, reg2_error_loop
     li x5, 0x71
@@ -256,7 +256,7 @@ Reg2_loop:
 
 reg2_error_loop:
     /* Jump here if a register contains an uxpected value.  This stops the loop
-    counter being incremented so the check task knows an error was found. */
+     * counter being incremented so the check task knows an error was found. */
     ebreak
     jal reg2_error_loop
 

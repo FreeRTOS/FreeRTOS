@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202107.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -86,7 +86,7 @@
 #endif
 
 /* Set the following definitions to 1 to include the API function, or zero
-to exclude the API function. */
+ * to exclude the API function. */
 #define INCLUDE_vTaskPrioritySet                1
 #define INCLUDE_uxTaskPriorityGet               1
 #define INCLUDE_vTaskDelete                     1
@@ -101,7 +101,7 @@ to exclude the API function. */
 #define INCLUDE_xSemaphoreGetMutexHolder        1
 
 /* Normal assert() semantics without relying on the provision of an assert.h
-header file. */
+ * header file. */
 void vAssertCalled( void );
 #define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled()
 

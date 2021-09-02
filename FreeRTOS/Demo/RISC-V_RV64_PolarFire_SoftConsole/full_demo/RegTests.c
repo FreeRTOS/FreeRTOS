@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202104.00
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202107.00
+ * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -45,11 +45,11 @@ extern void vRegTest1Implementation( void );
 extern void vRegTest2Implementation( void );
 
 /* Flag that will be latched to pdTRUE should any unexpected behaviour be
-detected in any of the tasks. */
+ * detected in any of the tasks. */
 static volatile BaseType_t xErrorDetected = pdFALSE;
 
 /* Counters that are incremented on each cycle of a test.  This is used to
-detect a stalled task - a test that is no longer running. */
+ * detect a stalled task - a test that is no longer running. */
 volatile uint32_t ulRegisterTest1Counter = 0;
 volatile uint32_t ulRegisterTest2Counter = 0;
 /*-----------------------------------------------------------*/

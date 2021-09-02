@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202104.00
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202107.00
+ * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -80,8 +80,9 @@
 #define mainREGISTER_TEST_PRIORITY          ( tskIDLE_PRIORITY )
 
 /* The period of the check task, in ms, converted to ticks using the
-pdMS_TO_TICKS() macro.  mainNO_ERROR_CHECK_TASK_PERIOD is used if no errors have
-been found, mainERROR_CHECK_TASK_PERIOD is used if an error has been found. */
+ * pdMS_TO_TICKS() macro.  mainNO_ERROR_CHECK_TASK_PERIOD is used if no errors
+ * have been found, mainERROR_CHECK_TASK_PERIOD is used if an error has been
+ * found. */
 #define mainNO_ERROR_CHECK_TASK_PERIOD      pdMS_TO_TICKS( 3000UL )
 #define mainERROR_CHECK_TASK_PERIOD         pdMS_TO_TICKS( 500UL )
 
@@ -276,9 +277,9 @@ BaseType_t xResult;
         #if( configSTART_DELETE_SELF_TESTS == 1 )
         {
             /* The suicide tasks must be created last as they need to know how many
-            * tasks were running prior to their creation.  This then allows them to
-            * ascertain whether or not the correct/expected number of tasks are
-            * running at any given time. */
+             * tasks were running prior to their creation.  This then allows them to
+             * ascertain whether or not the correct/expected number of tasks are
+             * running at any given time. */
             vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
         }
         #endif /* configSTART_DELETE_SELF_TESTS */
@@ -291,7 +292,7 @@ BaseType_t xResult;
 void vFullDemoTickHook( void )
 {
     /* Called from vApplicationTickHook() when the project is configured to
-    build the full test/demo applications. */
+     * build the full test/demo applications. */
 
     #if( configSTART_TASK_NOTIFY_TESTS == 1 )
     {

@@ -109,7 +109,7 @@
 
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/polarfire_hal/boards/icicle-kit-es/platform_config}&quot;"/>
 
-                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS/portable/GCC/RISC-V/chip_specific_extensions/RV64I_CLINT_no_extensions}&quot;"/>
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS/portable/GCC/RISC-V/chip_specific_extensions/RISCV_MTIME_CLINT_no_extensions}&quot;"/>
 
                                 </option>
 
@@ -343,7 +343,7 @@
 
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/polarfire_hal/boards/icicle-kit-es/platform_config}&quot;"/>
 
-                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS/portable/GCC/RISC-V/chip_specific_extensions/RV64I_CLINT_no_extensions}&quot;"/>
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS/portable/GCC/RISC-V/chip_specific_extensions/RISCV_MTIME_CLINT_no_extensions}&quot;"/>
 
                                 </option>
 

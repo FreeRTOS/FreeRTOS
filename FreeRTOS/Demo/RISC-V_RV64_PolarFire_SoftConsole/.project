@@ -177,7 +177,7 @@
 			<type>9</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-RV64I_CLINT_no_extensions</arguments>
+				<arguments>1.0-name-matches-false-false-RISCV_MTIME_CLINT_no_extensions</arguments>
 			</matcher>
 		</filter>
 	</filteredResources>

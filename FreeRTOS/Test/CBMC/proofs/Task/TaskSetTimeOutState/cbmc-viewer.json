@@ -1,0 +1,28 @@
+{ "expected-missing-functions":
+  [
+    "vApplicationTickHook",
+
+    "pxPortInitialiseStack",
+    "vPortCloseRunningThread",
+    "vPortDeleteThread",
+    "vPortEnterCritical",
+    "vPortExitCritical",
+    "vPortGenerateSimulatedInterrupt",
+    "xPortStartScheduler",
+
+    "pvTaskIncrementMutexHeldCount",
+    "uxTaskGetTaskNumber",
+    "vTaskInternalSetTimeOutState",
+    "vTaskMissedYield",
+    "vTaskPlaceOnEventList",
+    "vTaskPriorityDisinheritAfterTimeout",
+    "vTaskSuspendAll",
+    "xTaskGetCurrentTaskHandle",
+    "xTaskPriorityDisinherit",
+    "xTaskPriorityInherit",
+    "xTaskRemoveFromEventList",
+    "xTaskResumeAll"
+  ],
+  "proof-name": "TaskSetTimeOutState",
+  "proof-root": "Test/CBMC/proofs"
+}

@@ -4,29 +4,18 @@
 //                  to hang application when debugger not connected.
 //
 // ****************************************************************************
-// Copyright 2017-2020 NXP
+// Copyright 2017-2021 NXP
 // All rights reserved.
 //
-// Software that is described herein is for illustrative purposes only
-// which provides customers with programming information regarding the
-// NXP Cortex-M based MCUs. This software is supplied "AS IS" without any
-// warranties of any kind, and NXP Semiconductors and its licensor disclaim any
-// and all warranties, express or implied, including all implied warranties of
-// merchantability, fitness for a particular purpose and non-infringement of
-// intellectual property rights.  NXP Semiconductors assumes no responsibility
-// or liability for the use of the software, conveys no license or rights under
-// any patent, copyright, mask work right, or any other intellectual property
-// rights in or to any products. NXP Semiconductors reserves the right to make
-// changes in the software without notification. NXP Semiconductors also makes
-// no representation or warranty that such application will be suitable for the
-// specified use without further testing or modification.
+// NXP Confidential. This software is owned or controlled by NXP and may only be
+// used strictly in accordance with the applicable license terms.
 //
-// Permission to use, copy, modify, and distribute this software and its
-// documentation is hereby granted, under NXP Semiconductors' and its
-// licensor's relevant copyrights in the software, without fee, provided that it
-// is used in conjunction with NXP Semiconductors microcontrollers.  This
-// copyright, permission, and disclaimer notice must appear in all copies of
-// this code.
+// By expressly accepting such terms or by downloading, installing, activating
+// and/or otherwise using the software, you are agreeing that you have read, and
+// that you agree to comply with and are bound by, such license terms.
+// 
+// If you do not agree to be bound by the applicable license terms, then you may not
+// retain, install, activate or otherwise use the software.
 // ****************************************************************************
 //
 //                       ===== DESCRIPTION =====

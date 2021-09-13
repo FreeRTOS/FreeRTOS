@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2019 NXP
+ * Copyright 2016-2020 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -28,10 +28,27 @@ static const reset_ip_name_t s_gpioResets[] = GPIO_RSTS_N;
 /*******************************************************************************
  * Prototypes
  ************ ******************************************************************/
+/*!
+ * @brief Enable GPIO port clock.
+ *
+ * @param base   GPIO peripheral base pointer.
+ * @param port   GPIO port number.
+ */
+static void GPIO_EnablePortClock(GPIO_Type *base, uint32_t port);
 
 /*******************************************************************************
  * Code
  ******************************************************************************/
+static void GPIO_EnablePortClock(GPIO_Type *base, uint32_t port)
+{
+#if !(defined(FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL) && FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL)
+    assert(port < ARRAY_SIZE(s_gpioClockName));
+
+    /* Upgate the GPIO clock */
+    CLOCK_EnableClock(s_gpioClockName[port]);
+#endif /* FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL */
+}
+
 /*!
  * brief Initializes the GPIO peripheral.
  *
@@ -42,12 +59,8 @@ static const reset_ip_name_t s_gpioResets[] = GPIO_RSTS_N;
  */
 void GPIO_PortInit(GPIO_Type *base, uint32_t port)
 {
-#if !(defined(FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL) && FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL)
-    assert(port < ARRAY_SIZE(s_gpioClockName));
+    GPIO_EnablePortClock(base, port);
 
-    /* Upgate the GPIO clock */
-    CLOCK_EnableClock(s_gpioClockName[port]);
-#endif /* FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL */
 #if !(defined(FSL_FEATURE_GPIO_HAS_NO_RESET) && FSL_FEATURE_GPIO_HAS_NO_RESET)
     /* Reset the GPIO module */
     RESET_PeripheralReset(s_gpioResets[port]);
@@ -83,6 +96,8 @@ void GPIO_PortInit(GPIO_Type *base, uint32_t port)
  */
 void GPIO_PinInit(GPIO_Type *base, uint32_t port, uint32_t pin, const gpio_pin_config_t *config)
 {
+    GPIO_EnablePortClock(base, port);
+
     if (config->pinDirection == kGPIO_DigitalInput)
     {
 #if defined(FSL_FEATURE_GPIO_DIRSET_AND_DIRCLR) && (FSL_FEATURE_GPIO_DIRSET_AND_DIRCLR)
@@ -113,7 +128,7 @@ void GPIO_PinInit(GPIO_Type *base, uint32_t port, uint32_t pin, const gpio_pin_c
 
 #if defined(FSL_FEATURE_GPIO_HAS_INTERRUPT) && FSL_FEATURE_GPIO_HAS_INTERRUPT
 /*!
- * @brief Configures the gpio pin interrupt.
+ * @brief Set the configuration of pin interrupt.
  *
  * @param base GPIO base pointer.
  * @param port GPIO port number
@@ -122,9 +137,9 @@ void GPIO_PinInit(GPIO_Type *base, uint32_t port, uint32_t pin, const gpio_pin_c
  */
 void GPIO_SetPinInterruptConfig(GPIO_Type *base, uint32_t port, uint32_t pin, gpio_interrupt_config_t *config)
 {
-    base->INTEDG[port] = base->INTEDG[port] | ((uint32_t)config->mode << pin);
+    base->INTEDG[port] = (base->INTEDG[port] & ~(1UL << pin)) | ((uint32_t)config->mode << pin);
 
-    base->INTPOL[port] = base->INTPOL[port] | ((uint32_t)config->polarity << pin);
+    base->INTPOL[port] = (base->INTPOL[port] & ~(1UL << pin)) | ((uint32_t)config->polarity << pin);
 }
 
 /*!

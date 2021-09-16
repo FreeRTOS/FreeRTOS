@@ -298,6 +298,17 @@ SECTIONS
         PROVIDE(end = .);
     } > SRAM AT> SRAM
 
+    /* Shared data between UserIrqHandler and application tasks */
+    .user_irq_shared_memory : ALIGN(32)
+    {
+        . = ALIGN(32);
+        __user_irq_shared_memory_start__ = .;
+        *(user_irq_shared_memory)
+        . = ALIGN(32);
+        /* End address must be the last address in the region, therefore, -1. */
+        __user_irq_shared_memory_end__ = . - 1;
+    } > SRAM AT> SRAM
+
     /* NOINIT section for SRAMX. */
     .noinit_RAM2 (NOLOAD) : ALIGN(4)
     {

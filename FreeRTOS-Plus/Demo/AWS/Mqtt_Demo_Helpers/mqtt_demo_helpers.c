@@ -903,7 +903,7 @@ BaseType_t xPublishToTopic( MQTTContext_t * pxMqttContext,
     }
     else
     {
-        LogInfo( ( "the published payload:%s \r\n ", pcPayload ) );
+        LogInfo( ( "the published payload:%.*s \r\n ", payloadLength, pcPayload ) );
         /* This example publishes to only one topic and uses QOS1. */
         outgoingPublishPackets[ ucPublishIndex ].pubInfo.qos = MQTTQoS1;
         outgoingPublishPackets[ ucPublishIndex ].pubInfo.pTopicName = pcTopicFilter;

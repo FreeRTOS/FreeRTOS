@@ -66,7 +66,7 @@
 
 /* The following needs to be placed in the shared memory as it is accessed in
  * the UART received IRQ handler which is unprivileged. */
-TaskHandle_t xUartTaskHandle __attribute__( ( section( "user_irq_shared_memory" ) ) );
+TaskHandle_t xUartDemoTaskHandle __attribute__( ( section( "user_irq_shared_memory" ) ) );
 /*-----------------------------------------------------------*/
 
 void vUartDemoTask( void * pvParams )
@@ -105,6 +105,6 @@ void vUartDataReceivedIRQHandler( uint32_t ulData )
 
     /* Print the response and unblock the UART demo task. */
     USART_WriteBlocking( USART0, response, strlen( response ) );
-    xTaskNotifyGive( xUartTaskHandle );
+    xTaskNotifyGive( xUartDemoTaskHandle );
 }
 /*-----------------------------------------------------------*/

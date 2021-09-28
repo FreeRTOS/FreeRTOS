@@ -241,25 +241,25 @@ void FLEXCOMM0_IRQHandler(void)
 
 static void prvCreateDemoTasks( void )
 {
-    static StackType_t xUserIrqHandlerTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
-    static StackType_t xLedTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
-    static StackType_t xUartTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
+    static StackType_t xInterruptHandlerTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
+    static StackType_t xLedDemoTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
+    static StackType_t xUartDemoTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
 
-    extern TaskHandle_t xUartTaskHandle;
+    extern TaskHandle_t xUartDemoTaskHandle;
     extern uint32_t __user_irq_shared_memory_start__[];
     extern uint32_t __user_irq_shared_memory_end__[];
     uint32_t ulSharedMemoryLength = ( uint32_t )__user_irq_shared_memory_end__ - ( uint32_t )__user_irq_shared_memory_start__ + 1;
 
     /* The interrupt handler task needs access to UART memory region too as we
      * write the response to UART from the interrupt handler in the UART demo. */
-    TaskParameters_t xUserIrqHandlerTaskParameters =
+    TaskParameters_t xInterruptHandlerTaskParameters =
     {
         .pvTaskCode     = vInterruptHandlerTask,
-        .pcName         = "UserIrqHandlerTask",
+        .pcName         = "InterruptHandlerTask",
         .usStackDepth   = configMINIMAL_STACK_SIZE,
         .pvParameters   = xUserIrqQueueHandle,
         .uxPriority     = configMAX_PRIORITIES - 1, /* Run the interrupt handler task at the highest priority. */
-        .puxStackBuffer = xUserIrqHandlerTaskStack,
+        .puxStackBuffer = xInterruptHandlerTaskStack,
         .xRegions       =
         {
             { __user_irq_shared_memory_start__, ulSharedMemoryLength, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
@@ -267,14 +267,14 @@ static void prvCreateDemoTasks( void )
             { 0,                                0,                    0                                                      },
         }
     };
-    TaskParameters_t xLedTaskParameters =
+    TaskParameters_t xLedDemoTaskParameters =
     {
         .pvTaskCode     = vLedDemoTask,
-        .pcName         = "LedTask",
+        .pcName         = "LedDemoTask",
         .usStackDepth   = configMINIMAL_STACK_SIZE,
         .pvParameters   = NULL,
         .uxPriority     = tskIDLE_PRIORITY,
-        .puxStackBuffer = xLedTaskStack,
+        .puxStackBuffer = xLedDemoTaskStack,
         .xRegions       =
         {
             { __user_irq_shared_memory_start__, ulSharedMemoryLength, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
@@ -282,14 +282,14 @@ static void prvCreateDemoTasks( void )
             { 0,                                0,                    0                                                      },
         }
     };
-    TaskParameters_t xUartTaskParameters =
+    TaskParameters_t xUartDemoTaskParameters =
     {
         .pvTaskCode     = vUartDemoTask,
-        .pcName         = "UartTask",
+        .pcName         = "UartDemoTask",
         .usStackDepth   = configMINIMAL_STACK_SIZE,
         .pvParameters   = NULL,
         .uxPriority     = tskIDLE_PRIORITY,
-        .puxStackBuffer = xUartTaskStack,
+        .puxStackBuffer = xUartDemoTaskStack,
         .xRegions       =
         {
             { __user_irq_shared_memory_start__, ulSharedMemoryLength, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
@@ -298,9 +298,9 @@ static void prvCreateDemoTasks( void )
         }
     };
 
-    xTaskCreateRestricted( &( xUserIrqHandlerTaskParameters ), NULL );
-    xTaskCreateRestricted( &( xLedTaskParameters ), NULL );
-    xTaskCreateRestricted( &( xUartTaskParameters ), &( xUartTaskHandle ) );
+    xTaskCreateRestricted( &( xInterruptHandlerTaskParameters ), NULL );
+    xTaskCreateRestricted( &( xLedDemoTaskParameters ), NULL );
+    xTaskCreateRestricted( &( xUartDemoTaskParameters ), &( xUartDemoTaskHandle ) );
 }
 /*-----------------------------------------------------------*/
 

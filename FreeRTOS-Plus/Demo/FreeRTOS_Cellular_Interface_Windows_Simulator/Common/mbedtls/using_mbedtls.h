@@ -42,10 +42,25 @@
 
 /* Logging configuration for the Sockets. */
 #ifndef LIBRARY_LOG_NAME
-    #define LIBRARY_LOG_NAME     "TlsTransport"
+    #define LIBRARY_LOG_NAME    "TlsTransport"
 #endif
+
+/* Prototype for the function used to print to console on Windows simulator
+ * of FreeRTOS.
+ * The function prints to the console before the network is connected;
+ * then a UDP port after the network has connected. */
+extern void vLoggingPrintf( const char * pcFormatString,
+                            ... );
+
+/* Map the SdkLog macro to the logging function to enable logging
+ * on Windows simulator. */
+#ifndef SdkLog
+    #define SdkLog( message )    vLoggingPrintf message
+#endif
+
+
 #ifndef LIBRARY_LOG_LEVEL
-    #define LIBRARY_LOG_LEVEL    LOG_INFO
+    #define LIBRARY_LOG_LEVEL    LOG_ERROR
 #endif
 
 #include "logging_stack.h"
@@ -81,14 +96,14 @@ typedef struct SSLContext
 } SSLContext_t;
 
 /**
- * @brief Definition of the network context for the transport interface
- * implementation that uses mbedTLS and FreeRTOS+TLS sockets.
+ * @brief Parameters for the network context of the transport interface
+ * implementation that uses mbedTLS and FreeRTOS+TCP sockets.
  */
-struct NetworkContext
+typedef struct TlsTransportParams
 {
     Socket_t tcpSocket;
     SSLContext_t sslContext;
-};
+} TlsTransportParams_t;
 
 /**
  * @brief Contains the credentials necessary for tls connection setup.

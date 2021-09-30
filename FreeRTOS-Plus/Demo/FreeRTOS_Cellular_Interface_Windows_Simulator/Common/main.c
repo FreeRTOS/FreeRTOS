@@ -71,6 +71,15 @@ static void prvSRand( UBaseType_t ulSeed );
  */
 static void prvMiscInitialisation( void );
 
+/* Set the following constant to pdTRUE to log using the method indicated by the
+ * name of the constant, or pdFALSE to not log using the method indicated by the
+ * name of the constant.  Options include to standard out (xLogToStdout), to a disk
+ * file (xLogToFile), and to a UDP port (xLogToUDP).  If xLogToUDP is set to pdTRUE
+ * then UDP messages are sent to the IP address configured as the UDP logging server
+ * address (see the configUDP_LOGGING_ADDR0 definitions in FreeRTOSConfig.h) and
+ * the port number set by configPRINT_PORT in FreeRTOSConfig.h. */
+const BaseType_t xLogToStdout = pdTRUE, xLogToFile = pdFALSE, xLogToUDP = pdFALSE;
+
 /* Used by the pseudo random number generator. */
 static UBaseType_t ulNextRand;
 /*-----------------------------------------------------------*/
@@ -181,6 +190,8 @@ static void CellularDemoTask( void * pvParameters )
 
 static void prvMiscInitialisation( void )
 {
+    vLoggingInit( xLogToStdout, xLogToFile, xLogToUDP, 0U, configPRINT_PORT );
+
     /* FreeRTOS Cellular Library init needs thread ready environment.
      * CellularDemoTask invoke setupCellular to init FreeRTOS Cellular Library and register network.
      * Then it runs the MQTT demo. */

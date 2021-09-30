@@ -136,6 +136,7 @@ bnumconfigs
 bnumdescriptors
 bnumendpoints
 bo
+bod
 bootloader
 bootstrapcdn
 bp
@@ -655,6 +656,7 @@ eusci
 eval
 evb
 eventcallback
+evk
 evnt
 evt
 ewavr
@@ -906,6 +908,7 @@ initialises
 initializerequestheaders
 initirqlevels
 initstructure
+inputmux
 int
 intc
 intctl
@@ -1336,6 +1339,7 @@ numberofitems
 numofservers
 nvic
 nvs
+nxp
 ocd
 oe
 oer
@@ -2089,6 +2093,7 @@ retargets
 retored
 retr
 rfc
+rgb
 rhr
 ri
 richard
@@ -2776,6 +2781,7 @@ vapplicationstackoverflowhook
 vapplicationtickhook
 var
 vbasicwebserver
+vbat
 vblink
 vbus
 vbuttonhandlertask
@@ -3069,6 +3075,7 @@ xindex
 xinterface
 xinterruptcontroller
 xiptracevalues
+xirqrequest
 xisrautoreloadtimer
 xisroneshottimer
 xisrstatus
@@ -3082,6 +3089,7 @@ xlastwaketime
 xlatcherror
 xlcdqueue
 xledparaemtes
+xledstate
 xledtimer
 xlen
 xlength

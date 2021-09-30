@@ -229,6 +229,14 @@ SECTIONS
         /* End address must be the last address in the region, therefore, -1. */
         __privileged_sram_end__ = . - 1;
 
+        /* Shared data between UserIrqHandler and application tasks. */
+        /* It needs to be 32 byte aligned to satisfy MPU requirements. */
+        __user_irq_shared_memory_start__ = .;
+        *(user_irq_shared_memory)
+        . = ALIGN(32);
+        /* End address must be the last address in the region, therefore, -1. */
+        __user_irq_shared_memory_end__ = . - 1;
+
         *(vtable)
         *(.ramfunc*)
         KEEP(*(CodeQuickAccess))
@@ -296,17 +304,6 @@ SECTIONS
         PROVIDE(__end_bss_RAM = .) ;
         PROVIDE(__end_bss_SRAM = .) ;
         PROVIDE(end = .);
-    } > SRAM AT> SRAM
-
-    /* Shared data between UserIrqHandler and application tasks */
-    .user_irq_shared_memory : ALIGN(32)
-    {
-        . = ALIGN(32);
-        __user_irq_shared_memory_start__ = .;
-        *(user_irq_shared_memory)
-        . = ALIGN(32);
-        /* End address must be the last address in the region, therefore, -1. */
-        __user_irq_shared_memory_end__ = . - 1;
     } > SRAM AT> SRAM
 
     /* NOINIT section for SRAMX. */

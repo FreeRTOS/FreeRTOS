@@ -199,7 +199,7 @@ def process_components(root_dir, components, exclude_dirs=[]):
 def update_freertos_version_macros(path_macrofile, version_str, major, minor, build):
     with open(path_macrofile, encoding='utf-8', errors='ignore', newline='') as macro_file:
         macro_file_content = macro_file.read()
-        match_version = re.search(r'(^.*#define *tskKERNEL_VERSION_NUMBER *(".*")$)', macro_file_content, re.MULTILINE)
+        match_version = re.search(r'(^.*#define *tskKERNEL_VERSION_NUMBER *(.*)$)', macro_file_content, re.MULTILINE)
         match_major = re.search(r'(^.*#define *tskKERNEL_VERSION_MAJOR *(.*)$)', macro_file_content, re.MULTILINE)
         match_minor = re.search(r'(^.*#define *tskKERNEL_VERSION_MINOR *(.*)$)', macro_file_content, re.MULTILINE)
         match_build = re.search(r'(^.*#define *tskKERNEL_VERSION_BUILD *(.*)$)', macro_file_content, re.MULTILINE)

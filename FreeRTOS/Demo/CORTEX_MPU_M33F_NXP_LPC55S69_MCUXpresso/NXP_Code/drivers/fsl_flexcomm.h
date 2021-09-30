@@ -53,7 +53,7 @@ status_t FLEXCOMM_Init(void *base, FLEXCOMM_PERIPH_T periph);
 
 /*! @brief Sets IRQ handler for given FLEXCOMM module. It is used by drivers register IRQ handler according to FLEXCOMM
  * mode */
-void FLEXCOMM_SetIRQHandler(void *base, flexcomm_irq_handler_t handler, void *handle);
+void FLEXCOMM_SetIRQHandler(void *base, flexcomm_irq_handler_t handler, void *flexcommHandle);
 
 #if defined(__cplusplus)
 }

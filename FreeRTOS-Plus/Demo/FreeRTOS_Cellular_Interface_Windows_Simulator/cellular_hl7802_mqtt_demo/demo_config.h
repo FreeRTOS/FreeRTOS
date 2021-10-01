@@ -81,7 +81,6 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *
  * #define democonfigCLIENT_IDENTIFIER				"insert here."
  */
-#define democonfigCLIENT_IDENTIFIER    "MQTT_Test"
 
 /**
  * @brief Endpoint of the MQTT broker to connect to.

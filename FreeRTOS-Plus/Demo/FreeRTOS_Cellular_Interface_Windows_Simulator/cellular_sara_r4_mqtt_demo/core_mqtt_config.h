@@ -44,7 +44,7 @@
 #endif
 
 #ifndef LIBRARY_LOG_LEVEL
-    #define LIBRARY_LOG_LEVEL    LOG_DEBUG
+    #define LIBRARY_LOG_LEVEL    LOG_ERROR
 #endif
 
 /* Prototype for the function used to print to console on Windows simulator
@@ -57,7 +57,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /* Map the SdkLog macro to the logging function to enable logging
  * on Windows simulator. */
 #ifndef SdkLog
-    #define SdkLog( message )    printf message
+    #define SdkLog( message )    vLoggingPrintf message
 #endif
 
 #include "logging_stack.h"

@@ -57,7 +57,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /* Map the SdkLog macro to the logging function to enable logging
  * on Windows simulator. */
 #ifndef SdkLog
-    #define SdkLog( message )    printf message
+    #define SdkLog( message )    vLoggingPrintf message
 #endif
 
 #include "logging_stack.h"

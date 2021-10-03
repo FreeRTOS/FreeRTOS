@@ -20,17 +20,17 @@ To set up your Windows 10 machine to run this QEMU based demo you can follow the
 1. Install Ubuntu 20.04 LTS version from Microsoft Store, search for "Ubuntu"
 2. Update apt-get
 ```
-sudo apt-get update 
+sudo apt-get update
 ```
 3. Install Make and Qemu
 ```
-sudo apt-get install -y make qemu qemu-system-arm 
+sudo apt-get install -y make qemu qemu-system-arm
 ```
 4. Download and unzip Arm tools
 ```
 cd ~
 curl https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/10-2020q4/gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2 -o gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
-tar -xjvf gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2  
+tar -xjvf gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
 ```
 
 5. Update your path to include the arm toolchain Edit ".profile", add the unzipped bin folder to the front of the path. You can run the same command in the terminal to update the path temporarily in the current shell
@@ -112,17 +112,26 @@ the string contains “OK” and the current tick count. If an error has been
 detected, then the string contains a message that indicates which task
 reported the error.
 
-## How to start debugging
-1. gdb
-<P>
-Append the -s and -S switches to the previous command (qemu-system-arm)<br>
--s: allow gdb to be attached to the process remotely at port 1234 <br>
--S: start the program in the paused state <br>
 
-run: (make sure you build the debug version)
+## How to start debugging
+1. Build the debug version by using `DEBUG=1`:
+```
+$ make DEBUG=1
+```
+2. Run the binary with `-s` and `-S` flags:
+```
+$ sudo qemu-system-arm -machine mps2-an385 -monitor null -semihosting \
+        --semihosting-config enable=on,target=native \
+        -kernel ./build/RTOSDemo.axf \
+        -serial stdio -nographic -s -S
+```
+The options: <br>
+`-s` allows gdb to be attached to the process remotely at port 1234<br>
+`-S` starts the program in the paused state.<br>
+
+3. Open another terminal to run GDB and connect to the process:
 ```
 $ arm-none-eabi-gdb -q ./build/RTOSDemo.axf
-
 (gdb) target remote :1234
 (gdb) break main
 (gdb) c

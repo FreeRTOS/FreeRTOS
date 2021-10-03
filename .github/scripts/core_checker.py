@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# python >= 3.4 
+# python >= 3.4
 
 import os
 from common.header_checker import HeaderChecker
@@ -175,6 +175,7 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.properties',
     '.ps1',
     '.ptf',
+    '.py',
     '.r79',
     '.rapp',
     '.rc',
@@ -255,19 +256,23 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*/Makefile',
     r'.*/trcConfig\.h.*',
     r'.*/trcConfig\.c.*',
-    r'.*/trcSnapshotConfig\.h.*',
+    r'.*/trcSnapshotConfig\.h.*'
 ]
 
 FREERTOS_IGNORED_FILES = [
     'fyi-another-way-to-ignore-file.txt',
     'mbedtls_config.h',
     'requirements.txt',
-    'run-cbmc-proofs.py'
+    'run-cbmc-proofs.py',
+    '.editorconfig',
+    'lcovrc',
+    'htif.c', 'htif.h',
+    'ethernetif.c'
 ]
 
 FREERTOS_HEADER = [
     '/*\n',
-    ' * FreeRTOS V202012.00\n',
+    ' * FreeRTOS V202107.00\n',
     ' * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.\n',
     ' *\n',
     ' * Permission is hereby granted, free of charge, to any person obtaining a copy of\n',

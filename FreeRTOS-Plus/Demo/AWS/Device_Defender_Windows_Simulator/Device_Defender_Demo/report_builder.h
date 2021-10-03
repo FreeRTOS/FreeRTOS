@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -41,17 +41,27 @@ typedef enum
 } eReportBuilderStatus;
 
 /**
- * @brief Represents metrics to be included in the report.
+ * @brief Represents metrics to be included in the report, including custom metrics.
+ *
+ * This demo demonstrates the use of the stack high water mark and list of
+ * running task ids as custom metrics sent to AWS IoT Device Defender service.
+ *
+ * For more information on custom metrics, refer to the following AWS document:
+ * https://docs.aws.amazon.com/iot/latest/developerguide/dd-detect-custom-metrics.html
  */
 typedef struct ReportMetrics
 {
     NetworkStats_t * pxNetworkStats;
     uint16_t * pusOpenTcpPortsArray;
-    uint32_t ulOpenTcpPortsArrayLength;
+    size_t xOpenTcpPortsArrayLength;
     uint16_t * pusOpenUdpPortsArray;
-    uint32_t ulOpenUdpPortsArrayLength;
+    size_t xOpenUdpPortsArrayLength;
     Connection_t * pxEstablishedConnectionsArray;
-    uint32_t ulEstablishedConnectionsArrayLength;
+    size_t xEstablishedConnectionsArrayLength;
+    /* Custom metrics */
+    uint32_t ulStackHighWaterMark;
+    TaskStatus_t * pxTaskStatusArray;
+    size_t xTaskStatusArrayLength;
 } ReportMetrics_t;
 
 /**
@@ -59,23 +69,23 @@ typedef struct ReportMetrics
  * Service.
  *
  * @param[in] pcBuffer The buffer to write the report into.
- * @param[in] ulBufferLength The length of the buffer.
+ * @param[in] xBufferLength The length of the buffer.
  * @param[in] pxMetrics Metrics to write in the generated report.
  * @param[in] ulMajorReportVersion Major version of the report.
  * @param[in] ulMinorReportVersion Minor version of the report.
  * @param[in] ulReportId Value to be used as the ulReportId in the generated report.
- * @param[out] pulOutReprotLength The length of the generated report.
+ * @param[out] pxOutReprotLength The length of the generated report.
  *
  * @return #ReportBuilderSuccess if the report is successfully generated;
  * #ReportBuilderBadParameter if invalid parameters are passed;
  * #ReportBuilderBufferTooSmall if the buffer cannot hold the full report.
  */
 eReportBuilderStatus eGenerateJsonReport( char * pcBuffer,
-                                          uint32_t ulBufferLength,
+                                          size_t xBufferLength,
                                           const ReportMetrics_t * pxMetrics,
                                           uint32_t ulMajorReportVersion,
                                           uint32_t ulMinorReportVersion,
                                           uint32_t ulReportId,
-                                          uint32_t * pulOutReportLength );
+                                          size_t * pxOutReportLength );
 
 #endif /* ifndef REPORT_BUILDER_H_ */

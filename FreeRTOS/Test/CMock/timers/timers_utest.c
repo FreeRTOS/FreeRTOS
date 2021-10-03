@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -34,10 +34,12 @@
 #include "FreeRTOSConfig.h"
 #include "timers.h"
 #include "unity.h"
+#include "unity_memory.h"
 
 /* Mock includes. */
 #include "mock_queue.h"
 #include "mock_list.h"
+#include "mock_fake_assert.h"
 
 
 /* ============================  GLOBAL VARIABLES =========================== */
@@ -47,11 +49,11 @@ static uint16_t usMallocFreeCalls = 0;
 
 void * pvPortMalloc( size_t xSize )
 {
-    return malloc( xSize );
+    return unity_malloc( xSize );
 }
 void vPortFree( void * pv )
 {
-    return free( pv );
+    return unity_free( pv );
 }
 
 /*******************************************************************************
@@ -59,6 +61,10 @@ void vPortFree( void * pv )
  ******************************************************************************/
 void setUp( void )
 {
+    vFakeAssert_Ignore();
+
+    /* Track calls to malloc / free */
+    UnityMalloc_StartTest();
 }
 
 /*! called before each testcase */
@@ -68,6 +74,8 @@ void tearDown( void )
                                    "free is not called the same number of times as malloc,"
                                    "you might have a memory leak!!" );
     usMallocFreeCalls = 0;
+
+    UnityMalloc_EndTest();
 }
 
 /*! called at the beginning of the whole suite */
@@ -81,31 +89,34 @@ int suiteTearDown( int numFailures )
     return numFailures;
 }
 
-
-static void _xCallback_Test( TimerHandle_t xTimer )
-{}
+static void xCallback_Test( TimerHandle_t xTimer )
+{
+}
 
 /**
  * @brief xTimerCreate happy path
- * 
+ *
  */
 void test_xTimerCreate_Success( void )
 {
-    uint32_t ulID = 0; 
+    uint32_t ulID = 0;
     TimerHandle_t xTimer = NULL;
 
     vListInitialise_Ignore();
-    xQueueGenericCreateStatic_IgnoreAndReturn( (QueueHandle_t)1 );
+    xQueueGenericCreateStatic_IgnoreAndReturn( ( QueueHandle_t ) 1 );
     vQueueAddToRegistry_Ignore();
     vListInitialiseItem_Ignore();
 
     xTimer = xTimerCreate( "ut-timer",
-                            pdMS_TO_TICKS(1000),
-                            pdTRUE,
-                            &ulID,
-                            _xCallback_Test );
+                           pdMS_TO_TICKS( 1000 ),
+                           pdTRUE,
+                           &ulID,
+                           xCallback_Test );
 
     TEST_ASSERT_NOT_EQUAL( NULL, xTimer );
+
+    /* HACK: Free the timer directly */
+    vPortFree( ( void * ) xTimer );
 }
 
 void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
@@ -114,10 +125,12 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
 {
     static StaticTask_t xTimerTaskTCB;
     static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
+
     *ppxTimerTaskTCBBuffer = &xTimerTaskTCB;
     *ppxTimerTaskStackBuffer = uxTimerTaskStack;
     *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
 
 void vApplicationDaemonTaskStartupHook( void )
-{}
+{
+}

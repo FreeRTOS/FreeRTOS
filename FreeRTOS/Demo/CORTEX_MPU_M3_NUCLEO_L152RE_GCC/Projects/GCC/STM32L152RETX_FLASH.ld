@@ -72,7 +72,7 @@ MEMORY
 /* Initial 32K Flash is used to store kernel functions and
  * initial 512 bytes of RAM is used to store kernel data. */
 __privileged_functions_region_size__  = 32K;
-__privileged_data_region_size__       = 512;
+__privileged_data_region_size__       = 32K;
 
 __FLASH_segment_start__               = ORIGIN( FLASH );
 __FLASH_segment_end__                 = __FLASH_segment_start__ + LENGTH( FLASH );

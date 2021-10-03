@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -104,6 +104,25 @@ extern void vLoggingPrintf(const char* pcFormatString,
  */
 
 /**
+ * @brief Credentials source.
+ *
+ * Users can choose either a file or a buffer to pass to the TLS component
+ * as a source of credentials such as certificates and private keys. By default,
+ * following macros expect to have file paths:
+ * - democonfigROOT_CA_PEM
+ * - democonfigCLIENT_CERTIFICATE_PEM
+ * - democonfigCLIENT_PRIVATE_KEY_PEM
+ * If users want to pass those credentials not via files but buffers,
+ * enable democonfigCREDENTIALS_IN_BUFFER macro below and set buffer
+ * containing the credential data to each of the above three macros.
+ *
+ * @note This macro affects for all said three macros, do not mix file path
+ * and buffer to those macros.
+ *
+ * #define democonfigCREDENTIALS_IN_BUFFER
+ */
+
+ /**
  * @brief Server's root CA certificate.
  *
  * For AWS IoT MQTT broker, this certificate is used to identify the AWS IoT
@@ -113,8 +132,8 @@ extern void vLoggingPrintf(const char* pcFormatString,
  *
  *
  * @note This certificate should be PEM-encoded.
- * @note Define the path to the certificate, do not copy and paste the certificate
- * contents to this macro.
+ * @note If democonfigCREDENTIALS_IN_BUFFER is defined, define the certificate data.
+ * Otherwise, define the path to the certificate.
  * @warning If wolfSSL cannot verify the peer when connecting to AWS IoT, try
  * using the root CA of Starfield Services found at
  * https://www.amazontrust.com/repository/SFSRootCAG2.pem.
@@ -132,8 +151,8 @@ extern void vLoggingPrintf(const char* pcFormatString,
  * https://docs.aws.amazon.com/iot/latest/developerguide/client-authentication.html
  *
  * @note This certificate should be PEM-encoded.
- * @note Define the path to the certificate, do not copy and paste the certificate
- * contents to this macro.
+ * @note If democonfigCREDENTIALS_IN_BUFFER is defined, define the certificate data.
+ * Otherwise, define the path to the certificate.
  *
  * #define democonfigCLIENT_CERTIFICATE_PEM    "...insert here..."
  */
@@ -146,8 +165,8 @@ extern void vLoggingPrintf(const char* pcFormatString,
  * https://docs.aws.amazon.com/iot/latest/developerguide/client-authentication.html
  *
  * @note This private key should be PEM-encoded.
- * @note define the path to the certificate, do not copy and paste the certificate
- * contents to this macro.
+ * @note If democonfigCREDENTIALS_IN_BUFFER is defined, define the key data.
+ * Otherwise, define the path to the key file.
  *
  * #define democonfigCLIENT_PRIVATE_KEY_PEM    "...insert here..."
  */

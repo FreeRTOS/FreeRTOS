@@ -6,12 +6,10 @@ the same transport interface definition.
 
 Directories:
 
-+ coreMQTT contains the implementation of the coreMQTT library.  See:
-  https://www.freertos.org/mqtt
++ coreMQTT contains the implementation of the coreMQTT library. 
++ coreMQTT-Agent contains the implementation of the coreMQTT Agent library.
++ coreHTTP contains the implementation of the coreHTTP library.
++ coreSNTP contains the implementation of the coreSNTP library.
++ network_transport contains multiple implementations for the transport interface.   
 
-+ network_transport contains the transport interface definition.  See the
-  comment above and https://www.freertos.org/network-interface.html
-  
-+ coreHTTP contains the implementation of the coreHTTP library.  See:
-  https://www.freertos.org/http
-
+For more details on the above libraries, see: https://www.freertos.org/application-protocols.html.

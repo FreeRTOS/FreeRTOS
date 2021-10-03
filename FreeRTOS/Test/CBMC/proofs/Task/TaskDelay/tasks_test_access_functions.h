@@ -33,37 +33,40 @@
  */
 TaskHandle_t xUnconstrainedTCB( void )
 {
-	TCB_t * pxTCB = pvPortMalloc(sizeof(TCB_t));
+    TCB_t * pxTCB = pvPortMalloc( sizeof( TCB_t ) );
 
-	if ( pxTCB == NULL )
-		return NULL;
+    if( pxTCB == NULL )
+    {
+        return NULL;
+    }
 
-	__CPROVER_assume( pxTCB->uxPriority < configMAX_PRIORITIES );
+    __CPROVER_assume( pxTCB->uxPriority < configMAX_PRIORITIES );
 
-	vListInitialiseItem( &( pxTCB->xStateListItem ) );
-	vListInitialiseItem( &( pxTCB->xEventListItem ) );
+    vListInitialiseItem( &( pxTCB->xStateListItem ) );
+    vListInitialiseItem( &( pxTCB->xEventListItem ) );
 
-	listSET_LIST_ITEM_OWNER( &( pxTCB->xStateListItem ), pxTCB );
-	listSET_LIST_ITEM_OWNER( &( pxTCB->xEventListItem ), pxTCB );
+    listSET_LIST_ITEM_OWNER( &( pxTCB->xStateListItem ), pxTCB );
+    listSET_LIST_ITEM_OWNER( &( pxTCB->xEventListItem ), pxTCB );
 
-	if ( nondet_bool() )
-	{
-		listSET_LIST_ITEM_VALUE( &( pxTCB->xStateListItem ), pxTCB->uxPriority );
-	}
-	else
-	{
-		listSET_LIST_ITEM_VALUE( &( pxTCB->xStateListItem ), portMAX_DELAY );
-	}
+    if( nondet_bool() )
+    {
+        listSET_LIST_ITEM_VALUE( &( pxTCB->xStateListItem ), pxTCB->uxPriority );
+    }
+    else
+    {
+        listSET_LIST_ITEM_VALUE( &( pxTCB->xStateListItem ), portMAX_DELAY );
+    }
 
-	if ( nondet_bool() )
-	{
-		listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) pxTCB->uxPriority );
-	}
-	else
-	{
-		listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), portMAX_DELAY );
-	}
-	return pxTCB;
+    if( nondet_bool() )
+    {
+        listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) pxTCB->uxPriority );
+    }
+    else
+    {
+        listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), portMAX_DELAY );
+    }
+
+    return pxTCB;
 }
 
 /*
@@ -74,9 +77,9 @@ TaskHandle_t xUnconstrainedTCB( void )
 
 void vSetGlobalVariables( void )
 {
-	uxSchedulerSuspended = pdFALSE;
-	xTickCount = nondet_ticktype();
-	xNextTaskUnblockTime = nondet_ticktype();
+    uxSchedulerSuspended = pdFALSE;
+    xTickCount = nondet_ticktype();
+    xNextTaskUnblockTime = nondet_ticktype();
 }
 
 /*
@@ -86,39 +89,42 @@ void vSetGlobalVariables( void )
  */
 BaseType_t xPrepareTaskLists( void )
 {
-	TCB_t * pxTCB = NULL;
+    TCB_t * pxTCB = NULL;
 
-	__CPROVER_assert_zero_allocation();
+    __CPROVER_assert_zero_allocation();
 
-	prvInitialiseTaskLists();
+    prvInitialiseTaskLists();
 
-	/* The current task will be moved to the delayed list */
-	pxCurrentTCB = xUnconstrainedTCB();
-	if ( pxCurrentTCB == NULL )
-	{
-		return pdFAIL;
-	}
-	vListInsert( &pxReadyTasksLists[ pxCurrentTCB->uxPriority ], &( pxCurrentTCB->xStateListItem ) );
+    /* The current task will be moved to the delayed list */
+    pxCurrentTCB = xUnconstrainedTCB();
 
-	/*
-	 * Nondeterministic insertion of a task in the ready tasks list
-	 * guarantees coverage in line 5104 (tasks.c)
-	 */
-	if ( nondet_bool() )
-	{
-		pxTCB = xUnconstrainedTCB();
-		if ( pxTCB == NULL )
-		{
-			return pdFAIL;
-		}
-		vListInsert( &pxReadyTasksLists[ pxTCB->uxPriority ], &( pxTCB->xStateListItem ) );
+    if( pxCurrentTCB == NULL )
+    {
+        return pdFAIL;
+    }
 
-		/* Use of this macro ensures coverage on line 185 (list.c) */
-		listGET_OWNER_OF_NEXT_ENTRY( pxTCB , &pxReadyTasksLists[ pxTCB->uxPriority ] );
-	}
+    vListInsert( &pxReadyTasksLists[ pxCurrentTCB->uxPriority ], &( pxCurrentTCB->xStateListItem ) );
 
+    /*
+     * Nondeterministic insertion of a task in the ready tasks list
+     * guarantees coverage in line 5104 (tasks.c)
+     */
+    if( nondet_bool() )
+    {
+        pxTCB = xUnconstrainedTCB();
 
-	return pdPASS;
+        if( pxTCB == NULL )
+        {
+            return pdFAIL;
+        }
+
+        vListInsert( &pxReadyTasksLists[ pxTCB->uxPriority ], &( pxTCB->xStateListItem ) );
+
+        /* Use of this macro ensures coverage on line 185 (list.c) */
+        listGET_OWNER_OF_NEXT_ENTRY( pxTCB, &pxReadyTasksLists[ pxTCB->uxPriority ] );
+    }
+
+    return pdPASS;
 }
 
 /*
@@ -129,17 +135,17 @@ BaseType_t xPrepareTaskLists( void )
  */
 BaseType_t xTaskResumeAllStub( void )
 {
-	BaseType_t xAlreadyYielded;
+    BaseType_t xAlreadyYielded;
 
-	configASSERT( uxSchedulerSuspended );
+    configASSERT( uxSchedulerSuspended );
 
-	taskENTER_CRITICAL();
-	{
-		--uxSchedulerSuspended;
-		__CPROVER_assert( listLIST_IS_EMPTY( &xPendingReadyList ), "Pending ready tasks list not empty." );
-		__CPROVER_assert( xPendedTicks == 0 , "xPendedTicks is not equal to zero.");
-	}
-	taskEXIT_CRITICAL();
+    taskENTER_CRITICAL();
+    {
+        --uxSchedulerSuspended;
+        __CPROVER_assert( listLIST_IS_EMPTY( &xPendingReadyList ), "Pending ready tasks list not empty." );
+        __CPROVER_assert( xPendedTicks == 0, "xPendedTicks is not equal to zero." );
+    }
+    taskEXIT_CRITICAL();
 
-	return xAlreadyYielded;
+    return xAlreadyYielded;
 }

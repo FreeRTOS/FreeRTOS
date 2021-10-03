@@ -12,14 +12,14 @@
  * The Physical Memory Protection (PMP) interface on RISC-V cores
  * is a form of memory protection unit which allows for a finite number
  * of physical memory regions to be configured with certain access
- * permissions. 
+ * permissions.
  *
  * Additional information about the use and configuration rules for PMPs
  * can be found by reading the RISC-V Privileged Architecture Specification.
  */
 
-#include <stddef.h>
 #include <metal/machine.h>
+#include <stddef.h>
 
 struct metal_pmp;
 
@@ -28,11 +28,11 @@ struct metal_pmp;
  */
 enum metal_pmp_address_mode {
     /*! @brief Disable the PMP region */
-    METAL_PMP_OFF   = 0,
+    METAL_PMP_OFF = 0,
     /*! @brief Use Top-of-Range mode */
-    METAL_PMP_TOR   = 1,
+    METAL_PMP_TOR = 1,
     /*! @brief Use naturally-aligned 4-byte region mode */
-    METAL_PMP_NA4   = 2,
+    METAL_PMP_NA4 = 2,
     /*! @brief Use naturally-aligned power-of-two mode */
     METAL_PMP_NAPOT = 3
 };
@@ -56,7 +56,7 @@ struct metal_pmp_config {
     /*! @brief Sets whether the PMP region is locked */
     enum metal_pmp_locked {
         METAL_PMP_UNLOCKED = 0,
-        METAL_PMP_LOCKED   = 1
+        METAL_PMP_LOCKED = 1
     } L : 1;
 };
 
@@ -101,9 +101,10 @@ void metal_pmp_init(struct metal_pmp *pmp);
  * @param address The desired address of the PMP region
  * @return 0 upon success
  */
-int metal_pmp_set_region(struct metal_pmp *pmp, unsigned int region, struct metal_pmp_config config, size_t address);
+int metal_pmp_set_region(struct metal_pmp *pmp, unsigned int region,
+                         struct metal_pmp_config config, size_t address);
 
-/*! 
+/*!
  * @brief Get the configuration for a PMP region
  * @param pmp The PMP device handle
  * @param region The PMP region to read
@@ -111,7 +112,8 @@ int metal_pmp_set_region(struct metal_pmp *pmp, unsigned int region, struct meta
  * @param address Variable to store the PMP region address
  * @return 0 if the region is read successfully
  */
-int metal_pmp_get_region(struct metal_pmp *pmp, unsigned int region, struct metal_pmp_config *config, size_t *address);
+int metal_pmp_get_region(struct metal_pmp *pmp, unsigned int region,
+                         struct metal_pmp_config *config, size_t *address);
 
 /*!
  * @brief Lock a PMP region
@@ -128,7 +130,8 @@ int metal_pmp_lock(struct metal_pmp *pmp, unsigned int region);
  * @param address The desired address of the PMP region
  * @return 0 if the address is successfully set
  */
-int metal_pmp_set_address(struct metal_pmp *pmp, unsigned int region, size_t address);
+int metal_pmp_set_address(struct metal_pmp *pmp, unsigned int region,
+                          size_t address);
 
 /*!
  * @brief Get the address of a PMP region
@@ -145,7 +148,8 @@ size_t metal_pmp_get_address(struct metal_pmp *pmp, unsigned int region);
  * @param mode The PMP addressing mode to set
  * @return 0 if the addressing mode is successfully set
  */
-int metal_pmp_set_address_mode(struct metal_pmp *pmp, unsigned int region, enum metal_pmp_address_mode mode);
+int metal_pmp_set_address_mode(struct metal_pmp *pmp, unsigned int region,
+                               enum metal_pmp_address_mode mode);
 
 /*!
  * @brief Get the addressing mode of a PMP region
@@ -153,7 +157,8 @@ int metal_pmp_set_address_mode(struct metal_pmp *pmp, unsigned int region, enum 
  * @param region The PMP region to read
  * @return The address mode of the PMP region
  */
-enum metal_pmp_address_mode metal_pmp_get_address_mode(struct metal_pmp *pmp, unsigned int region);
+enum metal_pmp_address_mode metal_pmp_get_address_mode(struct metal_pmp *pmp,
+                                                       unsigned int region);
 
 /*!
  * @brief Set the executable bit for a PMP region

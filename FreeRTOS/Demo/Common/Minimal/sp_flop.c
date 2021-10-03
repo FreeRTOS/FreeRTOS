@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -48,254 +48,255 @@
 /* Demo program include files. */
 #include "flop.h"
 
-#define mathSTACK_SIZE		configMINIMAL_STACK_SIZE
-#define mathNUMBER_OF_TASKS  ( 8 )
+#define mathSTACK_SIZE         configMINIMAL_STACK_SIZE
+#define mathNUMBER_OF_TASKS    ( 8 )
 
 /* Four tasks, each of which performs a different floating point calculation.
-Each of the four is created twice. */
+ * Each of the four is created twice. */
 static portTASK_FUNCTION_PROTO( vCompetingMathTask1, pvParameters );
 static portTASK_FUNCTION_PROTO( vCompetingMathTask2, pvParameters );
 static portTASK_FUNCTION_PROTO( vCompetingMathTask3, pvParameters );
 static portTASK_FUNCTION_PROTO( vCompetingMathTask4, pvParameters );
 
 /* These variables are used to check that all the tasks are still running.  If a
-task gets a calculation wrong it will
-stop incrementing its check variable. */
+ * task gets a calculation wrong it will
+ * stop incrementing its check variable. */
 static volatile uint16_t usTaskCheck[ mathNUMBER_OF_TASKS ] = { ( uint16_t ) 0 };
 
 /*-----------------------------------------------------------*/
 
 void vStartMathTasks( UBaseType_t uxPriority )
 {
-	xTaskCreate( vCompetingMathTask1, "Math1", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 0 ] ), uxPriority, NULL );
-	xTaskCreate( vCompetingMathTask2, "Math2", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 1 ] ), uxPriority, NULL );
-	xTaskCreate( vCompetingMathTask3, "Math3", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 2 ] ), uxPriority, NULL );
-	xTaskCreate( vCompetingMathTask4, "Math4", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 3 ] ), uxPriority, NULL );
-	xTaskCreate( vCompetingMathTask1, "Math5", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 4 ] ), uxPriority, NULL );
-	xTaskCreate( vCompetingMathTask2, "Math6", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 5 ] ), uxPriority, NULL );
-	xTaskCreate( vCompetingMathTask3, "Math7", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 6 ] ), uxPriority, NULL );
-	xTaskCreate( vCompetingMathTask4, "Math8", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 7 ] ), uxPriority, NULL );
+    xTaskCreate( vCompetingMathTask1, "Math1", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 0 ] ), uxPriority, NULL );
+    xTaskCreate( vCompetingMathTask2, "Math2", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 1 ] ), uxPriority, NULL );
+    xTaskCreate( vCompetingMathTask3, "Math3", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 2 ] ), uxPriority, NULL );
+    xTaskCreate( vCompetingMathTask4, "Math4", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 3 ] ), uxPriority, NULL );
+    xTaskCreate( vCompetingMathTask1, "Math5", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 4 ] ), uxPriority, NULL );
+    xTaskCreate( vCompetingMathTask2, "Math6", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 5 ] ), uxPriority, NULL );
+    xTaskCreate( vCompetingMathTask3, "Math7", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 6 ] ), uxPriority, NULL );
+    xTaskCreate( vCompetingMathTask4, "Math8", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 7 ] ), uxPriority, NULL );
 }
 /*-----------------------------------------------------------*/
 
 static portTASK_FUNCTION( vCompetingMathTask1, pvParameters )
 {
-volatile float f1, f2, f3, f4;
-volatile uint16_t *pusTaskCheckVariable;
-volatile float fAnswer;
-short sError = pdFALSE;
+    volatile float f1, f2, f3, f4;
+    volatile uint16_t * pusTaskCheckVariable;
+    volatile float fAnswer;
+    short sError = pdFALSE;
 
-	f1 = 123.4567F;
-	f2 = 2345.6789F;
-	f3 = -918.222F;
+    f1 = 123.4567F;
+    f2 = 2345.6789F;
+    f3 = -918.222F;
 
-	fAnswer = ( f1 + f2 ) * f3;
+    fAnswer = ( f1 + f2 ) * f3;
 
-	/* The variable this task increments to show it is still running is passed in
-	as the parameter. */
-	pusTaskCheckVariable = ( uint16_t * ) pvParameters;
+    /* The variable this task increments to show it is still running is passed in
+     * as the parameter. */
+    pusTaskCheckVariable = ( uint16_t * ) pvParameters;
 
-	/* Keep performing a calculation and checking the result against a constant. */
-	for(;;)
-	{
-		f1 = 123.4567F;
-		f2 = 2345.6789F;
-		f3 = -918.222F;
+    /* Keep performing a calculation and checking the result against a constant. */
+    for( ; ; )
+    {
+        f1 = 123.4567F;
+        f2 = 2345.6789F;
+        f3 = -918.222F;
 
-		f4 = ( f1 + f2 ) * f3;
+        f4 = ( f1 + f2 ) * f3;
 
-		#if configUSE_PREEMPTION == 0
-			taskYIELD();
-		#endif
+        #if configUSE_PREEMPTION == 0
+            taskYIELD();
+        #endif
 
-		/* If the calculation does not match the expected constant, stop the
-		increment of the check variable. */
-		if( fabs( f4 - fAnswer ) > 0.001F )
-		{
-			sError = pdTRUE;
-		}
+        /* If the calculation does not match the expected constant, stop the
+         * increment of the check variable. */
+        if( fabs( f4 - fAnswer ) > 0.001F )
+        {
+            sError = pdTRUE;
+        }
 
-		if( sError == pdFALSE )
-		{
-			/* If the calculation has always been correct, increment the check
-			variable so we know this task is still running okay. */
-			( *pusTaskCheckVariable )++;
-		}
+        if( sError == pdFALSE )
+        {
+            /* If the calculation has always been correct, increment the check
+             * variable so we know this task is still running okay. */
+            ( *pusTaskCheckVariable )++;
+        }
 
-		#if configUSE_PREEMPTION == 0
-			taskYIELD();
-		#endif
-
-	}
+        #if configUSE_PREEMPTION == 0
+            taskYIELD();
+        #endif
+    }
 }
 /*-----------------------------------------------------------*/
 
 static portTASK_FUNCTION( vCompetingMathTask2, pvParameters )
 {
-volatile float f1, f2, f3, f4;
-volatile uint16_t *pusTaskCheckVariable;
-volatile float fAnswer;
-short sError = pdFALSE;
+    volatile float f1, f2, f3, f4;
+    volatile uint16_t * pusTaskCheckVariable;
+    volatile float fAnswer;
+    short sError = pdFALSE;
 
-	f1 = -389.38F;
-	f2 = 32498.2F;
-	f3 = -2.0001F;
+    f1 = -389.38F;
+    f2 = 32498.2F;
+    f3 = -2.0001F;
 
-	fAnswer = ( f1 / f2 ) * f3;
+    fAnswer = ( f1 / f2 ) * f3;
 
 
-	/* The variable this task increments to show it is still running is passed in
-	as the parameter. */
-	pusTaskCheckVariable = ( uint16_t * ) pvParameters;
+    /* The variable this task increments to show it is still running is passed in
+     * as the parameter. */
+    pusTaskCheckVariable = ( uint16_t * ) pvParameters;
 
-	/* Keep performing a calculation and checking the result against a constant. */
-	for( ;; )
-	{
-		f1 = -389.38F;
-		f2 = 32498.2F;
-		f3 = -2.0001F;
+    /* Keep performing a calculation and checking the result against a constant. */
+    for( ; ; )
+    {
+        f1 = -389.38F;
+        f2 = 32498.2F;
+        f3 = -2.0001F;
 
-		f4 = ( f1 / f2 ) * f3;
+        f4 = ( f1 / f2 ) * f3;
 
-		#if configUSE_PREEMPTION == 0
-			taskYIELD();
-		#endif
+        #if configUSE_PREEMPTION == 0
+            taskYIELD();
+        #endif
 
-		/* If the calculation does not match the expected constant, stop the
-		increment of the check variable. */
-		if( fabs( f4 - fAnswer ) > 0.001F )
-		{
-			sError = pdTRUE;
-		}
+        /* If the calculation does not match the expected constant, stop the
+         * increment of the check variable. */
+        if( fabs( f4 - fAnswer ) > 0.001F )
+        {
+            sError = pdTRUE;
+        }
 
-		if( sError == pdFALSE )
-		{
-			/* If the calculation has always been correct, increment the check
-			variable so we know
-			this task is still running okay. */
-			( *pusTaskCheckVariable )++;
-		}
+        if( sError == pdFALSE )
+        {
+            /* If the calculation has always been correct, increment the check
+             * variable so we know
+             * this task is still running okay. */
+            ( *pusTaskCheckVariable )++;
+        }
 
-		#if configUSE_PREEMPTION == 0
-			taskYIELD();
-		#endif
-	}
+        #if configUSE_PREEMPTION == 0
+            taskYIELD();
+        #endif
+    }
 }
 /*-----------------------------------------------------------*/
 
 static portTASK_FUNCTION( vCompetingMathTask3, pvParameters )
 {
-volatile float *pfArray, fTotal1, fTotal2, fDifference, fPosition;
-volatile uint16_t *pusTaskCheckVariable;
-const size_t xArraySize = 10;
-size_t xPosition;
-short sError = pdFALSE;
+    volatile float * pfArray, fTotal1, fTotal2, fDifference, fPosition;
+    volatile uint16_t * pusTaskCheckVariable;
+    const size_t xArraySize = 10;
+    size_t xPosition;
+    short sError = pdFALSE;
 
-	/* The variable this task increments to show it is still running is passed in
-	as the parameter. */
-	pusTaskCheckVariable = ( uint16_t * ) pvParameters;
+    /* The variable this task increments to show it is still running is passed in
+     * as the parameter. */
+    pusTaskCheckVariable = ( uint16_t * ) pvParameters;
 
-	pfArray = ( float * ) pvPortMalloc( xArraySize * sizeof( float ) );
+    pfArray = ( float * ) pvPortMalloc( xArraySize * sizeof( float ) );
 
-	/* Keep filling an array, keeping a running total of the values placed in the
-	array.  Then run through the array adding up all the values.  If the two totals
-	do not match, stop the check variable from incrementing. */
-	for( ;; )
-	{
-		fTotal1 = 0.0F;
-		fTotal2 = 0.0F;
-		fPosition = 0.0F;
+    /* Keep filling an array, keeping a running total of the values placed in the
+     * array.  Then run through the array adding up all the values.  If the two totals
+     * do not match, stop the check variable from incrementing. */
+    for( ; ; )
+    {
+        fTotal1 = 0.0F;
+        fTotal2 = 0.0F;
+        fPosition = 0.0F;
 
-		for( xPosition = 0; xPosition < xArraySize; xPosition++ )
-		{
-			pfArray[ xPosition ] = fPosition + 5.5F;
-			fTotal1 += fPosition + 5.5F;
-		}
+        for( xPosition = 0; xPosition < xArraySize; xPosition++ )
+        {
+            pfArray[ xPosition ] = fPosition + 5.5F;
+            fTotal1 += fPosition + 5.5F;
+        }
 
-		#if configUSE_PREEMPTION == 0
-			taskYIELD();
-		#endif
+        #if configUSE_PREEMPTION == 0
+            taskYIELD();
+        #endif
 
-		for( xPosition = 0; xPosition < xArraySize; xPosition++ )
-		{
-			fTotal2 += pfArray[ xPosition ];
-		}
+        for( xPosition = 0; xPosition < xArraySize; xPosition++ )
+        {
+            fTotal2 += pfArray[ xPosition ];
+        }
 
-		fDifference = fTotal1 - fTotal2;
-		if( fabs( fDifference ) > 0.001F )
-		{
-			sError = pdTRUE;
-		}
+        fDifference = fTotal1 - fTotal2;
 
-		#if configUSE_PREEMPTION == 0
-			taskYIELD();
-		#endif
+        if( fabs( fDifference ) > 0.001F )
+        {
+            sError = pdTRUE;
+        }
 
-		if( sError == pdFALSE )
-		{
-			/* If the calculation has always been correct, increment the check
-			variable so we know	this task is still running okay. */
-			( *pusTaskCheckVariable )++;
-		}
-	}
+        #if configUSE_PREEMPTION == 0
+            taskYIELD();
+        #endif
+
+        if( sError == pdFALSE )
+        {
+            /* If the calculation has always been correct, increment the check
+             * variable so we know	this task is still running okay. */
+            ( *pusTaskCheckVariable )++;
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
 static portTASK_FUNCTION( vCompetingMathTask4, pvParameters )
 {
-volatile float *pfArray, fTotal1, fTotal2, fDifference, fPosition;
-volatile uint16_t *pusTaskCheckVariable;
-const size_t xArraySize = 10;
-size_t xPosition;
-short sError = pdFALSE;
+    volatile float * pfArray, fTotal1, fTotal2, fDifference, fPosition;
+    volatile uint16_t * pusTaskCheckVariable;
+    const size_t xArraySize = 10;
+    size_t xPosition;
+    short sError = pdFALSE;
 
-	/* The variable this task increments to show it is still running is passed in
-	as the parameter. */
-	pusTaskCheckVariable = ( uint16_t * ) pvParameters;
+    /* The variable this task increments to show it is still running is passed in
+     * as the parameter. */
+    pusTaskCheckVariable = ( uint16_t * ) pvParameters;
 
-	pfArray = ( float * ) pvPortMalloc( xArraySize * sizeof( float ) );
+    pfArray = ( float * ) pvPortMalloc( xArraySize * sizeof( float ) );
 
-	/* Keep filling an array, keeping a running total of the values placed in the
-	array.  Then run through the array adding up all the values.  If the two totals
-	do not match, stop the check variable from incrementing. */
-	for( ;; )
-	{
-		fTotal1 = 0.0F;
-		fTotal2 = 0.0F;
-		fPosition = 0.0F;
+    /* Keep filling an array, keeping a running total of the values placed in the
+     * array.  Then run through the array adding up all the values.  If the two totals
+     * do not match, stop the check variable from incrementing. */
+    for( ; ; )
+    {
+        fTotal1 = 0.0F;
+        fTotal2 = 0.0F;
+        fPosition = 0.0F;
 
-		for( xPosition = 0; xPosition < xArraySize; xPosition++ )
-		{
-			pfArray[ xPosition ] = fPosition * 12.123F;
-			fTotal1 += fPosition * 12.123F;
-		}
+        for( xPosition = 0; xPosition < xArraySize; xPosition++ )
+        {
+            pfArray[ xPosition ] = fPosition * 12.123F;
+            fTotal1 += fPosition * 12.123F;
+        }
 
-		#if configUSE_PREEMPTION == 0
-			taskYIELD();
-		#endif
+        #if configUSE_PREEMPTION == 0
+            taskYIELD();
+        #endif
 
-		for( xPosition = 0; xPosition < xArraySize; xPosition++ )
-		{
-			fTotal2 += pfArray[ xPosition ];
-		}
+        for( xPosition = 0; xPosition < xArraySize; xPosition++ )
+        {
+            fTotal2 += pfArray[ xPosition ];
+        }
 
-		fDifference = fTotal1 - fTotal2;
-		if( fabs( fDifference ) > 0.001F )
-		{
-			sError = pdTRUE;
-		}
+        fDifference = fTotal1 - fTotal2;
 
-		#if configUSE_PREEMPTION == 0
-			taskYIELD();
-		#endif
+        if( fabs( fDifference ) > 0.001F )
+        {
+            sError = pdTRUE;
+        }
 
-		if( sError == pdFALSE )
-		{
-			/* If the calculation has always been correct, increment the check
-			variable so we know	this task is still running okay. */
-			( *pusTaskCheckVariable )++;
-		}
-	}
+        #if configUSE_PREEMPTION == 0
+            taskYIELD();
+        #endif
+
+        if( sError == pdFALSE )
+        {
+            /* If the calculation has always been correct, increment the check
+             * variable so we know	this task is still running okay. */
+            ( *pusTaskCheckVariable )++;
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
@@ -303,25 +304,22 @@ short sError = pdFALSE;
 BaseType_t xAreMathsTaskStillRunning( void )
 {
 /* Keep a history of the check variables so we know if they have been incremented
-since the last call. */
-static uint16_t usLastTaskCheck[ mathNUMBER_OF_TASKS ] = { ( uint16_t ) 0 };
-BaseType_t xReturn = pdTRUE, xTask;
+ * since the last call. */
+    static uint16_t usLastTaskCheck[ mathNUMBER_OF_TASKS ] = { ( uint16_t ) 0 };
+    BaseType_t xReturn = pdTRUE, xTask;
 
-	/* Check the maths tasks are still running by ensuring their check variables
-	are still incrementing. */
-	for( xTask = 0; xTask < mathNUMBER_OF_TASKS; xTask++ )
-	{
-		if( usTaskCheck[ xTask ] == usLastTaskCheck[ xTask ] )
-		{
-			/* The check has not incremented so an error exists. */
-			xReturn = pdFALSE;
-		}
+    /* Check the maths tasks are still running by ensuring their check variables
+     * are still incrementing. */
+    for( xTask = 0; xTask < mathNUMBER_OF_TASKS; xTask++ )
+    {
+        if( usTaskCheck[ xTask ] == usLastTaskCheck[ xTask ] )
+        {
+            /* The check has not incremented so an error exists. */
+            xReturn = pdFALSE;
+        }
 
-		usLastTaskCheck[ xTask ] = usTaskCheck[ xTask ];
-	}
+        usLastTaskCheck[ xTask ] = usTaskCheck[ xTask ];
+    }
 
-	return xReturn;
+    return xReturn;
 }
-
-
-

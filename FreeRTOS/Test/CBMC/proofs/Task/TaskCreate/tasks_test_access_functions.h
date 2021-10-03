@@ -34,16 +34,17 @@
  */
 void vNondetSetCurrentTCB( void )
 {
-	pxCurrentTCB = pvPortMalloc( sizeof(TCB_t) );
+    pxCurrentTCB = pvPortMalloc( sizeof( TCB_t ) );
 }
+
 /*
  * We just require task lists to be initialized for this proof
  */
 void vPrepareTaskLists( void )
 {
-	__CPROVER_assert_zero_allocation();
+    __CPROVER_assert_zero_allocation();
 
-	prvInitialiseTaskLists();
+    prvInitialiseTaskLists();
 }
 
 /*
@@ -52,33 +53,35 @@ void vPrepareTaskLists( void )
  */
 void vSetGlobalVariables( void )
 {
-	xSchedulerRunning = nondet_basetype();
-	uxCurrentNumberOfTasks = nondet_ubasetype();
+    xSchedulerRunning = nondet_basetype();
+    uxCurrentNumberOfTasks = nondet_ubasetype();
 }
 
 /*
  * pvPortMalloc is nondeterministic by definition, thus we do not need
  * to check for NULL allocation in this function
  */
-TaskHandle_t *pxNondetSetTaskHandle( void )
+TaskHandle_t * pxNondetSetTaskHandle( void )
 {
-	TaskHandle_t *pxNondetTaskHandle = pvPortMalloc( sizeof(TaskHandle_t) );
-	return pxNondetTaskHandle;
+    TaskHandle_t * pxNondetTaskHandle = pvPortMalloc( sizeof( TaskHandle_t ) );
+
+    return pxNondetTaskHandle;
 }
 
 /*
  * Tries to allocate a string of size xStringLength and sets the string
  * to be terminated using a nondeterministic index if allocation was successful
  */
-char *pcNondetSetString( size_t xStringLength )
+char * pcNondetSetString( size_t xStringLength )
 {
-	char *pcName = pvPortMalloc( xStringLength );
+    char * pcName = pvPortMalloc( xStringLength );
 
-	if ( pcName != NULL ) {
-		size_t uNondetIndex;
-		__CPROVER_assume( uNondetIndex < xStringLength );
-		pcName[uNondetIndex] = '\0';
-	}
+    if( pcName != NULL )
+    {
+        size_t uNondetIndex;
+        __CPROVER_assume( uNondetIndex < xStringLength );
+        pcName[ uNondetIndex ] = '\0';
+    }
 
-	return pcName;
+    return pcName;
 }

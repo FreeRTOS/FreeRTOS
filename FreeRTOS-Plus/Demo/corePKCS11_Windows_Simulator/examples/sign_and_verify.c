@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -164,7 +164,7 @@ void vPKCS11SignVerifyDemo( void )
     xResult = xFindObjectWithLabelAndClass( hSession, 
             pkcs11configLABEL_DEVICE_PUBLIC_KEY_FOR_TLS, 
             sizeof( pkcs11configLABEL_DEVICE_PUBLIC_KEY_FOR_TLS ) - 1UL, 
-            CKO_PRIVATE_KEY,
+            CKO_PUBLIC_KEY,
             &xPublicKeyHandle );
     configASSERT( xResult == CKR_OK );
     configASSERT( xPublicKeyHandle != CK_INVALID_HANDLE );

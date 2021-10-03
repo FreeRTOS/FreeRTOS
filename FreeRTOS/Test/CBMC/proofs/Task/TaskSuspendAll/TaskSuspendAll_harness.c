@@ -38,5 +38,5 @@
  */
 void harness()
 {
-	vTaskSuspendAll();
+    vTaskSuspendAll();
 }

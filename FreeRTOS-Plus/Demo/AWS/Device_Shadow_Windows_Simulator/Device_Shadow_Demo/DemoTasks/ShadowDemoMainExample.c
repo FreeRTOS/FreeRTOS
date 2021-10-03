@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -26,11 +26,12 @@
 
 /*
  * Demo for showing how to use the Device Shadow library's API. This version
- * of the Device Shadow API provides macros and helper functions for assembling MQTT topics
- * strings, and for determining whether an incoming MQTT message is related to the
- * device shadow. The Device Shadow library does not depend on a MQTT library,
+ * of the Device Shadow API provide macros and helper functions for assembling MQTT topics
+ * strings, and for determining whether an incoming MQTT message is related to a
+ * device shadow. The shadow can be either the classic shadow or a named shadow, selected by
+ * defining #democonfigSHADOW_NAME. The Device Shadow library does not depend on a MQTT library,
  * therefore the code for MQTT connections are placed in another file (shadow_demo_helpers.c)
- * to make it easy to read the code using Device Shadow library.
+ * to make it easy to read the code using the Device Shadow library.
  *
  * This example assumes there is a powerOn state in the device shadow. It does the
  * following operations:
@@ -40,7 +41,7 @@
  * 4. Publish a desired state of powerOn by using helper functions in shadow_demo_helpers.c.  That will cause
  * a delta message to be sent to device.
  * 5. Handle incoming MQTT messages in prvEventCallback, determine whether the message is related to the device
- * shadow by using a function defined by the Device Shadow library (Shadow_MatchTopic). If the message is a
+ * shadow by using a function defined by the Device Shadow library (Shadow_MatchTopicString). If the message is a
  * device shadow delta message, set a flag for the main function to know, then the main function will publish
  * a second message to update the reported state of powerOn.
  * 6. Handle incoming message again in prvEventCallback. If the message is from update/accepted, verify that it
@@ -207,6 +208,11 @@
  * @brief The length of #democonfigTHING_NAME.
  */
 #define THING_NAME_LENGTH    ( ( uint16_t ) ( sizeof( democonfigTHING_NAME ) - 1 ) )
+
+/**
+ * @brief The length of #democonfigSHADOW_NAME.
+ */
+#define SHADOW_NAME_LENGTH    ( ( uint16_t ) ( sizeof( democonfigSHADOW_NAME ) - 1 ) )
 
 /*-----------------------------------------------------------*/
 
@@ -674,7 +680,7 @@ static void prvUpdateAcceptedHandler( MQTTPublishInfo_t * pxPublishInfo )
 /*-----------------------------------------------------------*/
 
 /* This is the callback function invoked by the MQTT stack when it receives
- * incoming messages. This function demonstrates how to use the Shadow_MatchTopic
+ * incoming messages. This function demonstrates how to use the Shadow_MatchTopicString
  * function to determine whether the incoming message is a device shadow message
  * or not. If it is, it handles the message depending on the message type.
  */
@@ -684,7 +690,9 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
 {
     ShadowMessageType_t messageType = ShadowMessageTypeMaxNum;
     const char * pcThingName = NULL;
-    uint16_t usThingNameLength = 0U;
+    uint8_t ucThingNameLength = 0U;
+    const char * pcShadowName = NULL;
+    uint8_t ucShadowNameLength = 0U;
     uint16_t usPacketIdentifier;
 
     ( void ) pxMqttContext;
@@ -704,11 +712,13 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
         LogInfo( ( "pPublishInfo->pTopicName:%s.", pxDeserializedInfo->pPublishInfo->pTopicName ) );
 
         /* Let the Device Shadow library tell us whether this is a device shadow message. */
-        if( SHADOW_SUCCESS == Shadow_MatchTopic( pxDeserializedInfo->pPublishInfo->pTopicName,
-                                                 pxDeserializedInfo->pPublishInfo->topicNameLength,
-                                                 &messageType,
-                                                 &pcThingName,
-                                                 &usThingNameLength ) )
+        if( SHADOW_SUCCESS == Shadow_MatchTopicString( pxDeserializedInfo->pPublishInfo->pTopicName,
+                                                       pxDeserializedInfo->pPublishInfo->topicNameLength,
+                                                       &messageType,
+                                                       &pcThingName,
+                                                       &ucThingNameLength,
+                                                       &pcShadowName,
+                                                       &ucShadowNameLength ) )
         {
             /* Upon successful return, the messageType has been filled in. */
             if( messageType == ShadowMessageTypeUpdateDelta )
@@ -748,7 +758,7 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
         }
         else
         {
-            LogError( ( "Shadow_MatchTopic parse failed:%s !!", ( const char * ) pxDeserializedInfo->pPublishInfo->pTopicName ) );
+            LogError( ( "Shadow_MatchTopicString parse failed:%s !!", ( const char * ) pxDeserializedInfo->pPublishInfo->pTopicName ) );
         }
     }
     else
@@ -782,15 +792,17 @@ void vStartShadowDemo( void )
  *
  * This main function demonstrates how to use the macros provided by the
  * Device Shadow library to assemble strings for the MQTT topics defined
- * by AWS IoT Device Shadow. It uses these macros for topics to subscribe
- * to:
- * - SHADOW_TOPIC_STRING_UPDATE_DELTA for "$aws/things/thingName/shadow/update/delta"
- * - SHADOW_TOPIC_STRING_UPDATE_ACCEPTED for "$aws/things/thingName/shadow/update/accepted"
- * - SHADOW_TOPIC_STRING_UPDATE_REJECTED for "$aws/things/thingName/shadow/update/rejected"
+ * by AWS IoT Device Shadow. Named shadow topic strings differ from unnamed
+ * ("Classic") topic strings as indicated by the tokens within square brackets.
+ *
+ * The main function uses these macros for topics to subscribe to:
+ * - SHADOW_TOPIC_STR_UPDATE_DELTA for "$aws/things/thingName/shadow[/name/shadowname]/update/delta"
+ * - SHADOW_TOPIC_STR_UPDATE_ACC for "$aws/things/thingName/shadow[/name/shadowname]/update/accepted"
+ * - SHADOW_TOPIC_STR_UPDATE_REJ for "$aws/things/thingName/shadow[/name/shadowname]/update/rejected"
  *
  * It also uses these macros for topics to publish to:
- * - SHADOW_TOPIC_STIRNG_DELETE for "$aws/things/thingName/shadow/delete"
- * - SHADOW_TOPIC_STRING_UPDATE for "$aws/things/thingName/shadow/update"
+ * - SHADOW_TOPIC_STR_DELETE for "$aws/things/thingName/shadow[/name/shadowname]/delete"
+ * - SHADOW_TOPIC_STR_UPDATE for "$aws/things/thingName/shadow[/name/shadowname]/update"
  *
  * The helper functions this demo uses for MQTT operations have internal
  * loops to process incoming messages. Those are not the focus of this demo
@@ -842,16 +854,16 @@ void prvShadowDemoTask( void * pvParameters )
             /* First of all, try to delete any Shadow document in the cloud.
              * Try to subscribe to `/delete/accepted` and `/delete/rejected` topics. */
             xDemoStatus = xSubscribeToTopic( &xMqttContext,
-                                             SHADOW_TOPIC_STRING_DELETE_ACCEPTED( democonfigTHING_NAME ),
-                                             SHADOW_TOPIC_LENGTH_DELETE_ACCEPTED( THING_NAME_LENGTH ) );
+                                             SHADOW_TOPIC_STR_DELETE_ACC( democonfigTHING_NAME, democonfigSHADOW_NAME ),
+                                             SHADOW_TOPIC_LEN_DELETE_ACC( THING_NAME_LENGTH, SHADOW_NAME_LENGTH ) );
         }
 
         if( xDemoStatus == pdPASS )
         {
             /* Try to subscribe to `/delete/rejected` topic. */
             xDemoStatus = xSubscribeToTopic( &xMqttContext,
-                                             SHADOW_TOPIC_STRING_DELETE_REJECTED( democonfigTHING_NAME ),
-                                             SHADOW_TOPIC_LENGTH_DELETE_REJECTED( THING_NAME_LENGTH ) );
+                                             SHADOW_TOPIC_STR_DELETE_REJ( democonfigTHING_NAME, democonfigSHADOW_NAME ),
+                                             SHADOW_TOPIC_LEN_DELETE_REJ( THING_NAME_LENGTH, SHADOW_NAME_LENGTH ) );
         }
 
         if( xDemoStatus == pdPASS )
@@ -859,8 +871,8 @@ void prvShadowDemoTask( void * pvParameters )
             /* Publish to Shadow `delete` topic to attempt to delete the
              * Shadow document if exists. */
             xDemoStatus = xPublishToTopic( &xMqttContext,
-                                           SHADOW_TOPIC_STRING_DELETE( democonfigTHING_NAME ),
-                                           SHADOW_TOPIC_LENGTH_DELETE( THING_NAME_LENGTH ),
+                                           SHADOW_TOPIC_STR_DELETE( democonfigTHING_NAME, democonfigSHADOW_NAME ),
+                                           SHADOW_TOPIC_LEN_DELETE( THING_NAME_LENGTH, SHADOW_NAME_LENGTH ),
                                            pcUpdateDocument,
                                            0U );
         }
@@ -876,15 +888,15 @@ void prvShadowDemoTask( void * pvParameters )
         if( xDemoStatus == pdPASS )
         {
             xDemoStatus = xUnsubscribeFromTopic( &xMqttContext,
-                                                 SHADOW_TOPIC_STRING_DELETE_ACCEPTED( democonfigTHING_NAME ),
-                                                 SHADOW_TOPIC_LENGTH_DELETE_ACCEPTED( THING_NAME_LENGTH ) );
+                                                 SHADOW_TOPIC_STR_DELETE_ACC( democonfigTHING_NAME, democonfigSHADOW_NAME ),
+                                                 SHADOW_TOPIC_LEN_DELETE_ACC( THING_NAME_LENGTH, SHADOW_NAME_LENGTH ) );
         }
 
         if( xDemoStatus == pdPASS )
         {
             xDemoStatus = xUnsubscribeFromTopic( &xMqttContext,
-                                                 SHADOW_TOPIC_STRING_DELETE_REJECTED( democonfigTHING_NAME ),
-                                                 SHADOW_TOPIC_LENGTH_DELETE_REJECTED( THING_NAME_LENGTH ) );
+                                                 SHADOW_TOPIC_STR_DELETE_REJ( democonfigTHING_NAME, democonfigSHADOW_NAME ),
+                                                 SHADOW_TOPIC_LEN_DELETE_REJ( THING_NAME_LENGTH, SHADOW_NAME_LENGTH ) );
         }
 
         /* Check if Shadow document delete was successful. A delete can be
@@ -906,30 +918,30 @@ void prvShadowDemoTask( void * pvParameters )
         if( xDemoStatus == pdPASS )
         {
             xDemoStatus = xSubscribeToTopic( &xMqttContext,
-                                             SHADOW_TOPIC_STRING_UPDATE_DELTA( democonfigTHING_NAME ),
-                                             SHADOW_TOPIC_LENGTH_UPDATE_DELTA( THING_NAME_LENGTH ) );
+                                             SHADOW_TOPIC_STR_UPDATE_DELTA( democonfigTHING_NAME, democonfigSHADOW_NAME ),
+                                             SHADOW_TOPIC_LEN_UPDATE_DELTA( THING_NAME_LENGTH, SHADOW_NAME_LENGTH ) );
         }
 
         if( xDemoStatus == pdPASS )
         {
             xDemoStatus = xSubscribeToTopic( &xMqttContext,
-                                             SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( democonfigTHING_NAME ),
-                                             SHADOW_TOPIC_LENGTH_UPDATE_ACCEPTED( THING_NAME_LENGTH ) );
+                                             SHADOW_TOPIC_STR_UPDATE_ACC( democonfigTHING_NAME, democonfigSHADOW_NAME ),
+                                             SHADOW_TOPIC_LEN_UPDATE_ACC( THING_NAME_LENGTH, SHADOW_NAME_LENGTH ) );
         }
 
         if( xDemoStatus == pdPASS )
         {
             xDemoStatus = xSubscribeToTopic( &xMqttContext,
-                                             SHADOW_TOPIC_STRING_UPDATE_REJECTED( democonfigTHING_NAME ),
-                                             SHADOW_TOPIC_LENGTH_UPDATE_REJECTED( THING_NAME_LENGTH ) );
+                                             SHADOW_TOPIC_STR_UPDATE_REJ( democonfigTHING_NAME, democonfigSHADOW_NAME ),
+                                             SHADOW_TOPIC_LEN_UPDATE_REJ( THING_NAME_LENGTH, SHADOW_NAME_LENGTH ) );
         }
 
         /********************* Publish to Shadow topics. **********************/
 
-        /* This demo uses a constant #democonfigTHING_NAME known at compile time
-         * therefore we can use macros to assemble shadow topic strings.
-         * If the thing name is known at run time, then we could use the API
-         * #Shadow_GetTopicString to assemble shadow topic strings, here is the
+        /* This demo uses constants #democonfigTHING_NAME and #democonfigSHADOW_NAME
+         * known at compile time, therefore we can use macros to assemble shadow topic strings.
+         * If the thing name or shadow name is only known at run time, then we could use the API
+         * #Shadow_AssembleTopicString to assemble shadow topic strings. Here is the
          * example for /update/delta:
          *
          * For /update/delta:
@@ -941,14 +953,18 @@ void prvShadowDemoTask( void * pvParameters )
          * uint16_t usBufferSize = SHADOW_TOPIC_MAX_LENGTH;
          * uint16_t usOutLength = 0;
          * const char * pcThingName = "TestThingName";
-         * uint16_t usThingNameLength  = ( sizeof( pcThingName ) - 1U );
+         * uint8_t ucThingNameLength  = ( sizeof( pcThingName ) - 1U );
+         * const char * pcShadowName = "TestShadowName";
+         * uint8_t ucShadowNameLength = ( sizeof( pcShadowName ) - 1U );
          *
-         * shadowStatus = Shadow_GetTopicString( SHADOW_TOPIC_STRING_TYPE_UPDATE_DELTA,
-         *                                       pcThingName,
-         *                                       usThingNameLength,
-         *                                       & ( cTopicBuffer[ 0 ] ),
-         *                                       usBufferSize,
-         *                                       & usOutLength );
+         * shadowStatus = Shadow_AssembleTopicString( SHADOW_TOPIC_STRING_TYPE_UPDATE_DELTA,
+         *                                            pcThingName,
+         *                                            ucThingNameLength,
+         *                                            pcShadowName,
+         *                                            ucShadowNameLength,
+         *                                            & ( cTopicBuffer[ 0 ] ),
+         *                                            usBufferSize,
+         *                                            & usOutLength );
          */
 
         /* Then we publish a desired state to the /update topic. Since we've deleted
@@ -974,8 +990,8 @@ void prvShadowDemoTask( void * pvParameters )
                       ( long unsigned ) ( xTaskGetTickCount() % 1000000 ) );
 
             xDemoStatus = xPublishToTopic( &xMqttContext,
-                                           SHADOW_TOPIC_STRING_UPDATE( democonfigTHING_NAME ),
-                                           SHADOW_TOPIC_LENGTH_UPDATE( THING_NAME_LENGTH ),
+                                           SHADOW_TOPIC_STR_UPDATE( democonfigTHING_NAME, democonfigSHADOW_NAME ),
+                                           SHADOW_TOPIC_LEN_UPDATE( THING_NAME_LENGTH, SHADOW_NAME_LENGTH ),
                                            pcUpdateDocument,
                                            ( SHADOW_DESIRED_JSON_LENGTH + 1 ) );
         }
@@ -1007,8 +1023,8 @@ void prvShadowDemoTask( void * pvParameters )
                           ( long unsigned ) ulClientToken );
 
                 xDemoStatus = xPublishToTopic( &xMqttContext,
-                                               SHADOW_TOPIC_STRING_UPDATE( democonfigTHING_NAME ),
-                                               SHADOW_TOPIC_LENGTH_UPDATE( THING_NAME_LENGTH ),
+                                               SHADOW_TOPIC_STR_UPDATE( democonfigTHING_NAME, democonfigSHADOW_NAME ),
+                                               SHADOW_TOPIC_LEN_UPDATE( THING_NAME_LENGTH, SHADOW_NAME_LENGTH ),
                                                pcUpdateDocument,
                                                ( SHADOW_DESIRED_JSON_LENGTH + 1 ) );
             }
@@ -1025,39 +1041,39 @@ void prvShadowDemoTask( void * pvParameters )
             LogInfo( ( "Start to unsubscribe shadow topics and disconnect from MQTT. \r\n" ) );
 
             xDemoStatus = xUnsubscribeFromTopic( &xMqttContext,
-                                                 SHADOW_TOPIC_STRING_UPDATE_DELTA( democonfigTHING_NAME ),
-                                                 SHADOW_TOPIC_LENGTH_UPDATE_DELTA( THING_NAME_LENGTH ) );
+                                                 SHADOW_TOPIC_STR_UPDATE_DELTA( democonfigTHING_NAME, democonfigSHADOW_NAME ),
+                                                 SHADOW_TOPIC_LEN_UPDATE_DELTA( THING_NAME_LENGTH, SHADOW_NAME_LENGTH ) );
 
             if( xDemoStatus != pdPASS )
             {
                 LogError( ( "Failed to unsubscribe the topic %s",
-                            SHADOW_TOPIC_STRING_UPDATE_DELTA( democonfigTHING_NAME ) ) );
+                            SHADOW_TOPIC_STR_UPDATE_DELTA( democonfigTHING_NAME, democonfigSHADOW_NAME ) ) );
             }
         }
 
         if( xDemoStatus == pdPASS )
         {
             xDemoStatus = xUnsubscribeFromTopic( &xMqttContext,
-                                                 SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( democonfigTHING_NAME ),
-                                                 SHADOW_TOPIC_LENGTH_UPDATE_ACCEPTED( THING_NAME_LENGTH ) );
+                                                 SHADOW_TOPIC_STR_UPDATE_ACC( democonfigTHING_NAME, democonfigSHADOW_NAME ),
+                                                 SHADOW_TOPIC_LEN_UPDATE_ACC( THING_NAME_LENGTH, SHADOW_NAME_LENGTH ) );
 
             if( xDemoStatus != pdPASS )
             {
                 LogError( ( "Failed to unsubscribe the topic %s",
-                            SHADOW_TOPIC_STRING_UPDATE_ACCEPTED( democonfigTHING_NAME ) ) );
+                            SHADOW_TOPIC_STR_UPDATE_ACC( democonfigTHING_NAME, democonfigSHADOW_NAME ) ) );
             }
         }
 
         if( xDemoStatus == pdPASS )
         {
             xDemoStatus = xUnsubscribeFromTopic( &xMqttContext,
-                                                 SHADOW_TOPIC_STRING_UPDATE_REJECTED( democonfigTHING_NAME ),
-                                                 SHADOW_TOPIC_LENGTH_UPDATE_REJECTED( THING_NAME_LENGTH ) );
+                                                 SHADOW_TOPIC_STR_UPDATE_REJ( democonfigTHING_NAME, democonfigSHADOW_NAME ),
+                                                 SHADOW_TOPIC_LEN_UPDATE_REJ( THING_NAME_LENGTH, SHADOW_NAME_LENGTH ) );
 
             if( xDemoStatus != pdPASS )
             {
                 LogError( ( "Failed to unsubscribe the topic %s",
-                            SHADOW_TOPIC_STRING_UPDATE_REJECTED( democonfigTHING_NAME ) ) );
+                            SHADOW_TOPIC_STR_UPDATE_REJ( democonfigTHING_NAME, democonfigSHADOW_NAME ) ) );
             }
         }
 

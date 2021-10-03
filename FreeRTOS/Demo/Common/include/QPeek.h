@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -32,6 +32,3 @@ void vStartQueuePeekTasks( void );
 BaseType_t xAreQueuePeekTasksStillRunning( void );
 
 #endif /* Q_PEEK_TEST_H */
-
-
-

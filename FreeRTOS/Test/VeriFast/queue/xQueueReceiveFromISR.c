@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202107.00
  * Copyright (C) Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -18,6 +18,10 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 
 #include "proof/queue.h"
@@ -26,23 +30,26 @@
 BaseType_t xQueueReceiveFromISR( QueueHandle_t xQueue,
                                  void * const pvBuffer,
                                  BaseType_t * const pxHigherPriorityTaskWoken )
+
 /*@requires [1/2]queuehandle(xQueue, ?N, ?M, ?is_isr) &*& is_isr == true &*&
-    chars(pvBuffer, M, ?x) &*&
-    pxHigherPriorityTaskWoken == NULL ? true : integer(pxHigherPriorityTaskWoken, _);@*/
+ *  chars(pvBuffer, M, ?x) &*&
+ *  pxHigherPriorityTaskWoken == NULL ? true : integer(pxHigherPriorityTaskWoken, _);@*/
+
 /*@ensures [1/2]queuehandle(xQueue, N, M, is_isr) &*&
-    (result == pdPASS ? chars(pvBuffer, M, _) : chars(pvBuffer, M, x)) &*&
-    (pxHigherPriorityTaskWoken == NULL ? true : integer(pxHigherPriorityTaskWoken, _));@*/
+ *  (result == pdPASS ? chars(pvBuffer, M, _) : chars(pvBuffer, M, x)) &*&
+ *  (pxHigherPriorityTaskWoken == NULL ? true : integer(pxHigherPriorityTaskWoken, _));@*/
 {
     BaseType_t xReturn;
     UBaseType_t uxSavedInterruptStatus;
-#ifdef VERIFAST /*< const pointer declaration */
-    Queue_t * pxQueue = xQueue;
-#else
-    Queue_t * const pxQueue = xQueue;
 
-    configASSERT( pxQueue );
-    configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
-#endif
+    #ifdef VERIFAST /*< const pointer declaration */
+        Queue_t * pxQueue = xQueue;
+    #else
+        Queue_t * const pxQueue = xQueue;
+
+        configASSERT( pxQueue );
+        configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
+    #endif
 
     /* RTOS ports that support interrupt nesting have the concept of a maximum
      * system call (or maximum API call) interrupt priority.  Interrupts that are

@@ -32,10 +32,12 @@
 
 #include "cbmc.h"
 
-void harness(){
-	QueueHandle_t xSemaphore = pvPortMalloc(sizeof(Queue_t));
-	if (xSemaphore) {
-		xQueueGetMutexHolderFromISR( xSemaphore );
-	}
-}
+void harness()
+{
+    QueueHandle_t xSemaphore = pvPortMalloc( sizeof( Queue_t ) );
 
+    if( xSemaphore )
+    {
+        xQueueGetMutexHolderFromISR( xSemaphore );
+    }
+}

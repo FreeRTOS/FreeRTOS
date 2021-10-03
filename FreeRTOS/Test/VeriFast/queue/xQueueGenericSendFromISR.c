@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202107.00
  * Copyright (C) Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -18,6 +18,10 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 
 #include "proof/queue.h"
@@ -27,28 +31,30 @@ BaseType_t xQueueGenericSendFromISR( QueueHandle_t xQueue,
                                      const void * const pvItemToQueue,
                                      BaseType_t * const pxHigherPriorityTaskWoken,
                                      const BaseType_t xCopyPosition )
+
 /*@requires
-    [1/2]queuehandle(xQueue, ?N, ?M, ?is_isr) &*& is_isr == true &*&
-    chars(pvItemToQueue, M, ?x) &*&
-    integer(pxHigherPriorityTaskWoken, _) &*&
-    (xCopyPosition == queueSEND_TO_BACK || xCopyPosition == queueSEND_TO_FRONT || (xCopyPosition == queueOVERWRITE && N == 1));@*/
+ *  [1/2]queuehandle(xQueue, ?N, ?M, ?is_isr) &*& is_isr == true &*&
+ *  chars(pvItemToQueue, M, ?x) &*&
+ *  integer(pxHigherPriorityTaskWoken, _) &*&
+ *  (xCopyPosition == queueSEND_TO_BACK || xCopyPosition == queueSEND_TO_FRONT || (xCopyPosition == queueOVERWRITE && N == 1));@*/
+
 /*@ensures
-    [1/2]queuehandle(xQueue, N, M, is_isr) &*&
-    chars(pvItemToQueue, M, x) &*&
-    integer(pxHigherPriorityTaskWoken, _);@*/
+ *  [1/2]queuehandle(xQueue, N, M, is_isr) &*&
+ *  chars(pvItemToQueue, M, x) &*&
+ *  integer(pxHigherPriorityTaskWoken, _);@*/
 {
     BaseType_t xReturn;
     UBaseType_t uxSavedInterruptStatus;
 
-#ifdef VERIFAST /*< const pointer declaration */
-    Queue_t * pxQueue = xQueue;
-#else
-    Queue_t * const pxQueue = xQueue;
+    #ifdef VERIFAST /*< const pointer declaration */
+        Queue_t * pxQueue = xQueue;
+    #else
+        Queue_t * const pxQueue = xQueue;
 
-    configASSERT( pxQueue );
-    configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
-    configASSERT( !( ( xCopyPosition == queueOVERWRITE ) && ( pxQueue->uxLength != 1 ) ) );
-#endif
+        configASSERT( pxQueue );
+        configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
+        configASSERT( !( ( xCopyPosition == queueOVERWRITE ) && ( pxQueue->uxLength != 1 ) ) );
+    #endif
 
     /* RTOS ports that support interrupt nesting have the concept of a maximum
      * system call (or maximum API call) interrupt priority.  Interrupts that are
@@ -86,12 +92,12 @@ BaseType_t xQueueGenericSendFromISR( QueueHandle_t xQueue,
              *  in a task disinheriting a priority and prvCopyDataToQueue() can be
              *  called here even though the disinherit function does not check if
              *  the scheduler is suspended before accessing the ready lists. */
-#ifdef VERIFAST /*< void cast of unused return value */
-            /*@close queue(pxQueue, Storage, N, M, W, R, K, is_locked, abs);@*/
-            prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
-#else
-            ( void ) prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
-#endif
+            #ifdef VERIFAST /*< void cast of unused return value */
+                /*@close queue(pxQueue, Storage, N, M, W, R, K, is_locked, abs);@*/
+                prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
+            #else
+                ( void ) prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
+            #endif
             /*@open queue(pxQueue, _, N, M, _, _, _, _, _);@*/
 
             /* The event list is not altered if the queue is locked.  This will
@@ -185,9 +191,9 @@ BaseType_t xQueueGenericSendFromISR( QueueHandle_t xQueue,
                         }
 
                         /* Not used in this path. */
-#ifndef VERIFAST /*< void cast of unused var */
-                        ( void ) uxPreviousMessagesWaiting;
-#endif
+                        #ifndef VERIFAST /*< void cast of unused var */
+                            ( void ) uxPreviousMessagesWaiting;
+                        #endif
                     }
                 #endif /* configUSE_QUEUE_SETS */
             }
@@ -201,26 +207,27 @@ BaseType_t xQueueGenericSendFromISR( QueueHandle_t xQueue,
             }
 
             xReturn = pdPASS;
+
             /*@
-            if (xCopyPosition == queueSEND_TO_BACK)
-            {
-                close queue(pxQueue, Storage, N, M, (W+1)%N, R, (K+1), is_locked, append(abs, singleton(x)));
-            }
-            else if (xCopyPosition == queueSEND_TO_FRONT)
-            {
-                if (R == 0)
-                {
-                    close queue(pxQueue, Storage, N, M, W, (N-1), (K+1), is_locked, cons(x, abs));
-                }
-                else
-                {
-                    close queue(pxQueue, Storage, N, M, W, (R-1), (K+1), is_locked, cons(x, abs));
-                }
-            } else if (xCopyPosition == queueOVERWRITE)
-            {
-                close queue(pxQueue, Storage, N, M, W, R, 1, is_locked, singleton(x));
-            }
-            @*/
+             * if (xCopyPosition == queueSEND_TO_BACK)
+             * {
+             *  close queue(pxQueue, Storage, N, M, (W+1)%N, R, (K+1), is_locked, append(abs, singleton(x)));
+             * }
+             * else if (xCopyPosition == queueSEND_TO_FRONT)
+             * {
+             *  if (R == 0)
+             *  {
+             *      close queue(pxQueue, Storage, N, M, W, (N-1), (K+1), is_locked, cons(x, abs));
+             *  }
+             *  else
+             *  {
+             *      close queue(pxQueue, Storage, N, M, W, (R-1), (K+1), is_locked, cons(x, abs));
+             *  }
+             * } else if (xCopyPosition == queueOVERWRITE)
+             * {
+             *  close queue(pxQueue, Storage, N, M, W, R, 1, is_locked, singleton(x));
+             * }
+             * @*/
         }
         else
         {

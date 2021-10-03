@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -56,24 +56,23 @@ SECTIONS
         *(.rodata*)
         . = ALIGN(4);
         _etext = .;
-        _sidata = _etext;
     } > FLASH
 
-	.ARM.extab :
-	{
-		. = ALIGN(4);
-		*(.ARM.extab* .gnu.linkonce.armextab.*)
-		. = ALIGN(4);
-	} >FLASH
+    .ARM.extab :
+    {
+        . = ALIGN(4);
+        *(.ARM.extab* .gnu.linkonce.armextab.*)
+        . = ALIGN(4);
+    } >FLASH
 
-	.ARM :
-	{
-		. = ALIGN(4);
-		__exidx_start = .;
-		*(.ARM.exidx* .gnu.linkonce.armexidx.*)
-		__exidx_end = .;
-		. = ALIGN(4);
-	} >FLASH
+    .ARM :
+    {
+        . = ALIGN(4);
+        __exidx_start = .;
+        *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+        __exidx_end = .;
+        . = ALIGN(4);
+    } >FLASH
 
     .interrupts_ram :
     {
@@ -83,9 +82,10 @@ SECTIONS
         . += M_VECTOR_RAM_SIZE;
         . = ALIGN(4);
         __interrupts_ram_end = .;
-
     } > RAM
-    
+
+    _sidata = LOADADDR(.data);
+
     .data : /* AT ( _sidata ) */
     {
         . = ALIGN(4);

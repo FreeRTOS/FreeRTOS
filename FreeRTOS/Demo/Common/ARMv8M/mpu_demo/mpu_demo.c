@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -32,7 +32,7 @@
 /**
  * @brief Size of the shared memory region.
  */
-#define SHARED_MEMORY_SIZE 32
+#define SHARED_MEMORY_SIZE    32
 
 /**
  * @brief Memory region shared between two tasks.
@@ -74,153 +74,155 @@ static void prvRWAccessTask( void * pvParameters );
 
 static void prvROAccessTask( void * pvParameters )
 {
-uint8_t ucVal;
+    uint8_t ucVal;
 
-	/* Unused parameters. */
-	( void ) pvParameters;
+    /* Unused parameters. */
+    ( void ) pvParameters;
 
-	for( ; ; )
-	{
-		/* This task has RO access to ucSharedMemory and therefore it can read
-		 * it but cannot modify it. */
-		ucVal = ucSharedMemory[ 0 ];
+    for( ; ; )
+    {
+        /* This task has RO access to ucSharedMemory and therefore it can read
+         * it but cannot modify it. */
+        ucVal = ucSharedMemory[ 0 ];
 
-		/* Silent compiler warnings about unused variables. */
-		( void ) ucVal;
+        /* Silent compiler warnings about unused variables. */
+        ( void ) ucVal;
 
-		/* Since this task has Read Only access to the ucSharedMemory region,
-		 * writing to it results in Memory Fault. Set ucROTaskFaultTracker[ 0 ]
-		 * to 1 to tell the Memory Fault Handler that this is an expected fault.
-		 * The handler will recover from this fault gracefully by jumping to the
-		 * next instruction. */
-		ucROTaskFaultTracker[ 0 ] = 1;
+        /* Since this task has Read Only access to the ucSharedMemory region,
+         * writing to it results in Memory Fault. Set ucROTaskFaultTracker[ 0 ]
+         * to 1 to tell the Memory Fault Handler that this is an expected fault.
+         * The handler will recover from this fault gracefully by jumping to the
+         * next instruction. */
+        ucROTaskFaultTracker[ 0 ] = 1;
 
-		/* Illegal access to generate Memory Fault. */
-		ucSharedMemory[ 0 ] = 0;
+        /* Illegal access to generate Memory Fault. */
+        ucSharedMemory[ 0 ] = 0;
 
-		/* Wait for a second. */
-		vTaskDelay( pdMS_TO_TICKS( 1000 ) );
-	}
+        /* Wait for a second. */
+        vTaskDelay( pdMS_TO_TICKS( 1000 ) );
+    }
 }
 /*-----------------------------------------------------------*/
 
 static void prvRWAccessTask( void * pvParameters )
 {
-	/* Unused parameters. */
-	( void ) pvParameters;
+    /* Unused parameters. */
+    ( void ) pvParameters;
 
-	for( ; ; )
-	{
-		/* This task has RW access to ucSharedMemory and therefore can write to
-		 * it. */
-		ucSharedMemory[ 0 ] = 0;
+    for( ; ; )
+    {
+        /* This task has RW access to ucSharedMemory and therefore can write to
+         * it. */
+        ucSharedMemory[ 0 ] = 0;
 
-		/* Wait for a second. */
-		vTaskDelay( pdMS_TO_TICKS( 1000 ) );
-	}
+        /* Wait for a second. */
+        vTaskDelay( pdMS_TO_TICKS( 1000 ) );
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vStartMPUDemo( void )
 {
-static StackType_t xROAccessTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
-static StackType_t xRWAccessTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
-TaskParameters_t xROAccessTaskParameters =
-{
-	.pvTaskCode		= prvROAccessTask,
-	.pcName			= "ROAccess",
-	.usStackDepth	= configMINIMAL_STACK_SIZE,
-	.pvParameters	= NULL,
-	.uxPriority		= tskIDLE_PRIORITY,
-	.puxStackBuffer	= xROAccessTaskStack,
-	.xRegions		=	{
-							{ ucSharedMemory,		32,	tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER	},
-							{ ucROTaskFaultTracker,	32,	tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER	},
-							{ 0,					0,	0														},
-						}
-};
-TaskParameters_t xRWAccessTaskParameters =
-{
-	.pvTaskCode		= prvRWAccessTask,
-	.pcName			= "RWAccess",
-	.usStackDepth	= configMINIMAL_STACK_SIZE,
-	.pvParameters	= NULL,
-	.uxPriority		= tskIDLE_PRIORITY,
-	.puxStackBuffer	= xRWAccessTaskStack,
-	.xRegions		=	{
-							{ ucSharedMemory,	32,	tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER	},
-							{ 0,				0,	0														},
-							{ 0,				0,	0														},
-						}
-};
+    static StackType_t xROAccessTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
+    static StackType_t xRWAccessTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
+    TaskParameters_t xROAccessTaskParameters =
+    {
+        .pvTaskCode     = prvROAccessTask,
+        .pcName         = "ROAccess",
+        .usStackDepth   = configMINIMAL_STACK_SIZE,
+        .pvParameters   = NULL,
+        .uxPriority     = tskIDLE_PRIORITY,
+        .puxStackBuffer = xROAccessTaskStack,
+        .xRegions       =
+        {
+            { ucSharedMemory,       32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+            { ucROTaskFaultTracker, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            { 0,                    0,  0                                                      },
+        }
+    };
+    TaskParameters_t xRWAccessTaskParameters =
+    {
+        .pvTaskCode     = prvRWAccessTask,
+        .pcName         = "RWAccess",
+        .usStackDepth   = configMINIMAL_STACK_SIZE,
+        .pvParameters   = NULL,
+        .uxPriority     = tskIDLE_PRIORITY,
+        .puxStackBuffer = xRWAccessTaskStack,
+        .xRegions       =
+        {
+            { ucSharedMemory, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            { 0,              0,  0                                                      },
+            { 0,              0,  0                                                      },
+        }
+    };
 
-	/* Create an unprivileged task with RO access to ucSharedMemory. */
-	xTaskCreateRestricted( &( xROAccessTaskParameters ), NULL );
+    /* Create an unprivileged task with RO access to ucSharedMemory. */
+    xTaskCreateRestricted( &( xROAccessTaskParameters ), NULL );
 
-	/* Create an unprivileged task with RW access to ucSharedMemory. */
-	xTaskCreateRestricted( &( xRWAccessTaskParameters ), NULL );
+    /* Create an unprivileged task with RW access to ucSharedMemory. */
+    xTaskCreateRestricted( &( xRWAccessTaskParameters ), NULL );
 }
 /*-----------------------------------------------------------*/
 
 portDONT_DISCARD void vHandleMemoryFault( uint32_t * pulFaultStackAddress )
 {
-uint32_t ulPC;
-uint16_t usOffendingInstruction;
+    uint32_t ulPC;
+    uint16_t usOffendingInstruction;
 
-	/* Is this an expected fault? */
-	if( ucROTaskFaultTracker[ 0 ] == 1 )
-	{
-		/* Read program counter. */
-		ulPC = pulFaultStackAddress[ 6 ];
+    /* Is this an expected fault? */
+    if( ucROTaskFaultTracker[ 0 ] == 1 )
+    {
+        /* Read program counter. */
+        ulPC = pulFaultStackAddress[ 6 ];
 
-		/* Read the offending instruction. */
-		usOffendingInstruction = *( uint16_t * )ulPC;
+        /* Read the offending instruction. */
+        usOffendingInstruction = *( uint16_t * ) ulPC;
 
-		/* From ARM docs:
-		 * If the value of bits[15:11] of the halfword being decoded is one of
-		 * the following, the halfword is the first halfword of a 32-bit
-		 * instruction:
-		 * - 0b11101.
-		 * - 0b11110.
-		 * - 0b11111.
-		 * Otherwise, the halfword is a 16-bit instruction.
-		 */
+        /* From ARM docs:
+         * If the value of bits[15:11] of the halfword being decoded is one of
+         * the following, the halfword is the first halfword of a 32-bit
+         * instruction:
+         * - 0b11101.
+         * - 0b11110.
+         * - 0b11111.
+         * Otherwise, the halfword is a 16-bit instruction.
+         */
 
-		/* Extract bits[15:11] of the offending instruction. */
-		usOffendingInstruction = usOffendingInstruction & 0xF800;
-		usOffendingInstruction = ( usOffendingInstruction >> 11 );
+        /* Extract bits[15:11] of the offending instruction. */
+        usOffendingInstruction = usOffendingInstruction & 0xF800;
+        usOffendingInstruction = ( usOffendingInstruction >> 11 );
 
-		/* Determine if the offending instruction is a 32-bit instruction or
-		 * a 16-bit instruction. */
-		if( usOffendingInstruction == 0x001F ||
-			usOffendingInstruction == 0x001E ||
-			usOffendingInstruction == 0x001D )
-		{
-			/* Since the offending instruction is a 32-bit instruction,
-			 * increment the program counter by 4 to move to the next
-			 * instruction. */
-			ulPC += 4;
-		}
-		else
-		{
-			/* Since the offending instruction is a 16-bit instruction,
-			 * increment the program counter by 2 to move to the next
-			 * instruction. */
-			ulPC += 2;
-		}
+        /* Determine if the offending instruction is a 32-bit instruction or
+         * a 16-bit instruction. */
+        if( ( usOffendingInstruction == 0x001F ) ||
+            ( usOffendingInstruction == 0x001E ) ||
+            ( usOffendingInstruction == 0x001D ) )
+        {
+            /* Since the offending instruction is a 32-bit instruction,
+             * increment the program counter by 4 to move to the next
+             * instruction. */
+            ulPC += 4;
+        }
+        else
+        {
+            /* Since the offending instruction is a 16-bit instruction,
+             * increment the program counter by 2 to move to the next
+             * instruction. */
+            ulPC += 2;
+        }
 
-		/* Save the new program counter on the stack. */
-		pulFaultStackAddress[ 6 ] = ulPC;
+        /* Save the new program counter on the stack. */
+        pulFaultStackAddress[ 6 ] = ulPC;
 
-		/* Mark the fault as handled. */
-		ucROTaskFaultTracker[ 0 ] = 0;
-	}
-	else
-	{
-		/* This is an unexpected fault - loop forever. */
-		for( ; ; )
-		{
-		}
-	}
+        /* Mark the fault as handled. */
+        ucROTaskFaultTracker[ 0 ] = 0;
+    }
+    else
+    {
+        /* This is an unexpected fault - loop forever. */
+        for( ; ; )
+        {
+        }
+    }
 }
 /*-----------------------------------------------------------*/

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -61,34 +61,36 @@
 #include "crflash.h"
 
 /* The queue should only need to be of length 1.  See the description at the
-top of the file. */
-#define crfQUEUE_LENGTH		1
+ * top of the file. */
+#define crfQUEUE_LENGTH            1
 
-#define crfFIXED_DELAY_PRIORITY		0
-#define crfFLASH_PRIORITY			1
+#define crfFIXED_DELAY_PRIORITY    0
+#define crfFLASH_PRIORITY          1
 
 /* Only one flash co-routine is created so the index is not significant. */
-#define crfFLASH_INDEX				0
+#define crfFLASH_INDEX             0
 
 /* Don't allow more than crfMAX_FLASH_TASKS 'fixed delay' co-routines to be
-created. */
-#define crfMAX_FLASH_TASKS			8
+ * created. */
+#define crfMAX_FLASH_TASKS         8
 
 /* We don't want to block when posting to the queue. */
-#define crfPOSTING_BLOCK_TIME		0
+#define crfPOSTING_BLOCK_TIME      0
 
 /*
  * The 'fixed delay' co-routine as described at the top of the file.
  */
-static void prvFixedDelayCoRoutine( CoRoutineHandle_t xHandle, UBaseType_t uxIndex );
+static void prvFixedDelayCoRoutine( CoRoutineHandle_t xHandle,
+                                    UBaseType_t uxIndex );
 
 /*
  * The 'flash' co-routine as described at the top of the file.
  */
-static void prvFlashCoRoutine( CoRoutineHandle_t xHandle, UBaseType_t uxIndex );
+static void prvFlashCoRoutine( CoRoutineHandle_t xHandle,
+                               UBaseType_t uxIndex );
 
 /* The queue used to pass data between the 'fixed delay' co-routines and the
-'flash' co-routine. */
+ * 'flash' co-routine. */
 static QueueHandle_t xFlashQueue;
 
 /* This will be set to pdFALSE if we detect an error. */
@@ -101,108 +103,113 @@ static BaseType_t xCoRoutineFlashStatus = pdPASS;
  */
 void vStartFlashCoRoutines( UBaseType_t uxNumberToCreate )
 {
-UBaseType_t uxIndex;
+    UBaseType_t uxIndex;
 
-	if( uxNumberToCreate > crfMAX_FLASH_TASKS )
-	{
-		uxNumberToCreate = crfMAX_FLASH_TASKS;
-	}
+    if( uxNumberToCreate > crfMAX_FLASH_TASKS )
+    {
+        uxNumberToCreate = crfMAX_FLASH_TASKS;
+    }
 
-	/* Create the queue used to pass data between the co-routines. */
-	xFlashQueue = xQueueCreate( crfQUEUE_LENGTH, sizeof( UBaseType_t ) );
+    /* Create the queue used to pass data between the co-routines. */
+    xFlashQueue = xQueueCreate( crfQUEUE_LENGTH, sizeof( UBaseType_t ) );
 
-	if( xFlashQueue )
-	{
-		/* Create uxNumberToCreate 'fixed delay' co-routines. */
-		for( uxIndex = 0; uxIndex < uxNumberToCreate; uxIndex++ )
-		{
-			xCoRoutineCreate( prvFixedDelayCoRoutine, crfFIXED_DELAY_PRIORITY, uxIndex );
-		}
+    if( xFlashQueue )
+    {
+        /* Create uxNumberToCreate 'fixed delay' co-routines. */
+        for( uxIndex = 0; uxIndex < uxNumberToCreate; uxIndex++ )
+        {
+            xCoRoutineCreate( prvFixedDelayCoRoutine, crfFIXED_DELAY_PRIORITY, uxIndex );
+        }
 
-		/* Create the 'flash' co-routine. */
-		xCoRoutineCreate( prvFlashCoRoutine, crfFLASH_PRIORITY, crfFLASH_INDEX );
-	}
+        /* Create the 'flash' co-routine. */
+        xCoRoutineCreate( prvFlashCoRoutine, crfFLASH_PRIORITY, crfFLASH_INDEX );
+    }
 }
 /*-----------------------------------------------------------*/
 
-static void prvFixedDelayCoRoutine( CoRoutineHandle_t xHandle, UBaseType_t uxIndex )
+static void prvFixedDelayCoRoutine( CoRoutineHandle_t xHandle,
+                                    UBaseType_t uxIndex )
 {
 /* Even though this is a co-routine the xResult variable does not need to be
-static as we do not need it to maintain its state between blocks. */
-BaseType_t xResult;
+ * static as we do not need it to maintain its state between blocks. */
+    BaseType_t xResult;
+
 /* The uxIndex parameter of the co-routine function is used as an index into
-the xFlashRates array to obtain the delay period to use. */
-static const TickType_t xFlashRates[ crfMAX_FLASH_TASKS ] = { 150 / portTICK_PERIOD_MS,
-																200 / portTICK_PERIOD_MS,
-																250 / portTICK_PERIOD_MS,
-																300 / portTICK_PERIOD_MS,
-																350 / portTICK_PERIOD_MS,
-																400 / portTICK_PERIOD_MS,
-																450 / portTICK_PERIOD_MS,
-																500  / portTICK_PERIOD_MS };
+ * the xFlashRates array to obtain the delay period to use. */
+    static const TickType_t xFlashRates[ crfMAX_FLASH_TASKS ] =
+    {
+        150 / portTICK_PERIOD_MS,
+        200 / portTICK_PERIOD_MS,
+        250 / portTICK_PERIOD_MS,
+        300 / portTICK_PERIOD_MS,
+        350 / portTICK_PERIOD_MS,
+        400 / portTICK_PERIOD_MS,
+        450 / portTICK_PERIOD_MS,
+        500 / portTICK_PERIOD_MS
+    };
 
-	/* Co-routines MUST start with a call to crSTART. */
-	crSTART( xHandle );
+    /* Co-routines MUST start with a call to crSTART. */
+    crSTART( xHandle );
 
-	for( ;; )
-	{
-		/* Post our uxIndex value onto the queue.  This is used as the LED to
-		flash. */
-		crQUEUE_SEND( xHandle, xFlashQueue, ( void * ) &uxIndex, crfPOSTING_BLOCK_TIME, &xResult );
+    for( ; ; )
+    {
+        /* Post our uxIndex value onto the queue.  This is used as the LED to
+         * flash. */
+        crQUEUE_SEND( xHandle, xFlashQueue, ( void * ) &uxIndex, crfPOSTING_BLOCK_TIME, &xResult );
 
-		if( xResult != pdPASS )
-		{
-			/* For the reasons stated at the top of the file we should always
-			find that we can post to the queue.  If we could not then an error
-			has occurred. */
-			xCoRoutineFlashStatus = pdFAIL;
-		}
+        if( xResult != pdPASS )
+        {
+            /* For the reasons stated at the top of the file we should always
+             * find that we can post to the queue.  If we could not then an error
+             * has occurred. */
+            xCoRoutineFlashStatus = pdFAIL;
+        }
 
-		crDELAY( xHandle, xFlashRates[ uxIndex ] );
-	}
+        crDELAY( xHandle, xFlashRates[ uxIndex ] );
+    }
 
-	/* Co-routines MUST end with a call to crEND. */
-	crEND();
+    /* Co-routines MUST end with a call to crEND. */
+    crEND();
 }
 /*-----------------------------------------------------------*/
 
-static void prvFlashCoRoutine( CoRoutineHandle_t xHandle, UBaseType_t uxIndex )
+static void prvFlashCoRoutine( CoRoutineHandle_t xHandle,
+                               UBaseType_t uxIndex )
 {
 /* Even though this is a co-routine the variable do not need to be
-static as we do not need it to maintain their state between blocks. */
-BaseType_t xResult;
-UBaseType_t uxLEDToFlash;
+ * static as we do not need it to maintain their state between blocks. */
+    BaseType_t xResult;
+    UBaseType_t uxLEDToFlash;
 
-	/* Co-routines MUST start with a call to crSTART. */
-	crSTART( xHandle );
-	( void ) uxIndex;
+    /* Co-routines MUST start with a call to crSTART. */
+    crSTART( xHandle );
+    ( void ) uxIndex;
 
-	for( ;; )
-	{
-		/* Block to wait for the number of the LED to flash. */
-		crQUEUE_RECEIVE( xHandle, xFlashQueue, &uxLEDToFlash, portMAX_DELAY, &xResult );
+    for( ; ; )
+    {
+        /* Block to wait for the number of the LED to flash. */
+        crQUEUE_RECEIVE( xHandle, xFlashQueue, &uxLEDToFlash, portMAX_DELAY, &xResult );
 
-		if( xResult != pdPASS )
-		{
-			/* We would not expect to wake unless we received something. */
-			xCoRoutineFlashStatus = pdFAIL;
-		}
-		else
-		{
-			/* We received the number of an LED to flash - flash it! */
-			vParTestToggleLED( uxLEDToFlash );
-		}
-	}
+        if( xResult != pdPASS )
+        {
+            /* We would not expect to wake unless we received something. */
+            xCoRoutineFlashStatus = pdFAIL;
+        }
+        else
+        {
+            /* We received the number of an LED to flash - flash it! */
+            vParTestToggleLED( uxLEDToFlash );
+        }
+    }
 
-	/* Co-routines MUST end with a call to crEND. */
-	crEND();
+    /* Co-routines MUST end with a call to crEND. */
+    crEND();
 }
 /*-----------------------------------------------------------*/
 
 BaseType_t xAreFlashCoRoutinesStillRunning( void )
 {
-	/* Return pdPASS or pdFAIL depending on whether an error has been detected
-	or not. */
-	return xCoRoutineFlashStatus;
+    /* Return pdPASS or pdFAIL depending on whether an error has been detected
+     * or not. */
+    return xCoRoutineFlashStatus;
 }
-

@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202012.00
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202107.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,8 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 
 #ifndef FREERTOS_CONFIG_H
@@ -42,7 +43,7 @@
 *----------------------------------------------------------*/
 #define configENABLE_BACKWARD_COMPATIBILITY        1
 #define configUSE_PREEMPTION                       1
-#define configUSE_PORT_OPTIMISED_TASK_SELECTION    1
+#define configUSE_PORT_OPTIMISED_TASK_SELECTION    0
 #define configMAX_PRIORITIES                       ( 7 )
 #define configTICK_RATE_HZ                         ( 1000 )                  /* In this non-real time simulated environment the tick frequency has to be at least a multiple of the Win32 tick frequency, and therefore very slow. */
 #define configMINIMAL_STACK_SIZE                   ( ( unsigned short ) 60 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the Win32 thread. */
@@ -52,10 +53,10 @@
 #define configIDLE_SHOULD_YIELD                    1
 #define configUSE_CO_ROUTINES                      0
 #ifndef configUSE_MUTEXES
-    #define configUSE_MUTEXES                          1
+    #define configUSE_MUTEXES                      1
 #endif
 #ifndef configUSE_RECURSIVE_MUTEXES
-    #define configUSE_RECURSIVE_MUTEXES                1
+    #define configUSE_RECURSIVE_MUTEXES            1
 #endif
 #define configQUEUE_REGISTRY_SIZE                  0
 #define configUSE_APPLICATION_TASK_TAG             1
@@ -66,31 +67,31 @@
 
 /* Hook function related definitions. */
 #ifndef configUSE_TICK_HOOK
-    #define configUSE_TICK_HOOK                        0
+    #define configUSE_TICK_HOOK            0
 #endif
-#define configUSE_IDLE_HOOK                        1
-#define configUSE_MALLOC_FAILED_HOOK               1
-#define configCHECK_FOR_STACK_OVERFLOW             0      /* Not applicable to the Win32 port. */
+#define configUSE_IDLE_HOOK                1
+#define configUSE_MALLOC_FAILED_HOOK       1
+#define configCHECK_FOR_STACK_OVERFLOW     0              /* Not applicable to the Win32 port. */
 
 /* Software timer related definitions. */
-#define configUSE_TIMERS                           1
-#define configTIMER_TASK_PRIORITY                  ( configMAX_PRIORITIES - 1 )
-#define configTIMER_QUEUE_LENGTH                   5
-#define configTIMER_TASK_STACK_DEPTH               ( configMINIMAL_STACK_SIZE * 2 )
+#define configUSE_TIMERS                   1
+#define configTIMER_TASK_PRIORITY          ( configMAX_PRIORITIES - 1 )
+#define configTIMER_QUEUE_LENGTH           5
+#define configTIMER_TASK_STACK_DEPTH       ( configMINIMAL_STACK_SIZE * 2 )
 
 /* Event group related definitions. */
-#define configUSE_EVENT_GROUPS                     1
+#define configUSE_EVENT_GROUPS             1
 
 /* Co-routine definitions. */
-#define configUSE_CO_ROUTINES                   0
-#define configMAX_CO_ROUTINE_PRIORITIES         ( 2 )
+#define configUSE_CO_ROUTINES              0
+#define configMAX_CO_ROUTINE_PRIORITIES    ( 2 )
 
 /* Memory allocation strategy. */
 #ifndef configSUPPORT_DYNAMIC_ALLOCATION
-    #define configSUPPORT_DYNAMIC_ALLOCATION        1
+    #define configSUPPORT_DYNAMIC_ALLOCATION    1
 #endif
 #ifndef configSUPPORT_STATIC_ALLOCATION
-    #define configSUPPORT_STATIC_ALLOCATION         1
+    #define configSUPPORT_STATIC_ALLOCATION     1
 #endif
 
 
@@ -101,13 +102,13 @@
 #define INCLUDE_vTaskDelete                     1
 #define INCLUDE_vTaskCleanUpResources           0
 #ifndef INCLUDE_vTaskSuspend
-    #define INCLUDE_vTaskSuspend                    1
+    #define INCLUDE_vTaskSuspend                1
 #endif
 #define INCLUDE_vTaskDelayUntil                 1
 #define INCLUDE_vTaskDelay                      1
 #define INCLUDE_uxTaskGetStackHighWaterMark     1
 #ifndef INCLUDE_xTaskGetSchedulerState
-    #define INCLUDE_xTaskGetSchedulerState          1
+    #define INCLUDE_xTaskGetSchedulerState      1
 #endif
 #define INCLUDE_xTimerGetTimerTaskHandle        0
 #define INCLUDE_xTaskGetIdleTaskHandle          0
@@ -131,7 +132,7 @@
 extern void vAssertCalled( const char * pcFile,
                            uint32_t ulLine );
 #ifndef configASSERT
-#define configASSERT( x )    if( ( x ) == 0 ) vAssertCalled( __FILE__, __LINE__ )
+    #define configASSERT( x )    if( ( x ) == 0 ) vAssertCalled( __FILE__, __LINE__ )
 #endif
 
 /* Remove logging in formal verification */
@@ -227,7 +228,7 @@ extern void vAssertCalled( const char * pcFile,
 
 #define configPROFILING                      ( 0 )
 
-/* Pseudo random number generater used by some demo tasks. */
+/* Pseudo random number generator used by some demo tasks. */
 extern uint32_t ulRand();
 #define configRAND32()    ulRand()
 

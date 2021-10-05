@@ -2442,7 +2442,7 @@ teardown
 telecom
 telekom
 telstra
-Telus
+telus
 tei
 temo
 temt

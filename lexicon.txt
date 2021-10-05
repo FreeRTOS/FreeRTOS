@@ -199,12 +199,16 @@ cd
 cdatastring
 cdc
 cec
+cellularconnectionloop
 cellulardemo
 cellulardemotask
 cellularloglevel
+cellulartest
+cellulartesttask
 centre
 ceo
 cer
+cereg
 cerrorbuffer
 cert
 certificatetemplate
@@ -216,6 +220,7 @@ cexpectednumberofparameters
 cexpectedstring
 cfginitialize
 cg
+cgreg
 ch
 chacha
 chachapoly
@@ -259,6 +264,7 @@ closesession
 cmac
 cmaxpower
 cmcnt
+cmd
 cmdlen
 cmdname
 cmdrx
@@ -556,6 +562,8 @@ dqp
 dr
 drbg
 drm
+drx
+drxvalue
 dset
 dsp
 dspdis
@@ -582,12 +590,15 @@ ecmd
 ecp
 edbg
 edk
+edrx
 eeprom
 eequalpriority
 efm
 eg
 egisters
 eic
+eidrx
+eidrxsettings
 eind
 eint
 einval
@@ -636,6 +647,7 @@ ep
 epalstate
 epfr
 epint
+eps
 eqivalent
 equalled
 er
@@ -941,6 +953,7 @@ integrationtestportablemax
 intel
 intenac
 intenas
+interfal
 interfer
 interruptcall
 interrupthandler
@@ -1092,6 +1105,7 @@ lfilecloseresult
 lfxo
 lfxt
 lhigherprioritytaskwoken
+libatdata
 libc
 libgcc
 libs
@@ -1145,6 +1159,7 @@ lsl
 lsr
 lstringlength
 ltd
+lte
 ltransmitted
 lu
 lv
@@ -1506,6 +1521,8 @@ pcnew
 pcnewdir
 pcommandtorelease
 pcommandtosend
+pcommportevent
+pcommtaskevent
 pcontext
 pcontextbuffer
 pcoverflowedtask
@@ -1886,9 +1903,14 @@ pservertime
 psignature
 psl
 pslotlist
+psm
+psmsettings
+psmtau
+psmtimer
 psoc
 psocket
 psr
+psregistrationstatus
 psslcontext
 pstplatformimagestate
 psval
@@ -2072,6 +2094,7 @@ randomisation
 randomise
 randomised
 randomiser
+ratpriorities
 rb
 rbr
 rbuf
@@ -2137,6 +2160,7 @@ resynchronise
 retargets
 retored
 retr
+rf
 rfc
 rgb
 rhr
@@ -2189,6 +2213,7 @@ rxbuffer
 rxcie
 rxd
 rxdv
+rxechar
 rxed
 rxen
 rxend
@@ -2357,6 +2382,7 @@ statictask
 statictimer
 stdarg
 stdint
+stdlib
 stdout
 sthreempty
 stirng
@@ -2454,6 +2480,7 @@ testrunnerafqp
 testrunnerfull
 testshadowname
 testthingname
+testtimoutms
 testval
 tex
 tfrz
@@ -2522,6 +2549,7 @@ twoechoclient
 tx
 txcomp
 txd
+txempty
 txen
 txend
 txfifolevel
@@ -2700,6 +2728,7 @@ ulwantedbaud
 umount
 un
 unblockes
+unconfigure
 unconfigured
 unferenced
 unicast
@@ -2769,6 +2798,7 @@ utilies
 utilise
 utilised
 utils
+utran
 uvmpw
 ux
 uxbaseled

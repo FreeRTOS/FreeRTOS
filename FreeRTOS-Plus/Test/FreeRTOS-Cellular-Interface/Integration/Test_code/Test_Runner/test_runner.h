@@ -1,5 +1,5 @@
 /*
- * Amazon FreeRTOS Cellular Preview Release
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -24,45 +24,54 @@
  */
 
 /**
- * @file cellular_config.h
- * @brief cellular config options.
+ * @file aws_test_runner.h
+ * @brief The function to be called to run all the tests.
  */
 
-#ifndef __CELLULAR_CONFIG_H__
-#define __CELLULAR_CONFIG_H__
+#ifndef _TEST_RUNNER_H_
+#define _TEST_RUNNER_H_
 
-/* This is a project specific file and is used to override config values defined
- * in cellular_config_defaults.h. */
+#include "test_runner_config.h"
+
+/*
+ * @brief If set to 1, will run DQP_FR tests only.
+ */
+#ifdef testrunnerAFQP_ENABLED
+    #define testrunnerTEST_FILTER    "AFQP"
+#else
+    #define testrunnerTEST_FILTER    0
+#endif
 
 /**
- * Cellular comm interface make use of COM port on computer to communicate with
- * cellular module on windows simulator, for example "COM5".
- * #define CELLULAR_COMM_INTERFACE_PORT    "...insert here..."
+ * @brief Size of shared array.
+ *
  */
+#define testrunnerBUFFER_SIZE    ( 4000 )
 
-/*
- * Default APN for network registration.
- * #define CELLULAR_APN                    "...insert here..."
+/**
+ * @brief Buffer used for all tests.
+ *
+ * Since tests are run in series, they can use the same memory array.
+ * This makes significant heap savings.
  */
+extern char cBuffer[ testrunnerBUFFER_SIZE ];
 
-/*
- * PDN context id for cellular network.
+/**
+ * @brief FreeRTOS heap measurement taken before tests are run.
  */
-#define CELLULAR_PDN_CONTEXT_ID         ( CELLULAR_PDN_CONTEXT_ID_MIN )
+extern unsigned int xHeapBefore;
 
-/*
- * PDN connect timeout for network registration.
+/**
+ * @brief FreeRTOS heap measurement taken after all tests are run.
  */
-#define CELLULAR_PDN_CONNECT_TIMEOUT    ( 100000UL )
+extern unsigned int xHeapAfter;
 
-/*
- * Overwrite default config for different cellular modules.
+
+/**
+ * @brief Runs all the tests.
  */
+void TEST_RUNNER_RunTests_task( void * pvParameters );
 
-/*
- * GetHostByName API is not used in the demo. IP address is used to store the hostname.
- * The value should be longer than the length of democonfigMQTT_BROKER_ENDPOINT in demo_config.h.
- */
-#define CELLULAR_IP_ADDRESS_MAX_SIZE    ( 64U )
 
-#endif /* __CELLULAR_CONFIG_H__ */
+
+#endif /* _AWS_TEST_RUNNER_H_ */

@@ -185,7 +185,7 @@ static void CellularDemoTask( void * pvParameters )
     /* Run the MQTT demo. */
     vStartSimpleMQTTDemo();
 
-    vTaskDelete(NULL);
+    vTaskDelete( NULL );
 }
 
 /*-----------------------------------------------------------*/

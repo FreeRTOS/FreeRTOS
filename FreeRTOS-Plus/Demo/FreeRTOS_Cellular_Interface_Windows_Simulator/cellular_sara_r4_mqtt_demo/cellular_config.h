@@ -41,7 +41,7 @@
  */
 
 /*
- * Default APN for network registartion.
+ * Default APN for network registration.
  * #define CELLULAR_APN                    "...insert here..."
  */
 
@@ -102,7 +102,7 @@
  * 100: standard Europe
  * Notes :
  * The standard Europe profile should be used as the basis for all other MNOs in
- * Europe outside of Vodafoneand Deutsche Telekom. However, there may be changes
+ * Europe outside of Vodafone and Deutsche Telekom. However, there may be changes
  * that need to be applied to the module for properoperation with any given European
  * MNO such as attach type, RAT preference, band selection, etc. Pleaseconsult with
  * the preferred network provider.

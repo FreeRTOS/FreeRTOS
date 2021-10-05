@@ -211,7 +211,7 @@ static _cellularCommContext_t _iotCellularCommContext =
     .pCommTaskEvent            = NULL
 };
 
-/* Inidicate RX event is received in comm driver. */
+/* Indicate RX event is received in comm driver. */
 static bool rxEvent = false;
 
 /*-----------------------------------------------------------*/
@@ -308,8 +308,8 @@ static CellularCommInterfaceError_t _setupCommTimeout( HANDLE hComm )
     BOOL Status = TRUE;
 
     /* Set ReadIntervalTimeout to MAXDWORD and zero values for both
-     * ReadTotalTimeoutConstant and ReadTotalTimeoutMultiplier to retrun
-     * immediatly with the bytes that already been received. */
+     * ReadTotalTimeoutConstant and ReadTotalTimeoutMultiplier to return
+     * immediately with the bytes that already been received. */
     xCommTimeouts.ReadIntervalTimeout = MAXDWORD;
     xCommTimeouts.ReadTotalTimeoutConstant = 0;
     xCommTimeouts.ReadTotalTimeoutMultiplier = 0;
@@ -390,7 +390,7 @@ static void commTaskThread( void * pUserData )
         }
         else
         {
-            /* Polling the global share variabe to trigger the interrupt. */
+            /* Polling the global share variable to trigger the interrupt. */
             if( rxEvent == true )
             {
                 rxEvent = false;

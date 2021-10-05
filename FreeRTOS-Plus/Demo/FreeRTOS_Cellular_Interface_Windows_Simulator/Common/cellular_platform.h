@@ -97,7 +97,7 @@ bool Platform_CreateDetachedThread( void ( * threadRoutine )( void * ),
  *
  * Cellular library use platform mutex to protect resource.
  *
- * The IotMutex_ functions can be refernced as function prototype for
+ * The IotMutex_ functions can be referenced as function prototype for
  * PlatfromMutex_ prefix function in the following link.
  * https://docs.aws.amazon.com/freertos/latest/lib-ref/c-sdk/platform/platform_threads_functions.html
  *
@@ -137,7 +137,7 @@ void PlatformMutex_Unlock( PlatformMutex_t * pMutex );
  *
  * Cellular library use platform event group for process synchronization.
  *
- * The EventGroup functions in the following link can be refernced as function prototype.
+ * The EventGroup functions in the following link can be referenced as function prototype.
  * https://www.freertos.org/event-groups-API.html
  *
  */
@@ -160,7 +160,7 @@ void PlatformMutex_Unlock( PlatformMutex_t * pMutex );
  *
  * Cellular library use platform delay function for waiting events.
  *
- * The delay functions in the following link can be refernced as function prototype.
+ * The delay functions in the following link can be referenced as function prototype.
  * https://www.freertos.org/a00127.html
  *
  */

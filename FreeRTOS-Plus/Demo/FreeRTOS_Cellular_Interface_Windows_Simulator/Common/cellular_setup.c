@@ -158,6 +158,7 @@ bool setupCellular( void )
 
             if( timeoutCount >= timeoutCountLimit )
             {
+                cellularStatus = CELLULAR_INVALID_HANDLE;
                 configPRINTF( ( ">>>  Cellular module can't be registered  <<<\r\n" ) );
             }
 

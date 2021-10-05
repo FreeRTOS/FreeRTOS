@@ -52,12 +52,12 @@
 
 /*-----------------------------------------------------------*/
 
-/* Celllular socket wrapper needs application provide the cellular handle and pdn context id. */
-/* User of celllular socket wrapper should provide this variable. */
+/* Cellular socket wrapper needs application provide the cellular handle and pdn context id. */
+/* User of cellular socket wrapper should provide this variable. */
 /* coverity[misra_c_2012_rule_8_6_violation] */
 extern CellularHandle_t CellularHandle;
 
-/* User of celllular socket wrapper should provide this variable. */
+/* User of cellular socket wrapper should provide this variable. */
 /* coverity[misra_c_2012_rule_8_6_violation] */
 extern uint8_t CellularSocketPdnContextId;
 
@@ -225,7 +225,7 @@ static BaseType_t prvCellularSocketRegisterCallback( CellularSocketHandle_t cell
  * @param[in] timeoutValueMs Timeout value for the comparison between entry time and current time.
  * @param[out] pElapsedTimeMs The elapsed time if timeout condition is true.
  *
- * @return Ture if the difference between entry time and current time is bigger or
+ * @return True if the difference between entry time and current time is bigger or
  * equal to timeoutValueMs. Otherwise, return false.
  */
 static bool _calculateElapsedTime( uint64_t entryTimeMs,
@@ -845,7 +845,7 @@ int32_t Sockets_Recv( Socket_t xSocket,
 
 /* This function sends the data until timeout or data is completely sent to server.
  * Send timeout unit is TickType_t. Any timeout value greater than UINT32_MAX_MS_TICKS
- * or portMAX_DELAY will be regarded as MAX deley. In this case, this function
+ * or portMAX_DELAY will be regarded as MAX delay. In this case, this function
  * will not return until all bytes of data are sent successfully or until an error occurs. */
 int32_t Sockets_Send( Socket_t xSocket,
                       const void * pvBuffer,
@@ -889,7 +889,7 @@ int32_t Sockets_Send( Socket_t xSocket,
             sendTimeoutMs = TICKS_TO_MS( pCellularSocketContext->sendTimeout );
         }
 
-        /* Loop sending data until data is sent completly or timeout. */
+        /* Loop sending data until data is sent completely or timeout. */
         while( bytesToSend > 0U )
         {
             socketStatus = Cellular_SocketSend( CellularHandle,

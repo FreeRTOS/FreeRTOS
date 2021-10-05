@@ -41,7 +41,7 @@
  */
 
 /*
- * Default APN for network registartion.
+ * Default APN for network registration.
  * #define CELLULAR_APN                    "...insert here..."
  */
 

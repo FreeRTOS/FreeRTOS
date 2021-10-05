@@ -53,7 +53,7 @@ static void prvThreadRoutineWrapper( void * pArgument );
  * @param[in] pMutex Mutex to lock.
  * @param[in] timeout Timeout value to lock mutex.
  *
- * @return ture if mutex is locked successfully. Otherwise false.
+ * @return true if mutex is locked successfully. Otherwise false.
  */
 static bool prIotMutexTimedLock( PlatformMutex_t * pMutex,
                                  TickType_t timeout );

@@ -226,12 +226,12 @@ static void validate_and_clear_assertions( void )
 
 
 /**
- * @brief Sending a size larger than configMESSAGE_BUFFER_LENGTH_TYPE
+ * @brief assert if xDataLengthBytes does not fit in
+ *        configMESSAGE_BUFFER_LENGTH_TYPE.
+ *
  */
 void test_xMessageBufferSend_size_mismatch( void )
 {
-#undef configMESSAGE_BUFFER_LENGTH_TYPE
-#define configMESSAGE_BUFFER_LENGTH_TYPE    uint8_t
     uint8_t message[ UINT8_MAX + 5 + 1 ] = { 0 };
 
     vTaskSetTimeOutState_Ignore();
@@ -249,7 +249,4 @@ void test_xMessageBufferSend_size_mismatch( void )
     vStreamBufferDelete( xMessageBuffer );
 
     validate_and_clear_assertions();
-
-#undef configMESSAGE_BUFFER_LENGTH_TYPE
-#define configMESSAGE_BUFFER_LENGTH_TYPE    size_t
 }

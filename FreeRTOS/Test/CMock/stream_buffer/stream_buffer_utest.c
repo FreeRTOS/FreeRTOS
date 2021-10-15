@@ -1002,12 +1002,15 @@ void test_xStreamBufferSend_stream_buffer_wrong_size( void )
 {
 #undef configMESSAGE_BUFFER_LENGTH_TYPE
 #define configMESSAGE_BUFFER_LENGTH_TYPE    uint8_t
-    uint8_t data[ 257 ] = { 0xAA };
+    uint8_t data[ UINT8_MAX + 3] = { 0xAA };
 
-    xStreamBuffer = xStreamBufferCreate( 257,
+    xStreamBuffer = xStreamBufferCreate( UINT8_MAX + 3,
                                          TEST_STREAM_BUFFER_TRIGGER_LEVEL );
 
-    EXPECT_ASSERT_BREAK( ( void ) xStreamBufferSend( NULL, data, 257, 0 ) );
+    EXPECT_ASSERT_BREAK( ( void ) xStreamBufferSend( NULL,
+                                                     data,
+                                                     UINT8_MAX + 3,
+                                                     0 ) );
     vStreamBufferDelete( xStreamBuffer );
 
     validate_and_clear_assertions();

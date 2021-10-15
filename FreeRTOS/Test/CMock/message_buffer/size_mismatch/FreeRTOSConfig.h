@@ -68,7 +68,7 @@
 #define configSUPPORT_DYNAMIC_ALLOCATION                 1
 #define configINITIAL_TICK_COUNT                         ( ( TickType_t ) 0 ) /* For test. */
 #define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN    1                    /* As there are a lot of tasks running. */
-#define configMESSAGE_BUFFER_LENGTH_TYPE    uint8_t
+#define configMESSAGE_BUFFER_LENGTH_TYPE                 uint8_t
 
 /* Software timer related configuration options. */
 #define configUSE_TIMERS                                 1

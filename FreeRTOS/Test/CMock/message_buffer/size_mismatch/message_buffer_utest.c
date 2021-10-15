@@ -45,35 +45,6 @@
 #include "mock_fake_port.h"
 
 /**
- * @brief Sample size in bytes of the message buffer used for test.
- * Keep it short enough so that they can be allocated on stack.
- */
-#define TEST_MESSAGE_BUFFER_SIZE             ( 64U )
-
-/**
- * @brief Minimum size required to store the length of the message.
- */
-#define TEST_MESSAGE_METADATA_SIZE           ( sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ) )
-
-/**
- * @brief Maximum size of a message that can be sent to a message buffer.
- * Each message stores an associated length of the message as metadata. So maximum message
- * size at any time is total length - size of the variable used to store length.
- */
-#define TEST_MAX_MESSAGE_SIZE                ( TEST_MESSAGE_BUFFER_SIZE - TEST_MESSAGE_METADATA_SIZE )
-
-/**
- * @brief Maximum unsigned long value so as to trigger an integer overflow.
- */
-#define TEST_MESSAGE_BUFFER_MAX_UINT_SIZE    ( ~( size_t ) ( 0UL ) )
-
-/**
- * @brief Ticks to wait from tests if the message buffer is full while sending data or
- * below trigger level while receiving data.
- */
-#define TEST_MESSAGE_BUFFER_WAIT_TICKS       ( 1000U )
-
-/**
  * @brief CException code for when a configASSERT should be intercepted.
  */
 #define configASSERT_E                       0xAA101

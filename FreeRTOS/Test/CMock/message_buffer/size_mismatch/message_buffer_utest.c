@@ -47,7 +47,7 @@
 /**
  * @brief CException code for when a configASSERT should be intercepted.
  */
-#define configASSERT_E                       0xAA101
+#define configASSERT_E    0xAA101
 
 /**
  * @brief Expect a configASSERT from the function called.
@@ -91,12 +91,12 @@ static int receiverTaskWoken = 0;
 /**
  * @brief Dummy sender task handle to which the stream buffer receive APIs will send notification.
  */
-//static TaskHandle_t senderTask = ( TaskHandle_t ) ( 0xAABBCCDD );
+/*static TaskHandle_t senderTask = ( TaskHandle_t ) ( 0xAABBCCDD ); */
 
 /**
  * @brief Dummy receiver task handle to which the stream buffer send APIs will send notifications.
  */
-//static TaskHandle_t receiverTask = ( TaskHandle_t ) ( 0xABCDEEFF );
+/*static TaskHandle_t receiverTask = ( TaskHandle_t ) ( 0xABCDEEFF ); */
 
 /**
  * @brief Global message buffer handle used for tests.

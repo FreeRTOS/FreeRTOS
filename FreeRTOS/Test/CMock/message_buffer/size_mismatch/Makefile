@@ -20,7 +20,7 @@ SUITE_UT_SRC        +=  message_buffer_utest.c
 
 # SUITE_SUPPORT_SRC: .c files used for testing that do not contain test cases.
 # Paths are relative to PROJECT_DIR
-SUITE_SUPPORT_SRC   += 
+SUITE_SUPPORT_SRC   +=
 
 # List the headers used by PROJECT_SRC that you would like to mock
 MOCK_FILES_FP   +=  $(KERNEL_DIR)/include/task.h

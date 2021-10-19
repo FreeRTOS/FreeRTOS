@@ -363,9 +363,6 @@
     <ClCompile Include="DemoTasks\MutualAuthMQTTExample.c">
       <Filter>DemoTasks</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\backoff_algorithm</Filter>
     </ClCompile>
@@ -443,31 +440,27 @@
       <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\modules\sara_r4\cellular_r4.c">
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\modules\hl7802\cellular_hl7802.c">
       <Filter>Module</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\modules\sara_r4\cellular_r4_api.c">
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\modules\hl7802\cellular_hl7802_api.c">
       <Filter>Module</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\modules\sara_r4\cellular_r4_urc_handler.c">
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\modules\hl7802\cellular_hl7802_urc_handler.c">
       <Filter>Module</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\modules\sara_r4\cellular_r4_wrapper.c">
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\modules\hl7802\cellular_hl7802_wrapper.c">
       <Filter>Module</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
-    <ClCompile Include="..\Common\mbedtls\mbedtls_error.c">
-      <Filter>Common\mbedtls</Filter>
-    </ClCompile>
     <ClCompile Include="..\Common\mbedtls\mbedtls_freertos_port.c">
       <Filter>Common\mbedtls</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\mbedtls\sockets_wrapper.c">
       <Filter>Common\mbedtls</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\mbedtls\using_mbedtls.c">
-      <Filter>Common\mbedtls</Filter>
-    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls\using_mbedtls.c" />
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
   </ItemGroup>
   <ItemGroup>
@@ -869,28 +862,18 @@
       <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
-    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\modules\sara_r4\cellular_r4.h">
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\modules\hl7802\cellular_hl7802.h">
       <Filter>Module</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
-    <ClInclude Include="..\Common\mbedtls\mbedtls_config.h">
-      <Filter>Common\mbedtls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\mbedtls\mbedtls_error.h">
-      <Filter>Common\mbedtls</Filter>
-    </ClInclude>
     <ClInclude Include="..\Common\mbedtls\sockets_wrapper.h">
-      <Filter>Common\mbedtls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\mbedtls\threading_alt.h">
-      <Filter>Common\mbedtls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\mbedtls\using_mbedtls.h">
       <Filter>Common\mbedtls</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls\using_mbedtls.h" />
+    <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
   </ItemGroup>
 </Project>

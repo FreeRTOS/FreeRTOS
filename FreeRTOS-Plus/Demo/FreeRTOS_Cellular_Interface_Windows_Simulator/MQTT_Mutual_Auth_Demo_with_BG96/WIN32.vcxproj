@@ -495,7 +495,6 @@
     <ClCompile Include="..\Common\cellular_setup.c" />
     <ClCompile Include="..\Common\comm_if_windows.c" />
     <ClCompile Include="..\Common\main.c" />
-    <ClCompile Include="..\Common\mbedtls\mbedtls_error.c" />
     <ClCompile Include="..\Common\mbedtls\mbedtls_freertos_port.c" />
     <ClCompile Include="..\Common\mbedtls\sockets_wrapper.c" />
     <ClCompile Include="DemoTasks\MutualAuthMQTTExample.c" />
@@ -630,10 +629,7 @@
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\x509_csr.h" />
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\xtea.h" />
     <ClInclude Include="..\Common\cellular_platform.h" />
-    <ClInclude Include="..\Common\mbedtls\mbedtls_config.h" />
-    <ClInclude Include="..\Common\mbedtls\mbedtls_error.h" />
     <ClInclude Include="..\Common\mbedtls\sockets_wrapper.h" />
-    <ClInclude Include="..\Common\mbedtls\threading_alt.h" />
     <ClInclude Include="cellular_config.h" />
     <ClInclude Include="mbedtls_config.h" />
     <ClInclude Include="demo_config.h" />

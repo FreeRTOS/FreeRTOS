@@ -1,73 +1,73 @@
 name : "FreeRTOS"
-version: "202012.00"
+version: "202107.00"
 description: "This is the standard distribution of FreeRTOS."
 
 dependencies:
   - name: "FreeRTOS-Kernel"
-    version: "V10.4.3"
+    version: "fa0f5c4"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Kernel.git"
       path: "FreeRTOS/Source"
 
   - name: "FreeRTOS-Plus-TCP"
-    version: "V2.3.2"
+    version: "56ee41a"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Plus-TCP.git"
       path: "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP"
 
   - name: "coreJSON"
-    version: "v3.0.0"
+    version: "a1c702e"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreJSON.git"
       path: "FreeRTOS-Plus/Source/coreJSON"
 
   - name: "coreHTTP"
-    version: "v2.0.0"
+    version: "e006f10"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreHTTP.git"
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreHTTP"
 
   - name: "coreMQTT"
-    version: "v1.1.0"
+    version: "73eee0b"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreMQTT.git"
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT"
 
   - name: "coreMQTT Agent"
-    version: "v1.0.0"
+    version: "63312b5"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreMQTT-Agent.git"
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent"
 
   - name: "corePKCS11"
-    version: "v3.0.0"
+    version: "997124b"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/corePKCS11.git"
       path: "FreeRTOS-Plus/Source/corePKCS11"
 
   - name: "device-defender"
-    version: "v1.1.0"
+    version: "d21c4d8"
     repository:
       type: "git"
       url: "https://github.com/aws/Device-Defender-for-AWS-IoT-embedded-sdk.git"
       path: "FreeRTOS-Plus/Source/AWS/device-defender"
 
   - name: "device-shadow"
-    version: "v1.0.2"
+    version: "e14ee90"
     repository:
       type: "git"
       url: "https://github.com/aws/Device-Shadow-for-AWS-IoT-embedded-sdk.git"
       path: "FreeRTOS-Plus/Source/AWS/device-shadow"
 
   - name: "jobs"
-    version: "v1.1.0"
+    version: "dbd52eb"
     repository:
       type: "git"
       url: "https://github.com/aws/Jobs-for-AWS-IoT-embedded-sdk.git"
@@ -81,24 +81,45 @@ dependencies:
       path: "FreeRTOS-Plus/ThirdParty/wolfSSL"
 
   - name: "mbedtls"
-    version: "v2.25.0"
+    version: "v2.26.0"
     repository:
       type: "git"
       url:  "https://github.com/ARMmbed/mbedtls"
       path: "FreeRTOS-Plus/ThirdParty/mbedtls"
 
   - name: "backoffAlgorithm"
-    version: "v1.0.0"
+    version: "5db5777"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/backoffAlgorithm"
       path: "FreeRTOS-Plus/Source/Utilities/backoff_algorithm"
 
   - name: "ota"
-    version: "v3.0.0"
+    version: "2a8536e"
     repository:
       type: "git"
       url: "https://github.com/aws/ota-for-aws-iot-embedded-sdk"
       path: "FreeRTOS-Plus/Source/AWS/ota"
+
+  - name: "coreSNTP"
+    version: "03e9f9c"
+    repository:
+      type: "git"
+      url: "https://github.com/FreeRTOS/coreSNTP"
+      path: "FreeRTOS-Plus/Source/Application-Protocols/coreSNTP"
+
+  - name: "FreeRTOS-Community-Supported-Demos"
+    version: "e21b617"
+    repository:
+      type: "git"
+      url: "https://github.com/FreeRTOS/FreeRTOS-Community-Supported-Demos"
+      path: "FreeRTOS/Demo/ThirdParty/Community-Supported-Demos"
+
+  - name: "FreeRTOS-Partner-Supported-Demos"
+    version: "109ef4d"
+    repository:
+      type: "git"
+      url: "https://github.com/FreeRTOS/FreeRTOS-Partner-Supported-Demos"
+      path: "FreeRTOS/Demo/ThirdParty/Partner-Supported-Demos"
 
 license: "MIT"

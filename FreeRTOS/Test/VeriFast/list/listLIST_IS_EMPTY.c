@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -18,17 +18,22 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 
 #include "proof/list.h"
 
 /* Wrap the macro in a function call so we can give a function contract */
-#define listLIST_IS_EMPTY( pxList )                       ( ( ( pxList )->uxNumberOfItems == ( UBaseType_t ) 0 ) ? pdTRUE : pdFALSE )
+#define listLIST_IS_EMPTY( pxList )    ( ( ( pxList )->uxNumberOfItems == ( UBaseType_t ) 0 ) ? pdTRUE : pdFALSE )
 
 BaseType_t wrapper_listLIST_IS_EMPTY( List_t * pxList )
 /*@requires xLIST(pxList, ?len, ?idx, ?end, ?cells, ?vals);@*/
+
 /*@ensures xLIST(pxList, len, idx, end, cells, vals) &*&
-    result == ((len == 0) ? pdTRUE : pdFALSE); @*/
+ *  result == ((len == 0) ? pdTRUE : pdFALSE); @*/
 {
     /*@open xLIST(pxList, len, _, _, _, _);@*/
     return listLIST_IS_EMPTY( pxList );

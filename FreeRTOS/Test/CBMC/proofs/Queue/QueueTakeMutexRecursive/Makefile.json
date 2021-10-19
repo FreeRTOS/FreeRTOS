@@ -38,7 +38,6 @@
     "--unwind {QueueSemaphoreTake_BOUND}",
     "--unwindset prvUnlockQueue.0:{PRV_UNLOCK_UNWINDING_BOUND},prvUnlockQueue.1:{PRV_UNLOCK_UNWINDING_BOUND}",
     "--signed-overflow-check",
-    "--pointer-overflow-check",
     "--unsigned-overflow-check"
   ],
   "OBJS": [

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -49,9 +49,6 @@
 /* FreeRTOS Socket wrapper include. */
 #include "sockets_wrapper.h"
 
-/* mbedTLS util includes. */
-#include "mbedtls_error.h"
-
 /* PKCS #11 includes. */
 #include "core_pkcs11_config.h"
 #include "core_pkcs11.h"
@@ -92,16 +89,16 @@ static const char * pNoLowLevelMbedTlsCodeStr = "<No-Low-Level-Code>";
  * if the code-contains a high-level code; otherwise, using a default string.
  */
 #define mbedtlsHighLevelCodeOrDefault( mbedTlsCode )        \
-    ( mbedtls_strerror_highlevel( mbedTlsCode ) != NULL ) ? \
-    mbedtls_strerror_highlevel( mbedTlsCode ) : pNoHighLevelMbedTlsCodeStr
+    ( mbedtls_high_level_strerr( mbedTlsCode ) != NULL ) ? \
+    mbedtls_high_level_strerr( mbedTlsCode ) : pNoHighLevelMbedTlsCodeStr
 
 /**
  * @brief Utility for converting the level-level code in an mbedTLS error to string,
  * if the code-contains a level-level code; otherwise, using a default string.
  */
 #define mbedtlsLowLevelCodeOrDefault( mbedTlsCode )        \
-    ( mbedtls_strerror_lowlevel( mbedTlsCode ) != NULL ) ? \
-    mbedtls_strerror_lowlevel( mbedTlsCode ) : pNoLowLevelMbedTlsCodeStr
+    ( mbedtls_low_level_strerr( mbedTlsCode ) != NULL ) ? \
+    mbedtls_low_level_strerr( mbedTlsCode ) : pNoLowLevelMbedTlsCodeStr
 
 /*-----------------------------------------------------------*/
 

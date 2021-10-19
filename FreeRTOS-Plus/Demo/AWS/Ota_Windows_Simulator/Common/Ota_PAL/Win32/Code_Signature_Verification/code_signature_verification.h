@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -26,7 +26,7 @@
 
  /**
   * @file code_signature_verification.h
-  * @brief Interface for code siganture verfication funtions.
+  * @brief Interface for code signature verification functions.
   *
   */
 

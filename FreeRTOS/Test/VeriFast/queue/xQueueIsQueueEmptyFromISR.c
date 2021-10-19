@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -18,22 +18,27 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
+ *
  */
 
 #include "proof/queue.h"
 
 BaseType_t xQueueIsQueueEmptyFromISR( const QueueHandle_t xQueue )
 /*@requires queue(xQueue, ?Storage, ?N, ?M, ?W, ?R, ?K, ?is_locked, ?abs);@*/
+
 /*@ensures queue(xQueue, Storage, N, M, W, R, K, is_locked, abs) &*&
-    result == ((K == 0) ? pdTRUE : pdFALSE);@*/
+ *  result == ((K == 0) ? pdTRUE : pdFALSE);@*/
 {
     BaseType_t xReturn;
 
-#ifdef VERIFAST /*< const pointer declaration */
-    Queue_t * pxQueue = xQueue;
-#else
-    Queue_t * const pxQueue = xQueue;
-#endif
+    #ifdef VERIFAST /*< const pointer declaration */
+        Queue_t * pxQueue = xQueue;
+    #else
+        Queue_t * const pxQueue = xQueue;
+    #endif
 
     configASSERT( pxQueue );
 

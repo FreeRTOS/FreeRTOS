@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -259,11 +259,11 @@ static PublishPackets_t outgoingPublishPackets[ MAX_OUTGOING_PUBLISHES ] = { 0 }
  * in the backoffAlgorithm library API.
  *
  * @note The "uxRand" function represents a pseudo random number generator.
- * However, it is recommended to use a True Randon Number Generator (TRNG)
+ * However, it is recommended to use a True Random Number Generator (TRNG)
  * for generating unique device-specific random values to avoid possibility
  * of network collisions from multiple devices retrying network operations.
  *
- * @return The generated randon number. This function ALWAYS succeeds.
+ * @return The generated random number. This function ALWAYS succeeds.
  */
 static int32_t prvGenerateRandomNumber();
 
@@ -903,7 +903,7 @@ BaseType_t xPublishToTopic( MQTTContext_t * pxMqttContext,
     }
     else
     {
-        LogInfo( ( "the published payload:%s \r\n ", pcPayload ) );
+        LogInfo( ( "the published payload:%.*s \r\n ", payloadLength, pcPayload ) );
         /* This example publishes to only one topic and uses QOS1. */
         outgoingPublishPackets[ ucPublishIndex ].pubInfo.qos = MQTTQoS1;
         outgoingPublishPackets[ ucPublishIndex ].pubInfo.pTopicName = pcTopicFilter;

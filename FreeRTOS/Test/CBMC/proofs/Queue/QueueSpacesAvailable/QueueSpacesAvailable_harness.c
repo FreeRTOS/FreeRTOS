@@ -31,11 +31,12 @@
 #include "queue_init.h"
 #include "cbmc.h"
 
-void harness(){
-	QueueHandle_t xQueue = xUnconstrainedQueue();
+void harness()
+{
+    QueueHandle_t xQueue = xUnconstrainedQueue();
 
-	// QueueSpacesAvailable asserts nonnull pointer
-	__CPROVER_assume(xQueue);
+    /* QueueSpacesAvailable asserts nonnull pointer */
+    __CPROVER_assume( xQueue );
 
-	uxQueueSpacesAvailable( xQueue );
+    uxQueueSpacesAvailable( xQueue );
 }

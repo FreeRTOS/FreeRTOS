@@ -24,6 +24,38 @@ jobs:
         run: |
           git-secrets --register-aws
           git-secrets --scan
+
+  formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Uncrustify
+        run: sudo apt-get install uncrustify
+      - name: Run Uncrustify
+        run: |
+          uncrustify --version
+          find FreeRTOS/Demo/Common FreeRTOS/Test \( -name ethernet -o -name drivers -o -path 'FreeRTOS/Test/CMock/CMock' \) -prune -false -o -name "*.[hc]" -exec uncrustify --check -c tools/uncrustify.cfg {} +
+      - name: Check For Trailing Whitespace
+        run: |
+          set +e
+          ERROR=0
+          find .  \( -name '.git' -o -path "./FreeRTOS/Test/CBMC/patches" -o -path "./FreeRTOS-Plus" -o -path "./FreeRTOS/Source"  -o  -path "./FreeRTOS/Test/CMock/CMock"  -o -path "./FreeRTOS/Demo" \) -prune -false -o -type f -a -name "*" -exec grep  -In -e "[[:blank:]]$" {} +
+          if [ "$?" = "0" ]; then
+            echo "Files have trailing whitespace."
+            ERROR=1
+          fi
+
+          find FreeRTOS/Demo/Common   \( -name "ethernet" \) -prune -o -false -o -type f -a -name "*" -exec grep --color=yes -In -e "[[:blank:]]$" {} +
+          if [ "$?" = "0" ]; then
+            echo "Files have trailing whitespace."
+            exit 1
+          else
+            if [ "$ERROR" -eq "1" ]; then
+              exit 1
+            fi
+            exit 0
+          fi
+
   doxygen:
     runs-on: ubuntu-20.04
     steps:
@@ -53,10 +85,91 @@ jobs:
       - name: Upload doxygen artifact if main branch
         if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release-candidate' )
         env:
-          GIT_SHA: 
+          GIT_SHA:
         uses: actions/upload-artifact@v2
         with:
           name: doxygen.zip-${{ github.sha }}
           path: ./freertos/doxygen.zip
           retention-days: 2
+
+  spell-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Parent Repo
+        uses: actions/checkout@v2
+        with:
+          ref: main
+          repository: FreeRTOS/CI-CD-Github-Actions
+          path: commonCI
+      - name: Clone This Repo
+        uses: actions/checkout@v2
+        with:
+            path: ./FreeRTOS
+      - name: Install spell
+        run: |
+          sudo apt-get install spell
+          sudo apt-get install util-linux
+      - name: Check spelling
+        run: |
+          # Add path to the tool to the environment variable.
+          PATH=$PATH:commonCI/spellings/tools
+          # Make sure that only Amazon licenced files are checked.
+          sed -i 's/`find $DIRNAME \\( -iname \\\*\.\[ch\] -o -iname \\\*\.dox \\) -type f`/`grep -ril "copyright \(c\) \[0-9\]\[0-9\]\[0-9\]\[0-9\] amazon.com" | grep "\\.\[ch\]"`/g' commonCI/spellings/tools/find-unknown-comment-words
+          # Run the spell check script.
+          find-unknown-comment-words --directory FreeRTOS/ --lexicon FreeRTOS/lexicon.txt
+          # Check the exit status.
+          if [ "$?" = "0" ]; then
+            exit 0
+          else
+            exit 1
+          fi
+
+  verify-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Install Python3
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Run manifest verifier
+        uses: FreeRTOS/CI-CD-Github-Actions/manifest-verifier@main
+        with:
+          path: ./
+          exclude-submodules: FreeRTOS-Plus/Test/CMock,FreeRTOS/Test/CMock/CMock,FreeRTOS/Test/litani
+          fail-on-incorrect-version: true
+
+  memory-statistics:
+    runs-on: ubuntu-latest
+    env:
+      ARM_GCC_TOOLCHAIN_URL: "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2?revision=05382cca-1721-44e1-ae19-1e7c3dc96118&la=en&hash=D7C9D18FCA2DD9F894FD9F3C3DC9228498FA281A"
+    steps:
+      - name: Install ARM GCC
+        run: wget -qO- "${{ env.ARM_GCC_TOOLCHAIN_URL }}" | sudo tar --strip-components=1 -xj -C /usr/local
+      - name: Clone FreeRTOS Repository with submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Clone mbedTLS submodule from corePKCS11
+        run: git submodule update --init --recursive --checkout -- FreeRTOS-Plus/Source/corePKCS11
+      - name: Clone CI-CD-Github-Actions repository
+        uses: actions/checkout@v2
+        with:
+          repository: FreeRTOS/CI-CD-Github-Actions
+          path: tools
+      - name: Run script to generate JSON memory statistics
+        run: tools/memory_statistics/memory_statistics.py --json_report --config tools/memory_statistics/paths.json --output freertos_lts_memory_estimates.json
+      - name: Upload memory size report as artifact (for main and release-candidate ONLY)
+        if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release-candidate' )
+        uses: actions/upload-artifact@v2
+        with:
+          name: freertos-memory-estimates
+          path: ./freertos_lts_memory_estimates.json
+          retention-days: 2
+
+
+
+
 

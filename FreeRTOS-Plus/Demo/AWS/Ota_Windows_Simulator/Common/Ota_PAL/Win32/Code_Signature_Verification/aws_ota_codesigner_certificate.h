@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -26,10 +26,10 @@
 
  /**
   * @file aws_ota_codesigner_certificate.h
-  * @brief Code signer certifciate as char array.
+  * @brief Code signer certificate as char array.
   *
   * Define this char array containing the PEM encode signing certificate.
-  * Note -  It is highly recommended to use this for demo pupose and store
+  * Note -  It is highly recommended to use this for demo purpose and store
   * certificates in secure location in production devices.
   */
 

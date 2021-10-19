@@ -2137,7 +2137,7 @@ extern void vPortFree( void *pv );
  * Requires: MBEDTLS_AES_C or MBEDTLS_DES_C
  *
  */
-//#define MBEDTLS_CMAC_C
+#define MBEDTLS_CMAC_C
 
 /**
  * \def MBEDTLS_CTR_DRBG_C
@@ -2296,6 +2296,7 @@ extern void vPortFree( void *pv );
  * This module provides a generic entropy pool
  */
 #define MBEDTLS_ENTROPY_C
+#define MBEDTLS_ERROR_C
 
 /**
  * \def MBEDTLS_ERROR_C
@@ -2307,7 +2308,7 @@ extern void vPortFree( void *pv );
  *
  * This module enables mbedtls_strerror().
  */
-//#define MBEDTLS_ERROR_C
+#define MBEDTLS_ERROR_C
 
 /**
  * \def MBEDTLS_GCM_C

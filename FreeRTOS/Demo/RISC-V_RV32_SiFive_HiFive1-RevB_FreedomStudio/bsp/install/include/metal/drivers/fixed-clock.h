@@ -6,8 +6,8 @@
 
 struct __metal_driver_fixed_clock;
 
-#include <metal/compiler.h>
 #include <metal/clock.h>
+#include <metal/compiler.h>
 
 struct __metal_driver_vtable_fixed_clock {
     struct __metal_clock_vtable clock;

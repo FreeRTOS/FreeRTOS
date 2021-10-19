@@ -4,11 +4,12 @@
 #ifndef METAL__CLOCK_H
 #define METAL__CLOCK_H
 
-/*! 
+/*!
  * @file clock.h
  * @brief API for manipulating clock sources
  *
- * The clock interface allows for controlling the rate of various clocks in the system.
+ * The clock interface allows for controlling the rate of various clocks in the
+ * system.
  */
 
 struct metal_clock;
@@ -45,7 +46,8 @@ typedef struct _metal_clock_callback_t metal_clock_callback;
 /*!
  * @brief Call all callbacks in the linked list, if any are registered
  */
-__inline__ void _metal_clock_call_all_callbacks(const metal_clock_callback *const list) {
+__inline__ void
+_metal_clock_call_all_callbacks(const metal_clock_callback *const list) {
     const metal_clock_callback *current = list;
     while (current) {
         current->callback(current->priv);
@@ -56,7 +58,9 @@ __inline__ void _metal_clock_call_all_callbacks(const metal_clock_callback *cons
 /*!
  * @brief Append a callback to the linked list and return the head of the list
  */
-__inline__ metal_clock_callback *_metal_clock_append_to_callbacks(metal_clock_callback *list, metal_clock_callback *const cb) {
+__inline__ metal_clock_callback *
+_metal_clock_append_to_callbacks(metal_clock_callback *list,
+                                 metal_clock_callback *const cb) {
     cb->_next = NULL;
 
     if (!list) {
@@ -78,13 +82,14 @@ __inline__ metal_clock_callback *_metal_clock_append_to_callbacks(metal_clock_ca
  * @struct metal_clock
  * @brief The handle for a clock
  *
- * Clocks are defined as a pointer to a `struct metal_clock`, the contents of which
- * are implementation defined. Users of the clock interface must call functions
- * which accept a `struct metal_clock *` as an argument to interract with the clock.
+ * Clocks are defined as a pointer to a `struct metal_clock`, the contents of
+ * which are implementation defined. Users of the clock interface must call
+ * functions which accept a `struct metal_clock *` as an argument to interract
+ * with the clock.
  *
- * Note that no mechanism for obtaining a pointer to a `struct metal_clock` has been
- * defined, making it impossible to call any of these functions without invoking
- * implementation-defined behavior.
+ * Note that no mechanism for obtaining a pointer to a `struct metal_clock` has
+ * been defined, making it impossible to call any of these functions without
+ * invoking implementation-defined behavior.
  */
 struct metal_clock {
     const struct __metal_clock_vtable *vtable;
@@ -102,7 +107,9 @@ struct metal_clock {
  * @param clk The handle for the clock
  * @return The current rate of the clock in Hz
  */
-__inline__ long metal_clock_get_rate_hz(const struct metal_clock *clk) { return clk->vtable->get_rate_hz(clk); }
+__inline__ long metal_clock_get_rate_hz(const struct metal_clock *clk) {
+    return clk->vtable->get_rate_hz(clk);
+}
 
 /*!
  * @brief Set the current rate of a clock
@@ -115,11 +122,10 @@ __inline__ long metal_clock_get_rate_hz(const struct metal_clock *clk) { return 
  * to the given rate in Hz. Returns the actual value that's been selected, which
  * could be anything!
  *
- * Prior to and after the rate change of the clock, this will call the registered
- * pre- and post-rate change callbacks.
+ * Prior to and after the rate change of the clock, this will call the
+ * registered pre- and post-rate change callbacks.
  */
-__inline__ long metal_clock_set_rate_hz(struct metal_clock *clk, long hz)
-{
+__inline__ long metal_clock_set_rate_hz(struct metal_clock *clk, long hz) {
     _metal_clock_call_all_callbacks(clk->_pre_rate_change_callback);
 
     long out = clk->vtable->set_rate_hz(clk, hz);
@@ -135,9 +141,11 @@ __inline__ long metal_clock_set_rate_hz(struct metal_clock *clk, long hz)
  * @param clk The handle for the clock
  * @param cb The callback to be registered
  */
-__inline__ void metal_clock_register_pre_rate_change_callback(struct metal_clock *clk, metal_clock_callback *cb)
-{
-    clk->_pre_rate_change_callback = _metal_clock_append_to_callbacks(clk->_pre_rate_change_callback, cb);
+__inline__ void
+metal_clock_register_pre_rate_change_callback(struct metal_clock *clk,
+                                              metal_clock_callback *cb) {
+    clk->_pre_rate_change_callback =
+        _metal_clock_append_to_callbacks(clk->_pre_rate_change_callback, cb);
 }
 
 /*!
@@ -146,9 +154,11 @@ __inline__ void metal_clock_register_pre_rate_change_callback(struct metal_clock
  * @param clk The handle for the clock
  * @param cb The callback to be registered
  */
-__inline__ void metal_clock_register_post_rate_change_callback(struct metal_clock *clk, metal_clock_callback *cb)
-{
-    clk->_post_rate_change_callback = _metal_clock_append_to_callbacks(clk->_post_rate_change_callback, cb);
+__inline__ void
+metal_clock_register_post_rate_change_callback(struct metal_clock *clk,
+                                               metal_clock_callback *cb) {
+    clk->_post_rate_change_callback =
+        _metal_clock_append_to_callbacks(clk->_post_rate_change_callback, cb);
 }
 
 #endif

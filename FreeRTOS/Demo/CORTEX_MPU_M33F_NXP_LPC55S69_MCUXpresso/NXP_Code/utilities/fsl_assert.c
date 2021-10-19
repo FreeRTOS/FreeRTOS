@@ -14,7 +14,12 @@
 #if (defined(__CC_ARM)) || (defined(__ARMCC_VERSION)) || (defined(__ICCARM__))
 void __aeabi_assert(const char *failedExpr, const char *file, int line)
 {
+#if SDK_DEBUGCONSOLE == DEBUGCONSOLE_DISABLE
     PRINTF("ASSERT ERROR \" %s \": file \"%s\" Line \"%d\" \n", failedExpr, file, line);
+#else
+    (void)PRINTF("ASSERT ERROR \" %s \": file \"%s\" Line \"%d\" \n", failedExpr, file, line);
+#endif
+
     for (;;)
     {
         __BKPT(0);
@@ -24,7 +29,7 @@ void __aeabi_assert(const char *failedExpr, const char *file, int line)
 #if defined(__REDLIB__)
 void __assertion_failed(char *failedExpr)
 {
-    PRINTF("ASSERT ERROR \" %s \n", failedExpr);
+    (void)PRINTF("ASSERT ERROR \" %s \n", failedExpr);
     for (;;)
     {
         __BKPT(0);
@@ -33,7 +38,8 @@ void __assertion_failed(char *failedExpr)
 #else
 void __assert_func(const char *file, int line, const char *func, const char *failedExpr)
 {
-    PRINTF("ASSERT ERROR \" %s \": file \"%s\" Line \"%d\" function name \"%s\" \n", failedExpr, file, line, func);
+    (void)PRINTF("ASSERT ERROR \" %s \": file \"%s\" Line \"%d\" function name \"%s\" \n", failedExpr, file, line,
+                 func);
     for (;;)
     {
         __BKPT(0);

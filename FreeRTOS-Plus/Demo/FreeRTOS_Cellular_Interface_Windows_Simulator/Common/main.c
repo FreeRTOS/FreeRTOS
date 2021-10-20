@@ -53,6 +53,9 @@
 /* FreeRTOS Cellular Library init and setup cellular network registration. */
 extern bool setupCellular( void );
 
+/* The MQTT demo entry function. */
+extern void vStartSimpleMQTTDemo(void);
+
 /* The task function to setup cellular with thread ready environment. */
 static void CellularDemoTask( void * pvParameters );
 
@@ -171,6 +174,7 @@ static void CellularDemoTask( void * pvParameters )
 {
     bool retCellular = true;
 
+    ( void ) pvParameters;
     /* Setup cellular. */
     retCellular = setupCellular();
 

@@ -55,7 +55,7 @@
 #include "xuartps_hw.h"
 
 
-int main()
+int old_main()
 {
     init_platform();
 

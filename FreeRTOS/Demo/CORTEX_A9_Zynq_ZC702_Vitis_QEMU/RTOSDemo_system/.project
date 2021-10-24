@@ -4,6 +4,7 @@
 	<comment></comment>
 	<projects>
 		<project>RTOSDemo</project>
+		<project>zc702</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

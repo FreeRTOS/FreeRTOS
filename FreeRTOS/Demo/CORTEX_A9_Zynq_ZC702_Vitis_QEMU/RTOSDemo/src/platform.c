@@ -40,7 +40,8 @@
  * if ps7/psu init source files are added in the source directory for
  * compiling example outside of SDK.
  */
-/*#include "ps7_init.h"*/
+/*#include "ps7_init.h"_RB_*/
+extern void ps7_init( void );
 /*#include "psu_init.h"*/
 
 #ifdef STDOUT_IS_16550
@@ -98,7 +99,7 @@ init_platform()
      * Make sure that the ps7/psu_init.c and ps7/psu_init.h files are included
      * along with this example source files for compilation.
      */
-    /* ps7_init();*/
+    ps7_init(); /*_RB_*/
     /* psu_init();*/
     enable_caches();
     init_uart();

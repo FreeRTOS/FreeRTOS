@@ -43,16 +43,26 @@
  *   uartns550   9600
  *   uartlite    Configurable only in HW design
  *   ps7_uart    115200 (configured by bootrom/bsp)
+ *
+ *
+ *   QEMU command line:
+ *   qemu-system-arm -M xilinx-zynq-a9 -smp 1 -semihosting --semihosting-config enable=on,target=native -nographic -serial mon:stdio -kernel RTOSDemo.elf -s -S
  */
 
 #include <stdio.h>
 #include "platform.h"
 #include "xil_printf.h"
+#include "xuartps_hw.h"
 
 
 int main()
 {
     init_platform();
+
+	/* Initialise UART for use with QEMU. */
+	XUartPs_ResetHw( 0xE0000000 );
+	XUartPs_WriteReg(0xE0000000, XUARTPS_CR_OFFSET, ((u32)XUARTPS_CR_RX_DIS | (u32)XUARTPS_CR_TX_EN | (u32)XUARTPS_CR_STOPBRK));
+
 
     print("Hello World\n\r");
     print("Successfully ran Hello World application");

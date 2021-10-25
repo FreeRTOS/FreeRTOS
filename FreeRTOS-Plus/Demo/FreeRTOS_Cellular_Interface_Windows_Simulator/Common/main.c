@@ -54,7 +54,7 @@
 extern bool setupCellular( void );
 
 /* The MQTT demo entry function. */
-extern void vStartSimpleMQTTDemo(void);
+extern void vStartSimpleMQTTDemo( void );
 
 /* The task function to setup cellular with thread ready environment. */
 static void CellularDemoTask( void * pvParameters );

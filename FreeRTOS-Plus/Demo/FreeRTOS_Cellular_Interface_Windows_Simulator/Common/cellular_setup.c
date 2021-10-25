@@ -42,7 +42,7 @@
 /* The config header is always included first. */
 #ifndef CELLULAR_DO_NOT_USE_CUSTOM_CONFIG
     /* Include custom config file before other headers. */
-#include "cellular_config.h"
+    #include "cellular_config.h"
 #endif
 #include "cellular_config_defaults.h"
 #include "cellular_types.h"
@@ -90,6 +90,7 @@ bool setupCellular( void )
     uint32_t timeoutCountLimit = ( CELLULAR_PDN_CONNECT_TIMEOUT / CELLULAR_PDN_CONNECT_WAIT_INTERVAL_MS ) + 1U;
     uint32_t timeoutCount = 0;
     uint8_t NumStatus = 1;
+    CellularPsmSettings_t psmSettings = { 0 };
 
     /* Initialize Cellular Comm Interface. */
     cellularStatus = Cellular_Init( &CellularHandle, pCommIntf );
@@ -105,7 +106,19 @@ bool setupCellular( void )
                 ( ( simStatus.simCardState == CELLULAR_SIM_CARD_INSERTED ) &&
                   ( simStatus.simCardLockState == CELLULAR_SIM_CARD_READY ) ) )
             {
-                configPRINTF( ( ">>>  Cellular SIM okay  <<<\r\n" ) );
+                /* Turn of PSM because this is demo to showcase MQTT instead of PSM mode. */
+                psmSettings.mode = 0;
+                cellularStatus = cellularStatus = Cellular_SetPsmSettings( CellularHandle, &psmSettings );
+
+                if( cellularStatus != CELLULAR_SUCCESS )
+                {
+                    configPRINTF( ( ">>>  Cellular_SetPsmSettings failure  <<<\r\n" ) );
+                }
+                else
+                {
+                    configPRINTF( ( ">>>  Cellular SIM okay  <<<\r\n" ) );
+                }
+
                 break;
             }
             else

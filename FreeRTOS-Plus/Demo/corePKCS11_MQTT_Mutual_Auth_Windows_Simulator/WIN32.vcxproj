@@ -169,6 +169,7 @@
     <ClCompile Include="..\..\Source\corePKCS11\source\core_pki_utils.c" />
     <ClCompile Include="..\..\Source\corePKCS11\source\portable\mbedtls\core_pkcs11_mbedtls.c" />
     <ClCompile Include="..\..\Source\corePKCS11\source\portable\windows\core_pkcs11_pal.c" />
+    <ClCompile Include="..\..\Source\Utilities\mbedtls_freertos\mbedtls_bio_freertos_plus_tcp.c" />
     <ClCompile Include="..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\aes.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\aesni.c" />

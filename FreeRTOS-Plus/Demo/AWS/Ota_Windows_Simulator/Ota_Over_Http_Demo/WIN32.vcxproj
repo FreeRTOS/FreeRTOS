@@ -176,6 +176,7 @@
     <ClCompile Include="..\..\..\..\Source\AWS\ota\source\ota_interface.c" />
     <ClCompile Include="..\..\..\..\Source\AWS\ota\source\ota_mqtt.c" />
     <ClCompile Include="..\..\..\..\Source\AWS\ota\source\portable\os\ota_os_freertos.c" />
+    <ClCompile Include="..\..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_bio_freertos_plus_tcp.c" />
     <ClCompile Include="..\..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c" />
     <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\error.c" />
     <ClCompile Include="..\..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c" />

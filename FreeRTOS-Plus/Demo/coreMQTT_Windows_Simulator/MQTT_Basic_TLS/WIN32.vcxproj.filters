@@ -399,6 +399,10 @@
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
+    <ClCompile Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_bio_freertos_plus_tcp.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\NetworkInterface.h">
@@ -764,5 +768,6 @@
     <ClInclude Include="FreeRTOSIPConfig.h">
       <Filter>Config</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
   </ItemGroup>
 </Project>

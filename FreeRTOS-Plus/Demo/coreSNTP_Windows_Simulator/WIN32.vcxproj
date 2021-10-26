@@ -235,7 +235,8 @@
     <ClCompile Include="..\..\Source\corePKCS11\source\core_pkcs11.c" />
     <ClCompile Include="..\..\Source\corePKCS11\source\core_pki_utils.c" />
     <ClCompile Include="..\..\Source\corePKCS11\source\portable\mbedtls\core_pkcs11_mbedtls.c" />
-    <ClCompile Include="..\..\Source\corePKCS11\source\portable\windows\core_pkcs11_pal.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\os\core_pkcs11_pal_utils.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\os\freertos_winsim\core_pkcs11_pal.c" />
     <ClCompile Include="..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c" />
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_ARP.c" />
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_DHCP.c" />
@@ -377,6 +378,7 @@
     <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11f.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11t.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11.h" />
+    <ClInclude Include="..\..\Source\corePKCS11\source\portable\os\core_pkcs11_pal_utils.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11_pal.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pki_utils.h" />
     <ClInclude Include="..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h" />

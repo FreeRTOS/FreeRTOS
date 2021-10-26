@@ -187,6 +187,9 @@ static void CellularDemoTask( void * pvParameters )
     configASSERT( retCellular == true );
 
     /* Run the MQTT demo. */
+    /* Demos that use the network are created after the network is
+     * up. */
+    LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
     vStartSimpleMQTTDemo();
 
     vTaskDelete( NULL );

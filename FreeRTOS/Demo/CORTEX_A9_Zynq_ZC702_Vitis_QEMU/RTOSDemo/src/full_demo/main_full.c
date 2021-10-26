@@ -442,9 +442,11 @@ unsigned long ulErrorFound = pdFALSE;
 			at a higher frequency to give visible feedback that something has
 			gone wrong (it might just be that the loop back connector required
 			by the comtest tasks has not been fitted). */
-			xDelayPeriod = mainERROR_CHECK_TASK_PERIOD;
+//_RB_			xDelayPeriod = mainERROR_CHECK_TASK_PERIOD;
 			pcStatusMessage = "Error found in at least one task.";
 		}
+
+		xil_printf( "%s : %u\n", pcStatusMessage, ulErrorFound );
 	}
 }
 /*-----------------------------------------------------------*/

@@ -3,6 +3,7 @@
 	<name>RTOSDemo</name>
 	<comment>Created by Vitis v2021.1</comment>
 	<projects>
+		<project>zc702</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -96,10 +96,8 @@
  *
  * When mainSELECTED_APPLICATION is set to 1 the comprehensive test and demo
  * application will be run.
- *
- * When mainSELECTED_APPLICATION is set to 2 the lwIP example will be run.
  */
-#define mainSELECTED_APPLICATION	1
+#define mainSELECTED_APPLICATION	0
 
 /*-----------------------------------------------------------*/
 
@@ -212,9 +210,7 @@ XScuGic_Config *pxGICConfig;
 
 	/* Initialise UART for use with QEMU. */
 	XUartPs_ResetHw( 0xE0000000 );
-	XUartPs_WriteReg(0xE0000000, XUARTPS_CR_OFFSET,
-				((u32)XUARTPS_CR_RX_DIS | (u32)XUARTPS_CR_TX_EN |
-						(u32)XUARTPS_CR_STOPBRK));
+	XUartPs_WriteReg(0xE0000000, XUARTPS_CR_OFFSET, ((u32)XUARTPS_CR_RX_DIS | (u32)XUARTPS_CR_TX_EN | (u32)XUARTPS_CR_STOPBRK));
 }
 /*-----------------------------------------------------------*/
 

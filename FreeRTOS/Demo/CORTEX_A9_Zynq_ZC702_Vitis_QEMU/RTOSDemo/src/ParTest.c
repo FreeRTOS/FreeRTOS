@@ -31,6 +31,11 @@
  * PARallel port TEST.
  *-----------------------------------------------------------*/
 
+/* Standard includes for printing messages when QEMU is used (as LEDs can't be
+seen). */
+#include <stdio.h>
+#include "xil_printf.h"
+
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -85,6 +90,11 @@ BaseType_t xLEDState;
 
 	xLEDState = XGpioPs_ReadPin( &xGpio, partstLED_OUTPUT );
 	XGpioPs_WritePin( &xGpio, partstLED_OUTPUT, !xLEDState );
+
+#if( configUSING_QEMU == 1 )
+	/* Can't see the LED blink when using QEMU, so print a message as well. */
+	xil_printf( "blink\n" );
+#endif
 }
 
 

@@ -38,6 +38,7 @@ ENTRY(_vector_table)
 SECTIONS
 {
 .text : {
+   *(.freertos_vectors)
    KEEP (*(.vectors))
    *(.boot)
    *(.text)

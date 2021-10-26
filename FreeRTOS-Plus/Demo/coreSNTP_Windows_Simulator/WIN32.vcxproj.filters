@@ -41,9 +41,6 @@
     <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\coreSNTP\include">
       <UniqueIdentifier>{6ad56e6d-c330-4830-8f4b-c75b05dfa866}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\platform\logging">
-      <UniqueIdentifier>{59d75faa-e4df-4d85-bf56-67e9cc801004}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Config">
       <UniqueIdentifier>{1407130d-da4c-4bcc-8ca0-4cf77f4cf97f}</UniqueIdentifier>
     </Filter>
@@ -391,18 +388,22 @@
     <ClCompile Include="..\..\Source\corePKCS11\source\portable\mbedtls\core_pkcs11_mbedtls.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\source\portable\windows\core_pkcs11_pal.c">
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\os\freertos_winsim\core_pkcs11_pal.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\os\core_pkcs11_pal_utils.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\corePKCS11\source\core_pki_utils.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils\mbedtls_utils.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Application-Protocols\coreSNTP\source\core_sntp_serializer.c" />
     <ClCompile Include="..\..\Source\Application-Protocols\coreSNTP\source\core_sntp_client.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\error.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils\mbedtls_utils.c" />
+    <ClCompile Include="..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c" />
+    <ClCompile Include="..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\NetworkInterface.h">
@@ -474,15 +475,6 @@
     <ClInclude Include="..\..\..\FreeRTOS\Source\include\projdefs.h">
       <Filter>FreeRTOS\Source\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\logging</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_levels.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\logging</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_stack.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\logging</Filter>
-    </ClInclude>
     <ClInclude Include="FreeRTOSConfig.h">
       <Filter>Config</Filter>
     </ClInclude>
@@ -498,7 +490,7 @@
     <ClInclude Include="common_demo_include.h">
       <Filter>Config</Filter>
     </ClInclude>
-<ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\aes.h">
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\aes.h">
       <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\aesni.h">
@@ -750,6 +742,9 @@
     <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11_pal.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\corePKCS11\source\portable\os\core_pkcs11_pal_utils.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pki_utils.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include</Filter>
     </ClInclude>
@@ -757,5 +752,23 @@
     <ClInclude Include="..\..\Source\Application-Protocols\coreSNTP\source\include\core_sntp_serializer.h" />
     <ClInclude Include="..\..\Source\Application-Protocols\coreSNTP\source\include\core_sntp_client.h" />
     <ClInclude Include="core_pkcs11_config.h" />
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_errno_TCP.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_levels.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_stack.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\psa_util.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\common.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_core.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_invasive.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_its.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_se.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_service_integration.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_slot_management.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_storage.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\ssl_invasive.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
+    <ClInclude Include="..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h" />
+    <ClInclude Include="aws_mbedtls_config.h" />
+    <ClInclude Include="threading_alt.h" />
   </ItemGroup>
 </Project>

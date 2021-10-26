@@ -114,10 +114,10 @@ void mbedtls_platform_free( void * ptr );
 #define MBEDTLS_PLATFORM_FREE_MACRO      mbedtls_platform_free
 
 /* The network send and receive functions on FreeRTOS. */
-int mbedtls_platform_send( void * ctx,
+int mbedtls_cellular_send( void * ctx,
                            const unsigned char * buf,
                            size_t len );
-int mbedtls_platform_recv( void * ctx,
+int mbedtls_cellular_recv( void * ctx,
                            unsigned char * buf,
                            size_t len );
 

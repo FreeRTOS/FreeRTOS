@@ -453,9 +453,6 @@
       <Filter>Module</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
-    <ClCompile Include="..\Common\mbedtls\mbedtls_freertos_port.c">
-      <Filter>Common\mbedtls</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\cellular\sockets_wrapper.c">
@@ -463,6 +460,13 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\cellular\using_mbedtls\using_mbedtls.c" />
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
+    <ClCompile Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_bio_freertos_cellular.c">
+      <Filter>Common\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c">
+      <Filter>Common\mbedtls</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\FreeRTOS\Source\include\timers.h">
@@ -878,6 +882,7 @@
       <Filter>Common\mbedtls</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\cellular\using_mbedtls\using_mbedtls.h" />
+    <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
   </ItemGroup>
 </Project>

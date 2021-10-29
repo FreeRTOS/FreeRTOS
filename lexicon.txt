@@ -688,6 +688,7 @@ evb
 eventcallback
 eventgroup
 eventqueue
+evk
 evnt
 evt
 ewavr

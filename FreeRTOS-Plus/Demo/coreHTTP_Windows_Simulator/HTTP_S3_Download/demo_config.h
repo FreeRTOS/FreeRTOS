@@ -109,8 +109,24 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * "-----BEGIN CERTIFICATE-----\n"\
  * "...base64 data...\n"\
  * "-----END CERTIFICATE-----\n"
- * #define democonfigCLIENT_CERTIFICATE_PEM   "...insert here..." 
+ * #define democonfigIOT_CRED_PROVIDER_ROOT_CA_PEM   "...insert here..." 
  */
+
+
+/**
+ * @brief Client certificate.
+ *
+ * @note This certificate should be PEM-encoded.
+ *
+ * Must include the PEM header and footer:
+ * "-----BEGIN CERTIFICATE-----
+" * "...base64 data...
+" * "-----END CERTIFICATE-----
+"
+ *
+ * #define democonfigCLIENT_CERTIFICATE_PEM    "...insert here..."
+ */
+
 
 /**
  * @brief Client's private key.

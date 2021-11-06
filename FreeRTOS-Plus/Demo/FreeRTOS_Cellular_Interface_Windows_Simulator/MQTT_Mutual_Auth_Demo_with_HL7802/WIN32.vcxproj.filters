@@ -95,6 +95,9 @@
     <Filter Include="Common\mbedtls">
       <UniqueIdentifier>{d7c1e40c-3e7e-4e0e-b027-697eb7dd60bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include">
+      <UniqueIdentifier>{ecbccccb-07f7-402c-a775-58bae2032453}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c">
@@ -455,10 +458,6 @@
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
-    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\cellular\sockets_wrapper.c">
-      <Filter>Common\mbedtls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\cellular\using_mbedtls\using_mbedtls.c" />
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
     <ClCompile Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_bio_freertos_cellular.c">
@@ -466,6 +465,13 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c">
       <Filter>Common\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\cellular\sockets_wrapper.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\using_mbedtls\using_mbedtls\using_mbedtls.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -872,17 +878,20 @@
     </ClInclude>
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
+    <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
+    <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
+    <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
+    <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
+    <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
+    <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport</Filter>
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
-    <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
-    <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
-    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\cellular\sockets_wrapper.h">
-      <Filter>Common\mbedtls</Filter>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\cellular\sockets_wrapper.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\cellular\using_mbedtls\using_mbedtls.h" />
-    <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
-    <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\using_mbedtls\using_mbedtls\using_mbedtls.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

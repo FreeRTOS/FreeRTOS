@@ -121,6 +121,9 @@ int mbedtls_platform_recv( void * ctx,
                            unsigned char * buf,
                            size_t len );
 
+#define MBEDTLS_SSL_SEND mbedtls_platform_send
+#define MBEDTLS_SSL_RECV mbedtls_platform_recv
+
 /* The entropy poll function. */
 int mbedtls_platform_entropy_poll( void * data,
                                    unsigned char * output,

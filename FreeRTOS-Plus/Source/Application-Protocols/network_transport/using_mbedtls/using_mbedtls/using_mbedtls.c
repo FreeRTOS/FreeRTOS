@@ -48,8 +48,8 @@
 
 /*-----------------------------------------------------------*/
 
-/** 
- * @brief Each compilation unit that consumes the NetworkContext must define it. 
+/**
+ * @brief Each compilation unit that consumes the NetworkContext must define it.
  * It should contain a single pointer as seen below whenever the header file
  * of this transport implementation is included to your project.
  *
@@ -79,7 +79,7 @@ static const char * pNoLowLevelMbedTlsCodeStr = "<No-Low-Level-Code>";
  * @brief Utility for converting the high-level code in an mbedTLS error to string,
  * if the code-contains a high-level code; otherwise, using a default string.
  */
-#define mbedtlsHighLevelCodeOrDefault( mbedTlsCode )        \
+#define mbedtlsHighLevelCodeOrDefault( mbedTlsCode )       \
     ( mbedtls_high_level_strerr( mbedTlsCode ) != NULL ) ? \
     mbedtls_high_level_strerr( mbedTlsCode ) : pNoHighLevelMbedTlsCodeStr
 
@@ -87,7 +87,7 @@ static const char * pNoLowLevelMbedTlsCodeStr = "<No-Low-Level-Code>";
  * @brief Utility for converting the level-level code in an mbedTLS error to string,
  * if the code-contains a level-level code; otherwise, using a default string.
  */
-#define mbedtlsLowLevelCodeOrDefault( mbedTlsCode )        \
+#define mbedtlsLowLevelCodeOrDefault( mbedTlsCode )       \
     ( mbedtls_low_level_strerr( mbedTlsCode ) != NULL ) ? \
     mbedtls_low_level_strerr( mbedTlsCode ) : pNoLowLevelMbedTlsCodeStr
 
@@ -525,6 +525,10 @@ static TlsTransportStatus_t tlsHandshake( NetworkContext_t * pNetworkContext,
          * #mbedtls_ssl_set_bio requires the second parameter as void *.
          */
         /* coverity[misra_c_2012_rule_11_2_violation] */
+
+        /* These two macros MBEDTLS_SSL_SEND and MBEDTLS_SSL_RECV need to be
+         * defined in mbedtls_config.h according to which implementation you use.
+         */
         mbedtls_ssl_set_bio( &( pTlsTransportParams->sslContext.context ),
                              ( void * ) pTlsTransportParams->tcpSocket,
                              MBEDTLS_SSL_SEND,

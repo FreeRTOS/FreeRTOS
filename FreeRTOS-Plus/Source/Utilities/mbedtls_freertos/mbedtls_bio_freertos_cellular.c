@@ -42,7 +42,7 @@
 /*-----------------------------------------------------------*/
 
 /**
- * @brief Sends data over FreeRTOS+TCP sockets.
+ * @brief Sends data over cellular sockets.
  *
  * @param[in] ctx The network context containing the socket handle.
  * @param[in] buf Buffer containing the bytes to send.
@@ -54,20 +54,16 @@ int mbedtls_cellular_send( void * ctx,
                            const unsigned char * buf,
                            size_t len )
 {
-    Socket_t socket;
-
     configASSERT( ctx != NULL );
     configASSERT( buf != NULL );
 
-    socket = ( Socket_t ) ctx;
-
-    return Sockets_Send( socket, buf, len );
+    return Sockets_Send( ( Socket_t ) ctx, buf, len );
 }
 
 /*-----------------------------------------------------------*/
 
 /**
- * @brief Receives data from FreeRTOS+TCP socket.
+ * @brief Receives data from cellular socket.
  *
  * @param[in] ctx The network context containing the socket handle.
  * @param[out] buf Buffer to receive bytes into.
@@ -79,13 +75,22 @@ int mbedtls_cellular_recv( void * ctx,
                            unsigned char * buf,
                            size_t len )
 {
-    Socket_t socket;
+    int recvStatus = 0;
+    int returnStatus = -1;
 
     configASSERT( ctx != NULL );
     configASSERT( buf != NULL );
 
-    socket = ( Socket_t ) ctx;
+    recvStatus = Sockets_Recv( ( Socket_t ) ctx, buf, len );
 
-    return ( int ) Sockets_Recv( socket, buf, len );
+    if( recvStatus < 0 )
+    {
+        returnStatus = MBEDTLS_ERR_SSL_INTERNAL_ERROR;
+    }
+    else
+    {
+        returnStatus = recvStatus;
+    }
+
+    return returnStatus;
 }
-

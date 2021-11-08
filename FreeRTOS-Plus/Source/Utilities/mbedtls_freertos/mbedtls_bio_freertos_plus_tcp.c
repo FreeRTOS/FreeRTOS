@@ -54,15 +54,13 @@ int mbedtls_platform_send( void * ctx,
                            const unsigned char * buf,
                            size_t len )
 {
-    Socket_t socket;
     BaseType_t sendStatus = 0;
     int returnStatus = -1;
 
     configASSERT( ctx != NULL );
     configASSERT( buf != NULL );
 
-    socket = ( Socket_t ) ctx;
-    sendStatus = FreeRTOS_send( socket, buf, len, 0 );
+    sendStatus = FreeRTOS_send( ( Socket_t ) ctx, buf, len, 0 );
 
     switch( sendStatus )
     {
@@ -105,16 +103,13 @@ int mbedtls_platform_recv( void * ctx,
                            unsigned char * buf,
                            size_t len )
 {
-    Socket_t socket;
     BaseType_t recvStatus = 0;
     int returnStatus = -1;
 
     configASSERT( ctx != NULL );
     configASSERT( buf != NULL );
 
-    socket = ( Socket_t ) ctx;
-
-    recvStatus = FreeRTOS_recv( socket, buf, len, 0 );
+    recvStatus = FreeRTOS_recv( ( Socket_t ) ctx, buf, len, 0 );
 
     switch( recvStatus )
     {
@@ -139,4 +134,3 @@ int mbedtls_platform_recv( void * ctx,
 
     return returnStatus;
 }
-

@@ -498,6 +498,19 @@ static void prvGetHeaderStartLocFromHttpRequest( HTTPRequestHeaders_t * pxReques
                                                  size_t * pxHeadersDataLen );
 
 /**
+ * @brief Compute the SHA256 hash of input and output hex representation.
+ *
+ * @param[in] pcInputStr Input string to compute SHA256
+ * @param[in] xInputStrLen Length of `pcInputStr`.
+ * @param[out] pcHexOutput Output buffer for hex encoded SHA256 hash.
+ *
+ * @note The size of `pcHexOutput` should be at least HEX_ENCODED_SHA256_HASH_DIGEST_LENGTH.
+ */
+static void prvSha256Encode( const char * pcInputStr,
+                             size_t xInputStrLen,
+                             char * pcHexOutput );
+
+/**
  * @brief Application-defined Hash Initialization function provided
  * to the SigV4 library.
  *
@@ -897,6 +910,7 @@ static BaseType_t prvSendS3HttpEmptyGet( const TransportInterface_t * pxTranspor
      * used for Sigv4 signing */
     char * pcHeaderStart;
     size_t xHeadersLen;
+    static char cPayloadSha256[ HEX_ENCODED_SHA256_HASH_DIGEST_LENGTH ];
 
     configASSERT( pxTransportInterface != NULL );
     configASSERT( pcPath != NULL );
@@ -984,11 +998,12 @@ static BaseType_t prvSendS3HttpEmptyGet( const TransportInterface_t * pxTranspor
     if( xStatus == pdPASS )
     {
         /* Add the SHA256 of an empty payload. */
+        prvSha256Encode( S3_REQUEST_EMPTY_PAYLOAD, sizeof(S3_REQUEST_EMPTY_PAYLOAD) - 1, cPayloadSha256 );
         xHttpStatus = HTTPClient_AddHeader( &xRequestHeaders,
                                            SIGV4_HTTP_X_AMZ_CONTENT_SHA256_HEADER,
                                            sizeof( SIGV4_HTTP_X_AMZ_CONTENT_SHA256_HEADER ) - 1,
-                                           S3_REQUEST_EMPTY_PAYLOAD_SHA256,
-                                           sizeof( S3_REQUEST_EMPTY_PAYLOAD_SHA256 ) - 1 );
+                                           cPayloadSha256,
+                                           sizeof( cPayloadSha256 ) );
         if( xHttpStatus != HTTPSuccess )
         {
             LogError( ( "Failed to add X-AMZ-CONTENT-SHA256-HEADER to request headers: Error=%s.",
@@ -1432,4 +1447,27 @@ static void prvGetHeaderStartLocFromHttpRequest( HTTPRequestHeaders_t * pxReques
     /* Moving header pointer past "\r\n" .*/
     *pxHeadersDataLen = xHeaderLen - 2;
     *pcStartHeaderLoc = pcHeaders + 2;
+}
+
+static void prvSha256Encode( const char * pcInputStr,
+                             size_t xInputStrLen,
+                             char * pcHexOutput )
+{
+    configASSERT( pcInputStr != NULL );
+    configASSERT( xInputStrLen >= 0 );
+    configASSERT( pcHexOutput != NULL );
+
+    const char cHexChars[] = "0123456789abcdef";
+    char * pcOutputChar = pcHexOutput;
+    static uint8_t ucSha256[ SHA256_HASH_DIGEST_LENGTH ];
+
+    mbedtls_sha256_ret( pcInputStr, xInputStrLen, ucSha256, 0 );
+
+    for(size_t i = 0; i < SHA256_HASH_DIGEST_LENGTH; i++ )
+    {
+        *pcOutputChar = cHexChars[ ( ucSha256[ i ] & 0xF0 ) >> 4 ];
+        pcOutputChar++;
+        *pcOutputChar = cHexChars[ ( ucSha256[ i ] & 0x0F ) ];
+        pcOutputChar++;
+    }
 }

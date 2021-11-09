@@ -605,21 +605,12 @@ static void prvHTTPDemoTask( void * pvParameters )
     NetworkContext_t xNetworkContext = { 0 };
     TlsTransportParams_t xTlsTransportParams = { 0 };
     BaseType_t xIsConnectionEstablished = pdFALSE;
-    /* HTTP Client library return status. */
-    HTTPStatus_t xHTTPStatus = HTTPSuccess;
     UBaseType_t uxDemoRunCount = 0UL;
     /* Response from IoT credential provider */
     HTTPResponse_t xCredentialResponse = { 0 };
 
     /* The user of this demo must check the logs for any failure codes. */
     BaseType_t xDemoStatus = pdPASS;
-
-    /* The length of the path within the pre-signed URL. This variable is
-     * defined in order to store the length returned from parsing the URL, but
-     * it is unused. The path used for the requests in this demo needs all the
-     * query information following the location of the object, to the end of the
-     * S3 presigned URL. */
-    size_t xPathLen = 0;
 
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
@@ -758,7 +749,6 @@ static BaseType_t prvConnectToServer( NetworkContext_t * pxNetworkContext,
                                       NetworkCredentials_t * pxNetworkCredentials )
 {
     TlsTransportStatus_t xNetworkStatus;
-    NetworkCredentials_t xNetworkCredentials = { 0 };
 
     configASSERT( pxNetworkContext != NULL );
 
@@ -783,7 +773,7 @@ static BaseType_t prvConnectToS3Server( NetworkContext_t * pxNetworkContext )
     NetworkCredentials_t xNetworkCredentials = { 0 };
     xNetworkCredentials.disableSni = democonfigDISABLE_SNI;
     /* Set the credentials for establishing a TLS connection. */
-    xNetworkCredentials.pRootCa = democonfigS3_ROOT_CA_PEM;
+    xNetworkCredentials.pRootCa = ( uint8_t * )democonfigS3_ROOT_CA_PEM;
     xNetworkCredentials.rootCaSize = sizeof( democonfigS3_ROOT_CA_PEM );
 
     return prvConnectToServer( pxNetworkContext, AWS_S3_ENDPOINT, &xNetworkCredentials );
@@ -794,11 +784,11 @@ static BaseType_t prvConnectToIotServer( NetworkContext_t * pxNetworkContext )
     NetworkCredentials_t xNetworkCredentials = { 0 };
     xNetworkCredentials.disableSni = democonfigDISABLE_SNI;
     /* Set the credentials for establishing a TLS connection. */
-    xNetworkCredentials.pRootCa =  democonfigIOT_CRED_PROVIDER_ROOT_CA_PEM;
+    xNetworkCredentials.pRootCa =  ( uint8_t * )democonfigIOT_CRED_PROVIDER_ROOT_CA_PEM;
     xNetworkCredentials.rootCaSize = sizeof( democonfigIOT_CRED_PROVIDER_ROOT_CA_PEM );
-    xNetworkCredentials.pClientCert = democonfigCLIENT_CERTIFICATE_PEM;
+    xNetworkCredentials.pClientCert = ( uint8_t * )democonfigCLIENT_CERTIFICATE_PEM;
     xNetworkCredentials.clientCertSize = sizeof( democonfigCLIENT_CERTIFICATE_PEM );
-    xNetworkCredentials.pPrivateKey = democonfigCLIENT_PRIVATE_KEY_PEM;
+    xNetworkCredentials.pPrivateKey = ( uint8_t * )democonfigCLIENT_PRIVATE_KEY_PEM;
     xNetworkCredentials.privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
 
     return prvConnectToServer( pxNetworkContext, democonfigIOT_CREDENTIAL_PROVIDER_ENDPOINT, &xNetworkCredentials );

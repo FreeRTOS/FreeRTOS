@@ -373,7 +373,7 @@ static void prvHTTPDemoTask( void * pvParameters );
 /**
  * @brief Establish a HTTP connection with AWS S3 server.
  *
- * @param[in] pxTransportInterface The transport interface for making network calls.
+ * @param[in] pxNetworkContext The network context for communication.
  * @param[in] pcServer Address of the server to connect to.
  * @param[in] pxNetworkCredentials Credentials for connecting to the server.
  *
@@ -385,7 +385,7 @@ static BaseType_t prvConnectToServer( NetworkContext_t * pxNetworkContext,
 /**
  * @brief Establish a HTTP connection with AWS S3 server.
  *
- * @param[in] pxTransportInterface The transport interface for making network calls.
+ * @param[in] pxNetworkContext The network context for communication.
  *
  * @return pdPASS on success, pdFAIL on failure.
  */
@@ -394,7 +394,7 @@ static BaseType_t prvConnectToS3Server( NetworkContext_t * pxNetworkContext );
 /**
  * @brief Establish a HTTP connection with AWS IoT credential provider server.
  *
- * @param[in] pxTransportInterface The transport interface for making network calls.
+ * @param[in] pxNetworkContext The network context for communication.
  *
  * @return pdPASS on success, pdFAIL on failure.
  */
@@ -591,7 +591,7 @@ void vStartSimpleHTTPDemo( void )
  *
  * This demo demonstrates downloading a file from S3 using SigV4 authentication.
  * First the demo establishes a TLS connection with IoT credential provider
- * server to obtain a temporary credential. Then it connects to S3 server and
+ * server to obtain temporary credentials. Then it connects to S3 server and
  * sends HTTP requests to download the file.
  *
  * @note This example is single-threaded.

@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202107.00
- * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /*
@@ -209,16 +208,25 @@ static void prvInitializeUartReceivedInterrupt( void )
 static void userButtonPressedHandler( pint_pin_int_t xInterruptType, uint32_t ulMatchStatus )
 {
     UserIrqRequest_t xIrqRequest;
+    BaseType_t xHigherPriorityTaskWoken;
 
     /* Silence warnings about unused variables. */
     ( void ) xInterruptType;
     ( void ) ulMatchStatus;
 
+    /* We have not woken a task at the start of the ISR. */
+    xHigherPriorityTaskWoken = pdFALSE;
+
     /* Enqueue a request to user IRQ queue to be processed in the unprivileged
      * interrupt handler. */
     xIrqRequest.xHandlerFunction = vButtonPressedIRQHandler;
     xIrqRequest.ulData = 0; /* Not used. */
-    xQueueSendFromISR( xUserIrqQueueHandle, &( xIrqRequest ), NULL );
+    xQueueSendFromISR( xUserIrqQueueHandle, &( xIrqRequest ), &( xHigherPriorityTaskWoken ) );
+
+    /* Posting the above request might have unblocked the interrupt handler task.
+     * Make sure to return to the interrupt handler task in case it was not already
+     * running. */
+    portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 
@@ -226,6 +234,10 @@ static void userButtonPressedHandler( pint_pin_int_t xInterruptType, uint32_t ul
 void FLEXCOMM0_IRQHandler(void)
 {
     UserIrqRequest_t xIrqRequest;
+    BaseType_t xHigherPriorityTaskWoken;
+
+    /* We have not woken a task at the start of the ISR. */
+    xHigherPriorityTaskWoken = pdFALSE;
 
     /* If new data arrived. */
     if( ( kUSART_RxFifoNotEmptyFlag | kUSART_RxError ) & USART_GetStatusFlags( USART0 ) )
@@ -234,8 +246,13 @@ void FLEXCOMM0_IRQHandler(void)
          * interrupt handler. */
         xIrqRequest.xHandlerFunction = vUartDataReceivedIRQHandler;
         xIrqRequest.ulData = ( uint32_t ) USART_ReadByte( USART0 );
-        xQueueSendFromISR( xUserIrqQueueHandle, &( xIrqRequest ), NULL );
+        xQueueSendFromISR( xUserIrqQueueHandle, &( xIrqRequest ), &( xHigherPriorityTaskWoken ) );
     }
+
+    /* Posting the above request might have unblocked the interrupt handler task.
+     * Make sure to return to the interrupt handler task in case it was not already
+     * running. */
+    portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 

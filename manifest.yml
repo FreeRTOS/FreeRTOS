@@ -122,4 +122,11 @@ dependencies:
       url: "https://github.com/FreeRTOS/FreeRTOS-Partner-Supported-Demos"
       path: "FreeRTOS/Demo/ThirdParty/Partner-Supported-Demos"
 
+  - name: "FreeRTOS-Cellular-Interface"
+    version: "d35316b"
+    repository:
+      type: "git"
+      url: "https://github.com/FreeRTOS/FreeRTOS-Cellular-Interface.git"
+      path: "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface"
+
 license: "MIT"

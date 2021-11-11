@@ -21,6 +21,7 @@
  *
  * https://www.FreeRTOS.org
  * https://github.com/FreeRTOS
+ *
  */
 
 #ifndef __CELLULAR_PLATFORM_H__

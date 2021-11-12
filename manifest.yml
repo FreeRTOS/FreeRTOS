@@ -1,5 +1,5 @@
 name : "FreeRTOS"
-version: "202107.00"
+version: "202111.00"
 description: "This is the standard distribution of FreeRTOS."
 
 dependencies:
@@ -123,7 +123,7 @@ dependencies:
       path: "FreeRTOS/Demo/ThirdParty/Partner-Supported-Demos"
 
   - name: "FreeRTOS-Cellular-Interface"
-    version: "3f8ab4d"
+    version: "v1.1.0"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Cellular-Interface.git"

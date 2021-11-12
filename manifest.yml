@@ -18,56 +18,56 @@ dependencies:
       path: "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP"
 
   - name: "coreJSON"
-    version: "a1c702e"
+    version: "2c1cebf"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreJSON.git"
       path: "FreeRTOS-Plus/Source/coreJSON"
 
   - name: "coreHTTP"
-    version: "e006f10"
+    version: "c4f04ea"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreHTTP.git"
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreHTTP"
 
   - name: "coreMQTT"
-    version: "73eee0b"
+    version: "785f2f2"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreMQTT.git"
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT"
 
   - name: "coreMQTT Agent"
-    version: "63312b5"
+    version: "5efcee2"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreMQTT-Agent.git"
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent"
 
   - name: "corePKCS11"
-    version: "f0877a3"
+    version: "ca5f8e4"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/corePKCS11.git"
       path: "FreeRTOS-Plus/Source/corePKCS11"
 
   - name: "device-defender"
-    version: "d21c4d8"
+    version: "a405231"
     repository:
       type: "git"
       url: "https://github.com/aws/Device-Defender-for-AWS-IoT-embedded-sdk.git"
       path: "FreeRTOS-Plus/Source/AWS/device-defender"
 
   - name: "device-shadow"
-    version: "e14ee90"
+    version: "92327cd"
     repository:
       type: "git"
       url: "https://github.com/aws/Device-Shadow-for-AWS-IoT-embedded-sdk.git"
       path: "FreeRTOS-Plus/Source/AWS/device-shadow"
 
   - name: "jobs"
-    version: "dbd52eb"
+    version: "0476210"
     repository:
       type: "git"
       url: "https://github.com/aws/Jobs-for-AWS-IoT-embedded-sdk.git"
@@ -102,7 +102,7 @@ dependencies:
       path: "FreeRTOS-Plus/Source/AWS/ota"
 
   - name: "coreSNTP"
-    version: "03e9f9c"
+    version: "7c54c2b"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreSNTP"

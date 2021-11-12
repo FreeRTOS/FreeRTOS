@@ -18,56 +18,56 @@ dependencies:
       path: "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP"
 
   - name: "coreJSON"
-    version: "2c1cebf"
+    version: "v3.1.0"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreJSON.git"
       path: "FreeRTOS-Plus/Source/coreJSON"
 
   - name: "coreHTTP"
-    version: "c4f04ea"
+    version: "v2.1.0"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreHTTP.git"
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreHTTP"
 
   - name: "coreMQTT"
-    version: "785f2f2"
+    version: "v1.2.0"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreMQTT.git"
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT"
 
   - name: "coreMQTT Agent"
-    version: "5efcee2"
+    version: "v1.1.0"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreMQTT-Agent.git"
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent"
 
   - name: "corePKCS11"
-    version: "ca5f8e4"
+    version: "v3.3.0"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/corePKCS11.git"
       path: "FreeRTOS-Plus/Source/corePKCS11"
 
   - name: "device-defender"
-    version: "a405231"
+    version: "v1.2.0"
     repository:
       type: "git"
       url: "https://github.com/aws/Device-Defender-for-AWS-IoT-embedded-sdk.git"
       path: "FreeRTOS-Plus/Source/AWS/device-defender"
 
   - name: "device-shadow"
-    version: "92327cd"
+    version: "v1.2.0"
     repository:
       type: "git"
       url: "https://github.com/aws/Device-Shadow-for-AWS-IoT-embedded-sdk.git"
       path: "FreeRTOS-Plus/Source/AWS/device-shadow"
 
   - name: "jobs"
-    version: "0476210"
+    version: "v1.2.0"
     repository:
       type: "git"
       url: "https://github.com/aws/Jobs-for-AWS-IoT-embedded-sdk.git"
@@ -88,7 +88,7 @@ dependencies:
       path: "FreeRTOS-Plus/ThirdParty/mbedtls"
 
   - name: "backoffAlgorithm"
-    version: "1237825"
+    version: "v1.2.0"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/backoffAlgorithm"
@@ -102,7 +102,7 @@ dependencies:
       path: "FreeRTOS-Plus/Source/AWS/ota"
 
   - name: "coreSNTP"
-    version: "7c54c2b"
+    version: "v1.1.0"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreSNTP"

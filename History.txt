@@ -1,5 +1,10 @@
 Documentation and download available at https://www.FreeRTOS.org/
 
+Changes between FreeRTOS 202107.00 and FreeRTOS 202111.00 released November 2021
+
+	+ Add Cellular library and demo showcasing use of Cellular library.
+	+ Add demo project for [PolarFire SoC FPGA Icicle Kit](https://www.microsemi.com/existing-parts/parts/152514).
+
 Changes between FreeRTOS 202104.00 and FreeRTOS 202107.00 released July 2021
 
 	+ Release coreSNTP v1.0.0, a client library for SNTP communication.

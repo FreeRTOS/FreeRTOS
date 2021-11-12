@@ -4,7 +4,7 @@ description: "This is the standard distribution of FreeRTOS."
 
 dependencies:
   - name: "FreeRTOS-Kernel"
-    version: "fa0f5c4"
+    version: "a432a68"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Kernel.git"
@@ -46,7 +46,7 @@ dependencies:
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent"
 
   - name: "corePKCS11"
-    version: "997124b"
+    version: "f0877a3"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/corePKCS11.git"
@@ -121,5 +121,12 @@ dependencies:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Partner-Supported-Demos"
       path: "FreeRTOS/Demo/ThirdParty/Partner-Supported-Demos"
+
+  - name: "FreeRTOS-Cellular-Interface"
+    version: "3f8ab4d"
+    repository:
+      type: "git"
+      url: "https://github.com/FreeRTOS/FreeRTOS-Cellular-Interface.git"
+      path: "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface"
 
 license: "MIT"

@@ -389,8 +389,8 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
             /* coverity[misra_c_2012_rule_11_2_violation] */
             mbedtls_ssl_set_bio( &( pTlsTransportParams->sslContext.context ),
                                  ( void * ) pTlsTransportParams->tcpSocket,
-                                 mbedtls_platform_send,
-                                 mbedtls_platform_recv,
+                                 MBEDTLS_SSL_SEND,
+                                 MBEDTLS_SSL_RECV,
                                  NULL );
         }
     }

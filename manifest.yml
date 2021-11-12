@@ -88,7 +88,7 @@ dependencies:
       path: "FreeRTOS-Plus/ThirdParty/mbedtls"
 
   - name: "backoffAlgorithm"
-    version: "5db5777"
+    version: "1237825"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/backoffAlgorithm"

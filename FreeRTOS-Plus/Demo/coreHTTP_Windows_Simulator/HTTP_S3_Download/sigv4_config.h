@@ -24,12 +24,6 @@
  *
  */
 
-/**
- * @file sigv4_config.h
- * @brief Values for configuration macros provided by the application to be
- * used by the SigV4 Utility Library.
- */
-
 #ifndef SIGV4_CONFIG_H_
 #define SIGV4_CONFIG_H_
 

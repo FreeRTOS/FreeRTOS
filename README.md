@@ -1,4 +1,9 @@
-The [FreeRTOS 202107.00](https://github.com/FreeRTOS/FreeRTOS/tree/202107.00) release introduces the new [coreSNTP library](https://github.com/FreeRTOS/coreSNTP) to allow IoT devices to synchronize their system clocks with time servers using Simple Time Network Protocol (SNTP). A demo of using the library to maintain wall-clock (or real-time) in the system can be seen [here](https://github.com/FreeRTOS/FreeRTOS/tree/202107.00/FreeRTOS-Plus/Demo/coreSNTP_Windows_Simulator).
+The [FreeRTOS 202111.00](https://github.com/FreeRTOS/FreeRTOS/tree/202111.00) release
+adds [examples](https://github.com/FreeRTOS/FreeRTOS/tree/main/FreeRTOS-Plus/Demo/FreeRTOS_Cellular_Interface_Windows_Simulator)
+demonstrating the use of [FreeRTOS Cellular Interface](https://github.com/FreeRTOS/FreeRTOS-Cellular-Interface).
+The release also adds an [example](https://github.com/FreeRTOS/FreeRTOS/tree/main/FreeRTOS/Demo/Safer_Interrupts_M33F_NXP_LPC55S69_MCUXpresso)
+that demonstrates a method of minimizing the time an application spends in privileged mode
+in FreeRTOS ports on microcontrollers (MCU) with Memory Protection Unit (MPU) support.
 
 ## Getting started
 The [FreeRTOS.org](https://www.freertos.org) website contains a [FreeRTOS Kernel Quick Start Guide](https://www.freertos.org/FreeRTOS-quick-start-guide.html), a [list of supported devices and compilers](https://www.freertos.org/RTOS_ports.html), the [API reference](https://www.freertos.org/a00106.html), and many other resources.

@@ -58,7 +58,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\Source\Utilities\mbedtls_freertos;..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\Common\WinPCap;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\include;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\dependency\3rdparty\pkcs11;..\..\ThirdParty\mbedtls\include;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\Source\Application-Protocols\coreSNTP\source\include;..\..\Source\Utilities\backoff_algorithm\source\include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Source\Utilities\mbedtls_freertos;..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\Common\WinPCap;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\include;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\dependency\3rdparty\pkcs11;..\..\ThirdParty\mbedtls\include;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\Source\Application-Protocols\coreSNTP\source\include;..\..\Source\Utilities\backoff_algorithm\source\include;.;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\portable\os;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;MBEDTLS_CONFIG_FILE="mbedtls_config.h";CONFIG_MEDTLS_USE_AFR_MEMORY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -235,8 +235,10 @@
     <ClCompile Include="..\..\Source\corePKCS11\source\core_pkcs11.c" />
     <ClCompile Include="..\..\Source\corePKCS11\source\core_pki_utils.c" />
     <ClCompile Include="..\..\Source\corePKCS11\source\portable\mbedtls\core_pkcs11_mbedtls.c" />
-    <ClCompile Include="..\..\Source\corePKCS11\source\portable\windows\core_pkcs11_pal.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\os\core_pkcs11_pal_utils.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\os\freertos_winsim\core_pkcs11_pal.c" />
     <ClCompile Include="..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c" />
+    <ClCompile Include="..\..\Source\Utilities\mbedtls_freertos\mbedtls_bio_freertos_plus_tcp.c" />
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_ARP.c" />
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_DHCP.c" />
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_DNS.c" />
@@ -377,6 +379,7 @@
     <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11f.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11t.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11.h" />
+    <ClInclude Include="..\..\Source\corePKCS11\source\portable\os\core_pkcs11_pal_utils.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11_pal.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pki_utils.h" />
     <ClInclude Include="..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h" />

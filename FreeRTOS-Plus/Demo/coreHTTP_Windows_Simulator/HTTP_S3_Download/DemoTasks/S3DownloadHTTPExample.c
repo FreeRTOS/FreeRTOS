@@ -263,11 +263,6 @@
 #define S3_REQUEST_EMPTY_PAYLOAD                      ""
 
 /**
- * @brief Precomputed SHA-256 hash of S3_REQUEST_EMPTY_PAYLOAD
- */
-#define S3_REQUEST_EMPTY_PAYLOAD_SHA256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-
-/**
  * @brief The maximum number of times to run the loop in this demo.
  *
  * @note The demo loop is re-run only if the demo fails initially. Once the demo

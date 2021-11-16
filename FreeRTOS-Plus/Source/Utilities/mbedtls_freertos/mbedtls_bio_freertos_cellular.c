@@ -33,6 +33,9 @@
 #include "FreeRTOS.h"
 #include "FreeRTOS_Sockets.h"
 
+/* Sockets wrapper includes. */
+#include "sockets_wrapper.h"
+
 /* mbed TLS includes. */
 #include "mbedtls_config.h"
 #include "threading_alt.h"

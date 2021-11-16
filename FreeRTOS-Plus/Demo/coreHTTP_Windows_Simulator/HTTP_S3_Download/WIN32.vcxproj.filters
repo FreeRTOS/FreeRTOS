@@ -77,6 +77,18 @@
     <Filter Include="Config">
       <UniqueIdentifier>{64d18fee-0d61-476f-b5e2-9a778d994c6f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\coreJSON">
+      <UniqueIdentifier>{920b26be-50b9-439f-af06-96f14427dd9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\coreJSON\include">
+      <UniqueIdentifier>{6b025b5c-b332-47e5-b751-b0aa5c21455d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\platform\sigv4">
+      <UniqueIdentifier>{168b4967-2a71-4793-8c4d-7fd177d5b76e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\platform\sigv4\include">
+      <UniqueIdentifier>{01f6051a-2c97-4942-bc76-90b1a968647d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c">
@@ -385,6 +397,12 @@
     <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\backoff_algorithm</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls\using_mbedtls.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\sockets_wrapper.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\core_http_client.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP</Filter>
     </ClCompile>
@@ -392,6 +410,15 @@
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
+    <ClCompile Include="..\..\..\Source\coreJSON\source\core_json.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreJSON</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\AWS\sigv4\source\sigv4.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\sigv4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\AWS\sigv4\source\sigv4_quicksort.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\sigv4</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_bio_freertos_plus_tcp.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
     </ClCompile>
@@ -720,6 +747,12 @@
     <ClInclude Include="..\..\..\Source\Utilities\mbedtls_freertos\threading_alt.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\sockets_wrapper.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls\using_mbedtls.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_errno_TCP.h">
       <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
     </ClInclude>
@@ -763,6 +796,20 @@
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
+    <ClInclude Include="..\..\..\Source\coreJSON\source\include\core_json.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreJSON\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\AWS\sigv4\source\include\sigv4.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\sigv4\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\AWS\sigv4\source\include\sigv4_config_defaults.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\sigv4\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\AWS\sigv4\source\include\sigv4_internal.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\sigv4\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\AWS\sigv4\source\include\sigv4_quicksort.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\sigv4\include</Filter>
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\using_mbedtls\using_mbedtls\using_mbedtls.h">

@@ -58,6 +58,9 @@
 [submodule "FreeRTOS/Demo/ThirdParty/Partner-Supported-Demos"]
 	path = FreeRTOS/Demo/ThirdParty/Partner-Supported-Demos
 	url = https://github.com/FreeRTOS/FreeRTOS-Partner-Supported-Demos
+[submodule "FreeRTOS-Plus/Source/AWS/sigv4"]
+	path = FreeRTOS-Plus/Source/AWS/sigv4
+	url = https://github.com/aws/SigV4-for-AWS-IoT-embedded-sdk.git
 [submodule "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface"]
 	path = FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface
 	url = https://github.com/FreeRTOS/Lab-Project-FreeRTOS-Cellular-Library.git

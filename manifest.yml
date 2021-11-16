@@ -24,6 +24,13 @@ dependencies:
       url: "https://github.com/FreeRTOS/coreJSON.git"
       path: "FreeRTOS-Plus/Source/coreJSON"
 
+  - name: "sigv4"
+    version: "1945a7e"
+    repository:
+      type: "git"
+      url: "https://github.com/aws/SigV4-for-AWS-IoT-embedded-sdk.git"
+      path: "FreeRTOS-Plus/Source/AWS/sigv4"
+
   - name: "coreHTTP"
     version: "v2.1.0"
     repository:

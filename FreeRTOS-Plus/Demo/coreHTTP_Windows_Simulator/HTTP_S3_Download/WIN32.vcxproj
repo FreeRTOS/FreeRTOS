@@ -58,7 +58,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\..\Common\WinPCap;..\..\..\..\FreeRTOS\Source\include;..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\Source\Application-Protocols\coreHTTP\source\include;..\..\..\Source\Application-Protocols\coreHTTP\source\interface;..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser;..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp;..\..\..\Source\Application-Protocols\network_transport\using_mbedtls\using_mbedtls;..\..\..\Source\Utilities\mbedtls_freertos;..\..\..\..\Source\mbedtls_utils;..\..\..\ThirdParty\mbedtls\include;..\Common;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\..\Common\WinPCap;..\..\..\..\FreeRTOS\Source\include;..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\Source\Application-Protocols\coreHTTP\source\include;..\..\..\Source\Application-Protocols\coreHTTP\source\interface;..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser;..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp;..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls;..\..\..\Source\Utilities\mbedtls_freertos;..\..\..\..\Source\mbedtls_utils;..\..\..\ThirdParty\mbedtls\include;..\Common;.;%(AdditionalIncludeDirectories);..\..\..\Source\coreJSON\source\include;..\..\..\Source\AWS\sigv4\source\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config.h";WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -157,6 +157,14 @@
     <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_UDP_IP.c" />
     <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement\BufferAllocation_2.c" />
     <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\NetworkInterface\WinPCap\NetworkInterface.c" />
+    <ClCompile Include="..\..\..\Source\AWS\sigv4\source\sigv4.c" />
+    <ClCompile Include="..\..\..\Source\AWS\sigv4\source\sigv4_quicksort.c" />
+    <ClCompile Include="..\..\..\Source\coreJSON\source\core_json.c" />
+    <ClCompile Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c" />
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
+    <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\sockets_wrapper.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls\using_mbedtls.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\using_mbedtls\using_mbedtls\using_mbedtls.c" />
     <ClCompile Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_bio_freertos_plus_tcp.c" />
@@ -517,6 +525,16 @@
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreHTTP\source\include\core_http_client_private.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreHTTP\source\include\core_http_config_defaults.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h" />
+    <ClInclude Include="..\..\..\Source\AWS\sigv4\source\include\sigv4.h" />
+    <ClInclude Include="..\..\..\Source\AWS\sigv4\source\include\sigv4_config_defaults.h" />
+    <ClInclude Include="..\..\..\Source\AWS\sigv4\source\include\sigv4_internal.h" />
+    <ClInclude Include="..\..\..\Source\AWS\sigv4\source\include\sigv4_quicksort.h" />
+    <ClInclude Include="..\..\..\Source\coreJSON\source\include\core_json.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_errno_TCP.h" />
+    <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
+    <ClInclude Include="..\..\..\Source\Utilities\mbedtls_freertos\threading_alt.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\sockets_wrapper.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls\using_mbedtls.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\using_mbedtls\using_mbedtls\using_mbedtls.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_errno_TCP.h" />

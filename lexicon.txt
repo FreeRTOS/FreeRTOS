@@ -1,5 +1,6 @@
 ab
 abs
+accesskeyid
 acclerator
 ack
 acks
@@ -33,6 +34,7 @@ amout
 ampcorea
 ampm
 amptask
+amz
 amzn
 ansi
 ap
@@ -390,6 +392,7 @@ controltask
 coprocessor
 copybrief
 corehttp
+corejson
 coremqtt
 corepkcs
 coresntp
@@ -417,6 +420,7 @@ createfile
 createfileforrx
 createthread
 creceivedstring
+credentialprovider
 cren
 crend
 crflash
@@ -430,6 +434,7 @@ crxlock
 crxstring
 crypotki
 crypto
+cryptointerface
 cryptoki
 csamplepagefirstpart
 csamplepagesecondpart
@@ -453,6 +458,7 @@ ctx
 ctxbuffer
 ctxlock
 ctxstring
+curbyte
 curson
 cvore
 cwd
@@ -1024,6 +1030,7 @@ irqn
 irqs
 ish
 isn
+iso
 isr
 isrcode
 isrs
@@ -1053,6 +1060,10 @@ jp
 jquery
 js
 json
+jsonbadparameter
+jsonnotfound
+jsonnullparameter
+jsonsuccess
 jtag
 jtvic
 june
@@ -1502,7 +1513,9 @@ pcfilebuffer
 pcfilename
 pcfrom
 pchelpstring
+pchexoutput
 pchost
+pcinputstr
 pcjobdocument
 pcjobid
 pcjobstatusreport
@@ -1538,8 +1551,10 @@ pcrestcommand
 pcrootdir
 pcrxbuffer
 pcrxedchar
+pcserver
 pcshadowname
 pcsource
+pcstartheaderloc
 pcstatusmessage
 pcstring
 pcstringtoreceive
@@ -1913,6 +1928,7 @@ psocket
 psr
 psregistrationstatus
 psslcontext
+pstartheaderloc
 pstplatformimagestate
 psval
 psw
@@ -2020,6 +2036,7 @@ pxdeserializedinfo
 pxexpiredtimer
 pxfilesize
 pxftpclient
+pxheadersdatalen
 pxhigherprioritytaskwoken
 pxincomingpacket
 pxincomingpublishcallback
@@ -2050,9 +2067,12 @@ pxpublishinfo
 pxqueue
 pxreadhandle
 pxreportdescriptor
+pxrequestheaders
 pxrequestinfo
+pxresponse
 pxreturninfo
 pxsiglen
+pxsigvcreds
 pxslotid
 pxsocket
 pxstaticstreambuffer
@@ -2249,6 +2269,7 @@ sctlr
 sdk
 sdklog
 sec
+secretaccesskey
 seg
 segfault
 sel
@@ -2278,6 +2299,7 @@ sertx
 serveraddr
 serverhost
 serverport
+sessiontoken
 setbaudratevalue
 setfaketaskpriority
 setimagestate
@@ -2692,6 +2714,8 @@ ulport
 ulprescale
 ulpriority
 ulprioritysetcounter
+ulrangeend
+ulrangestart
 ulreaddata
 ulreceivedvalue
 ulrecvbytes
@@ -3169,6 +3193,7 @@ xilinx
 xincrement
 xindex
 xinterface
+xinputstrlen
 xinterruptcontroller
 xiptracevalues
 xirqrequest

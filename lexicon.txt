@@ -1928,6 +1928,7 @@ psocket
 psr
 psregistrationstatus
 psslcontext
+pstartheaderloc
 pstplatformimagestate
 psval
 psw

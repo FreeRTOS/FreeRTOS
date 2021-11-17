@@ -1,5 +1,6 @@
 /*
  * FreeRTOS V202111.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -21,12 +22,6 @@
  * https://www.FreeRTOS.org
  * https://github.com/FreeRTOS
  *
- */
-
-/**
- * @file sigv4_config.h
- * @brief Values for configuration macros provided by the application to be
- * used by the SigV4 Utility Library.
  */
 
 #ifndef SIGV4_CONFIG_H_

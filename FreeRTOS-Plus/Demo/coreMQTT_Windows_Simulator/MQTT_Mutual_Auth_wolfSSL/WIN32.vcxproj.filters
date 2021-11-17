@@ -402,10 +402,10 @@
     <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\using_mbedtls\using_wolfSSL\using_wolfSSL.c">
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c">
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\using_wolfSSL\using_wolfSSL.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -753,10 +753,10 @@
     <ClInclude Include="..\..\..\Source\Utilities\logging\logging.h" />
     <ClInclude Include="..\..\..\Source\Utilities\logging\logging_levels.h" />
     <ClInclude Include="..\..\..\Source\Utilities\logging\logging_stack.h" />
-    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\using_mbedtls\using_wolfSSL\using_wolfSSL.h">
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h">
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\using_wolfSSL\using_wolfSSL.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
     </ClInclude>
   </ItemGroup>

@@ -58,7 +58,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\Common\WinPCap;..\..\..\..\FreeRTOS\Source\include;..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\FreeRTOS-Plus\Source\Application-Protocols\coreMQTT\source\include;..\..\..\..\FreeRTOS-Plus\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\..\FreeRTOS-Plus\Source\Utilities\backoff_algorithm\source\include;..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp;..\..\..\Source\Application-Protocols\network_transport\using_mbedtls\using_wolfSSL;..\..\..\Source\Utilities\wolfSSL_freertos;..\..\..\ThirdParty\wolfSSL;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\Common\WinPCap;..\..\..\..\FreeRTOS\Source\include;..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\FreeRTOS-Plus\Source\Application-Protocols\coreMQTT\source\include;..\..\..\..\FreeRTOS-Plus\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\..\FreeRTOS-Plus\Source\Utilities\backoff_algorithm\source\include;..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp;..\..\..\Source\Application-Protocols\network_transport\using_wolfSSL;..\..\..\Source\Utilities\wolfSSL_freertos;..\..\..\ThirdParty\wolfSSL;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WOLFSSL_USER_SETTINGS;WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -162,7 +162,7 @@
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c" />
-    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\using_mbedtls\using_wolfSSL\using_wolfSSL.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\using_wolfSSL\using_wolfSSL.c" />
     <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c" />
     <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\bio.c" />
     <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\crl.c" />
@@ -362,7 +362,7 @@
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_state.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h" />
-    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\using_mbedtls\using_wolfSSL\using_wolfSSL.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\using_wolfSSL\using_wolfSSL.h" />
     <ClInclude Include="..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h" />
     <ClInclude Include="..\..\..\Source\Utilities\logging\logging.h" />
     <ClInclude Include="..\..\..\Source\Utilities\logging\logging_levels.h" />

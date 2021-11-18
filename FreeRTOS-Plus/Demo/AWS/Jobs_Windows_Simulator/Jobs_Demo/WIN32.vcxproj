@@ -58,7 +58,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\..\..\Common\WinPCap;..\..\..\..\..\FreeRTOS\Source\include;..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp;..\..\..\..\Source\Application-Protocols\network_transport\using_mbedtls\using_mbedtls;..\..\..\..\Source\Utilities\mbedtls_freertos;..\..\..\..\..\Source\mbedtls_utils;..\..\..\..\ThirdParty\mbedtls\include;..\..\..\..\Source\AWS\jobs\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\Mqtt_Demo_Helpers;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\..\..\Common\WinPCap;..\..\..\..\..\FreeRTOS\Source\include;..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp;..\..\..\..\Source\Application-Protocols\network_transport\using_mbedtls;..\..\..\..\Source\Utilities\mbedtls_freertos;..\..\..\..\..\Source\mbedtls_utils;..\..\..\..\ThirdParty\mbedtls\include;..\..\..\..\Source\AWS\jobs\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\Mqtt_Demo_Helpers;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config.h";WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -158,7 +158,7 @@
     <ClCompile Include="..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement\BufferAllocation_2.c" />
     <ClCompile Include="..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\NetworkInterface\WinPCap\NetworkInterface.c" />
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c" />
-    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\using_mbedtls\using_mbedtls\using_mbedtls.c" />
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\using_mbedtls\using_mbedtls.c" />
     <ClCompile Include="..\..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_bio_freertos_plus_tcp.c" />
     <ClCompile Include="..\..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c" />
     <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\error.c" />
@@ -518,7 +518,7 @@
     <ClInclude Include="..\..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_stack.h" />
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_config_defaults.h" />
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h" />
-    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\using_mbedtls\using_mbedtls\using_mbedtls.h" />
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\using_mbedtls\using_mbedtls.h" />
     <ClInclude Include="..\..\..\..\Source\AWS\jobs\source\include\jobs.h" />
     <ClInclude Include="..\..\..\..\Source\coreJSON\source\include\core_json.h" />
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_errno_TCP.h" />

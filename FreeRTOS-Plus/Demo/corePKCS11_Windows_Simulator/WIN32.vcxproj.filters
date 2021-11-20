@@ -359,14 +359,18 @@
     <ClCompile Include="..\..\Source\corePKCS11\source\portable\mbedtls\core_pkcs11_mbedtls.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\corePKCS11\source\portable\windows\core_pkcs11_pal.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\corePKCS11\source\core_pki_utils.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils\mbedtls_utils.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\error.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\os\core_pkcs11_pal_utils.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\os\freertos_winsim\core_pkcs11_pal.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -711,6 +715,10 @@
     </ClInclude>
     <ClInclude Include="core_pkcs11_config.h">
       <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
+    <ClInclude Include="..\..\Source\corePKCS11\source\portable\os\core_pkcs11_pal_utils.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

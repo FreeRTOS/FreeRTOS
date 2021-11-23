@@ -248,7 +248,7 @@ static void prvObjectImporting( void )
      * Compare the hard coded x509, in PEM format, with the DER formatted
      * x509 certificate that is created by the Cryptoki library, with the following
      * OpenSSL command:
-     * "$ openssl x509 -in FreeRTOS_P11_Certificate.dat -inform der -text"
+     * "$ openssl x509 -in corePKCS11_Certificate.dat -inform der -text"
      *
      * See this explanation for the difference between the PEM format and the
      * DER format:
@@ -263,7 +263,7 @@ static void prvObjectImporting( void )
     configASSERT( xResult == CKR_OK );
     configASSERT( xCertHandle != CK_INVALID_HANDLE );
 
-    configPRINTF( ( "FreeRTOS_P11_Certificate.dat has been created in the Visual Studio" \
+    configPRINTF( ( "corePKCS11_Certificate.dat has been created in the Visual Studio" \
                     " Solution directory\r\n" ) );
 
     vPortFree( pucDerObject );
@@ -365,7 +365,7 @@ static void prvObjectGeneration( void )
                     pkcs11configLABEL_DEVICE_PUBLIC_KEY_FOR_TLS ) );
 
     /* This function will generate a new EC private and public key pair. You can
-     * use " $openssl ec -inform der -in FreeRTOS_P11_Key.dat -text " to see
+     * use " $openssl ec -inform der -in corePKCS11_Key.dat -text " to see
      * the structure of the keys that were generated.
      */
     xResult = pxFunctionList->C_GenerateKeyPair( hSession,
@@ -377,7 +377,7 @@ static void prvObjectGeneration( void )
                                                  &xPublicKeyHandle,
                                                  &xPrivateKeyHandle );
     configASSERT( xResult == CKR_OK );
-    configPRINTF( ( "FreeRTOS_P11_Key.dat has been created in the Visual Studio" \
+    configPRINTF( ( "corePKCS11_Key.dat has been created in the Visual Studio" \
                     " Solution directory\r\n" ) );
     configPRINTF( ( "Extracting public key bytes...\r\n" ) );
 

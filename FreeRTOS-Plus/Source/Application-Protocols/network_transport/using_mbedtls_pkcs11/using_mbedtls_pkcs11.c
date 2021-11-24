@@ -320,7 +320,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
     {
         /* Setup the client private key. */
         xResult = initializeClientKeys( &( pTlsTransportParams->sslContext ),
-                                        &( pNetworkCredentials->pPrivateKeyLabel ) );
+                                        pNetworkCredentials->pPrivateKeyLabel );
 
         if( xResult != CKR_OK )
         {
@@ -640,7 +640,7 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
         /* Get the handle of the device private key. */
         xResult = xFindObjectWithLabelAndClass( pxCtx->xP11Session,
                                                 pcLabelName,
-                                                sizeof( pcLabelName ) - 1UL,
+                                                strlen( pcLabelName ),
                                                 CKO_PRIVATE_KEY,
                                                 &pxCtx->xP11PrivateKey );
     }

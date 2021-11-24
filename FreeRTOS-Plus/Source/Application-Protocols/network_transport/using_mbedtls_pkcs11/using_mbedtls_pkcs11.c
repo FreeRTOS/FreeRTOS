@@ -176,7 +176,8 @@ static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
  *
  * @return Zero on success.
  */
-static CK_RV initializeClientKeys( SSLContext_t * pxCtx );
+static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
+                                    char * pcLabelName );
 
 /**
  * @brief Sign a cryptographic hash with the private key.
@@ -248,6 +249,8 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
     configASSERT( pHostName != NULL );
     configASSERT( pNetworkCredentials != NULL );
     configASSERT( pNetworkCredentials->pRootCa != NULL );
+    configASSERT( pNetworkCredentials->pClientCertLabel != NULL );
+    configASSERT( pNetworkCredentials->pPrivateKeyLabel != NULL );
 
     pTlsTransportParams = pNetworkContext->pParams;
 
@@ -316,7 +319,8 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
         /* Setup the client private key. */
-        xResult = initializeClientKeys( &( pTlsTransportParams->sslContext ) );
+        xResult = initializeClientKeys( &( pTlsTransportParams->sslContext ),
+                                        &( pNetworkCredentials->pPrivateKeyLabel ) );
 
         if( xResult != CKR_OK )
         {
@@ -328,7 +332,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
         {
             /* Setup the client certificate. */
             xResult = readCertificateIntoContext( &( pTlsTransportParams->sslContext ),
-                                                  pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS,
+                                                  pNetworkCredentials->pClientCertLabel,
                                                   CKO_CERTIFICATE,
                                                   &( pTlsTransportParams->sslContext.clientCert ) );
 
@@ -586,7 +590,8 @@ static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
  *
  * @return Zero on success.
  */
-static CK_RV initializeClientKeys( SSLContext_t * pxCtx )
+static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
+                                    char * pcLabelName )
 {
     CK_RV xResult = CKR_OK;
     CK_SLOT_ID * pxSlotIds = NULL;
@@ -634,8 +639,8 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx )
     {
         /* Get the handle of the device private key. */
         xResult = xFindObjectWithLabelAndClass( pxCtx->xP11Session,
-                                                pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS,
-                                                sizeof( pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS ) - 1UL,
+                                                pcLabelName,
+                                                sizeof( pcLabelName ) - 1UL,
                                                 CKO_PRIVATE_KEY,
                                                 &pxCtx->xP11PrivateKey );
     }

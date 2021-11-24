@@ -148,6 +148,8 @@ typedef struct NetworkCredentials
     size_t userNameSize;             /**< @brief Size associated with #NetworkCredentials.pUserName. */
     const unsigned char * pPassword; /**< @brief String representing the password for MQTT. */
     size_t passwordSize;             /**< @brief Size associated with #NetworkCredentials.pPassword. */
+    char * pClientCertLabel;         /**< @brief String representing the PKCS #11 label for the client certificate. */
+    char * pPrivateKeyLabel;         /**< @brief String representing the PKCS #11 label for the private key. */
 } NetworkCredentials_t;
 
 /**

@@ -1524,6 +1524,7 @@ pcks
 pcl
 pclabelname
 pclientcert
+pclientcertlabel
 pclk
 pclkb
 pclwipappsblockinggettxbuffer
@@ -1693,6 +1694,7 @@ ppcmessagetodisplay
 ppollperiod
 ppr
 pprivatekey
+pprivatekeylabel
 ppublishinfo
 ppvcontext
 ppxidletaskstackbuffer

@@ -456,7 +456,7 @@ static void prvTLSConnect( NetworkCredentials_t * pxNetworkCredentials,
 
     /* Set the credentials for establishing a TLS connection. */
     pxNetworkCredentials->pRootCa = ( const unsigned char * ) democonfigROOT_CA_PEM;
-    pxNetworkCredentials->rootCaSize = sizeof(democonfigROOT_CA_PEM); 
+    pxNetworkCredentials->rootCaSize = sizeof( democonfigROOT_CA_PEM );
     pxNetworkCredentials->pClientCertLabel = pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS;
     pxNetworkCredentials->pPrivateKeyLabel = pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS;
 

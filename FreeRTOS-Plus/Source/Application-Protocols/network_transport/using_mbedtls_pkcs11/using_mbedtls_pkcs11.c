@@ -170,9 +170,11 @@ static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
                                          mbedtls_x509_crt * pxCertificateContext );
 
 /**
- * @brief Helper for setting up potentially hardware-based cryptographic context.
+ * @brief Helper for setting up potentially hardware-based cryptographic context
+ * for the client TLS certificate and private key.
  *
- * @param Caller context.
+ * @param[in] Caller context.
+ * @param[in] PKCS11 label which contains the desired private key.
  *
  * @return Zero on success.
  */
@@ -586,7 +588,8 @@ static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
  * @brief Helper for setting up potentially hardware-based cryptographic context
  * for the client TLS certificate and private key.
  *
- * @param Caller context.
+ * @param[in] Caller context.
+ * @param[in] PKCS11 label which contains the desired private key.
  *
  * @return Zero on success.
  */

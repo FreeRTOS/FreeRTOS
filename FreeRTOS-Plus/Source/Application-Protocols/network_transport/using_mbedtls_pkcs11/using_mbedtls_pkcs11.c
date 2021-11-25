@@ -182,6 +182,13 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
                                    const char * pcLabelName );
 
 /**
+ * @brief Stub function to satisfy mbedtls checks before sign operations 
+ *
+ * @return 1.
+ */
+int canDoStub( mbedtls_pk_type_t type );
+
+/**
  * @brief Sign a cryptographic hash with the private key.
  *
  * @param[in] pvContext Crypto context.
@@ -692,6 +699,25 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
     {
         memcpy( &pxCtx->privKeyInfo, mbedtls_pk_info_from_type( xKeyAlgo ), sizeof( mbedtls_pk_info_t ) );
 
+        /* Assign unimplemented function pointers to NULL */
+        pxCtx->privKeyInfo.get_bitlen = NULL;
+        pxCtx->privKeyInfo.can_do = canDoStub;
+        pxCtx->privKeyInfo.verify_func = NULL;
+#if defined(MBEDTLS_ECDSA_C) && defined(MBEDTLS_ECP_RESTARTABLE)
+        pxCtx->privKeyInfo.verify_rs_func = NULL;
+        pxCtx->privKeyInfo.sign_rs_func = NULL;
+#endif /* MBEDTLS_ECDSA_C && MBEDTLS_ECP_RESTARTABLE */
+        pxCtx->privKeyInfo.decrypt_func = NULL;
+        pxCtx->privKeyInfo.encrypt_func = NULL;
+        pxCtx->privKeyInfo.check_pair_func = NULL;
+        pxCtx->privKeyInfo.ctx_alloc_func = NULL;
+        pxCtx->privKeyInfo.ctx_free_func = NULL;
+#if defined(MBEDTLS_ECDSA_C) && defined(MBEDTLS_ECP_RESTARTABLE)
+        pxCtx->privKeyInfo.rs_alloc_func = NULL;
+        pxCtx->privKeyInfo.rs_free_func = NULL;
+#endif /* MBEDTLS_ECDSA_C && MBEDTLS_ECP_RESTARTABLE */
+        pxCtx->privKeyInfo.debug_func = NULL;
+
         pxCtx->privKeyInfo.sign_func = privateKeySigningCallback;
         pxCtx->privKey.pk_info = &pxCtx->privKeyInfo;
         pxCtx->privKey.pk_ctx = pxCtx;
@@ -796,6 +822,13 @@ static int32_t privateKeySigningCallback( void * pvContext,
     }
 
     return lFinalResult;
+}
+
+/*-----------------------------------------------------------*/
+
+int canDoStub( mbedtls_pk_type_t type ) 
+{
+    return 1;
 }
 
 /*-----------------------------------------------------------*/

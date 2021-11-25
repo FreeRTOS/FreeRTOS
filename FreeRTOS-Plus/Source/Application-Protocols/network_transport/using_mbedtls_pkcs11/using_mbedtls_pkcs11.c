@@ -165,7 +165,7 @@ static int32_t generateRandomBytes( void * pvCtx,
  * @return Zero on success.
  */
 static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
-                                         char * pcLabelName,
+                                         const char * pcLabelName,
                                          CK_OBJECT_CLASS xClass,
                                          mbedtls_x509_crt * pxCertificateContext );
 
@@ -179,7 +179,7 @@ static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
  * @return Zero on success.
  */
 static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
-                                   char * pcLabelName );
+                                   const char * pcLabelName );
 
 /**
  * @brief Sign a cryptographic hash with the private key.
@@ -516,7 +516,7 @@ static int32_t generateRandomBytes( void * pvCtx,
 /*-----------------------------------------------------------*/
 
 static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
-                                         char * pcLabelName,
+                                         const char * pcLabelName,
                                          CK_OBJECT_CLASS xClass,
                                          mbedtls_x509_crt * pxCertificateContext )
 {
@@ -595,7 +595,7 @@ static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
  * @return Zero on success.
  */
 static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
-                                   char * pcLabelName )
+                                   const char * pcLabelName )
 {
     CK_RV xResult = CKR_OK;
     CK_SLOT_ID * pxSlotIds = NULL;

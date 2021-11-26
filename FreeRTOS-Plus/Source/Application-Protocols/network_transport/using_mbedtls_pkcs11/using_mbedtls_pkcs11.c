@@ -57,8 +57,8 @@
 
 /*-----------------------------------------------------------*/
 
-/** 
- * @brief Each compilation unit that consumes the NetworkContext must define it. 
+/**
+ * @brief Each compilation unit that consumes the NetworkContext must define it.
  * It should contain a single pointer as seen below whenever the header file
  * of this transport implementation is included to your project.
  *
@@ -182,7 +182,7 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
                                    const char * pcLabelName );
 
 /**
- * @brief Stub function to satisfy mbedtls checks before sign operations 
+ * @brief Stub function to satisfy mbedtls checks before sign operations
  *
  * @return 1.
  */
@@ -826,7 +826,7 @@ static int32_t privateKeySigningCallback( void * pvContext,
 
 /*-----------------------------------------------------------*/
 
-int canDoStub( mbedtls_pk_type_t type ) 
+int canDoStub( mbedtls_pk_type_t type )
 {
     return 1;
 }

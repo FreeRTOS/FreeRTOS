@@ -64,3 +64,9 @@
 [submodule "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface"]
 	path = FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface
 	url = https://github.com/FreeRTOS/Lab-Project-FreeRTOS-Cellular-Library.git
+[submodule "FreeRTOS-Plus/ThirdParty/tinycbor"]
+	path = FreeRTOS-Plus/ThirdParty/tinycbor
+	url = https://github.com/intel/tinycbor.git
+[submodule "FreeRTOS-Plus/Source/AWS/fleet-provisioning"]
+	path = FreeRTOS-Plus/Source/AWS/fleet-provisioning
+	url = https://github.com/aws/Fleet-Provisioning-for-AWS-IoT-embedded-sdk.git

@@ -136,4 +136,19 @@ dependencies:
       url: "https://github.com/FreeRTOS/FreeRTOS-Cellular-Interface.git"
       path: "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface"
 
+  - name: "fleet-provisioning"
+    version: "3ec98fc"
+    repository:
+    repository:
+      type: "git"
+      url: "https://github.com/aws/Fleet-Provisioning-for-AWS-IoT-embedded-sdk.git"
+      path: "FreeRTOS-Plus/Source/AWS/fleet-provisioning"
+
+  - name: "tinycbor"
+    version: "6176e0a"
+    repository:
+      type: "git"
+      url: "https://github.com/intel/tinycbor.git"
+      path: "FreeRTOS-Plus/ThirdParty/tinycbor"
+
 license: "MIT"

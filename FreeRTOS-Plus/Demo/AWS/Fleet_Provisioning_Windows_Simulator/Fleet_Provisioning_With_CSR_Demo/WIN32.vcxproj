@@ -58,7 +58,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\..\..\Common\WinPCap;..\..\..\..\..\FreeRTOS\Source\include;..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp;..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls;..\..\..\..\Source\Utilities\mbedtls_freertos;..\..\..\..\ThirdParty\mbedtls\include;..\..\..\..\Source\AWS\fleet-provisioning\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\Mqtt_Demo_Helpers;..\..\..\..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include;.;..\..\..\..\ThirdParty\tinycbor\src;..\..\..\..\Source\corePKCS11\source\include;..\..\..\..\Source\corePKCS11\source\;..\..\..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11;..\..\..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils;..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls_pkcs11;..\..\..\..\Source\corePKCS11\source\portable\os;..\..\..\..\ThirdParty\mbedtls\library;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\..\..\Common\WinPCap;..\..\..\..\..\FreeRTOS\Source\include;..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp;..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls;..\..\..\..\Source\Utilities\mbedtls_freertos;..\..\..\..\ThirdParty\mbedtls\include;..\..\..\..\Source\AWS\fleet-provisioning\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\Mqtt_Demo_Helpers;..\..\..\..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include;.;..\..\..\..\ThirdParty\tinycbor\src;..\..\..\..\Source\corePKCS11\source\include;..\..\..\..\Source\corePKCS11\source\;..\..\..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11;..\..\..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils;..\..\..\..\Source\Application-Protocols\network_transport\using_mbedtls_pkcs11;..\..\..\..\Source\corePKCS11\source\portable\os;..\..\..\..\ThirdParty\mbedtls\library;..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp;..\..\..\..\ThirdParty\mbedtls\include\mbedtls;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config.h";WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -157,7 +157,8 @@
     <ClCompile Include="..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_UDP_IP.c" />
     <ClCompile Include="..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement\BufferAllocation_2.c" />
     <ClCompile Include="..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\NetworkInterface\WinPCap\NetworkInterface.c" />
-    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls_pkcs11\using_mbedtls_pkcs11.c" />
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c" />
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\using_mbedtls_pkcs11\using_mbedtls_pkcs11.c" />
     <ClCompile Include="..\..\..\..\Source\AWS\fleet-provisioning\source\fleet_provisioning.c" />
     <ClCompile Include="..\..\..\..\Source\corePKCS11\source\core_pkcs11.c" />
     <ClCompile Include="..\..\..\..\Source\corePKCS11\source\core_pki_utils.c" />
@@ -166,9 +167,9 @@
     <ClCompile Include="..\..\..\..\Source\corePKCS11\source\portable\os\core_pkcs11_pal_utils.c" />
     <ClCompile Include="..\..\..\..\Source\corePKCS11\source\portable\os\freertos_winsim\core_pkcs11_pal.c" />
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\tcp_netstat.c" />
+    <ClCompile Include="..\..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_bio_freertos_plus_tcp.c" />
     <ClCompile Include="..\..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c" />
     <ClCompile Include="..\..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c" />
-    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\sockets_wrapper.c" />
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c" />
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c" />
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c" />
@@ -525,19 +526,18 @@
     <ClInclude Include="..\..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_levels.h" />
     <ClInclude Include="..\..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_stack.h" />
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_config_defaults.h" />
-    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls_pkcs11\using_mbedtls_pkcs11.h" />
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h" />
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\using_mbedtls_pkcs11\using_mbedtls_pkcs11.h" />
     <ClInclude Include="..\..\..\..\Source\AWS\fleet-provisioning\source\include\fleet_provisioning.h" />
     <ClInclude Include="..\..\..\..\Source\AWS\fleet-provisioning\source\include\fleet_provisioning_config_defaults.h" />
     <ClInclude Include="..\..\..\..\Source\coreJSON\source\include\core_json.h" />
     <ClInclude Include="..\..\..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils\mbedtls_utils.h" />
     <ClInclude Include="..\..\..\..\Source\corePKCS11\source\include\core_pkcs11.h" />
-    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\include\core_pkcs11_pal.h" />
     <ClInclude Include="..\..\..\..\Source\corePKCS11\source\include\core_pki_utils.h" />
     <ClInclude Include="..\..\..\..\Source\corePKCS11\source\portable\os\core_pkcs11_pal_utils.h" />
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_errno_TCP.h" />
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include\tcp_netstat.h" />
     <ClInclude Include="..\..\..\..\Source\Utilities\mbedtls_freertos\threading_alt.h" />
-    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\sockets_wrapper.h" />
     <ClInclude Include="..\..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h" />
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h" />
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_serializer.h" />

@@ -53,7 +53,7 @@
 #endif
 
 #ifndef LIBRARY_LOG_LEVEL
-    #define LIBRARY_LOG_LEVEL    LOG_ERROR
+    #define LIBRARY_LOG_LEVEL    LOG_INFO
 #endif
 
 /* Prototype for the function used to print to console on Windows simulator
@@ -70,6 +70,10 @@ extern void vLoggingPrintf( const char * pcFormatString,
 #endif
 
 #include "logging_stack.h"
+
+/************ End of logging configuration ****************/
+
+#include <stdlib.h>
 
 /**
  * @brief Malloc API used by core_pkcs11.h
@@ -171,11 +175,31 @@ extern void vLoggingPrintf( const char * pcFormatString,
 #define pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS       ( "Device Cert" )
 
 /**
+ * @brief The PKCS #11 label for the object to be used for HMAC operations.
+ */
+#define pkcs11configLABEL_HMAC_KEY                         ( "HMAC Key" )
+
+/**
+ * @brief The PKCS #11 label for the object to be used for CMAC operations.
+ */
+#define pkcs11configLABEL_CMAC_KEY                         ( "CMAC Key" )
+
+/**
  * @brief The PKCS #11 label for the object to be used for code verification.
  *
  * Used by over-the-air update code to verify an incoming signed image.
  */
 #define pkcs11configLABEL_CODE_VERIFICATION_KEY            ( "Code Verify Key" )
+
+/**
+ * @brief The PKCS #11 label for the claim certificate for Fleet Provisioning.
+ */
+#define pkcs11configLABEL_CLAIM_CERTIFICATE                ( "Claim Cert" )
+
+/**
+ * @brief The PKCS #11 label for the claim private key for Fleet Provisioning.
+ */
+#define pkcs11configLABEL_CLAIM_PRIVATE_KEY                ( "Claim Key" )
 
 /**
  * @brief The PKCS #11 label for Just-In-Time-Provisioning.
@@ -192,15 +216,5 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @see aws_default_root_certificates.h
  */
 #define pkcs11configLABEL_ROOT_CERTIFICATE                 ( "Root Cert" )
-
-/**
- * @brief The PKCS #11 label for the object to be used for HMAC operations.
- */
-#define pkcs11configLABEL_HMAC_KEY                         "HMAC Key"
-
- /**
-  * @brief The PKCS #11 label for the object to be used for CMAC operations.
-  */
-#define pkcs11configLABEL_CMAC_KEY                         "CMAC Key"
 
 #endif /* _CORE_PKCS11_CONFIG_H_ include guard. */

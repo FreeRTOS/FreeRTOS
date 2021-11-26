@@ -101,9 +101,6 @@
     <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11">
       <UniqueIdentifier>{9c5ed328-ee41-4482-a7ee-eef8aab4b9bc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include">
-      <UniqueIdentifier>{dad7dd2f-4849-4a8d-870e-37e93dea3b78}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c">
@@ -168,9 +165,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\backoff_algorithm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\sockets_wrapper.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\aes.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
@@ -485,8 +479,14 @@
     <ClCompile Include="DemoTasks\FleetProvisioningDemoExample.c">
       <Filter>DemoTasks</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls_pkcs11\using_mbedtls_pkcs11.c">
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\using_mbedtls_pkcs11\using_mbedtls_pkcs11.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_bio_freertos_plus_tcp.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -576,9 +576,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\Source\Utilities\mbedtls_freertos\threading_alt.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\sockets_wrapper.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\ThirdParty\mbedtls\include\mbedtls\aes.h">
       <Filter>FreeRTOS+\mbedtls\include</Filter>
@@ -885,29 +882,29 @@
     <ClInclude Include="..\..\..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils\mbedtls_utils.h">
       <Filter>FreeRTOS+\mbedtls</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\include\core_pkcs11.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\include\core_pki_utils.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h">
       <Filter>FreeRTOS+\mbedtls</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\ThirdParty\tinycbor\src\cbor.h">
       <Filter>FreeRTOS+\tinycbor</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\portable\os\core_pkcs11_pal_utils.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\ThirdParty\mbedtls\include\mbedtls\cmac.h">
       <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls_pkcs11\using_mbedtls_pkcs11.h">
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\include\core_pkcs11.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\portable\os\core_pkcs11_pal_utils.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\include\core_pki_utils.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\corePKCS11\source\include\core_pkcs11_pal.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include</Filter>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\using_mbedtls_pkcs11\using_mbedtls_pkcs11.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

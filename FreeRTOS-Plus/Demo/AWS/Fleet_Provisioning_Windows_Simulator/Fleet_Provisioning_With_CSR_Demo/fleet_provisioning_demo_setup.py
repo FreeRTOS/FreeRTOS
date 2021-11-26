@@ -5,8 +5,8 @@ from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 
-KEY_OUT_NAME = "corePKCS11_Key.dat"
-CERT_OUT_NAME = "corePKCS11_Certificate.dat"
+KEY_OUT_NAME = "corePKCS11_Claim_Key.dat"
+CERT_OUT_NAME = "corePKCS11_Claim_Certificate.dat"
 
 
 def convert_pem_to_der(cert_file, key_file):

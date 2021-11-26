@@ -47,7 +47,8 @@
 #define configMINIMAL_STACK_SIZE                   ( ( unsigned short ) 60 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the Win32 thread. */
 #define configTOTAL_HEAP_SIZE                      ( ( size_t ) ( 2048U * 1024U ) )
 #define configMAX_TASK_NAME_LEN                    ( 15 )
-#define configUSE_TRACE_FACILITY                   0
+#define configUSE_TRACE_FACILITY                   1
+#define configUSE_STATS_FORMATTING_FUNCTIONS       0
 #define configUSE_16_BIT_TICKS                     0
 #define configIDLE_SHOULD_YIELD                    1
 #define configUSE_CO_ROUTINES                      0
@@ -102,23 +103,12 @@
 #define INCLUDE_xTimerPendFunctionCall             1
 #define INCLUDE_pcTaskGetTaskName                  1
 
-/* This demo makes use of one or more example stats formatting functions.  These
- * format the raw data provided by the uxTaskGetSystemState() function in to human
- * readable ASCII form.  See the notes in the implementation of vTaskList() within
- * FreeRTOS/Source/tasks.c for limitations.  configUSE_STATS_FORMATTING_FUNCTIONS
- * is set to 2 so the formatting functions are included without the stdio.h being
- * included in tasks.c.  That is because this project defines its own sprintf()
- * functions. */
-#define configUSE_STATS_FORMATTING_FUNCTIONS       1
-
 /* Assert call defined for debug builds. */
 #ifdef _DEBUG
     extern void vAssertCalled( const char * pcFile,
                                uint32_t ulLine );
     #define configASSERT( x )    if( ( x ) == 0 ) vAssertCalled( __FILE__, __LINE__ )
 #endif /* _DEBUG */
-
-
 
 /* Application specific definitions follow. **********************************/
 

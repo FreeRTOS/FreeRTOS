@@ -76,33 +76,31 @@
 #include "mqtt_operations.h"
 #include "pkcs11_operations.h"
 #include "fleet_provisioning_serializer.h"
+#include "using_mbedtls_pkcs11.h"
 
 /**
  * These configurations are required. Throw compilation error if it is not
  * defined.
  */
-#ifndef PROVISIONING_TEMPLATE_NAME
-    #error "Please define PROVISIONING_TEMPLATE_NAME to the template name registered with AWS IoT Core in demo_config.h."
+#ifndef democonfigPROVISIONING_TEMPLATE_NAME
+    #error "Please define democonfigPROVISIONING_TEMPLATE_NAME to the template name registered with AWS IoT Core in demo_config.h."
 #endif
-#ifndef CLAIM_CERT_PATH
-    #error "Please define path to claim certificate (CLAIM_CERT_PATH) in demo_config.h."
+#ifndef democonfigDEVICE_SERIAL_NUMBER
+    #error "Please define a serial number (democonfigDEVICE_SERIAL_NUMBER) in demo_config.h."
 #endif
-#ifndef CLAIM_PRIVATE_KEY_PATH
-    #error "Please define path to claim private key (CLAIM_PRIVATE_KEY_PATH) in demo_config.h."
-#endif
-#ifndef DEVICE_SERIAL_NUMBER
-    #error "Please define a serial number (DEVICE_SERIAL_NUMBER) in demo_config.h."
+#ifndef democonfigROOT_CA_PEM
+    #error "Please define Root CA certificate of the MQTT broker(democonfigROOT_CA_PEM) in demo_config.h."
 #endif
 
 /**
- * @brief The length of #PROVISIONING_TEMPLATE_NAME.
+ * @brief The length of #democonfigPROVISIONING_TEMPLATE_NAME.
  */
-#define PROVISIONING_TEMPLATE_NAME_LENGTH    ( ( uint16_t ) ( sizeof( PROVISIONING_TEMPLATE_NAME ) - 1 ) )
+#define PROVISIONING_TEMPLATE_NAME_LENGTH    ( ( uint16_t ) ( sizeof( democonfigPROVISIONING_TEMPLATE_NAME ) - 1 ) )
 
 /**
- * @brief The length of #DEVICE_SERIAL_NUMBER.
+ * @brief The length of #democonfigDEVICE_SERIAL_NUMBER.
  */
-#define DEVICE_SERIAL_NUMBER_LENGTH          ( ( uint16_t ) ( sizeof( DEVICE_SERIAL_NUMBER ) - 1 ) )
+#define DEVICE_SERIAL_NUMBER_LENGTH          ( ( uint16_t ) ( sizeof( democonfigDEVICE_SERIAL_NUMBER ) - 1 ) )
 
 /**
  * @brief Size of AWS IoT Thing name buffer.
@@ -150,6 +148,16 @@
 #define OWNERSHIP_TOKEN_BUFFER_LENGTH                  512
 
 /**
+ * @brief Milliseconds per second.
+ */
+#define _MILLISECONDS_PER_SECOND                          ( 1000U )
+
+/**
+ * @brief Milliseconds per FreeRTOS tick.
+ */
+#define _MILLISECONDS_PER_TICK                            ( _MILLISECONDS_PER_SECOND / configTICK_RATE_HZ )
+
+/**
  * @brief Status values of the Fleet Provisioning response.
  */
 typedef enum
@@ -181,13 +189,34 @@ static size_t thingNameLength;
  * APIs. When the MQTT publish callback receives an expected Fleet Provisioning
  * accepted payload, it copies it into this buffer.
  */
-static uint8_t payloadBuffer[ NETWORK_BUFFER_SIZE ];
+static uint8_t payloadBuffer[ democonfigNETWORK_BUFFER_SIZE ];
 
 /**
  * @brief Length of the payload stored in #payloadBuffer. This is set by the
  * MQTT publish callback when it copies a received payload into #payloadBuffer.
  */
 static size_t payloadLength;
+
+/**
+ * @brief Global entry time into the application to use as a reference timestamp
+ * in the #prvGetTimeMs function. #prvGetTimeMs will always return the difference
+ * between the current time and the global entry time. This will reduce the chances
+ * of overflow for the 32 bit unsigned integer used for holding the timestamp.
+ */
+static uint32_t ulGlobalEntryTimeMs;
+/*-----------------------------------------------------------*/
+
+/** 
+ * @brief Each compilation unit that consumes the NetworkContext must define it. 
+ * It should contain a single pointer to the type of your desired transport.
+ * When using multiple transports in the same compilation unit, define this pointer as void *.
+ *
+ * @note Transport stacks are defined in FreeRTOS-Plus/Source/Application-Protocols/network_transport.
+ */
+struct NetworkContext
+{
+    TlsTransportParams_t * pParams;
+};
 
 /*-----------------------------------------------------------*/
 
@@ -227,6 +256,13 @@ static bool subscribeToRegisterThingResponseTopics( void );
  * @brief Unsubscribe from the RegisterThing accepted and rejected topics.
  */
 static bool unsubscribeFromRegisterThingResponseTopics( void );
+
+/**
+ * @brief The timer query function provided to the MQTT context.
+ *
+ * @return Time in milliseconds.
+ */
+static uint32_t prvGetTimeMs( void );
 
 /** TODO: Add description for FP demo
  * @brief The task used to demonstrate the FP API.
@@ -402,26 +438,26 @@ static bool subscribeToRegisterThingResponseTopics( void )
 {
     bool status;
 
-    status = SubscribeToTopic( FP_CBOR_REGISTER_ACCEPTED_TOPIC( PROVISIONING_TEMPLATE_NAME ),
+    status = SubscribeToTopic( FP_CBOR_REGISTER_ACCEPTED_TOPIC( democonfigPROVISIONING_TEMPLATE_NAME ),
                                FP_CBOR_REGISTER_ACCEPTED_LENGTH( PROVISIONING_TEMPLATE_NAME_LENGTH ) );
 
     if( status == false )
     {
         LogError( ( "Failed to subscribe to fleet provisioning topic: %.*s.",
                     FP_CBOR_REGISTER_ACCEPTED_LENGTH( PROVISIONING_TEMPLATE_NAME_LENGTH ),
-                    FP_CBOR_REGISTER_ACCEPTED_TOPIC( PROVISIONING_TEMPLATE_NAME ) ) );
+                    FP_CBOR_REGISTER_ACCEPTED_TOPIC( democonfigPROVISIONING_TEMPLATE_NAME ) ) );
     }
 
     if( status == true )
     {
-        status = SubscribeToTopic( FP_CBOR_REGISTER_REJECTED_TOPIC( PROVISIONING_TEMPLATE_NAME ),
+        status = SubscribeToTopic( FP_CBOR_REGISTER_REJECTED_TOPIC( democonfigPROVISIONING_TEMPLATE_NAME ),
                                    FP_CBOR_REGISTER_REJECTED_LENGTH( PROVISIONING_TEMPLATE_NAME_LENGTH ) );
 
         if( status == false )
         {
             LogError( ( "Failed to subscribe to fleet provisioning topic: %.*s.",
                         FP_CBOR_REGISTER_REJECTED_LENGTH( PROVISIONING_TEMPLATE_NAME_LENGTH ),
-                        FP_CBOR_REGISTER_REJECTED_TOPIC( PROVISIONING_TEMPLATE_NAME ) ) );
+                        FP_CBOR_REGISTER_REJECTED_TOPIC( democonfigPROVISIONING_TEMPLATE_NAME ) ) );
         }
     }
 
@@ -433,30 +469,49 @@ static bool unsubscribeFromRegisterThingResponseTopics( void )
 {
     bool status;
 
-    status = UnsubscribeFromTopic( FP_CBOR_REGISTER_ACCEPTED_TOPIC( PROVISIONING_TEMPLATE_NAME ),
+    status = UnsubscribeFromTopic( FP_CBOR_REGISTER_ACCEPTED_TOPIC( democonfigPROVISIONING_TEMPLATE_NAME ),
                                    FP_CBOR_REGISTER_ACCEPTED_LENGTH( PROVISIONING_TEMPLATE_NAME_LENGTH ) );
 
     if( status == false )
     {
         LogError( ( "Failed to unsubscribe from fleet provisioning topic: %.*s.",
                     FP_CBOR_REGISTER_ACCEPTED_LENGTH( PROVISIONING_TEMPLATE_NAME_LENGTH ),
-                    FP_CBOR_REGISTER_ACCEPTED_TOPIC( PROVISIONING_TEMPLATE_NAME ) ) );
+                    FP_CBOR_REGISTER_ACCEPTED_TOPIC( democonfigPROVISIONING_TEMPLATE_NAME ) ) );
     }
 
     if( status == true )
     {
-        status = UnsubscribeFromTopic( FP_CBOR_REGISTER_REJECTED_TOPIC( PROVISIONING_TEMPLATE_NAME ),
+        status = UnsubscribeFromTopic( FP_CBOR_REGISTER_REJECTED_TOPIC( democonfigPROVISIONING_TEMPLATE_NAME ),
                                        FP_CBOR_REGISTER_REJECTED_LENGTH( PROVISIONING_TEMPLATE_NAME_LENGTH ) );
 
         if( status == false )
         {
             LogError( ( "Failed to unsubscribe from fleet provisioning topic: %.*s.",
                         FP_CBOR_REGISTER_REJECTED_LENGTH( PROVISIONING_TEMPLATE_NAME_LENGTH ),
-                        FP_CBOR_REGISTER_REJECTED_TOPIC( PROVISIONING_TEMPLATE_NAME ) ) );
+                        FP_CBOR_REGISTER_REJECTED_TOPIC( democonfigPROVISIONING_TEMPLATE_NAME ) ) );
         }
     }
 
     return status;
+}
+/*-----------------------------------------------------------*/
+
+static uint32_t prvGetTimeMs( void )
+{
+    TickType_t xTickCount = 0;
+    uint32_t ulTimeMs = 0UL;
+
+    /* Get the current tick count. */
+    xTickCount = xTaskGetTickCount();
+
+    /* Convert the ticks to milliseconds. */
+    ulTimeMs = ( uint32_t ) xTickCount * _MILLISECONDS_PER_TICK;
+
+    /* Reduce ulGlobalEntryTimeMs from obtained time so as to always return the
+     * elapsed time in the application. */
+    ulTimeMs = ( uint32_t ) ( ulTimeMs - ulGlobalEntryTimeMs );
+
+    return ulTimeMs;
 }
 /*-----------------------------------------------------------*/
 
@@ -506,6 +561,24 @@ int prvFleetProvisioningTask(void* pvParameters)
     int demoRunCount = 0;
     CK_RV pkcs11ret = CKR_OK;
 
+
+    uint32_t ulPublishCount = 0U;
+    const uint32_t ulMaxPublishCount = 5UL;
+    NetworkContext_t xNetworkContext = { 0 };
+    TlsTransportParams_t xTlsTransportParams = { 0 };
+    NetworkCredentials_t xNetworkCredentials = { 0 };
+    MQTTContext_t xMQTTContext = { 0 };
+    MQTTStatus_t xMQTTStatus;
+
+    /* Set the pParams member of the network context with desired transport. */
+    xNetworkContext.pParams = &xTlsTransportParams;
+
+    /* Set the entry time of the demo application. This entry time will be used
+     * to calculate relative time elapsed in the execution of the demo application,
+     * by the timer utility function that is provided to the MQTT library.
+     */
+    ulGlobalEntryTimeMs = prvGetTimeMs();
+
     do
     {
         /* Initialize the buffer lengths to their max lengths. */
@@ -515,26 +588,23 @@ int prvFleetProvisioningTask(void* pvParameters)
 
         /* Initialize the PKCS #11 module */
         pkcs11ret = xInitializePkcs11Session(&p11Session);
-
         if (pkcs11ret != CKR_OK)
         {
             LogError(("Failed to initialize PKCS #11."));
             status = false;
         }
-        else
-        {
-            /* Insert the claim credentials into the PKCS #11 module */
-            status = loadClaimCredentials(p11Session,
-                CLAIM_CERT_PATH,
-                pkcs11configLABEL_CLAIM_CERTIFICATE,
-                CLAIM_PRIVATE_KEY_PATH,
-                pkcs11configLABEL_CLAIM_PRIVATE_KEY);
 
-            if (status == false)
-            {
-                LogError(("Failed to provision PKCS #11 with claim credentials."));
-            }
+        status = generateKeyAndCsr( p11Session,
+                                        pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS,
+                                        pkcs11configLABEL_DEVICE_PUBLIC_KEY_FOR_TLS,
+                                        csr,
+                                        CSR_BUFFER_LENGTH,
+                                        &csrLength );
+        if (status == false)
+        {
+            LogError(("Failed to generate Key and Certificate Signing Request."));
         }
+        pkcs11CloseSession( p11Session );
 
 
         /**** Connect to AWS IoT Core with provisioning claim credentials *****/
@@ -543,7 +613,7 @@ int prvFleetProvisioningTask(void* pvParameters)
          * credentials should allow use of the RegisterThing API and one of the
          * CreateCertificatefromCsr or CreateKeysAndCertificate.
          * In this demo we use CreateCertificatefromCsr. */
-        
+        status = true;
         if( status == true )
         {
             /* Attempts to connect to the AWS IoT MQTT broker. If the
@@ -551,7 +621,6 @@ int prvFleetProvisioningTask(void* pvParameters)
              * exponentially increase until maximum attempts are reached. */
             LogInfo(("Establishing MQTT session with claim certificate..."));
             status = EstablishMqttSession(provisioningPublishCallback,
-                p11Session,
                 pkcs11configLABEL_CLAIM_CERTIFICATE,
                 pkcs11configLABEL_CLAIM_PRIVATE_KEY);
 
@@ -581,21 +650,10 @@ int prvFleetProvisioningTask(void* pvParameters)
 
         if( status == true )
         {
-            /* Create a new key and CSR. */
-            status = generateKeyAndCsr( p11Session,
-                                        pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS,
-                                        pkcs11configLABEL_DEVICE_PUBLIC_KEY_FOR_TLS,
-                                        csr,
-                                        CSR_BUFFER_LENGTH,
-                                        &csrLength );
-        }
-
-        if( status == true )
-        {
             /* Create the request payload containing the CSR to publish to the
              * CreateCertificateFromCsr APIs. */
             status = generateCsrRequest( payloadBuffer,
-                                         NETWORK_BUFFER_SIZE,
+                                         democonfigNETWORK_BUFFER_SIZE,
                                          csr,
                                          csrLength,
                                          &payloadLength );
@@ -666,10 +724,10 @@ int prvFleetProvisioningTask(void* pvParameters)
         {
             /* Create the request payload to publish to the RegisterThing API. */
             status = generateRegisterThingRequest( payloadBuffer,
-                                                   NETWORK_BUFFER_SIZE,
+                                                   democonfigNETWORK_BUFFER_SIZE,
                                                    ownershipToken,
                                                    ownershipTokenLength,
-                                                   DEVICE_SERIAL_NUMBER,
+                                                   democonfigDEVICE_SERIAL_NUMBER,
                                                    DEVICE_SERIAL_NUMBER_LENGTH,
                                                    &payloadLength );
         }
@@ -683,7 +741,7 @@ int prvFleetProvisioningTask(void* pvParameters)
         if( status == true )
         {
             /* Publish the RegisterThing request. */
-            PublishToTopic( FP_CBOR_REGISTER_PUBLISH_TOPIC( PROVISIONING_TEMPLATE_NAME ),
+            PublishToTopic( FP_CBOR_REGISTER_PUBLISH_TOPIC( democonfigPROVISIONING_TEMPLATE_NAME ),
                             FP_CBOR_REGISTER_PUBLISH_LENGTH( PROVISIONING_TEMPLATE_NAME_LENGTH ),
                             ( char * ) payloadBuffer,
                             payloadLength );
@@ -692,7 +750,7 @@ int prvFleetProvisioningTask(void* pvParameters)
             {
                 LogError( ( "Failed to publish to fleet provisioning topic: %.*s.",
                             FP_CBOR_REGISTER_PUBLISH_LENGTH( PROVISIONING_TEMPLATE_NAME_LENGTH ),
-                            FP_CBOR_REGISTER_PUBLISH_TOPIC( PROVISIONING_TEMPLATE_NAME ) ) );
+                            FP_CBOR_REGISTER_PUBLISH_TOPIC( democonfigPROVISIONING_TEMPLATE_NAME ) ) );
             }
         }
 
@@ -741,7 +799,6 @@ int prvFleetProvisioningTask(void* pvParameters)
         {
             LogInfo( ( "Establishing MQTT session with provisioned certificate..." ) );
             status = EstablishMqttSession( provisioningPublishCallback,
-                                           p11Session,
                                            pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS,
                                            pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS );
 
@@ -768,7 +825,7 @@ int prvFleetProvisioningTask(void* pvParameters)
             connectionEstablished = false;
         }
 
-        pkcs11CloseSession( p11Session );
+        //pkcs11CloseSession( p11Session );
 
         /**** Retry in case of failure ****************************************/
 

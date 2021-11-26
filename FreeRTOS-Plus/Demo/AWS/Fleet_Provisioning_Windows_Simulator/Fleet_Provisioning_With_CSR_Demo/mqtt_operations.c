@@ -20,26 +20,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/**
- * @file mqtt_operations.c
- *
- * @brief This file provides wrapper functions for MQTT operations on a mutually
- * authenticated TLS connection.
- *
- * A mutually authenticated TLS connection is used to connect to the AWS IoT
- * MQTT message broker in this example. Define ROOT_CA_CERT_PATH,
- * CLIENT_CERT_PATH, and CLIENT_PRIVATE_KEY_PATH in demo_config.h to achieve
- * mutual authentication.
- */
+ /**
+  * @file mqtt_operations.c
+  *
+  * @brief This file provides wrapper functions for MQTT operations on a mutually
+  * authenticated TLS connection.
+  *
+  * A mutually authenticated TLS connection is used to connect to the AWS IoT
+  * MQTT message broker in this example. Define ROOT_CA_CERT_PATH,
+  * CLIENT_CERT_PATH, and CLIENT_PRIVATE_KEY_PATH in demo_config.h to achieve
+  * mutual authentication.
+  */
 
-/* Standard includes. */
+  /* Standard includes. */
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
-/* POSIX includes. */
-#include <unistd.h>
 
 /* Config include. */
 #include "demo_config.h"
@@ -48,48 +45,45 @@
 #include "mqtt_operations.h"
 
 /* MbedTLS transport include. */
-#include "mbedtls_pkcs11_posix.h"
+#include "using_mbedtls_pkcs11.h"
 
 /*Include backoff algorithm header for retry logic.*/
 #include "backoff_algorithm.h"
-
-/* Clock for timer. */
-#include "clock.h"
 
 /**
  * These configurations are required. Throw compilation error if the below
  * configs are not defined.
  */
-#ifndef AWS_IOT_ENDPOINT
-    #error "Please define AWS IoT MQTT broker endpoint(AWS_IOT_ENDPOINT) in demo_config.h."
+#ifndef democonfigMQTT_BROKER_ENDPOINT
+    #error "Please define AWS IoT MQTT broker endpoint(democonfigMQTT_BROKER_ENDPOINT) in demo_config.h."
 #endif
-#ifndef ROOT_CA_CERT_PATH
-    #error "Please define path to Root CA certificate of the MQTT broker(ROOT_CA_CERT_PATH) in demo_config.h."
+#ifndef democonfigROOT_CA_PEM
+    #error "Please define the PEM-encoded Root CA certificate of the MQTT broker(democonfigROOT_CA_PEM) in demo_config.h."
 #endif
-#ifndef CLIENT_IDENTIFIER
-    #error "Please define a unique CLIENT_IDENTIFIER."
+#ifndef democonfigCLIENT_IDENTIFIER
+    #error "Please define a unique democonfigCLIENT_IDENTIFIER."
 #endif
 
-/**
- * Provide default values for undefined configuration settings.
- */
+ /**
+  * Provide default values for undefined configuration settings.
+  */
 #ifndef AWS_MQTT_PORT
-    #define AWS_MQTT_PORT    ( 8883 )
+#define AWS_MQTT_PORT    ( 8883 )
 #endif
 
-#ifndef NETWORK_BUFFER_SIZE
-    #define NETWORK_BUFFER_SIZE    ( 1024U )
+#ifndef democonfigNETWORK_BUFFER_SIZE
+#define democonfigNETWORK_BUFFER_SIZE    ( 1024U )
 #endif
 
 /**
  * @brief Length of the AWS IoT endpoint.
  */
-#define AWS_IOT_ENDPOINT_LENGTH                  ( ( uint16_t ) ( sizeof( AWS_IOT_ENDPOINT ) - 1 ) )
+#define democonfigMQTT_BROKER_ENDPOINT_LENGTH                  ( ( uint16_t ) ( sizeof( democonfigMQTT_BROKER_ENDPOINT ) - 1 ) )
 
 /**
  * @brief Length of the client identifier.
  */
-#define CLIENT_IDENTIFIER_LENGTH                 ( ( uint16_t ) ( sizeof( CLIENT_IDENTIFIER ) - 1 ) )
+#define CLIENT_IDENTIFIER_LENGTH                 ( ( uint16_t ) ( sizeof( democonfigCLIENT_IDENTIFIER ) - 1 ) )
 
 /**
  * @brief ALPN protocol name for AWS IoT MQTT.
@@ -164,9 +158,19 @@
 #define TRANSPORT_SEND_RECV_TIMEOUT_MS           ( 100U )
 
 /**
+ * @brief Milliseconds per second.
+ */
+#define MILLISECONDS_PER_SECOND                      ( 1000U )
+
+/**
+ * @brief Milliseconds per FreeRTOS tick.
+ */
+#define MILLISECONDS_PER_TICK                        ( MILLISECONDS_PER_SECOND / configTICK_RATE_HZ )
+
+/**
  * @brief The MQTT metrics string expected by AWS IoT MQTT Broker.
  */
-#define METRICS_STRING                           "?SDK=" OS_NAME "&Version=" OS_VERSION "&Platform=" HARDWARE_PLATFORM_NAME "&MQTTLib=" MQTT_LIB
+#define METRICS_STRING                           "?SDK=" democonfigOS_NAME "&Version=" democonfigOS_VERSION "&Platform=" democonfigHARDWARE_PLATFORM_NAME "&MQTTLib=" democonfigMQTT_LIB
 
 /**
  * @brief The length of the MQTT metrics string.
@@ -194,9 +198,17 @@ typedef struct PublishPackets
 /* Each compilation unit must define the NetworkContext struct. */
 struct NetworkContext
 {
-    MbedtlsPkcs11Context_t * pParams;
+    SSLContext_t * pParams;
 };
 /*-----------------------------------------------------------*/
+
+/**
+ * @brief Global entry time into the application to use as a reference timestamp
+ * in the #prvGetTimeMs function. #prvGetTimeMs will always return the difference
+ * between the current time and the global entry time. This will reduce the chances
+ * of overflow for the 32 bit unsigned integer used for holding the timestamp.
+ */
+static uint32_t ulGlobalEntryTimeMs;
 
 /**
  * @brief Packet Identifier generated when Subscribe request was sent to the broker.
@@ -225,7 +237,7 @@ static PublishPackets_t outgoingPublishPackets[ MAX_OUTGOING_PUBLISHES ] = { 0 }
 /**
  * @brief The network buffer must remain valid for the lifetime of the MQTT context.
  */
-static uint8_t buffer[ NETWORK_BUFFER_SIZE ];
+static uint8_t buffer[ democonfigNETWORK_BUFFER_SIZE ];
 
 /**
  * @brief The MQTT context used for MQTT operation.
@@ -240,7 +252,7 @@ static NetworkContext_t networkContext = { 0 };
 /**
  * @brief The parameters for MbedTLS operation.
  */
-static MbedtlsPkcs11Context_t tlsContext = { 0 };
+static SSLContext_t tlsContext = { 0 };
 
 /**
  * @brief The flag to indicate that the mqtt session is established.
@@ -270,14 +282,12 @@ static uint32_t generateRandomNumber( void );
  * of attempts are exhausted.
  *
  * @param[out] pNetworkContext The created network context.
- * @param[in] p11Session The PKCS #11 session to use.
  * @param[in] pClientCertLabel The client certificate PKCS #11 label to use.
  * @param[in] pPrivateKeyLabel The private key PKCS #11 label for the client certificate.
  *
  * @return false on failure; true on successful connection.
  */
 static bool connectToBrokerWithBackoffRetries( NetworkContext_t * pNetworkContext,
-                                               CK_SESSION_HANDLE p11Session,
                                                char * pClientCertLabel,
                                                char * pPrivateKeyLabel );
 
@@ -336,6 +346,14 @@ static void mqttCallback( MQTTContext_t * pMqttContext,
  * false otherwise.
  */
 static bool handlePublishResend( MQTTContext_t * pMqttContext );
+
+/**
+ * @brief The timer query function provided to the MQTT context.
+ *
+ * @return Time in milliseconds.
+ */
+static uint32_t prvGetTimeMs(void);
+
 /*-----------------------------------------------------------*/
 
 static uint32_t generateRandomNumber()
@@ -346,15 +364,14 @@ static uint32_t generateRandomNumber()
 /*-----------------------------------------------------------*/
 
 static bool connectToBrokerWithBackoffRetries( NetworkContext_t * pNetworkContext,
-                                               CK_SESSION_HANDLE p11Session,
                                                char * pClientCertLabel,
                                                char * pPrivateKeyLabel )
 {
     bool returnStatus = false;
     BackoffAlgorithmStatus_t backoffAlgStatus = BackoffAlgorithmSuccess;
-    MbedtlsPkcs11Status_t tlsStatus = MBEDTLS_PKCS11_SUCCESS;
+    TlsTransportStatus_t tlsStatus = TLS_TRANSPORT_SUCCESS;
     BackoffAlgorithmContext_t reconnectParams;
-    MbedtlsPkcs11Credentials_t tlsCredentials = { 0 };
+    NetworkCredentials_t tlsCredentials = { 0 };
     uint16_t nextRetryBackOff = 0U;
     const char * alpn[] = { ALPN_PROTOCOL_NAME, NULL };
 
@@ -362,10 +379,11 @@ static bool connectToBrokerWithBackoffRetries( NetworkContext_t * pNetworkContex
     pNetworkContext->pParams = &tlsContext;
 
     /* Initialize credentials for establishing TLS session. */
-    tlsCredentials.pRootCaPath = ROOT_CA_CERT_PATH;
+    tlsCredentials.pRootCa = democonfigROOT_CA_PEM;
+    tlsCredentials.rootCaSize = sizeof(democonfigROOT_CA_PEM);
     tlsCredentials.pClientCertLabel = pClientCertLabel;
     tlsCredentials.pPrivateKeyLabel = pPrivateKeyLabel;
-    tlsCredentials.p11Session = p11Session;
+    //tlsCredentials.p11Session = p11Session;
 
     /* AWS IoT requires devices to send the Server Name Indication (SNI)
      * extension to the Transport Layer Security (TLS) protocol and provide
@@ -394,20 +412,20 @@ static bool connectToBrokerWithBackoffRetries( NetworkContext_t * pNetworkContex
     do
     {
         /* Establish a TLS session with the MQTT broker. This example connects
-         * to the MQTT broker as specified in AWS_IOT_ENDPOINT and AWS_MQTT_PORT
+         * to the MQTT broker as specified in democonfigMQTT_BROKER_ENDPOINT and AWS_MQTT_PORT
          * at the demo config header. */
         LogDebug( ( "Establishing a TLS session to %.*s:%d.",
-                    AWS_IOT_ENDPOINT_LENGTH,
-                    AWS_IOT_ENDPOINT,
+                    democonfigMQTT_BROKER_ENDPOINT_LENGTH,
+                    democonfigMQTT_BROKER_ENDPOINT,
                     AWS_MQTT_PORT ) );
 
-        tlsStatus = Mbedtls_Pkcs11_Connect( pNetworkContext,
-                                            AWS_IOT_ENDPOINT,
+        tlsStatus = TLS_FreeRTOS_Connect( pNetworkContext,
+                                            democonfigMQTT_BROKER_ENDPOINT,
                                             AWS_MQTT_PORT,
                                             &tlsCredentials,
-                                            TRANSPORT_SEND_RECV_TIMEOUT_MS );
+                                            TRANSPORT_SEND_RECV_TIMEOUT_MS, TRANSPORT_SEND_RECV_TIMEOUT_MS);
 
-        if( tlsStatus == MBEDTLS_PKCS11_SUCCESS )
+        if( tlsStatus == TLS_TRANSPORT_SUCCESS )
         {
             /* Connection successful. */
             returnStatus = true;
@@ -426,10 +444,10 @@ static bool connectToBrokerWithBackoffRetries( NetworkContext_t * pNetworkContex
                 LogWarn( ( "Connection to the broker failed. Retrying connection "
                            "after %hu ms backoff.",
                            ( unsigned short ) nextRetryBackOff ) );
-                Clock_SleepMs( nextRetryBackOff );
+                vTaskDelay( pdMS_TO_TICKS( nextRetryBackOff ) );
             }
         }
-    } while( ( tlsStatus != MBEDTLS_PKCS11_SUCCESS ) && ( backoffAlgStatus == BackoffAlgorithmSuccess ) );
+    } while( ( tlsStatus != TLS_TRANSPORT_SUCCESS ) && ( backoffAlgStatus == BackoffAlgorithmSuccess ) );
 
     return returnStatus;
 }
@@ -634,7 +652,6 @@ static bool handlePublishResend( MQTTContext_t * pMqttContext )
 /*-----------------------------------------------------------*/
 
 bool EstablishMqttSession( MQTTPublishCallback_t publishCallback,
-                           CK_SESSION_HANDLE p11Session,
                            char * pClientCertLabel,
                            char * pPrivateKeyLabel )
 {
@@ -656,7 +673,6 @@ bool EstablishMqttSession( MQTTPublishCallback_t publishCallback,
     ( void ) memset( pNetworkContext, 0U, sizeof( NetworkContext_t ) );
 
     returnStatus = connectToBrokerWithBackoffRetries( pNetworkContext,
-                                                      p11Session,
                                                       pClientCertLabel,
                                                       pPrivateKeyLabel );
 
@@ -665,8 +681,8 @@ bool EstablishMqttSession( MQTTPublishCallback_t publishCallback,
         /* Log an error to indicate connection failure after all
          * reconnect attempts are over. */
         LogError( ( "Failed to connect to MQTT broker %.*s.",
-                    AWS_IOT_ENDPOINT_LENGTH,
-                    AWS_IOT_ENDPOINT ) );
+                    democonfigMQTT_BROKER_ENDPOINT_LENGTH,
+                    democonfigMQTT_BROKER_ENDPOINT ) );
     }
     else
     {
@@ -674,12 +690,12 @@ bool EstablishMqttSession( MQTTPublishCallback_t publishCallback,
          * For this demo, TCP sockets are used to send and receive data
          * from the network. pNetworkContext is an SSL context for OpenSSL.*/
         transport.pNetworkContext = pNetworkContext;
-        transport.send = Mbedtls_Pkcs11_Send;
-        transport.recv = Mbedtls_Pkcs11_Recv;
+        transport.send = TLS_FreeRTOS_send;
+        transport.recv = TLS_FreeRTOS_recv;
 
         /* Fill the values for network buffer. */
         networkBuffer.pBuffer = buffer;
-        networkBuffer.size = NETWORK_BUFFER_SIZE;
+        networkBuffer.size = democonfigNETWORK_BUFFER_SIZE;
 
         /* Remember the publish callback supplied. */
         appPublishCallback = publishCallback;
@@ -687,7 +703,7 @@ bool EstablishMqttSession( MQTTPublishCallback_t publishCallback,
         /* Initialize the MQTT library. */
         mqttStatus = MQTT_Init( pMqttContext,
                                 &transport,
-                                Clock_GetTimeMs,
+                                prvGetTimeMs,
                                 mqttCallback,
                                 &networkBuffer );
 
@@ -710,7 +726,7 @@ bool EstablishMqttSession( MQTTPublishCallback_t publishCallback,
             /* The client identifier is used to uniquely identify this MQTT client to
              * the MQTT broker. In a production device the identifier can be something
              * unique, such as a device serial number. */
-            connectInfo.pClientIdentifier = CLIENT_IDENTIFIER;
+            connectInfo.pClientIdentifier = democonfigCLIENT_IDENTIFIER;
             connectInfo.clientIdentifierLength = CLIENT_IDENTIFIER_LENGTH;
 
             /* The maximum time interval in seconds which is allowed to elapse
@@ -812,7 +828,7 @@ bool DisconnectMqttSession( void )
     }
 
     /* End TLS session, then close TCP connection. */
-    ( void ) Mbedtls_Pkcs11_Disconnect( pNetworkContext );
+    ( void ) TLS_FreeRTOS_Disconnect( pNetworkContext );
 
     return returnStatus;
 }
@@ -1027,4 +1043,24 @@ bool ProcessLoop( void )
 
     return returnStatus;
 }
+/*-----------------------------------------------------------*/
+
+static uint32_t prvGetTimeMs(void)
+{
+    TickType_t xTickCount = 0;
+    uint32_t ulTimeMs = 0UL;
+
+    /* Get the current tick count. */
+    xTickCount = xTaskGetTickCount();
+
+    /* Convert the ticks to milliseconds. */
+    ulTimeMs = (uint32_t)xTickCount * MILLISECONDS_PER_TICK;
+
+    /* Reduce ulGlobalEntryTimeMs from obtained time so as to always return the
+     * elapsed time in the application. */
+    ulTimeMs = (uint32_t)(ulTimeMs - ulGlobalEntryTimeMs);
+
+    return ulTimeMs;
+}
+
 /*-----------------------------------------------------------*/

@@ -43,7 +43,6 @@ typedef void (* MQTTPublishCallback_t )( MQTTPublishInfo_t * pPublishInfo,
  *
  * @param[in] publishCallback The callback function to receive incoming
  * publishes from the MQTT broker.
- * @param[in] p11Session The PKCS #11 session to use.
  * @param[in] pClientCertLabel The client certificate PKCS #11 label to use.
  * @param[in] pPrivateKeyLabel The private key PKCS #11 label for the client certificate.
  *
@@ -51,7 +50,6 @@ typedef void (* MQTTPublishCallback_t )( MQTTPublishInfo_t * pPublishInfo,
  * false otherwise.
  */
 bool EstablishMqttSession( MQTTPublishCallback_t publishCallback,
-                           CK_SESSION_HANDLE p11Session,
                            char * pClientCertLabel,
                            char * pPrivateKeyLabel );
 

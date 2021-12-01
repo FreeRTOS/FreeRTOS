@@ -200,13 +200,6 @@ static uint8_t pucPayloadBuffer[ democonfigNETWORK_BUFFER_SIZE ];
  */
 static size_t xPayloadLength;
 
-/**
- * @brief Global entry time into the application to use as a reference timestamp
- * in the #prvGetTimeMs function. #prvGetTimeMs will always return the difference
- * between the current time and the global entry time. This will reduce the chances
- * of overflow for the 32 bit unsigned integer used for holding the timestamp.
- */
-static uint32_t ulGlobalEntryTimeMs;
 /*-----------------------------------------------------------*/
 
 /**
@@ -259,13 +252,6 @@ static bool prvSubscribeToRegisterThingResponseTopics( void );
  * @brief Unsubscribe from the RegisterThing accepted and rejected topics.
  */
 static bool prvUnsubscribeFromRegisterThingResponseTopics( void );
-
-/**
- * @brief The timer query function provided to the MQTT context.
- *
- * @return Time in milliseconds.
- */
-static uint32_t prvGetTimeMs( void );
 
 /**
  * @brief The task used to demonstrate the FP API.
@@ -499,25 +485,6 @@ static bool prvUnsubscribeFromRegisterThingResponseTopics( void )
 }
 /*-----------------------------------------------------------*/
 
-static uint32_t prvGetTimeMs( void )
-{
-    TickType_t xTickCount = 0;
-    uint32_t ulTimeMs = 0UL;
-
-    /* Get the current tick count. */
-    xTickCount = xTaskGetTickCount();
-
-    /* Convert the ticks to milliseconds. */
-    ulTimeMs = ( uint32_t ) xTickCount * fpdemoMILLISECONDS_PER_TICK;
-
-    /* Reduce ulGlobalEntryTimeMs from obtained time so as to always return the
-     * elapsed time in the application. */
-    ulTimeMs = ( uint32_t ) ( ulTimeMs - ulGlobalEntryTimeMs );
-
-    return ulTimeMs;
-}
-/*-----------------------------------------------------------*/
-
 /**
  * @brief Create the task that demonstrates the Fleet Provisioning library API
  */
@@ -573,12 +540,6 @@ int prvFleetProvisioningTask(void* pvParameters)
 
     /* Set the pParams member of the network context with desired transport. */
     xNetworkContext.pxParams = &xTlsTransportParams;
-
-    /* Set the entry time of the demo application. This entry time will be used
-     * to calculate relative time elapsed in the execution of the demo application,
-     * by the timer utility function that is provided to the MQTT library.
-     */
-    ulGlobalEntryTimeMs = prvGetTimeMs();
 
     do
     {
@@ -856,8 +817,8 @@ int prvFleetProvisioningTask(void* pvParameters)
     }
 
     /* Delete this task. */
-    LogInfo(("Deleting Fleet Provisioning Demo task."));
-    vTaskDelete(NULL);
+    LogInfo( ( "Deleting Fleet Provisioning Demo task." ) );
+    vTaskDelete( NULL );
 
     return ( xStatus == true ) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

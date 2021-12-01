@@ -60,6 +60,9 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+/* Demo Config */
+#include "demo_config.h"
+
 /* mbedTLS include for configuring threading functions */
 #include "mbedtls/threading.h"
 #include "threading_alt.h"
@@ -75,7 +78,6 @@
 #include "fleet_provisioning.h"
 
 /* Demo includes. */
-#include "demo_config.h"
 #include "mqtt_operations.h"
 #include "pkcs11_operations.h"
 #include "fleet_provisioning_serializer.h"
@@ -575,7 +577,6 @@ int prvFleetProvisioningTask(void* pvParameters)
          * credentials should allow use of the RegisterThing API and one of the
          * CreateCertificatefromCsr or CreateKeysAndCertificate.
          * In this demo we use CreateCertificatefromCsr. */
-        xStatus = true;
         if( xStatus == true )
         {
             /* Attempts to connect to the AWS IoT MQTT broker. If the

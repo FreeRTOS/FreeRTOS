@@ -66,9 +66,9 @@ extern void vLoggingPrintf( const char * pcFormatString,
 
 /************ End of logging configuration ****************/
 
- #ifndef democonfigCLIENT_IDENTIFIER
+#ifndef democonfigCLIENT_IDENTIFIER
 
- /**
+/**
  * @brief The MQTT client identifier used in this example.  Each client identifier
  * must be unique so edit as required to ensure no two clients connecting to the
  * same broker use the same client identifier.
@@ -81,7 +81,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
     #define democonfigCLIENT_IDENTIFIER    "testClient"__TIME__
 #endif
 
- /**
+/**
  * @brief Details of the MQTT broker to connect to.
  *
  * This is the Claim's Rest API Endpoint for AWS IoT.
@@ -92,7 +92,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * #define democonfigMQTT_BROKER_ENDPOINT     "...insert here..."
  */
 
- /**
+/**
  * @brief AWS IoT MQTT broker port number.
  *
  * In general, port 8883 is for secured MQTT connections.
@@ -166,14 +166,14 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * In the Windows port, this stack only holds a structure. The actual
  * stack is created by an operating system thread.
  */
-#define democonfigDEMO_STACKSIZE         configMINIMAL_STACK_SIZE
+#define democonfigDEMO_STACKSIZE            configMINIMAL_STACK_SIZE
 
 /**
  * @brief Size of the network buffer for MQTT packets. Must be large enough to
  * hold the GetCertificateFromCsr response, which, among other things, includes
  * a PEM encoded certificate.
  */
-#define democonfigNETWORK_BUFFER_SIZE    ( 2048U )
+#define democonfigNETWORK_BUFFER_SIZE       ( 2048U )
 
 /**
  * @brief The name of the operating system that the application is running on.
@@ -201,6 +201,6 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * symbol.
  */
 #include "core_mqtt.h" /* Include coreMQTT header for MQTT_LIBRARY_VERSION macro. */
-#define democonfigMQTT_LIB               "core-mqtt@"MQTT_LIBRARY_VERSION
+#define democonfigMQTT_LIB    "core-mqtt@"MQTT_LIBRARY_VERSION
 
 #endif /* DEMO_CONFIG_H */

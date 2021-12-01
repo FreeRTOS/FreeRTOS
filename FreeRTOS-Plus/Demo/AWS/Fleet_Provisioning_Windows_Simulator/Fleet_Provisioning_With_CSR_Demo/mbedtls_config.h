@@ -130,8 +130,8 @@ int mbedtls_platform_recv( void * ctx,
 
 /* These two macro used by mbedtls_ssl_set_bio in using_mbedtls network
  * transport layer. */
-#define MBEDTLS_SSL_SEND mbedtls_platform_send
-#define MBEDTLS_SSL_RECV mbedtls_platform_recv
+#define MBEDTLS_SSL_SEND    mbedtls_platform_send
+#define MBEDTLS_SSL_RECV    mbedtls_platform_recv
 
 /* The entropy poll function. */
 int mbedtls_platform_entropy_poll( void * data,

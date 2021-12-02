@@ -552,23 +552,27 @@ int prvFleetProvisioningTask(void* pvParameters)
 
         /* Initialize the PKCS #11 module */
         xPkcs11Ret = xInitializePkcs11Session(&xP11Session);
+        
         if (xPkcs11Ret != CKR_OK)
         {
             LogError(("Failed to initialize PKCS #11."));
             xStatus = false;
         }
-
-        xStatus = xGenerateKeyAndCsr( xP11Session,
-                                        pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS,
-                                        pkcs11configLABEL_DEVICE_PUBLIC_KEY_FOR_TLS,
-                                        pcCsr,
-                                        fpdemoCSR_BUFFER_LENGTH,
-                                        &xCsrLength );
-        if (xStatus == false)
+        else
         {
-            LogError(("Failed to generate Key and Certificate Signing Request."));
+            xStatus = xGenerateKeyAndCsr( xP11Session,
+                                          pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS,
+                                          pkcs11configLABEL_DEVICE_PUBLIC_KEY_FOR_TLS,
+                                          pcCsr,
+                                          fpdemoCSR_BUFFER_LENGTH,
+                                          &xCsrLength );
+            if (xStatus == false)
+            {
+                LogError(("Failed to generate Key and Certificate Signing Request."));
+            }
+        
+            xPkcs11CloseSession( xP11Session );
         }
-        xPkcs11CloseSession( xP11Session );
 
 
         /**** Connect to AWS IoT Core with provisioning claim credentials *****/

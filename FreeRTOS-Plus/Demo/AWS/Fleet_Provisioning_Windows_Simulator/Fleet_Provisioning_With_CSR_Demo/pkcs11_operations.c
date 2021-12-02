@@ -58,16 +58,6 @@
 #include "mbedtls/x509_csr.h"
 
 /**
- * @brief Size of buffer in which to hold the certificate signing request (CSR).
- */
-#define pkcs11opCLAIM_CERT_BUFFER_LENGTH           2048
-
-/**
- * @brief Size of buffer in which to hold the certificate signing request (CSR).
- */
-#define pkcs11opCLAIM_PRIVATE_KEY_BUFFER_LENGTH    2048
-
-/**
  * @brief Represents string to be logged when mbedTLS returned error
  * does not contain a high-level code.
  */
@@ -144,19 +134,6 @@ typedef struct SigningCallbackContext
 static SigningCallbackContext_t xSigningContext = { 0 };
 
 /*-----------------------------------------------------------*/
-
-/**
- * @brief Reads a file into the given buffer.
- *
- * @param[in] pcPath Path of the file.
- * @param[out] pcBuffer Buffer to read file contents into.
- * @param[in] xBufferLength Length of #pcBuffer.
- * @param[out] pxOutWrittenLength Length of contents written to #pcBuffer.
- */
-static bool prvReadFile( const char * pcPath,
-                         char * pcBuffer,
-                         size_t xBufferLength,
-                         size_t * pxOutWrittenLength );
 
 /**
  * @brief Delete the specified crypto object from storage.
@@ -282,103 +259,6 @@ static CK_RV prvGenerateKeyPairEC( CK_SESSION_HANDLE xSession,
                                    const char * pcPublicKeyLabel,
                                    CK_OBJECT_HANDLE_PTR xPrivateKeyHandlePtr,
                                    CK_OBJECT_HANDLE_PTR xPublicKeyHandlePtr );
-
-/*-----------------------------------------------------------*/
-
-static bool prvReadFile( const char * pcPath,
-                         char * pcBuffer,
-                         size_t xBufferLength,
-                         size_t * pxOutWrittenLength )
-{
-    FILE * pxFile;
-    size_t xLength = 0;
-    bool xStatus = true;
-
-    /* Get the file descriptor for the CSR file. */
-    pxFile = fopen( pcPath, "rb" );
-
-    if( pxFile == NULL )
-    {
-        LogError( ( "Error opening file at path: %s. Error: %s.",
-                    pcPath, strerror( errno ) ) );
-        xStatus = false;
-    }
-    else
-    {
-        int result;
-        /* Seek to the end of the file, so that we can get the file size. */
-        result = fseek( pxFile, 0L, SEEK_END );
-
-        if( result == -1 )
-        {
-            LogError( ( "Failed while moving to end of file. Path: %s. Error: %s.",
-                        pcPath, strerror( errno ) ) );
-            xStatus = false;
-        }
-        else
-        {
-            long lenResult = -1;
-            /* Get the current position which is the file size. */
-            lenResult = ftell( pxFile );
-
-            if( lenResult == -1 )
-            {
-                LogError( ( "Failed to get length of file. Path: %s. Error: %s.", pcPath,
-                            strerror( errno ) ) );
-                xStatus = false;
-            }
-            else
-            {
-                xLength = ( size_t ) lenResult;
-            }
-        }
-
-        if( xStatus == true )
-        {
-            if( xLength > xBufferLength )
-            {
-                LogError( ( "Buffer too small for file. Buffer size: %ld. Required size: %ld.",
-                            xBufferLength, xLength ) );
-                xStatus = false;
-            }
-        }
-
-        if( xStatus == true )
-        {
-            /* Return to the beginning of the file. */
-            result = fseek( pxFile, 0L, SEEK_SET );
-
-            if( result == -1 )
-            {
-                LogError( ( "Failed to move to beginning of file. Path: %s. Error: %s.",
-                            pcPath, strerror( errno ) ) );
-                xStatus = false;
-            }
-        }
-
-        if( xStatus == true )
-        {
-            size_t written = 0;
-            /* Read the CSR into our buffer. */
-            written = fread( pcBuffer, 1, xLength, pxFile );
-
-            if( written != xLength )
-            {
-                LogError( ( "Failed reading file. Path: %s. Error: %s.", pcPath,
-                            strerror( errno ) ) );
-                xStatus = false;
-            }
-            else
-            {
-                *pxOutWrittenLength = xLength;
-            }
-        }
-
-        fclose( pxFile );
-    }
-
-    return xStatus;
-}
 
 /*-----------------------------------------------------------*/
 
@@ -958,7 +838,7 @@ static int prvRandomCallback( void * pxCtx,
         if( xRes != CKR_OK )
         {
             LogError( ( "Failed to generate a random number in RNG callback. "
-                        "C_GenerateRandom failed with %lu.", xRes ) );
+                        "C_GenerateRandom failed with %lu.", ( unsigned long ) xRes ) );
         }
     }
 

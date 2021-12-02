@@ -86,16 +86,6 @@ extern void vLoggingPrintf( const char * pcFormatString,
 #define PKCS11_FREE                                        vPortFree
 
 /**
- * @brief ESP32 NVS Partition where PKCS #11 data is stored
- */
-#define pkcs11configSTORAGE_PARTITION                      "storage"
-
-/**
- * @brief ESP32 NVS namespace for PKCS #11 data
- */
-#define pkcs11configSTORAGE_NS                             "creds"
-
-/**
  * @brief PKCS #11 default user PIN.
  *
  * The PKCS #11 standard specifies the presence of a user PIN. That feature is

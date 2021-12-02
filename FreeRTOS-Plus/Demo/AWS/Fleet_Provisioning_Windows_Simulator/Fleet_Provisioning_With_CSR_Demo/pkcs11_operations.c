@@ -173,20 +173,6 @@ static CK_RV prvProvisionPrivateRSAKey( CK_SESSION_HANDLE xSession,
                                         const char * pcLabel,
                                         mbedtls_pk_context * pxMbedPkContext );
 
-
-/**
- * @brief Import the specified private key into storage.
- *
- * @param[in] xSession The PKCS #11 session.
- * @param[in] pcPrivateKey The private key to store, in PEM format.
- * @param[in] xPrivateKeyLength The length of the key, including null terminator.
- * @param[in] pcLabel The label to store the key.
- */
-static CK_RV prvProvisionPrivateKey( CK_SESSION_HANDLE xSession,
-                                     const char * pcPrivateKey,
-                                     size_t xPrivateKeyLength,
-                                     const char * pcLabel );
-
 /**
  * @brief Import the specified X.509 client certificate into storage.
  *
@@ -505,56 +491,6 @@ static CK_RV prvProvisionPrivateRSAKey( CK_SESSION_HANDLE xSession,
     {
         free( pxRsaParams );
     }
-
-    return xResult;
-}
-
-/*-----------------------------------------------------------*/
-
-static CK_RV prvProvisionPrivateKey( CK_SESSION_HANDLE xSession,
-                                     const char * pcPrivateKey,
-                                     size_t xPrivateKeyLength,
-                                     const char * pcLabel )
-{
-    CK_RV xResult = CKR_OK;
-    mbedtls_pk_type_t xMbedKeyType = MBEDTLS_PK_NONE;
-    int xMbedResult = 0;
-    mbedtls_pk_context xMbedPkContext = { 0 };
-
-    mbedtls_pk_init( &xMbedPkContext );
-    xMbedResult = mbedtls_pk_parse_key( &xMbedPkContext, ( const uint8_t * ) pcPrivateKey,
-                                        xPrivateKeyLength, NULL, 0 );
-
-    if( xMbedResult != 0 )
-    {
-        LogError( ( "Unable to parse private key." ) );
-        xResult = CKR_ARGUMENTS_BAD;
-    }
-
-    /* Determine whether the key to be imported is RSA or EC. */
-    if( xResult == CKR_OK )
-    {
-        xMbedKeyType = mbedtls_pk_get_type( &xMbedPkContext );
-
-        if( xMbedKeyType == MBEDTLS_PK_RSA )
-        {
-            xResult = prvProvisionPrivateRSAKey( xSession, pcLabel, &xMbedPkContext );
-        }
-        else if( ( xMbedKeyType == MBEDTLS_PK_ECDSA ) ||
-                 ( xMbedKeyType == MBEDTLS_PK_ECKEY ) ||
-                 ( xMbedKeyType == MBEDTLS_PK_ECKEY_DH ) )
-        {
-            xResult = prvProvisionPrivateECKey( xSession, pcLabel, &xMbedPkContext );
-        }
-        else
-        {
-            LogError( ( "Invalid private key type provided. Only RSA-2048 and "
-                        "EC P-256 keys are supported." ) );
-            xResult = CKR_ARGUMENTS_BAD;
-        }
-    }
-
-    mbedtls_pk_free( &xMbedPkContext );
 
     return xResult;
 }
@@ -924,7 +860,7 @@ bool xGenerateKeyAndCsr( CK_SESSION_HANDLE xP11Session,
     mbedtls_pk_info_t xPrivKeyInfo;
     mbedtls_ecdsa_context xEcdsaContext;
     mbedtls_x509write_csr xReq;
-    int32_t usMbedtlsRet = -1;
+    int32_t ulMbedtlsRet = -1;
     const mbedtls_pk_info_t * pxHeader = mbedtls_pk_info_from_type( MBEDTLS_PK_ECKEY );
 
     assert( pcPrivKeyLabel != NULL );
@@ -943,29 +879,29 @@ bool xGenerateKeyAndCsr( CK_SESSION_HANDLE xP11Session,
         mbedtls_x509write_csr_init( &xReq );
         mbedtls_x509write_csr_set_md_alg( &xReq, MBEDTLS_MD_SHA256 );
 
-        usMbedtlsRet = mbedtls_x509write_csr_set_key_usage( &xReq, MBEDTLS_X509_KU_DIGITAL_SIGNATURE );
+        ulMbedtlsRet = mbedtls_x509write_csr_set_key_usage( &xReq, MBEDTLS_X509_KU_DIGITAL_SIGNATURE );
 
-        if( usMbedtlsRet == 0 )
+        if( ulMbedtlsRet == 0 )
         {
-            usMbedtlsRet = mbedtls_x509write_csr_set_ns_cert_type( &xReq, MBEDTLS_X509_NS_CERT_TYPE_SSL_CLIENT );
+            ulMbedtlsRet = mbedtls_x509write_csr_set_ns_cert_type( &xReq, MBEDTLS_X509_NS_CERT_TYPE_SSL_CLIENT );
         }
 
-        if( usMbedtlsRet == 0 )
+        if( ulMbedtlsRet == 0 )
         {
-            usMbedtlsRet = mbedtls_x509write_csr_set_subject_name( &xReq, democonfigCSR_SUBJECT_NAME );
+            ulMbedtlsRet = mbedtls_x509write_csr_set_subject_name( &xReq, democonfigCSR_SUBJECT_NAME );
         }
 
-        if( usMbedtlsRet == 0 )
+        if( ulMbedtlsRet == 0 )
         {
             mbedtls_pk_init( &xPrivKey );
         }
 
-        if( usMbedtlsRet == 0 )
+        if( ulMbedtlsRet == 0 )
         {
-            usMbedtlsRet = prvExtractEcPublicKey( xP11Session, &xEcdsaContext, xPubKeyHandle );
+            ulMbedtlsRet = prvExtractEcPublicKey( xP11Session, &xEcdsaContext, xPubKeyHandle );
         }
 
-        if( usMbedtlsRet == 0 )
+        if( ulMbedtlsRet == 0 )
         {
             xSigningContext.p11Session = xP11Session;
             xSigningContext.p11PrivateKey = xPrivKeyHandle;
@@ -978,7 +914,7 @@ bool xGenerateKeyAndCsr( CK_SESSION_HANDLE xP11Session,
 
             mbedtls_x509write_csr_set_key( &xReq, &xPrivKey );
 
-            usMbedtlsRet = mbedtls_x509write_csr_pem( &xReq, ( unsigned char * ) pcCsrBuffer,
+            ulMbedtlsRet = mbedtls_x509write_csr_pem( &xReq, ( unsigned char * ) pcCsrBuffer,
                                                       xCsrBufferLength, &prvRandomCallback,
                                                       &xP11Session );
         }
@@ -990,7 +926,7 @@ bool xGenerateKeyAndCsr( CK_SESSION_HANDLE xP11Session,
 
     *pxOutCsrLength = strlen( pcCsrBuffer );
 
-    return( usMbedtlsRet == 0 );
+    return( ulMbedtlsRet == 0 );
 }
 
 /*-----------------------------------------------------------*/

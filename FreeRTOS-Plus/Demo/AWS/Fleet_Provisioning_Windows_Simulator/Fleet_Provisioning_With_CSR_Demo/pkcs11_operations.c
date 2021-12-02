@@ -1000,17 +1000,109 @@ bool xLoadCertificate( CK_SESSION_HANDLE xP11Session,
                        const char * pcLabel,
                        size_t xCertificateLength )
 {
-    CK_RV xRet;
+    PKCS11_CertificateTemplate_t xCertificateTemplate;
+    CK_OBJECT_CLASS xCertificateClass = CKO_CERTIFICATE;
+    CK_CERTIFICATE_TYPE xCertificateType = CKC_X_509;
+    CK_FUNCTION_LIST_PTR xFunctionList = NULL;
+    CK_RV xResult = CKR_OK;
+    uint8_t* pucDerObject = NULL;
+    int32_t ulConversion = 0;
+    size_t xDerLen = 0;
+    CK_BBOOL xTokenStorage = CK_TRUE;
+    CK_BYTE pxSubject[] = "TestSubject";
+    CK_OBJECT_HANDLE xObjectHandle = CK_INVALID_HANDLE;
 
-    assert( pcCertificate != NULL );
-    assert( pcLabel != NULL );
+    assert(pcCertificate != NULL);
+    assert(pcLabel != NULL);
 
-    xRet = prvProvisionCertificate( xP11Session,
-                                    pcCertificate,
-                                    xCertificateLength + 1, /* MbedTLS includes null character in length for PEM objects. */
-                                    pcLabel );
+    /* Initialize the client certificate template. */
+    xCertificateTemplate.xObjectClass.type = CKA_CLASS;
+    xCertificateTemplate.xObjectClass.pValue = &xCertificateClass;
+    xCertificateTemplate.xObjectClass.ulValueLen = sizeof(xCertificateClass);
+    xCertificateTemplate.xSubject.type = CKA_SUBJECT;
+    xCertificateTemplate.xSubject.pValue = pxSubject;
+    xCertificateTemplate.xSubject.ulValueLen = strlen((const char*)pxSubject);
+    xCertificateTemplate.xValue.type = CKA_VALUE;
+    xCertificateTemplate.xValue.pValue = (CK_VOID_PTR)pcCertificate;
+    /* MbedTLS includes null character in length for PEM objects - add 1 to xCertificateLength. */
+    xCertificateTemplate.xValue.ulValueLen = (CK_ULONG)xCertificateLength + 1;
+    xCertificateTemplate.xLabel.type = CKA_LABEL;
+    xCertificateTemplate.xLabel.pValue = (CK_VOID_PTR)pcLabel;
+    xCertificateTemplate.xLabel.ulValueLen = strlen(pcLabel);
+    xCertificateTemplate.xCertificateType.type = CKA_CERTIFICATE_TYPE;
+    xCertificateTemplate.xCertificateType.pValue = &xCertificateType;
+    xCertificateTemplate.xCertificateType.ulValueLen = sizeof(CK_CERTIFICATE_TYPE);
+    xCertificateTemplate.xTokenObject.type = CKA_TOKEN;
+    xCertificateTemplate.xTokenObject.pValue = &xTokenStorage;
+    xCertificateTemplate.xTokenObject.ulValueLen = sizeof(xTokenStorage);
 
-    return( xRet == CKR_OK );
+    if (pcCertificate == NULL)
+    {
+        LogError(("Certificate cannot be null."));
+        xResult = CKR_ATTRIBUTE_VALUE_INVALID;
+    }
+
+    if (xResult == CKR_OK)
+    {
+        xResult = C_GetFunctionList(&xFunctionList);
+
+        if (xResult != CKR_OK)
+        {
+            LogError(("Could not get a PKCS #11 function pointer."));
+        }
+    }
+
+    if (xResult == CKR_OK)
+    {
+        /* Convert the certificate to DER format from PEM. The DER key should
+         * be about 3/4 the size of the PEM key, so mallocing the PEM key size
+         * is sufficient. */
+        pucDerObject = (uint8_t*)malloc(xCertificateTemplate.xValue.ulValueLen);
+        xDerLen = xCertificateTemplate.xValue.ulValueLen;
+
+        if (pucDerObject != NULL)
+        {
+            ulConversion = convert_pem_to_der((unsigned char*)xCertificateTemplate.xValue.pValue,
+                xCertificateTemplate.xValue.ulValueLen,
+                pucDerObject, &xDerLen);
+
+            if (0 != ulConversion)
+            {
+                LogError(("Failed to convert provided certificate."));
+                xResult = CKR_ARGUMENTS_BAD;
+            }
+        }
+        else
+        {
+            LogError(("Failed to allocate buffer for converting certificate to DER."));
+            xResult = CKR_HOST_MEMORY;
+        }
+    }
+
+    if (xResult == CKR_OK)
+    {
+        /* Set the template pointers to refer to the DER converted objects. */
+        xCertificateTemplate.xValue.pValue = pucDerObject;
+        xCertificateTemplate.xValue.ulValueLen = xDerLen;
+
+        /* Best effort clean-up of the existing object, if it exists. */
+        prvDestroyProvidedObjects(xP11Session, (CK_BYTE_PTR*)&pcLabel, &xCertificateClass, 1);
+
+        /* Create an object using the encoded client certificate. */
+        LogInfo(("Writing certificate into label \"%s\".", pcLabel));
+
+        xResult = xFunctionList->C_CreateObject(xP11Session,
+            (CK_ATTRIBUTE_PTR)&xCertificateTemplate,
+            sizeof(xCertificateTemplate) / sizeof(CK_ATTRIBUTE),
+            &xObjectHandle);
+    }
+
+    if (pucDerObject != NULL)
+    {
+        free(pucDerObject);
+    }
+
+    return( xResult == CKR_OK );
 }
 
 /*-----------------------------------------------------------*/

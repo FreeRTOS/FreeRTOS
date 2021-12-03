@@ -37,7 +37,7 @@
 #include "fleet_provisioning.h"
 
 /* Header include. */
-#include "fleet_provisioning_tinycbor_serializer.h"
+#include "tinycbor_serializer.h"
 /*-----------------------------------------------------------*/
 
 bool xGenerateCsrRequest( uint8_t * pucBuffer,

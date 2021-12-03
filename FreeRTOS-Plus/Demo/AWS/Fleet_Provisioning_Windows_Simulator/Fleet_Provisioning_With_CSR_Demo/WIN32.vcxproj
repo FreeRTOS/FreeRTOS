@@ -493,7 +493,7 @@
     <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborpretty_stdio.c" />
     <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborvalidation.c" />
     <ClCompile Include="DemoTasks\FleetProvisioningDemoExample.c" />
-    <ClCompile Include="fleet_provisioning_tinycbor_serializer.c" />
+    <ClCompile Include="tinycbor_serializer.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="mqtt_operations.c" />
     <ClCompile Include="pkcs11_operations.c" />
@@ -629,7 +629,7 @@
     <ClInclude Include="..\..\..\..\ThirdParty\tinycbor\src\utf8_p.h" />
     <ClInclude Include="core_pkcs11_config.h" />
     <ClInclude Include="fleet_provisioning_config.h" />
-    <ClInclude Include="fleet_provisioning_tinycbor_serializer.h" />
+    <ClInclude Include="tinycbor_serializer.h" />
     <ClInclude Include="mbedtls_config.h" />
     <ClInclude Include="demo_config.h" />
     <ClInclude Include="FreeRTOSConfig.h" />

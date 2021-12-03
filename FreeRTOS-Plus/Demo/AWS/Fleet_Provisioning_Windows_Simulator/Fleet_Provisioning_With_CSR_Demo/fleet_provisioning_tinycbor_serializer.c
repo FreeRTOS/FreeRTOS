@@ -24,6 +24,9 @@
  *
  */
 
+/* FreeRTOS includes. */
+#include <FreeRTOS.h>
+
 /* TinyCBOR library for CBOR encoding and decoding operations. */
 #include "cbor.h"
 
@@ -46,9 +49,9 @@ bool xGenerateCsrRequest( uint8_t * pucBuffer,
     CborEncoder xEncoder, xMapEncoder;
     CborError xCborRet;
 
-    assert( pucBuffer != NULL );
-    assert( pcCsr != NULL );
-    assert( pxOutLengthWritten != NULL );
+    configASSERT( pucBuffer != NULL );
+    configASSERT( pcCsr != NULL );
+    configASSERT( pxOutLengthWritten != NULL );
 
     /* For details on the CreateCertificatefromCsr request payload format, see:
      * https://docs.aws.amazon.com/iot/latest/developerguide/fleet-provision-api.html#create-cert-csr-request-payload
@@ -102,10 +105,10 @@ bool xGenerateRegisterThingRequest( uint8_t * pucBuffer,
     CborEncoder xEncoder, xMapEncoder, xParametersEncoder;
     CborError xCborRet;
 
-    assert( pucBuffer != NULL );
-    assert( pcCertificateOwnershipToken != NULL );
-    assert( pcSerial != NULL );
-    assert( pxOutLengthWritten != NULL );
+    configASSERT( pucBuffer != NULL );
+    configASSERT( pcCertificateOwnershipToken != NULL );
+    configASSERT( pcSerial != NULL );
+    configASSERT( pxOutLengthWritten != NULL );
 
     /* For details on the RegisterThing request payload format, see:
      * https://docs.aws.amazon.com/iot/latest/developerguide/fleet-provision-api.html#register-thing-request-payload
@@ -187,14 +190,14 @@ bool xParseCsrResponse( const uint8_t * pucResponse,
     CborValue xMap;
     CborValue xValue;
 
-    assert( pucResponse != NULL );
-    assert( pcCertificateBuffer != NULL );
-    assert( pxCertificateBufferLength != NULL );
-    assert( pcCertificateIdBuffer != NULL );
-    assert( pxCertificateIdBufferLength != NULL );
-    assert( *pxCertificateIdBufferLength >= 64 );
-    assert( pcOwnershipTokenBuffer != NULL );
-    assert( pxOwnershipTokenBufferLength != NULL );
+    configASSERT( pucResponse != NULL );
+    configASSERT( pcCertificateBuffer != NULL );
+    configASSERT( pxCertificateBufferLength != NULL );
+    configASSERT( pcCertificateIdBuffer != NULL );
+    configASSERT( pxCertificateIdBufferLength != NULL );
+    configASSERT( *pxCertificateIdBufferLength >= 64 );
+    configASSERT( pcOwnershipTokenBuffer != NULL );
+    configASSERT( pxOwnershipTokenBufferLength != NULL );
 
     /* For details on the CreateCertificatefromCsr response payload format, see:
      * https://docs.aws.amazon.com/iot/latest/developerguide/fleet-provision-api.html#register-thing-response-payload
@@ -322,9 +325,9 @@ bool xParseRegisterThingResponse( const uint8_t * pucResponse,
     CborValue map;
     CborValue value;
 
-    assert( pucResponse != NULL );
-    assert( pcThingNameBuffer != NULL );
-    assert( pxThingNameBufferLength != NULL );
+    configASSERT( pucResponse != NULL );
+    configASSERT( pcThingNameBuffer != NULL );
+    configASSERT( pxThingNameBufferLength != NULL );
 
     /* For details on the RegisterThing response payload format, see:
      * https://docs.aws.amazon.com/iot/latest/developerguide/fleet-provision-api.html#register-thing-response-payload

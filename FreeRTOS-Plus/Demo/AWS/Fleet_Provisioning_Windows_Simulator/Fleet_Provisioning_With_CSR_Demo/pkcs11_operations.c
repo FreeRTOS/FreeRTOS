@@ -494,10 +494,10 @@ bool xGenerateKeyAndCsr( CK_SESSION_HANDLE xP11Session,
     int32_t ulMbedtlsRet = -1;
     const mbedtls_pk_info_t * pxHeader = mbedtls_pk_info_from_type( MBEDTLS_PK_ECKEY );
 
-    assert( pcPrivKeyLabel != NULL );
-    assert( pcPubKeyLabel != NULL );
-    assert( pcCsrBuffer != NULL );
-    assert( pxOutCsrLength != NULL );
+    configASSERT( pcPrivKeyLabel != NULL );
+    configASSERT( pcPubKeyLabel != NULL );
+    configASSERT( pcCsrBuffer != NULL );
+    configASSERT( pxOutCsrLength != NULL );
 
     xPkcs11Ret = prvGenerateKeyPairEC( xP11Session,
                                        pcPrivKeyLabel,
@@ -579,8 +579,8 @@ bool xLoadCertificate( CK_SESSION_HANDLE xP11Session,
     CK_BYTE pxSubject[] = "TestSubject";
     CK_OBJECT_HANDLE xObjectHandle = CK_INVALID_HANDLE;
 
-    assert(pcCertificate != NULL);
-    assert(pcLabel != NULL);
+    configASSERT(pcCertificate != NULL);
+    configASSERT(pcLabel != NULL);
 
     /* Initialize the client certificate template. */
     xCertificateTemplate.xObjectClass.type = CKA_CLASS;

@@ -100,9 +100,9 @@
 #define fpdemoPROVISIONING_TEMPLATE_NAME_LENGTH    ( ( uint16_t ) ( sizeof( democonfigPROVISIONING_TEMPLATE_NAME ) - 1 ) )
 
 /**
- * @brief The length of #democonfigDEVICE_SERIAL_NUMBER.
+ * @brief The length of #democonfigFP_DEMO_ID.
  */
-#define fpdemoDEVICE_SERIAL_NUMBER_LENGTH          ( ( uint16_t ) ( sizeof( democonfigFP_DEMO_ID ) - 1 ) )
+#define fpdemoFP_DEMO_ID_LENGTH          ( ( uint16_t ) ( sizeof( democonfigFP_DEMO_ID ) - 1 ) )
 
 /**
  * @brief Size of AWS IoT Thing name buffer.
@@ -693,7 +693,7 @@ int prvFleetProvisioningTask( void * pvParameters )
                                                      pcOwnershipToken,
                                                      xOwnershipTokenLength,
                                                      democonfigFP_DEMO_ID,
-                                                     fpdemoDEVICE_SERIAL_NUMBER_LENGTH,
+                                                     fpdemoFP_DEMO_ID_LENGTH,
                                                      &xPayloadLength );
         }
 

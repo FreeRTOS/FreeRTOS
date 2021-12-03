@@ -89,34 +89,6 @@ static const char * pcNoLowLevelMbedTlsCodeStr = "<No-Low-Level-Code>";
     ? mbedtls_low_level_strerr( mbedTlsCode )           \
     : pcNoLowLevelMbedTlsCodeStr
 
-/* Length parameters for importing RSA-2048 private keys. */
-#define MODULUS_LENGTH        pkcs11RSA_2048_MODULUS_BITS / 8
-#define E_LENGTH              3
-#define D_LENGTH              pkcs11RSA_2048_MODULUS_BITS / 8
-#define PRIME_1_LENGTH        128
-#define PRIME_2_LENGTH        128
-#define EXPONENT_1_LENGTH     128
-#define EXPONENT_2_LENGTH     128
-#define COEFFICIENT_LENGTH    128
-
-#define EC_PARAMS_LENGTH      10
-#define EC_D_LENGTH           32
-
-/**
- * @brief Struct for holding parsed RSA-2048 private keys.
- */
-typedef struct RsaParams_t
-{
-    CK_BYTE modulus[ MODULUS_LENGTH + 1 ];
-    CK_BYTE e[ E_LENGTH + 1 ];
-    CK_BYTE d[ D_LENGTH + 1 ];
-    CK_BYTE prime1[ PRIME_1_LENGTH + 1 ];
-    CK_BYTE prime2[ PRIME_2_LENGTH + 1 ];
-    CK_BYTE exponent1[ EXPONENT_1_LENGTH + 1 ];
-    CK_BYTE exponent2[ EXPONENT_2_LENGTH + 1 ];
-    CK_BYTE coefficient[ COEFFICIENT_LENGTH + 1 ];
-} RsaParams_t;
-
 /**
  * @brief Struct containing parameters needed by the signing callback.
  */

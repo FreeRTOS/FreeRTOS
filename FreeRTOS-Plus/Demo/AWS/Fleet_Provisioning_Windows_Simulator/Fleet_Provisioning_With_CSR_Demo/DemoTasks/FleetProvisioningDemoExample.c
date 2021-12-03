@@ -80,7 +80,7 @@
 /* Demo includes. */
 #include "mqtt_operations.h"
 #include "pkcs11_operations.h"
-#include "fleet_provisioning_serializer.h"
+#include "fleet_provisioning_tinycbor_serializer.h"
 #include "using_mbedtls_pkcs11.h"
 
 /**

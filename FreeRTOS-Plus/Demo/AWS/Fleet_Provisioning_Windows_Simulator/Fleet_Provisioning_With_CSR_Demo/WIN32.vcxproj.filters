@@ -409,7 +409,7 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\FreeRTOS-Plus\Demo\Common\Logging\windows\Logging_WinSim.c" />
     <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\error.c" />
-    <ClCompile Include="fleet_provisioning_serializer.c" />
+    <ClCompile Include="fleet_provisioning_tinycbor_serializer.c" />
     <ClCompile Include="pkcs11_operations.c" />
     <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\x509write_crt.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
@@ -848,7 +848,7 @@
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreJSON\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
-    <ClInclude Include="fleet_provisioning_serializer.h" />
+    <ClInclude Include="fleet_provisioning_tinycbor_serializer.h" />
     <ClInclude Include="pkcs11_operations.h" />
     <ClInclude Include="core_pkcs11_config.h">
       <Filter>Config</Filter>

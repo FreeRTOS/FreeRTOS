@@ -66,7 +66,15 @@ extern void vLoggingPrintf( const char * pcFormatString,
 
 /************ End of logging configuration ****************/
 
-#ifndef democonfigCLIENT_IDENTIFIER
+/**
+ * @brief The unique ID used by the demo to differentiate instances.
+ *
+ *!!! Please note a #defined constant is used for convenience of demonstration
+ *!!! only.  Production devices can use something unique to the device that can
+ *!!! be read by software, such as a production serial number, instead of a
+ *!!! hard coded constant.
+ */
+#define democonfigFP_DEMO_ID     "DemoID"__TIME__
 
 /**
  * @brief The MQTT client identifier used in this example.  Each client identifier
@@ -78,7 +86,8 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * time. This client id can cause collision, if more than one instance of the same
  * binary is used at the same time to connect to the broker.
  */
-    #define democonfigCLIENT_IDENTIFIER    "testClient"__TIME__
+#ifndef democonfigCLIENT_IDENTIFIER
+    #define democonfigCLIENT_IDENTIFIER    "client"democonfigFP_DEMO_ID
 #endif
 
 /**
@@ -137,16 +146,6 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * demo.
  *
  * #define democonfigPROVISIONING_TEMPLATE_NAME    "...insert here..."
- */
-
-/**
- * @brief Serial number to send in the request to the Fleet Provisioning
- * RegisterThing API.
- *
- * This is sent as a parameter to the provisioning template, which uses it to
- * generate a unique Thing name. This should be unique per device.
- *
- * #define democonfigDEVICE_SERIAL_NUMBER    "...insert here..."
  */
 
 /**

@@ -90,9 +90,6 @@
 #ifndef democonfigPROVISIONING_TEMPLATE_NAME
     #error "Please define democonfigPROVISIONING_TEMPLATE_NAME to the template name registered with AWS IoT Core in demo_config.h."
 #endif
-#ifndef democonfigDEVICE_SERIAL_NUMBER
-    #error "Please define a serial number (democonfigDEVICE_SERIAL_NUMBER) in demo_config.h."
-#endif
 #ifndef democonfigROOT_CA_PEM
     #error "Please define Root CA certificate of the MQTT broker(democonfigROOT_CA_PEM) in demo_config.h."
 #endif
@@ -105,7 +102,7 @@
 /**
  * @brief The length of #democonfigDEVICE_SERIAL_NUMBER.
  */
-#define fpdemoDEVICE_SERIAL_NUMBER_LENGTH          ( ( uint16_t ) ( sizeof( democonfigDEVICE_SERIAL_NUMBER ) - 1 ) )
+#define fpdemoDEVICE_SERIAL_NUMBER_LENGTH          ( ( uint16_t ) ( sizeof( democonfigFP_DEMO_ID ) - 1 ) )
 
 /**
  * @brief Size of AWS IoT Thing name buffer.
@@ -695,7 +692,7 @@ int prvFleetProvisioningTask( void * pvParameters )
                                                      democonfigNETWORK_BUFFER_SIZE,
                                                      pcOwnershipToken,
                                                      xOwnershipTokenLength,
-                                                     democonfigDEVICE_SERIAL_NUMBER,
+                                                     democonfigFP_DEMO_ID,
                                                      fpdemoDEVICE_SERIAL_NUMBER_LENGTH,
                                                      &xPayloadLength );
         }

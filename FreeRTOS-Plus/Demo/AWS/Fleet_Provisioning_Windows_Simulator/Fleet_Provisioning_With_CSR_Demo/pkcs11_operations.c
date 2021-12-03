@@ -234,7 +234,7 @@ static CK_RV prvDestroyProvidedObjects( CK_SESSION_HANDLE xSession,
             pxLabelPtr = pxPkcsLabelsPtr[ xIndex ];
 
             xResult = xFindObjectWithLabelAndClass( xSession, ( char * ) pxLabelPtr,
-                                                    strlen( ( char * ) pxLabelPtr ),
+                                                    strnlen( ( char * ) pxLabelPtr, pkcs11configMAX_LABEL_LENGTH),
                                                     pxClass[ xIndex ], &xObjectHandle );
 
             while( ( xResult == CKR_OK ) && ( xObjectHandle != CK_INVALID_HANDLE ) )
@@ -248,7 +248,7 @@ static CK_RV prvDestroyProvidedObjects( CK_SESSION_HANDLE xSession,
                 if( xResult == CKR_OK )
                 {
                     xResult = xFindObjectWithLabelAndClass( xSession, ( char * ) pxLabelPtr,
-                                                            strlen( ( char * ) pxLabelPtr ),
+                                                            strnlen( ( char * ) pxLabelPtr,  pkcs11configMAX_LABEL_LENGTH ),
                                                             pxClass[ xIndex ], &xObjectHandle );
                 }
                 else
@@ -460,7 +460,7 @@ static CK_RV prvGenerateKeyPairEC( CK_SESSION_HANDLE xSession,
         { CKA_KEY_TYPE,  NULL /* &keyType */,         sizeof( xKeyType )         },
         { CKA_VERIFY,    NULL /* &trueObject */,      sizeof( xTrueObject )      },
         { CKA_EC_PARAMS, NULL /* ecParams */,         sizeof( pxEcParams )       },
-        { CKA_LABEL,     ( void * ) pcPublicKeyLabel, strlen( pcPublicKeyLabel ) }
+        { CKA_LABEL,     ( void * ) pcPublicKeyLabel, strnlen( pcPublicKeyLabel, pkcs11configMAX_LABEL_LENGTH) }
     };
 
     /* Aggregate initializers must not use the address of an automatic variable. */
@@ -474,7 +474,7 @@ static CK_RV prvGenerateKeyPairEC( CK_SESSION_HANDLE xSession,
         { CKA_TOKEN,    NULL /* &trueObject */,       sizeof( xTrueObject )       },
         { CKA_PRIVATE,  NULL /* &trueObject */,       sizeof( xTrueObject )       },
         { CKA_SIGN,     NULL /* &trueObject */,       sizeof( xTrueObject )       },
-        { CKA_LABEL,    ( void * ) pcPrivateKeyLabel, strlen( pcPrivateKeyLabel ) }
+        { CKA_LABEL,    ( void * ) pcPrivateKeyLabel, strnlen( pcPrivateKeyLabel, pkcs11configMAX_LABEL_LENGTH) }
     };
 
     /* Aggregate initializers must not use the address of an automatic variable. */
@@ -623,7 +623,7 @@ bool xLoadCertificate( CK_SESSION_HANDLE xP11Session,
     xCertificateTemplate.xValue.ulValueLen = (CK_ULONG)xCertificateLength + 1;
     xCertificateTemplate.xLabel.type = CKA_LABEL;
     xCertificateTemplate.xLabel.pValue = (CK_VOID_PTR)pcLabel;
-    xCertificateTemplate.xLabel.ulValueLen = strlen(pcLabel);
+    xCertificateTemplate.xLabel.ulValueLen = strnlen(pcLabel, pkcs11configMAX_LABEL_LENGTH);
     xCertificateTemplate.xCertificateType.type = CKA_CERTIFICATE_TYPE;
     xCertificateTemplate.xCertificateType.pValue = &xCertificateType;
     xCertificateTemplate.xCertificateType.ulValueLen = sizeof(CK_CERTIFICATE_TYPE);

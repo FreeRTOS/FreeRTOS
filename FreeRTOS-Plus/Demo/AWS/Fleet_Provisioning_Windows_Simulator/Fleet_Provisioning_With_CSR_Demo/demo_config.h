@@ -74,7 +74,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *!!! be read by software, such as a production serial number, instead of a
  *!!! hard coded constant.
  */
-#define democonfigFP_DEMO_ID     "DemoID"__TIME__
+#define democonfigFP_DEMO_ID    "DemoID"__TIME__
 
 /**
  * @brief The MQTT client identifier used in this example.  Each client identifier

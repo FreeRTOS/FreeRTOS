@@ -206,7 +206,7 @@ static CK_RV prvDestroyProvidedObjects( CK_SESSION_HANDLE xSession,
             pxLabelPtr = pxPkcsLabelsPtr[ xIndex ];
 
             xResult = xFindObjectWithLabelAndClass( xSession, ( char * ) pxLabelPtr,
-                                                    strnlen( ( char * ) pxLabelPtr, pkcs11configMAX_LABEL_LENGTH),
+                                                    strnlen( ( char * ) pxLabelPtr, pkcs11configMAX_LABEL_LENGTH ),
                                                     pxClass[ xIndex ], &xObjectHandle );
 
             while( ( xResult == CKR_OK ) && ( xObjectHandle != CK_INVALID_HANDLE ) )
@@ -220,7 +220,7 @@ static CK_RV prvDestroyProvidedObjects( CK_SESSION_HANDLE xSession,
                 if( xResult == CKR_OK )
                 {
                     xResult = xFindObjectWithLabelAndClass( xSession, ( char * ) pxLabelPtr,
-                                                            strnlen( ( char * ) pxLabelPtr,  pkcs11configMAX_LABEL_LENGTH ),
+                                                            strnlen( ( char * ) pxLabelPtr, pkcs11configMAX_LABEL_LENGTH ),
                                                             pxClass[ xIndex ], &xObjectHandle );
                 }
                 else
@@ -429,10 +429,10 @@ static CK_RV prvGenerateKeyPairEC( CK_SESSION_HANDLE xSession,
     CK_BBOOL xTrueObject = CK_TRUE;
     CK_ATTRIBUTE pxPublicKeyTemplate[] =
     {
-        { CKA_KEY_TYPE,  NULL /* &keyType */,         sizeof( xKeyType )         },
-        { CKA_VERIFY,    NULL /* &trueObject */,      sizeof( xTrueObject )      },
-        { CKA_EC_PARAMS, NULL /* ecParams */,         sizeof( pxEcParams )       },
-        { CKA_LABEL,     ( void * ) pcPublicKeyLabel, strnlen( pcPublicKeyLabel, pkcs11configMAX_LABEL_LENGTH) }
+        { CKA_KEY_TYPE,  NULL /* &keyType */,         sizeof( xKeyType )             },
+        { CKA_VERIFY,    NULL /* &trueObject */,      sizeof( xTrueObject )          },
+        { CKA_EC_PARAMS, NULL /* ecParams */,         sizeof( pxEcParams )           },
+        { CKA_LABEL,     ( void * ) pcPublicKeyLabel, strnlen( pcPublicKeyLabel, pkcs11configMAX_LABEL_LENGTH )}
     };
 
     /* Aggregate initializers must not use the address of an automatic variable. */
@@ -442,11 +442,11 @@ static CK_RV prvGenerateKeyPairEC( CK_SESSION_HANDLE xSession,
 
     CK_ATTRIBUTE privateKeyTemplate[] =
     {
-        { CKA_KEY_TYPE, NULL /* &keyType */,          sizeof( xKeyType )          },
-        { CKA_TOKEN,    NULL /* &trueObject */,       sizeof( xTrueObject )       },
-        { CKA_PRIVATE,  NULL /* &trueObject */,       sizeof( xTrueObject )       },
-        { CKA_SIGN,     NULL /* &trueObject */,       sizeof( xTrueObject )       },
-        { CKA_LABEL,    ( void * ) pcPrivateKeyLabel, strnlen( pcPrivateKeyLabel, pkcs11configMAX_LABEL_LENGTH) }
+        { CKA_KEY_TYPE, NULL /* &keyType */,          sizeof( xKeyType )             },
+        { CKA_TOKEN,    NULL /* &trueObject */,       sizeof( xTrueObject )          },
+        { CKA_PRIVATE,  NULL /* &trueObject */,       sizeof( xTrueObject )          },
+        { CKA_SIGN,     NULL /* &trueObject */,       sizeof( xTrueObject )          },
+        { CKA_LABEL,    ( void * ) pcPrivateKeyLabel, strnlen( pcPrivateKeyLabel, pkcs11configMAX_LABEL_LENGTH )}
     };
 
     /* Aggregate initializers must not use the address of an automatic variable. */
@@ -572,95 +572,95 @@ bool xLoadCertificate( CK_SESSION_HANDLE xP11Session,
     CK_CERTIFICATE_TYPE xCertificateType = CKC_X_509;
     CK_FUNCTION_LIST_PTR xFunctionList = NULL;
     CK_RV xResult = CKR_OK;
-    uint8_t* pucDerObject = NULL;
+    uint8_t * pucDerObject = NULL;
     int32_t ulConversion = 0;
     size_t xDerLen = 0;
     CK_BBOOL xTokenStorage = CK_TRUE;
     CK_BYTE pxSubject[] = "TestSubject";
     CK_OBJECT_HANDLE xObjectHandle = CK_INVALID_HANDLE;
 
-    configASSERT(pcLabel != NULL);
+    configASSERT( pcLabel != NULL );
 
-    if (pcCertificate == NULL)
+    if( pcCertificate == NULL )
     {
-        LogError(("Certificate cannot be null."));
+        LogError( ( "Certificate cannot be null." ) );
         xResult = CKR_ATTRIBUTE_VALUE_INVALID;
     }
 
-    if (xResult == CKR_OK)
+    if( xResult == CKR_OK )
     {
         /* Convert the certificate to DER format from PEM. The DER key should
          * be about 3/4 the size of the PEM key, so mallocing the PEM key size
          * is sufficient. */
-        pucDerObject = (uint8_t*)malloc(xCertificateLength + 1);
+        pucDerObject = ( uint8_t * ) malloc( xCertificateLength + 1 );
         xDerLen = xCertificateLength + 1;
 
-        if (pucDerObject != NULL)
+        if( pucDerObject != NULL )
         {
-            ulConversion = convert_pem_to_der((unsigned char*)pcCertificate,
-                xCertificateLength + 1,
-                pucDerObject, &xDerLen);
+            ulConversion = convert_pem_to_der( ( unsigned char * ) pcCertificate,
+                                               xCertificateLength + 1,
+                                               pucDerObject, &xDerLen );
 
-            if (0 != ulConversion)
+            if( 0 != ulConversion )
             {
-                LogError(("Failed to convert provided certificate."));
+                LogError( ( "Failed to convert provided certificate." ) );
                 xResult = CKR_ARGUMENTS_BAD;
             }
         }
         else
         {
-            LogError(("Failed to allocate buffer for converting certificate to DER."));
+            LogError( ( "Failed to allocate buffer for converting certificate to DER." ) );
             xResult = CKR_HOST_MEMORY;
         }
     }
 
-    if (xResult == CKR_OK)
+    if( xResult == CKR_OK )
     {
-        xResult = C_GetFunctionList(&xFunctionList);
+        xResult = C_GetFunctionList( &xFunctionList );
 
-        if (xResult != CKR_OK)
+        if( xResult != CKR_OK )
         {
-            LogError(("Could not get a PKCS #11 function pointer."));
+            LogError( ( "Could not get a PKCS #11 function pointer." ) );
         }
     }
 
-    if (xResult == CKR_OK)
+    if( xResult == CKR_OK )
     {
         /* Initialize the client certificate template. */
         xCertificateTemplate.xObjectClass.type = CKA_CLASS;
         xCertificateTemplate.xObjectClass.pValue = &xCertificateClass;
-        xCertificateTemplate.xObjectClass.ulValueLen = sizeof(xCertificateClass);
+        xCertificateTemplate.xObjectClass.ulValueLen = sizeof( xCertificateClass );
         xCertificateTemplate.xSubject.type = CKA_SUBJECT;
         xCertificateTemplate.xSubject.pValue = pxSubject;
-        xCertificateTemplate.xSubject.ulValueLen = strlen((const char*)pxSubject);
+        xCertificateTemplate.xSubject.ulValueLen = strlen( ( const char * ) pxSubject );
         xCertificateTemplate.xValue.type = CKA_VALUE;
         xCertificateTemplate.xValue.pValue = pucDerObject;
         xCertificateTemplate.xValue.ulValueLen = xDerLen;
         xCertificateTemplate.xLabel.type = CKA_LABEL;
-        xCertificateTemplate.xLabel.pValue = (CK_VOID_PTR)pcLabel;
-        xCertificateTemplate.xLabel.ulValueLen = strnlen(pcLabel, pkcs11configMAX_LABEL_LENGTH);
+        xCertificateTemplate.xLabel.pValue = ( CK_VOID_PTR ) pcLabel;
+        xCertificateTemplate.xLabel.ulValueLen = strnlen( pcLabel, pkcs11configMAX_LABEL_LENGTH );
         xCertificateTemplate.xCertificateType.type = CKA_CERTIFICATE_TYPE;
         xCertificateTemplate.xCertificateType.pValue = &xCertificateType;
-        xCertificateTemplate.xCertificateType.ulValueLen = sizeof(CK_CERTIFICATE_TYPE);
+        xCertificateTemplate.xCertificateType.ulValueLen = sizeof( CK_CERTIFICATE_TYPE );
         xCertificateTemplate.xTokenObject.type = CKA_TOKEN;
         xCertificateTemplate.xTokenObject.pValue = &xTokenStorage;
-        xCertificateTemplate.xTokenObject.ulValueLen = sizeof(xTokenStorage);
+        xCertificateTemplate.xTokenObject.ulValueLen = sizeof( xTokenStorage );
 
         /* Best effort clean-up of the existing object, if it exists. */
-        prvDestroyProvidedObjects(xP11Session, (CK_BYTE_PTR*)&pcLabel, &xCertificateClass, 1);
+        prvDestroyProvidedObjects( xP11Session, ( CK_BYTE_PTR * ) &pcLabel, &xCertificateClass, 1 );
 
         /* Create an object using the encoded client certificate. */
-        LogInfo(("Writing certificate into label \"%s\".", pcLabel));
+        LogInfo( ( "Writing certificate into label \"%s\".", pcLabel ) );
 
-        xResult = xFunctionList->C_CreateObject(xP11Session,
-            (CK_ATTRIBUTE_PTR)&xCertificateTemplate,
-            sizeof(xCertificateTemplate) / sizeof(CK_ATTRIBUTE),
-            &xObjectHandle);
+        xResult = xFunctionList->C_CreateObject( xP11Session,
+                                                 ( CK_ATTRIBUTE_PTR ) &xCertificateTemplate,
+                                                 sizeof( xCertificateTemplate ) / sizeof( CK_ATTRIBUTE ),
+                                                 &xObjectHandle );
     }
 
-    if (pucDerObject != NULL)
+    if( pucDerObject != NULL )
     {
-        free(pucDerObject);
+        free( pucDerObject );
     }
 
     return( xResult == CKR_OK );

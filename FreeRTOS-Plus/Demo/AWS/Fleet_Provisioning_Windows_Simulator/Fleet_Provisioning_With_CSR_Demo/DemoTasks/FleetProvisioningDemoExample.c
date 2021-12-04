@@ -102,7 +102,7 @@
 /**
  * @brief The length of #democonfigFP_DEMO_ID.
  */
-#define fpdemoFP_DEMO_ID_LENGTH          ( ( uint16_t ) ( sizeof( democonfigFP_DEMO_ID ) - 1 ) )
+#define fpdemoFP_DEMO_ID_LENGTH                    ( ( uint16_t ) ( sizeof( democonfigFP_DEMO_ID ) - 1 ) )
 
 /**
  * @brief Size of AWS IoT Thing name buffer.

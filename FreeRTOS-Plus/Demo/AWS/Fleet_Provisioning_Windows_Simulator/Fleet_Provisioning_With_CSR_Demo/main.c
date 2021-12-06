@@ -106,10 +106,6 @@ static UBaseType_t ulNextRand;
 
 int main( void )
 {
-    /***
-     * See https://www.FreeRTOS.org/iot-device-shadow for configuration and usage instructions.
-     ***/
-
     /* Miscellaneous initialization including preparing the logging and seeding
      * the random number generator. */
     prvMiscInitialisation();

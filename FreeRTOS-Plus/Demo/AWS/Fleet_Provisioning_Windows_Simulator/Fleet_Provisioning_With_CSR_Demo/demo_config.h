@@ -74,7 +74,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *!!! be read by software, such as a production serial number, instead of a
  *!!! hard coded constant.
  */
-#define democonfigFP_DEMO_ID    "DemoID"__TIME__
+#define democonfigFP_DEMO_ID    "FPDemoID"__TIME__
 
 /**
  * @brief The MQTT client identifier used in this example.  Each client identifier
@@ -156,7 +156,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * This is passed to MbedTLS; see https://tls.mbed.org/api/x509__csr_8h.html#a954eae166b125cea2115b7db8c896e90
  */
 #ifndef democonfigCSR_SUBJECT_NAME
-    #define democonfigCSR_SUBJECT_NAME    "CN=Fleet Provisioning Demo"
+    #define democonfigCSR_SUBJECT_NAME    "CN="democonfigFP_DEMO_ID
 #endif
 
 /**

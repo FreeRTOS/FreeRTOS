@@ -164,6 +164,12 @@ extern void vLoggingPrintf( const char * pcFormatString,
  *
  * In the Windows port, this stack only holds a structure. The actual
  * stack is created by an operating system thread.
+ * 
+ * @note This demo runs on WinSim and the minimal stack size is functional.
+ * However, if you are porting components of this demo to other platforms,
+ * the stack size may need to be increased to accommodate the size of the
+ * buffers used when generating new keys and certificates.
+ * 
  */
 #define democonfigDEMO_STACKSIZE            configMINIMAL_STACK_SIZE
 

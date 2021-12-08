@@ -221,6 +221,7 @@ int main_full( void )
     xTaskCreate( prvDemoQueueSpaceFunctions, "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
     xTaskCreate( prvPermanentlyBlockingSemaphoreTask, "BlockSem", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
     xTaskCreate( prvPermanentlyBlockingNotificationTask, "BlockNoti", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvDemonstrateChangingTimerReloadMode, "TimerMode", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
 
     vStartMessageBufferTasks( configMINIMAL_STACK_SIZE );
     vStartStreamBufferTasks();
@@ -270,7 +271,6 @@ static void prvCheckTask( void * pvParameters )
 {
     TickType_t xNextWakeTime;
     const TickType_t xCycleFrequency = pdMS_TO_TICKS( 10000UL );
-    HeapStats_t xHeapStats;
 
     /* Just to remove compiler warning. */
     ( void ) pvParameters;
@@ -428,7 +428,7 @@ static void prvCheckTask( void * pvParameters )
             }
         #endif /* configSUPPORT_STATIC_ALLOCATION */
 
-        printf( "%s - tick count %u \r\n",
+        printf( "%s - tick count %lu \r\n",
                 pcStatusMessage,
                 xTaskGetTickCount() );
 
@@ -582,10 +582,10 @@ void vFullDemoTickHookFunction( void )
 static void prvPendedFunction( void * pvParameter1,
                                uint32_t ulParameter2 )
 {
-    static intptr_t ulLastParameter1 = 1000UL, ulLastParameter2 = 0UL;
-    intptr_t ulParameter1;
+    static uintptr_t ulLastParameter1 = 1000UL, ulLastParameter2 = 0UL;
+    uintptr_t ulParameter1;
 
-    ulParameter1 = ( intptr_t ) pvParameter1;
+    ulParameter1 = ( uintptr_t ) pvParameter1;
 
     /* Ensure the parameters are as expected. */
     configASSERT( ulParameter1 == ( ulLastParameter1 + 1 ) );

@@ -31,9 +31,8 @@ MEMORY
 }
 ENTRY(Reset_Handler)
 
-_Min_Heap_Size = 0x40000 ;        /* Required amount of heap. _RB_*/
-_Min_Stack_Size = 0x4000 ;       /* Required amount of stack. */
-M_VECTOR_RAM_SIZE = (16 + 48) * 4;
+_Min_Heap_Size = 0x8 ;        /* Not used as building heap_4.c */
+_Min_Stack_Size = 0x400 ;       /* Required amount of stack.  Used by main(), then re-used as the interrupt stack after the kernel starts. */
 _estack = ORIGIN(RAM) + LENGTH(RAM);
 
 

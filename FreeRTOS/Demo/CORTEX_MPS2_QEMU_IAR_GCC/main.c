@@ -40,6 +40,11 @@
  * enables the IAR IDE to connect and debug:
  * qemu-system-arm -machine mps2-an385 -cpu cortex-m3 -kernel [path-to]/RTOSDemo.out -nographic -serial stdio -semihosting -semihosting-config enable=on,target=native -s -S
  * and set IAR connect GDB server to "localhost,1234" in project debug options.
+ *
+ * Use the following for GCC
+ * qemu-system-arm -machine mps2-an385 -cpu cortex-m3 -kernel [path-to]/RTOSDemo.elf -nographic -serial stdio -semihosting -semihosting-config enable=on,target=native -s -S
+ *
+ * In both cases remove the "-s -S" to run standalone, without the debugger.
  */
 
 /* FreeRTOS includes. */
@@ -60,7 +65,7 @@ The blinky demo is implemented and described in main_blinky.c.
 If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is not 1 then the comprehensive test and
 demo application will be built.  The comprehensive test and demo application is
 implemented and described in main_full.c. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
 /* printf() output uses the UART.  These constants define the addresses of the
 required UART registers. */
@@ -266,13 +271,13 @@ static void prvUARTInit( void )
 
 int __write( int iFile, char *pcString, int iStringLength )
 {
-	uint32_t ulNextChar;
+	int iNextChar;
 
 	/* Avoid compiler warnings about unused parameters. */
 	( void ) iFile;
 
 	/* Output the formatted string to the UART. */
-	for( ulNextChar = 0; ulNextChar < iStringLength; ulNextChar++ )
+	for( iNextChar = 0; iNextChar < iStringLength; iNextChar++ )
 	{
 		while( ( UART0_STATE & TX_BUFFER_MASK ) != 0 );
 		UART0_DATA = *pcString;

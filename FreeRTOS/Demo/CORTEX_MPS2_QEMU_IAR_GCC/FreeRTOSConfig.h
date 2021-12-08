@@ -116,7 +116,7 @@ allowable margin of error on slower processors (slower than the Win32
 machine on which the test is developed). */
 #define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN   4
 
-#ifdef __ICCARM__ /* Prevent C code being included in asm files. */
+#ifndef __IASMARM__ /* Prevent C code being included in IAR asm files. */
 	void vAssertCalled( const char *pcFileName, uint32_t ulLine );
 	#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __FILE__, __LINE__ );
 #endif

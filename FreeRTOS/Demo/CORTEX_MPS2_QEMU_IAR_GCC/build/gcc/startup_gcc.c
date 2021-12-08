@@ -59,9 +59,6 @@ static void HardFault_Handler( void ) __attribute__( ( naked ) );
 static void Default_Handler( void ) __attribute__( ( naked ) );
 void Reset_Handler( void );
 
-/* Peripheral interrupt handlers. */
-extern void EthernetISR( void );
-
 static void uart_init( void );
 extern int main( void );
 extern uint32_t _estack;
@@ -98,7 +95,7 @@ const uint32_t* isr_vector[] __attribute__((section(".isr_vector"))) =
     0,
     0,
     0,
-    ( uint32_t * ) EthernetISR, // Ethernet   13
+    0, // Ethernet   13
 };
 
 void Reset_Handler( void )
@@ -146,6 +143,7 @@ void Default_Handler( void )
 {
     __asm volatile
     (
+        ".align 8                                \n"
         " ldr r3, NVIC_INT_CTRL_CONST            \n" /* Load the address of the interrupt control register into r3. */
         " ldr r2, [r3, #0]                       \n" /* Load the value of the interrupt control register into r2. */
         " uxtb r2, r2                            \n" /* The interrupt number is in the least significant byte - clear all other bits. */
@@ -160,6 +158,7 @@ void HardFault_Handler( void )
 {
     __asm volatile
     (
+        ".align 8                                                   \n"
         " tst lr, #4                                                \n"
         " ite eq                                                    \n"
         " mrseq r0, msp                                             \n"

@@ -2,6 +2,9 @@ OUTPUT_DIR := ./output
 IMAGE := RTOSDemo.elf
 SUB_MAKEFILE_DIR = ./library-makefiles
 
+# The directory that contains the /source and /demo sub directories.
+FREERTOS_ROOT = ./../../../../
+
 CC = arm-none-eabi-gcc
 LD = arm-none-eabi-gcc
 SIZE = arm-none-eabi-size
@@ -15,7 +18,6 @@ CFLAGS += $(INCLUDE_DIRS) -nostartfiles -ffreestanding -mthumb -mcpu=cortex-m3 \
 #
 # Kernel build.
 #
-FREERTOS_ROOT = ./../../../../
 KERNEL_DIR = $(FREERTOS_ROOT)/Source
 KERNEL_PORT_DIR += $(KERNEL_DIR)/portable/GCC/ARM_CM3
 INCLUDE_DIRS += -I$(KERNEL_DIR)/include \
@@ -44,7 +46,7 @@ SOURCE_FILES += (COMMON_DEMO_FILES)/blocktim.c
 SOURCE_FILES += (COMMON_DEMO_FILES)/countsem.c
 SOURCE_FILES += (COMMON_DEMO_FILES)/death.c
 SOURCE_FILES += (COMMON_DEMO_FILES)/dynamic.c
-SOURCE_FILES += (COMMON_DEMO_FILES)/EventGoupsDemo.c
+SOURCE_FILES += (COMMON_DEMO_FILES)/EventGroupsDemo.c
 SOURCE_FILES += (COMMON_DEMO_FILES)/GenQTest.c
 SOURCE_FILES += (COMMON_DEMO_FILES)/integer.c
 SOURCE_FILES += (COMMON_DEMO_FILES)/IntQueue.c
@@ -72,11 +74,11 @@ SOURCE_FILES += (COMMON_DEMO_FILES)/TimerDemo.c
 #
 DEMO_PROJECT = $(DEMO_ROOT)/CORTEX_MPS2_QEMU_IAR_GCC
 VPATH += $(DEMO_PROJECT)
-INCLUDE_DIRS += -I$(DEMO_PROJECT)
+INCLUDE_DIRS += -I$(DEMO_PROJECT) -I$(DEMO_PROJECT)/CMSIS
 SOURCE_FILES += (DEMO_PROJECT)/main.c
 SOURCE_FILES += (DEMO_PROJECT)/main_blinky.c
 SOURCE_FILES += (DEMO_PROJECT)/main_full.c
-SOURCE_FILES += startup_gcc.c
+SOURCE_FILES += ./startup_gcc.c
 
 #Create a list of object files with the desired output directory path.
 OBJS = $(SOURCE_FILES:%.c=%.o)

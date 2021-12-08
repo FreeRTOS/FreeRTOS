@@ -165,6 +165,9 @@ const TickType_t xTaskPeriod = pdMS_TO_TICKS( 5000UL );
 TickType_t xPreviousWakeTime;
 extern uint32_t ulNestCount;
 
+    /* Avoid warning about unused parameter. */
+    ( void ) pvParameters;
+
 	xPreviousWakeTime = xTaskGetTickCount();
 
 	for( ;; )
@@ -271,7 +274,7 @@ extern uint32_t ulNestCount;
 
 		/* It is normally not good to call printf() from an embedded system,
 		although it is ok in this simulated case. */
-		printf( "%s : %d (%d)\r\n", pcMessage, (int) xTaskGetTickCount(), ulNestCount );
+		printf( "%s : %d (%d)\r\n", pcMessage, (int) xTaskGetTickCount(), ( int ) ulNestCount );
 	}
 }
 /*-----------------------------------------------------------*/

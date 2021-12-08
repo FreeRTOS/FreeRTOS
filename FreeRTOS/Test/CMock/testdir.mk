@@ -131,7 +131,7 @@ $(PROJ_DIR)/%.i : $(KERNEL_DIR)/%.c
 
 # compile the project objects with coverage instrumented
 $(PROJ_DIR)/%.o : $(PROJ_DIR)/%.i
-    $(CC) -c $< $(CPPFLAGS) $(CFLAGS) $(INCLUDE_DIR) $(GCC_COV_OPTS) -o $@
+    $(CC) -c $< $(CPPFLAGS) $(CFLAGS) $(INCLUDE_DIR) $(GCC_COV_OPTS) -Wall -Wextra -Werror -pedantic -std=c89 -o $@
 
 # Build mock objects
 $(SCRATCH_DIR)/mock_%.o : $(MOCKS_DIR)/mock_%.c

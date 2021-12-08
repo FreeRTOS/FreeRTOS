@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202107.00
+ * FreeRTOS V202111.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -57,8 +57,8 @@
 
 /*-----------------------------------------------------------*/
 
-/** 
- * @brief Each compilation unit that consumes the NetworkContext must define it. 
+/**
+ * @brief Each compilation unit that consumes the NetworkContext must define it.
  * It should contain a single pointer as seen below whenever the header file
  * of this transport implementation is included to your project.
  *
@@ -165,18 +165,28 @@ static int32_t generateRandomBytes( void * pvCtx,
  * @return Zero on success.
  */
 static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
-                                         char * pcLabelName,
+                                         const char * pcLabelName,
                                          CK_OBJECT_CLASS xClass,
                                          mbedtls_x509_crt * pxCertificateContext );
 
 /**
- * @brief Helper for setting up potentially hardware-based cryptographic context.
+ * @brief Helper for setting up potentially hardware-based cryptographic context
+ * for the client TLS certificate and private key.
  *
- * @param Caller context.
+ * @param[in] Caller context.
+ * @param[in] PKCS11 label which contains the desired private key.
  *
  * @return Zero on success.
  */
-static CK_RV initializeClientKeys( SSLContext_t * pxCtx );
+static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
+                                   const char * pcLabelName );
+
+/**
+ * @brief Stub function to satisfy mbedtls checks before sign operations
+ *
+ * @return 1.
+ */
+int canDoStub( mbedtls_pk_type_t type );
 
 /**
  * @brief Sign a cryptographic hash with the private key.
@@ -248,6 +258,8 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
     configASSERT( pHostName != NULL );
     configASSERT( pNetworkCredentials != NULL );
     configASSERT( pNetworkCredentials->pRootCa != NULL );
+    configASSERT( pNetworkCredentials->pClientCertLabel != NULL );
+    configASSERT( pNetworkCredentials->pPrivateKeyLabel != NULL );
 
     pTlsTransportParams = pNetworkContext->pParams;
 
@@ -316,7 +328,8 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
         /* Setup the client private key. */
-        xResult = initializeClientKeys( &( pTlsTransportParams->sslContext ) );
+        xResult = initializeClientKeys( &( pTlsTransportParams->sslContext ),
+                                        pNetworkCredentials->pPrivateKeyLabel );
 
         if( xResult != CKR_OK )
         {
@@ -328,7 +341,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
         {
             /* Setup the client certificate. */
             xResult = readCertificateIntoContext( &( pTlsTransportParams->sslContext ),
-                                                  pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS,
+                                                  pNetworkCredentials->pClientCertLabel,
                                                   CKO_CERTIFICATE,
                                                   &( pTlsTransportParams->sslContext.clientCert ) );
 
@@ -510,7 +523,7 @@ static int32_t generateRandomBytes( void * pvCtx,
 /*-----------------------------------------------------------*/
 
 static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
-                                         char * pcLabelName,
+                                         const char * pcLabelName,
                                          CK_OBJECT_CLASS xClass,
                                          mbedtls_x509_crt * pxCertificateContext )
 {
@@ -521,7 +534,8 @@ static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
     /* Get the handle of the certificate. */
     xResult = xFindObjectWithLabelAndClass( pSslContext->xP11Session,
                                             pcLabelName,
-                                            strlen( pcLabelName ),
+                                            strnlen( pcLabelName,
+                                                     pkcs11configMAX_LABEL_LENGTH ),
                                             xClass,
                                             &xCertObj );
 
@@ -582,11 +596,13 @@ static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
  * @brief Helper for setting up potentially hardware-based cryptographic context
  * for the client TLS certificate and private key.
  *
- * @param Caller context.
+ * @param[in] Caller context.
+ * @param[in] PKCS11 label which contains the desired private key.
  *
  * @return Zero on success.
  */
-static CK_RV initializeClientKeys( SSLContext_t * pxCtx )
+static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
+                                   const char * pcLabelName )
 {
     CK_RV xResult = CKR_OK;
     CK_SLOT_ID * pxSlotIds = NULL;
@@ -634,8 +650,9 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx )
     {
         /* Get the handle of the device private key. */
         xResult = xFindObjectWithLabelAndClass( pxCtx->xP11Session,
-                                                pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS,
-                                                sizeof( pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS ) - 1UL,
+                                                pcLabelName,
+                                                strnlen( pcLabelName,
+                                                         pkcs11configMAX_LABEL_LENGTH ),
                                                 CKO_PRIVATE_KEY,
                                                 &pxCtx->xP11PrivateKey );
     }
@@ -681,6 +698,25 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx )
     if( xResult == CKR_OK )
     {
         memcpy( &pxCtx->privKeyInfo, mbedtls_pk_info_from_type( xKeyAlgo ), sizeof( mbedtls_pk_info_t ) );
+
+        /* Assign unimplemented function pointers to NULL */
+        pxCtx->privKeyInfo.get_bitlen = NULL;
+        pxCtx->privKeyInfo.can_do = canDoStub;
+        pxCtx->privKeyInfo.verify_func = NULL;
+#if defined(MBEDTLS_ECDSA_C) && defined(MBEDTLS_ECP_RESTARTABLE)
+        pxCtx->privKeyInfo.verify_rs_func = NULL;
+        pxCtx->privKeyInfo.sign_rs_func = NULL;
+#endif /* MBEDTLS_ECDSA_C && MBEDTLS_ECP_RESTARTABLE */
+        pxCtx->privKeyInfo.decrypt_func = NULL;
+        pxCtx->privKeyInfo.encrypt_func = NULL;
+        pxCtx->privKeyInfo.check_pair_func = NULL;
+        pxCtx->privKeyInfo.ctx_alloc_func = NULL;
+        pxCtx->privKeyInfo.ctx_free_func = NULL;
+#if defined(MBEDTLS_ECDSA_C) && defined(MBEDTLS_ECP_RESTARTABLE)
+        pxCtx->privKeyInfo.rs_alloc_func = NULL;
+        pxCtx->privKeyInfo.rs_free_func = NULL;
+#endif /* MBEDTLS_ECDSA_C && MBEDTLS_ECP_RESTARTABLE */
+        pxCtx->privKeyInfo.debug_func = NULL;
 
         pxCtx->privKeyInfo.sign_func = privateKeySigningCallback;
         pxCtx->privKey.pk_info = &pxCtx->privKeyInfo;
@@ -786,6 +822,13 @@ static int32_t privateKeySigningCallback( void * pvContext,
     }
 
     return lFinalResult;
+}
+
+/*-----------------------------------------------------------*/
+
+int canDoStub( mbedtls_pk_type_t type )
+{
+    return 1;
 }
 
 /*-----------------------------------------------------------*/

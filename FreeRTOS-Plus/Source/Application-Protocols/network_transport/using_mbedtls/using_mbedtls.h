@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202107.00
+ * FreeRTOS V202111.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -25,15 +25,12 @@
  */
 
 /**
- * @file tls_freertos_pkcs11.h
+ * @file tls_freertos.h
  * @brief TLS transport interface header.
- * @note This file is derived from the tls_freertos.h header file found in the mqtt
- * section of IoT Libraries source code. The file has been modified to support using
- * PKCS #11 when using TLS.
  */
 
-#ifndef USING_MBEDTLS_PKCS11
-#define USING_MBEDTLS_PKCS11
+#ifndef USING_MBEDTLS
+#define USING_MBEDTLS
 
 /**************************************************/
 /******* DO NOT CHANGE the following order ********/
@@ -50,7 +47,7 @@
 
 /* Logging configuration for the Sockets. */
 #ifndef LIBRARY_LOG_NAME
-    #define LIBRARY_LOG_NAME     "PkcsTlsTransport"
+    #define LIBRARY_LOG_NAME     "TlsTransport"
 #endif
 #ifndef LIBRARY_LOG_LEVEL
     #define LIBRARY_LOG_LEVEL    LOG_ERROR
@@ -85,36 +82,26 @@ extern void vLoggingPrintf( const char * pcFormatString,
 #include "mbedtls/ssl.h"
 #include "mbedtls/threading.h"
 #include "mbedtls/x509.h"
-#include "mbedtls/pk.h"
-#include "mbedtls/pk_internal.h"
 #include "mbedtls/error.h"
-
-/* PKCS #11 includes. */
-#include "core_pkcs11.h"
 
 /**
  * @brief Secured connection context.
  */
 typedef struct SSLContext
 {
-    mbedtls_ssl_config config;            /**< @brief SSL connection configuration. */
-    mbedtls_ssl_context context;          /**< @brief SSL connection context */
-    mbedtls_x509_crt_profile certProfile; /**< @brief Certificate security profile for this connection. */
-    mbedtls_x509_crt rootCa;              /**< @brief Root CA certificate context. */
-    mbedtls_x509_crt clientCert;          /**< @brief Client certificate context. */
-    mbedtls_pk_context privKey;           /**< @brief Client private key context. */
-    mbedtls_pk_info_t privKeyInfo;        /**< @brief Client private key info. */
-
-    /* PKCS#11. */
-    CK_FUNCTION_LIST_PTR pxP11FunctionList;
-    CK_SESSION_HANDLE xP11Session;
-    CK_OBJECT_HANDLE xP11PrivateKey;
-    CK_KEY_TYPE xKeyType;
+    mbedtls_ssl_config config;               /**< @brief SSL connection configuration. */
+    mbedtls_ssl_context context;             /**< @brief SSL connection context */
+    mbedtls_x509_crt_profile certProfile;    /**< @brief Certificate security profile for this connection. */
+    mbedtls_x509_crt rootCa;                 /**< @brief Root CA certificate context. */
+    mbedtls_x509_crt clientCert;             /**< @brief Client certificate context. */
+    mbedtls_pk_context privKey;              /**< @brief Client private key context. */
+    mbedtls_entropy_context entropyContext;  /**< @brief Entropy context for random number generation. */
+    mbedtls_ctr_drbg_context ctrDrgbContext; /**< @brief CTR DRBG context for random number generation. */
 } SSLContext_t;
 
 /**
- * @brief Definition of the network context for the transport interface
- * implementation that uses mbedTLS and FreeRTOS+TLS sockets.
+ * @brief Parameters for the network context of the transport interface
+ * implementation that uses mbedTLS and FreeRTOS+TCP sockets.
  */
 typedef struct TlsTransportParams
 {
@@ -142,12 +129,12 @@ typedef struct NetworkCredentials
      */
     BaseType_t disableSni;
 
-    const unsigned char * pRootCa;   /**< @brief String representing a trusted server root certificate. */
-    size_t rootCaSize;               /**< @brief Size associated with #NetworkCredentials.pRootCa. */
-    const unsigned char * pUserName; /**< @brief String representing the username for MQTT. */
-    size_t userNameSize;             /**< @brief Size associated with #NetworkCredentials.pUserName. */
-    const unsigned char * pPassword; /**< @brief String representing the password for MQTT. */
-    size_t passwordSize;             /**< @brief Size associated with #NetworkCredentials.pPassword. */
+    const uint8_t * pRootCa;     /**< @brief String representing a trusted server root certificate. */
+    size_t rootCaSize;           /**< @brief Size associated with #NetworkCredentials.pRootCa. */
+    const uint8_t * pClientCert; /**< @brief String representing the client certificate. */
+    size_t clientCertSize;       /**< @brief Size associated with #NetworkCredentials.pClientCert. */
+    const uint8_t * pPrivateKey; /**< @brief String representing the client certificate's private key. */
+    size_t privateKeySize;       /**< @brief Size associated with #NetworkCredentials.pPrivateKey. */
 } NetworkCredentials_t;
 
 /**
@@ -228,4 +215,4 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
                            const void * pBuffer,
                            size_t bytesToSend );
 
-#endif /* ifndef USING_MBEDTLS_PKCS11 */
+#endif /* ifndef USING_MBEDTLS */

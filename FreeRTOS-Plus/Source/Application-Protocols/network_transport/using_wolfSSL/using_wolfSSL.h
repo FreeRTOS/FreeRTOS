@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202107.00
+ * FreeRTOS V202111.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -25,12 +25,12 @@
  */
 
 /**
- * @file tls_freertos.h
+ * @file using_wolfSSL.h
  * @brief TLS transport interface header.
  */
 
-#ifndef USING_MBEDTLS
-#define USING_MBEDTLS
+#ifndef USING_WOLFSSL_H
+#define USING_WOLFSSL_H
 
 /**************************************************/
 /******* DO NOT CHANGE the following order ********/
@@ -50,20 +50,7 @@
     #define LIBRARY_LOG_NAME     "TlsTransport"
 #endif
 #ifndef LIBRARY_LOG_LEVEL
-    #define LIBRARY_LOG_LEVEL    LOG_ERROR
-#endif
-
-/* Prototype for the function used to print to console on Windows simulator
- * of FreeRTOS.
- * The function prints to the console before the network is connected;
- * then a UDP port after the network has connected. */
-extern void vLoggingPrintf( const char * pcFormatString,
-                            ... );
-
-/* Map the SdkLog macro to the logging function to enable logging
- * on Windows simulator. */
-#ifndef SdkLog
-    #define SdkLog( message )    vLoggingPrintf message
+    #define LIBRARY_LOG_LEVEL    LOG_INFO
 #endif
 
 #include "logging_stack.h"
@@ -76,38 +63,27 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /* Transport interface include. */
 #include "transport_interface.h"
 
-/* mbed TLS includes. */
-#include "mbedtls/ctr_drbg.h"
-#include "mbedtls/entropy.h"
-#include "mbedtls/ssl.h"
-#include "mbedtls/threading.h"
-#include "mbedtls/x509.h"
-#include "mbedtls/error.h"
+/* wolfSSL interface include. */
+#include "wolfssl/ssl.h"
 
 /**
  * @brief Secured connection context.
  */
 typedef struct SSLContext
 {
-    mbedtls_ssl_config config;               /**< @brief SSL connection configuration. */
-    mbedtls_ssl_context context;             /**< @brief SSL connection context */
-    mbedtls_x509_crt_profile certProfile;    /**< @brief Certificate security profile for this connection. */
-    mbedtls_x509_crt rootCa;                 /**< @brief Root CA certificate context. */
-    mbedtls_x509_crt clientCert;             /**< @brief Client certificate context. */
-    mbedtls_pk_context privKey;              /**< @brief Client private key context. */
-    mbedtls_entropy_context entropyContext;  /**< @brief Entropy context for random number generation. */
-    mbedtls_ctr_drbg_context ctrDrgbContext; /**< @brief CTR DRBG context for random number generation. */
+    WOLFSSL_CTX* ctx;                     /**< @brief wolfSSL context */
+    WOLFSSL* ssl;                         /**< @brief wolfSSL ssl session context */
 } SSLContext_t;
 
 /**
- * @brief Parameters for the network context of the transport interface
- * implementation that uses mbedTLS and FreeRTOS+TCP sockets.
+ * @brief Definition of the network context for the transport interface
+ * implementation that uses mbedTLS and FreeRTOS+TLS sockets.
  */
-typedef struct TlsTransportParams
+struct NetworkContext
 {
     Socket_t tcpSocket;
     SSLContext_t sslContext;
-} TlsTransportParams_t;
+};
 
 /**
  * @brief Contains the credentials necessary for tls connection setup.
@@ -115,26 +91,31 @@ typedef struct TlsTransportParams
 typedef struct NetworkCredentials
 {
     /**
-     * @brief To use ALPN, set this to a NULL-terminated list of supported
-     * protocols in decreasing order of preference.
+     * @brief Set this to a non-NULL value to use ALPN.
+     *
+     * This string must be NULL-terminated.
      *
      * See [this link]
      * (https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/)
      * for more information.
      */
-    const char ** pAlpnProtos;
+    const char * pAlpnProtos;
 
     /**
      * @brief Disable server name indication (SNI) for a TLS session.
      */
     BaseType_t disableSni;
 
-    const uint8_t * pRootCa;     /**< @brief String representing a trusted server root certificate. */
-    size_t rootCaSize;           /**< @brief Size associated with #NetworkCredentials.pRootCa. */
-    const uint8_t * pClientCert; /**< @brief String representing the client certificate. */
-    size_t clientCertSize;       /**< @brief Size associated with #NetworkCredentials.pClientCert. */
-    const uint8_t * pPrivateKey; /**< @brief String representing the client certificate's private key. */
-    size_t privateKeySize;       /**< @brief Size associated with #NetworkCredentials.pPrivateKey. */
+    const unsigned char * pRootCa;     /**< @brief String representing a trusted server root certificate. */
+    size_t rootCaSize;                 /**< @brief Size associated with #IotNetworkCredentials.pRootCa. */
+    const unsigned char * pClientCert; /**< @brief String representing the client certificate. */
+    size_t clientCertSize;             /**< @brief Size associated with #IotNetworkCredentials.pClientCert. */
+    const unsigned char * pPrivateKey; /**< @brief String representing the client certificate's private key. */
+    size_t privateKeySize;             /**< @brief Size associated with #IotNetworkCredentials.pPrivateKey. */
+    const unsigned char * pUserName;   /**< @brief String representing the username for MQTT. */
+    size_t userNameSize;               /**< @brief Size associated with #IotNetworkCredentials.pUserName. */
+    const unsigned char * pPassword;   /**< @brief String representing the password for MQTT. */
+    size_t passwordSize;               /**< @brief Size associated with #IotNetworkCredentials.pPassword. */
 } NetworkCredentials_t;
 
 /**
@@ -215,4 +196,4 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
                            const void * pBuffer,
                            size_t bytesToSend );
 
-#endif /* ifndef USING_MBEDTLS */
+#endif /* ifndef USING_WOLFSSL_H */

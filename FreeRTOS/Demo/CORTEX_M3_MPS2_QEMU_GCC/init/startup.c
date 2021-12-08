@@ -97,7 +97,7 @@ void prvGetRegistersFromStack( uint32_t * pulFaultStackAddress )
     {
     }
     /* remove the warning: variable <x> is set but not used */
-    r0;
+    ( void ) r0;
     r1;
     r2;
     r3;

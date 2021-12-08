@@ -71,6 +71,7 @@ LDFLAGS += -Xlinker -Map=${BUILD_DIR}/output.map
 
 CFLAGS += -nostartfiles -mthumb -mcpu=cortex-m3 -Wno-error=implicit-function-declaration
 CFLAGS += -Wno-builtin-declaration-mismatch -Werror
+CFLAGS += -Wall -Wextra
 
 ifeq ($(DEBUG), 1)
     CFLAGS += -ggdb3 -Og

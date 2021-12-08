@@ -131,7 +131,9 @@ void vApplicationMallocFailedHook( void )
 	(although it does not provide information on how the remaining heap might be
 	fragmented).  See http://www.freertos.org/a00111.html for more
 	information. */
-	vAssertCalled( __FILE__, __LINE__ );
+	printf( "\r\n\r\nMalloc failed\r\n" );
+	portDISABLE_INTERRUPTS();
+	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
@@ -157,7 +159,9 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 	/* Run time stack overflow checking is performed if
 	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
 	function is called if a stack overflow is detected. */
-	vAssertCalled( __FILE__, __LINE__ );
+	printf( "\r\n\r\nStack overflow in %s\r\n", pcTaskName );
+	portDISABLE_INTERRUPTS();
+	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
@@ -286,4 +290,20 @@ int __write( int iFile, char *pcString, int iStringLength )
 
 	return iStringLength;
 }
+/*-----------------------------------------------------------*/
+
+void *malloc( size_t size )
+{
+	( void ) size;
+
+	/* This project uses heap_4 so doesn't set up a heap for use by the C
+	library - but something is calling the C library malloc().  See
+	https://freertos.org/a00111.html for more information. */
+	printf( "\r\n\r\nUnexpected call to malloc() - should be usine pvPortMalloc()\r\n" );
+	portDISABLE_INTERRUPTS();
+	for( ;; );
+
+}
+
+
 

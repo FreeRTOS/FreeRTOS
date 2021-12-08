@@ -26,18 +26,12 @@
 
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "CMSIS/CMSDK_CM3.h"
-#include "CMSIS/core_cm3.h"
 
 /* UART peripheral register addresses and bits. */
 #define UART0_ADDR             ( ( UART_t * ) ( 0x40004000 ) )
 #define UART_DR( baseaddr )    ( *( uint32_t * ) ( baseaddr ) )
 #define UART_STATE( baseaddr ) ( *( uint32_t * ) ( baseaddr + 4 ) )
 #define UART_STATE_TXFULL      ( 1 << 0 )
-#define UART_CTRL_TX_EN        ( 1 << 0 )
-#define UART_CTRL_RX_EN        ( 1 << 1 )
 
 typedef struct UART_t
 {
@@ -59,7 +53,6 @@ static void HardFault_Handler( void ) __attribute__( ( naked ) );
 static void Default_Handler( void ) __attribute__( ( naked ) );
 void Reset_Handler( void );
 
-static void uart_init( void );
 extern int main( void );
 extern uint32_t _estack;
 
@@ -100,7 +93,6 @@ const uint32_t* isr_vector[] __attribute__((section(".isr_vector"))) =
 
 void Reset_Handler( void )
 {
-    uart_init();
     main();
 }
 
@@ -131,7 +123,7 @@ void prvGetRegistersFromStack( uint32_t *pulFaultStackAddress )
     pc = pulFaultStackAddress[ 6 ];
     psr = pulFaultStackAddress[ 7 ];
 
-    printf( "Fault" );
+    printf( "Calling prvGetRegistersFromStack() from fault handler" );
     fflush( stdout );
 
     /* When the following line is hit, the variables contain the register values. */
@@ -170,20 +162,6 @@ void HardFault_Handler( void )
     );
 }
 
-
-
-
-/**
- * @brief initializes the UART emulated hardware
- */
-static void uart_init( void )
-{
-    UART0_ADDR->BAUDDIV = 16;
-    UART0_ADDR->CTRL = UART_CTRL_TX_EN;
-
-    NVIC_DisableIRQ( ETHERNET_IRQn );
-    NVIC_SetPriority( ETHERNET_IRQn, 255 );
-}
 
 /* Output to UART. */
 int _write( int file, char *buf, int len )

@@ -104,6 +104,11 @@
 #define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 3 )
 #define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
 
+/* Stack sizes are defined relative to configMINIMAL_STACK_SIZE so they scale
+across projects that have that constant set differently - in this case the
+constant is different depending on the compiler in use. */
+#define mainMESSAGE_BUFFER_STACK_SIZE		( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
+
 /*-----------------------------------------------------------*/
 
 /* The task that checks the operation of all the other standard demo tasks, as
@@ -124,7 +129,7 @@ void main_full( void )
 	vStartQueuePeekTasks();
 	vStartQueueSetTasks();
 	vStartEventGroupTasks();
-	vStartMessageBufferTasks( configMINIMAL_STACK_SIZE );
+	vStartMessageBufferTasks( mainMESSAGE_BUFFER_STACK_SIZE );
 	vStartStreamBufferTasks();
 	vCreateAbortDelayTasks();
 	vStartCountingSemaphoreTasks();

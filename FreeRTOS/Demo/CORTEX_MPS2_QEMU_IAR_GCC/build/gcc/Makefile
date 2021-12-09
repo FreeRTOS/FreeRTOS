@@ -1,5 +1,5 @@
 OUTPUT_DIR := ./output
-IMAGE := RTOSDemo.elf
+IMAGE := RTOSDemo.out
 SUB_MAKEFILE_DIR = ./library-makefiles
 
 # The directory that contains the /source and /demo sub directories.

@@ -1050,7 +1050,7 @@
     <group>
         <name>Blinky Demo</name>
         <file>
-            <name>$PROJ_DIR$\main_blinky.c</name>
+            <name>$PROJ_DIR$\..\..\main_blinky.c</name>
         </file>
     </group>
     <group>
@@ -1058,25 +1058,25 @@
         <group>
             <name>include</name>
             <file>
-                <name>$PROJ_DIR$\..\..\Source\include\event_groups.h</name>
+                <name>$PROJ_DIR$\..\..\..\..\Source\include\event_groups.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\Source\include\message_buffer.h</name>
+                <name>$PROJ_DIR$\..\..\..\..\Source\include\message_buffer.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\Source\include\queue.h</name>
+                <name>$PROJ_DIR$\..\..\..\..\Source\include\queue.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\Source\include\semphr.h</name>
+                <name>$PROJ_DIR$\..\..\..\..\Source\include\semphr.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\Source\include\stream_buffer.h</name>
+                <name>$PROJ_DIR$\..\..\..\..\Source\include\stream_buffer.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\Source\include\task.h</name>
+                <name>$PROJ_DIR$\..\..\..\..\Source\include\task.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\Source\include\timers.h</name>
+                <name>$PROJ_DIR$\..\..\..\..\Source\include\timers.h</name>
             </file>
         </group>
         <group>
@@ -1086,37 +1086,37 @@
                 <group>
                     <name>ARM_CM3</name>
                     <file>
-                        <name>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CM3\port.c</name>
+                        <name>$PROJ_DIR$\..\..\..\..\Source\portable\IAR\ARM_CM3\port.c</name>
                     </file>
                     <file>
-                        <name>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CM3\portasm.s</name>
+                        <name>$PROJ_DIR$\..\..\..\..\Source\portable\IAR\ARM_CM3\portasm.s</name>
                     </file>
                 </group>
             </group>
             <group>
                 <name>MemMang</name>
                 <file>
-                    <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_4.c</name>
+                    <name>$PROJ_DIR$\..\..\..\..\Source\portable\MemMang\heap_4.c</name>
                 </file>
             </group>
         </group>
         <file>
-            <name>$PROJ_DIR$\..\..\Source\event_groups.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Source\event_groups.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\Source\list.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Source\list.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\Source\queue.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Source\queue.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\Source\stream_buffer.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Source\stream_buffer.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\Source\tasks.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Source\tasks.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\Source\timers.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Source\timers.c</name>
         </file>
     </group>
     <group>
@@ -1124,89 +1124,89 @@
         <group>
             <name>Standard Demo Tasks</name>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\AbortDelay.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\AbortDelay.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\BlockQ.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\BlockQ.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\blocktim.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\blocktim.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\countsem.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\countsem.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\death.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\death.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\dynamic.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\dynamic.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\EventGroupsDemo.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\EventGroupsDemo.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\GenQTest.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\GenQTest.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\integer.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\integer.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\IntQueue.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\IntQueue.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\IntQueueTimer.c</name>
+                <name>$PROJ_DIR$\..\..\IntQueueTimer.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\IntSemTest.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\IntSemTest.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\MessageBufferAMP.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\MessageBufferAMP.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\MessageBufferDemo.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\MessageBufferDemo.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\PollQ.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\PollQ.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\QPeek.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\QPeek.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\QueueOverwrite.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\QueueOverwrite.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\QueueSet.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\QueueSet.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\QueueSetPolling.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\QueueSetPolling.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\recmutex.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\recmutex.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\semtest.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\semtest.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\StaticAllocation.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\StaticAllocation.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\StreamBufferDemo.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\StreamBufferDemo.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\StreamBufferInterrupt.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\StreamBufferInterrupt.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\TaskNotify.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\TaskNotify.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\TaskNotifyArray.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\TaskNotifyArray.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\TimerDemo.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\TimerDemo.c</name>
             </file>
         </group>
         <file>
-            <name>$PROJ_DIR$\main_full.c</name>
+            <name>$PROJ_DIR$\..\..\main_full.c</name>
         </file>
     </group>
     <group>
@@ -1216,9 +1216,9 @@
         </file>
     </group>
     <file>
-        <name>$PROJ_DIR$\FreeRTOSConfig.h</name>
+        <name>$PROJ_DIR$\..\..\FreeRTOSConfig.h</name>
     </file>
     <file>
-        <name>$PROJ_DIR$\main.c</name>
+        <name>$PROJ_DIR$\..\..\main.c</name>
     </file>
 </project>

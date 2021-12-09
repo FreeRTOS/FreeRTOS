@@ -108,7 +108,7 @@
 across projects that have that constant set differently - in this case the
 constant is different depending on the compiler in use. */
 #define mainMESSAGE_BUFFER_STACK_SIZE		( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
-
+#define mainCHECK_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
 /*-----------------------------------------------------------*/
 
 /* The task that checks the operation of all the other standard demo tasks, as
@@ -149,7 +149,7 @@ void main_full( void )
 	or not the correct/expected number of tasks are running at any given time. */
 	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
-	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvCheckTask, "Check", mainCHECK_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();

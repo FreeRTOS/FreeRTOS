@@ -2879,6 +2879,7 @@ uxtaskgetsystemstate
 uxtaskgettasknumber
 uxtaskpriority
 uxtaskpriorityget
+uxtb
 uxtick
 uxtxstackbuffer
 uxvariabletoincrement

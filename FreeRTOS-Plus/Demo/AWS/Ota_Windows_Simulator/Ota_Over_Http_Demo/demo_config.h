@@ -190,7 +190,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /*
  * @brief Server's root CA certificate for TLS authentication with S3.
  *
- * The Baltimore Cybertrust Root CA Certificate is defined below.
+ * The Amazon Root CA Certificate is defined below.
  *
  * @note This certificate should be PEM-encoded.
  *

@@ -55,8 +55,9 @@ SECTIONS
         _sidata = .;
     } > FLASH
 
-    .data : AT (ADDR(.text) + SIZEOF(.text))
+    .data :
     {
+        . = ALIGN(8);
         _data = .;
         _sdata = .;
         *(vtable)
@@ -66,6 +67,7 @@ SECTIONS
 
     .bss :
     {
+        . = ALIGN(8);
         _bss = .;
         _sbss = .;
         *(.bss)

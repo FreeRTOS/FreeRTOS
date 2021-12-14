@@ -19,7 +19,7 @@
     },
     "policy": {
       "Properties": {
-        "PolicyName": "<provisioned-thing-policy>"
+        "PolicyName": "FleetProvisioningDemoThingPolicy"
       },
       "Type": "AWS::IoT::Policy"
     },

@@ -16,7 +16,7 @@
       ],
       "Resource": [
         "arn:aws:iot:<aws-region>:<aws-account-id>:topic/$aws/certificates/create-from-csr/*",
-        "arn:aws:iot:<aws-region>:<aws-account-id>:topic/$aws/provisioning-templates/<template-name>/provision/*"
+        "arn:aws:iot:<aws-region>:<aws-account-id>:topic/$aws/provisioning-templates/FleetProvisioningDemoTemplate/provision/*"
       ]
     },
     {
@@ -24,7 +24,7 @@
       "Action": "iot:Subscribe",
       "Resource": [
         "arn:aws:iot:<aws-region>:<aws-account-id>:topicfilter/$aws/certificates/create-from-csr/*",
-        "arn:aws:iot:<aws-region>:<aws-account-id>:topicfilter/$aws/provisioning-templates/<template-name>/provision/*"
+        "arn:aws:iot:<aws-region>:<aws-account-id>:topicfilter/$aws/provisioning-templates/FleetProvisioningDemoTemplate/provision/*"
       ]
     }
   ]

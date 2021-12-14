@@ -66,7 +66,7 @@ void uart_init()
  * @todo  implement if necessary
  *
  */
-int _fstat( int file )
+int _fstat(__attribute__((unused)) int file )
 {
     return 0;
 }
@@ -76,9 +76,9 @@ int _fstat( int file )
  * @todo  implement if necessary
  *
  */
-int _read( int file,
-           char * buf,
-           int len )
+int _read(__attribute__((unused)) int file,
+          __attribute__((unused)) char * buf,
+          __attribute__((unused)) int len )
 {
     return -1;
 }
@@ -91,9 +91,9 @@ int _read( int file,
  * @param [in] len   length of the buffer
  * @returns the number of bytes written
  */
-int _write( int file,
-            char * buf,
-            int len )
+int _write(__attribute__((unused)) int file,
+           __attribute__((unused)) char * buf,
+           int len )
 {
     int todo;
 

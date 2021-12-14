@@ -26,6 +26,9 @@
 
 
 /******************************************************************************
+ * See https://www.freertos.org/freertos-on-qemu-mps2-an385-model.html for
+ * instructions.
+ *
  * This project provides two demo applications.  A simple blinky style project,
  * and a more comprehensive test and demo application.  The
  * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY constant, defined in this file, is used to
@@ -95,6 +98,10 @@ static void prvUARTInit( void );
 
 void main( void )
 {
+	/* See https://www.freertos.org/freertos-on-qemu-mps2-an385-model.html for
+	instructions. */
+
+	
 	/* Hardware initialisation.  printf() output uses the UART for IO. */
 	prvUARTInit();
 

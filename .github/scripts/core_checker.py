@@ -121,6 +121,7 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.la',
     '.launch',
     '.lcf',
+    '.ld',
     '.lds',
     '.lib',
     '.lk1',
@@ -262,6 +263,8 @@ FREERTOS_IGNORED_PATTERNS = [
 ]
 
 FREERTOS_IGNORED_FILES = [
+    '.cproject',
+    '.project',
     'fyi-another-way-to-ignore-file.txt',
     'mbedtls_config.h',
     'requirements.txt',

@@ -257,6 +257,8 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*CMSIS.*',
     r'.*/makefile',
     r'.*/Makefile',
+    r'.*/printf-stdarg\.c.*',
+    r'.*/startup.*',
     r'.*/trcConfig\.h.*',
     r'.*/trcConfig\.c.*',
     r'.*/trcSnapshotConfig\.h.*'

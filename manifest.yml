@@ -137,7 +137,7 @@ dependencies:
       path: "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface"
 
   - name: "fleet-provisioning"
-    version: "3ec98fc"
+    version: "v1.0.1"
     repository:
       type: "git"
       url: "https://github.com/aws/Fleet-Provisioning-for-AWS-IoT-embedded-sdk.git"

@@ -3,7 +3,7 @@ Documentation and download available at https://www.FreeRTOS.org/
 Changes between FreeRTOS 202111.00 and FreeRTOS 202112.00 released December 2021
 
 	+ Added Fleet Provisioning library and demo showcasing the use of Fleet Provisioning library.
-	+ Updated Sigv4 library with performance and stylistic improvements.
+	+ Updated Sigv4 library with performance improvements and bugfixes.
 	+ Added CBMC proofs for all public and private functions in the OTA Update library
 
 Changes between FreeRTOS 202107.00 and FreeRTOS 202111.00 released November 2021

@@ -88,7 +88,7 @@ dependencies:
       path: "FreeRTOS-Plus/ThirdParty/wolfSSL"
 
   - name: "mbedtls"
-    version: "v2.26.0"
+    version: "v2.28.0"
     repository:
       type: "git"
       url:  "https://github.com/ARMmbed/mbedtls"

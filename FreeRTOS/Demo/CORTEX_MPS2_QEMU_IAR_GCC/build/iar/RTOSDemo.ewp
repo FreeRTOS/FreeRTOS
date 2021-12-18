@@ -11,9 +11,13 @@
             <name>General</name>
             <archiveVersion>3</archiveVersion>
             <data>
-                <version>31</version>
+                <version>33</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
+                <option>
+                    <name>BrowseInfoPath</name>
+                    <state>Debug\BrowseInfo</state>
+                </option>
                 <option>
                     <name>OGProductVersion</name>
                     <state>4.41A</state>
@@ -66,15 +70,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.42.1.23869</state>
-                </option>
-                <option>
-                    <name>GeneralEnableMisra</name>
-                    <state>0</state>
-                </option>
-                <option>
-                    <name>GeneralMisraVerbose</name>
-                    <state>0</state>
+                    <state>9.10.2.39304</state>
                 </option>
                 <option>
                     <name>OGChipSelectEditMenu</name>
@@ -97,26 +93,12 @@
                     <state>0</state>
                 </option>
                 <option>
-                    <name>GeneralMisraRules98</name>
-                    <version>0</version>
-                    <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
-                </option>
-                <option>
-                    <name>GeneralMisraVer</name>
-                    <state>0</state>
-                </option>
-                <option>
-                    <name>GeneralMisraRules04</name>
-                    <version>0</version>
-                    <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
-                </option>
-                <option>
                     <name>RTConfigPath2</name>
                     <state>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</state>
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>28</version>
+                    <version>30</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -133,7 +115,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>28</version>
+                    <version>30</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -156,7 +138,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>28</version>
+                    <version>30</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -209,13 +191,21 @@
                     <version>0</version>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>OGAarch64Abi</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>OG_32_64Device</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
             <name>ICCARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>36</version>
+                <version>37</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -344,10 +334,6 @@
                     <state></state>
                 </option>
                 <option>
-                    <name>CompilerMisraOverride</name>
-                    <state>0</state>
-                </option>
-                <option>
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$\</state>
                     <state>$PROJ_DIR$\..\common\include</state>
@@ -379,16 +365,6 @@
                 <option>
                     <name>CCOptLevelSlave</name>
                     <state>3</state>
-                </option>
-                <option>
-                    <name>CompilerMisraRules98</name>
-                    <version>0</version>
-                    <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
-                </option>
-                <option>
-                    <name>CompilerMisraRules04</name>
-                    <version>0</version>
-                    <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
                 </option>
                 <option>
                     <name>CCPosIndRopi</name>
@@ -481,7 +457,7 @@
             <name>AARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>10</version>
+                <version>11</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -637,6 +613,10 @@
                     <name>AsmNoLiteralPool</name>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>PreInclude</name>
+                    <state></state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -676,12 +656,8 @@
                 <extensions></extensions>
                 <cmdline></cmdline>
                 <hasPrio>0</hasPrio>
+                <buildSequence>inputOutputBased</buildSequence>
             </data>
-        </settings>
-        <settings>
-            <name>BICOMP</name>
-            <archiveVersion>0</archiveVersion>
-            <data />
         </settings>
         <settings>
             <name>BUILDACTION</name>
@@ -695,16 +671,12 @@
             <name>ILINK</name>
             <archiveVersion>0</archiveVersion>
             <data>
-                <version>23</version>
+                <version>25</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
                     <name>IlinkLibIOConfig</name>
                     <state>1</state>
-                </option>
-                <option>
-                    <name>XLinkMisraHandler</name>
-                    <state>0</state>
                 </option>
                 <option>
                     <name>IlinkInputFileSlave</name>
@@ -1031,6 +1003,26 @@
                     <name>IlinkRawBinaryAlign2</name>
                     <state></state>
                 </option>
+                <option>
+                    <name>IlinkLogCrtRoutineSelection</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkLogFragmentInfo</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkLogInlining</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkLogMerging</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>IlinkDemangle</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -1054,16 +1046,11 @@
                 </option>
             </data>
         </settings>
-        <settings>
-            <name>BILINK</name>
-            <archiveVersion>0</archiveVersion>
-            <data />
-        </settings>
     </configuration>
     <group>
         <name>Blinky Demo</name>
         <file>
-            <name>$PROJ_DIR$\main_blinky.c</name>
+            <name>$PROJ_DIR$\..\..\main_blinky.c</name>
         </file>
     </group>
     <group>
@@ -1071,25 +1058,25 @@
         <group>
             <name>include</name>
             <file>
-                <name>$PROJ_DIR$\..\..\Source\include\event_groups.h</name>
+                <name>$PROJ_DIR$\..\..\..\..\Source\include\event_groups.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\Source\include\message_buffer.h</name>
+                <name>$PROJ_DIR$\..\..\..\..\Source\include\message_buffer.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\Source\include\queue.h</name>
+                <name>$PROJ_DIR$\..\..\..\..\Source\include\queue.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\Source\include\semphr.h</name>
+                <name>$PROJ_DIR$\..\..\..\..\Source\include\semphr.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\Source\include\stream_buffer.h</name>
+                <name>$PROJ_DIR$\..\..\..\..\Source\include\stream_buffer.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\Source\include\task.h</name>
+                <name>$PROJ_DIR$\..\..\..\..\Source\include\task.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\Source\include\timers.h</name>
+                <name>$PROJ_DIR$\..\..\..\..\Source\include\timers.h</name>
             </file>
         </group>
         <group>
@@ -1099,37 +1086,37 @@
                 <group>
                     <name>ARM_CM3</name>
                     <file>
-                        <name>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CM3\port.c</name>
+                        <name>$PROJ_DIR$\..\..\..\..\Source\portable\IAR\ARM_CM3\port.c</name>
                     </file>
                     <file>
-                        <name>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CM3\portasm.s</name>
+                        <name>$PROJ_DIR$\..\..\..\..\Source\portable\IAR\ARM_CM3\portasm.s</name>
                     </file>
                 </group>
             </group>
             <group>
                 <name>MemMang</name>
                 <file>
-                    <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_4.c</name>
+                    <name>$PROJ_DIR$\..\..\..\..\Source\portable\MemMang\heap_4.c</name>
                 </file>
             </group>
         </group>
         <file>
-            <name>$PROJ_DIR$\..\..\Source\event_groups.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Source\event_groups.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\Source\list.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Source\list.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\Source\queue.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Source\queue.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\Source\stream_buffer.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Source\stream_buffer.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\Source\tasks.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Source\tasks.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\Source\timers.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\Source\timers.c</name>
         </file>
     </group>
     <group>
@@ -1137,89 +1124,89 @@
         <group>
             <name>Standard Demo Tasks</name>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\AbortDelay.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\AbortDelay.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\BlockQ.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\BlockQ.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\blocktim.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\blocktim.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\countsem.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\countsem.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\death.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\death.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\dynamic.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\dynamic.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\EventGroupsDemo.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\EventGroupsDemo.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\GenQTest.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\GenQTest.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\integer.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\integer.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\IntQueue.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\IntQueue.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\IntQueueTimer.c</name>
+                <name>$PROJ_DIR$\..\..\IntQueueTimer.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\IntSemTest.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\IntSemTest.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\MessageBufferAMP.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\MessageBufferAMP.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\MessageBufferDemo.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\MessageBufferDemo.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\PollQ.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\PollQ.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\QPeek.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\QPeek.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\QueueOverwrite.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\QueueOverwrite.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\QueueSet.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\QueueSet.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\QueueSetPolling.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\QueueSetPolling.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\recmutex.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\recmutex.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\semtest.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\semtest.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\StaticAllocation.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\StaticAllocation.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\StreamBufferDemo.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\StreamBufferDemo.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\StreamBufferInterrupt.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\StreamBufferInterrupt.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\TaskNotify.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\TaskNotify.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\TaskNotifyArray.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\TaskNotifyArray.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\Common\Minimal\TimerDemo.c</name>
+                <name>$PROJ_DIR$\..\..\..\Common\Minimal\TimerDemo.c</name>
             </file>
         </group>
         <file>
-            <name>$PROJ_DIR$\main_full.c</name>
+            <name>$PROJ_DIR$\..\..\main_full.c</name>
         </file>
     </group>
     <group>
@@ -1229,9 +1216,9 @@
         </file>
     </group>
     <file>
-        <name>$PROJ_DIR$\FreeRTOSConfig.h</name>
+        <name>$PROJ_DIR$\..\..\FreeRTOSConfig.h</name>
     </file>
     <file>
-        <name>$PROJ_DIR$\main.c</name>
+        <name>$PROJ_DIR$\..\..\main.c</name>
     </file>
 </project>

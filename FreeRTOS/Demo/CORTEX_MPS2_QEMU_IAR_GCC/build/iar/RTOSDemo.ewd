@@ -88,7 +88,7 @@
                 </option>
                 <option>
                     <name>OCLastSavedByProductVersion</name>
-                    <state>8.42.1.23869</state>
+                    <state>9.10.2.39304</state>
                 </option>
                 <option>
                     <name>UseFlashLoader</name>
@@ -498,7 +498,7 @@
             <name>IJET_ID</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>8</version>
+                <version>9</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -722,6 +722,58 @@
                     <name>CCIjetUsbSerialNoSelect</name>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>CatchV8ARReset</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CatchV8AREREL1NS</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CatchV8AREREL1S</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CatchV8AREREL2NS</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CatchV8AREREL3S</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CatchV8AREEL1NS</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CatchV8ARREL1NS</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CatchV8AREEL1S</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CatchV8ARREL1S</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CatchV8AREEL2NS</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CatchV8ARREL2NS</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CatchV8AREEL3S</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CatchV8ARREL3S</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -928,7 +980,7 @@
             <name>LMIFTDI_ID</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>2</version>
+                <version>3</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -953,6 +1005,19 @@
                 </option>
                 <option>
                     <name>CCLmiFtdiInterfaceCmdLine</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CCLmiftdiUsbSerialNo</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>CCLmiftdiUsbSerialNoSelect</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CCLmiftdiResetList</name>
+                    <version>0</version>
                     <state>0</state>
                 </option>
             </data>
@@ -1007,7 +1072,7 @@
             <name>STLINK_ID</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>6</version>
+                <version>7</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -1421,10 +1486,6 @@
                 <loadFlag>0</loadFlag>
             </plugin>
             <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\HWRTOSplugin\HWRTOSplugin.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
                 <file>$TOOLKIT_DIR$\plugins\rtos\Mbed\MbedArmPlugin.ENU.ewplugin</file>
                 <loadFlag>0</loadFlag>
             </plugin>
@@ -1437,39 +1498,19 @@
                 <loadFlag>1</loadFlag>
             </plugin>
             <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\RemedyRtosViewer\RemedyRtosViewer.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
                 <file>$TOOLKIT_DIR$\plugins\rtos\SafeRTOS\SafeRTOSPlugin.ewplugin</file>
                 <loadFlag>0</loadFlag>
             </plugin>
             <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\SMX\smxAwareIarArm8b.ewplugin</file>
+                <file>$TOOLKIT_DIR$\plugins\rtos\SMX\smxAwareIarArm9.ewplugin</file>
                 <loadFlag>0</loadFlag>
             </plugin>
             <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\SMX\smxAwareIarArm8bBE.ewplugin</file>
+                <file>$TOOLKIT_DIR$\plugins\rtos\SMX\smxAwareIarArm9BE.ewplugin</file>
                 <loadFlag>0</loadFlag>
             </plugin>
             <plugin>
                 <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ENU.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\TI-RTOS\tirtosplugin.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-286-KA-CSpy.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-KA-CSpy.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-III\uCOS-III-KA-CSpy.ewplugin</file>
                 <loadFlag>0</loadFlag>
             </plugin>
             <plugin>

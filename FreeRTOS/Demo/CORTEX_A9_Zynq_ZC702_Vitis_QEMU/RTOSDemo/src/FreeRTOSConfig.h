@@ -135,6 +135,13 @@ to exclude the API function. */
 #define INCLUDE_xTaskGetHandle					1
 #define INCLUDE_xSemaphoreGetMutexHolder		1
 
+/* Demo specific settings to enable all tests to run simultaneously. */
+#define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN    1
+#define intqHIGHER_PRIORITY		( configMAX_PRIORITIES - 5 )
+#define bktPRIMARY_PRIORITY		( configMAX_PRIORITIES - 3 )
+#define bktSECONDARY_PRIORITY	( configMAX_PRIORITIES - 4 )
+
+
 /* This demo makes use of one or more example stats formatting functions.  These
 format the raw data provided by the uxTaskGetSystemState() function in to human
 readable ASCII form.  See the notes in the implementation of vTaskList() within

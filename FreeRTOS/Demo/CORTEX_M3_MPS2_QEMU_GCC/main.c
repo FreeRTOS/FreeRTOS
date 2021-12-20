@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202107.00
+ * FreeRTOS V202111.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -68,7 +68,6 @@ int main()
             #error "Invalid Selection...\nPlease Select a Demo application from the main command"
         }
     #endif /* if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 ) */
-        snprint
     return 0;
 }
 
@@ -108,15 +107,6 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask,
 
 void vApplicationIdleHook( void )
 {
-    volatile size_t xFreeHeapSpace;
-
-    /* This is just a trivial example of an idle hook.  It is called on each
-     * cycle of the idle task.  It must *NOT* attempt to block.  In this case the
-     * idle task just queries the amount of FreeRTOS heap that remains.  See the
-     * memory management section on the https://www.FreeRTOS.org web site for memory
-     * management options.  If there is a lot of heap memory free then the
-     * configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
-     * RAM. */
     #if ( mainCREATE_FULL_DEMO_ONLY == 1 )
         {
             /* Call the idle task processing used by the full demo.  The simple

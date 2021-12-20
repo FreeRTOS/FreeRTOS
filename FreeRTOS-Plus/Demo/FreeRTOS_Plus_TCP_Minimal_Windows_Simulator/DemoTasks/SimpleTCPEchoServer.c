@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V202107.00
+    FreeRTOS V202111.00
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.

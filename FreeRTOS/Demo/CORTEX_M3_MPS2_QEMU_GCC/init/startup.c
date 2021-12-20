@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202107.00
+ * FreeRTOS V202111.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -96,6 +96,15 @@ void prvGetRegistersFromStack( uint32_t * pulFaultStackAddress )
     for( ; ; )
     {
     }
+    /* remove the warning: variable <x> is set but not used */
+    ( void ) r0;
+    ( void ) r1;
+    ( void ) r2;
+    ( void ) r3;
+    ( void ) r12;
+    ( void ) lr;
+    ( void ) pc;
+    ( void ) psr;
 }
 
 static void Default_Handler( void ) __attribute__( ( naked ) );
@@ -114,7 +123,7 @@ void Default_Handler( void )
         "NVIC_INT_CTRL_CONST: .word 0xe000ed04\n"
     );
 }
-static void HardFault_Handler( void ) __attribute__( ( naked ) );
+static void Default_Handler2( void ) __attribute__( ( naked ) );
 void Default_Handler2( void )
 {
     __asm volatile
@@ -199,7 +208,7 @@ void _start( void )
     exit( 0 );
 }
 
-__attribute__( ( naked ) ) void exit( int status )
+__attribute__( ( naked ) ) void exit(__attribute__((unused)) int status )
 {
     /* Force qemu to exit using ARM Semihosting */
     __asm volatile (

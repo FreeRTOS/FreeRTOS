@@ -276,9 +276,8 @@ def main():
     proof_root = pathlib.Path(__file__).resolve().parent
     litani = get_litani_path(proof_root)
 
+    run_cmd(["./prepare.py"], check=True, cwd=str(proof_root))
     if not args.no_standalone:
-        run_cmd(
-            ["./prepare.py"], check=True, cwd=str(proof_root))
         run_cmd(
             [str(litani), "init", "--project", args.project_name], check=True)
 

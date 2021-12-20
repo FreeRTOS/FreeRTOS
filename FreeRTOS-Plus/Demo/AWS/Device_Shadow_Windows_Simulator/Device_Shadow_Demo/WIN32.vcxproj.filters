@@ -158,12 +158,6 @@
     <ClCompile Include="..\..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\backoff_algorithm</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls\using_mbedtls.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\sockets_wrapper.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\aes.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
@@ -421,6 +415,19 @@
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\FreeRTOS-Plus\Demo\Common\Logging\windows\Logging_WinSim.c" />
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\error.c" />
+    <ClCompile Include="..\..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_bio_freertos_plus_tcp.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\error.c" />
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\error.c" />
+    <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\error.c" />
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\using_mbedtls\using_mbedtls.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\NetworkInterface.h">
@@ -509,12 +516,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\Source\Utilities\mbedtls_freertos\threading_alt.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\sockets_wrapper.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_mbedtls\using_mbedtls.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\ThirdParty\mbedtls\include\mbedtls\aes.h">
       <Filter>FreeRTOS+\mbedtls\include</Filter>
@@ -795,6 +796,16 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\Source\coreJSON\source\include\core_json.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreJSON\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\using_mbedtls\using_mbedtls.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

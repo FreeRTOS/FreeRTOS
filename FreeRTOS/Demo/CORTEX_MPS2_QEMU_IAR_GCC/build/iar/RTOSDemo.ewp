@@ -335,11 +335,11 @@
                 </option>
                 <option>
                     <name>CCIncludePath2</name>
-                    <state>$PROJ_DIR$\</state>
-                    <state>$PROJ_DIR$\..\common\include</state>
-                    <state>$PROJ_DIR$\..\..\source\include</state>
-                    <state>$PROJ_DIR$\CMSIS</state>
-                    <state>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CM3</state>
+                    <state>$PROJ_DIR$\..\..\</state>
+                    <state>$PROJ_DIR$\..\..\..\common\include</state>
+                    <state>$PROJ_DIR$\..\..\..\..\Source\include</state>
+                    <state>$PROJ_DIR$\..\..\CMSIS</state>
+                    <state>$PROJ_DIR$\..\..\..\..\Source\portable\IAR\ARM_CM3</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -599,7 +599,7 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state>$PROJ_DIR$\</state>
+                    <state>$PROJ_DIR$\..\..</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>

@@ -43,6 +43,7 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.cdkws',
     '.cfg',
     '.cgp',
+    '.checksum',
     '.cmake',
     '.cmd',
     '.config',
@@ -204,6 +205,7 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.sig',
     '.sln',
     '.spec',
+    '.sprj',
     '.stf',
     '.stg',
     '.suo',
@@ -274,7 +276,11 @@ FREERTOS_IGNORED_FILES = [
     '.editorconfig',
     'lcovrc',
     'htif.c', 'htif.h',
-    'ethernetif.c'
+    'ethernetif.c',
+    'platform.c',
+    'platform.h',
+    'platform_config.h'
+    
 ]
 
 FREERTOS_HEADER = [

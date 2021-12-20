@@ -60,7 +60,6 @@ extern void __iar_program_start(void);
 extern void xPortPendSVHandler(void);
 extern void xPortSysTickHandler(void);
 extern void vPortSVCHandler(void);
-extern void vDualTimer1Handler( void );
 extern void TIMER0_Handler( void );
 extern void TIMER1_Handler( void );
 

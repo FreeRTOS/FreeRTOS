@@ -45,7 +45,7 @@
 #define configCPU_CLOCK_HZ				( ( unsigned long ) 25000000 )
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 50 * 1024 ) )
+#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 60 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 12 )
 #define configUSE_TRACE_FACILITY		0
 #define configUSE_16_BIT_TICKS			0
@@ -54,7 +54,7 @@
 #define configUSE_MUTEXES				1
 #define configUSE_RECURSIVE_MUTEXES		1
 #define configCHECK_FOR_STACK_OVERFLOW	2
-#define configMALLOC_FAILED_HOOK		1
+#define configUSE_MALLOC_FAILED_HOOK	1
 #define configUSE_QUEUE_SETS			1
 #define configUSE_COUNTING_SEMAPHORES	1
 
@@ -116,7 +116,7 @@ allowable margin of error on slower processors (slower than the Win32
 machine on which the test is developed). */
 #define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN   4
 
-#ifdef __ICCARM__ /* Prevent C code being included in asm files. */
+#ifndef __IASMARM__ /* Prevent C code being included in IAR asm files. */
 	void vAssertCalled( const char *pcFileName, uint32_t ulLine );
 	#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __FILE__, __LINE__ );
 #endif

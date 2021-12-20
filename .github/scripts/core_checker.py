@@ -280,7 +280,7 @@ FREERTOS_IGNORED_FILES = [
     'platform.c',
     'platform.h',
     'platform_config.h'
-    
+
 ]
 
 FREERTOS_HEADER = [

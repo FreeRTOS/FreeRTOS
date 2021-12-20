@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 
@@ -441,7 +440,7 @@
 
         if( xReturned != pdPASS )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         /* Ensure the semaphore passes a few sanity checks as a valid semaphore. */
@@ -467,7 +466,7 @@
 
                 if( xReturned != pdPASS )
                 {
-                    xErrorOccurred = pdTRUE;
+                    xErrorOccurred = __LINE__;
                 }
 
                 /* Ensure the semaphore passes a few sanity checks as a valid semaphore. */
@@ -536,7 +535,7 @@
                  * function expects it to be unavailable. */
                 if( xSemaphoreTake( xSemaphore, staticDONT_BLOCK ) == pdFAIL )
                 {
-                    xErrorOccurred = pdTRUE;
+                    xErrorOccurred = __LINE__;
                 }
 
                 prvSanityCheckCreatedSemaphore( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
@@ -569,7 +568,7 @@
 
             if( xReturned != pdPASS )
             {
-                xErrorOccurred = pdTRUE;
+                xErrorOccurred = __LINE__;
             }
         }
     }
@@ -616,7 +615,7 @@
 
         if( xReturned != pdPASS )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         vTaskDelay( xTimerPeriod * staticMAX_TIMER_CALLBACK_EXECUTIONS );
@@ -625,7 +624,7 @@
          * times, and then stopped itself. */
         if( uxVariableToIncrement != staticMAX_TIMER_CALLBACK_EXECUTIONS )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         /* Finished with the timer, delete it. */
@@ -635,7 +634,7 @@
         * command will have been sent even without a block time being used. */
         if( xReturned != pdPASS )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         /* Just to show the check task that this task is still executing. */
@@ -659,21 +658,21 @@
 
                 if( xReturned != pdPASS )
                 {
-                    xErrorOccurred = pdTRUE;
+                    xErrorOccurred = __LINE__;
                 }
 
                 vTaskDelay( xTimerPeriod * staticMAX_TIMER_CALLBACK_EXECUTIONS );
 
                 if( uxVariableToIncrement != staticMAX_TIMER_CALLBACK_EXECUTIONS )
                 {
-                    xErrorOccurred = pdTRUE;
+                    xErrorOccurred = __LINE__;
                 }
 
                 xReturned = xTimerDelete( xTimer, staticDONT_BLOCK );
 
                 if( xReturned != pdPASS )
                 {
-                    xErrorOccurred = pdTRUE;
+                    xErrorOccurred = __LINE__;
                 }
             }
         #endif /* if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) */
@@ -758,13 +757,13 @@
         /* Check the task was created correctly, then delete the task. */
         if( xCreatedTask == NULL )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
         else if( eTaskGetState( xCreatedTask ) != eSuspended )
         {
             /* The created task had a higher priority so should have executed and
              * suspended itself by now. */
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
         else
         {
@@ -788,14 +787,14 @@
 
                 if( eTaskGetState( xCreatedTask ) != eSuspended )
                 {
-                    xErrorOccurred = pdTRUE;
+                    xErrorOccurred = __LINE__;
                 }
 
                 configASSERT( xReturned == pdPASS );
 
                 if( xReturned != pdPASS )
                 {
-                    xErrorOccurred = pdTRUE;
+                    xErrorOccurred = __LINE__;
                 }
 
                 vTaskDelete( xCreatedTask );
@@ -857,7 +856,7 @@
 
         if( xEventBits != ( EventBits_t ) 0 )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         /* Some some bits, then read them back to check they are as expected. */
@@ -867,7 +866,7 @@
 
         if( xEventBits != xFirstTestBits )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         xEventGroupSetBits( xEventGroup, xSecondTestBits );
@@ -876,7 +875,7 @@
 
         if( xEventBits != ( xFirstTestBits | xSecondTestBits ) )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         /* Finally try clearing some bits too and check that operation proceeds as
@@ -887,7 +886,7 @@
 
         if( xEventBits != xSecondTestBits )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
     }
 /*-----------------------------------------------------------*/
@@ -908,12 +907,12 @@
         if( ( ( TickType_t ) ( xTaskGetTickCount() - xTickCount ) ) < xShortBlockTime )
         {
             /* Did not block on the semaphore as long as expected. */
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         if( xReturned != pdFAIL )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         /* Should be possible to 'give' the semaphore up to a maximum of uxMaxCount
@@ -924,7 +923,7 @@
 
             if( xReturned == pdFAIL )
             {
-                xErrorOccurred = pdTRUE;
+                xErrorOccurred = __LINE__;
             }
         }
 
@@ -933,7 +932,7 @@
 
         if( xReturned != pdFAIL )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         configASSERT( uxSemaphoreGetCount( xSemaphore ) == uxMaxCount );
@@ -946,7 +945,7 @@
 
             if( xReturned == pdFAIL )
             {
-                xErrorOccurred = pdTRUE;
+                xErrorOccurred = __LINE__;
             }
         }
 
@@ -958,12 +957,12 @@
         if( ( ( TickType_t ) ( xTaskGetTickCount() - xTickCount ) ) < xShortBlockTime )
         {
             /* Did not block on the semaphore as long as expected. */
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         if( xReturned != pdFAIL )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         configASSERT( uxSemaphoreGetCount( xSemaphore ) == 0 );
@@ -984,7 +983,7 @@
 
             if( xReturned != errQUEUE_EMPTY )
             {
-                xErrorOccurred = pdTRUE;
+                xErrorOccurred = __LINE__;
             }
 
             /* Now it should be possible to write to the queue staticQUEUE_LENGTH_IN_ITEMS
@@ -995,7 +994,7 @@
 
                 if( xReturned != pdPASS )
                 {
-                    xErrorOccurred = pdTRUE;
+                    xErrorOccurred = __LINE__;
                 }
             }
 
@@ -1004,7 +1003,7 @@
 
             if( xReturned != errQUEUE_FULL )
             {
-                xErrorOccurred = pdTRUE;
+                xErrorOccurred = __LINE__;
             }
 
             /* Now read back from the queue to ensure the data read back matches that
@@ -1015,12 +1014,12 @@
 
                 if( xReturned != pdPASS )
                 {
-                    xErrorOccurred = pdTRUE;
+                    xErrorOccurred = __LINE__;
                 }
 
                 if( ullRead != ull )
                 {
-                    xErrorOccurred = pdTRUE;
+                    xErrorOccurred = __LINE__;
                 }
             }
 
@@ -1029,7 +1028,7 @@
 
             if( xReturned != errQUEUE_EMPTY )
             {
-                xErrorOccurred = pdTRUE;
+                xErrorOccurred = __LINE__;
             }
         }
     }
@@ -1047,7 +1046,7 @@
 
         if( xReturned != pdFAIL )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
 
         /* Now it should be possible to take the mutex a number of times. */
@@ -1057,7 +1056,7 @@
 
             if( xReturned != pdPASS )
             {
-                xErrorOccurred = pdTRUE;
+                xErrorOccurred = __LINE__;
             }
         }
 
@@ -1069,7 +1068,7 @@
 
             if( xReturned != pdPASS )
             {
-                xErrorOccurred = pdTRUE;
+                xErrorOccurred = __LINE__;
             }
         }
 
@@ -1078,7 +1077,7 @@
 
         if( xReturned != pdFAIL )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
     }
 /*-----------------------------------------------------------*/
@@ -1090,7 +1089,7 @@
 
         if( uxCycleCounter == uxLastCycleCounter )
         {
-            xErrorOccurred = pdTRUE;
+            xErrorOccurred = __LINE__;
         }
         else
         {

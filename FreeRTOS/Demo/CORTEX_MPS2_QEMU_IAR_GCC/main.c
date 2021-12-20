@@ -26,6 +26,9 @@
 
 
 /******************************************************************************
+ * See https://www.freertos.org/freertos-on-qemu-mps2-an385-model.html for
+ * instructions.
+ *
  * This project provides two demo applications.  A simple blinky style project,
  * and a more comprehensive test and demo application.  The
  * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY constant, defined in this file, is used to
@@ -36,10 +39,11 @@
  * This file implements the code that is not demo specific, including the
  * hardware setup and FreeRTOS hook functions.
  *
- * Use the following command to start the application running in a way that
- * enables the IAR IDE to connect and debug:
+ * Running in QEMU:
+ * Use the following commands to start the application running in a way that
+ * enables the debugger to connect, omit the "-s -S" to run the project without
+ * the debugger:
  * qemu-system-arm -machine mps2-an385 -cpu cortex-m3 -kernel [path-to]/RTOSDemo.out -nographic -serial stdio -semihosting -semihosting-config enable=on,target=native -s -S
- * and set IAR connect GDB server to "localhost,1234" in project debug options.
  */
 
 /* FreeRTOS includes. */
@@ -94,6 +98,10 @@ static void prvUARTInit( void );
 
 void main( void )
 {
+	/* See https://www.freertos.org/freertos-on-qemu-mps2-an385-model.html for
+	instructions. */
+
+	
 	/* Hardware initialisation.  printf() output uses the UART for IO. */
 	prvUARTInit();
 
@@ -126,7 +134,9 @@ void vApplicationMallocFailedHook( void )
 	(although it does not provide information on how the remaining heap might be
 	fragmented).  See http://www.freertos.org/a00111.html for more
 	information. */
-	vAssertCalled( __FILE__, __LINE__ );
+	printf( "\r\n\r\nMalloc failed\r\n" );
+	portDISABLE_INTERRUPTS();
+	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
@@ -152,7 +162,9 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 	/* Run time stack overflow checking is performed if
 	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
 	function is called if a stack overflow is detected. */
-	vAssertCalled( __FILE__, __LINE__ );
+	printf( "\r\n\r\nStack overflow in %s\r\n", pcTaskName );
+	portDISABLE_INTERRUPTS();
+	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
@@ -266,13 +278,13 @@ static void prvUARTInit( void )
 
 int __write( int iFile, char *pcString, int iStringLength )
 {
-	uint32_t ulNextChar;
+	int iNextChar;
 
 	/* Avoid compiler warnings about unused parameters. */
 	( void ) iFile;
 
 	/* Output the formatted string to the UART. */
-	for( ulNextChar = 0; ulNextChar < iStringLength; ulNextChar++ )
+	for( iNextChar = 0; iNextChar < iStringLength; iNextChar++ )
 	{
 		while( ( UART0_STATE & TX_BUFFER_MASK ) != 0 );
 		UART0_DATA = *pcString;
@@ -281,4 +293,20 @@ int __write( int iFile, char *pcString, int iStringLength )
 
 	return iStringLength;
 }
+/*-----------------------------------------------------------*/
+
+void *malloc( size_t size )
+{
+	( void ) size;
+
+	/* This project uses heap_4 so doesn't set up a heap for use by the C
+	library - but something is calling the C library malloc().  See
+	https://freertos.org/a00111.html for more information. */
+	printf( "\r\n\r\nUnexpected call to malloc() - should be usine pvPortMalloc()\r\n" );
+	portDISABLE_INTERRUPTS();
+	for( ;; );
+
+}
+
+
 

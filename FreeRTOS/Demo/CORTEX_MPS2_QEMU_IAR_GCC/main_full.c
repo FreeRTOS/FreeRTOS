@@ -104,6 +104,11 @@
 #define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 3 )
 #define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
 
+/* Stack sizes are defined relative to configMINIMAL_STACK_SIZE so they scale
+across projects that have that constant set differently - in this case the
+constant is different depending on the compiler in use. */
+#define mainMESSAGE_BUFFER_STACK_SIZE		( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
+#define mainCHECK_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
 /*-----------------------------------------------------------*/
 
 /* The task that checks the operation of all the other standard demo tasks, as
@@ -124,7 +129,7 @@ void main_full( void )
 	vStartQueuePeekTasks();
 	vStartQueueSetTasks();
 	vStartEventGroupTasks();
-	vStartMessageBufferTasks( configMINIMAL_STACK_SIZE );
+	vStartMessageBufferTasks( mainMESSAGE_BUFFER_STACK_SIZE );
 	vStartStreamBufferTasks();
 	vCreateAbortDelayTasks();
 	vStartCountingSemaphoreTasks();
@@ -144,7 +149,7 @@ void main_full( void )
 	or not the correct/expected number of tasks are running at any given time. */
 	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
-	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvCheckTask, "Check", mainCHECK_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
@@ -164,6 +169,9 @@ static const char * pcMessage = "PASS";
 const TickType_t xTaskPeriod = pdMS_TO_TICKS( 5000UL );
 TickType_t xPreviousWakeTime;
 extern uint32_t ulNestCount;
+
+    /* Avoid warning about unused parameter. */
+    ( void ) pvParameters;
 
 	xPreviousWakeTime = xTaskGetTickCount();
 
@@ -271,7 +279,7 @@ extern uint32_t ulNestCount;
 
 		/* It is normally not good to call printf() from an embedded system,
 		although it is ok in this simulated case. */
-		printf( "%s : %d (%d)\r\n", pcMessage, (int) xTaskGetTickCount(), ulNestCount );
+		printf( "%s : %d (%d)\r\n", pcMessage, (int) xTaskGetTickCount(), ( int ) ulNestCount );
 	}
 }
 /*-----------------------------------------------------------*/

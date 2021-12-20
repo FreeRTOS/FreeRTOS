@@ -199,6 +199,9 @@
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\cmac.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\constant_time.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\ctr_drbg.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
@@ -262,6 +265,12 @@
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\memory_buffer_alloc.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\mps_reader.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\mps_trace.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\net_sockets.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
@@ -307,6 +316,45 @@
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\poly1305.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\psa_crypto.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\psa_crypto_aead.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\psa_crypto_cipher.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\psa_crypto_client.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\psa_crypto_driver_wrappers.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\psa_crypto_ecp.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\psa_crypto_hash.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\psa_crypto_mac.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\psa_crypto_rsa.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\psa_crypto_se.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\psa_crypto_slot_management.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\psa_crypto_storage.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\psa_its_file.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\ripemd160.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
@@ -349,6 +397,9 @@
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\ssl_tls.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\ssl_tls13_keys.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\threading.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
@@ -385,6 +436,9 @@
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\xtea.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Demo\Common\Logging\windows\Logging_WinSim.c" />
     <ClCompile Include="..\Common\main.c" />
     <ClCompile Include="DemoTasks\S3DownloadHTTPExample.c">
@@ -403,7 +457,6 @@
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser\http_parser.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
     <ClCompile Include="..\..\..\Source\coreJSON\source\core_json.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreJSON</Filter>
     </ClCompile>
@@ -416,7 +469,6 @@
     <ClCompile Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_bio_freertos_plus_tcp.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport</Filter>
     </ClCompile>
@@ -545,6 +597,9 @@
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\chachapoly.h">
       <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\check_config.h">
       <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
@@ -594,9 +649,6 @@
       <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\entropy_poll.h">
-      <Filter>FreeRTOS+\mbedtls\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h">
       <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\gcm.h">

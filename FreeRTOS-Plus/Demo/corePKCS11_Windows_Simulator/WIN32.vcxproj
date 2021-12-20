@@ -58,7 +58,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\include;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\dependency\3rdparty\pkcs11;..\..\ThirdPartymbedtls\include;..\..\ThirdParty\mbedtls\library;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;examples;.;..\..\Source\corePKCS11\source\portable\os;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\include;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\dependency\3rdparty\pkcs11;..\..\ThirdParty\mbedtls\include;..\..\ThirdParty\mbedtls\library;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;examples;.;..\..\Source\corePKCS11\source\portable\os;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;MBEDTLS_CONFIG_FILE="aws_mbedtls_config.h";CONFIG_MEDTLS_USE_AFR_MEMORY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>

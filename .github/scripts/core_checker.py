@@ -48,6 +48,7 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.config',
     '.cpp',
     '.cproj',
+    '.cproject',
     '.crun',
     '.css',
     '.csv',
@@ -120,6 +121,7 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.la',
     '.launch',
     '.lcf',
+    '.ld',
     '.lds',
     '.lib',
     '.lk1',
@@ -172,6 +174,7 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.pref',
     '.prefs',
     '.prj',
+    '.project',
     '.properties',
     '.ps1',
     '.ptf',
@@ -254,12 +257,16 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*CMSIS.*',
     r'.*/makefile',
     r'.*/Makefile',
+    r'.*/printf-stdarg\.c.*',
+    r'.*/startup.*',
     r'.*/trcConfig\.h.*',
     r'.*/trcConfig\.c.*',
     r'.*/trcSnapshotConfig\.h.*'
 ]
 
 FREERTOS_IGNORED_FILES = [
+    '.cproject',
+    '.project',
     'fyi-another-way-to-ignore-file.txt',
     'mbedtls_config.h',
     'requirements.txt',

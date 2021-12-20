@@ -107,8 +107,9 @@ static XTtcPs xTimerInstances[ tmrTIMERS_USED ];
 
 /* Used to provide a means of ensuring the intended interrupt nesting depth is
 actually being reached. */
-extern uint32_t ulPortInterruptNesting;
-static uint32_t ulMaxRecordedNesting = 0;
+extern uint32_t ulPortInterruptNesting; /* From the Cortex-A9 port layer. */
+static volatile uint32_t ulMaxRecordedNesting = 0;
+volatile uint32_t ulNestingCount = 0;
 
 /* Used to ensure the high frequency timer is running at the expected
 frequency. */
@@ -175,81 +176,96 @@ const uint8_t ucRisingEdge = 3;
 	}
 }
 /*-----------------------------------------------------------*/
-
+volatile uint32_t ulUnexpectedInterrupts = 0;
 static void prvTimerHandler( void *pvCallBackRef )
 {
 uint32_t ulInterruptStatus;
 XTtcPs *pxTimer = ( XTtcPs * ) pvCallBackRef;
-BaseType_t xYieldRequired;
+BaseType_t xYieldRequired = pdFALSE;
 
 #if( configASSERT_DEFINED == 1 )
 	/* Test floating point access within nested interrupts. */
 	volatile long double d1, d2;
 #endif
 
+	/* If this is the only interrupt executing then the nesting count will be 1. */
+	if( ulPortInterruptNesting > 1UL )
+	{
+		ulNestingCount++;
+	}
 
 	/* Read the interrupt status, then write it back to clear the interrupt. */
 	ulInterruptStatus = XTtcPs_GetInterruptStatus( pxTimer );
 	XTtcPs_ClearInterruptStatus( pxTimer, ulInterruptStatus );
 
 	/* Only one interrupt event type is expected. */
-	configASSERT( ( XTTCPS_IXR_INTERVAL_MASK & ulInterruptStatus ) != 0 );
-
-	/* Check the device ID to know which IntQueue demo to call. */
-	if( pxTimer->Config.DeviceId == xDeviceIDs[ 0 ] )
+	if( ulInterruptStatus != 0 )
 	{
-		#if( configASSERT_DEFINED == 1 )
+		configASSERT( ( XTTCPS_IXR_INTERVAL_MASK & ulInterruptStatus ) != 0 );
+
+		/* Check the device ID to know which IntQueue demo to call. */
+		if( pxTimer->Config.DeviceId == xDeviceIDs[ 0 ] )
 		{
-			/* Test floating point access within nested interrupts. */
-			d1 = 1.5L;
-			d2 = 5.25L;
+			#if( configASSERT_DEFINED == 1 )
+			{
+				/* Test floating point access within nested interrupts. */
+				d1 = 1.5L;
+				d2 = 5.25L;
+			}
+			#endif /* configASSERT_DEFINED */
+
+			xYieldRequired = xFirstTimerHandler();
+
+			/* Will fail eventually if flop context switch is not correct in
+			interrupts.  Keep calculation simple so the answer is exact even when
+			using flop. */
+			configASSERT( ( d1 * d2 ) == ( 1.5L * 5.25L ) );
 		}
-		#endif /* configASSERT_DEFINED */
-
-		xYieldRequired = xFirstTimerHandler();
-
-		/* Will fail eventually if flop context switch is not correct in
-		interrupts.  Keep calculation simple so the answer is exact even when
-		using flop. */
-		configASSERT( ( d1 * d2 ) == ( 1.5L * 5.25L ) );
-	}
-	else if( pxTimer->Config.DeviceId == xDeviceIDs[ 1 ] )
-	{
-		#if( configASSERT_DEFINED == 1 )
+		else if( pxTimer->Config.DeviceId == xDeviceIDs[ 1 ] )
 		{
-			/* Test floating point access within nested interrupts. */
-			d1 = 10.5L;
-			d2 = 5.5L;
+			#if( configASSERT_DEFINED == 1 )
+			{
+				/* Test floating point access within nested interrupts. */
+				d1 = 10.5L;
+				d2 = 5.5L;
+			}
+			#endif /* configASSERT_DEFINED */
+
+			xYieldRequired = xSecondTimerHandler();
+
+			/* Will fail eventually if flop context switch is not correct in
+			interrupts.  Keep calculation simple so the answer is exact even when
+			using flop. */
+			configASSERT( ( d1 / d2 ) == ( 10.5L / 5.5L ) );
 		}
-		#endif /* configASSERT_DEFINED */
+		else
+		{
+			configASSERT( pxTimer->Config.DeviceId == xDeviceIDs[ 2 ] );
 
-		xYieldRequired = xSecondTimerHandler();
+			/* Used to check the timer is running at the expected frequency. */
+			ulHighFrequencyTimerCounts++;
 
-		/* Will fail eventually if flop context switch is not correct in
-		interrupts.  Keep calculation simple so the answer is exact even when
-		using flop. */
-		configASSERT( ( d1 / d2 ) == ( 10.5L / 5.5L ) );
+			/* Latch the highest interrupt nesting count detected for viewing
+			in the debugger (for test purposes). */
+			if( ulPortInterruptNesting > ulMaxRecordedNesting )
+			{
+				ulMaxRecordedNesting = ulPortInterruptNesting;
+			}
+
+			xYieldRequired = pdFALSE;
+		}
+
+		/* If xYieldRequired is not pdFALSE then calling either xFirstTimerHandler()
+		or xSecondTimerHandler() resulted in a task leaving the blocked state and
+		the task that left the blocked state had a priority higher than the currently
+		running task (the task this interrupt interrupted) - so a context switch
+		should be performed so the interrupt returns directly to the higher priority
+		task.  xYieldRequired is tested inside the following macro. */
+		portYIELD_FROM_ISR( xYieldRequired );
 	}
 	else
 	{
-		/* Used to check the timer is running at the expected frequency. */
-		ulHighFrequencyTimerCounts++;
-
-		/* Latch the highest interrupt nesting count detected. */
-		if( ulPortInterruptNesting > ulMaxRecordedNesting )
-		{
-			ulMaxRecordedNesting = ulPortInterruptNesting;
-		}
-
-		xYieldRequired = pdFALSE;
+		ulUnexpectedInterrupts++;
 	}
-
-	/* If xYieldRequired is not pdFALSE then calling either xFirstTimerHandler()
-	or xSecondTimerHandler() resulted in a task leaving the blocked state and
-	the task that left the blocked state had a priority higher than the currently
-	running task (the task this interrupt interrupted) - so a context switch
-	should be performed so the interrupt returns directly to the higher priority
-	task.  xYieldRequired is tested inside the following macro. */
-	portYIELD_FROM_ISR( xYieldRequired );
 }
 

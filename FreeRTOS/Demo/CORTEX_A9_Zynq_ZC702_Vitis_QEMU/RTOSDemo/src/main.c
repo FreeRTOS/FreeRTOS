@@ -27,15 +27,14 @@
 
 /******************************************************************************
  *
- * See http://www.freertos.org/RTOS-Xilinx-Zynq.html for instructions.
+ * See http://www.freertos.org/RTOS-Xilinx-Zynq-QEMU.html for instructions.
  *
- * This project provides three demo applications.  A simple blinky style
- * project, a more comprehensive test and demo application, and an lwIP example.
- * The mainSELECTED_APPLICATION setting (defined in this file) is used to
- * select between the three.  The simply blinky demo is implemented and
+ * This project provides two demo applications.  A simple blinky style
+ * project and a more comprehensive test and demo application.
+ * The mainCREATE_SIMPLY_BLINKY_DEMO_ONLY setting (defined in this file) is used to
+ * select between the two.  The simply blinky demo is implemented and
  * described in main_blinky.c.  The more comprehensive test and demo application
- * is implemented and described in main_full.c.  The lwIP example is implemented
- * and described in main_lwIP.c.
+ * is implemented and described in main_full.c.
  *
  * This file implements the code that is not demo specific, including the
  * hardware setup and FreeRTOS hook functions.
@@ -57,6 +56,11 @@
  * ENSURE TO READ THE DOCUMENTATION PAGE FOR THIS PORT AND DEMO APPLICATION ON
  * THE http://www.FreeRTOS.org WEB SITE FOR FULL INFORMATION ON USING THIS DEMO
  * APPLICATION, AND ITS ASSOCIATE FreeRTOS ARCHITECTURE PORT!
+ *
+ * Command to run in QEMU and wait for the debugger to attach:
+ * qemu-system-arm -M xilinx-zynq-a9 -smp 1 -nographic -kernel [path_to]/RTOSDemo.elf -nographic -serial stdio -semihosting -semihosting-config enable=on,target=native -s -S
+ *
+ * Omit the -s -S to run without waiting for the debugger.
  *
  */
 
@@ -88,16 +92,16 @@
 #include "xil_exception.h"
 #include "xuartps_hw.h"
 
-/* mainSELECTED_APPLICATION is used to select between three demo applications,
- * as described at the top of this file.
+/* mainCREATE_SIMPLY_BLINKY_DEMO_ONLY is used to select between three demo a
+ * pplications, as described at the top of this file.
  *
- * When mainSELECTED_APPLICATION is set to 0 the simple blinky example will
- * be run.
+ * When mainCREATE_SIMPLY_BLINKY_DEMO_ONLY is set to 1 the simple blinky example
+ * will be built.
  *
- * When mainSELECTED_APPLICATION is set to 1 the comprehensive test and demo
- * application will be run.
+ * When mainCREATE_SIMPLY_BLINKY_DEMO_ONLY is set to 0 the comprehensive test
+ * and demo application will be built.
  */
-#define mainSELECTED_APPLICATION	0
+#define mainCREATE_SIMPLY_BLINKY_DEMO_ONLY	1
 
 /*-----------------------------------------------------------*/
 
@@ -108,20 +112,16 @@ static void prvSetupHardware( void );
 
 /*
  * See the comments at the top of this file and above the
- * mainSELECTED_APPLICATION definition.
+ * mainCREATE_SIMPLY_BLINKY_DEMO_ONLY definition.
  */
-#if ( mainSELECTED_APPLICATION == 0 )
+#if ( mainCREATE_SIMPLY_BLINKY_DEMO_ONLY == 1 )
 	extern void main_blinky( void );
-#elif ( mainSELECTED_APPLICATION == 1 )
-	extern void main_full( void );
-#elif ( mainSELECTED_APPLICATION == 2 )
-	extern void main_lwIP( void );
 #else
-	#error Invalid mainSELECTED_APPLICATION setting.  See the comments at the top of this file and above the mainSELECTED_APPLICATION definition.
+	extern void main_full( void );
 #endif
 
 /*
- * The Xilinx projects use a BSP that do not allow the start up code to be
+ * The Xilinx projects use a BSP that does not allow the start up code to be
  * altered easily.  Therefore the vector table used by FreeRTOS is defined in
  * FreeRTOS_asm_vectors.S, which is part of this project.  Switch to use the
  * FreeRTOS vector table.
@@ -132,12 +132,6 @@ extern void vPortInstallFreeRTOSVectorTable( void );
 within this file. */
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
-void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
-void vApplicationTickHook( void );
-
-/* The private watchdog is used as the timer that generates run time
-stats.  This frequency means it will overflow quite quickly. */
-XScuWdt xWatchDogInstance;
 
 /*-----------------------------------------------------------*/
 
@@ -149,28 +143,29 @@ extern XScuGic xInterruptController;
 
 int main( void )
 {
-	/* See http://www.freertos.org/RTOS-Xilinx-Zynq.html for instructions. */
+	/* See http://www.freertos.org/RTOS-Xilinx-Zynq-QEMU.html for instructions. */
 
 	/* Configure the hardware ready to run the demo. */
 	prvSetupHardware();
 
-	/* The mainSELECTED_APPLICATION setting is described at the top	of this
+	/* The mainCREATE_SIMPLY_BLINKY_DEMO_ONLY setting is described at the top	of this
 	file. */
-	#if( mainSELECTED_APPLICATION == 0 )
+	#if( mainCREATE_SIMPLY_BLINKY_DEMO_ONLY == 1 )
 	{
 		main_blinky();
 	}
-	#elif( mainSELECTED_APPLICATION == 1 )
+	#else
 	{
 		main_full();
 	}
-	#else
-	{
-		main_lwIP();
-	}
 	#endif
 
-	/* Don't expect to reach here. */
+	/* Don't expect to reach here as the scheduler should now be running the
+	individual tasks.  If the code does reach here then it is likely there was
+	not enough heap space to allocate a stack to either the idle or timer task.
+	However as configSUPPORT_STATIC_ALLOCATION is set to 1 those stacks are
+	startically allocated so that should never happen.
+	See https://freertos.org/a00111.html */
 	return 0;
 }
 /*-----------------------------------------------------------*/
@@ -199,10 +194,11 @@ XScuGic_Config *pxGICConfig;
 	configASSERT( xStatus == XST_SUCCESS );
 	( void ) xStatus; /* Remove compiler warning if configASSERT() is not defined. */
 
-	/* Initialise the LED port. */
+	/* Initialise the LED port in case execution is on the real hardware rather
+	than in QEMU. */
 	vParTestInitialise();
 
-	/* The Xilinx projects use a BSP that do not allow the start up code to be
+	/* The Xilinx projects use a BSP that does not allow the start up code to be
 	altered easily.  Therefore the vector table used by FreeRTOS is defined in
 	FreeRTOS_asm_vectors.S, which is part of this project.  Switch to use the
 	FreeRTOS vector table. */
@@ -266,6 +262,8 @@ volatile unsigned long ul = 0;
 	( void ) pcFile;
 	( void ) ulLine;
 
+	xil_printf( "ASSERT:  %s:%d\n", pcFile, ( int ) ulLine );
+
 	taskENTER_CRITICAL();
 	{
 		/* Set ul to a non-zero value using the debugger to step out of this
@@ -281,7 +279,7 @@ volatile unsigned long ul = 0;
 
 void vApplicationTickHook( void )
 {
-	#if( mainSELECTED_APPLICATION == 1 )
+	#if( mainCREATE_SIMPLY_BLINKY_DEMO_ONLY == 0 )
 	{
 		/* The full demo includes a software timer demo/test that requires
 		prodding periodically from the tick interrupt. */
@@ -389,25 +387,6 @@ volatile size_t x;
 	}
 
 	return xBytes - x;
-}
-/*-----------------------------------------------------------*/
-
-void vInitialiseTimerForRunTimeStats( void )
-{
-XScuWdt_Config *pxWatchDogInstance;
-uint32_t ulValue;
-const uint32_t ulMaxDivisor = 0xff, ulDivisorShift = 0x08;
-
-	 pxWatchDogInstance = XScuWdt_LookupConfig( XPAR_SCUWDT_0_DEVICE_ID );
-	 XScuWdt_CfgInitialize( &xWatchDogInstance, pxWatchDogInstance, pxWatchDogInstance->BaseAddr );
-
-	 ulValue = XScuWdt_GetControlReg( &xWatchDogInstance );
-	 ulValue |= ulMaxDivisor << ulDivisorShift;
-	 XScuWdt_SetControlReg( &xWatchDogInstance, ulValue );
-
-	 XScuWdt_LoadWdt( &xWatchDogInstance, UINT_MAX );
-	 XScuWdt_SetTimerMode( &xWatchDogInstance );
-	 XScuWdt_Start( &xWatchDogInstance );
 }
 /*-----------------------------------------------------------*/
 

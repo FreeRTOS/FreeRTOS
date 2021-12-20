@@ -98,6 +98,7 @@ LEDs aren't visible in QEMU. */
 #define configUSE_QUEUE_SETS					1
 #define configSUPPORT_STATIC_ALLOCATION			1
 #define configTASK_NOTIFICATION_ARRAY_ENTRIES	3
+#define configUSE_STATS_FORMATTING_FUNCTIONS	0
 
 /* Include the query-heap CLI command to query the free heap space. */
 #define configINCLUDE_QUERY_HEAP_COMMAND		1
@@ -141,28 +142,6 @@ to exclude the API function. */
 #define bktPRIMARY_PRIORITY		( configMAX_PRIORITIES - 3 )
 #define bktSECONDARY_PRIORITY	( configMAX_PRIORITIES - 4 )
 
-
-/* This demo makes use of one or more example stats formatting functions.  These
-format the raw data provided by the uxTaskGetSystemState() function in to human
-readable ASCII form.  See the notes in the implementation of vTaskList() within
-FreeRTOS/Source/tasks.c for limitations. */
-#define configUSE_STATS_FORMATTING_FUNCTIONS	1
-
-/* The private watchdog is used to generate run time stats. */
-#include "xscuwdt.h"
-extern XScuWdt xWatchDogInstance;
-extern void vInitialiseTimerForRunTimeStats( void );
-#define configGENERATE_RUN_TIME_STATS 1
-#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vInitialiseTimerForRunTimeStats()
-#define portGET_RUN_TIME_COUNTER_VALUE() ( ( 0xffffffffUL - XScuWdt_ReadReg( xWatchDogInstance.Config.BaseAddr, XSCUWDT_COUNTER_OFFSET ) ) >> 1 )
-
-/* The size of the global output buffer that is available for use when there
-are multiple command interpreters running at once (for example, one on a UART
-and one on TCP/IP).  This is done to prevent an output buffer being defined by
-each implementation - which would waste RAM.  In this case, there is only one
-command interpreter running. */
-#define configCOMMAND_INT_MAX_OUTPUT_SIZE 2096
-
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. */
 void vAssertCalled( const char * pcFile, unsigned long ulLine );
@@ -196,43 +175,6 @@ Zynq MPU. */
 #define configINTERRUPT_CONTROLLER_BASE_ADDRESS 		( XPAR_PS7_SCUGIC_0_DIST_BASEADDR )
 #define configINTERRUPT_CONTROLLER_CPU_INTERFACE_OFFSET ( -0xf00 )
 #define configUNIQUE_INTERRUPT_PRIORITIES				32
-
-
-
-/****** Network configuration settings - only used when the lwIP example is
-built.  See the page that documents this demo on the http://www.FreeRTOS.org
-website for more information. ***********************************************/
-
-/* The priority for the task that unblocked by the MAC interrupt to process
-received packets. */
-#define configMAC_INPUT_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
-
-/* The priority of the task that runs the lwIP stack. */
-#define configLWIP_TASK_PRIORITY			( configMAX_PRIORITIES - 2 )
-
-/* The priority of the task that uses lwIP sockets to provide a simple command
-line interface. */
-#define configCLI_TASK_PRIORITY				( tskIDLE_PRIORITY )
-
-/* MAC address configuration. */
-#define configMAC_ADDR0	0x00
-#define configMAC_ADDR1	0x13
-#define configMAC_ADDR2	0x14
-#define configMAC_ADDR3	0x15
-#define configMAC_ADDR4	0x15
-#define configMAC_ADDR5	0x16
-
-/* IP address configuration. */
-#define configIP_ADDR0		172
-#define configIP_ADDR1		25
-#define configIP_ADDR2		218
-#define configIP_ADDR3		200
-
-/* Netmask configuration. */
-#define configNET_MASK0		255
-#define configNET_MASK1		255
-#define configNET_MASK2		255
-#define configNET_MASK3		0
 
 #endif /* FREERTOS_CONFIG_H */
 

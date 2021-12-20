@@ -91,10 +91,10 @@ BaseType_t xLEDState;
 	xLEDState = XGpioPs_ReadPin( &xGpio, partstLED_OUTPUT );
 	XGpioPs_WritePin( &xGpio, partstLED_OUTPUT, !xLEDState );
 
-#if( configUSING_QEMU == 1 )
-	/* Can't see the LED blink when using QEMU, so print a message as well. */
-	xil_printf( "blink\n" );
-#endif
+	#if( configUSING_QEMU == 1 )
+		/* Can't see the LED blink when using QEMU, so print a message as well. */
+		xil_printf( "blink\n" );
+	#endif
 }
 
 

@@ -26,24 +26,22 @@
  */
 
 /******************************************************************************
- * NOTE 1:  This project provides three demo applications.  A simple blinky
- * style project, a more comprehensive test and demo application, and an
- * lwIP example.  The mainSELECTED_APPLICATION setting in main.c is used to
- * select between the three.  See the notes on using mainSELECTED_APPLICATION
+ * NOTE 1:  This project provides two demo applications.  A simple blinky
+ * style project and a more comprehensive test and demo application.  The
+ * mainCREATE_SIMPLE_BLILNKY_DEMO_ONLY setting in main.c is used to select
+ * between the two.  See the notes on using mainCREATE_SIMPLE_BLILNKY_DEMO_ONLY
  * in main.c.  This file implements the comprehensive version.
  *
  * NOTE 2:  This file only contains the source code that is specific to the
  * full demo.  Generic functions, such FreeRTOS hook functions, and functions
  * required to configure the hardware, are defined in main.c.
  *
- * NOTE 3:  The full demo includes a test that checks the floating point context
- * is maintained correctly across task switches.  The standard GCC libraries can
- * use floating point registers and made this test fail (unless the tasks that
- * use the library are given a floating point context as described on the
- * documentation page for this demo).  printf-stdarg.c is included in this
- * project to prevent the standard GCC libraries being linked into the project.
- *
  ******************************************************************************
+ *
+ * Set configUSING_QEMU to 1 in FreeRTOS.org to have the demo output to the
+ * QEMU UART.  Not simulated time is much slower than calendar time when using
+ * QEMU, so three seconds of simulated time is a lot longer than three seconds
+ * of emulated time.
  *
  * main_full() creates all the demo application tasks and software timers, then
  * starts the scheduler.  The web documentation provides more details of the
@@ -52,14 +50,6 @@
  *
  * In addition to the standard demo tasks, the following tasks and tests are
  * defined and/or created within this file:
- *
- * FreeRTOS+CLI command console.  The command console is access through the
- * UART to USB connector on the ZC702 Zynq development board (marked J2).  For
- * reasons of robustness testing the UART driver is deliberately written to be
- * inefficient and should not be used as a template for a production driver.
- * Type "help" to see a list of registered commands.  The FreeRTOS+CLI license
- * is different to the FreeRTOS license, see http://www.FreeRTOS.org/cli for
- * license and usage details.  The default baud rate is 115200.
  *
  * "Reg test" tasks - These fill both the core and floating point registers with
  * known values, then check that each register maintains its expected value for
@@ -74,20 +64,25 @@
  * If the check task discovers that a task has either stalled, or reported an
  * error, then it changes its own execution period from the initial three
  * seconds, to just 200ms.  The check task also toggles an LED each time it is
- * called.  This provides a visual indication of the system status:  If the LED
- * toggles every three seconds, then no issues have been discovered.  If the LED
- * toggles every 200ms, then an issue has been discovered with at least one
- * task.
+ * called (or prints "blink" to the UART when using QEMU).  This provides a
+ * visual indication of the system status:  If the LED toggles every three
+ * seconds (or "blink" is printed every emulated 3 seconds when using QEMU),
+ * then no issues have been discovered.  If the LED toggles every 200ms, then an
+ * issue has been discovered with at least one task.  If building for QEMU then
+ * a status message of the form "AAAA - StatusMessage:X - BB" is printed to the
+ * UART where AAAA is the tick count and StatusMessage:X is a human readable
+ * status message along with a bitwise error code to help identify which test
+ * failed in the case of an error, and BB is the number of times the interrupt
+ * nesting test has found interrupts to be nested.
  */
 
 /* Standard includes. */
 #include <stdio.h>
+#include "xil_printf.h"
 
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
-#include "timers.h"
-#include "semphr.h"
 
 /* Standard demo application includes. */
 #include "flop.h"
@@ -125,9 +120,6 @@
 #define mainCHECK_TASK_PRIORITY				( configMAX_PRIORITIES - 1 )
 #define mainQUEUE_OVERWRITE_PRIORITY		( tskIDLE_PRIORITY )
 
-/* The priority used by the UART command console task. */
-#define mainUART_COMMAND_CONSOLE_TASK_PRIORITY	( configMAX_PRIORITIES - 2 )
-
 /* The LED used by the check timer. */
 #define mainCHECK_LED						( 0 )
 
@@ -137,12 +129,12 @@
 /* The period after which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks.  ms are converted to the
 equivalent in ticks using the portTICK_PERIOD_MS constant. */
-#define mainNO_ERROR_CHECK_TASK_PERIOD		( 3000UL / portTICK_PERIOD_MS )
+#define mainNO_ERROR_CHECK_TASK_PERIOD		pdMS_TO_TICKS( 3000UL )
 
 /* The period at which the check timer will expire, in ms, if an error has been
 reported in one of the standard demo tasks.  ms are converted to the equivalent
 in ticks using the portTICK_PERIOD_MS constant. */
-#define mainERROR_CHECK_TASK_PERIOD 		( 200UL / portTICK_PERIOD_MS )
+#define mainERROR_CHECK_TASK_PERIOD 		pdMS_TO_TICKS( 200UL )
 
 /* Parameters that are passed into the register check tasks solely for the
 purpose of ensuring parameters are passed into tasks correctly. */
@@ -156,7 +148,6 @@ purpose of ensuring parameters are passed into tasks correctly. */
 #define mainMESSAGE_BUFFER_STACK_SIZE		( configMINIMAL_STACK_SIZE * 2 )
 
 /*-----------------------------------------------------------*/
-
 
 /*
  * The check task, as described at the top of this file.
@@ -238,13 +229,6 @@ void main_full( void )
 	}
 	#endif
 
-	/* Start the tasks that implements the command console on the UART, as
-	described above. */
-//_RB_	vUARTCommandConsoleStart( mainUART_COMMAND_CONSOLE_STACK_SIZE, mainUART_COMMAND_CONSOLE_TASK_PRIORITY );
-
-	/* Register the standard CLI commands. */
-//_RB_	vRegisterSampleCLICommands();
-
 	/* Create the register check tasks, as described at the top of this	file */
 	xTaskCreate( prvRegTestTaskEntry1, "Reg1", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_1_PARAMETER, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( prvRegTestTaskEntry2, "Reg2", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_2_PARAMETER, tskIDLE_PRIORITY, NULL );
@@ -282,6 +266,7 @@ TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
 TickType_t xLastExecutionTime;
 static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
 unsigned long ulErrorFound = pdFALSE;
+extern volatile uint32_t ulNestingCount;
 
 	/* Just to stop compiler warnings. */
 	( void ) pvParameters;
@@ -442,11 +427,13 @@ unsigned long ulErrorFound = pdFALSE;
 			at a higher frequency to give visible feedback that something has
 			gone wrong (it might just be that the loop back connector required
 			by the comtest tasks has not been fitted). */
-//_RB_			xDelayPeriod = mainERROR_CHECK_TASK_PERIOD;
-			pcStatusMessage = "Error found in at least one task.";
+			xDelayPeriod = mainERROR_CHECK_TASK_PERIOD;
+			pcStatusMessage = "Error found in at least one task (one bit set per detected error)";
 		}
 
-		xil_printf( "%s : %u\n", pcStatusMessage, ulErrorFound );
+		#if( configUSING_QEMU == 1 )
+			xil_printf( "%u - %s:%xH - %d\n", xTaskGetTickCount(), pcStatusMessage, ulErrorFound, ulNestingCount );
+		#endif
 	}
 }
 /*-----------------------------------------------------------*/

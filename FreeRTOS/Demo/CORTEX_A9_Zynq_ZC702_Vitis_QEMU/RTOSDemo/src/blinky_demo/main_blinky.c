@@ -26,16 +26,22 @@
  */
 
 /******************************************************************************
- * NOTE 1:  This project provides three demo applications.  A simple blinky
- * style project, a more comprehensive test and demo application, and an
- * lwIP example.  The mainSELECTED_APPLICATION setting in main.c is used to
- * select between the three.  See the notes on using mainSELECTED_APPLICATION
- * in main.c.  This file implements the simply blinky style version.
+ * NOTE 1:  This project provides two demo applications.  A simple blinky
+ * style project and a more comprehensive test and demo application.  The
+ * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting in main.c is used to
+ * select between the three.  See the notes on using
+ * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY in main.c.  This file implements the
+ * simply blinky style version.
  *
  * NOTE 2:  This file only contains the source code that is specific to the
  * basic demo.  Generic functions, such FreeRTOS hook functions, and functions
  * required to configure the hardware are defined in main.c.
  ******************************************************************************
+ *
+ * Set configUSING_QEMU to 1 in FreeRTOS.org to have the demo output to the
+ * QEMU UART.  Not simulated time is much slower than calendar time when using
+ * QEMU, so three seconds of simulated time is a lot longer than three seconds
+ * of emulated time.
  *
  * main_blinky() creates one queue, and two tasks.  It then starts the
  * scheduler.
@@ -52,14 +58,16 @@
  * in this file.  prvQueueReceiveTask() sits in a loop where it repeatedly
  * blocks on attempts to read data from the queue that was created within
  * main_blinky().  When data is received, the task checks the value of the
- * data, and if the value equals the expected 100, toggles an LED.  The 'block
- * time' parameter passed to the queue receive function specifies that the
- * task should be held in the Blocked state indefinitely to wait for data to
- * be available on the queue.  The queue receive task will only leave the
- * Blocked state when the queue send task writes to the queue.  As the queue
- * send task writes to the queue every 200 milliseconds, the queue receive
- * task leaves the Blocked state every 200 milliseconds, and therefore toggles
- * the LED every 200 milliseconds.
+ * data, and if the value equals the expected 100, toggles an LED (writes "blink"
+ * to the UART when using QEMU).  The 'block time' parameter passed to the queue
+ * receive function specifies that the task should be held in the Blocked state
+ * indefinitely to wait for data to be available on the queue.  The queue
+ * receive task will only leave the Blocked state when the queue send task
+ * writes to the queue.  As the queue send task writes to the queue every 200
+ * milliseconds, the queue receive task leaves the Blocked state every 200
+ * milliseconds, and therefore toggles the LED (or writes "blink" to the UART)
+ * every 200 milliseconds.  Note when using QEMU the emulated 200ms is much
+ * longer than a real 200ms of calendar time.
  */
 
 /* Kernel includes. */

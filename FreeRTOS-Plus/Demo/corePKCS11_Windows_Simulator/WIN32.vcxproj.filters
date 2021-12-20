@@ -308,9 +308,12 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_tls.c">
       <Filter>FreeRTOS+\mbedtls</Filter>
     </ClCompile>
-     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_tls13_keys.c">
-       <Filter>FreeRTOS+\mbedtls</Filter>
-     </ClCompile>
+     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_tls13_keys.c">
+
+       <Filter>FreeRTOS+\mbedtls</Filter>
+
+     </ClCompile>
+
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\threading.c">
       <Filter>FreeRTOS+\mbedtls</Filter>
     </ClCompile>
@@ -401,7 +404,6 @@
     <ClCompile Include="..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils\mbedtls_utils.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ThirdParty\mbedtls\library\error.c" />
     <ClCompile Include="..\..\Source\corePKCS11\source\portable\os\core_pkcs11_pal_utils.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11</Filter>
     </ClCompile>
@@ -752,7 +754,6 @@
     <ClInclude Include="core_pkcs11_config.h">
       <Filter>Config</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\portable\os\core_pkcs11_pal_utils.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include</Filter>
     </ClInclude>

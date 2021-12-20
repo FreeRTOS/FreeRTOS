@@ -157,7 +157,6 @@
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_UDP_IP.c" />
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement\BufferAllocation_2.c" />
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\NetworkInterface\WinPCap\NetworkInterface.c" />
-    <ClCompile Include="..\..\..\FreeRTOS-Plus\ThirdParty\mbedtls\library\error.c" />
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c" />
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c" />
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c" />
@@ -311,7 +310,6 @@
     <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pki_utils.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_errno_TCP.h" />
     <ClInclude Include="..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h" />
-    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
     <ClInclude Include="..\..\Source\Utilities\mbedtls_freertos\threading_alt.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\aes.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\aesni.h" />

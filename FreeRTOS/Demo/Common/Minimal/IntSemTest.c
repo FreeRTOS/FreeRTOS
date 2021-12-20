@@ -533,5 +533,5 @@ BaseType_t xAreInterruptSemaphoreTasksStillRunning( void )
         xReturn = pdTRUE;
     }
 
-    return ( BaseType_t ) !xErrorDetected;
+    return xReturn;
 }

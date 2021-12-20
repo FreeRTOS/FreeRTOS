@@ -279,7 +279,8 @@ FREERTOS_IGNORED_FILES = [
     'ethernetif.c',
     'platform.c',
     'platform.h',
-    'platform_config.h'
+    'platform_config.h',
+    'FreeRTOS_asm_vectors.S'
 
 ]
 

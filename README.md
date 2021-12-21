@@ -1,6 +1,6 @@
 The [FreeRTOS 202112.00](https://github.com/FreeRTOS/FreeRTOS/tree/202112.00) release
 adds the [Fleet Provisioning for AWS IoT](https://github.com/aws/Fleet-Provisioning-for-AWS-IoT-embedded-sdk/) library, as well as an [example demonstrating its use](https://github.com/FreeRTOS/FreeRTOS/tree/release-candidate/FreeRTOS-Plus/Demo/AWS/Fleet_Provisioning_Windows_Simulator/Fleet_Provisioning_With_CSR_Demo).
-This release also includes CBMC proofs for all public and private functions in the [OTA Update library](https://github.com/aws/ota-for-aws-iot-embedded-sdk). Additionally, the [Sigv4 library](https://github.com/aws/SigV4-for-AWS-IoT-embedded-sdk/) has been updated with various performance improvements and bugfixes.
+This release also includes CBMC proofs for all public and private functions in the [OTA Update library](https://github.com/aws/ota-for-aws-iot-embedded-sdk). Additionally, the [Sigv4 library](https://github.com/aws/SigV4-for-AWS-IoT-embedded-sdk/) has been updated with various performance improvements and bugfixes. The version of mbed TLS used in corePKCS11 and in demos has been updated.
 
 ## Getting started
 The [FreeRTOS.org](https://www.freertos.org) website contains a [FreeRTOS Kernel Quick Start Guide](https://www.freertos.org/FreeRTOS-quick-start-guide.html), a [list of supported devices and compilers](https://www.freertos.org/RTOS_ports.html), the [API reference](https://www.freertos.org/a00106.html), and many other resources.

@@ -203,6 +203,9 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\cmac.c">
       <Filter>FreeRTOS+\mbedtls</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\constant_time.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ctr_drbg.c">
       <Filter>FreeRTOS+\mbedtls</Filter>
     </ClCompile>
@@ -266,6 +269,12 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\memory_buffer_alloc.c">
       <Filter>FreeRTOS+\mbedtls</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\mps_reader.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\mps_trace.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\net_sockets.c">
       <Filter>FreeRTOS+\mbedtls</Filter>
     </ClCompile>
@@ -312,6 +321,30 @@
       <Filter>FreeRTOS+\mbedtls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_aead.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_cipher.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_client.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_driver_wrappers.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_ecp.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_hash.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_mac.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_rsa.c">
       <Filter>FreeRTOS+\mbedtls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_se.c">
@@ -368,6 +401,9 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_tls.c">
       <Filter>FreeRTOS+\mbedtls</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_tls13_keys.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\threading.c">
       <Filter>FreeRTOS+\mbedtls</Filter>
     </ClCompile>
@@ -420,7 +456,6 @@
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\FreeRTOS-Plus\ThirdParty\mbedtls\library\error.c" />
     <ClCompile Include="..\..\Source\Utilities\mbedtls_freertos\mbedtls_bio_freertos_plus_tcp.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
     </ClCompile>
@@ -832,17 +867,12 @@
     <ClInclude Include="core_pkcs11_config.h">
       <Filter>Config</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
-    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
     <ClInclude Include="..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
     <ClInclude Include="..\..\Source\Application-Protocols\network_transport\using_mbedtls_pkcs11\using_mbedtls_pkcs11.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
-    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\portable\os\core_pkcs11_pal_utils.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\corePKCS11\include</Filter>
     </ClInclude>

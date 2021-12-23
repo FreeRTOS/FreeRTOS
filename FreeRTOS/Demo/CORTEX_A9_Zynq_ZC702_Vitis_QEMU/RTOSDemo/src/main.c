@@ -91,8 +91,8 @@
 #include "xil_exception.h"
 #include "xuartps_hw.h"
 
-/* mainCREATE_SIMPLY_BLINKY_DEMO_ONLY is used to select between three demo a
- * pplications, as described at the top of this file.
+/* mainCREATE_SIMPLY_BLINKY_DEMO_ONLY is used to select between three demo
+ * applications, as described at the top of this file.
  *
  * When mainCREATE_SIMPLY_BLINKY_DEMO_ONLY is set to 1 the simple blinky example
  * will be built.
@@ -163,7 +163,7 @@ int main( void )
 	individual tasks.  If the code does reach here then it is likely there was
 	not enough heap space to allocate a stack to either the idle or timer task.
 	However as configSUPPORT_STATIC_ALLOCATION is set to 1 those stacks are
-	startically allocated so that should never happen.
+	statically allocated so that should never happen.
 	See https://freertos.org/a00111.html */
 	return 0;
 }

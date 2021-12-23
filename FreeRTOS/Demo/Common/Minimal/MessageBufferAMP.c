@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202111.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -52,7 +52,7 @@
  * same design pattern described on the link below for queues, but using message
  * buffers instead.  It is actually simpler with a message buffer as variable
  * length data can be written into the message buffer directly:
- * http://www.freertos.org/Pend-on-multiple-rtos-objects.html#alternative_design_pattern
+ * https://www.FreeRTOS.org/Pend-on-multiple-rtos-objects.html#alternative_design_pattern
  */
 
 /* Standard includes. */

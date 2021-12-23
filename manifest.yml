@@ -53,7 +53,7 @@ dependencies:
       path: "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent"
 
   - name: "corePKCS11"
-    version: "v3.3.0"
+    version: "v3.4.0"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/corePKCS11.git"
@@ -88,7 +88,7 @@ dependencies:
       path: "FreeRTOS-Plus/ThirdParty/wolfSSL"
 
   - name: "mbedtls"
-    version: "v2.26.0"
+    version: "v2.28.0"
     repository:
       type: "git"
       url:  "https://github.com/ARMmbed/mbedtls"

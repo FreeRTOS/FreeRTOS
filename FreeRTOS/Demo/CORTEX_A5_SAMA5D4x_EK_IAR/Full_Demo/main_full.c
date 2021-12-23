@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202111.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
  *
- * 1 tab == 4 spaces!
  */
 
 /******************************************************************************
@@ -50,7 +49,7 @@
  * CDC driver provided by Atmel.  It is accessed through the USB connector
  * marked J1 SAMA5D4 Xplained board.  Type "help" to see a list of registered
  * commands.  The FreeRTOS+CLI license is different to the FreeRTOS license, see
- * http://www.FreeRTOS.org/cli for license and usage details.  The default baud
+ * https://www.FreeRTOS.org/cli for license and usage details.  The default baud
  * rate is 115200.
  *
  * "Reg test" tasks - These fill both the core and floating point registers with

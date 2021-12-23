@@ -1,9 +1,6 @@
-The [FreeRTOS 202111.00](https://github.com/FreeRTOS/FreeRTOS/tree/202111.00) release
-adds [examples](https://github.com/FreeRTOS/FreeRTOS/tree/main/FreeRTOS-Plus/Demo/FreeRTOS_Cellular_Interface_Windows_Simulator)
-demonstrating the use of [FreeRTOS Cellular Interface](https://github.com/FreeRTOS/FreeRTOS-Cellular-Interface).
-The release also adds an [example](https://github.com/FreeRTOS/FreeRTOS/tree/main/FreeRTOS/Demo/Safer_Interrupts_M33F_NXP_LPC55S69_MCUXpresso)
-that demonstrates a method of minimizing the time an application spends in privileged mode
-in FreeRTOS ports on microcontrollers (MCU) with Memory Protection Unit (MPU) support.
+The [FreeRTOS 202112.00](https://github.com/FreeRTOS/FreeRTOS/tree/202112.00) release
+adds the [Fleet Provisioning for AWS IoT](https://github.com/aws/Fleet-Provisioning-for-AWS-IoT-embedded-sdk/) library and the [Sigv4 library](https://github.com/aws/SigV4-for-AWS-IoT-embedded-sdk/). Additionally, the update includes an [example demonstrating the use of the Fleet Provisioning library](https://github.com/FreeRTOS/FreeRTOS/tree/release-candidate/FreeRTOS-Plus/Demo/AWS/Fleet_Provisioning_Windows_Simulator/Fleet_Provisioning_With_CSR_Demo), as well as a modification to the [HTTP S3 download demo](https://github.com/FreeRTOS/FreeRTOS/tree/release-candidate/FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download) to demonstrate the Sigv4 library.
+This release also includes CBMC proofs for all public and private functions in the [OTA Update library](https://github.com/aws/ota-for-aws-iot-embedded-sdk). The version of mbed TLS used in corePKCS11 and in demos has been updated.
 
 ## Getting started
 The [FreeRTOS.org](https://www.freertos.org) website contains a [FreeRTOS Kernel Quick Start Guide](https://www.freertos.org/FreeRTOS-quick-start-guide.html), a [list of supported devices and compilers](https://www.freertos.org/RTOS_ports.html), the [API reference](https://www.freertos.org/a00106.html), and many other resources.

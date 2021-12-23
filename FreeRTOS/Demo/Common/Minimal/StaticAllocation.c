@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202111.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
  *
- * 1 tab == 4 spaces!
  */
 
 
@@ -363,7 +362,7 @@
  * items it is possible for the queue to hold at any one time, which equals the
  * queue length (in items, not bytes) multiplied by the size of each item.  In this
  * case the queue will hold staticQUEUE_LENGTH_IN_ITEMS 64-bit items.  See
- * http://www.freertos.org/Embedded-RTOS-Queues.html */
+ * https://www.FreeRTOS.org/Embedded-RTOS-Queues.html */
         static uint8_t ucQueueStorageArea[ staticQUEUE_LENGTH_IN_ITEMS * sizeof( uint64_t ) ];
 
         /* Create the queue.  xQueueCreateStatic() has two more parameters than the
@@ -564,7 +563,7 @@
         if( *puxVariableToIncrement == staticMAX_TIMER_CALLBACK_EXECUTIONS )
         {
             /* This is called from a timer callback so must not block.  See
-             * http://www.FreeRTOS.org/FreeRTOS-timers-xTimerStop.html */
+             * https://www.FreeRTOS.org/FreeRTOS-timers-xTimerStop.html */
             xReturned = xTimerStop( xExpiredTimer, staticDONT_BLOCK );
 
             if( xReturned != pdPASS )

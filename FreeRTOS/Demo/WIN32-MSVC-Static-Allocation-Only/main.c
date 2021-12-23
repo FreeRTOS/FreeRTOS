@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202111.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
  *
- * 1 tab == 4 spaces!
  */
 
 /******************************************************************************
@@ -35,8 +34,8 @@
  * pvPortMalloc() just equates to NULL, and calls to vPortFree() have no
  * effect.  See:
  *
- * http://www.freertos.org/a00111.html and
- * http://www.freertos.org/Static_Vs_Dynamic_Memory_Allocation.html
+ * https://www.FreeRTOS.org/a00111.html and
+ * https://www.FreeRTOS.org/Static_Vs_Dynamic_Memory_Allocation.html
  *
  *******************************************************************************
  */

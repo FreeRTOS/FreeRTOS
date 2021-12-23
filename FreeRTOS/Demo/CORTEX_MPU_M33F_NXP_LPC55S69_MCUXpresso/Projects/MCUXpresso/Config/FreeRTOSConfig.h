@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
  *
- * 1 tab == 4 spaces!
  */
 
 /******************************************************************************
@@ -41,7 +40,7 @@
  *
  * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
  * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
- * http://www.freertos.org/a00110.html
+ * https://www.FreeRTOS.org/a00110.html
  *----------------------------------------------------------*/
 
 extern uint32_t SystemCoreClock;
@@ -122,7 +121,7 @@ extern uint32_t SystemCoreClock;
 
 /* Dimensions a buffer that can be used by the FreeRTOS+CLI command interpreter.
  * See the FreeRTOS+CLI documentation for more information:
- * http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_CLI/ */
+ * https://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_CLI/ */
 #define configCOMMAND_INT_MAX_OUTPUT_SIZE				2048
 
 /* Interrupt priority configuration follows...................... */

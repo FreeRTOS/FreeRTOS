@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
  *
- * 1 tab == 4 spaces!
  */
 
 /*
@@ -59,7 +58,7 @@
  * flashing the one remaining LED (mainRESET_LED) when it starts.  After
  * this initial flash mainRESET_LED should remain off.
  *
- * http://www.FreeRTOS.org contains important information on the use of the
+ * https://www.FreeRTOS.org contains important information on the use of the
  * PIC18F port.
  */
 

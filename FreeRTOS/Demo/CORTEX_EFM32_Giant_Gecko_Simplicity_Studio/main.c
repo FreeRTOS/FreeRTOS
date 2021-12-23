@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
  *
- * 1 tab == 4 spaces!
  */
 
 /******************************************************************************
@@ -87,7 +86,7 @@ int main( void )
 {
 	/*
 	 * See the following link for instructions:
-	 * http://www.freertos.org/EFM32-Giant-Gecko-Pearl-Gecko-tickless-RTOS-demo.html
+	 * https://www.FreeRTOS.org/EFM32-Giant-Gecko-Pearl-Gecko-tickless-RTOS-demo.html
 	 */
 
 	/* Configure the hardware ready to run the demo. */

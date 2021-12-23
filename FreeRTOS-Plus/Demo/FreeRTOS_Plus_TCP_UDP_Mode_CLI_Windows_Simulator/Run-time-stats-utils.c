@@ -26,7 +26,7 @@
 
 /*
  * Utility functions required to gather run time statistics.  See:
- * http://www.freertos.org/rtos-run-time-stats.html
+ * https://www.FreeRTOS.org/rtos-run-time-stats.html
  *
  * Note that this is a simulated port, where simulated time is a lot slower than
  * real time, therefore the run time counter values have no real meaningful

@@ -35,7 +35,7 @@
   *
   * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
   * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
-  * http://www.freertos.org/a00110.html
+  * https://www.FreeRTOS.org/a00110.html
   *
   * The bottom of this file contains some constants specific to running the UDP
   * stack in this demo.  Constants specific to FreeRTOS+TCP itself (rather than

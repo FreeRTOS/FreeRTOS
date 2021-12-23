@@ -110,7 +110,7 @@ static UBaseType_t ulNextRand;
 /******************************************************************************
  *
  * See the following web page for information on using this demo.
- * http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_UDP/Embedded_Ethernet_Examples/RTOS_UDP_CLI_Windows_Simulator.shtml
+ * https://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_UDP/Embedded_Ethernet_Examples/RTOS_UDP_CLI_Windows_Simulator.shtml
  *
  ******************************************************************************/
 

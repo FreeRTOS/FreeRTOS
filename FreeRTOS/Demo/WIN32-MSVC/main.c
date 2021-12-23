@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
  *
- * 1 tab == 4 spaces!
  */
 
 /******************************************************************************
@@ -42,7 +41,7 @@
  * this demo application.  Also, the timing information in the FreeRTOS+Trace
  * logs have no meaningful units.  See the documentation page for the Windows
  * port for further information:
- * http://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
+ * https://www.FreeRTOS.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
  *
  *
  *******************************************************************************
@@ -93,7 +92,7 @@ extern void main_full( void );
 
 /*
  * Only the comprehensive demo uses application hook (callback) functions.  See
- * http://www.freertos.org/a00016.html for more information.
+ * https://www.FreeRTOS.org/a00016.html for more information.
  */
 void vFullDemoTickHookFunction( void );
 void vFullDemoIdleFunction( void );
@@ -102,7 +101,7 @@ void vFullDemoIdleFunction( void );
  * This demo uses heap_5.c, so start by defining some heap regions.  It is not
  * necessary for this demo to use heap_5, as it could define one large heap
  * region.  Heap_5 is only used for test and example purposes.  See
- * http://www.freertos.org/a00111.html for an explanation.
+ * https://www.FreeRTOS.org/a00111.html for an explanation.
  */
 static void  prvInitialiseHeap( void );
 

@@ -19,14 +19,14 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
  */
 
 
 /*
  * Utility functions required to gather run time statistics.  See:
- * http://www.freertos.org/rtos-run-time-stats.html
+ * https://www.FreeRTOS.org/rtos-run-time-stats.html
  *
  * Note that this is a simulated port, where simulated time is a lot slower than
  * real time, therefore the run time counter values have no real meaningful

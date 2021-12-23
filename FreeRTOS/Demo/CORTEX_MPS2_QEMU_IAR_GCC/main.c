@@ -84,7 +84,7 @@ extern void main_full( void );
 
 /*
  * Only the comprehensive demo uses application hook (callback) functions.  See
- * http://www.freertos.org/a00016.html for more information.
+ * https://www.FreeRTOS.org/a00016.html for more information.
  */
 void vFullDemoTickHookFunction( void );
 void vFullDemoIdleFunction( void );

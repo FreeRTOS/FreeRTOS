@@ -73,7 +73,7 @@
  *
  * See the following web page for essential demo usage and configuration
  * details:
- * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Server.html
+ * https://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Server.html
  */
 
 /* Standard includes. */

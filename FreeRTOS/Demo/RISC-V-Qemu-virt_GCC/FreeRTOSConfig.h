@@ -22,7 +22,6 @@
  * https://www.FreeRTOS.org
  * https://www.github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 #ifndef FREERTOS_CONFIG_H

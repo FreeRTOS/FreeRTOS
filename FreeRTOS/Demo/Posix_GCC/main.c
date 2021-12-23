@@ -91,7 +91,7 @@ static void traceOnEnter( void );
 
 /*
  * Only the comprehensive demo uses application hook (callback) functions.  See
- * http://www.freertos.org/a00016.html for more information.
+ * https://www.FreeRTOS.org/a00016.html for more information.
  */
 void vFullDemoTickHookFunction( void );
 void vFullDemoIdleFunction( void );
@@ -313,7 +313,7 @@ void vAssertCalled( const char * const pcFileName,
     volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 
     /* Called if an assertion passed to configASSERT() fails.  See
-     * http://www.freertos.org/a00110.html#configASSERT for more information. */
+     * https://www.FreeRTOS.org/a00110.html#configASSERT for more information. */
 
     /* Parameters are not used. */
     ( void ) ulLine;

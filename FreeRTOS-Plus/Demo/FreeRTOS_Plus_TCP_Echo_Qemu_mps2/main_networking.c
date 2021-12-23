@@ -28,7 +28,7 @@
  * This project is a cut down version of the project described on the following
  * link.  Only the simple UDP client and server and the TCP echo clients are
  * included in the build:
- * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html
+ * https://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html
  */
 
 /* Standard includes. */
@@ -143,7 +143,7 @@ void main_tcp_echo_client_tasks( void )
 
     /*
      * Instructions for using this project are provided on:
-     * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html
+     * https://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html
      */
 
     /* Miscellaneous initialisation including preparing the logging and seeding

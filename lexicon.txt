@@ -1,3 +1,4 @@
+aaaa
 ab
 abs
 accesskeyid
@@ -81,6 +82,7 @@ basetype
 bauddiv
 baudrate
 baudrateconverter
+bb
 bcd
 bcdcdc
 bcddevicel
@@ -2459,6 +2461,7 @@ staticsemaphore
 staticstreambuffer
 statictask
 statictimer
+statusmessage
 stdarg
 stdint
 stdlib
@@ -2770,6 +2773,7 @@ ulong
 ulpacketsreceived
 ulpacketssent
 ulport
+ulportinterruptnesting
 ulprescale
 ulpriority
 ulprioritysetcounter

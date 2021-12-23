@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ASCII"?>
+<sdkproject:SdkProject xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sdkproject="http://www.xilinx.com/sdkproject" name="RTOSDemo" location="C:/Users/ribarry/Dev/Workspaces/Vitis/Demo_Zynq_QEMU/RTOSDemo" platform="C:/Users/ribarry/Dev/Workspaces/Vitis/Demo_Zynq_QEMU/zc702/export/zc702/zc702.xpfm" platformUID="xilinx:zc702::0.0(custom)" systemProject="RTOSDemo_system" sysConfig="zc702" runtime="cpp" cpu="standalone_domain" cpuInstance="ps7_cortexa9_0" os="standalone" mssSignature="0a055bd1f9481d215f2c9ec0c30c607d">
+  <configuration name="Debug" id="xilinx.gnu.armv7.exe.debug.1415197739">
+    <configBuildOptions xsi:type="sdkproject:SdkOptions"/>
+    <lastBuildOptions xsi:type="sdkproject:SdkOptions"/>
+  </configuration>
+  <configuration name="Release" id="xilinx.gnu.armv7.exe.release.1690806787" dirty="true">
+    <configBuildOptions xsi:type="sdkproject:SdkOptions"/>
+  </configuration>
+  <template appTemplateName="hello_world"/>
+</sdkproject:SdkProject>

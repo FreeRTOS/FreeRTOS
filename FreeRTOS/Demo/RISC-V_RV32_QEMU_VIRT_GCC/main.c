@@ -43,7 +43,6 @@
  * Use the following commands to start the application running in a way that
  * enables the debugger to connect, omit the "-s -S" to run the project without
  * the debugger:
- * qemu-system-arm -machine mps2-an385 -cpu cortex-m3 -kernel [path-to]/RTOSDemo.out -nographic -serial stdio -semihosting -semihosting-config enable=on,target=native -s -S
  *
  * qemu-system-riscv32 -nographic -machine virt -net none -chardev stdio,id=con,mux=on -serial chardev:con -mon chardev=con,mode=readline -bios none -smp 4 -kernel [path-to]/RTOSDemo.elf
  */
@@ -66,7 +65,7 @@ The blinky demo is implemented and described in main_blinky.c.
 If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is not 1 then the comprehensive test and
 demo application will be built.  The comprehensive test and demo application is
 implemented and described in main_full.c. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
 /* printf() output uses the UART.  These constants define the addresses of the
 required UART registers. */

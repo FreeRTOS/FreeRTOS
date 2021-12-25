@@ -95,11 +95,6 @@ static void prvQueueSendTask( void *pvParameters );
  */
 static void prvQueueSendTimerCallback( TimerHandle_t xTimerHandle );
 
-/*
- * To output via the serial port.
- */
-extern void vSendString( const char *s );
-
 /*-----------------------------------------------------------*/
 
 /* The queue used by both tasks. */
@@ -223,15 +218,15 @@ uint32_t ulReceivedValue;
 		{
 			/* It is normally not good to call printf() from an embedded system,
 			although it is ok in this simulated case. */
-			vSendString( "Message received from task\r\n" );
+			printf( "Message received from task\r\n" );
 		}
 		else if( ulReceivedValue == mainVALUE_SENT_FROM_TIMER )
 		{
-			vSendString( "Message received from software timer\r\n" );
+			printf( "Message received from software timer\r\n" );
 		}
 		else
 		{
-			vSendString( "Unexpected message\r\n" );
+			printf( "Unexpected message\r\n" );
 		}
 	}
 }

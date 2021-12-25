@@ -26,12 +26,14 @@
 */
 
 #include <stdarg.h>
+#include "ns16550.h"
+#include "riscv-virt.h"
 
-#define UART0_ADDRESS 	( 0x40004000UL )
-#define UART0_DATA		( * ( ( ( volatile unsigned int * )( UART0_ADDRESS + 0UL ) ) ) )
-#define putchar(c)      UART0_DATA = c
+#define putchar(c)      vOutNS16550( &dev, c )
 
 static int tiny_print( char **out, const char *format, va_list args, unsigned int buflen );
+
+static struct device dev = { NS16550_ADDR };
 
 static void printchar(char **str, int c, char *buflimit)
 {

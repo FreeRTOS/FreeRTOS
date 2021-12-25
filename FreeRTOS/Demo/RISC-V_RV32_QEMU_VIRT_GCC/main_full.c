@@ -77,7 +77,6 @@
 #include "GenQTest.h"
 #include "QPeek.h"
 #include "recmutex.h"
-#include "IntQueue.h"
 #include "QueueSet.h"
 #include "EventGroupsDemo.h"
 #include "MessageBufferDemo.h"
@@ -115,13 +114,17 @@ constant is different depending on the compiler in use. */
  * described at the top of this file. */
 static void prvCheckTask( void *pvParameters );
 
+/*
+ * To output via the serial port.
+ */
+extern void vSendString( const char *s );
+
 /*-----------------------------------------------------------*/
 
 void main_full( void )
 {
 	/* Start the standard demo tasks. */
 	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
-	vStartInterruptQueueTasks();
 	vStartRecursiveMutexTasks();
 	vCreateBlockTimeTasks();
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
@@ -168,7 +171,6 @@ static void prvCheckTask( void *pvParameters )
 static const char * pcMessage = "PASS";
 const TickType_t xTaskPeriod = pdMS_TO_TICKS( 5000UL );
 TickType_t xPreviousWakeTime;
-extern uint32_t ulNestCount;
 
     /* Avoid warning about unused parameter. */
     ( void ) pvParameters;
@@ -196,10 +198,6 @@ extern uint32_t ulNestCount;
 	    {
 	        pcMessage = "xIsCreateTaskStillRunning() returned false";
 	    }
-		else if( xAreIntQueueTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "xAreIntQueueTasksStillRunning() returned false";
-		}
 		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 		{
 			pcMessage = "xAreBlockTimeTestTasksStillRunning() returned false";
@@ -279,7 +277,7 @@ extern uint32_t ulNestCount;
 
 		/* It is normally not good to call printf() from an embedded system,
 		although it is ok in this simulated case. */
-		printf( "%s : %d (%d)\r\n", pcMessage, (int) xTaskGetTickCount(), ( int ) ulNestCount );
+		printf( "%s : %d\r\n", pcMessage, (int) xTaskGetTickCount() );
 	}
 }
 /*-----------------------------------------------------------*/

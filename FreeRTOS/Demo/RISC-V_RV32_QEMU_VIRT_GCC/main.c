@@ -44,7 +44,7 @@
  * enables the debugger to connect, omit the "-s -S" to run the project without
  * the debugger:
  *
- * qemu-system-riscv32 -nographic -machine virt -net none -chardev stdio,id=con,mux=on -serial chardev:con -mon chardev=con,mode=readline -bios none -smp 4 -kernel [path-to]/RTOSDemo.elf
+ * qemu-system-riscv32 -machine virt -smp 1 -nographic -bios none -serial stdio -kernel [path-to]/RTOSDemo.elf -s -S
  */
 
 /* FreeRTOS includes. */
@@ -96,21 +96,12 @@ extern void main_full( void );
 void vFullDemoTickHookFunction( void );
 void vFullDemoIdleFunction( void );
 
-/*
- * Printf() output is sent to the serial port.  Initialise the serial hardware.
- */
-static void prvUARTInit( void );
-
 /*-----------------------------------------------------------*/
 
 void main( void )
 {
 	/* See https://www.freertos.org/freertos-on-qemu-mps2-an385-model.html for
 	instructions. */
-
-	
-	/* Hardware initialisation.  printf() output uses the UART for IO. */
-	prvUARTInit();
 
 	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
 	of this file. */
@@ -273,13 +264,6 @@ static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 	Note that, as the array is necessarily of type StackType_t,
 	configMINIMAL_STACK_SIZE is specified in words, not bytes. */
 	*pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
-}
-/*-----------------------------------------------------------*/
-
-static void prvUARTInit( void )
-{
-	UART0_BAUDDIV = 16;
-	UART0_CTRL = 1;
 }
 /*-----------------------------------------------------------*/
 

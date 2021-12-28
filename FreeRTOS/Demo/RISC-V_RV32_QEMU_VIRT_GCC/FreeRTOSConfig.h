@@ -49,7 +49,7 @@
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				0
 #define configUSE_TICK_HOOK				1
-#define configCPU_CLOCK_HZ				( ( unsigned long ) 25000000 )
+#define configCPU_CLOCK_HZ				( ( unsigned long ) 20000000 )
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 120 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 80 * 1024 ) )
@@ -64,6 +64,7 @@
 #define configUSE_MALLOC_FAILED_HOOK	1
 #define configUSE_QUEUE_SETS			1
 #define configUSE_COUNTING_SEMAPHORES	1
+#define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
 
 #define configMAX_PRIORITIES			( 9UL )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
@@ -112,8 +113,13 @@ FreeRTOS/Source/tasks.c for limitations. */
 void vAssertCalled( const char *pcFileName, uint32_t ulLine );
 #define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __FILE__, __LINE__ );
 
+/* The test that checks the trigger level on stream buffers requires an
+allowable margin of error on slower processors (slower than the Win32
+machine on which the test is developed). */
+#define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN   2
+
 #define intqHIGHER_PRIORITY		( configMAX_PRIORITIES - 5 )
-#define bktPRIMARY_PRIORITY		( configMAX_PRIORITIES - 3 )
-#define bktSECONDARY_PRIORITY	( configMAX_PRIORITIES - 4 )
+#define bktPRIMARY_PRIORITY		( configMAX_PRIORITIES - 4 )
+#define bktSECONDARY_PRIORITY	( configMAX_PRIORITIES - 5 )
 
 #endif /* FREERTOS_CONFIG_H */

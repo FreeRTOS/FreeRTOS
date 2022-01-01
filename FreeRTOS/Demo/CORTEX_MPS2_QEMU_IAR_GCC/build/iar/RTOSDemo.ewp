@@ -1208,6 +1208,9 @@
         <file>
             <name>$PROJ_DIR$\..\..\main_full.c</name>
         </file>
+        <file>
+            <name>$PROJ_DIR$\RegTest.S</name>
+        </file>
     </group>
     <group>
         <name>System files</name>

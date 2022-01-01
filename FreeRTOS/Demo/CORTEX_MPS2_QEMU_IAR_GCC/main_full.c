@@ -109,11 +109,37 @@ across projects that have that constant set differently - in this case the
 constant is different depending on the compiler in use. */
 #define mainMESSAGE_BUFFER_STACK_SIZE		( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
 #define mainCHECK_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
+
+/* Parameters that are passed into the register check tasks solely for the
+purpose of ensuring parameters are passed into tasks correctly. */
+#define mainREG_TEST_TASK_1_PARAMETER		( ( void * ) 0x12345678 )
+#define mainREG_TEST_TASK_2_PARAMETER		( ( void * ) 0x87654321 )
+
 /*-----------------------------------------------------------*/
+
+/*
+ * Register check tasks, and the tasks used to write over and check the contents
+ * of the FPU registers, as described at the top of this file.  The nature of
+ * these files necessitates that they are written in an assembly file, but the
+ * entry points are kept in the C file for the convenience of checking the task
+ * parameter.
+ */
+static void prvRegTestTaskEntry1( void *pvParameters );
+extern void vRegTest1Implementation( void );
+static void prvRegTestTaskEntry2( void *pvParameters );
+extern void vRegTest2Implementation( void );
 
 /* The task that checks the operation of all the other standard demo tasks, as
  * described at the top of this file. */
 static void prvCheckTask( void *pvParameters );
+
+/*-----------------------------------------------------------*/
+
+/* The following two variables are used to communicate the status of the
+register check tasks to the check task.  If the variables keep incrementing,
+then the register check tasks have not discovered any errors.  If a variable
+stops incrementing, then an error has been found. */
+volatile unsigned long ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
 
 /*-----------------------------------------------------------*/
 
@@ -144,6 +170,15 @@ void main_full( void )
 	vStartStreamBufferInterruptDemo();
 	vStartInterruptSemaphoreTasks();
 
+	/* Create the register check tasks, as described at the top of this	file */
+	xTaskCreate( prvRegTestTaskEntry1, 				/* Function that implements the task. */
+				 "Reg1", 							/* Human readable name for the task - not used by the kernel but helps debugging. */
+				 configMINIMAL_STACK_SIZE,			/* Size of stack to allocate for the task - in words not bytes. */
+				 mainREG_TEST_TASK_1_PARAMETER, 	/* A parameter passed into the task to check parameter passing is working correctly. */
+				 tskIDLE_PRIORITY, 					/* Priority assigned to the task - must be between 0 (tskIDLE_PRIORITY) and (configMAX_PRIORITIES - 1). */
+				 NULL );							/* Can be used to pass a handle to the create task out of the xTaskCreate() function. */
+	xTaskCreate( prvRegTestTaskEntry2, "Reg2", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_2_PARAMETER, tskIDLE_PRIORITY, NULL );
+
 	/* The suicide tasks must be created last as they need to know how many
 	tasks were running prior to their creation in order to ascertain whether
 	or not the correct/expected number of tasks are running at any given time. */
@@ -166,6 +201,7 @@ void main_full( void )
 static void prvCheckTask( void *pvParameters )
 {
 static const char * pcMessage = "PASS";
+unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
 const TickType_t xTaskPeriod = pdMS_TO_TICKS( 5000UL );
 TickType_t xPreviousWakeTime;
 extern uint32_t ulNestCount;
@@ -276,6 +312,18 @@ extern uint32_t ulNestCount;
 		{
 			pcMessage = "xAreInterruptSemaphoreTasksStillRunning() returned false";
 		}
+		else if( ulLastRegTest1Value == ulRegTest1LoopCounter )
+		{
+			/* Check that the register test 1 task is still running. */
+			pcMessage = "Error in RegTest 1";
+		}
+		else if( ulLastRegTest2Value == ulRegTest2LoopCounter )
+		{
+			/* Check that the register test 2 task is still running. */
+			pcMessage = "Error in RegTest 2";
+		}
+		ulLastRegTest2Value = ulRegTest2LoopCounter;
+		ulLastRegTest1Value = ulRegTest1LoopCounter;
 
 		/* It is normally not good to call printf() from an embedded system,
 		although it is ok in this simulated case. */
@@ -314,6 +362,42 @@ void vFullDemoTickHookFunction( void )
 
 	/* Exercise semaphores from interrupts. */
 	vInterruptSemaphorePeriodicTest();
+}
+/*-----------------------------------------------------------*/
+
+static void prvRegTestTaskEntry1( void *pvParameters )
+{
+	/* Although the regtest task is written in assembler, its entry point is
+	written in C for convenience of checking the task parameter is being passed
+	in correctly. */
+	if( pvParameters == mainREG_TEST_TASK_1_PARAMETER )
+	{
+		/* Start the part of the test that is written in assembler. */
+		vRegTest1Implementation();
+	}
+
+	/* The following line will only execute if the task parameter is found to
+	be incorrect.  The check task will detect that the regtest loop counter is
+	not being incremented and flag an error. */
+	vTaskDelete( NULL );
+}
+/*-----------------------------------------------------------*/
+
+static void prvRegTestTaskEntry2( void *pvParameters )
+{
+	/* Although the regtest task is written in assembler, its entry point is
+	written in C for convenience of checking the task parameter is being passed
+	in correctly. */
+	if( pvParameters == mainREG_TEST_TASK_2_PARAMETER )
+	{
+		/* Start the part of the test that is written in assembler. */
+		vRegTest2Implementation();
+	}
+
+	/* The following line will only execute if the task parameter is found to
+	be incorrect.  The check task will detect that the regtest loop counter is
+	not being incremented and flag an error. */
+	vTaskDelete( NULL );
 }
 /*-----------------------------------------------------------*/
 

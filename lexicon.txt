@@ -51,6 +51,7 @@ appropiate
 aptime
 apu
 ar
+aren't
 args
 armv
 arp

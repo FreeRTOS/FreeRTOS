@@ -613,6 +613,7 @@ void test_xQueueSendFromISR_locked_overflow( void )
     vSetQueueTxLock( xQueueSet, INT8_MAX );
 
     vFakePortAssertIfInterruptPriorityInvalid_Expect();
+
     /* The number of tasks need to be more than 127 to trigger the
      * overflow assertion. */
     uxTaskGetNumberOfTasks_IgnoreAndReturn( 128 );

@@ -604,6 +604,7 @@ void test_macro_xQueueSendFromISR_locked( void )
     vSetQueueTxLock( xQueue, queueLOCKED_UNMODIFIED );
 
     vFakePortAssertIfInterruptPriorityInvalid_Expect();
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     uint32_t testval = getNextMonotonicTestValue();
 
@@ -640,6 +641,9 @@ void test_macro_xQueueSendFromISR_locked_overflow( void )
     vSetQueueTxLock( xQueue, INT8_MAX );
 
     vFakePortAssertIfInterruptPriorityInvalid_Expect();
+    /* The number of tasks need to be more than 127 to trigger the
+     * overflow assertion. */
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 128 );
 
     /* Expect an assertion since the cTxLock value has overflowed */
     fakeAssertExpectFail();

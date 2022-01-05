@@ -1018,9 +1018,9 @@ void test_xQueueReceiveFromISR_locked( void )
 
     TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
 
-   /* Verify that the cRxLock counter has only been incremented by one
-    * even after 2 calls to xQueueReceiveFromISR because there is only
-    * one task in the system as returned from uxTaskGetNumberOfTasks. */
+    /* Verify that the cRxLock counter has only been incremented by one
+     * even after 2 calls to xQueueReceiveFromISR because there is only
+     * one task in the system as returned from uxTaskGetNumberOfTasks. */
     TEST_ASSERT_EQUAL( queueLOCKED_UNMODIFIED + 1, cGetQueueRxLock( xQueue ) );
 
     /* Verify that the cTxLock counter has not changed */

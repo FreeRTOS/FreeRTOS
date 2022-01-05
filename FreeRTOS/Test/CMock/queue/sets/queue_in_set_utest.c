@@ -570,6 +570,7 @@ void test_xQueueSendFromISR_locked( void )
     vSetQueueTxLock( xQueueSet, queueLOCKED_UNMODIFIED );
 
     vFakePortAssertIfInterruptPriorityInvalid_Expect();
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     uint32_t testVal = getNextMonotonicTestValue();
 
@@ -612,6 +613,11 @@ void test_xQueueSendFromISR_locked_overflow( void )
     vSetQueueTxLock( xQueueSet, INT8_MAX );
 
     vFakePortAssertIfInterruptPriorityInvalid_Expect();
+
+    /* The number of tasks need to be more than 127 to trigger the
+     * overflow assertion. */
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 128 );
+
 
     /* Expect an assertion since the cTxLock value has overflowed */
     fakeAssertExpectFail();
@@ -670,6 +676,7 @@ static BaseType_t xQueueSend_locked_xTaskCheckForTimeOutCB( TimeOut_t * const px
 
     if( cmock_num_calls == NUM_CALLS_TO_INTERCEPT )
     {
+        uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
         uint32_t checkVal = INVALID_UINT32;
         QueueHandle_t xQueue = xQueueSelectFromSetFromISR( xQueueSetHandleStatic );
         TEST_ASSERT_NOT_NULL( xQueue );
@@ -731,6 +738,7 @@ static BaseType_t xQueueSend_xTaskResumeAllCallback( int cmock_num_calls )
     {
         if( cmock_num_calls == NUM_CALLS_TO_INTERCEPT )
         {
+            uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
             uint32_t testVal = getNextMonotonicTestValue();
             ( void ) xQueueSendFromISR( xQueueHandleStatic, &testVal, NULL );
         }
@@ -865,6 +873,7 @@ void test_xQueueReceive_in_set_blocking_success_locked_no_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xQueueReceive_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &td_task_xTaskResumeAllStub );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     uint32_t checkVal = INVALID_UINT32;
 
@@ -929,6 +938,7 @@ void test_xQueueReceive_in_set_blocking_fail_locked_high_prio_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xQueueReceive_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xQueueReceive_xTaskResumeAllCallback );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY + 1 );
 
@@ -971,6 +981,7 @@ void test_xQueueReceive_in_set_blocking_success_locked_low_prio_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xQueueReceive_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xQueueReceive_xTaskResumeAllCallback );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY - 1 );
 

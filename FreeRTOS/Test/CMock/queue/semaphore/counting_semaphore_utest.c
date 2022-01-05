@@ -419,6 +419,7 @@ void test_xSemaphoreTake_blocking_success( void )
     vFakePortAssertIfInterruptPriorityInvalid_Expect();
 
     xTaskCheckForTimeOut_Stub( &blocking_xTaskCheckForTimeOut_cb );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     TEST_ASSERT_EQUAL( 0, uxSemaphoreGetCount( xSemaphore ) );
 
@@ -468,6 +469,7 @@ void test_xSemaphoreTake_blocking_success_last_chance( void )
     vFakePortAssertIfInterruptPriorityInvalid_Expect();
 
     xTaskCheckForTimeOut_Stub( &blocking_last_chance_xTaskCheckForTimeOut_cb );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     TEST_ASSERT_EQUAL( 0, uxSemaphoreGetCount( xSemaphore ) );
 
@@ -564,6 +566,7 @@ void test_xSemaphoreTake_blocking_success_locked_no_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xSemaphoreTake_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &td_task_xTaskResumeAllStub );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreTake( xSemaphore, TICKS_TO_WAIT ) );
 
@@ -616,6 +619,7 @@ void test_xSemaphoreTake_blocking_timeout_locked_high_prio_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xSemaphoreTake_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xSemaphoreTake_xTaskResumeAllCallback );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY + 1 );
 
@@ -653,6 +657,7 @@ void test_xSemaphoreTake_blocking_success_locked_low_prio_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xSemaphoreTake_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xSemaphoreTake_xTaskResumeAllCallback );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY - 1 );
 

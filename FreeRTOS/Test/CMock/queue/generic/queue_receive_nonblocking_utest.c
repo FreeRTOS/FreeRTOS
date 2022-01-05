@@ -1001,6 +1001,8 @@ void test_xQueueReceiveFromISR_locked( void )
 
     ( void ) xQueueSend( xQueue, &testVal, 0 );
 
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
+
     /* Set private lock counters */
     vSetQueueRxLock( xQueue, queueLOCKED_UNMODIFIED );
     vSetQueueTxLock( xQueue, queueLOCKED_UNMODIFIED );
@@ -1042,6 +1044,10 @@ void test_xQueueReceiveFromISR_locked_overflow( void )
     vSetQueueTxLock( xQueue, INT8_MAX );
 
     uint32_t checkVal = INVALID_UINT32;
+
+    /* The number of tasks need to be more than 127 to trigger the
+     * overflow assertion. */
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 128 );
 
     /* Expect an assertion since the cRxLock value has overflowed */
     fakeAssertExpectFail();

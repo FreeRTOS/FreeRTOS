@@ -263,6 +263,7 @@ clienttoken
 cligetoutputbuffer
 clint
 cliprocesscommand
+cloudformation
 clk
 clkdiv
 clksel
@@ -765,6 +766,7 @@ flasg
 flashc
 flashlite
 flashtimer
+fleetprovisioningdemotemplate
 flexcomm
 flg
 flopc

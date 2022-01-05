@@ -673,3 +673,32 @@ void test_xSemaphoreTake_blocking_success_locked_low_prio_pending( void )
 
     vQueueDelete( xSemaphore );
 }
+
+/**
+ * @brief Test xSemaphoreGiveFromISR on a semaphore that is locked
+ * @coverage xQueueGiveFromISR
+ */
+void test_macro_xSemaphoreGiveFromISR_locked( void )
+{
+    SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( 2, 0 );
+
+    /* Set private lock counters */
+    vSetQueueRxLock( xSemaphore, queueLOCKED_UNMODIFIED );
+    vSetQueueTxLock( xSemaphore, queueLOCKED_UNMODIFIED );
+
+    vFakePortAssertIfInterruptPriorityInvalid_Ignore();
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
+
+    TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreGiveFromISR( xSemaphore, NULL ) );
+    TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreGiveFromISR( xSemaphore, NULL ) );
+
+    /* Verify that the cRxLock counter has not changed */
+    TEST_ASSERT_EQUAL( queueLOCKED_UNMODIFIED, cGetQueueRxLock( xSemaphore ) );
+
+    /* Verify that the cTxLock counter has only been incremented by one
+     * even after 2 calls to xQueueSendFromISR because there is only
+     * one task in the system as returned from uxTaskGetNumberOfTasks. */
+    TEST_ASSERT_EQUAL( queueLOCKED_UNMODIFIED + 1, cGetQueueTxLock( xSemaphore ) );
+
+    vSemaphoreDelete( xSemaphore );
+}

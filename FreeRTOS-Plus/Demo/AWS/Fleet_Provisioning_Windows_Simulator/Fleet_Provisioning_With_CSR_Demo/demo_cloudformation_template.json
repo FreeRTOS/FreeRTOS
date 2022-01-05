@@ -5,11 +5,12 @@
             "Description": "Enter the \"certificateId\" of the certificate created using the \"aws iot create-keys-and-certificate\" command.\nFor more information, see the documentation: https://freertos.org/iot-fleet-provisioning/demo.html"
         }
     },
+
     "Resources": {
         "FPDemoRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
-                "RoleName": "FleetProvisioningDemoRole",
+                "RoleName": "CF_FleetProvisioningDemoRole",
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
                     "Statement": [
@@ -30,7 +31,7 @@
         "FPDemoThingPolicy": {
             "Type": "AWS::IoT::Policy",
             "Properties": {
-                "PolicyName": "FleetProvisioningDemoThingPolicy",
+                "PolicyName": "CF_FleetProvisioningDemoThingPolicy",
                 "PolicyDocument": {
                     "Version": "2012-10-17",
                     "Statement": [
@@ -60,7 +61,7 @@
         "FPDemoTemplate": {
             "Type": "AWS::IoT::ProvisioningTemplate",
             "Properties": {
-                "TemplateName": "FleetProvisioningDemoTemplate",
+                "TemplateName": "CF_FleetProvisioningDemoTemplate",
                 "Enabled": "true",
                 "ProvisioningRoleArn": {
                     "Fn::Join": [
@@ -77,13 +78,13 @@
                         ]
                     ]
                 },
-                "TemplateBody": "{ \"Parameters\": { \"SerialNumber\": { \"Type\": \"String\" }, \"AWS::IoT::Certificate::Id\": { \"Type\": \"String\" } }, \"Resources\": { \"certificate\": { \"Properties\": { \"CertificateId\": { \"Ref\": \"AWS::IoT::Certificate::Id\" }, \"Status\": \"Active\" }, \"Type\": \"AWS::IoT::Certificate\" }, \"policy\": { \"Properties\": { \"PolicyName\": \"FleetProvisioningDemoThingPolicy\" }, \"Type\": \"AWS::IoT::Policy\" }, \"thing\": { \"OverrideSettings\": { \"AttributePayload\": \"MERGE\", \"ThingGroups\": \"DO_NOTHING\" }, \"Properties\": { \"AttributePayload\": {}, \"ThingGroups\": [], \"ThingName\": { \"Fn::Join\": [ \"\", [ \"fp_demo_\", { \"Ref\": \"SerialNumber\" } ] ] } }, \"Type\": \"AWS::IoT::Thing\" } }, \"DeviceConfiguration\": { \"Foo\": \"Bar\" } }"
+                "TemplateBody": "{ \"Parameters\": { \"SerialNumber\": { \"Type\": \"String\" }, \"AWS::IoT::Certificate::Id\": { \"Type\": \"String\" } }, \"Resources\": { \"certificate\": { \"Properties\": { \"CertificateId\": { \"Ref\": \"AWS::IoT::Certificate::Id\" }, \"Status\": \"Active\" }, \"Type\": \"AWS::IoT::Certificate\" }, \"policy\": { \"Properties\": { \"PolicyName\": \"CF_FleetProvisioningDemoThingPolicy\" }, \"Type\": \"AWS::IoT::Policy\" }, \"thing\": { \"OverrideSettings\": { \"AttributePayload\": \"MERGE\", \"ThingGroups\": \"DO_NOTHING\" }, \"Properties\": { \"AttributePayload\": {}, \"ThingGroups\": [], \"ThingName\": { \"Fn::Join\": [ \"\", [ \"fp_demo_\", { \"Ref\": \"SerialNumber\" } ] ] } }, \"Type\": \"AWS::IoT::Thing\" } }, \"DeviceConfiguration\": { \"Foo\": \"Bar\" } }"
             }
         },
         "FPDemoClaimPolicy": {
             "Type": "AWS::IoT::Policy",
             "Properties": {
-                "PolicyName": "FleetProvisioningDemoClaimPolicy",
+                "PolicyName": "CF_FleetProvisioningDemoClaimPolicy",
                 "PolicyDocument": {
                     "Version": "2012-10-17",
                     "Statement": [

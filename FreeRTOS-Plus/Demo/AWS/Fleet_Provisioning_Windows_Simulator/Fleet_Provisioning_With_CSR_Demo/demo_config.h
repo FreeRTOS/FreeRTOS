@@ -145,6 +145,10 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @note The provisioning template MUST be created in AWS IoT before running the
  * demo.
  *
+ * @note If you followed the manual setup steps on https://freertos.org/iot-fleet-provisioning/demo.html,
+ * the provisioning template name is "FleetProvisioningDemoTemplate".
+ * However, if you used CloudFormation to set up the demo, the template name is "CF_FleetProvisioningDemoTemplate"
+ *
  * #define democonfigPROVISIONING_TEMPLATE_NAME    "...insert here..."
  */
 

@@ -597,12 +597,13 @@ void test_macro_xQueueSendFromISR_task_waiting_lower_priority_success( void )
  */
 void test_macro_xQueueSendFromISR_locked( void )
 {
-    QueueHandle_t xQueue = xQueueCreate( 1, sizeof( uint32_t ) );
+    QueueHandle_t xQueue = xQueueCreate( 2, sizeof( uint32_t ) );
 
     /* Set private lock counters */
     vSetQueueRxLock( xQueue, queueLOCKED_UNMODIFIED );
     vSetQueueTxLock( xQueue, queueLOCKED_UNMODIFIED );
 
+    vFakePortAssertIfInterruptPriorityInvalid_Expect();
     vFakePortAssertIfInterruptPriorityInvalid_Expect();
     uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
@@ -611,20 +612,26 @@ void test_macro_xQueueSendFromISR_locked( void )
     TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
 
     TEST_ASSERT_EQUAL( pdTRUE, xQueueSendFromISR( xQueue, &testval, NULL ) );
+    TEST_ASSERT_EQUAL( pdTRUE, xQueueSendFromISR( xQueue, &testval, NULL ) );
 
-    TEST_ASSERT_EQUAL( 1, uxQueueMessagesWaiting( xQueue ) );
+    TEST_ASSERT_EQUAL( 2, uxQueueMessagesWaiting( xQueue ) );
 
     /* Verify that the cRxLock counter has not changed */
     TEST_ASSERT_EQUAL( queueLOCKED_UNMODIFIED, cGetQueueRxLock( xQueue ) );
 
-    /* Verify that the cTxLock counter has been incremented */
+    /* Verify that the cTxLock counter has only been incremented by one
+     * even after 2 calls to xQueueSendFromISR because there is only
+     * one task in the system as returned from uxTaskGetNumberOfTasks. */
     TEST_ASSERT_EQUAL( queueLOCKED_UNMODIFIED + 1, cGetQueueTxLock( xQueue ) );
 
     uint32_t checkVal = INVALID_UINT32;
 
     ( void ) xQueueReceive( xQueue, &checkVal, 0 );
-
     TEST_ASSERT_EQUAL( testval, checkVal );
+
+    ( void ) xQueueReceive( xQueue, &checkVal, 0 );
+    TEST_ASSERT_EQUAL( testval, checkVal );
+
     vQueueDelete( xQueue );
 }
 

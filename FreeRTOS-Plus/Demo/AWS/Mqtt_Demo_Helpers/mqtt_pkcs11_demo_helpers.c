@@ -175,7 +175,7 @@
  * with the prefix of 8-bit length information of the string. Thus, the 14 byte (0x0e) length
  * information is prefixed to the string.
  */
-#define mqttopALPN_PROTOCOL_NAME                       "\x0ex-amzn-mqtt-ca"
+#define mqttopALPN_PROTOCOL_NAME         "\x0ex-amzn-mqtt-ca"
 
 
 /*-----------------------------------------------------------*/

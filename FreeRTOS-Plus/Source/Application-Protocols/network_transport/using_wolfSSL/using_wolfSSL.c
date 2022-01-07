@@ -487,36 +487,38 @@ int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
     if( ( pNetworkContext == NULL ) || ( pNetworkContext->sslContext.ssl == NULL ) )
     {
         LogError( ( "invalid input, pNetworkContext=%p", pNetworkContext ) );
-        return -1;
+        tlsStatus = -1;
     }
     else if( pBuffer == NULL )
     {
         LogError( ( "invalid input, pBuffer == NULL" ) );
-        return -1;
+        tlsStatus = -1;
     }
     else if( bytesToRecv == 0 )
     {
         LogError( ( "invalid input, bytesToRecv == 0" ) );
-        return -1;
-    }
-
-    pSsl = pNetworkContext->sslContext.ssl;
-
-    iResult = wolfSSL_read( pSsl, pBuffer, bytesToRecv );
-
-    if( iResult > 0 )
-    {
-        tlsStatus = iResult;
-    }
-    else if( wolfSSL_want_read( pSsl ) == 1 )
-    {
-        tlsStatus = 0;
+        tlsStatus = -1;
     }
     else
     {
-        tlsStatus = wolfSSL_state( pSsl );
-        LogError( ( "Error from wolfSSL_read %d : %s ",
-                    iResult, wolfSSL_ERR_reason_error_string( tlsStatus ) ) );
+        pSsl = pNetworkContext->sslContext.ssl;
+
+        iResult = wolfSSL_read( pSsl, pBuffer, bytesToRecv );
+
+        if( iResult > 0 )
+        {
+            tlsStatus = iResult;
+        }
+        else if( wolfSSL_want_read( pSsl ) == 1 )
+        {
+            tlsStatus = 0;
+        }
+        else
+        {
+            tlsStatus = wolfSSL_state( pSsl );
+            LogError( ( "Error from wolfSSL_read %d : %s ",
+                        iResult, wolfSSL_ERR_reason_error_string( tlsStatus ) ) );
+        }
     }
 
     return tlsStatus;
@@ -535,36 +537,38 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
     if( ( pNetworkContext == NULL ) || ( pNetworkContext->sslContext.ssl == NULL ) )
     {
         LogError( ( "invalid input, pNetworkContext=%p", pNetworkContext ) );
-        return -1;
+        tlsStatus = -1;
     }
     else if( pBuffer == NULL )
     {
         LogError( ( "invalid input, pBuffer == NULL" ) );
-        return -1;
+        tlsStatus = -1;
     }
     else if( bytesToSend == 0 )
     {
         LogError( ( "invalid input, bytesToSend == 0" ) );
-        return -1;
-    }
-
-    pSsl = pNetworkContext->sslContext.ssl;
-
-    iResult = wolfSSL_write( pSsl, pBuffer, bytesToSend );
-
-    if( iResult > 0 )
-    {
-        tlsStatus = iResult;
-    }
-    else if( wolfSSL_want_write( pSsl ) == 1 )
-    {
-        tlsStatus = 0;
+        tlsStatus = -1;
     }
     else
     {
-        tlsStatus = wolfSSL_state( pSsl );
-        LogError( ( "Error from wolfSL_write %d : %s ",
-                    iResult, wolfSSL_ERR_reason_error_string( tlsStatus ) ) );
+        pSsl = pNetworkContext->sslContext.ssl;
+
+        iResult = wolfSSL_write( pSsl, pBuffer, bytesToSend );
+
+        if( iResult > 0 )
+        {
+            tlsStatus = iResult;
+        }
+        else if( wolfSSL_want_write( pSsl ) == 1 )
+        {
+            tlsStatus = 0;
+        }
+        else
+        {
+            tlsStatus = wolfSSL_state( pSsl );
+            LogError( ( "Error from wolfSL_write %d : %s ",
+                        iResult, wolfSSL_ERR_reason_error_string( tlsStatus ) ) );
+        }
     }
 
     return tlsStatus;

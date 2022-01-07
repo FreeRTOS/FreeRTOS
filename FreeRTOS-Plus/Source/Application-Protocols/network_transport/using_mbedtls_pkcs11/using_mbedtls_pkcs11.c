@@ -978,46 +978,49 @@ int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
     if( ( pNetworkContext == NULL ) || ( pNetworkContext->pParams == NULL ) )
     {
         LogError( ( "invalid input, pNetworkContext=%p", pNetworkContext ) );
-        return -1;
+        tlsStatus = -1;
     }
     else if( pBuffer == NULL )
     {
         LogError( ( "invalid input, pBuffer == NULL" ) );
-        return -1;
+        tlsStatus = -1;
     }
     else if( bytesToRecv == 0 )
     {
         LogError( ( "invalid input, bytesToRecv == 0" ) );
-        return -1;
-    }
-
-    pTlsTransportParams = pNetworkContext->pParams;
-    tlsStatus = ( int32_t ) mbedtls_ssl_read( &( pTlsTransportParams->sslContext.context ),
-                                              pBuffer,
-                                              bytesToRecv );
-
-    if( ( tlsStatus == MBEDTLS_ERR_SSL_TIMEOUT ) ||
-        ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ||
-        ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) )
-    {
-        LogDebug( ( "Failed to read data. However, a read can be retried on this error. "
-                    "mbedTLSError= %s : %s.",
-                    mbedtlsHighLevelCodeOrDefault( tlsStatus ),
-                    mbedtlsLowLevelCodeOrDefault( tlsStatus ) ) );
-
-        /* Mark these set of errors as a timeout. The libraries may retry read
-         * on these errors. */
-        tlsStatus = 0;
-    }
-    else if( tlsStatus < 0 )
-    {
-        LogError( ( "Failed to read data: mbedTLSError= %s : %s.",
-                    mbedtlsHighLevelCodeOrDefault( tlsStatus ),
-                    mbedtlsLowLevelCodeOrDefault( tlsStatus ) ) );
+        tlsStatus = -1;
     }
     else
     {
-        /* Empty else marker. */
+        pTlsTransportParams = pNetworkContext->pParams;
+
+        tlsStatus = ( int32_t ) mbedtls_ssl_read( &( pTlsTransportParams->sslContext.context ),
+                                                  pBuffer,
+                                                  bytesToRecv );
+
+        if( ( tlsStatus == MBEDTLS_ERR_SSL_TIMEOUT ) ||
+            ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ||
+            ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) )
+        {
+            LogDebug( ( "Failed to read data. However, a read can be retried on this error. "
+                        "mbedTLSError= %s : %s.",
+                        mbedtlsHighLevelCodeOrDefault( tlsStatus ),
+                        mbedtlsLowLevelCodeOrDefault( tlsStatus ) ) );
+
+            /* Mark these set of errors as a timeout. The libraries may retry read
+             * on these errors. */
+            tlsStatus = 0;
+        }
+        else if( tlsStatus < 0 )
+        {
+            LogError( ( "Failed to read data: mbedTLSError= %s : %s.",
+                        mbedtlsHighLevelCodeOrDefault( tlsStatus ),
+                        mbedtlsLowLevelCodeOrDefault( tlsStatus ) ) );
+        }
+        else
+        {
+            /* Empty else marker. */
+        }
     }
 
     return tlsStatus;
@@ -1035,46 +1038,48 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
     if( ( pNetworkContext == NULL ) || ( pNetworkContext->pParams == NULL ) )
     {
         LogError( ( "invalid input, pNetworkContext=%p", pNetworkContext ) );
-        return -1;
+        tlsStatus = -1;
     }
     else if( pBuffer == NULL )
     {
         LogError( ( "invalid input, pBuffer == NULL" ) );
-        return -1;
+        tlsStatus = -1;
     }
     else if( bytesToSend == 0 )
     {
         LogError( ( "invalid input, bytesToSend == 0" ) );
-        return -1;
-    }
-
-    pTlsTransportParams = pNetworkContext->pParams;
-    tlsStatus = ( int32_t ) mbedtls_ssl_write( &( pTlsTransportParams->sslContext.context ),
-                                               pBuffer,
-                                               bytesToSend );
-
-    if( ( tlsStatus == MBEDTLS_ERR_SSL_TIMEOUT ) ||
-        ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ||
-        ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) )
-    {
-        LogDebug( ( "Failed to send data. However, send can be retried on this error. "
-                    "mbedTLSError= %s : %s.",
-                    mbedtlsHighLevelCodeOrDefault( tlsStatus ),
-                    mbedtlsLowLevelCodeOrDefault( tlsStatus ) ) );
-
-        /* Mark these set of errors as a timeout. The libraries may retry send
-         * on these errors. */
-        tlsStatus = 0;
-    }
-    else if( tlsStatus < 0 )
-    {
-        LogError( ( "Failed to send data:  mbedTLSError= %s : %s.",
-                    mbedtlsHighLevelCodeOrDefault( tlsStatus ),
-                    mbedtlsLowLevelCodeOrDefault( tlsStatus ) ) );
+        tlsStatus = -1;
     }
     else
     {
-        /* Empty else marker. */
+        pTlsTransportParams = pNetworkContext->pParams;
+        tlsStatus = ( int32_t ) mbedtls_ssl_write( &( pTlsTransportParams->sslContext.context ),
+                                                   pBuffer,
+                                                   bytesToSend );
+
+        if( ( tlsStatus == MBEDTLS_ERR_SSL_TIMEOUT ) ||
+            ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ||
+            ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) )
+        {
+            LogDebug( ( "Failed to send data. However, send can be retried on this error. "
+                        "mbedTLSError= %s : %s.",
+                        mbedtlsHighLevelCodeOrDefault( tlsStatus ),
+                        mbedtlsLowLevelCodeOrDefault( tlsStatus ) ) );
+
+            /* Mark these set of errors as a timeout. The libraries may retry send
+             * on these errors. */
+            tlsStatus = 0;
+        }
+        else if( tlsStatus < 0 )
+        {
+            LogError( ( "Failed to send data:  mbedTLSError= %s : %s.",
+                        mbedtlsHighLevelCodeOrDefault( tlsStatus ),
+                        mbedtlsLowLevelCodeOrDefault( tlsStatus ) ) );
+        }
+        else
+        {
+            /* Empty else marker. */
+        }
     }
 
     return tlsStatus;

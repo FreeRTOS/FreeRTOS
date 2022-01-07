@@ -51,6 +51,7 @@ appropiate
 aptime
 apu
 ar
+aren't
 args
 armv
 arp
@@ -2119,6 +2120,7 @@ pxport
 pxpublishinfo
 pxqueue
 pxreadhandle
+pxreceivecompletedcallback
 pxreportdescriptor
 pxrequestheaders
 pxrequestinfo
@@ -2126,6 +2128,7 @@ pxresponse
 pxreturninfo
 pxrng
 pxrngcontext
+pxsendcompletedcallback
 pxsiglen
 pxsigvcreds
 pxslotid
@@ -3271,6 +3274,7 @@ xinterface
 xinterruptcontroller
 xiptracevalues
 xirqrequest
+xisinsideisr
 xisrautoreloadtimer
 xisroneshottimer
 xisrstatus

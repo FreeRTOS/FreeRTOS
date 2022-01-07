@@ -496,9 +496,8 @@ void vStartFleetProvisioningDemo()
                                mbedtls_platform_mutex_unlock );
 
     /* This example uses a single application task, which shows that how to use
-     * Device Defender library to generate and validate AWS IoT Device Defender
-     * MQTT topics, and use the coreMQTT library to communicate with the AWS
-     * IoT Device Defender service. */
+     * Fleet Provisioning library to generate and sign certificates with AWS IoT
+     * and create new IoT Things using the AWS IoT Fleet Provisioning API */
     xTaskCreate( prvFleetProvisioningTask, /* Function that implements the task. */
                  "DemoTask",               /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */

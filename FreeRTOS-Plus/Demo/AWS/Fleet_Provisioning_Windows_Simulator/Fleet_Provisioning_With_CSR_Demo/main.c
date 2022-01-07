@@ -25,7 +25,7 @@
  */
 
 /***
- * See https://www.FreeRTOS.org/iot-device-defender for configuration and usage instructions.
+ * See https://www.FreeRTOS.org/iot-fleet-provisioning for configuration and usage instructions.
  ***/
 
 /* Standard includes. */

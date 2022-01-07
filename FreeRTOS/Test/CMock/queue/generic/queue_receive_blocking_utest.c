@@ -107,6 +107,7 @@ void test_xQueueReceive_blocking_success_locked_no_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xQueueReceive_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &td_task_xTaskResumeAllStub );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     uint32_t checkVal = INVALID_UINT32;
 
@@ -138,6 +139,7 @@ void test_xQueuePeek_blocking_success_locked_no_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xQueueReceive_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &td_task_xTaskResumeAllStub );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     uint32_t checkVal = INVALID_UINT32;
 
@@ -193,6 +195,7 @@ void test_xQueueReceive_blocking_timeout_locked_high_prio_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xQueueReceive_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xQueueReceive_xTaskResumeAllCallback );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY + 1 );
 
@@ -232,6 +235,7 @@ void test_xQueuePeek_blocking_timeout_locked_high_prio_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xQueueReceive_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xQueueReceive_xTaskResumeAllCallback );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY + 1 );
 
@@ -271,6 +275,7 @@ void test_xQueueReceive_blocking_success_locked_low_prio_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xQueueReceive_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xQueueReceive_xTaskResumeAllCallback );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY - 1 );
 
@@ -306,6 +311,7 @@ void test_xQueuePeek_blocking_success_locked_low_prio_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xQueueReceive_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xQueueReceive_xTaskResumeAllCallback );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY - 1 );
 

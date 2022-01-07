@@ -114,6 +114,7 @@ void test_macro_xQueueSend_blocking_success_locked_no_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xQueueSend_locked_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &td_task_xTaskResumeAllStub );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     uint32_t testVal2 = getLastMonotonicTestValue() + 12345;
 
@@ -169,6 +170,7 @@ void test_macro_xQueueSend_blocking_fail_locked_high_prio_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xQueueSend_locked_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xQueueSend_xTaskResumeAllCallback );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     /* this task is lower priority than the pending task */
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY + 1 );
@@ -215,6 +217,7 @@ void test_macro_xQueueSend_blocking_success_locked_low_prio_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xQueueSend_locked_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xQueueSend_xTaskResumeAllCallback );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     /* The pending task is lower priority */
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY - 1 );

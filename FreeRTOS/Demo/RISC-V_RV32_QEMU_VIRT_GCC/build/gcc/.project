@@ -25,11 +25,6 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>CommonDemoSource</name>
-			<type>2</type>
-			<locationURI>FREERTOS_ROOT/Demo/Common/Minimal</locationURI>
-		</link>
-		<link>
 			<name>FreeRTOS_kernel</name>
 			<type>2</type>
 			<locationURI>FREERTOS_ROOT/Source</locationURI>
@@ -40,9 +35,19 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>Source/Blinky_Demo</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>Source/FreeRTOSConfig.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/FreeRTOSConfig.h</locationURI>
+		</link>
+		<link>
+			<name>Source/Full_Demo</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
 			<name>Source/Makefile</name>
@@ -58,16 +63,6 @@
 			<name>Source/main.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/main.c</locationURI>
-		</link>
-		<link>
-			<name>Source/main_blinky.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/main_blinky.c</locationURI>
-		</link>
-		<link>
-			<name>Source/main_full.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/main_full.c</locationURI>
 		</link>
 		<link>
 			<name>Source/ns16550.c</name>
@@ -108,6 +103,26 @@
 			<name>Source/startfiles</name>
 			<type>1</type>
 			<locationURI>PROJECT_LOC/startfiles</locationURI>
+		</link>
+		<link>
+			<name>Source/Blinky_Demo/main_blinky.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/main_blinky.c</locationURI>
+		</link>
+		<link>
+			<name>Source/Full_Demo/CommonDemoSource</name>
+			<type>2</type>
+			<locationURI>FREERTOS_ROOT/Demo/Common/Minimal</locationURI>
+		</link>
+		<link>
+			<name>Source/Full_Demo/RegTest.S</name>
+			<type>1</type>
+			<locationURI>PROJECT_LOC/RegTest.S</locationURI>
+		</link>
+		<link>
+			<name>Source/Full_Demo/main_full.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/main_full.c</locationURI>
 		</link>
 	</linkedResources>
 	<filteredResources>

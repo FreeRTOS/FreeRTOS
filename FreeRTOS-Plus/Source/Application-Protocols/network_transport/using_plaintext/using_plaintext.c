@@ -133,7 +133,21 @@ int32_t Plaintext_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
     PlaintextTransportParams_t * pPlaintextTransportParams = NULL;
     int32_t socketStatus = 1;
 
-    configASSERT( ( pNetworkContext != NULL ) && ( pNetworkContext->pParams != NULL ) );
+    if (pNetworkContext == NULL || pNetworkContext->pParams == NULL)
+    {
+        LogError(("invalid input, pNetworkContext=%p", pNetworkContext));
+        return -1;
+    }
+    else if (pBuffer == NULL)
+    {
+        LogError(("invalid input, pBuffer == NULL"));
+        return -1;
+    }
+    else if (bytesToRecv == 0)
+    {
+        LogError(("invalid input, bytesToRecv == 0"));
+        return -1;
+    }
 
     pPlaintextTransportParams = pNetworkContext->pParams;
 
@@ -169,7 +183,21 @@ int32_t Plaintext_FreeRTOS_send( NetworkContext_t * pNetworkContext,
     PlaintextTransportParams_t * pPlaintextTransportParams = NULL;
     int32_t socketStatus = 0;
 
-    configASSERT( ( pNetworkContext != NULL ) && ( pNetworkContext->pParams != NULL ) );
+    if (pNetworkContext == NULL || pNetworkContext->pParams == NULL)
+    {
+        LogError(("invalid input, pNetworkContext=%p", pNetworkContext));
+        return -1;
+    }
+    else if (pBuffer == NULL)
+    {
+        LogError(("invalid input, pBuffer == NULL"));
+        return -1;
+    }
+    else if (bytesToSend == 0)
+    {
+        LogError(("invalid input, bytesToSend == 0"));
+        return -1;
+    }
 
     pPlaintextTransportParams = pNetworkContext->pParams;
     socketStatus = FreeRTOS_send( pPlaintextTransportParams->tcpSocket,

@@ -88,7 +88,7 @@ static const char * pNoLowLevelMbedTlsCodeStr = "<No-Low-Level-Code>";
  * @brief Utility for converting the high-level code in an mbedTLS error to string,
  * if the code-contains a high-level code; otherwise, using a default string.
  */
-#define mbedtlsHighLevelCodeOrDefault( mbedTlsCode )        \
+#define mbedtlsHighLevelCodeOrDefault( mbedTlsCode )       \
     ( mbedtls_high_level_strerr( mbedTlsCode ) != NULL ) ? \
     mbedtls_high_level_strerr( mbedTlsCode ) : pNoHighLevelMbedTlsCodeStr
 
@@ -96,7 +96,7 @@ static const char * pNoLowLevelMbedTlsCodeStr = "<No-Low-Level-Code>";
  * @brief Utility for converting the level-level code in an mbedTLS error to string,
  * if the code-contains a level-level code; otherwise, using a default string.
  */
-#define mbedtlsLowLevelCodeOrDefault( mbedTlsCode )        \
+#define mbedtlsLowLevelCodeOrDefault( mbedTlsCode )       \
     ( mbedtls_low_level_strerr( mbedTlsCode ) != NULL ) ? \
     mbedtls_low_level_strerr( mbedTlsCode ) : pNoLowLevelMbedTlsCodeStr
 
@@ -208,9 +208,9 @@ static int32_t privateKeySigningCallback( void * pvContext,
                                           size_t xHashLen,
                                           unsigned char * pucSig,
                                           size_t * pxSigLen,
-                                          int32_t ( * piRng )( void *,
-                                                               unsigned char *,
-                                                               size_t ),
+                                          int32_t ( *piRng )( void *,
+                                                              unsigned char *,
+                                                              size_t ),
                                           void * pvRng );
 
 
@@ -703,19 +703,19 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
         pxCtx->privKeyInfo.get_bitlen = NULL;
         pxCtx->privKeyInfo.can_do = canDoStub;
         pxCtx->privKeyInfo.verify_func = NULL;
-#if defined(MBEDTLS_ECDSA_C) && defined(MBEDTLS_ECP_RESTARTABLE)
-        pxCtx->privKeyInfo.verify_rs_func = NULL;
-        pxCtx->privKeyInfo.sign_rs_func = NULL;
-#endif /* MBEDTLS_ECDSA_C && MBEDTLS_ECP_RESTARTABLE */
+        #if defined( MBEDTLS_ECDSA_C ) && defined( MBEDTLS_ECP_RESTARTABLE )
+            pxCtx->privKeyInfo.verify_rs_func = NULL;
+            pxCtx->privKeyInfo.sign_rs_func = NULL;
+        #endif /* MBEDTLS_ECDSA_C && MBEDTLS_ECP_RESTARTABLE */
         pxCtx->privKeyInfo.decrypt_func = NULL;
         pxCtx->privKeyInfo.encrypt_func = NULL;
         pxCtx->privKeyInfo.check_pair_func = NULL;
         pxCtx->privKeyInfo.ctx_alloc_func = NULL;
         pxCtx->privKeyInfo.ctx_free_func = NULL;
-#if defined(MBEDTLS_ECDSA_C) && defined(MBEDTLS_ECP_RESTARTABLE)
-        pxCtx->privKeyInfo.rs_alloc_func = NULL;
-        pxCtx->privKeyInfo.rs_free_func = NULL;
-#endif /* MBEDTLS_ECDSA_C && MBEDTLS_ECP_RESTARTABLE */
+        #if defined( MBEDTLS_ECDSA_C ) && defined( MBEDTLS_ECP_RESTARTABLE )
+            pxCtx->privKeyInfo.rs_alloc_func = NULL;
+            pxCtx->privKeyInfo.rs_free_func = NULL;
+        #endif /* MBEDTLS_ECDSA_C && MBEDTLS_ECP_RESTARTABLE */
         pxCtx->privKeyInfo.debug_func = NULL;
 
         pxCtx->privKeyInfo.sign_func = privateKeySigningCallback;
@@ -737,9 +737,9 @@ static int32_t privateKeySigningCallback( void * pvContext,
                                           size_t xHashLen,
                                           unsigned char * pucSig,
                                           size_t * pxSigLen,
-                                          int32_t ( * piRng )( void *,
-                                                               unsigned char *,
-                                                               size_t ),
+                                          int32_t ( *piRng )( void *,
+                                                              unsigned char *,
+                                                              size_t ),
                                           void * pvRng )
 {
     CK_RV xResult = CKR_OK;
@@ -923,7 +923,7 @@ void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
     TlsTransportParams_t * pTlsTransportParams = NULL;
     BaseType_t tlsStatus = 0;
 
-    if( pNetworkContext != NULL && pNetworkContext->pParams != NULL )
+    if( ( pNetworkContext != NULL ) && ( pNetworkContext->pParams != NULL ) )
     {
         pTlsTransportParams = pNetworkContext->pParams;
         /* Attempting to terminate TLS connection. */
@@ -975,19 +975,19 @@ int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
     TlsTransportParams_t * pTlsTransportParams = NULL;
     int32_t tlsStatus = 0;
 
-    if (pNetworkContext == NULL || pNetworkContext->pParams == NULL)
+    if( ( pNetworkContext == NULL ) || ( pNetworkContext->pParams == NULL ) )
     {
-        LogError(("invalid input, pNetworkContext=%p", pNetworkContext));
+        LogError( ( "invalid input, pNetworkContext=%p", pNetworkContext ) );
         return -1;
     }
-    else if (pBuffer == NULL)
+    else if( pBuffer == NULL )
     {
-        LogError(("invalid input, pBuffer == NULL"));
+        LogError( ( "invalid input, pBuffer == NULL" ) );
         return -1;
     }
-    else if (bytesToRecv == 0)
+    else if( bytesToRecv == 0 )
     {
-        LogError(("invalid input, bytesToRecv == 0"));
+        LogError( ( "invalid input, bytesToRecv == 0" ) );
         return -1;
     }
 
@@ -1032,19 +1032,19 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
     TlsTransportParams_t * pTlsTransportParams = NULL;
     int32_t tlsStatus = 0;
 
-    if (pNetworkContext == NULL || pNetworkContext->pParams == NULL)
+    if( ( pNetworkContext == NULL ) || ( pNetworkContext->pParams == NULL ) )
     {
-        LogError(("invalid input, pNetworkContext=%p", pNetworkContext));
+        LogError( ( "invalid input, pNetworkContext=%p", pNetworkContext ) );
         return -1;
     }
-    else if (pBuffer == NULL)
+    else if( pBuffer == NULL )
     {
-        LogError(("invalid input, pBuffer == NULL"));
+        LogError( ( "invalid input, pBuffer == NULL" ) );
         return -1;
     }
-    else if (bytesToSend == 0)
+    else if( bytesToSend == 0 )
     {
-        LogError(("invalid input, bytesToSend == 0"));
+        LogError( ( "invalid input, bytesToSend == 0" ) );
         return -1;
     }
 

@@ -242,7 +242,7 @@ static TlsTransportStatus_t loadCredentials( NetworkContext_t * pNetCtx,
         }
 
         return returnStatus;
-    #else  /* if defined( democonfigCREDENTIALS_IN_BUFFER ) */
+    #else /* if defined( democonfigCREDENTIALS_IN_BUFFER ) */
         if( wolfSSL_CTX_load_verify_locations( pNetCtx->sslContext.ctx,
                                                ( const char * ) ( pNetCred->pRootCa ), NULL ) == SSL_SUCCESS )
         {
@@ -484,19 +484,19 @@ int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
     int iResult = 0;
     WOLFSSL * pSsl = NULL;
 
-    if( pNetworkContext == NULL || pNetworkContext->sslContext.ssl == NULL )
+    if( ( pNetworkContext == NULL ) || ( pNetworkContext->sslContext.ssl == NULL ) )
     {
-        LogError(("invalid input, pNetworkContext=%p", pNetworkContext));
+        LogError( ( "invalid input, pNetworkContext=%p", pNetworkContext ) );
         return -1;
     }
     else if( pBuffer == NULL )
     {
-        LogError(("invalid input, pBuffer == NULL"));
+        LogError( ( "invalid input, pBuffer == NULL" ) );
         return -1;
     }
     else if( bytesToRecv == 0 )
     {
-        LogError(("invalid input, bytesToRecv == 0"));
+        LogError( ( "invalid input, bytesToRecv == 0" ) );
         return -1;
     }
 
@@ -532,19 +532,19 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
     int iResult = 0;
     WOLFSSL * pSsl = NULL;
 
-    if( pNetworkContext == NULL || pNetworkContext->sslContext.ssl == NULL )
+    if( ( pNetworkContext == NULL ) || ( pNetworkContext->sslContext.ssl == NULL ) )
     {
-        LogError(("invalid input, pNetworkContext=%p", pNetworkContext));
+        LogError( ( "invalid input, pNetworkContext=%p", pNetworkContext ) );
         return -1;
     }
     else if( pBuffer == NULL )
     {
-        LogError(("invalid input, pBuffer == NULL"));
+        LogError( ( "invalid input, pBuffer == NULL" ) );
         return -1;
     }
     else if( bytesToSend == 0 )
     {
-        LogError(("invalid input, bytesToSend == 0"));
+        LogError( ( "invalid input, bytesToSend == 0" ) );
         return -1;
     }
 

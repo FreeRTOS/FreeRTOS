@@ -773,19 +773,19 @@ int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
     TlsTransportParams_t * pTlsTransportParams = NULL;
     int32_t tlsStatus = 0;
 
-    if ((pNetworkContext == NULL) || pNetworkContext->pParams == NULL)
+    if( ( pNetworkContext == NULL ) || ( pNetworkContext->pParams == NULL ) )
     {
-        LogError(("invalid input, pNetworkContext=%p", pNetworkContext));
+        LogError( ( "invalid input, pNetworkContext=%p", pNetworkContext ) );
         return -1;
     }
-    else if (pBuffer == NULL)
+    else if( pBuffer == NULL )
     {
-        LogError(("invalid input, pBuffer == NULL"));
+        LogError( ( "invalid input, pBuffer == NULL" ) );
         return -1;
     }
-    else if (bytesToRecv == 0)
+    else if( bytesToRecv == 0 )
     {
-        LogError(("invalid input, bytesToRecv == 0"));
+        LogError( ( "invalid input, bytesToRecv == 0" ) );
         return -1;
     }
 
@@ -829,19 +829,19 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
     TlsTransportParams_t * pTlsTransportParams = NULL;
     int32_t tlsStatus = 0;
 
-    if ((pNetworkContext == NULL) || pNetworkContext->pParams == NULL)
+    if( ( pNetworkContext == NULL ) || ( pNetworkContext->pParams == NULL ) )
     {
-        LogError(("invalid input, pNetworkContext=%p", pNetworkContext));
+        LogError( ( "invalid input, pNetworkContext=%p", pNetworkContext ) );
         return -1;
     }
-    else if (pBuffer == NULL)
+    else if( pBuffer == NULL )
     {
-        LogError(("invalid input, pBuffer == NULL"));
+        LogError( ( "invalid input, pBuffer == NULL" ) );
         return -1;
     }
-    else if (bytesToSend == 0)
+    else if( bytesToSend == 0 )
     {
-        LogError(("invalid input, bytesToSend == 0"));
+        LogError( ( "invalid input, bytesToSend == 0" ) );
         return -1;
     }
 

@@ -792,8 +792,8 @@ static void prvTest7_CheckBacklogBehaviour( void )
 
     if( xTestStatus == pdPASS )
     {
-        /* No errors have been reported so increment the loop counter so the
-         * check task knows this task is still running. */
+        /* No errors have been reported so increment the loop counter so the check
+         * task knows this task is still running. */
         ulLoopCounter++;
     }
 }
@@ -982,7 +982,7 @@ void vTimerPeriodicISRTests( void )
     else if( uxTick == ( ( 3 * xBasePeriod ) + xMargin ) )
     {
         /* The auto-reload timer and one-shot timer will be active.  At
-         * this time the auto-reload timer should have  expired again, but the one
+         * this time the auto-reload timer should have expired again, but the one
          * shot timer count should not have changed yet. */
         if( ucISRAutoReloadTimerCounter != 3 )
         {
@@ -1114,8 +1114,8 @@ void vTimerPeriodicISRTests( void )
     else if( uxTick == ( ( 12 * xBasePeriod ) - ( 2 * xMargin ) ) )
     {
         /* Only the one-shot timer should have been running and this time it
-         * should have  expired.  Check its callback count has been incremented.
-         * The auto-reload  timer is still not running so should still have the same
+         * should have expired.  Check its callback count has been incremented.
+         * The auto-reload timer is still not running so should still have the same
          * count value.  This time the one-shot timer is not reset so should not
          * restart from its expiry period again. */
         if( ucISRAutoReloadTimerCounter != 3 )

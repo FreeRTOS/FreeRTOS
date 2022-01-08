@@ -1,4 +1,4 @@
-# Profilig your application
+# Profiling your application
 
 ## Introduction [(from the official gprof doc)](https://sourceware.org/binutils/docs/gprof/Introduction.html#Introduction)
 Profiling allows you to learn where your program spent its time and which
@@ -22,7 +22,7 @@ $ make PROFILE=1
 ```
 Run your application
 ```
-$ ./build/possix_demo
+$ ./build/posix_demo
 ```
 Since FreeRTOS and its application never come to an end and typically run
 forever.  The user has to kill the application with **Ctrl_C**  when they feel
@@ -66,6 +66,6 @@ $ make SANITIZE_LEAK=1
 ```
 Then run your program normally.
 ```
-$ ./build/possix_demo
+$ ./build/posix_demo
 ```
 If an error is detected by the sanitizer, a report showing the error will be printed to stdout.

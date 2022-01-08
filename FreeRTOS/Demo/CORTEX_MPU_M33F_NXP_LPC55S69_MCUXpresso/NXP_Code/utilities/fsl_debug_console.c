@@ -1,38 +1,10 @@
 /*
- * This is a modified version of the file printf.c, which was distributed
- * by Motorola as part of the M5407C3BOOT.zip package used to initialize
- * the M5407C3 evaluation board.
+ * Copyright 2017-2018, 2020 NXP
+ * All rights reserved.
  *
- * Copyright:
- *      1999-2000 MOTOROLA, INC. All Rights Reserved.
- *  You are hereby granted a copyright license to use, modify, and
- *  distribute the SOFTWARE so long as this entire notice is
- *  retained without alteration in any modified and/or redistributed
- *  versions, and that such modified versions are clearly identified
- *  as such. No licenses are granted by implication, estoppel or
- *  otherwise under any patents or trademarks of Motorola, Inc. This
- *  software is provided on an "AS IS" basis and without warranty.
- *
- *  To the maximum extent permitted by applicable law, MOTOROLA
- *  DISCLAIMS ALL WARRANTIES WHETHER EXPRESS OR IMPLIED, INCLUDING
- *  IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR
- *  PURPOSE AND ANY WARRANTY AGAINST INFRINGEMENT WITH REGARD TO THE
- *  SOFTWARE (INCLUDING ANY MODIFIED VERSIONS THEREOF) AND ANY
- *  ACCOMPANYING WRITTEN MATERIALS.
- *
- *  To the maximum extent permitted by applicable law, IN NO EVENT
- *  SHALL MOTOROLA BE LIABLE FOR ANY DAMAGES WHATSOEVER (INCLUDING
- *  WITHOUT LIMITATION, DAMAGES FOR LOSS OF BUSINESS PROFITS, BUSINESS
- *  INTERRUPTION, LOSS OF BUSINESS INFORMATION, OR OTHER PECUNIARY
- *  LOSS) ARISING OF THE USE OR INABILITY TO USE THE SOFTWARE.
- *
- *  Motorola assumes no responsibility for the maintenance and support
- *  of this software
-
- * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2019 NXP
  *
  * SPDX-License-Identifier: BSD-3-Clause
+ *
  */
 
 #include <stdarg.h>
@@ -40,625 +12,99 @@
 #if defined(__CC_ARM) || defined(__ARMCC_VERSION)
 #include <stdio.h>
 #endif
-
-#ifdef FSL_RTOS_FREE_RTOS
-#include "FreeRTOS.h"
-#include "semphr.h"
-#include "task.h"
-#endif
-
-#include "fsl_debug_console_conf.h"
-#include "fsl_str.h"
-
-#include "fsl_common.h"
-#include "serial_manager.h"
-
+#include <math.h>
 #include "fsl_debug_console.h"
+#include "fsl_adapter_uart.h"
+
+/*! @brief Keil: suppress ellipsis warning in va_arg usage below. */
+#if defined(__CC_ARM)
+#pragma diag_suppress 1256
+#endif /* __CC_ARM */
 
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
-#ifndef NDEBUG
-#if (defined(DEBUG_CONSOLE_ASSERT_DISABLE) && (DEBUG_CONSOLE_ASSERT_DISABLE > 0U))
-#undef assert
-#define assert(n)
-#endif
-#endif
 
-#if SDK_DEBUGCONSOLE
-#define DEBUG_CONSOLE_FUNCTION_PREFIX
-#else
-#define DEBUG_CONSOLE_FUNCTION_PREFIX static
-#endif
+/*! @brief This definition is maximum line that debugconsole can scanf each time.*/
+#define IO_MAXLINE 20U
 
-/*! @brief character backspace ASCII value */
-#define DEBUG_CONSOLE_BACKSPACE 127U
+/*! @brief The overflow value.*/
+#ifndef HUGE_VAL
+#define HUGE_VAL (99.e99)
+#endif /* HUGE_VAL */
 
-/* lock definition */
-#if (DEBUG_CONSOLE_SYNCHRONIZATION_MODE == DEBUG_CONSOLE_SYNCHRONIZATION_FREERTOS)
-
-static SemaphoreHandle_t s_debugConsoleReadSemaphore;
-#if (defined(DEBUG_CONSOLE_RX_ENABLE) && (DEBUG_CONSOLE_RX_ENABLE > 0U))
-static SemaphoreHandle_t s_debugConsoleReadWaitSemaphore;
-#endif
-
-#elif (DEBUG_CONSOLE_SYNCHRONIZATION_MODE == DEBUG_CONSOLE_SYNCHRONIZATION_BM)
-
-#if (defined(DEBUG_CONSOLE_RX_ENABLE) && (DEBUG_CONSOLE_RX_ENABLE > 0U))
-static volatile uint8_t s_debugConsoleReadWaitSemaphore;
-#endif
-
-#else
-
-#endif /* DEBUG_CONSOLE_SYNCHRONIZATION_MODE == DEBUG_CONSOLE_SYNCHRONIZATION_FREERTOS */
-
-/*! @brief get current runing environment is ISR or not */
-#ifdef __CA7_REV
-#define IS_RUNNING_IN_ISR() SystemGetIRQNestingLevel()
-#else
-#define IS_RUNNING_IN_ISR() __get_IPSR()
-#endif /* __CA7_REV */
-
-/* semaphore definition */
-#if (DEBUG_CONSOLE_SYNCHRONIZATION_MODE == DEBUG_CONSOLE_SYNCHRONIZATION_FREERTOS)
-
-/* mutex semaphore */
-/* clang-format off */
-#define DEBUG_CONSOLE_CREATE_MUTEX_SEMAPHORE(mutex) ((mutex) = xSemaphoreCreateMutex())
-#define DEBUG_CONSOLE_DESTROY_MUTEX_SEMAPHORE(mutex)   \
-        do                                             \
-        {                                              \
-            if(NULL != mutex)                          \
-            {                                          \
-                vSemaphoreDelete(mutex);               \
-                mutex = NULL;                          \
-            }                                          \
-        } while(0)
-
-#define DEBUG_CONSOLE_GIVE_MUTEX_SEMAPHORE(mutex) \
-{                                                 \
-        if (IS_RUNNING_IN_ISR() == 0U)            \
-        {                                         \
-            (void)xSemaphoreGive(mutex);          \
-        }                                         \
-}
-
-#define DEBUG_CONSOLE_TAKE_MUTEX_SEMAPHORE_BLOCKING(mutex) \
-{                                                          \
-        if (IS_RUNNING_IN_ISR() == 0U)                     \
-        {                                                  \
-            (void)xSemaphoreTake(mutex, portMAX_DELAY);    \
-        }                                                  \
-}
-
-#define DEBUG_CONSOLE_TAKE_MUTEX_SEMAPHORE_NONBLOCKING(mutex, result) \
-{                                                                     \
-        if (IS_RUNNING_IN_ISR() == 0U)                                \
-        {                                                             \
-            result = xSemaphoreTake(mutex, 0U);                       \
-        }                                                             \
-        else                                                          \
-        {                                                             \
-            result = 1U;                                              \
-        }                                                             \
-}
-
-/* Binary semaphore */
-#define DEBUG_CONSOLE_CREATE_BINARY_SEMAPHORE(binary) ((binary) = xSemaphoreCreateBinary())
-#define DEBUG_CONSOLE_DESTROY_BINARY_SEMAPHORE(binary) \
-        do                                             \
-        {                                              \
-            if(NULL != binary)                         \
-            {                                          \
-                vSemaphoreDelete(binary);              \
-                binary = NULL;                         \
-            }                                          \
-        } while(0)
-#define DEBUG_CONSOLE_TAKE_BINARY_SEMAPHORE_BLOCKING(binary) ((void)xSemaphoreTake(binary, portMAX_DELAY))
-#define DEBUG_CONSOLE_GIVE_BINARY_SEMAPHORE_FROM_ISR(binary) ((void)xSemaphoreGiveFromISR(binary, NULL))
-
-#elif (DEBUG_CONSOLE_SYNCHRONIZATION_BM == DEBUG_CONSOLE_SYNCHRONIZATION_MODE)
-
-#define DEBUG_CONSOLE_CREATE_MUTEX_SEMAPHORE(mutex)
-#define DEBUG_CONSOLE_DESTROY_MUTEX_SEMAPHORE(mutex)
-#define DEBUG_CONSOLE_TAKE_MUTEX_SEMAPHORE_BLOCKING(mutex)
-#define DEBUG_CONSOLE_GIVE_MUTEX_SEMAPHORE(mutex)
-#define DEBUG_CONSOLE_TAKE_MUTEX_SEMAPHORE_NONBLOCKING(mutex, result) (result = 1U)
-
-#define DEBUG_CONSOLE_CREATE_BINARY_SEMAPHORE(binary)
-#define DEBUG_CONSOLE_DESTROY_BINARY_SEMAPHORE(binary)
-#ifdef DEBUG_CONSOLE_TRANSFER_NON_BLOCKING
-#define DEBUG_CONSOLE_TAKE_BINARY_SEMAPHORE_BLOCKING(binary) \
-    {                                                        \
-        while (!binary)                                      \
-        {                                                    \
-        }                                                    \
-        binary = false;                                      \
-    }
-#define DEBUG_CONSOLE_GIVE_BINARY_SEMAPHORE_FROM_ISR(binary) (binary = true)
-#else
-#define DEBUG_CONSOLE_TAKE_BINARY_SEMAPHORE_BLOCKING(binary)
-#define DEBUG_CONSOLE_GIVE_BINARY_SEMAPHORE_FROM_ISR(binary)
-#endif /* DEBUG_CONSOLE_TRANSFER_NON_BLOCKING */
-/* clang-format on */
-
-/* add other implementation here
- *such as :
- * #elif(DEBUG_CONSOLE_SYNCHRONIZATION_MODE == DDEBUG_CONSOLE_SYNCHRONIZATION_xxx)
- */
-
-#else
-
-#error RTOS type is not defined by DEBUG_CONSOLE_SYNCHRONIZATION_MODE.
-
-#endif /* DEBUG_CONSOLE_SYNCHRONIZATION_MODE == DEBUG_CONSOLE_SYNCHRONIZATION_FREERTOS */
-
-#ifdef DEBUG_CONSOLE_TRANSFER_NON_BLOCKING
-/* receive state structure */
-typedef struct _debug_console_write_ring_buffer
+/*! @brief State structure storing debug console. */
+typedef struct DebugConsoleState
 {
-    uint32_t ringBufferSize;
-    volatile uint32_t ringHead;
-    volatile uint32_t ringTail;
-    uint8_t ringBuffer[DEBUG_CONSOLE_TRANSMIT_BUFFER_LEN];
-} debug_console_write_ring_buffer_t;
-#endif
+    uint8_t uartHandleBuffer[HAL_UART_HANDLE_SIZE];
+    hal_uart_status_t (*putChar)(hal_uart_handle_t handle,
+                                 const uint8_t *data,
+                                 size_t length); /*!< put char function pointer */
+    hal_uart_status_t (*getChar)(hal_uart_handle_t handle,
+                                 uint8_t *data,
+                                 size_t length); /*!< get char function pointer */
+    serial_port_type_t type;                     /*!< The initialized port of the debug console. */
+} debug_console_state_t;
 
-typedef struct _debug_console_state_struct
+/*! @brief Type of KSDK printf function pointer. */
+typedef int (*PUTCHAR_FUNC)(int a);
+
+#if PRINTF_ADVANCED_ENABLE
+/*! @brief Specification modifier flags for printf. */
+enum _debugconsole_printf_flag
 {
-    uint8_t serialHandleBuffer[SERIAL_MANAGER_HANDLE_SIZE];
-    serial_handle_t serialHandle; /*!< serial manager handle */
-#ifdef DEBUG_CONSOLE_TRANSFER_NON_BLOCKING
-    debug_console_write_ring_buffer_t writeRingBuffer;
-    uint8_t readRingBuffer[DEBUG_CONSOLE_RECEIVE_BUFFER_LEN];
-#endif
-    uint8_t serialWriteHandleBuffer[SERIAL_MANAGER_WRITE_HANDLE_SIZE];
-    uint8_t serialReadHandleBuffer[SERIAL_MANAGER_READ_HANDLE_SIZE];
-} debug_console_state_struct_t;
+    kPRINTF_Minus             = 0x01U,  /*!< Minus FLag. */
+    kPRINTF_Plus              = 0x02U,  /*!< Plus Flag. */
+    kPRINTF_Space             = 0x04U,  /*!< Space Flag. */
+    kPRINTF_Zero              = 0x08U,  /*!< Zero Flag. */
+    kPRINTF_Pound             = 0x10U,  /*!< Pound Flag. */
+    kPRINTF_LengthChar        = 0x20U,  /*!< Length: Char Flag. */
+    kPRINTF_LengthShortInt    = 0x40U,  /*!< Length: Short Int Flag. */
+    kPRINTF_LengthLongInt     = 0x80U,  /*!< Length: Long Int Flag. */
+    kPRINTF_LengthLongLongInt = 0x100U, /*!< Length: Long Long Int Flag. */
+};
+#endif /* PRINTF_ADVANCED_ENABLE */
+
+/*! @brief Specification modifier flags for scanf. */
+enum _debugconsole_scanf_flag
+{
+    kSCANF_Suppress   = 0x2U,    /*!< Suppress Flag. */
+    kSCANF_DestMask   = 0x7cU,   /*!< Destination Mask. */
+    kSCANF_DestChar   = 0x4U,    /*!< Destination Char Flag. */
+    kSCANF_DestString = 0x8U,    /*!< Destination String FLag. */
+    kSCANF_DestSet    = 0x10U,   /*!< Destination Set Flag. */
+    kSCANF_DestInt    = 0x20U,   /*!< Destination Int Flag. */
+    kSCANF_DestFloat  = 0x30U,   /*!< Destination Float Flag. */
+    kSCANF_LengthMask = 0x1f00U, /*!< Length Mask Flag. */
+#if SCANF_ADVANCED_ENABLE
+    kSCANF_LengthChar        = 0x100U, /*!< Length Char Flag. */
+    kSCANF_LengthShortInt    = 0x200U, /*!< Length ShortInt Flag. */
+    kSCANF_LengthLongInt     = 0x400U, /*!< Length LongInt Flag. */
+    kSCANF_LengthLongLongInt = 0x800U, /*!< Length LongLongInt Flag. */
+#endif                                 /* SCANF_ADVANCED_ENABLE */
+#if SCANF_FLOAT_ENABLE
+    kSCANF_LengthLongLongDouble = 0x1000U, /*!< Length LongLongDuoble Flag. */
+#endif                                     /*SCANF_FLOAT_ENABLE */
+    kSCANF_TypeSinged = 0x2000U,           /*!< TypeSinged Flag. */
+};
 
 /*******************************************************************************
  * Variables
  ******************************************************************************/
-
-/*! @brief Debug console state information. */
-#if (defined(DATA_SECTION_IS_CACHEABLE) && (DATA_SECTION_IS_CACHEABLE > 0))
-AT_NONCACHEABLE_SECTION(static debug_console_state_struct_t s_debugConsoleState);
-#else
-static debug_console_state_struct_t s_debugConsoleState;
-#endif
-serial_handle_t g_serialHandle; /*!< serial manager handle */
+/*! @brief Debug UART state information. */
+static debug_console_state_t s_debugConsole;
 
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
-/*!
- * @brief This is a printf call back function which is used to relocate the log to buffer
- * or print the log immediately when the local buffer is full.
- *
- * @param[in] buf   Buffer to store log.
- * @param[in] indicator Buffer index.
- * @param[in] val Target character to store.
- * @param[in] len length of the character
- *
- */
 #if SDK_DEBUGCONSOLE
-static void DbgConsole_PrintCallback(char *buf, int32_t *indicator, char dbgVal, int len);
-#endif
+static int DbgConsole_PrintfFormattedData(PUTCHAR_FUNC func_ptr, const char *fmt, va_list ap);
+static int DbgConsole_ScanfFormattedData(const char *line_ptr, char *format, va_list args_ptr);
+#endif /* SDK_DEBUGCONSOLE */
 
-status_t DbgConsole_ReadOneCharacter(uint8_t *ch);
-int DbgConsole_SendData(uint8_t *ch, size_t size);
-int DbgConsole_SendDataReliable(uint8_t *ch, size_t size);
-int DbgConsole_ReadLine(uint8_t *buf, size_t size);
-int DbgConsole_ReadCharacter(uint8_t *ch);
-
-#if ((SDK_DEBUGCONSOLE > 0U) ||                                                   \
-     ((SDK_DEBUGCONSOLE == 0U) && defined(DEBUG_CONSOLE_TRANSFER_NON_BLOCKING) && \
-      (defined(DEBUG_CONSOLE_TX_RELIABLE_ENABLE) && (DEBUG_CONSOLE_TX_RELIABLE_ENABLE > 0U))))
-DEBUG_CONSOLE_FUNCTION_PREFIX status_t DbgConsole_Flush(void);
-#endif
 /*******************************************************************************
  * Code
  ******************************************************************************/
-
-#if defined(DEBUG_CONSOLE_TRANSFER_NON_BLOCKING)
-
-static void DbgConsole_SerialManagerTxCallback(void *callbackParam,
-                                               serial_manager_callback_message_t *message,
-                                               serial_manager_status_t status)
-{
-    debug_console_state_struct_t *ioState;
-    uint32_t sendDataLength;
-
-    if ((NULL == callbackParam) || (NULL == message))
-    {
-        return;
-    }
-
-    ioState = (debug_console_state_struct_t *)callbackParam;
-
-    ioState->writeRingBuffer.ringTail += message->length;
-    if (ioState->writeRingBuffer.ringTail >= ioState->writeRingBuffer.ringBufferSize)
-    {
-        ioState->writeRingBuffer.ringTail = 0U;
-    }
-
-    if (kStatus_SerialManager_Success == status)
-    {
-        if (ioState->writeRingBuffer.ringTail != ioState->writeRingBuffer.ringHead)
-        {
-            if (ioState->writeRingBuffer.ringHead > ioState->writeRingBuffer.ringTail)
-            {
-                sendDataLength = ioState->writeRingBuffer.ringHead - ioState->writeRingBuffer.ringTail;
-            }
-            else
-            {
-                sendDataLength = ioState->writeRingBuffer.ringBufferSize - ioState->writeRingBuffer.ringTail;
-            }
-
-            (void)SerialManager_WriteNonBlocking(
-                ((serial_write_handle_t)&ioState->serialWriteHandleBuffer[0]),
-                &ioState->writeRingBuffer.ringBuffer[ioState->writeRingBuffer.ringTail], sendDataLength);
-        }
-    }
-    else if (kStatus_SerialManager_Canceled == status)
-    {
-        ioState->writeRingBuffer.ringTail = 0U;
-        ioState->writeRingBuffer.ringHead = 0U;
-    }
-    else
-    {
-        /*MISRA rule 16.4*/
-    }
-}
-
-#if (defined(DEBUG_CONSOLE_RX_ENABLE) && (DEBUG_CONSOLE_RX_ENABLE > 0U))
-
-static void DbgConsole_SerialManagerRxCallback(void *callbackParam,
-                                               serial_manager_callback_message_t *message,
-                                               serial_manager_status_t status)
-{
-    if ((NULL == callbackParam) || (NULL == message))
-    {
-        return;
-    }
-
-    if (kStatus_SerialManager_Notify == status)
-    {
-    }
-    else if (kStatus_SerialManager_Success == status)
-    {
-        /* release s_debugConsoleReadWaitSemaphore from RX callback */
-        DEBUG_CONSOLE_GIVE_BINARY_SEMAPHORE_FROM_ISR(s_debugConsoleReadWaitSemaphore);
-    }
-    else
-    {
-        /*MISRA rule 16.4*/
-    }
-}
-#endif
-
-#endif
-
-status_t DbgConsole_ReadOneCharacter(uint8_t *ch)
-{
-#if (defined(DEBUG_CONSOLE_RX_ENABLE) && (DEBUG_CONSOLE_RX_ENABLE > 0U))
-
-#if defined(DEBUG_CONSOLE_TRANSFER_NON_BLOCKING) && \
-    (DEBUG_CONSOLE_SYNCHRONIZATION_MODE == DEBUG_CONSOLE_SYNCHRONIZATION_BM) && defined(OSA_USED)
-    return kStatus_Fail;
-#else
-    status_t status = (status_t)kStatus_SerialManager_Error;
-
-/* recieve one char every time */
-#if defined(DEBUG_CONSOLE_TRANSFER_NON_BLOCKING)
-    status = (status_t)SerialManager_ReadNonBlocking(
-        ((serial_read_handle_t)&s_debugConsoleState.serialReadHandleBuffer[0]), ch, 1);
-#else
-    status = (status_t)SerialManager_ReadBlocking(
-        ((serial_read_handle_t)&s_debugConsoleState.serialReadHandleBuffer[0]), ch, 1);
-#endif
-    if ((status_t)kStatus_SerialManager_Success != status)
-    {
-        return (status_t)kStatus_Fail;
-    }
-    /* wait s_debugConsoleReadWaitSemaphore from RX callback */
-    DEBUG_CONSOLE_TAKE_BINARY_SEMAPHORE_BLOCKING(s_debugConsoleReadWaitSemaphore);
-
-    return (status_t)kStatus_Success;
-#endif
-
-#else
-
-    return (status_t)kStatus_Fail;
-
-#endif
-}
-
-#if DEBUG_CONSOLE_ENABLE_ECHO_FUNCTION
-static status_t DbgConsole_EchoCharacter(uint8_t *ch, bool isGetChar, int *index)
-{
-    /* Due to scanf take \n and \r as end of string,should not echo */
-    if (((*ch != (uint8_t)'\r') && (*ch != (uint8_t)'\n')) || (isGetChar))
-    {
-        /* recieve one char every time */
-        if (1 != DbgConsole_SendDataReliable(ch, 1U))
-        {
-            return (status_t)kStatus_Fail;
-        }
-    }
-
-    if ((!isGetChar) && (index != NULL))
-    {
-        if (DEBUG_CONSOLE_BACKSPACE == *ch)
-        {
-            if ((*index >= 2))
-            {
-                *index -= 2;
-            }
-            else
-            {
-                *index = 0;
-            }
-        }
-    }
-
-    return (status_t)kStatus_Success;
-}
-#endif
-
-int DbgConsole_SendData(uint8_t *ch, size_t size)
-{
-    status_t status = (status_t)kStatus_SerialManager_Error;
-#if defined(DEBUG_CONSOLE_TRANSFER_NON_BLOCKING)
-    uint32_t sendDataLength;
-    int txBusy = 0;
-#endif
-    assert(NULL != ch);
-    assert(0 != size);
-
-#if defined(DEBUG_CONSOLE_TRANSFER_NON_BLOCKING)
-    uint32_t regPrimask = DisableGlobalIRQ();
-    if (s_debugConsoleState.writeRingBuffer.ringHead != s_debugConsoleState.writeRingBuffer.ringTail)
-    {
-        txBusy = 1;
-        sendDataLength =
-            (s_debugConsoleState.writeRingBuffer.ringHead + s_debugConsoleState.writeRingBuffer.ringBufferSize -
-             s_debugConsoleState.writeRingBuffer.ringTail) %
-            s_debugConsoleState.writeRingBuffer.ringBufferSize;
-    }
-    else
-    {
-        sendDataLength = 0U;
-    }
-    sendDataLength = s_debugConsoleState.writeRingBuffer.ringBufferSize - sendDataLength - 1;
-    if (sendDataLength < size)
-    {
-        EnableGlobalIRQ(regPrimask);
-        return -1;
-    }
-    for (int i = 0; i < (int)size; i++)
-    {
-        s_debugConsoleState.writeRingBuffer.ringBuffer[s_debugConsoleState.writeRingBuffer.ringHead++] = ch[i];
-        if (s_debugConsoleState.writeRingBuffer.ringHead >= s_debugConsoleState.writeRingBuffer.ringBufferSize)
-        {
-            s_debugConsoleState.writeRingBuffer.ringHead = 0U;
-        }
-    }
-
-    status = (status_t)kStatus_SerialManager_Success;
-
-    if (txBusy == 0)
-    {
-        if (s_debugConsoleState.writeRingBuffer.ringHead > s_debugConsoleState.writeRingBuffer.ringTail)
-        {
-            sendDataLength =
-                s_debugConsoleState.writeRingBuffer.ringHead - s_debugConsoleState.writeRingBuffer.ringTail;
-        }
-        else
-        {
-            sendDataLength =
-                s_debugConsoleState.writeRingBuffer.ringBufferSize - s_debugConsoleState.writeRingBuffer.ringTail;
-        }
-
-        status = (status_t)SerialManager_WriteNonBlocking(
-            ((serial_write_handle_t)&s_debugConsoleState.serialWriteHandleBuffer[0]),
-            &s_debugConsoleState.writeRingBuffer.ringBuffer[s_debugConsoleState.writeRingBuffer.ringTail],
-            sendDataLength);
-    }
-    EnableGlobalIRQ(regPrimask);
-#else
-    status = (status_t)SerialManager_WriteBlocking(
-        ((serial_write_handle_t)&s_debugConsoleState.serialWriteHandleBuffer[0]), ch, size);
-#endif
-    return (((status_t)kStatus_Success == status) ? (int)size : -1);
-}
-
-int DbgConsole_SendDataReliable(uint8_t *ch, size_t size)
-{
-#if defined(DEBUG_CONSOLE_TRANSFER_NON_BLOCKING)
-#if (defined(DEBUG_CONSOLE_TX_RELIABLE_ENABLE) && (DEBUG_CONSOLE_TX_RELIABLE_ENABLE > 0U))
-    status_t status = kStatus_SerialManager_Error;
-    uint32_t sendDataLength;
-    uint32_t totalLength = size;
-    int sentLength;
-#endif /* DEBUG_CONSOLE_TX_RELIABLE_ENABLE */
-#else
-    status_t status = kStatus_SerialManager_Error;
-#endif /* DEBUG_CONSOLE_TRANSFER_NON_BLOCKING */
-
-    assert(NULL != ch);
-    assert(0 != size);
-
-    if (NULL == g_serialHandle)
-    {
-        return 0;
-    }
-
-#if defined(DEBUG_CONSOLE_TRANSFER_NON_BLOCKING)
-
-#if (defined(DEBUG_CONSOLE_TX_RELIABLE_ENABLE) && (DEBUG_CONSOLE_TX_RELIABLE_ENABLE > 0U))
-    do
-    {
-        uint32_t regPrimask = DisableGlobalIRQ();
-        if (s_debugConsoleState.writeRingBuffer.ringHead != s_debugConsoleState.writeRingBuffer.ringTail)
-        {
-            sendDataLength =
-                (s_debugConsoleState.writeRingBuffer.ringHead + s_debugConsoleState.writeRingBuffer.ringBufferSize -
-                 s_debugConsoleState.writeRingBuffer.ringTail) %
-                s_debugConsoleState.writeRingBuffer.ringBufferSize;
-        }
-        else
-        {
-            sendDataLength = 0U;
-        }
-        sendDataLength = s_debugConsoleState.writeRingBuffer.ringBufferSize - sendDataLength - 1U;
-
-        if (sendDataLength > 0U)
-        {
-            if (sendDataLength > totalLength)
-            {
-                sendDataLength = totalLength;
-            }
-
-            sentLength = DbgConsole_SendData(&ch[size - totalLength], sendDataLength);
-            if (sentLength > 0)
-            {
-                totalLength = totalLength - (uint32_t)sentLength;
-            }
-        }
-        EnableGlobalIRQ(regPrimask);
-
-        if (totalLength != 0U)
-        {
-            status = DbgConsole_Flush();
-            if ((status_t)kStatus_Success != status)
-            {
-                break;
-            }
-        }
-    } while (totalLength != 0U);
-    return (status_t)(uint32_t)((uint32_t)size - totalLength);
-#else
-    return DbgConsole_SendData(ch, size);
-#endif /* DEBUG_CONSOLE_TX_RELIABLE_ENABLE */
-
-#else
-    status          = (status_t)SerialManager_WriteBlocking(
-        ((serial_write_handle_t)&s_debugConsoleState.serialWriteHandleBuffer[0]), ch, size);
-    return (((status_t)kStatus_Success == status) ? (int)size : -1);
-#endif /* DEBUG_CONSOLE_TRANSFER_NON_BLOCKING */
-}
-
-int DbgConsole_ReadLine(uint8_t *buf, size_t size)
-{
-    int i = 0;
-
-    assert(buf != NULL);
-
-    if (NULL == g_serialHandle)
-    {
-        return -1;
-    }
-
-    /* take mutex lock function */
-    DEBUG_CONSOLE_TAKE_MUTEX_SEMAPHORE_BLOCKING(s_debugConsoleReadSemaphore);
-
-    do
-    {
-        /* recieve one char every time */
-        if ((status_t)kStatus_Success != DbgConsole_ReadOneCharacter(&buf[i]))
-        {
-            /* release mutex lock function */
-            DEBUG_CONSOLE_GIVE_MUTEX_SEMAPHORE(s_debugConsoleReadSemaphore);
-            i = -1;
-            break;
-        }
-#if DEBUG_CONSOLE_ENABLE_ECHO_FUNCTION
-        (void)DbgConsole_EchoCharacter(&buf[i], false, &i);
-#endif
-        /* analysis data */
-        if (((uint8_t)'\r' == buf[i]) || ((uint8_t)'\n' == buf[i]))
-        {
-            /* End of Line. */
-            if (0 == i)
-            {
-                buf[i] = (uint8_t)'\0';
-                continue;
-            }
-            else
-            {
-                break;
-            }
-        }
-        i++;
-    } while (i < (int)size);
-
-    /* get char should not add '\0'*/
-    if (i == (int)size)
-    {
-        buf[i] = (uint8_t)'\0';
-    }
-    else
-    {
-        buf[i + 1] = (uint8_t)'\0';
-    }
-
-    /* release mutex lock function */
-    DEBUG_CONSOLE_GIVE_MUTEX_SEMAPHORE(s_debugConsoleReadSemaphore);
-
-    return i;
-}
-
-int DbgConsole_ReadCharacter(uint8_t *ch)
-{
-    int ret;
-
-    assert(ch);
-
-    if (NULL == g_serialHandle)
-    {
-        return -1;
-    }
-
-    /* take mutex lock function */
-    DEBUG_CONSOLE_TAKE_MUTEX_SEMAPHORE_BLOCKING(s_debugConsoleReadSemaphore);
-    /* read one character */
-    if ((status_t)kStatus_Success == DbgConsole_ReadOneCharacter(ch))
-    {
-        ret = 1;
-#if DEBUG_CONSOLE_ENABLE_ECHO_FUNCTION
-        (void)DbgConsole_EchoCharacter(ch, true, NULL);
-#endif
-    }
-    else
-    {
-        ret = -1;
-    }
-
-    /* release mutex lock function */
-    DEBUG_CONSOLE_GIVE_MUTEX_SEMAPHORE(s_debugConsoleReadSemaphore);
-
-    return ret;
-}
-
-#if SDK_DEBUGCONSOLE
-static void DbgConsole_PrintCallback(char *buf, int32_t *indicator, char dbgVal, int len)
-{
-    int i = 0;
-
-    for (i = 0; i < len; i++)
-    {
-        if (((uint32_t)*indicator + 1UL) >= DEBUG_CONSOLE_PRINTF_MAX_LOG_LEN)
-        {
-            (void)DbgConsole_SendDataReliable((uint8_t *)buf, (uint32_t)(*indicator));
-            *indicator = 0;
-        }
-
-        buf[*indicator] = dbgVal;
-        (*indicator)++;
-    }
-}
-#endif
 
 /*************Code for DbgConsole Init, Deinit, Printf, Scanf *******************************/
 
@@ -666,123 +112,34 @@ static void DbgConsole_PrintCallback(char *buf, int32_t *indicator, char dbgVal,
 /* See fsl_debug_console.h for documentation of this function. */
 status_t DbgConsole_Init(uint8_t instance, uint32_t baudRate, serial_port_type_t device, uint32_t clkSrcFreq)
 {
-    serial_manager_config_t serialConfig;
-    status_t status = (status_t)kStatus_SerialManager_Error;
+    hal_uart_config_t usrtConfig;
 
-#if (defined(SERIAL_PORT_TYPE_UART) && (SERIAL_PORT_TYPE_UART > 0U))
-    serial_port_uart_config_t uartConfig = {
-        .instance     = instance,
-        .clockRate    = clkSrcFreq,
-        .baudRate     = baudRate,
-        .parityMode   = kSerialManager_UartParityDisabled,
-        .stopBitCount = kSerialManager_UartOneStopBit,
-        .enableRx     = 1,
-        .enableTx     = 1,
-    };
-#endif
-
-#if (defined(SERIAL_PORT_TYPE_USBCDC) && (SERIAL_PORT_TYPE_USBCDC > 0U))
-    serial_port_usb_cdc_config_t usbCdcConfig = {
-        .controllerIndex = (serial_port_usb_cdc_controller_index_t)instance,
-    };
-#endif
-
-#if (defined(SERIAL_PORT_TYPE_SWO) && (SERIAL_PORT_TYPE_SWO > 0U))
-    serial_port_swo_config_t swoConfig = {
-        .clockRate = clkSrcFreq,
-        .baudRate  = baudRate,
-        .port      = instance,
-        .protocol  = kSerialManager_SwoProtocolNrz,
-    };
-#endif
-
-#if (defined(SERIAL_PORT_TYPE_USBCDC_VIRTUAL) && (SERIAL_PORT_TYPE_USBCDC_VIRTUAL > 0U))
-    serial_port_usb_cdc_virtual_config_t usbCdcVirtualConfig = {
-        .controllerIndex = (serial_port_usb_cdc_virtual_controller_index_t)instance,
-    };
-#endif
-    serialConfig.type = device;
-#if defined(DEBUG_CONSOLE_TRANSFER_NON_BLOCKING)
-    serialConfig.ringBuffer     = &s_debugConsoleState.readRingBuffer[0];
-    serialConfig.ringBufferSize = DEBUG_CONSOLE_RECEIVE_BUFFER_LEN;
-#endif
-
-    if (kSerialPort_Uart == device)
+    if (kSerialPort_Uart != device)
     {
-#if (defined(SERIAL_PORT_TYPE_UART) && (SERIAL_PORT_TYPE_UART > 0U))
-        serialConfig.portConfig = &uartConfig;
-#else
-        return status;
-#endif
-    }
-    else if (kSerialPort_UsbCdc == device)
-    {
-#if (defined(SERIAL_PORT_TYPE_USBCDC) && (SERIAL_PORT_TYPE_USBCDC > 0U))
-        serialConfig.portConfig = &usbCdcConfig;
-#else
-        return status;
-#endif
-    }
-    else if (kSerialPort_Swo == device)
-    {
-#if (defined(SERIAL_PORT_TYPE_SWO) && (SERIAL_PORT_TYPE_SWO > 0U))
-        serialConfig.portConfig = &swoConfig;
-#else
-        return status;
-#endif
-    }
-    else if (kSerialPort_UsbCdcVirtual == device)
-    {
-#if (defined(SERIAL_PORT_TYPE_USBCDC_VIRTUAL) && (SERIAL_PORT_TYPE_USBCDC_VIRTUAL > 0U))
-        serialConfig.portConfig = &usbCdcVirtualConfig;
-#else
-        return status;
-#endif
-    }
-    else
-    {
-        return status;
+        return kStatus_Fail;
     }
 
-    (void)memset(&s_debugConsoleState, 0, sizeof(s_debugConsoleState));
+    /* Set debug console to initialized to avoid duplicated initialized operation. */
+    s_debugConsole.type = device;
 
-#if defined(DEBUG_CONSOLE_TRANSFER_NON_BLOCKING)
-    s_debugConsoleState.writeRingBuffer.ringBufferSize = DEBUG_CONSOLE_TRANSMIT_BUFFER_LEN;
+    usrtConfig.srcClock_Hz  = clkSrcFreq;
+    usrtConfig.baudRate_Bps = baudRate;
+    usrtConfig.parityMode   = kHAL_UartParityDisabled;
+    usrtConfig.stopBitCount = kHAL_UartOneStopBit;
+    usrtConfig.enableRx     = 1U;
+    usrtConfig.enableTx     = 1U;
+    usrtConfig.enableRxRTS  = 0U;
+    usrtConfig.enableTxCTS  = 0U;
+    usrtConfig.instance     = instance;
+#if (defined(HAL_UART_ADAPTER_FIFO) && (HAL_UART_ADAPTER_FIFO > 0u))
+    usrtConfig.txFifoWatermark = 0U;
+    usrtConfig.rxFifoWatermark = 0U;
 #endif
-
-    s_debugConsoleState.serialHandle = (serial_handle_t)&s_debugConsoleState.serialHandleBuffer[0];
-    status                           = (status_t)SerialManager_Init(s_debugConsoleState.serialHandle, &serialConfig);
-
-    assert(kStatus_SerialManager_Success == status);
-
-    DEBUG_CONSOLE_CREATE_MUTEX_SEMAPHORE(s_debugConsoleReadSemaphore);
-#if (defined(DEBUG_CONSOLE_RX_ENABLE) && (DEBUG_CONSOLE_RX_ENABLE > 0U))
-    DEBUG_CONSOLE_CREATE_BINARY_SEMAPHORE(s_debugConsoleReadWaitSemaphore);
-#endif
-
-    {
-        status = (status_t)SerialManager_OpenWriteHandle(
-            s_debugConsoleState.serialHandle, ((serial_write_handle_t)&s_debugConsoleState.serialWriteHandleBuffer[0]));
-        assert(kStatus_SerialManager_Success == status);
-#if defined(DEBUG_CONSOLE_TRANSFER_NON_BLOCKING)
-        (void)SerialManager_InstallTxCallback(((serial_write_handle_t)&s_debugConsoleState.serialWriteHandleBuffer[0]),
-                                              DbgConsole_SerialManagerTxCallback, &s_debugConsoleState);
-#endif
-    }
-
-#if (defined(DEBUG_CONSOLE_RX_ENABLE) && (DEBUG_CONSOLE_RX_ENABLE > 0U))
-    {
-        status = (status_t)SerialManager_OpenReadHandle(
-            s_debugConsoleState.serialHandle, ((serial_read_handle_t)&s_debugConsoleState.serialReadHandleBuffer[0]));
-        assert(kStatus_SerialManager_Success == status);
-#if defined(DEBUG_CONSOLE_TRANSFER_NON_BLOCKING)
-        (void)SerialManager_InstallRxCallback(((serial_read_handle_t)&s_debugConsoleState.serialReadHandleBuffer[0]),
-                                              DbgConsole_SerialManagerRxCallback, &s_debugConsoleState);
-#endif
-    }
-#endif
-
-    g_serialHandle = s_debugConsoleState.serialHandle;
+    /* Enable clock and initial UART module follow user configure structure. */
+    (void)HAL_UartInit((hal_uart_handle_t)&s_debugConsole.uartHandleBuffer[0], &usrtConfig);
+    /* Set the function pointer for send and receive for this kind of device. */
+    s_debugConsole.putChar = HAL_UartSendBlocking;
+    s_debugConsole.getChar = HAL_UartReceiveBlocking;
 
     return kStatus_Success;
 }
@@ -790,206 +147,1441 @@ status_t DbgConsole_Init(uint8_t instance, uint32_t baudRate, serial_port_type_t
 /* See fsl_debug_console.h for documentation of this function. */
 status_t DbgConsole_Deinit(void)
 {
+    if (kSerialPort_None == s_debugConsole.type)
     {
-        if (s_debugConsoleState.serialHandle != NULL)
-        {
-            (void)SerialManager_CloseWriteHandle(
-                ((serial_write_handle_t)&s_debugConsoleState.serialWriteHandleBuffer[0]));
-        }
+        return kStatus_Success;
     }
-#if (defined(DEBUG_CONSOLE_RX_ENABLE) && (DEBUG_CONSOLE_RX_ENABLE > 0U))
-    {
-        if (s_debugConsoleState.serialHandle != NULL)
-        {
-            (void)SerialManager_CloseReadHandle(((serial_read_handle_t)&s_debugConsoleState.serialReadHandleBuffer[0]));
-        }
-    }
-#endif
-    if (s_debugConsoleState.serialHandle)
-    {
-        if (kStatus_SerialManager_Success == SerialManager_Deinit(s_debugConsoleState.serialHandle))
-        {
-            s_debugConsoleState.serialHandle = NULL;
-            g_serialHandle                   = NULL;
-        }
-    }
-#if (defined(DEBUG_CONSOLE_RX_ENABLE) && (DEBUG_CONSOLE_RX_ENABLE > 0U))
-    DEBUG_CONSOLE_DESTROY_BINARY_SEMAPHORE(s_debugConsoleReadWaitSemaphore);
-#endif
-    DEBUG_CONSOLE_DESTROY_MUTEX_SEMAPHORE(s_debugConsoleReadSemaphore);
 
-    return (status_t)kStatus_Success;
+    (void)HAL_UartDeinit((hal_uart_handle_t)&s_debugConsole.uartHandleBuffer[0]);
+
+    s_debugConsole.type = kSerialPort_None;
+
+    return kStatus_Success;
 }
-#endif /* ((SDK_DEBUGCONSOLE == DEBUGCONSOLE_REDIRECT_TO_SDK) || defined(SDK_DEBUGCONSOLE_UART)) */
-
-#if ((SDK_DEBUGCONSOLE > 0U) ||                                                   \
-     ((SDK_DEBUGCONSOLE == 0U) && defined(DEBUG_CONSOLE_TRANSFER_NON_BLOCKING) && \
-      (defined(DEBUG_CONSOLE_TX_RELIABLE_ENABLE) && (DEBUG_CONSOLE_TX_RELIABLE_ENABLE > 0U))))
-DEBUG_CONSOLE_FUNCTION_PREFIX status_t DbgConsole_Flush(void)
-{
-#if defined(DEBUG_CONSOLE_TRANSFER_NON_BLOCKING)
-
-#if (DEBUG_CONSOLE_SYNCHRONIZATION_MODE == DEBUG_CONSOLE_SYNCHRONIZATION_BM) && defined(OSA_USED)
-
-    if (s_debugConsoleState.writeRingBuffer.ringHead != s_debugConsoleState.writeRingBuffer.ringTail)
-    {
-        return (status_t)kStatus_Fail;
-    }
-
-#else
-
-    while (s_debugConsoleState.writeRingBuffer.ringHead != s_debugConsoleState.writeRingBuffer.ringTail)
-    {
-#if (DEBUG_CONSOLE_SYNCHRONIZATION_MODE == DEBUG_CONSOLE_SYNCHRONIZATION_FREERTOS)
-        if (0U == IS_RUNNING_IN_ISR())
-        {
-            if (taskSCHEDULER_RUNNING == xTaskGetSchedulerState())
-            {
-                vTaskDelay(1);
-            }
-        }
-        else
-        {
-            return (status_t)kStatus_Fail;
-        }
-#endif
-    }
-
-#endif
-
-#endif
-    return (status_t)kStatus_Success;
-}
-#endif
+#endif /* DEBUGCONSOLE_REDIRECT_TO_SDK */
 
 #if SDK_DEBUGCONSOLE
 /* See fsl_debug_console.h for documentation of this function. */
-int DbgConsole_Printf(const char *formatString, ...)
+int DbgConsole_Printf(const char *fmt_s, ...)
 {
     va_list ap;
-    int logLength = 0, dbgResult = 0;
-    char printBuf[DEBUG_CONSOLE_PRINTF_MAX_LOG_LEN] = {'\0'};
+    int result;
 
-    if (NULL == g_serialHandle)
+    /* Do nothing if the debug UART is not initialized. */
+    if (kSerialPort_None == s_debugConsole.type)
     {
-        return 0;
+        return -1;
     }
-
-    va_start(ap, formatString);
-    /* format print log first */
-    logLength = StrFormatPrintf(formatString, ap, printBuf, DbgConsole_PrintCallback);
-    /* print log */
-    dbgResult = DbgConsole_SendDataReliable((uint8_t *)printBuf, (size_t)logLength);
-
+    va_start(ap, fmt_s);
+    result = DbgConsole_PrintfFormattedData(DbgConsole_Putchar, fmt_s, ap);
     va_end(ap);
 
-    return dbgResult;
+    return result;
 }
 
 /* See fsl_debug_console.h for documentation of this function. */
 int DbgConsole_Putchar(int ch)
 {
-    /* print char */
-    return DbgConsole_SendDataReliable((uint8_t *)&ch, 1U);
+    /* Do nothing if the debug UART is not initialized. */
+    if (kSerialPort_None == s_debugConsole.type)
+    {
+        return -1;
+    }
+    (void)s_debugConsole.putChar((hal_uart_handle_t)&s_debugConsole.uartHandleBuffer[0], (uint8_t *)(&ch), 1);
+
+    return 1;
 }
 
 /* See fsl_debug_console.h for documentation of this function. */
-int DbgConsole_Scanf(char *formatString, ...)
+int DbgConsole_Scanf(char *fmt_ptr, ...)
 {
+    /* Plus one to store end of string char */
+    char temp_buf[IO_MAXLINE + 1];
     va_list ap;
-    int formatResult;
-    char scanfBuf[DEBUG_CONSOLE_SCANF_MAX_LOG_LEN + 1U] = {'\0'};
+    int32_t i;
+    char result;
 
-    /* scanf log */
-    (void)DbgConsole_ReadLine((uint8_t *)scanfBuf, DEBUG_CONSOLE_SCANF_MAX_LOG_LEN);
-    /* get va_list */
-    va_start(ap, formatString);
-    /* format scanf log */
-    formatResult = StrFormatScanf(scanfBuf, formatString, ap);
-
-    va_end(ap);
-
-    return formatResult;
-}
-/* See fsl_debug_console.h for documentation of this function. */
-int DbgConsole_BlockingPrintf(const char *formatString, ...)
-{
-    va_list ap;
-    status_t status = (status_t)kStatus_SerialManager_Error;
-    int logLength = 0, dbgResult = 0;
-    char printBuf[DEBUG_CONSOLE_PRINTF_MAX_LOG_LEN] = {'\0'};
-
-    if (NULL == g_serialHandle)
+    /* Do nothing if the debug UART is not initialized. */
+    if (kSerialPort_None == s_debugConsole.type)
     {
-        return 0;
+        return -1;
     }
+    va_start(ap, fmt_ptr);
+    temp_buf[0] = '\0';
 
-    va_start(ap, formatString);
-    /* format print log first */
-    logLength = StrFormatPrintf(formatString, ap, printBuf, DbgConsole_PrintCallback);
-
-#if defined(DEBUG_CONSOLE_TRANSFER_NON_BLOCKING)
-    SerialManager_CancelWriting(((serial_write_handle_t)&s_debugConsoleState.serialWriteHandleBuffer[0]));
-#endif
-    /* print log */
-    status =
-        (status_t)SerialManager_WriteBlocking(((serial_write_handle_t)&s_debugConsoleState.serialWriteHandleBuffer[0]),
-                                              (uint8_t *)printBuf, (size_t)logLength);
-    dbgResult = (((status_t)kStatus_Success == status) ? (int)logLength : -1);
-    va_end(ap);
-
-    return dbgResult;
-}
-
-#ifdef DEBUG_CONSOLE_TRANSFER_NON_BLOCKING
-status_t DbgConsole_TryGetchar(char *ch)
-{
-#if (defined(DEBUG_CONSOLE_RX_ENABLE) && (DEBUG_CONSOLE_RX_ENABLE > 0U))
-    uint32_t length = 0;
-    status_t status = (status_t)kStatus_Fail;
-
-    assert(ch);
-
-    if (NULL == g_serialHandle)
+    i = 0;
+    while (true)
     {
-        return kStatus_Fail;
-    }
-
-    /* take mutex lock function */
-    DEBUG_CONSOLE_TAKE_MUTEX_SEMAPHORE_BLOCKING(s_debugConsoleReadSemaphore);
-
-    if (kStatus_SerialManager_Success ==
-        SerialManager_TryRead(((serial_read_handle_t)&s_debugConsoleState.serialReadHandleBuffer[0]), (uint8_t *)ch, 1,
-                              &length))
-    {
-        if (length != 0U)
+        if (i >= (int32_t)IO_MAXLINE)
         {
-#if DEBUG_CONSOLE_ENABLE_ECHO_FUNCTION
-            (void)DbgConsole_EchoCharacter((uint8_t *)ch, true, NULL);
-#endif
-            status = (status_t)kStatus_Success;
+            break;
         }
+
+        result      = (char)DbgConsole_Getchar();
+        temp_buf[i] = result;
+
+        if ((result == '\r') || (result == '\n'))
+        {
+            /* End of Line. */
+            if (i == 0)
+            {
+                temp_buf[i] = '\0';
+                i           = -1;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        i++;
     }
-    /* release mutex lock function */
-    DEBUG_CONSOLE_GIVE_MUTEX_SEMAPHORE(s_debugConsoleReadSemaphore);
-    return status;
-#else
-    return (status_t)kStatus_Fail;
-#endif
+
+    if (i == (int32_t)IO_MAXLINE)
+    {
+        temp_buf[i] = '\0';
+    }
+    else
+    {
+        temp_buf[i + 1] = '\0';
+    }
+    result = (char)DbgConsole_ScanfFormattedData(temp_buf, fmt_ptr, ap);
+    va_end(ap);
+
+    return (int)result;
 }
-#endif
 
 /* See fsl_debug_console.h for documentation of this function. */
 int DbgConsole_Getchar(void)
 {
-    uint8_t ch = 0U;
-
-    /* Get char */
-    (void)DbgConsole_ReadCharacter(&ch);
+    char ch;
+    /* Do nothing if the debug UART is not initialized. */
+    if (kSerialPort_None == s_debugConsole.type)
+    {
+        return -1;
+    }
+    while (kStatus_HAL_UartSuccess !=
+           s_debugConsole.getChar((hal_uart_handle_t)&s_debugConsole.uartHandleBuffer[0], (uint8_t *)(&ch), 1))
+    {
+        return -1;
+    }
 
     return (int)ch;
 }
 
+/*************Code for process formatted data*******************************/
+/*!
+ * @brief Scanline function which ignores white spaces.
+ *
+ * @param[in]   s The address of the string pointer to update.
+ * @return      String without white spaces.
+ */
+static uint32_t DbgConsole_ScanIgnoreWhiteSpace(const char **s)
+{
+    uint8_t count = 0;
+    char c;
+
+    c = **s;
+    while ((c == ' ') || (c == '\t') || (c == '\n') || (c == '\r') || (c == '\v') || (c == '\f'))
+    {
+        count++;
+        (*s)++;
+        c = **s;
+    }
+    return count;
+}
+
+/*!
+ * @brief This function puts padding character.
+ *
+ * @param[in] c         Padding character.
+ * @param[in] curlen    Length of current formatted string .
+ * @param[in] width     Width of expected formatted string.
+ * @param[in] count     Number of characters.
+ * @param[in] func_ptr  Function to put character out.
+ */
+static void DbgConsole_PrintfPaddingCharacter(
+    char c, int32_t curlen, int32_t width, int32_t *count, PUTCHAR_FUNC func_ptr)
+{
+    int32_t i;
+
+    for (i = curlen; i < width; i++)
+    {
+        (void)func_ptr(c);
+        (*count)++;
+    }
+}
+
+/*!
+ * @brief Converts a radix number to a string and return its length.
+ *
+ * @param[in] numstr    Converted string of the number.
+ * @param[in] nump      Pointer to the number.
+ * @param[in] neg       Polarity of the number.
+ * @param[in] radix     The radix to be converted to.
+ * @param[in] use_caps  Used to identify %x/X output format.
+
+ * @return Length of the converted string.
+ */
+static int32_t DbgConsole_ConvertRadixNumToString(char *numstr, void *nump, int32_t neg, int32_t radix, bool use_caps)
+{
+#if PRINTF_ADVANCED_ENABLE
+    int64_t a;
+    int64_t b;
+    int64_t c;
+
+    uint64_t ua;
+    uint64_t ub;
+    uint64_t uc;
+#else
+    int32_t a;
+    int32_t b;
+    int32_t c;
+
+    uint32_t ua;
+    uint32_t ub;
+    uint32_t uc;
+#endif /* PRINTF_ADVANCED_ENABLE */
+
+    int32_t nlen;
+    char *nstrp;
+
+    nlen     = 0;
+    nstrp    = numstr;
+    *nstrp++ = '\0';
+
+#if !(PRINTF_ADVANCED_ENABLE > 0)
+    neg = 0;
+#endif
+
+    if (0 != neg)
+    {
+#if PRINTF_ADVANCED_ENABLE
+        a = *(int64_t *)nump;
+#else
+        a = *(int32_t *)nump;
+#endif /* PRINTF_ADVANCED_ENABLE */
+        if (a == 0)
+        {
+            *nstrp = '0';
+            ++nlen;
+            return nlen;
+        }
+        while (a != 0)
+        {
+#if PRINTF_ADVANCED_ENABLE
+            b = (int64_t)a / (int64_t)radix;
+            c = (int64_t)a - ((int64_t)b * (int64_t)radix);
+            if (c < 0)
+            {
+                c = (int64_t)'0' - c;
+            }
+#else
+            b = a / radix;
+            c = a - (b * radix);
+            if (c < 0)
+            {
+                c = (int32_t)'0' - c;
+            }
+#endif /* PRINTF_ADVANCED_ENABLE */
+            else
+            {
+                c = c + '0';
+            }
+            a        = b;
+            *nstrp++ = (char)c;
+            ++nlen;
+        }
+    }
+    else
+    {
+#if PRINTF_ADVANCED_ENABLE
+        ua = *(uint64_t *)nump;
+#else
+        ua = *(uint32_t *)nump;
+#endif /* PRINTF_ADVANCED_ENABLE */
+        if (ua == 0U)
+        {
+            *nstrp = '0';
+            ++nlen;
+            return nlen;
+        }
+        while (ua != 0U)
+        {
+#if PRINTF_ADVANCED_ENABLE
+            ub = (uint64_t)ua / (uint64_t)radix;
+            uc = (uint64_t)ua - ((uint64_t)ub * (uint64_t)radix);
+#else
+            ub = ua / (uint32_t)radix;
+            uc = ua - (ub * (uint32_t)radix);
+#endif /* PRINTF_ADVANCED_ENABLE */
+
+            if (uc < 10U)
+            {
+                uc = uc + '0';
+            }
+            else
+            {
+                uc = uc - 10U + (use_caps ? 'A' : 'a');
+            }
+            ua       = ub;
+            *nstrp++ = (char)uc;
+            ++nlen;
+        }
+    }
+    return nlen;
+}
+
+#if PRINTF_FLOAT_ENABLE
+/*!
+ * @brief Converts a floating radix number to a string and return its length.
+ *
+ * @param[in] numstr            Converted string of the number.
+ * @param[in] nump              Pointer to the number.
+ * @param[in] radix             The radix to be converted to.
+ * @param[in] precision_width   Specify the precision width.
+
+ * @return Length of the converted string.
+ */
+static int32_t DbgConsole_ConvertFloatRadixNumToString(char *numstr,
+                                                       void *nump,
+                                                       int32_t radix,
+                                                       uint32_t precision_width)
+{
+    int32_t a;
+    int32_t b;
+    int32_t c;
+    uint32_t i;
+    double fa;
+    double dc;
+    double fb;
+    double r;
+    double fractpart;
+    double intpart;
+
+    int32_t nlen;
+    char *nstrp;
+    nlen     = 0;
+    nstrp    = numstr;
+    *nstrp++ = '\0';
+    r        = *(double *)nump;
+    if (0.0 == r)
+    {
+        *nstrp = '0';
+        ++nlen;
+        return nlen;
+    }
+    fractpart = modf((double)r, (double *)&intpart);
+    /* Process fractional part. */
+    for (i = 0; i < precision_width; i++)
+    {
+        fractpart *= (double)radix;
+    }
+    if (r >= 0.0)
+    {
+        fa = fractpart + (double)0.5;
+        if (fa >= pow((double)10, (double)precision_width))
+        {
+            intpart++;
+        }
+    }
+    else
+    {
+        fa = fractpart - (double)0.5;
+        if (fa <= -pow((double)10, (double)precision_width))
+        {
+            intpart--;
+        }
+    }
+    for (i = 0; i < precision_width; i++)
+    {
+        fb = fa / (double)radix;
+        dc = (fa - (double)(int64_t)fb * (double)radix);
+        c  = (int32_t)dc;
+        if (c < 0)
+        {
+            c = (int32_t)'0' - c;
+        }
+        else
+        {
+            c = c + '0';
+        }
+        fa       = fb;
+        *nstrp++ = (char)c;
+        ++nlen;
+    }
+    *nstrp++ = (char)'.';
+    ++nlen;
+    a = (int32_t)intpart;
+    if (a == 0)
+    {
+        *nstrp++ = '0';
+        ++nlen;
+    }
+    else
+    {
+        while (a != 0)
+        {
+            b = (int32_t)a / (int32_t)radix;
+            c = (int32_t)a - ((int32_t)b * (int32_t)radix);
+            if (c < 0)
+            {
+                c = (int32_t)'0' - c;
+            }
+            else
+            {
+                c = c + '0';
+            }
+            a        = b;
+            *nstrp++ = (char)c;
+            ++nlen;
+        }
+    }
+    return nlen;
+}
+#endif /* PRINTF_FLOAT_ENABLE */
+
+/*!
+ * @brief This function outputs its parameters according to a formatted string.
+ *
+ * @note I/O is performed by calling given function pointer using following
+ * (*func_ptr)(c);
+ *
+ * @param[in] func_ptr  Function to put character out.
+ * @param[in] fmt_ptr   Format string for printf.
+ * @param[in] args_ptr  Arguments to printf.
+ *
+ * @return Number of characters
+ */
+static int DbgConsole_PrintfFormattedData(PUTCHAR_FUNC func_ptr, const char *fmt, va_list ap)
+{
+    /* va_list ap; */
+    const char *p;
+    char c;
+
+    char vstr[33];
+    char *vstrp  = NULL;
+    int32_t vlen = 0;
+
+    bool done;
+    int32_t count = 0;
+
+    uint32_t field_width;
+    uint32_t precision_width;
+    char *sval;
+    int32_t cval;
+    bool use_caps;
+    uint8_t radix = 0;
+
+#if PRINTF_ADVANCED_ENABLE
+    uint32_t flags_used;
+    char schar;
+    bool dschar;
+    int64_t ival;
+    uint64_t uval = 0;
+    bool valid_precision_width;
+#else
+    int32_t ival;
+    uint32_t uval = 0;
+#endif /* PRINTF_ADVANCED_ENABLE */
+
+#if PRINTF_FLOAT_ENABLE
+    double fval;
+#endif /* PRINTF_FLOAT_ENABLE */
+
+    /* Start parsing apart the format string and display appropriate formats and data. */
+    p = fmt;
+    while (true)
+    {
+        if ('\0' == *p)
+        {
+            break;
+        }
+        c = *p;
+        /*
+         * All formats begin with a '%' marker.  Special chars like
+         * '\n' or '\t' are normally converted to the appropriate
+         * character by the __compiler__.  Thus, no need for this
+         * routine to account for the '\' character.
+         */
+        if (c != '%')
+        {
+            (void)func_ptr(c);
+            count++;
+            p++;
+            /* By using 'continue', the next iteration of the loop is used, skipping the code that follows. */
+            continue;
+        }
+
+        use_caps = true;
+
+#if PRINTF_ADVANCED_ENABLE
+        /* First check for specification modifier flags. */
+        flags_used = 0;
+        done       = false;
+        while (!done)
+        {
+            switch (*++p)
+            {
+                case '-':
+                    flags_used |= (uint32_t)kPRINTF_Minus;
+                    break;
+                case '+':
+                    flags_used |= (uint32_t)kPRINTF_Plus;
+                    break;
+                case ' ':
+                    flags_used |= (uint32_t)kPRINTF_Space;
+                    break;
+                case '0':
+                    flags_used |= (uint32_t)kPRINTF_Zero;
+                    break;
+                case '#':
+                    flags_used |= (uint32_t)kPRINTF_Pound;
+                    break;
+                default:
+                    /* We've gone one char too far. */
+                    --p;
+                    done = true;
+                    break;
+            }
+        }
+#endif /* PRINTF_ADVANCED_ENABLE */
+
+        /* Next check for minimum field width. */
+        field_width = 0;
+        done        = false;
+        while (!done)
+        {
+            c = *++p;
+            if ((c >= '0') && (c <= '9'))
+            {
+                field_width = (field_width * 10U) + ((uint32_t)c - (uint32_t)'0');
+            }
+#if PRINTF_ADVANCED_ENABLE
+            else if (c == '*')
+            {
+                field_width = (uint32_t)va_arg(ap, uint32_t);
+            }
+#endif /* PRINTF_ADVANCED_ENABLE */
+            else
+            {
+                /* We've gone one char too far. */
+                --p;
+                done = true;
+            }
+        }
+        /* Next check for the width and precision field separator. */
+#if (PRINTF_ADVANCED_ENABLE || PRINTF_FLOAT_ENABLE)
+        precision_width = 6U; /* MISRA C-2012 Rule 2.2 */
+#endif
+#if PRINTF_ADVANCED_ENABLE
+        valid_precision_width = false;
+#endif /* PRINTF_ADVANCED_ENABLE */
+        if (*++p == '.')
+        {
+            /* Must get precision field width, if present. */
+            precision_width = 0U;
+            done            = false;
+            while (!done)
+            {
+                c = *++p;
+                if ((c >= '0') && (c <= '9'))
+                {
+                    precision_width = (precision_width * 10U) + ((uint32_t)c - (uint32_t)'0');
+#if PRINTF_ADVANCED_ENABLE
+                    valid_precision_width = true;
+#endif /* PRINTF_ADVANCED_ENABLE */
+                }
+#if PRINTF_ADVANCED_ENABLE
+                else if (c == '*')
+                {
+                    precision_width       = (uint32_t)va_arg(ap, uint32_t);
+                    valid_precision_width = true;
+                }
+#endif /* PRINTF_ADVANCED_ENABLE */
+                else
+                {
+                    /* We've gone one char too far. */
+                    --p;
+                    done = true;
+                }
+            }
+        }
+        else
+        {
+            /* We've gone one char too far. */
+            --p;
+        }
+#if PRINTF_ADVANCED_ENABLE
+        /*
+         * Check for the length modifier.
+         */
+        switch (/* c = */ *++p)
+        {
+            case 'h':
+                if (*++p != 'h')
+                {
+                    flags_used |= (uint32_t)kPRINTF_LengthShortInt;
+                    --p;
+                }
+                else
+                {
+                    flags_used |= (uint32_t)kPRINTF_LengthChar;
+                }
+                break;
+            case 'l':
+                if (*++p != 'l')
+                {
+                    flags_used |= (uint32_t)kPRINTF_LengthLongInt;
+                    --p;
+                }
+                else
+                {
+                    flags_used |= (uint32_t)kPRINTF_LengthLongLongInt;
+                }
+                break;
+            default:
+                /* we've gone one char too far */
+                --p;
+                break;
+        }
+#endif /* PRINTF_ADVANCED_ENABLE */
+        /* Now we're ready to examine the format. */
+        c = *++p;
+        {
+            if ((c == 'd') || (c == 'i') || (c == 'f') || (c == 'F') || (c == 'x') || (c == 'X') || (c == 'o') ||
+                (c == 'b') || (c == 'p') || (c == 'u'))
+            {
+                if ((c == 'd') || (c == 'i'))
+                {
+#if PRINTF_ADVANCED_ENABLE
+                    if (0U != (flags_used & (uint32_t)kPRINTF_LengthLongLongInt))
+                    {
+                        ival = (int64_t)va_arg(ap, int64_t);
+                    }
+                    else
+#endif /* PRINTF_ADVANCED_ENABLE */
+                    {
+                        ival = (int32_t)va_arg(ap, int32_t);
+                    }
+                    vlen  = DbgConsole_ConvertRadixNumToString(vstr, &ival, 1, 10, use_caps);
+                    vstrp = &vstr[vlen];
+#if PRINTF_ADVANCED_ENABLE
+                    if (ival < 0)
+                    {
+                        schar = '-';
+                        ++vlen;
+                    }
+                    else
+                    {
+                        if (0U != (flags_used & (uint32_t)kPRINTF_Plus))
+                        {
+                            schar = '+';
+                            ++vlen;
+                        }
+                        else
+                        {
+                            if (0U != (flags_used & (uint32_t)kPRINTF_Space))
+                            {
+                                schar = ' ';
+                                ++vlen;
+                            }
+                            else
+                            {
+                                schar = '\0';
+                            }
+                        }
+                    }
+                    dschar = false;
+                    /* Do the ZERO pad. */
+                    if (0U != (flags_used & (uint32_t)kPRINTF_Zero))
+                    {
+                        if ('\0' != schar)
+                        {
+                            (void)func_ptr(schar);
+                            count++;
+                        }
+                        dschar = true;
+
+                        DbgConsole_PrintfPaddingCharacter('0', vlen, (int32_t)field_width, &count, func_ptr);
+                        vlen = (int32_t)field_width;
+                    }
+                    else
+                    {
+                        if (0U == (flags_used & (uint32_t)kPRINTF_Minus))
+                        {
+                            DbgConsole_PrintfPaddingCharacter(' ', vlen, (int32_t)field_width, &count, func_ptr);
+                            if ('\0' != schar)
+                            {
+                                (void)func_ptr(schar);
+                                count++;
+                            }
+                            dschar = true;
+                        }
+                    }
+                    /* The string was built in reverse order, now display in correct order. */
+                    if ((!dschar) && ('\0' != schar))
+                    {
+                        (void)func_ptr(schar);
+                        count++;
+                    }
+#endif /* PRINTF_ADVANCED_ENABLE */
+                }
+
+#if PRINTF_FLOAT_ENABLE
+                if ((c == 'f') || (c == 'F'))
+                {
+                    fval  = (double)va_arg(ap, double);
+                    vlen  = DbgConsole_ConvertFloatRadixNumToString(vstr, &fval, 10, precision_width);
+                    vstrp = &vstr[vlen];
+
+#if PRINTF_ADVANCED_ENABLE
+                    if (fval < 0.0)
+                    {
+                        schar = '-';
+                        ++vlen;
+                    }
+                    else
+                    {
+                        if (0U != (flags_used & (uint32_t)kPRINTF_Plus))
+                        {
+                            schar = '+';
+                            ++vlen;
+                        }
+                        else
+                        {
+                            if (0U != (flags_used & (uint32_t)kPRINTF_Space))
+                            {
+                                schar = ' ';
+                                ++vlen;
+                            }
+                            else
+                            {
+                                schar = '\0';
+                            }
+                        }
+                    }
+                    dschar = false;
+                    if (0U != (flags_used & (uint32_t)kPRINTF_Zero))
+                    {
+                        if ('\0' != schar)
+                        {
+                            (void)func_ptr(schar);
+                            count++;
+                        }
+                        dschar = true;
+                        DbgConsole_PrintfPaddingCharacter('0', vlen, (int32_t)field_width, &count, func_ptr);
+                        vlen = (int32_t)field_width;
+                    }
+                    else
+                    {
+                        if (0U == (flags_used & (uint32_t)kPRINTF_Minus))
+                        {
+                            DbgConsole_PrintfPaddingCharacter(' ', vlen, (int32_t)field_width, &count, func_ptr);
+                            if ('\0' != schar)
+                            {
+                                (void)func_ptr(schar);
+                                count++;
+                            }
+                            dschar = true;
+                        }
+                    }
+                    if ((!dschar) && ('\0' != schar))
+                    {
+                        (void)func_ptr(schar);
+                        count++;
+                    }
+#endif /* PRINTF_ADVANCED_ENABLE */
+                }
+#endif /* PRINTF_FLOAT_ENABLE */
+                if ((c == 'X') || (c == 'x'))
+                {
+                    if (c == 'x')
+                    {
+                        use_caps = false;
+                    }
+#if PRINTF_ADVANCED_ENABLE
+                    if (0U != (flags_used & (uint32_t)kPRINTF_LengthLongLongInt))
+                    {
+                        uval = (uint64_t)va_arg(ap, uint64_t);
+                    }
+                    else
+#endif /* PRINTF_ADVANCED_ENABLE */
+                    {
+                        uval = (uint32_t)va_arg(ap, uint32_t);
+                    }
+                    vlen  = DbgConsole_ConvertRadixNumToString(vstr, &uval, 0, 16, use_caps);
+                    vstrp = &vstr[vlen];
+
+#if PRINTF_ADVANCED_ENABLE
+                    dschar = false;
+                    if (0U != (flags_used & (uint32_t)kPRINTF_Zero))
+                    {
+                        if (0U != (flags_used & (uint32_t)kPRINTF_Pound))
+                        {
+                            (void)func_ptr('0');
+                            (void)func_ptr((use_caps ? 'X' : 'x'));
+                            count += 2;
+                            /*vlen += 2;*/
+                            dschar = true;
+                        }
+                        DbgConsole_PrintfPaddingCharacter('0', vlen, (int32_t)field_width, &count, func_ptr);
+                        vlen = (int32_t)field_width;
+                    }
+                    else
+                    {
+                        if (0U == (flags_used & (uint32_t)kPRINTF_Pound))
+                        {
+                            if (0U != (flags_used & (uint32_t)kPRINTF_Pound))
+                            {
+                                vlen += 2;
+                            }
+                            DbgConsole_PrintfPaddingCharacter(' ', vlen, (int32_t)field_width, &count, func_ptr);
+                            if (0U != (flags_used & (uint32_t)kPRINTF_Pound))
+                            {
+                                (void)func_ptr('0');
+                                (void)func_ptr(use_caps ? 'X' : 'x');
+                                count += 2;
+
+                                dschar = true;
+                            }
+                        }
+                    }
+
+                    if ((0U != (flags_used & (uint32_t)kPRINTF_Pound)) && (!dschar))
+                    {
+                        (void)func_ptr('0');
+                        (void)func_ptr(use_caps ? 'X' : 'x');
+                        count += 2;
+                        vlen += 2;
+                    }
+#endif /* PRINTF_ADVANCED_ENABLE */
+                }
+                if ((c == 'o') || (c == 'b') || (c == 'p') || (c == 'u'))
+                {
+#if PRINTF_ADVANCED_ENABLE
+                    if (0U != (flags_used & (uint32_t)kPRINTF_LengthLongLongInt))
+                    {
+                        uval = (uint64_t)va_arg(ap, uint64_t);
+                    }
+                    else
+#endif /* PRINTF_ADVANCED_ENABLE */
+                    {
+                        uval = (uint32_t)va_arg(ap, uint32_t);
+                    }
+                    switch (c)
+                    {
+                        case 'o':
+                            radix = 8;
+                            break;
+                        case 'b':
+                            radix = 2;
+                            break;
+                        case 'p':
+                            radix = 16;
+                            break;
+                        case 'u':
+                            radix = 10;
+                            break;
+                        default:
+                            /* MISRA C-2012 Rule 16.4 */
+                            break;
+                    }
+                    vlen  = DbgConsole_ConvertRadixNumToString(vstr, &uval, 0, (int32_t)radix, use_caps);
+                    vstrp = &vstr[vlen];
+#if PRINTF_ADVANCED_ENABLE
+                    if (0U != (flags_used & (uint32_t)kPRINTF_Zero))
+                    {
+                        DbgConsole_PrintfPaddingCharacter('0', vlen, (int32_t)field_width, &count, func_ptr);
+                        vlen = (int32_t)field_width;
+                    }
+                    else
+                    {
+                        if (0U == (flags_used & (uint32_t)kPRINTF_Minus))
+                        {
+                            DbgConsole_PrintfPaddingCharacter(' ', vlen, (int32_t)field_width, &count, func_ptr);
+                        }
+                    }
+#endif /* PRINTF_ADVANCED_ENABLE */
+                }
+#if !PRINTF_ADVANCED_ENABLE
+                DbgConsole_PrintfPaddingCharacter(' ', vlen, (int32_t)field_width, &count, func_ptr);
+#endif /* !PRINTF_ADVANCED_ENABLE */
+                if (vstrp != NULL)
+                {
+                    while ('\0' != *vstrp)
+                    {
+                        (void)func_ptr(*vstrp--);
+                        count++;
+                    }
+                }
+#if PRINTF_ADVANCED_ENABLE
+                if (0U != (flags_used & (uint32_t)kPRINTF_Minus))
+                {
+                    DbgConsole_PrintfPaddingCharacter(' ', vlen, (int32_t)field_width, &count, func_ptr);
+                }
+#endif /* PRINTF_ADVANCED_ENABLE */
+            }
+            else if (c == 'c')
+            {
+                cval = (int32_t)va_arg(ap, uint32_t);
+                (void)func_ptr(cval);
+                count++;
+            }
+            else if (c == 's')
+            {
+                sval = (char *)va_arg(ap, char *);
+                if (NULL != sval)
+                {
+#if PRINTF_ADVANCED_ENABLE
+                    if (valid_precision_width)
+                    {
+                        vlen = (int32_t)precision_width;
+                    }
+                    else
+                    {
+                        vlen = (int32_t)strlen(sval);
+                    }
+#else
+                    vlen = (int32_t)strlen(sval);
+#endif /* PRINTF_ADVANCED_ENABLE */
+#if PRINTF_ADVANCED_ENABLE
+                    if (0U == (flags_used & (uint32_t)kPRINTF_Minus))
+#endif /* PRINTF_ADVANCED_ENABLE */
+                    {
+                        DbgConsole_PrintfPaddingCharacter(' ', vlen, (int32_t)field_width, &count, func_ptr);
+                    }
+
+#if PRINTF_ADVANCED_ENABLE
+                    if (valid_precision_width)
+                    {
+                        while (('\0' != *sval) && (vlen > 0))
+                        {
+                            (void)func_ptr(*sval++);
+                            count++;
+                            vlen--;
+                        }
+                        /* In case that vlen sval is shorter than vlen */
+                        vlen = (int32_t)precision_width - vlen;
+                    }
+                    else
+                    {
+#endif /* PRINTF_ADVANCED_ENABLE */
+                        while ('\0' != *sval)
+                        {
+                            (void)func_ptr(*sval++);
+                            count++;
+                        }
+#if PRINTF_ADVANCED_ENABLE
+                    }
+#endif /* PRINTF_ADVANCED_ENABLE */
+
+#if PRINTF_ADVANCED_ENABLE
+                    if (0U != (flags_used & (uint32_t)kPRINTF_Minus))
+                    {
+                        DbgConsole_PrintfPaddingCharacter(' ', vlen, (int32_t)field_width, &count, func_ptr);
+                    }
+#endif /* PRINTF_ADVANCED_ENABLE */
+                }
+            }
+            else
+            {
+                (void)func_ptr(c);
+                count++;
+            }
+        }
+        p++;
+    }
+    return count;
+}
+
+/*!
+ * @brief Converts an input line of ASCII characters based upon a provided
+ * string format.
+ *
+ * @param[in] line_ptr The input line of ASCII data.
+ * @param[in] format   Format first points to the format string.
+ * @param[in] args_ptr The list of parameters.
+ *
+ * @return Number of input items converted and assigned.
+ * @retval IO_EOF When line_ptr is empty string "".
+ */
+static int DbgConsole_ScanfFormattedData(const char *line_ptr, char *format, va_list args_ptr)
+{
+    uint8_t base;
+    int8_t neg;
+    /* Identifier for the format string. */
+    char *c = format;
+    char temp;
+    char *buf;
+    /* Flag telling the conversion specification. */
+    uint32_t flag = 0;
+    /* Filed width for the matching input streams. */
+    uint32_t field_width;
+    /* How many arguments are assigned except the suppress. */
+    uint32_t nassigned = 0;
+    bool match_failure = false;
+    /* How many characters are read from the input streams. */
+    uint32_t n_decode = 0;
+
+    int32_t val;
+
+    const char *s;
+    /* Identifier for the input string. */
+    const char *p = line_ptr;
+
+#if SCANF_FLOAT_ENABLE
+    double fnum = 0.0;
+#endif /* SCANF_FLOAT_ENABLE */
+
+    /* Return EOF error before any conversion. */
+    if (*p == '\0')
+    {
+        return -1;
+    }
+
+    /* Decode directives. */
+    while (('\0' != (*c)) && ('\0' != (*p)))
+    {
+        /* Ignore all white-spaces in the format strings. */
+        if (0U != DbgConsole_ScanIgnoreWhiteSpace((const char **)(void *)&c))
+        {
+            n_decode += DbgConsole_ScanIgnoreWhiteSpace(&p);
+        }
+        else if ((*c != '%') || ((*c == '%') && (*(c + 1) == '%')))
+        {
+            /* Ordinary characters. */
+            c++;
+            if (*p == *c)
+            {
+                n_decode++;
+                p++;
+                c++;
+            }
+            else
+            {
+                /* Match failure. Misalignment with C99, the unmatched characters need to be pushed back to stream.
+                 * However, it is deserted now. */
+                break;
+            }
+        }
+        else
+        {
+            /* convernsion specification */
+            c++;
+            /* Reset. */
+            flag        = 0;
+            field_width = 0;
+            base        = 0;
+
+            /* Loop to get full conversion specification. */
+            while (('\0' != *c) && (0U == (flag & (uint32_t)kSCANF_DestMask)))
+            {
+                switch (*c)
+                {
+#if SCANF_ADVANCED_ENABLE
+                    case '*':
+                        if (0U != (flag & (uint32_t)kSCANF_Suppress))
+                        {
+                            /* Match failure. */
+                            match_failure = true;
+                            break;
+                        }
+                        flag |= (uint32_t)kSCANF_Suppress;
+                        c++;
+                        break;
+                    case 'h':
+                        if (0U != (flag & (uint32_t)kSCANF_LengthMask))
+                        {
+                            /* Match failure. */
+                            match_failure = true;
+                            break;
+                        }
+
+                        if (c[1] == 'h')
+                        {
+                            flag |= (uint32_t)kSCANF_LengthChar;
+                            c++;
+                        }
+                        else
+                        {
+                            flag |= (uint32_t)kSCANF_LengthShortInt;
+                        }
+                        c++;
+                        break;
+                    case 'l':
+                        if (0U != (flag & (uint32_t)kSCANF_LengthMask))
+                        {
+                            /* Match failure. */
+                            match_failure = true;
+                            break;
+                        }
+
+                        if (c[1] == 'l')
+                        {
+                            flag |= (uint32_t)kSCANF_LengthLongLongInt;
+                            c++;
+                        }
+                        else
+                        {
+                            flag |= (uint32_t)kSCANF_LengthLongInt;
+                        }
+                        c++;
+                        break;
+#endif /* SCANF_ADVANCED_ENABLE */
+#if SCANF_FLOAT_ENABLE
+                    case 'L':
+                        if (flag & (uint32_t)kSCANF_LengthMask)
+                        {
+                            /* Match failure. */
+                            match_failure = true;
+                            break;
+                        }
+                        flag |= (uint32_t)kSCANF_LengthLongLongDouble;
+                        c++;
+                        break;
+#endif /* SCANF_FLOAT_ENABLE */
+                    case '0':
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                    case '9':
+                        if (0U != field_width)
+                        {
+                            /* Match failure. */
+                            match_failure = true;
+                            break;
+                        }
+                        do
+                        {
+                            field_width = field_width * 10U + ((uint32_t)*c - (uint32_t)'0');
+                            c++;
+                        } while ((*c >= '0') && (*c <= '9'));
+                        break;
+                    case 'd':
+                        base = 10;
+                        flag |= (uint32_t)kSCANF_TypeSinged;
+                        flag |= (uint32_t)kSCANF_DestInt;
+                        c++;
+                        break;
+                    case 'u':
+                        base = 10;
+                        flag |= (uint32_t)kSCANF_DestInt;
+                        c++;
+                        break;
+                    case 'o':
+                        base = 8;
+                        flag |= (uint32_t)kSCANF_DestInt;
+                        c++;
+                        break;
+                    case 'x':
+                    case 'X':
+                        base = 16;
+                        flag |= (uint32_t)kSCANF_DestInt;
+                        c++;
+                        break;
+                    case 'i':
+                        base = 0;
+                        flag |= (uint32_t)kSCANF_DestInt;
+                        c++;
+                        break;
+#if SCANF_FLOAT_ENABLE
+                    case 'a':
+                    case 'A':
+                    case 'e':
+                    case 'E':
+                    case 'f':
+                    case 'F':
+                    case 'g':
+                    case 'G':
+                        flag |= kSCANF_DestFloat;
+                        c++;
+                        break;
+#endif /* SCANF_FLOAT_ENABLE */
+                    case 'c':
+                        flag |= (uint32_t)kSCANF_DestChar;
+                        if (0U == field_width)
+                        {
+                            field_width = 1;
+                        }
+                        c++;
+                        break;
+                    case 's':
+                        flag |= (uint32_t)kSCANF_DestString;
+                        c++;
+                        break;
+                    default:
+                        /* Match failure. */
+                        match_failure = true;
+                        break;
+                }
+
+                /* Match failure. */
+                if (match_failure)
+                {
+                    return (int)nassigned;
+                }
+            }
+
+            if (0U == (flag & (uint32_t)kSCANF_DestMask))
+            {
+                /* Format strings are exhausted. */
+                return (int)nassigned;
+            }
+
+            if (0U == field_width)
+            {
+                /* Large than length of a line. */
+                field_width = 99;
+            }
+
+            /* Matching strings in input streams and assign to argument. */
+            switch (flag & (uint32_t)kSCANF_DestMask)
+            {
+                case (uint32_t)kSCANF_DestChar:
+                    s   = (const char *)p;
+                    buf = va_arg(args_ptr, char *);
+                    while (((field_width--) > 0U) && ('\0' != *p))
+                    {
+                        if (0U == (flag & (uint32_t)kSCANF_Suppress))
+                        {
+                            *buf++ = *p++;
+                        }
+                        else
+                        {
+                            p++;
+                        }
+                        n_decode++;
+                    }
+
+                    if ((0U == (flag & (uint32_t)kSCANF_Suppress)) && (s != p))
+                    {
+                        nassigned++;
+                    }
+                    break;
+                case (uint32_t)kSCANF_DestString:
+                    n_decode += DbgConsole_ScanIgnoreWhiteSpace(&p);
+                    s   = p;
+                    buf = va_arg(args_ptr, char *);
+                    while ((field_width-- > 0U) && (*p != '\0') && (*p != ' ') && (*p != '\t') && (*p != '\n') &&
+                           (*p != '\r') && (*p != '\v') && (*p != '\f'))
+                    {
+                        if (0U != (flag & (uint32_t)kSCANF_Suppress))
+                        {
+                            p++;
+                        }
+                        else
+                        {
+                            *buf++ = *p++;
+                        }
+                        n_decode++;
+                    }
+
+                    if ((0U == (flag & (uint32_t)kSCANF_Suppress)) && (s != p))
+                    {
+                        /* Add NULL to end of string. */
+                        *buf = '\0';
+                        nassigned++;
+                    }
+                    break;
+                case (uint32_t)kSCANF_DestInt:
+                    n_decode += DbgConsole_ScanIgnoreWhiteSpace(&p);
+                    s   = p;
+                    val = 0;
+                    if ((base == 0U) || (base == 16U))
+                    {
+                        if ((s[0] == '0') && ((s[1] == 'x') || (s[1] == 'X')))
+                        {
+                            base = 16U;
+                            if (field_width >= 1U)
+                            {
+                                p += 2;
+                                n_decode += 2U;
+                                field_width -= 2U;
+                            }
+                        }
+                    }
+
+                    if (base == 0U)
+                    {
+                        if (s[0] == '0')
+                        {
+                            base = 8U;
+                        }
+                        else
+                        {
+                            base = 10U;
+                        }
+                    }
+
+                    neg = 1;
+                    switch (*p)
+                    {
+                        case '-':
+                            neg = -1;
+                            n_decode++;
+                            p++;
+                            field_width--;
+                            break;
+                        case '+':
+                            neg = 1;
+                            n_decode++;
+                            p++;
+                            field_width--;
+                            break;
+                        default:
+                            /* MISRA C-2012 Rule 16.4 */
+                            break;
+                    }
+
+                    while ((field_width-- > 0U) && (*p > '\0'))
+                    {
+                        if ((*p <= '9') && (*p >= '0'))
+                        {
+                            temp = *p - '0' + (char)0;
+                        }
+                        else if ((*p <= 'f') && (*p >= 'a'))
+                        {
+                            temp = *p - 'a' + (char)10;
+                        }
+                        else if ((*p <= 'F') && (*p >= 'A'))
+                        {
+                            temp = *p - 'A' + (char)10;
+                        }
+                        else
+                        {
+                            temp = (char)base;
+                        }
+
+                        if ((uint8_t)temp >= base)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            val = (int32_t)base * val + (int32_t)temp;
+                        }
+                        p++;
+                        n_decode++;
+                    }
+                    val *= neg;
+                    if (0U == (flag & (uint32_t)kSCANF_Suppress))
+                    {
+#if SCANF_ADVANCED_ENABLE
+                        switch (flag & (uint32_t)kSCANF_LengthMask)
+                        {
+                            case (uint32_t)kSCANF_LengthChar:
+                                if (0U != (flag & (uint32_t)kSCANF_TypeSinged))
+                                {
+                                    *va_arg(args_ptr, signed char *) = (signed char)val;
+                                }
+                                else
+                                {
+                                    *va_arg(args_ptr, unsigned char *) = (unsigned char)val;
+                                }
+                                break;
+                            case (uint32_t)kSCANF_LengthShortInt:
+                                if (0U != (flag & (uint32_t)kSCANF_TypeSinged))
+                                {
+                                    *va_arg(args_ptr, signed short *) = (signed short)val;
+                                }
+                                else
+                                {
+                                    *va_arg(args_ptr, unsigned short *) = (unsigned short)val;
+                                }
+                                break;
+                            case (uint32_t)kSCANF_LengthLongInt:
+                                if (0U != (flag & (uint32_t)kSCANF_TypeSinged))
+                                {
+                                    *va_arg(args_ptr, signed long int *) = (signed long int)val;
+                                }
+                                else
+                                {
+                                    *va_arg(args_ptr, unsigned long int *) = (unsigned long int)val;
+                                }
+                                break;
+                            case (uint32_t)kSCANF_LengthLongLongInt:
+                                if (0U != (flag & (uint32_t)kSCANF_TypeSinged))
+                                {
+                                    *va_arg(args_ptr, signed long long int *) = (signed long long int)val;
+                                }
+                                else
+                                {
+                                    *va_arg(args_ptr, unsigned long long int *) = (unsigned long long int)val;
+                                }
+                                break;
+                            default:
+                                /* The default type is the type int. */
+                                if (0U != (flag & (uint32_t)kSCANF_TypeSinged))
+                                {
+                                    *va_arg(args_ptr, signed int *) = (signed int)val;
+                                }
+                                else
+                                {
+                                    *va_arg(args_ptr, unsigned int *) = (unsigned int)val;
+                                }
+                                break;
+                        }
+#else
+                        /* The default type is the type int. */
+                        if (0U != (flag & (uint32_t)kSCANF_TypeSinged))
+                        {
+                            *va_arg(args_ptr, signed int *) = (signed int)val;
+                        }
+                        else
+                        {
+                            *va_arg(args_ptr, unsigned int *) = (unsigned int)val;
+                        }
+#endif /* SCANF_ADVANCED_ENABLE */
+                        nassigned++;
+                    }
+                    break;
+#if SCANF_FLOAT_ENABLE
+                case (uint32_t)kSCANF_DestFloat:
+                    n_decode += DbgConsole_ScanIgnoreWhiteSpace(&p);
+                    fnum = strtod(p, (char **)&s);
+
+                    if ((fnum >= HUGE_VAL) || (fnum <= -HUGE_VAL))
+                    {
+                        break;
+                    }
+
+                    n_decode += (int)(s) - (int)(p);
+                    p = s;
+                    if (0U == (flag & (uint32_t)kSCANF_Suppress))
+                    {
+                        if (0U != (flag & (uint32_t)kSCANF_LengthLongLongDouble))
+                        {
+                            *va_arg(args_ptr, double *) = fnum;
+                        }
+                        else
+                        {
+                            *va_arg(args_ptr, float *) = (float)fnum;
+                        }
+                        nassigned++;
+                    }
+                    break;
+#endif /* SCANF_FLOAT_ENABLE */
+                default:
+                    /* Match failure. */
+                    match_failure = true;
+                    break;
+            }
+
+            /* Match failure. */
+            if (match_failure)
+            {
+                return (int)nassigned;
+            }
+        }
+    }
+    return (int)nassigned;
+}
 #endif /* SDK_DEBUGCONSOLE */
 
 /*************Code to support toolchain's printf, scanf *******************************/
@@ -997,55 +1589,60 @@ int DbgConsole_Getchar(void)
 #if (defined(__ICCARM__))
 #if defined(SDK_DEBUGCONSOLE_UART)
 #pragma weak __write
+size_t __write(int handle, const unsigned char *buffer, size_t size);
 size_t __write(int handle, const unsigned char *buffer, size_t size)
 {
-    if (buffer == 0)
+    size_t ret;
+    if (NULL == buffer)
     {
         /*
          * This means that we should flush internal buffers.  Since we don't we just return.
          * (Remember, "handle" == -1 means that all handles should be flushed.)
          */
-        return 0;
+        ret = (size_t)0;
     }
-
-    /* This function only writes to "standard out" and "standard err" for all other file handles it returns failure. */
-    if ((handle != 1) && (handle != 2))
+    else if ((handle != 1) && (handle != 2))
     {
-        return ((size_t)-1);
+        /* This function only writes to "standard out" and "standard err" for all other file handles it returns failure.
+         */
+        ret = (size_t)-1;
     }
-
-    /* Send data. */
-    DbgConsole_SendDataReliable((uint8_t *)buffer, size);
-
-    return size;
+    else if (kSerialPort_None == s_debugConsole.type)
+    {
+        /* Do nothing if the debug UART is not initialized. */
+        ret = (size_t)-1;
+    }
+    else
+    {
+        /* Send data. */
+        (void)s_debugConsole.putChar((hal_uart_handle_t)&s_debugConsole.uartHandleBuffer[0], buffer, size);
+        ret = size;
+    }
+    return ret;
 }
 
 #pragma weak __read
+size_t __read(int handle, unsigned char *buffer, size_t size);
 size_t __read(int handle, unsigned char *buffer, size_t size)
 {
-    uint8_t ch     = 0U;
-    int actualSize = 0U;
-
+    size_t ret;
     /* This function only reads from "standard in", for all other file  handles it returns failure. */
     if (handle != 0)
     {
-        return ((size_t)-1);
+        ret = ((size_t)-1);
     }
-
-    /* Receive data.*/
-    for (; size > 0; size--)
+    else if (kSerialPort_None == s_debugConsole.type)
     {
-        DbgConsole_ReadCharacter(&ch);
-        if (ch == 0)
-        {
-            break;
-        }
-
-        *buffer++ = ch;
-        actualSize++;
+        /* Do nothing if the debug UART is not initialized. */
+        ret = ((size_t)-1);
     }
-
-    return actualSize;
+    else
+    {
+        /* Receive data. */
+        (void)s_debugConsole.getChar((hal_uart_handle_t)&s_debugConsole.uartHandleBuffer[0], buffer, size);
+        ret = size;
+    }
+    return ret;
 }
 #endif /* SDK_DEBUGCONSOLE_UART */
 
@@ -1055,7 +1652,7 @@ size_t __read(int handle, unsigned char *buffer, size_t size)
 #if (defined(SDK_DEBUGCONSOLE_UART))
 int __attribute__((weak)) __sys_write(int handle, char *buffer, int size)
 {
-    if (buffer == 0)
+    if (NULL == buffer)
     {
         /* return -1 if error. */
         return -1;
@@ -1067,8 +1664,14 @@ int __attribute__((weak)) __sys_write(int handle, char *buffer, int size)
         return -1;
     }
 
+    /* Do nothing if the debug UART is not initialized. */
+    if (kSerialPort_None == s_debugConsole.type)
+    {
+        return -1;
+    }
+
     /* Send data. */
-    DbgConsole_SendDataReliable((uint8_t *)buffer, size);
+    (void)s_debugConsole.putChar((hal_uart_handle_t)&s_debugConsole.uartHandleBuffer[0], (uint8_t *)buffer, size);
 
     return 0;
 }
@@ -1076,13 +1679,18 @@ int __attribute__((weak)) __sys_write(int handle, char *buffer, int size)
 int __attribute__((weak)) __sys_readc(void)
 {
     char tmp;
+    /* Do nothing if the debug UART is not initialized. */
+    if (kSerialPort_None == s_debugConsole.type)
+    {
+        return -1;
+    }
 
     /* Receive data. */
-    DbgConsole_ReadCharacter((uint8_t *)&tmp);
+    s_debugConsole.getChar((hal_uart_handle_t)&s_debugConsole.uartHandleBuffer[0], (uint8_t *)&tmp, sizeof(tmp));
 
     return tmp;
 }
-#endif
+#endif /* SDK_DEBUGCONSOLE_UART */
 
 /* These function fputc and fgetc is used to support KEIL toolchain to printf and scanf*/
 #elif defined(__CC_ARM) || defined(__ARMCC_VERSION)
@@ -1107,18 +1715,29 @@ FILE __stdin;
 #pragma weak fputc
 int fputc(int ch, FILE *f)
 {
+    /* Do nothing if the debug UART is not initialized. */
+    if (kSerialPort_None == s_debugConsole.type)
+    {
+        return -1;
+    }
+
     /* Send data. */
-    return DbgConsole_SendDataReliable((uint8_t *)(&ch), 1);
+    (void)s_debugConsole.putChar((hal_uart_handle_t)&s_debugConsole.uartHandleBuffer[0], (uint8_t *)(&ch), 1);
+    return 1;
 }
 
 #pragma weak fgetc
 int fgetc(FILE *f)
 {
     char ch;
+    /* Do nothing if the debug UART is not initialized. */
+    if (kSerialPort_None == s_debugConsole.type)
+    {
+        return -1;
+    }
 
     /* Receive data. */
-    DbgConsole_ReadCharacter((uint8_t *)&ch);
-
+    s_debugConsole.getChar((hal_uart_handle_t)&s_debugConsole.uartHandleBuffer[0], (uint8_t *)(&ch), 1);
     return ch;
 }
 
@@ -1140,7 +1759,8 @@ void _sys_exit(int returncode)
 void _ttywrch(int ch)
 {
     char ench = ch;
-    DbgConsole_SendDataReliable((uint8_t *)(&ench), 1);
+    /* Send data. */
+    s_debugConsole.putChar((hal_uart_handle_t)&s_debugConsole.uartHandleBuffer[0], (uint8_t *)(&ench), 1);
 }
 
 char *_sys_command_string(char *cmd, int len)
@@ -1149,15 +1769,14 @@ char *_sys_command_string(char *cmd, int len)
 }
 #endif /* SDK_DEBUGCONSOLE_UART */
 
-/* These function __write and __read is used to support ARM_GCC, KDS, Atollic toolchains to printf and scanf*/
-#elif (defined(__GNUC__))
+/* These function __write_r and __read_r are used to support Xtensa Clang toolchain to printf and scanf */
+#elif defined(__XTENSA__) && defined(__XT_CLANG__)
+#if defined(SDK_DEBUGCONSOLE_UART)
 
-#if ((defined(__GNUC__) && (!defined(__MCUXPRESSO)) && (defined(SDK_DEBUGCONSOLE_UART))) || \
-     (defined(__MCUXPRESSO) && (defined(SDK_DEBUGCONSOLE_UART))))
-int __attribute__((weak)) _write(int handle, char *buffer, int size);
-int __attribute__((weak)) _write(int handle, char *buffer, int size)
+int __attribute__((weak)) _write_r(void *ptr, int handle, char *buffer, int size);
+int __attribute__((weak)) _write_r(void *ptr, int handle, char *buffer, int size)
 {
-    if (buffer == NULL)
+    if (NULL == buffer)
     {
         /* return -1 if error. */
         return -1;
@@ -1169,8 +1788,67 @@ int __attribute__((weak)) _write(int handle, char *buffer, int size)
         return -1;
     }
 
+    /* Do nothing if the debug UART is not initialized. */
+    if (kSerialPort_None == s_debugConsole.type)
+    {
+        return -1;
+    }
+
     /* Send data. */
-    (void)DbgConsole_SendDataReliable((uint8_t *)buffer, (size_t)size);
+    (void)s_debugConsole.putChar((hal_uart_handle_t)&s_debugConsole.uartHandleBuffer[0], (uint8_t *)buffer, size);
+
+    return size;
+}
+
+int __attribute__((weak)) _read_r(void *ptr, int handle, char *buffer, int size);
+int __attribute__((weak)) _read_r(void *ptr, int handle, char *buffer, int size)
+{
+    /* This function only reads from "standard in", for all other file handles it returns failure. */
+    if (handle != 0)
+    {
+        return -1;
+    }
+
+    /* Do nothing if the debug UART is not initialized. */
+    if (kSerialPort_None == s_debugConsole.type)
+    {
+        return -1;
+    }
+
+    /* Receive data. */
+    (void)s_debugConsole.getChar((hal_uart_handle_t)&s_debugConsole.uartHandleBuffer[0], (uint8_t *)buffer, size);
+    return size;
+}
+#endif /* SDK_DEBUGCONSOLE_UART */
+
+/* These function __write and __read is used to support ARM_GCC, KDS, Atollic toolchains to printf and scanf*/
+#elif (defined(__GNUC__))
+
+#if ((defined(__GNUC__) && (!defined(__MCUXPRESSO)) && (defined(SDK_DEBUGCONSOLE_UART))) || \
+     (defined(__MCUXPRESSO) && (defined(SDK_DEBUGCONSOLE_UART))))
+int __attribute__((weak)) _write(int handle, char *buffer, int size);
+int __attribute__((weak)) _write(int handle, char *buffer, int size)
+{
+    if (NULL == buffer)
+    {
+        /* return -1 if error. */
+        return -1;
+    }
+
+    /* This function only writes to "standard out" and "standard err" for all other file handles it returns failure. */
+    if ((handle != 1) && (handle != 2))
+    {
+        return -1;
+    }
+
+    /* Do nothing if the debug UART is not initialized. */
+    if (kSerialPort_None == s_debugConsole.type)
+    {
+        return -1;
+    }
+
+    /* Send data. */
+    (void)s_debugConsole.putChar((hal_uart_handle_t)&s_debugConsole.uartHandleBuffer[0], (uint8_t *)buffer, size);
 
     return size;
 }
@@ -1178,33 +1856,21 @@ int __attribute__((weak)) _write(int handle, char *buffer, int size)
 int __attribute__((weak)) _read(int handle, char *buffer, int size);
 int __attribute__((weak)) _read(int handle, char *buffer, int size)
 {
-    uint8_t ch     = 0U;
-    int actualSize = 0;
-
     /* This function only reads from "standard in", for all other file handles it returns failure. */
     if (handle != 0)
     {
         return -1;
     }
 
-    /* Receive data. */
-    for (; size > 0; size--)
+    /* Do nothing if the debug UART is not initialized. */
+    if (kSerialPort_None == s_debugConsole.type)
     {
-        if (DbgConsole_ReadCharacter(&ch) < 0)
-        {
-            break;
-        }
-
-        *buffer++ = (char)ch;
-        actualSize++;
-
-        if ((ch == 0U) || (ch == (uint8_t)'\n') || (ch == (uint8_t)'\r'))
-        {
-            break;
-        }
+        return -1;
     }
 
-    return (actualSize > 0) ? actualSize : -1;
+    /* Receive data. */
+    (void)s_debugConsole.getChar((hal_uart_handle_t)&s_debugConsole.uartHandleBuffer[0], (uint8_t *)buffer, size);
+    return size;
 }
 #endif
 

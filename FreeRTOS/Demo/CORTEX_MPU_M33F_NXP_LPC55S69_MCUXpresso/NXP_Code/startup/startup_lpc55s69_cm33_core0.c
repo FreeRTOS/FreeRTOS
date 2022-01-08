@@ -1,10 +1,10 @@
 //*****************************************************************************
 // LPC55S69_cm33_core0 startup code for use with MCUXpresso IDE
 //
-// Version : 230919
+// Version : 010621
 //*****************************************************************************
 //
-// Copyright 2016-2019 NXP
+// Copyright 2016-2021 NXP
 // All rights reserved.
 //
 // SPDX-License-Identifier: BSD-3-Clause
@@ -44,6 +44,7 @@ extern "C" {
 // by the linker when "Enable Code Read Protect" selected.
 // See crp.h header for more information
 //*****************************************************************************
+
 //*****************************************************************************
 // Declaration of external SystemInit function
 //*****************************************************************************
@@ -224,6 +225,7 @@ extern void _vStackTop(void);
 // External declaration for LPC MCU vector table checksum from  Linker Script
 //*****************************************************************************
 WEAK extern void __valid_user_code_checksum();
+extern void _vStackBase(void);
 
 //*****************************************************************************
 //*****************************************************************************
@@ -234,6 +236,9 @@ WEAK extern void __valid_user_code_checksum();
 // The vector table.
 // This relies on the linker script to place at correct location in memory.
 //*****************************************************************************
+
+
+
 extern void (* const g_pfnVectors[])(void);
 extern void * __Vectors __attribute__ ((alias ("g_pfnVectors")));
 
@@ -319,6 +324,7 @@ void (* const g_pfnVectors[])(void) = {
     DMA1_IRQHandler,                 // 74: DMA1 interrupt
     FLEXCOMM8_IRQHandler,            // 75: Flexcomm Interface 8 (SPI, , FLEXCOMM)
 
+
 }; /* End of g_pfnVectors */
 
 //*****************************************************************************
@@ -361,11 +367,23 @@ extern unsigned int __bss_section_table_end;
 // Sets up a simple runtime environment and initializes the C/C++
 // library.
 //*****************************************************************************
-__attribute__ ((section(".after_vectors.reset")))
+__attribute__ ((naked, section(".after_vectors.reset")))
 void ResetISR(void) {
+
 
     // Disable interrupts
     __asm volatile ("cpsid i");
+
+    // Config VTOR & MSPLIM register
+    __asm volatile ("LDR R0, =0xE000ED08  \n"
+                    "STR %0, [R0]         \n"
+                    "LDR R1, [%0]         \n"
+                    "MSR MSP, R1          \n"
+                    "MSR MSPLIM, %1       \n"
+                    :
+                    : "r"(g_pfnVectors), "r"(_vStackBase)
+                    : "r0", "r1");
+
 
 
 

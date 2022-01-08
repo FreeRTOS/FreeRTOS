@@ -129,10 +129,15 @@ def process(folder, files):
         pathlib.Path(new_config_folder).mkdir(exist_ok=True, parents=True)
         harness_copied = False
         for file in files:
+            # Copy cbmc proof harness into configuration directory
             if file.endswith("harness.c"):
                 shutil.copy(os.path.join(folder, file),
                             os.path.join(new_config_folder, file))
                 harness_copied = True
+            # Copy cbmc-viewer configuration file into configuration directory
+            if file == "cbmc-viewer.json":
+                shutil.copy(os.path.join(folder, file),
+                            os.path.join(new_config_folder, file))
 
         if not harness_copied:
             LOGGER.error("Could not find a harness in folder %s.", folder)

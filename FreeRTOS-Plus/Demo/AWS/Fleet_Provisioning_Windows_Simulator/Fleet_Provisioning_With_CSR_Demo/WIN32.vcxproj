@@ -560,10 +560,10 @@
     <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborpretty.c" />
     <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborpretty_stdio.c" />
     <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborvalidation.c" />
+    <ClCompile Include="..\..\Mqtt_Demo_Helpers\mqtt_pkcs11_demo_helpers.c" />
     <ClCompile Include="DemoTasks\FleetProvisioningDemoExample.c" />
     <ClCompile Include="tinycbor_serializer.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="mqtt_operations.c" />
     <ClCompile Include="pkcs11_operations.c" />
   </ItemGroup>
   <ItemGroup>
@@ -695,6 +695,7 @@
     <ClInclude Include="..\..\..\..\ThirdParty\tinycbor\src\compilersupport_p.h" />
     <ClInclude Include="..\..\..\..\ThirdParty\tinycbor\src\tinycbor-version.h" />
     <ClInclude Include="..\..\..\..\ThirdParty\tinycbor\src\utf8_p.h" />
+    <ClInclude Include="..\..\Mqtt_Demo_Helpers\mqtt_pkcs11_demo_helpers.h" />
     <ClInclude Include="core_pkcs11_config.h" />
     <ClInclude Include="fleet_provisioning_config.h" />
     <ClInclude Include="tinycbor_serializer.h" />
@@ -703,7 +704,6 @@
     <ClInclude Include="FreeRTOSConfig.h" />
     <ClInclude Include="FreeRTOSIPConfig.h" />
     <ClInclude Include="core_mqtt_config.h" />
-    <ClInclude Include="mqtt_operations.h" />
     <ClInclude Include="pkcs11_operations.h" />
   </ItemGroup>
   <ItemGroup>

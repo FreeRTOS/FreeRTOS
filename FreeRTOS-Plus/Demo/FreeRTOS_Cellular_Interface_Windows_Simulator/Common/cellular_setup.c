@@ -202,7 +202,7 @@ bool setupCellular( void )
 
             if( timeoutCount >= timeoutCountLimit )
             {
-                /* Return timeout to indicate network is not registerted within
+                /* Return timeout to indicate network is not registered within
                  * CELLULAR_PDN_CONNECT_TIMEOUT. */
                 cellularStatus = CELLULAR_TIMEOUT;
                 configPRINTF( ( ">>>  Cellular module can't be registered within CELLULAR_PDN_CONNECT_TIMEOUT <<<\r\n" ) );

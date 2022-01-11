@@ -150,7 +150,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  */
 
 /*
- * Reboot Sara R4 cellular modem with AT+CFUN=15 in module init.
+ * Reboot Sara R4 cellular modem in module init function.
  */
 #define  CELLULAR_CONFIG_SARA_R4_REBOOT_ON_INIT
 

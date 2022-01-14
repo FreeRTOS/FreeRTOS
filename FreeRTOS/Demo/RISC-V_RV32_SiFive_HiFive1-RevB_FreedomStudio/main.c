@@ -118,7 +118,6 @@ int main( void )
 	#endif
 }
 /*-----------------------------------------------------------*/
-
 static void prvSetupHardware( void )
 {
 struct metal_cpu *pxCPU;
@@ -245,6 +244,22 @@ volatile uint32_t ulMEPC = 0UL, ulMCAUSE = 0UL, ulPLICPending0Register = 0UL, ul
 	/* Force an assert as this function has not been implemented as the demo
 	does not use external interrupts. */
 	configASSERT( metal_cpu_get( mainHART_0 ) == 0x00 );
+}
+/*-----------------------------------------------------------*/
+
+void freertos_risc_v_application_interrupt_handler( uint32_t ulMcause )
+{
+	( void )ulMcause;
+
+	handle_trap();
+}
+/*-----------------------------------------------------------*/
+
+void freertos_risc_v_application_exception_handler( uint32_t ulMcause )
+{
+	( void )ulMcause;
+
+	handle_trap();
 }
 /*-----------------------------------------------------------*/
 

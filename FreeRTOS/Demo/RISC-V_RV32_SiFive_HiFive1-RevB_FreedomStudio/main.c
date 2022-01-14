@@ -59,7 +59,7 @@
 or 0 to run the more comprehensive test and demo application. */
 #define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
-/* Set to 0 to use vectored mode.
+/* Set to 1 to use direct mode and set to 0 to use vectored mode.
 
 VECTOR MODE=Direct --> all traps into machine mode cause the pc to be set to the
 vector base address (BASE) in the mtvec register.
@@ -68,7 +68,7 @@ VECTOR MODE=Vectored --> all synchronous exceptions into machine mode cause the
 pc to be set to the BASE, whereas interrupts cause the pc to be set to the
 address BASE plus four times the interrupt cause number.
 */
-#define mainVECTOR_MODE_DIRECT	1
+#define mainVECTOR_MODE_DIRECT	0
 
 /* Index to first HART (there is only one). */
 #define mainHART_0 		0
@@ -82,6 +82,8 @@ address BASE plus four times the interrupt cause number.
 /*-----------------------------------------------------------*/
 
 extern void freertos_risc_v_trap_handler( void );
+extern void freertos_vector_table( void );
+
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
  * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
@@ -150,7 +152,11 @@ struct metal_interrupt *pxInterruptController;
 
 	#if( mainVECTOR_MODE_DIRECT == 1 )
 	{
-		__asm__ volatile( "csrw mtvec, %0" :: "r"(freertos_risc_v_trap_handler) );
+		__asm__ volatile( "csrw mtvec, %0" :: "r"( freertos_risc_v_trap_handler ) );
+	}
+	#else
+	{
+		__asm__ volatile( "csrw mtvec, %0" :: "r"( ( uintptr_t )freertos_vector_table | 0x1 ) );
 	}
 	#endif
 

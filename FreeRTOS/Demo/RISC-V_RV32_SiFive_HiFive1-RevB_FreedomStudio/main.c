@@ -59,6 +59,17 @@
 or 0 to run the more comprehensive test and demo application. */
 #define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
+/* Set to 0 to use vectored mode.
+
+VECTOR MODE=Direct --> all traps into machine mode cause the pc to be set to the
+vector base address (BASE) in the mtvec register.
+
+VECTOR MODE=Vectored --> all synchronous exceptions into machine mode cause the
+pc to be set to the BASE, whereas interrupts cause the pc to be set to the
+address BASE plus four times the interrupt cause number.
+*/
+#define mainVECTOR_MODE_DIRECT	1
+
 /* Index to first HART (there is only one). */
 #define mainHART_0 		0
 
@@ -70,6 +81,7 @@ or 0 to run the more comprehensive test and demo application. */
 
 /*-----------------------------------------------------------*/
 
+extern void freertos_risc_v_trap_handler( void );
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
  * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
@@ -135,6 +147,12 @@ struct metal_interrupt *pxInterruptController;
 	pxInterruptController = metal_cpu_interrupt_controller( pxCPU );
 	configASSERT( pxInterruptController );
 	metal_interrupt_init( pxInterruptController );
+
+	#if( mainVECTOR_MODE_DIRECT == 1 )
+	{
+		__asm__ volatile( "csrw mtvec, %0" :: "r"(freertos_risc_v_trap_handler) );
+	}
+	#endif
 
 	/* Set all interrupt enable bits to 0. */
 	mainPLIC_ENABLE_0 = 0UL;

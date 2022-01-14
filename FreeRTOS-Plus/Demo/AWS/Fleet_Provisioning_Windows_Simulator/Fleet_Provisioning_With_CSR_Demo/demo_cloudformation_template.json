@@ -1,11 +1,4 @@
 {
-    "Parameters": {
-        "CertificateId": {
-            "Type": "String",
-            "Description": "Enter the \"certificateId\" of the certificate created using the \"aws iot create-keys-and-certificate\" command.\nFor more information, see the documentation: https://freertos.org/iot-fleet-provisioning/demo.html"
-        }
-    },
-
     "Resources": {
         "FPDemoRole": {
             "Type": "AWS::IAM::Role",
@@ -182,33 +175,6 @@
                                 }
                             ]
                         }
-                    ]
-                }
-            }
-        },
-        "FPAttachPolicy": {
-            "Type": "AWS::IoT::PolicyPrincipalAttachment",
-            "Properties": {
-                "PolicyName": {
-                    "Ref": "FPDemoClaimPolicy"
-                },
-                "Principal": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "arn:aws:iot:",
-                            {
-                                "Ref": "AWS::Region"
-                            },
-                            ":",
-                            {
-                                "Ref": "AWS::AccountId"
-                            },
-                            ":cert/",
-                            {
-                                "Ref": "CertificateId"
-                            }
-                        ]
                     ]
                 }
             }

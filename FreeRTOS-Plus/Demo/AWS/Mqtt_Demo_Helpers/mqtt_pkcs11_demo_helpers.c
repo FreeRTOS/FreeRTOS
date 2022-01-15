@@ -44,8 +44,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-/* Shadow includes */
-#include "mqtt_demo_helpers.h"
+/* Header file include */
+#include "mqtt_pkcs11_demo_helpers.h"
 
 /* MQTT library includes. */
 #include "core_mqtt.h"
@@ -54,7 +54,7 @@
 #include "backoff_algorithm.h"
 
 /* Transport interface implementation include header for TLS. */
-#include "using_mbedtls.h"
+#include "using_mbedtls_pkcs11.h"
 
 /* Demo specific config. */
 #include "demo_config.h"
@@ -69,13 +69,6 @@
 
 #ifndef democonfigROOT_CA_PEM
     #error "Please define the AWS Root CA certificate (democonfigROOT_CA_PEM) in demo_config.h."
-#endif
-#ifndef democonfigCLIENT_PRIVATE_KEY_PEM
-    #error "Please define client private key (democonfigCLIENT_PRIVATE_KEY_PEM) in demo_config.h."
-#endif
-
-#ifndef democonfigCLIENT_CERTIFICATE_PEM
-    #error "Please define client certificate (democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h."
 #endif
 
 #ifndef democonfigMQTT_BROKER_ENDPOINT
@@ -171,14 +164,18 @@
 #define AWS_IOT_METRICS_STRING_LENGTH    ( ( uint16_t ) ( sizeof( AWS_IOT_METRICS_STRING ) - 1 ) )
 
 /**
- * @brief ALPN (Application-Layer Protocol Negotiation) protocol name for AWS IoT MQTT.
+ * @brief ALPN protocol name for AWS IoT MQTT.
  *
- * This will be used if democonfigMQTT_BROKER_PORT is configured as 443 for the AWS IoT MQTT broker.
- * Please see more details about the ALPN protocol for AWS IoT MQTT endpoint
- * in the link below.
+ * This will be used if the democonfigMQTT_BROKER_PORT is configured as 443 for AWS IoT MQTT
+ * broker. Please see more details about the ALPN protocol for AWS IoT MQTT
+ * endpoint in the link below.
  * https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/
+ *
+ * @note OpenSSL requires that the protocol string passed to it for configuration be encoded
+ * with the prefix of 8-bit length information of the string. Thus, the 14 byte (0x0e) length
+ * information is prefixed to the string.
  */
-#define AWS_IOT_MQTT_ALPN                "\x0ex-amzn-mqtt-ca"
+#define mqttopALPN_PROTOCOL_NAME         "\x0ex-amzn-mqtt-ca"
 
 
 /*-----------------------------------------------------------*/
@@ -275,10 +272,14 @@ static int32_t prvGenerateRandomNumber();
  * timeout value is reached or the number of attempts are exhausted.
  *
  * @param[out] pxNetworkContext The output parameter to return the created network context.
+ * @param[in] pcClientCertLabel The client certificate PKCS #11 label to use.
+ * @param[in] pcPrivateKeyLabel The private key PKCS #11 label for the client certificate.
  *
  * @return The status of the final connection attempt.
  */
-static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext_t * pxNetworkContext );
+static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext_t * pxNetworkContext,
+                                                                  char * pcClientCertLabel,
+                                                                  char * pcPrivateKeyLabel );
 
 /**
  * @brief Function to get the free index at which an outgoing publish
@@ -339,13 +340,16 @@ static int32_t prvGenerateRandomNumber()
 
 /*-----------------------------------------------------------*/
 
-static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext_t * pxNetworkContext )
+static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext_t * pxNetworkContext,
+                                                                  char * pcClientCertLabel,
+                                                                  char * pcPrivateKeyLabel )
 {
     TlsTransportStatus_t xNetworkStatus = TLS_TRANSPORT_SUCCESS;
     BackoffAlgorithmStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
     BackoffAlgorithmContext_t xReconnectParams = { 0 };
     NetworkCredentials_t xNetworkCredentials = { 0 };
     uint16_t usNextRetryBackOff = 0U;
+    const char * pcAlpn[] = { mqttopALPN_PROTOCOL_NAME, NULL };
 
     /* ALPN protocols must be a NULL-terminated list of strings. Therefore,
      * the first entry will contain the actual ALPN protocol string while the
@@ -357,21 +361,26 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext
     /* Set the credentials for establishing a TLS connection. */
     xNetworkCredentials.pRootCa = ( const unsigned char * ) democonfigROOT_CA_PEM;
     xNetworkCredentials.rootCaSize = sizeof( democonfigROOT_CA_PEM );
-    #ifdef democonfigCLIENT_CERTIFICATE_PEM
-        xNetworkCredentials.pClientCert = ( const unsigned char * ) democonfigCLIENT_CERTIFICATE_PEM;
-        xNetworkCredentials.clientCertSize = sizeof( democonfigCLIENT_CERTIFICATE_PEM );
-        xNetworkCredentials.pPrivateKey = ( const unsigned char * ) democonfigCLIENT_PRIVATE_KEY_PEM;
-        xNetworkCredentials.privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
-    #endif
+    xNetworkCredentials.pClientCertLabel = pcClientCertLabel;
+    xNetworkCredentials.pPrivateKeyLabel = pcPrivateKeyLabel;
 
+    /* AWS IoT requires devices to send the Server Name Indication (SNI)
+     * extension to the Transport Layer Security (TLS) protocol and provide
+     * the complete endpoint address in the host_name field. Details about
+     * SNI for AWS IoT can be found in the link below.
+     * https://docs.aws.amazon.com/iot/latest/developerguide/transport-security.html
+     */
     xNetworkCredentials.disableSni = pdFALSE;
-/* The ALPN string changes depending on whether username/password authentication is used. */
-    #ifdef democonfigCLIENT_USERNAME
-        pcAlpnProtocols[ 0 ] = AWS_IOT_CUSTOM_AUTH_ALPN;
-    #else
-        pcAlpnProtocols[ 0 ] = AWS_IOT_MQTT_ALPN;
-    #endif
-    xNetworkCredentials.pAlpnProtos = pcAlpnProtocols;
+
+    if( democonfigMQTT_BROKER_PORT == 443 )
+    {
+        /* Pass the ALPN protocol name depending on the port being used.
+         * Please see more details about the ALPN protocol for AWS IoT MQTT endpoint
+         * in the link below.
+         * https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/
+         */
+        xNetworkCredentials.pAlpnProtos = pcAlpn;
+    }
 
     /* Initialize reconnect attempts and interval.*/
     BackoffAlgorithm_InitializeParams( &xReconnectParams,
@@ -586,7 +595,9 @@ static BaseType_t xHandlePublishResend( MQTTContext_t * pxMqttContext )
 BaseType_t xEstablishMqttSession( MQTTContext_t * pxMqttContext,
                                   NetworkContext_t * pxNetworkContext,
                                   MQTTFixedBuffer_t * pxNetworkBuffer,
-                                  MQTTEventCallback_t eventCallback )
+                                  MQTTEventCallback_t eventCallback,
+                                  char * pcClientCertLabel,
+                                  char * pcPrivateKeyLabel )
 {
     BaseType_t xReturnStatus = pdTRUE;
     MQTTStatus_t xMQTTStatus;
@@ -600,7 +611,9 @@ BaseType_t xEstablishMqttSession( MQTTContext_t * pxMqttContext,
     /* Initialize the mqtt context. */
     ( void ) memset( pxMqttContext, 0U, sizeof( MQTTContext_t ) );
 
-    if( prvConnectToServerWithBackoffRetries( pxNetworkContext ) != TLS_TRANSPORT_SUCCESS )
+    if( prvConnectToServerWithBackoffRetries( pxNetworkContext,
+                                              pcClientCertLabel,
+                                              pcPrivateKeyLabel ) != TLS_TRANSPORT_SUCCESS )
     {
         /* Log error to indicate connection failure after all
          * reconnect attempts are over. */
@@ -656,7 +669,7 @@ BaseType_t xEstablishMqttSession( MQTTContext_t * pxMqttContext,
              * PINGREQ Packet. */
             xConnectInfo.keepAliveSeconds = mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS;
 
-/* Append metrics when connecting to the AWS IoT Core broker. */
+            /* Append metrics when connecting to the AWS IoT Core broker. */
             #ifdef democonfigCLIENT_USERNAME
                 xConnectInfo.pUserName = CLIENT_USERNAME_WITH_METRICS;
                 xConnectInfo.userNameLength = ( uint16_t ) strlen( CLIENT_USERNAME_WITH_METRICS );

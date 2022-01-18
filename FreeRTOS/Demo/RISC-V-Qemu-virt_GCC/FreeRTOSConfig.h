@@ -67,6 +67,11 @@
 #define configGENERATE_RUN_TIME_STATS	0
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
 
+/* Assert definitions. */
+void vAssertCalled( void );
+#define configASSERT_DEFINED                   1
+#define configASSERT( x )                      do { if ( !(x) ) vAssertCalled(); } while(0)
+
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 			0
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )

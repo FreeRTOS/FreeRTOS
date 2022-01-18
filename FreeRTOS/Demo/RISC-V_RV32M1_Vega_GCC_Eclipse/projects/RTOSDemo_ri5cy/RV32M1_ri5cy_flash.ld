@@ -56,6 +56,13 @@ SECTIONS
   } > m_vector
 
 
+  .trap_vectors : ALIGN(8) {
+      *(.text.freertos_risc_v_trap_handler)
+      *(.text.freertos_risc_v_exception_handler)
+      *(.text.freertos_risc_v_interrupt_handler)
+      *(.text.freertos_risc_v_mtimer_interrupt_handler)
+  } > m_text
+  
   /* The program code and other data goes into internal flash */
   .text :
   {

@@ -69,6 +69,13 @@
 or 0 to run the more comprehensive test and demo application. */
 #define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
+#ifndef mainVECTOR_MODE_DIRECT
+	#define mainVECTOR_MODE_DIRECT		0
+#endif
+
+extern void freertos_risc_v_trap_handler( void );
+extern void freertos_vector_table( void );
+
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
  * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
@@ -122,6 +129,11 @@ gpio_pin_config_t mGpioPinConfigStruct;
 	mGpioPinConfigStruct.outputLogic = 1U; /* High. */
 	mGpioPinConfigStruct.pinDirection = kGPIO_DigitalOutput;
 	GPIO_PinInit( BOARD_LED1_GPIO, BOARD_LED1_GPIO_PIN, &mGpioPinConfigStruct );
+#if mainVECTOR_MODE_DIRECT == 1
+	__asm__ volatile( "csrw mtvec, %0" :: "r"( freertos_risc_v_trap_handler ) )
+#else
+	__asm__ volatile( "csrw mtvec, %0" :: "r"( ( uintptr_t )freertos_vector_table | 0x1 ) );
+#endif
 }
 /*-----------------------------------------------------------*/
 
@@ -222,7 +234,7 @@ void vTaskSwitchContext( void );
 the default SystemIrqHandler() implementation as that enables interrupts.  A
 version that does not enable interrupts is provided below.  THIS INTERRUPT
 HANDLER IS SPECIFIC TO THE VEGA BOARD WHICH DOES NOT INCLUDE A CLINT! */
-void SystemIrqHandler( uint32_t mcause )
+void freertos_risc_v_application_interrupt_handler( uint32_t mcause )
 {
 uint32_t ulInterruptNumber;
 typedef void ( * irq_handler_t )( void );

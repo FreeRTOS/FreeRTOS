@@ -71,22 +71,80 @@
 
 /* Standard demo application includes. */
 #include "dynamic.h"
-#include "blocktim.h"
+#include "BlockQ.h"
+#include "integer.h"
+#include "semtest.h"
+#include "PollQ.h"
 #include "GenQTest.h"
+#include "QPeek.h"
 #include "recmutex.h"
+#include "flop.h"
 #include "TimerDemo.h"
-#include "EventGroupsDemo.h"
-#include "TaskNotify.h"
-#include "AbortDelay.h"
 #include "countsem.h"
 #include "death.h"
+#include "QueueSet.h"
+#include "QueueOverwrite.h"
+#include "EventGroupsDemo.h"
+#include "IntSemTest.h"
+#include "IntQueue.h"
+#include "TaskNotify.h"
+#include "TaskNotifyArray.h"
+#include "QueueSetPolling.h"
+#include "StaticAllocation.h"
+#include "blocktim.h"
+#include "AbortDelay.h"
 #include "MessageBufferDemo.h"
 #include "StreamBufferDemo.h"
 #include "StreamBufferInterrupt.h"
 
+#define configSTART_TASK_NOTIFY_TESTS				0
+#define configSTART_TASK_NOTIFY_ARRAY_TESTS			0
+#define configSTART_BLOCKING_QUEUE_TESTS			0	// PASS
+#define configSTART_SEMAPHORE_TESTS					0	// PASS
+#define configSTART_POLLED_QUEUE_TESTS				0	// PASS
+#define configSTART_INTEGER_MATH_TESTS				0	// PASS
+#define configSTART_GENERIC_QUEUE_TESTS				0	// PASS
+#define configSTART_PEEK_QUEUE_TESTS				0	// PASS
+#define configSTART_MATH_TESTS						0	// PASS
+#define configSTART_RECURSIVE_MUTEX_TESTS			0	// PASS
+#define configSTART_COUNTING_SEMAPHORE_TESTS		0	// PASS
+#define configSTART_QUEUE_SET_TESTS					0	// PASS
+#define configSTART_QUEUE_OVERWRITE_TESTS			0	// PASS
+#define configSTART_EVENT_GROUP_TESTS				0	// PASS
+#define configSTART_INTERRUPT_SEMAPHORE_TESTS		0	// PASS
+#define configSTART_QUEUE_SET_POLLING_TESTS			0	// PASS
+#define configSTART_BLOCK_TIME_TESTS				0	// PASS
+#define configSTART_ABORT_DELAY_TESTS				0	// PASS
+#define configSTART_MESSAGE_BUFFER_TESTS			0	// FAIL
+#define configSTART_STREAM_BUFFER_TESTS				0	// FAIL
+#define configSTART_STREAM_BUFFER_INTERRUPT_TESTS   0	// PASS
+#define configSTART_TIMER_TESTS						0	// FAIL
+#define configSTART_DELETE_SELF_TESTS				0	// PASS
+#define configSTART_DYNAMIC_PRIORITY_TESTS			0	// PASS
+#define configSTART_REGISTER_TESTS					0	// PASS
+#if ( configSTART_QUEUE_SET_TESTS == 1 )
+    #if ( configUSE_QUEUE_SETS != 1 )
+        #error To run QUEUE_SET_TESTS and QUEUE_SET_POLLING_TESTS, INCLUDE_xTaskAbortDelay must be set to 1 in FreeRTOSConfig.h.
+    #endif
+#endif
+#if ( configSTART_ABORT_DELAY_TESTS == 1 )
+    #if ( INCLUDE_xTaskAbortDelay != 1 )
+        #error To run xTaskAbortDelay test, so INCLUDE_xTaskAbortDelay must be set to 1 in FreeRTOSConfig.h.
+    #endif
+#endif
 /* Priorities for the demo application tasks. */
 #define mainCHECK_TASK_PRIORITY				( configMAX_PRIORITIES - 1 )
-#define mainCREATOR_TASK_PRIORITY			( tskIDLE_PRIORITY + 3UL )
+#define testrunnerCHECK_TASK_PRIORITY			( configMAX_PRIORITIES - 2 )
+#define testrunnerQUEUE_POLL_PRIORITY			( tskIDLE_PRIORITY + 1 )
+#define testrunnerSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
+#define testrunnerBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2 )
+#define testrunnerCREATOR_TASK_PRIORITY			( tskIDLE_PRIORITY + 3 )
+#define testrunnerFLASH_TASK_PRIORITY			( tskIDLE_PRIORITY + 1 )
+#define testrunnerINTEGER_TASK_PRIORITY			( tskIDLE_PRIORITY )
+#define testrunnerGEN_QUEUE_TASK_PRIORITY		( tskIDLE_PRIORITY )
+#define testrunnerFLOP_TASK_PRIORITY			( tskIDLE_PRIORITY )
+#define testrunnerQUEUE_OVERWRITE_PRIORITY		( tskIDLE_PRIORITY )
+#define testrunnerREGISTER_TEST_PRIORITY		( tskIDLE_PRIORITY )
 
 /* The period of the check task, in ms, converted to ticks using the
 pdMS_TO_TICKS() macro.  mainNO_ERROR_CHECK_TASK_PERIOD is used if no errors have
@@ -161,41 +219,179 @@ volatile uint32_t ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
 
 void main_full( void )
 {
+	BaseType_t xResult;
+	xResult = xTaskCreate( prvCheckTask, "Check", mainCHECK_TASK_STACK_SIZE_WORDS, NULL, mainCHECK_TASK_PRIORITY, NULL );
 	/* Start all the other standard demo/test tasks.  They have no particular
 	functionality, but do demonstrate how to use the FreeRTOS API and test the
 	kernel port. */
-	vStartDynamicPriorityTasks();
-	vCreateBlockTimeTasks();
-	vStartGenericQueueTasks( tskIDLE_PRIORITY );
-	vStartRecursiveMutexTasks();
-	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
-	vStartEventGroupTasks();
-	vStartTaskNotifyTask();
-	vCreateAbortDelayTasks();
-	vStartCountingSemaphoreTasks();
-	vStartMessageBufferTasks( configMINIMAL_STACK_SIZE  );
-	vStartStreamBufferTasks();
-	vStartStreamBufferInterruptDemo();
+	if( xResult == pdPASS )
+	{
+		#if( configSTART_TASK_NOTIFY_TESTS == 1 )
+		{
+			vStartTaskNotifyTask();
+		}
+		#endif /* configSTART_TASK_NOTIFY_TESTS */
 
-	/* Create the register check tasks, as described at the top of this	file.
-	Use xTaskCreateStatic() to create a task using only statically allocated
-	memory. */
-	xTaskCreate( prvRegTestTaskEntry1, 			/* The function that implements the task. */
-				 "Reg1", 						/* The name of the task. */
-				 mainREG_TEST_STACK_SIZE_WORDS, /* Size of stack to allocate for the task - in words not bytes!. */
-				 mainREG_TEST_TASK_1_PARAMETER, /* Parameter passed into the task. */
-				 tskIDLE_PRIORITY, 				/* Priority of the task. */
-				 NULL );						/* Can be used to pass out a handle to the created task. */
-	xTaskCreate( prvRegTestTaskEntry2, "Reg2", mainREG_TEST_STACK_SIZE_WORDS, mainREG_TEST_TASK_2_PARAMETER, tskIDLE_PRIORITY, NULL );
+		#if( configSTART_TASK_NOTIFY_ARRAY_TESTS == 1 )
+		{
+			vStartTaskNotifyArrayTask();
+		}
+		#endif /* configSTART_TASK_NOTIFY_ARRAY_TESTS */
 
-	/* Create the task that performs the 'check' functionality,	as described at
-	the top of this file. */
-	xTaskCreate( prvCheckTask, "Check", mainCHECK_TASK_STACK_SIZE_WORDS, NULL, mainCHECK_TASK_PRIORITY, NULL );
+		#if( configSTART_BLOCKING_QUEUE_TESTS == 1 )
+		{
+			vStartBlockingQueueTasks( testrunnerBLOCK_Q_PRIORITY );
+		}
+		#endif /* configSTART_BLOCKING_QUEUE_TESTS */
 
-	/* The set of tasks created by the following function call have to be
-	created last as they keep account of the number of tasks they expect to see
-	running. */
-	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+		#if( configSTART_SEMAPHORE_TESTS == 1 )
+		{
+			vStartSemaphoreTasks( testrunnerSEM_TEST_PRIORITY );
+		}
+		#endif /* configSTART_SEMAPHORE_TESTS */
+
+		#if( configSTART_POLLED_QUEUE_TESTS == 1 )
+		{
+			vStartPolledQueueTasks( testrunnerQUEUE_POLL_PRIORITY );
+		}
+		#endif /* configSTART_POLLED_QUEUE_TESTS */
+
+		#if( configSTART_INTEGER_MATH_TESTS == 1 )
+		{
+			vStartIntegerMathTasks( testrunnerINTEGER_TASK_PRIORITY );
+		}
+		#endif /* configSTART_INTEGER_MATH_TESTS */
+
+		#if( configSTART_GENERIC_QUEUE_TESTS == 1 )
+		{
+			vStartGenericQueueTasks( testrunnerGEN_QUEUE_TASK_PRIORITY );
+		}
+		#endif /* configSTART_GENERIC_QUEUE_TESTS */
+
+		#if( configSTART_PEEK_QUEUE_TESTS == 1 )
+		{
+			vStartQueuePeekTasks();
+		}
+		#endif /* configSTART_PEEK_QUEUE_TESTS */
+
+		#if( configSTART_MATH_TESTS == 1 )
+		{
+			vStartMathTasks( testrunnerFLOP_TASK_PRIORITY );
+		}
+		#endif /* configSTART_MATH_TESTS */
+
+		#if( configSTART_RECURSIVE_MUTEX_TESTS == 1 )
+		{
+			vStartRecursiveMutexTasks();
+		}
+		#endif /* configSTART_RECURSIVE_MUTEX_TESTS */
+
+		#if( configSTART_COUNTING_SEMAPHORE_TESTS == 1 )
+		{
+			vStartCountingSemaphoreTasks();
+		}
+		#endif /* configSTART_COUNTING_SEMAPHORE_TESTS */
+
+		#if( configSTART_QUEUE_SET_TESTS == 1 )
+		{
+			vStartQueueSetTasks();
+		}
+		#endif /* configSTART_QUEUE_SET_TESTS */
+
+		#if( configSTART_QUEUE_OVERWRITE_TESTS == 1 )
+		{
+			vStartQueueOverwriteTask( testrunnerQUEUE_OVERWRITE_PRIORITY );
+		}
+		#endif /* configSTART_QUEUE_OVERWRITE_TESTS */
+
+		#if( configSTART_EVENT_GROUP_TESTS == 1 )
+		{
+			vStartEventGroupTasks();
+		}
+		#endif /* configSTART_EVENT_GROUP_TESTS */
+
+		#if( configSTART_INTERRUPT_SEMAPHORE_TESTS == 1 )
+		{
+			vStartInterruptSemaphoreTasks();
+		}
+		#endif /* configSTART_INTERRUPT_SEMAPHORE_TESTS */
+
+		#if( configSTART_QUEUE_SET_POLLING_TESTS == 1 )
+		{
+			vStartQueueSetPollingTask();
+		}
+		#endif /* configSTART_QUEUE_SET_POLLING_TESTS */
+
+		#if( configSTART_BLOCK_TIME_TESTS == 1 )
+		{
+			vCreateBlockTimeTasks();
+		}
+		#endif /* configSTART_BLOCK_TIME_TESTS */
+
+		#if( configSTART_ABORT_DELAY_TESTS == 1 )
+		{
+			vCreateAbortDelayTasks();
+		}
+		#endif /* configSTART_ABORT_DELAY_TESTS */
+
+		#if( configSTART_MESSAGE_BUFFER_TESTS == 1 )
+		{
+			vStartMessageBufferTasks( configMINIMAL_STACK_SIZE );
+		}
+		#endif /* configSTART_MESSAGE_BUFFER_TESTS */
+
+		#if(configSTART_STREAM_BUFFER_TESTS  == 1 )
+		{
+			vStartStreamBufferTasks();
+		}
+		#endif /* configSTART_STREAM_BUFFER_TESTS */
+
+		#if( configSTART_STREAM_BUFFER_INTERRUPT_TESTS == 1 )
+		{
+			vStartStreamBufferInterruptDemo();
+		}
+		#endif /* configSTART_STREAM_BUFFER_INTERRUPT_TESTS */
+
+		#if( ( configSTART_TIMER_TESTS == 1 ) && ( configUSE_PREEMPTION != 0 ) )
+		{
+			/* Don't expect these tasks to pass when preemption is not used. */
+			vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
+		}
+		#endif /* ( configSTART_TIMER_TESTS == 1 ) && ( configUSE_PREEMPTION != 0 ) */
+
+		#if( configSTART_INTERRUPT_QUEUE_TESTS == 1 )
+		{
+			vStartInterruptQueueTasks();
+		}
+		#endif /* configSTART_INTERRUPT_QUEUE_TESTS */
+
+		#if( configSTART_DELETE_SELF_TESTS == 1 )
+		{
+			/* The suicide tasks must be created last as they need to know how many
+			* tasks were running prior to their creation.  This then allows them to
+			* ascertain whether or not the correct/expected number of tasks are
+			* running at any given time. */
+			vCreateSuicidalTasks( testrunnerCREATOR_TASK_PRIORITY );
+		}
+		#endif /* configSTART_DELETE_SELF_TESTS */
+
+		#if configSTART_DYNAMIC_PRIORITY_TESTS == 1
+			vStartDynamicPriorityTasks();
+		#endif
+
+		/* Create the register check tasks, as described at the top of this	file.
+		Use xTaskCreateStatic() to create a task using only statically allocated
+		memory. */
+		#if configSTART_REGISTER_TESTS == 1
+			xTaskCreate( prvRegTestTaskEntry1, 			/* The function that implements the task. */
+						"Reg1", 						/* The name of the task. */
+						mainREG_TEST_STACK_SIZE_WORDS, /* Size of stack to allocate for the task - in words not bytes!. */
+						mainREG_TEST_TASK_1_PARAMETER, /* Parameter passed into the task. */
+						tskIDLE_PRIORITY, 				/* Priority of the task. */
+						NULL );						/* Can be used to pass out a handle to the created task. */
+			xTaskCreate( prvRegTestTaskEntry2, "Reg2", mainREG_TEST_STACK_SIZE_WORDS, mainREG_TEST_TASK_2_PARAMETER, tskIDLE_PRIORITY, NULL );
+		#endif
+	}
 
 	/* Start the timers that are used to exercise external interrupt handling. */
 	prvSetupPeripheralTimers();
@@ -217,7 +413,9 @@ static void prvCheckTask( void *pvParameters )
 {
 TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
 TickType_t xLastExecutionTime;
+#if configSTART_REGISTER_TESTS == 1
 uint32_t ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
+#endif
 char * const pcPassMessage = mainDEMO_SUCCESS_MESSAGE;
 char * pcStatusMessage = pcPassMessage;
 extern void vToggleLED( void );
@@ -245,88 +443,247 @@ extern void vToggleLED( void );
 
 		/* Check all the demo tasks (other than the flash tasks) to ensure
 		that they are all still running, and that none have detected an error. */
-		if( xAreDynamicPriorityTasksStillRunning() == pdFALSE )
+		#if( configSTART_TASK_NOTIFY_TESTS == 1 )
 		{
-			pcStatusMessage = "FreeRTOS Demo ERROR: Dynamic priority demo/tests.\r\n";
+			if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR:  Notification";
+			}
 		}
+		#endif /* configSTART_TASK_NOTIFY_TESTS */
 
-		if( xAreBlockTimeTestTasksStillRunning() == pdFALSE )
+		#if( configSTART_TASK_NOTIFY_ARRAY_TESTS == 1 )
 		{
-			pcStatusMessage = "FreeRTOS Demo ERROR: Block time demo/tests.\r\n";
+			if( xAreTaskNotificationArrayTasksStillRunning() != pdTRUE )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR:  Notification Array";
+			}
 		}
+		#endif /* configSTART_TASK_NOTIFY_ARRAY_TESTS */
 
-		if( xAreGenericQueueTasksStillRunning() == pdFALSE )
+		#if( configSTART_BLOCKING_QUEUE_TESTS == 1 )
 		{
-			pcStatusMessage = "FreeRTOS Demo ERROR: Generic queue demo/tests.\r\n";
+			if( xAreBlockingQueuesStillRunning() != pdTRUE )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR: BlockQueue";
+			}
 		}
+		#endif /* configSTART_BLOCKING_QUEUE_TESTS */
 
-		if( xAreRecursiveMutexTasksStillRunning() == pdFALSE )
+		#if( configSTART_SEMAPHORE_TESTS == 1 )
 		{
-			pcStatusMessage = "FreeRTOS Demo ERROR: Recursive mutex demo/tests.\r\n";
+			if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR: SemTest";
+			}
 		}
+		#endif /* configSTART_SEMAPHORE_TESTS */
 
-		if( xAreTimerDemoTasksStillRunning( ( TickType_t ) xDelayPeriod ) == pdFALSE )
+		#if( configSTART_POLLED_QUEUE_TESTS == 1 )
 		{
-			pcStatusMessage = "FreeRTOS Demo ERROR: Timer demo/tests.\r\n";
+			if( xArePollingQueuesStillRunning() != pdTRUE )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR: PollQueue";
+			}
 		}
+		#endif /* configSTART_POLLED_QUEUE_TESTS */
 
-		if( xAreEventGroupTasksStillRunning() == pdFALSE )
+		#if( configSTART_INTEGER_MATH_TESTS == 1 )
 		{
-			pcStatusMessage = "FreeRTOS Demo ERROR: Event group demo/tests.\r\n";
+			if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR: IntMath";
+			}
 		}
+		#endif /* configSTART_INTEGER_MATH_TESTS */
 
-		if( xAreTaskNotificationTasksStillRunning() == pdFALSE )
+		#if( configSTART_GENERIC_QUEUE_TESTS == 1 )
 		{
-			pcStatusMessage = "FreeRTOS Demo ERROR: Task notification demo/tests.\r\n";
+			if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR: GenQueue";
+			}
 		}
+		#endif /* configSTART_GENERIC_QUEUE_TESTS */
 
-		if( xAreAbortDelayTestTasksStillRunning() == pdFALSE )
+		#if( configSTART_PEEK_QUEUE_TESTS == 1 )
 		{
-			pcStatusMessage = "FreeRTOS Demo ERROR: Abort delay.\r\n";
+			if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR: QueuePeek";
+			}
 		}
+		#endif /* configSTART_PEEK_QUEUE_TESTS */
 
-		if( xAreCountingSemaphoreTasksStillRunning() == pdFALSE )
+		#if( configSTART_MATH_TESTS == 1 )
 		{
-			pcStatusMessage = "FreeRTOS Demo ERROR: Counting semaphores.\r\n";
+			if( xAreMathsTaskStillRunning() != pdPASS )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR: Flop";
+			}
 		}
+		#endif /* configSTART_MATH_TESTS */
 
-		if( xIsCreateTaskStillRunning() == pdFALSE )
+		#if( configSTART_RECURSIVE_MUTEX_TESTS == 1 )
 		{
-			pcStatusMessage = "FreeRTOS Demo ERROR: Suicide tasks.\r\n";
+			if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR: RecMutex";
+			}
 		}
+		#endif /* configSTART_RECURSIVE_MUTEX_TESTS */
 
-		if( xAreMessageBufferTasksStillRunning() == pdFALSE )
+		#if( configSTART_COUNTING_SEMAPHORE_TESTS == 1 )
 		{
-			pcStatusMessage = "FreeRTOS Demo ERROR: Message buffer.\r\n";
+			if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR: CountSem";
+			}
 		}
+		#endif /* configSTART_COUNTING_SEMAPHORE_TESTS */
 
-		if( xAreStreamBufferTasksStillRunning() == pdFALSE )
+		#if( configSTART_QUEUE_SET_TESTS == 1 )
 		{
-			pcStatusMessage = "FreeRTOS Demo ERROR: Stream buffer.\r\n";
+			if( xAreQueueSetTasksStillRunning() != pdPASS )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR: Queue set";
+			}
 		}
+		#endif /* configSTART_QUEUE_SET_TESTS */
 
-		if( xIsInterruptStreamBufferDemoStillRunning() == pdFALSE )
+		#if( configSTART_QUEUE_OVERWRITE_TESTS == 1 )
 		{
-			pcStatusMessage = "FreeRTOS Demo ERROR: Stream buffer interrupt.\r\n";
+			if( xIsQueueOverwriteTaskStillRunning() != pdPASS )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR: Queue overwrite";
+			}
 		}
+		#endif /* configSTART_QUEUE_OVERWRITE_TESTS */
 
-		/* Check that the register test 1 task is still running. */
-		if( ulLastRegTest1Value == ulRegTest1LoopCounter )
+		#if( configSTART_EVENT_GROUP_TESTS == 1 )
 		{
-			pcStatusMessage = "FreeRTOS Demo ERROR: Register test 1.\r\n";
+			if( xAreEventGroupTasksStillRunning() != pdTRUE )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR: EventGroup";
+			}
 		}
-		ulLastRegTest1Value = ulRegTest1LoopCounter;
+		#endif /* configSTART_EVENT_GROUP_TESTS */
 
-		/* Check that the register test 2 task is still running. */
-		if( ulLastRegTest2Value == ulRegTest2LoopCounter )
+		#if( configSTART_INTERRUPT_SEMAPHORE_TESTS == 1 )
 		{
-			pcStatusMessage = "FreeRTOS Demo ERROR: Register test 2.\r\n";
+			if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR: IntSem";
+			}
 		}
-		ulLastRegTest2Value = ulRegTest2LoopCounter;
+		#endif /* configSTART_INTERRUPT_SEMAPHORE_TESTS */
+
+		#if( configSTART_QUEUE_SET_POLLING_TESTS == 1 )
+		{
+			if( xAreQueueSetPollTasksStillRunning() != pdPASS )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR: Queue set polling";
+			}
+		}
+		#endif /* configSTART_QUEUE_SET_POLLING_TESTS */
+
+		#if( configSTART_BLOCK_TIME_TESTS == 1 )
+		{
+			if( xAreBlockTimeTestTasksStillRunning() != pdPASS )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR: Block time";
+			}
+		}
+		#endif /* configSTART_BLOCK_TIME_TESTS */
+
+		#if( configSTART_ABORT_DELAY_TESTS == 1 )
+		{
+			if( xAreAbortDelayTestTasksStillRunning() != pdPASS )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR: Abort delay";
+			}
+		}
+		#endif /* configSTART_ABORT_DELAY_TESTS */
+
+		#if( configSTART_MESSAGE_BUFFER_TESTS == 1 )
+		{
+			if( xAreMessageBufferTasksStillRunning() != pdTRUE )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR:  MessageBuffer";
+			}
+		}
+		#endif /* configSTART_MESSAGE_BUFFER_TESTS */
+
+		#if( configSTART_STREAM_BUFFER_TESTS == 1 )
+		{
+			if( xAreStreamBufferTasksStillRunning() != pdTRUE )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR:  StreamBuffer";
+			}
+		}
+		#endif /* configSTART_STREAM_BUFFER_TESTS */
+
+		#if( configSTART_STREAM_BUFFER_INTERRUPT_TESTS == 1 )
+		{
+			if( xIsInterruptStreamBufferDemoStillRunning() != pdPASS )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR: Stream buffer interrupt";
+			}
+		}
+		#endif /* configSTART_STREAM_BUFFER_INTERRUPT_TESTS */
+
+		#if( ( configSTART_TIMER_TESTS == 1 ) && ( configUSE_PREEMPTION != 0 ) )
+		{
+			if( xAreTimerDemoTasksStillRunning( ( TickType_t ) xDelayPeriod ) != pdTRUE )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR: TimerDemo";
+			}
+		}
+		#endif /* ( configSTART_TIMER_TESTS == 1 ) && ( configUSE_PREEMPTION != 0 ) */
+
+		#if( configSTART_INTERRUPT_QUEUE_TESTS == 1 )
+		{
+			if( xAreIntQueueTasksStillRunning() != pdTRUE )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR: IntQueue";
+			}
+		}
+		#endif /* configSTART_INTERRUPT_QUEUE_TESTS */
+
+		#if( configSTART_DELETE_SELF_TESTS == 1 )
+		{
+			if( xIsCreateTaskStillRunning() != pdTRUE )
+			{
+				pcStatusMessage = "FreeRTOS Demo ERROR: Death";
+			}
+		}
+		#endif /* configSTART_DELETE_SELF_TESTS */
+
+        #if configSTART_DYNAMIC_PRIORITY_TESTS == 1
+            if( xAreDynamicPriorityTasksStillRunning() == pdFALSE )
+            {
+                pcStatusMessage = "FreeRTOS Demo ERROR: Dynamic priority demo/tests.\r\n";
+            }
+        #endif
+
+		#if configSTART_REGISTER_TESTS == 1
+            /* Check that the register test 1 task is still running. */
+            if( ulLastRegTest1Value == ulRegTest1LoopCounter )
+            {
+                pcStatusMessage = "FreeRTOS Demo ERROR: Register test 1.\r\n";
+            }
+            ulLastRegTest1Value = ulRegTest1LoopCounter;
+
+            /* Check that the register test 2 task is still running. */
+            if( ulLastRegTest2Value == ulRegTest2LoopCounter )
+            {
+                pcStatusMessage = "FreeRTOS Demo ERROR: Register test 2.\r\n";
+            }
+            ulLastRegTest2Value = ulRegTest2LoopCounter;
+        #endif
 
 		/* Write the status message to the UART. */
 		vToggleLED();
-		configPRINT_STRING( pcStatusMessage );
 
 		/* If an error has been found then increase the LED toggle rate by
 		increasing the cycle frequency. */
@@ -334,10 +691,13 @@ extern void vToggleLED( void );
 		{
 			xDelayPeriod = mainERROR_CHECK_TASK_PERIOD;
 		}
+
+		configPRINT_STRING( pcStatusMessage );
 	}
 }
 /*-----------------------------------------------------------*/
 
+#if configSTART_REGISTER_TESTS == 1
 static void prvRegTestTaskEntry1( void *pvParameters )
 {
 	/* Although the regtest task is written in assembler, its entry point is
@@ -372,30 +732,88 @@ static void prvRegTestTaskEntry2( void *pvParameters )
 	not being incremented and flag an error. */
 	vTaskDelete( NULL );
 }
+#endif
 /*-----------------------------------------------------------*/
 
 void vFullDemoTickHook( void )
 {
 	/* The full demo includes a software timer demo/test that requires
-	prodding periodically from the tick interrupt. */
-	vTimerPeriodicISRTests();
-
-	/* Call the periodic event group from ISR demo. */
-	vPeriodicEventGroupsProcessing();
-
-	/* Use task notifications from an interrupt. */
-	xNotifyTaskFromISR();
-
-	/* Writes to stream buffer byte by byte to test the stream buffer trigger
-	level functionality. */
-	vPeriodicStreamBufferProcessing();
-
-	/* Writes a string to a string buffer four bytes at a time to demonstrate
-	a stream being sent from an interrupt to a task. */
-	vBasicStreamBufferSendFromISR();
-
-	/* Called from vApplicationTickHook() when the project is configured to
 	build the full test/demo applications. */
+	#if( configSTART_TASK_NOTIFY_TESTS == 1 )
+	{
+		/* Use task notifications from an interrupt. */
+		xNotifyTaskFromISR();
+	}
+	#endif /* configSTART_TASK_NOTIFY_TESTS */
+
+	#if( configSTART_TASK_NOTIFY_ARRAY_TESTS == 1 )
+	{
+		xNotifyArrayTaskFromISR();
+	}
+	#endif /* configSTART_TASK_NOTIFY_ARRAY_TESTS */
+
+	#if( configSTART_QUEUE_SET_TESTS == 1 )
+	{
+		vQueueSetAccessQueueSetFromISR();
+	}
+	#endif /* configSTART_QUEUE_SET_TESTS */
+
+	#if( configSTART_QUEUE_OVERWRITE_TESTS == 1 )
+	{
+		vQueueOverwritePeriodicISRDemo();
+	}
+	#endif /* configSTART_QUEUE_OVERWRITE_TESTS */
+
+	#if( configSTART_EVENT_GROUP_TESTS == 1 )
+	{
+		/* Call the periodic event group from ISR demo. */
+		vPeriodicEventGroupsProcessing();
+	}
+	#endif /* configSTART_EVENT_GROUP_TESTS */
+
+	#if( configSTART_INTERRUPT_SEMAPHORE_TESTS == 1 )
+	{
+		vInterruptSemaphorePeriodicTest();
+	}
+	#endif /* configSTART_INTERRUPT_SEMAPHORE_TESTS */
+
+	#if( configSTART_QUEUE_SET_POLLING_TESTS == 1 )
+	{
+		vQueueSetPollingInterruptAccess();
+	}
+	#endif /* configSTART_QUEUE_SET_POLLING_TESTS */
+
+	#if( configSTART_STREAM_BUFFER_TESTS == 1 )
+	{
+		/* Writes to stream buffer byte by byte to test the stream buffer trigger
+		level functionality. */
+		vPeriodicStreamBufferProcessing();
+	}
+	#endif /* configSTART_STREAM_BUFFER_TESTS */
+
+	#if( configSTART_STREAM_BUFFER_INTERRUPT_TESTS == 1 )
+	{
+		/* Writes a string to a string buffer four bytes at a time to demonstrate
+		a stream being sent from an interrupt to a task. */		
+		vBasicStreamBufferSendFromISR();
+	}
+	#endif /* configSTART_STREAM_BUFFER_INTERRUPT_TESTS */
+
+	#if( ( configSTART_TIMER_TESTS == 1 ) && ( configUSE_PREEMPTION != 0 ) )
+	{
+		/* The full demo includes a software timer demo/test that requires
+		prodding periodically from the tick interrupt. */
+
+		/* Only created when preemption is used. */
+		vTimerPeriodicISRTests();
+	}
+	#endif /* ( configSTART_TIMER_TESTS == 1 ) && ( configUSE_PREEMPTION != 0 ) */
+
+	#if( configSTART_INTERRUPT_QUEUE_TESTS == 1 )
+	{
+		portYIELD_FROM_ISR( xFirstTimerHandler() );
+	}
+	#endif /* configSTART_INTERRUPT_QUEUE_TESTS */
 }
 /*-----------------------------------------------------------*/
 

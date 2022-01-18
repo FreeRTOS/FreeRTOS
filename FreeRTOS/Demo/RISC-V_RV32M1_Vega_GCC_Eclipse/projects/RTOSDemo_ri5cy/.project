@@ -85,6 +85,11 @@
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/AbortDelay.c</locationURI>
 		</link>
 		<link>
+			<name>full_demo/common_demo_files/BlockQ.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/BlockQ.c</locationURI>
+		</link>
+		<link>
 			<name>full_demo/common_demo_files/EventGroupsDemo.c</name>
 			<type>1</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/EventGroupsDemo.c</locationURI>
@@ -95,9 +100,44 @@
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/GenQTest.c</locationURI>
 		</link>
 		<link>
+			<name>full_demo/common_demo_files/IntQueue.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/IntQueue.c</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_files/IntSemTest.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/IntSemTest.c</locationURI>
+		</link>
+		<link>
 			<name>full_demo/common_demo_files/MessageBufferDemo.c</name>
 			<type>1</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/MessageBufferDemo.c</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_files/PollQ.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/PollQ.c</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_files/QPeek.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/QPeek.c</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_files/QueueOverwrite.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/QueueOverwrite.c</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_files/QueueSet.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/QueueSet.c</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_files/QueueSetPolling.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/QueueSetPolling.c</locationURI>
 		</link>
 		<link>
 			<name>full_demo/common_demo_files/StreamBufferDemo.c</name>
@@ -113,6 +153,11 @@
 			<name>full_demo/common_demo_files/TaskNotify.c</name>
 			<type>1</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/TaskNotify.c</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_files/TaskNotifyArray.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/TaskNotifyArray.c</locationURI>
 		</link>
 		<link>
 			<name>full_demo/common_demo_files/TimerDemo.c</name>
@@ -140,14 +185,29 @@
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/dynamic.c</locationURI>
 		</link>
 		<link>
+			<name>full_demo/common_demo_files/flop.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/flop.c</locationURI>
+		</link>
+		<link>
 			<name>full_demo/common_demo_files/include</name>
 			<type>2</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/include</locationURI>
 		</link>
 		<link>
+			<name>full_demo/common_demo_files/integer.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/integer.c</locationURI>
+		</link>
+		<link>
 			<name>full_demo/common_demo_files/recmutex.c</name>
 			<type>1</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/recmutex.c</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_files/semtest.c.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/semtest.c</locationURI>
 		</link>
 		<link>
 			<name>common/rv32m1_sdk_riscv/RISCV/core_riscv32.h</name>

@@ -1,11 +1,7 @@
 #!/usr/bin/env python
 
-import sys
 import boto3
 import botocore
-import argparse
-import json
-from dataclasses import dataclass
 from typing import Dict, List
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
@@ -13,6 +9,8 @@ from cryptography.hazmat.primitives import serialization
 
 KEY_OUT_NAME = "corePKCS11_Claim_Key.dat"
 CERT_OUT_NAME = "corePKCS11_Claim_Certificate.dat"
+
+RESOURCE_STACK_NAME = "FPDemoStack"
 
 cf = boto3.client("cloudformation")
 iot = boto3.client("iot")
@@ -30,17 +28,23 @@ def convert_cf_arn_to_link(arn):
     ])
 
 # Get the CloudFormation stack if it exists - "STACK_NOT_FOUND" otherwise
-def get_stack(stack_name):
+def get_stack():
     try:
-        response = cf.describe_stacks(StackName=stack_name)
+        paginator = cf.get_paginator("describe_stacks")
+        response_iterator = paginator.paginate(StackName=RESOURCE_STACK_NAME)
+        for response in response_iterator:
+            return response["Stacks"][0]
+        response = cf.describe_stacks(StackName=RESOURCE_STACK_NAME)
         return response["Stacks"][0]
-    except botocore.exceptions.ClientError:
-        return "STACK_NOT_FOUND"
+    except botocore.exceptions.ClientError as e:
+        if e.response["Error"]["Code"] == "ValidationError":
+            return "STACK_NOT_FOUND"
+        raise
 
 
 # Create the required resources from the CloudFormation template
-def create_resources(stack_name):
-    stack_response = get_stack(stack_name)
+def create_resources():
+    stack_response = get_stack()
     if stack_response != "STACK_NOT_FOUND":
         print("Stack already exists with status: " + stack_response["StackStatus"])
         print("View the stack in the CloudFormation console here:\n" + convert_cf_arn_to_link(stack_response["StackId"]))
@@ -51,17 +55,18 @@ def create_resources(stack_name):
         cf_template_file.close()
 
         create_response = cf.create_stack(
-            StackName=stack_name,
+            StackName=RESOURCE_STACK_NAME,
             TemplateBody=cf_template,
-            Capabilities=["CAPABILITY_NAMED_IAM"]
+            Capabilities=["CAPABILITY_NAMED_IAM"],
+            OnFailure="ROLLBACK"
         )
 
-        print("Stack creation started. View the stack in the CloudFormation console here:\n")
+        print("Stack creation started. View the stack in the CloudFormation console here:")
         print(convert_cf_arn_to_link(create_response["StackId"]))
         print("Waiting...")
         try:
             create_waiter = cf.get_waiter("stack_create_complete")
-            create_waiter.wait(StackName=stack_name)
+            create_waiter.wait(StackName=RESOURCE_STACK_NAME)
             print("Successfully created the resources stack.")
         except botocore.exceptions.WaiterError as err:
             print("Error: Stack creation failed. You may need to delete_all and try again.")
@@ -69,8 +74,6 @@ def create_resources(stack_name):
 
 def convert_pem_to_der(cert_pem, key_pem):
     # Convert certificate from PEM to DER
-    print("Converting format to DER format...")
-    print("Starting key PEM to DER conversion.")
     key = serialization.load_pem_private_key(bytes(key_pem, "utf-8"), None, default_backend())
     key_der = key.private_bytes(
         serialization.Encoding.DER,
@@ -83,7 +86,6 @@ def convert_pem_to_der(cert_pem, key_pem):
         f"Successfully converted key PEM to DER. Output file named: {KEY_OUT_NAME}"
     )
 
-    print("Starting certificate pem conversion.")
     cert = x509.load_pem_x509_certificate(bytes(cert_pem, "utf-8"), default_backend())
     with open(CERT_OUT_NAME, "wb") as cert_out:
         cert_out.write(cert.public_bytes(serialization.Encoding.DER))
@@ -93,11 +95,11 @@ def convert_pem_to_der(cert_pem, key_pem):
     )
 
 # Generate IoT credentials in DER format and save them in the demo directory
-def create_credentials(stack_name):
+def create_credentials():
     # Verify that the stack exists (create_resources has been ran before somewhere)
-    stack_response = get_stack(stack_name)
+    stack_response = get_stack()
     if stack_response == "STACK_NOT_FOUND":
-        raise Exception("CloudFormation stack \"" + stack_name + "\" not found. You must run 'create_resources'.")
+        raise Exception(f"CloudFormation stack \"{RESOURCE_STACK_NAME}\" not found.")
     elif stack_response["StackStatus"] != "CREATE_COMPLETE":
         print("Error: Stack was not successfully created. View the stack in the CloudFormation console here:")
         stack_link = convert_cf_arn_to_link(stack_response["StackId"])
@@ -108,20 +110,20 @@ def create_credentials(stack_name):
         convert_pem_to_der(credentials["certificatePem"], credentials["keyPair"]["PrivateKey"])
 
 
-# Set the necessary fields in demo_config.h (perhaps more difficult than worth it)
+# Set the necessary fields in demo_config.h
 def update_demo_config():
-    print("TODO")
-
-# Delete all resources (including provisioned Things)
-def delete_all():
     print("TODO")
 
 # Parse arguments and execute appropriate functions
 def main(args):
     # Check arguments and go appropriately
-    print("Begin Execution")
-    #create_resources("FPDemoStack")
-    create_credentials("FPDemoStack")
+    print("\nThis script will set up the AWS resources required for the Fleet Provisioning demo.")
+    print("It may take several minutes for the resources to be provisioned.")
+    if input("Are you sure you want to do this? (y/n) ") == "y":
+        print()
+        create_resources()
+        create_credentials()
+        print("\nFleet Provisioning demo setup complete. Ensure that the Key and Certificate files are in the same folder where you run the demo.")
 
 if __name__ == "__main__":
     main({"Test": "Value"})

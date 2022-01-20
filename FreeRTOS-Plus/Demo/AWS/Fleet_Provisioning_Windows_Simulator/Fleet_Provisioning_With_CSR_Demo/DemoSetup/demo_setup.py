@@ -39,8 +39,11 @@ def get_stack():
 def create_resources():
     stack_response = get_stack()
     if stack_response != "STACK_NOT_FOUND":
-        print("Stack already exists with status: " + stack_response["StackStatus"])
-        print("View the stack in the CloudFormation console here:\n" + convert_cf_arn_to_link(stack_response["StackId"]))
+        print("Fleet Provisioning resource stack already exists with status: " + stack_response["StackStatus"])
+        print()
+        if stack_response["StackStatus"] != "CREATE_COMPLETE":
+            raise Exception("Fleet Provisioning resource stack failed to create successfully. You may need to delete the stack and retry."
+                + "\nView the stack in the CloudFormation console here:\n" + convert_cf_arn_to_link(stack_response["StackId"]))
     else:
         # Read the cloudformation template file contained in the same directory
         cf_template_file = open("cloudformation_template.json", "r")
@@ -115,6 +118,7 @@ def update_demo_config():
     header_file.write(file_text)
     header_file.close()
     template_file.close()
+    print("Successfully updated demo_config.h")
     
     
 
@@ -128,7 +132,7 @@ def main(args):
         create_resources()
         create_credentials()
         update_demo_config()
-        print("\nFleet Provisioning demo setup complete. Ensure that the Key and Certificate files are in the same folder as \"fleet_provisioning_demo.sln\".")
+        print("\nFleet Provisioning demo setup complete. Ensure that all generated files (key, certificate, demo_config.h) are in the same folder as \"fleet_provisioning_demo.sln\".")
 
 if __name__ == "__main__":
     main({"Test": "Value"})

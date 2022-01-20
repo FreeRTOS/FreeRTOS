@@ -16,14 +16,7 @@ iot = boto3.client("iot")
 # Convert a CloudFormation arn into a link to the resource
 def convert_cf_arn_to_link(arn):
     region = arn.split(":")[3]
-    return "".join([
-        "https://",
-        region,
-        ".console.aws.amazon.com/cloudformation/home?region=",
-        region,
-        "#/stacks/stackinfo?stackId=",
-        arn
-    ])
+    return f"https://{region}.console.aws.amazon.com/cloudformation/home?region={region}#/stacks/stackinfo?stackId={arn}"
 
 # Get the CloudFormation stack if it exists - "STACK_NOT_FOUND" otherwise
 def get_stack():

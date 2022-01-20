@@ -18,14 +18,7 @@ iot = boto3.client("iot")
 # Convert a CloudFormation arn into a link to the resource
 def convert_cf_arn_to_link(arn):
     region = arn.split(":")[3]
-    return "".join([
-        "https://",
-        region,
-        ".console.aws.amazon.com/cloudformation/home?region=",
-        region,
-        "#/stacks/stackinfo?stackId=",
-        arn
-    ])
+    return f"https://{region}.console.aws.amazon.com/cloudformation/home?region={region}#/stacks/stackinfo?stackId={arn}"
 
 # Get the CloudFormation stack if it exists - "STACK_NOT_FOUND" otherwise
 def get_stack():
@@ -50,7 +43,7 @@ def create_resources():
         print("View the stack in the CloudFormation console here:\n" + convert_cf_arn_to_link(stack_response["StackId"]))
     else:
         # Read the cloudformation template file contained in the same directory
-        cf_template_file = open("demo_cloudformation_template.json", "r")
+        cf_template_file = open("cloudformation_template.json", "r")
         cf_template = cf_template_file.read()
         cf_template_file.close()
 
@@ -80,14 +73,14 @@ def convert_pem_to_der(cert_pem, key_pem):
         serialization.PrivateFormat.TraditionalOpenSSL,
         serialization.NoEncryption(),
     )
-    with open(KEY_OUT_NAME, "wb") as key_out:
+    with open(f"../{KEY_OUT_NAME}", "wb") as key_out:
         key_out.write(key_der)
     print(
         f"Successfully converted key PEM to DER. Output file named: {KEY_OUT_NAME}"
     )
 
     cert = x509.load_pem_x509_certificate(bytes(cert_pem, "utf-8"), default_backend())
-    with open(CERT_OUT_NAME, "wb") as cert_out:
+    with open(f"../{CERT_OUT_NAME}", "wb") as cert_out:
         cert_out.write(cert.public_bytes(serialization.Encoding.DER))
 
     print(
@@ -123,7 +116,7 @@ def main(args):
         print()
         create_resources()
         create_credentials()
-        print("\nFleet Provisioning demo setup complete. Ensure that the Key and Certificate files are in the same folder where you run the demo.")
+        print("\nFleet Provisioning demo setup complete. Ensure that the Key and Certificate files are in the same folder as \"fleet_provisioning_demo.sln\".")
 
 if __name__ == "__main__":
     main({"Test": "Value"})

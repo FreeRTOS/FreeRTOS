@@ -123,7 +123,7 @@ def update_demo_config():
     
 
 # Parse arguments and execute appropriate functions
-def main(args):
+def main():
     # Check arguments and go appropriately
     print("\nThis script will set up the AWS resources required for the Fleet Provisioning demo.")
     print("It may take several minutes for the resources to be provisioned.")
@@ -135,4 +135,4 @@ def main(args):
         print("\nFleet Provisioning demo setup complete. Ensure that all generated files (key, certificate, demo_config.h) are in the same folder as \"fleet_provisioning_demo.sln\".")
 
 if __name__ == "__main__":
-    main({"Test": "Value"})
+    main()

@@ -1,12 +1,16 @@
 #!/usr/bin/env python
 
-import sys
+import os
 import boto3
 import botocore
 from typing import Dict, List
 
 KEY_OUT_NAME = "corePKCS11_Claim_Key.dat"
 CERT_OUT_NAME = "corePKCS11_Claim_Certificate.dat"
+
+THING_PRIVATE_KEY_NAME = "corePKCS11_Key.dat"
+THING_PUBLIC_KEY_NAME = "corePKCS11_PubKey.dat"
+THING_CERT_NAME = "corePKCS11_Certificate.dat"
 
 RESOURCE_STACK_NAME = "FPDemoStack"
 
@@ -67,7 +71,7 @@ def delete_certificate_and_things(certificate_arn, policy_name):
     iot.delete_certificate(certificateId=certificate_id) 
 
 # Delete all resources (including provisioned Things)
-def delete_all():
+def delete_resources():
     stack_response = get_stack()
     if stack_response == "STACK_NOT_FOUND":
         print("Nothing to delete - no Fleet Provisioning resources were found.\n\nDone.")
@@ -120,14 +124,42 @@ def delete_all():
 
     print("All Fleet Provisioning demo resources have been cleaned up.\n\nDone.")
 
+# Delete the files created by the demo and reset demo_config.h
+def reset_files():
+    # Remove Claim credentials
+    if os.path.exists(f"../{KEY_OUT_NAME}"):
+        os.remove(f"../{KEY_OUT_NAME}")
+    if os.path.exists(f"../{CERT_OUT_NAME}"):
+        os.remove(f"../{CERT_OUT_NAME}")
+
+    # Remove demo-generated Thing credentials
+    if os.path.exists(f"../{THING_PRIVATE_KEY_NAME}"):
+        os.remove(f"../{THING_PRIVATE_KEY_NAME}")
+    if os.path.exists(f"../{THING_PUBLIC_KEY_NAME}"):
+        os.remove(f"../{THING_PUBLIC_KEY_NAME}")
+    if os.path.exists(f"../{THING_CERT_NAME}"):
+        os.remove(f"../{THING_CERT_NAME}")
+    
+    # Reset demo_config.h
+    template_file = open("demo_config_empty.templ", 'r')
+    file_text = template_file.read()
+    
+    header_file = open("../demo_config.h", "w")
+    header_file.write(file_text)
+    header_file.close()
+    template_file.close()
+    print("Credentials removed and demo_config.h reset.")
+    
+
 # Parse arguments and execute appropriate functions
-def main(args):
+def main():
     # Check arguments and go appropriately
     print("\nThis script will delete ALL Things, credentials, and resources which were created by demo_setup.py and the Fleet Provisioning demo.")
     print("It may take several minutes for all of the resources to be deleted.")
     if input("Are you sure you want to do this? (y/n) ") == "y":
         print()
-        delete_all()
+        reset_files()
+        delete_resources()
 
 if __name__ == "__main__":
-    main({"Test": "Value"})
+    main()

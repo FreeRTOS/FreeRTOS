@@ -105,7 +105,18 @@ def create_credentials():
 
 # Set the necessary fields in demo_config.h
 def update_demo_config():
-    print("TODO")
+    endpoint = iot.describe_endpoint(endpointType='iot:Data-ATS')
+
+    template_file = open("demo_config.templ", 'r')
+    file_text = template_file.read()
+    file_text = file_text.replace("<IOTEndpoint>", "\"" + endpoint["endpointAddress"] + "\"")
+    
+    header_file = open("../demo_config.h", "w")
+    header_file.write(file_text)
+    header_file.close()
+    template_file.close()
+    
+    
 
 # Parse arguments and execute appropriate functions
 def main(args):
@@ -116,6 +127,7 @@ def main(args):
         print()
         create_resources()
         create_credentials()
+        update_demo_config()
         print("\nFleet Provisioning demo setup complete. Ensure that the Key and Certificate files are in the same folder as \"fleet_provisioning_demo.sln\".")
 
 if __name__ == "__main__":

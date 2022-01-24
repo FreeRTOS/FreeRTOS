@@ -155,5 +155,4 @@ header file. */
 #define configPRINT_STRING( pcString )  PRINTF( pcString )
 
 #define configISR_STACK_SIZE_WORDS 200
-#define mainVECTOR_MODE_DIRECT		0
 #endif /* FREERTOS_CONFIG_H */

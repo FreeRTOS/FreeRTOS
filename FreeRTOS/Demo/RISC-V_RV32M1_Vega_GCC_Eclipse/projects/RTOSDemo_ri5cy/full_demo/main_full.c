@@ -121,7 +121,7 @@
 #define configSTART_TIMER_TESTS						0
 #define configSTART_DELETE_SELF_TESTS				0
 #define configSTART_DYNAMIC_PRIORITY_TESTS			0
-#define configSTART_REGISTER_TESTS					0
+#define configSTART_REGISTER_TESTS					1
 #if ( configSTART_QUEUE_SET_TESTS == 1 )
     #if ( configUSE_QUEUE_SETS != 1 )
         #error To run QUEUE_SET_TESTS and QUEUE_SET_POLLING_TESTS, INCLUDE_xTaskAbortDelay must be set to 1 in FreeRTOSConfig.h.

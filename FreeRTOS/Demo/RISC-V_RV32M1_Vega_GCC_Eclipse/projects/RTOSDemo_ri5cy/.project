@@ -30,11 +30,6 @@
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Source</locationURI>
 		</link>
 		<link>
-			<name>FreeRTOS_startup_RV32M1_ri5cy.S</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/common/rv32m1_sdk_riscv/devices/RV32M1/gcc/startup_RV32M1_ri5cy.S</locationURI>
-		</link>
-		<link>
 			<name>common</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>

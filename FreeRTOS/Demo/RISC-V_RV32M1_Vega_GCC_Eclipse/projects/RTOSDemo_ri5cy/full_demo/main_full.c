@@ -196,10 +196,12 @@ static void prvSetupPeripheralTimers( void );
  * entry points are kept in the C file for the convenience of checking the task
  * parameter.
  */
+#if configSTART_REGISTER_TESTS == 1
 static void prvRegTestTaskEntry1( void *pvParameters );
 extern void vRegTest1Implementation( void );
 static void prvRegTestTaskEntry2( void *pvParameters );
 extern void vRegTest2Implementation( void );
+#endif
 
 /*
  * Tick hook used by the full demo, which includes code that interacts with

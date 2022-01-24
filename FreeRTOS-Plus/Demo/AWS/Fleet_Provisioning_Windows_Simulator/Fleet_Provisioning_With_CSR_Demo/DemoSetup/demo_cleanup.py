@@ -74,7 +74,7 @@ def delete_certificate_and_things(certificate_arn, policy_name):
 def delete_resources():
     stack_response = get_stack()
     if stack_response == "STACK_NOT_FOUND":
-        print("Nothing to delete - no Fleet Provisioning resources were found.\n\nDone.")
+        print("Nothing to delete - no Fleet Provisioning resources were found.")
         return
     
     # Find all certificates with "CF_FleetProvisioningDemoThingPolicy" attached
@@ -108,7 +108,7 @@ def delete_resources():
     
     print("Done.")
 
-    print("Stack deletion started. View the stack in the CloudFormation console here:")
+    print("Fleet Provisioning resource stack deletion started. View the stack in the CloudFormation console here:")
     print(convert_cf_arn_to_link(stack_response["StackId"]))
     delete_response = cf.delete_stack(
         StackName=RESOURCE_STACK_NAME
@@ -122,7 +122,7 @@ def delete_resources():
         print("Error: Stack deletion failed. Check the CloudFormation link for more information.")
         raise
 
-    print("All Fleet Provisioning demo resources have been cleaned up.\n\nDone.")
+    print("All Fleet Provisioning demo resources have been cleaned up.")
 
 # Delete the files created by the demo and reset demo_config.h
 def reset_files():

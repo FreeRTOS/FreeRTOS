@@ -2848,6 +2848,7 @@ usagefault
 usart
 usarts
 usb
+usbat
 usbbus
 usbconfiguration
 usbdevice

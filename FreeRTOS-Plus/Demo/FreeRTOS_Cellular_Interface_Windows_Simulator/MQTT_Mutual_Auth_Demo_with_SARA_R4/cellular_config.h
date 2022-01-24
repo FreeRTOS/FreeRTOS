@@ -149,4 +149,9 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * #define CELLULAR_CONFIG_SARA_R4_SET_MNO_PROFILE         ( ...insert here... )
  */
 
+/*
+ * Reboot Sara R4 cellular modem in module init function.
+ */
+#define  CELLULAR_CONFIG_SARA_R4_REBOOT_ON_INIT
+
 #endif /* __CELLULAR_CONFIG_H__ */

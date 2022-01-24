@@ -470,7 +470,6 @@
     <ClCompile Include="..\..\..\..\ThirdParty\mbedtls\library\x509write_csr.c">
       <Filter>FreeRTOS+\mbedtls\library</Filter>
     </ClCompile>
-    <ClCompile Include="mqtt_operations.c" />
     <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborencoder.c">
       <Filter>FreeRTOS+\tinycbor</Filter>
     </ClCompile>
@@ -537,6 +536,7 @@
     <ClCompile Include="..\..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_bio_freertos_plus_tcp.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\mbedtls</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Mqtt_Demo_Helpers\mqtt_pkcs11_demo_helpers.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\NetworkInterface.h">
@@ -904,7 +904,6 @@
     <ClInclude Include="fleet_provisioning_config.h">
       <Filter>Config</Filter>
     </ClInclude>
-    <ClInclude Include="mqtt_operations.h" />
     <ClInclude Include="..\..\..\..\ThirdParty\tinycbor\src\cborinternal_p.h">
       <Filter>FreeRTOS+\tinycbor</Filter>
     </ClInclude>
@@ -950,6 +949,7 @@
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\using_mbedtls_pkcs11\using_mbedtls_pkcs11.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Mqtt_Demo_Helpers\mqtt_pkcs11_demo_helpers.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\ThirdParty\mbedtls\CMakeLists.txt">

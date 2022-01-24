@@ -105,4 +105,10 @@ extern void vLoggingPrintf( const char * pcFormatString,
  */
 #define CELLULAR_IP_ADDRESS_MAX_SIZE    ( 64U )
 
+/*
+ * BG96 supports different URC port. Define this macro if "usbat" port is URC output port.
+ * Otherwise, "uart1" will be configured to URC output port.
+ */
+#define CELLULAR_BG96_URC_PORT_USBAT
+
 #endif /* __CELLULAR_CONFIG_H__ */

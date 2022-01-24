@@ -9,36 +9,41 @@ KEY_OUT_NAME = "corePKCS11_Claim_Key.dat"
 CERT_OUT_NAME = "corePKCS11_Claim_Certificate.dat"
 
 
-def convert_pem_to_der(cert_file, key_file):
+def convert_pem_to_der(cert_pem, key_pem):
     # Convert certificate from PEM to DER
-    print("Converting format to DER format...")
-    with open(key_file, "rb") as key:
-        print("Starting key PEM to DER conversion.")
-        pemkey = serialization.load_pem_private_key(key.read(), None, default_backend())
-        key_der = pemkey.private_bytes(
-            serialization.Encoding.DER,
-            serialization.PrivateFormat.TraditionalOpenSSL,
-            serialization.NoEncryption(),
-        )
-        with open(KEY_OUT_NAME, "wb") as key_out:
-            key_out.write(key_der)
-        print(
-            f"Successfully converted key PEM to DER. Output file named: {KEY_OUT_NAME}"
-        )
+    key = serialization.load_pem_private_key(
+        bytes(key_pem, "utf-8"), None, default_backend())
+    key_der = key.private_bytes(
+        serialization.Encoding.DER,
+        serialization.PrivateFormat.TraditionalOpenSSL,
+        serialization.NoEncryption(),
+    )
+    with open(f"../{KEY_OUT_NAME}", "wb") as key_out:
+        key_out.write(key_der)
+    print(
+        f"Successfully converted key PEM to DER. Output file named: {KEY_OUT_NAME}"
+    )
 
-    print("Starting certificate pem conversion.")
-    with open(cert_file, "rb") as cert:
-        cert = x509.load_pem_x509_certificate(cert.read(), default_backend())
-        with open(CERT_OUT_NAME, "wb") as cert_out:
-            cert_out.write(cert.public_bytes(serialization.Encoding.DER))
+    cert = x509.load_pem_x509_certificate(
+        bytes(cert_pem, "utf-8"), default_backend())
+    with open(f"../{CERT_OUT_NAME}", "wb") as cert_out:
+        cert_out.write(cert.public_bytes(serialization.Encoding.DER))
 
-        print(
-            f"Successfully converted certificate PEM to DER. Output file named: {CERT_OUT_NAME}"
-        )
+    print(
+        f"Successfully converted certificate PEM to DER. Output file named: {CERT_OUT_NAME}"
+    )
 
 
 def main(args):
-    convert_pem_to_der(cert_file=args.cert_file, key_file=args.key_file)
+    cert = open(args.cert_file, "r")
+    cert_pem = cert.read()
+    cert.close()
+
+    key = open(args.key_file, "r")
+    key_pem = key.read()
+    key.close()
+
+    convert_pem_to_der(cert_pem, key_pem)
 
 
 if __name__ == "__main__":

@@ -3,7 +3,6 @@
 import os
 import boto3
 import botocore
-from typing import Dict, List
 
 KEY_OUT_NAME = "corePKCS11_Claim_Key.dat"
 CERT_OUT_NAME = "corePKCS11_Claim_Certificate.dat"
@@ -45,7 +44,7 @@ def delete_thing(thing_name):
                 thingName=thing_name,
                 principal=certificate_arn
             )
-    
+
     iot.delete_thing(thingName=thing_name)
 
 # Delete a certificate and all Things attached to it
@@ -57,7 +56,7 @@ def delete_certificate_and_things(certificate_arn, policy_name):
     for response in list_things_iterator:
         for thing_name in response["things"]:
             delete_thing(thing_name)
-    
+
     iot.detach_policy(
         policyName=policy_name,
         target=certificate_arn
@@ -68,7 +67,7 @@ def delete_certificate_and_things(certificate_arn, policy_name):
         certificateId=certificate_id,
         newStatus="INACTIVE"
     )
-    iot.delete_certificate(certificateId=certificate_id) 
+    iot.delete_certificate(certificateId=certificate_id)
 
 # Delete all resources (including provisioned Things)
 def delete_resources():
@@ -76,7 +75,7 @@ def delete_resources():
     if stack_response == "STACK_NOT_FOUND":
         print("Nothing to delete - no Fleet Provisioning resources were found.")
         return
-    
+
     # Find all certificates with "CF_FleetProvisioningDemoThingPolicy" attached
     print("Deleting certificates and things...")
     paginator = iot.get_paginator("list_targets_for_policy")
@@ -91,7 +90,7 @@ def delete_resources():
                 certificate_arn,
                 "CF_FleetProvisioningDemoThingPolicy"
             )
-    
+
     # Find all certificates with "CF_FleetProvisioningDemoClaimPolicy" attached
     paginator = iot.get_paginator("list_targets_for_policy")
     list_targets_claim_iterator = paginator.paginate(
@@ -105,7 +104,7 @@ def delete_resources():
                 certificate_arn,
                 "CF_FleetProvisioningDemoClaimPolicy"
             )
-    
+
     print("Done.")
 
     print("Fleet Provisioning resource stack deletion started. View the stack in the CloudFormation console here:")
@@ -139,17 +138,17 @@ def reset_files():
         os.remove(f"../{THING_PUBLIC_KEY_NAME}")
     if os.path.exists(f"../{THING_CERT_NAME}"):
         os.remove(f"../{THING_CERT_NAME}")
-    
+
     # Reset demo_config.h
     template_file = open("demo_config_empty.templ", 'r')
     file_text = template_file.read()
-    
+
     header_file = open("../demo_config.h", "w")
     header_file.write(file_text)
     header_file.close()
     template_file.close()
     print("Credentials removed and demo_config.h reset.")
-    
+
 
 # Parse arguments and execute appropriate functions
 def main():
@@ -160,6 +159,7 @@ def main():
         print()
         reset_files()
         delete_resources()
+
 
 if __name__ == "__main__":
     main()

@@ -2,10 +2,7 @@
 
 import boto3
 import botocore
-from typing import Dict, List
-from cryptography import x509
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import serialization
+from convert_credentials_to_der import convert_pem_to_der
 
 KEY_OUT_NAME = "corePKCS11_Claim_Key.dat"
 CERT_OUT_NAME = "corePKCS11_Claim_Certificate.dat"
@@ -39,11 +36,12 @@ def get_stack():
 def create_resources():
     stack_response = get_stack()
     if stack_response != "STACK_NOT_FOUND":
-        print("Fleet Provisioning resource stack already exists with status: " + stack_response["StackStatus"])
+        print("Fleet Provisioning resource stack already exists with status: " +
+              stack_response["StackStatus"])
         print()
         if stack_response["StackStatus"] != "CREATE_COMPLETE":
             raise Exception("Fleet Provisioning resource stack failed to create successfully. You may need to delete the stack and retry."
-                + "\nView the stack in the CloudFormation console here:\n" + convert_cf_arn_to_link(stack_response["StackId"]))
+                            + "\nView the stack in the CloudFormation console here:\n" + convert_cf_arn_to_link(stack_response["StackId"]))
     else:
         # Read the cloudformation template file contained in the same directory
         cf_template_file = open("cloudformation_template.json", "r")
@@ -65,45 +63,30 @@ def create_resources():
             create_waiter.wait(StackName=RESOURCE_STACK_NAME)
             print("Successfully created the resources stack.")
         except botocore.exceptions.WaiterError as err:
-            print("Error: Stack creation failed. You may need to delete_all and try again.")
+            print(
+                "Error: Stack creation failed. You may need to delete_all and try again.")
             raise
 
-def convert_pem_to_der(cert_pem, key_pem):
-    # Convert certificate from PEM to DER
-    key = serialization.load_pem_private_key(bytes(key_pem, "utf-8"), None, default_backend())
-    key_der = key.private_bytes(
-        serialization.Encoding.DER,
-        serialization.PrivateFormat.TraditionalOpenSSL,
-        serialization.NoEncryption(),
-    )
-    with open(f"../{KEY_OUT_NAME}", "wb") as key_out:
-        key_out.write(key_der)
-    print(
-        f"Successfully converted key PEM to DER. Output file named: {KEY_OUT_NAME}"
-    )
-
-    cert = x509.load_pem_x509_certificate(bytes(cert_pem, "utf-8"), default_backend())
-    with open(f"../{CERT_OUT_NAME}", "wb") as cert_out:
-        cert_out.write(cert.public_bytes(serialization.Encoding.DER))
-
-    print(
-        f"Successfully converted certificate PEM to DER. Output file named: {CERT_OUT_NAME}"
-    )
-
 # Generate IoT credentials in DER format and save them in the demo directory
+
+
 def create_credentials():
     # Verify that the stack exists (create_resources has been ran before somewhere)
     stack_response = get_stack()
     if stack_response == "STACK_NOT_FOUND":
-        raise Exception(f"CloudFormation stack \"{RESOURCE_STACK_NAME}\" not found.")
+        raise Exception(
+            f"CloudFormation stack \"{RESOURCE_STACK_NAME}\" not found.")
     elif stack_response["StackStatus"] != "CREATE_COMPLETE":
         print("Error: Stack was not successfully created. View the stack in the CloudFormation console here:")
         stack_link = convert_cf_arn_to_link(stack_response["StackId"])
-        raise Exception("Stack was not successfully created. View the stack in the CloudFormation console here:\n" + stack_link)
+        raise Exception(
+            "Stack was not successfully created. View the stack in the CloudFormation console here:\n" + stack_link)
     else:
         credentials = iot.create_keys_and_certificate(setAsActive=True)
-        iot.attach_policy(policyName="CF_FleetProvisioningDemoClaimPolicy", target=credentials["certificateArn"])
-        convert_pem_to_der(credentials["certificatePem"], credentials["keyPair"]["PrivateKey"])
+        iot.attach_policy(policyName="CF_FleetProvisioningDemoClaimPolicy",
+                          target=credentials["certificateArn"])
+        convert_pem_to_der(
+            credentials["certificatePem"], credentials["keyPair"]["PrivateKey"])
 
 
 # Set the necessary fields in demo_config.h
@@ -112,15 +95,15 @@ def update_demo_config():
 
     template_file = open("demo_config.templ", 'r')
     file_text = template_file.read()
-    file_text = file_text.replace("<IOTEndpoint>", "\"" + endpoint["endpointAddress"] + "\"")
-    
+    file_text = file_text.replace(
+        "<IOTEndpoint>", "\"" + endpoint["endpointAddress"] + "\"")
+
     header_file = open("../demo_config.h", "w")
     header_file.write(file_text)
     header_file.close()
     template_file.close()
     print("Successfully updated demo_config.h")
-    
-    
+
 
 # Parse arguments and execute appropriate functions
 def main():
@@ -133,6 +116,7 @@ def main():
         create_credentials()
         update_demo_config()
         print("\nFleet Provisioning demo setup complete. Ensure that all generated files (key, certificate, demo_config.h) are in the same folder as \"fleet_provisioning_demo.sln\".")
+
 
 if __name__ == "__main__":
     main()

@@ -521,6 +521,7 @@ democonfiguse
 democonfiguser
 demofiles
 demoiptrace
+demosetup
 demotask
 demotimer
 der

@@ -35,13 +35,11 @@ def convert_pem_to_der(cert_pem, key_pem):
 
 
 def main(args):
-    cert = open(args.cert_file, "r")
-    cert_pem = cert.read()
-    cert.close()
+    with open(args.cert_file, "r") as cert:
+        cert_pem = cert.read()
 
-    key = open(args.key_file, "r")
-    key_pem = key.read()
-    key.close()
+    with open(args.key_file, "r") as key:
+        key_pem = key.read()
 
     convert_pem_to_der(cert_pem, key_pem)
 

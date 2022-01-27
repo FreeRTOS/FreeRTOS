@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202111.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -242,7 +242,7 @@ static TlsTransportStatus_t loadCredentials( NetworkContext_t * pNetCtx,
         }
 
         return returnStatus;
-    #else  /* if defined( democonfigCREDENTIALS_IN_BUFFER ) */
+    #else /* if defined( democonfigCREDENTIALS_IN_BUFFER ) */
         if( wolfSSL_CTX_load_verify_locations( pNetCtx->sslContext.ctx,
                                                ( const char * ) ( pNetCred->pRootCa ), NULL ) == SSL_SUCCESS )
         {
@@ -482,23 +482,43 @@ int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
 {
     int32_t tlsStatus = 0;
     int iResult = 0;
-    WOLFSSL * pSsl = pNetworkContext->sslContext.ssl;
+    WOLFSSL * pSsl = NULL;
 
-    iResult = wolfSSL_read( pSsl, pBuffer, bytesToRecv );
-
-    if( iResult > 0 )
+    if( ( pNetworkContext == NULL ) || ( pNetworkContext->sslContext.ssl == NULL ) )
     {
-        tlsStatus = iResult;
+        LogError( ( "invalid input, pNetworkContext=%p", pNetworkContext ) );
+        tlsStatus = -1;
     }
-    else if( wolfSSL_want_read( pSsl ) == 1 )
+    else if( pBuffer == NULL )
     {
-        tlsStatus = 0;
+        LogError( ( "invalid input, pBuffer == NULL" ) );
+        tlsStatus = -1;
+    }
+    else if( bytesToRecv == 0 )
+    {
+        LogError( ( "invalid input, bytesToRecv == 0" ) );
+        tlsStatus = -1;
     }
     else
     {
-        tlsStatus = wolfSSL_state( pSsl );
-        LogError( ( "Error from wolfSSL_read %d : %s ",
-                    iResult, wolfSSL_ERR_reason_error_string( tlsStatus ) ) );
+        pSsl = pNetworkContext->sslContext.ssl;
+
+        iResult = wolfSSL_read( pSsl, pBuffer, bytesToRecv );
+
+        if( iResult > 0 )
+        {
+            tlsStatus = iResult;
+        }
+        else if( wolfSSL_want_read( pSsl ) == 1 )
+        {
+            tlsStatus = 0;
+        }
+        else
+        {
+            tlsStatus = wolfSSL_state( pSsl );
+            LogError( ( "Error from wolfSSL_read %d : %s ",
+                        iResult, wolfSSL_ERR_reason_error_string( tlsStatus ) ) );
+        }
     }
 
     return tlsStatus;
@@ -512,23 +532,43 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
 {
     int32_t tlsStatus = 0;
     int iResult = 0;
-    WOLFSSL * pSsl = pNetworkContext->sslContext.ssl;
+    WOLFSSL * pSsl = NULL;
 
-    iResult = wolfSSL_write( pSsl, pBuffer, bytesToSend );
-
-    if( iResult > 0 )
+    if( ( pNetworkContext == NULL ) || ( pNetworkContext->sslContext.ssl == NULL ) )
     {
-        tlsStatus = iResult;
+        LogError( ( "invalid input, pNetworkContext=%p", pNetworkContext ) );
+        tlsStatus = -1;
     }
-    else if( wolfSSL_want_write( pSsl ) == 1 )
+    else if( pBuffer == NULL )
     {
-        tlsStatus = 0;
+        LogError( ( "invalid input, pBuffer == NULL" ) );
+        tlsStatus = -1;
+    }
+    else if( bytesToSend == 0 )
+    {
+        LogError( ( "invalid input, bytesToSend == 0" ) );
+        tlsStatus = -1;
     }
     else
     {
-        tlsStatus = wolfSSL_state( pSsl );
-        LogError( ( "Error from wolfSL_write %d : %s ",
-                    iResult, wolfSSL_ERR_reason_error_string( tlsStatus ) ) );
+        pSsl = pNetworkContext->sslContext.ssl;
+
+        iResult = wolfSSL_write( pSsl, pBuffer, bytesToSend );
+
+        if( iResult > 0 )
+        {
+            tlsStatus = iResult;
+        }
+        else if( wolfSSL_want_write( pSsl ) == 1 )
+        {
+            tlsStatus = 0;
+        }
+        else
+        {
+            tlsStatus = wolfSSL_state( pSsl );
+            LogError( ( "Error from wolfSL_write %d : %s ",
+                        iResult, wolfSSL_ERR_reason_error_string( tlsStatus ) ) );
+        }
     }
 
     return tlsStatus;

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202111.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,17 +19,16 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
  *
- * 1 tab == 4 spaces!
  */
 
 /******************************************************************************
  *
  * This demo is described on the following web page:
  * TODO: This link describes the FAT version of this demo.
- * http://www.freertos.org/FreeRTOS-Plus/Fail_Safe_File_System/Fail_Safe_Embedded_File_System_demo.shtml
+ * https://www.FreeRTOS.org/FreeRTOS-Plus/Fail_Safe_File_System/Fail_Safe_Embedded_File_System_demo.shtml
  *
  ******************************************************************************/
 

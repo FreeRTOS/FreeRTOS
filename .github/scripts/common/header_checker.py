@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # /*
-# * FreeRTOS V202111.00
+# * FreeRTOS V202112.00
 # * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
 # *
 # * Permission is hereby granted, free of charge, to any person obtaining a copy of

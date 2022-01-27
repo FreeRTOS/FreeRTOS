@@ -1,3 +1,4 @@
+aaaa
 ab
 abs
 accesskeyid
@@ -50,6 +51,7 @@ appropiate
 aptime
 apu
 ar
+aren't
 args
 armv
 arp
@@ -81,6 +83,7 @@ basetype
 bauddiv
 baudrate
 baudrateconverter
+bb
 bcd
 bcdcdc
 bcddevicel
@@ -114,6 +117,7 @@ binterfaceprotocol
 binterfacesubclass
 binterval
 bio
+bios
 bislisten
 bitmasking
 bitvalue
@@ -2117,6 +2121,7 @@ pxport
 pxpublishinfo
 pxqueue
 pxreadhandle
+pxreceivecompletedcallback
 pxreportdescriptor
 pxrequestheaders
 pxrequestinfo
@@ -2124,6 +2129,7 @@ pxresponse
 pxreturninfo
 pxrng
 pxrngcontext
+pxsendcompletedcallback
 pxsiglen
 pxsigvcreds
 pxslotid
@@ -2459,6 +2465,7 @@ staticsemaphore
 staticstreambuffer
 statictask
 statictimer
+statusmessage
 stdarg
 stdint
 stdlib
@@ -2770,6 +2777,7 @@ ulong
 ulpacketsreceived
 ulpacketssent
 ulport
+ulportinterruptnesting
 ulprescale
 ulpriority
 ulprioritysetcounter
@@ -2841,6 +2849,7 @@ usagefault
 usart
 usarts
 usb
+usbat
 usbbus
 usbconfiguration
 usbdevice
@@ -2937,6 +2946,7 @@ uxtaskgetsystemstate
 uxtaskgettasknumber
 uxtaskpriority
 uxtaskpriorityget
+uxtb
 uxtick
 uxtxstackbuffer
 uxvariabletoincrement
@@ -3266,6 +3276,7 @@ xinterface
 xinterruptcontroller
 xiptracevalues
 xirqrequest
+xisinsideisr
 xisrautoreloadtimer
 xisroneshottimer
 xisrstatus

@@ -264,9 +264,9 @@ static portTASK_FUNCTION( vCounterControlTask, pvParameters )
             vTaskSuspend( xContinuousIncrementHandle );
             {
                 #if ( INCLUDE_eTaskGetState == 1 )
-                    {
-                        configASSERT( eTaskGetState( xContinuousIncrementHandle ) == eSuspended );
-                    }
+                {
+                    configASSERT( eTaskGetState( xContinuousIncrementHandle ) == eSuspended );
+                }
                 #endif /* INCLUDE_eTaskGetState */
 
                 ulLastCounter = ulCounter;
@@ -278,9 +278,9 @@ static portTASK_FUNCTION( vCounterControlTask, pvParameters )
             #endif
 
             #if ( INCLUDE_eTaskGetState == 1 )
-                {
-                    configASSERT( eTaskGetState( xContinuousIncrementHandle ) == eReady );
-                }
+            {
+                configASSERT( eTaskGetState( xContinuousIncrementHandle ) == eReady );
+            }
             #endif /* INCLUDE_eTaskGetState */
 
             /* Now delay to ensure the other task has processor time. */
@@ -311,9 +311,9 @@ static portTASK_FUNCTION( vCounterControlTask, pvParameters )
         ulCounter = ( uint32_t ) 0;
 
         #if ( INCLUDE_eTaskGetState == 1 )
-            {
-                configASSERT( eTaskGetState( xLimitedIncrementHandle ) == eSuspended );
-            }
+        {
+            configASSERT( eTaskGetState( xLimitedIncrementHandle ) == eSuspended );
+        }
         #endif /* INCLUDE_eTaskGetState */
 
         /* Resume the limited count task which has a higher priority than us.
@@ -328,9 +328,9 @@ static portTASK_FUNCTION( vCounterControlTask, pvParameters )
         /* This task should not run again until xLimitedIncrementHandle has
          * suspended itself. */
         #if ( INCLUDE_eTaskGetState == 1 )
-            {
-                configASSERT( eTaskGetState( xLimitedIncrementHandle ) == eSuspended );
-            }
+        {
+            configASSERT( eTaskGetState( xLimitedIncrementHandle ) == eSuspended );
+        }
         #endif /* INCLUDE_eTaskGetState */
 
         /* Does the counter variable have the expected value? */
@@ -415,9 +415,9 @@ static portTASK_FUNCTION( vQueueReceiveWhenSuspendedTask, pvParameters )
             xTaskResumeAll();
 
             #if configUSE_PREEMPTION == 0
-                {
-                    taskYIELD();
-                }
+            {
+                taskYIELD();
+            }
             #endif
         } while( xGotValue == pdFALSE );
 

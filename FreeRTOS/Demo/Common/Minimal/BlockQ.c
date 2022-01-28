@@ -242,12 +242,12 @@ static portTASK_FUNCTION( vBlockingQueueConsumer, pvParameters )
             }
 
             #if configUSE_PREEMPTION == 0
+            {
+                if( pxQueueParameters->xBlockTime == 0 )
                 {
-                    if( pxQueueParameters->xBlockTime == 0 )
-                    {
-                        taskYIELD();
-                    }
+                    taskYIELD();
                 }
+            }
             #endif
         }
     }

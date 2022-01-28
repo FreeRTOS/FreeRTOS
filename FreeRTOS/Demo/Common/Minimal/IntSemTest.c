@@ -177,9 +177,9 @@ static void prvTakeAndGiveInTheSameOrder( void )
     /* Ensure the slave is suspended, and that this task is running at the
      * lower priority as expected as the start conditions. */
     #if ( INCLUDE_eTaskGetState == 1 )
-        {
-            configASSERT( eTaskGetState( xSlaveHandle ) == eSuspended );
-        }
+    {
+        configASSERT( eTaskGetState( xSlaveHandle ) == eSuspended );
+    }
     #endif /* INCLUDE_eTaskGetState */
 
     if( uxTaskPriorityGet( NULL ) != intsemMASTER_PRIORITY )
@@ -200,9 +200,9 @@ static void prvTakeAndGiveInTheSameOrder( void )
     /* The slave has the higher priority so should now have executed and
      * blocked on the semaphore. */
     #if ( INCLUDE_eTaskGetState == 1 )
-        {
-            configASSERT( eTaskGetState( xSlaveHandle ) == eBlocked );
-        }
+    {
+        configASSERT( eTaskGetState( xSlaveHandle ) == eBlocked );
+    }
     #endif /* INCLUDE_eTaskGetState */
 
     /* This task should now have inherited the priority of the slave
@@ -264,9 +264,9 @@ static void prvTakeAndGiveInTheSameOrder( void )
     }
 
     #if ( INCLUDE_eTaskGetState == 1 )
-        {
-            configASSERT( eTaskGetState( xSlaveHandle ) == eSuspended );
-        }
+    {
+        configASSERT( eTaskGetState( xSlaveHandle ) == eSuspended );
+    }
     #endif /* INCLUDE_eTaskGetState */
 
     /* Reset the mutex ready for the next round. */
@@ -279,9 +279,9 @@ static void prvTakeAndGiveInTheOppositeOrder( void )
     /* Ensure the slave is suspended, and that this task is running at the
      * lower priority as expected as the start conditions. */
     #if ( INCLUDE_eTaskGetState == 1 )
-        {
-            configASSERT( eTaskGetState( xSlaveHandle ) == eSuspended );
-        }
+    {
+        configASSERT( eTaskGetState( xSlaveHandle ) == eSuspended );
+    }
     #endif /* INCLUDE_eTaskGetState */
 
     if( uxTaskPriorityGet( NULL ) != intsemMASTER_PRIORITY )
@@ -302,9 +302,9 @@ static void prvTakeAndGiveInTheOppositeOrder( void )
     /* The slave has the higher priority so should now have executed and
      * blocked on the semaphore. */
     #if ( INCLUDE_eTaskGetState == 1 )
-        {
-            configASSERT( eTaskGetState( xSlaveHandle ) == eBlocked );
-        }
+    {
+        configASSERT( eTaskGetState( xSlaveHandle ) == eBlocked );
+    }
     #endif /* INCLUDE_eTaskGetState */
 
     /* This task should now have inherited the priority of the slave

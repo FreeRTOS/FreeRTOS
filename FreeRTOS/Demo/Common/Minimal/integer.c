@@ -99,9 +99,9 @@ static portTASK_FUNCTION( vCompeteingIntMathTask, pvParameters )
 
         /* Yield in case cooperative scheduling is being used. */
         #if configUSE_PREEMPTION == 0
-            {
-                taskYIELD();
-            }
+        {
+            taskYIELD();
+        }
         #endif
 
         /* Finish off the calculation. */
@@ -128,9 +128,9 @@ static portTASK_FUNCTION( vCompeteingIntMathTask, pvParameters )
 
         /* Yield in case cooperative scheduling is being used. */
         #if configUSE_PREEMPTION == 0
-            {
-                taskYIELD();
-            }
+        {
+            taskYIELD();
+        }
         #endif
     }
 }

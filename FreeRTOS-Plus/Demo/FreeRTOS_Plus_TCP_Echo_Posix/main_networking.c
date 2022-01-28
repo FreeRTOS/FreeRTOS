@@ -236,16 +236,21 @@ static void prvSRand( UBaseType_t ulSeed )
 static void prvMiscInitialisation( void )
 {
     time_t xTimeNow;
-
+    uint32_t ulRandomNumbers[ 4 ];
     /* Seed the random number generator. */
     time( &xTimeNow );
     FreeRTOS_debug_printf( ( "Seed for randomiser: %lu\n", xTimeNow ) );
     prvSRand( ( uint32_t ) xTimeNow );
+
+    ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 0 ] );
+    ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 1 ] );
+    ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 2 ] );
+    ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 3 ] );
     FreeRTOS_debug_printf( ( "Random numbers: %08X %08X %08X %08X\n",
-                             ipconfigRAND32(),
-                             ipconfigRAND32(),
-                             ipconfigRAND32(),
-                             ipconfigRAND32() ) );
+                             ulRandomNumbers[ 0 ],
+                             ulRandomNumbers[ 1 ],
+                             ulRandomNumbers[ 2 ],
+                             ulRandomNumbers[ 3 ] ) );
 }
 /*-----------------------------------------------------------*/
 

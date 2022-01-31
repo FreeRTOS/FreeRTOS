@@ -278,8 +278,6 @@ extern uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
 /*
  * Set *pulNumber to a random number, and return pdTRUE. When the random number
  * generator is broken, it shall return pdFALSE.
- * The macros ipconfigRAND32() and configRAND32() are not in use
- * anymore in FreeRTOS+TCP.
  *
  * THIS IS ONLY A DUMMY IMPLEMENTATION THAT RETURNS A PSEUDO RANDOM NUMBER SO IS
  * NOT INTENDED FOR USE IN PRODUCTION SYSTEMS.

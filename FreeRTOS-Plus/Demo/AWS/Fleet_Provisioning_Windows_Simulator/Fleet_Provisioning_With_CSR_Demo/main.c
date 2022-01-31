@@ -227,6 +227,7 @@ static void prvMiscInitialisation( void )
 {
     time_t xTimeNow;
     uint32_t ulLoggingIPAddress;
+    uint32_t ulRandomNumbers[ 4 ];
 
     ulLoggingIPAddress = FreeRTOS_inet_addr_quick( configUDP_LOGGING_ADDR0, configUDP_LOGGING_ADDR1, configUDP_LOGGING_ADDR2, configUDP_LOGGING_ADDR3 );
     vLoggingInit( xLogToStdout, xLogToFile, xLogToUDP, ulLoggingIPAddress, configPRINT_PORT );
@@ -241,7 +242,12 @@ static void prvMiscInitialisation( void )
     time( &xTimeNow );
     LogDebug( ( "Seed for randomizer: %lu\n", xTimeNow ) );
     prvSRand( ( uint32_t ) xTimeNow );
-    LogDebug( ( "Random numbers: %08X %08X %08X %08X\n", ipconfigRAND32(), ipconfigRAND32(), ipconfigRAND32(), ipconfigRAND32() ) );
+
+    ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 0 ] );
+    ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 1 ] );
+    ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 2 ] );
+    ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 3 ] );
+    LogDebug( ( "Random numbers: %08X %08X %08X %08X\n", ulRandomNumbers[ 0 ], ulRandomNumbers[ 1 ], ulRandomNumbers[ 2 ], ulRandomNumbers[ 3 ] ) );
 }
 /*-----------------------------------------------------------*/
 
@@ -309,8 +315,6 @@ extern uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
 /*
  * Set *pulNumber to a random number, and return pdTRUE. When the random number
  * generator is broken, it shall return pdFALSE.
- * The macros ipconfigRAND32() and configRAND32() are not in use
- * anymore in FreeRTOS+TCP.
  *
  * THIS IS ONLY A DUMMY IMPLEMENTATION THAT RETURNS A PSEUDO RANDOM NUMBER SO IS
  * NOT INTENDED FOR USE IN PRODUCTION SYSTEMS.

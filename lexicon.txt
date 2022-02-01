@@ -469,6 +469,7 @@ ctxbuffer
 ctxlock
 ctxstring
 curbyte
+currentthread
 curson
 cvore
 cwd
@@ -1041,6 +1042,7 @@ irqchannelpreemptionpriority
 irqchannelsubpriority
 irqcr
 irqhandler
+irqmask
 irqmd
 irqn
 irqs
@@ -1536,6 +1538,7 @@ pcfile
 pcfilebuffer
 pcfilename
 pcfrom
+pchead
 pchelpstring
 pchexoutput
 pchost
@@ -1579,6 +1582,7 @@ pcpubkeylabel
 pcpublickeylabel
 pcqueuegetname
 pcqueuename
+pcreadfrom
 pcreceivedstring
 pcreg
 pcrestcommand
@@ -1593,6 +1597,7 @@ pcstatusmessage
 pcstring
 pcstringtoreceive
 pcstringtosend
+pctail
 pctaskname
 pcthingname
 pcthingnamebuffer
@@ -1606,6 +1611,7 @@ pcurl
 pcurldata
 pcurrenttime
 pcwritebuffer
+pcwriteto
 pd
 pdata
 pdc
@@ -1795,6 +1801,7 @@ prvcollectdevicemetrics
 prvcomtxtimercallback
 prvconnectandcreatedemotasks
 prvcopycommand
+prvCopyDataToQueue
 prvcoreatask
 prvcorebtasks
 prvcreatecommand
@@ -2005,6 +2012,7 @@ puchash
 pucindex
 pucmessage
 pucpayloadbuffer
+pucqueuestorage
 pucrandom
 pucresponse
 pucsig
@@ -2048,6 +2056,7 @@ pvbuffer
 pvcontext
 pvctx
 pvincomingpublishcallbackcontext
+pvitemtoqueue
 pvoptionvalue
 pvparam
 pvparameters
@@ -2100,6 +2109,7 @@ pxnetif
 pxnetworkbuffer
 pxnetworkcontext
 pxnetworkcredentials
+pxnewqueue
 pxnext
 pxopenedinterfacehandle
 pxoutcharswritten
@@ -2157,6 +2167,8 @@ queuegenericcreate
 queuegenericcreatestatic
 queuegenericreset
 queuehandle
+queuelists
+queueoverwrite
 queuequeue
 queueregistry
 queueregistryitem
@@ -2168,6 +2180,7 @@ queuesetisr
 queuesetpriority
 queuespacesavailable
 queuestorage
+queuesuspend
 ra
 rampz
 rand
@@ -2322,6 +2335,7 @@ sbtrigger
 scalled
 scanf
 scf
+schedulersuspend
 sci
 scott
 scr
@@ -2489,6 +2503,7 @@ sublicense
 subsquent
 succeds
 suicidaltasks
+summarise
 svc
 svr
 sw
@@ -2666,6 +2681,7 @@ ucdatamsr
 ucdatashar
 ucdatasipr
 ucfifodata
+uchars
 ucheap
 ucidentifier
 ucindex
@@ -2987,6 +3003,7 @@ veh
 veify
 veirfy
 vemacread
+verifast
 verifyinit
 verizon
 verrorchecks
@@ -3190,6 +3207,7 @@ xcomporthandle
 xconnectedsocket
 xconnectionsarraylength
 xcontrolmessagebuffer
+xcopyposition
 xcorebmessagebuffers
 xcount
 xcreatecleansession
@@ -3372,6 +3390,7 @@ xportnumber
 xportpendsvhandler
 xportregistercinterrupthandler
 xportsystickhandler
+xposition
 xpreparetasklists
 xprintqueue
 xprivatekeyhandleptr
@@ -3568,6 +3587,7 @@ xteststatus
 xtickstowait
 xtime
 xtimeonentering
+xtimeout
 xtimeouts
 xtimer
 xtimerbuffer

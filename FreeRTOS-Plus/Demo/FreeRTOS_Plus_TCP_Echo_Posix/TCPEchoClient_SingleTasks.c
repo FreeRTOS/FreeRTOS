@@ -313,12 +313,14 @@ missing data. */
 	BaseType_t lCharactersToAdd, lCharacter;
 	char cChar = '0';
 	const BaseType_t lMinimumLength = 60;
+        uint32_t ulRandomNumber;
 
 		/* Randomise the number of characters that will be sent in the echo
 		request. */
 		do
 		{
-			lCharactersToAdd = ipconfigRAND32() % ( ulBufferLength - 20UL );
+                        ( void ) xApplicationGetRandomNumber( &ulRandomNumber );
+			lCharactersToAdd = ulRandomNumber % ( ulBufferLength - 20UL );
 		} while( ( lCharactersToAdd == 0 ) || ( lCharactersToAdd < lMinimumLength ) ); /* Must be at least enough to add the unique text to the start of the string later. */
 
 		/* Fill the buffer. */

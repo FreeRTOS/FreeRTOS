@@ -1,0 +1,6 @@
+<!DOCTYPE Board_Memory_Definition_File>
+<root name="nRF9160_xxAA">
+  <MemorySegment name="FLASH_S" start="0x00000000" size="0x0007F000" access="ReadOnly" />
+  <MemorySegment name="FLASH_NSC" start="0x0007F000" size="0x00001000" access="ReadOnly" />
+  <MemorySegment name="RAM_S" start="0x20000000" size="0x00020000" access="Read/Write" />
+</root>

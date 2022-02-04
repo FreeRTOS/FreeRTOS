@@ -51,7 +51,7 @@
     #define PORTMACRO_H
 
     #ifdef __cplusplus
-        extern "C" {
+    extern "C" {
     #endif
 
 /*-----------------------------------------------------------
@@ -146,7 +146,7 @@
     #define portTASK_FUNCTION( vFunction, pvParameters )          void vFunction( void * pvParameters )
 
     #ifdef __cplusplus
-        }
+    }
     #endif
 
 #endif /* PORTMACRO_H */

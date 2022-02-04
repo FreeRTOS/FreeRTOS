@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -163,23 +163,23 @@ void vStartMessageBufferTasks( configSTACK_DEPTH_TYPE xStackSize )
     xTaskCreate( prvNonBlockingSenderTask, "NonBlkTx", xStackSize, ( void * ) xMessageBuffer, tskIDLE_PRIORITY, NULL );
 
     #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
-        {
-            /* The sender tasks set up the message buffers before creating the
-             * receiver tasks.  Priorities must be 0 and 1 as the priority is used to
-             * index into the xStaticMessageBuffers and ucBufferStorage arrays. */
-            xTaskCreate( prvSenderTask, "1Sender", xBlockingStackSize, NULL, mbHIGHER_PRIORITY, NULL );
-            xTaskCreate( prvSenderTask, "2Sender", xBlockingStackSize, NULL, mbLOWER_PRIORITY, NULL );
-        }
+    {
+        /* The sender tasks set up the message buffers before creating the
+         * receiver tasks.  Priorities must be 0 and 1 as the priority is used to
+         * index into the xStaticMessageBuffers and ucBufferStorage arrays. */
+        xTaskCreate( prvSenderTask, "1Sender", xBlockingStackSize, NULL, mbHIGHER_PRIORITY, NULL );
+        xTaskCreate( prvSenderTask, "2Sender", xBlockingStackSize, NULL, mbLOWER_PRIORITY, NULL );
+    }
     #endif /* configSUPPORT_STATIC_ALLOCATION */
 
     #if ( configRUN_ADDITIONAL_TESTS == 1 )
-        {
-            xCoherenceTestMessageBuffer = xMessageBufferCreate( mbCOHERENCE_TEST_BUFFER_SIZE );
-            configASSERT( xCoherenceTestMessageBuffer );
+    {
+        xCoherenceTestMessageBuffer = xMessageBufferCreate( mbCOHERENCE_TEST_BUFFER_SIZE );
+        configASSERT( xCoherenceTestMessageBuffer );
 
-            xTaskCreate( prvSpaceAvailableCoherenceActor, "mbsanity1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-            xTaskCreate( prvSpaceAvailableCoherenceTester, "mbsanity2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-        }
+        xTaskCreate( prvSpaceAvailableCoherenceActor, "mbsanity1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+        xTaskCreate( prvSpaceAvailableCoherenceTester, "mbsanity2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+    }
     #endif
 }
 /*-----------------------------------------------------------*/
@@ -419,19 +419,19 @@ static void prvSingleTaskTests( MessageBufferHandle_t xMessageBuffer )
     configASSERT( xReturned == 0 );
     ( void ) xReturned; /* In case configASSERT() is not defined. */
     #ifndef configMESSAGE_BUFFER_LENGTH_TYPE
-        {
-            /* The following will fail if configMESSAGE_BUFFER_LENGTH_TYPE is set
-             * to a non 32-bit type. */
-            xReturned = xMessageBufferSend( xMessageBuffer, ( const void * ) pc55ByteString, mbMESSAGE_BUFFER_LENGTH_BYTES - 1, mbDONT_BLOCK );
-            configASSERT( xReturned == 0 );
-            ( void ) xReturned; /* In case configASSERT() is not defined. */
-            xReturned = xMessageBufferSend( xMessageBuffer, ( const void * ) pc55ByteString, mbMESSAGE_BUFFER_LENGTH_BYTES - 2, mbDONT_BLOCK );
-            configASSERT( xReturned == 0 );
-            ( void ) xReturned; /* In case configASSERT() is not defined. */
-            xReturned = xMessageBufferSend( xMessageBuffer, ( const void * ) pc55ByteString, mbMESSAGE_BUFFER_LENGTH_BYTES - 3, mbDONT_BLOCK );
-            configASSERT( xReturned == 0 );
-            ( void ) xReturned; /* In case configASSERT() is not defined. */
-        }
+    {
+        /* The following will fail if configMESSAGE_BUFFER_LENGTH_TYPE is set
+         * to a non 32-bit type. */
+        xReturned = xMessageBufferSend( xMessageBuffer, ( const void * ) pc55ByteString, mbMESSAGE_BUFFER_LENGTH_BYTES - 1, mbDONT_BLOCK );
+        configASSERT( xReturned == 0 );
+        ( void ) xReturned; /* In case configASSERT() is not defined. */
+        xReturned = xMessageBufferSend( xMessageBuffer, ( const void * ) pc55ByteString, mbMESSAGE_BUFFER_LENGTH_BYTES - 2, mbDONT_BLOCK );
+        configASSERT( xReturned == 0 );
+        ( void ) xReturned; /* In case configASSERT() is not defined. */
+        xReturned = xMessageBufferSend( xMessageBuffer, ( const void * ) pc55ByteString, mbMESSAGE_BUFFER_LENGTH_BYTES - 3, mbDONT_BLOCK );
+        configASSERT( xReturned == 0 );
+        ( void ) xReturned; /* In case configASSERT() is not defined. */
+    }
     #endif /* ifndef configMESSAGE_BUFFER_LENGTH_TYPE */
 
     /* Don't expect any messages to be available as the above were too large to
@@ -934,36 +934,36 @@ BaseType_t xAreMessageBufferTasksStillRunning( void )
     }
 
     #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
+    {
+        static uint32_t ulLastSenderLoopCounters[ mbNUMBER_OF_ECHO_CLIENTS ] = { 0 };
+
+        for( x = 0; x < mbNUMBER_OF_SENDER_TASKS; x++ )
         {
-            static uint32_t ulLastSenderLoopCounters[ mbNUMBER_OF_ECHO_CLIENTS ] = { 0 };
-
-            for( x = 0; x < mbNUMBER_OF_SENDER_TASKS; x++ )
-            {
-                if( ulLastSenderLoopCounters[ x ] == ulSenderLoopCounters[ x ] )
-                {
-                    xReturn = pdFAIL;
-                }
-                else
-                {
-                    ulLastSenderLoopCounters[ x ] = ulSenderLoopCounters[ x ];
-                }
-            }
-        }
-    #endif /* configSUPPORT_STATIC_ALLOCATION */
-
-    #if ( configRUN_ADDITIONAL_TESTS == 1 )
-        {
-            static uint32_t ullastSizeCoherencyTestCycles = 0UL;
-
-            if( ullastSizeCoherencyTestCycles == ulSizeCoherencyTestCycles )
+            if( ulLastSenderLoopCounters[ x ] == ulSenderLoopCounters[ x ] )
             {
                 xReturn = pdFAIL;
             }
             else
             {
-                ullastSizeCoherencyTestCycles = ulSizeCoherencyTestCycles;
+                ulLastSenderLoopCounters[ x ] = ulSenderLoopCounters[ x ];
             }
         }
+    }
+    #endif /* configSUPPORT_STATIC_ALLOCATION */
+
+    #if ( configRUN_ADDITIONAL_TESTS == 1 )
+    {
+        static uint32_t ullastSizeCoherencyTestCycles = 0UL;
+
+        if( ullastSizeCoherencyTestCycles == ulSizeCoherencyTestCycles )
+        {
+            xReturn = pdFAIL;
+        }
+        else
+        {
+            ullastSizeCoherencyTestCycles = ulSizeCoherencyTestCycles;
+        }
+    }
     #endif /* if ( configRUN_ADDITIONAL_TESTS == 1 ) */
 
     return xReturn;

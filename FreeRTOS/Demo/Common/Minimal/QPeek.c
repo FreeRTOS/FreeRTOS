@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -111,14 +111,14 @@ static void prvHighestPriorityPeekTask( void * pvParameters )
     uint32_t ulValue;
 
     #ifdef USE_STDIO
-        {
-            void vPrintDisplayMessage( const char * const * ppcMessageToSend );
+    {
+        void vPrintDisplayMessage( const char * const * ppcMessageToSend );
 
-            const char * const pcTaskStartMsg = "Queue peek test started.\r\n";
+        const char * const pcTaskStartMsg = "Queue peek test started.\r\n";
 
-            /* Queue a message for printing to say the task has started. */
-            vPrintDisplayMessage( &pcTaskStartMsg );
-        }
+        /* Queue a message for printing to say the task has started. */
+        vPrintDisplayMessage( &pcTaskStartMsg );
+    }
     #endif
 
     for( ; ; )

@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -242,12 +242,12 @@ static portTASK_FUNCTION( vBlockingQueueConsumer, pvParameters )
             }
 
             #if configUSE_PREEMPTION == 0
+            {
+                if( pxQueueParameters->xBlockTime == 0 )
                 {
-                    if( pxQueueParameters->xBlockTime == 0 )
-                    {
-                        taskYIELD();
-                    }
+                    taskYIELD();
                 }
+            }
             #endif
         }
     }

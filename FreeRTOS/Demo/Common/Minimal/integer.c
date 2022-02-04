@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -99,9 +99,9 @@ static portTASK_FUNCTION( vCompeteingIntMathTask, pvParameters )
 
         /* Yield in case cooperative scheduling is being used. */
         #if configUSE_PREEMPTION == 0
-            {
-                taskYIELD();
-            }
+        {
+            taskYIELD();
+        }
         #endif
 
         /* Finish off the calculation. */
@@ -128,9 +128,9 @@ static portTASK_FUNCTION( vCompeteingIntMathTask, pvParameters )
 
         /* Yield in case cooperative scheduling is being used. */
         #if configUSE_PREEMPTION == 0
-            {
-                taskYIELD();
-            }
+        {
+            taskYIELD();
+        }
         #endif
     }
 }

@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202112.00
- * Copyright (C) Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -60,18 +60,18 @@ static BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue,
         /* This case is unreachable for queues */
         /*@assert false;@*/
         #if ( configUSE_MUTEXES == 1 )
+        {
+            if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
             {
-                if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
-                {
-                    /* The mutex is no longer being held. */
-                    xReturn = xTaskPriorityDisinherit( pxQueue->u.xSemaphore.xMutexHolder );
-                    pxQueue->u.xSemaphore.xMutexHolder = NULL;
-                }
-                else
-                {
-                    mtCOVERAGE_TEST_MARKER();
-                }
+                /* The mutex is no longer being held. */
+                xReturn = xTaskPriorityDisinherit( pxQueue->u.xSemaphore.xMutexHolder );
+                pxQueue->u.xSemaphore.xMutexHolder = NULL;
             }
+            else
+            {
+                mtCOVERAGE_TEST_MARKER();
+            }
+        }
         #endif /* configUSE_MUTEXES */
     }
     else if( xPosition == queueSEND_TO_BACK )

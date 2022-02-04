@@ -37,7 +37,7 @@
  * @brief Memory region shared between two tasks.
  */
 static uint8_t ucSharedMemory[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( 32 ) ) );
-#if( configTOTAL_MPU_REGIONS == 16 )
+#if ( configTOTAL_MPU_REGIONS == 16 )
     static uint8_t ucSharedMemory1[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( 32 ) ) );
     static uint8_t ucSharedMemory2[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( 32 ) ) );
     static uint8_t ucSharedMemory3[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( 32 ) ) );
@@ -116,72 +116,72 @@ static void prvROAccessTask( void * pvParameters )
         ucSharedMemory[ 0 ] = 0;
         configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
 
-        #if( configTOTAL_MPU_REGIONS == 16 )
-        {
-            /* Perform the above mentioned sequence on ucSharedMemory1. */
-            ucVal = ucSharedMemory1[ 0 ];
-            /* Silent compiler warnings about unused variables. */
-            ( void ) ucVal;
-            ucROTaskFaultTracker[ 0 ] = 1;
-            ucSharedMemory1[ 0 ] = 0;
-            configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
+        #if ( configTOTAL_MPU_REGIONS == 16 )
+            {
+                /* Perform the above mentioned sequence on ucSharedMemory1. */
+                ucVal = ucSharedMemory1[ 0 ];
+                /* Silent compiler warnings about unused variables. */
+                ( void ) ucVal;
+                ucROTaskFaultTracker[ 0 ] = 1;
+                ucSharedMemory1[ 0 ] = 0;
+                configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
 
-            /* Perform the above mentioned sequence on ucSharedMemory2. */
-            ucVal = ucSharedMemory2[ 0 ];
-            /* Silent compiler warnings about unused variables. */
-            ( void ) ucVal;
-            ucROTaskFaultTracker[ 0 ] = 1;
-            ucSharedMemory2[ 0 ] = 0;
-            configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
+                /* Perform the above mentioned sequence on ucSharedMemory2. */
+                ucVal = ucSharedMemory2[ 0 ];
+                /* Silent compiler warnings about unused variables. */
+                ( void ) ucVal;
+                ucROTaskFaultTracker[ 0 ] = 1;
+                ucSharedMemory2[ 0 ] = 0;
+                configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
 
-            /* Perform the above mentioned sequence on ucSharedMemory3. */
-            ucVal = ucSharedMemory3[ 0 ];
-            /* Silent compiler warnings about unused variables. */
-            ( void ) ucVal;
-            ucROTaskFaultTracker[ 0 ] = 1;
-            ucSharedMemory3[ 0 ] = 0;
-            configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
+                /* Perform the above mentioned sequence on ucSharedMemory3. */
+                ucVal = ucSharedMemory3[ 0 ];
+                /* Silent compiler warnings about unused variables. */
+                ( void ) ucVal;
+                ucROTaskFaultTracker[ 0 ] = 1;
+                ucSharedMemory3[ 0 ] = 0;
+                configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
 
-            /* Perform the above mentioned sequence on ucSharedMemory4. */
-            ucVal = ucSharedMemory4[ 0 ];
-            /* Silent compiler warnings about unused variables. */
-            ( void ) ucVal;
-            ucROTaskFaultTracker[ 0 ] = 1;
-            ucSharedMemory4[ 0 ] = 0;
-            configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
+                /* Perform the above mentioned sequence on ucSharedMemory4. */
+                ucVal = ucSharedMemory4[ 0 ];
+                /* Silent compiler warnings about unused variables. */
+                ( void ) ucVal;
+                ucROTaskFaultTracker[ 0 ] = 1;
+                ucSharedMemory4[ 0 ] = 0;
+                configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
 
-            /* Perform the above mentioned sequence on ucSharedMemory5. */
-            ucVal = ucSharedMemory5[ 0 ];
-            /* Silent compiler warnings about unused variables. */
-            ( void ) ucVal;
-            ucROTaskFaultTracker[ 0 ] = 1;
-            ucSharedMemory5[ 0 ] = 0;
-            configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
+                /* Perform the above mentioned sequence on ucSharedMemory5. */
+                ucVal = ucSharedMemory5[ 0 ];
+                /* Silent compiler warnings about unused variables. */
+                ( void ) ucVal;
+                ucROTaskFaultTracker[ 0 ] = 1;
+                ucSharedMemory5[ 0 ] = 0;
+                configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
 
-            /* Perform the above mentioned sequence on ucSharedMemory6. */
-            ucVal = ucSharedMemory6[ 0 ];
-            /* Silent compiler warnings about unused variables. */
-            ( void ) ucVal;
-            ucROTaskFaultTracker[ 0 ] = 1;
-            ucSharedMemory6[ 0 ] = 0;
-            configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
+                /* Perform the above mentioned sequence on ucSharedMemory6. */
+                ucVal = ucSharedMemory6[ 0 ];
+                /* Silent compiler warnings about unused variables. */
+                ( void ) ucVal;
+                ucROTaskFaultTracker[ 0 ] = 1;
+                ucSharedMemory6[ 0 ] = 0;
+                configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
 
-            /* Perform the above mentioned sequence on ucSharedMemory7. */
-            ucVal = ucSharedMemory7[ 0 ];
-            /* Silent compiler warnings about unused variables. */
-            ( void ) ucVal;
-            ucROTaskFaultTracker[ 0 ] = 1;
-            ucSharedMemory7[ 0 ] = 0;
-            configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
+                /* Perform the above mentioned sequence on ucSharedMemory7. */
+                ucVal = ucSharedMemory7[ 0 ];
+                /* Silent compiler warnings about unused variables. */
+                ( void ) ucVal;
+                ucROTaskFaultTracker[ 0 ] = 1;
+                ucSharedMemory7[ 0 ] = 0;
+                configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
 
-            /* Perform the above mentioned sequence on ucSharedMemory8. */
-            ucVal = ucSharedMemory8[ 0 ];
-            /* Silent compiler warnings about unused variables. */
-            ( void ) ucVal;
-            ucROTaskFaultTracker[ 0 ] = 1;
-            ucSharedMemory8[ 0 ] = 0;
-            configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
-        }
+                /* Perform the above mentioned sequence on ucSharedMemory8. */
+                ucVal = ucSharedMemory8[ 0 ];
+                /* Silent compiler warnings about unused variables. */
+                ( void ) ucVal;
+                ucROTaskFaultTracker[ 0 ] = 1;
+                ucSharedMemory8[ 0 ] = 0;
+                configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
+            }
         #endif /* configTOTAL_MPU_REGIONS == 16 */
 
         /* Wait for a second. */
@@ -201,17 +201,17 @@ static void prvRWAccessTask( void * pvParameters )
          * it. */
         ucSharedMemory[ 0 ] = 0;
 
-        #if( configTOTAL_MPU_REGIONS == 16 )
-        {
-            ucSharedMemory1[ 0 ] = 0;
-            ucSharedMemory2[ 0 ] = 0;
-            ucSharedMemory3[ 0 ] = 0;
-            ucSharedMemory4[ 0 ] = 0;
-            ucSharedMemory5[ 0 ] = 0;
-            ucSharedMemory6[ 0 ] = 0;
-            ucSharedMemory7[ 0 ] = 0;
-            ucSharedMemory8[ 0 ] = 0;
-        }
+        #if ( configTOTAL_MPU_REGIONS == 16 )
+            {
+                ucSharedMemory1[ 0 ] = 0;
+                ucSharedMemory2[ 0 ] = 0;
+                ucSharedMemory3[ 0 ] = 0;
+                ucSharedMemory4[ 0 ] = 0;
+                ucSharedMemory5[ 0 ] = 0;
+                ucSharedMemory6[ 0 ] = 0;
+                ucSharedMemory7[ 0 ] = 0;
+                ucSharedMemory8[ 0 ] = 0;
+            }
         #endif /* configTOTAL_MPU_REGIONS == 16 */
 
         /* Wait for a second. */
@@ -235,15 +235,15 @@ void vStartMPUDemo( void )
         .xRegions       =
         {
             { ucSharedMemory,       32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
-            #if( configTOTAL_MPU_REGIONS == 16 )
-            { ucSharedMemory1,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
-            { ucSharedMemory2,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
-            { ucSharedMemory3,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
-            { ucSharedMemory4,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
-            { ucSharedMemory5,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
-            { ucSharedMemory6,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
-            { ucSharedMemory7,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
-            { ucSharedMemory8,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+            #if ( configTOTAL_MPU_REGIONS == 16 )
+                { ucSharedMemory1,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+                { ucSharedMemory2,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+                { ucSharedMemory3,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+                { ucSharedMemory4,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+                { ucSharedMemory5,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+                { ucSharedMemory6,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+                { ucSharedMemory7,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
+                { ucSharedMemory8,      32, tskMPU_REGION_READ_ONLY | tskMPU_REGION_EXECUTE_NEVER  },
             #endif /* configTOTAL_MPU_REGIONS == 16 */
             { ucROTaskFaultTracker, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
             { 0,                    0,  0                                                      },
@@ -259,19 +259,19 @@ void vStartMPUDemo( void )
         .puxStackBuffer = xRWAccessTaskStack,
         .xRegions       =
         {
-            { ucSharedMemory, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
-            #if( configTOTAL_MPU_REGIONS == 16 )
-            { ucSharedMemory1, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
-            { ucSharedMemory2, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
-            { ucSharedMemory3, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
-            { ucSharedMemory4, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
-            { ucSharedMemory5, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
-            { ucSharedMemory6, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
-            { ucSharedMemory7, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
-            { ucSharedMemory8, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            { ucSharedMemory,  32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+            #if ( configTOTAL_MPU_REGIONS == 16 )
+                { ucSharedMemory1, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+                { ucSharedMemory2, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+                { ucSharedMemory3, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+                { ucSharedMemory4, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+                { ucSharedMemory5, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+                { ucSharedMemory6, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+                { ucSharedMemory7, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
+                { ucSharedMemory8, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
             #endif /* configTOTAL_MPU_REGIONS == 16 */
-            { 0,              0,  0                                                      },
-            { 0,              0,  0                                                      },
+            { 0,               0,  0                                                      },
+            { 0,               0,  0                                                      },
         }
     };
 

@@ -50,6 +50,9 @@ extern uint32_t SystemCoreClock;
 #define configENABLE_FPU                                1
 #define configENABLE_TRUSTZONE                          1
 
+/* This part has 16 MPU regions. */
+#define configTOTAL_MPU_REGIONS                         16
+
 /* Constants related to the behaviour or the scheduler. */
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION         0
 #define configUSE_PREEMPTION                            1

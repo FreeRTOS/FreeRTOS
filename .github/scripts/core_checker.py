@@ -73,7 +73,7 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.dtd',
     '.dts',
     '.elf',
-    '.emProject'
+    '.emProject',
     '.env_conf',
     '.ewd',
     '.ewp',

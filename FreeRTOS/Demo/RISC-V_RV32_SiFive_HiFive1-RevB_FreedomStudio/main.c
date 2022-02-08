@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -59,6 +59,17 @@
 or 0 to run the more comprehensive test and demo application. */
 #define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
+/* Set to 1 to use direct mode and set to 0 to use vectored mode.
+
+VECTOR MODE=Direct --> all traps into machine mode cause the pc to be set to the
+vector base address (BASE) in the mtvec register.
+
+VECTOR MODE=Vectored --> all synchronous exceptions into machine mode cause the
+pc to be set to the BASE, whereas interrupts cause the pc to be set to the
+address BASE plus four times the interrupt cause number.
+*/
+#define mainVECTOR_MODE_DIRECT	0
+
 /* Index to first HART (there is only one). */
 #define mainHART_0 		0
 
@@ -69,6 +80,9 @@ or 0 to run the more comprehensive test and demo application. */
 #define mainPLIC_ENABLE_1  ( * ( ( volatile uint32_t * ) 0x0C002004UL ) )
 
 /*-----------------------------------------------------------*/
+
+extern void freertos_risc_v_trap_handler( void );
+extern void freertos_vector_table( void );
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -118,7 +132,6 @@ int main( void )
 	#endif
 }
 /*-----------------------------------------------------------*/
-
 static void prvSetupHardware( void )
 {
 struct metal_cpu *pxCPU;
@@ -136,6 +149,16 @@ struct metal_interrupt *pxInterruptController;
 	pxInterruptController = metal_cpu_interrupt_controller( pxCPU );
 	configASSERT( pxInterruptController );
 	metal_interrupt_init( pxInterruptController );
+
+	#if( mainVECTOR_MODE_DIRECT == 1 )
+	{
+		__asm__ volatile( "csrw mtvec, %0" :: "r"( freertos_risc_v_trap_handler ) );
+	}
+	#else
+	{
+		__asm__ volatile( "csrw mtvec, %0" :: "r"( ( uintptr_t )freertos_vector_table | 0x1 ) );
+	}
+	#endif
 
 	/* Set all interrupt enable bits to 0. */
 	mainPLIC_ENABLE_0 = 0UL;
@@ -245,6 +268,22 @@ volatile uint32_t ulMEPC = 0UL, ulMCAUSE = 0UL, ulPLICPending0Register = 0UL, ul
 	/* Force an assert as this function has not been implemented as the demo
 	does not use external interrupts. */
 	configASSERT( metal_cpu_get( mainHART_0 ) == 0x00 );
+}
+/*-----------------------------------------------------------*/
+
+void freertos_risc_v_application_interrupt_handler( uint32_t ulMcause )
+{
+	( void )ulMcause;
+
+	handle_trap();
+}
+/*-----------------------------------------------------------*/
+
+void freertos_risc_v_application_exception_handler( uint32_t ulMcause )
+{
+	( void )ulMcause;
+
+	handle_trap();
 }
 /*-----------------------------------------------------------*/
 

@@ -238,13 +238,16 @@ static void prvRegTestTaskEntry2( void *pvParameters )
 /* See the comments at the top of this file. */
 static void prvCheckTask( void *pvParameters )
 {
-static const char * pcMessage = "PASS";
+static const char * pcMessage = "FreeRTOS Demo SUCCESS:";
 const TickType_t xTaskPeriod = pdMS_TO_TICKS( 5000UL );
 TickType_t xPreviousWakeTime;
 uint32_t ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
 
     /* Avoid warning about unused parameter. */
     ( void ) pvParameters;
+
+	/* Demo start marker. */
+	printf( "FreeRTOS Demo Start\r\n" );
 
 	xPreviousWakeTime = xTaskGetTickCount();
 
@@ -255,95 +258,95 @@ uint32_t ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
 		/* Has an error been found in any task? */
 		if( xAreStreamBufferTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreStreamBufferTasksStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xAreStreamBufferTasksStillRunning() returned false";
 		}
 		else if( xAreMessageBufferTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreMessageBufferTasksStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xAreMessageBufferTasksStillRunning() returned false";
 		}
 		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreGenericQueueTasksStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xAreGenericQueueTasksStillRunning() returned false";
 		}
 	    else if( xIsCreateTaskStillRunning() != pdTRUE )
 	    {
-	        pcMessage = "xIsCreateTaskStillRunning() returned false";
+	        pcMessage = "FreeRTOS Demo ERROR: xIsCreateTaskStillRunning() returned false";
 	    }
 		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreBlockTimeTestTasksStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xAreBlockTimeTestTasksStillRunning() returned false";
 		}
 		else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreSemaphoreTasksStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xAreSemaphoreTasksStillRunning() returned false";
 		}
 		else if( xArePollingQueuesStillRunning() != pdTRUE )
 		{
-			pcMessage = "xArePollingQueuesStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xArePollingQueuesStillRunning() returned false";
 		}
 		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreQueuePeekTasksStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xAreQueuePeekTasksStillRunning() returned false";
 		}
 		else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreRecursiveMutexTasksStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xAreRecursiveMutexTasksStillRunning() returned false";
 		}
 		else if( xAreQueueSetTasksStillRunning() != pdPASS )
 		{
-			pcMessage = "xAreQueueSetTasksStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xAreQueueSetTasksStillRunning() returned false";
 		}
 		else if( xAreEventGroupTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreEventGroupTasksStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xAreEventGroupTasksStillRunning() returned false";
 		}
 		else if( xAreAbortDelayTestTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreAbortDelayTestTasksStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xAreAbortDelayTestTasksStillRunning() returned false";
 		}
 		else if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreCountingSemaphoreTasksStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xAreCountingSemaphoreTasksStillRunning() returned false";
 		}
 		else if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreDynamicPriorityTasksStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xAreDynamicPriorityTasksStillRunning() returned false";
 		}
 		else if( xAreMessageBufferAMPTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreMessageBufferAMPTasksStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xAreMessageBufferAMPTasksStillRunning() returned false";
 		}
 		else if( xIsQueueOverwriteTaskStillRunning() != pdTRUE )
 		{
-			pcMessage = "xIsQueueOverwriteTaskStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xIsQueueOverwriteTaskStillRunning() returned false";
 		}
 		else if( xAreQueueSetPollTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreQueueSetPollTasksStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xAreQueueSetPollTasksStillRunning() returned false";
 		}
 		else if( xAreStaticAllocationTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreStaticAllocationTasksStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xAreStaticAllocationTasksStillRunning() returned false";
 		}
 		else if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreTaskNotificationTasksStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xAreTaskNotificationTasksStillRunning() returned false";
 		}
 		else if( xAreTaskNotificationArrayTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreTaskNotificationArrayTasksStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xAreTaskNotificationArrayTasksStillRunning() returned false";
 		}
 		else if( xAreTimerDemoTasksStillRunning( xTaskPeriod ) != pdTRUE )
 		{
-			pcMessage = "xAreTimerDemoTasksStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xAreTimerDemoTasksStillRunning() returned false";
 		}
 		else if( xIsInterruptStreamBufferDemoStillRunning() != pdTRUE )
 		{
-			pcMessage = "xIsInterruptStreamBufferDemoStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xIsInterruptStreamBufferDemoStillRunning() returned false";
 		}
 		else if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
 		{
-			pcMessage = "xAreInterruptSemaphoreTasksStillRunning() returned false";
+			pcMessage = "FreeRTOS Demo ERROR: xAreInterruptSemaphoreTasksStillRunning() returned false";
 		}
 		else if( ulLastRegTest1Value == ulRegTest1LoopCounter ) /* Check that the register test 1 task is still running. */
 		{

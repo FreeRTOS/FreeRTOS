@@ -1351,6 +1351,7 @@ msr
 mss
 mtcoverage
 mtu
+mtvec
 muc
 multithreaded
 multple

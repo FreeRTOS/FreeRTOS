@@ -67,6 +67,15 @@ demo application will be built.  The comprehensive test and demo application is
 implemented and described in main_full.c. */
 #define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
+/* Set to 1 to use direct mode and set to 0 to use vectored mode.
+VECTOR MODE=Direct --> all traps into machine mode cause the pc to be set to the
+vector base address (BASE) in the mtvec register.
+VECTOR MODE=Vectored --> all synchronous exceptions into machine mode cause the
+pc to be set to the BASE, whereas interrupts cause the pc to be set to the
+address BASE plus four times the interrupt cause number.
+*/
+#define mainVECTOR_MODE_DIRECT	0
+
 /* printf() output uses the UART.  These constants define the addresses of the
 required UART registers. */
 #define UART0_ADDRESS 	( 0x40004000UL )
@@ -81,6 +90,9 @@ required UART registers. */
 #define mainPLIC_PENDING_1 ( * ( ( volatile uint32_t * ) 0x0C001004UL ) )
 #define mainPLIC_ENABLE_0  ( * ( ( volatile uint32_t * ) 0x0C002000UL ) )
 #define mainPLIC_ENABLE_1  ( * ( ( volatile uint32_t * ) 0x0C002004UL ) )
+
+extern void freertos_risc_v_trap_handler( void );
+extern void freertos_vector_table( void );
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -102,6 +114,16 @@ void main( void )
 {
 	/* See https://www.freertos.org/freertos-on-qemu-mps2-an385-model.html for
 	instructions. */
+
+	#if( mainVECTOR_MODE_DIRECT == 1 )
+	{
+		__asm__ volatile( "csrw mtvec, %0" :: "r"( freertos_risc_v_trap_handler ) );
+	}
+	#else
+	{
+		__asm__ volatile( "csrw mtvec, %0" :: "r"( ( uintptr_t )freertos_vector_table | 0x1 ) );
+	}
+	#endif
 
 	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
 	of this file. */
@@ -299,3 +321,4 @@ void *malloc( size_t size )
 
 }
 /*-----------------------------------------------------------*/
+

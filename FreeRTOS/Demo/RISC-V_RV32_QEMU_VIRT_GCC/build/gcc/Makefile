@@ -95,6 +95,7 @@ SOURCE_FILES += (DEMO_PROJECT)/riscv-virt.c
 SOURCE_FILES += ./printf-stdarg.c
 ASM_SOURCE_FILES += ./start.S
 ASM_SOURCE_FILES += ./RegTest.S
+ASM_SOURCE_FILES += ./vector.S
 
 
 #Create a list of object files with the desired output directory path.

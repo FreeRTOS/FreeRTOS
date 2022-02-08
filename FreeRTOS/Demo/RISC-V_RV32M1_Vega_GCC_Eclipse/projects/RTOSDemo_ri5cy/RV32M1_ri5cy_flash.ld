@@ -54,8 +54,7 @@ SECTIONS
     __VECTOR_TABLE = .;
     KEEP(*(.vectors))
   } > m_vector
-
-
+  
   /* The program code and other data goes into internal flash */
   .text :
   {
@@ -64,6 +63,10 @@ SECTIONS
     . = ALIGN(4);
     __user_vector = .;
     KEEP(*(user_vectors))
+    *(.text.freertos_risc_v_trap_handler)
+    *(.text.freertos_risc_v_exception_handler)
+    *(.text.freertos_risc_v_interrupt_handler)
+    *(.text.freertos_risc_v_mtimer_interrupt_handler)
     *(.text)                 /* .text sections (code) */
     *(.text*)                /* .text* sections (code) */
     *(.rodata)               /* .rodata sections (constants, strings, etc.) */

@@ -111,6 +111,8 @@
 #define configUSE_APPLICATION_TASK_TAG	0
 #define configUSE_COUNTING_SEMAPHORES	1
 #define configGENERATE_RUN_TIME_STATS	0
+#define configUSE_QUEUE_SETS                    1
+#define configTASK_NOTIFICATION_ARRAY_ENTRIES   3
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 			0
@@ -152,4 +154,5 @@ header file. */
 /* Map to the platform printf function. */
 #define configPRINT_STRING( pcString )  PRINTF( pcString )
 
+#define configISR_STACK_SIZE_WORDS 200
 #endif /* FREERTOS_CONFIG_H */

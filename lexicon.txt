@@ -1092,6 +1092,7 @@ keil
 keygen
 keytype
 khz
+kib
 kickstart
 knowns
 kx
@@ -2450,6 +2451,7 @@ spbrg
 spen
 spi
 sprintf
+spu
 sr
 sram
 src
@@ -2530,6 +2532,7 @@ systeminit
 systeminithook
 systemirqhandler
 systemtick
+systemstoreficrns
 systick
 systickdelay
 sz

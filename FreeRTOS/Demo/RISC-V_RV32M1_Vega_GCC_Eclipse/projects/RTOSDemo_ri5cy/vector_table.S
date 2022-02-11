@@ -103,3 +103,10 @@ Reset_Handler:
     ebreak
 
     .size Reset_Handler, . - Reset_Handler
+
+
+    .global _init
+    .global _fini
+_init:
+_fini:
+    ret

@@ -1,9 +1,11 @@
 Tracealyzer Stream Port for STM32 USB CDC (Virtual COM Port)
+Percepio AB
+https://percepio.com
 ------------------------------------------------------------
 
 This directory contains a "stream port" for the Tracealyzer recorder library,
 allowing for streaming the trace data over a USB connection. The stream port is defined by a set of macros in
-trcStreamingPort.h, found in the "include" directory, that relies on functions in trcStreamingPort.c.
+trcStreamPort.h, found in the "include" directory, that relies on functions in trcStreamingPort.c.
 
 This particular stream port targets STM32 devices using USB CDC (virtual COM port).
 It was been tested with STM32F767 and STM32L475.
@@ -34,7 +36,7 @@ The default TX and RX buffers are not used by the trace recorder library, so thi
 
 3. Open trcConfig.h and set TRC_CFG_RECORDER_MODE to TRC_RECORDER_MODE_STREAMING.
 
-4. Copy trcStreamingPort.c and include/trcStreamingPort.h into your project.
+4. Copy trcStreamingPort.c and include/trcStreamPort.h into your project.
 
 5. Make sure you have "vTraceEnable(TRC_INIT);" in main.c (not TRC_START or so).
 This should be placed after the HW setup but before making any RTOS calls.
@@ -82,13 +84,10 @@ You may try the following to start with:
 Also see the "tuning" guide at https://percepio.com/2018/10/11/tuning-your-custom-trace-streaming/ 
 
 Also note that this USB stream port has a diagnostics option that might come handy. 
-Enable USB_PERF_DIAGNOSTICS in trcStreamingPort.h. This will save additional "user events"
+Enable USB_PERF_DIAGNOSTICS in trcStreamPort.h. This will save additional "user events"
 each time a buffer page is transmitted, showing the number of bytes sent and the 
 remaining capacity in the trace buffer (if this goes down to zero, data is lost).
 
 #define USB_PERF_DIAGNOSTICS 1 
 
 If you need assistence, feel free to contact support@percepio.com.
-
-Percepio AB
-https://percepio.com

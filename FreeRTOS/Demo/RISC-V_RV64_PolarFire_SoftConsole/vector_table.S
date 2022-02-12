@@ -28,7 +28,7 @@
 .extern freertos_risc_v_interrupt_handler
 .extern freertos_risc_v_mtimer_interrupt_handler
 
-.balign 128, 0
+.balign 256, 0
 .option norvc
 .global freertos_vector_table
 freertos_vector_table:

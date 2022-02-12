@@ -20,10 +20,6 @@
 OUTPUT_ARCH( "riscv" )
 ENTRY(_start)
 
-.extern freertos_risc_v_exception_handler
-.extern freertos_risc_v_interrupt_handler
-.extern freertos_risc_v_mtimer_interrupt_handler
-
 /*-----------------------------------------------------------------------------
 
 -- MSS hart Reset vector

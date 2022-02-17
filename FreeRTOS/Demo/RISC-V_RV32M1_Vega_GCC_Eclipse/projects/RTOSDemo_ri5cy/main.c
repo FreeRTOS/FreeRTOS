@@ -24,18 +24,6 @@
  *
  */
 
-
-/*
- * Create implementation of vPortSetupTimerInterrupt() if the CLINT is not
- * available, but make sure the configCLINT_BASE_ADDRESS constant is still
- * defined.
- *
- * Define vPortHandleInterrupt to whatever the interrupt handler is called.  In
- * this case done by defining vPortHandleInterrupt=SystemIrqHandler on the
- * assembler command line as SystemIrqHandler is referenced from both FreeRTOS
- * code and the libraries that come with the Vega board.
- */
-
 /* FreeRTOS kernel includes. */
 #include <FreeRTOS.h>
 #include <task.h>
@@ -67,18 +55,16 @@
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
-
-extern uint32_t __VECTOR_TABLE[];
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    0
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
  * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
  */
 #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
-	extern void main_blinky( void );
+    extern void main_blinky( void );
 #else
-	extern void main_full( void );
+    extern void main_full( void );
 #endif /* #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 */
 
 /* Prototypes for the standard FreeRTOS callback/hook functions implemented
@@ -95,19 +81,19 @@ static void prvSetupHardware( void );
 
 void main( void )
 {
-	prvSetupHardware();
+    prvSetupHardware();
 
-	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
-	of this file. */
-	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
-	{
-		main_blinky();
-	}
-	#else
-	{
-		main_full();
-	}
-	#endif
+    /* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
+    of this file. */
+    #if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
+    {
+        main_blinky();
+    }
+    #else
+    {
+        main_full();
+    }
+    #endif
 }
 /*-----------------------------------------------------------*/
 
@@ -115,81 +101,79 @@ static void prvSetupHardware( void )
 {
 gpio_pin_config_t mGpioPinConfigStruct;
 
-	/* Init board hardware. */
-	BOARD_InitPins();
-	BOARD_BootClockRUN();
-	BOARD_InitDebugConsole();
+    /* Init board hardware. */
+    BOARD_InitPins();
+    BOARD_BootClockRUN();
+    BOARD_InitDebugConsole();
 
-	/* For LED. */
-	mGpioPinConfigStruct.outputLogic = 1U; /* High. */
-	mGpioPinConfigStruct.pinDirection = kGPIO_DigitalOutput;
-	GPIO_PinInit( BOARD_LED1_GPIO, BOARD_LED1_GPIO_PIN, &mGpioPinConfigStruct );
-
-	__asm__ volatile( "csrw mtvec, %0" :: "r"( __VECTOR_TABLE ) );
+    /* For LED. */
+    mGpioPinConfigStruct.outputLogic = 1U; /* High. */
+    mGpioPinConfigStruct.pinDirection = kGPIO_DigitalOutput;
+    GPIO_PinInit( BOARD_LED1_GPIO, BOARD_LED1_GPIO_PIN, &mGpioPinConfigStruct );
 }
 /*-----------------------------------------------------------*/
 
 void vToggleLED( void )
 {
-	GPIO_TogglePinsOutput( BOARD_LED1_GPIO, 1U << BOARD_LED1_GPIO_PIN );
+    GPIO_TogglePinsOutput( BOARD_LED1_GPIO, 1U << BOARD_LED1_GPIO_PIN );
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
-	/* vApplicationMallocFailedHook() will only be called if
-	configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
-	function that will get called if a call to pvPortMalloc() fails.
-	pvPortMalloc() is called internally by the kernel whenever a task, queue,
-	timer or semaphore is created.  It is also called by various parts of the
-	demo application.  If heap_1.c or heap_2.c are used, then the size of the
-	heap available to pvPortMalloc() is defined by configTOTAL_HEAP_SIZE in
-	FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
-	to query the size of free heap space that remains (although it does not
-	provide information on how the remaining heap might be fragmented). */
-	taskDISABLE_INTERRUPTS();
-	__asm volatile( "ebreak" );
-	for( ;; );
+    /* vApplicationMallocFailedHook() will only be called if
+    configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
+    function that will get called if a call to pvPortMalloc() fails.
+    pvPortMalloc() is called internally by the kernel whenever a task, queue,
+    timer or semaphore is created.  It is also called by various parts of the
+    demo application.  If heap_1.c or heap_2.c are used, then the size of the
+    heap available to pvPortMalloc() is defined by configTOTAL_HEAP_SIZE in
+    FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
+    to query the size of free heap space that remains (although it does not
+    provide information on how the remaining heap might be fragmented). */
+    taskDISABLE_INTERRUPTS();
+    __asm volatile( "ebreak" );
+    for( ;; );
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
 {
-	/* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
-	to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle
-	task.  It is essential that code added to this hook function never attempts
-	to block in any way (for example, call xQueueReceive() with a block time
-	specified, or call vTaskDelay()).  If the application makes use of the
-	vTaskDelete() API function (as this demo application does) then it is also
-	important that vApplicationIdleHook() is permitted to return to its calling
-	function, because it is the responsibility of the idle task to clean up
-	memory allocated by the kernel to any task that has since been deleted. */
+    /* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
+    to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle
+    task.  It is essential that code added to this hook function never attempts
+    to block in any way (for example, call xQueueReceive() with a block time
+    specified, or call vTaskDelay()).  If the application makes use of the
+    vTaskDelete() API function (as this demo application does) then it is also
+    important that vApplicationIdleHook() is permitted to return to its calling
+    function, because it is the responsibility of the idle task to clean up
+    memory allocated by the kernel to any task that has since been deleted. */
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
-	( void ) pcTaskName;
-	( void ) pxTask;
+    ( void ) pcTaskName;
+    ( void ) pxTask;
 
-	/* Run time stack overflow checking is performed if
-	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-	function is called if a stack overflow is detected. */
-	taskDISABLE_INTERRUPTS();
-	__asm volatile( "ebreak" );
-	for( ;; );
+    /* Run time stack overflow checking is performed if
+    configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+    function is called if a stack overflow is detected. */
+    taskDISABLE_INTERRUPTS();
+    __asm volatile( "ebreak" );
+    for( ;; );
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationTickHook( void )
 {
-	/* The tests in the full demo expect some interaction with interrupts. */
-	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
-	{
-		extern void vFullDemoTickHook( void );
-		vFullDemoTickHook();
-	}
-	#endif
+    /* The tests in the full demo expect some interaction with interrupts. */
+    #if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
+    {
+        extern void vFullDemoTickHook( void );
+        vFullDemoTickHook();
+    }
+    #endif
 }
 /*-----------------------------------------------------------*/
 
@@ -197,10 +181,10 @@ void vPortSetupTimerInterrupt( void )
 {
 extern void SystemSetupSystick(uint32_t tickRateHz, uint32_t intPriority );
 
-	/* No CLINT so use the LPIT (Low Power Interrupt Timer) to generate the tick
-	interrupt. */
-	CLOCK_SetIpSrc( kCLOCK_Lpit0, kCLOCK_IpSrcFircAsync );
-	SystemSetupSystick( configTICK_RATE_HZ, configKERNEL_INTERRUPT_PRIORITY - 1 );
+    /* No CLINT so use the LPIT (Low Power Interrupt Timer) to generate the tick
+    interrupt. */
+    CLOCK_SetIpSrc( kCLOCK_Lpit0, kCLOCK_IpSrcFircAsync );
+    SystemSetupSystick( configTICK_RATE_HZ, configKERNEL_INTERRUPT_PRIORITY - 1 );
 }
 /*-----------------------------------------------------------*/
 
@@ -211,14 +195,14 @@ void vTaskSwitchContext( void );
 
 #warning requires critical section if interrupt nesting is used.
 
-	/* vPortSetupTimerInterrupt() uses LPIT0 to generate the tick interrupt. */
-	if( xTaskIncrementTick() != 0 )
-	{
-		vTaskSwitchContext();
-	}
+    /* vPortSetupTimerInterrupt() uses LPIT0 to generate the tick interrupt. */
+    if( xTaskIncrementTick() != 0 )
+    {
+        vTaskSwitchContext();
+    }
 
-	/* Clear LPIT0 interrupt. */
-	LPIT0->MSR = 1U;
+    /* Clear LPIT0 interrupt. */
+    LPIT0->MSR = 1U;
 }
 /*-----------------------------------------------------------*/
 
@@ -232,15 +216,16 @@ uint32_t ulInterruptNumber;
 typedef void ( * irq_handler_t )( void );
 extern const irq_handler_t isrTable[];
 
-	ulInterruptNumber = mcause & 0x1FUL;
+    ulInterruptNumber = mcause & 0x1FUL;
 
-	/* Clear pending flag in EVENT unit .*/
-	EVENT_UNIT->INTPTPENDCLEAR = ( 1U << ulInterruptNumber );
+    /* Clear pending flag in EVENT unit .*/
+    EVENT_UNIT->INTPTPENDCLEAR = ( 1U << ulInterruptNumber );
 
-	/* Read back to make sure write finished. */
-	(void)(EVENT_UNIT->INTPTPENDCLEAR);
+    /* Read back to make sure write finished. */
+    (void)(EVENT_UNIT->INTPTPENDCLEAR);
 
-	/* Now call the real irq handler for ulInterruptNumber */
-	isrTable[ ulInterruptNumber ]();
+    /* Now call the real irq handler for ulInterruptNumber */
+    isrTable[ ulInterruptNumber ]();
 }
+/*-----------------------------------------------------------*/
 

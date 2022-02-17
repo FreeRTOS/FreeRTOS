@@ -24,70 +24,74 @@
  *
  */
 
-.extern freertos_risc_v_trap_handler
+#include "portContext.h"
+
+.extern freertos_risc_v_exception_handler
+.extern freertos_risc_v_interrupt_handler
+.extern vTaskSwitchContext
 
 .text
 .section .vectors, "ax"
 .option norvc
-.global freertos_vector_table
 freertos_vector_table:
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
-    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
+    jal x0, freertos_risc_v_interrupt_handler
 
-    // reset vector
+    /* Reset vector. */
     jal x0, Reset_Handler
 
-    // Illegal instrution exception
+    /* Illegal instrution exception. */
     jal x0, freertos_risc_v_exception_handler
 
-    // ecall handler
-    jal x0, freertos_risc_v_trap_handler
+    /* Ecall handler. */
+    jal x0, Ecall_Handler
 
-    // LSU error
+    /* LSU error (Invalid Memory Access) exception. */
     jal x0, freertos_risc_v_exception_handler
+/*-----------------------------------------------------------*/
 
-    .section .startup
+.section .startup
 
 /* Reset Handler */
 Reset_Handler:
 
-    # Disable global interrupt. */
+    /* Disable global interrupt. */
     csrci mstatus, 8
 
-    # initialize stack pointer
+    /* Initialize stack pointer. */
     la sp, __StackTop
 
-    # initialize global pointer
+    /* Initialize global pointer */
     la gp, __global_pointer
 
 #ifndef __NO_SYSTEM_INIT
@@ -96,7 +100,7 @@ Reset_Handler:
 
     call __libc_init_array
 
-    # Enable global interrupt. */
+    /* Enable global interrupt. */
     csrsi mstatus, 8
 
     jal main
@@ -104,9 +108,18 @@ Reset_Handler:
 
     .size Reset_Handler, . - Reset_Handler
 
-
     .global _init
     .global _fini
 _init:
 _fini:
     ret
+/*-----------------------------------------------------------*/
+
+/* RISC-V RI5CY core has a separate ecall entry point in the vector table.
+ * Therefore we can write a more efficient ecall handler which do not need to
+ * check the mcause value. */
+Ecall_Handler:
+    portcontextSAVE_EXCEPTION_CONTEXT
+    call vTaskSwitchContext
+    portcontextRESTORE_CONTEXT
+/*-----------------------------------------------------------*/

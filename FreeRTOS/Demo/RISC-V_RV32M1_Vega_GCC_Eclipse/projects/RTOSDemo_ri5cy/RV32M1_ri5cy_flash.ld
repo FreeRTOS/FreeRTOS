@@ -156,7 +156,7 @@ SECTIONS
 
   .stack :
   {
-    . = ALIGN(8);
+    . = ALIGN(16);
     __StackLimit = .;
     . += STACK_SIZE;
     __StackTop = .;

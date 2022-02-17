@@ -95,11 +95,6 @@
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/GenQTest.c</locationURI>
 		</link>
 		<link>
-			<name>full_demo/common_demo_files/IntQueue.c</name>
-			<type>1</type>
-			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/IntQueue.c</locationURI>
-		</link>
-		<link>
 			<name>full_demo/common_demo_files/IntSemTest.c</name>
 			<type>1</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/IntSemTest.c</locationURI>

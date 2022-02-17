@@ -16,36 +16,42 @@ $ cd crosstool-ng
 $ ./bootstrap
 $ ./configure --enable-local
 $ make
+```
+
+Run the below command to open the GUI config menu, then exit and save the default setting. The configurations will be save to .config file.
+```
 $ ./ct-ng menuconfig
 ```
 
-For RV32 builds, change the following configs:
+Open and modify the .config file according your need:
 
-```
-CT_EXPERIMENTAL=y
-CT_ARCH_RISCV=y
-CT_ARCH_64=n
-CT_ARCH_ARCH=rv32ima
-CT_ARCH_ABI=ilp32
-CT_TARGET_CFLAGS="-mcmodel=medany"
-CT_TARGET_LDFLAGS="-mcmodel=medany"
-CT_MULTILIB=y
-CT_DEBUG_GDB=y
-```
+- For RV32 builds, change the following configs:
 
-For RV64 builds, change the following configs:
+  ```
+  CT_EXPERIMENTAL=y
+  CT_ARCH_RISCV=y
+  CT_ARCH_64=n
+  CT_ARCH_ARCH=rv32ima
+  CT_ARCH_ABI=ilp32
+  CT_TARGET_CFLAGS="-mcmodel=medany"
+  CT_TARGET_LDFLAGS="-mcmodel=medany"
+  CT_MULTILIB=y
+  CT_DEBUG_GDB=y
+  ```
 
-```
-CT_EXPERIMENTAL=y
-CT_ARCH_RISCV=y
-CT_ARCH_64=y
-CT_ARCH_ARCH=rv32ima
-CT_ARCH_ABI=ilp32
-CT_TARGET_CFLAGS="-mcmodel=medany"
-CT_TARGET_LDFLAGS="-mcmodel=medany"
-CT_MULTILIB=y
-CT_DEBUG_GDB=y
-```
+- For RV64 builds, change the following configs:
+
+  ```
+  CT_EXPERIMENTAL=y
+  CT_ARCH_RISCV=y
+  CT_ARCH_64=y
+  CT_ARCH_ARCH=rv32ima
+  CT_ARCH_ABI=ilp32
+  CT_TARGET_CFLAGS="-mcmodel=medany"
+  CT_TARGET_LDFLAGS="-mcmodel=medany"
+  CT_MULTILIB=y
+  CT_DEBUG_GDB=y
+  ```
 
 Build the GNU toolchain for RISC-V.
 

@@ -124,6 +124,8 @@ extern void vRegTest1Implementation( void );
 static void prvRegTestTaskEntry2( void *pvParameters );
 extern void vRegTest2Implementation( void );
 
+extern void vSendString( const char * const pcString );
+
 /*
  * Tick hook used by the full demo, which includes code that interacts with
  * some of the tests.
@@ -191,6 +193,9 @@ extern void vToggleLED( void );
 	/* Just to stop compiler warnings. */
 	( void ) pvParameters;
 
+	/* Demo start marker. */
+	vSendString( "FreeRTOS Demo Start\r\n" );
+
 	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
 	works correctly. */
 	xLastExecutionTime = xTaskGetTickCount();
@@ -246,12 +251,16 @@ extern void vToggleLED( void );
 		system status if the UART is not connected. */
 		vToggleLED();
 
+
+
 		/* If an error has been found then increase the LED toggle rate by
 		increasing the cycle frequency. */
 		if( pcStatusMessage != pcPassMessage )
 		{
 			xDelayPeriod = mainERROR_CHECK_TASK_PERIOD;
 		}
+
+		vSendString( pcStatusMessage );
 	}
 }
 /*-----------------------------------------------------------*/

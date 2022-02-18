@@ -9,9 +9,9 @@
         <debug>1</debug>
         <settings>
             <name>C-STAT</name>
-            <archiveVersion>262</archiveVersion>
+            <archiveVersion>515</archiveVersion>
             <data>
-                <version>262</version>
+                <version>515</version>
                 <cstatargs>
                     <useExtraArgs>0</useExtraArgs>
                     <extraArgs></extraArgs>
@@ -22,9 +22,10 @@
                     <enableFalsePositives>0</enableFalsePositives>
                     <messagesLimitEnabled>1</messagesLimitEnabled>
                     <messagesLimit>100</messagesLimit>
+                    <outputDir>Debug\C-STAT</outputDir>
                 </cstatargs>
                 <cstat_settings>
-                    <cstat_version>1.6.2</cstat_version>
+                    <cstat_version>2.3.3</cstat_version>
                     <checks_tree>
                         <package enabled="true" name="STDCHECKS">
                             <group enabled="true" name="ARR">
@@ -290,15 +291,214 @@
                             </group>
                         </package>
                         <package enabled="false" name="CERT">
+                            <group enabled="true" name="CERT-ARR">
+                                <check enabled="true" name="CERT-ARR30-C_a" />
+                                <check enabled="true" name="CERT-ARR30-C_b" />
+                                <check enabled="true" name="CERT-ARR30-C_c" />
+                                <check enabled="true" name="CERT-ARR30-C_d" />
+                                <check enabled="true" name="CERT-ARR30-C_e" />
+                                <check enabled="true" name="CERT-ARR30-C_f" />
+                                <check enabled="true" name="CERT-ARR30-C_g" />
+                                <check enabled="true" name="CERT-ARR30-C_h" />
+                                <check enabled="true" name="CERT-ARR30-C_i" />
+                                <check enabled="true" name="CERT-ARR30-C_j" />
+                                <check enabled="true" name="CERT-ARR32-C" />
+                                <check enabled="true" name="CERT-ARR36-C_a" />
+                                <check enabled="true" name="CERT-ARR36-C_b" />
+                                <check enabled="true" name="CERT-ARR37-C" />
+                                <check enabled="true" name="CERT-ARR38-C_a" />
+                                <check enabled="true" name="CERT-ARR38-C_b" />
+                                <check enabled="true" name="CERT-ARR38-C_c" />
+                                <check enabled="true" name="CERT-ARR38-C_d" />
+                                <check enabled="true" name="CERT-ARR38-C_e" />
+                                <check enabled="true" name="CERT-ARR38-C_f" />
+                                <check enabled="true" name="CERT-ARR39-C" />
+                            </group>
+                            <group enabled="true" name="CERT-DCL">
+                                <check enabled="true" name="CERT-DCL30-C_a" />
+                                <check enabled="true" name="CERT-DCL30-C_b" />
+                                <check enabled="true" name="CERT-DCL30-C_c" />
+                                <check enabled="true" name="CERT-DCL30-C_d" />
+                                <check enabled="true" name="CERT-DCL30-C_e" />
+                                <check enabled="true" name="CERT-DCL31-C" />
+                                <check enabled="true" name="CERT-DCL36-C" />
+                                <check enabled="true" name="CERT-DCL37-C_a" />
+                                <check enabled="true" name="CERT-DCL37-C_b" />
+                                <check enabled="false" name="CERT-DCL37-C_c" />
+                                <check enabled="true" name="CERT-DCL38-C" />
+                                <check enabled="true" name="CERT-DCL39-C" />
+                                <check enabled="true" name="CERT-DCL40-C" />
+                                <check enabled="true" name="CERT-DCL41-C" />
+                            </group>
+                            <group enabled="true" name="CERT-ENV">
+                                <check enabled="true" name="CERT-ENV30-C" />
+                                <check enabled="true" name="CERT-ENV31-C" />
+                                <check enabled="true" name="CERT-ENV32-C" />
+                                <check enabled="true" name="CERT-ENV33-C" />
+                                <check enabled="true" name="CERT-ENV34-C" />
+                            </group>
+                            <group enabled="true" name="CERT-ERR">
+                                <check enabled="true" name="CERT-ERR30-C_a" />
+                                <check enabled="true" name="CERT-ERR30-C_b" />
+                                <check enabled="true" name="CERT-ERR30-C_c" />
+                                <check enabled="true" name="CERT-ERR30-C_d" />
+                                <check enabled="true" name="CERT-ERR32-C" />
+                                <check enabled="true" name="CERT-ERR33-C_a" />
+                                <check enabled="true" name="CERT-ERR33-C_b" />
+                                <check enabled="true" name="CERT-ERR33-C_c" />
+                                <check enabled="true" name="CERT-ERR33-C_d" />
+                                <check enabled="true" name="CERT-ERR34-C_a" />
+                                <check enabled="true" name="CERT-ERR34-C_b" />
+                            </group>
                             <group enabled="true" name="CERT-EXP">
                                 <check enabled="true" name="CERT-EXP19-C" />
+                                <check enabled="true" name="CERT-EXP30-C_a" />
+                                <check enabled="true" name="CERT-EXP30-C_b" />
+                                <check enabled="true" name="CERT-EXP32-C" />
+                                <check enabled="true" name="CERT-EXP33-C_a" />
+                                <check enabled="true" name="CERT-EXP33-C_b" />
+                                <check enabled="true" name="CERT-EXP33-C_c" />
+                                <check enabled="true" name="CERT-EXP33-C_d" />
+                                <check enabled="true" name="CERT-EXP33-C_e" />
+                                <check enabled="true" name="CERT-EXP33-C_f" />
+                                <check enabled="true" name="CERT-EXP34-C_a" />
+                                <check enabled="true" name="CERT-EXP34-C_b" />
+                                <check enabled="true" name="CERT-EXP34-C_c" />
+                                <check enabled="true" name="CERT-EXP34-C_d" />
+                                <check enabled="true" name="CERT-EXP34-C_e" />
+                                <check enabled="true" name="CERT-EXP34-C_f" />
+                                <check enabled="true" name="CERT-EXP34-C_g" />
+                                <check enabled="true" name="CERT-EXP35-C" />
+                                <check enabled="true" name="CERT-EXP36-C_a" />
+                                <check enabled="true" name="CERT-EXP36-C_b" />
+                                <check enabled="true" name="CERT-EXP37-C_a" />
+                                <check enabled="true" name="CERT-EXP37-C_b" />
+                                <check enabled="true" name="CERT-EXP37-C_c" />
+                                <check enabled="true" name="CERT-EXP39-C_a" />
+                                <check enabled="true" name="CERT-EXP39-C_b" />
+                                <check enabled="true" name="CERT-EXP39-C_c" />
+                                <check enabled="true" name="CERT-EXP39-C_d" />
+                                <check enabled="true" name="CERT-EXP39-C_e" />
+                                <check enabled="true" name="CERT-EXP40-C_a" />
+                                <check enabled="true" name="CERT-EXP40-C_b" />
+                                <check enabled="true" name="CERT-EXP42-C" />
+                                <check enabled="true" name="CERT-EXP43-C_a" />
+                                <check enabled="true" name="CERT-EXP43-C_b" />
+                                <check enabled="true" name="CERT-EXP43-C_c" />
+                                <check enabled="true" name="CERT-EXP43-C_d" />
+                                <check enabled="true" name="CERT-EXP44-C" />
+                                <check enabled="true" name="CERT-EXP45-C" />
+                                <check enabled="true" name="CERT-EXP46-C" />
+                                <check enabled="true" name="CERT-EXP47-C_a" />
+                                <check enabled="true" name="CERT-EXP47-C_b" />
                             </group>
                             <group enabled="true" name="CERT-FIO">
+                                <check enabled="true" name="CERT-FIO30-C" />
+                                <check enabled="true" name="CERT-FIO32-C" />
+                                <check enabled="true" name="CERT-FIO34-C" />
                                 <check enabled="true" name="CERT-FIO37-C" />
                                 <check enabled="true" name="CERT-FIO38-C" />
+                                <check enabled="true" name="CERT-FIO39-C" />
+                                <check enabled="true" name="CERT-FIO40-C" />
+                                <check enabled="true" name="CERT-FIO41-C" />
+                                <check enabled="true" name="CERT-FIO42-C_a" />
+                                <check enabled="false" name="CERT-FIO42-C_b" />
+                                <check enabled="true" name="CERT-FIO44-C" />
+                                <check enabled="true" name="CERT-FIO45-C" />
+                                <check enabled="true" name="CERT-FIO46-C_a" />
+                                <check enabled="true" name="CERT-FIO46-C_b" />
+                                <check enabled="true" name="CERT-FIO46-C_c" />
+                                <check enabled="true" name="CERT-FIO47-C_a" />
+                                <check enabled="true" name="CERT-FIO47-C_b" />
+                                <check enabled="true" name="CERT-FIO47-C_c" />
+                            </group>
+                            <group enabled="true" name="CERT-FLP">
+                                <check enabled="true" name="CERT-FLP30-C_a" />
+                                <check enabled="true" name="CERT-FLP30-C_b" />
+                                <check enabled="true" name="CERT-FLP32-C_a" />
+                                <check enabled="true" name="CERT-FLP32-C_b" />
+                                <check enabled="true" name="CERT-FLP34-C" />
+                                <check enabled="true" name="CERT-FLP36-C" />
+                                <check enabled="true" name="CERT-FLP37-C" />
+                            </group>
+                            <group enabled="true" name="CERT-INT">
+                                <check enabled="true" name="CERT-INT30-C_a" />
+                                <check enabled="false" name="CERT-INT30-C_b" />
+                                <check enabled="true" name="CERT-INT31-C_a" />
+                                <check enabled="true" name="CERT-INT31-C_b" />
+                                <check enabled="true" name="CERT-INT31-C_c" />
+                                <check enabled="true" name="CERT-INT32-C_a" />
+                                <check enabled="false" name="CERT-INT32-C_b" />
+                                <check enabled="true" name="CERT-INT33-C_a" />
+                                <check enabled="true" name="CERT-INT33-C_b" />
+                                <check enabled="true" name="CERT-INT33-C_c" />
+                                <check enabled="true" name="CERT-INT33-C_d" />
+                                <check enabled="true" name="CERT-INT33-C_e" />
+                                <check enabled="true" name="CERT-INT33-C_f" />
+                                <check enabled="true" name="CERT-INT33-C_g" />
+                                <check enabled="true" name="CERT-INT33-C_h" />
+                                <check enabled="true" name="CERT-INT33-C_i" />
+                                <check enabled="true" name="CERT-INT34-C_a" />
+                                <check enabled="true" name="CERT-INT34-C_b" />
+                                <check enabled="true" name="CERT-INT34-C_c" />
+                                <check enabled="true" name="CERT-INT35-C" />
+                                <check enabled="true" name="CERT-INT36-C" />
+                            </group>
+                            <group enabled="true" name="CERT-MEM">
+                                <check enabled="true" name="CERT-MEM30-C_a" />
+                                <check enabled="true" name="CERT-MEM30-C_b" />
+                                <check enabled="true" name="CERT-MEM30-C_c" />
+                                <check enabled="true" name="CERT-MEM31-C" />
+                                <check enabled="true" name="CERT-MEM33-C_a" />
+                                <check enabled="true" name="CERT-MEM33-C_b" />
+                                <check enabled="true" name="CERT-MEM34-C_a" />
+                                <check enabled="true" name="CERT-MEM34-C_b" />
+                                <check enabled="true" name="CERT-MEM34-C_c" />
+                                <check enabled="true" name="CERT-MEM35-C_a" />
+                                <check enabled="true" name="CERT-MEM35-C_b" />
+                                <check enabled="true" name="CERT-MEM35-C_c" />
+                                <check enabled="true" name="CERT-MEM36-C" />
+                            </group>
+                            <group enabled="true" name="CERT-MSC">
+                                <check enabled="true" name="CERT-MSC30-C" />
+                                <check enabled="true" name="CERT-MSC32-C" />
+                                <check enabled="false" name="CERT-MSC33-C" />
+                                <check enabled="true" name="CERT-MSC37-C" />
+                                <check enabled="true" name="CERT-MSC38-C" />
+                                <check enabled="true" name="CERT-MSC39-C" />
+                                <check enabled="true" name="CERT-MSC40-C_a" />
+                                <check enabled="true" name="CERT-MSC40-C_b" />
+                                <check enabled="true" name="CERT-MSC40-C_c" />
+                                <check enabled="true" name="CERT-MSC40-C_d" />
+                                <check enabled="false" name="CERT-MSC40-C_e" />
+                                <check enabled="true" name="CERT-MSC41-C_a" />
+                                <check enabled="true" name="CERT-MSC41-C_b" />
+                                <check enabled="true" name="CERT-MSC41-C_c" />
+                            </group>
+                            <group enabled="true" name="CERT-PRE">
+                                <check enabled="true" name="CERT-PRE31-C" />
+                                <check enabled="true" name="CERT-PRE32-C_a" />
+                                <check enabled="true" name="CERT-PRE32-C_b" />
                             </group>
                             <group enabled="true" name="CERT-SIG">
+                                <check enabled="true" name="CERT-SIG30-C" />
                                 <check enabled="true" name="CERT-SIG31-C" />
+                                <check enabled="true" name="CERT-SIG34-C" />
+                                <check enabled="true" name="CERT-SIG35-C" />
+                            </group>
+                            <group enabled="true" name="CERT-STR">
+                                <check enabled="true" name="CERT-STR30-C" />
+                                <check enabled="true" name="CERT-STR31-C_a" />
+                                <check enabled="true" name="CERT-STR31-C_b" />
+                                <check enabled="true" name="CERT-STR31-C_c" />
+                                <check enabled="true" name="CERT-STR31-C_d" />
+                                <check enabled="true" name="CERT-STR31-C_e" />
+                                <check enabled="true" name="CERT-STR31-C_f" />
+                                <check enabled="true" name="CERT-STR31-C_g" />
+                                <check enabled="true" name="CERT-STR31-C_h" />
+                                <check enabled="true" name="CERT-STR32-C" />
+                                <check enabled="true" name="CERT-STR34-C" />
+                                <check enabled="true" name="CERT-STR37-C" />
                             </group>
                         </package>
                         <package enabled="false" name="SECURITY">
@@ -591,6 +791,18 @@
                                 <check enabled="true" name="MISRAC2012-Dir-4.13_f" />
                                 <check enabled="true" name="MISRAC2012-Dir-4.13_g" />
                                 <check enabled="false" name="MISRAC2012-Dir-4.13_h" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_a" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_b" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_c" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_d" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_e" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_f" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_g" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_h" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_i" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_j" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_l" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_m" />
                             </group>
                             <group enabled="true" name="MISRAC2012-Rule-1">
                                 <check enabled="true" name="MISRAC2012-Rule-1.3_a" />
@@ -662,7 +874,7 @@
                                 <check enabled="true" name="MISRAC2012-Rule-8.1" />
                                 <check enabled="true" name="MISRAC2012-Rule-8.2_a" />
                                 <check enabled="true" name="MISRAC2012-Rule-8.2_b" />
-                                <check enabled="true" name="MISRAC2012-Rule-8.3_b" />
+                                <check enabled="true" name="MISRAC2012-Rule-8.3" />
                                 <check enabled="true" name="MISRAC2012-Rule-8.4" />
                                 <check enabled="true" name="MISRAC2012-Rule-8.5_a" />
                                 <check enabled="true" name="MISRAC2012-Rule-8.5_b" />
@@ -720,6 +932,7 @@
                                 <check enabled="false" name="MISRAC2012-Rule-12.1" />
                                 <check enabled="true" name="MISRAC2012-Rule-12.2" />
                                 <check enabled="false" name="MISRAC2012-Rule-12.3" />
+                                <check enabled="true" name="MISRAC2012-Rule-12.5" />
                             </group>
                             <group enabled="true" name="MISRAC2012-Rule-13">
                                 <check enabled="true" name="MISRAC2012-Rule-13.1" />
@@ -802,6 +1015,8 @@
                                 <check enabled="true" name="MISRAC2012-Rule-20.4_c89" />
                                 <check enabled="true" name="MISRAC2012-Rule-20.4_c99" />
                                 <check enabled="false" name="MISRAC2012-Rule-20.5" />
+                                <check enabled="true" name="MISRAC2012-Rule-20.6_a" />
+                                <check enabled="true" name="MISRAC2012-Rule-20.6_b" />
                                 <check enabled="true" name="MISRAC2012-Rule-20.7" />
                                 <check enabled="false" name="MISRAC2012-Rule-20.10" />
                             </group>
@@ -819,6 +1034,21 @@
                                 <check enabled="true" name="MISRAC2012-Rule-21.11" />
                                 <check enabled="false" name="MISRAC2012-Rule-21.12_a" />
                                 <check enabled="false" name="MISRAC2012-Rule-21.12_b" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.13" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.14" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.15" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.16" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.17_a" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.17_b" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.17_c" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.17_d" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.17_e" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.17_f" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.18_a" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.18_b" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.19_a" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.19_b" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.20" />
                             </group>
                             <group enabled="true" name="MISRAC2012-Rule-22">
                                 <check enabled="true" name="MISRAC2012-Rule-22.1_a" />
@@ -831,6 +1061,11 @@
                                 <check enabled="true" name="MISRAC2012-Rule-22.5_a" />
                                 <check enabled="true" name="MISRAC2012-Rule-22.5_b" />
                                 <check enabled="true" name="MISRAC2012-Rule-22.6" />
+                                <check enabled="true" name="MISRAC2012-Rule-22.7_a" />
+                                <check enabled="true" name="MISRAC2012-Rule-22.7_b" />
+                                <check enabled="true" name="MISRAC2012-Rule-22.8" />
+                                <check enabled="true" name="MISRAC2012-Rule-22.9" />
+                                <check enabled="true" name="MISRAC2012-Rule-22.10" />
                             </group>
                         </package>
                         <package enabled="false" name="MISRAC++2008">
@@ -927,8 +1162,7 @@
                             </group>
                             <group enabled="true" name="MISRAC++2008-5-3">
                                 <check enabled="true" name="MISRAC++2008-5-3-1" />
-                                <check enabled="true" name="MISRAC++2008-5-3-2_a" />
-                                <check enabled="true" name="MISRAC++2008-5-3-2_b" />
+                                <check enabled="true" name="MISRAC++2008-5-3-2" />
                                 <check enabled="true" name="MISRAC++2008-5-3-3" />
                                 <check enabled="true" name="MISRAC++2008-5-3-4" />
                             </group>
@@ -1086,9 +1320,9 @@
         <debug>0</debug>
         <settings>
             <name>C-STAT</name>
-            <archiveVersion>262</archiveVersion>
+            <archiveVersion>515</archiveVersion>
             <data>
-                <version>262</version>
+                <version>515</version>
                 <cstatargs>
                     <useExtraArgs>0</useExtraArgs>
                     <extraArgs></extraArgs>
@@ -1099,9 +1333,10 @@
                     <enableFalsePositives>0</enableFalsePositives>
                     <messagesLimitEnabled>1</messagesLimitEnabled>
                     <messagesLimit>100</messagesLimit>
+                    <outputDir>Release\C-STAT</outputDir>
                 </cstatargs>
                 <cstat_settings>
-                    <cstat_version>1.6.2</cstat_version>
+                    <cstat_version>2.3.3</cstat_version>
                     <checks_tree>
                         <package enabled="true" name="STDCHECKS">
                             <group enabled="true" name="ARR">
@@ -1367,15 +1602,214 @@
                             </group>
                         </package>
                         <package enabled="false" name="CERT">
+                            <group enabled="true" name="CERT-ARR">
+                                <check enabled="true" name="CERT-ARR30-C_a" />
+                                <check enabled="true" name="CERT-ARR30-C_b" />
+                                <check enabled="true" name="CERT-ARR30-C_c" />
+                                <check enabled="true" name="CERT-ARR30-C_d" />
+                                <check enabled="true" name="CERT-ARR30-C_e" />
+                                <check enabled="true" name="CERT-ARR30-C_f" />
+                                <check enabled="true" name="CERT-ARR30-C_g" />
+                                <check enabled="true" name="CERT-ARR30-C_h" />
+                                <check enabled="true" name="CERT-ARR30-C_i" />
+                                <check enabled="true" name="CERT-ARR30-C_j" />
+                                <check enabled="true" name="CERT-ARR32-C" />
+                                <check enabled="true" name="CERT-ARR36-C_a" />
+                                <check enabled="true" name="CERT-ARR36-C_b" />
+                                <check enabled="true" name="CERT-ARR37-C" />
+                                <check enabled="true" name="CERT-ARR38-C_a" />
+                                <check enabled="true" name="CERT-ARR38-C_b" />
+                                <check enabled="true" name="CERT-ARR38-C_c" />
+                                <check enabled="true" name="CERT-ARR38-C_d" />
+                                <check enabled="true" name="CERT-ARR38-C_e" />
+                                <check enabled="true" name="CERT-ARR38-C_f" />
+                                <check enabled="true" name="CERT-ARR39-C" />
+                            </group>
+                            <group enabled="true" name="CERT-DCL">
+                                <check enabled="true" name="CERT-DCL30-C_a" />
+                                <check enabled="true" name="CERT-DCL30-C_b" />
+                                <check enabled="true" name="CERT-DCL30-C_c" />
+                                <check enabled="true" name="CERT-DCL30-C_d" />
+                                <check enabled="true" name="CERT-DCL30-C_e" />
+                                <check enabled="true" name="CERT-DCL31-C" />
+                                <check enabled="true" name="CERT-DCL36-C" />
+                                <check enabled="true" name="CERT-DCL37-C_a" />
+                                <check enabled="true" name="CERT-DCL37-C_b" />
+                                <check enabled="false" name="CERT-DCL37-C_c" />
+                                <check enabled="true" name="CERT-DCL38-C" />
+                                <check enabled="true" name="CERT-DCL39-C" />
+                                <check enabled="true" name="CERT-DCL40-C" />
+                                <check enabled="true" name="CERT-DCL41-C" />
+                            </group>
+                            <group enabled="true" name="CERT-ENV">
+                                <check enabled="true" name="CERT-ENV30-C" />
+                                <check enabled="true" name="CERT-ENV31-C" />
+                                <check enabled="true" name="CERT-ENV32-C" />
+                                <check enabled="true" name="CERT-ENV33-C" />
+                                <check enabled="true" name="CERT-ENV34-C" />
+                            </group>
+                            <group enabled="true" name="CERT-ERR">
+                                <check enabled="true" name="CERT-ERR30-C_a" />
+                                <check enabled="true" name="CERT-ERR30-C_b" />
+                                <check enabled="true" name="CERT-ERR30-C_c" />
+                                <check enabled="true" name="CERT-ERR30-C_d" />
+                                <check enabled="true" name="CERT-ERR32-C" />
+                                <check enabled="true" name="CERT-ERR33-C_a" />
+                                <check enabled="true" name="CERT-ERR33-C_b" />
+                                <check enabled="true" name="CERT-ERR33-C_c" />
+                                <check enabled="true" name="CERT-ERR33-C_d" />
+                                <check enabled="true" name="CERT-ERR34-C_a" />
+                                <check enabled="true" name="CERT-ERR34-C_b" />
+                            </group>
                             <group enabled="true" name="CERT-EXP">
                                 <check enabled="true" name="CERT-EXP19-C" />
+                                <check enabled="true" name="CERT-EXP30-C_a" />
+                                <check enabled="true" name="CERT-EXP30-C_b" />
+                                <check enabled="true" name="CERT-EXP32-C" />
+                                <check enabled="true" name="CERT-EXP33-C_a" />
+                                <check enabled="true" name="CERT-EXP33-C_b" />
+                                <check enabled="true" name="CERT-EXP33-C_c" />
+                                <check enabled="true" name="CERT-EXP33-C_d" />
+                                <check enabled="true" name="CERT-EXP33-C_e" />
+                                <check enabled="true" name="CERT-EXP33-C_f" />
+                                <check enabled="true" name="CERT-EXP34-C_a" />
+                                <check enabled="true" name="CERT-EXP34-C_b" />
+                                <check enabled="true" name="CERT-EXP34-C_c" />
+                                <check enabled="true" name="CERT-EXP34-C_d" />
+                                <check enabled="true" name="CERT-EXP34-C_e" />
+                                <check enabled="true" name="CERT-EXP34-C_f" />
+                                <check enabled="true" name="CERT-EXP34-C_g" />
+                                <check enabled="true" name="CERT-EXP35-C" />
+                                <check enabled="true" name="CERT-EXP36-C_a" />
+                                <check enabled="true" name="CERT-EXP36-C_b" />
+                                <check enabled="true" name="CERT-EXP37-C_a" />
+                                <check enabled="true" name="CERT-EXP37-C_b" />
+                                <check enabled="true" name="CERT-EXP37-C_c" />
+                                <check enabled="true" name="CERT-EXP39-C_a" />
+                                <check enabled="true" name="CERT-EXP39-C_b" />
+                                <check enabled="true" name="CERT-EXP39-C_c" />
+                                <check enabled="true" name="CERT-EXP39-C_d" />
+                                <check enabled="true" name="CERT-EXP39-C_e" />
+                                <check enabled="true" name="CERT-EXP40-C_a" />
+                                <check enabled="true" name="CERT-EXP40-C_b" />
+                                <check enabled="true" name="CERT-EXP42-C" />
+                                <check enabled="true" name="CERT-EXP43-C_a" />
+                                <check enabled="true" name="CERT-EXP43-C_b" />
+                                <check enabled="true" name="CERT-EXP43-C_c" />
+                                <check enabled="true" name="CERT-EXP43-C_d" />
+                                <check enabled="true" name="CERT-EXP44-C" />
+                                <check enabled="true" name="CERT-EXP45-C" />
+                                <check enabled="true" name="CERT-EXP46-C" />
+                                <check enabled="true" name="CERT-EXP47-C_a" />
+                                <check enabled="true" name="CERT-EXP47-C_b" />
                             </group>
                             <group enabled="true" name="CERT-FIO">
+                                <check enabled="true" name="CERT-FIO30-C" />
+                                <check enabled="true" name="CERT-FIO32-C" />
+                                <check enabled="true" name="CERT-FIO34-C" />
                                 <check enabled="true" name="CERT-FIO37-C" />
                                 <check enabled="true" name="CERT-FIO38-C" />
+                                <check enabled="true" name="CERT-FIO39-C" />
+                                <check enabled="true" name="CERT-FIO40-C" />
+                                <check enabled="true" name="CERT-FIO41-C" />
+                                <check enabled="true" name="CERT-FIO42-C_a" />
+                                <check enabled="false" name="CERT-FIO42-C_b" />
+                                <check enabled="true" name="CERT-FIO44-C" />
+                                <check enabled="true" name="CERT-FIO45-C" />
+                                <check enabled="true" name="CERT-FIO46-C_a" />
+                                <check enabled="true" name="CERT-FIO46-C_b" />
+                                <check enabled="true" name="CERT-FIO46-C_c" />
+                                <check enabled="true" name="CERT-FIO47-C_a" />
+                                <check enabled="true" name="CERT-FIO47-C_b" />
+                                <check enabled="true" name="CERT-FIO47-C_c" />
+                            </group>
+                            <group enabled="true" name="CERT-FLP">
+                                <check enabled="true" name="CERT-FLP30-C_a" />
+                                <check enabled="true" name="CERT-FLP30-C_b" />
+                                <check enabled="true" name="CERT-FLP32-C_a" />
+                                <check enabled="true" name="CERT-FLP32-C_b" />
+                                <check enabled="true" name="CERT-FLP34-C" />
+                                <check enabled="true" name="CERT-FLP36-C" />
+                                <check enabled="true" name="CERT-FLP37-C" />
+                            </group>
+                            <group enabled="true" name="CERT-INT">
+                                <check enabled="true" name="CERT-INT30-C_a" />
+                                <check enabled="false" name="CERT-INT30-C_b" />
+                                <check enabled="true" name="CERT-INT31-C_a" />
+                                <check enabled="true" name="CERT-INT31-C_b" />
+                                <check enabled="true" name="CERT-INT31-C_c" />
+                                <check enabled="true" name="CERT-INT32-C_a" />
+                                <check enabled="false" name="CERT-INT32-C_b" />
+                                <check enabled="true" name="CERT-INT33-C_a" />
+                                <check enabled="true" name="CERT-INT33-C_b" />
+                                <check enabled="true" name="CERT-INT33-C_c" />
+                                <check enabled="true" name="CERT-INT33-C_d" />
+                                <check enabled="true" name="CERT-INT33-C_e" />
+                                <check enabled="true" name="CERT-INT33-C_f" />
+                                <check enabled="true" name="CERT-INT33-C_g" />
+                                <check enabled="true" name="CERT-INT33-C_h" />
+                                <check enabled="true" name="CERT-INT33-C_i" />
+                                <check enabled="true" name="CERT-INT34-C_a" />
+                                <check enabled="true" name="CERT-INT34-C_b" />
+                                <check enabled="true" name="CERT-INT34-C_c" />
+                                <check enabled="true" name="CERT-INT35-C" />
+                                <check enabled="true" name="CERT-INT36-C" />
+                            </group>
+                            <group enabled="true" name="CERT-MEM">
+                                <check enabled="true" name="CERT-MEM30-C_a" />
+                                <check enabled="true" name="CERT-MEM30-C_b" />
+                                <check enabled="true" name="CERT-MEM30-C_c" />
+                                <check enabled="true" name="CERT-MEM31-C" />
+                                <check enabled="true" name="CERT-MEM33-C_a" />
+                                <check enabled="true" name="CERT-MEM33-C_b" />
+                                <check enabled="true" name="CERT-MEM34-C_a" />
+                                <check enabled="true" name="CERT-MEM34-C_b" />
+                                <check enabled="true" name="CERT-MEM34-C_c" />
+                                <check enabled="true" name="CERT-MEM35-C_a" />
+                                <check enabled="true" name="CERT-MEM35-C_b" />
+                                <check enabled="true" name="CERT-MEM35-C_c" />
+                                <check enabled="true" name="CERT-MEM36-C" />
+                            </group>
+                            <group enabled="true" name="CERT-MSC">
+                                <check enabled="true" name="CERT-MSC30-C" />
+                                <check enabled="true" name="CERT-MSC32-C" />
+                                <check enabled="false" name="CERT-MSC33-C" />
+                                <check enabled="true" name="CERT-MSC37-C" />
+                                <check enabled="true" name="CERT-MSC38-C" />
+                                <check enabled="true" name="CERT-MSC39-C" />
+                                <check enabled="true" name="CERT-MSC40-C_a" />
+                                <check enabled="true" name="CERT-MSC40-C_b" />
+                                <check enabled="true" name="CERT-MSC40-C_c" />
+                                <check enabled="true" name="CERT-MSC40-C_d" />
+                                <check enabled="false" name="CERT-MSC40-C_e" />
+                                <check enabled="true" name="CERT-MSC41-C_a" />
+                                <check enabled="true" name="CERT-MSC41-C_b" />
+                                <check enabled="true" name="CERT-MSC41-C_c" />
+                            </group>
+                            <group enabled="true" name="CERT-PRE">
+                                <check enabled="true" name="CERT-PRE31-C" />
+                                <check enabled="true" name="CERT-PRE32-C_a" />
+                                <check enabled="true" name="CERT-PRE32-C_b" />
                             </group>
                             <group enabled="true" name="CERT-SIG">
+                                <check enabled="true" name="CERT-SIG30-C" />
                                 <check enabled="true" name="CERT-SIG31-C" />
+                                <check enabled="true" name="CERT-SIG34-C" />
+                                <check enabled="true" name="CERT-SIG35-C" />
+                            </group>
+                            <group enabled="true" name="CERT-STR">
+                                <check enabled="true" name="CERT-STR30-C" />
+                                <check enabled="true" name="CERT-STR31-C_a" />
+                                <check enabled="true" name="CERT-STR31-C_b" />
+                                <check enabled="true" name="CERT-STR31-C_c" />
+                                <check enabled="true" name="CERT-STR31-C_d" />
+                                <check enabled="true" name="CERT-STR31-C_e" />
+                                <check enabled="true" name="CERT-STR31-C_f" />
+                                <check enabled="true" name="CERT-STR31-C_g" />
+                                <check enabled="true" name="CERT-STR31-C_h" />
+                                <check enabled="true" name="CERT-STR32-C" />
+                                <check enabled="true" name="CERT-STR34-C" />
+                                <check enabled="true" name="CERT-STR37-C" />
                             </group>
                         </package>
                         <package enabled="false" name="SECURITY">
@@ -1668,6 +2102,18 @@
                                 <check enabled="true" name="MISRAC2012-Dir-4.13_f" />
                                 <check enabled="true" name="MISRAC2012-Dir-4.13_g" />
                                 <check enabled="false" name="MISRAC2012-Dir-4.13_h" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_a" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_b" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_c" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_d" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_e" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_f" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_g" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_h" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_i" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_j" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_l" />
+                                <check enabled="true" name="MISRAC2012-Dir-4.14_m" />
                             </group>
                             <group enabled="true" name="MISRAC2012-Rule-1">
                                 <check enabled="true" name="MISRAC2012-Rule-1.3_a" />
@@ -1739,7 +2185,7 @@
                                 <check enabled="true" name="MISRAC2012-Rule-8.1" />
                                 <check enabled="true" name="MISRAC2012-Rule-8.2_a" />
                                 <check enabled="true" name="MISRAC2012-Rule-8.2_b" />
-                                <check enabled="true" name="MISRAC2012-Rule-8.3_b" />
+                                <check enabled="true" name="MISRAC2012-Rule-8.3" />
                                 <check enabled="true" name="MISRAC2012-Rule-8.4" />
                                 <check enabled="true" name="MISRAC2012-Rule-8.5_a" />
                                 <check enabled="true" name="MISRAC2012-Rule-8.5_b" />
@@ -1797,6 +2243,7 @@
                                 <check enabled="false" name="MISRAC2012-Rule-12.1" />
                                 <check enabled="true" name="MISRAC2012-Rule-12.2" />
                                 <check enabled="false" name="MISRAC2012-Rule-12.3" />
+                                <check enabled="true" name="MISRAC2012-Rule-12.5" />
                             </group>
                             <group enabled="true" name="MISRAC2012-Rule-13">
                                 <check enabled="true" name="MISRAC2012-Rule-13.1" />
@@ -1879,6 +2326,8 @@
                                 <check enabled="true" name="MISRAC2012-Rule-20.4_c89" />
                                 <check enabled="true" name="MISRAC2012-Rule-20.4_c99" />
                                 <check enabled="false" name="MISRAC2012-Rule-20.5" />
+                                <check enabled="true" name="MISRAC2012-Rule-20.6_a" />
+                                <check enabled="true" name="MISRAC2012-Rule-20.6_b" />
                                 <check enabled="true" name="MISRAC2012-Rule-20.7" />
                                 <check enabled="false" name="MISRAC2012-Rule-20.10" />
                             </group>
@@ -1896,6 +2345,21 @@
                                 <check enabled="true" name="MISRAC2012-Rule-21.11" />
                                 <check enabled="false" name="MISRAC2012-Rule-21.12_a" />
                                 <check enabled="false" name="MISRAC2012-Rule-21.12_b" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.13" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.14" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.15" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.16" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.17_a" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.17_b" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.17_c" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.17_d" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.17_e" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.17_f" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.18_a" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.18_b" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.19_a" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.19_b" />
+                                <check enabled="true" name="MISRAC2012-Rule-21.20" />
                             </group>
                             <group enabled="true" name="MISRAC2012-Rule-22">
                                 <check enabled="true" name="MISRAC2012-Rule-22.1_a" />
@@ -1908,6 +2372,11 @@
                                 <check enabled="true" name="MISRAC2012-Rule-22.5_a" />
                                 <check enabled="true" name="MISRAC2012-Rule-22.5_b" />
                                 <check enabled="true" name="MISRAC2012-Rule-22.6" />
+                                <check enabled="true" name="MISRAC2012-Rule-22.7_a" />
+                                <check enabled="true" name="MISRAC2012-Rule-22.7_b" />
+                                <check enabled="true" name="MISRAC2012-Rule-22.8" />
+                                <check enabled="true" name="MISRAC2012-Rule-22.9" />
+                                <check enabled="true" name="MISRAC2012-Rule-22.10" />
                             </group>
                         </package>
                         <package enabled="false" name="MISRAC++2008">
@@ -2004,8 +2473,7 @@
                             </group>
                             <group enabled="true" name="MISRAC++2008-5-3">
                                 <check enabled="true" name="MISRAC++2008-5-3-1" />
-                                <check enabled="true" name="MISRAC++2008-5-3-2_a" />
-                                <check enabled="true" name="MISRAC++2008-5-3-2_b" />
+                                <check enabled="true" name="MISRAC++2008-5-3-2" />
                                 <check enabled="true" name="MISRAC++2008-5-3-3" />
                                 <check enabled="true" name="MISRAC++2008-5-3-4" />
                             </group>

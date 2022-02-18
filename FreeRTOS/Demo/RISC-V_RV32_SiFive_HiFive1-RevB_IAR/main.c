@@ -272,7 +272,7 @@ char pcCause[ 20 ];
 	#warning vApplicationHandleTrap not implemented.
 	/* Not implemented yet! */
 	sprintf( pcCause, "%u", mcause );
-	vSendString( pcCause );
+	configPRINT_STRING( pcCause );
 	configASSERT( mcause == 0 );
 }
 

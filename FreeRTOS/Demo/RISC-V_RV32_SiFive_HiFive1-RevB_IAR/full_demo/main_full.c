@@ -124,8 +124,6 @@ extern void vRegTest1Implementation( void );
 static void prvRegTestTaskEntry2( void *pvParameters );
 extern void vRegTest2Implementation( void );
 
-extern void vSendString( const char * const pcString );
-
 /*
  * Tick hook used by the full demo, which includes code that interacts with
  * some of the tests.
@@ -194,7 +192,7 @@ extern void vToggleLED( void );
 	( void ) pvParameters;
 
 	/* Demo start marker. */
-	vSendString( "FreeRTOS Demo Start\r\n" );
+	configPRINT_STRING( "FreeRTOS Demo Start\r\n" );
 
 	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
 	works correctly. */
@@ -260,7 +258,7 @@ extern void vToggleLED( void );
 			xDelayPeriod = mainERROR_CHECK_TASK_PERIOD;
 		}
 
-		vSendString( pcStatusMessage );
+		configPRINT_STRING( pcStatusMessage );
 	}
 }
 /*-----------------------------------------------------------*/

@@ -99,4 +99,8 @@ to exclude the API function. */
 header file. */
 #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); __asm volatile( "ebreak" ); for( ;; ); }
 
+/* Map to the platform write function. */
+extern void vSendString( const char * const pcString );
+#define configPRINT_STRING( pcString )		vSendString( pcString )
+
 #endif /* FREERTOS_CONFIG_H */

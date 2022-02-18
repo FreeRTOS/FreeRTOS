@@ -252,6 +252,7 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*mbedtls_config\.h.*',
     r'.*mbedtls_config\.h.*',
     r'.*CMSIS.*',
+    r'.*User.*',
     r'.*/makefile',
     r'.*/Makefile',
     r'.*/trcConfig\.h.*',

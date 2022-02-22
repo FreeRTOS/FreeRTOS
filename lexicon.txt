@@ -1060,6 +1060,7 @@ isset
 itemlength
 itesm
 itm
+itmc
 itteratio
 itu
 ivr
@@ -2883,6 +2884,7 @@ usbqueue
 usbufferaddress
 usbuffersize
 uscheckstatus
+usclockhz
 usdocumentlength
 userguide
 usermode

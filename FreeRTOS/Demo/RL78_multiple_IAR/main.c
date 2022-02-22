@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -58,7 +58,7 @@
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    0
 
 /*-----------------------------------------------------------*/
 
@@ -71,7 +71,7 @@ extern void main_full( void );
 
 /*
  * This function is called from the C startup routine to setup the processor -
- * in particular the clock source.
+ * in particular the CPU clock source.
  */
 int __low_level_init(void);
 
@@ -81,6 +81,9 @@ void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
+
+/* Prototype for the application-implemented timer for the OS tick */
+void vApplicationSetupTimerInterrupt( void );
 
 /*-----------------------------------------------------------*/
 
@@ -92,115 +95,171 @@ static SemaphoreHandle_t xSemaphore = NULL;
 enabled. */
 __root __far const unsigned char OptionByte[] @ 0x00C0 =
 {
-	0x6eU, 0xffU, 0xe8U, 0x85U
+    0x6eU, 0xffU, 0xe8U, 0x85U
 };
 
 /* Security byte definition */
 __root __far const unsigned char ucSecurityCode[]  @ 0x00C4 =
 {
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 /*-----------------------------------------------------------*/
 
 void main( void )
 {
-	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
-	of this file. */
-	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
-	{
-		main_blinky();
-	}
-	#else
-	{
-		main_full();
-	}
-	#endif
+    /* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
+    of this file. */
+    #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
+    {
+        main_blinky();
+    }
+    #else
+    {
+        main_full();
+    }
+    #endif
 }
 /*-----------------------------------------------------------*/
 
 void vAnExampleISR_C_Handler( void )
 {
-	/*
-	 * This demo does not include a functional interrupt service routine - so
-	 * this dummy handler (which is not actually installed) is provided as an
-	 * example of how an ISR that needs to cause a context switch needs to be
-	 * implemented.  ISRs that do not cause a context switch have no special
-	 * requirements and can be written as per the compiler documentation.
-	 *
-	 * This C function is called from a wrapper function that is implemented
-	 * in assembly code.  See vANExampleISR_ASM_Wrapper() in ExampleISR.s87.
-	 * Also see the documentation page for this demo on the FreeRTOS.org website
-	 * for full instructions.
-	 */
+    /*
+     * This demo does not include a functional interrupt service routine - so
+     * this dummy handler (which is not actually installed) is provided as an
+     * example of how an ISR that needs to cause a context switch needs to be
+     * implemented.  ISRs that do not cause a context switch have no special
+     * requirements and can be written as per the compiler documentation.
+     *
+     * This C function is called from a wrapper function that is implemented
+     * in assembly code.  See vAnExampleISR_ASM_Wrapper() in interrupt_vector.s.
+     * Also see the documentation page for this demo on the FreeRTOS.org website
+     * for full instructions.
+     */
 short sHigherPriorityTaskWoken = pdFALSE;
 
-	/* Handler code goes here...*/
+    /* Handler code goes here...*/
 
-	/* For purposes of demonstration, assume at some point the hander calls
-	xSemaphoreGiveFromISR().*/
-	xSemaphoreGiveFromISR( xSemaphore, &sHigherPriorityTaskWoken );
+    /* For purposes of demonstration, assume at some point the hander calls
+    xSemaphoreGiveFromISR().*/
+    xSemaphoreGiveFromISR( xSemaphore, &sHigherPriorityTaskWoken );
 
-	/* If giving the semaphore unblocked a task, and the unblocked task has a
-	priority higher than or equal to the currently running task, then
-	sHigherPriorityTaskWoken will have been set to pdTRUE internally within the
-	xSemaphoreGiveFromISR() function.  Passing a pdTRUE	value to
-	portYIELD_FROM_ISR() will cause this interrupt to return directly to the
-	higher priority unblocked task. */
-	portYIELD_FROM_ISR( sHigherPriorityTaskWoken );
+    /* If giving the semaphore unblocked a task, and the unblocked task has a
+    priority higher than or equal to the currently running task, then
+    sHigherPriorityTaskWoken will have been set to pdTRUE internally within the
+    xSemaphoreGiveFromISR() function.  Passing a pdTRUE    value to
+    portYIELD_FROM_ISR() will cause this interrupt to return directly to the
+    higher priority unblocked task. */
+    portYIELD_FROM_ISR( sHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 
 int __low_level_init(void)
 {
-	portDISABLE_INTERRUPTS();
+    portDISABLE_INTERRUPTS();
 
-	/* Set fMX */
-	CMC = 0x00;
-	MSTOP = 1U;
+    /* Set fMX */
+    CMC = 0x00;
+    MSTOP = 1U;
 
-	/* Set fMAIN */
-	MCM0 = 0U;
+    /* Set fMAIN */
+    MCM0 = 0U;
 
-	/* Set fSUB */
-	XTSTOP = 1U;
-	OSMC = 0x10;
+    /* Set fSUB */
+    XTSTOP = 1U;
+    OSMC = 0x10;
 
-	/* Set fCLK */
-	CSS = 0U;
+    /* Set fCLK */
+    CSS = 0U;
 
-	/* Set fIH */
-	HIOSTOP = 0U;
+    /* Set fIH */
+    HIOSTOP = 0U;
 
-	/* LED port initialization. */
-	LED_INIT();
+    /* Board's LED initialization. */
+    LED_INIT();
 
-	return pdTRUE;
+    return pdTRUE;
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationSetupTimerInterrupt( void )
+{
+const uint16_t usClockHz = 15000UL; /* Internal clock. */
+const uint16_t usCompareMatch = ( usClockHz / configTICK_RATE_HZ ) + 1UL;
+
+    /* Use the internal 15 kHz clock. */
+    OSMC = ( uint8_t ) 0x16;
+
+    /* The clock source for the Interval Timer peripheral used for generating
+    the tick interrupt depends on the RL78 device in use. */
+    #if configTICK_VECTOR == 0x38
+    {
+        /* Supply the interval timer clock. */
+        RTCEN = ( uint8_t ) 1U;
+
+        /* Disable INTIT interrupt. */
+        ITMK = ( uint8_t ) 1;
+
+        /* Disable ITMC operation. */
+        ITMC = ( uint8_t ) 0x0000;
+
+        /* Clear INIT interrupt. */
+        ITIF = ( uint8_t ) 0;
+
+        /* Set interval and enable interrupt operation. */
+        ITMC = usCompareMatch | 0x8000U;
+
+        /* Enable INTIT interrupt. */
+        ITMK = ( uint8_t ) 0;
+    }
+    #elif configTICK_VECTOR == 0x3C
+    {
+        /* Supply the interval timer clock. */
+        TMKAEN = ( uint8_t ) 1U;
+
+        /* Disable INTIT interrupt. */
+        TMKAMK = ( uint8_t ) 1;
+
+        /* Disable ITMC operation. */
+        ITMC = ( uint8_t ) 0x0000;
+
+        /* Clear INIT interrupt. */
+        TMKAIF = ( uint8_t ) 0;
+
+        /* Set interval and enable interrupt operation. */
+        ITMC = usCompareMatch | 0x8000U;
+
+        /* Enable INTIT interrupt. */
+        TMKAMK = ( uint8_t ) 0;
+    }
+    #else
+        #error "It is necessary to configure a suitable timer interrupt for the tick."
+    #endif
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
-	/* Called if a call to pvPortMalloc() fails because there is insufficient
-	free memory available in the FreeRTOS heap.  pvPortMalloc() is called
-	internally by FreeRTOS API functions that create tasks, queues, software
-	timers, and semaphores.  The size of the FreeRTOS heap is set by the
-	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
-	taskDISABLE_INTERRUPTS();
-	for( ;; );
+    /* Called if a call to pvPortMalloc() fails because there is insufficient
+    free memory available in the FreeRTOS heap.  pvPortMalloc() is called
+    internally by FreeRTOS API functions that create tasks, queues, software
+    timers, and semaphores.  The size of the FreeRTOS heap is set by the
+    configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
+    taskDISABLE_INTERRUPTS();
+    for( ;; );
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
-	( void ) pcTaskName;
-	( void ) pxTask;
+    ( void ) pcTaskName;
+    ( void ) pxTask;
 
-	/* Run time stack overflow checking is performed if
-	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-	function is called if a stack overflow is detected. */
-	taskDISABLE_INTERRUPTS();
-	for( ;; );
+    /* Run time stack overflow checking is performed if
+    configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+    function is called if a stack overflow is detected. */
+    taskDISABLE_INTERRUPTS();
+    for( ;; );
 }
 /*-----------------------------------------------------------*/
 
@@ -208,17 +267,15 @@ void vApplicationIdleHook( void )
 {
 volatile size_t xFreeHeapSpace;
 
-	/* This is just a trivial example of an idle hook.  It is called on each
-	cycle of the idle task.  It must *NOT* attempt to block.  In this case the
-	idle task just queries the amount of FreeRTOS heap that remains.  See the
-	memory management section on the http://www.FreeRTOS.org web site for memory
-	management options.  If there is a lot of heap memory free then the
-	configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
-	RAM. */
-	xFreeHeapSpace = xPortGetFreeHeapSize();
+    /* This is just a trivial example of an idle hook.  It is called on each
+    cycle of the idle task.  It must *NOT* attempt to block.  In this case the
+    idle task just queries the amount of FreeRTOS heap that remains.  See the
+    memory management section on the http://www.FreeRTOS.org web site for memory
+    management options.  If there is a lot of heap memory free then the
+    configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
+    RAM. */
+    xFreeHeapSpace = xPortGetFreeHeapSize();
 
-	/* Remove compiler warning about xFreeHeapSpace being set but never used. */
-	( void ) xFreeHeapSpace;
+    /* Remove compiler warning about xFreeHeapSpace being set but never used. */
+    ( void ) xFreeHeapSpace;
 }
-
-

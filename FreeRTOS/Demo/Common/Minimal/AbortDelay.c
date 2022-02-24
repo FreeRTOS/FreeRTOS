@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202107.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /*
@@ -421,18 +420,18 @@
         EventBits_t xBitsToWaitFor = ( EventBits_t ) 0x01, xReturn;
 
         #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
-            {
-                static StaticEventGroup_t xEventGroupBuffer;
+        {
+            static StaticEventGroup_t xEventGroupBuffer;
 
-                /* Create the event group.  Statically allocated memory is used so the
-                 * creation cannot fail. */
-                xEventGroup = xEventGroupCreateStatic( &xEventGroupBuffer );
-            }
+            /* Create the event group.  Statically allocated memory is used so the
+             * creation cannot fail. */
+            xEventGroup = xEventGroupCreateStatic( &xEventGroupBuffer );
+        }
         #else
-            {
-                xEventGroup = xEventGroupCreate();
-                configASSERT( xEventGroup );
-            }
+        {
+            xEventGroup = xEventGroupCreate();
+            configASSERT( xEventGroup );
+        }
         #endif /* if ( configSUPPORT_STATIC_ALLOCATION == 1 ) */
 
         /* Note the time before the delay so the length of the delay is known. */
@@ -489,25 +488,25 @@
         uint8_t uxRxData;
 
         #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
-            {
-                /* Defines the memory that will actually hold the streams within the
-                 * stream buffer. */
-                static uint8_t ucStorageBuffer[ sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ) + 1 ];
+        {
+            /* Defines the memory that will actually hold the streams within the
+             * stream buffer. */
+            static uint8_t ucStorageBuffer[ sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ) + 1 ];
 
-                /* The variable used to hold the stream buffer structure. */
-                StaticStreamBuffer_t xStreamBufferStruct;
+            /* The variable used to hold the stream buffer structure. */
+            StaticStreamBuffer_t xStreamBufferStruct;
 
 
-                xStreamBuffer = xStreamBufferCreateStatic( sizeof( ucStorageBuffer ),
-                                                           xTriggerLevelBytes,
-                                                           ucStorageBuffer,
-                                                           &xStreamBufferStruct );
-            }
+            xStreamBuffer = xStreamBufferCreateStatic( sizeof( ucStorageBuffer ),
+                                                       xTriggerLevelBytes,
+                                                       ucStorageBuffer,
+                                                       &xStreamBufferStruct );
+        }
         #else /* if ( configSUPPORT_STATIC_ALLOCATION == 1 ) */
-            {
-                xStreamBuffer = xStreamBufferCreate( sizeof( uint8_t ), xTriggerLevelBytes );
-                configASSERT( xStreamBuffer );
-            }
+        {
+            xStreamBuffer = xStreamBufferCreate( sizeof( uint8_t ), xTriggerLevelBytes );
+            configASSERT( xStreamBuffer );
+        }
         #endif /* if ( configSUPPORT_STATIC_ALLOCATION == 1 ) */
 
         /* Note the time before the delay so the length of the delay is known. */
@@ -564,19 +563,19 @@
         uint8_t ucItemToQueue;
 
         #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
-            {
-                static StaticQueue_t xQueueBuffer;
-                static uint8_t ucQueueStorage[ sizeof( uint8_t ) ];
+        {
+            static StaticQueue_t xQueueBuffer;
+            static uint8_t ucQueueStorage[ sizeof( uint8_t ) ];
 
-                /* Create the queue.  Statically allocated memory is used so the
-                 * creation cannot fail. */
-                xQueue = xQueueCreateStatic( xQueueLength, sizeof( uint8_t ), ucQueueStorage, &xQueueBuffer );
-            }
+            /* Create the queue.  Statically allocated memory is used so the
+             * creation cannot fail. */
+            xQueue = xQueueCreateStatic( xQueueLength, sizeof( uint8_t ), ucQueueStorage, &xQueueBuffer );
+        }
         #else
-            {
-                xQueue = xQueueCreate( xQueueLength, sizeof( uint8_t ) );
-                configASSERT( xQueue );
-            }
+        {
+            xQueue = xQueueCreate( xQueueLength, sizeof( uint8_t ) );
+            configASSERT( xQueue );
+        }
         #endif /* if ( configSUPPORT_STATIC_ALLOCATION == 1 ) */
 
         /* This function tests aborting when in the blocked state waiting to send,
@@ -640,17 +639,17 @@
         SemaphoreHandle_t xSemaphore;
 
         #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
-            {
-                static StaticSemaphore_t xSemaphoreBuffer;
+        {
+            static StaticSemaphore_t xSemaphoreBuffer;
 
-                /* Create the semaphore.  Statically allocated memory is used so the
-                 * creation cannot fail. */
-                xSemaphore = xSemaphoreCreateBinaryStatic( &xSemaphoreBuffer );
-            }
+            /* Create the semaphore.  Statically allocated memory is used so the
+             * creation cannot fail. */
+            xSemaphore = xSemaphoreCreateBinaryStatic( &xSemaphoreBuffer );
+        }
         #else
-            {
-                xSemaphore = xSemaphoreCreateBinary();
-            }
+        {
+            xSemaphore = xSemaphoreCreateBinary();
+        }
         #endif
 
         /* Note the time before the delay so the length of the delay is known. */

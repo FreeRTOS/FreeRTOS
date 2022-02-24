@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202107.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -438,6 +438,7 @@ void test_xSemaphoreGiveFromISR_locked( void )
     vSetQueueTxLock( xSemaphore, queueLOCKED_UNMODIFIED );
 
     vFakePortAssertIfInterruptPriorityInvalid_Expect();
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreGiveFromISR( xSemaphore, NULL ) );
 
@@ -465,6 +466,11 @@ void test_xSemaphoreGiveFromISR_locked_overflow( void )
     vSetQueueTxLock( xSemaphore, INT8_MAX );
 
     vFakePortAssertIfInterruptPriorityInvalid_Expect();
+
+    /* The number of tasks need to be more than 127 to trigger the
+     * overflow assertion. */
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 128 );
+
 
     /* Expect an assertion since the cTxLock value has overflowed */
     fakeAssertExpectFail();
@@ -645,6 +651,8 @@ void test_xSemaphoreTake_blocking_success( void )
     vFakePortAssertIfInterruptPriorityInvalid_Ignore();
 
     xTaskCheckForTimeOut_Stub( &blocking_success_xTaskCheckForTimeOut_cb );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
+
 
     TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreTake( xSemaphore, TICKS_TO_WAIT ) );
 
@@ -690,6 +698,7 @@ void test_xSemaphoreTake_blocking_success_last_chance( void )
     vFakePortAssertIfInterruptPriorityInvalid_Expect();
 
     xTaskCheckForTimeOut_Stub( &blocking_last_chance_xTaskCheckForTimeOut_cb );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreTake( xSemaphore, TICKS_TO_WAIT ) );
 
@@ -759,6 +768,7 @@ static BaseType_t xSemaphoreTake_xTaskCheckForTimeOutCB( TimeOut_t * const pxTim
 
     if( cmock_num_calls == NUM_CALLS_TO_INTERCEPT )
     {
+        uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
         TEST_ASSERT_TRUE( xSemaphoreGiveFromISR( xSemaphoreHandleStatic, NULL ) );
         TEST_ASSERT_EQUAL( 1, uxQueueMessagesWaiting( xSemaphoreHandleStatic ) );
     }
@@ -783,6 +793,7 @@ void test_xSemaphoreTake_blocking_success_locked_no_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xSemaphoreTake_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &td_task_xTaskResumeAllStub );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreTake( xSemaphore, TICKS_TO_WAIT ) );
 
@@ -835,6 +846,7 @@ void test_xSemaphoreTake_blocking_timeout_locked_high_prio_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xSemaphoreTake_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xSemaphoreTake_xTaskResumeAllCallback );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY + 1 );
 

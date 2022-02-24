@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202107.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -204,13 +204,13 @@ void vStartStreamBufferTasks( void )
     xTaskCreate( prvInterruptTriggerLevelTest, "StrTrig", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
 
     #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
-        {
-            /* The sender tasks set up the stream buffers before creating the
-             * receiver tasks.  Priorities must be 0 and 1 as the priority is used to
-             * index into the xStaticStreamBuffers and ucBufferStorage arrays. */
-            xTaskCreate( prvSenderTask, "Str1Sender", sbSMALLER_STACK_SIZE, NULL, sbHIGHER_PRIORITY, NULL );
-            xTaskCreate( prvSenderTask, "Str2Sender", sbSMALLER_STACK_SIZE, NULL, sbLOWER_PRIORITY, NULL );
-        }
+    {
+        /* The sender tasks set up the stream buffers before creating the
+         * receiver tasks.  Priorities must be 0 and 1 as the priority is used to
+         * index into the xStaticStreamBuffers and ucBufferStorage arrays. */
+        xTaskCreate( prvSenderTask, "Str1Sender", sbSMALLER_STACK_SIZE, NULL, sbHIGHER_PRIORITY, NULL );
+        xTaskCreate( prvSenderTask, "Str2Sender", sbSMALLER_STACK_SIZE, NULL, sbLOWER_PRIORITY, NULL );
+    }
     #endif /* configSUPPORT_STATIC_ALLOCATION */
 }
 /*-----------------------------------------------------------*/
@@ -1225,21 +1225,21 @@ BaseType_t xAreStreamBufferTasksStillRunning( void )
     }
 
     #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
-        {
-            static uint32_t ulLastSenderLoopCounters[ sbNUMBER_OF_ECHO_CLIENTS ] = { 0 };
+    {
+        static uint32_t ulLastSenderLoopCounters[ sbNUMBER_OF_ECHO_CLIENTS ] = { 0 };
 
-            for( x = 0; x < sbNUMBER_OF_SENDER_TASKS; x++ )
+        for( x = 0; x < sbNUMBER_OF_SENDER_TASKS; x++ )
+        {
+            if( ulLastSenderLoopCounters[ x ] == ulSenderLoopCounters[ x ] )
             {
-                if( ulLastSenderLoopCounters[ x ] == ulSenderLoopCounters[ x ] )
-                {
-                    xErrorStatus = pdFAIL;
-                }
-                else
-                {
-                    ulLastSenderLoopCounters[ x ] = ulSenderLoopCounters[ x ];
-                }
+                xErrorStatus = pdFAIL;
+            }
+            else
+            {
+                ulLastSenderLoopCounters[ x ] = ulSenderLoopCounters[ x ];
             }
         }
+    }
     #endif /* configSUPPORT_STATIC_ALLOCATION */
 
     return xErrorStatus;

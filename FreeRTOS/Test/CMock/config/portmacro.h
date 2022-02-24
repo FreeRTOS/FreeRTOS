@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202107.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -51,7 +51,7 @@
     #define PORTMACRO_H
 
     #ifdef __cplusplus
-        extern "C" {
+    extern "C" {
     #endif
 
 /*-----------------------------------------------------------
@@ -146,7 +146,7 @@
     #define portTASK_FUNCTION( vFunction, pvParameters )          void vFunction( void * pvParameters )
 
     #ifdef __cplusplus
-        }
+    }
     #endif
 
 #endif /* PORTMACRO_H */

@@ -58,7 +58,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\include;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\dependency\3rdparty\pkcs11;..\..\ThirdParty\mbedtls\include;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;examples;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\include;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\dependency\3rdparty\pkcs11;..\..\ThirdParty\mbedtls\include;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;examples;.;..\..\Source\corePKCS11\source\portable\os;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;MBEDTLS_CONFIG_FILE="aws_mbedtls_config.h";CONFIG_MEDTLS_USE_AFR_MEMORY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -169,6 +169,7 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\cipher.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\cipher_wrap.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\cmac.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\constant_time.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ctr_drbg.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\debug.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\des.c" />
@@ -190,6 +191,8 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\md4.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\md5.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\memory_buffer_alloc.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\mps_reader.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\mps_trace.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\net_sockets.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\nist_kw.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\oid.c" />
@@ -205,6 +208,14 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\platform.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\platform_util.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\poly1305.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_aead.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_cipher.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_client.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_driver_wrappers.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_ecp.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_hash.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_mac.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_rsa.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_se.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_slot_management.c" />
@@ -224,6 +235,7 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_srv.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_ticket.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_tls.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_tls13_keys.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\threading.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\timing.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\version.c" />
@@ -236,12 +248,12 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509_crt.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509_csr.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\xtea.c" />
-    <ClCompile Include="..\..\ThirdParty\mbedtls\library\error.c" />
     <ClCompile Include="..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils\mbedtls_utils.c" />
     <ClCompile Include="..\..\Source\corePKCS11\source\core_pkcs11.c" />
     <ClCompile Include="..\..\Source\corePKCS11\source\core_pki_utils.c" />
     <ClCompile Include="..\..\Source\corePKCS11\source\portable\mbedtls\core_pkcs11_mbedtls.c" />
-    <ClCompile Include="..\..\Source\corePKCS11\source\portable\windows\core_pkcs11_pal.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\os\core_pkcs11_pal_utils.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\os\freertos_winsim\core_pkcs11_pal.c" />
     <ClCompile Include="examples\demo_helpers.c" />
     <ClCompile Include="examples\management_and_rng.c" />
     <ClCompile Include="examples\objects.c" />
@@ -347,11 +359,11 @@
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_slot_management.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_storage.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\ssl_invasive.h" />
-    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11f.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11t.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11.h" />
+    <ClInclude Include="..\..\Source\corePKCS11\source\portable\os\core_pkcs11_pal_utils.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11_pal.h" />
     <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pki_utils.h" />
     <ClInclude Include="core_pkcs11_config.h" />

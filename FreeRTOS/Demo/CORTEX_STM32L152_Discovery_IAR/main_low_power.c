@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202107.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
  *
- * 1 tab == 4 spaces!
  */
 
 /* ****************************************************************************
@@ -37,7 +36,7 @@
  * This application demonstrates the FreeRTOS tickless idle mode (tick
  * suppression) being used to allow the STM32L to enter various low power modes
  * during extended idle periods.  See
- * http://www.freertos.org/low-power-tickless-rtos.html for information on
+ * https://www.FreeRTOS.org/low-power-tickless-rtos.html for information on
  * tickless operation.
  *
  * Deeper low power modes have longer wake up periods that lighter low power

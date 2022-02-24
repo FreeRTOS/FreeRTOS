@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202107.00
- * Copyright (C) Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202112.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -176,15 +176,15 @@ static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength,
     #endif
 
     #if ( configUSE_TRACE_FACILITY == 1 )
-        {
-            pxNewQueue->ucQueueType = ucQueueType;
-        }
+    {
+        pxNewQueue->ucQueueType = ucQueueType;
+    }
     #endif /* configUSE_TRACE_FACILITY */
 
     #if ( configUSE_QUEUE_SETS == 1 )
-        {
-            pxNewQueue->pxQueueSetContainer = NULL;
-        }
+    {
+        pxNewQueue->pxQueueSetContainer = NULL;
+    }
     #endif /* configUSE_QUEUE_SETS */
 
     traceQUEUE_CREATE( pxNewQueue );
@@ -262,12 +262,12 @@ QueueHandle_t xQueueGenericCreate( const UBaseType_t uxQueueLength,
         #endif /* ifdef VERIFAST */
 
         #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
-            {
-                /* Queues can be created either statically or dynamically, so
-                 * note this task was created dynamically in case it is later
-                 * deleted. */
-                pxNewQueue->ucStaticallyAllocated = pdFALSE;
-            }
+        {
+            /* Queues can be created either statically or dynamically, so
+             * note this task was created dynamically in case it is later
+             * deleted. */
+            pxNewQueue->ucStaticallyAllocated = pdFALSE;
+        }
         #endif /* configSUPPORT_STATIC_ALLOCATION */
 
         prvInitialiseNewQueue( uxQueueLength, uxItemSize, pucQueueStorage, ucQueueType, pxNewQueue );

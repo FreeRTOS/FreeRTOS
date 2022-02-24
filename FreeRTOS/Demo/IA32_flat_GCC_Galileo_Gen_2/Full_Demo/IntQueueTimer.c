@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202107.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
  *
- * 1 tab == 4 spaces!
  */
 
 /*
@@ -48,7 +47,7 @@
  * asm wrapper code and is installed using xPortInstallInterruptHandler().  For
  * convenience the asm wrapper which calls vApplicationHPETTimer1Handler(), is
  * implemented in RegTest.S.  See
- * http://www.freertos.org/RTOS_Intel_Quark_Galileo_GCC.html#interrupts for more
+ * https://www.FreeRTOS.org/RTOS_Intel_Quark_Galileo_GCC.html#interrupts for more
  * details.
  */
 void vApplicationHPETTimer0Handler( void );

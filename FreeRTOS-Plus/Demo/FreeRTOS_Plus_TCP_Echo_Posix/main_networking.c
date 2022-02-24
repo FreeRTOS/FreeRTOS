@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202107.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -28,7 +28,7 @@
  * This project is a cut down version of the project described on the following
  * link.  Only the simple UDP client and server and the TCP echo clients are
  * included in the build:
- * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html
+ * https://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html
  */
 
 /* Standard includes. */
@@ -126,7 +126,7 @@ void main_tcp_echo_client_tasks( void )
 
     /*
      * Instructions for using this project are provided on:
-     * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html
+     * https://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html
      */
 
     /* Miscellaneous initialisation including preparing the logging and seeding
@@ -236,16 +236,21 @@ static void prvSRand( UBaseType_t ulSeed )
 static void prvMiscInitialisation( void )
 {
     time_t xTimeNow;
-
+    uint32_t ulRandomNumbers[ 4 ];
     /* Seed the random number generator. */
     time( &xTimeNow );
     FreeRTOS_debug_printf( ( "Seed for randomiser: %lu\n", xTimeNow ) );
     prvSRand( ( uint32_t ) xTimeNow );
+
+    ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 0 ] );
+    ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 1 ] );
+    ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 2 ] );
+    ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 3 ] );
     FreeRTOS_debug_printf( ( "Random numbers: %08X %08X %08X %08X\n",
-                             ipconfigRAND32(),
-                             ipconfigRAND32(),
-                             ipconfigRAND32(),
-                             ipconfigRAND32() ) );
+                             ulRandomNumbers[ 0 ],
+                             ulRandomNumbers[ 1 ],
+                             ulRandomNumbers[ 2 ],
+                             ulRandomNumbers[ 3 ] ) );
 }
 /*-----------------------------------------------------------*/
 

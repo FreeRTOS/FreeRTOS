@@ -13,11 +13,11 @@ analysis tool
 how to run the proofs on your local clone of a:FR.
 
 
-Bulding and running proofs
+Building and running proofs
 --------------------------
 
-Python-based build
-------------------
+Currently, only python based builds are supported for the CBMC proofs. The below
+section outlines the instructions for the Python based build.
 
 ### Prerequisites
 

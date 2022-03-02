@@ -21,23 +21,30 @@ section outlines the instructions for the Python based build.
 
 ### Prerequisites
 
-You will need Python 3. On Windows, you will need Visual Studio 2019 or later
-(in particular, you will need the Developer Command Prompt and NMake). On macOS
-and Linux, you will need Make.
+You will need Python version >= 3.7. On Windows, you will need Visual Studio 2019
+or later (in particular, you will need the Developer Command Prompt and NMake). On
+macOS and Linux, you will need Make.
 
+If you are running on a 64-bit machine, please install the 32-bit version of gcc
+libraires. For example, on linux, one would run the following command to install
+the libraries: `sudo apt-get install gcc-multilib`
 
 ### Installing CBMC
 
-- Clone the [CBMC repository](https://github.com/diffblue/cbmc).
-
 - The latest installation instructions can be found on the
   [releases](https://github.com/diffblue/cbmc/releases) page of the CBMC repository.
+
 - Please follow all the installation instructions given for your platform.
 
 - Ensure that you can run the programs `cbmc`, `goto-cc` (or `goto-cl`
-  on Windows), and `goto-instrument` from the command line.
+  on Windows), and `goto-instrument` from the command line. If you cannot run these
+  commands, please refer to the above instructions to install CBMC.
 
 ### Setting up the proofs
+
+Make sure that all the submodules of the FreeRTOS repository have been cloned. To
+clone all the submodules, go to the root of the FreeRTOS repository and run this
+command: `git submodule update --init --recursive --checkout`.
 
 Change into the `proofs` directory and run
 ```

@@ -10,7 +10,7 @@ The proofs are checked using the
 [C Bounded Model Checker](http://www.cprover.org/cbmc/), an open-source static
 analysis tool
 ([GitHub repository](https://github.com/diffblue/cbmc)). This README describes
-how to run the proofs on your local clone of a:FR.
+how to run the proofs on your local clone of FreeRTOS.
 
 
 Building and running proofs
@@ -42,6 +42,16 @@ the libraries: `sudo apt-get install gcc-multilib`
   on Windows), and `goto-instrument` from the command line. If you cannot run these
   commands, please refer to the above instructions to install CBMC.
 
+### Installing CBMC-viewer (to generate the report)
+
+- The latest installation instructions can be found on the
+  [releases](https://github.com/awslabs/aws-viewer-for-cbmc/releases) page of the CBMC-viewer repository.
+
+- Please follow all the installation instructions given for your platform.
+
+- Ensure that you can run the programs `cbmc-viewer`. If not, please verify
+  that all instructions above have been followed.
+
 ### Setting up the proofs
 
 Make sure that all the submodules of the FreeRTOS repository have been cloned. To
@@ -64,6 +74,9 @@ previous step will have left a Makefile in each of those directories. To
 run a proof, change into the directory for that proof and run `make`.
 The proofs may take some time to run; they eventually write their output to
 `cbmc.txt`, which should have the text `VERIFICATION SUCCESSFUL` at the end.
+
+The make command will also generate a report in html and json format which makes
+understanding the failures easier.
 
 ### Proof directory structure
 

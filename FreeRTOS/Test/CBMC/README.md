@@ -16,14 +16,16 @@ how to run the proofs on your local clone of a:FR.
 Building and running proofs
 --------------------------
 
-Currently, only python based builds are supported for the CBMC proofs. The below
-section outlines the instructions for the Python based build.
+Currently, only python based builds are supported for the CBMC proofs. The proofs
+can be run on Linux and MacOS. Windows users can use [WSL](https://docs.microsoft.com/en-us/windows/wsl).
+The below section outlines the instructions for the Python based build.
 
 ### Prerequisites
 
-You will need Python version >= 3.7. On Windows, you will need Visual Studio 2019
-or later (in particular, you will need the Developer Command Prompt and NMake). On
-macOS and Linux, you will need Make.
+On Windows, you can install WSL using these simple [instructions](https://docs.microsoft.com/en-us/windows/wsl/install).
+
+You will need Python version >= 3.7.
+And you will need Make to build and run the proofs.
 
 If you are running on a 64-bit machine, please install the 32-bit version of gcc
 libraires. For example, on linux, one would run the following command to install
@@ -59,10 +61,9 @@ programs.
 Each of the leaf directories under `proofs` is a proof of the memory
 safety of a single entry point in FreeRTOS. The scripts that you ran in the
 previous step will have left a Makefile in each of those directories. To
-run a proof, change into the directory for that proof and run `nmake` on
-Windows or `make` on Linux or macOS. The proofs may take some time to
-run; they eventually write their output to `cbmc.txt`, which should have
-the text `VERIFICATION SUCCESSFUL` at the end.
+run a proof, change into the directory for that proof and run `make`.
+The proofs may take some time to run; they eventually write their output to
+`cbmc.txt`, which should have the text `VERIFICATION SUCCESSFUL` at the end.
 
 ### Proof directory structure
 

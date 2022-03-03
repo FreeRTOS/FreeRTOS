@@ -1051,7 +1051,7 @@
     <ClInclude Include="core_http_config.h">
       <Filter>Config</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser\http_parser.h">
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\llhttp\include\llhttp.h">
       <Filter>FreeRTOS+\httpparser\include</Filter>
     </ClInclude>
     <ClInclude Include="..\Common\Ota_PAL\Win32\Code_Signature_Verification\code_signature_verification.h">

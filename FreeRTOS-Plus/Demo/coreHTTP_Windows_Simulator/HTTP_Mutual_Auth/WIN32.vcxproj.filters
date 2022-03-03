@@ -528,7 +528,7 @@
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreHTTP\source\include\core_http_client.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser\http_parser.h">
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\llhttp\include\llhttp.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\aes.h">

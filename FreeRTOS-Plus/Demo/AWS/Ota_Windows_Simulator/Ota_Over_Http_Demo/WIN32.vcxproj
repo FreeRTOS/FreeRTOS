@@ -158,7 +158,9 @@
     <ClCompile Include="..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement\BufferAllocation_2.c" />
     <ClCompile Include="..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\NetworkInterface\WinPCap\NetworkInterface.c" />
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreHTTP\source\core_http_client.c" />
-    <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser\http_parser.c" />
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\llhttp\src\api.c" />
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\llhttp\src\http.c" />
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\llhttp\src\llhttp.c" />
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\core_mqtt_agent.c" />
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\core_mqtt_agent_command_functions.c" />
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c" />

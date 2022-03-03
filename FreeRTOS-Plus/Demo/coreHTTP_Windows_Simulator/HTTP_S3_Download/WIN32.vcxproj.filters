@@ -444,7 +444,13 @@
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\core_http_client.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser\http_parser.c">
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\llhttp\src\api.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\llhttp\src\http.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\llhttp\src\llhttp.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Source\coreJSON\source\core_json.c">

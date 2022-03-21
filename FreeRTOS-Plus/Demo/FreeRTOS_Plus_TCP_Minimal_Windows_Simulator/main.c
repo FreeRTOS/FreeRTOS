@@ -1,6 +1,6 @@
 /*
- * FreeRTOS V202104.00
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202112.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,17 +19,16 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /*
  * This project is a cut down version of the project described on the following
  * link.  Only the simple UDP client and server and the TCP echo clients are
  * included in the build:
- * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html
+ * https://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html
  */
 
 /* Standard includes. */
@@ -139,7 +138,7 @@ int main( void )
 
     /*
      * Instructions for using this project are provided on:
-     * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html
+     * https://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html
      */
 
     /* Miscellaneous initialisation including preparing the logging and seeding
@@ -301,6 +300,7 @@ static void prvMiscInitialisation( void )
 {
     time_t xTimeNow;
     uint32_t ulLoggingIPAddress;
+    uint32_t ulRandomNumbers[ 4 ];
 
     ulLoggingIPAddress = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0, configECHO_SERVER_ADDR1, configECHO_SERVER_ADDR2, configECHO_SERVER_ADDR3 );
     vLoggingInit( xLogToStdout, xLogToFile, xLogToUDP, ulLoggingIPAddress, configPRINT_PORT );
@@ -309,7 +309,16 @@ static void prvMiscInitialisation( void )
     time( &xTimeNow );
     FreeRTOS_debug_printf( ( "Seed for randomiser: %lu\r\n", xTimeNow ) );
     prvSRand( ( uint32_t ) xTimeNow );
-    FreeRTOS_debug_printf( ( "Random numbers: %08X %08X %08X %08X\r\n", ipconfigRAND32(), ipconfigRAND32(), ipconfigRAND32(), ipconfigRAND32() ) );
+
+    ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 0 ] );
+    ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 1 ] );
+    ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 2 ] );
+    ( void ) xApplicationGetRandomNumber( &ulRandomNumbers[ 3 ] );
+    FreeRTOS_debug_printf( ( "Random numbers: %08X %08X %08X %08X\r\n",
+                             ulRandomNumbers[ 0 ],
+                             ulRandomNumbers[ 1 ],
+                             ulRandomNumbers[ 2 ],
+                             ulRandomNumbers[ 3 ] ) );
 }
 /*-----------------------------------------------------------*/
 

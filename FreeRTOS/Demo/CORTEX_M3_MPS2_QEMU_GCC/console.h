@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -27,19 +27,25 @@
 #ifndef CONSOLE_H
 #define CONSOLE_H
 
+/* *INDENT-OFF* */
 #ifdef __cplusplus
-extern "C" {
+    extern "C" {
 #endif
+/* *INDENT-ON* */
+
 
 /*-----------------------------------------------------------
- * Example console I/O wrappers.
- *----------------------------------------------------------*/
+* Example console I/O wrappers.
+*----------------------------------------------------------*/
 
-void console_init(void);
-void console_print(const char *fmt, ...);
+void console_init( void );
+void console_print( const char * fmt,
+                    ... );
 
+/* *INDENT-OFF* */
 #ifdef __cplusplus
-}
+    }
 #endif
+/* *INDENT-ON* */
 
 #endif /* CONSOLE_H */

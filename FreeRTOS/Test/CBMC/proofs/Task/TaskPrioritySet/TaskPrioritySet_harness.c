@@ -22,8 +22,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
  */
 
 #include <stdint.h>
@@ -41,17 +41,17 @@ BaseType_t xPrepareTaskLists( TaskHandle_t * xTask );
  */
 void harness()
 {
-	TaskHandle_t xTask;
-	UBaseType_t uxNewPriority;
-	BaseType_t xTasksPrepared;
+    TaskHandle_t xTask;
+    UBaseType_t uxNewPriority;
+    BaseType_t xTasksPrepared;
 
-	__CPROVER_assume( uxNewPriority < configMAX_PRIORITIES );
+    __CPROVER_assume( uxNewPriority < configMAX_PRIORITIES );
 
-	xTasksPrepared = xPrepareTaskLists( &xTask );
+    xTasksPrepared = xPrepareTaskLists( &xTask );
 
-	/* Check that this second invocation of xPrepareTaskLists is needed. */
-	if ( xPrepareTaskLists( &xTask ) != pdFAIL )
-	{
-		vTaskPrioritySet( xTask, uxNewPriority );
-	}
+    /* Check that this second invocation of xPrepareTaskLists is needed. */
+    if( xPrepareTaskLists( &xTask ) != pdFAIL )
+    {
+        vTaskPrioritySet( xTask, uxNewPriority );
+    }
 }

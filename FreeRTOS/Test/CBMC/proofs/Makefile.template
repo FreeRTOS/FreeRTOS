@@ -138,7 +138,6 @@ report: cbmc.txt property.xml coverage.xml
 	$(VIEWER) \
 	--goto $(ENTRY).goto \
 	--srcdir $(FREERTOS) \
-	--blddir $(FREERTOS) \
 	--htmldir html \
 	--srcexclude "(.@FORWARD_SLASH@Demo)" \
 	--result cbmc.txt \

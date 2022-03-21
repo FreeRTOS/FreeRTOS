@@ -22,8 +22,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
  */
 
 #include "FreeRTOS.h"
@@ -31,24 +31,30 @@
 #include "queue_init.h"
 #include "cbmc.h"
 
-BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvItemToQueue, const BaseType_t xPosition );
+BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue,
+                               const void * pvItemToQueue,
+                               const BaseType_t xPosition );
 
-void harness(){
-	QueueHandle_t xQueue = xUnconstrainedQueueBoundedItemSize(10);
+void harness()
+{
+    QueueHandle_t xQueue = xUnconstrainedQueueBoundedItemSize( 10 );
 
 
-	if( xQueue ){
-		void *pvItemToQueue = pvPortMalloc(xQueue->uxItemSize);
-		if( !pvItemToQueue )
-		{
-			xQueue->uxItemSize = 0;
-		}
-		if(xQueue->uxItemSize == 0)
-		{
-			xQueue->uxQueueType = nondet_int8_t();
-		}
-		BaseType_t xPosition;
-		prvCopyDataToQueue( xQueue, pvItemToQueue, xPosition );
-	}
+    if( xQueue )
+    {
+        void * pvItemToQueue = pvPortMalloc( xQueue->uxItemSize );
 
+        if( !pvItemToQueue )
+        {
+            xQueue->uxItemSize = 0;
+        }
+
+        if( xQueue->uxItemSize == 0 )
+        {
+            xQueue->uxQueueType = nondet_int8_t();
+        }
+
+        BaseType_t xPosition;
+        prvCopyDataToQueue( xQueue, pvItemToQueue, xPosition );
+    }
 }

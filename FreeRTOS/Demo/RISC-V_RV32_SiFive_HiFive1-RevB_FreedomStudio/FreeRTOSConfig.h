@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 #ifndef FREERTOS_CONFIG_H
@@ -48,8 +47,8 @@
 #define configCPU_CLOCK_HZ				( 32768 )
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES			( 7 )
-#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 120 ) /* Only needs to be this high as some demo tasks also use this constant.  In production only the idle task would use this. */
-#define configTOTAL_HEAP_SIZE			( ( size_t ) 10900 )
+#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 128 )
+#define configTOTAL_HEAP_SIZE			( ( size_t ) 10 * 1024 )
 #define configMAX_TASK_NAME_LEN			( 16 )
 #define configUSE_TRACE_FACILITY		0
 #define configUSE_16_BIT_TICKS			0
@@ -98,5 +97,8 @@ to exclude the API function. */
 header file. */
 void vAssertCalled( void );
 #define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled()
+
+/* Map to the platform write function. */
+#define configPRINT_STRING( pcString )		write( STDOUT_FILENO, pcString, strlen( pcString ) )
 
 #endif /* FREERTOS_CONFIG_H */

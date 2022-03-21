@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V202104.00
+    FreeRTOS V202112.00
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -73,7 +73,7 @@
  *
  * See the following web page for essential demo usage and configuration
  * details:
- * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Server.html
+ * https://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Server.html
  */
 
 /* Standard includes. */

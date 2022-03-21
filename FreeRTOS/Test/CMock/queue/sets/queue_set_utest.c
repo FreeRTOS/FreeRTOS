@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -95,19 +95,11 @@ void test_xQueueCreateSet_zeroLength( void )
     QueueSetHandle_t xQueueSet = xQueueCreateSet( 0 );
 
     /* validate returned QueueSet handle */
-    TEST_ASSERT_NOT_EQUAL( NULL, xQueueSet );
+    TEST_ASSERT_EQUAL( NULL, xQueueSet );
 
     /* verify that configASSERT was called */
     TEST_ASSERT_EQUAL( true, fakeAssertGetFlagAndClear() );
-    TEST_ASSERT_EQUAL( QUEUE_T_SIZE, getLastMallocSize() );
-
-    /* Veify that QueueSet is full */
-    TEST_ASSERT_EQUAL( 0, uxQueueSpacesAvailable( xQueueSet ) );
-
-    /* Veify that QueueSet is also empty */
-    TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueueSet ) );
-
-    vQueueDelete( xQueueSet );
+    TEST_ASSERT_EQUAL( 0, getLastMallocSize() );
 }
 
 /**
@@ -130,36 +122,6 @@ void test_xQueueCreateSet_oneLength( void )
     TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueueSet ) );
 
     vQueueDelete( xQueueSet );
-}
-
-/**
- * @brief Test xQueueAddToSet with a QueueSet of uxEventQueueLength=0
- * @details: Adds two queues of size 1,0 to a QueueSet of size 0.
- * @coverage xQueueAddToSet
- */
-void test_xQueueAddToSet_ZeroLength( void )
-{
-    /* Expect that xQueueCreateSet will assert because a length of 0 is invalid */
-    fakeAssertExpectFail();
-
-    QueueSetHandle_t xQueueSet = xQueueCreateSet( 0 );
-
-    fakeAssertGetFlagAndClear();
-
-    QueueHandle_t xQueue1 = xQueueCreate( 1, 0 );
-
-    TEST_ASSERT_EQUAL( pdTRUE, xQueueAddToSet( xQueue1, xQueueSet ) );
-
-    QueueHandle_t xQueue2 = xQueueCreate( 1, 0 );
-
-    TEST_ASSERT_EQUAL( pdTRUE, xQueueAddToSet( xQueue2, xQueueSet ) );
-
-    ( void ) xQueueRemoveFromSet( xQueue1, xQueueSet );
-    ( void ) xQueueRemoveFromSet( xQueue2, xQueueSet );
-
-    vQueueDelete( xQueueSet );
-    vQueueDelete( xQueue1 );
-    vQueueDelete( xQueue2 );
 }
 
 /**

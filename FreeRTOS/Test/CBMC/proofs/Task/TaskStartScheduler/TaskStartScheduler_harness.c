@@ -22,8 +22,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
  */
 
 #include <stdint.h>
@@ -40,12 +40,12 @@ BaseType_t xPrepareTasks( void );
  */
 void harness()
 {
-  BaseType_t xTasksPrepared;
+    BaseType_t xTasksPrepared;
 
-  xTasksPrepared = xPrepareTasks();
+    xTasksPrepared = xPrepareTasks();
 
-  if ( xTasksPrepared != pdFAIL )
-  {
-    vTaskStartScheduler();
-  }
+    if( xTasksPrepared != pdFAIL )
+    {
+        vTaskStartScheduler();
+    }
 }

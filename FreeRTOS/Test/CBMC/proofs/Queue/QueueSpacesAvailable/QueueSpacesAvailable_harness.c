@@ -22,8 +22,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
  */
 
 #include "FreeRTOS.h"
@@ -31,11 +31,12 @@
 #include "queue_init.h"
 #include "cbmc.h"
 
-void harness(){
-	QueueHandle_t xQueue = xUnconstrainedQueue();
+void harness()
+{
+    QueueHandle_t xQueue = xUnconstrainedQueue();
 
-	// QueueSpacesAvailable asserts nonnull pointer
-	__CPROVER_assume(xQueue);
+    /* QueueSpacesAvailable asserts nonnull pointer */
+    __CPROVER_assume( xQueue );
 
-	uxQueueSpacesAvailable( xQueue );
+    uxQueueSpacesAvailable( xQueue );
 }

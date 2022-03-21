@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -75,12 +75,12 @@ eMetricsCollectorStatus eGetNetworkStats( NetworkStats_t * pxOutNetworkStats )
     /* Fill our response with values gotten from FreeRTOS+TCP. */
     if( eStatus == eMetricsCollectorSuccess )
     {
-        LogDebug( ( "Network stats read. Bytes received: %u, packets received: %u, "
-                    "bytes sent: %u, packets sent: %u.",
-                    ( unsigned int ) xMetrics.xInput.uxByteCount,
-                    ( unsigned int ) xMetrics.xInput.uxPacketCount,
-                    ( unsigned int ) xMetrics.xOutput.uxByteCount,
-                    ( unsigned int ) xMetrics.xOutput.uxPacketCount ) );
+        LogDebug( ( "Network stats read. Bytes received: %lu, packets received: %lu, "
+                    "bytes sent: %lu, packets sent: %lu.",
+                    ( unsigned long ) xMetrics.xInput.uxByteCount,
+                    ( unsigned long ) xMetrics.xInput.uxPacketCount,
+                    ( unsigned long ) xMetrics.xOutput.uxByteCount,
+                    ( unsigned long ) xMetrics.xOutput.uxPacketCount ) );
 
         pxOutNetworkStats->ulBytesReceived = xMetrics.xInput.uxByteCount;
         pxOutNetworkStats->ulPacketsReceived = xMetrics.xInput.uxPacketCount;
@@ -93,17 +93,17 @@ eMetricsCollectorStatus eGetNetworkStats( NetworkStats_t * pxOutNetworkStats )
 /*-----------------------------------------------------------*/
 
 eMetricsCollectorStatus eGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
-                                          uint32_t ulTcpPortsArrayLength,
-                                          uint32_t * pulOutNumTcpOpenPorts )
+                                          size_t xTcpPortsArrayLength,
+                                          size_t * pxOutNumTcpOpenPorts )
 {
     eMetricsCollectorStatus eStatus = eMetricsCollectorSuccess;
 
     MetricsType_t xMetrics = { 0 };
     BaseType_t xMetricsStatus = 0;
-    uint32_t ulCopyAmount = 0UL;
+    size_t xCopyAmount = 0UL;
 
     /* pusOutTcpPortsArray can be NULL. */
-    configASSERT( pulOutNumTcpOpenPorts != NULL );
+    configASSERT( pxOutNumTcpOpenPorts != NULL );
 
     /* Get metrics from FreeRTOS+TCP tcp_netstat utility. */
     xMetricsStatus = vGetMetrics( &xMetrics );
@@ -121,24 +121,24 @@ eMetricsCollectorStatus eGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
          * given array. */
         if( pusOutTcpPortsArray != NULL )
         {
-            ulCopyAmount = xMetrics.xTCPPortList.uxCount;
+            xCopyAmount = xMetrics.xTCPPortList.uxCount;
 
             /* Limit the copied ports to what can fit in the output array. */
-            if( ulTcpPortsArrayLength < xMetrics.xTCPPortList.uxCount )
+            if( xTcpPortsArrayLength < xMetrics.xTCPPortList.uxCount )
             {
                 LogWarn( ( "Ports returned truncated due to insufficient buffer size." ) );
-                ulCopyAmount = ulTcpPortsArrayLength;
+                xCopyAmount = xTcpPortsArrayLength;
             }
 
-            memcpy( pusOutTcpPortsArray, &xMetrics.xTCPPortList.usTCPPortList, ulCopyAmount * sizeof( uint16_t ) );
+            memcpy( pusOutTcpPortsArray, &xMetrics.xTCPPortList.usTCPPortList, xCopyAmount * sizeof( uint16_t ) );
 
             /* Return the number of elements copied to the array. */
-            *pulOutNumTcpOpenPorts = ulCopyAmount;
+            *pxOutNumTcpOpenPorts = xCopyAmount;
         }
         else
         {
             /* Return the total number of open ports. */
-            *pulOutNumTcpOpenPorts = xMetrics.xTCPPortList.uxCount;
+            *pxOutNumTcpOpenPorts = xMetrics.xTCPPortList.uxCount;
         }
     }
 
@@ -147,17 +147,17 @@ eMetricsCollectorStatus eGetOpenTcpPorts( uint16_t * pusOutTcpPortsArray,
 /*-----------------------------------------------------------*/
 
 eMetricsCollectorStatus eGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
-                                          uint32_t ulUdpPortsArrayLength,
-                                          uint32_t * pulOutNumUdpOpenPorts )
+                                          size_t xUdpPortsArrayLength,
+                                          size_t * pxOutNumUdpOpenPorts )
 {
     eMetricsCollectorStatus eStatus = eMetricsCollectorSuccess;
 
     MetricsType_t xMetrics = { 0 };
     BaseType_t xMetricsStatus = 0;
-    uint32_t ulCopyAmount = 0UL;
+    uint32_t xCopyAmount = 0UL;
 
     /* pusOutUdpPortsArray can be NULL. */
-    configASSERT( pulOutNumUdpOpenPorts != NULL );
+    configASSERT( pxOutNumUdpOpenPorts != NULL );
 
     /* Get metrics from FreeRTOS+TCP tcp_netstat utility. */
     xMetricsStatus = vGetMetrics( &xMetrics );
@@ -175,24 +175,24 @@ eMetricsCollectorStatus eGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
          * given array. */
         if( pusOutUdpPortsArray != NULL )
         {
-            ulCopyAmount = xMetrics.xUDPPortList.uxCount;
+            xCopyAmount = xMetrics.xUDPPortList.uxCount;
 
             /* Limit the copied ports to what can fit in the output array. */
-            if( ulUdpPortsArrayLength < xMetrics.xUDPPortList.uxCount )
+            if( xUdpPortsArrayLength < xMetrics.xUDPPortList.uxCount )
             {
                 LogWarn( ( "Ports returned truncated due to insufficient buffer size." ) );
-                ulCopyAmount = ulUdpPortsArrayLength;
+                xCopyAmount = xUdpPortsArrayLength;
             }
 
-            memcpy( pusOutUdpPortsArray, &xMetrics.xUDPPortList.usUDPPortList, ulCopyAmount * sizeof( uint16_t ) );
+            memcpy( pusOutUdpPortsArray, &xMetrics.xUDPPortList.usUDPPortList, xCopyAmount * sizeof( uint16_t ) );
 
             /* Return the number of elements copied to the array. */
-            *pulOutNumUdpOpenPorts = ulCopyAmount;
+            *pxOutNumUdpOpenPorts = xCopyAmount;
         }
         else
         {
             /* Return the total number of open ports. */
-            *pulOutNumUdpOpenPorts = xMetrics.xUDPPortList.uxCount;
+            *pxOutNumUdpOpenPorts = xMetrics.xUDPPortList.uxCount;
         }
     }
 
@@ -202,19 +202,19 @@ eMetricsCollectorStatus eGetOpenUdpPorts( uint16_t * pusOutUdpPortsArray,
 /*-----------------------------------------------------------*/
 
 eMetricsCollectorStatus eGetEstablishedConnections( Connection_t * pxOutConnectionsArray,
-                                                    uint32_t ulConnectionsArrayLength,
-                                                    uint32_t * pulOutNumEstablishedConnections )
+                                                    size_t xConnectionsArrayLength,
+                                                    size_t * pxOutNumEstablishedConnections )
 {
     eMetricsCollectorStatus eStatus = eMetricsCollectorSuccess;
 
     MetricsType_t xMetrics = { 0 };
     BaseType_t xMetricsStatus = 0;
-    uint32_t ulCopyAmount = 0UL;
+    size_t xCopyAmount = 0UL;
     uint32_t ulLocalIp = 0UL;
     uint32_t i;
 
     /* pxOutConnectionsArray can be NULL. */
-    configASSERT( pulOutNumEstablishedConnections != NULL );
+    configASSERT( pxOutNumEstablishedConnections != NULL );
 
     /* Get metrics from FreeRTOS+TCP tcp_netstat utility. */
     xMetricsStatus = vGetMetrics( &xMetrics );
@@ -232,19 +232,19 @@ eMetricsCollectorStatus eGetEstablishedConnections( Connection_t * pxOutConnecti
          * the given array. */
         if( pxOutConnectionsArray != NULL )
         {
-            ulCopyAmount = xMetrics.xTCPSocketList.uxCount;
+            xCopyAmount = xMetrics.xTCPSocketList.uxCount;
 
             /* Get local IP as the tcp_netstat utility does not give it. */
             ulLocalIp = FreeRTOS_GetIPAddress();
 
             /* Limit the outputted connections to what can fit in the output array. */
-            if( ulConnectionsArrayLength < xMetrics.xTCPSocketList.uxCount )
+            if( xConnectionsArrayLength < xMetrics.xTCPSocketList.uxCount )
             {
                 LogWarn( ( "Ports returned truncated due to insufficient buffer size." ) );
-                ulCopyAmount = ulConnectionsArrayLength;
+                xCopyAmount = xConnectionsArrayLength;
             }
 
-            for( i = 0; i < ulCopyAmount; i++ )
+            for( i = 0; i < xCopyAmount; i++ )
             {
                 pxOutConnectionsArray[ i ].ulLocalIp = ulLocalIp;
                 pxOutConnectionsArray[ i ].usLocalPort =
@@ -256,12 +256,12 @@ eMetricsCollectorStatus eGetEstablishedConnections( Connection_t * pxOutConnecti
             }
 
             /* Return the number of elements copied to the array. */
-            *pulOutNumEstablishedConnections = ulCopyAmount;
+            *pxOutNumEstablishedConnections = xCopyAmount;
         }
         else
         {
             /* Return the total number of established connections. */
-            *pulOutNumEstablishedConnections = xMetrics.xTCPSocketList.uxCount;
+            *pxOutNumEstablishedConnections = xMetrics.xTCPSocketList.uxCount;
         }
     }
 

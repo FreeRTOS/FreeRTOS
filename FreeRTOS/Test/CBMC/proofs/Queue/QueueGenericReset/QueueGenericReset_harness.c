@@ -22,8 +22,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
  */
 
 #include "FreeRTOS.h"
@@ -34,12 +34,11 @@
 
 struct QueueDefinition;
 
-void harness() {
-	BaseType_t xNewQueue;
+void harness()
+{
+    BaseType_t xNewQueue;
 
-	QueueHandle_t xQueue = xUnconstrainedQueue();
-	if(xQueue != NULL)
-	{
-		xQueueGenericReset(xQueue, xNewQueue);
-	}
+    QueueHandle_t xQueue = xUnconstrainedQueue();
+
+    xQueueGenericReset( xQueue, xNewQueue );
 }

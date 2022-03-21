@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -35,7 +35,7 @@
 *
 * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
 * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
-* http://www.freertos.org/a00110.html
+* https://www.FreeRTOS.org/a00110.html
 *
 * The bottom of this file contains some constants specific to running the UDP
 * stack in this demo.  Constants specific to FreeRTOS+TCP itself (rather than
@@ -53,10 +53,10 @@
 #define configIDLE_SHOULD_YIELD                    1
 #define configUSE_CO_ROUTINES                      0
 #ifndef configUSE_MUTEXES
-    #define configUSE_MUTEXES                          1
+    #define configUSE_MUTEXES                      1
 #endif
 #ifndef configUSE_RECURSIVE_MUTEXES
-    #define configUSE_RECURSIVE_MUTEXES                1
+    #define configUSE_RECURSIVE_MUTEXES            1
 #endif
 #define configQUEUE_REGISTRY_SIZE                  0
 #define configUSE_APPLICATION_TASK_TAG             1
@@ -67,31 +67,31 @@
 
 /* Hook function related definitions. */
 #ifndef configUSE_TICK_HOOK
-    #define configUSE_TICK_HOOK                        0
+    #define configUSE_TICK_HOOK            0
 #endif
-#define configUSE_IDLE_HOOK                        1
-#define configUSE_MALLOC_FAILED_HOOK               1
-#define configCHECK_FOR_STACK_OVERFLOW             0      /* Not applicable to the Win32 port. */
+#define configUSE_IDLE_HOOK                1
+#define configUSE_MALLOC_FAILED_HOOK       1
+#define configCHECK_FOR_STACK_OVERFLOW     0              /* Not applicable to the Win32 port. */
 
 /* Software timer related definitions. */
-#define configUSE_TIMERS                           1
-#define configTIMER_TASK_PRIORITY                  ( configMAX_PRIORITIES - 1 )
-#define configTIMER_QUEUE_LENGTH                   5
-#define configTIMER_TASK_STACK_DEPTH               ( configMINIMAL_STACK_SIZE * 2 )
+#define configUSE_TIMERS                   1
+#define configTIMER_TASK_PRIORITY          ( configMAX_PRIORITIES - 1 )
+#define configTIMER_QUEUE_LENGTH           5
+#define configTIMER_TASK_STACK_DEPTH       ( configMINIMAL_STACK_SIZE * 2 )
 
 /* Event group related definitions. */
-#define configUSE_EVENT_GROUPS                     1
+#define configUSE_EVENT_GROUPS             1
 
 /* Co-routine definitions. */
-#define configUSE_CO_ROUTINES                   0
-#define configMAX_CO_ROUTINE_PRIORITIES         ( 2 )
+#define configUSE_CO_ROUTINES              0
+#define configMAX_CO_ROUTINE_PRIORITIES    ( 2 )
 
 /* Memory allocation strategy. */
 #ifndef configSUPPORT_DYNAMIC_ALLOCATION
-    #define configSUPPORT_DYNAMIC_ALLOCATION        1
+    #define configSUPPORT_DYNAMIC_ALLOCATION    1
 #endif
 #ifndef configSUPPORT_STATIC_ALLOCATION
-    #define configSUPPORT_STATIC_ALLOCATION         1
+    #define configSUPPORT_STATIC_ALLOCATION     1
 #endif
 
 
@@ -102,13 +102,13 @@
 #define INCLUDE_vTaskDelete                     1
 #define INCLUDE_vTaskCleanUpResources           0
 #ifndef INCLUDE_vTaskSuspend
-    #define INCLUDE_vTaskSuspend                    1
+    #define INCLUDE_vTaskSuspend                1
 #endif
 #define INCLUDE_vTaskDelayUntil                 1
 #define INCLUDE_vTaskDelay                      1
 #define INCLUDE_uxTaskGetStackHighWaterMark     1
 #ifndef INCLUDE_xTaskGetSchedulerState
-    #define INCLUDE_xTaskGetSchedulerState          1
+    #define INCLUDE_xTaskGetSchedulerState      1
 #endif
 #define INCLUDE_xTimerGetTimerTaskHandle        0
 #define INCLUDE_xTaskGetIdleTaskHandle          0
@@ -132,7 +132,7 @@
 extern void vAssertCalled( const char * pcFile,
                            uint32_t ulLine );
 #ifndef configASSERT
-#define configASSERT( x )    if( ( x ) == 0 ) vAssertCalled( __FILE__, __LINE__ )
+    #define configASSERT( x )    if( ( x ) == 0 ) vAssertCalled( __FILE__, __LINE__ )
 #endif
 
 /* Remove logging in formal verification */
@@ -174,8 +174,8 @@ extern void vAssertCalled( const char * pcFile,
 
 /* The address of an echo server that will be used by the two demo echo client
  * tasks:
- * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html,
- * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/UDP_Echo_Clients.html. */
+ * https://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html,
+ * https://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/UDP_Echo_Clients.html. */
 #define configECHO_SERVER_ADDR0              192
 #define configECHO_SERVER_ADDR1              168
 #define configECHO_SERVER_ADDR2              2

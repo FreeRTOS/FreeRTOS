@@ -18,12 +18,12 @@
 #include "NetworkInterface.h"
 
 /*
-  * CBMC models a pointer as an object id and an offset into that
-  * object.  The top bits of a pointer encode the object id and the
-  * remaining bits encode the offset.  This means there is a bound on
-  * the maximum offset into an object in CBMC, and hence a bound on the
-  * size of objects in CBMC.
-  */
+ * CBMC models a pointer as an object id and an offset into that
+ * object.  The top bits of a pointer encode the object id and the
+ * remaining bits encode the offset.  This means there is a bound on
+ * the maximum offset into an object in CBMC, and hence a bound on the
+ * size of objects in CBMC.
+ */
 #define CBMC_BITS               7
 #define CBMC_MAX_OBJECT_SIZE    ( 0xFFFFFFFF >> ( CBMC_BITS + 1 ) )
 
@@ -70,19 +70,19 @@ enum CBMC_LOOP_CONDITION
 #define __CPROVER_printf2_ptr( str, exp )    { uint8_t * ValueOf_ ## str = ( uint8_t * ) ( exp ); }
 
 /*
-  * An assertion that pvPortMalloc returns NULL when asked to allocate 0 bytes.
-  * This assertion is used in some of the TaskPool proofs.
-  */
+ * An assertion that pvPortMalloc returns NULL when asked to allocate 0 bytes.
+ * This assertion is used in some of the TaskPool proofs.
+ */
 #define __CPROVER_assert_zero_allocation()       \
     __CPROVER_assert( pvPortMalloc( 0 ) == NULL, \
                       "pvPortMalloc allows zero-allocated memory." )
 
 /*
-  * A stub for pvPortMalloc that nondeterministically chooses to return
-  * either NULL or an allocation of the requested space.  The stub is
-  * guaranteed to return NULL when asked to allocate 0 bytes.
-  * This stub is used in some of the TaskPool proofs.
-  */
+ * A stub for pvPortMalloc that nondeterministically chooses to return
+ * either NULL or an allocation of the requested space.  The stub is
+ * guaranteed to return NULL when asked to allocate 0 bytes.
+ * This stub is used in some of the TaskPool proofs.
+ */
 void * pvPortMalloc( size_t xWantedSize )
 {
     if( xWantedSize == 0 )

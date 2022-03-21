@@ -104,12 +104,12 @@ def extract_version_number_from_file(file_path):
         match = re.search('\s*\*\s*(Amazon FreeRTOS.*V(.*))', content, re.MULTILINE)
         # Is it a kernel file?
         if match is None:
-            match = re.search('\s*\*\s*(FreeRTOS Kernel.*V([0-9]*\.[0-9]*\.[0-9]*))', content, re.MULTILINE)
+            match = re.search('\s*\*\s*(FreeRTOS Kernel.*V?([0-9]*\.[0-9]*\.[0-9]*|<DEVELOPMENT BRANCH>))', content, re.MULTILINE)
         if match is None:
-            match = re.search('\s*\*\s*(FreeRTOS V([0-9]*\.[0-9]*))', content, re.MULTILINE)
+            match = re.search('\s*\*\s*(FreeRTOS V?([0-9]*\.[0-9]*|<DEVELOPMENT BRANCH>))', content, re.MULTILINE)
         # Is it s FreeRTOS+TCP file?
         if match is None:
-            match = re.search('\s*\*\s*(FreeRTOS\+TCP.*V(.*))', content, re.MULTILINE)
+            match = re.search('\s*\*\s*(FreeRTOS\+TCP.*V?(.*|<DEVELOPMENT BRANCH>))', content, re.MULTILINE)
         # AWS library from C SDK
         if match is None:
             match = re.search('\s*\*\s*(AWS IoT.*V(.*))', content, re.MULTILINE)
@@ -196,17 +196,17 @@ def process_components(root_dir, components, exclude_dirs=[]):
         if wanna_update_version == 'yes':
             update_version_number_in_a_component(c, root_dir, exclude_dirs=exclude_dirs)
 
-def update_freertos_version_macros(path_macrofile, major, minor, build):
+def update_freertos_version_macros(path_macrofile, version_str, major, minor, build):
     with open(path_macrofile, encoding='utf-8', errors='ignore', newline='') as macro_file:
         macro_file_content = macro_file.read()
-        match_version = re.search(r'(^.*#define *tskKERNEL_VERSION_NUMBER *(".*")$)', macro_file_content, re.MULTILINE)
+        match_version = re.search(r'(^.*#define *tskKERNEL_VERSION_NUMBER *(.*)$)', macro_file_content, re.MULTILINE)
         match_major = re.search(r'(^.*#define *tskKERNEL_VERSION_MAJOR *(.*)$)', macro_file_content, re.MULTILINE)
         match_minor = re.search(r'(^.*#define *tskKERNEL_VERSION_MINOR *(.*)$)', macro_file_content, re.MULTILINE)
         match_build = re.search(r'(^.*#define *tskKERNEL_VERSION_BUILD *(.*)$)', macro_file_content, re.MULTILINE)
 
         if match_version.groups() and match_major.groups() and match_minor.groups() and match_build.groups():
             (old_version_string, old_version_number) = match_version.groups()
-            new_version_string = old_version_string.replace(old_version_number, '"V%s.%s.%s"' % (major, minor, build))
+            new_version_string = old_version_string.replace(old_version_number, '"V%s"' % version_str)
             macro_file_content = macro_file_content.replace(old_version_string, new_version_string)
 
             (old_major_string, old_major_number) = match_major.groups()
@@ -309,7 +309,7 @@ def main():
         print('FreeRTOS Code:\n    %s' % freertos_path)
         print('Old Version:\n    %s' % args.freertos_old_version)
         print('New Version:\n    %s' % args.freertos_new_version)
-        process_freertos_components(freertos_path, _FREERTOS_COMPONENTS, args.freertos_old_version.strip(), args.freertos_new_version.strip(), verbose=args.verbose)            
+        process_freertos_components(freertos_path, _FREERTOS_COMPONENTS, args.freertos_old_version.strip(), args.freertos_new_version.strip(), verbose=args.verbose)
 
     if not afr_path and not freertos_path:
         parser.print_help()

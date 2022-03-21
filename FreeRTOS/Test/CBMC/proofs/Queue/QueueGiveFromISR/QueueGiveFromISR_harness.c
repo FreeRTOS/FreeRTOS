@@ -22,8 +22,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
  */
 
 #include "FreeRTOS.h"
@@ -32,12 +32,14 @@
 
 #include "cbmc.h"
 
-void harness(){
-	QueueHandle_t xQueue = xUnconstrainedMutex();
-	BaseType_t *xHigherPriorityTaskWoken = pvPortMalloc(sizeof(BaseType_t));
-	if(xQueue){
-		xQueue->uxMessagesWaiting = nondet_UBaseType_t();
-		xQueueGiveFromISR( xQueue, xHigherPriorityTaskWoken );
-	}
+void harness()
+{
+    QueueHandle_t xQueue = xUnconstrainedMutex();
+    BaseType_t * xHigherPriorityTaskWoken = pvPortMalloc( sizeof( BaseType_t ) );
 
+    if( xQueue )
+    {
+        xQueue->uxMessagesWaiting = nondet_UBaseType_t();
+        xQueueGiveFromISR( xQueue, xHigherPriorityTaskWoken );
+    }
 }

@@ -22,8 +22,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
  */
 
 #include "FreeRTOS.h"
@@ -32,13 +32,10 @@
 #include "cbmc.h"
 
 
-void harness(){
+void harness()
+{
     UBaseType_t uxMaxCount;
     UBaseType_t uxInitialCount;
 
-    __CPROVER_assume(uxMaxCount != 0);
-    __CPROVER_assume(uxInitialCount <= uxMaxCount);
-
     xQueueCreateCountingSemaphore( uxMaxCount, uxInitialCount );
 }
-

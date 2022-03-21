@@ -22,8 +22,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
  */
 
 #include <stdint.h>
@@ -34,7 +34,7 @@
 
 void harness()
 {
-	TickType_t xTickCount;
+    TickType_t xTickCount;
 
-	xTickCount = xTaskGetTickCount();
+    xTickCount = xTaskGetTickCount();
 }

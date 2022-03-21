@@ -22,8 +22,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
  */
 
 #include <stdint.h>
@@ -41,14 +41,14 @@ BaseType_t xPrepareCurrentTCB( void );
  */
 void harness()
 {
-        UBaseType_t xTasksPrepared;
-        TimeOut_t pxTimeOut;
-        TickType_t pxTicksToWait;
+    UBaseType_t xTasksPrepared;
+    TimeOut_t pxTimeOut;
+    TickType_t pxTicksToWait;
 
-        xTasksPrepared = xPrepareCurrentTCB();
+    xTasksPrepared = xPrepareCurrentTCB();
 
-        if ( xTasksPrepared != pdFAIL )
-        {
-                xTaskCheckForTimeOut( &pxTimeOut, &pxTicksToWait );
-        }
+    if( xTasksPrepared != pdFAIL )
+    {
+        xTaskCheckForTimeOut( &pxTimeOut, &pxTicksToWait );
+    }
 }

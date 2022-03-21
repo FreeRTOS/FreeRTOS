@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -994,27 +994,33 @@ void test_xQueueReceiveFromISR_success( void )
 void test_xQueueReceiveFromISR_locked( void )
 {
     /* Create a new queue */
-    QueueHandle_t xQueue = xQueueCreate( 1, sizeof( uint32_t ) );
+    QueueHandle_t xQueue = xQueueCreate( 2, sizeof( uint32_t ) );
 
     /* Send a test value so the queue is not empty */
     uint32_t testVal = getNextMonotonicTestValue();
 
     ( void ) xQueueSend( xQueue, &testVal, 0 );
+    ( void ) xQueueSend( xQueue, &testVal, 0 );
+
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     /* Set private lock counters */
     vSetQueueRxLock( xQueue, queueLOCKED_UNMODIFIED );
     vSetQueueTxLock( xQueue, queueLOCKED_UNMODIFIED );
 
-    TEST_ASSERT_EQUAL( 1, uxQueueMessagesWaiting( xQueue ) );
+    TEST_ASSERT_EQUAL( 2, uxQueueMessagesWaiting( xQueue ) );
 
     uint32_t checkVal = INVALID_UINT32;
 
     /* Run xQueueReceiveFromISR with the queue locked */
     TEST_ASSERT_EQUAL( pdTRUE, xQueueReceiveFromISR( xQueue, &checkVal, NULL ) );
+    TEST_ASSERT_EQUAL( pdTRUE, xQueueReceiveFromISR( xQueue, &checkVal, NULL ) );
 
     TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
 
-    /* Verify that the cRxLock counter has been incremented */
+    /* Verify that the cRxLock counter has only been incremented by one
+     * even after 2 calls to xQueueReceiveFromISR because there is only
+     * one task in the system as returned from uxTaskGetNumberOfTasks. */
     TEST_ASSERT_EQUAL( queueLOCKED_UNMODIFIED + 1, cGetQueueRxLock( xQueue ) );
 
     /* Verify that the cTxLock counter has not changed */
@@ -1042,6 +1048,10 @@ void test_xQueueReceiveFromISR_locked_overflow( void )
     vSetQueueTxLock( xQueue, INT8_MAX );
 
     uint32_t checkVal = INVALID_UINT32;
+
+    /* The number of tasks need to be more than 127 to trigger the
+     * overflow assertion. */
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 128 );
 
     /* Expect an assertion since the cRxLock value has overflowed */
     fakeAssertExpectFail();

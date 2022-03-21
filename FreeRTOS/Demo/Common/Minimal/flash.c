@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
  *
- * 1 tab == 4 spaces!
  */
 
 /**
@@ -49,12 +48,12 @@
 #include "partest.h"
 #include "flash.h"
 
-#define ledSTACK_SIZE		configMINIMAL_STACK_SIZE
-#define ledNUMBER_OF_LEDS	( 3 )
-#define ledFLASH_RATE_BASE	( ( TickType_t ) 333 )
+#define ledSTACK_SIZE         configMINIMAL_STACK_SIZE
+#define ledNUMBER_OF_LEDS     ( 3 )
+#define ledFLASH_RATE_BASE    ( ( TickType_t ) 333 )
 
 /* Variable used by the created tasks to calculate the LED number to use, and
-the rate at which they should flash the LED. */
+ * the rate at which they should flash the LED. */
 static volatile UBaseType_t uxFlashTaskNumber = 0;
 
 /* The task that is created three times. */
@@ -64,56 +63,55 @@ static portTASK_FUNCTION_PROTO( vLEDFlashTask, pvParameters );
 
 void vStartLEDFlashTasks( UBaseType_t uxPriority )
 {
-BaseType_t xLEDTask;
+    BaseType_t xLEDTask;
 
-	/* Create the three tasks. */
-	for( xLEDTask = 0; xLEDTask < ledNUMBER_OF_LEDS; ++xLEDTask )
-	{
-		/* Spawn the task. */
-		xTaskCreate( vLEDFlashTask, "LEDx", ledSTACK_SIZE, NULL, uxPriority, ( TaskHandle_t * ) NULL );
-	}
+    /* Create the three tasks. */
+    for( xLEDTask = 0; xLEDTask < ledNUMBER_OF_LEDS; ++xLEDTask )
+    {
+        /* Spawn the task. */
+        xTaskCreate( vLEDFlashTask, "LEDx", ledSTACK_SIZE, NULL, uxPriority, ( TaskHandle_t * ) NULL );
+    }
 }
 /*-----------------------------------------------------------*/
 
 static portTASK_FUNCTION( vLEDFlashTask, pvParameters )
 {
-TickType_t xFlashRate, xLastFlashTime;
-UBaseType_t uxLED;
+    TickType_t xFlashRate, xLastFlashTime;
+    UBaseType_t uxLED;
 
-	/* The parameters are not used. */
-	( void ) pvParameters;
+    /* The parameters are not used. */
+    ( void ) pvParameters;
 
-	/* Calculate the LED and flash rate. */
-	portENTER_CRITICAL();
-	{
-		/* See which of the eight LED's we should use. */
-		uxLED = uxFlashTaskNumber;
+    /* Calculate the LED and flash rate. */
+    portENTER_CRITICAL();
+    {
+        /* See which of the eight LED's we should use. */
+        uxLED = uxFlashTaskNumber;
 
-		/* Update so the next task uses the next LED. */
-		uxFlashTaskNumber++;
-	}
-	portEXIT_CRITICAL();
+        /* Update so the next task uses the next LED. */
+        uxFlashTaskNumber++;
+    }
+    portEXIT_CRITICAL();
 
-	xFlashRate = ledFLASH_RATE_BASE + ( ledFLASH_RATE_BASE * ( TickType_t ) uxLED );
-	xFlashRate /= portTICK_PERIOD_MS;
+    xFlashRate = ledFLASH_RATE_BASE + ( ledFLASH_RATE_BASE * ( TickType_t ) uxLED );
+    xFlashRate /= portTICK_PERIOD_MS;
 
-	/* We will turn the LED on and off again in the delay period, so each
-	delay is only half the total period. */
-	xFlashRate /= ( TickType_t ) 2;
+    /* We will turn the LED on and off again in the delay period, so each
+     * delay is only half the total period. */
+    xFlashRate /= ( TickType_t ) 2;
 
-	/* We need to initialise xLastFlashTime prior to the first call to
-	vTaskDelayUntil(). */
-	xLastFlashTime = xTaskGetTickCount();
+    /* We need to initialise xLastFlashTime prior to the first call to
+     * vTaskDelayUntil(). */
+    xLastFlashTime = xTaskGetTickCount();
 
-	for(;;)
-	{
-		/* Delay for half the flash period then turn the LED on. */
-		vTaskDelayUntil( &xLastFlashTime, xFlashRate );
-		vParTestToggleLED( uxLED );
+    for( ; ; )
+    {
+        /* Delay for half the flash period then turn the LED on. */
+        vTaskDelayUntil( &xLastFlashTime, xFlashRate );
+        vParTestToggleLED( uxLED );
 
-		/* Delay for half the flash period then turn the LED off. */
-		vTaskDelayUntil( &xLastFlashTime, xFlashRate );
-		vParTestToggleLED( uxLED );
-	}
+        /* Delay for half the flash period then turn the LED off. */
+        vTaskDelayUntil( &xLastFlashTime, xFlashRate );
+        vParTestToggleLED( uxLED );
+    }
 } /*lint !e715 !e818 !e830 Function definition must be standard for task creation. */
-

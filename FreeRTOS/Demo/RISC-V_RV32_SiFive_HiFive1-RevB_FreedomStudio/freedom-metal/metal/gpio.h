@@ -28,25 +28,25 @@ struct __metal_gpio_vtable {
     int (*disable_io)(struct metal_gpio *, long pins);
     int (*config_int)(struct metal_gpio *, long pins, int intr_type);
     int (*clear_int)(struct metal_gpio *, long pins, int intr_type);
-    struct metal_interrupt* (*interrupt_controller)(struct metal_gpio *gpio);
+    struct metal_interrupt *(*interrupt_controller)(struct metal_gpio *gpio);
     int (*get_interrupt_id)(struct metal_gpio *gpio, int pin);
 };
 
-#define METAL_GPIO_INT_DISABLE       0
-#define METAL_GPIO_INT_RISING        1
-#define METAL_GPIO_INT_FALLING       2
-#define METAL_GPIO_INT_BOTH_EDGE     3
-#define METAL_GPIO_INT_LOW           4
-#define METAL_GPIO_INT_HIGH          5
-#define METAL_GPIO_INT_BOTH_LEVEL    6
-#define METAL_GPIO_INT_MAX           7
+#define METAL_GPIO_INT_DISABLE 0
+#define METAL_GPIO_INT_RISING 1
+#define METAL_GPIO_INT_FALLING 2
+#define METAL_GPIO_INT_BOTH_EDGE 3
+#define METAL_GPIO_INT_LOW 4
+#define METAL_GPIO_INT_HIGH 5
+#define METAL_GPIO_INT_BOTH_LEVEL 6
+#define METAL_GPIO_INT_MAX 7
 
 /*!
  * @struct metal_gpio
  * @brief The handle for a GPIO interface
  */
 struct metal_gpio {
-	const struct __metal_gpio_vtable *vtable;
+    const struct __metal_gpio_vtable *vtable;
 };
 
 /*!
@@ -63,8 +63,8 @@ struct metal_gpio *metal_gpio_get_device(unsigned int device_num);
  * @return 0 if the input is successfully enabled
  */
 __inline__ int metal_gpio_enable_input(struct metal_gpio *gpio, int pin) {
-    if(!gpio) {
-	return 1;
+    if (!gpio) {
+        return 1;
     }
 
     return gpio->vtable->enable_input(gpio, (1 << pin));
@@ -77,8 +77,8 @@ __inline__ int metal_gpio_enable_input(struct metal_gpio *gpio, int pin) {
  * @return 0 if the input is successfully disabled
  */
 __inline__ int metal_gpio_disable_input(struct metal_gpio *gpio, int pin) {
-    if(!gpio) {
-	return 1;
+    if (!gpio) {
+        return 1;
     }
 
     return gpio->vtable->disable_input(gpio, (1 << pin));
@@ -91,8 +91,8 @@ __inline__ int metal_gpio_disable_input(struct metal_gpio *gpio, int pin) {
  * @return 0 if the output is successfully enabled
  */
 __inline__ int metal_gpio_enable_output(struct metal_gpio *gpio, int pin) {
-    if(!gpio) {
-	return 1;
+    if (!gpio) {
+        return 1;
     }
 
     return gpio->vtable->enable_output(gpio, (1 << pin));
@@ -105,8 +105,8 @@ __inline__ int metal_gpio_enable_output(struct metal_gpio *gpio, int pin) {
  * @return 0 if the output is successfully disabled
  */
 __inline__ int metal_gpio_disable_output(struct metal_gpio *gpio, int pin) {
-    if(!gpio) {
-	return 1;
+    if (!gpio) {
+        return 1;
     }
 
     return gpio->vtable->disable_output(gpio, (1 << pin));
@@ -120,14 +120,14 @@ __inline__ int metal_gpio_disable_output(struct metal_gpio *gpio, int pin) {
  * @return 0 if the output is successfully set
  */
 __inline__ int metal_gpio_set_pin(struct metal_gpio *gpio, int pin, int value) {
-    if(!gpio) {
-	return 1;
+    if (!gpio) {
+        return 1;
     }
 
-    if(value == 0) {
-	return gpio->vtable->output_clear(gpio, (1 << pin));
+    if (value == 0) {
+        return gpio->vtable->output_clear(gpio, (1 << pin));
     } else {
-	return gpio->vtable->output_set(gpio, (1 << pin));
+        return gpio->vtable->output_set(gpio, (1 << pin));
     }
 }
 
@@ -138,16 +138,16 @@ __inline__ int metal_gpio_set_pin(struct metal_gpio *gpio, int pin, int value) {
  * @return The value of the GPIO pin
  */
 __inline__ int metal_gpio_get_input_pin(struct metal_gpio *gpio, int pin) {
-    if(!gpio) {
-	return 0;
+    if (!gpio) {
+        return 0;
     }
 
     long value = gpio->vtable->input(gpio);
 
-    if(value & (1 << pin)) {
-	    return 1;
+    if (value & (1 << pin)) {
+        return 1;
     } else {
-	    return 0;
+        return 0;
     }
 }
 
@@ -158,16 +158,16 @@ __inline__ int metal_gpio_get_input_pin(struct metal_gpio *gpio, int pin) {
  * @return The value of the GPIO pin
  */
 __inline__ int metal_gpio_get_output_pin(struct metal_gpio *gpio, int pin) {
-    if(!gpio) {
-	return 0;
+    if (!gpio) {
+        return 0;
     }
 
     long value = gpio->vtable->output(gpio);
 
-    if(value & (1 << pin)) {
-	return 1;
+    if (value & (1 << pin)) {
+        return 1;
     } else {
-	return 0;
+        return 0;
     }
 }
 
@@ -178,8 +178,8 @@ __inline__ int metal_gpio_get_output_pin(struct metal_gpio *gpio, int pin) {
  * @return 0 if the pin is successfully cleared
  */
 __inline__ int metal_gpio_clear_pin(struct metal_gpio *gpio, int pin) {
-    if(!gpio) {
-	return 1;
+    if (!gpio) {
+        return 1;
     }
 
     return gpio->vtable->output_clear(gpio, (1 << pin));
@@ -192,8 +192,8 @@ __inline__ int metal_gpio_clear_pin(struct metal_gpio *gpio, int pin) {
  * @return 0 if the pin is successfully toggled
  */
 __inline__ int metal_gpio_toggle_pin(struct metal_gpio *gpio, int pin) {
-    if(!gpio) {
-	return 1;
+    if (!gpio) {
+        return 1;
     }
 
     return gpio->vtable->output_toggle(gpio, (1 << pin));
@@ -206,9 +206,10 @@ __inline__ int metal_gpio_toggle_pin(struct metal_gpio *gpio, int pin) {
  * @param io_function The IO function to set
  * @return 0 if the pinmux is successfully set
  */
-__inline__ int metal_gpio_enable_pinmux(struct metal_gpio *gpio, int pin, int io_function) {
-    if(!gpio) {
-	return 1;
+__inline__ int metal_gpio_enable_pinmux(struct metal_gpio *gpio, int pin,
+                                        int io_function) {
+    if (!gpio) {
+        return 1;
     }
 
     return gpio->vtable->enable_io(gpio, (1 << pin), (io_function << pin));
@@ -221,8 +222,8 @@ __inline__ int metal_gpio_enable_pinmux(struct metal_gpio *gpio, int pin, int io
  * @return 0 if the pinmux is successfully set
  */
 __inline__ int metal_gpio_disable_pinmux(struct metal_gpio *gpio, int pin) {
-    if(!gpio) {
-	return 1;
+    if (!gpio) {
+        return 1;
     }
 
     return gpio->vtable->disable_io(gpio, (1 << pin));
@@ -235,9 +236,10 @@ __inline__ int metal_gpio_disable_pinmux(struct metal_gpio *gpio, int pin) {
  * @param intr_type The interrupt type
  * @return 0 if the interrupt mode is setup properly
  */
-__inline__ int metal_gpio_config_interrupt(struct metal_gpio *gpio, int pin, int intr_type) {
-    if(!gpio) {
-	return 1;
+__inline__ int metal_gpio_config_interrupt(struct metal_gpio *gpio, int pin,
+                                           int intr_type) {
+    if (!gpio) {
+        return 1;
     }
 
     return gpio->vtable->config_int(gpio, (1 << pin), intr_type);
@@ -250,9 +252,10 @@ __inline__ int metal_gpio_config_interrupt(struct metal_gpio *gpio, int pin, int
  * @param intr_type The interrupt type to be clear
  * @return 0 if the interrupt is cleared
  */
-__inline__ int metal_gpio_clear_interrupt(struct metal_gpio *gpio, int pin, int intr_type) {
-    if(!gpio) {
-	return 1;
+__inline__ int metal_gpio_clear_interrupt(struct metal_gpio *gpio, int pin,
+                                          int intr_type) {
+    if (!gpio) {
+        return 1;
     }
 
     return gpio->vtable->clear_int(gpio, (1 << pin), intr_type);
@@ -265,8 +268,8 @@ __inline__ int metal_gpio_clear_interrupt(struct metal_gpio *gpio, int pin, int 
  * @return A pointer to the interrupt controller responsible for handling
  * gpio interrupts.
  */
-__inline__ struct metal_interrupt*
-    metal_gpio_interrupt_controller(struct metal_gpio *gpio) {
+__inline__ struct metal_interrupt *
+metal_gpio_interrupt_controller(struct metal_gpio *gpio) {
     return gpio->vtable->interrupt_controller(gpio);
 }
 

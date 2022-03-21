@@ -132,18 +132,24 @@
     <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\backoff_algorithm</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_plaintext\using_plaintext.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\sockets_wrapper.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport</Filter>
-    </ClCompile>
     <ClCompile Include="..\Common\http_demo_utils.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\core_http_client.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser\http_parser.c">
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\llhttp\src\api.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\llhttp\src\http.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\llhttp\src\llhttp.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\using_plaintext\using_plaintext.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -216,14 +222,8 @@
     <ClInclude Include="..\..\..\..\FreeRTOS\Source\include\projdefs.h">
       <Filter>FreeRTOS\Source\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser\http_parser.h">
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\llhttp\include\llhttp.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreHTTP\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\sockets_wrapper.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\freertos_plus_tcp\using_plaintext\using_plaintext.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_errno_TCP.h">
       <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
@@ -263,6 +263,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\using_plaintext\using_plaintext.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\transport\include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202112.00
  * Copyright (C) Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -29,23 +29,26 @@
 
 BaseType_t xQueuePeekFromISR( QueueHandle_t xQueue,
                               void * const pvBuffer )
+
 /*@requires [1/2]queuehandle(xQueue, ?N, ?M, ?is_isr) &*& is_isr == true &*&
-    chars(pvBuffer, M, ?x);@*/
+ *  chars(pvBuffer, M, ?x);@*/
+
 /*@ensures [1/2]queuehandle(xQueue, N, M, is_isr) &*&
-    (result == pdPASS ? chars(pvBuffer, M, _) : chars(pvBuffer, M, x));@*/
+ *  (result == pdPASS ? chars(pvBuffer, M, _) : chars(pvBuffer, M, x));@*/
 {
     BaseType_t xReturn;
     UBaseType_t uxSavedInterruptStatus;
     int8_t * pcOriginalReadPosition;
-#ifdef VERIFAST /*< const pointer declaration */
-    Queue_t * pxQueue = xQueue;
-#else
-    Queue_t * const pxQueue = xQueue;
 
-    configASSERT( pxQueue );
-    configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
-    configASSERT( pxQueue->uxItemSize != 0 ); /* Can't peek a semaphore. */
-#endif
+    #ifdef VERIFAST /*< const pointer declaration */
+        Queue_t * pxQueue = xQueue;
+    #else
+        Queue_t * const pxQueue = xQueue;
+
+        configASSERT( pxQueue );
+        configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
+        configASSERT( pxQueue->uxItemSize != 0 ); /* Can't peek a semaphore. */
+    #endif
 
     /* RTOS ports that support interrupt nesting have the concept of a maximum
      * system call (or maximum API call) interrupt priority.  Interrupts that are

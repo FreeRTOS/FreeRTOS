@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# python >= 3.4 
+# python >= 3.4
 
 import os
 from common.header_checker import HeaderChecker
@@ -43,11 +43,13 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.cdkws',
     '.cfg',
     '.cgp',
+    '.checksum',
     '.cmake',
     '.cmd',
     '.config',
     '.cpp',
     '.cproj',
+    '.cproject',
     '.crun',
     '.css',
     '.csv',
@@ -71,6 +73,7 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.dtd',
     '.dts',
     '.elf',
+    '.emProject',
     '.env_conf',
     '.ewd',
     '.ewp',
@@ -120,6 +123,7 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.la',
     '.launch',
     '.lcf',
+    '.ld',
     '.lds',
     '.lib',
     '.lk1',
@@ -172,6 +176,7 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.pref',
     '.prefs',
     '.prj',
+    '.project',
     '.properties',
     '.ps1',
     '.ptf',
@@ -201,6 +206,7 @@ FREERTOS_IGNORED_EXTENSIONS = [
     '.sig',
     '.sln',
     '.spec',
+    '.sprj',
     '.stf',
     '.stg',
     '.suo',
@@ -252,8 +258,11 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*mbedtls_config\.h.*',
     r'.*mbedtls_config\.h.*',
     r'.*CMSIS.*',
+    r'.*/Nordic_Code/*',
     r'.*/makefile',
     r'.*/Makefile',
+    r'.*/printf-stdarg\.c.*',
+    r'.*/startup.*',
     r'.*/trcConfig\.h.*',
     r'.*/trcConfig\.c.*',
     r'.*/trcSnapshotConfig\.h.*',
@@ -261,6 +270,8 @@ FREERTOS_IGNORED_PATTERNS = [
 ]
 
 FREERTOS_IGNORED_FILES = [
+    '.cproject',
+    '.project',
     'fyi-another-way-to-ignore-file.txt',
     'mbedtls_config.h',
     'requirements.txt',
@@ -268,12 +279,17 @@ FREERTOS_IGNORED_FILES = [
     '.editorconfig',
     'lcovrc',
     'htif.c', 'htif.h',
-    'ethernetif.c'
+    'ethernetif.c',
+    'platform.c',
+    'platform.h',
+    'platform_config.h',
+    'FreeRTOS_asm_vectors.S',
+    'gdbinit'
 ]
 
 FREERTOS_HEADER = [
     '/*\n',
-    ' * FreeRTOS V202104.00\n',
+    ' * FreeRTOS V202112.00\n',
     ' * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.\n',
     ' *\n',
     ' * Permission is hereby granted, free of charge, to any person obtaining a copy of\n',

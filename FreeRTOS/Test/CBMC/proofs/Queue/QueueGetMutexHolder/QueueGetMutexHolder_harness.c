@@ -22,8 +22,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
  */
 
 #include "FreeRTOS.h"
@@ -32,10 +32,13 @@
 
 #include "cbmc.h"
 
-void harness() {
-  QueueHandle_t xSemaphore = xUnconstrainedQueue();
-  if (xSemaphore) {
-    xSemaphore->uxQueueType = nondet_uint8_t();
-    xQueueGetMutexHolder(xSemaphore);
-  }
+void harness()
+{
+    QueueHandle_t xSemaphore = xUnconstrainedQueue();
+
+    if( xSemaphore )
+    {
+        xSemaphore->uxQueueType = nondet_uint8_t();
+        xQueueGetMutexHolder( xSemaphore );
+    }
 }

@@ -22,8 +22,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
  */
 
 #include <stdint.h>
@@ -40,10 +40,10 @@ void vPrepareTask( TaskHandle_t * xTask );
  */
 void harness()
 {
-	TaskHandle_t xTask;
-	UBaseType_t uxTaskNumber;
+    TaskHandle_t xTask;
+    UBaseType_t uxTaskNumber;
 
-	vPrepareTask( &xTask );
+    vPrepareTask( &xTask );
 
-	uxTaskNumber = uxTaskGetTaskNumber( xTask );
+    uxTaskNumber = uxTaskGetTaskNumber( xTask );
 }

@@ -22,8 +22,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
  */
 
 #include "FreeRTOS.h"
@@ -32,19 +32,14 @@
 #include "cbmc.h"
 
 
-void harness(){
-	UBaseType_t uxQueueLength;
-	UBaseType_t uxItemSize;
-	uint8_t ucQueueType;
+void harness()
+{
+    UBaseType_t uxQueueLength;
+    UBaseType_t uxItemSize;
+    uint8_t ucQueueType;
 
-	size_t uxQueueStorageSize;
-	__CPROVER_assume(uxQueueStorageSize < (UINT32_MAX>>8));
+    /* Allow CBMC to run in a reasonable amount of time. */
+    __CPROVER_assume( ( uxQueueLength == QUEUE_LENGTH ) || ( uxItemSize == QUEUE_ITEM_SIZE ) );
 
-	// QueueGenericCreate does not check for multiplication overflow
-	__CPROVER_assume(uxItemSize < uxQueueStorageSize/uxQueueLength);
-
-	// QueueGenericCreate asserts positive queue length
-	__CPROVER_assume(uxQueueLength > ( UBaseType_t ) 0);
-
-	xQueueGenericCreate( uxQueueLength, uxItemSize, ucQueueType );
+    xQueueGenericCreate( uxQueueLength, uxItemSize, ucQueueType );
 }

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202112.00
  * Copyright (C) Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -41,11 +41,11 @@ UBaseType_t uxQueueMessagesWaitingFromISR( const QueueHandle_t xQueue )
 {
     UBaseType_t uxReturn;
 
-#ifdef VERIFAST /*< const pointer declaration */
-    Queue_t * pxQueue = xQueue;
-#else
-    Queue_t * const pxQueue = xQueue;
-#endif
+    #ifdef VERIFAST /*< const pointer declaration */
+        Queue_t * pxQueue = xQueue;
+    #else
+        Queue_t * const pxQueue = xQueue;
+    #endif
 
     configASSERT( pxQueue );
     uxReturn = pxQueue->uxMessagesWaiting;

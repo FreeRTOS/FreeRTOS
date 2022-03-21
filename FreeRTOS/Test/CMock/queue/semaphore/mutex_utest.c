@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -114,8 +114,8 @@ void test_macro_xSemaphoreCreateMutexStatic_nullptr( void )
 
     xSemaphore = xSemaphoreCreateMutexStatic( NULL );
 
-    /* verify that configASSERT was called */
-    TEST_ASSERT_EQUAL( true, fakeAssertGetFlagAndClear() );
+    /* Check that configASSERT was called twice */
+    fakeAssertVerifyNumAssertsAndClear( 2 );
 
     TEST_ASSERT_EQUAL( NULL, xSemaphore );
     TEST_ASSERT_EQUAL( 0, getLastMallocSize() );

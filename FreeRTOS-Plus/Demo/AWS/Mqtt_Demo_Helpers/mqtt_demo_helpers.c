@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -202,8 +202,8 @@ typedef struct PublishPackets
 
 /*-----------------------------------------------------------*/
 
-/** 
- * @brief Each compilation unit that consumes the NetworkContext must define it. 
+/**
+ * @brief Each compilation unit that consumes the NetworkContext must define it.
  * It should contain a single pointer to the type of your desired transport.
  * When using multiple transports in the same compilation unit, define this pointer as void *.
  *
@@ -903,7 +903,7 @@ BaseType_t xPublishToTopic( MQTTContext_t * pxMqttContext,
     }
     else
     {
-        LogInfo( ( "the published payload:%s \r\n ", pcPayload ) );
+        LogInfo( ( "the published payload:%.*s \r\n ", payloadLength, pcPayload ) );
         /* This example publishes to only one topic and uses QOS1. */
         outgoingPublishPackets[ ucPublishIndex ].pubInfo.qos = MQTTQoS1;
         outgoingPublishPackets[ ucPublishIndex ].pubInfo.pTopicName = pcTopicFilter;

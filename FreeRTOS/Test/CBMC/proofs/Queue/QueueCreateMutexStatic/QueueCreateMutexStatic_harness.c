@@ -22,8 +22,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
  */
 
 #include "FreeRTOS.h"
@@ -31,11 +31,10 @@
 #include "cbmc.h"
 
 
-void harness(){
+void harness()
+{
     uint8_t ucQueueType;
+    StaticQueue_t * pxStaticQueue = ( StaticQueue_t * ) pvPortMalloc( sizeof( StaticQueue_t ) );
 
-    //The mutex storage is assumed to be not null.
-    StaticQueue_t xStaticQueue;
-
-    xQueueCreateMutexStatic( ucQueueType, &xStaticQueue );
+    xQueueCreateMutexStatic( ucQueueType, pxStaticQueue );
 }

@@ -1,5 +1,26 @@
 Documentation and download available at https://www.FreeRTOS.org/
 
+Changes between FreeRTOS 202111.00 and FreeRTOS 202112.00 released December 2021
+
+	+ Added Fleet Provisioning library and demo showcasing the use of Fleet Provisioning library.
+	+ Added Sigv4 library and updated HTTP S3 download demo to showcase its use.
+	+ Added CBMC proofs for all public and private functions in the OTA Update library
+	+ Updated mbed TLS version used by corePKCS11 to v2.28.0
+
+Changes between FreeRTOS 202107.00 and FreeRTOS 202111.00 released November 2021
+
+	+ Add Cellular library and demo showcasing use of Cellular library.
+	+ Add demo project for [PolarFire SoC FPGA Icicle Kit](https://www.microsemi.com/existing-parts/parts/152514).
+
+Changes between FreeRTOS 202104.00 and FreeRTOS 202107.00 released July 2021
+
+	+ Release coreSNTP v1.0.0, a client library for SNTP communication.
+	+ Add demo showcasing use of coreSNTP library to setup SNTP client for
+	  synchronizing demo system time with time servers.
+	+ Demo Updates
+		- Update Device Shadow demo to use Named Shadow feature.
+
+
 Changes between FreeRTOS 202012.00 and FreeRTOS 202104.00 released April 2021
 
 	+ Released LTS versions of AWS IoT Device Defender, AWS IoT Jobs and

@@ -1,0 +1,408 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C686325E-3261-42F7-AEB1-DDE5280E1CEB}</ProjectGuid>
+    <ProjectName>RTOSDemo</ProjectName>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <TypeLibraryName>.\Debug/WIN32.tlb</TypeLibraryName>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\Source\Utilities\mbedtls_freertos;..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\Common\WinPCap;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\include;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\dependency\3rdparty\pkcs11;..\..\ThirdParty\mbedtls\include;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\Source\Application-Protocols\coreSNTP\source\include;..\..\Source\Utilities\backoff_algorithm\source\include;.;..\..\..\FreeRTOS-Plus\Source\corePKCS11\source\portable\os;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;MBEDTLS_CONFIG_FILE="mbedtls_config.h";CONFIG_MEDTLS_USE_AFR_MEMORY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>.\Debug/WIN32.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalOptions>/wd4210 /wd4127 /wd4214 /wd4201 /wd4244  /wd4310 /wd4200 %(AdditionalOptions)</AdditionalOptions>
+      <BrowseInformation>true</BrowseInformation>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <ExceptionHandling>false</ExceptionHandling>
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Link>
+      <OutputFile>.\Debug/RTOSDemo.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Debug/WIN32.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>wpcap.lib;Bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Common\WinPCap</AdditionalLibraryDirectories>
+      <Profile>false</Profile>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug/WIN32.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <TypeLibraryName>.\Release/WIN32.tlb</TypeLibraryName>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <PreprocessorDefinitions>_WINSOCKAPI_;WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\Release/WIN32.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalIncludeDirectories>..\Common\Utils;..\Common\ethernet\lwip-1.4.0\ports\win32\WinPCap;..\Common\ethernet\lwip-1.4.0\src\include\ipv4;..\Common\ethernet\lwip-1.4.0\src\include;..\..\Source\include;..\..\Source\portable\MSVC-MingW;..\Common\ethernet\lwip-1.4.0\ports\win32\include;..\Common\Include;.\lwIP_Apps;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Link>
+      <OutputFile>.\Release/RTOSDemo.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <ProgramDatabaseFile>.\Release/WIN32.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>..\Common\ethernet\lwip-1.4.0\ports\win32\WinPCap</AdditionalLibraryDirectories>
+      <AdditionalDependencies>wpcap.lib;Bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release/WIN32.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\event_groups.c" />
+    <ClCompile Include="..\..\..\FreeRTOS\Source\list.c" />
+    <ClCompile Include="..\..\..\FreeRTOS\Source\portable\MemMang\heap_4.c" />
+    <ClCompile Include="..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c" />
+    <ClCompile Include="..\..\..\FreeRTOS\Source\queue.c" />
+    <ClCompile Include="..\..\..\FreeRTOS\Source\stream_buffer.c" />
+    <ClCompile Include="..\..\..\FreeRTOS\Source\tasks.c" />
+    <ClCompile Include="..\..\..\FreeRTOS\Source\timers.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\aes.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\aesni.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\arc4.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\aria.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\asn1parse.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\asn1write.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\base64.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\bignum.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\blowfish.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\camellia.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ccm.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\certs.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\chacha20.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\chachapoly.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\cipher.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\cipher_wrap.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\cmac.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\constant_time.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ctr_drbg.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\debug.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\des.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\dhm.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ecdh.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ecdsa.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ecjpake.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ecp.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ecp_curves.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\entropy.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\entropy_poll.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\error.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\gcm.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\havege.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\hkdf.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\hmac_drbg.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\md.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\md2.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\md4.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\md5.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\memory_buffer_alloc.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\mps_reader.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\mps_trace.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\net_sockets.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\nist_kw.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\oid.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\padlock.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\pem.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\pk.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkcs11.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkcs12.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkcs5.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkparse.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\pkwrite.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\pk_wrap.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\platform.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\platform_util.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\poly1305.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_aead.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_cipher.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_client.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_driver_wrappers.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_ecp.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_hash.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_mac.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_rsa.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_se.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_slot_management.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_crypto_storage.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\psa_its_file.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ripemd160.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\rsa.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\rsa_internal.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\sha1.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\sha256.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\sha512.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_cache.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_ciphersuites.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_cli.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_cookie.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_msg.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_srv.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_ticket.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_tls.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\ssl_tls13_keys.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\threading.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\timing.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\version.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\version_features.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509write_crt.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509write_csr.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509_create.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509_crl.c" />
+    <ClCompile Include="..\..\thirdparty\mbedtls\library\x509_crt.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509_csr.c" />
+    <ClCompile Include="..\..\ThirdParty\mbedtls\library\xtea.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\dependency\3rdparty\mbedtls_utils\mbedtls_utils.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\core_pkcs11.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\core_pki_utils.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\mbedtls\core_pkcs11_mbedtls.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\os\core_pkcs11_pal_utils.c" />
+    <ClCompile Include="..\..\Source\corePKCS11\source\portable\os\freertos_winsim\core_pkcs11_pal.c" />
+    <ClCompile Include="..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c" />
+    <ClCompile Include="..\..\Source\Utilities\mbedtls_freertos\mbedtls_bio_freertos_plus_tcp.c" />
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_ARP.c" />
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_DHCP.c" />
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_DNS.c" />
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_IP.c" />
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_Sockets.c" />
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_Stream_Buffer.c" />
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_TCP_IP.c" />
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_TCP_WIN.c" />
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_UDP_IP.c" />
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement\BufferAllocation_2.c" />
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\NetworkInterface\WinPCap\NetworkInterface.c" />
+    <ClCompile Include="..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c" />
+    <ClCompile Include="..\..\Source\Application-Protocols\coreSNTP\source\core_sntp_serializer.c" />
+    <ClCompile Include="..\..\Source\Application-Protocols\coreSNTP\source\core_sntp_client.c" />
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Demo\Common\Logging\windows\Logging_WinSim.c" />
+    <ClCompile Include="main.c" />
+    <ClCompile Include="DemoTasks\SNTPClientTask.c" />
+    <ClCompile Include="DemoTasks\SampleAppTask.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\FreeRTOS\Source\include\event_groups.h" />
+    <ClInclude Include="..\..\..\FreeRTOS\Source\include\FreeRTOS.h" />
+    <ClInclude Include="..\..\..\FreeRTOS\Source\include\portable.h" />
+    <ClInclude Include="..\..\..\FreeRTOS\Source\include\projdefs.h" />
+    <ClInclude Include="..\..\..\FreeRTOS\Source\include\queue.h" />
+    <ClInclude Include="..\..\..\FreeRTOS\Source\include\semphr.h" />
+    <ClInclude Include="..\..\..\FreeRTOS\Source\include\task.h" />
+    <ClInclude Include="..\..\..\FreeRTOS\Source\include\timers.h" />
+    <ClInclude Include="..\..\..\FreeRTOS\Source\portable\MSVC-MingW\portmacro.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOSIPConfigDefaults.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_ARP.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_DHCP.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_DNS.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_IP.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_IP_Private.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_Sockets.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_Stream_Buffer.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_TCP_IP.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_TCP_WIN.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_UDP_IP.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\IPTraceMacroDefaults.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\NetworkBufferManagement.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\NetworkInterface.h" />
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_errno_TCP.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_levels.h" />
+    <ClInclude Include="..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_stack.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\aes.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\aesni.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\arc4.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\aria.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\asn1.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\asn1write.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\base64.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\bignum.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\blowfish.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\bn_mul.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\camellia.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ccm.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\certs.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\chacha20.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\chachapoly.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\check_config.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\cipher.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\cipher_internal.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\cmac.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\compat-1.3.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\config.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ctr_drbg.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\debug.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\des.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\dhm.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ecdh.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ecdsa.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ecjpake.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ecp.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ecp_internal.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\entropy.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\entropy_poll.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\gcm.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\havege.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\hkdf.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\hmac_drbg.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\md.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\md2.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\md4.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\md5.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\md_internal.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\memory_buffer_alloc.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\net.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\net_sockets.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\nist_kw.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\oid.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\padlock.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\pem.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\pk.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\pkcs11.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\pkcs12.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\pkcs5.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\pk_internal.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\platform.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\platform_time.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\platform_util.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\poly1305.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\psa_util.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ripemd160.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\rsa.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\rsa_internal.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\sha1.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\sha256.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\sha512.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ssl.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ssl_cache.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ssl_ciphersuites.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ssl_cookie.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ssl_internal.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\ssl_ticket.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\threading.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\timing.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\version.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\x509.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\x509_crl.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\x509_crt.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\x509_csr.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\include\mbedtls\xtea.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\common.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_core.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_invasive.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_its.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_se.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_slot_management.h" />
+    <ClInclude Include="..\..\ThirdParty\mbedtls\library\psa_crypto_storage.h" />
+    <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11.h" />
+    <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11f.h" />
+    <ClInclude Include="..\..\Source\corePKCS11\source\dependency\3rdparty\pkcs11\pkcs11t.h" />
+    <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11.h" />
+    <ClInclude Include="..\..\Source\corePKCS11\source\portable\os\core_pkcs11_pal_utils.h" />
+    <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pkcs11_pal.h" />
+    <ClInclude Include="..\..\Source\corePKCS11\source\include\core_pki_utils.h" />
+    <ClInclude Include="..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h" />
+    <ClInclude Include="..\..\Source\Application-Protocols\coreSNTP\source\include\core_sntp_config_defaults.h" />
+    <ClInclude Include="..\..\Source\Application-Protocols\coreSNTP\source\include\core_sntp_serializer.h" />
+    <ClInclude Include="..\..\Source\Application-Protocols\coreSNTP\source\include\core_sntp_client.h" />
+    <ClInclude Include="demo_config.h" />
+    <ClInclude Include="common_demo_include.h" />
+    <ClInclude Include="FreeRTOSConfig.h" />
+    <ClInclude Include="FreeRTOSIPConfig.h" />
+    <ClInclude Include="core_sntp_config.h" />
+    <ClInclude Include="mbedtls_config.h" />
+    <ClInclude Include="core_pkcs11_config.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

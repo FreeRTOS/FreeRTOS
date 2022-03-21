@@ -19,14 +19,19 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
  *
- * 1 tab == 4 spaces!
  */
 
 #ifndef COMMAND_INTERPRETER_H
 #define COMMAND_INTERPRETER_H
+
+/* *INDENT-OFF* */
+#ifdef __cplusplus
+    extern "C" {
+#endif
+/* *INDENT-ON* */
 
 /* The prototype to which callback functions used to process command line
 commands must comply.  pcWriteBuffer is a buffer into which the output from
@@ -88,6 +93,12 @@ char *FreeRTOS_CLIGetOutputBuffer( void );
  * Return a pointer to the xParameterNumber'th word in pcCommandString.
  */
 const char *FreeRTOS_CLIGetParameter( const char *pcCommandString, UBaseType_t uxWantedParameter, BaseType_t *pxParameterStringLength );
+
+/* *INDENT-OFF* */
+#ifdef __cplusplus
+    }
+#endif
+/* *INDENT-ON* */
 
 #endif /* COMMAND_INTERPRETER_H */
 

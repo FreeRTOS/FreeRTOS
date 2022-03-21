@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -68,145 +68,6 @@ int suiteTearDown( int numFailures )
 /* ==============================  Test Cases =============================== */
 
 
-
-/**
- * @brief Test xSemaphoreTake with an invalid counting semaphore
- * @details Verify that a call to xSemaphoreTake fails on a counting
- * semaphore created with uxMaxCount=0 and uxInitialCount=0
- * @coverage xQueueSemaphoreTake
- */
-void test_macro_xSemaphoreTake_CountingSemaphore_zero_zero_fail( void )
-{
-    /* Expect that xSemaphoreCreateCounting will assert because uxMaxCount=0 is invalid */
-    fakeAssertExpectFail();
-
-    SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( 0, 0 );
-
-    fakeAssertGetNumAssertsAndClear();
-
-    /* validate returned semaphore handle */
-    TEST_ASSERT_NOT_EQUAL( NULL, xSemaphore );
-
-    TEST_ASSERT_EQUAL( QUEUE_T_SIZE, getLastMallocSize() );
-
-    /* Verify that an xSemaphoreTake fails */
-    TEST_ASSERT_EQUAL( pdFALSE, xSemaphoreTake( xSemaphore, 0 ) );
-
-    vSemaphoreDelete( xSemaphore );
-}
-
-/**
- * @brief Test xSemaphoreGive with an invalid counting semaphore
- * @details Verify that a call to xSemaphoreGive fails on a counting
- * semaphore created with uxMaxCount=0 and uxInitialCount=0
- * @coverage xQueueGenericSend
- */
-void test_macro_xSemaphoreGive_CountingSemaphore_zero_zero_fail( void )
-{
-    /* Expect that xSemaphoreCreateCounting will assert because uxMaxCount=0 is invalid */
-    fakeAssertExpectFail();
-
-    SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( 0, 0 );
-
-    fakeAssertGetNumAssertsAndClear();
-
-    /* validate returned semaphore handle */
-    TEST_ASSERT_NOT_EQUAL( NULL, xSemaphore );
-
-    TEST_ASSERT_EQUAL( QUEUE_T_SIZE, getLastMallocSize() );
-
-    /* Verify that an xSemaphoreGive fails */
-    TEST_ASSERT_EQUAL( pdFALSE, xSemaphoreGive( xSemaphore ) );
-
-    vSemaphoreDelete( xSemaphore );
-}
-
-/**
- * @brief Test xSemaphoreGive with xSemaphoreCreateCounting( 1, 2 )
- * @details Test xSemaphoreGive with an invalid counting semaphore where
- *  uxInitialCount > xMaxCount
- * @coverage xQueueGenericSend
- */
-void test_macro_xSemaphoreGive_with_CountingSemaphore_one_two_fail( void )
-{
-    /* Expect that xSemaphoreCreateCounting will assert because
-     *  uxInitialCount > xMaxCount  is invalid */
-    fakeAssertExpectFail();
-
-    SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( 1, 2 );
-
-    fakeAssertGetFlagAndClear();
-
-    /* validate returned semaphore handle */
-    TEST_ASSERT_NOT_EQUAL( NULL, xSemaphore );
-
-    TEST_ASSERT_EQUAL( QUEUE_T_SIZE, getLastMallocSize() );
-
-    /* Verify that an xSemaphoreGive fails */
-    TEST_ASSERT_EQUAL( pdFALSE, xSemaphoreGive( xSemaphore ) );
-
-    vSemaphoreDelete( xSemaphore );
-}
-
-/**
- * @brief Test xSemaphoreTake with xSemaphoreCreateCounting( 1, 2 )
- * @details Test xSemaphoreTake with an invalid counting semaphore where
- *  uxInitialCount > xMaxCount
- * @coverage xQueueSemaphoreTake
- */
-void test_macro_xSemaphoreTake_with_CountingSemaphore_one_two_success( void )
-{
-    /* Expect that xSemaphoreCreateCounting will assert because
-     *  uxInitialCount > xMaxCount  is invalid */
-    fakeAssertExpectFail();
-
-    SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( 1, 2 );
-
-    fakeAssertGetFlagAndClear();
-
-    /* validate returned semaphore handle */
-    TEST_ASSERT_NOT_EQUAL( NULL, xSemaphore );
-
-    TEST_ASSERT_EQUAL( QUEUE_T_SIZE, getLastMallocSize() );
-
-    /* Verify that an xSemaphoreTake succeeds */
-    TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreTake( xSemaphore, 0 ) );
-
-    vSemaphoreDelete( xSemaphore );
-}
-
-/**
- * @brief Test xSemaphoreTake and xSemaphoreGive with xSemaphoreCreateCounting( 1, 2 )
- * @details Test xSemaphoreTake and xSemaphoreGive with an invalid counting
- *  semaphore where uxInitialCount > xMaxCount.
- * @coverage xQueueSemaphoreTake xQueueGenericSend
- */
-void test_macro_xSemaphoreTake_xSemaphoreGive_with_CountingSemaphore_one_two_success( void )
-{
-    /* Expect that xSemaphoreCreateCounting will assert because
-     *  uxInitialCount > xMaxCount  is invalid */
-    fakeAssertExpectFail();
-
-    SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( 1, 2 );
-
-    fakeAssertGetFlagAndClear();
-
-    /* validate returned semaphore handle */
-    TEST_ASSERT_NOT_EQUAL( NULL, xSemaphore );
-
-    TEST_ASSERT_EQUAL( QUEUE_T_SIZE, getLastMallocSize() );
-
-    /* Verify that an xSemaphoreTake succeeds */
-    TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreTake( xSemaphore, 0 ) );
-
-    /* Verify that a second xSemaphoreTake succeeds */
-    TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreTake( xSemaphore, 0 ) );
-
-    /* Verify that an xSemaphoreGive succeeds */
-    TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreGive( xSemaphore ) );
-
-    vSemaphoreDelete( xSemaphore );
-}
 
 /**
  * @brief Test xSemaphoreTake with xSemaphoreCreateCounting( 1, 0 )
@@ -476,91 +337,6 @@ void test_macro_xSemaphoreGive_CountingSemaphore_lower_bound( void )
 }
 
 /**
- * @brief Test xSemaphoreGive with xSemaphoreCreateCounting( UINT64_MAX - 1, UINT64_MAX )
- * @details Test xSemaphoreGive with a counting semaphore with uxMaxCount=UINT64_MAX-1 and
- *          uxInitialCount=UINT64_MAX
- * @coverage xQueueGenericSend
- */
-void test_macro_xSemaphoreGive_CountingSemaphore_over_upper_bound( void )
-{
-    /* Expect that xSemaphoreCreateCounting will configASSERT because
-     *  uxInitialCount > xMaxCount is invalid */
-    fakeAssertExpectFail();
-
-    SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( UINT64_MAX - 1, UINT64_MAX );
-
-    /* verify that configASSERT was called */
-    TEST_ASSERT_EQUAL( true, fakeAssertGetFlagAndClear() );
-
-    /* validate returned semaphore handle */
-    TEST_ASSERT_NOT_EQUAL( NULL, xSemaphore );
-
-    TEST_ASSERT_EQUAL( QUEUE_T_SIZE, getLastMallocSize() );
-
-    /* Check the count */
-    TEST_ASSERT_EQUAL( UINT64_MAX, uxSemaphoreGetCount( xSemaphore ) );
-
-    /* Verify that an xSemaphoreGive operation fails */
-    TEST_ASSERT_EQUAL( pdFALSE, xSemaphoreGive( xSemaphore ) );
-
-    /* Check that the count has not changed */
-    TEST_ASSERT_EQUAL( UINT64_MAX, uxSemaphoreGetCount( xSemaphore ) );
-
-    vSemaphoreDelete( xSemaphore );
-}
-
-/**
- * @brief Test xSemaphoreGive with a counting semaphore where uxInitialCount > uxMaxCount
- * @details Test xSemaphoreGive with a counting semaphore with uxMaxCount=1 and
- *          uxInitialCount=2
- * @coverage xQueueGenericSend
- */
-void test_macro_xSemaphoreGive_count_higher_than_max( void )
-{
-    /* Expect that xSemaphoreCreateCounting will assert because
-     *  uxInitialCount > xMaxCount  is invalid */
-    fakeAssertExpectFail();
-
-    SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( 1, 2 );
-
-    fakeAssertGetFlagAndClear();
-
-    /* validate returned semaphore handle */
-    TEST_ASSERT_NOT_EQUAL( NULL, xSemaphore );
-
-    TEST_ASSERT_EQUAL( QUEUE_T_SIZE, getLastMallocSize() );
-
-    /* Check that the count was initialized correctly */
-    TEST_ASSERT_EQUAL( 2, uxSemaphoreGetCount( xSemaphore ) );
-
-    /* Verify that an xSemaphoreGive fails (would cause the count to increase) */
-    TEST_ASSERT_EQUAL( pdFALSE, xSemaphoreGive( xSemaphore ) );
-
-    /* Verify that an xSemaphoreTake succeeds */
-    TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreTake( xSemaphore, 0 ) );
-
-    /* Check that the count has decreased */
-    TEST_ASSERT_EQUAL( 1, uxSemaphoreGetCount( xSemaphore ) );
-
-    /* Verify that an xSemaphoreGive fails (would cause the count to increase beyond 2) */
-    TEST_ASSERT_EQUAL( pdFALSE, xSemaphoreGive( xSemaphore ) );
-
-    /* Verify that an xSemaphoreTake succeds */
-    TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreTake( xSemaphore, 0 ) );
-
-    /* Check that the count has decreased */
-    TEST_ASSERT_EQUAL( 0, uxSemaphoreGetCount( xSemaphore ) );
-
-    /* Verify that an xSemaphoreGive succeeds */
-    TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreGive( xSemaphore ) );
-
-    /* Check that the count is now 1 */
-    TEST_ASSERT_EQUAL( 1, uxSemaphoreGetCount( xSemaphore ) );
-
-    vSemaphoreDelete( xSemaphore );
-}
-
-/**
  *  @brief Test xSemaphoreTake with taskSCHEDULER_SUSPENDED and timeout=10
  *  @details This should cause xSemaphoreTake to configASSERT because it would
  *  block forever when the semaphore is empty.
@@ -643,6 +419,7 @@ void test_xSemaphoreTake_blocking_success( void )
     vFakePortAssertIfInterruptPriorityInvalid_Expect();
 
     xTaskCheckForTimeOut_Stub( &blocking_xTaskCheckForTimeOut_cb );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     TEST_ASSERT_EQUAL( 0, uxSemaphoreGetCount( xSemaphore ) );
 
@@ -692,6 +469,7 @@ void test_xSemaphoreTake_blocking_success_last_chance( void )
     vFakePortAssertIfInterruptPriorityInvalid_Expect();
 
     xTaskCheckForTimeOut_Stub( &blocking_last_chance_xTaskCheckForTimeOut_cb );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     TEST_ASSERT_EQUAL( 0, uxSemaphoreGetCount( xSemaphore ) );
 
@@ -788,6 +566,7 @@ void test_xSemaphoreTake_blocking_success_locked_no_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xSemaphoreTake_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &td_task_xTaskResumeAllStub );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreTake( xSemaphore, TICKS_TO_WAIT ) );
 
@@ -840,6 +619,7 @@ void test_xSemaphoreTake_blocking_timeout_locked_high_prio_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xSemaphoreTake_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xSemaphoreTake_xTaskResumeAllCallback );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY + 1 );
 
@@ -877,6 +657,7 @@ void test_xSemaphoreTake_blocking_success_locked_low_prio_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xSemaphoreTake_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xSemaphoreTake_xTaskResumeAllCallback );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY - 1 );
 
@@ -891,4 +672,33 @@ void test_xSemaphoreTake_blocking_success_locked_low_prio_pending( void )
     TEST_ASSERT_EQUAL( NUM_CALLS_TO_INTERCEPT, td_task_getCount_vPortYieldWithinAPI() );
 
     vQueueDelete( xSemaphore );
+}
+
+/**
+ * @brief Test xSemaphoreGiveFromISR on a semaphore that is locked
+ * @coverage xQueueGiveFromISR
+ */
+void test_macro_xSemaphoreGiveFromISR_locked( void )
+{
+    SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( 2, 0 );
+
+    /* Set private lock counters */
+    vSetQueueRxLock( xSemaphore, queueLOCKED_UNMODIFIED );
+    vSetQueueTxLock( xSemaphore, queueLOCKED_UNMODIFIED );
+
+    vFakePortAssertIfInterruptPriorityInvalid_Ignore();
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
+
+    TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreGiveFromISR( xSemaphore, NULL ) );
+    TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreGiveFromISR( xSemaphore, NULL ) );
+
+    /* Verify that the cRxLock counter has not changed */
+    TEST_ASSERT_EQUAL( queueLOCKED_UNMODIFIED, cGetQueueRxLock( xSemaphore ) );
+
+    /* Verify that the cTxLock counter has only been incremented by one
+     * even after 2 calls to xQueueSendFromISR because there is only
+     * one task in the system as returned from uxTaskGetNumberOfTasks. */
+    TEST_ASSERT_EQUAL( queueLOCKED_UNMODIFIED + 1, cGetQueueTxLock( xSemaphore ) );
+
+    vSemaphoreDelete( xSemaphore );
 }

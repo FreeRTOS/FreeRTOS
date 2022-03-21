@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -74,47 +74,6 @@ int suiteTearDown( int numFailures )
 
 /* ==============================  Test Cases =============================== */
 
-
-/**
- * @brief Test xQueueSend on a member Queue (size 1) of a QueueSet (size 0)
- * @details: In this case, sending to the queue causes a configASSERT, but returns pdTRUE.
- * @coverage xQueueGenericSend
- */
-void test_macro_xQueueSend_QueueSet_Fail( void )
-{
-    /* Expect that xQueueCreateSet will assert because a length of 0 is invalid */
-    fakeAssertExpectFail();
-
-    QueueSetHandle_t xQueueSet = xQueueCreateSet( 0 );
-
-    fakeAssertGetFlagAndClear();
-
-    QueueHandle_t xQueue = xQueueCreate( 1, sizeof( uint32_t ) );
-
-    TEST_ASSERT_EQUAL( pdTRUE, xQueueAddToSet( xQueue, xQueueSet ) );
-
-    /* Expect that xQueueSend / prvNotifyQueueSetContainer will assert because
-     *  a QueueSet length of 0 is invalid */
-    fakeAssertExpectFail();
-
-    uint32_t testValue = getNextMonotonicTestValue();
-    TEST_ASSERT_EQUAL( pdTRUE, xQueueSend( xQueue, &testValue, 0 ) );
-
-    TEST_ASSERT_EQUAL( pdTRUE, fakeAssertGetFlagAndClear() );
-
-    QueueHandle_t xQueue2 = xQueueSelectFromSet( xQueueSet, 0 );
-
-    TEST_ASSERT_EQUAL( NULL, xQueue2 );
-
-    uint32_t checkValue = INVALID_UINT32;
-
-    TEST_ASSERT_EQUAL( pdTRUE, xQueueReceive( xQueue, &checkValue, 0 ) );
-
-    TEST_ASSERT_EQUAL( testValue, checkValue );
-
-    vQueueDelete( xQueueSet );
-    vQueueDelete( xQueue );
-}
 
 /**
  * @brief Test xQueueSend on a member Queue (size 1) of a QueueSet (size 1)
@@ -412,6 +371,97 @@ void test_macro_xQueueSendFromISR_in_set_high_priority_pending( void )
 }
 
 /**
+ * @brief Test xQueueSendFromISR with a higher priority task waiting on a locked queue in Queue Set.
+ * @details Test xQueueSendFromISR with a higher priority task waiting on a locked queue and
+ *  verifies that xTaskResumeAll resumes the high priority task.
+ * @coverage xQueueGenericSendFromISR
+ */
+void test_macro_xQueueSendFromISR_in_set_locked_and_high_priority_pending( void )
+{
+    QueueHandle_t xQueue = xQueueCreate( 1, sizeof( uint32_t ) );
+    QueueSetHandle_t xQueueSet = xQueueCreateSet( 1 );
+
+    xQueueAddToSet( xQueue, xQueueSet );
+
+    vFakePortAssertIfInterruptPriorityInvalid_Expect();
+
+    /* Insert an item into the event list. */
+    td_task_setFakeTaskPriority( DEFAULT_PRIORITY + 1 );
+    td_task_addFakeTaskWaitingToReceiveFromQueue( xQueueSet );
+
+    /* Lock the queue. */
+    vSetQueueTxLock( xQueue, queueLOCKED_UNMODIFIED );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
+
+    uint32_t testVal = getNextMonotonicTestValue();
+
+    /* Add item to queue. */
+    TEST_ASSERT_EQUAL( pdTRUE, xQueueSendFromISR( xQueue, &testVal, NULL ) );
+    /* This call will trigger unlocking of the queue which eventually calls xTaskResumeAll. */
+    TEST_ASSERT_EQUAL( errQUEUE_FULL, xQueueSend( xQueue, &testVal, 1 ) );
+
+    /* Ensure that the xTaskResumeAll resumes high priority task. */
+    TEST_ASSERT_EQUAL( 1, td_task_getYieldCount() );
+    TEST_ASSERT_EQUAL( 1, td_task_getCount_YieldFromTaskResumeAll() );
+    TEST_ASSERT_EQUAL( 1, td_task_getCount_vTaskMissedYield() );
+
+    QueueHandle_t xQueueTemp = xQueueSelectFromSet( xQueueSet, 0 );
+    uint32_t checkVal = INVALID_UINT32;
+
+    xQueueReceive( xQueueTemp, &checkVal, 0 );
+    TEST_ASSERT_EQUAL( testVal, checkVal );
+
+    vQueueDelete( xQueue );
+    vQueueDelete( xQueueSet );
+}
+
+/**
+ * @brief Test xQueueSendFromISR with a low priority task waiting on a locked queue in Queue Set.
+ * @details Test xQueueSendFromISR with a low priority task waiting on a locked queue and
+ *  verifies that xTaskResumeAll does not resume the low priority task.
+ * @coverage xQueueGenericSendFromISR
+ */
+void test_macro_xQueueSendFromISR_in_set_locked_and_low_priority_pending( void )
+{
+    QueueHandle_t xQueue = xQueueCreate( 1, sizeof( uint32_t ) );
+    QueueSetHandle_t xQueueSet = xQueueCreateSet( 1 );
+
+    xQueueAddToSet( xQueue, xQueueSet );
+
+    vFakePortAssertIfInterruptPriorityInvalid_Expect();
+
+    /* Insert an item into the event list. */
+    td_task_setFakeTaskPriority( DEFAULT_PRIORITY - 1 );
+    td_task_addFakeTaskWaitingToReceiveFromQueue( xQueueSet );
+
+    /* Lock the queue. */
+    vSetQueueTxLock( xQueue, queueLOCKED_UNMODIFIED );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
+
+    uint32_t testVal = getNextMonotonicTestValue();
+
+    /* Add item to queue. */
+    TEST_ASSERT_EQUAL( pdTRUE, xQueueSendFromISR( xQueue, &testVal, NULL ) );
+    /* This call will trigger unlocking of the queue which eventually calls xTaskResumeAll. */
+    TEST_ASSERT_EQUAL( errQUEUE_FULL, xQueueSend( xQueue, &testVal, 1 ) );
+
+    /* Ensure that the xTaskResumeAll does not resume low priority task. */
+    TEST_ASSERT_EQUAL( 0, td_task_getCount_YieldFromTaskResumeAll() );
+    TEST_ASSERT_EQUAL( 0, td_task_getCount_vTaskMissedYield() );
+    TEST_ASSERT_EQUAL( 1, td_task_getYieldCount() );
+    TEST_ASSERT_EQUAL( 1, td_task_getCount_vPortYieldWithinAPI() );
+
+    QueueHandle_t xQueueTemp = xQueueSelectFromSet( xQueueSet, 0 );
+    uint32_t checkVal = INVALID_UINT32;
+
+    xQueueReceive( xQueueTemp, &checkVal, 0 );
+    TEST_ASSERT_EQUAL( testVal, checkVal );
+
+    vQueueDelete( xQueue );
+    vQueueDelete( xQueueSet );
+}
+
+/**
  * @brief Test xQueueSendFromISR with a lower priority task waiting on a queue in a Queue Set
  * @details Test xQueueSendFromISR on a Queeu in a Queue Set with a lower priority task waiting and
  *  verify that xHigherPriorityTaskWoken is not modified.
@@ -611,6 +661,7 @@ void test_xQueueSendFromISR_locked( void )
     vSetQueueTxLock( xQueueSet, queueLOCKED_UNMODIFIED );
 
     vFakePortAssertIfInterruptPriorityInvalid_Expect();
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     uint32_t testVal = getNextMonotonicTestValue();
 
@@ -653,6 +704,11 @@ void test_xQueueSendFromISR_locked_overflow( void )
     vSetQueueTxLock( xQueueSet, INT8_MAX );
 
     vFakePortAssertIfInterruptPriorityInvalid_Expect();
+
+    /* The number of tasks need to be more than 127 to trigger the
+     * overflow assertion. */
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 128 );
+
 
     /* Expect an assertion since the cTxLock value has overflowed */
     fakeAssertExpectFail();
@@ -711,6 +767,7 @@ static BaseType_t xQueueSend_locked_xTaskCheckForTimeOutCB( TimeOut_t * const px
 
     if( cmock_num_calls == NUM_CALLS_TO_INTERCEPT )
     {
+        uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
         uint32_t checkVal = INVALID_UINT32;
         QueueHandle_t xQueue = xQueueSelectFromSetFromISR( xQueueSetHandleStatic );
         TEST_ASSERT_NOT_NULL( xQueue );
@@ -772,6 +829,7 @@ static BaseType_t xQueueSend_xTaskResumeAllCallback( int cmock_num_calls )
     {
         if( cmock_num_calls == NUM_CALLS_TO_INTERCEPT )
         {
+            uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
             uint32_t testVal = getNextMonotonicTestValue();
             ( void ) xQueueSendFromISR( xQueueHandleStatic, &testVal, NULL );
         }
@@ -906,6 +964,7 @@ void test_xQueueReceive_in_set_blocking_success_locked_no_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xQueueReceive_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &td_task_xTaskResumeAllStub );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     uint32_t checkVal = INVALID_UINT32;
 
@@ -970,6 +1029,7 @@ void test_xQueueReceive_in_set_blocking_fail_locked_high_prio_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xQueueReceive_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xQueueReceive_xTaskResumeAllCallback );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY + 1 );
 
@@ -1012,6 +1072,7 @@ void test_xQueueReceive_in_set_blocking_success_locked_low_prio_pending( void )
 
     xTaskCheckForTimeOut_Stub( &xQueueReceive_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xQueueReceive_xTaskResumeAllCallback );
+    uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
 
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY - 1 );
 

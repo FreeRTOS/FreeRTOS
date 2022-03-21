@@ -33,7 +33,6 @@
   "CBMCFLAGS": [
     "--unwind 1",
     "--signed-overflow-check",
-    "--pointer-overflow-check",
     "--unsigned-overflow-check",
     "--unwindset xQueueReceive.0:{QUEUE_RECEIVE_BOUND},prvUnlockQueue.0:{LOCK_BOUND},prvUnlockQueue.1:{LOCK_BOUND}",
     "--nondet-static"

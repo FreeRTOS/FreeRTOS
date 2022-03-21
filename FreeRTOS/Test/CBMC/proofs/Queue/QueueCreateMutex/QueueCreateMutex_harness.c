@@ -22,8 +22,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
  */
 
 #include "FreeRTOS.h"
@@ -31,8 +31,9 @@
 
 #include "cbmc.h"
 
-void harness() {
-  uint8_t ucQueueType;
+void harness()
+{
+    uint8_t ucQueueType;
 
-  xQueueCreateMutex(ucQueueType);
+    xQueueCreateMutex( ucQueueType );
 }

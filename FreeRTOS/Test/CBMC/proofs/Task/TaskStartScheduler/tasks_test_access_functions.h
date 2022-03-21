@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -35,18 +35,20 @@
  */
 TaskHandle_t xUnconstrainedTCB( void )
 {
-	TCB_t * pxTCB = pvPortMalloc(sizeof(TCB_t));
+    TCB_t * pxTCB = pvPortMalloc( sizeof( TCB_t ) );
 
-	if ( pxTCB == NULL )
-		return NULL;
+    if( pxTCB == NULL )
+    {
+        return NULL;
+    }
 
-	return pxTCB;
+    return pxTCB;
 }
 
-StaticTask_t *pxIdleTaskTCB;
-StaticTask_t *pxTimerTaskTCB;
-StackType_t  *pxIdleTaskStack;
-StackType_t  *pxTimerTaskStack;
+StaticTask_t * pxIdleTaskTCB;
+StaticTask_t * pxTimerTaskTCB;
+StackType_t * pxIdleTaskStack;
+StackType_t * pxTimerTaskStack;
 
 /*
  * `pxCurrentTCB` allocation is allowed to fail. The global variables above
@@ -56,37 +58,41 @@ StackType_t  *pxTimerTaskStack;
  */
 BaseType_t xPrepareTasks( void )
 {
-	__CPROVER_assert_zero_allocation();
+    __CPROVER_assert_zero_allocation();
 
-	prvInitialiseTaskLists();
+    prvInitialiseTaskLists();
 
-	pxCurrentTCB = xUnconstrainedTCB();
+    pxCurrentTCB = xUnconstrainedTCB();
 
-	pxIdleTaskTCB = pvPortMalloc(sizeof(StaticTask_t));
-	if (pxIdleTaskTCB == NULL )
-	{
-		return pdFAIL;
-	}
+    pxIdleTaskTCB = pvPortMalloc( sizeof( StaticTask_t ) );
 
-	pxIdleTaskStack = pvPortMalloc( sizeof(StackType_t) * configMINIMAL_STACK_SIZE );
-	if ( pxIdleTaskStack == NULL )
-	{
-		return pdFAIL;
-	}
+    if( pxIdleTaskTCB == NULL )
+    {
+        return pdFAIL;
+    }
 
-	pxTimerTaskTCB = pvPortMalloc( sizeof(StaticTask_t) );
-	if ( pxTimerTaskTCB == NULL )
-	{
-		return pdFAIL;
-	}
+    pxIdleTaskStack = pvPortMalloc( sizeof( StackType_t ) * configMINIMAL_STACK_SIZE );
 
-	pxTimerTaskStack = pvPortMalloc( sizeof(StackType_t) * configTIMER_TASK_STACK_DEPTH );
-	if ( pxTimerTaskStack == NULL )
-	{
-		return pdFAIL;
-	}
+    if( pxIdleTaskStack == NULL )
+    {
+        return pdFAIL;
+    }
 
-	return pdPASS;
+    pxTimerTaskTCB = pvPortMalloc( sizeof( StaticTask_t ) );
+
+    if( pxTimerTaskTCB == NULL )
+    {
+        return pdFAIL;
+    }
+
+    pxTimerTaskStack = pvPortMalloc( sizeof( StackType_t ) * configTIMER_TASK_STACK_DEPTH );
+
+    if( pxTimerTaskStack == NULL )
+    {
+        return pdFAIL;
+    }
+
+    return pdPASS;
 }
 
 /*
@@ -96,17 +102,19 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
                                     StackType_t ** ppxIdleTaskStackBuffer,
                                     uint32_t * pulIdleTaskStackSize )
 {
-	*ppxIdleTaskTCBBuffer = pxIdleTaskTCB;
-	*ppxIdleTaskStackBuffer = pxIdleTaskStack;
+    *ppxIdleTaskTCBBuffer = pxIdleTaskTCB;
+    *ppxIdleTaskStackBuffer = pxIdleTaskStack;
     *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
 }
 
 /*
  * The buffers used here have been successfully allocated before (global variables)
  */
-void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize )
+void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
+                                     StackType_t ** ppxTimerTaskStackBuffer,
+                                     uint32_t * pulTimerTaskStackSize )
 {
-	*ppxTimerTaskTCBBuffer = pxTimerTaskTCB;
-	*ppxTimerTaskStackBuffer = pxTimerTaskStack;
-	*pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
+    *ppxTimerTaskTCBBuffer = pxTimerTaskTCB;
+    *ppxTimerTaskStackBuffer = pxTimerTaskStack;
+    *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }

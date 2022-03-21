@@ -49,3 +49,24 @@
 [submodule "FreeRTOS-Plus/Source/AWS/ota"]
 	path = FreeRTOS-Plus/Source/AWS/ota
 	url = https://github.com/aws/ota-for-aws-iot-embedded-sdk.git
+[submodule "FreeRTOS-Plus/Source/Application-Protocols/coreSNTP"]
+	path = FreeRTOS-Plus/Source/Application-Protocols/coreSNTP
+	url = https://github.com/FreeRTOS/coreSNTP.git
+[submodule "FreeRTOS/Demo/ThirdParty/Community-Supported-Demos"]
+	path = FreeRTOS/Demo/ThirdParty/Community-Supported-Demos
+	url = https://github.com/FreeRTOS/FreeRTOS-Community-Supported-Demos
+[submodule "FreeRTOS/Demo/ThirdParty/Partner-Supported-Demos"]
+	path = FreeRTOS/Demo/ThirdParty/Partner-Supported-Demos
+	url = https://github.com/FreeRTOS/FreeRTOS-Partner-Supported-Demos
+[submodule "FreeRTOS-Plus/Source/AWS/sigv4"]
+	path = FreeRTOS-Plus/Source/AWS/sigv4
+	url = https://github.com/aws/SigV4-for-AWS-IoT-embedded-sdk.git
+[submodule "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface"]
+	path = FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface
+	url = https://github.com/FreeRTOS/Lab-Project-FreeRTOS-Cellular-Library.git
+[submodule "FreeRTOS-Plus/ThirdParty/tinycbor"]
+	path = FreeRTOS-Plus/ThirdParty/tinycbor
+	url = https://github.com/intel/tinycbor.git
+[submodule "FreeRTOS-Plus/Source/AWS/fleet-provisioning"]
+	path = FreeRTOS-Plus/Source/AWS/fleet-provisioning
+	url = https://github.com/aws/Fleet-Provisioning-for-AWS-IoT-embedded-sdk.git

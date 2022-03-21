@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -31,10 +31,17 @@
 /* Run a simple demo just prints 'Blink' */
 #define DEMO_BLINKY	1
 
+extern void freertos_risc_v_trap_handler( void );
+
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
+
+/*
+ * Setup the Spike simulator to run this demo.
+ */
+static void prvSetupSpike( void );
 
 int main_blinky( void );
 
@@ -43,6 +50,7 @@ int main_blinky( void );
 int main( void )
 {
 	int ret;
+	prvSetupSpike();
 
 #if defined(DEMO_BLINKY)
 	ret = main_blinky();
@@ -51,6 +59,11 @@ int main( void )
 #endif
 
 	return ret;
+}
+/*-----------------------------------------------------------*/
+static void prvSetupSpike( void )
+{
+	__asm__ volatile( "csrw mtvec, %0" :: "r"( freertos_risc_v_trap_handler ) );
 }
 
 /*-----------------------------------------------------------*/

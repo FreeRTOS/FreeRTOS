@@ -31,7 +31,6 @@
   "CBMCFLAGS": [
     "--unwind 1",
     "--signed-overflow-check",
-    "--pointer-overflow-check",
     "--unsigned-overflow-check",
     "--nondet-static"
   ],

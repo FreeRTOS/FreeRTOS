@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
  *
- * 1 tab == 4 spaces!
  */
 
 /******************************************************************************
@@ -41,7 +40,7 @@
  * THE http://www.FreeRTOS.org WEB SITE FOR FULL INFORMATION ON USING THIS DEMO
  * APPLICATION, AND ITS ASSOCIATE FreeRTOS ARCHITECTURE PORT!
  *
- * http://www.freertos.org/Renesas_RZ-T_Cortex-R4F-RTOS.html
+ * https://www.FreeRTOS.org/Renesas_RZ-T_Cortex-R4F-RTOS.html
  *
  */
 

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202012.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -113,19 +113,11 @@ void test_macro_xQueueCreate_zeroQueueLength_zeroItemSize()
     QueueHandle_t xQueue = xQueueCreate( 0, 0 );
 
     /* validate returned queue handle */
-    TEST_ASSERT_NOT_EQUAL( NULL, xQueue );
+    TEST_ASSERT_EQUAL( NULL, xQueue );
 
     /* verify that configASSERT was called */
     TEST_ASSERT_EQUAL( true, fakeAssertGetFlagAndClear() );
-    TEST_ASSERT_EQUAL( QUEUE_T_SIZE, getLastMallocSize() );
-
-    /* Veify that queue is empty */
-    TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
-
-    /* Veify that queue is also full */
-    TEST_ASSERT_EQUAL( 0, uxQueueSpacesAvailable( xQueue ) );
-
-    vQueueDelete( xQueue );
+    TEST_ASSERT_EQUAL( 0, getNumberMallocCalls() );
 }
 
 /**
@@ -141,19 +133,11 @@ void test_macro_xQueueCreate_zeroQueueLength_oneItemSize( void )
     QueueHandle_t xQueue = xQueueCreate( 0, 1 );
 
     /* validate returned queue handle */
-    TEST_ASSERT_NOT_EQUAL( NULL, xQueue );
+    TEST_ASSERT_EQUAL( NULL, xQueue );
 
     /* verify that configASSERT was called */
     TEST_ASSERT_EQUAL( true, fakeAssertGetFlagAndClear() );
-    TEST_ASSERT_EQUAL( QUEUE_T_SIZE, getLastMallocSize() );
-
-    /* Veify that new queue is empty */
-    TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
-
-    /* Valdiate that the queue is full */
-    TEST_ASSERT_EQUAL( 0, uxQueueSpacesAvailable( xQueue ) );
-
-    vQueueDelete( xQueue );
+    TEST_ASSERT_EQUAL( 0, getNumberMallocCalls() );
 }
 
 /**

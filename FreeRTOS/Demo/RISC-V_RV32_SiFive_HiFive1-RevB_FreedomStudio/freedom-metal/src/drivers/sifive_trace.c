@@ -34,8 +34,7 @@ static void write_itc_uint8(struct metal_uart *trace, uint8_t data) {
     TRACE_REG8(METAL_SIFIVE_TRACE_ITCSTIMULUS + 3) = data;
 }
 
-int __metal_driver_sifive_trace_putc(struct metal_uart *trace,
-                                     unsigned char c) {
+int __metal_driver_sifive_trace_putc(struct metal_uart *trace, int c) {
     static uint32_t buffer = 0;
     static int bytes_in_buffer = 0;
 
@@ -48,7 +47,7 @@ int __metal_driver_sifive_trace_putc(struct metal_uart *trace,
 
         buffer = 0;
         bytes_in_buffer = 0;
-    } else if ((c == '\n') || (c == '\r')) { // partial write
+    } else if (((char)c == '\n') || ((char)c == '\r')) { // partial write
         switch (bytes_in_buffer) {
         case 3: // do a full word write
             write_itc_uint16(trace, (uint16_t)(buffer));
@@ -66,7 +65,7 @@ int __metal_driver_sifive_trace_putc(struct metal_uart *trace,
         bytes_in_buffer = 0;
     }
 
-    return (int)c;
+    return c;
 }
 
 void __metal_driver_sifive_trace_init(struct metal_uart *trace, int baud_rate) {
@@ -93,3 +92,5 @@ __METAL_DEFINE_VTABLE(__metal_driver_vtable_sifive_trace) = {
 };
 
 #endif /* METAL_SIFIVE_TRACE */
+
+typedef int no_empty_translation_units;

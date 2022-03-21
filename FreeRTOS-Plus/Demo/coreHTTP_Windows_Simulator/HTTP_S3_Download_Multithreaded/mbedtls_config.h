@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -86,6 +86,7 @@
 #define MBEDTLS_ECDSA_C
 #define MBEDTLS_ECP_C
 #define MBEDTLS_ENTROPY_C
+#define MBEDTLS_ERROR_C
 #define MBEDTLS_GCM_C
 #define MBEDTLS_MD_C
 #define MBEDTLS_OID_C
@@ -119,6 +120,11 @@ int mbedtls_platform_send( void * ctx,
 int mbedtls_platform_recv( void * ctx,
                            unsigned char * buf,
                            size_t len );
+
+/* These two macro used by mbedtls_ssl_set_bio in using_mbedtls network
+ * transport layer. */
+#define MBEDTLS_SSL_SEND mbedtls_platform_send
+#define MBEDTLS_SSL_RECV mbedtls_platform_recv
 
 /* The entropy poll function. */
 int mbedtls_platform_entropy_poll( void * data,

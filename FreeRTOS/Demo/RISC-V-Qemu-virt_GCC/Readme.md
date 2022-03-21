@@ -1,3 +1,6 @@
+There is an updated version of this original submission from Katsuhiro Suzuki
+in the FreeRTOS/Demo/RISC-V_RV32_QEMU_VIRT_GCC directory.
+
 # Emulating generic RISC-V 32bit machine on QEMU
 
 ## Requirements

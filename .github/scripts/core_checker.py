@@ -256,7 +256,8 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*/Makefile',
     r'.*/trcConfig\.h.*',
     r'.*/trcConfig\.c.*',
-    r'.*/trcSnapshotConfig\.h.*'
+    r'.*/trcSnapshotConfig\.h.*',
+    r'.*/MicroZed_hw_platform.*'
 ]
 
 FREERTOS_IGNORED_FILES = [

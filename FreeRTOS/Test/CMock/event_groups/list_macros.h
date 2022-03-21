@@ -65,7 +65,7 @@ TickType_t listGET_ITEM_VALUE_OF_HEAD_ENTRY( List_t * list );
 TCB_t * listGET_LIST_ITEM_OWNER( ListItem_t * listItem );
 
 #undef listGET_END_MARKER
-ListItem_t * listGET_END_MARKER( ListItem_t * pxList );
+ListItem_t * listGET_END_MARKER( const List_t * pxList );
 
 #undef listGET_NEXT
 ListItem_t * listGET_NEXT( ListItem_t * pxList );

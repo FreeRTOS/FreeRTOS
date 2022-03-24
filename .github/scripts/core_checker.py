@@ -284,6 +284,7 @@ FREERTOS_IGNORED_FILES = [
     'platform.h',
     'platform_config.h',
     'FreeRTOS_asm_vectors.S',
+    'interrupt_vector.s',
     'gdbinit'
 ]
 

@@ -1229,7 +1229,7 @@ static void prvRegTest3Task( void *pvParameters )
 	{
 		/* Run the unprivileged mode access tests that used to be executed
 		form an unprivileged task created using the xTaskCreate() API.
-		Since the heap moved to the privilged data section xTaskCreate() can
+		Since the heap moved to the privileged data section xTaskCreate() can
 		no longer be used to create unprivileged tasks. */
 		prvOldStyleUserModeTask();
 		

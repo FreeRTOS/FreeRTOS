@@ -19,9 +19,10 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * http://www.FreeRTOS.org
+ * http://aws.amazon.com/freertos
  *
+ * 1 tab == 4 spaces!
  */
 
 /* FreeRTOS includes. */
@@ -607,10 +608,10 @@ volatile uint32_t stacked_psr;
 	( void ) stacked_pc;
 	( void ) stacked_lr;
 	( void ) stacked_r12;
-    ( void ) stacked_r0;
-    ( void ) stacked_r1;
-    ( void ) stacked_r2;
-    ( void ) stacked_r3;
+	( void ) stacked_r0;
+	( void ) stacked_r1;
+	( void ) stacked_r2;
+	( void ) stacked_r3;
 }
 /*-----------------------------------------------------------*/
 
@@ -619,6 +620,7 @@ void HardFault_Handler( void )
 {
 	__asm volatile
 	(
+	  ".align 8					   \n"
 		" tst lr, #4										\n"
 		" ite eq											\n"
 		" mrseq r0, msp										\n"
@@ -636,6 +638,7 @@ void MemManage_Handler( void )
 {
 	__asm volatile
 	(
+	  ".align 8					   \n"
 		" tst lr, #4										\n"
 		" ite eq											\n"
 		" mrseq r0, msp										\n"

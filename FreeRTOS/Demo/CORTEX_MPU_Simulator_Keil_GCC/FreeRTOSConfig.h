@@ -19,9 +19,10 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * http://www.FreeRTOS.org
+ * http://aws.amazon.com/freertos
  *
+ * 1 tab == 4 spaces!
  */
 
 
@@ -47,7 +48,8 @@ extern "C" {
 /* The MPU version of port.c includes and excludes functions depending on the
 settings within this file.  Therefore, to ensure all the functions in port.c
 build, this configuration file has all options turned on. */
-
+#define configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY 1
+#define configALLOW_UNPRIVILEGED_CRITICAL_SECTIONS 0
 #define configUSE_PREEMPTION					1
 #define configTICK_RATE_HZ						( 1000 )
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION	1
@@ -57,7 +59,7 @@ build, this configuration file has all options turned on. */
 #define configCPU_CLOCK_HZ						48000000
 #define configMAX_PRIORITIES					( 5 )
 #define configMINIMAL_STACK_SIZE				( ( unsigned short ) 120 )
-#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 16 * 1024 ) )
+#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 15 * 1024 ) )
 #define configMAX_TASK_NAME_LEN					( 10 )
 #define configUSE_TRACE_FACILITY				1
 #define configUSE_16_BIT_TICKS					0
@@ -149,7 +151,7 @@ standard names. */
 
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. */
-#define configASSERT( x ) if( ( x ) == 0UL ) { portDISABLE_INTERRUPTS(); for( ;; ); }
+#define configASSERT( x ) if( ( x ) == 0 ) { portDISABLE_INTERRUPTS(); for( ;; ); }
 
 /* LED not used at present, so just increment a variable to keep a count of the
 number of times the LED would otherwise have been toggled. */

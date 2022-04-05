@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -134,8 +134,13 @@ static void prvCheckTask( void *pvParameters );
  * Prototype for a task created in User mode using the original vTaskCreate()
  * API function.  The task demonstrates the characteristics of such a task,
  * before simply deleting itself.
- */
-static void prvOldStyleUserModeTask( void *pvParameters );
+ *
+ * It is not possible to use xTaskCreate() to create an unprivileged task since
+ * heap moved to the privileged data section, so the access tests implemented by
+ * this function are now called from an unprivileged register check task created 
+ * using the xTaskCreateRestricted() API. 
+ */ 
+static void prvOldStyleUserModeTask( void );
 
 /*
  * Prototype for a task created in Privileged mode using the original
@@ -258,7 +263,7 @@ stack size is defined in words, not bytes. */
  automatically create an MPU region for the stack.  The stack alignment must
  match its size, so if 128 words are reserved for the stack then it must be
  aligned to ( 128 * 4 ) bytes. */
-static portSTACK_TYPE xCheckTaskStack[ mainCHECK_TASK_STACK_SIZE_WORDS ] mainALIGN_TO( mainCHECK_TASK_STACK_ALIGNMENT );
+PRIVILEGED_DATA static portSTACK_TYPE xCheckTaskStack[ mainCHECK_TASK_STACK_SIZE_WORDS ] mainALIGN_TO( mainCHECK_TASK_STACK_ALIGNMENT );
 
 /* Declare three arrays - an MPU region will be created for each array
 using the TaskParameters_t structure below.  THIS IS JUST TO DEMONSTRATE THE
@@ -332,11 +337,13 @@ match its size, so if 128 words are reserved for the stack then it must be
 aligned to ( 128 * 4 ) bytes. */
 static portSTACK_TYPE xRegTest1Stack[ mainREG_TEST_STACK_SIZE_WORDS ] mainALIGN_TO( mainREG_TEST_STACK_ALIGNMENT );
 static portSTACK_TYPE xRegTest2Stack[ mainREG_TEST_STACK_SIZE_WORDS ] mainALIGN_TO( mainREG_TEST_STACK_ALIGNMENT );
+static portSTACK_TYPE xRegTest3Stack[ mainREG_TEST_STACK_SIZE_WORDS ] mainALIGN_TO( mainREG_TEST_STACK_ALIGNMENT );
+static portSTACK_TYPE xRegTest4Stack[ mainREG_TEST_STACK_SIZE_WORDS ] mainALIGN_TO( mainREG_TEST_STACK_ALIGNMENT );
 
 /* Fill in a TaskParameters_t structure per reg test task to define the tasks. */
 static const TaskParameters_t xRegTest1Parameters =
 {
-	vRegTest1Implementation,							/* pvTaskCode - the function that implements the task. */
+	vRegTest1Implementation,					/* pvTaskCode - the function that implements the task. */
 	"RegTest1",									/* pcName			*/
 	mainREG_TEST_STACK_SIZE_WORDS,				/* usStackDepth		*/
 	( void * ) configREG_TEST_TASK_1_PARAMETER,	/* pvParameters - this value is just to test that the parameter is being passed into the task correctly. */
@@ -353,13 +360,47 @@ static const TaskParameters_t xRegTest1Parameters =
 
 static TaskParameters_t xRegTest2Parameters =
 {
-	vRegTest2Implementation,				/* pvTaskCode - the function that implements the task. */
+	vRegTest2Implementation,		/* pvTaskCode - the function that implements the task. */
 	"RegTest2",						/* pcName			*/
 	mainREG_TEST_STACK_SIZE_WORDS,	/* usStackDepth		*/
 	( void * ) NULL,				/* pvParameters	- this task uses the parameter to pass in a queue handle, but the queue is not created yet. */
 	tskIDLE_PRIORITY,				/* uxPriority		*/
 	xRegTest2Stack,					/* puxStackBuffer - the array to use as the task stack, as declared above. */
 	{								/* xRegions - this task does not use any non-stack data hence all members are zero. */
+		/* Base address		Length		Parameters */
+		{ 0x00,				0x00,			0x00 },
+		{ 0x00,				0x00,			0x00 },
+		{ 0x00,				0x00,			0x00 }
+	}
+};
+/*-----------------------------------------------------------*/
+
+static const TaskParameters_t xRegTest3Parameters =
+{
+	prvRegTest3Task,							/* pvTaskCode - the function that implements the task. */
+	"RegTest3",									/* pcName			*/
+	mainREG_TEST_STACK_SIZE_WORDS,				/* usStackDepth		*/
+	( void * ) configREG_TEST_TASK_3_PARAMETER,	/* pvParameters - this value is just to test that the parameter is being passed into the task correctly. */
+	tskIDLE_PRIORITY | portPRIVILEGE_BIT,		/* uxPriority - note that this task is created with privileges to demonstrate one method of passing a queue handle into the task. */
+	xRegTest3Stack,								/* puxStackBuffer - the array to use as the task stack, as declared above. */
+	{											/* xRegions - this task does not use any non-stack data hence all members are zero. */
+		/* Base address		Length		Parameters */
+		{ 0x00,				0x00,			0x00 },
+		{ 0x00,				0x00,			0x00 },
+		{ 0x00,				0x00,			0x00 }
+	}
+};
+/*-----------------------------------------------------------*/
+
+static const TaskParameters_t xRegTest4Parameters =
+{
+	prvRegTest4Task,							/* pvTaskCode - the function that implements the task. */
+	"RegTest4",									/* pcName			*/
+	mainREG_TEST_STACK_SIZE_WORDS,				/* usStackDepth		*/
+	( void * ) configREG_TEST_TASK_4_PARAMETER,	/* pvParameters - this value is just to test that the parameter is being passed into the task correctly. */
+	tskIDLE_PRIORITY | portPRIVILEGE_BIT,		/* uxPriority - note that this task is created with privileges to demonstrate one method of passing a queue handle into the task. */
+	xRegTest4Stack,								/* puxStackBuffer - the array to use as the task stack, as declared above. */
+	{											/* xRegions - this task does not use any non-stack data hence all members are zero. */
 		/* Base address		Length		Parameters */
 		{ 0x00,				0x00,			0x00 },
 		{ 0x00,				0x00,			0x00 },
@@ -419,7 +460,7 @@ int main( void )
 	/* Create three test tasks.  Handles to the created tasks are not required,
 	hence the second parameter is NULL. */
 	xTaskCreateRestricted( &xRegTest1Parameters, NULL );
-    xTaskCreateRestricted( &xRegTest2Parameters, NULL );
+	xTaskCreateRestricted( &xRegTest2Parameters, NULL );
 	xTaskCreateRestricted( &xCheckTaskParameters, NULL );
 
 	/* Create a task that does nothing but ensure some of the MPU API functions
@@ -427,16 +468,6 @@ int main( void )
 	test purposes only.  The task's handle is saved in xTaskToDelete so it can
 	get deleted in the idle task hook. */
 	xTaskCreateRestricted( &xTaskToDeleteParameters, &xTaskToDelete );
-
-	/* Create the tasks that are created using the original xTaskCreate() API
-	function. */
-	xTaskCreate(	prvOldStyleUserModeTask,	/* The function that implements the task. */
-					"Task1",					/* Text name for the task. */
-					100,						/* Stack depth in words. */
-					NULL,						/* Task parameters. */
-					3,							/* Priority and mode (user in this case). */
-					NULL						/* Handle. */
-				);
 
 	xTaskCreate(	prvOldStylePrivilegedModeTask,	/* The function that implements the task. */
 					"Task2",						/* Text name for the task. */
@@ -448,8 +479,8 @@ int main( void )
 
 	/* Create the third and fourth register check tasks, as described at the top
 	of this file. */
-	xTaskCreate( prvRegTest3Task, "Reg3", configMINIMAL_STACK_SIZE, configREG_TEST_TASK_3_PARAMETER, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvRegTest4Task, "Reg4", configMINIMAL_STACK_SIZE, configREG_TEST_TASK_4_PARAMETER, tskIDLE_PRIORITY, NULL );
+	xTaskCreateRestricted( &xRegTest3Parameters, NULL );
+	xTaskCreateRestricted( &xRegTest4Parameters, NULL );
 
 	/* Create and start the software timer. */
 	xTimer = xTimerCreate( "Timer", 			/* Test name for the timer. */
@@ -762,8 +793,12 @@ static void prvTaskToDelete( void *pvParameters )
 	/* Check the enter and exit critical macros are working correctly.  If the
 	SVC priority is below configMAX_SYSCALL_INTERRUPT_PRIORITY then this will
 	fault. */
-	taskENTER_CRITICAL();
-	taskEXIT_CRITICAL();
+	#if( configALLOW_UNPRIVILEGED_CRITICAL_SECTIONS == 1 )
+	{
+		taskENTER_CRITICAL();
+		taskEXIT_CRITICAL();
+	}
+	#endif
 
 	/* Exercise the API of various RTOS objects. */
 	prvExerciseEventGroupAPI();
@@ -940,7 +975,7 @@ volatile uint32_t ulReadData;
 }
 /*-----------------------------------------------------------*/
 
-static void prvOldStyleUserModeTask( void *pvParameters )
+static void prvOldStyleUserModeTask( void )
 {
 /*const volatile uint32_t *pulStandardPeripheralRegister = ( volatile uint32_t * ) 0x40000000;*/
 volatile const uint32_t *pul;
@@ -950,8 +985,6 @@ volatile uint32_t ulReadData;
 compiler warnings when the tests that use the variable are also commented out. */
 /* extern uint32_t __privileged_functions_start__[]; */
 /* const volatile uint32_t *pulSystemPeripheralRegister = ( volatile uint32_t * ) 0xe000e014; */
-
-	( void ) pvParameters;
 
 	/* This task is created in User mode using the original xTaskCreate() API
 	function.  It should have access to all Flash and RAM except that marked
@@ -995,11 +1028,6 @@ compiler warnings when the tests that use the variable are also commented out. *
 
 	/*pul = __privileged_data_end__ - 1;
 	ulReadData = *pul;*/
-
-	/* Must not just run off the end of a task function, so delete this task.
-	Note that because this task was created using xTaskCreate() the stack was
-	allocated dynamically and I have not included any code to free it again. */
-	vTaskDelete( NULL );
 
 	( void ) ulReadData;
 }
@@ -1199,6 +1227,12 @@ static void prvRegTest3Task( void *pvParameters )
 	in correctly. */
 	if( pvParameters == configREG_TEST_TASK_3_PARAMETER )
 	{
+		/* Run the unprivileged mode access tests that used to be executed
+		form an unprivileged task created using the xTaskCreate() API.
+		Since the heap moved to the privileged data section xTaskCreate() can
+		no longer be used to create unprivileged tasks. */
+		prvOldStyleUserModeTask();
+		
 		/* Start the part of the test that is written in assembler. */
 		vRegTest3Implementation();
 	}

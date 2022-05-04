@@ -20,8 +20,8 @@ SOURCE_FILES          +=    $(KERNEL_DIR)/timers.c
 SOURCE_FILES          +=    $(KERNEL_DIR)/event_groups.c
 SOURCE_FILES          +=    ${KERNEL_DIR}/portable/MemMang/heap_4.c
 
-INCLUDE_DIRS          +=    -I$(FREERTOS_DIR)/Demo/CORTEX_M3_MPS2_QEMU_GCC
-INCLUDE_DIRS          +=    -I$(FREERTOS_DIR)/Demo/CORTEX_M3_MPS2_QEMU_GCC/CMSIS
+INCLUDE_DIRS          +=    -I$(FREERTOS_DIR)/Demo/CORTEX_MPU_M3_MPS2_QEMU_GCC
+INCLUDE_DIRS          +=    -I$(FREERTOS_DIR)/Demo/CORTEX_MPU_M3_MPS2_QEMU_GCC/CMSIS
 INCLUDE_DIRS          +=    -I$(KERNEL_DIR)/include
 INCLUDE_DIRS          +=    -I$(KERNEL_DIR)/portable/GCC/ARM_CM3_MPU
 

@@ -32,7 +32,6 @@ SOURCE_FILES          +=    $(KERNEL_DIR)/stream_buffer.c
 DEFINES               :=    -DQEMU_SOC_MPS2
 DEFINES               :=    -DHEAP4
 DEFINES               +=    -DportUSING_MPU_WRAPPERS=1
-DEFINES               +=    -DconfigENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY=1
 DEFINES               +=    -DconfigALLOW_UNPRIVILEGED_CRITICAL_SECTIONS=1
 
 CPPFLAGS              +=    $(DEFINES)

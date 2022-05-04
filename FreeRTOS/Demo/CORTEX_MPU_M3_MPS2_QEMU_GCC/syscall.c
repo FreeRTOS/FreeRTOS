@@ -24,7 +24,7 @@
  *
  */
 #ifdef __cplusplus
-    extern "C" {
+extern "C" {
 #endif
 
 #include <sys/types.h>
@@ -66,7 +66,7 @@ void uart_init()
  * @todo  implement if necessary
  *
  */
-int _fstat(__attribute__((unused)) int file )
+int _fstat( __attribute__( ( unused ) ) int file )
 {
     return 0;
 }
@@ -76,9 +76,9 @@ int _fstat(__attribute__((unused)) int file )
  * @todo  implement if necessary
  *
  */
-int _read(__attribute__((unused)) int file,
-          __attribute__((unused)) char * buf,
-          __attribute__((unused)) int len )
+int _read( __attribute__( ( unused ) ) int file,
+           __attribute__( ( unused ) ) char * buf,
+           __attribute__( ( unused ) ) int len )
 {
     return -1;
 }
@@ -91,9 +91,9 @@ int _read(__attribute__((unused)) int file,
  * @param [in] len   length of the buffer
  * @returns the number of bytes written
  */
-int _write(__attribute__((unused)) int file,
-           __attribute__((unused)) char * buf,
-           int len )
+int _write( __attribute__( ( unused ) ) int file,
+            __attribute__( ( unused ) ) char * buf,
+            int len )
 {
     int todo;
 
@@ -131,16 +131,18 @@ void * _sbrk( int incr )
 
     return prev_heap_end;
 }
-void _close(int fd)
+void _close( int fd )
 {
-    (void) fd;
+    ( void ) fd;
 }
 
-int _lseek(int filedes, int offset, int whence)
+int _lseek( int filedes,
+            int offset,
+            int whence )
 {
-    (void) filedes;
-    (void) offset;
-    (void) whence;
+    ( void ) filedes;
+    ( void ) offset;
+    ( void ) whence;
 
     return 0;
 }
@@ -150,27 +152,28 @@ int _isatty()
     return 0;
 }
 
-__attribute__((naked))
-void _exit(int exit_code)
+__attribute__( ( naked ) )
+void _exit( int exit_code )
 {
-    (void) exit_code;
-    // Force qemu to exit using ARM Semihosting
+    ( void ) exit_code;
+    /* Force qemu to exit using ARM Semihosting */
     __asm volatile (
         "mov r1, r0\n"
         "cmp r1, #0\n"
         "bne .notclean\n"
-        "ldr r1, =0x20026\n" // ADP_Stopped_ApplicationExit, a clean exit
+        "ldr r1, =0x20026\n" /* ADP_Stopped_ApplicationExit, a clean exit */
         ".notclean:\n"
-        "movs r0, #0x18\n" // SYS_EXIT
+        "movs r0, #0x18\n"   /* SYS_EXIT */
         "bkpt 0xab\n"
         "end: b end\n"
         );
 }
 
-void _kill(pid_t pid, int sig)
+void _kill( pid_t pid,
+            int sig )
 {
-    (void) pid;
-    (void) sig;
+    ( void ) pid;
+    ( void ) sig;
 }
 
 int _getpid()
@@ -179,5 +182,5 @@ int _getpid()
 }
 
 #ifdef __cplusplus
-    }
+}
 #endif

@@ -101,14 +101,14 @@ extern void vAssertCalled( void );
 
 unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
 
-#define projCOVERAGE_TEST                       0
+#define projCOVERAGE_TEST                              0
 
-#define configKERNEL_INTERRUPT_PRIORITY         255
+#define configKERNEL_INTERRUPT_PRIORITY                255
 
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
  * See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY    191 /* equivalent to 0xa0, or priority 5. */
-#define configMAC_INTERRUPT_PRIORITY            5
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY           191 /* equivalent to 0xa0, or priority 5. */
+#define configMAC_INTERRUPT_PRIORITY                   5
 
 #define configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY    ( 1 )
 

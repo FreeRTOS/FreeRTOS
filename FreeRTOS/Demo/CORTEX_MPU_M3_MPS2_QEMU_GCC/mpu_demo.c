@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -116,61 +116,61 @@ static void prvROAccessTask( void * pvParameters )
         /*configASSERT( ucROTaskFaultTracker[ 0 ] == 0 ); */
 
         #if ( configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY == 1 )
-            {
-                /* Generate an SVC to raise the privilege. Since privilege
-                 * escalation is only allowed from kernel code, this request must
-                 * get rejected and the task must remain unprivileged. As a result,
-                 * trying to write to ucSharedMemory will still result in Memory
-                 * Fault. */
-                portRAISE_PRIVILEGE();
+        {
+            /* Generate an SVC to raise the privilege. Since privilege
+             * escalation is only allowed from kernel code, this request must
+             * get rejected and the task must remain unprivileged. As a result,
+             * trying to write to ucSharedMemory will still result in Memory
+             * Fault. */
+            portRAISE_PRIVILEGE();
 
-                /* Set ucROTaskFaultTracker[ 0 ] to 1 to tell the Memory Fault
-                 * Handler that this is an expected fault. The handler will then be
-                 * able to recover from this fault gracefully by jumping to the
-                 * next instruction.*/
-                ucROTaskFaultTracker[ 0 ] = 1;
+            /* Set ucROTaskFaultTracker[ 0 ] to 1 to tell the Memory Fault
+             * Handler that this is an expected fault. The handler will then be
+             * able to recover from this fault gracefully by jumping to the
+             * next instruction.*/
+            ucROTaskFaultTracker[ 0 ] = 1;
 
-                /* The following must still result in Memory Fault since the task
-                 * is still running unprivileged. */
-                ucSharedMemory[ 0 ] = 0;
+            /* The following must still result in Memory Fault since the task
+             * is still running unprivileged. */
+            ucSharedMemory[ 0 ] = 0;
 
-                /* Ensure that the above line did generate MemFault and the fault
-                 * handler did clear the  ucROTaskFaultTracker[ 0 ]. */
-                /*configASSERT( ucROTaskFaultTracker[ 0 ] == 0 ); */
-            }
+            /* Ensure that the above line did generate MemFault and the fault
+             * handler did clear the  ucROTaskFaultTracker[ 0 ]. */
+            /*configASSERT( ucROTaskFaultTracker[ 0 ] == 0 ); */
+        }
         #else /* if ( configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY == 1 ) */
-            {
-                /* Generate an SVC to raise the privilege. Since
-                 * configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY is not enabled, the
-                 * task will be able to escalate privilege. */
-                portRAISE_PRIVILEGE();
+        {
+            /* Generate an SVC to raise the privilege. Since
+             * configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY is not enabled, the
+             * task will be able to escalate privilege. */
+            portRAISE_PRIVILEGE();
 
-                /* At this point, the task is running privileged. The following
-                 * access must not result in Memory Fault. If something goes
-                 * wrong and we do get a fault, the execution will stop in fault
-                 * handler as ucROTaskFaultTracker[ 0 ] is not set (i.e.
-                 * un-expected fault). */
-                ucSharedMemory[ 0 ] = 0;
+            /* At this point, the task is running privileged. The following
+             * access must not result in Memory Fault. If something goes
+             * wrong and we do get a fault, the execution will stop in fault
+             * handler as ucROTaskFaultTracker[ 0 ] is not set (i.e.
+             * un-expected fault). */
+            ucSharedMemory[ 0 ] = 0;
 
-                /* Lower down the privilege. */
-                portSWITCH_TO_USER_MODE();
+            /* Lower down the privilege. */
+            portSWITCH_TO_USER_MODE();
 
-                /* Now the task is running unprivileged and therefore an attempt to
-                 * write to ucSharedMemory will result in a Memory Fault. Set
-                 * ucROTaskFaultTracker[ 0 ] to 1 to tell the Memory Fault Handler
-                 * that this is an expected fault. The handler will then be able to
-                 * recover from this fault gracefully by jumping to the next
-                 * instruction.*/
-                ucROTaskFaultTracker[ 0 ] = 1;
+            /* Now the task is running unprivileged and therefore an attempt to
+             * write to ucSharedMemory will result in a Memory Fault. Set
+             * ucROTaskFaultTracker[ 0 ] to 1 to tell the Memory Fault Handler
+             * that this is an expected fault. The handler will then be able to
+             * recover from this fault gracefully by jumping to the next
+             * instruction.*/
+            ucROTaskFaultTracker[ 0 ] = 1;
 
-                /* The following must result in Memory Fault since the task is now
-                 * running unprivileged. */
-                ucSharedMemory[ 0 ] = 0;
+            /* The following must result in Memory Fault since the task is now
+             * running unprivileged. */
+            ucSharedMemory[ 0 ] = 0;
 
-                /* Ensure that the above line did generate MemFault and the fault
-                 * handler did clear the  ucROTaskFaultTracker[ 0 ]. */
-                configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
-            }
+            /* Ensure that the above line did generate MemFault and the fault
+             * handler did clear the  ucROTaskFaultTracker[ 0 ]. */
+            configASSERT( ucROTaskFaultTracker[ 0 ] == 0 );
+        }
         #endif /* #if( configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY == 1 ) */
 
         /* Wait for a second. */

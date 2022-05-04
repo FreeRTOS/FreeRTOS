@@ -80,4 +80,3 @@ void vLoggingPrintf( const char * pcFormat,
     vprintf( pcFormat, arg );
     va_end( arg );
 }
-

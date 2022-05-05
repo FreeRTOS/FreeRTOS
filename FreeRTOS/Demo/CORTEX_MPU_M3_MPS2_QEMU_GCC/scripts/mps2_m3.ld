@@ -169,7 +169,6 @@ SECTIONS
     .data : /* AT ( _sidata ) */
     {
         . = ALIGN(4);
-        _sdata = .;
         *(.data)           /* .data sections. */
         *(.data*)
         . = ALIGN(4);

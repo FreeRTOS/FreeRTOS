@@ -2132,7 +2132,7 @@ static void prvMQTTAgentTask(void* pParam)
         xMQTTStatus = MQTTAgent_CommandLoop(&xGlobalMqttAgentContext);
 
         /* Clear Agent queue so that no any pending MQTT operations are processed. */
-        xQueueReset(xCommandQueue.queue);
+        MQTTAgent_CancelAll(&xGlobalMqttAgentContext);
 
         /* Success is returned for application initiated disconnect or termination. The socket will also be disconnected by the caller. */
         if (xMQTTStatus != MQTTSuccess)

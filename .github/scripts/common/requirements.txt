@@ -5,7 +5,7 @@ Deprecated==1.2.10
 gitdb==4.0.5
 GitPython==3.1.11
 idna==2.10
-PyGithub==1.54
+PyGithub==1.55
 PyJWT==2.4.0
 PyYAML==5.4
 requests

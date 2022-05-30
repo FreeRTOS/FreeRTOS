@@ -1,0 +1,1017 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+# GNU Make 3.81
+# Copyright (C) 2006  Free Software Foundation, Inc.
+# This is free software; see the source for copying conditions.
+# There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+# This program built for i386-apple-darwin11.3.0
+ 
+make: *** No rule to make target `all'.  Stop.
+
+
+# Make data base, printed on Mon May 30 11:13:51 2022
+
+# Variables
+
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# automatic
+?F = $(notdir $?)
+# makefile (from `Makefile', line 8)
+FREERTOS_DIR := /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS
+# environment
+VSCODE_LOG_NATIVE = false
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# makefile (from `Makefile', line 73)
+ 
+CPPFLAGS := -I. -I/Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/include -I/Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/portable/ThirdParty/GCC/Posix -I/Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils -I/Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/include -I/Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/Include -DBUILD_DIR=\"/Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Posix_GCC/build\" -D_WINDOWS_ -DTRACE_ON_ENTER=0 -DprojCOVERAGE_TEST=0
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# automatic
+@F = $(notdir $@)
+# makefile (from `Makefile', line 10)
+FREERTOS_PLUS_DIR_REL := ../../../FreeRTOS-Plus
+# makefile
+CURDIR := /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Posix_GCC
+# makefile
+SHELL = /bin/sh
+# makefile (from `Makefile', line 2)
+BIN := posix_demo
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
+# environment
+_ = /usr/bin/make
+# makefile (from `Makefile', line 85)
+CFLAGS := -ggdb3 -O3
+# makefile (from `Makefile', line 1)
+MAKEFILE_LIST :=  Makefile
+# makefile (from `Makefile', line 11)
+FREERTOS_PLUS_DIR := /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS-Plus
+# environment
+VSCODE_VERBOSE_LOGGING = true
+# environment
+__CFBundleIdentifier = com.microsoft.VSCode
+# environment
+INFOPATH = /opt/homebrew/share/info:
+# environment
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/j7/y190rn2s7n73rdnnpj8441y80000gr/T/vscode-ipc-4c9f5dd0-da91-4be5-8767-5792a8841c5f.sock
+# environment
+VSCODE_CWD = /
+# makefile (from `Makefile', line 107)
+OBJ_FILES = $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.o)
+# environment
+PATH = /opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+# makefile (from `Makefile', line 129)
+GPROF_OPTIONS := --directory-path=-I. -I/Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/include -I/Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/portable/ThirdParty/GCC/Posix -I/Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils -I/Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/include -I/Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/Include
+# environment
+VSCODE_LOG_STACK = false
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# makefile (from `Makefile', line 86)
+LDFLAGS := -ggdb3 -pthread -O3
+# default
+.FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
+# environment
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.TCZYP8bKKw/Listeners
+# automatic
+%F = $(notdir $%)
+# environment
+VSCODE_PIPE_LOGGING = true
+# environment
+PWD = /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Posix_GCC
+# environment
+HOMEBREW_CELLAR = /opt/homebrew/Cellar
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = undefined
+# makefile (from `Makefile', line 78)
+SOURCE_FILES := code_coverage_additions.c console.c main.c main_blinky.c main_full.c run-time-stats-utils.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/croutine.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/event_groups.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/list.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/queue.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/stream_buffer.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/tasks.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/timers.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/portable/MemMang/heap_3.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/AbortDelay.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/BlockQ.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/blocktim.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/countsem.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/death.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/dynamic.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/EventGroupsDemo.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/flop.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/GenQTest.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/integer.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/IntSemTest.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/MessageBufferAMP.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/MessageBufferDemo.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/PollQ.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/QPeek.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/QueueOverwrite.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/QueueSet.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/QueueSetPolling.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/recmutex.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/semtest.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/StaticAllocation.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/StreamBufferDemo.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/StreamBufferInterrupt.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/TaskNotify.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/TimerDemo.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/trcKernelPort.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/trcSnapshotRecorder.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/trcStreamingRecorder.c /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/streamports/File/trcStreamingPort.c
+# environment
+MANPATH = /opt/homebrew/share/man::
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+# environment
+HOME = /Users/gilbefan
+# default
+MAKEFILEPATH = $(shell /usr/bin/xcode-select -print-path 2>/dev/null || echo /Developer)/Makefiles
+# environment
+VSCODE_CODE_CACHE_PATH = /Users/gilbefan/Library/Application Support/Code/CachedData/da15b6fd3ef856477bf6f4fb29ba1b7af717770d
+# environment
+LOGNAME = gilbefan
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# makefile (from `Makefile', line 5)
+BUILD_DIR_ABS := /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Posix_GCC/build
+# environment
+XPC_FLAGS = 0x0
+# default
+MAKE = $(MAKE_COMMAND)
+# default
+MAKECMDGOALS := all
+# makefile (from `Makefile', line 109)
+DEP_FILE = $(OBJ_FILES:%.o=%.d)
+# environment
+SHLVL = 1
+# makefile (from `Makefile', line 1)
+CC := gcc
+# makefile (from `Makefile', line 4)
+BUILD_DIR := ./build
+# default
+MAKE_VERSION := 3.81
+# environment
+USER = gilbefan
+# makefile
+.DEFAULT_GOAL := posix_demo
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# default
+MAKE_COMMAND := /Library/Developer/CommandLineTools/usr/bin/make
+# default
+.VARIABLES := 
+ 
+# environment
+TMPDIR = /var/folders/j7/y190rn2s7n73rdnnpj8441y80000gr/T/
+# automatic
+*F = $(notdir $*)
+# environment
+VSCODE_IPC_HOOK = /Users/gilbefan/Library/Application Support/Code/1.67.1-main.sock
+# makefile
+MAKEFLAGS = Rrqp
+# environment
+MFLAGS = -Rrqp
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.1317342.1317348
+# environment
+HOMEBREW_PREFIX = /opt/homebrew
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# automatic
++F = $(notdir $+)
+# environment
+HOMEBREW_REPOSITORY = /opt/homebrew
+# environment
+__CF_USER_TEXT_ENCODING = 0x1F8:0x0:0x0
+# environment
+COMMAND_MODE = unix2003
+# default
+MAKEFILES := 
+# automatic
+<F = $(notdir $<)
+# environment
+LC_ALL = C
+# automatic
+^F = $(notdir $^)
+# makefile (from `Makefile', line 13)
+KERNEL_DIR := /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source
+# default
+SUFFIXES := 
+# makefile (from `Makefile', line 20)
+INCLUDE_DIRS := -I. -I/Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/include -I/Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/portable/ThirdParty/GCC/Posix -I/Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils -I/Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/include -I/Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/Include
+# makefile (from `Makefile', line 7)
+FREERTOS_DIR_REL := ../../../FreeRTOS
+# environment
+MAKELEVEL := 0
+# environment
+LANG = C
+# environment
+VSCODE_PID = 49635
+# variable set hash-table stats:
+# Load=83/1024=8%, Rehash=0, Collisions=2/257=1%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (device 16777233, inode 2143051): 17 files, no impossibilities.
+# /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source (device 16777233, inode 2145845): 20 files, no impossibilities.
+
+# 37 files, no impossibilities in 2 directories.
+
+# Implicit Rules
+
+build/%.o: %.c Makefile
+#  commands to execute (from `Makefile', line 120):
+	-mkdir -p $(@D)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -c $< -o $@
+	
+
+# 1 implicit rules, 0 (0.0%) terminal.
+
+# Files
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/StreamBufferInterrupt.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/StreamBufferDemo.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/PollQ.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/TaskNotify.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/BlockQ.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/event_groups.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/dynamic.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/death.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/MessageBufferDemo.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/main.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/run-time-stats-utils.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+all:
+#  Command-line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/IntSemTest.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/EventGroupsDemo.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/recmutex.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+.PHONY: clean
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/QueueSet.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/trcSnapshotRecorder.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/MessageBufferAMP.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/streamports/File/trcStreamingPort.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/stream_buffer.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/main_full.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/blocktim.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/trcStreamingRecorder.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+ 
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/TimerDemo.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/queue.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/timers.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/GenQTest.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.SUFFIXES:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2022-05-30 09:58:04
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/croutine.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/QPeek.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/StreamBufferDemo.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+posix_demo: build/posix_demo
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/death.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/semtest.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/tasks.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/trcKernelPort.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build/code_coverage_additions.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/QueueSetPolling.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/portable/MemMang/heap_3.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/IntSemTest.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/recmutex.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/TaskNotify.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/list.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/MessageBufferAMP.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/StaticAllocation.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/blocktim.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/streamports/File/trcStreamingPort.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/flop.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+ 
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/QueueSet.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/countsem.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/timers.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/GenQTest.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/queue.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/integer.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/QueueOverwrite.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/croutine.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/integer.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+build/posix_demo: build/code_coverage_additions.o build/console.o build/main.o build/main_blinky.o build/main_full.o build/run-time-stats-utils.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/croutine.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/event_groups.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/list.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/queue.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/stream_buffer.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/tasks.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/timers.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/portable/MemMang/heap_3.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/AbortDelay.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/BlockQ.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/blocktim.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/countsem.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/death.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/dynamic.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/EventGroupsDemo.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/flop.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/GenQTest.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/integer.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/IntSemTest.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/MessageBufferAMP.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/MessageBufferDemo.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/PollQ.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/QPeek.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/QueueOverwrite.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/QueueSet.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/QueueSetPolling.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/recmutex.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/semtest.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/StaticAllocation.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/StreamBufferDemo.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/StreamBufferInterrupt.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/TaskNotify.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/TimerDemo.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/trcKernelPort.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/trcSnapshotRecorder.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/trcStreamingRecorder.o build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/streamports/File/trcStreamingPort.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 114):
+	-mkdir -p ${@D}
+	$(CC) $^ ${LDFLAGS} -o $@
+	
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/semtest.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/main_blinky.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/tasks.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/console.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+ 
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/trcKernelPort.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/code_coverage_additions.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+clean:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 126):
+	-rm -rf $(BUILD_DIR)
+	
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/QueueSetPolling.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/AbortDelay.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/portable/MemMang/heap_3.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/StreamBufferInterrupt.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/list.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/PollQ.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/BlockQ.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/event_groups.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/dynamic.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/StaticAllocation.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/MessageBufferDemo.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build/main.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build/run-time-stats-utils.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+ 
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/flop.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/EventGroupsDemo.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/countsem.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+profile:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 131):
+	gprof -a -p --all-lines $(GPROF_OPTIONS) $(BUILD_DIR)/$(BIN) $(BUILD_DIR)/gmon.out > $(BUILD_DIR)/prof_flat.txt
+	gprof -a --graph $(GPROF_OPTIONS) $(BUILD_DIR)/$(BIN) $(BUILD_DIR)/gmon.out > $(BUILD_DIR)/prof_call_graph.txt
+	
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/QueueOverwrite.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/trcSnapshotRecorder.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Source/stream_buffer.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build/main_full.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/trcStreamingRecorder.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/TimerDemo.d:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/QPeek.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/main_blinky.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/console.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build//Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/Common/Minimal/AbortDelay.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# files hash-table stats:
+# Load=99/1024=10%, Rehash=0, Collisions=20/203=10%
+# VPATH Search Paths
+
+# No `vpath' search paths.
+
+# No general (`VPATH' variable) search path.
+
+# # of strings in strcache: 46
+# # of strcache buffers: 1
+# strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
+# strcache free: total = 226 / max = 226 / min = 226 / avg = 226
+
+# Finished Make data base on Mon May 30 11:13:51 2022
+
+ 

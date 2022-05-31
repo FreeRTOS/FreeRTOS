@@ -25,7 +25,7 @@ INCLUDE_DIRS += -I$(KERNEL_DIR)/include
 INCLUDE_DIRS += -I$(KERNEL_DIR)/portable/GCC/ARM_CM3
 INCLUDE_DIRS += -I.
 
-FREERTOS_TCP = ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP
+FREERTOS_TCP = ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source
 
 # FreeRTOS networking header directories
 INCLUDE_DIRS += -I${FREERTOS_TCP}/include/
@@ -33,7 +33,21 @@ INCLUDE_DIRS += -I${FREERTOS_TCP}/portable/Compiler/GCC/
 
 # FreeRTOS networking sources
 SOURCE_FILES +=  main_networking.c
+
 SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_DNS.c
+SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_DNS_Cache.c
+SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_DNS_Callback.c
+SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_DNS_Networking.c
+SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_DNS_Parser.c
+SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_ICMP.c
+SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_IP_Timers.c
+SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_IP_Utils.c
+SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_TCP_Reception.c
+SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_TCP_State_Handling.c
+SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_TCP_Transmission.c
+SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_TCP_Utils.c
+SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_Tiny_TCP.c
+
 SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_DHCP.c
 SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_ARP.c
 SOURCE_FILES += ${FREERTOS_TCP}/FreeRTOS_TCP_WIN.c
@@ -64,7 +78,8 @@ ifeq ($(DEBUG), 1)
 else
     CFLAGS += -O3
 endif
-    CFLAGS += -fstrict-aliasing -Wstrict-aliasing -Wno-error=address-of-packed-member
+
+CFLAGS += -fstrict-aliasing -Wstrict-aliasing -Wno-error=address-of-packed-member
 
 OBJ_FILES := $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.o)
 
@@ -83,6 +98,7 @@ $(BUILD_DIR)/$(BIN) : $(OBJ_FILES)
 	rm -f $@.$$$$
 
 INCLUDES := $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.d)
+
 -include $(INCLUDES)
 
 ${BUILD_DIR}/%.o : %.c Makefile

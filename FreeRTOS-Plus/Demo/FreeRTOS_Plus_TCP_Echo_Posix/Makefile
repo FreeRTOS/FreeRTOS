@@ -15,9 +15,11 @@ INCLUDE_DIRS += -I${FREERTOS_DIR}/Source/portable/ThirdParty/GCC/Posix
 INCLUDE_DIRS += -I${FREERTOS_DIR}/Source/portable/ThirdParty/GCC/Posix/utils
 INCLUDE_DIRS += -I${FREERTOS_DIR}/Demo/Common/include
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/Include
-INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/portable/NetworkInterface/linux/
-INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/include/
-INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/portable/Compiler/GCC/
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/linux/
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/include/
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/Compiler/GCC/
+
+FREERTOS_TCP_DIR := ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/
 
 SOURCE_FILES := $(wildcard *.c)
 SOURCE_FILES += $(wildcard ${FREERTOS_DIR}/Source/*.c)
@@ -27,18 +29,32 @@ SOURCE_FILES += ${FREERTOS_DIR}/Source/portable/MemMang/heap_3.c
 SOURCE_FILES += ${FREERTOS_DIR}/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c
 SOURCE_FILES += ${FREERTOS_DIR}/Source/portable/ThirdParty/GCC/Posix/port.c
 
+
 # FreeRTOS TCP
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/FreeRTOS_DNS.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/FreeRTOS_DHCP.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/FreeRTOS_ARP.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/FreeRTOS_TCP_WIN.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/portable/BufferManagement/BufferAllocation_2.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/FreeRTOS_IP.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/FreeRTOS_TCP_IP.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/FreeRTOS_Sockets.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/portable/NetworkInterface/linux/NetworkInterface.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/FreeRTOS_DNS.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/FreeRTOS_DHCP.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/FreeRTOS_ARP.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/FreeRTOS_TCP_WIN.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/FreeRTOS_Stream_Buffer.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/portable/BufferManagement/BufferAllocation_2.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/FreeRTOS_IP.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/FreeRTOS_TCP_IP.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/FreeRTOS_UDP_IP.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/FreeRTOS_Sockets.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/portable/NetworkInterface/linux/NetworkInterface.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/FreeRTOS_DNS_Cache.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/FreeRTOS_DNS_Callback.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/FreeRTOS_DNS_Networking.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/FreeRTOS_DNS_Parser.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/FreeRTOS_ICMP.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/FreeRTOS_IP_Timers.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/FreeRTOS_IP_Utils.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/FreeRTOS_TCP_Reception.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/FreeRTOS_TCP_State_Handling.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/FreeRTOS_TCP_Transmission.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/FreeRTOS_TCP_Utils.c
+SOURCE_FILES += ${FREERTOS_TCP_DIR}/FreeRTOS_Tiny_TCP.c
+
 
 # Demo library.
 SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/AbortDelay.c

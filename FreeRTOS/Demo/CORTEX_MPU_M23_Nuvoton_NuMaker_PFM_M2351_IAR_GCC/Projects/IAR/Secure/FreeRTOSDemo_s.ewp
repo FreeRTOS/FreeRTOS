@@ -618,7 +618,7 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state></state>
+                    <state>$PROJ_DIR$\..\Config</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -1075,9 +1075,6 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\..\..\..\Source\portable\IAR\ARM_CM23\secure\secure_context.h</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\..\Source\portable\IAR\ARM_CM23\secure\secure_context_port.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\..\..\..\Source\portable\IAR\ARM_CM23\secure\secure_context_port_asm.s</name>

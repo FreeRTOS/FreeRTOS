@@ -1,3 +1,26 @@
+# Running with VSCode
+1. Ensure [C/C++ extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) is installed in VSCode. Then, follow the steps below for your platform.
+
+## On MacOS or Linux
+1. Ensure gcc, lldb, and GNU make utility are installed on your host machine and added to PATH.
+2. Open VSCode to the folder FreeRTOS/Demo/Posix_GCC.
+3. On the VSCode left side panel, select “Run and Debug”. Then select the “Launch lldb” and press the play button to begin debugging.
+
+## On Windows using Ubuntu WSL
+1. Install [WSL](https://docs.microsoft.com/en-us/windows/wsl/install).
+2. Open VSCode and install the [Remote Development Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack).
+3. Navigate to ```FreeRTOS/Demo/Posix_GCC``` in WSL and use ```code .``` to open the folder in VSCode.
+    1. If ```code``` is not a recognized command, open VSCode and press ```CTRL+SHIFT+P```. Search for "Shell Command: Install ‘code’ command in Path".
+4. On the VSCode left side panel, select the “Run and Debug” button. Then select the “Launch GDB Ubuntu WSL” and press the play button. This will build, run, and attach a debugger to the demo program.
+    1. If the demo was previously built by MSYS2, make sure to ```make clean``` before building on Ubuntu WSL.
+
+## On Windows using MSYS2
+1. Install [MSYS2](https://www.msys2.org/), and ensure gcc is installed with ```pacman -S gcc```.
+2. Open VSCode to the folder ```FreeRTOS/Demo/Posix_GCC```.
+3. In ```.vscode/settings.json```, ensure the ```path``` variable under ```MSYS2``` is set to the ```bash.exe``` under your msys64 installation directory. The path should resemble ```${path to msys2 installation}\\msys64\\usr\\bin\\bash.exe```.
+4. On the VSCode left side panel, select the “Run and Debug” button. Then select the “Launch GDB MSYS2” and press the play button to begin debugging.
+    1. If the demo was previously built by Ubuntu WSL, make sure to ```make clean``` before building on MSYS2.
+
 # Profiling your application
 
 ## Introduction [(from the official gprof doc)](https://sourceware.org/binutils/docs/gprof/Introduction.html#Introduction)

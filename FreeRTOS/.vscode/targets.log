@@ -7,7 +7,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 
 # This program built for i386-apple-darwin11.3.0
 
-# Make data base, printed on Fri Jun  3 09:33:20 2022
+# Make data base, printed on Thu Jun  2 12:33:42 2022
 
 # Variables
 
@@ -24,7 +24,7 @@ VSCODE_LOG_NATIVE = false
 # automatic
 @F = $(notdir $@)
 # makefile
-CURDIR := /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/CORTEX_MPS2_QEMU_IAR_GCC
+CURDIR := /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS
 # makefile
 SHELL = /bin/sh
 # environment
@@ -40,7 +40,7 @@ __CFBundleIdentifier = com.microsoft.VSCode
 # environment
 INFOPATH = /opt/homebrew/share/info:
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/j7/y190rn2s7n73rdnnpj8441y80000gr/T/vscode-ipc-5e953154-30f7-4f9f-b4c5-325ee791fb35.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/j7/y190rn2s7n73rdnnpj8441y80000gr/T/vscode-ipc-038b71e7-2158-4493-a0ac-aba5b5cc35fd.sock
 # environment
 VSCODE_CWD = /
 # environment
@@ -60,7 +60,7 @@ SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.ULJAoD9aka/Listeners
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
-PWD = /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/CORTEX_MPS2_QEMU_IAR_GCC
+PWD = /Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS
 # environment
 HOMEBREW_CELLAR = /opt/homebrew/Cellar
 # environment
@@ -156,9 +156,9 @@ VSCODE_PID = 787
 
 # Directories
 
-# . (device 16777234, inode 2138371): 13 files, no impossibilities.
+# . (device 16777234, inode 2131977): 10 files, no impossibilities.
 
-# 13 files, no impossibilities in 1 directories.
+# 10 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -230,7 +230,7 @@ GNUmakefile:
 # strcache size: total = 0 / max = 0 / min = 4096 / avg = 0
 # strcache free: total = 0 / max = 0 / min = 4096 / avg = 0
 
-# Finished Make data base on Fri Jun  3 09:33:20 2022
+# Finished Make data base on Thu Jun  2 12:33:42 2022
 
  
 make: *** No rule to make target `all'.  Stop.

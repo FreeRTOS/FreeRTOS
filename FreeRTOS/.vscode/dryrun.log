@@ -1,0 +1,6 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS'
+make: Leaving directory `/Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS'
+ 
+make: *** No targets specified and no makefile found.  Stop.
+

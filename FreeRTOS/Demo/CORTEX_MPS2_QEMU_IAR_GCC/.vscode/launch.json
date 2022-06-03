@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/build/gcc/output/RTOSDemo.out",
             "cwd": "${workspaceFolder}",
-            "miDebuggerPath": "/Applications/ARM/bin/arm-none-eabi-gdb",
+            "miDebuggerPath": "/Applications/ARM/bin/arm-none-eabi-gdb-py",
             "miDebuggerServerAddress": "localhost:1234",
             "stopAtEntry": true,
             "preLaunchTask": "Run QEMU"

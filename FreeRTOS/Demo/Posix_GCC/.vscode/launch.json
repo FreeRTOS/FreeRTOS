@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(lldb) Launch",
+            "name": "Launch lldb",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/build/posix_demo",
+            "program": "${workspaceFolder}/build/posix_demo",
             "args": [],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
@@ -18,14 +18,14 @@
             "preLaunchTask": "${defaultBuildTask}"
         },
         {
-            "name": "gdb Launch",
+            "name": "Launch gdb",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/build/posix_demo",
+            "program": "${workspaceFolder}/build/posix_demo",
             "args": [],
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": false,
+            "externalConsole": true,
             "MIMode": "gdb",
             "preLaunchTask": "${defaultBuildTask}"
         }

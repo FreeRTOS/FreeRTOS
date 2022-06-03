@@ -18,11 +18,25 @@
             "preLaunchTask": "${defaultBuildTask}"
         },
         {
-            "name": "Launch gdb",
+            "name": "Launch GDB Ubuntu WSL",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/posix_demo",
             "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "preLaunchTask": "${defaultBuildTask}"
+        },
+        {
+            "name": "Launch GDB MSYS2",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/posix_demo",
+            "args": [],
+            "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": true,

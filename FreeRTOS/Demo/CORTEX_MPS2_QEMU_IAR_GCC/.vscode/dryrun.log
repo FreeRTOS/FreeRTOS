@@ -1,6 +1,0 @@
-make --dry-run --always-make --keep-going --print-directory
-make: Entering directory `/Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/CORTEX_MPS2_QEMU_IAR_GCC'
-make: Leaving directory `/Users/gilbefan/Documents/Gits/FreeRTOS-VSCode/FreeRTOS/Demo/CORTEX_MPS2_QEMU_IAR_GCC'
- 
-make: *** No targets specified and no makefile found.  Stop.
-

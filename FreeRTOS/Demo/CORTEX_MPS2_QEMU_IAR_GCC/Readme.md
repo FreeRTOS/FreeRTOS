@@ -3,9 +3,8 @@
 ## Prerequisites
 * Install [C/C++ extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) in VSCode.
 * Install [arm-none-eabi-gcc](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads).
-    * Ensure the required binaries are in PATH with ```arm-none-eabi-gcc --version" and "arm-none-eabi-gdb --version```.
 * Install GNU make utility.
-    * Ensure the required binaries are in PATH with ```make --version```.
+* Ensure the required binaries are in PATH with ```arm-none-eabi-gcc --version```, ```arm-none-eabi-gdb --version```, and ```make --version```.
 
 ## Building and Running
 1. Open VSCode to the folder ```FreeRTOS/Demo/CORTEX_MPS2_QEMU_IAR_GCC```.

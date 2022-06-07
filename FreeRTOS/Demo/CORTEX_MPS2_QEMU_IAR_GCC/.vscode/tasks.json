@@ -7,11 +7,11 @@
             "label": "Build QEMU",
             "type": "shell",
             "command": "sh -c -l 'make --directory=${workspaceFolder}/build/gcc' ",
+            "problemMatcher": "$gcc",
             "group": {
                 "kind": "build",
                 "isDefault": true
-            },
-            "problemMatcher": []
+            }
         },
         {
             "label": "Run QEMU",

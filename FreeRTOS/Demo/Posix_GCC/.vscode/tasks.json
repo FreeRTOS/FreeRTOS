@@ -7,7 +7,7 @@
             "label": "Build Posix Demo",
             "type": "shell",
             "command": "make",
-            "problemMatcher": [],
+            "problemMatcher": "$gcc",
             "group": {
                 "kind": "build",
                 "isDefault": true

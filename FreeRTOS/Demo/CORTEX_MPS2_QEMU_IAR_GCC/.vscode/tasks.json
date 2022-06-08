@@ -1,0 +1,44 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+          "label": "Build QEMU",
+          "type": "shell",
+          "command": "make --directory=${workspaceFolder}/build/gcc",
+          "problemMatcher": {
+            "base": "$gcc",
+            "fileLocation": ["relative", "${workspaceFolder}/build/gcc"]
+          },
+          "group": {
+              "kind": "build",
+              "isDefault": true
+          }
+        },
+        {
+          "label": "Run QEMU",
+          "type": "shell",
+          "command": "echo 'QEMU RTOSdemo started'; qemu-system-arm -machine mps2-an385 -cpu cortex-m3 -kernel ${workspaceFolder}/build/gcc/output/RTOSDemo.out -monitor none -nographic -serial stdio -s -S",
+          "dependsOn": ["Build QEMU"],
+          "isBackground": true,
+          "problemMatcher": [
+            {
+              "pattern": [
+                {
+                  "regexp": ".",
+                  "file": 1,
+                  "location": 2,
+                  "message": 3
+                }
+              ],
+              "background": {
+                "activeOnStart": true,
+                "beginsPattern": ".",
+                "endsPattern": "QEMU RTOSdemo started",
+              }
+            }
+          ]
+        }
+    ]
+}

@@ -1,6 +1,6 @@
 [submodule "FreeRTOS/Source"]
 	path = FreeRTOS/Source
-	url = https://github.com/FreeRTOS/FreeRTOS-Kernel.git
+	url = https://github.com/akshayutture/FreeRTOS-Kernel.git
 [submodule "FreeRTOS/Test/CMock/CMock"]
 	path = FreeRTOS/Test/CMock/CMock
 	url = https://github.com/ThrowTheSwitch/CMock.git

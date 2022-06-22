@@ -147,31 +147,52 @@ void MemMang_Handler( void )
         " ite eq                                                             \n"
         " mrseq r0, msp                                                      \n"
         " mrsne r0, psp                                                      \n"
-        " ldr r1, handler_address_const                                      \n"
+        " ldr r1, handler3_address_const                                      \n"
         " bx r1                                                              \n"
-        " handler_address_const: .word vHandleMemoryFault                    \n"
+        " handler3_address_const: .word vHandleMemoryFault                    \n"
     );
 }
 
 void BusFault_Handler( void )
 {
-    for( ; ; )
-    {
-    }
+    __asm volatile
+    (
+        " tst lr, #4                                                         \n"
+        " ite eq                                                             \n"
+        " mrseq r0, msp                                                      \n"
+        " mrsne r0, psp                                                      \n"
+        " ldr r1, handler4_address_const                                      \n"
+        " bx r1                                                              \n"
+        " handler4_address_const: .word vHandleMemoryFault                    \n"
+    );
 }
 
 void UsageFault_Handler( void )
 {
-    for( ; ; )
-    {
-    }
+    __asm volatile
+    (
+        " tst lr, #4                                                         \n"
+        " ite eq                                                             \n"
+        " mrseq r0, msp                                                      \n"
+        " mrsne r0, psp                                                      \n"
+        " ldr r1, handler5_address_const                                      \n"
+        " bx r1                                                              \n"
+        " handler5_address_const: .word vHandleMemoryFault                    \n"
+    );
 }
 
 void Debug_Handler( void )
 {
-    for( ; ; )
-    {
-    }
+    __asm volatile
+    (
+        " tst lr, #4                                                         \n"
+        " ite eq                                                             \n"
+        " mrseq r0, msp                                                      \n"
+        " mrsne r0, psp                                                      \n"
+        " ldr r1, handler6_address_const                                      \n"
+        " bx r1                                                              \n"
+        " handler6_address_const: .word vHandleMemoryFault                    \n"
+    );
 }
 
 const uint32_t * isr_vector[] __attribute__( ( section( ".isr_vector" ) ) ) =

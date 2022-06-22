@@ -33,6 +33,7 @@
 /* Demo includes. */
 #include "mpu_demo.h"
 
+#include <stdio.h>
 void app_main( void )
 {
     /* Start the MPU demo. */
@@ -40,6 +41,8 @@ void app_main( void )
 
     /* Start the scheduler. */
     vTaskStartScheduler();
+
+    printf( "Returned from vTaskStartScheduler Something bad happened\n" );
 
     /* Should not get here. */
     for( ; ; )
@@ -56,17 +59,19 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask,
     ( void ) pxTask;
     ( void ) pcTaskName;
 
+    printf( "Stack Overflow Hook called\n" );
+
     for( ; ; )
     {
     }
 }
 /*-----------------------------------------------------------*/
-
 void vApplicationMallocFailedHook( void )
 {
     /* If configUSE_MALLOC_FAILED_HOOK is set to 1 then this function will
     *  be called automatically if a call to pvPortMalloc() fails.  pvPortMalloc()
     *  is called automatically when a task, queue or semaphore is created. */
+    printf( "Application Malloc Failed Hook called\n" );
     for( ; ; )
     {
     }

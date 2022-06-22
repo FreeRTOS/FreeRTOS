@@ -268,7 +268,8 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*/trcConfig\.h.*',
     r'.*/trcConfig\.c.*',
     r'.*/trcSnapshotConfig\.h.*',
-    r'.*/MicroZed_hw_platform.*'
+    r'.*/MicroZed_hw_platform.*',
+    r'.*/ThirdParty/.*'
 ]
 
 FREERTOS_IGNORED_FILES = [

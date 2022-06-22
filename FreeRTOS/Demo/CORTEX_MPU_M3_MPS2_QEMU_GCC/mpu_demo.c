@@ -177,7 +177,9 @@ static void prvROAccessTask( void * pvParameters )
         vTaskDelay( pdMS_TO_TICKS( 1000 ) );
     }
 }
+
 /*-----------------------------------------------------------*/
+
 static void prvRWAccessTask( void * pvParameters )
 {
     /* Unused parameters. */
@@ -193,14 +195,8 @@ static void prvRWAccessTask( void * pvParameters )
         vTaskDelay( pdMS_TO_TICKS( 1000 ) );
     }
 }
-/*-----------------------------------------------------------*/
 
-extern uint32_t __special_functions_start__;
-extern uint32_t __special_functions_end__;
-extern uint32_t _etext;
-extern uint32_t __syscalls_flash_end__;
-extern uint32_t _edata;
-extern uint32_t _sdata;
+/*-----------------------------------------------------------*/
 
 void vStartMPUDemo( void )
 {

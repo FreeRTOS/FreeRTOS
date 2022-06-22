@@ -7,11 +7,13 @@ FREERTOS_DIR_REL      :=    ../../../FreeRTOS
 FREERTOS_DIR          :=    $(abspath $(FREERTOS_DIR_REL))
 KERNEL_DIR            :=    $(FREERTOS_DIR)/Source
 
-FREERTOS_PLUS_DIR_REL :=    ../../../FreeRTOS-Plus
-FREERTOS_PLUS_DIR     :=    $(abspath $(FREERTOS_PLUS_DIR_REL))
-
+# Startup sources
 SOURCE_FILES          +=    init/startup.c  syscall.c main.c
+
+# platform portable source file
 SOURCE_FILES          +=    $(KERNEL_DIR)/portable/GCC/ARM_CM3_MPU/port.c
+
+# Kernel source files
 SOURCE_FILES          +=    $(KERNEL_DIR)/portable/Common/mpu_wrappers.c
 SOURCE_FILES          +=    $(KERNEL_DIR)/tasks.c
 SOURCE_FILES          +=    $(KERNEL_DIR)/list.c
@@ -19,24 +21,22 @@ SOURCE_FILES          +=    $(KERNEL_DIR)/queue.c
 SOURCE_FILES          +=    $(KERNEL_DIR)/timers.c
 SOURCE_FILES          +=    $(KERNEL_DIR)/event_groups.c
 SOURCE_FILES          +=    ${KERNEL_DIR}/portable/MemMang/heap_4.c
+SOURCE_FILES          +=    $(KERNEL_DIR)/stream_buffer.c
+
+# application source files
+SOURCE_FILES          +=    app_main.c
+SOURCE_FILES          +=    mpu_demo.c
 
 INCLUDE_DIRS          +=    -I$(FREERTOS_DIR)/Demo/CORTEX_MPU_M3_MPS2_QEMU_GCC
 INCLUDE_DIRS          +=    -I$(FREERTOS_DIR)/Demo/CORTEX_MPU_M3_MPS2_QEMU_GCC/CMSIS
 INCLUDE_DIRS          +=    -I$(KERNEL_DIR)/include
 INCLUDE_DIRS          +=    -I$(KERNEL_DIR)/portable/GCC/ARM_CM3_MPU
 
-SOURCE_FILES          +=    app_main.c
-SOURCE_FILES          +=    mpu_demo.c
-SOURCE_FILES          +=    $(KERNEL_DIR)/stream_buffer.c
-
 DEFINES               :=    -DQEMU_SOC_MPS2
 DEFINES               :=    -DHEAP4
-DEFINES               +=    -DportUSING_MPU_WRAPPERS=1
-DEFINES               +=    -DconfigALLOW_UNPRIVILEGED_CRITICAL_SECTIONS=1
 
 CPPFLAGS              +=    $(DEFINES)
 
-#CFLAGS                +=    -mthumb
 CFLAGS                +=    -mcpu=cortex-m3
 CFLAGS                +=    -Wno-error=implicit-function-declaration
 CFLAGS                +=    -Wno-builtin-declaration-mismatch

@@ -68,9 +68,10 @@ extern void vAssertCalled( void );
 #define configUSE_COUNTING_SEMAPHORES                    1
 #define configSUPPORT_DYNAMIC_ALLOCATION                 1
 #define configSUPPORT_STATIC_ALLOCATION                  1
-#define  configNUM_TX_DESCRIPTORS                        15
+#define configNUM_TX_DESCRIPTORS                         15
 #define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN    2
 #define configCHECK_FOR_STACK_OVERFLOW                   2
+#define configALLOW_UNPRIVILEGED_CRITICAL_SECTIONS      1
 
 /* Set the following definitions to 1 to include the API function, or zero
  * to exclude the API function. */

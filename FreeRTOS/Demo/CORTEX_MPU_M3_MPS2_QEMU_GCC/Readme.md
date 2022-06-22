@@ -55,17 +55,12 @@ a file named __./build/RTOSDemo.axf__ will be generated
 ```
 sudo qemu-system-arm -machine mps2-an385 -monitor null -semihosting --semihosting-config enable=on,target=native -kernel ./build/RTOSDemo.axf -serial stdio -nographic -s -S
 ```
-__ -s -S __ will start the program waiting for the debugger, check the next
-section on how to attack the debuffer to the program and observe how it it not
-causing memory faults by placing break points on the MemMang\_handler in __startup.c__
-and inside the function __prvRWAccessTask__ in mpu\_demo.c
-To be noticed is how the task __prvRWAccessTask__ does not cause a memory fault
-while the __prvROAccessTask__ causes a memory violation with the MPU
+The options __ -s -S __ in the above command will start the program waiting
+for the debugger. Check the next section on how to attach the debugger to the
+program.  Place a breakpoint on the MemMang_Handler function in __startup.c__
+file and observe how the program repeated generates memory faults and
+gracefully recovers from those. 
 
-For a versions with debugging symbols and no optimizations **-O0**, run:
-```
-$ make DEBUG=1
-```
 
 ## How to start debugging
 1. Build the debug version by using `DEBUG=1`:

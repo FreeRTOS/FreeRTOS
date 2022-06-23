@@ -71,7 +71,7 @@ extern void vAssertCalled( void );
 #define configNUM_TX_DESCRIPTORS                         15
 #define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN    2
 #define configCHECK_FOR_STACK_OVERFLOW                   2
-#define configALLOW_UNPRIVILEGED_CRITICAL_SECTIONS      1
+#define configALLOW_UNPRIVILEGED_CRITICAL_SECTIONS       0
 
 /* Set the following definitions to 1 to include the API function, or zero
  * to exclude the API function. */

@@ -35,7 +35,7 @@
   ],
   "CBMCFLAGS":
   [
-      "--unwind 1",
+      "--unwindset vListInsert.1:3,vListInsert.0:3"
   ],
   "OBJS":
   [

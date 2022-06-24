@@ -36,22 +36,27 @@ void harness()
     List_t pxList;
     vListInitialise(&pxList);
     // Q] Should we generalize the number of items?
-    ListItem_t * item1 = pvPortMalloc( sizeof( ListItem_t ) );
-    if (item1!=NULL)
+    ListItem_t item1;
+    __CPROVER_assume( item1.xItemValue < configMAX_PRIORITIES );
+    vListInitialiseItem(&item1);
+    if (nondet_bool() )
     {
-        vListInitialiseItem(item1);
-        vListInsert(&pxList, item1);
+        vListInsert(&pxList, &item1);
     }
-    ListItem_t * item2 = pvPortMalloc( sizeof( ListItem_t ) );
-    if (item2!=NULL)
+    
+    ListItem_t item2;
+    __CPROVER_assume( item2.xItemValue < configMAX_PRIORITIES );
+    vListInitialiseItem(&item2);
+    if (nondet_bool() )
     {
-        vListInitialiseItem(item2);
-        vListInsert(&pxList, item2);
+        vListInsert(&pxList, &item2);
     }
-    ListItem_t * item3 = pvPortMalloc( sizeof( ListItem_t ) );
-    if (item3!=NULL)
+    ListItem_t item3;
+    
+    __CPROVER_assume( item3.xItemValue < configMAX_PRIORITIES );
+    vListInitialiseItem(&item3);
+    if (nondet_bool() )
     {
-        vListInitialiseItem(item3);
-        vListInsert(&pxList, item3);
+        vListInsert(&pxList, &item3);
     }
 }

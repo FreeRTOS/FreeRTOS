@@ -27,29 +27,23 @@
 #
 
 {
-  "ENTRY": "TaskDelete",
+  "ENTRY": "ListRemove",
   "DEF":
   [
     "FREERTOS_MODULE_TEST",
-    "'mtCOVERAGE_TEST_MARKER()=__CPROVER_assert(1, \"Coverage marker\")'",
-    "STACK_DEPTH=10",
-    "configUSE_TRACE_FACILITY=0",
-    "configGENERATE_RUN_TIME_STATS=0"
+    "'mtCOVERAGE_TEST_MARKER()=__CPROVER_assert(1, \"Coverage marker\")'"
   ],
   "CBMCFLAGS":
   [
-    "--unwind 1",
-    "--unwindset prvInitialiseTaskLists.0:8,vListInsert.0:3,uxListRemove.0:2,uxListRemove.1:2,insertAtIndex.0:2,vListInsert.1:3"
-
+      "--unwindset uxListRemove.0:3"
   ],
   "OBJS":
   [
     "$(ENTRY)_harness.goto",
-    "$(FREERTOS)/Source/tasks.goto",
     "$(FREERTOS)/Source/list.goto"
   ],
   "INC":
   [
-    "$(FREERTOS)/Test/CBMC/proofs/Task/TaskDelete/"
+    "$(FREERTOS)/Test/CBMC/proofs/List/ListRemove/"
   ]
 }

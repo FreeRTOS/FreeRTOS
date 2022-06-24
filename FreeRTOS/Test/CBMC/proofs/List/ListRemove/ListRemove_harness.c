@@ -42,6 +42,7 @@ void harness()
     if (nondet_bool() )
     {
         vListInsert(&pxList, &item1);
+        vListRemove(&item1);
     }
     
     ListItem_t item2;
@@ -49,14 +50,7 @@ void harness()
     vListInitialiseItem(&item2);
     if (nondet_bool() )
     {
-        vListInsert(&pxList, &item2);
-    }
-    
-    ListItem_t item3;    
-    __CPROVER_assume( item3.xItemValue < configMAX_PRIORITIES );
-    vListInitialiseItem(&item3);
-    if (nondet_bool() )
-    {
-        vListInsert(&pxList, &item3);
+        vListInsertEnd(&pxList, &item2);
+        vListRemove(&item2);
     }
 }

@@ -36,6 +36,36 @@ void harness()
 {
     List_t pxList;
     vListInitialise(&pxList);
+    
+    // Non-deterministically add 0 to (maxElements-1) elements to the
+    // list. (The -1 ensures that there is space to insert 1 more element)
+    for (UBaseType_t i = 0; i < configLIST_SIZE - 1; i++)
+    {
+        if (nondet_bool()){
+            pxList.xListData[pxList.uxNumberOfItems] = pvPortMalloc(sizeof(ListItem_t));
+            pxList.xListData[pxList.uxNumberOfItems]->pxContainer = &pxList;
+            __CPROVER_assume( pxList.xListData[pxList.uxNumberOfItems]->xItemValue < configMAX_PRIORITIES );
+            pxList.uxNumberOfItems++;
+        }
+    }
+
+    if (pxList.uxNumberOfItems > 0){
+        // Set the pxIndex field to some value between 0 and number of items
+        pxList.pxIndex = notdet_uint32();
+        __CPROVER_assume( pxList.pxIndex < pxList.uxNumberOfItems );
+
+        // Finally remove 1 item.
+        UBaseType_t indexToRemove;
+        __CPROVER_assume( indexToRemove < pxList.uxNumberOfItems );
+        uxListRemove((ListItem_t * const)pxList.xListData[indexToRemove]);
+    }
+}
+
+/*
+void harness()
+{
+    List_t pxList;
+    vListInitialise(&pxList);
 
     ListItem_t items[configLIST_SIZE];
     bool inserted[configLIST_SIZE]; // records which of the items were inserted.
@@ -74,3 +104,4 @@ void harness()
         }
     }
 }
+*/

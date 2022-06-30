@@ -31,6 +31,7 @@
 #include "list.h"
 #include "cbmc.h"
 
+
 void harness()
 {
     List_t pxList;
@@ -38,17 +39,13 @@ void harness()
     
     // Non-deterministically add 0 to (maxElements-1) elements to the
     // list. (The -1 ensures that there is space to insert 1 more element)
-    ListItem_t items[configLIST_SIZE-1];
-    UBaseType_t numListElements = nondet_uint32();
-    __CPROVER_assume( numListElements <= configLIST_SIZE - 1 );
-    for (UBaseType_t i = 0; i < numListElements; i++)
-    __CPROVER_assigns (i,__CPROVER_POINTER_OBJECT(pxList.xListData))
-    __CPROVER_loop_invariant (i >= 0 && i <= numListElements)
-    __CPROVER_decreases (numListElements - i)
+    for (UBaseType_t i = 0; i < configLIST_SIZE - 1; i++)
     {
-        pxList.xListData[i] = &items[i];
+        if (nondet_bool()){
+            pxList.xListData[pxList.uxNumberOfItems] = pvPortMalloc(sizeof(ListItem_t));
+            pxList.uxNumberOfItems++;
+        }
     }
-    __CPROVER_assume( pxList.uxNumberOfItems == numListElements );
 
     // Finally add 1 item.
     ListItem_t newItem;
@@ -56,13 +53,3 @@ void harness()
     __CPROVER_assume( insertIndex < pxList.uxNumberOfItems );
     vListinsertAtIndex(&pxList, insertIndex, &newItem);
 }
-
-/*
- UBaseType_t numListElements;
-    _CPROVER_assume( numListElements <= configLIST_SIZE - 1 );
-    ListItem_t items[numListElements];
-    for (UBaseType_t i = 0; i < numListElements ; i++){
-        pxList.xListData[i] = &items[i];
-    }
-    _CPROVER_assume( pxList.uxNumberOfItems == numListElements );
-*/

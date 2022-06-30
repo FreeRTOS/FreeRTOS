@@ -35,25 +35,27 @@ void harness()
 {
     List_t pxList;
     vListInitialise(&pxList);
-    ListItem_t items[configLIST_SIZE];
-
     
-    // Insert any number of elements between 0 and configLIST_SIZE
-    for (int i = 0; i < configLIST_SIZE ; i++)
-    __CPROVER_assigns (
-        i,__CPROVER_POINTER_OBJECT(items);
-        pxList.uxNumberOfItems,pxList.pxIndex,__CPROVER_POINTER_OBJECT(pxList.xListData);
-    )
-    //__CPROVER_loop_invariant (pxList.uxNumberOfItems <= configLIST_SIZE)
-    __CPROVER_loop_invariant (pxList.pxIndex <= pxList.uxNumberOfItems)
-    __CPROVER_loop_invariant (i >= 0 && i<=configLIST_SIZE)
-    __CPROVER_decreases (configLIST_SIZE - i)
+    // Non-deterministically add 0 to (maxElements-1) elements to the
+    // list. (The -1 ensures that there is space to insert 1 more element)
+    for (UBaseType_t i = 0; i < configLIST_SIZE - 1; i++)
     {
-        __CPROVER_assume( items[i].xItemValue < configMAX_PRIORITIES );
-        vListInitialiseItem(&items[i]);
-        if (nondet_bool() )
-        {
-            vListInsertEnd(&pxList, &items[i]);
+        if (nondet_bool()){
+            pxList.xListData[pxList.uxNumberOfItems] = pvPortMalloc(sizeof(ListItem_t));
+            pxList.uxNumberOfItems++;
         }
     }
+
+    // Set the pxIndex field to some value between 0 and number of items
+    if (pxList.uxNumberOfItems == 0){
+        pxList.pxIndex = 0;
+    }
+    else{
+        pxList.pxIndex = notdet_uint32();
+        __CPROVER_assume( pxList.pxIndex < pxList.uxNumberOfItems );
+    }
+
+    // Finally add 1 item.
+    ListItem_t newItem;
+    vListInsertEnd(&pxList, &newItem);
 }

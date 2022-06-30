@@ -35,7 +35,6 @@
   ],
   "CBMCFLAGS":
   [
-      "--unwindset insertAtIndex.0:3"
   ],
   "OBJS":
   [
@@ -45,5 +44,9 @@
   "INC":
   [
     "$(FREERTOS)/Test/CBMC/proofs/List/ListInsertEnd/"
+  ],
+  "APPLY_LOOP_CONTRACTS":
+  [
+    "1"
   ]
 }

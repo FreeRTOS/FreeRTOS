@@ -35,27 +35,34 @@ void harness()
 {
     List_t pxList;
     vListInitialise(&pxList);
-    ListItem_t item1;
-    __CPROVER_assume( item1.xItemValue < configMAX_PRIORITIES );
-    vListInitialiseItem(&item1);
-    if (nondet_bool() )
-    {
-        vListInsert(&pxList, &item1);
-    }
     
-    ListItem_t item2;
-    __CPROVER_assume( item2.xItemValue < configMAX_PRIORITIES );
-    vListInitialiseItem(&item2);
-    if (nondet_bool() )
+    // Non-deterministically add 0 to (maxElements-1) elements to the
+    // list. (The -1 ensures that there is space to insert 1 more element)
+    ListItem_t items[configLIST_SIZE-1];
+    UBaseType_t numListElements = nondet_uint32();
+    __CPROVER_assume( numListElements <= configLIST_SIZE - 1 );
+    for (UBaseType_t i = 0; i < numListElements; i++)
+    __CPROVER_assigns (i,__CPROVER_POINTER_OBJECT(pxList.xListData))
+    __CPROVER_loop_invariant (i >= 0 && i <= numListElements)
+    __CPROVER_decreases (numListElements - i)
     {
-        vListInsert(&pxList, &item2);
+        pxList.xListData[i] = &items[i];
     }
-    
-    ListItem_t item3;    
-    __CPROVER_assume( item3.xItemValue < configMAX_PRIORITIES );
-    vListInitialiseItem(&item3);
-    if (nondet_bool() )
-    {
-        vListInsert(&pxList, &item3);
-    }
+    __CPROVER_assume( pxList.uxNumberOfItems == numListElements );
+
+    // Finally add 1 item.
+    ListItem_t newItem;
+    UBaseType_t insertIndex;
+    __CPROVER_assume( insertIndex < pxList.uxNumberOfItems );
+    vListinsertAtIndex(&pxList, insertIndex, &newItem);
 }
+
+/*
+ UBaseType_t numListElements;
+    _CPROVER_assume( numListElements <= configLIST_SIZE - 1 );
+    ListItem_t items[numListElements];
+    for (UBaseType_t i = 0; i < numListElements ; i++){
+        pxList.xListData[i] = &items[i];
+    }
+    _CPROVER_assume( pxList.uxNumberOfItems == numListElements );
+*/

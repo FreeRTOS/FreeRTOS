@@ -104,12 +104,15 @@ $(ENTRY)5.goto: $(ENTRY)4.goto
 	$(GOTO_INSTRUMENT) --drop-unused-functions @RULE_INPUT@ @RULE_OUTPUT@ \
 		> $(ENTRY)5.txt 2>&1
 
-$(ENTRY)6.goto: $(ENTRY)5.goto
-	$(GOTO_INSTRUMENT) --apply-loop-contracts @RULE_INPUT@ @RULE_OUTPUT@ \
-		> $(ENTRY)6.txt 2>&1
 
-$(ENTRY).goto: $(ENTRY)6.goto
+$(ENTRY).goto: $(ENTRY)5.goto
+ifneq ($(H_APPLY_LOOP_CONTRACTS),1)
 	@CP@ @RULE_INPUT@ @RULE_OUTPUT@
+else
+	$(GOTO_INSTRUMENT) --apply-loop-contracts @RULE_INPUT@ @RULE_OUTPUT@ \
+		> $(ENTRY)5.txt 2>&1
+endif
+	
 
 # ____________________________________________________________________
 # Rules

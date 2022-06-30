@@ -25,6 +25,7 @@
  */
 
 #include <stdint.h>
+#include <stdbool.h>
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -35,22 +36,41 @@ void harness()
 {
     List_t pxList;
     vListInitialise(&pxList);
-    // Q] Should we generalize the number of items?
-    ListItem_t item1;
-    __CPROVER_assume( item1.xItemValue < configMAX_PRIORITIES );
-    vListInitialiseItem(&item1);
-    if (nondet_bool() )
-    {
-        vListInsert(&pxList, &item1);
-        vListRemove(&item1);
-    }
+
+    ListItem_t items[configLIST_SIZE];
+    bool inserted[configLIST_SIZE]; // records which of the items were inserted.
     
-    ListItem_t item2;
-    __CPROVER_assume( item2.xItemValue < configMAX_PRIORITIES );
-    vListInitialiseItem(&item2);
-    if (nondet_bool() )
+    // Insert a non-deterministic number of items into the list.
+    for (int i = 0 ; i < configLIST_SIZE ; i++)
+    __CPROVER_assigns (
+        i,__CPROVER_POINTER_OBJECT(items),__CPROVER_POINTER_OBJECT(inserted);
+        __CPROVER_POINTER_OBJECT(pxList.xListData),pxList.uxNumberOfItems,pxList.pxIndex;
+    )
+    //__CPROVER_loop_invariant (pxList.uxNumberOfItems <= configLIST_SIZE)
+    __CPROVER_loop_invariant (pxList.pxIndex <= pxList.uxNumberOfItems)
+    __CPROVER_loop_invariant (i >= 0 && i<=configLIST_SIZE)
+    __CPROVER_decreases (configLIST_SIZE - i)
     {
-        vListInsertEnd(&pxList, &item2);
-        vListRemove(&item2);
+        inserted[i] = nondet_bool();
+        if (inserted[i]){
+            vListInitialiseItem(&items[i]);
+            vListInsertEnd(&pxList, &items[i]);
+        }
+    }
+
+    // Delete a non-deterministic number of items from the list.
+    for (int i = 0 ; i < configLIST_SIZE ; i++)
+    __CPROVER_assigns (
+        i,__CPROVER_POINTER_OBJECT(items);
+        __CPROVER_POINTER_OBJECT(pxList.xListData),pxList.uxNumberOfItems,pxList.pxIndex;
+    )
+    //__CPROVER_loop_invariant (pxList.uxNumberOfItems <= configLIST_SIZE)
+    __CPROVER_loop_invariant (pxList.pxIndex <= pxList.uxNumberOfItems)
+    __CPROVER_loop_invariant (i >= 0 && i<=configLIST_SIZE)
+    __CPROVER_decreases (configLIST_SIZE - i)
+    {
+        if (inserted[i] && nondet_bool()){
+            vListRemove(&items[i]);
+        }
     }
 }

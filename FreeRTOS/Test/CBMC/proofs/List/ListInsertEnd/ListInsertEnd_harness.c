@@ -35,28 +35,25 @@ void harness()
 {
     List_t pxList;
     vListInitialise(&pxList);
-    // Q] Should we generalize the number of items?
-    ListItem_t item1;
-    __CPROVER_assume( item1.xItemValue < configMAX_PRIORITIES );
-    vListInitialiseItem(&item1);
-    if (nondet_bool() )
-    {
-        vListInsert(&pxList, &item1);
-    }
+    ListItem_t items[configLIST_SIZE];
+
     
-    ListItem_t item2;
-    __CPROVER_assume( item2.xItemValue < configMAX_PRIORITIES );
-    vListInitialiseItem(&item2);
-    if (nondet_bool() )
+    // Insert any number of elements between 0 and configLIST_SIZE
+    for (int i = 0; i < configLIST_SIZE ; i++)
+    __CPROVER_assigns (
+        i,__CPROVER_POINTER_OBJECT(items);
+        pxList.uxNumberOfItems,pxList.pxIndex,__CPROVER_POINTER_OBJECT(pxList.xListData);
+    )
+    //__CPROVER_loop_invariant (pxList.uxNumberOfItems <= configLIST_SIZE)
+    __CPROVER_loop_invariant (pxList.pxIndex <= pxList.uxNumberOfItems)
+    __CPROVER_loop_invariant (i >= 0 && i<=configLIST_SIZE)
+    __CPROVER_decreases (configLIST_SIZE - i)
     {
-        vListInsertEnd(&pxList, &item2);
-    }
-    ListItem_t item3;    
-    
-    __CPROVER_assume( item3.xItemValue < configMAX_PRIORITIES );
-    vListInitialiseItem(&item3);
-    if (nondet_bool() )
-    {
-        vListInsertEnd(&pxList, &item3);
+        __CPROVER_assume( items[i].xItemValue < configMAX_PRIORITIES );
+        vListInitialiseItem(&items[i]);
+        if (nondet_bool() )
+        {
+            vListInsertEnd(&pxList, &items[i]);
+        }
     }
 }

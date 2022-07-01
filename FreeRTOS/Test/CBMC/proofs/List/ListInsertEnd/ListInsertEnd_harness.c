@@ -25,6 +25,7 @@
  */
 
 #include <stdint.h>
+#include <stdlib.h>
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -39,9 +40,15 @@ void harness()
     // Non-deterministically add 0 to (maxElements-1) elements to the
     // list. (The -1 ensures that there is space to insert 1 more element)
     for (UBaseType_t i = 0; i < configLIST_SIZE - 1; i++)
+    //__CPROVER_assigns (i,__CPROVER_POINTER_OBJECT(pxList.xListData))
+    //__CPROVER_loop_invariant (i >= 0 && i<=configLIST_SIZE)
+    //__CPROVER_decreases (configLIST_SIZE - i)
     {
         if (nondet_bool()){
             pxList.xListData[pxList.uxNumberOfItems] = pvPortMalloc(sizeof(ListItem_t));
+            if (pxList.xListData[pxList.uxNumberOfItems] == NULL){
+                exit(1);
+            }
             pxList.uxNumberOfItems++;
         }
     }

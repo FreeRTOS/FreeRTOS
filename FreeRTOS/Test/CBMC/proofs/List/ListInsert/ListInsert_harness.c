@@ -25,6 +25,7 @@
  */
 
 #include <stdint.h>
+#include <stdlib.h>
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -42,6 +43,9 @@ void harness()
     {
         if (nondet_bool()){
             pxList.xListData[pxList.uxNumberOfItems] = pvPortMalloc(sizeof(ListItem_t));
+            if (pxList.xListData[pxList.uxNumberOfItems] == NULL){
+                exit(1);
+            }
             __CPROVER_assume( pxList.xListData[pxList.uxNumberOfItems]->xItemValue < configMAX_PRIORITIES );
             pxList.uxNumberOfItems++;
         }
@@ -55,7 +59,7 @@ void harness()
         pxList.pxIndex = notdet_uint32();
         __CPROVER_assume( pxList.pxIndex < pxList.uxNumberOfItems );
     }
-    
+
     // Finally add 1 item.
     ListItem_t newItem;
     __CPROVER_assume( newItem.xItemValue < configMAX_PRIORITIES );

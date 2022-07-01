@@ -26,6 +26,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -43,6 +44,9 @@ void harness()
     {
         if (nondet_bool()){
             pxList.xListData[pxList.uxNumberOfItems] = pvPortMalloc(sizeof(ListItem_t));
+            if (pxList.xListData[pxList.uxNumberOfItems] == NULL){
+                exit(1);
+            }
             pxList.xListData[pxList.uxNumberOfItems]->pxContainer = &pxList;
             __CPROVER_assume( pxList.xListData[pxList.uxNumberOfItems]->xItemValue < configMAX_PRIORITIES );
             pxList.uxNumberOfItems++;
@@ -57,7 +61,9 @@ void harness()
         // Finally remove 1 item.
         UBaseType_t indexToRemove;
         __CPROVER_assume( indexToRemove < pxList.uxNumberOfItems );
-        uxListRemove((ListItem_t * const)pxList.xListData[indexToRemove]);
+        if (pxList.xListData[indexToRemove]!=NULL){
+            uxListRemove(pxList.xListData[indexToRemove]);
+        }
     }
 }
 

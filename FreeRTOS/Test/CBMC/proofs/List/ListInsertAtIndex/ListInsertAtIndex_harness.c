@@ -25,6 +25,7 @@
  */
 
 #include <stdint.h>
+#include <stdlib.h>
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -43,6 +44,9 @@ void harness()
     {
         if (nondet_bool()){
             pxList.xListData[pxList.uxNumberOfItems] = pvPortMalloc(sizeof(ListItem_t));
+            if (pxList.xListData[pxList.uxNumberOfItems] == NULL){
+                exit(1);
+            }
             pxList.uxNumberOfItems++;
         }
     }

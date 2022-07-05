@@ -40,6 +40,28 @@ void harness()
     
     // Non-deterministically add 0 to (maxElements-1) elements to the
     // list. (The -1 ensures that there is space to insert 1 more element)
+    for (UBaseType_t i = 0; i < configLIST_SIZE; i++)
+    //__CPROVER_assigns (i,__CPROVER_POINTER_OBJECT(pxList.xListData),__CPROVER_POINTER_OBJECT(pxList.uxNumberOfItems))
+    //__CPROVER_loop_invariant (pxList.uxNumberOfItems <= configLIST_SIZE)
+    //__CPROVER_loop_invariant (i >= 0 && i<=configLIST_SIZE)
+    //__CPROVER_decreases (configLIST_SIZE - i)
+    {
+        pxList.xListData[pxList.uxNumberOfItems] = pvPortMalloc(sizeof(ListItem_t));
+        if (pxList.xListData[pxList.uxNumberOfItems] == NULL){
+            exit(1);
+        }
+        pxList.uxNumberOfItems++;
+    }
+}
+
+/*
+void harness()
+{
+    List_t pxList;
+    vListInitialise(&pxList);
+    
+    // Non-deterministically add 0 to (maxElements-1) elements to the
+    // list. (The -1 ensures that there is space to insert 1 more element)
     for (UBaseType_t i = 0; i < configLIST_SIZE - 1; i++)
     {
         if (nondet_bool()){
@@ -66,7 +88,7 @@ void harness()
         }
     }
 }
-
+*/
 /*
 void harness()
 {

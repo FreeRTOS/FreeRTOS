@@ -31,13 +31,17 @@
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
-#include "FreeRTOS_Sockets.h"
 
 /* mbed TLS includes. */
-#include "mbedtls_config.h"
+#if !defined(MBEDTLS_CONFIG_FILE)
+#include "config.h"
+#else
+#include MBEDTLS_CONFIG_FILE
+#endif
 #include "threading_alt.h"
 #include "mbedtls/entropy.h"
 #include "mbedtls/ssl.h"
+
 
 /*-----------------------------------------------------------*/
 
@@ -178,6 +182,7 @@ int mbedtls_platform_mutex_unlock( mbedtls_threading_mutex_t * pMutex )
     return 0;
 }
 
+#ifdef _WIN32
 /*-----------------------------------------------------------*/
 
 /**
@@ -250,3 +255,4 @@ int mbedtls_hardware_poll( void * data,
 }
 
 /*-----------------------------------------------------------*/
+#endif

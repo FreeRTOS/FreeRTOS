@@ -285,7 +285,7 @@ static BaseType_t prvNetworkRecvCellular( const cellularSocketWrapper_t * pCellu
 
     ( void ) xEventGroupClearBits( pCellularSocketContext->socketEventGroupHandle,
                                    SOCKET_DATA_RECEIVED_CALLBACK_BIT );
-    socketStatus = Cellular_SocketRecv( CellularHandle, cellularSocketHandle, buf, len, &recvLength );
+    Cellular_SocketRecv( CellularHandle, cellularSocketHandle, buf, len, &recvLength );
 
     /* Calculate remain recvTimeout. */
     if( recvTimeout != portMAX_DELAY )
@@ -421,7 +421,10 @@ static void prvCellularSocketClosedCallback( CellularSocketHandle_t socketHandle
 static BaseType_t prvSetupSocketRecvTimeout( cellularSocketWrapper_t * pCellularSocketContext,
                                              TickType_t receiveTimeout )
 {
+    CellularError_t socketStatus = CELLULAR_SUCCESS;
     BaseType_t retSetSockOpt = SOCKETS_ERROR_NONE;
+    uint32_t receiveTimeoutMs = 0;
+    CellularSocketHandle_t cellularSocketHandle = NULL;
 
     if( pCellularSocketContext == NULL )
     {
@@ -429,13 +432,37 @@ static BaseType_t prvSetupSocketRecvTimeout( cellularSocketWrapper_t * pCellular
     }
     else
     {
-        if( receiveTimeout >= portMAX_DELAY )
+        cellularSocketHandle = pCellularSocketContext->cellularSocketHandle;
+
+        if( receiveTimeout >= UINT32_MAX_MS_TICKS )
         {
+            /* Check if the ticks cause overflow. */
             pCellularSocketContext->receiveTimeout = portMAX_DELAY;
+            receiveTimeoutMs = UINT32_MAX_DELAY_MS;
+        }
+        else if( receiveTimeout >= portMAX_DELAY )
+        {
+            IotLogWarn( "Receievetimeout %d longer than portMAX_DELAY, %d ms is used instead",
+                        receiveTimeout, UINT32_MAX_DELAY_MS );
+            pCellularSocketContext->receiveTimeout = portMAX_DELAY;
+            receiveTimeoutMs = UINT32_MAX_DELAY_MS;
         }
         else
         {
             pCellularSocketContext->receiveTimeout = receiveTimeout;
+            receiveTimeoutMs = TICKS_TO_MS( receiveTimeout );
+        }
+
+        socketStatus = Cellular_SocketSetSockOpt( CellularHandle,
+                                                  cellularSocketHandle,
+                                                  CELLULAR_SOCKET_OPTION_LEVEL_TRANSPORT,
+                                                  CELLULAR_SOCKET_OPTION_RECV_TIMEOUT,
+                                                  ( const uint8_t * ) &receiveTimeoutMs,
+                                                  sizeof( uint32_t ) );
+
+        if( socketStatus != CELLULAR_SUCCESS )
+        {
+            retSetSockOpt = SOCKETS_EINVAL;
         }
     }
 
@@ -923,7 +950,7 @@ int32_t Sockets_Send( Socket_t xSocket,
             }
         }
 
-        IotLogDebug( "Sockets_Send expect %d write %d", len, sentLength );
+        IotLogDebug( "Sockets_Send expect %d write %d", xDataLength, sentLength );
     }
 
     return retSendLength;

@@ -34,7 +34,11 @@
 #include "FreeRTOS_Sockets.h"
 
 /* mbed TLS includes. */
-#include "mbedtls_config.h"
+#if !defined(MBEDTLS_CONFIG_FILE)
+#include "config.h"
+#else
+#include MBEDTLS_CONFIG_FILE
+#endif
 #include "threading_alt.h"
 #include "mbedtls/entropy.h"
 #include "mbedtls/ssl.h"

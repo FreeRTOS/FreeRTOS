@@ -43,7 +43,6 @@
   ],
   "INC":
   [
-    "$(FREERTOS)/Test/CBMC/proofs/List/ListRemove"
   ],
   "APPLY_LOOP_CONTRACTS":
   [

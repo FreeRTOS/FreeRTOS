@@ -43,7 +43,6 @@
   ],
   "INC":
   [
-    "$(FREERTOS)/Test/CBMC/proofs/List/ListInsertAtIndex/"
   ],
   "APPLY_LOOP_CONTRACTS":
   [

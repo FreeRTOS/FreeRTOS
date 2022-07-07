@@ -58,6 +58,23 @@ void vSetGlobalVariables( void )
 }
 
 /*
+ * For each of the pxReadyTasksLists lists (only kind of list needed for task-create)
+ * we could insert into, set a non-deterministic list size and pxIndex.
+ */
+void vSetNonDeterministicListSizes( void )
+{
+    for( UBaseType_t uxPriority = ( UBaseType_t ) 0U; uxPriority < ( UBaseType_t ) configMAX_PRIORITIES; uxPriority++ )
+    {
+        pxReadyTasksLists[uxPriority].uxNumberOfItems = nondet_ubasetype();
+        if (pxReadyTasksLists[uxPriority].uxNumberOfItems == 0){
+            pxReadyTasksLists[uxPriority].pxIndex = 0;
+        }
+        else{
+            __CPROVER_assume( pxReadyTasksLists[uxPriority].pxIndex < pxReadyTasksLists[uxPriority].uxNumberOfItems );
+        }
+    }
+}
+/*
  * pvPortMalloc is nondeterministic by definition, thus we do not need
  * to check for NULL allocation in this function
  */

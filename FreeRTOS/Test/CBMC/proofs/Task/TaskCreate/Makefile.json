@@ -36,8 +36,6 @@
   ],
   "CBMCFLAGS":
   [
-      "--unwind 1",
-      "--unwindset prvInitialiseNewTask.0:16,prvInitialiseNewTask.1:4,prvInitialiseTaskLists.0:8"
   ],
   "OBJS":
   [
@@ -48,5 +46,9 @@
   "INC":
   [
     "$(FREERTOS)/Test/CBMC/proofs/Task/TaskCreate/"
+  ],
+  "APPLY_LOOP_CONTRACTS":
+  [
+    "1"
   ]
 }

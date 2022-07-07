@@ -35,6 +35,7 @@ void vSetGlobalVariables( void );
 void vPrepareTaskLists( void );
 TaskHandle_t * pxNondetSetTaskHandle( void );
 char * pcNondetSetString( size_t xSizeLength );
+void vSetNonDeterministicListSizes( void );
 
 void harness()
 {
@@ -43,14 +44,12 @@ void harness()
     configSTACK_DEPTH_TYPE usStackDepth = STACK_DEPTH;
     void * pvParameters;
     TaskHandle_t * pxCreatedTask;
-
     UBaseType_t uxPriority;
-
-    __CPROVER_assume( uxPriority < configMAX_PRIORITIES );
 
     vNondetSetCurrentTCB();
     vSetGlobalVariables();
     vPrepareTaskLists();
+    vSetNonDeterministicListSizes();
 
     pxCreatedTask = pxNondetSetTaskHandle();
     pcName = pcNondetSetString( configMAX_TASK_NAME_LEN );

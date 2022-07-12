@@ -285,7 +285,7 @@ static BaseType_t prvNetworkRecvCellular( const cellularSocketWrapper_t * pCellu
 
     ( void ) xEventGroupClearBits( pCellularSocketContext->socketEventGroupHandle,
                                    SOCKET_DATA_RECEIVED_CALLBACK_BIT );
-    Cellular_SocketRecv( CellularHandle, cellularSocketHandle, buf, len, &recvLength );
+    socketStatus = Cellular_SocketRecv( CellularHandle, cellularSocketHandle, buf, len, &recvLength );
 
     /* Calculate remain recvTimeout. */
     if( recvTimeout != portMAX_DELAY )

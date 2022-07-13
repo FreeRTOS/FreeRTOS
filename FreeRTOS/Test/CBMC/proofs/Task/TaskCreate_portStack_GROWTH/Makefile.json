@@ -33,7 +33,8 @@
     "STACK_DEPTH=10",
     "FREERTOS_MODULE_TEST",
     "FREERTOS_TEST_MODIFY_CONSTANTS",
-    "'mtCOVERAGE_TEST_MARKER()=__CPROVER_assert(1, \"Coverage marker\")'"
+    "'mtCOVERAGE_TEST_MARKER()=__CPROVER_assert(1, \"Coverage marker\")'",
+    "configLIST_SIZE=300"
   ],
   "CBMCFLAGS":
   [

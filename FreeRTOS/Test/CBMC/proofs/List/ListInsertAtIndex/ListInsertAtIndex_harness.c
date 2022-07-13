@@ -46,6 +46,13 @@ void harness()
     // Finally add 1 item.
     ListItem_t newItem;
     UBaseType_t insertIndex;
-    __CPROVER_assume( insertIndex < pxList.uxNumberOfItems );
+    if (pxList.uxNumberOfItems == 0)
+    {
+        insertIndex = 0;
+    }
+    else 
+    {
+        __CPROVER_assume( insertIndex < pxList.uxNumberOfItems );
+    }
     vListinsertAtIndex(&pxList, insertIndex, &newItem);
 }

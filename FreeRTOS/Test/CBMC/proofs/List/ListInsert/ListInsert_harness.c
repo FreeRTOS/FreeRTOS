@@ -53,7 +53,9 @@ void harness()
         pxList.pxIndex = 0;
     }
     else{
-        __CPROVER_assume( pxList.pxIndex < pxList.uxNumberOfItems );
+        UBaseType_t newPxIndex;
+        __CPROVER_assume( newPxIndex < pxList.uxNumberOfItems );
+        pxList.pxIndex = newPxIndex;
     }
 
     // Finally add 1 item.

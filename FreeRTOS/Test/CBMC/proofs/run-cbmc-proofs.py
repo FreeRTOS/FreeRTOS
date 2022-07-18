@@ -148,19 +148,14 @@ def run_cmd(cmd, **args):
     return proc
 
 
-def run_build(litani, jobs):
-    cmd = [str(litani), "run-build"]
+def run_build(jobs):
+    cmd = ["litani", "run-build"]
     if jobs:
         cmd.extend(["-j", str(jobs)])
-
     run_cmd(cmd, check=True)
 
 
-def get_litani_path(proof_root):
-    return proof_root.parent.parent / "litani" / "litani"
-
-
-def add_proof_jobs(proof_directory, proof_root, litani):
+def add_proof_jobs(proof_directory, proof_root):
     proof_directory = pathlib.Path(proof_directory)
     harnesses = [
         f for f in os.listdir(proof_directory) if f.endswith("_harness.c")]
@@ -180,7 +175,7 @@ def add_proof_jobs(proof_directory, proof_root, litani):
     # Build goto-binary
 
     run_cmd([
-        str(litani), "add-job",
+        "litani", "add-job",
         "--command", "make -B veryclean goto",
         "--outputs", goto_binary,
         "--pipeline-name", proof_name,
@@ -193,7 +188,7 @@ def add_proof_jobs(proof_directory, proof_root, litani):
 
     cbmc_out = str(proof_directory / "cbmc.txt")
     run_cmd([
-        str(litani), "add-job",
+        "litani", "add-job",
         "--command", "make cbmc",
         "--inputs", goto_binary,
         "--outputs", cbmc_out,
@@ -208,7 +203,7 @@ def add_proof_jobs(proof_directory, proof_root, litani):
 
     property_out = str(proof_directory / "property.xml")
     run_cmd([
-        str(litani), "add-job",
+        "litani", "add-job",
         "--command", "make property",
         "--inputs", goto_binary,
         "--outputs", property_out,
@@ -220,7 +215,7 @@ def add_proof_jobs(proof_directory, proof_root, litani):
 
     coverage_out = str(proof_directory / "coverage.xml")
     run_cmd([
-        str(litani), "add-job",
+        "litani", "add-job",
         "--command", "make coverage",
         "--inputs", goto_binary,
         "--outputs", coverage_out,
@@ -234,7 +229,7 @@ def add_proof_jobs(proof_directory, proof_root, litani):
     # Check whether the CBMC proof actually passed. More details in the
     # Makefile rule for check-cbmc-result.
     run_cmd([
-        str(litani), "add-job",
+        "litani", "add-job",
         "--command", "make check-cbmc-result",
         "--inputs", cbmc_out,
         "--pipeline-name", proof_name,
@@ -245,7 +240,7 @@ def add_proof_jobs(proof_directory, proof_root, litani):
 
     # Generate report
     run_cmd([
-        str(litani), "add-job",
+        "litani", "add-job",
         "--command", "make report",
         "--inputs", cbmc_out, property_out, coverage_out,
         "--outputs", str(proof_directory / "html"),
@@ -259,11 +254,11 @@ def add_proof_jobs(proof_directory, proof_root, litani):
     return True
 
 
-def configure_proof_dirs(proof_dirs, proof_root, counter, litani):
+def configure_proof_dirs(proof_dirs, proof_root, counter):
     for proof_dir in proof_dirs:
         print_counter(counter)
 
-        success = add_proof_jobs(proof_dir, proof_root, litani)
+        success = add_proof_jobs(proof_dir, proof_root)
 
         counter["pass" if success else "fail"].append(proof_dir)
         counter["complete"] += 1
@@ -274,12 +269,11 @@ def main():
     set_up_logging(args.verbose)
 
     proof_root = pathlib.Path(__file__).resolve().parent
-    litani = get_litani_path(proof_root)
 
     run_cmd(["./prepare.py"], check=True, cwd=str(proof_root))
     if not args.no_standalone:
         run_cmd(
-            [str(litani), "init", "--project", args.project_name], check=True)
+            ["litani", "init", "--project", args.project_name], check=True)
 
     proof_dirs = list(get_proof_dirs(proof_root, args.proofs))
     if not proof_dirs:
@@ -294,7 +288,7 @@ def main():
         "width": int(math.log10(len(proof_dirs))) + 1
     }
 
-    configure_proof_dirs(proof_dirs, proof_root, counter, litani)
+    configure_proof_dirs(proof_dirs, proof_root, counter)
 
     print_counter(counter)
     print("", file=sys.stderr)
@@ -305,8 +299,9 @@ def main():
                 [str(f) for f in counter["fail"]]))
 
     if not args.no_standalone:
-        run_build(litani, args.parallel_jobs)
+        run_build(args.parallel_jobs)
 
 
 if __name__ == "__main__":
     main()
+

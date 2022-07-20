@@ -264,6 +264,7 @@ clienttoken
 cligetoutputbuffer
 clint
 cliprocesscommand
+cloudformation
 clk
 clkdiv
 clksel
@@ -522,6 +523,7 @@ democonfiguse
 democonfiguser
 demofiles
 demoiptrace
+demosetup
 demotask
 demotimer
 der
@@ -767,6 +769,7 @@ flasg
 flashc
 flashlite
 flashtimer
+fleetprovisioningdemotemplate
 flexcomm
 flg
 flopc

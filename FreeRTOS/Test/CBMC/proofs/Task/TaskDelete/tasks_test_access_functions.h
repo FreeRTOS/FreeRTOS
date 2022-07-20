@@ -33,15 +33,15 @@
  */
 TaskHandle_t xUnconstrainedTCB( void )
 {
-    TCB_t * pxTCB = pvPortMalloc( sizeof( TCB_t ) );
-    uint8_t ucStaticAllocationFlag;
-
+    // Allocate TCB
+    TCB_t * pxTCB = (TCB_t *) pvPortMalloc( sizeof( TCB_t ) );
     if( pxTCB == NULL )
     {
         return NULL;
     }
 
-    __CPROVER_assume( pxTCB->uxPriority < configMAX_PRIORITIES );
+    // Set some members
+    __CPROVER_assume( pxTCB->uxPriority < configMAX_PRIORITIES ); // necessary?
 
     vListInitialiseItem( &( pxTCB->xStateListItem ) );
     vListInitialiseItem( &( pxTCB->xEventListItem ) );
@@ -67,14 +67,17 @@ TaskHandle_t xUnconstrainedTCB( void )
         listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), portMAX_DELAY );
     }
 
+    // allocate stack
+    // make stack depth unbounded?
     pxTCB->pxStack = ( StackType_t * ) pvPortMalloc( ( ( ( size_t ) STACK_DEPTH ) * sizeof( StackType_t ) ) );
-
     if( pxTCB->pxStack == NULL )
     {
         vPortFree( pxTCB );
         return NULL;
     }
 
+    // set static allocation flag
+    uint8_t ucStaticAllocationFlag;
     __CPROVER_assume( ucStaticAllocationFlag <= tskSTATICALLY_ALLOCATED_STACK_AND_TCB );
     __CPROVER_assume( ucStaticAllocationFlag >= tskDYNAMICALLY_ALLOCATED_STACK_AND_TCB );
     pxTCB->ucStaticallyAllocated = ucStaticAllocationFlag;
@@ -89,21 +92,103 @@ TaskHandle_t xUnconstrainedTCB( void )
 void vSetGlobalVariables()
 {
     xSchedulerRunning = nondet_basetype();
+    uxCurrentNumberOfTasks = nondet_ubasetype();
+}
+
+/* 
+ * An unbounded proof requires non-deterministic list sizes.
+ * Since we make no assumptions about the contents of these lists,
+ * we don't need to populate them with anything.
+*/
+void vSetNonDeterministicListSize( List_t * list, UBaseType_t minSize)
+{
+    list->uxNumberOfItems = nondet_ubasetype();
+    // Needed?
+    __CPROVER_assume(list->uxNumberOfItems <= configLIST_SIZE && list->uxNumberOfItems >= minSize);
+    if (list->uxNumberOfItems == 0){
+        list->pxIndex = 0;
+    }
+    else{
+        list->pxIndex = nondet_ubasetype();
+        __CPROVER_assume(list->pxIndex < list->uxNumberOfItems );
+    }
+}
+
+
+void vPrepareTaskLists(){
+    __CPROVER_assert_zero_allocation();
+    prvInitialiseTaskLists();
+
+    // Set non-deterministic sizes for all the different lists we may need.
+    for( UBaseType_t uxPriority = ( UBaseType_t ) 0U; uxPriority < ( UBaseType_t ) configMAX_PRIORITIES; uxPriority++ )
+    {
+        vSetNonDeterministicListSize(&pxReadyTasksLists[uxPriority],0);
+    }
+    vSetNonDeterministicListSize(&xTasksWaitingTermination,0);
+    vSetNonDeterministicListSize(&xPendingReadyList,1);
+    vSetNonDeterministicListSize(pxDelayedTaskList,0);
 }
 
 /*
- * We initialise and fill the task lists so coverage is optimal.
- * This initialization is not guaranteed to be minimal, but it
- * is quite efficient and it serves the same purpose
- */
-BaseType_t xPrepareTaskLists( TaskHandle_t * xTask )
+ * So we only need to malloc the one TCB that we intend on 
+ * deleting. This saves us from having to make multiple malloc
+ * statements. 
+*/
+TaskHandle_t xAddTaskToLists()
 {
-    TCB_t * pxTCB = NULL;
+    // Create a new TCB and assume that it's at a particular index
+    TaskHandle_t newTCB = xUnconstrainedTCB();
+    if (newTCB == NULL){
+        exit(1); // is this necessary?
+    }
+    // Add the TCB's xStateListItem to the pending task list
+    UBaseType_t pendingListIndex;
+    __CPROVER_assume(pendingListIndex < xPendingReadyList.uxNumberOfItems);
+    xPendingReadyList.xListData[pendingListIndex] = &(newTCB->xStateListItem);
+    newTCB->xStateListItem.pxContainer = &xPendingReadyList;
+    
+    // Optionally, add the TCB's xEventListItem to the delayed task list
+    if (nondet_bool()){
+            UBaseType_t delayedListIndex;
+            __CPROVER_assume(delayedListIndex < pxDelayedTaskList->uxNumberOfItems);
+            pxDelayedTaskList->xListData[delayedListIndex] = &(newTCB->xEventListItem);
+            newTCB->xEventListItem.pxContainer = pxDelayedTaskList;
+    }
+    
+    // If the pxDelayedTaskList size is non-zero, we may access the head element.
+    // after a deletion. Hence we need to allocate 2 objects
+    if (pxDelayedTaskList->uxNumberOfItems > 0){
+        pxDelayedTaskList->xListData[0] = (ListItem_t *) pvPortMalloc( sizeof( ListItem_t ) );
+        if (pxDelayedTaskList->xListData[0] == NULL){
+            exit(1);
+        }
+    }
+    if (pxDelayedTaskList->uxNumberOfItems > 1){
+        pxDelayedTaskList->xListData[1] = (ListItem_t *) pvPortMalloc( sizeof( ListItem_t ) );
+        if (pxDelayedTaskList->xListData[1] == NULL){
+            exit(1);
+        }
+    }
 
-    __CPROVER_assert_zero_allocation();
+    /*
+     * The task handle passed to TaskDelete can be NULL. In that case, the
+     * task to delete is the one in `pxCurrentTCB`, 
+     * see the macro `prvGetTCBFromHandle` for reference. 
+     * Hence we either return the newly created TCB, or assign it to 
+     * `pxCurrentTCB` and return null.
+     */
+    if (notdet_bool()){
+        return newTCB;
+    } 
+    else
+    {
+        pxCurrentTCB = newTCB;
+        return NULL;
+    }
+}
 
-    prvInitialiseTaskLists();
-
+BaseType_t old_PrepareTaskLists( TaskHandle_t * xTask )
+{
     /*
      * The task handle passed to TaskDelete can be NULL. In that case, the
      * task to delete is the one in `pxCurrentTCB`, see the macro `prvGetTCBFromHandle`
@@ -111,7 +196,7 @@ BaseType_t xPrepareTaskLists( TaskHandle_t * xTask )
      * initialization for an arbitrary task `pxTCB` and `pxCurrentTCB`.
      */
 
-    pxTCB = xUnconstrainedTCB();
+    TCB_t * pxTCB = xUnconstrainedTCB();
 
     if( pxTCB != NULL )
     {

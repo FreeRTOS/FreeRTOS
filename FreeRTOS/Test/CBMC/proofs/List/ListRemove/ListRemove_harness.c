@@ -23,12 +23,8 @@
  * https://github.com/FreeRTOS
  *
  */
-
-#include <stdint.h>
-#include <stdbool.h>
-#include <stdlib.h>
-
 /* FreeRTOS includes. */
+#include <stdlib.h>
 #include "FreeRTOS.h"
 #include "list.h"
 #include "cbmc.h"
@@ -38,22 +34,21 @@ void harness()
     List_t pxList;
     vListInitialise(&pxList);
     
-    // Non-deterministically add 0 to (maxElements-1) elements to the
-    // list. (The -1 ensures that there is space to insert 1 more element)
-    ListItem_t items[configLIST_SIZE];
-    for (UBaseType_t i = 0; i < configLIST_SIZE; i++)
-    {
-        if (nondet_bool()){
-            pxList.xListData[pxList.uxNumberOfItems] = &items[i];
-            pxList.xListData[pxList.uxNumberOfItems]->pxContainer = &pxList;
-            pxList.uxNumberOfItems++;
-        }
-    }
+    // Set the number of items to some value lesser than the max list size.
+    UBaseType_t numItems;
+    __CPROVER_assume( numItems <= configLIST_SIZE - 1 );
+    pxList.uxNumberOfItems = numItems;
 
     // Finally delete 1 item.
     if (pxList.uxNumberOfItems > 0){
         UBaseType_t removalIndex;
         __CPROVER_assume( removalIndex < pxList.uxNumberOfItems );
+        // Allocate only the one object that we are trying to remove.
+        // Allocating more objects will prevent us from having unbounded proofs.
+        ListItem_t it;
+        pxList.xListData[removalIndex] = &it;
+        pxList.xListData[removalIndex]->pxContainer = &pxList;
         uxListRemove(pxList.xListData[removalIndex]);
     }
+
 }

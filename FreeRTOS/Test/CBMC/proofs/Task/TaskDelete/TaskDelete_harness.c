@@ -26,29 +26,21 @@
  * https://www.FreeRTOS.org
  */
 
-#include <stdint.h>
-
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 
 void vSetGlobalVariables();
-BaseType_t xPrepareTaskLists( TaskHandle_t * xTask );
+void vPrepareTaskLists();
+TaskHandle_t xAddTaskToLists(); 
 
-/*
- * The harness test first calls two functions included in the tasks.c file
- * that initialize the task lists and other global variables
- */
 void harness()
 {
-    TaskHandle_t xTaskToDelete;
-    BaseType_t xTasksPrepared;
-
+    // Initialization
     vSetGlobalVariables();
-    xTasksPrepared = xPrepareTaskLists( &xTaskToDelete );
+    vPrepareTaskLists();
+    TaskHandle_t xTaskToDelete = xAddTaskToLists();
 
-    if( xTasksPrepared != pdFAIL )
-    {
-        vTaskDelete( xTaskToDelete );
-    }
+    // Finally go ahead and delete the task
+    vTaskDelete(xTaskToDelete);
 }

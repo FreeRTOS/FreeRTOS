@@ -35,7 +35,7 @@
     "STACK_DEPTH=10",
     "configUSE_TRACE_FACILITY=0",
     "configGENERATE_RUN_TIME_STATS=0",
-    "configLIST_SIZE=1000000"
+    "configLIST_SIZE=4000000"
   ],
   "CBMCFLAGS":
   [

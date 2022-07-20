@@ -1,4 +1,4 @@
-This proof demonstrates the memory safety of the TaskCreate function,
+This proof demonstrates unbounded memory safety of the TaskCreate function,
 and is identical to the TaskCreate folder proof, but with 1 modification:
 the portSTACK_GROWTH macro is set to 1 instead of -1.
 

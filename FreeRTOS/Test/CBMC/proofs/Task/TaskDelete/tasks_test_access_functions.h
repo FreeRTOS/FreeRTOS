@@ -100,11 +100,11 @@ void vSetGlobalVariables()
  * Since we make no assumptions about the contents of these lists,
  * we don't need to populate them with anything.
 */
-void vSetNonDeterministicListSize( List_t * list, UBaseType_t minSize)
+void vSetNonDeterministicListSize( List_t * list)
 {
     list->uxNumberOfItems = nondet_ubasetype();
-    // Needed?
-    __CPROVER_assume(list->uxNumberOfItems <= configLIST_SIZE && list->uxNumberOfItems >= minSize);
+    __CPROVER_assume(list->uxNumberOfItems < configLIST_SIZE );
+
     if (list->uxNumberOfItems == 0){
         list->pxIndex = 0;
     }
@@ -122,25 +122,27 @@ void vPrepareTaskLists(){
     // Set non-deterministic sizes for all the different lists we may need.
     for( UBaseType_t uxPriority = ( UBaseType_t ) 0U; uxPriority < ( UBaseType_t ) configMAX_PRIORITIES; uxPriority++ )
     {
-        vSetNonDeterministicListSize(&pxReadyTasksLists[uxPriority],0);
+        vSetNonDeterministicListSize(&pxReadyTasksLists[uxPriority]);
     }
-    vSetNonDeterministicListSize(&xTasksWaitingTermination,0);
-    vSetNonDeterministicListSize(&xPendingReadyList,1);
-    vSetNonDeterministicListSize(pxDelayedTaskList,0);
+    vSetNonDeterministicListSize(&xTasksWaitingTermination);
+    vSetNonDeterministicListSize(&xPendingReadyList);
+    vSetNonDeterministicListSize(pxDelayedTaskList);
 }
 
 /*
- * So we only need to malloc the one TCB that we intend on 
- * deleting. This saves us from having to make multiple malloc
- * statements. 
+ * Creates a new TCB and optionally adds it to non-deterministic indices
+ * in various task-lists.
+ * It finally either returns the new TCB or null. 
 */
 TaskHandle_t xAddTaskToLists()
 {
-    // Create a new TCB and assume that it's at a particular index
+    // we only need to malloc the one TCB that we intend on 
+    // deleting. This saves us from having to make multiple mallocs
     TaskHandle_t newTCB = xUnconstrainedTCB();
     if (newTCB == NULL){
-        exit(1); // is this necessary?
+        exit(1);
     }
+
     // Add the TCB's xStateListItem to the pending task list
     UBaseType_t pendingListIndex;
     __CPROVER_assume(pendingListIndex < xPendingReadyList.uxNumberOfItems);
@@ -149,14 +151,17 @@ TaskHandle_t xAddTaskToLists()
     
     // Optionally, add the TCB's xEventListItem to the delayed task list
     if (nondet_bool()){
-            UBaseType_t delayedListIndex;
-            __CPROVER_assume(delayedListIndex < pxDelayedTaskList->uxNumberOfItems);
-            pxDelayedTaskList->xListData[delayedListIndex] = &(newTCB->xEventListItem);
-            newTCB->xEventListItem.pxContainer = pxDelayedTaskList;
+        UBaseType_t delayedListIndex;
+        __CPROVER_assume(delayedListIndex < pxDelayedTaskList->uxNumberOfItems);
+        pxDelayedTaskList->xListData[delayedListIndex] = &(newTCB->xEventListItem);
+        newTCB->xEventListItem.pxContainer = pxDelayedTaskList;
     }
     
-    // If the pxDelayedTaskList size is non-zero, we may access the head element.
-    // after a deletion. Hence we need to allocate 2 objects
+    // If the pxDelayedTaskList size is non-zero, we may access its head element's
+    // struct fields after a deletion in TaskDelete. 
+    // Hence we need to malloc the first two elements in the list. 
+    // The head element is needed for the field access. The second element
+    // is needed in the special case where the head element itself is deleted.
     if (pxDelayedTaskList->uxNumberOfItems > 0){
         pxDelayedTaskList->xListData[0] = (ListItem_t *) pvPortMalloc( sizeof( ListItem_t ) );
         if (pxDelayedTaskList->xListData[0] == NULL){
@@ -185,82 +190,4 @@ TaskHandle_t xAddTaskToLists()
         pxCurrentTCB = newTCB;
         return NULL;
     }
-}
-
-BaseType_t old_PrepareTaskLists( TaskHandle_t * xTask )
-{
-    /*
-     * The task handle passed to TaskDelete can be NULL. In that case, the
-     * task to delete is the one in `pxCurrentTCB`, see the macro `prvGetTCBFromHandle`
-     * in line 1165 (tasks.c) for reference. For that reason, we provide a similar
-     * initialization for an arbitrary task `pxTCB` and `pxCurrentTCB`.
-     */
-
-    TCB_t * pxTCB = xUnconstrainedTCB();
-
-    if( pxTCB != NULL )
-    {
-        if( nondet_bool() )
-        {
-            TCB_t * pxOtherTCB;
-            pxOtherTCB = xUnconstrainedTCB();
-
-            /*
-             * Nondeterministic insertion of another TCB in the same list
-             * to guarantee coverage in line 1174 (tasks.c)
-             */
-            if( pxOtherTCB != NULL )
-            {
-                vListInsert( &xPendingReadyList, &( pxOtherTCB->xStateListItem ) );
-            }
-        }
-
-        vListInsert( &xPendingReadyList, &( pxTCB->xStateListItem ) );
-
-        /*
-         * Nondeterministic insertion of an event list item to guarantee
-         * coverage in lines 1180-1184 (tasks.c)
-         */
-        if( nondet_bool() )
-        {
-            vListInsert( pxDelayedTaskList, &( pxTCB->xEventListItem ) );
-        }
-    }
-
-    /* Note that `*xTask = NULL` can happen here, but this is fine -- `pxCurrentTCB` will be used instead */
-    *xTask = pxTCB;
-
-    /*
-     * `pxCurrentTCB` must be initialized the same way as the previous task, but an
-     * allocation failure cannot happen in this case (i.e., if the previous task is NULL)
-     */
-    pxCurrentTCB = xUnconstrainedTCB();
-
-    if( pxCurrentTCB == NULL )
-    {
-        return pdFAIL;
-    }
-
-    if( nondet_bool() )
-    {
-        TCB_t * pxOtherTCB;
-        pxOtherTCB = xUnconstrainedTCB();
-
-        if( pxOtherTCB != NULL )
-        {
-            vListInsert( &pxReadyTasksLists[ pxOtherTCB->uxPriority ], &( pxOtherTCB->xStateListItem ) );
-        }
-    }
-
-    vListInsert( &pxReadyTasksLists[ pxCurrentTCB->uxPriority ], &( pxCurrentTCB->xStateListItem ) );
-
-    /* Use of this macro ensures coverage on line 185 (list.c) */
-    listGET_OWNER_OF_NEXT_ENTRY( pxCurrentTCB, &pxReadyTasksLists[ pxCurrentTCB->uxPriority ] );
-
-    if( nondet_bool() )
-    {
-        vListInsert( pxDelayedTaskList, &( pxCurrentTCB->xEventListItem ) );
-    }
-
-    return pdPASS;
 }

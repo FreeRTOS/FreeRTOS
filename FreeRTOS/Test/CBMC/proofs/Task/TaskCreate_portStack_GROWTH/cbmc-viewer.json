@@ -23,6 +23,6 @@
     "xTaskRemoveFromEventList",
     "xTaskResumeAll"
   ],
-  "proof-name": "TaskCreate",
+  "proof-name": "TaskCreate_portSTACK_GROWTH",
   "proof-root": "Test/CBMC/proofs"
 }

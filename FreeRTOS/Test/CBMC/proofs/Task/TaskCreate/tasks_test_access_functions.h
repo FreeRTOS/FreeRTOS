@@ -102,3 +102,12 @@ char * pcNondetSetString( size_t xStringLength )
 
     return pcName;
 }
+
+/* 
+ * Simply creates a new TCB object
+ */
+TaskHandle_t pxCreateTCB()
+{
+    TaskHandle_t newTCB = (TCB_t *) pvPortMalloc( sizeof( TCB_t ) );
+    return newTCB;
+}

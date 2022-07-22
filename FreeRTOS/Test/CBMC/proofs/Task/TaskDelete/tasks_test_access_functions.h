@@ -103,7 +103,7 @@ void vSetGlobalVariables()
 void vSetNonDeterministicListSize( List_t * list)
 {
     list->uxNumberOfItems = nondet_ubasetype();
-    __CPROVER_assume(list->uxNumberOfItems < configLIST_SIZE );
+    __CPROVER_assume(list->uxNumberOfItems <= configLIST_SIZE );
 
     if (list->uxNumberOfItems == 0){
         list->pxIndex = 0;

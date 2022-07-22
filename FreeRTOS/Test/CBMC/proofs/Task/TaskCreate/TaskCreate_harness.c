@@ -36,6 +36,7 @@ void vPrepareTaskLists( void );
 TaskHandle_t * pxNondetSetTaskHandle( void );
 char * pcNondetSetString( size_t xSizeLength );
 void vSetNonDeterministicListSizes( void );
+TaskHandle_t pxCreateTCB();
 
 void harness()
 {
@@ -43,7 +44,6 @@ void harness()
     char * pcName;
     configSTACK_DEPTH_TYPE usStackDepth = STACK_DEPTH;
     void * pvParameters;
-    TaskHandle_t * pxCreatedTask;
     UBaseType_t uxPriority;
 
     vNondetSetCurrentTCB();
@@ -51,13 +51,26 @@ void harness()
     vPrepareTaskLists();
     vSetNonDeterministicListSizes();
 
-    pxCreatedTask = pxNondetSetTaskHandle();
     pcName = pcNondetSetString( configMAX_TASK_NAME_LEN );
 
-    xTaskCreate( pxTaskCode,
-                 pcName,
-                 usStackDepth,
-                 pvParameters,
-                 uxPriority,
-                 pxCreatedTask );
+    if (nondet_bool()){
+        TaskHandle_t * pxCreatedTask = pxNondetSetTaskHandle();
+        xTaskCreate( pxTaskCode,
+                     pcName,
+                     usStackDepth,
+                     pvParameters,
+                     uxPriority,
+                     pxCreatedTask );
+    }
+    else{
+        StackType_t* st = pvPortMallocStack( ( ( ( size_t ) usStackDepth ) * sizeof( StackType_t ) ) ); 
+        TaskHandle_t tcb = pxCreateTCB();
+        xTaskCreateStatic( pxTaskCode,
+                           pcName,
+                           usStackDepth,
+                           pvParameters,
+                           uxPriority,
+                           st,
+                           tcb );
+    }
 }

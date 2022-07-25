@@ -194,5 +194,55 @@ void vPortGenerateSimulatedInterrupt( uint32_t ulInterruptNumber );
  */
 void vPortSetInterruptHandler( uint32_t ulInterruptNumber, uint32_t (*pvHandler)( void ) );
 
+/* MPU regions. 
+ * This section of the portmacro is copied from 
+ * FreeRTOSKernel/portable/IAR/ARM_CM33/non_secure
+ */
+#ifndef configTOTAL_MPU_REGIONS
+	#define configTOTAL_MPU_REGIONS						  ( 10UL )
+#endif
+#ifndef portPRIVILEGED_FLASH_REGION
+    #define portPRIVILEGED_FLASH_REGION                   ( 0UL )
+#endif
+#ifndef portUNPRIVILEGED_FLASH_REGION
+    #define portUNPRIVILEGED_FLASH_REGION                 ( 1UL )
+#endif
+#ifndef portUNPRIVILEGED_SYSCALLS_REGION
+    #define portUNPRIVILEGED_SYSCALLS_REGION              ( 2UL )
+#endif
+#ifndef portPRIVILEGED_RAM_REGION
+    #define portPRIVILEGED_RAM_REGION                     ( 3UL )
+#endif
+#ifndef portSTACK_REGION
+    #define portSTACK_REGION                              ( 4UL )
+#endif
+#ifndef portFIRST_CONFIGURABLE_REGION
+    #define portFIRST_CONFIGURABLE_REGION                 ( 5UL )
+#endif
+#ifndef portLAST_CONFIGURABLE_REGION
+    #define portLAST_CONFIGURABLE_REGION                  ( configTOTAL_MPU_REGIONS - 1UL )
+#endif
+#ifndef portNUM_CONFIGURABLE_REGIONS
+    #define portNUM_CONFIGURABLE_REGIONS                  ( ( portLAST_CONFIGURABLE_REGION - portFIRST_CONFIGURABLE_REGION ) + 1 )
+#endif
+#ifndef portTOTAL_NUM_REGIONS
+    #define portTOTAL_NUM_REGIONS                         ( portNUM_CONFIGURABLE_REGIONS + 1 )   /* Plus one to make space for the stack region. */
+#endif
+
+#ifndef portUSING_MPU_WRAPPERS
+	#define portUSING_MPU_WRAPPERS    0
+#endif
+
+typedef struct MPURegionSettings
+{
+	uint32_t ulRBAR; /**< RBAR for the region. */
+	uint32_t ulRLAR; /**< RLAR for the region. */
+} MPURegionSettings_t;
+typedef struct MPU_SETTINGS
+{
+    uint32_t ulMAIR0;                                              /**< MAIR0 for the task containing attributes for all the 4 per task regions. */
+    MPURegionSettings_t xRegionsSettings[ portTOTAL_NUM_REGIONS ]; /**< Settings for 4 per task regions. */
+} xMPU_SETTINGS;
+
 #endif
 

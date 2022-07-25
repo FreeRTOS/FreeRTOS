@@ -1,0 +1,30 @@
+{ "expected-missing-functions":
+  [
+    "vApplicationTickHook",
+
+    "pxPortInitialiseStack",
+    "vPortCloseRunningThread",
+    "vPortDeleteThread",
+    "vPortEnterCritical",
+    "vPortExitCritical",
+    "vPortGenerateSimulatedInterrupt",
+    "xPortStartScheduler",
+    "privileged_functions$$vPortStoreTaskMPUSettings",
+    "privileged_functions$$pxPortInitialiseStack",
+
+    "pvTaskIncrementMutexHeldCount",
+    "uxTaskGetTaskNumber",
+    "vTaskInternalSetTimeOutState",
+    "vTaskMissedYield",
+    "vTaskPlaceOnEventList",
+    "vTaskPriorityDisinheritAfterTimeout",
+    "vTaskSuspendAll",
+    "xTaskGetCurrentTaskHandle",
+    "xTaskPriorityDisinherit",
+    "xTaskPriorityInherit",
+    "xTaskRemoveFromEventList",
+    "xTaskResumeAll"
+  ],
+  "proof-name": "TaskCreateRestricted",
+  "proof-root": "Test/CBMC/proofs"
+}

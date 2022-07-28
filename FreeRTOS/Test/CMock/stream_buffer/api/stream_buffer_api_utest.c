@@ -1379,4 +1379,3 @@ void test_xStreamBufferSend_WrapOver( void )
 
     vStreamBufferDelete( xStreamBuffer );
 }
-

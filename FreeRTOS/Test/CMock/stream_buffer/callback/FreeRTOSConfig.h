@@ -108,6 +108,7 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 #define INCLUDE_xTaskGetSchedulerState            1
 #define INCLUDE_xTimerGetTimerDaemonTaskHandle    1
 #define INCLUDE_xTaskGetIdleTaskHandle            1
+#define INCLUDE_xTaskGetCurrentTaskHandle         1
 #define INCLUDE_xTaskGetHandle                    1
 #define INCLUDE_eTaskGetState                     1
 #define INCLUDE_xSemaphoreGetMutexHolder          1
@@ -127,20 +128,22 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
         {                                             \
             vFakeAssert( false, __FILE__, __LINE__ ); \
         }                                             \
-    } while ( 0 )
+    } while( 0 )
 
-#define mtCOVERAGE_TEST_MARKER()    __asm volatile ( "NOP" )
+#define mtCOVERAGE_TEST_MARKER()              __asm volatile ( "NOP" )
 
 extern void vDefaultSendCompletedStub( void * xStreamBuffer );
 #define sbSEND_COMPLETED( pxStreamBuffer )    vDefaultSendCompletedStub( pxStreamBuffer )
 
-extern void vDefaultSendCompletedFromISRStub( void * xStreamBuffer, long * const pxTaskWoken );
+extern void vDefaultSendCompletedFromISRStub( void * xStreamBuffer,
+                                              long * const pxTaskWoken );
 #define sbSEND_COMPLETE_FROM_ISR( pxStreamBuffer, pxTaskWoken )    vDefaultSendCompletedFromISRStub( pxStreamBuffer, pxTaskWoken )
 
 extern void vDefaultReceiveCompletedStub( void * xStreamBuffer );
-#define sbRECEIVE_COMPLETED( pxStreamBuffer )    vDefaultReceiveCompletedStub( pxStreamBuffer )
+#define sbRECEIVE_COMPLETED( pxStreamBuffer )                      vDefaultReceiveCompletedStub( pxStreamBuffer )
 
-extern void vDefaultReceiveCompletedFromISRStub( void * xStreamBuffer, long * const pxTaskWoken );
+extern void vDefaultReceiveCompletedFromISRStub( void * xStreamBuffer,
+                                                 long * const pxTaskWoken );
 #define sbRECEIVE_COMPLETED_FROM_ISR( pxStreamBuffer, pxTaskWoken )    vDefaultReceiveCompletedFromISRStub( pxStreamBuffer, pxTaskWoken )
 
 #endif /* FREERTOS_CONFIG_H */

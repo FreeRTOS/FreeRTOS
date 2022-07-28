@@ -107,6 +107,7 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 #define INCLUDE_xTaskGetSchedulerState            1
 #define INCLUDE_xTimerGetTimerDaemonTaskHandle    1
 #define INCLUDE_xTaskGetIdleTaskHandle            1
+#define INCLUDE_xTaskGetCurrentTaskHandle         1
 #define INCLUDE_xTaskGetHandle                    1
 #define INCLUDE_eTaskGetState                     1
 #define INCLUDE_xSemaphoreGetMutexHolder          1

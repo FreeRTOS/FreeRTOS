@@ -850,3 +850,37 @@ void test_xStreamBufferReceiveFromISR_DefaultCallbackInvoked( void )
 
     vStreamBufferDelete( xStreamBuffer );
 }
+
+/**
+ * @brief Tests both send and receive callbacks are retained after a streambuffer
+ * reset.
+ */
+void test_xStreamBufferReset_CallbackRetained( void )
+{
+    StaticStreamBuffer_t * pxStreamBufferStruct;
+    BaseType_t xStatus = pdFAIL;
+
+    xStreamBuffer = xStreamBufferCreateWithCallback( TEST_STREAM_BUFFER_SIZE,
+                                                     TEST_STREAM_BUFFER_TRIGGER_LEVEL,
+                                                     sendCompletedStub,
+                                                     receiveCompletedStub );
+    TEST_ASSERT_NOT_EQUAL( NULL, xStreamBuffer );
+
+    /* Verify internal memory allocated is equal to size of the struct + buffer size + 1. */
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE + 1U + sizeof( StaticStreamBuffer_t ), dynamicMemoryAllocated );
+
+    /* Verify the fields within stream buffer struct for send and receive completed stubs */
+    pxStreamBufferStruct = ( StaticStreamBuffer_t * ) ( xStreamBuffer );
+    TEST_ASSERT_EQUAL( sendCompletedStub, pxStreamBufferStruct->pvDummy5[ 0 ] );
+    TEST_ASSERT_EQUAL( receiveCompletedStub, pxStreamBufferStruct->pvDummy5[ 1 ] );
+
+    /* Reset Stream buffer */
+    xStatus = xStreamBufferReset( xStreamBuffer );
+    TEST_ASSERT_EQUAL( pdPASS, xStatus );
+
+    /* Verify that the send and receive completed callbacks are retained after reset. */
+    TEST_ASSERT_EQUAL( sendCompletedStub, pxStreamBufferStruct->pvDummy5[ 0 ] );
+    TEST_ASSERT_EQUAL( receiveCompletedStub, pxStreamBufferStruct->pvDummy5[ 1 ] );
+
+    vStreamBufferDelete( xStreamBuffer );
+}

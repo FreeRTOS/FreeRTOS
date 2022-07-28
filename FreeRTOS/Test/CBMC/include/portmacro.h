@@ -32,16 +32,23 @@
 /*
  * portmacro.h is an architecture specific file defining certain
  * constants and declaring certain functions.
- * This file is modeled on the portmacro from MSVC-MingW, but all
- * constants are defined within '#ifndef'.
- * Hence, each proof can define its own values for some constants
- * and the remaining constants will take default values from
- * the definitions in this file.
- * If there are some constants not available in this file, one
- * can add them using the same '#ifndef' style.
+ * 
+ * This portmacro file is defined in the CBMC directory and aims
+ * to be architecture-independent, with all constants defined with '#ifndef'.
+ * Hence, each proof can override the definitions they want to modify 
+ * in the proof-specific makefiles and the remaining constants will take 
+ * default values from the definitions in this file.
+ * 
+ * The default values in this portmacro are a combination of the
+ * values from the portmacros of FreeRTOSKernel/portable/MSVC-MingW
+ * and FreeRTOSKernel/portable/IAR/ARM_CM33/non_secure.
+ * They cover almost all the constants needed in the kernel.
+ * If a specific proof needs some constant not available in this
+ * file, one can directly define the constant in that proof's makefile.
+ * To add additional constants to this file, use the '#ifndef' style
+ * from below to ensure that the constants can be overridden in 
+ * specific proofs.
 */
-#include <windows.h>
-#include <winbase.h>
 
 /******************************************************************************
 	Defines
@@ -194,9 +201,8 @@ void vPortGenerateSimulatedInterrupt( uint32_t ulInterruptNumber );
  */
 void vPortSetInterruptHandler( uint32_t ulInterruptNumber, uint32_t (*pvHandler)( void ) );
 
-/* MPU regions. 
- * This section of the portmacro is copied from 
- * FreeRTOSKernel/portable/IAR/ARM_CM33/non_secure
+/* 
+ * MPU regions Macros
  */
 #ifndef configTOTAL_MPU_REGIONS
 	#define configTOTAL_MPU_REGIONS						  ( 10UL )

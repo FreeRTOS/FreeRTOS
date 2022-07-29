@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202104.00
+ * FreeRTOS V202112.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -23,7 +23,6 @@
  * https://github.com/FreeRTOS
  *
  */
-
 
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H

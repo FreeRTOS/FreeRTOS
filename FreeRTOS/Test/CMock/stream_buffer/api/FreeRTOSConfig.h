@@ -24,7 +24,6 @@
  *
  */
 
-
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
@@ -38,7 +37,7 @@
 *
 * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
 * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.  See
-* https://www.FreeRTOS.org/a00110.html
+* http://www.freertos.org/a00110.html
 *----------------------------------------------------------*/
 
 #define configUSE_PREEMPTION                             1
@@ -113,7 +112,6 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 #define INCLUDE_xSemaphoreGetMutexHolder          1
 #define INCLUDE_xTimerPendFunctionCall            1
 #define INCLUDE_xTaskAbortDelay                   1
-#define INCLUDE_xTaskGetCurrentTaskHandle         1
 
 /* It is a good idea to define configASSERT() while developing.  configASSERT()
  * uses the same semantics as the standard C assert() macro. */

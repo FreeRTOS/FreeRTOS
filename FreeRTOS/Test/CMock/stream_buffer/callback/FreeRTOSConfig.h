@@ -24,7 +24,6 @@
  *
  */
 
-
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
@@ -38,7 +37,7 @@
 *
 * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
 * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.  See
-* https://www.FreeRTOS.org/a00110.html
+* http://www.freertos.org/a00110.html
 *----------------------------------------------------------*/
 
 #define configUSE_PREEMPTION                             1
@@ -62,6 +61,7 @@
 #define configUSE_COUNTING_SEMAPHORES                    1
 #define configUSE_ALTERNATIVE_API                        0
 #define configUSE_QUEUE_SETS                             1
+#define configUSE_SB_COMPLETED_CALLBACK                  1
 #define configUSE_TASK_NOTIFICATIONS                     1
 #define configTASK_NOTIFICATION_ARRAY_ENTRIES            5
 #define configSUPPORT_STATIC_ALLOCATION                  1
@@ -113,7 +113,6 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
 #define INCLUDE_xSemaphoreGetMutexHolder          1
 #define INCLUDE_xTimerPendFunctionCall            1
 #define INCLUDE_xTaskAbortDelay                   1
-#define INCLUDE_xTaskGetCurrentTaskHandle         1
 
 /* It is a good idea to define configASSERT() while developing.  configASSERT()
  * uses the same semantics as the standard C assert() macro. */
@@ -130,12 +129,20 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
         }                                             \
     } while( 0 )
 
-#define mtCOVERAGE_TEST_MARKER()    __asm volatile ( "NOP" )
+#define mtCOVERAGE_TEST_MARKER()              __asm volatile ( "NOP" )
 
-#define configINCLUDE_MESSAGE_BUFFER_AMP_DEMO    0
-#if ( configINCLUDE_MESSAGE_BUFFER_AMP_DEMO == 1 )
-    extern void vGenerateCoreBInterrupt( void * xUpdatedMessageBuffer );
-    #define sbSEND_COMPLETED( pxStreamBuffer )    vGenerateCoreBInterrupt( pxStreamBuffer )
-#endif /* configINCLUDE_MESSAGE_BUFFER_AMP_DEMO */
+extern void vDefaultSendCompletedStub( void * xStreamBuffer );
+#define sbSEND_COMPLETED( pxStreamBuffer )    vDefaultSendCompletedStub( pxStreamBuffer )
+
+extern void vDefaultSendCompletedFromISRStub( void * xStreamBuffer,
+                                              long * const pxTaskWoken );
+#define sbSEND_COMPLETE_FROM_ISR( pxStreamBuffer, pxTaskWoken )    vDefaultSendCompletedFromISRStub( pxStreamBuffer, pxTaskWoken )
+
+extern void vDefaultReceiveCompletedStub( void * xStreamBuffer );
+#define sbRECEIVE_COMPLETED( pxStreamBuffer )                      vDefaultReceiveCompletedStub( pxStreamBuffer )
+
+extern void vDefaultReceiveCompletedFromISRStub( void * xStreamBuffer,
+                                                 long * const pxTaskWoken );
+#define sbRECEIVE_COMPLETED_FROM_ISR( pxStreamBuffer, pxTaskWoken )    vDefaultReceiveCompletedFromISRStub( pxStreamBuffer, pxTaskWoken )
 
 #endif /* FREERTOS_CONFIG_H */

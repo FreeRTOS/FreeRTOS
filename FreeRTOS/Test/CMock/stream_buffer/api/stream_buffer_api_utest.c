@@ -85,20 +85,20 @@
  * @details Use this macro when the call passed in as a parameter is expected
  * to cause invalid memory access.
  */
-#define EXPECT_ASSERT_BREAK( call )                 \
-    do                                              \
-    {                                               \
-        shouldAbortOnAssertion = true;              \
-        CEXCEPTION_T e = CEXCEPTION_NONE;           \
-        Try                                         \
-        {                                           \
-            call;                                   \
-            TEST_FAIL();                            \
-        }                                           \
-        Catch( e )                                  \
-        {                                           \
-            TEST_ASSERT_EQUAL( configASSERT_E, e ); \
-        }                                           \
+#define EXPECT_ASSERT_BREAK( call )                  \
+    do                                               \
+    {                                                \
+        shouldAbortOnAssertion = true;               \
+        CEXCEPTION_T e = CEXCEPTION_NONE;            \
+        Try                                          \
+        {                                            \
+            call;                                    \
+            TEST_FAIL_MESSAGE( "Expected Assert!" ); \
+        }                                            \
+        Catch( e )                                   \
+        {                                            \
+            TEST_ASSERT_EQUAL( configASSERT_E, e );  \
+        }                                            \
     } while( 0 )
 
 
@@ -183,7 +183,7 @@ static BaseType_t streamBufferReceiveCallback( UBaseType_t uxIndexToWaitOn,
     size_t dataReceived = 0;
 
     /* Receive enough bytes (full size) from stream buffer to wake up sender task. */
-    dataReceived = xStreamBufferReceive( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE, 0 );
+    dataReceived = xStreamBufferReceive( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_WAIT_TICKS );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, dataReceived );
     return pdTRUE;
 }
@@ -291,7 +291,7 @@ static BaseType_t streamBufferSendCallback( UBaseType_t uxIndexToWaitOn,
     size_t dataSent = 0;
 
     /* Send enough (trigger level) bytes to stream buffer to wake up the receiver Task. */
-    dataSent = xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_TRIGGER_LEVEL, 0 );
+    dataSent = xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_TRIGGER_LEVEL, TEST_STREAM_BUFFER_WAIT_TICKS );
     TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_TRIGGER_LEVEL, dataSent );
     return pdTRUE;
 }
@@ -713,6 +713,46 @@ void test_xStreamBufferSend_blocking( void )
 }
 
 /**
+ * @brief This test case validates that multiple concurrent writers are not allowed on a stream buffer.
+ * The API should cause an assert fail, if a second task tries to write to the stream buffer
+ * while first task is blocked writing onto it.
+ */
+void test_xStreamBufferSend_concurrent_writers( void )
+{
+    uint8_t data[ TEST_STREAM_BUFFER_SIZE ] = { 0 };
+    size_t sent = 0;
+
+    vTaskSetTimeOutState_Ignore();
+    xTaskGenericNotifyStateClear_IgnoreAndReturn( pdTRUE );
+    xTaskGetCurrentTaskHandle_IgnoreAndReturn( senderTask );
+    vTaskSuspendAll_Ignore();
+    xTaskResumeAll_IgnoreAndReturn( pdTRUE );
+
+    /* Create a stream buffer of test sample size. */
+    xStreamBuffer = xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
+    TEST_ASSERT_NOT_NULL( xStreamBuffer );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, xStreamBufferSpacesAvailable( xStreamBuffer ) );
+
+    /* Sending upto full size of stream buffer should not block. */
+    sent = xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_WAIT_TICKS );
+    TEST_ASSERT_EQUAL( TEST_STREAM_BUFFER_SIZE, sent );
+    TEST_ASSERT_EQUAL( 0, xStreamBufferSpacesAvailable( xStreamBuffer ) );
+
+    /*
+     * Sending data to a stream buffer now should cause the sender task to block by calling xTaskGenericNotifyWait callback.
+     * Withing the callback a second sender tries to send data to same stream buffer which will
+     * cause the assert to fail.
+     */
+    xTaskGenericNotifyWait_StubWithCallback( streamBufferSendCallback );
+    xTaskGenericNotify_StubWithCallback( senderTaskNotificationCallback );
+    xTaskCheckForTimeOut_IgnoreAndReturn( pdFALSE );
+    EXPECT_ASSERT_BREAK( ( void ) xStreamBufferSend( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_WAIT_TICKS ) );
+    validate_and_clear_assertions();
+
+    vStreamBufferDelete( xStreamBuffer );
+}
+
+/**
  * @brief Validates that stream buffer does not block if zero wait time is passed.
  */
 void test_xStreamBufferSend_zero_wait_ticks( void )
@@ -844,6 +884,42 @@ void test_xStreamBufferReceive_blocking( void )
     xTaskCheckForTimeOut_IgnoreAndReturn( pdTRUE );
     receivedBytes = xStreamBufferReceive( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_WAIT_TICKS );
     TEST_ASSERT_EQUAL( 2, receiverTaskWoken );
+
+    vStreamBufferDelete( xStreamBuffer );
+}
+
+/**
+ * @brief This test case validates that multiple concurrent readers are not allowed on a stream buffer.
+ * The API should cause an assert  fail if a second task tries to read from the stream buffer
+ * while the first task is blocked reading from it.
+ */
+void test_xStreamBufferReceive_concurrent_readers( void )
+{
+    uint8_t data[ TEST_STREAM_BUFFER_SIZE ] = { 0xAA };
+
+    vTaskSetTimeOutState_Ignore();
+    xTaskGenericNotifyStateClear_IgnoreAndReturn( pdTRUE );
+    xTaskGetCurrentTaskHandle_IgnoreAndReturn( receiverTask );
+
+    xTaskGenericNotify_StubWithCallback( receiverTaskNotificationCallback );
+    xTaskCheckForTimeOut_IgnoreAndReturn( pdFALSE );
+    vTaskSuspendAll_Ignore();
+    xTaskResumeAll_IgnoreAndReturn( pdTRUE );
+
+    /* Create a stream buffer of sample size. */
+    xStreamBuffer = xStreamBufferCreate( TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_TRIGGER_LEVEL );
+    TEST_ASSERT_NOT_NULL( xStreamBuffer );
+    TEST_ASSERT_EQUAL( 0, xStreamBufferBytesAvailable( xStreamBuffer ) );
+
+    /*
+     * Receiving from an empty buffer causes the task to wait by calling xTaskGenericNotifyWait callback.
+     * A second reader trying to read concurrently from stream buffer will cause  assert statement
+     * to fail.
+     */
+    xTaskGenericNotifyWait_StubWithCallback( streamBufferReceiveCallback );
+    xTaskCheckForTimeOut_IgnoreAndReturn( pdFALSE );
+    EXPECT_ASSERT_BREAK( ( void ) xStreamBufferReceive( xStreamBuffer, data, TEST_STREAM_BUFFER_SIZE, TEST_STREAM_BUFFER_WAIT_TICKS ) );
+    validate_and_clear_assertions();
 
     vStreamBufferDelete( xStreamBuffer );
 }

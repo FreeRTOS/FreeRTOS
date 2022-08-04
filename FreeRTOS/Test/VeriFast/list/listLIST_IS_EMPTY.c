@@ -27,13 +27,12 @@
 #include "proof/list.h"
 
 /* Wrap the macro in a function call so we can give a function contract */
-#define listLIST_IS_EMPTY( pxList )    ( ( ( pxList )->uxNumberOfItems == ( UBaseType_t ) 0 ) ? pdTRUE : pdFALSE )
+#define listLIST_IS_EMPTY( pxList )                       ( ( ( pxList )->uxNumberOfItems == ( UBaseType_t ) 0 ) ? pdTRUE : pdFALSE )
 
 BaseType_t wrapper_listLIST_IS_EMPTY( List_t * pxList )
 /*@requires xLIST(pxList, ?len, ?idx, ?end, ?cells, ?vals);@*/
-
 /*@ensures xLIST(pxList, len, idx, end, cells, vals) &*&
- *  result == ((len == 0) ? pdTRUE : pdFALSE); @*/
+    result == ((len == 0) ? pdTRUE : pdFALSE); @*/
 {
     /*@open xLIST(pxList, len, _, _, _, _);@*/
     return listLIST_IS_EMPTY( pxList );

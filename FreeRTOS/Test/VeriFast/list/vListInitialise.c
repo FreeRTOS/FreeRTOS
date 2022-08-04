@@ -27,16 +27,16 @@
 #include "proof/list.h"
 
 /*@
- * predicate xLIST_uninitialised(struct xLIST *l) =
- *  l->uxNumberOfItems |-> _ &*&
- *  l->pxIndex |-> _ &*&
- *  l->xListEnd.xItemValue |-> _ &*&
- *  l->xListEnd.pxNext |-> _ &*&
- *  l->xListEnd.pxPrevious |-> _ &*&
- *  l->xListEnd.pvOwner |-> _ &*&
- *  l->xListEnd.pxContainer |-> _ &*&
- *  struct_xLIST_ITEM_padding(&l->xListEnd);
- * @*/
+predicate xLIST_uninitialised(struct xLIST *l) =
+    l->uxNumberOfItems |-> _ &*&
+    l->pxIndex |-> _ &*&
+    l->xListEnd.xItemValue |-> _ &*&
+    l->xListEnd.pxNext |-> _ &*&
+    l->xListEnd.pxPrevious |-> _ &*&
+    l->xListEnd.pvOwner |-> _ &*&
+    l->xListEnd.pxContainer |-> _ &*&
+    struct_xLIST_ITEM_padding(&l->xListEnd);
+@*/
 
 void vListInitialise( List_t * const pxList )
 /*@requires xLIST_uninitialised(pxList);@*/
@@ -65,9 +65,9 @@ void vListInitialise( List_t * const pxList )
     listSET_LIST_INTEGRITY_CHECK_1_VALUE( pxList );
     listSET_LIST_INTEGRITY_CHECK_2_VALUE( pxList );
 
-    #ifdef VERIFAST /*< ***change MiniList_t to ListItem_t*** */
-        pxList->xListEnd.pxContainer = pxList;
-    #endif
+#ifdef VERIFAST /*< ***change MiniList_t to ListItem_t*** */
+    pxList->xListEnd.pxContainer = pxList;
+#endif
     /*@ListItem_t *end = &(pxList->xListEnd);@*/
     /*@close xLIST_ITEM(end, portMAX_DELAY, _, _, pxList);@*/
     /*@close DLS(end, end, end, end, singleton(end), singleton(portMAX_DELAY), pxList);@*/

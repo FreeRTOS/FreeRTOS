@@ -28,17 +28,16 @@
 
 BaseType_t xQueueIsQueueFullFromISR( const QueueHandle_t xQueue )
 /*@requires queue(xQueue, ?Storage, ?N, ?M, ?W, ?R, ?K, ?is_locked, ?abs);@*/
-
 /*@ensures queue(xQueue, Storage, N, M, W, R, K, is_locked, abs) &*&
- *  result == ((K == N) ? pdTRUE : pdFALSE);@*/
+    result == ((K == N) ? pdTRUE : pdFALSE);@*/
 {
     BaseType_t xReturn;
 
-    #ifdef VERIFAST /*< const pointer declaration */
-        Queue_t * pxQueue = xQueue;
-    #else
-        Queue_t * const pxQueue = xQueue;
-    #endif
+#ifdef VERIFAST /*< const pointer declaration */
+    Queue_t * pxQueue = xQueue;
+#else
+    Queue_t * const pxQueue = xQueue;
+#endif
 
     configASSERT( pxQueue );
 

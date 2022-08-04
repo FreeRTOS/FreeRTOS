@@ -54,9 +54,9 @@ BaseType_t xQueuePeek( QueueHandle_t xQueue,
 
     /* Cannot block if the scheduler is suspended. */
     #if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
-        {
-            configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
-        }
+    {
+        configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
+    }
     #endif
 #endif
 
@@ -144,7 +144,7 @@ BaseType_t xQueuePeek( QueueHandle_t xQueue,
         taskEXIT_CRITICAL();
 
         /* Interrupts and other tasks can send to and receive from the queue
-         * now the critical section has been exited. */
+         * now that the critical section has been exited. */
 
         /*@close exists<QueueHandle_t>(pxQueue);@*/
         vTaskSuspendAll();

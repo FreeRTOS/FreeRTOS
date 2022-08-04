@@ -18,7 +18,7 @@ all: queue list
 
 .PHONY: queue
 queue:
-	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/create.c                    | $(call check_coverage,325)
+	@$(VERIFAST) $(VERIFAST_ARGS) -disable_overflow_check queue/create.c                    | $(call check_coverage,315)
 	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/prvCopyDataFromQueue.c      | $(call check_coverage,308)
 	@$(VERIFAST) $(VERIFAST_ARGS) -disable_overflow_check queue/prvCopyDataToQueue.c        | $(call check_coverage,336)
 	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/prvIsQueueEmpty.c           | $(call check_coverage,289)
@@ -41,7 +41,7 @@ queue:
 list:
 	@$(VERIFAST) $(VERIFAST_ARGS)                         list/listLIST_IS_EMPTY.c   | $(call check_coverage,314)
 	@$(VERIFAST) $(VERIFAST_ARGS)                         list/uxListRemove.c        | $(call check_coverage,440)
-	@$(VERIFAST) $(VERIFAST_ARGS)                         list/vListInitialise.c     | $(call check_coverage,325)
+	@$(VERIFAST) $(VERIFAST_ARGS)                         list/vListInitialise.c     | $(call check_coverage,329)
 	@$(VERIFAST) $(VERIFAST_ARGS)                         list/vListInitialiseItem.c | $(call check_coverage,316)
 	@$(VERIFAST) $(VERIFAST_ARGS) -disable_overflow_check list/vListInsertEnd.c      | $(call check_coverage,410)
 	@$(VERIFAST) $(VERIFAST_ARGS) -disable_overflow_check list/vListInsert.c         | $(call check_coverage,456)

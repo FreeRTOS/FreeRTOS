@@ -50,9 +50,9 @@ BaseType_t xQueueGenericSend( QueueHandle_t xQueue,
     configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
     configASSERT( !( ( xCopyPosition == queueOVERWRITE ) && ( pxQueue->uxLength != 1 ) ) );
     #if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
-        {
-            configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
-        }
+    {
+        configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
+    }
     #endif
 #endif
 
@@ -80,70 +80,34 @@ BaseType_t xQueueGenericSend( QueueHandle_t xQueue,
 
                 /* VeriFast: we do not verify this configuration option */
                 #if ( configUSE_QUEUE_SETS == 1 )
+                {
+                    const UBaseType_t uxPreviousMessagesWaiting = pxQueue->uxMessagesWaiting;
+
+                    xYieldRequired = prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
+
+                    if( pxQueue->pxQueueSetContainer != NULL )
                     {
-                        const UBaseType_t uxPreviousMessagesWaiting = pxQueue->uxMessagesWaiting;
-
-                        xYieldRequired = prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
-
-                        if( pxQueue->pxQueueSetContainer != NULL )
+                        if( ( xCopyPosition == queueOVERWRITE ) && ( uxPreviousMessagesWaiting != ( UBaseType_t ) 0 ) )
                         {
-                            if( ( xCopyPosition == queueOVERWRITE ) && ( uxPreviousMessagesWaiting != ( UBaseType_t ) 0 ) )
-                            {
-                                /* Do not notify the queue set as an existing item
-                                 * was overwritten in the queue so the number of items
-                                 * in the queue has not changed. */
-                                mtCOVERAGE_TEST_MARKER();
-                            }
-                            else if( prvNotifyQueueSetContainer( pxQueue ) != pdFALSE )
-                            {
-                                /* The queue is a member of a queue set, and posting
-                                 * to the queue set caused a higher priority task to
-                                 * unblock. A context switch is required. */
-                                queueYIELD_IF_USING_PREEMPTION();
-                            }
-                            else
-                            {
-                                mtCOVERAGE_TEST_MARKER();
-                            }
+                            /* Do not notify the queue set as an existing item
+                             * was overwritten in the queue so the number of items
+                             * in the queue has not changed. */
+                            mtCOVERAGE_TEST_MARKER();
+                        }
+                        else if( prvNotifyQueueSetContainer( pxQueue ) != pdFALSE )
+                        {
+                            /* The queue is a member of a queue set, and posting
+                             * to the queue set caused a higher priority task to
+                             * unblock. A context switch is required. */
+                            queueYIELD_IF_USING_PREEMPTION();
                         }
                         else
                         {
-                            /* If there was a task waiting for data to arrive on the
-                             * queue then unblock it now. */
-                            if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
-                            {
-                                if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
-                                {
-                                    /* The unblocked task has a priority higher than
-                                     * our own so yield immediately.  Yes it is ok to
-                                     * do this from within the critical section - the
-                                     * kernel takes care of that. */
-                                    queueYIELD_IF_USING_PREEMPTION();
-                                }
-                                else
-                                {
-                                    mtCOVERAGE_TEST_MARKER();
-                                }
-                            }
-                            else if( xYieldRequired != pdFALSE )
-                            {
-                                /* This path is a special case that will only get
-                                 * executed if the task was holding multiple mutexes
-                                 * and the mutexes were given back in an order that is
-                                 * different to that in which they were taken. */
-                                queueYIELD_IF_USING_PREEMPTION();
-                            }
-                            else
-                            {
-                                mtCOVERAGE_TEST_MARKER();
-                            }
+                            mtCOVERAGE_TEST_MARKER();
                         }
                     }
-                #else /* configUSE_QUEUE_SETS */
+                    else
                     {
-                        /*@close queue(pxQueue, Storage, N, M, W, R, K, is_locked, abs);@*/
-                        xYieldRequired = prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
-
                         /* If there was a task waiting for data to arrive on the
                          * queue then unblock it now. */
                         if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
@@ -151,9 +115,9 @@ BaseType_t xQueueGenericSend( QueueHandle_t xQueue,
                             if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
                             {
                                 /* The unblocked task has a priority higher than
-                                 * our own so yield immediately.  Yes it is ok to do
-                                 * this from within the critical section - the kernel
-                                 * takes care of that. */
+                                 * our own so yield immediately.  Yes it is ok to
+                                 * do this from within the critical section - the
+                                 * kernel takes care of that. */
                                 queueYIELD_IF_USING_PREEMPTION();
                             }
                             else
@@ -164,8 +128,8 @@ BaseType_t xQueueGenericSend( QueueHandle_t xQueue,
                         else if( xYieldRequired != pdFALSE )
                         {
                             /* This path is a special case that will only get
-                             * executed if the task was holding multiple mutexes and
-                             * the mutexes were given back in an order that is
+                             * executed if the task was holding multiple mutexes
+                             * and the mutexes were given back in an order that is
                              * different to that in which they were taken. */
                             queueYIELD_IF_USING_PREEMPTION();
                         }
@@ -174,6 +138,42 @@ BaseType_t xQueueGenericSend( QueueHandle_t xQueue,
                             mtCOVERAGE_TEST_MARKER();
                         }
                     }
+                }
+                #else /* configUSE_QUEUE_SETS */
+                {
+                    /*@close queue(pxQueue, Storage, N, M, W, R, K, is_locked, abs);@*/
+                    xYieldRequired = prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
+
+                    /* If there was a task waiting for data to arrive on the
+                     * queue then unblock it now. */
+                    if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
+                    {
+                        if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
+                        {
+                            /* The unblocked task has a priority higher than
+                             * our own so yield immediately.  Yes it is ok to do
+                             * this from within the critical section - the kernel
+                             * takes care of that. */
+                            queueYIELD_IF_USING_PREEMPTION();
+                        }
+                        else
+                        {
+                            mtCOVERAGE_TEST_MARKER();
+                        }
+                    }
+                    else if( xYieldRequired != pdFALSE )
+                    {
+                        /* This path is a special case that will only get
+                         * executed if the task was holding multiple mutexes and
+                         * the mutexes were given back in an order that is
+                         * different to that in which they were taken. */
+                        queueYIELD_IF_USING_PREEMPTION();
+                    }
+                    else
+                    {
+                        mtCOVERAGE_TEST_MARKER();
+                    }
+                }
                 #endif /* configUSE_QUEUE_SETS */
 
                 /*@
@@ -241,16 +241,16 @@ BaseType_t xQueueGenericSend( QueueHandle_t xQueue,
                 vTaskPlaceOnEventList( &( pxQueue->xTasksWaitingToSend ), xTicksToWait );
 
                 /* Unlocking the queue means queue events can effect the
-                 * event list.  It is possible that interrupts occurring now
+                 * event list. It is possible that interrupts occurring now
                  * remove this task from the event list again - but as the
                  * scheduler is suspended the task will go onto the pending
-                 * ready last instead of the actual ready list. */
+                 * ready list instead of the actual ready list. */
                 /*@close queue_locked_invariant(xQueue)();@*/
                 prvUnlockQueue( pxQueue );
 
                 /* Resuming the scheduler will move tasks from the pending
                  * ready list into the ready list - so it is feasible that this
-                 * task is already in a ready list before it yields - in which
+                 * task is already in the ready list before it yields - in which
                  * case the yield will not cause a context switch unless there
                  * is also a higher priority task in the pending ready list. */
                 /*@close exists(pxQueue);@*/

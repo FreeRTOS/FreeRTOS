@@ -49,6 +49,8 @@ void vListInitialise( List_t * const pxList )
      * as the only list entry. */
     pxList->pxIndex = ( ListItem_t * ) &( pxList->xListEnd ); /*lint !e826 !e740 !e9087 The mini list structure is used as the list end to save RAM.  This is checked and valid. */
 
+    listSET_FIRST_LIST_ITEM_INTEGRITY_CHECK_VALUE( &( pxList->xListEnd ) );
+
     /* The list end value is the highest possible value in the list to
      * ensure it remains at the end of the list. */
     pxList->xListEnd.xItemValue = portMAX_DELAY;
@@ -57,6 +59,15 @@ void vListInitialise( List_t * const pxList )
      * when the list is empty. */
     pxList->xListEnd.pxNext = ( ListItem_t * ) &( pxList->xListEnd );     /*lint !e826 !e740 !e9087 The mini list structure is used as the list end to save RAM.  This is checked and valid. */
     pxList->xListEnd.pxPrevious = ( ListItem_t * ) &( pxList->xListEnd ); /*lint !e826 !e740 !e9087 The mini list structure is used as the list end to save RAM.  This is checked and valid. */
+
+    /* Initialize the remaining fields of xListEnd when it is a proper ListItem_t */
+    #if ( configUSE_MINI_LIST_ITEM == 0 )
+    {
+        pxList->xListEnd.pvOwner = NULL;
+        pxList->xListEnd.pxContainer = NULL;
+        listSET_SECOND_LIST_ITEM_INTEGRITY_CHECK_VALUE( &( pxList->xListEnd ) );
+    }
+    #endif
 
     pxList->uxNumberOfItems = ( UBaseType_t ) 0U;
 

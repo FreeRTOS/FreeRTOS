@@ -49,18 +49,3 @@ list:
 .PHONY: proof_changes
 proof_changes:
 	@git grep "if[n]*def VERIFAST" | cut  -f 3- -d ' ' | sort | uniq
-
-GIT?=git
-NO_CHANGE_CHECKOUT_DIR=no-change-check-freertos-kernel
-NO_CHANGE_EXPECTED_HASH_QUEUE        = ec62f69dab7
-NO_CHANGE_EXPECTED_HASH_QUEUE_HEADER = ec62f69dab7
-NO_CHANGE_EXPECTED_HASH_LIST         = ec62f69dab7
-NO_CHANGE_EXPECTED_HASH_LIST_HEADER  = ec62f69dab7
-.PHONY: synced_with_source_check
-synced_with_source_check:
-	@rm -rf $(NO_CHANGE_CHECKOUT_DIR)
-	@$(GIT) clone https://github.com/FreeRTOS/FreeRTOS-Kernel.git $(NO_CHANGE_CHECKOUT_DIR)
-	@cd $(NO_CHANGE_CHECKOUT_DIR) && $(GIT) diff --quiet $(NO_CHANGE_EXPECTED_HASH_QUEUE) queue.c
-	@cd $(NO_CHANGE_CHECKOUT_DIR) && $(GIT) diff --quiet $(NO_CHANGE_EXPECTED_HASH_QUEUE_HEADER) include/queue.h
-	@cd $(NO_CHANGE_CHECKOUT_DIR) && $(GIT) diff --quiet $(NO_CHANGE_EXPECTED_HASH_LIST) list.c
-	@cd $(NO_CHANGE_CHECKOUT_DIR) && $(GIT) diff --quiet $(NO_CHANGE_EXPECTED_HASH_LIST_HEADER) include/list.h

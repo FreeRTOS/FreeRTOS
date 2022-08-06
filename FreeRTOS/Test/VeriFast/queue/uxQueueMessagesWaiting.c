@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/queue.h"
 
 /* It may seem that the read of `pxQueue->uxMessagesWaiting` is required to be
@@ -71,3 +73,5 @@ UBaseType_t uxQueueMessagesWaiting( const QueueHandle_t xQueue )
 
     return uxReturn;
 } /*lint !e818 Pointer cannot be declared const as xQueue is a typedef not pointer. */
+
+/* *INDENT-ON* */

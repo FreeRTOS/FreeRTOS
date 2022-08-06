@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/list.h"
 
 /* Wrap the macro in a function call so we can give a function contract */
@@ -38,3 +40,5 @@ BaseType_t wrapper_listLIST_IS_EMPTY( List_t * pxList )
     return listLIST_IS_EMPTY( pxList );
     /*@close xLIST(pxList, len, _, _, cells, vals);@*/
 }
+
+/* *INDENT-ON* */

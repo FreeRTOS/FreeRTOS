@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #ifndef QUEUE_H
 #define QUEUE_H
 
@@ -551,3 +553,5 @@ void clearInterruptMaskFromISR(QueueHandle_t xQueue, UBaseType_t uxSavedInterrup
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR(uxSavedInterruptStatus) clearInterruptMaskFromISR(xQueue, uxSavedInterruptStatus)
 
 #endif /* QUEUE_H */
+
+/* *INDENT-ON* */

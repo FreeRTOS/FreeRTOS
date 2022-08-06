@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/queue.h"
 
 /* In this case we cannot wrap the macro in a function call to give a function
@@ -71,3 +73,5 @@ void wrapper_prvLockQueue( QueueHandle_t xQueue )
     mutex_acquire( xQueue->locked );
 #endif
 }
+
+/* *INDENT-ON* */

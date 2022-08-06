@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/list.h"
 
 /*@
@@ -84,3 +86,5 @@ void vListInitialise( List_t * const pxList )
     /*@close DLS(end, end, end, end, singleton(end), singleton(portMAX_DELAY), pxList);@*/
     /*@close xLIST(pxList, 0, end, end, singleton(end), singleton(portMAX_DELAY));@*/
 }
+
+/* *INDENT-ON* */

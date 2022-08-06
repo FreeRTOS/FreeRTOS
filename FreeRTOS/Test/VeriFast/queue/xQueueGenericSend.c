@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/queue.h"
 #include "proof/queuecontracts.h"
 
@@ -287,3 +289,5 @@ BaseType_t xQueueGenericSend( QueueHandle_t xQueue,
         }
     } /*lint -restore */
 }
+
+/* *INDENT-ON* */

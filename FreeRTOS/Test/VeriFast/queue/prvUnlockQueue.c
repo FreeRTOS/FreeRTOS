@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/queue.h"
 #define taskENTER_CRITICAL()    setInterruptMask( pxQueue )
 #define taskEXIT_CRITICAL()     clearInterruptMask( pxQueue )
@@ -164,3 +166,5 @@ static void prvUnlockQueue( Queue_t * const pxQueue )
     mutex_release( pxQueue->locked );
 #endif
 }
+
+/* *INDENT-ON* */

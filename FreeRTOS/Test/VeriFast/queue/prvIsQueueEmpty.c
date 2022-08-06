@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/queue.h"
 #define taskENTER_CRITICAL()    setInterruptMask( pxQueue )
 #define taskEXIT_CRITICAL()     clearInterruptMask( pxQueue )
@@ -51,3 +53,5 @@ static BaseType_t prvIsQueueEmpty( const Queue_t * pxQueue )
 
     return xReturn;
 }
+
+/* *INDENT-ON* */

@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/queue.h"
 
 /* Simplifying assumption: we do not verify queue initialisation in a
@@ -281,3 +283,5 @@ static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength,
 
         return pxNewQueue;
     }
+
+/* *INDENT-ON* */

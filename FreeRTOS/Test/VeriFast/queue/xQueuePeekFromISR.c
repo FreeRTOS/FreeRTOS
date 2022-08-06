@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/queue.h"
 #include "proof/queuecontracts.h"
 
@@ -92,3 +94,5 @@ BaseType_t xQueuePeekFromISR( QueueHandle_t xQueue,
 
     return xReturn;
 }
+
+/* *INDENT-ON* */

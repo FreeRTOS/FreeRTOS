@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #ifndef QUEUECONTRACTS_H
 #define QUEUECONTRACTS_H
 
@@ -59,3 +61,5 @@ BaseType_t prvIsQueueFull( Queue_t * pxQueue );
 /*@ensures [1/2]queuehandle(pxQueue, N, M, is_isr);@*/
 
 #endif /* QUEUECONTRACTS_H */
+
+/* *INDENT-ON* */

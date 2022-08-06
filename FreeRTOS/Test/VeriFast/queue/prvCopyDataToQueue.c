@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/queue.h"
 
 static BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue,
@@ -188,3 +190,5 @@ static BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue,
     @*/
     return xReturn;
 }
+
+/* *INDENT-ON* */

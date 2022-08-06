@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #ifndef LIST_H
 #define LIST_H
 
@@ -371,3 +373,5 @@ lemma void remove_append<t>(t x, list<t> l1, list<t> l2)
 @*/
 
 #endif /* LIST_H */
+
+/* *INDENT-ON* */

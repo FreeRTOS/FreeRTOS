@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/queue.h"
 
 UBaseType_t uxQueueSpacesAvailable( const QueueHandle_t xQueue )
@@ -51,3 +53,5 @@ UBaseType_t uxQueueSpacesAvailable( const QueueHandle_t xQueue )
 
     return uxReturn;
 } /*lint !e818 Pointer cannot be declared const as xQueue is a typedef not pointer. */
+
+/* *INDENT-ON* */

@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/queue.h"
 
 BaseType_t xQueueIsQueueFullFromISR( const QueueHandle_t xQueue )
@@ -52,3 +54,5 @@ BaseType_t xQueueIsQueueFullFromISR( const QueueHandle_t xQueue )
 
     return xReturn;
 } /*lint !e818 xQueue could not be pointer to const because it is a typedef. */
+
+/* *INDENT-ON* */

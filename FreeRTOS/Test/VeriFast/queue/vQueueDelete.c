@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/queue.h"
 #define configSUPPORT_DYNAMIC_ALLOCATION    1
 #define configSUPPORT_STATIC_ALLOCATION     0
@@ -82,3 +84,5 @@ void vQueueDelete( QueueHandle_t xQueue )
     }
     #endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 }
+
+/* *INDENT-ON* */

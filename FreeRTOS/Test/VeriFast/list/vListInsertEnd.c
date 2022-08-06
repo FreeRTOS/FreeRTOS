@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/list.h"
 
 void vListInsertEnd( List_t * const pxList,
@@ -236,3 +238,5 @@ void client_example1( List_t * const l, ListItem_t * const pxNewListItem )
 {
     vListInsertEnd(l, pxNewListItem);
 }
+
+/* *INDENT-ON* */

@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/list.h"
 
 UBaseType_t uxListRemove( ListItem_t * const pxItemToRemove )
@@ -308,3 +310,5 @@ void client_example2( List_t * l )
     /*@close exists(l);@*/
     uxListRemove( index );
 }
+
+/* *INDENT-ON* */

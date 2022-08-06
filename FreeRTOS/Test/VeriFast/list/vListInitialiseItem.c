@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/list.h"
 
 void vListInitialiseItem( ListItem_t * const pxItem )
@@ -39,3 +41,5 @@ void vListInitialiseItem( ListItem_t * const pxItem )
     listSET_SECOND_LIST_ITEM_INTEGRITY_CHECK_VALUE( pxItem );
     /*@close xLIST_ITEM(pxItem, _, _, _, NULL);@*/
 }
+
+/* *INDENT-ON* */

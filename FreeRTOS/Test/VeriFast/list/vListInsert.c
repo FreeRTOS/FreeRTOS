@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/list.h"
 
 
@@ -321,3 +323,5 @@ void vListInsert( List_t * const pxList,
         }
     }@*/
 }
+
+/* *INDENT-ON* */

@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/queue.h"
 
 static void prvCopyDataFromQueue( Queue_t * const pxQueue,
@@ -91,3 +93,5 @@ void caller_reinstates_queue_predicate( Queue_t * const pxQueue,
     pxQueue->uxMessagesWaiting = pxQueue->uxMessagesWaiting - 1;
     /*@deq_lemma(K, (R+1)%N, contents, abs, head(abs));@*/
 }
+
+/* *INDENT-ON* */

@@ -34,7 +34,7 @@ if (NOT FREERTOS_KERNEL_PATH)
     foreach(POSSIBLE_SUFFIX Source FreeRTOS-Kernel FreeRTOS/Source)
         # check if FreeRTOS-Kernel exists under directory that included us
         set(SEARCH_ROOT ${CMAKE_CURRENT_SOURCE_DIR}})
-        set(SEARCH_ROOT ../../../..)
+        set(SEARCH_ROOT ../../../../..)
         get_filename_component(_POSSIBLE_PATH ${SEARCH_ROOT}/${POSSIBLE_SUFFIX} REALPATH)
         if (EXISTS ${_POSSIBLE_PATH}/${FREERTOS_KERNEL_RP2040_RELATIVE_PATH}/CMakeLists.txt)
             get_filename_component(FREERTOS_KERNEL_PATH ${_POSSIBLE_PATH} REALPATH)

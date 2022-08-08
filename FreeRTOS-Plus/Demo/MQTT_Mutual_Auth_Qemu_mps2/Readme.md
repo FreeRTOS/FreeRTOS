@@ -78,3 +78,8 @@ $ arm-none-eabi-gdb -q ./build/RTOSDemo.axf
 (gdb) c
 ```
 
+# Note on the Entropy Source 
+<P>
+Within mbedtls_freertos_port.c, mbedtls_platform_entropy_poll utilizes a pseudo-random number<br>
+generator. This allows MPS2-AN385 boards emulated via QEMU to establish a TLS connection, but should<br>
+be updated if you plan to build a project off of this demo to improve security.<br> 

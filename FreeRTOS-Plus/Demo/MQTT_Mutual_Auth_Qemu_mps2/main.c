@@ -35,7 +35,7 @@
 
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationMallocFailedHook( void );
-void main_mqtt_client_tasks( void );
+void vMainMQTTClientTasks( void );
 void vApplicationIdleHook( void );
 void vApplicationTickHook( void );
 
@@ -45,7 +45,7 @@ int main ()
 {
 #if ( mainCREATE_NETWORKING_DEMO_ONLY == 1 )
     {
-       main_mqtt_client_tasks();
+       vMainMQTTClientTasks();
     }
 #else
     {

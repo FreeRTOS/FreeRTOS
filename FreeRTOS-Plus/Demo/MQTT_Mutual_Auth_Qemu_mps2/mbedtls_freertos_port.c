@@ -213,8 +213,9 @@ int mbedtls_platform_entropy_poll( void * data,
     /* Context is not used by this function. */
     ( void ) data;
 
-    /* TLS requires a secure random number generator; use the RNG provided
-     * by Windows. This function MUST be re-implemented for other platforms. */
+    /* TLS requires a secure random number generator; This entropy source is 
+     * pseudo-random and should be used for demo purposes only. This should be updated 
+     * to be more secure if you plan to use this in a project. */
     output = malloc (len);
     if (output == NULL)
     {

@@ -44,9 +44,6 @@
 /* Demo application includes. */
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
-/*#include "SimpleUDPClientAndServer.h" */
-/*#include "SimpleTCPEchoServer.h" */
-/*#include "logging.h" */
 
 /* Simple UDP client and server task parameters. */
 #define mainSIMPLE_UDP_CLIENT_SERVER_TASK_PRIORITY    ( tskIDLE_PRIORITY )
@@ -138,7 +135,7 @@ static UBaseType_t ulNextRand;
 
 /*-----------------------------------------------------------*/
 
-void main_mqtt_client_tasks( void )
+void vMainMQTTClientTasks( void )
 {
     const uint32_t ulLongTime_ms = pdMS_TO_TICKS( 1000UL );
 

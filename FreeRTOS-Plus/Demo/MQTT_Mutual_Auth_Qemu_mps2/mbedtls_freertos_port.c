@@ -237,7 +237,7 @@ int mbedtls_platform_entropy_poll( void * data,
 /**
  * @brief Function to generate a random number based on a hardware poll.
  *
- * For this FreeRTOS Windows port, this function is redirected by calling
+ * For this FreeRTOS QEMU MPS2-an385 demo, this function is redirected by calling
  * #mbedtls_platform_entropy_poll.
  *
  * @param[in] data Callback context.

@@ -5,7 +5,6 @@
 3. qemu-arm-system download [here](https://www.qemu.org/download)
 2. Make (tested on version 3.82)
 
-
 ## How to download
 Navigate to a parent directory of your choice and run the following command
 ```

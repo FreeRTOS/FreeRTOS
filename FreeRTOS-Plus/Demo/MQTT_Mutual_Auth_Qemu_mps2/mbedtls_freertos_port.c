@@ -41,8 +41,6 @@
 #include "mbedtls/entropy.h"
 #include "mbedtls/ssl.h"
 
-
-
 /*-----------------------------------------------------------*/
 
 /**

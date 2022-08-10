@@ -36,7 +36,6 @@
 #include <time.h>
 #include <unistd.h>
 
-
 /* FreeRTOS includes. */
 #include <FreeRTOS.h>
 #include "task.h"
@@ -66,14 +65,9 @@ extern void vStartSimpleMQTTDemo( void );
 /* Set the following constants to 1 or 0 to define which tasks to include and
  * exclude:
  *
- * mainCREATE_TCP_ECHO_TASKS_SINGLE:  When set to 1 a set of tasks are created that
- * send TCP echo requests to the standard echo port (port 7), then wait for and
- * verify the echo reply, from within the same task (Tx and Rx are performed in the
- * same RTOS task).  The IP address of the echo server must be configured using the
- * configECHO_SERVER_ADDR0 to configECHO_SERVER_ADDR3 constants in
- * FreeRTOSConfig.h.
- *
- */
+ * mainCREATE_MQTT_TASKS_SINGLE:  When set to 1 a set of tasks are created that
+ * create a MQTT connection on top of a mutual TLS connection and publish messages 
+ * to the MQTT broker defined in demo_config.h. */ 
 
 /*-----------------------------------------------------------*/
 
@@ -120,18 +114,12 @@ const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0,
                                     configMAC_ADDR5
                                   };
 
-/* Set the following constant to pdTRUE to log using the method indicated by the
- * name of the constant, or pdFALSE to not log using the method indicated by the
- * name of the constant.  Options include to standard out (xLogToStdout), to a disk
- * file (xLogToFile), and to a UDP port (xLogToUDP).  If xLogToUDP is set to pdTRUE
- * then UDP messages are sent to the IP address configured as the echo server
- * address (see the configECHO_SERVER_ADDR0 definitions in FreeRTOSConfig.h) and
- * the port number set by configPRINT_PORT in FreeRTOSConfig.h. */
-//const BaseType_t xLogToStdout = pdTRUE, xLogToFile = pdFALSE, xLogToUDP = pdFALSE;
-
-
 /* Use by the pseudo random number generator. */
 static UBaseType_t ulNextRand;
+
+/* Initially set to pdFALSE since tasks that use the IP stack have not 
+ * yet been created, and then set to pdTRUE once they have been created. */
+BaseType_t xTasksAlreadyCreated = pdFALSE;
 
 /*-----------------------------------------------------------*/
 
@@ -180,7 +168,6 @@ void vMainMQTTClientTasks( void )
 }
 /*-----------------------------------------------------------*/
 
-    BaseType_t xTasksAlreadyCreated = pdFALSE;
 /* Called by FreeRTOS+TCP when the network connects or disconnects.  Disconnect
  * events are only received if implemented in the MAC driver. */
 void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )

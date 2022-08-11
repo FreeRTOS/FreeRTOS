@@ -82,7 +82,7 @@ int _read(int file, char *buf, int len)
 
 /**
  * @brief  Write bytes to the UART channel to be displayed on the command line
- *         with qemu
+ *         with qemu - will not work on actual board
  * @param [in] file  ignored
  * @param [in] buf   buffer to send
  * @param [in] len   length of the buffer

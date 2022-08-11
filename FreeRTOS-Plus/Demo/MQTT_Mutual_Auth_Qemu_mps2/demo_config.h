@@ -157,6 +157,30 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * #define democonfigCLIENT_CERTIFICATE_PEM  "...insert here..."
  */
  
+ /**
+ * @brief Client Private Key.
+ * 
+ * !!! Please note pasting a key into the header file in this manner is for
+ * !!! convenience of demonstration only and should not be done in production.
+ * !!! Never paste a production private key here!.  Production devices should
+ * !!! store keys securely, such as within a secure element.  Additionally,
+ * !!! we provide the corePKCS library that further enhances security by
+ * !!! enabling securely stored keys to be used without exposing them to
+ * !!! software.
+ * 
+ * For AWS IoT MQTT broker, refer to the AWS documentation below for details
+ * regarding client authentication.
+ * https://docs.aws.amazon.com/iot/latest/developerguide/client-authentication.html
+ *
+ * @note This private key should be PEM-encoded.
+ *
+ * Must include the PEM header and footer:
+ * "-----BEGIN RSA PRIVATE KEY-----\n"\
+ * "...base64 data...\n"\
+ * "-----END RSA PRIVATE KEY-----\n"
+ * 
+ * #define democonfigCLIENT_PRIVATE_KEY_PEM  "...insert here..."
+ */
 
 /**
  * @brief An option to disable Server Name Indication.
@@ -223,14 +247,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * current value is given as an example. Please update for your specific
  * hardware platform.
  */
-#define democonfigHARDWARE_PLATFORM_NAME    "MPS2" 
-
-/**
- * @brief The name of the MQTT library used and its version, following an "@"
- * symbol.
- */
-#include "core_mqtt.h" /* Include coreMQTT header for MQTT_LIBRARY_VERSION macro. */
-#define democonfigMQTT_LIB               "core-mqtt@"MQTT_LIBRARY_VERSION
+#define democonfigHARDWARE_PLATFORM_NAME    "QEMUMPS2" 
 
 /**
  * @brief Set the stack size of the main demo task.

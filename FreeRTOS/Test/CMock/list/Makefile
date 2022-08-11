@@ -29,7 +29,7 @@ MOCK_FILES_FP       :=
 CPPFLAGS            +=  -DportUSING_MPU_WRAPPERS=0
 
 # List any addiitonal flags needed by the compiler
-CFLAGS              +=
+CFLAGS              += -Wno-unused-function
 
 # Try not to edit beyond this line unless necessary.
 

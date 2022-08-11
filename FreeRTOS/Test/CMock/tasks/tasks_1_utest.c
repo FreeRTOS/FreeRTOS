@@ -898,9 +898,9 @@ void test_vTaskDelete_sucess_not_current_task( void )
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
                                              &xPendingReadyList );
     uxListRemove_ExpectAndReturn( &ptcb->xEventListItem, pdTRUE );
-    vPortFree_ExpectAnyArgs();
-    vPortFree_ExpectAnyArgs();
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
+    vPortFree_ExpectAnyArgs();
+    vPortFree_ExpectAnyArgs();
     pxCurrentTCB = NULL;
     /* API call */
     vTaskDelete( ptcb );
@@ -920,9 +920,9 @@ void test_vTaskDelete_sucess_not_current_task_no_yield( void )
     listLIST_ITEM_CONTAINER_ExpectAndReturn( &ptcb->xEventListItem,
                                              &xPendingReadyList );
     uxListRemove_ExpectAndReturn( &ptcb->xEventListItem, pdTRUE );
-    vPortFree_ExpectAnyArgs();
-    vPortFree_ExpectAnyArgs();
     listLIST_IS_EMPTY_ExpectAnyArgsAndReturn( pdTRUE );
+    vPortFree_ExpectAnyArgs();
+    vPortFree_ExpectAnyArgs();
     pxCurrentTCB = NULL;
     /* API call */
     vTaskDelete( ptcb );

@@ -24,7 +24,7 @@ UNDEF_MOCKED_HEADER_MACROS := -UlistLIST_IS_EMPTY -UlistGET_OWNER_OF_HEAD_ENTRY\
                     -UlistLIST_ITEM_CONTAINER -UlistCURRENT_LIST_LENGTH
 
 # List special compilation flags for this module
-CFLAGS           +=
+CFLAGS           += -Wno-unused-function
 
 # List special preprocessing flags for this module
 CPPFLAGS         +=

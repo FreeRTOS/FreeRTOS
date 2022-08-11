@@ -105,7 +105,7 @@ void vConfigureTimerForRunTimeStats( void );    /* Prototype of function that in
  * format the raw data provided by the uxTaskGetSystemState() function in to human
  * readable ASCII form.  See the notes in the implementation of vTaskList() within
  * FreeRTOS/Source/tasks.c for limitations. */
-#define configUSE_STATS_FORMATTING_FUNCTIONS         1
+#define configUSE_STATS_FORMATTING_FUNCTIONS         0
 #define configSTACK_ALLOCATION_FROM_SEPARATE_HEAP    0
 
 /* Set the following definitions to 1 to include the API function, or zero

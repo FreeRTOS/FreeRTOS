@@ -28,7 +28,7 @@ UNDEF_MOCKED_HEADER_MACROS := -UlistLIST_IS_EMPTY -UlistGET_OWNER_OF_HEAD_ENTRY\
                     -UlistLIST_ITEM_CONTAINER -UlistCURRENT_LIST_LENGTH
 
 # List special compilation flags for this module
-CFLAGS           +=
+CFLAGS           += -Wno-unused-function
 
 # List special preprocessing flags for this module
 CPPFLAGS         +=
@@ -150,7 +150,7 @@ $(SCRATCH_DIR)/%/$(PROJECT)_utest.o : $(PROJECT_DIR)/$(PROJECT)_%_utest.c      \
         $(eval INCLUDE = -I$(SCRATCH_DIR)/$*/include)
         $(eval INCLUDE += -I$(SCRATCH_DIR)/$*/mocks)
         $(eval INCLUDE += -I$(KERNEL_DIR)/include)
-        $(CC) -c $< $(INCLUDE) $(CPPFLAGS)  $(CFLAGS) -o $@
+        $(CC) -c $< $(INCLUDE) $(CPPFLAGS) $(CFLAGS) -o $@
 
 # Build tasks.o from tasks.i with the custom FreeRTOSConfig.h and place it in
 # its configuration directory

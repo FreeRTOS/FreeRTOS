@@ -147,7 +147,7 @@ typedef unsigned long    UBaseType_t;
 #define  portASSERT_IF_IN_ISR()          vFakePortAssertIfISR();
 
 
-static inline uint8_t ucPortCountLeadingZeros( uint32_t ulBitmap )
+static uint8_t ucPortCountLeadingZeros( uint32_t ulBitmap )
 {
     uint8_t ucReturn;
 

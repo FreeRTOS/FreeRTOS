@@ -12,32 +12,5 @@ SUITES	+=	callback
 #   $(UT_ROOT_DIR)/$(PROJECT)/$(SUITE)
 PROJECT :=  $(lastword $(subst /, ,$(dir $(abspath $(MAKEFILE_ABSPATH)))))
 
-# PROJECT_HEADER_DEPS: headers that should be excluded from coverage measurements.
-PROJECT_HEADER_DEPS :=  FreeRTOS.h
+include ../subdir.mk
 
-# SUITE_UT_SRC: .c files that contain test cases (must end in _utest.c)
-SUITE_UT_SRC        :=  stream_buffer_utest.c
-
-# SUITE_SUPPORT_SRC: .c files used for testing that do not contain test cases.
-# Paths are relative to PROJECT_DIR
-SUITE_SUPPORT_SRC   :=
-
-# List the headers used by PROJECT_SRC that you would like to mock
-MOCK_FILES_FP       :=  $(KERNEL_DIR)/include/task.h
-MOCK_FILES_FP       +=  $(UT_ROOT_DIR)/config/fake_assert.h
-MOCK_FILES_FP       +=  $(UT_ROOT_DIR)/config/fake_port.h
-
-# List any addiitonal flags needed by the preprocessor
-CPPFLAGS            +=  -DportUSING_MPU_WRAPPERS=0
-
-# List any addiitonal flags needed by the compiler
-CFLAGS              +=
-
-# Try not to edit beyond this line unless necessary.
-
-# Project is determined based on path: $(UT_ROOT_DIR)/$(PROJECT)
-PROJECT             :=  $(lastword $(subst /, ,$(dir $(abspath $(MAKEFILE_ABSPATH)))))
-
-export
-
-include ../testdir.mk

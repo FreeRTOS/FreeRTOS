@@ -37,9 +37,6 @@
   ],
   "CBMCFLAGS":
   [
-    "--unwind 1",
-    "--unwindset prvInitialiseTaskLists.0:8,vListInsert.0:3,vListInsert.1:3,uxListRemove.0:3,uxListRemove.1:3,insertAtIndex.0:3"
-
   ],
   "OBJS":
   [
@@ -50,5 +47,9 @@
   "INC":
   [
     "$(FREERTOS)/Test/CBMC/proofs/Task/TaskPrioritySet/"
+  ],
+  "APPLY_LOOP_CONTRACTS":
+  [
+    "1"
   ]
 }

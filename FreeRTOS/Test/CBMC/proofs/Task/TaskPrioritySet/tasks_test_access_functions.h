@@ -70,60 +70,74 @@ TaskHandle_t xUnconstrainedTCB( void )
     return pxTCB;
 }
 
+/* 
+ * An unbounded proof requires non-deterministic list sizes.
+ * Since we make no assumptions about the contents of these lists,
+ * we don't need to populate them with anything.
+*/
+void vSetNonDeterministicListSize( List_t * list)
+{
+    list->uxNumberOfItems = nondet_ubasetype();
+    __CPROVER_assume(list->uxNumberOfItems <= configLIST_SIZE);
+
+    if (list->uxNumberOfItems == 0){
+        list->pxIndex = 0;
+    }
+    else{
+        list->pxIndex = nondet_ubasetype();
+        __CPROVER_assume(list->pxIndex < list->uxNumberOfItems );
+    }
+}
+
+
+
 /*
- * We initialise and fill the task lists so coverage is optimal.
- * This initialization is not guaranteed to be minimal, but it
- * is quite efficient and it serves the same purpose
- */
+ * Creates a new TCB and optionally adds it to non-deterministic indices
+ * in various task-lists.
+ * Also prepares a task-list
+*/
 BaseType_t xPrepareTaskLists( TaskHandle_t * xTask )
 {
-    TCB_t * pxTCB = NULL;
-
     __CPROVER_assert_zero_allocation();
-
     prvInitialiseTaskLists();
-
-    pxTCB = xUnconstrainedTCB();
-
-    /* Needed for coverage: nondet insertion of task. */
-    if( nondet_bool() )
+    for( UBaseType_t uxPriority = ( UBaseType_t ) 0U; uxPriority < ( UBaseType_t ) configMAX_PRIORITIES; uxPriority++ )
     {
-        TCB_t * pxOtherTCB;
-        pxOtherTCB = xUnconstrainedTCB();
-
-        if( pxOtherTCB != NULL )
-        {
-            vListInsert( &pxReadyTasksLists[ pxOtherTCB->uxPriority ], &( pxOtherTCB->xStateListItem ) );
-        }
+        vSetNonDeterministicListSize(&pxReadyTasksLists[uxPriority]);
     }
 
-    if( pxTCB != NULL )
-    {
-        /* Needed for coverage: nondeterministic insertion of task */
-        if( nondet_bool() )
-        {
-            vListInsert( &pxReadyTasksLists[ pxTCB->uxPriority ], &( pxTCB->xStateListItem ) );
-        }
-    }
-
-    /* Note that `*xTask = NULL` can happen here, but this is fine -- `pxCurrentTCB` will be used instead */
-    *xTask = pxTCB;
-
+    // we only need to malloc the one TCB that we intend on setting a priority for,
+    // and the current TCB. This saves us from having to make multiple mallocs
+    TaskHandle_t newTCB = xUnconstrainedTCB();
     pxCurrentTCB = xUnconstrainedTCB();
-
-    if( pxCurrentTCB == NULL )
-    {
+    if (newTCB == NULL || pxCurrentTCB == NULL){
         return pdFAIL;
     }
 
-    /* Needed for coverage: nondeterministic insertion of task */
-    if( nondet_bool() )
-    {
-        vListInsert( &pxReadyTasksLists[ pxCurrentTCB->uxPriority ], &( pxCurrentTCB->xStateListItem ) );
+    // Add the new TCB to the ready list that it is supposed to be a part of.
+    if (nondet_bool()){   // needed for 100% coverage
+        UBaseType_t newTCBlistIndex;
+        __CPROVER_assume(newTCBlistIndex < pxReadyTasksLists[newTCB->uxPriority].uxNumberOfItems);
+        pxReadyTasksLists[newTCB->uxPriority].xListData[newTCBlistIndex] = &(newTCB->xStateListItem);
+        newTCB->xStateListItem.pxContainer = &pxReadyTasksLists[newTCB->uxPriority];
+    }
 
-        /* Needed for coverage. */
-        listGET_OWNER_OF_NEXT_ENTRY( pxCurrentTCB, &pxReadyTasksLists[ pxCurrentTCB->uxPriority ] );
+    /*
+     * The task handle passed to TaskPrioritySet can be NULL. 
+     * In that case, the task to delete is the one in `pxCurrentTCB`, 
+     * see the macro `prvGetTCBFromHandle` for reference. 
+     * Hence we either set 'xTask' to the newly created TCB, 
+     * or assign it to null.
+     */
+    if (notdet_bool()){
+        *xTask = newTCB;
+    } 
+    else
+    {
+        *xTask = NULL;
     }
 
     return pdPASS;
 }
+
+
+

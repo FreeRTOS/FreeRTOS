@@ -1,3 +1,4 @@
+
 /*
  * FreeRTOS memory safety proofs with CBMC.
  * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
@@ -31,7 +32,7 @@
 /*
  * We allocate a TCB and set some members to basic values
  */
-TaskHandle_t xUnconstrainedTCB( UBaseType_t uxPriority )
+TaskHandle_t xUnconstrainedTCB()
 {
     TCB_t * pxTCB = pvPortMalloc( sizeof( TCB_t ) );
 
@@ -40,8 +41,7 @@ TaskHandle_t xUnconstrainedTCB( UBaseType_t uxPriority )
         return NULL;
     }
 
-    /* uxPriority is set to a specific priority */
-    pxTCB->uxPriority = uxPriority;
+    __CPROVER_assume( pxTCB->uxPriority < configMAX_PRIORITIES );
 
     vListInitialiseItem( &( pxTCB->xStateListItem ) );
     vListInitialiseItem( &( pxTCB->xEventListItem ) );
@@ -77,33 +77,66 @@ TaskHandle_t xUnconstrainedTCB( UBaseType_t uxPriority )
 void vSetGlobalVariables( void )
 {
     uxSchedulerSuspended = nondet_ubasetype();
+    uxTopReadyPriority = configMAX_PRIORITIES - 1;
 }
 
-/*
- * We initialize and fill with one item each ready tasks list
- * so that the assertion on line 175 (tasks.c) does not fail
- */
+
+void vSetNonDeterministicListSize( List_t * list)
+{
+    list->uxNumberOfItems = nondet_ubasetype();
+    __CPROVER_assume(list->uxNumberOfItems <= configLIST_SIZE );
+
+    if (list->uxNumberOfItems == 0){
+        list->pxIndex = 0;
+    }
+    else{
+        list->pxIndex = nondet_ubasetype();
+        __CPROVER_assume(list->pxIndex < list->uxNumberOfItems );
+    }
+}
+
+// Initialize the list to non-deterministic sizes and malloc
+// the one element that we are going to access.
 BaseType_t xPrepareTaskLists( void )
 {
-    TCB_t * pxTCB = NULL;
-
+    // Allocate new TCB
     __CPROVER_assert_zero_allocation();
-
-    prvInitialiseTaskLists();
-
-    for( int i = 0; i < configMAX_PRIORITIES; ++i )
+    TCB_t * newTCB = xUnconstrainedTCB();
+    if( newTCB == NULL )
     {
-        pxTCB = xUnconstrainedTCB( i );
-
-        if( pxTCB == NULL )
-        {
-            return pdFAIL;
-        }
-
-        vListInsert( &pxReadyTasksLists[ pxTCB->uxPriority ], &( pxTCB->xStateListItem ) );
+        return pdFAIL;
     }
 
-    listGET_OWNER_OF_NEXT_ENTRY( pxCurrentTCB, &pxReadyTasksLists[ configMAX_PRIORITIES - 1 ] );
+    // Set non-deterministic list sizes.
+    prvInitialiseTaskLists();
+    for( UBaseType_t uxPriority = ( UBaseType_t ) 0U; uxPriority < ( UBaseType_t ) configMAX_PRIORITIES; uxPriority++ )
+    {
+        vSetNonDeterministicListSize(&pxReadyTasksLists[uxPriority]);
+    }
 
+    // Assumption: The idle task is always in the ready list with 0 priority.
+    // Hence the list should have at least 1 element.
+    // TODO: Is this a reasonable assumption?
+    __CPROVER_assume(pxReadyTasksLists[0].uxNumberOfItems > 0);
+    
+    // Set the top ready priority to the highest non-empty priority.
+    UBaseType_t topReadyPriority = configMAX_PRIORITIES - 1;
+    while( listLIST_IS_EMPTY( &( pxReadyTasksLists[ topReadyPriority ] ) ) )
+    {
+        --topReadyPriority;
+    }            
+
+    // Set the new TCB to the one element that is going to be accessed.
+    // This saves proof time by avoiding allocating additional unnecessary tasks  
+    // (is an overapproximation, and hence sufficient to prove memory safety) 
+    UBaseType_t indexToBeAccessed = pxReadyTasksLists[topReadyPriority].pxIndex + 1;                                                            \
+    if( indexToBeAccessed == (pxReadyTasksLists[ topReadyPriority ]).uxNumberOfItems)
+    {
+        indexToBeAccessed = ( UBaseType_t ) 0;
+    }
+    pxReadyTasksLists[topReadyPriority].xListData[indexToBeAccessed] = &(newTCB->xStateListItem);                         
+    
     return pdPASS;
 }
+
+

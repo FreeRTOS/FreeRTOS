@@ -67,9 +67,12 @@ class HeaderChecker:
         py_ext=None,
         asm_ext=None,
         third_party_patterns=None,
+        copyright_regex = None
     ):
         self.padding = padding
         self.header = header
+
+        self.copyright_regex = re.compile(copyright_regex)
 
         # Construct mutated header for assembly files
         self.asm_header = [";" + line for line in header]
@@ -124,7 +127,12 @@ class HeaderChecker:
     def isValidHeaderSection(self, file_ext, section_name, section):
         """Validate a given section based on file extentions and section name"""
         valid = False
-        if file_ext in self.pyExtList:
+        if self.copyright_regex and section_name == "copyright":
+            valid = True
+            for line in section:
+                if not self.copyright_regex.match(line):
+                    valid = False
+        elif file_ext in self.pyExtList:
             valid = self.headers_py[section_name] == section
         elif file_ext in self.asmExtList:
             valid = self.headers[section_name] == section

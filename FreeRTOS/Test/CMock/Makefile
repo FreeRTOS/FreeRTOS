@@ -55,7 +55,7 @@ help:
     @echo -e '$(UNITS) : will build the corresponding test including all its configuration'
     @echo -e 'doc               : will generate doxygen docs in $(BUILD_DIR)/doc/index.html'
     @echo -e 'run               : will build and run all $(UNITS) and their various configurations.'
-    @echo -e '                    it will also generate a test report in the JUnit format in $(BUILD_DIR)/report.xml'
+    @echo -e '                    It will also generate a test report in the JUnit format in $(BUILD_DIR)/report.xml'
     @echo -e 'run_col           : same as run but the results are in colors(pass: green, fail: red)'
     @echo -e 'run_formatted     : will show test case results in a formatted way'
     @echo -e 'run_col_formatted : same as formatted but will show the results in colors'

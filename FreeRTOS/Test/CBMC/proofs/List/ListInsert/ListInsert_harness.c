@@ -37,18 +37,9 @@ void harness()
     List_t pxList;
     vListInitialise(&pxList);
     
-    // Non-deterministically add 0 to (maxElements-1) elements to the
-    // list. (The -1 ensures that there is space to insert 1 more element)
-    ListItem_t items[configLIST_SIZE - 1];
-    for (UBaseType_t i = 0; i < configLIST_SIZE - 1; i++)
-    {
-        if (nondet_bool()){
-            pxList.xListData[pxList.uxNumberOfItems] = &items[i];
-            pxList.uxNumberOfItems++;
-        }
-    }
-
-    // Set the pxIndex field to some value between 0 and number of items
+    // Non-deterministically set the number of items and pxIndex field
+    pxList.uxNumberOfItems = nondet_ubasetype();
+    __CPROVER_assume(pxList.uxNumberOfItems <= configLIST_SIZE );
     if (pxList.uxNumberOfItems == 0){
         pxList.pxIndex = 0;
     }
@@ -57,6 +48,18 @@ void harness()
         __CPROVER_assume( newPxIndex < pxList.uxNumberOfItems );
         pxList.pxIndex = newPxIndex;
     }
+
+    // Non-deterministically add 0 to (maxElements-1) elements to the
+    // list. (The -1 ensures that there is space to insert 1 more element)
+    ListItem_t items[configLIST_SIZE - 1];
+    for (UBaseType_t i = 0; i < configLIST_SIZE - 1; i++)
+    {
+        if (i < pxList.uxNumberOfItems){
+            pxList.xListData[i] = &items[i];
+        }
+    }
+
+    
 
     // Finally add 1 item.
     ListItem_t newItem;

@@ -1,21 +1,8 @@
-This proof demonstrates the memory safety of the TaskDelay function.  We assume
-that `pxCurrentTCB` is initialized and inserted in one of the ready tasks lists
-(with and without another task in the same list). We abstract function
-`xTaskResumeAll` by assuming that `xPendingReadyList` is empty and
-`xPendedTicks` is `0`. Finally, we assume nondeterministic values for global
-variables `xTickCount` and `xNextTaskUnblockTime`, and `pdFALSE` for
-`uxSchedulerSuspended` (to avoid assertion failure).
+This proof demonstrates the unbounded memory safety of the TaskDelay function.  
+The proof is a work in progress since it only works for lists up to 
+size 30. The bottleneck is mainly in the memory allocations that need
+to be made in the harness - can't work around this currently in CBMC.
 
-Configurations available:
-
- * `default`: The default configuration.
- * `useTickHook1`: The default configuration with `INCLUDE_vTaskSuspend=0`
-
-This proof is a work-in-progress.  Proof assumptions are described in
-the harness.  The proof also assumes the following functions are
-memory safe and have no side effects relevant to the memory safety of
-this function:
-
-* vPortEnterCritical
-* vPortExitCritical
-* vPortGenerateSimulatedInterrupt
+Scalability here is also made worse by the use array-theory.
+However, array-theory also enables other proofs to become fully
+unbounded, and hence we are committed to using it.

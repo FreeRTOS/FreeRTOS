@@ -36,7 +36,8 @@
         "PENDED_TICKS=1",
         "'mtCOVERAGE_TEST_MARKER()=__CPROVER_assert(1, \"Coverage marker\")'",
         "configUSE_TRACE_FACILITY=0",
-        "configGENERATE_RUN_TIME_STATS=0"
+        "configGENERATE_RUN_TIME_STATS=0",
+	"configLIST_SIZE=20"
       ]
     },
     { "vTaskSuspend0" :
@@ -46,14 +47,13 @@
         "'mtCOVERAGE_TEST_MARKER()=__CPROVER_assert(1, \"Coverage marker\")'",
         "configUSE_TRACE_FACILITY=0",
         "configGENERATE_RUN_TIME_STATS=0",
-        "INCLUDE_vTaskSuspend=0"
+        "INCLUDE_vTaskSuspend=0",
+	"configLIST_SIZE=20"
       ]
     }
   ],
   "CBMCFLAGS":
   [
-    "--unwind 1",
-    "--unwindset prvInitialiseTaskLists.0:8,vListInsert.0:4"
   ],
   "OBJS":
   [
@@ -64,5 +64,9 @@
   "INC":
   [
     "$(FREERTOS)/Test/CBMC/proofs/Task/TaskDelay/"
+  ],
+  "APPLY_LOOP_CONTRACTS":
+  [
+    "1"
   ]
 }

@@ -32,7 +32,8 @@
   [
     "FREERTOS_MODULE_TEST",
     "'portGET_HIGHEST_PRIORITY(uxTopPriority, uxReadyPriorities)=__CPROVER_assume( uxTopPriority < configMAX_PRIORITIES )'",
-    "'mtCOVERAGE_TEST_MARKER()=__CPROVER_assert(1, \"Coverage marker\")'"
+    "'mtCOVERAGE_TEST_MARKER()=__CPROVER_assert(1, \"Coverage marker\")'",
+    "configLIST_SIZE=4000000"
   ],
   "CBMCFLAGS":
   [

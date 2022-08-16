@@ -6,21 +6,17 @@
 
 include ../makefile.in
 
-.PRECIOUS:
-
-PROJECT          :=   timers
+PROJECT          :=   tasks
 #
 # Test/CMock/tasks
 PROJECT_DIR      :=   $(abspath .)
 PROJ_DIR         :=   $(abspath .)
 
 # List the dependency files you wish to mock
-MOCK_FILES_FP    :=   $(KERNEL_DIR)/include/task.h
-MOCK_FILES_FP    +=   $(KERNEL_DIR)/include/queue.h
+MOCK_FILES_FP    :=   $(KERNEL_DIR)/include/timers.h
 MOCK_FILES_FP    +=   $(KERNEL_DIR)/include/list.h
 MOCK_FILES_FP    +=   $(KERNEL_DIR)/include/portable.h
 MOCK_FILES_FP    +=   $(PROJECT_DIR)/list_macros.h
-MOCK_FILES_FP    +=   $(UT_ROOT_DIR)/config/fake_assert.h
 
 UNDEF_MOCKED_HEADER_MACROS := -UlistLIST_IS_EMPTY -UlistGET_OWNER_OF_HEAD_ENTRY\
                     -UlistIS_CONTAINED_WITHIN -UlistGET_LIST_ITEM_VALUE        \
@@ -60,12 +56,12 @@ CPP_FILES        :=   $(addprefix $(SCRATCH_DIR)/%/cpp/,$(notdir $(MOCK_FILES_FP
 DEP_FILES        :=   $(addsuffix .d,$(addprefix $(SCRATCH_DIR)/%/cpp/,$(notdir $(MOCK_FILES_FP))))
 
 # tasks_1_utest.c   tasks_2_utest.c ...
-PROJ_SRC_LIST    :=   $(sort $(wildcard $(PROJECT)_*_utest.c))
+PROJ_SRC_LIST          :=   $(sort $(wildcard $(PROJECT)_*_utest.c))
 
-# 1_utest.c   dynamic_utest.c
+# 1_utest.c dynamic_utest.c
 SUITE_UT_SRC     :=   $(subst $(PROJECT)_,,$(PROJ_SRC_LIST))
 
-# timers_1_utest.c -> 1 timers_dynamic_utest -> dynamic   config1 assert ...
+# 1 2 3 config1 assert ...
 DISCRIMINATOR    :=   $(subst _utest,,$(subst .c,,$(subst $(PROJECT)_,,$(PROJ_SRC_LIST))))
 
 # tasks/1/mocks   tasks/2/mocks
@@ -82,7 +78,7 @@ ifeq ($(MOCK_FILES_FP),)
      $(shell for n in $(MOCK_DIRS) ; do touch -a $(n)/mock_dummy.c)
 endif
 
-EXEC_LIST      := $(addprefix $(BIN_DIR)/,$(patsubst %.c,%,$(PROJ_SRC_LIST)))
+EXEC_LIST        := $(addprefix $(BIN_DIR)/,$(patsubst %.c,%,$(PROJ_SRC_LIST)))
 EXEC_PATH        := $(addsuffix _%_utest,$(addprefix $(BIN_DIR)/,$(PROJECT)))
 PROJ_OBJ_LIST  := $(EXEC_LIST)
 
@@ -93,16 +89,16 @@ all : directories $(EXEC_LIST)
 
 # Build the executables 1 per configuration
 $(EXEC_PATH) : $(MOCK_OBJS)                                                    \
-                 $(SCRATCH_DIR)/%/test_runner.o                                \
-                 $(SCRATCH_DIR)/%/$(PROJECT).o                                 \
-                 $(SCRATCH_DIR)/%/$(PROJECT)_utest.o                           \
-                 | libs directories
+               $(SCRATCH_DIR)/%/test_runner.o                                  \
+               $(SCRATCH_DIR)/%/$(PROJECT).o                                   \
+               $(SCRATCH_DIR)/%/$(PROJECT)_utest.o                             \
+               | libs directories
         $(CC) $+ $(LDFLAGS) -o $@
 
 # Mock All preprocessed header files
 $(MOCK_SRC_LIST) : $(CPP_FILES)                                                \
                    Makefile                                                    \
-                   $(PROJECT_DIR)/$(PROJECT).yml \
+                   $(PROJECT_DIR)/$(PROJECT).yml                               \
                    | directories
         cd $(@D) && cd .. &&                                                   \
             ruby $(CMOCK_EXEC_DIR)/cmock.rb -o$(PROJECT_DIR)/$(PROJECT).yml    \
@@ -144,20 +140,17 @@ $(SCRATCH_DIR)/%/test_runner.o : $(SCRATCH_DIR)/%/test_runner.c                \
 
 # Build tasks_utest.o from tasks_utest_%.c
 $(SCRATCH_DIR)/%/$(PROJECT)_utest.o : $(PROJECT_DIR)/$(PROJECT)_%_utest.c      \
-                                      $(MOCK_OBJS)                             \
                                       global_vars.h                            \
                                       | directories
         $(eval INCLUDE = -I$(SCRATCH_DIR)/$*/include)
         $(eval INCLUDE += -I$(SCRATCH_DIR)/$*/mocks)
         $(eval INCLUDE += -I$(KERNEL_DIR)/include)
-        $(CC) -c $< $(INCLUDE) $(CPPFLAGS) $(CFLAGS) -o $@
+        $(CC) -c $< $(INCLUDE) $(CPPFLAGS)  $(CFLAGS) -o $@
 
 # Build tasks.o from tasks.i with the custom FreeRTOSConfig.h and place it in
 # its configuration directory
 $(SCRATCH_DIR)/%/$(PROJECT).o : $(SCRATCH_DIR)/%/$(PROJECT).i | directories
         $(CC) -c $< $(CFLAGS) $(COVERAGE_OPTS) -o $@
-
-RESET_TIMER_FUNCTION := void stopTimers() { xTimerQueue = NULL; xTimerTaskHandle = NULL; }
 
 # Build tasks.i from tasks.c with the custom FreeRTOSConfig.h and place it in
 # its configuration directory
@@ -165,8 +158,6 @@ $(SCRATCH_DIR)/%/$(PROJECT).i : $(KERNEL_DIR)/$(PROJECT).c | directories
         $(eval INCLUDE = -I$(SCRATCH_DIR)/$*/include)
         $(eval INCLUDE += -I$(SCRATCH_DIR)/$*/mocks)                           \
         $(eval INCLUDE += -I$(KERNEL_DIR)/include)                             \
-        grep -q '$(RESET_TIMER_FUNCTION)' $< || \
-                        sed -i -e '$$a$(RESET_TIMER_FUNCTION)' $<
         $(CC) -E $< $(INCLUDE) $(CPPFLAGS) -include list_macros.h -o $@
 
 # Generate test_runner.c which contains the main function from the test file

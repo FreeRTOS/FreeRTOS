@@ -59,7 +59,7 @@ jobs:
         working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Cellular_Interface_Windows_Simulator/MQTT_Mutual_Auth_Demo_with_SARA_R4
         run: msbuild mqtt_mutual_auth_demo_with_sara_r4.sln -t:rebuild -property:Configuration=Debug
 
-  winsim_mqtt:
+  winsim_corelibs:
     name: core Library Windows Simulator Demos
     runs-on: windows-2019
     steps:

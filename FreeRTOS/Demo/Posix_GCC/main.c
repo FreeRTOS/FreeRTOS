@@ -66,6 +66,10 @@
 /* Local includes. */
 #include "console.h"
 
+#if ( projCOVERAGE_TEST != 1 )
+    #include <trcRecorder.h>
+#endif
+
 #define    BLINKY_DEMO    0
 #define    FULL_DEMO      1
 
@@ -161,7 +165,6 @@ int main( void )
             #if ( TRACE_ON_ENTER == 1 )
                 printf( "\r\nThe trace will be dumped to disk if Enter is hit.\r\n" );
             #endif
-            uiTraceStart();
         }
     #endif /* if ( projCOVERAGE_TEST != 1 ) */
 
@@ -352,6 +355,7 @@ static void prvSaveTraceFile( void )
     #if ( projCOVERAGE_TEST != 1 )
         {
             FILE * pxOutputFile;
+            extern RecorderDataType* RecorderDataPtr;
 
             vTraceStop();
 
@@ -436,4 +440,27 @@ void handle_sigint( int signal )
     }
 
     exit( 2 );
+}
+
+struct itimerval itimer;
+void vTraceTimerReset( void )
+{
+    /* Stop the timer and ignore any pending SIGALRMs that would end
+     * up running on the main thread when it is resumed. */
+    itimer.it_value.tv_sec = 0;
+    itimer.it_value.tv_usec = 0;
+
+    itimer.it_interval.tv_sec = 0;
+    itimer.it_interval.tv_usec = 0;
+    ( void )setitimer( ITIMER_REAL, &itimer, NULL );
+}
+
+uint32_t uiTraceTimerGetFrequency( void )
+{
+    return 0;
+}
+
+uint32_t uiTraceTimerGetValue(void)
+{
+    return 0;
 }

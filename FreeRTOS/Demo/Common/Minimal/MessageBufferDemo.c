@@ -661,7 +661,7 @@ static void prvNonBlockingReceiverTask( void * pvParameters )
 
     static void prvReceiverTask( void * pvParameters )
     {
-        MessageBufferHandle_t * const pxMessageBuffer = ( MessageBufferHandle_t * ) pvParameters;
+        MessageBufferHandle_t const pxMessageBuffer = ( MessageBufferHandle_t ) pvParameters;
         char cExpectedString[ 12 ]; /* Large enough to hold a 32-bit number in ASCII. */
         char cReceivedString[ 12 ]; /* Large enough to hold a 32-bit number in ASCII. */
         int32_t iExpectedData = 0;

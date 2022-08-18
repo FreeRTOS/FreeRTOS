@@ -20,7 +20,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
+ *
  */
 #ifndef CORE_MQTT_CONFIG_H
 #define CORE_MQTT_CONFIG_H
@@ -73,6 +74,70 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * macro sets the limit on how many simultaneous PUBLISH states an MQTT
  * context maintains.
  */
-#define MQTT_STATE_ARRAY_MAX_COUNT    10U
+#define MQTT_STATE_ARRAY_MAX_COUNT              20U
+
+/**
+ * @brief The maximum duration between non-empty network reads while
+ * receiving an MQTT packet via the #MQTT_ProcessLoop or #MQTT_ReceiveLoop
+ * API functions.
+ *
+ * When an incoming MQTT packet is detected, the transport receive function
+ * may be called multiple times until all of the expected number of bytes of the
+ * packet are received. This timeout represents the maximum polling duration that
+ * is allowed without any data reception from the network for the incoming packet.
+ *
+ * @note For this demo, the timeout value is configured to zero as the demo uses a
+ * dummy timer function (of #MQTTGetCurrentTimeFunc_t) that always returns zero.
+ * It is REQUIRED to set the the timeout to zero when using a dummy timer function
+ * that always returns zero.
+ */
+#define MQTT_RECV_POLLING_TIMEOUT_MS    0U
+
+/**
+ * @brief The maximum duration between non-empty network transmissions while
+ * sending an MQTT packet via the #MQTT_ProcessLoop or #MQTT_ReceiveLoop
+ * API functions.
+ *
+ * When sending an MQTT packet, the transport send function may be called multiple
+ * times until the required number of bytes are sent.
+ * This timeout represents the maximum time wait for any data
+ * transmission over the network through the transport send function.
+ *
+ * @note For this demo, the timeout value is configured to zero as the demo uses a
+ * dummy timer function (of #MQTTGetCurrentTimeFunc_t) that always returns zero.
+ * It is REQUIRED to set the the timeout to zero when using a dummy timer function
+ * that always returns zero.
+ *
+ */
+#define MQTT_SEND_RETRY_TIMEOUT_MS      0U
+
+/*********************** coreMQTT Agent Configurations **********************/
+/**
+ * @brief The maximum number of pending acknowledgments to track for a single
+ * connection.
+ *
+ * @note The MQTT agent tracks MQTT commands (such as PUBLISH and SUBSCRIBE) th
+ * at are still waiting to be acknowledged.  MQTT_AGENT_MAX_OUTSTANDING_ACKS set
+ * the maximum number of acknowledgments that can be outstanding at any one time.
+ * The higher this number is the greater the agent's RAM consumption will be.
+ */
+#define MQTT_AGENT_MAX_OUTSTANDING_ACKS         ( 20U )
+
+/**
+ * @brief Time in MS that the MQTT agent task will wait in the Blocked state (so
+ * not using any CPU time) for a command to arrive in its command queue before
+ * exiting the blocked state so it can call MQTT_ProcessLoop().
+ *
+ * @note It is important MQTT_ProcessLoop() is called often if there is known
+ * MQTT traffic, but calling it too often can take processing time away from
+ * lower priority tasks and waste CPU time and power.
+ */
+#define MQTT_AGENT_MAX_EVENT_QUEUE_WAIT_TIME    ( 1000 )
+
+/**
+ * @brief The number of command structures to allocate in the pool
+ * for the agent.
+ */
+#define MQTT_COMMAND_CONTEXTS_POOL_SIZE         10
 
 #endif /* ifndef CORE_MQTT_CONFIG_H */

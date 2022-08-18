@@ -245,13 +245,13 @@
     <ClInclude Include="demo_config.h">
       <Filter>Config</Filter>
     </ClInclude>
-    <ClInclude Include="core_mqtt_config.h">
+    <ClInclude Include="..\Common\core_mqtt_config.h">
       <Filter>Config</Filter>
     </ClInclude>
-    <ClInclude Include="FreeRTOSConfig.h">
+    <ClInclude Include="..\Common\FreeRTOSConfig.h">
       <Filter>Config</Filter>
     </ClInclude>
-    <ClInclude Include="FreeRTOSIPConfig.h">
+    <ClInclude Include="..\Common\FreeRTOSIPConfig.h">
       <Filter>Config</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_config_defaults.h">

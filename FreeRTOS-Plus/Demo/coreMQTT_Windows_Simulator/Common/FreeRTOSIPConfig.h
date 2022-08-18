@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -88,7 +88,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * call to FreeRTOS_gethostbyname() will return immediately, without even creating
  * a socket. */
 #define ipconfigUSE_DNS_CACHE                      ( 1 )
-#define ipconfigDNS_CACHE_NAME_LENGTH              ( 32 )
+#define ipconfigDNS_CACHE_NAME_LENGTH              ( 64 )
 #define ipconfigDNS_CACHE_ENTRIES                  ( 4 )
 #define ipconfigDNS_REQUEST_ATTEMPTS               ( 2 )
 
@@ -287,7 +287,7 @@ extern UBaseType_t uxRand();
 
 /* Each TCP socket has a circular buffers for Rx and Tx, which have a fixed
  * maximum size.  Define the size of Rx buffer for TCP sockets. */
-#define ipconfigTCP_RX_BUFFER_LENGTH                          ( 1000 )
+#define ipconfigTCP_RX_BUFFER_LENGTH                          ( 5000 )
 
 /* Define the size of Tx buffer for TCP sockets. */
 #define ipconfigTCP_TX_BUFFER_LENGTH                          ( 1000 )

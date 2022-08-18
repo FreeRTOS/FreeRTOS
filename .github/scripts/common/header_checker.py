@@ -72,7 +72,10 @@ class HeaderChecker:
         self.padding = padding
         self.header = header
 
-        self.copyright_regex = re.compile(copyright_regex)
+        if copyright_regex:
+            self.copyright_regex = re.compile(copyright_regex)
+        else:
+            self.copyright_regex = None
 
         # Construct mutated header for assembly files
         self.asm_header = [";" + line for line in header]

@@ -969,4 +969,3 @@ BaseType_t xAreMessageBufferTasksStillRunning( void )
     return xReturn;
 }
 /*-----------------------------------------------------------*/
-

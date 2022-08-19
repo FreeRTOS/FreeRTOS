@@ -1,18 +1,7 @@
-This proof demonstrates the memory safety of the TaskIncrementTick function.
-We assume that task lists are initialized and filled with a few list items. We
-also assign nondeterministic values to some global variables.
+This proof demonstrates bounded memory safety of the TaskIncrementTick function. The proof only scales to a bound of 2. 
+
+An unbounded proof was not possible because CBMC is missing syntax needed for the assigns clause. Further, this proof needs every list element allocated, as well as quantified invariants, both of which don't scale. Hence it is unlikely that we'll be able to get unbounded proofs in the near future.
 
 Configurations available:
  * `default`: The default configuration.  `useTickHook1`: The default
  * configuration with `configUSE_TICK_HOOK=1`
-
-This proof is a work-in-progress.  Proof assumptions are described in
-the harness.  The proof also assumes the following functions are
-memory safe and have no side effects relevant to the memory safety of
-this function:
-
-* prvTraceGetTaskNumber
-* prvTracePortGetTimeStamp
-* prvTraceStoreKernelCallWithNumericParamOnly
-* prvTraceStoreTaskReady
-* vApplicationTickHook

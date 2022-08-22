@@ -213,22 +213,6 @@
 #define mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS         ( 5000U )
 
 /**
- * @brief ALPN (Application-Layer Protocol Negotiation) protocol name for AWS IoT MQTT.
- *
- * This will be used if democonfigMQTT_BROKER_PORT is configured as 443 for the AWS IoT MQTT broker.
- * Please see more details about the ALPN protocol for AWS IoT MQTT endpoint
- * in the link below.
- * https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/
- */
-#define AWS_IOT_MQTT_ALPN                                 "\x0ex-amzn-mqtt-ca"
-
-/**
- * @brief This is the ALPN (Application-Layer Protocol Negotiation) string
- * required by AWS IoT for password-based authentication using TCP port 443.
- */
-#define AWS_IOT_CUSTOM_AUTH_ALPN                          "\x04mqtt"
-
-/**
  * Provide default values for undefined configuration settings.
  */
 #ifndef democonfigOS_NAME
@@ -253,22 +237,6 @@
 #define AWS_IOT_METRICS_STRING                                 \
     "?SDK=" democonfigOS_NAME "&Version=" democonfigOS_VERSION \
     "&Platform=" democonfigHARDWARE_PLATFORM_NAME "&MQTTLib=" democonfigMQTT_LIB
-
-/**
- * @brief The length of the MQTT metrics string expected by AWS IoT.
- */
-#define AWS_IOT_METRICS_STRING_LENGTH    ( ( uint16_t ) ( sizeof( AWS_IOT_METRICS_STRING ) - 1 ) )
-
-#ifdef democonfigCLIENT_USERNAME
-
-/**
- * @brief Append the username with the metrics string if #democonfigCLIENT_USERNAME is defined.
- *
- * This is to support both metrics reporting and username/password based client
- * authentication by AWS IoT.
- */
-    #define CLIENT_USERNAME_WITH_METRICS    democonfigCLIENT_USERNAME AWS_IOT_METRICS_STRING
-#endif
 
 /**
  * @brief Milliseconds per second.
@@ -613,19 +581,44 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
     uint16_t usNextRetryBackOff = 0U;
 
     #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
+        #if defined( democonfigCLIENT_USERNAME )
+            /*
+            * When democonfigCLIENT_USERNAME is defined, use the "mqtt" alpn to connect
+            * to AWS IoT Core with Custom Authentication on port 443.
+            *
+            * Custom Authentication uses the contents of the username and password
+            * fields of the MQTT CONNECT packet to authenticate the client.
+            *
+            * For more information, refer to the documentation at:
+            * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
+            */
+            static const char * ppcAlpnProtocols[] = { "mqtt", NULL };
+            #if democonfigMQTT_BROKER_PORT != 443U
+                #error "Connections to AWS IoT Core with custom authentication must connect to TCP port 443 with the \"mqtt\" alpn."
+            #endif /* democonfigMQTT_BROKER_PORT != 443U */
+        #else /* if !defined( democonfigCLIENT_USERNAME ) */
+            /*
+            * Otherwise, use the "x-amzn-mqtt-ca" alpn to connect to AWS IoT Core using
+            * x509 Certificate Authentication.
+            */
+            static const char * ppcAlpnProtocols[] = { "x-amzn-mqtt-ca", NULL };
 
-        /* ALPN protocols must be a NULL-terminated list of strings. Therefore,
-         * the first entry will contain the actual ALPN protocol string while the
-         * second entry must remain NULL. */
-        char * pcAlpnProtocols[] = { NULL, NULL };
+        #endif /* !defined( democonfigCLIENT_USERNAME ) */
 
-        /* The ALPN string changes depending on whether username/password authentication is used. */
-        #ifdef democonfigCLIENT_USERNAME
-            pcAlpnProtocols[ 0 ] = AWS_IOT_CUSTOM_AUTH_ALPN;
-        #else
-            pcAlpnProtocols[ 0 ] = AWS_IOT_MQTT_ALPN;
-        #endif
-        pxNetworkCredentials->pAlpnProtos = pcAlpnProtocols;
+        /*
+        * An ALPN identifier is only required when connecting to AWS IoT core on port 443.
+        * https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html
+        */
+        #if democonfigMQTT_BROKER_PORT == 443U
+            pxNetworkCredentials->pAlpnProtos = ppcAlpnProtocols;
+        #elif democonfigMQTT_BROKER_PORT == 8883U
+            pxNetworkCredentials->pAlpnProtos = NULL;
+        #else /* democonfigMQTT_BROKER_PORT != 8883U */
+            pxNetworkCredentials->pAlpnProtos = NULL;
+            #error "MQTT connections to AWS IoT Core are only allowed on ports 443 and 8883."
+        #endif /* democonfigMQTT_BROKER_PORT != 443U */
+    #else
+        pxNetworkCredentials->pAlpnProtos = NULL;
     #endif /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
 
     pxNetworkCredentials->disableSni = democonfigDISABLE_SNI;
@@ -734,18 +727,23 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
 
     /* Append metrics when connecting to the AWS IoT Core broker. */
     #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
-        #ifdef democonfigCLIENT_USERNAME
-            xConnectInfo.pUserName = CLIENT_USERNAME_WITH_METRICS;
-            xConnectInfo.userNameLength = ( uint16_t ) strlen( CLIENT_USERNAME_WITH_METRICS );
+        #if defined( democonfigCLIENT_USERNAME )
+            /* Append metrics string when connecting to AWS IoT Core with custom auth */
+            xConnectInfo.pUserName = democonfigCLIENT_USERNAME AWS_IOT_METRICS_STRING;
+            xConnectInfo.userNameLength = ( uint16_t ) strlen( democonfigCLIENT_USERNAME AWS_IOT_METRICS_STRING );
+
+            /* Use the provided password as-is */
             xConnectInfo.pPassword = democonfigCLIENT_PASSWORD;
             xConnectInfo.passwordLength = ( uint16_t ) strlen( democonfigCLIENT_PASSWORD );
         #else
+            /* If no username is needed, only send the metrics string */
             xConnectInfo.pUserName = AWS_IOT_METRICS_STRING;
-            xConnectInfo.userNameLength = AWS_IOT_METRICS_STRING_LENGTH;
+            xConnectInfo.userNameLength = ( uint16_t ) strlen( AWS_IOT_METRICS_STRING );
+
             /* Password for authentication is not used. */
             xConnectInfo.pPassword = NULL;
             xConnectInfo.passwordLength = 0U;
-        #endif
+        #endif /* defined( democonfigCLIENT_USERNAME ) */
     #else /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
         #ifdef democonfigCLIENT_USERNAME
             xConnectInfo.pUserName = democonfigCLIENT_USERNAME;

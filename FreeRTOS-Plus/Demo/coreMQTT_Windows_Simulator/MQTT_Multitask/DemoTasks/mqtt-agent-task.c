@@ -233,22 +233,6 @@
 #define mqttexampleMILLISECONDS_PER_SECOND           ( 1000U )
 #define mqttexampleMILLISECONDS_PER_TICK             ( mqttexampleMILLISECONDS_PER_SECOND / configTICK_RATE_HZ )
 
-/**
- * @brief ALPN (Application-Layer Protocol Negotiation) protocol name for AWS IoT MQTT.
- *
- * This will be used if democonfigMQTT_BROKER_PORT is configured as 443 for the AWS IoT MQTT broker.
- * Please see more details about the ALPN protocol for AWS IoT MQTT endpoint
- * in the link below.
- * https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/
- */
-#define AWS_IOT_MQTT_ALPN                            "\x0ex-amzn-mqtt-ca"
-
-/**
- * @brief This is the ALPN (Application-Layer Protocol Negotiation) string
- * required by AWS IoT for password-based authentication using TCP port 443.
- */
-#define AWS_IOT_CUSTOM_AUTH_ALPN                     "\x04mqtt"
-
  /**
   * @brief The MQTT metrics string expected by AWS IoT.
   */
@@ -256,26 +240,9 @@
     "?SDK=" democonfigOS_NAME "&Version=" democonfigOS_VERSION \
     "&Platform=" democonfigHARDWARE_PLATFORM_NAME "&MQTTLib=" democonfigMQTT_LIB
 
-  /**
-   * @brief The length of the MQTT metrics string expected by AWS IoT.
-   */
-#define AWS_IOT_METRICS_STRING_LENGTH    ( ( uint16_t ) ( sizeof( AWS_IOT_METRICS_STRING ) - 1 ) )
-
-#ifdef democonfigCLIENT_USERNAME
-
-   /**
-    * @brief Append the username with the metrics string if #democonfigCLIENT_USERNAME is defined.
-    *
-    * This is to support both metrics reporting and username/password based client
-    * authentication by AWS IoT.
-    */
-#define CLIENT_USERNAME_WITH_METRICS    democonfigCLIENT_USERNAME AWS_IOT_METRICS_STRING
-#endif
-
-
 /**
-    * Provide default values for undefined configuration settings.
-    */
+ * Provide default values for undefined configuration settings.
+ */
 #ifndef democonfigOS_NAME
 #define democonfigOS_NAME    "FreeRTOS"
 #endif
@@ -292,16 +259,6 @@
 #include "core_mqtt.h" /* Include coreMQTT header for MQTT_LIBRARY_VERSION macro. */
 #define democonfigMQTT_LIB    "core-mqtt@"MQTT_LIBRARY_VERSION
 #endif
-
-/**
- * @brief Length of client identifier.
- */
-#define democonfigCLIENT_IDENTIFIER_LENGTH    ( ( uint16_t ) ( sizeof( democonfigCLIENT_IDENTIFIER ) - 1 ) )
-
-/**
- * @brief Length of MQTT server host name.
- */
-#define democonfigBROKER_ENDPOINT_LENGTH      ( ( uint16_t ) ( sizeof( democonfigMQTT_BROKER_ENDPOINT ) - 1 ) )
 
 /*-----------------------------------------------------------*/
 
@@ -607,28 +564,23 @@ static MQTTStatus_t prvMQTTConnect( bool xCleanSession )
      * be moved inside the agent. */
     xConnectInfo.keepAliveSeconds = mqttexampleKEEP_ALIVE_INTERVAL_SECONDS;
 
-    /* Append metrics when connecting to the AWS IoT Core broker. */
-    #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
-        #ifdef democonfigCLIENT_USERNAME
-            xConnectInfo.pUserName = CLIENT_USERNAME_WITH_METRICS;
-            xConnectInfo.userNameLength = ( uint16_t ) strlen( CLIENT_USERNAME_WITH_METRICS );
-            xConnectInfo.pPassword = democonfigCLIENT_PASSWORD;
-            xConnectInfo.passwordLength = ( uint16_t ) strlen( democonfigCLIENT_PASSWORD );
-        #else
-            xConnectInfo.pUserName = AWS_IOT_METRICS_STRING;
-            xConnectInfo.userNameLength = AWS_IOT_METRICS_STRING_LENGTH;
-            /* Password for authentication is not used. */
-            xConnectInfo.pPassword = NULL;
-            xConnectInfo.passwordLength = 0U;
-        #endif
-    #else /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
-        #ifdef democonfigCLIENT_USERNAME
-            xConnectInfo.pUserName = democonfigCLIENT_USERNAME;
-            xConnectInfo.userNameLength = ( uint16_t ) strlen( democonfigCLIENT_USERNAME );
-            xConnectInfo.pPassword = democonfigCLIENT_PASSWORD;
-            xConnectInfo.passwordLength = ( uint16_t ) strlen( democonfigCLIENT_PASSWORD );
-        #endif /* ifdef democonfigCLIENT_USERNAME */
-    #endif /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
+    #if defined( democonfigUSE_AWS_IOT_CORE_BROKER ) && defined( democonfigCLIENT_USERNAME )
+        /* Append metrics string when connecting to AWS IoT Core with custom auth */
+        xConnectInfo.pUserName = democonfigCLIENT_USERNAME AWS_IOT_METRICS_STRING;
+        xConnectInfo.userNameLength = ( uint16_t ) strlen( democonfigCLIENT_USERNAME AWS_IOT_METRICS_STRING );
+    #elif defined( democonfigUSE_AWS_IOT_CORE_BROKER )
+        /* If no username is needed, only send the metrics string */
+        xConnectInfo.pUserName = AWS_IOT_METRICS_STRING;
+        xConnectInfo.userNameLength = ( uint16_t ) strlen( AWS_IOT_METRICS_STRING );
+
+        /* Password for authentication is not used. */
+        xConnectInfo.pPassword = NULL;
+        xConnectInfo.passwordLength = 0U;
+    #elif defined( democonfigCLIENT_USERNAME )
+        /* If not connecting to AWS IoT Core, send the username without modification. */
+        xConnectInfo.pUserName = democonfigCLIENT_USERNAME;
+        xConnectInfo.userNameLength = ( uint16_t ) strlen( democonfigCLIENT_USERNAME );
+    #endif /* defined( democonfigCLIENT_USERNAME ) */
 
     /* Send MQTT CONNECT packet to broker. MQTT's Last Will and Testament feature
      * is not used in this demo, so it is passed as NULL. */
@@ -757,7 +709,7 @@ static void prvSubscriptionCommandCallback( void * pxCommandContext,
 
 static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
 {
-    BaseType_t xConnected = pdFAIL;
+    BaseType_t xConnected = pdPASS;
     BackoffAlgorithmStatus_t xBackoffAlgStatus = BackoffAlgorithmSuccess;
     BackoffAlgorithmContext_t xReconnectParams = { 0 };
     uint16_t usNextRetryBackOff = 0U;
@@ -767,21 +719,47 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
         TlsTransportStatus_t xNetworkStatus = TLS_TRANSPORT_CONNECT_FAILURE;
         NetworkCredentials_t xNetworkCredentials = { 0 };
 
-        #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
+        #if defined( democonfigUSE_AWS_IOT_CORE_BROKER )
+            #if defined( democonfigCLIENT_USERNAME )
+                /*
+                * When democonfigCLIENT_USERNAME is defined, use the "mqtt" alpn to connect
+                * to AWS IoT Core with Custom Authentication on port 443.
+                *
+                * Custom Authentication uses the contents of the username and password
+                * fields of the MQTT CONNECT packet to authenticate the client.
+                *
+                * For more information, refer to the documentation at:
+                * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
+                */
+                static const char * ppcAlpnProtocols[] = { "mqtt", NULL };
+                #if democonfigMQTT_BROKER_PORT != 443U
+                    #error "Connections to AWS IoT Core with custom authentication must connect to TCP port 443 with the \"mqtt\" alpn."
+                #endif /* democonfigMQTT_BROKER_PORT != 443U */
+            #else /* if !defined( democonfigCLIENT_USERNAME ) */
+                /*
+                * Otherwise, use the "x-amzn-mqtt-ca" alpn to connect to AWS IoT Core using
+                * x509 Certificate Authentication.
+                */
+                static const char * ppcAlpnProtocols[] = { "x-amzn-mqtt-ca", NULL };
 
-            /* ALPN protocols must be a NULL-terminated list of strings. Therefore,
-             * the first entry will contain the actual ALPN protocol string while the
-             * second entry must remain NULL. */
-            char * pcAlpnProtocols[] = { NULL, NULL };
+            #endif /* !defined( democonfigCLIENT_USERNAME ) */
 
-            /* The ALPN string changes depending on whether username/password authentication is used. */
-            #ifdef democonfigCLIENT_USERNAME
-                pcAlpnProtocols[ 0 ] = AWS_IOT_CUSTOM_AUTH_ALPN;
-            #else
-                pcAlpnProtocols[ 0 ] = AWS_IOT_MQTT_ALPN;
-            #endif
-            xNetworkCredentials.pAlpnProtos = pcAlpnProtocols;
-        #endif /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
+            /*
+            * An ALPN identifier is only required when connecting to AWS IoT core on port 443.
+            * https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html
+            */
+            #if democonfigMQTT_BROKER_PORT == 443U
+                xNetworkCredentials.pAlpnProtos = ppcAlpnProtocols;
+            #elif democonfigMQTT_BROKER_PORT == 8883U
+                xNetworkCredentials.pAlpnProtos = NULL;
+            #else /* democonfigMQTT_BROKER_PORT != 8883U */
+                xNetworkCredentials.pAlpnProtos = NULL;
+                #error "MQTT connections to AWS IoT Core are only allowed on ports 443 and 8883."
+            #endif /* democonfigMQTT_BROKER_PORT != 443U */
+
+        #else /* !defined( democonfigUSE_AWS_IOT_CORE_BROKER ) */
+            xNetworkCredentials.pAlpnProtos = NULL;
+        #endif /* !defined( democonfigUSE_AWS_IOT_CORE_BROKER ) */
 
         /* Set the credentials for establishing a TLS connection. */
         xNetworkCredentials.pRootCa = ( const unsigned char * ) democonfigROOT_CA_PEM;
@@ -806,57 +784,60 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
                                        RETRY_MAX_BACKOFF_DELAY_MS,
                                        RETRY_MAX_ATTEMPTS );
 
-    /* Attempt to connect to MQTT broker. If connection fails, retry after a
-     * timeout. Timeout value will exponentially increase until the maximum
-     * number of attempts are reached.
-     */
-    do
+    if( xConnected == pdPASS )
     {
-        /* Establish a TCP connection with the MQTT broker. This example connects to
-         * the MQTT broker as specified in democonfigMQTT_BROKER_ENDPOINT and
-         * democonfigMQTT_BROKER_PORT at the top of this file. */
-        #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
-            LogInfo( ( "Creating a TLS connection to %s:%d.",
-                       democonfigMQTT_BROKER_ENDPOINT,
-                       democonfigMQTT_BROKER_PORT ) );
-            xNetworkStatus = TLS_FreeRTOS_Connect( pxNetworkContext,
-                                                   democonfigMQTT_BROKER_ENDPOINT,
-                                                   democonfigMQTT_BROKER_PORT,
-                                                   &xNetworkCredentials,
-                                                   mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS,
-                                                   mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS );
-            xConnected = ( xNetworkStatus == TLS_TRANSPORT_SUCCESS ) ? pdPASS : pdFAIL;
-        #else /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
-            LogInfo( ( "Creating a TCP connection to %s:%d.",
-                       democonfigMQTT_BROKER_ENDPOINT,
-                       democonfigMQTT_BROKER_PORT ) );
-            xNetworkStatus = Plaintext_FreeRTOS_Connect( pxNetworkContext,
-                                                         democonfigMQTT_BROKER_ENDPOINT,
-                                                         democonfigMQTT_BROKER_PORT,
-                                                         mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS,
-                                                         mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS );
-            xConnected = ( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS ) ? pdPASS : pdFAIL;
-        #endif /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
-
-        if( !xConnected )
+        /* Attempt to connect to MQTT broker. If connection fails, retry after a
+        * timeout. Timeout value will exponentially increase until the maximum
+        * number of attempts are reached.
+        */
+        do
         {
-            /* Get back-off value (in milliseconds) for the next connection retry. */
-            xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, uxRand(), &usNextRetryBackOff );
+            /* Establish a TCP connection with the MQTT broker. This example connects to
+            * the MQTT broker as specified in democonfigMQTT_BROKER_ENDPOINT and
+            * democonfigMQTT_BROKER_PORT at the top of this file. */
+            #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
+                LogInfo( ( "Creating a TLS connection to %s:%d.",
+                        democonfigMQTT_BROKER_ENDPOINT,
+                        democonfigMQTT_BROKER_PORT ) );
+                xNetworkStatus = TLS_FreeRTOS_Connect( pxNetworkContext,
+                                                    democonfigMQTT_BROKER_ENDPOINT,
+                                                    democonfigMQTT_BROKER_PORT,
+                                                    &xNetworkCredentials,
+                                                    mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS,
+                                                    mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS );
+                xConnected = ( xNetworkStatus == TLS_TRANSPORT_SUCCESS ) ? pdPASS : pdFAIL;
+            #else /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
+                LogInfo( ( "Creating a TCP connection to %s:%d.",
+                        democonfigMQTT_BROKER_ENDPOINT,
+                        democonfigMQTT_BROKER_PORT ) );
+                xNetworkStatus = Plaintext_FreeRTOS_Connect( pxNetworkContext,
+                                                            democonfigMQTT_BROKER_ENDPOINT,
+                                                            democonfigMQTT_BROKER_PORT,
+                                                            mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS,
+                                                            mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS );
+                xConnected = ( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS ) ? pdPASS : pdFAIL;
+            #endif /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
 
-            if( xBackoffAlgStatus == BackoffAlgorithmSuccess )
+            if( !xConnected )
             {
-                LogWarn( ( "Connection to the broker failed. "
-                           "Retrying connection in %hu ms.",
-                           usNextRetryBackOff ) );
-                vTaskDelay( pdMS_TO_TICKS( usNextRetryBackOff ) );
-            }
-        }
+                /* Get back-off value (in milliseconds) for the next connection retry. */
+                xBackoffAlgStatus = BackoffAlgorithm_GetNextBackoff( &xReconnectParams, uxRand(), &usNextRetryBackOff );
 
-        if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )
-        {
-            LogError( ( "Connection to the broker failed, all attempts exhausted." ) );
-        }
-    } while( ( xConnected != pdPASS ) && ( xBackoffAlgStatus == BackoffAlgorithmSuccess ) );
+                if( xBackoffAlgStatus == BackoffAlgorithmSuccess )
+                {
+                    LogWarn( ( "Connection to the broker failed. "
+                            "Retrying connection in %hu ms.",
+                            usNextRetryBackOff ) );
+                    vTaskDelay( pdMS_TO_TICKS( usNextRetryBackOff ) );
+                }
+            }
+
+            if( xBackoffAlgStatus == BackoffAlgorithmRetriesExhausted )
+            {
+                LogError( ( "Connection to the broker failed, all attempts exhausted." ) );
+            }
+        } while( ( xConnected != pdPASS ) && ( xBackoffAlgStatus == BackoffAlgorithmSuccess ) );
+    }
 
     /* Set the socket wakeup callback and ensure the read block time. */
     if( xConnected )

@@ -36,7 +36,8 @@
         "PENDED_TICKS=1",
         "'mtCOVERAGE_TEST_MARKER()=__CPROVER_assert(1, \"Coverage marker\")'",
         "configUSE_TRACE_FACILITY=0",
-        "configGENERATE_RUN_TIME_STATS=0"
+        "configGENERATE_RUN_TIME_STATS=0",
+	"configLIST_SIZE=1"
       ]
     },
     { "useTickHook1":
@@ -46,14 +47,14 @@
         "'mtCOVERAGE_TEST_MARKER()=__CPROVER_assert(1, \"Coverage marker\")'",
         "configUSE_TRACE_FACILITY=0",
         "configGENERATE_RUN_TIME_STATS=0",
-        "configUSE_TICK_HOOK=1"
+        "configUSE_TICK_HOOK=1",
+	"configLIST_SIZE=1"
       ]
     }
   ],
   "CBMCFLAGS":
   [
-    "--unwind 1",
-    "--unwindset prvInitialiseTaskLists.0:8,xTaskResumeAll.0:2,vListInsert.0:5,xTaskIncrementTick.0:4"
+    "--unwindset xTaskResumeAll.0:2,xTaskIncrementTick.0:2,uxListRemove.0:1,uxListRemove.1:1,vListinsertAtIndex.0:1,xPrepareTaskLists.0:2,xPrepareTaskLists.1:2,xPrepareTaskLists.2:2,prvInitialiseTaskLists.0:8,xTaskResumeAll.1:1"
 
   ],
   "OBJS":

@@ -93,11 +93,6 @@ void vMallocElements(List_t * list)
     }
 }
 
-/*
- * We initialise and fill the task lists so coverage is optimal.
- * This initialization is not guaranteed to be minimal, but it
- * is quite efficient and it serves the same purpose
- */
 BaseType_t xPrepareTaskLists( void )
 {
     __CPROVER_assert_zero_allocation();
@@ -110,5 +105,8 @@ BaseType_t xPrepareTaskLists( void )
     
     // Also allocate the current tcb
     pxCurrentTCB = xUnconstrainedTCB();
+    if (pxCurrentTCB == NULL){
+        return pdFAIL;
+    }
     return pdPASS;
 }

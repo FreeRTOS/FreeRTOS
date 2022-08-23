@@ -80,71 +80,92 @@ void vSetGlobalVariables( void )
     __CPROVER_assume( uxNonZeroValue != 0 );
 
     uxSchedulerSuspended = uxNonZeroValue;
-    xPendedTicks = nondet_bool() ? PENDED_TICKS : 0;
+    xPendedTicks = nondet_bool() ? 1 : 0;
     uxCurrentNumberOfTasks = nondet_ubasetype();
     xTickCount = nondet_ticktype();
 }
 
-/*
- * We initialise and fill the task lists so coverage is optimal.
- * This initialization is not guaranteed to be minimal, but it
- * is quite efficient and it serves the same purpose
- */
+
+/* 
+ * An unbounded proof requires non-deterministic list sizes.
+ * Since we make no assumptions about the contents of these lists,
+ * we don't need to populate them with anything.
+*/
+void vSetNonDeterministicListSize( List_t * list, UBaseType_t size)
+{
+    list->uxNumberOfItems = nondet_ubasetype();
+    __CPROVER_assume(list->uxNumberOfItems <= size );
+
+    if (list->uxNumberOfItems == 0){
+        list->pxIndex = 0;
+    }
+    else{
+        list->pxIndex = nondet_ubasetype();
+        __CPROVER_assume(list->pxIndex < list->uxNumberOfItems );
+    }
+}
+
 BaseType_t xPrepareTaskLists( void )
 {
-    TCB_t * pxTCB = NULL;
-
     __CPROVER_assert_zero_allocation();
-
     prvInitialiseTaskLists();
-
-    /* This task will be moved to a ready list, granting coverage
-     * on lines 2780-2786 (tasks.c) */
-    pxTCB = xUnconstrainedTCB();
-
-    if( pxTCB == NULL )
-    {
+    
+    // An auxillary list. It's purpose is to add elements that don't
+    // get added to the pxDelayedTaskList.
+    List_t * extraList = pvPortMalloc(sizeof(List_t));
+    if (extraList == NULL){
         return pdFAIL;
     }
+    vListInitialise(extraList);
 
-    vListInsert( pxOverflowDelayedTaskList, &( pxTCB->xStateListItem ) );
+    // Set non-deterministic sizes for the two lists used. 
+    vSetNonDeterministicListSize(pxDelayedTaskList, configLIST_SIZE);  
+    vSetNonDeterministicListSize(&xPendingReadyList, configLIST_SIZE);
 
-    /* Use of this macro ensures coverage on line 185 (list.c) */
-    listGET_OWNER_OF_NEXT_ENTRY( pxTCB, pxOverflowDelayedTaskList );
-
-    pxTCB = xUnconstrainedTCB();
-
-    if( pxTCB == NULL )
-    {
+    // Malloc a set of TCBs. We need to malloc the whole TCB instead of 
+    // just the list-item, since the TCB fields get accessed.
+    TCB_t ** TCBs = pvPortMalloc(configLIST_SIZE * sizeof(TCB_t*));
+    if (TCBs == NULL){
         return pdFAIL;
     }
-
-    vListInsert( &xPendingReadyList, &( pxTCB->xStateListItem ) );
-    vListInsert( pxOverflowDelayedTaskList, &( pxTCB->xEventListItem ) );
-
-    pxTCB = xUnconstrainedTCB();
-
-    if( pxTCB == NULL )
+    for (UBaseType_t i = 0; i < configLIST_SIZE; i++)
     {
-        return pdFAIL;
+        TCBs[i] = xUnconstrainedTCB();
+        if (TCBs[i] == NULL){
+            return pdFAIL;
+        }
     }
 
-    vListInsert( pxOverflowDelayedTaskList, &( pxTCB->xStateListItem ) );
-
-    /* This nondeterministic choice ensure coverage in line 2746 (tasks.c) */
-    if( nondet_bool() )
+    // Each stateListItem needs to be part of some list.
+    // Put it in either the delayed-task-list or the extra-list.
+    for (UBaseType_t i = 0; i < configLIST_SIZE; i++)
     {
-        vListInsert( pxOverflowDelayedTaskList, &( pxTCB->xEventListItem ) );
+        if (i < pxDelayedTaskList->uxNumberOfItems)
+        {
+            pxDelayedTaskList->xListData[i] = &(TCBs[i]->xStateListItem);
+            pxDelayedTaskList->xListData[i]->pxContainer = pxDelayedTaskList;
+        } 
+        else 
+        {
+            extraList->xListData[extraList->uxNumberOfItems] = &(TCBs[i]->xStateListItem);
+            extraList->xListData[extraList->uxNumberOfItems]->pxContainer = extraList;
+            extraList->uxNumberOfItems++;
+        }
     }
 
+    // Each eventListItem can be in the pending-ready list.
+    for (UBaseType_t i = 0; i < configLIST_SIZE; i++)
+    {
+        if (i < xPendingReadyList.uxNumberOfItems){
+            xPendingReadyList.xListData[i] = &(TCBs[i]->xEventListItem);
+            xPendingReadyList.xListData[i]->pxContainer = &xPendingReadyList;
+        }
+    }
+
+    // Also allocate the current tcb
     pxCurrentTCB = xUnconstrainedTCB();
-
-    if( pxCurrentTCB == NULL )
-    {
+    if (pxCurrentTCB == NULL){
         return pdFAIL;
     }
-
-    vListInsert( &pxReadyTasksLists[ pxCurrentTCB->uxPriority ], &( pxCurrentTCB->xStateListItem ) );
-
     return pdPASS;
 }

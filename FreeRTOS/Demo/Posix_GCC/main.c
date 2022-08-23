@@ -58,6 +58,7 @@
 #include <signal.h>
 #include <errno.h>
 #include <sys/select.h>
+#include <time.h>
 
 /* FreeRTOS kernel includes. */
 #include "FreeRTOS.h"
@@ -143,6 +144,9 @@ StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 #else
     static BaseType_t xTraceRunning = pdTRUE;
 #endif
+
+static clockid_t cid = CLOCK_THREAD_CPUTIME_ID;
+static uint32_t frequency;
 
 /*-----------------------------------------------------------*/
 
@@ -442,25 +446,57 @@ void handle_sigint( int signal )
     exit( 2 );
 }
 
-struct itimerval itimer;
 void vTraceTimerReset( void )
 {
-    /* Stop the timer and ignore any pending SIGALRMs that would end
-     * up running on the main thread when it is resumed. */
-    itimer.it_value.tv_sec = 0;
-    itimer.it_value.tv_usec = 0;
+    int xRet;
+    struct timespec ts;
+    ts.tv_sec = 0;
+    ts.tv_nsec = 0;
 
-    itimer.it_interval.tv_sec = 0;
-    itimer.it_interval.tv_usec = 0;
-    ( void )setitimer( ITIMER_REAL, &itimer, NULL );
+    xRet = clock_settime( cid, &ts );
+    if( xRet != 0 )
+    {
+        printf( "Could not reset time: %s\n", strerror( errno ) );
+    }
 }
 
 uint32_t uiTraceTimerGetFrequency( void )
 {
-    return 0;
+    struct timespec res;
+    int xRet;
+
+    res.tv_nsec = 0;
+    res.tv_sec = 0;
+
+    xRet = clock_getres( cid, &res );
+    if( xRet == 0 )
+    {
+        // calculate frequency from timer definition
+        frequency = (uint64_t) 1000000000 / res.tv_nsec;
+    }
+    else
+    {
+        printf( "Could not get clock frequency: %s\n", strerror( errno ) );
+    }
+    return frequency;
 }
 
-uint32_t uiTraceTimerGetValue(void)
+uint32_t uiTraceTimerGetValue( void )
 {
-    return 0;
+    int xRet;
+    struct timespec tp;
+    uint32_t result = 0;
+
+    xRet = clock_gettime( cid, &tp );
+    if( xRet == 0 )
+    {
+        result = tp.tv_nsec / frequency;
+        result += (tp.tv_sec * 1000000000) / frequency;
+    }
+    else
+    {
+        printf( "Could not get time: %s\n", strerror( errno ) );
+    }
+    return result;
 }
+

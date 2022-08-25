@@ -1,0 +1,6 @@
+{ "expected-missing-functions":
+  [
+  ],
+  "proof-name": "EquivalenceProofs",
+  "proof-root": "Test/CBMC/proofs"
+}

@@ -1,6 +1,6 @@
 { "expected-missing-functions":
   [
   ],
-  "proof-name": "ListInsertEndEquivalence",
+  "proof-name": "EquivalenceProofs",
   "proof-root": "Test/CBMC/proofs"
 }

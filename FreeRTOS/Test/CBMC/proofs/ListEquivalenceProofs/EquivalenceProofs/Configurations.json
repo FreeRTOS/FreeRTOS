@@ -27,13 +27,36 @@
 #
 
 {
-  "ENTRY": "ListInsertEndEquivalence",
+  "ENTRY": "EquivalenceProofs",
   "DEF":
   [
-    "FREERTOS_MODULE_TEST",
-    "'mtCOVERAGE_TEST_MARKER()=__CPROVER_assert(1, \"Coverage marker\")'",
-    "configLIST_SIZE=30",
-    "SKIP_CBMC_ARRAY_THEORY=1"
+    { "listInsert":
+      [
+        "FREERTOS_MODULE_TEST",
+        "'mtCOVERAGE_TEST_MARKER()=__CPROVER_assert(1, \"Coverage marker\")'",
+        "configLIST_SIZE=30",
+        "SKIP_CBMC_ARRAY_THEORY",
+        "USE_LIST_INSERT"
+      ]
+    },
+    { "listInsertEnd":
+      [
+        "FREERTOS_MODULE_TEST",
+        "'mtCOVERAGE_TEST_MARKER()=__CPROVER_assert(1, \"Coverage marker\")'",
+        "configLIST_SIZE=30",
+        "SKIP_CBMC_ARRAY_THEORY",
+        "USE_LIST_INSERT_END"
+      ]
+    },
+    { "listRemove":
+      [
+        "FREERTOS_MODULE_TEST",
+        "'mtCOVERAGE_TEST_MARKER()=__CPROVER_assert(1, \"Coverage marker\")'",
+        "configLIST_SIZE=30",
+        "SKIP_CBMC_ARRAY_THEORY",
+        "USE_LIST_REMOVE"
+      ]
+    }
   ],
   "CBMCFLAGS":
   [

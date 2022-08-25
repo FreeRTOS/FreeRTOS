@@ -1,0 +1,20 @@
+{
+  "ENTRY": "EquivalenceProofs",
+  "DEF": [
+    "FREERTOS_MODULE_TEST",
+    "'mtCOVERAGE_TEST_MARKER()=__CPROVER_assert(1, \"Coverage marker\")'",
+    "configLIST_SIZE=30",
+    "SKIP_CBMC_ARRAY_THEORY",
+    "USE_LIST_INSERT_END"
+  ],
+  "CBMCFLAGS": [
+    "--unwind 31"
+  ],
+  "OBJS": [
+    "$(ENTRY)_harness.goto",
+    "$(FREERTOS)/Source/list.goto",
+    "$(FREERTOS)/Source/old_list.goto"
+  ],
+  "INC": [],
+  "EXPECTED": true
+}

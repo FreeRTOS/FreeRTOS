@@ -32,7 +32,8 @@
   [
     "FREERTOS_MODULE_TEST",
     "'mtCOVERAGE_TEST_MARKER()=__CPROVER_assert(1, \"Coverage marker\")'",
-    "configLIST_SIZE=15"
+    "configLIST_SIZE=1000",
+    "SKIP_CBMC_ARRAY_THEORY"
   ],
   "CBMCFLAGS":
   [

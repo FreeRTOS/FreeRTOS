@@ -37,7 +37,8 @@
         "'mtCOVERAGE_TEST_MARKER()=__CPROVER_assert(1, \"Coverage marker\")'",
         "configUSE_TRACE_FACILITY=0",
         "configGENERATE_RUN_TIME_STATS=0",
-	"configLIST_SIZE=20"
+	"configLIST_SIZE=100",
+        "SKIP_CBMC_ARRAY_THEORY"
       ]
     },
     { "vTaskSuspend0" :
@@ -48,7 +49,8 @@
         "configUSE_TRACE_FACILITY=0",
         "configGENERATE_RUN_TIME_STATS=0",
         "INCLUDE_vTaskSuspend=0",
-	"configLIST_SIZE=20"
+	"configLIST_SIZE=100",
+        "SKIP_CBMC_ARRAY_THEORY"
       ]
     }
   ],

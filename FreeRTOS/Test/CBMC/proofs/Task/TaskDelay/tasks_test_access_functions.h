@@ -105,13 +105,14 @@ void vSetNonDeterministicListSize( List_t * list)
 
 void vMallocElements(List_t * list)
 {
+    ListItem_t * elements = pvPortMalloc((configLIST_SIZE - 1) * sizeof(ListItem_t));
+    if (elements == NULL){
+        exit(1);
+    }
     for (UBaseType_t i = 0; i < configLIST_SIZE - 1; i++)
     {
         if (i < list->uxNumberOfItems){
-            list->xListData[i] = pvPortMalloc(sizeof(ListItem_t));
-            if (list->xListData[i] == NULL){
-                exit(1);
-            } 
+            list->xListData[i] = &(elements[i]);
         }
     }
 }

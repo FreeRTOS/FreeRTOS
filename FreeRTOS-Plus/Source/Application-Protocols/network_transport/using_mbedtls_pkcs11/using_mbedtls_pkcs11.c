@@ -533,11 +533,11 @@ static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
     pcNullTerminator = memchr( pcLabelName, '\0', pkcs11configMAX_LABEL_LENGTH );
     if( NULL != pcNullTerminator )
     {
-        labelLength = pcNullTerminator - pcLabelName;
+        labelLength = ( size_t )( pcNullTerminator - pcLabelName );
     }
     else
     {
-        /* If NULL character not found set length to  pkcs11configMAX_LABEL_LENGTH */
+        /* If NULL character not found set length to pkcs11configMAX_LABEL_LENGTH. */
         labelLength = pkcs11configMAX_LABEL_LENGTH;
     }
 
@@ -660,15 +660,15 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
         size_t labelLength;
         char * pcNullTerminator = NULL;
 
-        /* Check for NULL character within pkcs11configMAX_LABEL_LENGTH */
+        /* Check for NULL character within pkcs11configMAX_LABEL_LENGTH. */
         pcNullTerminator = memchr( pcLabelName, '\0', pkcs11configMAX_LABEL_LENGTH );
         if( NULL != pcNullTerminator )
         {
-            labelLength = pcNullTerminator - pcLabelName;
+            labelLength = ( size_t )( pcNullTerminator - pcLabelName );
         }
         else
         {
-            /* If NULL character not found set length to  pkcs11configMAX_LABEL_LENGTH. */
+            /* If NULL character not found set length to pkcs11configMAX_LABEL_LENGTH. */
             labelLength = pkcs11configMAX_LABEL_LENGTH;
         }
 

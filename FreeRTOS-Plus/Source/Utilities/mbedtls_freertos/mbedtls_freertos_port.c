@@ -34,7 +34,11 @@
 #include "FreeRTOS_Sockets.h"
 
 /* mbed TLS includes. */
-#include "mbedtls_config.h"
+#if !defined( MBEDTLS_CONFIG_FILE )
+    #include "config.h"
+#else
+    #include MBEDTLS_CONFIG_FILE
+#endif
 #include "threading_alt.h"
 #include "mbedtls/entropy.h"
 #include "mbedtls/ssl.h"
@@ -180,73 +184,77 @@ int mbedtls_platform_mutex_unlock( mbedtls_threading_mutex_t * pMutex )
 
 /*-----------------------------------------------------------*/
 
-/**
- * @brief Function to generate a random number.
- *
- * @param[in] data Callback context.
- * @param[out] output The address of the buffer that receives the random number.
- * @param[in] len Maximum size of the random number to be generated.
- * @param[out] olen The size, in bytes, of the #output buffer.
- *
- * @return 0 if no critical failures occurred,
- * MBEDTLS_ERR_ENTROPY_SOURCE_FAILED otherwise.
- */
-int mbedtls_platform_entropy_poll( void * data,
-                                   unsigned char * output,
-                                   size_t len,
-                                   size_t * olen )
-{
-    int status = 0;
-    NTSTATUS rngStatus = 0;
-
-    configASSERT( output != NULL );
-    configASSERT( olen != NULL );
-
-    /* Context is not used by this function. */
-    ( void ) data;
-
-    /* TLS requires a secure random number generator; use the RNG provided
-     * by Windows. This function MUST be re-implemented for other platforms. */
-    rngStatus =
-        BCryptGenRandom( NULL, output, len, BCRYPT_USE_SYSTEM_PREFERRED_RNG );
-
-    if( rngStatus == 0 )
+#ifdef _WIN32
+    /**
+     * @brief Function to generate a random number.
+     *
+     * @param[in] data Callback context.
+     * @param[out] output The address of the buffer that receives the random number.
+     * @param[in] len Maximum size of the random number to be generated.
+     * @param[out] olen The size, in bytes, of the #output buffer.
+     *
+     * @return 0 if no critical failures occurred,
+     * MBEDTLS_ERR_ENTROPY_SOURCE_FAILED otherwise.
+     */
+    int mbedtls_platform_entropy_poll( void * data,
+                                       unsigned char * output,
+                                       size_t len,
+                                       size_t * olen )
     {
-        /* All random bytes generated. */
-        *olen = len;
-    }
-    else
-    {
-        /* RNG failure. */
-        *olen = 0;
-        status = MBEDTLS_ERR_ENTROPY_SOURCE_FAILED;
-    }
+        int status = 0;
+        NTSTATUS rngStatus = 0;
 
-    return status;
-}
+        configASSERT( output != NULL );
+        configASSERT( olen != NULL );
+
+        /* Context is not used by this function. */
+        ( void ) data;
+
+        /* TLS requires a secure random number generator; use the RNG provided
+         * by Windows. This function MUST be re-implemented for other platforms. */
+        rngStatus =
+            BCryptGenRandom( NULL, output, len, BCRYPT_USE_SYSTEM_PREFERRED_RNG );
+
+        if( rngStatus == 0 )
+        {
+            /* All random bytes generated. */
+            *olen = len;
+        }
+        else
+        {
+            /* RNG failure. */
+            *olen = 0;
+            status = MBEDTLS_ERR_ENTROPY_SOURCE_FAILED;
+        }
+
+        return status;
+    }
+#endif
 
 /*-----------------------------------------------------------*/
 
-/**
- * @brief Function to generate a random number based on a hardware poll.
- *
- * For this FreeRTOS Windows port, this function is redirected by calling
- * #mbedtls_platform_entropy_poll.
- *
- * @param[in] data Callback context.
- * @param[out] output The address of the buffer that receives the random number.
- * @param[in] len Maximum size of the random number to be generated.
- * @param[out] olen The size, in bytes, of the #output buffer.
- *
- * @return 0 if no critical failures occurred,
- * MBEDTLS_ERR_ENTROPY_SOURCE_FAILED otherwise.
- */
-int mbedtls_hardware_poll( void * data,
-                           unsigned char * output,
-                           size_t len,
-                           size_t * olen )
-{
-    return mbedtls_platform_entropy_poll( data, output, len, olen );
-}
+#ifdef _WIN32
+    /**
+     * @brief Function to generate a random number based on a hardware poll.
+     *
+     * For this FreeRTOS Windows port, this function is redirected by calling
+     * #mbedtls_platform_entropy_poll.
+     *
+     * @param[in] data Callback context.
+     * @param[out] output The address of the buffer that receives the random number.
+     * @param[in] len Maximum size of the random number to be generated.
+     * @param[out] olen The size, in bytes, of the #output buffer.
+     *
+     * @return 0 if no critical failures occurred,
+     * MBEDTLS_ERR_ENTROPY_SOURCE_FAILED otherwise.
+     */
+    int mbedtls_hardware_poll( void * data,
+                               unsigned char * output,
+                               size_t len,
+                               size_t * olen )
+    {
+        return mbedtls_platform_entropy_poll( data, output, len, olen );
+    }
+#endif
 
 /*-----------------------------------------------------------*/

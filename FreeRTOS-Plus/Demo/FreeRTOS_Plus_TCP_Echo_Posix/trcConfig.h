@@ -52,8 +52,6 @@
 extern "C" {
 #endif
 
-#include "trcPortDefines.h"
-
 /******************************************************************************
  * Include of processor header file
  *

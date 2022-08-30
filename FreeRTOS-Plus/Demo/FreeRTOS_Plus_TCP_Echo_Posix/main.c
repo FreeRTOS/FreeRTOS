@@ -51,6 +51,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdarg.h>
+#include <time.h>
+#include <errno.h>
 
 /* FreeRTOS kernel includes. */
 #include "FreeRTOS.h"
@@ -58,6 +60,8 @@
 
 /* Local includes. */
 #include "console.h"
+
+#include <trcRecorder.h>
 
 #define    ECHO_CLIENT_DEMO  0
 
@@ -103,6 +107,10 @@ StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 /* Notes if the trace is running or not. */
 static BaseType_t xTraceRunning = pdTRUE;
 
+static clockid_t cid = CLOCK_THREAD_CPUTIME_ID;
+
+static uint32_t frequency;
+
 /*-----------------------------------------------------------*/
 
 int main( void )
@@ -118,7 +126,7 @@ int main( void )
         configASSERT() is called. */
         printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
         printf( "\r\nThe trace will be dumped to disk if Enter is hit.\r\n" );
-        uiTraceStart();
+        traceSTART();
     }
     #endif
 
@@ -284,6 +292,7 @@ static void prvSaveTraceFile( void )
     #if ( projCOVERAGE_TEST != 1 )
     {
     FILE * pxOutputFile;
+    extern RecorderDataType * RecorderDataPtr;
 
         vTraceStop();
 
@@ -354,4 +363,58 @@ the stack and so not exists after this function exits. */
     Note that, as the array is necessarily of type StackType_t,
     configMINIMAL_STACK_SIZE is specified in words, not bytes. */
     *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
+}
+
+void vTraceTimerReset( void )
+{
+    int xRet;
+    struct timespec ts;
+    ts.tv_sec = 0;
+    ts.tv_nsec = 0;
+
+    xRet = clock_settime( cid, &ts );
+    if( xRet != 0 )
+    {
+        printf( "Could not reset time: %s\n", strerror( errno ) );
+    }
+}
+
+uint32_t uiTraceTimerGetFrequency( void )
+{
+    struct timespec res;
+    int xRet;
+
+    res.tv_nsec = 0;
+    res.tv_sec = 0;
+
+    xRet = clock_getres( cid, &res );
+    if( xRet == 0 )
+    {
+        // calculate frequency from timer definition
+        frequency = (uint64_t) 1000000000 / res.tv_nsec;
+    }
+    else
+    {
+        printf( "Could not get clock frequency: %s\n", strerror( errno ) );
+    }
+    return frequency;
+}
+
+uint32_t uiTraceTimerGetValue( void )
+{
+    int xRet;
+    struct timespec tp;
+    uint32_t result = 0;
+
+    xRet = clock_gettime( cid, &tp );
+    if( xRet == 0 )
+    {
+        result = tp.tv_nsec / frequency;
+        result += (tp.tv_sec * 1000000000) / frequency;
+    }
+    else
+    {
+        printf( "Could not get time: %s\n", strerror( errno ) );
+    }
+    return result;
 }

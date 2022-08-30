@@ -18,6 +18,7 @@ INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/Include
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/portable/NetworkInterface/linux/
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/include/
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/portable/Compiler/GCC/
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/config
 
 SOURCE_FILES := $(wildcard *.c)
 SOURCE_FILES += $(wildcard ${FREERTOS_DIR}/Source/*.c)
@@ -70,11 +71,10 @@ SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/TimerDemo.c
 # Trace library.
 SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/trcKernelPort.c
 SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/trcSnapshotRecorder.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/trcStreamingRecorder.c
-SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/File/trcStreamingPort.c
 
+CFLAGS := -ggdb3 -O0
+CPPFLAGS := -DprojCOVERAGE_TEST=0 -D_DEFAULT_SOURCE -D_WINDOWS_ -DTRACE_ON_ENTER=0
 
-CFLAGS := -ggdb3 -O0 -DprojCOVERAGE_TEST=0 -D_WINDOWS_
 LDFLAGS := -ggdb3 -O0 -pthread -lpcap
 
 OBJ_FILES = $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.o)
@@ -85,23 +85,16 @@ ${BIN} : $(BUILD_DIR)/$(BIN)
 
 ${BUILD_DIR}/${BIN} : ${OBJ_FILES}
 	-mkdir -p ${@D}
-	$(CC) $^ $(CFLAGS) $(INCLUDE_DIRS) ${LDFLAGS} -o $@
-
+	$(CC) $^ ${LDFLAGS} -o $@
 
 -include ${DEP_FILE}
 
-${BUILD_DIR}/%.o : %.c
+${BUILD_DIR}/%.o : %.c Makefile
 	-mkdir -p $(@D)
-	$(CC) $(CFLAGS) ${INCLUDE_DIRS} -MMD -c $< -o $@
+	$(CC) $(CFLAGS) ${CPPFLAGS} ${INCLUDE_DIRS} -MMD -c $< -o $@
 
 .PHONY: clean
 
 clean:
 	-rm -rf $(BUILD_DIR)
-
-
-
-
-
-
 

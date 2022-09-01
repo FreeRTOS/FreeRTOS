@@ -27,7 +27,8 @@ This is a reasonable defintion of equivalence because these are the properties o
 In addition to the definition of equivalence listed above, the proof makes the following assumptions in the harness which we list explicitly here:
 1. The two lists are initialized correctly.
 2. The `pxContainer` field of every list item is set to a valid list. (necessary for ListRemove)
-
+3. We do not exceed the maxiumum capacity set for the array. This is a reasonable assumption, because the FreeRTOS team confirmed that one can know the exact number of tasks at compile time.
+4. The mallocs (memory allocations) for the array-list and linked-list succeed.
 
 #### Applications of this proof 
 

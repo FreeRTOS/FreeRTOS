@@ -250,5 +250,5 @@ typedef struct MPU_SETTINGS
     MPURegionSettings_t xRegionsSettings[ portTOTAL_NUM_REGIONS ]; /**< Settings for 4 per task regions. */
 } xMPU_SETTINGS;
 
-#endif
+#endif  /* closes #ifndef PORTMACRO_H */
 

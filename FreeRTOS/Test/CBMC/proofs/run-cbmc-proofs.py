@@ -298,8 +298,52 @@ def main():
             "Failed to configure the following proofs:\n%s", "\n".join(
                 [str(f) for f in counter["fail"]]))
 
+    add_verifast_proofs(proof_root.parent.parent / "VeriFast")
+
     if not args.no_standalone:
         run_build(args.parallel_jobs)
+
+
+def add_verifast_proofs(verifast_root):
+    with open(verifast_root / "proof-configuration") as handle:
+        for line in handle:
+            line = line.strip()
+            if line.startswith(" *") or line.startswith("/*") or not line:
+                continue
+
+            parts = line.split()
+            coverage, proof_name, flags = parts[0], parts[1], ""
+            if len(parts) > 2:
+                flags = " ".join(parts[2:])
+            fyle = verifast_root / proof_name
+
+            out_file = verifast_root / "out" / f"{proof_name}.stdout"
+            cmd = f"verifast -I include -c {flags} {fyle.resolve()}"
+
+            run_cmd([
+                "litani", "add-job",
+                "--command", cmd,
+                "--outputs", str(out_file),
+                "--stdout-file", str(out_file),
+                "--pipeline-name", f"VeriFast/{proof_name}",
+                "--ci-stage", "test",
+                "--cwd", str(verifast_root),
+                "--tags", "tool:verifast",
+                "--description", f"{proof_name}: running VeriFast",
+            ], check=True)
+
+            run_cmd([
+                "litani", "add-job",
+                "--command", f"grep '{coverage} statements verified' < {out_file}",
+                "--inputs", str(out_file),
+                "--phony-outputs", f"{proof_name}_coverage_result",
+                "--pipeline-name", f"VeriFast/{proof_name}",
+                "--ci-stage", "report",
+                "--cwd", str(verifast_root),
+                "--tags", "tool:verifast",
+                "--description", f"{proof_name}: checking VeriFast coverage",
+            ], check=True)
+
 
 
 if __name__ == "__main__":

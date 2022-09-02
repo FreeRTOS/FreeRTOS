@@ -81,6 +81,26 @@ void vSetNonDeterministicListSize( List_t * list, UBaseType_t size)
 
 void vMallocElements(List_t * list)
 {
+    
+}
+
+BaseType_t xPrepareTaskLists( void )
+{
+    __CPROVER_assert_zero_allocation();
+    prvInitialiseTaskLists();
+    
+    // Non-deterministically choose one of the lists to have all
+    // the items.
+    List_t * list;
+    if (nondet_bool()){
+        list = pxDelayedTaskList;
+    } else {
+        list = pxOverflowDelayedTaskList;
+    }
+    
+    // Set non-deterministic size for the delayed task-list. 
+    // But we also need to malloc their elements.
+    vSetNonDeterministicListSize(list, configLIST_SIZE);
     for (UBaseType_t i = 0; i < configLIST_SIZE; i++)
     {
         if (i < list->uxNumberOfItems){
@@ -89,24 +109,15 @@ void vMallocElements(List_t * list)
             TCB_t * pxTCB = xUnconstrainedTCB();
             list->xListData[i] = &(pxTCB->xStateListItem);
             list->xListData[i]->pxContainer = list;
+            if (nondet_bool()){
+                xPendingReadyList.xListData[xPendingReadyList.uxNumberOfItems] = &(pxTCB->xEventListItem);
+                xPendingReadyList.xListData[xPendingReadyList.uxNumberOfItems]->pxContainer = &xPendingReadyList;
+                xPendingReadyList.uxNumberOfItems++;
+            }
         }
     }
-}
-
-BaseType_t xPrepareTaskLists( void )
-{
-    __CPROVER_assert_zero_allocation();
-    prvInitialiseTaskLists();
-    
-    // Set non-deterministic size for the delayed task-list. 
-    // But we also need to malloc their elements.
-    vSetNonDeterministicListSize(pxDelayedTaskList, configLIST_SIZE);
-    vMallocElements(pxDelayedTaskList);
     
     // Also allocate the current tcb
     pxCurrentTCB = xUnconstrainedTCB();
-    if (pxCurrentTCB == NULL){
-        return pdFAIL;
-    }
     return pdPASS;
 }

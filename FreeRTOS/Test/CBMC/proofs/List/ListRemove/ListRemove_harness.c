@@ -39,6 +39,16 @@ void harness()
     __CPROVER_assume( numItems <= configLIST_SIZE - 1 );
     pxList.uxNumberOfItems = numItems;
 
+    // Set the pxIndex
+    if (pxList.uxNumberOfItems == 0){
+        pxList.pxIndex = 0;
+    }
+    else{
+        UBaseType_t unConstrainedPxIndex;
+        pxList.pxIndex = unConstrainedPxIndex;
+        __CPROVER_assume( pxList.pxIndex < pxList.uxNumberOfItems );
+    }
+
     // Finally delete 1 item.
     if (pxList.uxNumberOfItems > 0){
         UBaseType_t removalIndex;

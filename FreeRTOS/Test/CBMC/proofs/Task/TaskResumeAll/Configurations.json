@@ -54,7 +54,7 @@
   ],
   "CBMCFLAGS":
   [
-    "--unwindset xTaskResumeAll.0:2,xTaskIncrementTick.0:2,uxListRemove.0:1,uxListRemove.1:1,vListinsertAtIndex.0:1,xPrepareTaskLists.0:2,xPrepareTaskLists.1:2,xPrepareTaskLists.2:2,prvInitialiseTaskLists.0:8,xTaskResumeAll.1:1"
+    "--unwindset xTaskResumeAll.0:2,xTaskIncrementTick.0:2,uxListRemove.0:1,uxListRemove.1:1,vListinsertAtIndex.0:1,xPrepareTaskLists.0:8,xPrepareTaskLists.1:2,xPrepareTaskLists.2:2,xPrepareTaskLists.3:2,prvInitialiseTaskLists.0:8,xTaskResumeAll.1:1"
 
   ],
   "OBJS":

@@ -49,7 +49,7 @@
   ],
   "CBMCFLAGS":
   [
-    "--unwindset uxListRemove.0:2,uxListRemove.1:2,xTaskIncrementTick.0:3,vListinsertAtIndex.0:2,vMallocElements.0:3"
+    "--unwindset uxListRemove.0:2,uxListRemove.1:2,xTaskIncrementTick.0:3,vListinsertAtIndex.0:2"
   ],
   "OBJS":
   [

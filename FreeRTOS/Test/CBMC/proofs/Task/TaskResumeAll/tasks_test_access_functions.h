@@ -113,10 +113,12 @@ BaseType_t xPrepareTaskLists( void )
     // An auxillary list. It's purpose is to add elements that don't
     // get added to the pxDelayedTaskList.
     List_t * extraList = pvPortMalloc(sizeof(List_t));
-    if (extraList == NULL){
+    List_t * extraList2 = pvPortMalloc(sizeof(List_t));
+    if (extraList == NULL || extraList2 == NULL){
         return pdFAIL;
     }
     vListInitialise(extraList);
+    vListInitialise(extraList2);
 
     // Set non-deterministic sizes for the two lists used. 
     vSetNonDeterministicListSize(pxDelayedTaskList, configLIST_SIZE);  
@@ -159,6 +161,13 @@ BaseType_t xPrepareTaskLists( void )
         if (i < xPendingReadyList.uxNumberOfItems){
             xPendingReadyList.xListData[i] = &(TCBs[i]->xEventListItem);
             xPendingReadyList.xListData[i]->pxContainer = &xPendingReadyList;
+        }
+        else{
+            if (nondet_bool()){
+                extraList2->xListData[extraList2->uxNumberOfItems] = &(TCBs[i]->xEventListItem);
+                extraList2->xListData[extraList2->uxNumberOfItems]->pxContainer = extraList2;
+                extraList2->uxNumberOfItems++;
+            }
         }
     }
 

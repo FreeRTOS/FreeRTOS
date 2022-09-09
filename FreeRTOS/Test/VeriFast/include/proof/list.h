@@ -56,7 +56,7 @@ typedef ssize_t BaseType_t;
 
 struct xLIST;
 
-struct xLIST_ITEM 
+struct xLIST_ITEM
 {
 	TickType_t xItemValue;
 	struct xLIST_ITEM * pxNext;

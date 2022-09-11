@@ -157,17 +157,17 @@ used with multiple project configurations.  If it is
 #define configMAC_ISR_SIMULATOR_PRIORITY	( configMAX_PRIORITIES - 1 )
 #define ipconfigUSE_NETWORK_EVENT_HOOK 1
 //#define ipconfigSOCK_DEFAULT_RECEIVE_BLOCK_TIME  pdMS_TO_TICKS(5000)
-#define configNETWORK_INTERFACE_TO_USE 1L
+#define configNETWORK_INTERFACE_TO_USE 5L
 
 /* The address of an echo server that will be used by the two demo echo client
 tasks.
 http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html
 http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/UDP_Echo_Clients.html */
 
-#define configECHO_SERVER_ADDR0	172
-#define configECHO_SERVER_ADDR1 19
-#define configECHO_SERVER_ADDR2 195
-#define configECHO_SERVER_ADDR3 36
+#define configECHO_SERVER_ADDR0	125
+#define configECHO_SERVER_ADDR1 0
+#define configECHO_SERVER_ADDR2 75
+#define configECHO_SERVER_ADDR3 13
 
 /* Default MAC address configuration.  The demo creates a virtual network
 connection that uses this MAC address by accessing the raw Ethernet/WiFi data
@@ -184,17 +184,17 @@ configure the real network connection to use. */
 /* Default IP address configuration.  Used in ipconfigUSE_DNS is set to 0, or
 ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
 
-#define configIP_ADDR0		172
-#define configIP_ADDR1		19
-#define configIP_ADDR2		195
-#define configIP_ADDR3		37
+#define configIP_ADDR0		125
+#define configIP_ADDR1		0
+#define configIP_ADDR2		75
+#define configIP_ADDR3		0
 
 /* Default gateway IP address configuration.  Used in ipconfigUSE_DNS is set to
 0, or ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
 
-#define configGATEWAY_ADDR0	172
-#define configGATEWAY_ADDR1	19
-#define configGATEWAY_ADDR2	192
+#define configGATEWAY_ADDR0	125
+#define configGATEWAY_ADDR1	0
+#define configGATEWAY_ADDR2	75
 #define configGATEWAY_ADDR3	1
 
 /* Default DNS server configuration.  OpenDNS addresses are 208.67.222.222 and

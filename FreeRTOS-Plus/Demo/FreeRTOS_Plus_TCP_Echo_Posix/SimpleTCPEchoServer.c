@@ -163,6 +163,8 @@ const BaseType_t xBacklog = 20;
 	xListeningSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_STREAM, FREERTOS_IPPROTO_TCP );
 	configASSERT( xListeningSocket != FREERTOS_INVALID_SOCKET );
 
+	FreeRTOS_debug_printf(("Echo Server Created...\n"));
+
 	/* Set a time out so accept() will just wait for a connection. */
 	FreeRTOS_setsockopt( xListeningSocket, 0, FREERTOS_SO_RCVTIMEO, &xReceiveTimeOut, sizeof( xReceiveTimeOut ) );
 
@@ -185,6 +187,8 @@ const BaseType_t xBacklog = 20;
 		/* Wait for a client to connect. */
 		xConnectedSocket = FreeRTOS_accept( xListeningSocket, &xClient, &xSize );
 		configASSERT( xConnectedSocket != FREERTOS_INVALID_SOCKET );
+
+		FreeRTOS_debug_printf(("Client connected...\n"));
 
 		/* Spawn a task to handle the connection. */
 		xTaskCreate( prvServerConnectionInstance, "EchoServer", usUsedStackSize, ( void * ) xConnectedSocket, tskIDLE_PRIORITY, NULL );

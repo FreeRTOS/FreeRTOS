@@ -34,11 +34,11 @@
   /* You can find the code to setup an echo server in the Repo */
 
   /* Assume ECHO server IP-address A.B.C.D  And   Port Z*/
-#define tcptestECHO_SERVER_ADDR0         ( 255 )    /* Replace with Your Echo Server Addr First Byte  i.e. A */
-#define tcptestECHO_SERVER_ADDR1         ( 255 )    /* Replace with Your Echo Server Addr Second Byte i.e. B */
-#define tcptestECHO_SERVER_ADDR2         ( 255 )    /* Replace with Your Echo Server Addr Third Byte  i.e. C */
-#define tcptestECHO_SERVER_ADDR3         ( 255 )    /* Replace with Your Echo Server Addr Fourth Byte i.e. D */
-#define tcptestECHO_PORT                 ( 0 )      /* Replace with Your Echo Server Port Number i.e. Z */
+#define tcptestECHO_SERVER_ADDR0         ( 128 )    /* Replace with Your Echo Server Addr First Byte  i.e. A */
+#define tcptestECHO_SERVER_ADDR1         ( 46 )    /* Replace with Your Echo Server Addr Second Byte i.e. B */
+#define tcptestECHO_SERVER_ADDR2         ( 74 )    /* Replace with Your Echo Server Addr Third Byte  i.e. C */
+#define tcptestECHO_SERVER_ADDR3         ( 13 )    /* Replace with Your Echo Server Addr Fourth Byte i.e. D */
+#define tcptestECHO_PORT                 ( 2000 )      /* Replace with Your Echo Server Port Number i.e. Z */
 
 #if tcptestECHO_PORT == 0
 #error "Use Correct Port number and Correct IP address by setting tcptestECHO_SERVER_ADDR[0-3] and tcptestECHO_PORT in test_tcp.h"

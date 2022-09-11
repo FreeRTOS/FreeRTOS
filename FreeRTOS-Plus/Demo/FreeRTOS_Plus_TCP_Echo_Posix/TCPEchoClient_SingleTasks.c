@@ -49,6 +49,7 @@
 /* FreeRTOS+TCP includes. */
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
+#include "FreeRTOS_ARP.h"
 
 /* Exclude the whole file if FreeRTOSIPConfig.h is configured to use UDP only. */
 #if ( ipconfigUSE_TCP == 1 )
@@ -61,7 +62,7 @@ congested. */
 
 /* The echo server is assumed to be on port 7, which is the standard echo
 protocol port. */
-	#define echoECHO_PORT				  ( 7 )
+	#define echoECHO_PORT				  ( 2000 )
 
 /* The size of the buffers is a multiple of the MSS - the length of the data
 sent is a pseudo random size between 20 and echoBUFFER_SIZES. */
@@ -175,6 +176,16 @@ missing data. */
 
 			/* Connect to the echo server. */
 			printf( "connecting to echo server....\n" );
+
+			if (xIsIPInARPCache(xEchoServerAddress.sin_addr) == pdFALSE) {
+                printf("Connect IP address not in ARP cache...Adding now...\n");
+                MACAddress_t destinationMacAddress;
+                uint8_t ucBytes[6] = {0x46, 0xE7, 0xD7, 0xAA, 0x9B, 0x5F};
+                memcpy(&destinationMacAddress, ucBytes, sizeof(MACAddress_t));
+                vARPRefreshCacheEntry( &destinationMacAddress, xEchoServerAddress.sin_addr );
+            } else {
+                printf("Connect IP address found in ARP cache...\n");
+            }
 
 			ret = FreeRTOS_connect( xSocket, &xEchoServerAddress, sizeof( xEchoServerAddress ) );
 

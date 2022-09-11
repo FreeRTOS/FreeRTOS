@@ -282,11 +282,12 @@ simultaneously, one could define TCP_WIN_SEG_COUNT as 120. */
 #define ipconfigTCP_WIN_SEG_COUNT		240
 
 /* Each TCP socket has a circular buffers for Rx and Tx, which have a fixed
+/* Each TCP socket has a circular buffers for Rx and Tx, which have a fixed
 maximum size.  Define the size of Rx buffer for TCP sockets. */
-#define ipconfigTCP_RX_BUFFER_LENGTH			( 1000 )
+#define ipconfigTCP_RX_BUFFER_LENGTH			( 540000 )
 
 /* Define the size of Tx buffer for TCP sockets. */
-#define ipconfigTCP_TX_BUFFER_LENGTH			( 1000 )
+#define ipconfigTCP_TX_BUFFER_LENGTH			( 262144 )
 
 /* When using call-back handlers, the driver may check if the handler points to
 real program memory (RAM or flash) or just has a random non-zero value. */
@@ -300,6 +301,8 @@ disconnecting stage will timeout after a period of non-activity. */
 /* Include support for TCP keep-alive messages. */
 #define ipconfigTCP_KEEP_ALIVE				( 1 )
 #define ipconfigTCP_KEEP_ALIVE_INTERVAL		( 20 ) /* in seconds */
+
+#define ipconfigBUFFER_PADDING              ( 14 )
 
 #define portINLINE __inline
 

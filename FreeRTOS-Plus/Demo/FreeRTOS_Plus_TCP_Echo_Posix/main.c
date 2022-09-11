@@ -51,6 +51,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdarg.h>
+#include <signal.h>
 
 /* FreeRTOS kernel includes. */
 #include "FreeRTOS.h"
@@ -75,6 +76,7 @@ static void traceOnEnter( void );
  */
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
+void handler(int signum);
 void vApplicationStackOverflowHook( TaskHandle_t pxTask,
                                     char *pcTaskName );
 void vApplicationTickHook( void );
@@ -107,6 +109,9 @@ static BaseType_t xTraceRunning = pdTRUE;
 
 int main( void )
 {
+    signal(SIGTERM, handler);
+    signal(SIGHUP, handler);
+    signal(SIGINT, handler);
     /* Do not include trace code when performing a code coverage analysis. */
     #if ( projCOVERAGE_TEST != 1 )
     {
@@ -155,6 +160,14 @@ void vApplicationMallocFailedHook( void )
     vAssertCalled( __FILE__, __LINE__ );
 }
 /*-----------------------------------------------------------*/
+
+void handler(int signum)
+{
+    /* notify the operator that the service has receive SIGTERM
+    and clean up (close file descriptors, etc).  */
+
+    exit(0);
+}
 
 void vApplicationIdleHook( void )
 {

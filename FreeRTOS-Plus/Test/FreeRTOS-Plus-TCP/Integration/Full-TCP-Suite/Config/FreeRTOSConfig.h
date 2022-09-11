@@ -171,7 +171,7 @@ extern void vLoggingPrint(const char* pcMessage);
     * results in the wired network being used, while setting
     * configNETWORK_INTERFACE_TO_USE to 2 results in the wireless network being
     * used. */
-#define configNETWORK_INTERFACE_TO_USE       ( 0L )
+#define configNETWORK_INTERFACE_TO_USE       ( 1L )
 
     /* The address of an echo server that will be used by the two demo echo client
      * tasks:

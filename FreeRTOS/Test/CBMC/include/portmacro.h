@@ -116,7 +116,7 @@ typedef unsigned long UBaseType_t;
 #define portYIELD()					vPortGenerateSimulatedInterrupt( portINTERRUPT_YIELD )
 
 extern volatile BaseType_t xInsideInterrupt;
-#define portSOFTWARE_BARRIER() while( xInsideInterrupt != pdFALSE )
+//#define portSOFTWARE_BARRIER() while( xInsideInterrupt != pdFALSE )
 
 
 /* Simulated interrupts return pdFALSE if no context switch should be performed,

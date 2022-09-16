@@ -221,10 +221,8 @@ int main(void) {
     /* Create the software timer as described in the comments at the top of
     this file. */
     xExampleSoftwareTimer = xTimerCreate(     /* A text name, purely to help
-                                            debugging. */
-            (const char *) "LEDTimer",
-            /* The timer period, in this case
-            1000ms (1s). */
+                                                 debugging. */
+            (const char *) "Timer",
             mainSOFTWARE_TIMER_PERIOD_MS,
             /* This is a periodic timer, so
             xAutoReload is set to pdTRUE. */
@@ -232,8 +230,7 @@ int main(void) {
             /* The ID is not used, so can be set
             to anything. */
             (void *) 0,
-            /* The callback function that switches
-            the LED off. */
+            /* The callback function that ticks */
             vExampleTimerCallback
     );
 
@@ -365,7 +362,7 @@ void vApplicationTickHook( void )
     /* The RTOS tick hook function is enabled by setting configUSE_TICK_HOOK to
     1 in FreeRTOSConfig.h.
 
-    "Give" the semaphore on every 500th tick interrupt. */
+    "Give" the semaphore on every 50th tick interrupt. */
     ulCount++;
     if( ulCount >= 50UL )
     {

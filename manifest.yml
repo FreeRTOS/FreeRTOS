@@ -4,7 +4,7 @@ description: "This is the standard distribution of FreeRTOS."
 
 dependencies:
   - name: "FreeRTOS-Kernel"
-    version: "349e803"
+    version: "b0a8bd8"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Kernel.git"
@@ -32,7 +32,7 @@ dependencies:
       path: "FreeRTOS-Plus/Source/AWS/sigv4"
 
   - name: "coreHTTP"
-    version: "v2.1.0"
+    version: "7fbd7c3"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreHTTP.git"

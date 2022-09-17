@@ -5,6 +5,8 @@ DOXY_ARGS += "ALIASES+=\"coverage=\\xrefitem coverage \\\"Coverage Target\\\" \\
 DOXY_ARGS += "PROJECT_NAME=FreeRTOS Unit Tests\nGENERATE_LATEX=NO\n"
 DOXY_ARGS += "OUTPUT_DIRECTORY=$(DOC_DIR)"
 
-all:
-    mkdir -p $(DOC_DIR)
+all: | directories
     echo -e $(DOXY_ARGS) | doxygen -
+
+directories:
+        mkdir -p $(DOC_DIR)

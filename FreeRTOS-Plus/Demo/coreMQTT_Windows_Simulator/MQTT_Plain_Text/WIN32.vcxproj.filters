@@ -123,7 +123,7 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Demo\Common\Logging\windows\Logging_WinSim.c" />
     <ClCompile Include="..\Common\main.c" />
-    <ClCompile Include="DemoTasks\PlainTextMQTTExample.c">
+    <ClCompile Include="DemoTasks\PlaintextMQTTExample.c">
       <Filter>DemoTasks</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c">

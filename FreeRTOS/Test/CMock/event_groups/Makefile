@@ -33,9 +33,10 @@ MOCK_FILES_FP   +=  $(PROJECT_DIR)/list_macros.h
 
 # List any addiitonal flags needed by the preprocessor
 CPPFLAGS            +=  -DportUSING_MPU_WRAPPERS=0
+CPPFLAGS            += -include list_macros.h
+CFLAGS            += -include list_macros.h
 
 # List any addiitonal flags needed by the compiler
-CFLAGS              += -include list_macros.h
 CFLAGS              += -Wno-incompatible-pointer-types
 
 # Try not to edit beyond this line unless necessary.

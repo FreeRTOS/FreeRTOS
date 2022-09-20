@@ -8,7 +8,7 @@
 #include "timers.h" /* Software timer related API prototypes. */
 #include <stdio.h>
 
-#include "unity.h"
+#include "unity.h" /* unit testing support functions */
 
 #ifndef mainRUN_FREE_RTOS_ON_CORE
 #define mainRUN_FREE_RTOS_ON_CORE 0
@@ -36,7 +36,7 @@ has a higher priority than the send task, so will remove items as they are
 added, meaning the send task should always find the queue empty. */
 #define mainQUEUE_LENGTH (1)
 
-#define TEST_ITERATIONS (100)
+#define TEST_ITERATIONS (15)
 
 /*-----------------------------------------------------------*/
 
@@ -94,6 +94,8 @@ static volatile uint32_t ulCountOfReceivedSemaphores = 0;
 static volatile uint32_t ulCountOfSDKMutexEnters = 0;
 static volatile uint32_t ulCountOfSDKSemaphoreAcquires = 0;
 
+static volatile uint32_t ulCountSubMachinesComplete = 0;
+
 /*-----------------------------------------------------------*/
 
 #include "pico/mutex.h"
@@ -108,20 +110,21 @@ static semaphore_t xSDKSemaphore;
 
 static void prvNonRTOSWorker() {
   printf("Core %d: Doing regular SDK stuff\n", get_core_num());
-  uint32_t counter;
+  uint32_t counter = 0;
   while (counter < TEST_ITERATIONS) {
     mutex_enter_blocking(&xSDKMutex);
     printf("Core %d: Acquire SDK mutex\n", get_core_num());
     absolute_time_t end_time = make_timeout_time_ms(750);
     while (!time_reached(end_time)) {
-      counter++;
       printf("Core %d: Busy work with mutex %d\n", get_core_num(), counter);
-      busy_wait_us(137384);
+      busy_wait_us(50);
+      sleep_ms(50);
     }
     printf("Core %d: Release SDK mutex\n", get_core_num());
+    counter++;
     mutex_exit(&xSDKMutex);
     printf("Core %d: Starting SDK sleep\n", get_core_num());
-    sleep_ms(1200);
+    sleep_ms(200);
     printf("Core %d: Finish SDK sleep; release SDK semaphore\n",
            get_core_num());
     sem_release(&xSDKSemaphore);
@@ -131,12 +134,15 @@ static void prvNonRTOSWorker() {
 
   printf("Core %d: prvNonRTOSWorker completed %d iterations.\n", get_core_num(),
          TEST_ITERATIONS);
+
+  ulCountSubMachinesComplete++;
 }
 
 static void prvLaunchRTOS() {
   printf("Core %d: Launching FreeRTOS scheduler\n", get_core_num());
   /* Start the tasks and timer running. */
   vTaskStartScheduler();
+
   /* should never reach here */
   panic_unsupported();
 }
@@ -189,7 +195,7 @@ void test_Template(void) {
 
   /* Create the queue send task in exactly the same way.  Again, this is
   described in the comments at the top of the file. */
-  xTaskCreate(prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL,
+  xTaskCreate(prvQueueSendTask, "Tx", configMINIMAL_STACK_SIZE, NULL,
               mainQUEUE_SEND_TASK_PRIORITY, NULL);
 
   /* Create the task that is synchronised with an interrupt using the
@@ -245,7 +251,9 @@ int main(void) {
 
   RUN_TEST(test_Template);
 
-  return UNITY_END();
+  return 0; // UNITY_END is unreachable via this path. a state machine and
+            // counter is used so that a just one child task will call it
+            // instead.
 }
 /*-----------------------------------------------------------*/
 
@@ -287,8 +295,15 @@ static void prvQueueSendTask(void *pvParameters) {
   printf("Core %d: prvQueueSendTask completed %d iterations.\n", get_core_num(),
          TEST_ITERATIONS);
 
+  ulCountSubMachinesComplete++;
+
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+
+    if (ulCountSubMachinesComplete == 5) {
+      UNITY_END();
+      ulCountSubMachinesComplete++;
+    }
   }
 }
 /*-----------------------------------------------------------*/
@@ -334,6 +349,8 @@ static void prvEventSemaphoreTask(void *pvParameters) {
   printf("Core %d: prvEventSemaphoreTask completed %d iterations.\n",
          get_core_num(), TEST_ITERATIONS);
 
+  ulCountSubMachinesComplete++;
+
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
   }
@@ -360,6 +377,8 @@ static void prvSDKMutexUseTask(void *pvParameters) {
   printf("Core %d: prvSDKMutexUseTask completed %d iterations.\n",
          get_core_num(), TEST_ITERATIONS);
 
+  ulCountSubMachinesComplete++;
+
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
   }
@@ -385,6 +404,8 @@ static void prvSDKSemaphoreUseTask(void *pvParameters) {
 
   printf("Core %d: prvSDKSemaphoreUseTask completed %d iterations.\n",
          get_core_num(), TEST_ITERATIONS);
+
+  ulCountSubMachinesComplete++;
 
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);

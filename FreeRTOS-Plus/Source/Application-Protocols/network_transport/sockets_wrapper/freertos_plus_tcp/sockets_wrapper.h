@@ -75,6 +75,8 @@ extern void vLoggingPrintf( const char * pcFormatString,
 
 /************ End of logging configuration ****************/
 
+#define SOCKETS_INVALID_SOCKET      ( ( Socket_t ) ~0U )
+
 /**
  * @brief Establish a connection to server.
  *

@@ -120,6 +120,7 @@ bio
 bios
 bislisten
 bitmasking
+bitscanreverse
 bitvalue
 bk
 bktallowable
@@ -173,8 +174,6 @@ busfault
 buttonisr
 bvic
 bytesreceived
-bytesreceived
-bytessent
 bytessent
 bytestorecv
 bytestosend
@@ -264,13 +263,13 @@ clienttoken
 cligetoutputbuffer
 clint
 cliprocesscommand
-cloudformation
 clk
 clkdiv
 clksel
 clockoffsetms
 clocksource
 closesession
+cloudformation
 cmac
 cmaxpower
 cmcnt
@@ -799,6 +798,7 @@ freertosconifg
 freertosdemo
 freertosipconfig
 freertosipconfigdefaults
+freertoskernel
 freq
 freqency
 fromisr
@@ -1250,6 +1250,7 @@ maintx
 mainudp
 mainvalue
 mainwait
+mair
 malloc
 mallocing
 mam
@@ -1327,6 +1328,7 @@ mps
 mpsoc
 mpu
 mpudemo
+mpuregionsettings
 mqtt
 mqttagent
 mqttagentcommand
@@ -1354,6 +1356,7 @@ msi
 msp
 msr
 mss
+msvc
 mtcoverage
 mtu
 mtvec
@@ -1715,16 +1718,20 @@ portisr
 portlarge
 portlm
 portmacro
+portmacros
 portmax
 portmedium
 portno
+portnum
 portprivilege
 portrestore
 portsave
 portsmall
+portsoftware
 portswitch
 porttc
 porttick
+porttotal
 portyield
 posix
 potainterfaces
@@ -1763,6 +1770,7 @@ presponsedata
 prev
 printc
 printf
+printfs
 prio
 prioity
 prioritisation
@@ -2197,6 +2205,7 @@ randomised
 randomiser
 ratpriorities
 rb
+rbar
 rbr
 rbuf
 rc
@@ -2273,6 +2282,7 @@ ripemd
 risc
 riscv
 rl
+rlar
 rmd
 rmii
 rnfr
@@ -2368,6 +2378,7 @@ sendtimeout
 sendtimeoutms
 sendto
 sep
+sepearted
 serialbaurate
 serialised
 serialisr
@@ -2535,8 +2546,8 @@ systemgetwallclocktime
 systeminit
 systeminithook
 systemirqhandler
-systemtick
 systemstoreficrns
+systemtick
 systick
 systickdelay
 sz
@@ -2549,6 +2560,8 @@ taskhandle
 taskhasexecuted
 tasknotify
 taskparameters
+taskpool
+taskrecord
 taskscheduler
 taskselect
 tasksstubs
@@ -2772,6 +2785,7 @@ ulglobalentrytimems
 ulhighfrequencytimercounts
 ulhighfrequencytimerinterrupts
 ulhighfrequencytimerticks
+ulinterruptmask
 ulinterruptnumber
 ulinterrupttriggercounter
 ulipaddress
@@ -2781,6 +2795,7 @@ ullength
 ullinenumber
 ulloopcounter
 ulmaingetruntimecountervalue
+ulmair
 ulmajorreportversion
 ulmaxfpuinterruptnesting
 ulmaxjitter
@@ -2808,6 +2823,7 @@ ulpriority
 ulprioritysetcounter
 ulrangeend
 ulrangestart
+ulrbar
 ulreaddata
 ulreceivedvalue
 ulrecvbytes
@@ -2818,6 +2834,7 @@ ulremoteipaddress
 ulreportid
 ulrestartoffset
 ulreturned
+ulrlar
 ulsecondnotificationvalueconst
 ulsecondnotifiedconst
 ulsecondnotifiedvalueconst
@@ -3301,6 +3318,7 @@ xilinx
 xincrement
 xindex
 xinputstrlen
+xinsideinterrupt
 xinterface
 xinterruptcontroller
 xiptracevalues
@@ -3472,6 +3490,7 @@ xreceivedbytes
 xreceivelength
 xrecvloop
 xregions
+xregionssettings
 xregtest
 xregtesterror
 xregteststacksize

@@ -2320,6 +2320,7 @@ rxechar
 rxed
 rxen
 rxend
+rxevent
 rxfifolevel
 rxmode
 rxsetup

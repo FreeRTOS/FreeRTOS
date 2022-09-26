@@ -661,6 +661,7 @@ static CellularCommInterfaceError_t prvCommIntfOpen( CellularCommInterfaceReceiv
         if( pvRxEventMutex != NULL )
         {
             CloseHandle( pvRxEventMutex );
+            pvRxEventMutex = NULL;
         }
     }
 
@@ -737,6 +738,7 @@ static CellularCommInterfaceError_t prvCommIntfClose( CellularCommInterfaceHandl
         if( pvRxEventMutex != NULL )
         {
             CloseHandle( pvRxEventMutex );
+            pvRxEventMutex = NULL;
         }
 
         /* clean the data structure. */

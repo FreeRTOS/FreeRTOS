@@ -60,7 +60,8 @@
 	url = https://github.com/aws/SigV4-for-AWS-IoT-embedded-sdk.git
 [submodule "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface"]
 	path = FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface
-	url = https://github.com/FreeRTOS/Lab-Project-FreeRTOS-Cellular-Library.git
+	url = https://github.com/ActoryOu/FreeRTOS-Cellular-Interface.git
+	branch = split
 [submodule "FreeRTOS-Plus/ThirdParty/tinycbor"]
 	path = FreeRTOS-Plus/ThirdParty/tinycbor
 	url = https://github.com/intel/tinycbor.git

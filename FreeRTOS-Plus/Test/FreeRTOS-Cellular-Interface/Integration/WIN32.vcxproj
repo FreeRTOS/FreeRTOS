@@ -160,10 +160,10 @@
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\portable\BufferManagement\BufferAllocation_2.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\portable\NetworkInterface\WinPCap\NetworkInterface.c" />
     <ClCompile Include="..\..\..\Demo\Common\Logging\windows\Logging_WinSim.c" />
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\modules\bg96\cellular_bg96.c" />
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\modules\bg96\cellular_bg96_api.c" />
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\modules\bg96\cellular_bg96_urc_handler.c" />
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\modules\bg96\cellular_bg96_wrapper.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\bg96\cellular_bg96.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\bg96\cellular_bg96_api.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\bg96\cellular_bg96_urc_handler.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\bg96\cellular_bg96_wrapper.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\cellular_3gpp_api.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\cellular_3gpp_urc_handler.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\cellular_at_core.c" />
@@ -1704,7 +1704,7 @@
     <ClInclude Include="..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW\portmacro.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOSIPConfigDefaults.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_ARP.h" />
-    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\modules\bg96\cellular_bg96.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Modules\bg96\cellular_bg96.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\cellular_api.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\cellular_config_defaults.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\cellular_types.h" />

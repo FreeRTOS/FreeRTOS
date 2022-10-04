@@ -17,7 +17,7 @@ target_link_libraries(hello_world_common INTERFACE
         ${BSL_LINK_LIBRARIES})
 
 add_executable(hello_world)
-target_link_libraries(hello_world hello_world_common unity bsl)
+target_link_libraries(hello_world hello_world_common)
 target_include_directories(hello_world PUBLIC
-        "${UNITY_DIR}/src/")
+        ${BSL_INCLUDE_PATHS})
 add_test(hello_world_test hello_world)

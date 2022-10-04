@@ -4,7 +4,10 @@
 # It should be include()ed prior to project()
 
 set(BSL_PATH ${CMAKE_CURRENT_LIST_DIR})
-set(BSL_LINK_LIBRARIES pico_stdlib pico_multicore)
+set(BSL_LINK_LIBRARIES pico_stdlib pico_multicore bsl unity)
+set(BSL_DEFINES "PICO_STACK_SIZE=0x1000 TARGET_RASPBERRY_PICO=1")
+set(BSL_ON_CORE_ONE_DEFINES "mainRUN_FREE_RTOS_template_on_core=1")
+set(BSL_INCLUDE_PATHS "${UNITY_DIR}/src/")
 
 if (DEFINED ENV{PICO_SDK_PATH} AND (NOT PICO_SDK_PATH))
     set(PICO_SDK_PATH $ENV{PICO_SDK_PATH})

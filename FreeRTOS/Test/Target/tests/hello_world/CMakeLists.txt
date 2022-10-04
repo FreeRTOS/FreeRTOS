@@ -4,14 +4,6 @@ project(hello_world C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
-include(CTest)
-
-add_library(unity STATIC
-                "${UNITY_DIR}/src/unity.c")
-
-target_include_directories(unity PUBLIC
-        "${UNITY_DIR}/src/")
-
 add_library(hello_world_common INTERFACE)
 target_sources(hello_world_common INTERFACE
         test.c)

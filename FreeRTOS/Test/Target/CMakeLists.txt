@@ -19,5 +19,12 @@ endif ()
 
 PROJECT(Tests)
 
+include(CTest)
+
+add_library(unity STATIC
+                "${UNITY_DIR}/src/unity.c")
+target_include_directories(unity PUBLIC
+        "${UNITY_DIR}/src/")
+
 #add_subdirectory(tests/template)
 add_subdirectory(tests/hello_world)

@@ -4,8 +4,12 @@
 #include "semphr.h"   /* Semaphore related API prototypes. */
 #include "task.h"     /* RTOS task related API prototypes. */
 #include "timers.h"   /* Software timer related API prototypes. */
+
+#include <inttypes.h>
+#include <stdint.h>
 #include <stdio.h>
 
+#include "bsl.h"
 #include "unity.h" /* unit testing support functions */
 
 #ifndef mainRUN_FREE_RTOS_ON_CORE
@@ -94,29 +98,30 @@ static volatile uint32_t ulCountSubMachinesComplete = 0;
 #error Require only one core configured for FreeRTOS
 #endif
 
-auto_init_mutex(xSDKMutex);
-static semaphore_t xSDKSemaphore;
+static SemaphoreHandle_t xSDKMutex = NULL;
+static SemaphoreHandle_t xSDKSemaphore = NULL;
 
 static void prvNonRTOSWorker() {
+
   printf("Core %d: Doing regular SDK stuff\n", get_core_num());
   uint32_t counter = 0;
   while (counter < TEST_ITERATIONS) {
-    mutex_enter_blocking(&xSDKMutex);
+    xSemaphoreTake(xSDKMutex, portMAX_DELAY);
     printf("Core %d: Acquire SDK mutex\n", get_core_num());
-    absolute_time_t end_time = make_timeout_time_ms(750);
-    while (!time_reached(end_time)) {
+    uint64_t end_time = getCPUTime() + MS_TO_CPUTIME(10);
+    while (getCPUTime() != end_time) {
       printf("Core %d: Busy work with mutex %d\n", get_core_num(), counter);
-      busy_wait_us(50);
-      sleep_ms(50);
+      busyWaitMicroseconds(50);
+      delayMs(50);
     }
     printf("Core %d: Release SDK mutex\n", get_core_num());
     counter++;
-    mutex_exit(&xSDKMutex);
+    xSemaphoreGive(xSDKMutex);
     printf("Core %d: Starting SDK sleep\n", get_core_num());
-    sleep_ms(200);
+    delayMs(200);
     printf("Core %d: Finish SDK sleep; release SDK semaphore\n",
            get_core_num());
-    sem_release(&xSDKSemaphore);
+    xSemaphoreGive(xSDKSemaphore);
   }
 
   TEST_ASSERT_EQUAL_INT(TEST_ITERATIONS, counter);
@@ -149,7 +154,7 @@ void test_Template(void) {
 
   /* Configure the system ready to run the demo.  The clock configuration
   can be done here if it was not done before main() was called. */
-  DSL_Init();
+  initTestEnvironment();
 
   /* Create the queue used by the queue send and queue receive tasks. */
   xQueue = xQueueCreate(/* The number of items the queue can hold. */
@@ -196,8 +201,6 @@ void test_Template(void) {
   xTaskCreate(prvSDKMutexUseTask, "SDK Mutex Use", configMINIMAL_STACK_SIZE,
               NULL, mainSDK_MUTEX_USE_TASK_PRIORITY, NULL);
 
-  sem_init(&xSDKSemaphore, 0, 1);
-
   /* Create the task that uses SDK mutexes */
   xTaskCreate(prvSDKSemaphoreUseTask, "SDK Seamphore Use",
               configMINIMAL_STACK_SIZE, NULL,
@@ -223,7 +226,7 @@ void test_Template(void) {
   be created, and it is not yet running). */
   xTimerStart(xExampleSoftwareTimer, 0);
 
-  multicore_launch_core1(prvCore1Entry);
+  AMPLaunchOnCore(1, prvCore1Entry);
 #if (mainRUN_FREE_RTOS_ON_CORE == 0)
   prvLaunchRTOS();
 #else
@@ -237,6 +240,9 @@ void tearDown(void) {
 
 int main(void) {
   printf("Beginning Test...");
+
+  xSDKMutex = xSemaphoreCreateBinary();
+  xSDKSemaphore = xSemaphoreCreateBinary();
 
   UNITY_BEGIN();
 
@@ -358,7 +364,7 @@ static void validatorTask(void *pvParameters) {
 
 static void prvSDKMutexUseTask(void *pvParameters) {
   while (ulCountOfSDKMutexEnters < TEST_ITERATIONS) {
-    mutex_enter_blocking(&xSDKMutex);
+    xSemaphoreTake(xSDKMutex, portMAX_DELAY);
     ulCountOfSDKMutexEnters++;
     printf(
         "Core %d - Thread '%s': SDK Mutex Entered, sleeping for a while %d\n",
@@ -368,7 +374,7 @@ static void prvSDKMutexUseTask(void *pvParameters) {
     printf("Core %d - Thread '%s': Sleep finished; SDK Mutex releasing %d\n",
            get_core_num(), pcTaskGetName(xTaskGetCurrentTaskHandle()),
            ulCountOfSDKMutexEnters);
-    mutex_exit(&xSDKMutex);
+    xSemaphoreGive(xSDKMutex);
   }
 
   TEST_ASSERT_EQUAL_INT(TEST_ITERATIONS, ulCountOfSDKMutexEnters);
@@ -386,16 +392,17 @@ static void prvSDKMutexUseTask(void *pvParameters) {
 
 static void prvSDKSemaphoreUseTask(void *pvParameters) {
   while (ulCountOfSDKSemaphoreAcquires < TEST_ITERATIONS) {
-    absolute_time_t t = get_absolute_time();
-    if (sem_acquire_timeout_us(&xSDKSemaphore, 250500)) {
+    uint64_t cputime = getCPUTime();
+    if (xSemaphoreTake(xSDKSemaphore, portMAX_DELAY)) {
       ulCountOfSDKSemaphoreAcquires++;
       printf("Core %d - Thread '%s': SDK Sem acquired %d\n", get_core_num(),
              pcTaskGetName(xTaskGetCurrentTaskHandle()),
              ulCountOfSDKMutexEnters);
     } else {
-      printf("Core %d - Thread '%s': SDK Sem wait timeout (ok) after %d us\n",
+      printf("Core %d - Thread '%s': SDK Sem wait timeout (ok) after %lld "
+             "cputime\n",
              get_core_num(), pcTaskGetName(xTaskGetCurrentTaskHandle()),
-             (int)absolute_time_diff_us(t, get_absolute_time()));
+             getCPUTime() - cputime);
     }
   }
 
@@ -432,7 +439,12 @@ void vApplicationTickHook(void) {
     NOTE: A semaphore is used for example purposes.  In a real application it
     might be preferable to use a direct to task notification,
     which will be faster and use less RAM. */
-    DSL_ToggleLED();
+    if ((ulCount % 2) == 0) {
+      clearPin(LED_PIN);
+    } else {
+      setPin(LED_PIN);
+    }
+
     xSemaphoreGiveFromISR(xEventSemaphore, &xHigherPriorityTaskWoken);
     ulCount = 0UL;
   }

@@ -26,5 +26,5 @@ add_library(unity STATIC
 target_include_directories(unity PUBLIC
         "${UNITY_DIR}/src/")
 
-#add_subdirectory(tests/template)
+add_subdirectory(tests/template)
 add_subdirectory(tests/hello_world)

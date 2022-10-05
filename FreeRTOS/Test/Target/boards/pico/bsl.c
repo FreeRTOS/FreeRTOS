@@ -49,7 +49,7 @@ void busyWaitMicroseconds(uint32_t us) { busy_wait_us(us); }
 uint64_t getCPUTime(void) { return (uint64_t)get_absolute_time(); }
 
 int AMPLaunchOnCore(int coreNum, void (*function)(void)) {
-  function();
+  (*function)();
 
   return 0;
 }

@@ -1,6 +1,8 @@
 #ifndef _BOARD_SUPPORT_LIBRARY_H
 #define _BOARD_SUPPORT_LIBRARY_H
 
+#include "pico/stdlib.h"
+
 #include <stddef.h>
 #include <stdint.h>
 
@@ -17,7 +19,7 @@ extern int BSL_Write(char *buffer, size_t len);
   (123456) // XXXADS must tune to platform if needed. some platforms will have a
            // time-sycned source but it will be relative to something
 
-#define LED_PIN (25)
+#define LED_PIN (PICO_DEFAULT_LED_PIN)
 
 extern void initTestEnvironment(void);
 extern void sendReport(char *buffer, size_t len);

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202112.00
+ * FreeRTOS V202107.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,9 +19,10 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * http://www.FreeRTOS.org
+ * http://aws.amazon.com/freertos
  *
+ * 1 tab == 4 spaces!
  */
 
 #ifndef FREERTOS_CONFIG_H
@@ -101,7 +102,7 @@
 */
 
 /* SMP port only */
-#define configNUM_CORES                         1
+#define configNUM_CORES                         2
 #define configTICK_CORE                         0
 #define configRUN_MULTIPLE_PRIORITIES           0
 
@@ -133,6 +134,11 @@ to exclude the API function. */
 #define INCLUDE_xQueueGetMutexHolder            1
 
 /* A header file that defines trace macro can be included here. */
+
+/* SMP Related config. */
+#define configUSE_MINIMAL_IDLE_HOOK             0
+#define portCRITICAL_NESTING_IN_TCB             1
+#define portSUPPORT_SMP                         1
 
 #endif /* FREERTOS_CONFIG_H */
 

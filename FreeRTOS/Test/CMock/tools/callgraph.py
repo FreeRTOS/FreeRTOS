@@ -77,6 +77,10 @@ ret = subprocess.run(
     capture_output=True,
 )
 
+if ret.stderr.decode("utf-8"):
+    print (ret.stderr.decode("utf-8"))
+    sys.exit(1)
+
 lineregex = (
     r"^{\s*(?P<level>\d+)} \s*"
     r"(?P<function>\S*)\(\) \<.* at "

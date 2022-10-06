@@ -136,7 +136,7 @@
     <ClCompile Include="..\..\..\..\FreeRTOS\Source\stream_buffer.c">
       <Filter>FreeRTOS\Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\main.c" />
+    <ClCompile Include="..\Common\main.c" />
     <ClCompile Include="DemoTasks\MutualAuthMQTTExample.c">
       <Filter>DemoTasks</Filter>
     </ClCompile>
@@ -470,8 +470,8 @@
     <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\IPTraceMacroDefaults.h">
       <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
     </ClInclude>
-    <ClInclude Include="FreeRTOSConfig.h" />
-    <ClInclude Include="FreeRTOSIPConfig.h" />
+    <ClInclude Include="..\Common\FreeRTOSConfig.h" />
+    <ClInclude Include="..\Common\FreeRTOSIPConfig.h" />
     <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_Stream_Buffer.h">
       <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
     </ClInclude>

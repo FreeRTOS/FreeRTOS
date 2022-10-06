@@ -1,0 +1,267 @@
+name: Build FreeRTOS+ Demos
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - "FreeRTOS/Source"
+      - "FreeRTOS-Plus/Source/**"
+      - "FreeRTOS-Plus/Demo/Common/**"
+      - "FreeRTOS-Plus/Demo/FreeRTOS_Cellular_Interface_Windows_Simulator/**"
+
+  pull_request:
+    branches: [main]
+    paths:
+      - "FreeRTOS/Source"
+      - "FreeRTOS-Plus/Source/**"
+      - "FreeRTOS-Plus/Demo/Common/**"
+      - "FreeRTOS-Plus/Demo/FreeRTOS_Cellular_Interface_Windows_Simulator/**"
+
+jobs:
+  winsim_cellular:
+    name: Windows Simulator Cellular Demos
+    runs-on: windows-2019
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Submodules
+        run: git submodule update --checkout --init --recursive
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: Configure FreeRTOS+Cellular Demos
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Cellular_Interface_Windows_Simulator
+        run: |
+          echo '#define CELLULAR_COMM_INTERFACE_PORT ""' | tee -a */cellular_config.h
+          echo '#define CELLULAR_APN ""' | tee -a */cellular_config.h
+
+          echo '#ifndef DEMO_CONFIG_H_TEST_BUILD' | tee -a */demo_config.h
+          echo '    #define DEMO_CONFIG_H_TEST_BUILD' | tee -a */demo_config.h
+          echo '    #define democonfigMQTT_BROKER_ENDPOINT ""' | tee -a */demo_config.h
+          echo '    #define democonfigMQTT_BROKER_PORT ( 8883 )' | tee -a */demo_config.h
+          echo '    #define democonfigROOT_CA_PEM ""' | tee -a */demo_config.h
+          echo '    #define democonfigCLIENT_CERTIFICATE_PEM ""' | tee -a */demo_config.h
+          echo '    #define democonfigCLIENT_PRIVATE_KEY_PEM ""' | tee -a */demo_config.h
+          echo '    #define democonfigUSE_AWS_IOT_CORE_BROKER ( 1 )' | tee -a */demo_config.h
+          echo '#endif /* DEMO_CONFIG_H_TEST_BUILD */' | tee -a */demo_config.h
+
+      - name: Build Cellular MQTT Demo for BG96
+        working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Cellular_Interface_Windows_Simulator/MQTT_Mutual_Auth_Demo_with_BG96
+        run: msbuild mqtt_mutual_auth_demo_with_bg96.sln -t:rebuild -property:Configuration=Debug
+
+      - name: Build Cellular MQTT Demo for HL7802
+        working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Cellular_Interface_Windows_Simulator/MQTT_Mutual_Auth_Demo_with_HL7802
+        run: msbuild mqtt_mutual_auth_demo_with_hl7802.sln -t:rebuild -property:Configuration=Debug
+
+      - name: Build Cellular MQTT Demo for SARA-R4
+        working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Cellular_Interface_Windows_Simulator/MQTT_Mutual_Auth_Demo_with_SARA_R4
+        run: msbuild mqtt_mutual_auth_demo_with_sara_r4.sln -t:rebuild -property:Configuration=Debug
+
+  winsim_corelibs:
+    name: core Library Windows Simulator Demos
+    runs-on: windows-2019
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Submodules
+        run: git submodule update --checkout --init --recursive
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: Configure coreMQTT Demos
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator
+        run: |
+          echo '#ifndef DEMO_CONFIG_H_TEST_BUILD' | tee -a */demo_config.h
+          echo '    #define DEMO_CONFIG_H_TEST_BUILD' | tee -a */demo_config.h
+          echo '    #define democonfigCLIENT_CERTIFICATE_PEM ""' | tee -a */demo_config.h
+          echo '    #define democonfigCLIENT_IDENTIFIER ""' | tee -a */demo_config.h
+          echo '    #define democonfigCLIENT_PRIVATE_KEY_PEM ""' | tee -a */demo_config.h
+          echo '    #define democonfigCLIENT_PRIVATE_KEY_PEM ""' | tee -a */demo_config.h
+          echo '    #define democonfigMQTT_BROKER_ENDPOINT ""' | tee -a */demo_config.h
+          echo '    #define democonfigMQTT_BROKER_PORT ( 8883 )' | tee -a */demo_config.h
+          echo '    #define democonfigROOT_CA_PEM ""' | tee -a */demo_config.h
+          echo '    #define democonfigUSE_AWS_IOT_CORE_BROKER ( 1U )' | tee -a */demo_config.h
+          echo '#endif /* DEMO_CONFIG_H_TEST_BUILD */' | tee -a */demo_config.h
+
+      - name: Build MQTT Basic TLS Demo
+        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Basic_TLS
+        run: msbuild mqtt_basic_tls_demo.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: Build MQTT Keep Alive Demo
+        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Keep_Alive
+        run: msbuild mqtt_keep_alive_demo.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: Build MQTT Multi-Task Demo
+        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Multitask
+        run: msbuild mqtt_multitask_demo.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: Build MQTT Mutual Authentication with mbedtls Demo
+        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth
+        run: msbuild mqtt_mutual_auth_demo.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: Build MQTT Mutual Authentication with WolfSSL Demo
+        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Mutual_Auth_wolfSSL
+        run: msbuild mqtt_mutual_auth_demo_wolfSSL.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: Build MQTT Plain Text Demo
+        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Plain_Text
+        run: msbuild mqtt_plain_text_demo.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: Build MQTT Serializer Demo
+        working-directory: FreeRTOS-Plus/Demo/coreMQTT_Windows_Simulator/MQTT_Serializer
+        run: msbuild mqtt_serializer_demo.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: Configure corePKCS11_MQTT_Mutual_Auth_Windows_Simulator
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/corePKCS11_MQTT_Mutual_Auth_Windows_Simulator
+        run: |
+          echo '#ifndef DEMO_CONFIG_H_TEST_BUILD' | tee -a demo_config.h
+          echo '    #define DEMO_CONFIG_H_TEST_BUILD' | tee -a demo_config.h
+          echo '    #define democonfigCLIENT_CERTIFICATE_PEM ""' | tee -a demo_config.h
+          echo '    #define democonfigCLIENT_IDENTIFIER ""' | tee -a demo_config.h
+          echo '    #define democonfigTHING_NAME ""' | tee -a demo_config.h
+          echo '    #define democonfigPROVISIONING_TEMPLATE_NAME ""' | tee -a demo_config.h
+          echo '    #define democonfigCLIENT_PRIVATE_KEY_PEM ""' | tee -a demo_config.h
+          echo '    #define democonfigCLIENT_PRIVATE_KEY_PEM ""' | tee -a demo_config.h
+          echo '    #define democonfigMQTT_BROKER_ENDPOINT ""' | tee -a demo_config.h
+          echo '    #define democonfigMQTT_BROKER_PORT ( 8883 )' | tee -a demo_config.h
+          echo '    #define democonfigROOT_CA_PEM ""' | tee -a demo_config.h
+          echo '#endif /* DEMO_CONFIG_H_TEST_BUILD */' | tee -a demo_config.h
+
+      - name: Build corePKCS11 + coreMQTT Mutual Auth Demo
+        working-directory: FreeRTOS-Plus/Demo/corePKCS11_MQTT_Mutual_Auth_Windows_Simulator
+        run: msbuild pkcs11_mqtt_mutual_auth_demo.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: corePKCS11 Demo
+        working-directory: FreeRTOS-Plus/Demo/corePKCS11_Windows_Simulator
+        run: msbuild pkcs11_demos.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: Configure coreSNTP_Windows_Simulator
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreSNTP_Windows_Simulator
+        run: |
+          echo '#ifndef DEMO_CONFIG_H_TEST_BUILD' | tee -a demo_config.h
+          echo '    #define DEMO_CONFIG_H_TEST_BUILD' | tee -a demo_config.h
+          echo '    #define democonfigLIST_OF_TIME_SERVERS ""' | tee -a demo_config.h
+          echo '    #define democonfigLIST_OF_AUTHENTICATION_SYMMETRIC_KEYS ""' | tee -a demo_config.h
+          echo '    #define democonfigLIST_OF_AUTHENTICATION_KEY_IDS ""' | tee -a demo_config.h
+          echo '    #define democonfigSNTP_CLIENT_POLLING_INTERVAL_SECONDS 500U' | tee -a demo_config.h
+          echo '#endif /* DEMO_CONFIG_H_TEST_BUILD */' | tee -a demo_config.h
+
+      - name: coreSNTP Demo
+        working-directory: FreeRTOS-Plus/Demo/coreSNTP_Windows_Simulator
+        run: msbuild core_sntp_demo.sln -t:rebuild -property:Configuration=Debug -m
+
+
+  winsim_aws_iot:
+    name: AWS IoT Windows Simulator Demos
+    runs-on: windows-2019
+    continue-on-error: true
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Submodules
+        run: git submodule update --checkout --init --recursive
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: Adjust Configuration files
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/AWS
+        run: |
+          echo '#ifndef DEMO_CONFIG_H_TEST_BUILD' | tee -a */*/demo_config.h
+          echo '    #define DEMO_CONFIG_H_TEST_BUILD' | tee -a */*/demo_config.h
+          echo '    #define democonfigCLIENT_CERTIFICATE_PEM ""' | tee -a */*/demo_config.h
+          echo '    #define democonfigCLIENT_IDENTIFIER ""' | tee -a */*/demo_config.h
+          echo '    #define democonfigTHING_NAME ""' | tee -a */*/demo_config.h
+          echo '    #define democonfigPROVISIONING_TEMPLATE_NAME ""' | tee -a */*/demo_config.h
+          echo '    #define democonfigCLIENT_PRIVATE_KEY_PEM ""' | tee -a */*/demo_config.h
+          echo '    #define democonfigCLIENT_PRIVATE_KEY_PEM ""' | tee -a */*/demo_config.h
+          echo '    #define democonfigMQTT_BROKER_ENDPOINT ""' | tee -a */*/demo_config.h
+          echo '    #define democonfigMQTT_BROKER_PORT ( 8883 )' | tee -a */*/demo_config.h
+          echo '    #define democonfigROOT_CA_PEM ""' | tee -a */*/demo_config.h
+          echo '#endif /* DEMO_CONFIG_H_TEST_BUILD */' | tee -a */*/demo_config.h
+
+      - name: Build AWS IoT Device Defender Demo
+        working-directory: FreeRTOS-Plus/Demo/AWS/Device_Defender_Windows_Simulator/Device_Defender_Demo
+        run: msbuild defender_demo.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: Build AWS IoT Device Shadow Demo
+        working-directory: FreeRTOS-Plus/Demo/AWS/Device_Shadow_Windows_Simulator/Device_Shadow_Demo
+        run: msbuild shadow_main_demo.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: Build AWS IoT Fleet Provisioning Demo
+        working-directory: FreeRTOS-Plus/Demo/AWS/Fleet_Provisioning_Windows_Simulator/Fleet_Provisioning_With_CSR_Demo
+        run: msbuild fleet_provisioning_demo.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: Build AWS IoT Jobs Demo
+        working-directory: FreeRTOS-Plus/Demo/AWS/Jobs_Windows_Simulator/Jobs_Demo
+        run: msbuild jobs_demo.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: Build AWS IoT OTA over MQTT
+        working-directory: FreeRTOS-Plus/Demo/AWS/Ota_Windows_Simulator/Ota_Over_Mqtt_Demo
+        run: msbuild ota_over_mqtt_demo.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: Build AWS IoT OTA over HTTP
+        working-directory: FreeRTOS-Plus/Demo/AWS/Ota_Windows_Simulator/Ota_Over_Http_Demo
+        run: msbuild ota_over_http_demo.sln -t:rebuild -property:Configuration=Debug -m
+
+  winsim_plus_tcp:
+    name: FreeRTOS+TCP Windows Simulator Demos
+    runs-on: windows-2019
+    continue-on-error: true
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Submodules
+        run: git submodule update --checkout --init --recursive
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: Build FreeRTOS+TCP Minimal Demo
+        working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Minimal_Windows_Simulator
+        run: msbuild FreeRTOS_Plus_TCP_Minimal.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: Build FreeRTOS+TCP UDP CLI Demo
+        working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_UDP_Mode_CLI_Windows_Simulator
+        run: msbuild FreeRTOS_Plus_UDP_with_CLI.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: Build FreeRTOS+WolfSSL Demo
+        working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_WolfSSL_Windows_Simulator
+        run: msbuild FreeRTOS_Plus_WolfSSL.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: Build FreeRTOS+WolfSSL FIPS Demo
+        working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_WolfSSL_FIPS_Ready_Windows_Simulator
+        run: msbuild FreeRTOS_Plus_WolfSSL.sln -t:rebuild -property:Configuration=Debug -m
+
+  winsim_plus_demos:
+    name: FreeRTOS+CLI Windows Simulator Demos
+    runs-on: windows-2019
+    continue-on-error: true
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Submodules
+        run: git submodule update --checkout --init --recursive
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: Build FreeRTOS+CLI+Trace Demo
+        working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_CLI_with_Trace_Windows_Simulator
+        run: msbuild FreeRTOS_Plus_CLI_with_Trace.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: Build FreeRTOS+RelianceEdge+CLI Demo
+        working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_Reliance_Edge_and_CLI_Windows_Simulator
+        run: msbuild FreeRTOS_Plus_Reliance_Edge_with_CLI.sln -t:rebuild -property:Configuration=Debug -m
+

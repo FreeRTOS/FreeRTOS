@@ -268,7 +268,9 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*/trcConfig\.h.*',
     r'.*/trcConfig\.c.*',
     r'.*/trcSnapshotConfig\.h.*',
-    r'.*/MicroZed_hw_platform.*'
+    r'.*/MicroZed_hw_platform.*',
+    r'.*/ThirdParty/.*',
+    r'FreeRTOS\-Plus/Demo/Common/WinPCap/.*'
 ]
 
 FREERTOS_IGNORED_FILES = [
@@ -318,12 +320,14 @@ FREERTOS_HEADER = [
     ' */\n',
 ]
 
+FREERTOS_COPYRIGHT_REGEX = r"^( *(\/\*|\*|#|\/\/))? Copyright \(C\) 20\d\d Amazon.com, Inc. or its affiliates.  All Rights Reserved\.( \*\/)?$"
+
 def main():
     parser = HeaderChecker.configArgParser()
     args   = parser.parse_args()
 
     # Configure the checks then run
-    checker = HeaderChecker(FREERTOS_HEADER)
+    checker = HeaderChecker(FREERTOS_HEADER, copyright_regex=FREERTOS_COPYRIGHT_REGEX)
     checker.ignoreExtension(*FREERTOS_IGNORED_EXTENSIONS)
     checker.ignorePattern(*FREERTOS_IGNORED_PATTERNS)
     checker.ignoreFile(*FREERTOS_IGNORED_FILES)

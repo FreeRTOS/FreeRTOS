@@ -47,10 +47,6 @@ SOURCE_FILES += ${FREERTOS_TCP}/portable/NetworkInterface/MPS2_AN385/NetworkInte
 SOURCE_FILES += TCPEchoClient_SingleTasks.c
 SOURCE_FILES += ${FREERTOS_TCP}/portable/NetworkInterface/MPS2_AN385/ether_lan9118/smsc9220_eth_drv.c
 
-# networking specific cflags
-CFLAGS := -DmainCREATE_NETWORKING_DEMO_ONLY=1
-CFLAGS += -DmainCREATE_TCP_ECHO_TASKS_SINGLE=1
-
 DEFINES := -DprojCOVERAGE_TEST -DQEMU_SOC_MPS2 -DHEAP3
 
 LDFLAGS = -T ./scripts/mps2_m3.ld -specs=nano.specs --specs=rdimon.specs -lc -lrdimon

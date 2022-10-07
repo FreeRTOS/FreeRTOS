@@ -84,6 +84,6 @@ ENV PICO_SDK_PATH=/home/$USER/pico/pico-sdk
 ENV FREERTOS_KERNEL_PATH=/workspaces/FreeRTOS/FreeRTOS/Source
 ENV IDF_PATH=/opt/esp/idf
 RUN curl https://raw.githubusercontent.com/raspberrypi/pico-setup/master/pico_setup.sh | SKIP_VSCODE=1 SKIP_UART=1 bash
-COPY --from=espressif/idf:${ESP_IDF_TAG} /opt/esp /opt/esp
+COPY --from=espressif/idf:release-v5.0 /opt/esp /opt/esp
 RUN $IDF_PATH/install.sh
 RUN echo . $IDF_PATH/export.sh >> ~/.bashrc

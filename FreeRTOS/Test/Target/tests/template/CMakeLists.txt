@@ -36,9 +36,6 @@ add_executable(template_on_core_zero_pico)
 target_link_libraries(template_on_core_zero_pico template_common)
 target_include_directories(template_on_core_zero_pico PUBLIC
         ${BSL_INCLUDE_PATHS})
-target_compile_definitions(template_on_core_zero_pico PRIVATE
-        ${BSL_DEFINES}
-)
 add_test(template_on_core_zero_pico_test one_core_zero_pico)
 
 add_executable(template_on_core_one_pico)
@@ -47,7 +44,6 @@ target_link_libraries(template_on_core_one_pico template_common)
 target_include_directories(template_on_core_one_pico PUBLIC
         ${BSL_INCLUDE_PATHS})
 target_compile_definitions(template_on_core_one_pico PRIVATE
-        ${BSL_DEFINES}
         ${BSL_ON_CORE_ONE_DEFINES}
 )
 add_test(template_on_core_one_pico_test one_core_one_pico)

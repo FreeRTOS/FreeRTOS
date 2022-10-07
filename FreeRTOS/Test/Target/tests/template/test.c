@@ -252,6 +252,7 @@ int main(void) {
             // counter is used so that just one child task will call it
             // instead.
 }
+
 /*-----------------------------------------------------------*/
 
 static void vExampleTimerCallback(TimerHandle_t xTimer) {

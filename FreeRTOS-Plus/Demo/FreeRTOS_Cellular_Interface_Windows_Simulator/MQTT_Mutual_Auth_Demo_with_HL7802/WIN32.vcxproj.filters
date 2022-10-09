@@ -74,7 +74,7 @@
     <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\platform\cellular\interface">
       <UniqueIdentifier>{5465caea-3879-404b-a54e-753ece92941c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\platform\cellular\include\common">
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\platform\cellular\include\Common">
       <UniqueIdentifier>{2559b11d-a741-471f-ad56-e7263dc15046}</UniqueIdentifier>
     </Filter>
     <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\platform\cellular\include\private">
@@ -417,7 +417,7 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Demo\Common\Logging\windows\Logging_WinSim.c" />
     <ClCompile Include="..\Common\main.c" />
-    <ClCompile Include="DemoTasks\MutualAuthMQTTExample.c">
+    <ClCompile Include="..\Common\MutualAuthMQTTExample.c">
       <Filter>DemoTasks</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
@@ -822,19 +822,19 @@
     <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_stack.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\logging</Filter>
     </ClInclude>
-    <ClInclude Include="core_mqtt_config.h">
+    <ClInclude Include="..\Common\core_mqtt_config.h">
       <Filter>Config</Filter>
     </ClInclude>
     <ClInclude Include="demo_config.h">
       <Filter>Config</Filter>
     </ClInclude>
-    <ClInclude Include="FreeRTOSConfig.h">
+    <ClInclude Include="..\Common\FreeRTOSConfig.h">
       <Filter>Config</Filter>
     </ClInclude>
-    <ClInclude Include="FreeRTOSIPConfig.h">
+    <ClInclude Include="..\Common\FreeRTOSIPConfig.h">
       <Filter>Config</Filter>
     </ClInclude>
-    <ClInclude Include="mbedtls_config.h">
+    <ClInclude Include="..\Common\mbedtls_config.h">
       <Filter>Config</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
@@ -848,16 +848,16 @@
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\cellular\interface</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\common\cellular_at_core.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\cellular\include\common</Filter>
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\cellular\include\Common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\common\cellular_common.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\cellular\include\common</Filter>
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\cellular\include\Common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\common\cellular_common_api.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\cellular\include\common</Filter>
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\cellular\include\Common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\common\cellular_common_portable.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\cellular\include\common</Filter>
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\cellular\include\Common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\private\cellular_common_internal.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\cellular\include\private</Filter>

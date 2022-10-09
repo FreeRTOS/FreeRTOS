@@ -43,16 +43,7 @@ extern void initialise_monitor_handles(void);
 
 int main ()
 {
-#if ( mainCREATE_NETWORKING_DEMO_ONLY == 1 )
-    {
-       main_tcp_echo_client_tasks();
-    }
-#else
-    {
-    #error "Invalid Selection..." \
-           "\nPlease Select a Demo application from the main command"
-    }
-#endif
+    main_tcp_echo_client_tasks();
     return 0;
 }
 

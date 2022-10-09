@@ -53,6 +53,9 @@
     #define LIBRARY_LOG_LEVEL    LOG_INFO
 #endif
 
+extern void vLoggingPrintf( const char * pcFormatString,
+                            ... );
+
 #include "logging_stack.h"
 
 /************ End of logging configuration ****************/

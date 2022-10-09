@@ -89,9 +89,6 @@ extern uint8_t CellularSocketPdnContextId;
 #define CELLULAR_SOCKET_OPEN_TIMEOUT_TICKS     ( portMAX_DELAY )
 #define CELLULAR_SOCKET_CLOSE_TIMEOUT_TICKS    ( pdMS_TO_TICKS( 10000U ) )
 
-/* Cellular socket AT command timeout. */
-#define CELLULAR_SOCKET_RECV_TIMEOUT_MS        ( 1000UL )
-
 /* Time conversion constants. */
 #define _MILLISECONDS_PER_SECOND               ( 1000 )                                          /**< @brief Milliseconds per second. */
 #define _MILLISECONDS_PER_TICK                 ( _MILLISECONDS_PER_SECOND / configTICK_RATE_HZ ) /**< Milliseconds per FreeRTOS tick. */
@@ -447,7 +444,6 @@ static BaseType_t prvSetupSocketRecvTimeout( cellularSocketWrapper_t * pCellular
 static BaseType_t prvSetupSocketSendTimeout( cellularSocketWrapper_t * pCellularSocketContext,
                                              TickType_t sendTimeout )
 {
-    CellularError_t socketStatus = CELLULAR_SUCCESS;
     BaseType_t retSetSockOpt = SOCKETS_ERROR_NONE;
     uint32_t sendTimeoutMs = 0;
     CellularSocketHandle_t cellularSocketHandle = NULL;
@@ -477,18 +473,6 @@ static BaseType_t prvSetupSocketSendTimeout( cellularSocketWrapper_t * pCellular
         {
             pCellularSocketContext->sendTimeout = sendTimeout;
             sendTimeoutMs = TICKS_TO_MS( sendTimeout );
-        }
-
-        socketStatus = Cellular_SocketSetSockOpt( CellularHandle,
-                                                  cellularSocketHandle,
-                                                  CELLULAR_SOCKET_OPTION_LEVEL_TRANSPORT,
-                                                  CELLULAR_SOCKET_OPTION_SEND_TIMEOUT,
-                                                  ( const uint8_t * ) &sendTimeoutMs,
-                                                  sizeof( uint32_t ) );
-
-        if( socketStatus != CELLULAR_SUCCESS )
-        {
-            retSetSockOpt = SOCKETS_EINVAL;
         }
     }
 
@@ -599,7 +583,6 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
     CellularSocketAddress_t serverAddress = { 0 };
     EventBits_t waitEventBits = 0;
     BaseType_t retConnect = SOCKETS_ERROR_NONE;
-    const uint32_t defaultReceiveTimeoutMs = CELLULAR_SOCKET_RECV_TIMEOUT_MS;
 
     /* Create a new TCP socket. */
     cellularSocketStatus = Cellular_CreateSocket( CellularHandle,
@@ -658,23 +641,6 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
 
         IotLogDebug( "Ip address %s port %d\r\n", serverAddress.ipAddress.ipAddress, serverAddress.port );
         retConnect = prvCellularSocketRegisterCallback( cellularSocketHandle, pCellularSocketContext );
-    }
-
-    /* Setup cellular socket recv AT command default timeout. */
-    if( retConnect == SOCKETS_ERROR_NONE )
-    {
-        cellularSocketStatus = Cellular_SocketSetSockOpt( CellularHandle,
-                                                          cellularSocketHandle,
-                                                          CELLULAR_SOCKET_OPTION_LEVEL_TRANSPORT,
-                                                          CELLULAR_SOCKET_OPTION_RECV_TIMEOUT,
-                                                          ( const uint8_t * ) &defaultReceiveTimeoutMs,
-                                                          sizeof( uint32_t ) );
-
-        if( cellularSocketStatus != CELLULAR_SUCCESS )
-        {
-            IotLogError( "Failed to setup cellular AT command receive timeout %d.", cellularSocketStatus );
-            retConnect = SOCKETS_SOCKET_ERROR;
-        }
     }
 
     /* Setup cellular socket send/recv timeout. */
@@ -923,7 +889,7 @@ int32_t Sockets_Send( Socket_t xSocket,
             }
         }
 
-        IotLogDebug( "Sockets_Send expect %d write %d", len, sentLength );
+        IotLogDebug( "Sockets_Send expect %d write %d", xDataLength, sentLength );
     }
 
     return retSendLength;

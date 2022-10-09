@@ -55,7 +55,7 @@
 #include <io.h>
 
 #ifndef __MINGW32__
-#include "IP6_misc.h"
+#include "ip6_misc.h"
 #endif
 
 #define caddr_t char*

@@ -36,10 +36,6 @@
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 
-/* FreeRTOS+TCP includes. */
-#include "FreeRTOS_IP.h"
-#include "FreeRTOS_Sockets.h"
-
 /* TLS transport header. */
 #include "using_mbedtls.h"
 
@@ -700,9 +696,9 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
         {
             sslContextFree( &( pTlsTransportParams->sslContext ) );
 
-            if( pTlsTransportParams->tcpSocket != FREERTOS_INVALID_SOCKET )
+            if( pTlsTransportParams->tcpSocket != SOCKETS_INVALID_SOCKET )
             {
-                ( void ) FreeRTOS_closesocket( pTlsTransportParams->tcpSocket );
+                ( void ) Sockets_Disconnect( pTlsTransportParams->tcpSocket );
             }
         }
     }

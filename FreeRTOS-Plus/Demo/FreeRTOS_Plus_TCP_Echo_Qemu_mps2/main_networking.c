@@ -26,8 +26,7 @@
 
 /*
  * This project is a cut down version of the project described on the following
- * link.  Only the simple UDP client and server and the TCP echo clients are
- * included in the build:
+ * link.  Only the TCP echo clients is included in the build:
  * https://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/examples_FreeRTOS_simulator.html
  */
 
@@ -44,26 +43,15 @@
 /* Demo application includes. */
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
-/*#include "SimpleUDPClientAndServer.h" */
-/*#include "SimpleTCPEchoServer.h" */
-/*#include "logging.h" */
 #include "TCPEchoClient_SingleTasks.h"
 
-/* Simple UDP client and server task parameters. */
-#define mainSIMPLE_UDP_CLIENT_SERVER_TASK_PRIORITY    ( tskIDLE_PRIORITY )
-#define mainSIMPLE_UDP_CLIENT_SERVER_PORT             ( 5005UL )
-
-/* Echo client task parameters - used for both TCP and UDP echo clients. */
-#define mainECHO_CLIENT_TASK_STACK_SIZE               ( configMINIMAL_STACK_SIZE * 2 )      /* Not used in the linux port. */
-#define mainECHO_CLIENT_TASK_PRIORITY                 ( tskIDLE_PRIORITY + 1 )
-
-/* Echo server task parameters. */
-#define mainECHO_SERVER_TASK_STACK_SIZE               ( configMINIMAL_STACK_SIZE * 2 )      /* Not used in the linux port. */
-#define mainECHO_SERVER_TASK_PRIORITY                 ( tskIDLE_PRIORITY + 1 )
+/* Echo client task parameters  */
+#define mainECHO_CLIENT_TASK_STACK_SIZE    ( configMINIMAL_STACK_SIZE * 2 )                 /* Not used in the linux port. */
+#define mainECHO_CLIENT_TASK_PRIORITY      ( tskIDLE_PRIORITY + 1 )
 
 /* Define a name that will be used for LLMNR and NBNS searches. */
-#define mainHOST_NAME                                 "RTOSDemo"
-#define mainDEVICE_NICK_NAME                          "qemu_demo"
+#define mainHOST_NAME                      "RTOSDemo"
+#define mainDEVICE_NICK_NAME               "qemu_demo"
 
 /* Set the following constants to 1 or 0 to define which tasks to include and
  * exclude:
@@ -94,43 +82,43 @@ static void prvMiscInitialisation( void );
  * defined here will be used if ipconfigUSE_DHCP is 0, or if ipconfigUSE_DHCP is
  * 1 but a DHCP server could not be contacted.  See the online documentation for
  * more information. */
-static const uint8_t ucIPAddress[ 4 ] = { configIP_ADDR0,
-                                          configIP_ADDR1,
-                                          configIP_ADDR2,
-                                          configIP_ADDR3
-                                        };
-static const uint8_t ucNetMask[ 4 ] = { configNET_MASK0,
-                                        configNET_MASK1,
-                                        configNET_MASK2,
-                                        configNET_MASK3
-                                      };
-static const uint8_t ucGatewayAddress[ 4 ] = { configGATEWAY_ADDR0,
-                                               configGATEWAY_ADDR1,
-                                               configGATEWAY_ADDR2,
-                                               configGATEWAY_ADDR3
-                                             };
-static const uint8_t ucDNSServerAddress[ 4 ] = { configDNS_SERVER_ADDR0,
-                                                 configDNS_SERVER_ADDR1,
-                                                 configDNS_SERVER_ADDR2,
-                                                 configDNS_SERVER_ADDR3
-                                               };
-const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0,
-                                    configMAC_ADDR1,
-                                    configMAC_ADDR2,
-                                    configMAC_ADDR3,
-                                    configMAC_ADDR4,
-                                    configMAC_ADDR5
-                                  };
-
-/* Set the following constant to pdTRUE to log using the method indicated by the
- * name of the constant, or pdFALSE to not log using the method indicated by the
- * name of the constant.  Options include to standard out (xLogToStdout), to a disk
- * file (xLogToFile), and to a UDP port (xLogToUDP).  If xLogToUDP is set to pdTRUE
- * then UDP messages are sent to the IP address configured as the echo server
- * address (see the configECHO_SERVER_ADDR0 definitions in FreeRTOSConfig.h) and
- * the port number set by configPRINT_PORT in FreeRTOSConfig.h. */
-//const BaseType_t xLogToStdout = pdTRUE, xLogToFile = pdFALSE, xLogToUDP = pdFALSE;
-
+static const uint8_t ucIPAddress[ 4 ] =
+{
+    configIP_ADDR0,
+    configIP_ADDR1,
+    configIP_ADDR2,
+    configIP_ADDR3
+};
+static const uint8_t ucNetMask[ 4 ] =
+{
+    configNET_MASK0,
+    configNET_MASK1,
+    configNET_MASK2,
+    configNET_MASK3
+};
+static const uint8_t ucGatewayAddress[ 4 ] =
+{
+    configGATEWAY_ADDR0,
+    configGATEWAY_ADDR1,
+    configGATEWAY_ADDR2,
+    configGATEWAY_ADDR3
+};
+static const uint8_t ucDNSServerAddress[ 4 ] =
+{
+    configDNS_SERVER_ADDR0,
+    configDNS_SERVER_ADDR1,
+    configDNS_SERVER_ADDR2,
+    configDNS_SERVER_ADDR3
+};
+const uint8_t ucMACAddress[ 6 ] =
+{
+    configMAC_ADDR0,
+    configMAC_ADDR1,
+    configMAC_ADDR2,
+    configMAC_ADDR3,
+    configMAC_ADDR4,
+    configMAC_ADDR5
+};
 
 /* Use by the pseudo random number generator. */
 static UBaseType_t ulNextRand;
@@ -182,7 +170,8 @@ void main_tcp_echo_client_tasks( void )
 }
 /*-----------------------------------------------------------*/
 
-    BaseType_t xTasksAlreadyCreated = pdFALSE;
+BaseType_t xTasksAlreadyCreated = pdFALSE;
+
 /* Called by FreeRTOS+TCP when the network connects or disconnects.  Disconnect
  * events are only received if implemented in the MAC driver. */
 void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
@@ -205,10 +194,10 @@ void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
              * demo tasks. */
 
             #if ( mainCREATE_TCP_ECHO_TASKS_SINGLE == 1 )
-                {
-                    vStartTCPEchoClientTasks_SingleTasks( mainECHO_CLIENT_TASK_STACK_SIZE,
-                                                          mainECHO_CLIENT_TASK_PRIORITY );
-                }
+            {
+                vStartTCPEchoClientTasks_SingleTasks( mainECHO_CLIENT_TASK_STACK_SIZE,
+                                                      mainECHO_CLIENT_TASK_PRIORITY );
+            }
             #endif /* mainCREATE_TCP_ECHO_TASKS_SINGLE */
 
             xTasksAlreadyCreated = pdTRUE;
@@ -231,7 +220,7 @@ void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
     }
     else
     {
-        FreeRTOS_printf( ("Application idle hook network down\n") );
+        FreeRTOS_printf( ( "Application idle hook network down\n" ) );
     }
 }
 /*-----------------------------------------------------------*/

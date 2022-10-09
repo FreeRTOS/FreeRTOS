@@ -800,19 +800,19 @@
     <ClInclude Include="..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging\logging_stack.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\logging</Filter>
     </ClInclude>
-    <ClInclude Include="core_mqtt_config.h">
+    <ClInclude Include="..\Common\core_mqtt_config.h">
       <Filter>Config</Filter>
     </ClInclude>
     <ClInclude Include="demo_config.h">
       <Filter>Config</Filter>
     </ClInclude>
-    <ClInclude Include="FreeRTOSConfig.h">
+    <ClInclude Include="..\Common\FreeRTOSConfig.h">
       <Filter>Config</Filter>
     </ClInclude>
-    <ClInclude Include="FreeRTOSIPConfig.h">
+    <ClInclude Include="..\Common\FreeRTOSIPConfig.h">
       <Filter>Config</Filter>
     </ClInclude>
-    <ClInclude Include="mbedtls_config.h">
+    <ClInclude Include="Common\mbedtls_config.h">
       <Filter>Config</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h">

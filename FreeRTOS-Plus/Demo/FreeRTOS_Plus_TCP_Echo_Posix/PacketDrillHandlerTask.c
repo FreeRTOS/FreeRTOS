@@ -67,6 +67,7 @@ FreeRTOSConfig.h as it is a demo application constant. */
 
 /* Rx and Tx time outs are used to ensure the sockets do not wait too long for
 missing data. */
+static const TickType_t xConnectTimeOut = pdMS_TO_TICKS( 300 );
 static const TickType_t xReceiveTimeOut = portMAX_DELAY;
 static const TickType_t xSendTimeOut = pdMS_TO_TICKS( 10000 );
 
@@ -259,8 +260,12 @@ static void handlePacketDrillCommand(void *pvParameters) {
                 FreeRTOS_debug_printf(("Connect IP address found in ARP cache...\n"));
             }
 
+            FreeRTOS_setsockopt( socketArray[connectPackage.sockfd], 0, FREERTOS_SO_RCVTIMEO, &xConnectTimeOut, sizeof( xReceiveTimeOut ) );
+
             int connectResult = FreeRTOS_connect( socketArray[connectPackage.sockfd],
                             &xEchoServerAddress, sizeof( xEchoServerAddress ) );
+
+            FreeRTOS_setsockopt( socketArray[connectPackage.sockfd], 0, FREERTOS_SO_RCVTIMEO, &xReceiveTimeOut, sizeof( xReceiveTimeOut ) );
 
             if (connectResult < 0) {
                 FreeRTOS_debug_printf(("Error connecting to socket with response: %d\n", connectResult));

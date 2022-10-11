@@ -548,7 +548,7 @@ static void *packetDrillBridgeThread (void *pvParameters)
 
             FreeRTOS_debug_printf(("Syscall response buffer received: %d...\n", syscallResponse.result));
 
-            int numWrote = write(cfd, &syscallResponse, data_size);
+            int numWrote = send(cfd, &syscallResponse, data_size, MSG_NOSIGNAL);
 
             if (numWrote == -1) {
                 FreeRTOS_debug_printf(("Error writing socket response...\n"));

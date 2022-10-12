@@ -2659,7 +2659,9 @@ void test_xTaskIncrementTick_success_unblock_tasks( void )
     TaskHandle_t task_handle2;
 
     /* setup */
+    create_task_priority = 4;
     task_handle = create_task();
+    create_task_priority = 4;
     task_handle2 = create_task();
     ptcb = task_handle;
     xPendedTicks = 3;
@@ -2680,7 +2682,7 @@ void test_xTaskIncrementTick_success_unblock_tasks( void )
     listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
     /* back */
     listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ ptcb->uxPriority ],
-                                             1 );
+                                             2 );
 
     /* API Call */
     ret_task_incrementtick = xTaskIncrementTick();

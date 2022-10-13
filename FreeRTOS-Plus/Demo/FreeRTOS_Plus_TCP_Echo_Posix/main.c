@@ -306,7 +306,7 @@ static void prvSaveTraceFile( void )
         {
             fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
             fclose( pxOutputFile );
-            printf( "\r\nTrace output saved to Trace.dump\r\n" );
+            //printf( "\r\nTrace output saved to Trace.dump\r\n" );
         }
         else
         {

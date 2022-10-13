@@ -496,16 +496,16 @@
       <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\sara-r4\cellular_r4.c">
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\sara-r4\source\cellular_r4.c">
       <Filter>Module</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\sara-r4\cellular_r4_api.c">
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\sara-r4\source\cellular_r4_api.c">
       <Filter>Module</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\sara-r4\cellular_r4_urc_handler.c">
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\sara-r4\source\cellular_r4_urc_handler.c">
       <Filter>Module</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\sara-r4\cellular_r4_wrapper.c">
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\sara-r4\source\cellular_r4_wrapper.c">
       <Filter>Module</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\error.c" />
@@ -926,7 +926,7 @@
       <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />
-    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Modules\sara-r4\cellular_r4.h">
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Modules\sara-r4\source\cellular_r4.h">
       <Filter>Module</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\error.h" />

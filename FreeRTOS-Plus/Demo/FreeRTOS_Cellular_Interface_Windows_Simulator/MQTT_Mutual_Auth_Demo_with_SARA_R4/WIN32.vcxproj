@@ -92,10 +92,10 @@
     <ClCompile Include="..\..\..\..\FreeRTOS\Source\timers.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\cellular\sockets_wrapper.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\using_mbedtls\using_mbedtls.c" />
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\sara-r4\cellular_r4.c" />
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\sara-r4\cellular_r4_api.c" />
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\sara-r4\cellular_r4_urc_handler.c" />
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\sara-r4\cellular_r4_wrapper.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\sara-r4\source\cellular_r4.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\sara-r4\source\cellular_r4_api.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\sara-r4\source\cellular_r4_urc_handler.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\sara-r4\source\cellular_r4_wrapper.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\cellular_3gpp_api.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\cellular_3gpp_urc_handler.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\cellular_at_core.c" />
@@ -431,7 +431,7 @@
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_config_defaults.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\cellular\sockets_wrapper.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\using_mbedtls\using_mbedtls.h" />
-    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Modules\sara-r4\cellular_r4.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Modules\sara-r4\source\cellular_r4.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\cellular_api.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\cellular_config_defaults.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\cellular_types.h" />

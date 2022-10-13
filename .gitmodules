@@ -60,11 +60,19 @@
 	url = https://github.com/aws/SigV4-for-AWS-IoT-embedded-sdk.git
 [submodule "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface"]
 	path = FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface
-	url = https://github.com/ActoryOu/FreeRTOS-Cellular-Interface.git
-	branch = split
+	url = https://github.com/FreeRTOS/FreeRTOS-Cellular-Interface
 [submodule "FreeRTOS-Plus/ThirdParty/tinycbor"]
 	path = FreeRTOS-Plus/ThirdParty/tinycbor
 	url = https://github.com/intel/tinycbor.git
 [submodule "FreeRTOS-Plus/Source/AWS/fleet-provisioning"]
 	path = FreeRTOS-Plus/Source/AWS/fleet-provisioning
 	url = https://github.com/aws/Fleet-Provisioning-for-AWS-IoT-embedded-sdk.git
+[submodule "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/bg96"]
+	path = FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/bg96
+	url = https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-Quectel-BG96
+[submodule "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/hl7802"]
+	path = FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/hl7802
+	url = https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-Sierra-Wireless-HL7802
+[submodule "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/sara-r4"]
+	path = FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/sara-r4
+	url = https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-ublox-SARA-R4

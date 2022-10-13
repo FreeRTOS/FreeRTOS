@@ -456,16 +456,16 @@
     <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\cellular_pktio.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\cellular</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\bg96\cellular_bg96.c">
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\bg96\source\cellular_bg96.c">
       <Filter>Module</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\bg96\cellular_bg96_api.c">
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\bg96\source\cellular_bg96_api.c">
       <Filter>Module</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\bg96\cellular_bg96_urc_handler.c">
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\bg96\source\cellular_bg96_urc_handler.c">
       <Filter>Module</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\bg96\cellular_bg96_wrapper.c">
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Modules\bg96\source\cellular_bg96_wrapper.c">
       <Filter>Module</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\cellular_setup.c">
@@ -871,7 +871,7 @@
     <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\private\cellular_pktio_internal.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\cellular\include\private</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Modules\bg96\cellular_bg96.h">
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Modules\bg96\source\cellular_bg96.h">
       <Filter>Module</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\cellular_api.h">

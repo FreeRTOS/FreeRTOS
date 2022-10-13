@@ -38,7 +38,7 @@
  * Create the PacketDrill handler task.
  */
 void vStartPacketDrillHandlerTask( uint16_t usTaskStackSize, UBaseType_t uxTaskPriority );
-void resetPacketDrillTask();
+int resetPacketDrillTask();
 
 
 struct AcceptPackage {

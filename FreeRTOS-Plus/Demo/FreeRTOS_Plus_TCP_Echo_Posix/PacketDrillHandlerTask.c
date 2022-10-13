@@ -246,20 +246,14 @@ static void handlePacketDrillCommand(void *pvParameters) {
                 uint32_t destinationIPAddress = getFreeRTOSSinAddr(sock_addr->sin_addr);
                 xEchoServerAddress.sin_addr = destinationIPAddress;
 
-                /*xEchoServerAddress.sin_port = FreeRTOS_htons( echoECHO_PORT );
-                xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
-                                                                        configECHO_SERVER_ADDR1,
-                                                                        configECHO_SERVER_ADDR2,
-                                                                        configECHO_SERVER_ADDR3 );*/
-
-                if (xIsIPInARPCache(xEchoServerAddress.sin_addr) == pdFALSE) {
-                    FreeRTOS_debug_printf(("Connect IP address not in ARP cache...Adding now...\n"));
-                    MACAddress_t destinationMacAddress;
-                    memcpy(&destinationMacAddress, destinationMacBytes, sizeof(MACAddress_t));
-                    vARPRefreshCacheEntry( &destinationMacAddress, destinationIPAddress );
-                } else {
-                    FreeRTOS_debug_printf(("Connect IP address found in ARP cache...\n"));
-                }
+            if (xIsIPInARPCache(xEchoServerAddress.sin_addr) == pdFALSE) {
+                FreeRTOS_debug_printf(("Connect IP address not in ARP cache...Adding now...\n"));
+                MACAddress_t destinationMacAddress;
+                memcpy(&destinationMacAddress, destinationMacBytes, sizeof(MACAddress_t));
+                vARPRefreshCacheEntry( &destinationMacAddress, destinationIPAddress );
+            } else {
+                FreeRTOS_debug_printf(("Connect IP address found in ARP cache...\n"));
+            }
 
                 FreeRTOS_setsockopt( socketArray[connectPackage.sockfd], 0, FREERTOS_SO_RCVTIMEO, &xConnectTimeOut, sizeof( xReceiveTimeOut ) );
 
@@ -320,25 +314,19 @@ static void handlePacketDrillCommand(void *pvParameters) {
                 sendResultToThread(closeResult);
             } else if (strcmp(syscallPackage.syscallId, "freertos_init") == 0){
 
-                int sizeSocketArray = socketCounter - 3;
-                if (sizeSocketArray > 0) {
-                    memset(socketArray + (3*sizeof(Socket_t)), 0, sizeSocketArray * sizeof(Socket_t));
-                }
+            int sizeSocketArray = resetPacketDrillTask();
 
-                FreeRTOS_debug_printf(("FreeRTOS Initialized..\n"));
-
-                socketCounter = 3;
-                sendResultToThread(sizeSocketArray);
-            } else {
-                response = 0;
-                sendResultToThread(response);
-            }
+            sendResultToThread(sizeSocketArray);
+        } else {
+            response = 0;
+            sendResultToThread(response);
+        }
 
         }
 
     }
 
-    
+
 }
 
 static void sendSyscallResponseToThread(struct SyscallResponsePackage syscallResponse) {
@@ -368,15 +356,23 @@ static void sendResultToThread(int result) {
     sendSyscallResponseToThread(syscallResponse);
 }
 
-void resetPacketDrillTask() {
-    /*int sizeSocketArray = socketCounter - 3;
+int resetPacketDrillTask() {
+    int sizeSocketArray = socketCounter - 3;
     if (sizeSocketArray > 0) {
         memset(socketArray + (3*sizeof(Socket_t)), 0, sizeSocketArray * sizeof(Socket_t));
+
+        /* We want to close all the socket we opened during this session */
+        for (int counter = 0; counter < sizeSocketArray; counter++) {
+            Socket_t socket = socketArray[counter + 3];
+            FreeRTOS_closesocket(socket);
+        }
     }
 
     socketCounter = 3;
 
-    FreeRTOS_debug_printf(("PacketDrill Handler Task Reset..\n"));*/
+    FreeRTOS_debug_printf(("PacketDrill Handler Task Reset..\n"));
+
+    return sizeSocketArray;
 
 }
 

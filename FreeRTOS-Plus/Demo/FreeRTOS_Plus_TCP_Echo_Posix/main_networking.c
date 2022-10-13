@@ -154,6 +154,8 @@ static UBaseType_t ulNextRand;
 
 /*-----------------------------------------------------------*/
 
+__AFL_FUZZ_INIT();
+
 void main_tcp_echo_client_tasks( void )
 {
     const uint32_t ulLongTime_ms = pdMS_TO_TICKS( 1000UL );
@@ -166,6 +168,10 @@ void main_tcp_echo_client_tasks( void )
     /* Miscellaneous initialisation including preparing the logging and seeding
      * the random number generator. */
     prvMiscInitialisation();
+
+    #ifdef __AFL_HAVE_MANUAL_CONTROL
+        __AFL_INIT();
+    #endif
 
     /* Initialise the network interface.
      *
@@ -481,99 +487,110 @@ static void *packetDrillBridgeThread (void *pvParameters)
 
     for (;;) {
 
-        FreeRTOS_debug_printf(("Waiting to accept a connection...\n"));
+        unsigned char *buf = __AFL_FUZZ_TESTCASE_BUF;
 
-        int cfd = accept(sfd, NULL, NULL);
+        while (__AFL_LOOP(1000)) {
 
-        if (cfd == -1) {
-            FreeRTOS_debug_printf(("Error accepting connection...\n"));
-            return NULL;
-        }
-        FreeRTOS_debug_printf(("Accepted socket fd = %d\n", cfd));
+            FreeRTOS_debug_printf(("Waiting to accept a connection...\n"));
 
-        //
-        // Transfer data from connected socket to stdout until EOF */
-        //
+            FreeRTOS_debug_printf(("%s\n", buf));
 
-        ssize_t numRead;
-        struct SyscallPackage syscallPackage;
+            int cfd = accept(sfd, NULL, NULL);
 
-        size_t xSpace;
+            if (cfd == -1) {
+                FreeRTOS_debug_printf(("Error accepting connection...\n"));
+                return NULL;
+            }
+            FreeRTOS_debug_printf(("Accepted socket fd = %d\n", cfd));
 
-            // Read at most BUF_SIZE bytes from the socket into buf.
-        while ((numRead = read(cfd, &syscallPackage, sizeof(struct SyscallPackage))) > 0) {
+            //
+            // Transfer data from connected socket to stdout until EOF 
+            //
 
-            if (syscallPackage.bufferedMessage == 1) {
-                void *buffer = malloc(syscallPackage.bufferedCount);
-                size_t bufferCount = read(cfd, buffer, syscallPackage.bufferedCount);
+            ssize_t numRead;
+            struct SyscallPackage syscallPackage; 
 
-                if (bufferCount <= 0) {
-                    FreeRTOS_debug_printf(("Error reading buffer content from socket\n"));
-                } else if (bufferCount != syscallPackage.bufferedCount) {
-                    FreeRTOS_debug_printf(("Count of buffer not equal to expected count.\n"));
-                } else {
-                    FreeRTOS_debug_printf(("Successfully read buffer count from socket.\n"));
+            size_t xSpace;
+
+                // Read at most BUF_SIZE bytes from the socket into buf.
+            while ((numRead = read(cfd, &syscallPackage, sizeof(struct SyscallPackage))) > 0) {
+
+                if (syscallPackage.bufferedMessage == 1) {
+                    void *buffer = malloc(syscallPackage.bufferedCount);
+                    size_t bufferCount = read(cfd, buffer, syscallPackage.bufferedCount);
+
+                    if (bufferCount <= 0) {
+                        FreeRTOS_debug_printf(("Error reading buffer content from socket\n"));
+                    } else if (bufferCount != syscallPackage.bufferedCount) {
+                        FreeRTOS_debug_printf(("Count of buffer not equal to expected count.\n"));
+                    } else {
+                        FreeRTOS_debug_printf(("Successfully read buffer count from socket.\n"));
+                    }
+
+                    syscallPackage.buffer = buffer;
+
                 }
 
-                syscallPackage.buffer = buffer;
+                xSpace = uxStreamBufferGetSpace( xSendBuffer );
+
+                if (xSpace >= sizeof(struct SyscallPackage)) {
+                    uxStreamBufferAdd( xSendBuffer,
+                                    0,
+                                    ( const uint8_t * ) &syscallPackage,
+                                    sizeof( struct SyscallPackage ) );
+
+                } else {
+                    FreeRTOS_debug_printf(("There is not enough space in send buffer...\n"));
+                    continue;
+                }
+
+                //TODO: Modify the wait time such that for calls like accept, it waits indefinitely,
+                // while it returns an error for other non-blocking calls.
+
+                event_wait_timed( pvSendEvent, xMaxMSToWait );
+
+                size_t data_size = sizeof(struct SyscallResponsePackage);
+                struct SyscallResponsePackage syscallResponse;
+
+                if (uxStreamBufferGetSize( xRecvBuffer ) < data_size) {
+                    FreeRTOS_debug_printf(("Not enough data in receive buffer...\n"));
+                }
+
+                uxStreamBufferGet( xRecvBuffer, 0, ( uint8_t * ) &syscallResponse, data_size, pdFALSE );
+
+                FreeRTOS_debug_printf(("Syscall response buffer received: %d...\n", syscallResponse.result));
+
+                int numWrote = send(cfd, &syscallResponse, data_size, MSG_NOSIGNAL);
+
+                if (numWrote == -1) {
+                    FreeRTOS_debug_printf(("Error writing socket response...\n"));
+                } else {
+                    FreeRTOS_debug_printf(("Successfully wrote socket response to Packetdrill...\n"));
+                }
+
 
             }
 
-            xSpace = uxStreamBufferGetSpace( xSendBuffer );
-
-            if (xSpace >= sizeof(struct SyscallPackage)) {
-                uxStreamBufferAdd( xSendBuffer,
-                                   0,
-                                   ( const uint8_t * ) &syscallPackage,
-                                   sizeof( struct SyscallPackage ) );
-
-            } else {
-                FreeRTOS_debug_printf(("There is not enough space in send buffer...\n"));
-                continue;
+            if (numRead == 0) {
+                FreeRTOS_debug_printf(("About to unlink\n"));
             }
 
-            //TODO: Modify the wait time such that for calls like accept, it waits indefinitely,
-            // while it returns an error for other non-blocking calls.
+            if (numRead == -1) {
+            FreeRTOS_debug_printf(("Error reading from socket...\n"));
 
-            event_wait_timed( pvSendEvent, xMaxMSToWait );
-
-            size_t data_size = sizeof(struct SyscallResponsePackage);
-            struct SyscallResponsePackage syscallResponse;
-
-            if (uxStreamBufferGetSize( xRecvBuffer ) < data_size) {
-                FreeRTOS_debug_printf(("Not enough data in receive buffer...\n"));
             }
 
-            uxStreamBufferGet( xRecvBuffer, 0, ( uint8_t * ) &syscallResponse, data_size, pdFALSE );
+            if (close(cfd) == -1) {
+            FreeRTOS_debug_printf(("Error closing socket...\n"));
 
-            FreeRTOS_debug_printf(("Syscall response buffer received: %d...\n", syscallResponse.result));
-
-            int numWrote = send(cfd, &syscallResponse, data_size, MSG_NOSIGNAL);
-
-            if (numWrote == -1) {
-                FreeRTOS_debug_printf(("Error writing socket response...\n"));
-            } else {
-                FreeRTOS_debug_printf(("Successfully wrote socket response to Packetdrill...\n"));
             }
 
+            resetPacketDrillTask();
+            
 
         }
 
-        if (numRead == 0) {
-            FreeRTOS_debug_printf(("About to unlink\n"));
-        }
-
-        if (numRead == -1) {
-          FreeRTOS_debug_printf(("Error reading from socket...\n"));
-
-        }
-
-        if (close(cfd) == -1) {
-          FreeRTOS_debug_printf(("Error closing socket...\n"));
-
-        }
-
-        resetPacketDrillTask();
+        
     }
 
     // TODO: How do I close this socket when the program is terminated.

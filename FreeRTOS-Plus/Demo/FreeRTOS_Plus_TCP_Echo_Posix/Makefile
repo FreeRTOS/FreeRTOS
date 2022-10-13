@@ -1,4 +1,4 @@
-CC := gcc
+CC ?= gcc
 BIN := posix_demo
 
 BUILD_DIR := build

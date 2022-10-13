@@ -111,229 +111,234 @@ void vStartPacketDrillHandlerTask( uint16_t usTaskStackSize, UBaseType_t uxTaskP
 static void handlePacketDrillCommand(void *pvParameters) {
 
     for (;;) {
+        while (__AFL_LOOP(1000)) {
 
-        if (uxStreamBufferGetSize( xSendBuffer ) < sizeof( struct SyscallPackage )) {
-            vTaskDelay( configWINDOWS_MAC_INTERRUPT_SIMULATOR_DELAY );
-            continue;
-        }
-
-        struct SyscallPackage syscallPackage;
-
-        uxStreamBufferGet( xSendBuffer, 0, ( uint8_t * ) &syscallPackage, sizeof( struct SyscallPackage ), pdFALSE );
-
-        //xQueueReceive( packetDrillQueue, &syscallPackage, portMAX_DELAY );
-
-        FreeRTOS_debug_printf(("Packetdrill command received: %s\n", syscallPackage.syscallId));
-
-        int8_t response = 0;
-
-        if (strcmp(syscallPackage.syscallId, "socket_create") == 0) {
-            /* Create a TCP socket. */
-
-            #if( ipconfigUSE_TCP_WIN == 1 )
-            	WinProperties_t xWinProps;
-
-            	/* Fill in the buffer and window sizes that will be used by the socket. */
-            	xWinProps.lTxBufSize = ipconfigTCP_TX_BUFFER_LENGTH;
-            	xWinProps.lTxWinSize = configECHO_SERVER_TX_WINDOW_SIZE;
-            	xWinProps.lRxBufSize = ipconfigTCP_RX_BUFFER_LENGTH;
-            	xWinProps.lRxWinSize = configECHO_SERVER_RX_WINDOW_SIZE;
-            #endif /* ipconfigUSE_TCP_WIN */
-
-            Socket_t xSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_STREAM, FREERTOS_IPPROTO_TCP );
-
-            if ( xSocket == FREERTOS_INVALID_SOCKET ) {
-                response = 0;
-                FreeRTOS_debug_printf(("Error creating socket...\n"));
-                sendResultToThread(response);
+            if (uxStreamBufferGetSize( xSendBuffer ) < sizeof( struct SyscallPackage )) {
+                vTaskDelay( configWINDOWS_MAC_INTERRUPT_SIMULATOR_DELAY );
                 continue;
             }
 
-            // TODO: Check for array out of bounds access
-            socketArray[socketCounter] = xSocket;
+            struct SyscallPackage syscallPackage;
 
-            /* Set a time out so a missing reply does not cause the task to block
-            indefinitely. */
-            FreeRTOS_setsockopt( xSocket, 0, FREERTOS_SO_RCVTIMEO, &xReceiveTimeOut, sizeof( xReceiveTimeOut ) );
-            FreeRTOS_setsockopt( xSocket, 0, FREERTOS_SO_SNDTIMEO, &xSendTimeOut, sizeof( xSendTimeOut ) );
+            uxStreamBufferGet( xSendBuffer, 0, ( uint8_t * ) &syscallPackage, sizeof( struct SyscallPackage ), pdFALSE );
 
-            /* Set the window and buffer sizes. */
-            #if( ipconfigUSE_TCP_WIN == 1 )
-            {
-                FreeRTOS_setsockopt( xSocket, 0, FREERTOS_SO_WIN_PROPERTIES, ( void * ) &xWinProps, sizeof( xWinProps ) );
-            }
-            #endif /* ipconfigUSE_TCP_WIN */
+            //xQueueReceive( packetDrillQueue, &syscallPackage, portMAX_DELAY );
 
-            response = socketCounter;
-            socketCounter++;
+            FreeRTOS_debug_printf(("Packetdrill command received: %s\n", syscallPackage.syscallId));
 
-            sendResultToThread(response);
+            int8_t response = 0;
 
-        } else if (strcmp(syscallPackage.syscallId, "socket_bind") == 0) {
+            if (strcmp(syscallPackage.syscallId, "socket_create") == 0) {
+                /* Create a TCP socket. */
 
-            struct BindPackage bindPackage = syscallPackage.bindPackage;
+                #if( ipconfigUSE_TCP_WIN == 1 )
+                    WinProperties_t xWinProps;
 
-            struct freertos_sockaddr xBindAddress;
+                    /* Fill in the buffer and window sizes that will be used by the socket. */
+                    xWinProps.lTxBufSize = ipconfigTCP_TX_BUFFER_LENGTH;
+                    xWinProps.lTxWinSize = configECHO_SERVER_TX_WINDOW_SIZE;
+                    xWinProps.lRxBufSize = ipconfigTCP_RX_BUFFER_LENGTH;
+                    xWinProps.lRxWinSize = configECHO_SERVER_RX_WINDOW_SIZE;
+                #endif /* ipconfigUSE_TCP_WIN */
 
-            struct sockaddr_in *sock_addr = (struct sockaddr_in *) &bindPackage.addr;
-            xBindAddress.sin_port = sock_addr->sin_port;
-            int8_t bindResult = FreeRTOS_bind( socketArray[bindPackage.sockfd], &xBindAddress, sizeof( xBindAddress ) );
+                Socket_t xSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_STREAM, FREERTOS_IPPROTO_TCP );
 
-            if (bindResult < 0) {
-                FreeRTOS_debug_printf(("Error binding to port with response: %d\n", bindResult));
-            }
+                if ( xSocket == FREERTOS_INVALID_SOCKET ) {
+                    response = 0;
+                    FreeRTOS_debug_printf(("Error creating socket...\n"));
+                    sendResultToThread(response);
+                    continue;
+                }
 
-            sendResultToThread(bindResult);
+                // TODO: Check for array out of bounds access
+                socketArray[socketCounter] = xSocket;
 
-        } else if (strcmp(syscallPackage.syscallId, "socket_listen") == 0) {
+                /* Set a time out so a missing reply does not cause the task to block
+                indefinitely. */
+                FreeRTOS_setsockopt( xSocket, 0, FREERTOS_SO_RCVTIMEO, &xReceiveTimeOut, sizeof( xReceiveTimeOut ) );
+                FreeRTOS_setsockopt( xSocket, 0, FREERTOS_SO_SNDTIMEO, &xSendTimeOut, sizeof( xSendTimeOut ) );
 
-            struct ListenPackage listenPackage = syscallPackage.listenPackage;
+                /* Set the window and buffer sizes. */
+                #if( ipconfigUSE_TCP_WIN == 1 )
+                {
+                    FreeRTOS_setsockopt( xSocket, 0, FREERTOS_SO_WIN_PROPERTIES, ( void * ) &xWinProps, sizeof( xWinProps ) );
+                }
+                #endif /* ipconfigUSE_TCP_WIN */
 
-            int listenResult = FreeRTOS_listen( socketArray[listenPackage.sockfd], listenPackage.backlog );
-
-            if (listenResult < 0) {
-                FreeRTOS_debug_printf(("Error listening on socket with response: %d\n", listenResult));
-            }
-
-            sendResultToThread(listenResult);
-
-        } else if (strcmp(syscallPackage.syscallId, "socket_accept") == 0) {
-
-            struct AcceptPackage acceptPackage = syscallPackage.acceptPackage;
-
-            struct freertos_sockaddr xClient;
-            socklen_t xSize = sizeof( xClient );
-            //TODO: Return the client socket to packetdrill
-            Socket_t xConnectedSocket = FreeRTOS_accept( socketArray[acceptPackage.sockfd], &xClient, &xSize );
-
-            if ( xConnectedSocket == FREERTOS_INVALID_SOCKET ) {
-                response = 0;
-                FreeRTOS_debug_printf(("Error connecting to client socket...\n"));
+                response = socketCounter;
+                socketCounter++;
 
                 sendResultToThread(response);
-                continue;
-            }
 
-            // TODO: Check for array out of bounds access
-            socketArray[socketCounter] = xConnectedSocket;
+            } else if (strcmp(syscallPackage.syscallId, "socket_bind") == 0) {
 
-            response = socketCounter;
-            socketCounter++;
+                struct BindPackage bindPackage = syscallPackage.bindPackage;
 
-            struct sockaddr_in addr;
-            addr.sin_family = AF_INET;
-            addr.sin_port = xClient.sin_port;
-            addr.sin_addr = getUnixSinAddr(xClient.sin_addr);
+                struct freertos_sockaddr xBindAddress;
 
-            struct AcceptResponsePackage acceptResponse;
-            acceptResponse.addr = *((struct sockaddr *)(&addr));
-            acceptResponse.addrlen = sizeof(struct sockaddr_in);
+                struct sockaddr_in *sock_addr = (struct sockaddr_in *) &bindPackage.addr;
+                xBindAddress.sin_port = sock_addr->sin_port;
+                int8_t bindResult = FreeRTOS_bind( socketArray[bindPackage.sockfd], &xBindAddress, sizeof( xBindAddress ) );
 
-            struct SyscallResponsePackage syscallResponse;
-            syscallResponse.result = response;
-            syscallResponse.acceptResponse = acceptResponse;
+                if (bindResult < 0) {
+                    FreeRTOS_debug_printf(("Error binding to port with response: %d\n", bindResult));
+                }
 
-            sendSyscallResponseToThread(syscallResponse);
-        } else if (strcmp(syscallPackage.syscallId, "socket_connect") == 0) {
+                sendResultToThread(bindResult);
 
-            struct BindPackage connectPackage = syscallPackage.connectPackage;
+            } else if (strcmp(syscallPackage.syscallId, "socket_listen") == 0) {
 
-            struct freertos_sockaddr xEchoServerAddress;
+                struct ListenPackage listenPackage = syscallPackage.listenPackage;
 
-            struct sockaddr_in *sock_addr = (struct sockaddr_in *) &connectPackage.addr;
-            xEchoServerAddress.sin_port = sock_addr->sin_port;
-            uint32_t destinationIPAddress = getFreeRTOSSinAddr(sock_addr->sin_addr);
-            xEchoServerAddress.sin_addr = destinationIPAddress;
+                int listenResult = FreeRTOS_listen( socketArray[listenPackage.sockfd], listenPackage.backlog );
 
-            /*xEchoServerAddress.sin_port = FreeRTOS_htons( echoECHO_PORT );
-            xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
-                                                                    configECHO_SERVER_ADDR1,
-                                                                    configECHO_SERVER_ADDR2,
-                                                                    configECHO_SERVER_ADDR3 );*/
+                if (listenResult < 0) {
+                    FreeRTOS_debug_printf(("Error listening on socket with response: %d\n", listenResult));
+                }
 
-            if (xIsIPInARPCache(xEchoServerAddress.sin_addr) == pdFALSE) {
-                FreeRTOS_debug_printf(("Connect IP address not in ARP cache...Adding now...\n"));
-                MACAddress_t destinationMacAddress;
-                memcpy(&destinationMacAddress, destinationMacBytes, sizeof(MACAddress_t));
-                vARPRefreshCacheEntry( &destinationMacAddress, destinationIPAddress );
+                sendResultToThread(listenResult);
+
+            } else if (strcmp(syscallPackage.syscallId, "socket_accept") == 0) {
+
+                struct AcceptPackage acceptPackage = syscallPackage.acceptPackage;
+
+                struct freertos_sockaddr xClient;
+                socklen_t xSize = sizeof( xClient );
+                //TODO: Return the client socket to packetdrill
+                Socket_t xConnectedSocket = FreeRTOS_accept( socketArray[acceptPackage.sockfd], &xClient, &xSize );
+
+                if ( xConnectedSocket == FREERTOS_INVALID_SOCKET ) {
+                    response = 0;
+                    FreeRTOS_debug_printf(("Error connecting to client socket...\n"));
+
+                    sendResultToThread(response);
+                    continue;
+                }
+
+                // TODO: Check for array out of bounds access
+                socketArray[socketCounter] = xConnectedSocket;
+
+                response = socketCounter;
+                socketCounter++;
+
+                struct sockaddr_in addr;
+                addr.sin_family = AF_INET;
+                addr.sin_port = xClient.sin_port;
+                addr.sin_addr = getUnixSinAddr(xClient.sin_addr);
+
+                struct AcceptResponsePackage acceptResponse;
+                acceptResponse.addr = *((struct sockaddr *)(&addr));
+                acceptResponse.addrlen = sizeof(struct sockaddr_in);
+
+                struct SyscallResponsePackage syscallResponse;
+                syscallResponse.result = response;
+                syscallResponse.acceptResponse = acceptResponse;
+
+                sendSyscallResponseToThread(syscallResponse);
+            } else if (strcmp(syscallPackage.syscallId, "socket_connect") == 0) {
+
+                struct BindPackage connectPackage = syscallPackage.connectPackage;
+
+                struct freertos_sockaddr xEchoServerAddress;
+
+                struct sockaddr_in *sock_addr = (struct sockaddr_in *) &connectPackage.addr;
+                xEchoServerAddress.sin_port = sock_addr->sin_port;
+                uint32_t destinationIPAddress = getFreeRTOSSinAddr(sock_addr->sin_addr);
+                xEchoServerAddress.sin_addr = destinationIPAddress;
+
+                /*xEchoServerAddress.sin_port = FreeRTOS_htons( echoECHO_PORT );
+                xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
+                                                                        configECHO_SERVER_ADDR1,
+                                                                        configECHO_SERVER_ADDR2,
+                                                                        configECHO_SERVER_ADDR3 );*/
+
+                if (xIsIPInARPCache(xEchoServerAddress.sin_addr) == pdFALSE) {
+                    FreeRTOS_debug_printf(("Connect IP address not in ARP cache...Adding now...\n"));
+                    MACAddress_t destinationMacAddress;
+                    memcpy(&destinationMacAddress, destinationMacBytes, sizeof(MACAddress_t));
+                    vARPRefreshCacheEntry( &destinationMacAddress, destinationIPAddress );
+                } else {
+                    FreeRTOS_debug_printf(("Connect IP address found in ARP cache...\n"));
+                }
+
+                FreeRTOS_setsockopt( socketArray[connectPackage.sockfd], 0, FREERTOS_SO_RCVTIMEO, &xConnectTimeOut, sizeof( xReceiveTimeOut ) );
+
+                int connectResult = FreeRTOS_connect( socketArray[connectPackage.sockfd],
+                                &xEchoServerAddress, sizeof( xEchoServerAddress ) );
+
+                FreeRTOS_setsockopt( socketArray[connectPackage.sockfd], 0, FREERTOS_SO_RCVTIMEO, &xReceiveTimeOut, sizeof( xReceiveTimeOut ) );
+
+                if (connectResult < 0) {
+                    FreeRTOS_debug_printf(("Error connecting to socket with response: %d\n", connectResult));
+                } else {
+                    FreeRTOS_debug_printf(("Successfully connected to socket\n"));
+
+                }
+
+                sendResultToThread(connectResult);
+            } else if (strcmp(syscallPackage.syscallId, "socket_write") == 0) {
+
+                struct WritePackage writePackage = syscallPackage.writePackage;
+
+                int writeResult = FreeRTOS_send(socketArray[writePackage.sockfd],
+                                        syscallPackage.buffer, syscallPackage.bufferedCount, 0);
+
+                if (writeResult < 0) {
+                    FreeRTOS_debug_printf(("Error writing to socket with response: %d\n", writeResult));
+                }
+
+                sendResultToThread(writeResult);
+            } else if (strcmp(syscallPackage.syscallId, "socket_read") == 0) {
+
+                struct ReadPackage readPackage = syscallPackage.readPackage;
+
+                char *readBuffer = pvPortMalloc(readPackage.count);
+
+                int result = FreeRTOS_recv( socketArray[readPackage.sockfd],
+                                            (void *) readBuffer,
+                                            readPackage.count,
+                                            0 );
+
+                if (result < 0 ) {
+                    FreeRTOS_debug_printf(("Error reading from socket with result: %d\n", result));
+                }
+
+                sendResultToThread(result);
+
+            } else if (strcmp(syscallPackage.syscallId, "socket_close") == 0){
+
+                struct ClosePackage closePackage = syscallPackage.closePackage;
+
+                Socket_t socketToClose = socketArray[closePackage.sockfd];
+
+                int closeResult = FreeRTOS_shutdown(socketToClose, 0);
+
+                if (closeResult != 0) {
+                    FreeRTOS_debug_printf(("Error closing socket with response: %d\n", closeResult));
+                }
+
+                sendResultToThread(closeResult);
+            } else if (strcmp(syscallPackage.syscallId, "freertos_init") == 0){
+
+                int sizeSocketArray = socketCounter - 3;
+                if (sizeSocketArray > 0) {
+                    memset(socketArray + (3*sizeof(Socket_t)), 0, sizeSocketArray * sizeof(Socket_t));
+                }
+
+                FreeRTOS_debug_printf(("FreeRTOS Initialized..\n"));
+
+                socketCounter = 3;
+                sendResultToThread(sizeSocketArray);
             } else {
-                FreeRTOS_debug_printf(("Connect IP address found in ARP cache...\n"));
+                response = 0;
+                sendResultToThread(response);
             }
 
-            FreeRTOS_setsockopt( socketArray[connectPackage.sockfd], 0, FREERTOS_SO_RCVTIMEO, &xConnectTimeOut, sizeof( xReceiveTimeOut ) );
-
-            int connectResult = FreeRTOS_connect( socketArray[connectPackage.sockfd],
-                            &xEchoServerAddress, sizeof( xEchoServerAddress ) );
-
-            FreeRTOS_setsockopt( socketArray[connectPackage.sockfd], 0, FREERTOS_SO_RCVTIMEO, &xReceiveTimeOut, sizeof( xReceiveTimeOut ) );
-
-            if (connectResult < 0) {
-                FreeRTOS_debug_printf(("Error connecting to socket with response: %d\n", connectResult));
-            } else {
-                FreeRTOS_debug_printf(("Successfully connected to socket\n"));
-
-            }
-
-            sendResultToThread(connectResult);
-        } else if (strcmp(syscallPackage.syscallId, "socket_write") == 0) {
-
-            struct WritePackage writePackage = syscallPackage.writePackage;
-
-            int writeResult = FreeRTOS_send(socketArray[writePackage.sockfd],
-                                    syscallPackage.buffer, syscallPackage.bufferedCount, 0);
-
-            if (writeResult < 0) {
-                FreeRTOS_debug_printf(("Error writing to socket with response: %d\n", writeResult));
-            }
-
-            sendResultToThread(writeResult);
-        } else if (strcmp(syscallPackage.syscallId, "socket_read") == 0) {
-
-            struct ReadPackage readPackage = syscallPackage.readPackage;
-
-            char *readBuffer = pvPortMalloc(readPackage.count);
-
-            int result = FreeRTOS_recv( socketArray[readPackage.sockfd],
-                                          (void *) readBuffer,
-                                          readPackage.count,
-                                          0 );
-
-            if (result < 0 ) {
-                FreeRTOS_debug_printf(("Error reading from socket with result: %d\n", result));
-            }
-
-            sendResultToThread(result);
-
-        } else if (strcmp(syscallPackage.syscallId, "socket_close") == 0){
-
-            struct ClosePackage closePackage = syscallPackage.closePackage;
-
-            Socket_t socketToClose = socketArray[closePackage.sockfd];
-
-            int closeResult = FreeRTOS_shutdown(socketToClose, 0);
-
-            if (closeResult != 0) {
-                FreeRTOS_debug_printf(("Error closing socket with response: %d\n", closeResult));
-            }
-
-            sendResultToThread(closeResult);
-        } else if (strcmp(syscallPackage.syscallId, "freertos_init") == 0){
-
-            int sizeSocketArray = socketCounter - 3;
-            if (sizeSocketArray > 0) {
-                memset(socketArray + (3*sizeof(Socket_t)), 0, sizeSocketArray * sizeof(Socket_t));
-            }
-
-            FreeRTOS_debug_printf(("FreeRTOS Initialized..\n"));
-
-            socketCounter = 3;
-            sendResultToThread(sizeSocketArray);
-        } else {
-            response = 0;
-            sendResultToThread(response);
         }
 
     }
+
+    
 }
 
 static void sendSyscallResponseToThread(struct SyscallResponsePackage syscallResponse) {

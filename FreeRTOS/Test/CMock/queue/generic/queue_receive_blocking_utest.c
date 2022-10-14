@@ -70,6 +70,18 @@ int suiteTearDown( int numFailures )
 
 /* ==========================  Helper functions =========================== */
 
+/**
+ * @brief Callback for vTaskYieldTaskWithinAPI used by tests for yield counts
+ *
+ * NumCalls is checked in the test assert.
+ */
+static void vTaskYieldWithinAPI_Callback(int NumCalls)
+{
+    ( void ) NumCalls;
+
+    portYIELD_WITHIN_API();
+}
+
 /* =============================  Test Cases ============================== */
 
 /**
@@ -108,6 +120,7 @@ void test_xQueueReceive_blocking_success_locked_no_pending( void )
     xTaskCheckForTimeOut_Stub( &xQueueReceive_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &td_task_xTaskResumeAllStub );
     uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     uint32_t checkVal = INVALID_UINT32;
 
@@ -140,6 +153,7 @@ void test_xQueuePeek_blocking_success_locked_no_pending( void )
     xTaskCheckForTimeOut_Stub( &xQueueReceive_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &td_task_xTaskResumeAllStub );
     uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     uint32_t checkVal = INVALID_UINT32;
 
@@ -196,6 +210,7 @@ void test_xQueueReceive_blocking_timeout_locked_high_prio_pending( void )
     xTaskCheckForTimeOut_Stub( &xQueueReceive_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xQueueReceive_xTaskResumeAllCallback );
     uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY + 1 );
 
@@ -236,6 +251,7 @@ void test_xQueuePeek_blocking_timeout_locked_high_prio_pending( void )
     xTaskCheckForTimeOut_Stub( &xQueueReceive_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xQueueReceive_xTaskResumeAllCallback );
     uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY + 1 );
 
@@ -276,6 +292,7 @@ void test_xQueueReceive_blocking_success_locked_low_prio_pending( void )
     xTaskCheckForTimeOut_Stub( &xQueueReceive_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xQueueReceive_xTaskResumeAllCallback );
     uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY - 1 );
 
@@ -312,6 +329,7 @@ void test_xQueuePeek_blocking_success_locked_low_prio_pending( void )
     xTaskCheckForTimeOut_Stub( &xQueueReceive_xTaskCheckForTimeOutCB );
     xTaskResumeAll_Stub( &xQueueReceive_xTaskResumeAllCallback );
     uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     td_task_setFakeTaskPriority( DEFAULT_PRIORITY - 1 );
 
@@ -345,6 +363,7 @@ void test_xQueuePeek_blocking_suspended_assert( void )
     td_task_setSchedulerState( taskSCHEDULER_SUSPENDED );
 
     vTaskSuspendAll_Stub( td_task_vTaskSuspendAllStubNoCheck );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     uint32_t checkVal = INVALID_UINT32;
 
@@ -398,6 +417,7 @@ void test_xQueuePeek_blocking_success( void )
     xQueueHandleStatic = xQueue;
 
     xTaskCheckForTimeOut_Stub( &blocking_success_xTaskCheckForTimeOut_cb );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     uint32_t checkVal = INVALID_UINT32;
 
@@ -446,6 +466,7 @@ void test_xQueuePeek_blocking_success_last_chance( void )
     xQueueHandleStatic = xQueue;
 
     xTaskCheckForTimeOut_Stub( &blocking_success_last_chance_xTaskCheckForTimeOut_cb );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     uint32_t checkVal = INVALID_UINT32;
 
@@ -472,6 +493,8 @@ void test_xQueuePeek_blocking_timeout( void )
 
     uint32_t checkVal = INVALID_UINT32;
 
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
+
     TEST_ASSERT_EQUAL( pdFALSE, xQueuePeek( xQueue, &checkVal, TICKS_TO_WAIT ) );
 
     TEST_ASSERT_EQUAL( 0, uxQueueMessagesWaiting( xQueue ) );
@@ -496,6 +519,7 @@ void test_xQueueReceive_blocking_suspended_assert( void )
     uint32_t checkVal = INVALID_UINT32;
 
     fakeAssertExpectFail();
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     td_task_setSchedulerState( taskSCHEDULER_SUSPENDED );
 
@@ -528,6 +552,7 @@ void test_xQueueReceive_blocking_success( void )
     xQueueHandleStatic = xQueue;
 
     xTaskCheckForTimeOut_Stub( &blocking_success_xTaskCheckForTimeOut_cb );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     uint32_t checkVal = INVALID_UINT32;
 
@@ -558,6 +583,7 @@ void test_xQueueReceive_blocking_success_last_chance( void )
     xQueueHandleStatic = xQueue;
 
     xTaskCheckForTimeOut_Stub( &blocking_success_last_chance_xTaskCheckForTimeOut_cb );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     uint32_t checkVal = INVALID_UINT32;
 
@@ -583,6 +609,8 @@ void test_xQueueReceive_blocking_timeout( void )
     QueueHandle_t xQueue = xQueueCreate( 1, sizeof( uint32_t ) );
 
     uint32_t checkVal = INVALID_UINT32;
+
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     TEST_ASSERT_EQUAL( pdFALSE, xQueueReceive( xQueue, &checkVal, TICKS_TO_WAIT ) );
 
@@ -612,6 +640,8 @@ void test_xQueueReceive_blocking_locked( void )
 
     uint32_t checkVal = INVALID_UINT32;
 
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
+
     /* Run xQueueReceive in blocking mode with the queue locked */
     TEST_ASSERT_EQUAL( pdFALSE, xQueueReceive( xQueue, &checkVal, TICKS_TO_WAIT ) );
 
@@ -636,6 +666,8 @@ void test_xQueueReceive_blocking_locked( void )
  */
 void test_xQueuePeek_blocking_locked( void )
 {
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
+
     /* Create a new binary Queue */
     QueueHandle_t xQueue = xQueueCreate( 1, sizeof( uint32_t ) );
 

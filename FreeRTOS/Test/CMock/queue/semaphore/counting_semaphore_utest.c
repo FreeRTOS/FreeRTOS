@@ -40,6 +40,18 @@ static SemaphoreHandle_t xSemaphoreHandleStatic;
 
 /* ==========================  CALLBACK FUNCTIONS =========================== */
 
+/**
+ * @brief Callback for vTaskYieldTaskWithinAPI used by tests for yield counts
+ *
+ * NumCalls is checked in the test assert.
+ */
+static void vTaskYieldWithinAPI_Callback(int NumCalls)
+{
+    ( void ) NumCalls;
+
+    portYIELD_WITHIN_API();
+}
+
 /* ============================= Unity Fixtures ============================= */
 
 void setUp( void )
@@ -349,6 +361,7 @@ void test_xSemaphoreTake_blocking_suspended_assert( void )
     fakeAssertExpectFail();
 
     vTaskSuspendAll_Stub( td_task_vTaskSuspendAllStubNoCheck );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     td_task_setSchedulerState( taskSCHEDULER_SUSPENDED );
 
@@ -417,6 +430,7 @@ void test_xSemaphoreTake_blocking_success( void )
     xSemaphoreHandleStatic = xSemaphore;
 
     vFakePortAssertIfInterruptPriorityInvalid_Expect();
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     xTaskCheckForTimeOut_Stub( &blocking_xTaskCheckForTimeOut_cb );
     uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
@@ -467,6 +481,7 @@ void test_xSemaphoreTake_blocking_success_last_chance( void )
     xSemaphoreHandleStatic = xSemaphore;
 
     vFakePortAssertIfInterruptPriorityInvalid_Expect();
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     xTaskCheckForTimeOut_Stub( &blocking_last_chance_xTaskCheckForTimeOut_cb );
     uxTaskGetNumberOfTasks_IgnoreAndReturn( 1 );
@@ -492,6 +507,8 @@ void test_xSemaphoreTake_blocking_timeout( void )
 {
     SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( 2, 0 );
 
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
+
     TEST_ASSERT_EQUAL( pdFALSE, xSemaphoreTake( xSemaphore, TICKS_TO_WAIT ) );
 
     TEST_ASSERT_EQUAL( TICKS_TO_WAIT, td_task_getYieldCount() );
@@ -511,6 +528,8 @@ void test_xSemaphoreTake_blocking_locked( void )
 {
     /* Create a new binary semaphore */
     SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( 2, 0 );
+
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     /* Set private lock counters */
     vSetQueueRxLock( xSemaphore, queueLOCKED_UNMODIFIED );
@@ -560,6 +579,7 @@ void test_xSemaphoreTake_blocking_success_locked_no_pending( void )
     SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( 2, 0 );
 
     vFakePortAssertIfInterruptPriorityInvalid_Ignore();
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     /* Export for callbacks */
     xSemaphoreHandleStatic = xSemaphore;
@@ -613,6 +633,7 @@ void test_xSemaphoreTake_blocking_timeout_locked_high_prio_pending( void )
     SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( 2, 0 );
 
     vFakePortAssertIfInterruptPriorityInvalid_Ignore();
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     /* Export for callbacks */
     xSemaphoreHandleStatic = xSemaphore;
@@ -651,6 +672,7 @@ void test_xSemaphoreTake_blocking_success_locked_low_prio_pending( void )
     SemaphoreHandle_t xSemaphore = xSemaphoreCreateCounting( 2, 0 );
 
     vFakePortAssertIfInterruptPriorityInvalid_Ignore();
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     /* Export for callbacks */
     xSemaphoreHandleStatic = xSemaphore;

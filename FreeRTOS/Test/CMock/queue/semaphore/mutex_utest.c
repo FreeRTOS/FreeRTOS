@@ -38,6 +38,18 @@ static SemaphoreHandle_t xSemaphoreHandleStatic = NULL;
 
 /* ==========================  CALLBACK FUNCTIONS =========================== */
 
+/**
+ * @brief Callback for vTaskYieldTaskWithinAPI used by tests for yield counts
+ *
+ * NumCalls is checked in the test assert.
+ */
+static void vTaskYieldWithinAPI_Callback(int NumCalls)
+{
+    ( void ) NumCalls;
+
+    portYIELD_WITHIN_API();
+}
+
 /* ============================= Unity Fixtures ============================= */
 
 void setUp( void )
@@ -468,6 +480,7 @@ void test_macro_xSemaphoreTake_blocking_mutex_inherit_timeout( void )
 
     /* Return a test value from the call to pvTaskIncrementMutexHeldCount */
     pvTaskIncrementMutexHeldCount_ExpectAndReturn( ( void * ) xFakeMutexHolder );
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     /* Take the mutex */
     TEST_ASSERT_EQUAL( pdTRUE, xSemaphoreTake( xSemaphore, 0 ) );
@@ -552,6 +565,8 @@ static BaseType_t xSemaphoreTake_blocking_xTaskResumeAllStub( int cmock_num_call
 void test_macro_xSemaphoreTake_blocking_mutex_inherit_disinherit( void )
 {
     xTaskPriorityDisinherit_ExpectAndReturn( NULL, pdFALSE );
+
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     SemaphoreHandle_t xSemaphore = xSemaphoreCreateMutex();
 

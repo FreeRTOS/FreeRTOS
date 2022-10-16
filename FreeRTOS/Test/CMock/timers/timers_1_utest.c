@@ -219,6 +219,19 @@ static void xCallback_Test_2_end( TimerHandle_t xTimer )
  *  pthread_exit( &i );
  * }
  */
+
+/**
+ * @brief Callback for vTaskYieldTaskWithinAPI used by tests for yield counts
+ *
+ * NumCalls is checked in the test assert.
+ */
+static void vTaskYieldWithinAPI_Callback(int NumCalls)
+{
+    ( void ) NumCalls;
+
+    portYIELD_WITHIN_API();
+}
+
 /* =============================  STATIC FUNCTIONS  ========================= */
 static void * timer_thread_function( void * args )
 {
@@ -823,6 +836,7 @@ void test_timer_function_success3( void )
     vQueueWaitForMessageRestricted_ExpectAnyArgs();
     xTaskResumeAll_ExpectAndReturn( pdFALSE ); /* no context switch.. yield */
     /* yield called */
+    vTaskYieldWithinAPI_Stub( vTaskYieldWithinAPI_Callback );
 
     /* API Call */
     pthread_create( &thread_id, NULL, &timer_thread_function, NULL );

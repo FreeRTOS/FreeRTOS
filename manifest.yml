@@ -130,7 +130,7 @@ dependencies:
       path: "FreeRTOS/Demo/ThirdParty/Partner-Supported-Demos"
 
   - name: "FreeRTOS-Cellular-Interface"
-    version: "a07c8c7"
+    version: "v1.3.0"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Cellular-Interface.git"

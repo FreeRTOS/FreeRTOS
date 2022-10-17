@@ -226,7 +226,10 @@ void test_Template(void) {
   be created, and it is not yet running). */
   xTimerStart(xExampleSoftwareTimer, 0);
 
-  AMPLaunchOnCore(1, prvCore1Entry);
+  if (AMPLaunchOnCore(1, prvCore1Entry) != 0) {
+    printf("AMPLaunchOnCore Failed.");
+  }
+
 #if (mainRUN_FREE_RTOS_ON_CORE == 0)
   prvLaunchRTOS();
 #else
@@ -423,6 +426,7 @@ static void prvSDKSemaphoreUseTask(void *pvParameters) {
 void vApplicationTickHook(void) {
   BaseType_t xHigherPriorityTaskWoken = pdFALSE;
   static uint32_t ulCount = 0;
+  static bool toggle = false;
 
   /* The RTOS tick hook function is enabled by setting configUSE_TICK_HOOK to
   1 in FreeRTOSConfig.h.
@@ -440,10 +444,12 @@ void vApplicationTickHook(void) {
     NOTE: A semaphore is used for example purposes.  In a real application it
     might be preferable to use a direct to task notification,
     which will be faster and use less RAM. */
-    if ((ulCount % 2) == 0) {
+    if (toggle) {
       clearPin(LED_PIN);
+      toggle = false;
     } else {
       setPin(LED_PIN);
+      toggle = true;
     }
 
     xSemaphoreGiveFromISR(xEventSemaphore, &xHigherPriorityTaskWoken);

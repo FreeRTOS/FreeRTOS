@@ -71,6 +71,11 @@ include(${CMAKE_CURRENT_LIST_DIR}/FreeRTOS_Kernel_import.cmake)
 
 pico_sdk_init()
 
+macro(bsl_executable_modifiers EXECUTABLE_NAME)
+    pico_enable_stdio_usb(${EXECUTABLE_NAME} 1)
+    pico_add_extra_outputs(${EXECUTABLE_NAME})
+endmacro()
+
 # one of the following directories need be included, why is it not?
 # /home/ubuntu/pico/pico-sdk/src/host/pico_multicore/include
 # /home/ubuntu/pico/pico-sdk/src/rp2_common/pico_multicore/include
@@ -82,6 +87,7 @@ foreach (_variableName ${_variableNames})
 endforeach()
 
 add_library(bsl STATIC "${CMAKE_CURRENT_LIST_DIR}/bsl.c")
+pico_enable_stdio_usb(bsl 1)
 target_include_directories(bsl PUBLIC ${BSL_PATH} ${PICO_INCLUDE_DIRS})
 target_link_libraries(bsl PUBLIC pico_stdlib pico_multicore)
 

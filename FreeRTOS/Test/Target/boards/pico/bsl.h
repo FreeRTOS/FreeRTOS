@@ -6,15 +6,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-extern void BSL_Init(void);
-extern int BSL_ToggleLED(void);
-extern int BSL_Write(char *buffer, size_t len);
-
-// refactor anchor
-// ^^ past
-// ------------------------------------------------------------------------------
-// vv future
-
 #define CPUTIME_TO_MS_DIVISOR                                                  \
   (123456) // XXXADS must tune to platform if needed. some platforms will have a
            // time-sycned source but it will be relative to something

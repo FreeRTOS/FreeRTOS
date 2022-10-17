@@ -19,13 +19,13 @@ void hello_world(void) {
   char strbuf[] = "Hello World\n";
   size_t strbuf_len = sizeof(char) / sizeof(strbuf);
 
-  BSL_Write(strbuf, strbuf_len);
+  sendReport(strbuf, strbuf_len);
 
   UNITY_END();
 }
 
 int main(void) {
-  BSL_Init();
+  initTestEnvironment();
 
   UNITY_BEGIN();
 
@@ -45,5 +45,5 @@ void vApplicationMallocFailedHook(void) {
   char strbuf[] = "Malloc Failed";
   size_t strbuf_len = sizeof(char) / sizeof(strbuf);
 
-  BSL_Write(strbuf, strbuf_len);
+  sendReport(strbuf, strbuf_len);
 }

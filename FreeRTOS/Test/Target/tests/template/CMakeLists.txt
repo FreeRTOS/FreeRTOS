@@ -32,7 +32,7 @@ target_compile_definitions(template_on_core_one PRIVATE
 add_test(template_on_core_one_test one_core_one)
 
 add_executable(template_on_core_zero_pico)
-# pico_enable_stdio_semihosting(template_on_core_zero_pico ENABLED)
+bsl_executable_modifiers(template_on_core_zero_pico)
 target_link_libraries(template_on_core_zero_pico template_common)
 target_include_directories(template_on_core_zero_pico PUBLIC
         ${BSL_INCLUDE_PATHS})
@@ -41,7 +41,7 @@ target_compile_definitions(template_on_core_zero_pico PRIVATE
 add_test(template_on_core_zero_pico_test one_core_zero_pico)
 
 add_executable(template_on_core_one_pico)
-# pico_enable_stdio_semihosting(template_on_core_one_pico ENABLED)
+bsl_executable_modifiers(template_on_core_one_pico)
 target_link_libraries(template_on_core_one_pico template_common)
 target_include_directories(template_on_core_one_pico PUBLIC
         ${BSL_INCLUDE_PATHS})

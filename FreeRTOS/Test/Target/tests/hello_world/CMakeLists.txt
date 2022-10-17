@@ -17,6 +17,7 @@ target_link_libraries(hello_world_common INTERFACE
         ${BSL_LINK_LIBRARIES})
 
 add_executable(hello_world)
+bsl_executable_modifiers(hello_world)
 target_link_libraries(hello_world hello_world_common)
 target_include_directories(hello_world PUBLIC
         ${BSL_INCLUDE_PATHS})

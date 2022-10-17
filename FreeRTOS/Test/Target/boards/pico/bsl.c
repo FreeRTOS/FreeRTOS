@@ -9,24 +9,6 @@
 #include <stddef.h>
 #include <stdio.h>
 
-void BSL_Init(void) {
-  /* Want to be able to printf */
-  stdio_init_all();
-
-  /* And flash LED */
-  gpio_init(PICO_DEFAULT_LED_PIN);
-  gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
-}
-
-int BSL_ToggleLED(void) { gpio_xor_mask(1u << PICO_DEFAULT_LED_PIN); }
-
-int BSL_Write(char *buffer, size_t len) {}
-
-// refactor anchor
-// ^^ past
-// ------------------------------------------------------------------------------
-// vv future
-
 void initTestEnvironment(void) {
   /* Want to be able to printf */
   stdio_init_all();
@@ -52,7 +34,7 @@ int AMPLaunchOnCore(int coreNum, void (*function)(void)) {
   int rvb = -1;
 
   if (coreNum == 1) {
-    multicore_launch_core1((*function));
+    multicore_launch_core1(*function);
     rvb = 0;
   }
 

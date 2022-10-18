@@ -104,5 +104,8 @@
     <ClCompile Include="..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c">
       <Filter>port</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\FreeRTOS\Source\portable\MemMang\heap_4.c">
+      <Filter>port</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

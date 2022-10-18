@@ -61,11 +61,11 @@
 #define configUSE_ALTERNATIVE_API                  0
 #define configNUM_THREAD_LOCAL_STORAGE_POINTERS    8
 #define configENABLE_BACKWARD_COMPATIBILITY        1
-#define configSUPPORT_STATIC_ALLOCATION            1
+#define configSUPPORT_STATIC_ALLOCATION            0
 
 /* Hook function related definitions. */
-#define configUSE_TICK_HOOK                        1
-#define configUSE_IDLE_HOOK                        1
+#define configUSE_TICK_HOOK                        0
+#define configUSE_IDLE_HOOK                        0
 #define configUSE_MALLOC_FAILED_HOOK               1
 #define configCHECK_FOR_STACK_OVERFLOW             0 /* Not applicable to the Win32 port. */
 
@@ -77,9 +77,6 @@
 
 /* Event group related definitions. */
 #define configUSE_EVENT_GROUPS                     1
-
-/* Run time stats gathering configuration options. */
-#define configGENERATE_RUN_TIME_STATS              1
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES                      0
@@ -122,12 +119,12 @@
 
 
 /* Run time stats gathering definitions. */
-unsigned long ulGetRunTimeCounterValue( void );
-void vConfigureTimerForRunTimeStats( void );
+//unsigned long ulGetRunTimeCounterValue( void );
+//void vConfigureTimerForRunTimeStats( void );
 
-#define configGENERATE_RUN_TIME_STATS	1
-#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()    vConfigureTimerForRunTimeStats()
-#define portGET_RUN_TIME_COUNTER_VALUE()            ulGetRunTimeCounterValue()
+#define configGENERATE_RUN_TIME_STATS	0
+//#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()    vConfigureTimerForRunTimeStats()
+//#define portGET_RUN_TIME_COUNTER_VALUE()            ulGetRunTimeCounterValue()
 
 /* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
 // #include "trcRecorder.h"

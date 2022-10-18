@@ -33,7 +33,7 @@
 
 #if SIZEOF_CHAR == 1
 typedef unsigned char u_int8_t;
-typedef signed char _int8_t;
+typedef signed char int8_t;
 #elif SIZEOF_INT == 1
 typedef unsigned int u_int8_t;
 typedef signed int int8_t;
@@ -49,7 +49,7 @@ typedef signed int int8_t;
 
 #if SIZEOF_SHORT == 2
 typedef unsigned short u_int16_t;
-typedef signed short _int16_t;
+typedef signed short int16_t;
 #elif SIZEOF_INT == 2
 typedef unsigned int u_int16_t;
 typedef signed int int16_t;
@@ -68,7 +68,7 @@ typedef signed char int16_t;
 
 #if SIZEOF_INT == 4
 typedef unsigned int u_int32_t;
-typedef signed int _int32_t;
+typedef signed int int32_t;
 #elif SIZEOF_LONG == 4
 typedef unsigned long u_int32_t;
 typedef signed long int32_t;

@@ -88,10 +88,10 @@ dependencies:
       path: "FreeRTOS-Plus/ThirdParty/wolfSSL"
 
   - name: "mbedtls"
-    version: "v2.28.0"
+    version: "v3.2.1"
     repository:
       type: "git"
-      url:  "https://github.com/ARMmbed/mbedtls"
+      url:  "https://github.com/Mbed-TLS/mbedtls.git"
       path: "FreeRTOS-Plus/ThirdParty/mbedtls"
 
   - name: "backoffAlgorithm"

@@ -41,7 +41,7 @@
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
@@ -65,15 +65,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>..\ThirdParty\winpcap\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>..\ThirdParty\winpcap\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup>
     <OutDir>build\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <PublicIncludeDirectories>$(ProjectDir)..\Source\FreeRTOS-Plus-TCP\source\portable\NetworkInterface\WinPCap;$(ProjectDir)..\Source\FreeRTOS-Plus-TCP\source\portable\Compiler\MSVC;$(ProjectDir)..\Source\FreeRTOS-Plus-TCP\source\include;$(PublicIncludeDirectories)</PublicIncludeDirectories>
+    <PublicIncludeDirectories>..\Source\FreeRTOS-Plus-TCP\source\portable\NetworkInterface\WinPCap;..\Source\FreeRTOS-Plus-TCP\source\portable\Compiler\MSVC;.;..\Source\FreeRTOS-Plus-TCP\source\include;$(PublicIncludeDirectories)</PublicIncludeDirectories>
     <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ReferencePath>..\ThirdParty\winpcap\lib\x64;$(ReferencePath)</ReferencePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ReferencePath>..\ThirdParty\winpcap\lib\x64;$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -106,8 +114,14 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\Source\FreeRTOS-Plus-TCP\source\portable\Compiler\MSVC;$(ProjectDir)..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include;$(ProjectDir)..\Source\FreeRTOS-Plus-TCP\source\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Source\FreeRTOS-Plus-TCP\source\portable\Compiler\MSVC;$(ProjectDir)..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include;$(ProjectDir)..\Source\FreeRTOS-Plus-TCP\source\include;$(ProjectDir)..\ThirdParty\winpcap\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Lib>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Packet.lib;wpcap.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Packet.lib;wpcap.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_ARP.c" />
@@ -131,6 +145,8 @@
     <ClCompile Include="..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_TCP_WIN.c" />
     <ClCompile Include="..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_Tiny_TCP.c" />
     <ClCompile Include="..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_UDP_IP.c" />
+    <ClCompile Include="..\Source\FreeRTOS-Plus-TCP\source\portable\BufferManagement\BufferAllocation_2.c" />
+    <ClCompile Include="..\Source\FreeRTOS-Plus-TCP\source\portable\NetworkInterface\WinPCap\NetworkInterface.c" />
     <ClCompile Include="..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\tcp_dump_packets.c" />
     <ClCompile Include="..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\tcp_mem_stats.c" />
     <ClCompile Include="..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\tcp_netstat.c" />
@@ -168,6 +184,22 @@
     <ClInclude Include="..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include\tcp_dump_packets.h" />
     <ClInclude Include="..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include\tcp_mem_stats.h" />
     <ClInclude Include="..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include\tcp_netstat.h" />
+    <ClInclude Include="..\ThirdParty\winpcap\include\bittypes.h" />
+    <ClInclude Include="..\ThirdParty\winpcap\include\ip6_misc.h" />
+    <ClInclude Include="..\ThirdParty\winpcap\include\Packet32.h" />
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap-bpf.h" />
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap-namedb.h" />
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap-stdinc.h" />
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap.h" />
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap\bluetooth.h" />
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap\bpf.h" />
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap\namedb.h" />
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap\pcap.h" />
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap\sll.h" />
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap\usb.h" />
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap\vlan.h" />
+    <ClInclude Include="..\ThirdParty\winpcap\include\remote-ext.h" />
+    <ClInclude Include="..\ThirdParty\winpcap\include\Win32-Extensions.h" />
     <ClInclude Include="FreeRTOSIPConfig.h" />
   </ItemGroup>
   <ItemGroup>

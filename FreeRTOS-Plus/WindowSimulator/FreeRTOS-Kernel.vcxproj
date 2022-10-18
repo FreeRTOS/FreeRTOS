@@ -72,7 +72,7 @@
   <PropertyGroup>
     <OutDir>build\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <PublicIncludeDirectories>$(ProjectDir)..\..\FreeRTOS\Source\portable\MSVC-MingW;$(ProjectDir)..\..\FreeRTOS\Source\include;$(PublicIncludeDirectories)</PublicIncludeDirectories>
+    <PublicIncludeDirectories>..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\FreeRTOS\Source\include;.\;$(ProjectDir);$(PublicIncludeDirectories)</PublicIncludeDirectories>
     <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

@@ -21,6 +21,12 @@
     <Filter Include="config">
       <UniqueIdentifier>{7f8e5e6c-a484-404a-a27f-4a214aa6c6ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="winpcap">
+      <UniqueIdentifier>{97a99563-c215-4975-9cb8-c6a29a30f03f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="winpcap\include">
+      <UniqueIdentifier>{7a52d3bf-8fc9-4242-8636-e173ade0aa68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_ICMP.c">
@@ -94,6 +100,12 @@
     </ClCompile>
     <ClCompile Include="..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\tcp_netstat.c">
       <Filter>tcp_utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\FreeRTOS-Plus-TCP\source\portable\NetworkInterface\WinPCap\NetworkInterface.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\FreeRTOS-Plus-TCP\source\portable\BufferManagement\BufferAllocation_2.c">
+      <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -195,6 +207,54 @@
     </ClInclude>
     <ClInclude Include="FreeRTOSIPConfig.h">
       <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap\bpf.h">
+      <Filter>winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap\sll.h">
+      <Filter>winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap\bluetooth.h">
+      <Filter>winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap\pcap.h">
+      <Filter>winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap\usb.h">
+      <Filter>winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap\vlan.h">
+      <Filter>winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap\namedb.h">
+      <Filter>winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap-bpf.h">
+      <Filter>winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap-namedb.h">
+      <Filter>winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ThirdParty\winpcap\include\remote-ext.h">
+      <Filter>winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ThirdParty\winpcap\include\bittypes.h">
+      <Filter>winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ThirdParty\winpcap\include\ip6_misc.h">
+      <Filter>winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap.h">
+      <Filter>winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ThirdParty\winpcap\include\Win32-Extensions.h">
+      <Filter>winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ThirdParty\winpcap\include\Packet32.h">
+      <Filter>winpcap\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ThirdParty\winpcap\include\pcap-stdinc.h">
+      <Filter>winpcap\include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

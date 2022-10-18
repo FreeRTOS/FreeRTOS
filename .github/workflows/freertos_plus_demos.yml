@@ -2,19 +2,9 @@ name: Build FreeRTOS+ Demos
 on:
   push:
     branches: ["**"]
-    paths:
-      - "FreeRTOS/Source"
-      - "FreeRTOS-Plus/Source/**"
-      - "FreeRTOS-Plus/Demo/Common/**"
-      - "FreeRTOS-Plus/Demo/FreeRTOS_Cellular_Interface_Windows_Simulator/**"
 
   pull_request:
     branches: [main]
-    paths:
-      - "FreeRTOS/Source"
-      - "FreeRTOS-Plus/Source/**"
-      - "FreeRTOS-Plus/Demo/Common/**"
-      - "FreeRTOS-Plus/Demo/FreeRTOS_Cellular_Interface_Windows_Simulator/**"
 
 jobs:
   winsim_cellular:

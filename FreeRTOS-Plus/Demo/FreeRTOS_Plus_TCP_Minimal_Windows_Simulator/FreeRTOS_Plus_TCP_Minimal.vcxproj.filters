@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{38712199-cebf-4124-bf15-398f7c3419ea}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="DemoTasks">
+      <UniqueIdentifier>{b71e974a-9f28-4815-972b-d930ba8a34d0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DemoTasks\SimpleUDPClientAndServer.c">
+      <Filter>DemoTasks</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c" />
+    <ClCompile Include="DemoTasks\TCPEchoClient_SingleTasks.c">
+      <Filter>DemoTasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Demo\Common\Logging\windows\Logging_WinSim.c" />
+    <ClCompile Include="DemoTasks\SimpleTCPEchoServer.c">
+      <Filter>DemoTasks</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="tcp_echo_config.h" />
+  </ItemGroup>
+</Project>

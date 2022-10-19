@@ -30,11 +30,22 @@
  * mbedTLS.
  */
 
+ #include "logging_levels.h"
+
+#define LIBRARY_LOG_NAME "MbedtlsTransport"
+#define LIBRARY_LOG_LEVEL LOG_INFO
+
+#include "logging_stack.h"
+
 /* Standard includes. */
 #include <string.h>
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
+
+/* FreeRTOS+TCP includes. */
+#include "FreeRTOS_IP.h"
+#include "FreeRTOS_Sockets.h"
 
 /* TLS transport header. */
 #include "using_mbedtls.h"
@@ -303,12 +314,19 @@ static int32_t setPrivateKey( SSLContext_t * pSslContext,
     configASSERT( pSslContext != NULL );
     configASSERT( pPrivateKey != NULL );
 
-    /* Setup the client private key. */
-    mbedtlsError = mbedtls_pk_parse_key( &( pSslContext->privKey ),
-                                         pPrivateKey,
-                                         privateKeySize,
-                                         NULL,
-                                         0 );
+    #if MBEDTLS_VERSION_NUMBER < 0x03000000
+        mbedtlsError = mbedtls_pk_parse_key( &( pSslContext->privKey ),
+                                             pPrivateKey,
+                                             privateKeySize,
+                                             NULL, 0 );
+    #else
+        mbedtlsError = mbedtls_pk_parse_key( &( pSslContext->privKey ),
+                                             pPrivateKey,
+                                             privateKeySize,
+                                             NULL, 0,
+                                             mbedtls_ctr_drbg_random,
+                                             &( pSslContext->ctrDrgbContext ) );
+    #endif
 
     if( mbedtlsError != 0 )
     {
@@ -527,8 +545,8 @@ static TlsTransportStatus_t tlsHandshake( NetworkContext_t * pNetworkContext,
          */
         mbedtls_ssl_set_bio( &( pTlsTransportParams->sslContext.context ),
                              ( void * ) pTlsTransportParams->tcpSocket,
-                             MBEDTLS_SSL_SEND,
-                             MBEDTLS_SSL_RECV,
+                             mbedtls_platform_send,
+                             mbedtls_platform_recv,
                              NULL );
     }
 
@@ -566,22 +584,14 @@ static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyConte
     TlsTransportStatus_t returnStatus = TLS_TRANSPORT_SUCCESS;
     int32_t mbedtlsError = 0;
 
-    /* Set the mutex functions for mbed TLS thread safety. */
-    mbedtls_threading_set_alt( mbedtls_platform_mutex_init,
-                               mbedtls_platform_mutex_free,
-                               mbedtls_platform_mutex_lock,
-                               mbedtls_platform_mutex_unlock );
+    #if defined( MBEDTLS_THREADING_ALT )
+        /* Set the mutex functions for mbed TLS thread safety. */
+        mbedtls_platform_threading_init();
+    #endif
 
     /* Initialize contexts for random number generation. */
     mbedtls_entropy_init( pEntropyContext );
     mbedtls_ctr_drbg_init( pCtrDrgbContext );
-
-    /* Add a strong entropy source. At least one is required. */
-    mbedtlsError = mbedtls_entropy_add_source( pEntropyContext,
-                                               mbedtls_platform_entropy_poll,
-                                               NULL,
-                                               32,
-                                               MBEDTLS_ENTROPY_SOURCE_STRONG );
 
     if( mbedtlsError != 0 )
     {
@@ -696,9 +706,9 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
         {
             sslContextFree( &( pTlsTransportParams->sslContext ) );
 
-            if( pTlsTransportParams->tcpSocket != SOCKETS_INVALID_SOCKET )
+            if( pTlsTransportParams->tcpSocket != FREERTOS_INVALID_SOCKET )
             {
-                ( void ) Sockets_Disconnect( pTlsTransportParams->tcpSocket );
+                ( void ) FreeRTOS_closesocket( pTlsTransportParams->tcpSocket );
             }
         }
     }
@@ -744,8 +754,8 @@ void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
         else
         {
             /* WANT_READ and WANT_WRITE can be ignored. Logging for debugging purposes. */
-            LogInfo( ( "(Network connection %p) TLS close-notify sent; ",
-                       "received %s as the TLS status can be ignored for close-notify."
+            LogInfo( ( "(Network connection %p) TLS close-notify sent; "
+                       "received %s as the TLS status can be ignored for close-notify.",
                        ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ? "WANT_READ" : "WANT_WRITE",
                        pNetworkContext ) );
         }
@@ -756,9 +766,6 @@ void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
         /* Free mbed TLS contexts. */
         sslContextFree( &( pTlsTransportParams->sslContext ) );
     }
-
-    /* Clear the mutex functions for mbed TLS thread safety. */
-    mbedtls_threading_free_alt();
 }
 /*-----------------------------------------------------------*/
 

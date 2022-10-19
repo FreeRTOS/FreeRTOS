@@ -487,9 +487,13 @@ static void *packetDrillBridgeThread (void *pvParameters)
 
     for (;;) {
 
+        #ifdef __AFL_HAVE_MANUAL_CONTROL
+
         unsigned char *buf = __AFL_FUZZ_TESTCASE_BUF;
 
         while (__AFL_LOOP(1000)) {
+
+        #endif
 
             FreeRTOS_debug_printf(("Waiting to accept a connection...\n"));
 
@@ -587,8 +591,9 @@ static void *packetDrillBridgeThread (void *pvParameters)
 
             resetPacketDrillTask();
             
-
+        #ifdef __AFL_HAVE_MANUAL_CONTROL
         }
+        #endif
 
         
     }

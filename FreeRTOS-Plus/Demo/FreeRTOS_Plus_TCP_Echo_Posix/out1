@@ -1,0 +1,1880 @@
+strace: Process 1686242 attached
+DEBUG: debug enabled
+Running __sanitizer_cov_trace_pc_guard_init: 0x4e5534-0x4ec9e0 (7467 edges) after_fs=0
+Done __sanitizer_cov_trace_pc_guard_init: __afl_final_loc = 7467
+DEBUG: (1) id_str 163890, __afl_area_ptr 0x6288e0, __afl_area_initial 0x6288e0, __afl_area_ptr_dummy 0x6288e0, __afl_map_addr 0x0, MAP_SIZE 65536, __afl_final_loc 7468, __afl_map_size 7468, max_size_forkserver 8388608/0x800000
+DEBUG: (2) id_str 163890, __afl_area_ptr 0x7f4a138d8000, __afl_area_initial 0x6288e0, __afl_area_ptr_dummy 0x6288e0, __afl_map_addr 0x0, MAP_SIZE 65536, __afl_final_loc 7468, __afl_map_size 7468, max_size_forkserver 8388608/0x800000
+DEBUG: cmplog id_str <null>
+target forkserver recv: 81000001
+DEBUG: fuzzcase shmem 163889
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 1/7
+DEBUG: successfully got fuzzing shared memory
+[0mstrace: Process 1686243 attached
+strace: Process 1686244 attached
+strace: Process 1686245 attached
+strace: Process 1686246 attached
+strace: Process 1686247 attached
+strace: Process 1686248 attached
+strace: Process 1686249 attached
+strace: Process 1686250 attached
+strace: Process 1686251 attached
+[pid 1686251]      0.000000 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000049 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000038 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000019 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000007 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000010 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000016 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 2/7
+[0m[pid 1686242]      0.000263 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000089 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019515 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000046 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000025 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 3/12
+[0m[pid 1686242]      0.000238 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000037 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019592 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000032 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 4/12
+[0m[pid 1686242]      0.000242 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019617 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 5/12
+[0m[pid 1686242]      0.000230 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019633 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000015 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 6/12
+[0m[pid 1686242]      0.000231 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019634 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000026 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 7/12
+[0m[pid 1686242]      0.000228 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019637 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000026 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 8/12
+[0m[pid 1686242]      0.000241 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019624 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000043 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000019 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 9/12
+[0m[pid 1686242]      0.000230 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019614 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000032 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 10/12
+[0m[pid 1686242]      0.000232 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019631 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000026 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 11/12
+[0m[pid 1686242]      0.000228 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019635 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000015 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 12/12
+[0m[pid 1686242]      0.000225 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019626 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[1;92m[+] [0mEnabled environment variable AFL_DEBUG with value 1[0m
+[1;92m[+] [0mEnabled environment variable AFL_NO_UI with value 1[0m
+[1;92m[+] [0mEnabled environment variable AFL_DEBUG with value 1[0m
+[1;92m[+] [0mEnabled environment variable AFL_SKIP_CPUFREQ with value 1[0m
+[0;36mafl-fuzz++4.04a[0m based on afl by Michal Zalewski and a large online community
+[1;92m[+] [0mafl++ is maintained by Marc "van Hauser" Heuse, Heiko "hexcoder" Eißfeldt, Andrea Fioraldi and Dominik Maier[0m
+[1;92m[+] [0mafl++ is open source, get it at https://github.com/AFLplusplus/AFLplusplus[0m
+[1;92m[+] [0mNOTE: This is v3.x which changes defaults and behaviours - see README.md[0m
+[1;92m[+] [0mNo -M/-S set, autoconfiguring for "-S default"[0m
+[1;94m[*] [0mGetting to work...[0m
+[1;92m[+] [0mUsing exponential power schedule (FAST)[0m
+[1;92m[+] [0mEnabled testcache with 50 MB[0m
+[1;92m[+] [0mGenerating fuzz data with a length of min=1 max=1048576[0m
+[1;94m[*] [0mChecking core_pattern...[0m
+[1;92m[+] [0mDisabling the UI because AFL_NO_UI is set.[0m
+[1;92m[+] [0mYou have 36 CPU cores and 2 runnable tasks (utilization: 6%).[0m
+[1;92m[+] [0mTry parallel jobs - see /usr/local/share/doc/afl/fuzzing_in_depth.md#c-using-multiple-cores[0m
+[1;94m[*] [0mSetting up output directories...[0m
+[1;92m[+] [0mOutput directory exists but deemed OK to reuse.[0m
+[1;94m[*] [0mDeleting old session data...[0m
+[1;92m[+] [0mOutput dir cleanup successful.[0m
+[1;94m[*] [0mChecking CPU core loadout...[0m
+[1;92m[+] [0mFound a free CPU core, try binding to #2.[0m
+[1;94m[*] [0mScanning 'in'...[0m
+[1;92m[+] [0mLoaded a total of 1 seeds.[0m
+[1;94m[*] [0mCreating hard links for all input files...[0m
+[1;94m[*] [0mValidating target binary...[0m
+[1;92m[+] [0m[1;95mPersistent mode binary detected.[0m
+[1;92m[+] [0m[1;95mDeferred forkserver binary detected.[0m
+[1;94m[*] [0mSpinning up the fork server...[0m
+[1;92m[+] [0mAll right - fork server is up.[0m
+[1;94m[*] [0mExtended forkserver functions received (c3003a57).[0m
+[1;94m[*] [0mUsing SHARED MEMORY FUZZING feature.[0m
+[1;94m[*] [0mTarget map size: 7468[0m
+[1;94m[*] [0mNo auto-generated dictionary tokens to reuse.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000000,time:0,execs:0,orig:text.txt'...[0m
+[1;93m[!] [1;97mWARNING: [0minstability detected during calibration[0m
+[1;90m    len = 7, map size = 110, exec speed = 30130 us
+[0m[1;93m[!] [1;97mWARNING: [0mInstrumentation output varies across runs.[0m
+[1;92m[+] [0mAll test cases processed.[0m
+[1;93m[!] [1;97mWARNING: [0m[1;91mThe target binary is pretty slow! See /usr/local/share/doc/afl/fuzzing_in_depth.md#i-improve-the-speed[0m
+[1;92m[+] [0mHere are some useful stats:
+
+[1;90m    Test case count : [0m1 favored, 1 variable, 0 ignored, 1 total
+[1;90m       Bitmap range : [0m110 to 110 bits (average: 110.00 bits)
+[1;90m        Exec timing : [0m30.1k to 30.1k us (average: 30.1k us)
+[0m
+[1;94m[*] [0mNo -t option specified, so I'll use an exec timeout of 100 ms.[0m
+[1;92m[+] [0mAll set and ready to roll![0m
+[1;94m[*] [0mEntering queue cycle 1.[0m
+[1;94m[*] [0mFuzzing test case #0 (1 total, 0 crashes saved, perf_score=100, exec_us=30130, hits=0, map=110, ascii=0)...[0m
+[pid 1686242]      0.000759 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000082 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.020059 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000026 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000013 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000482 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019379 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000032 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000182 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019668 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000186 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019690 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000028 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000181 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019679 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000042 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000018 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000182 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019665 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000032 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000024 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000184 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019676 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000024 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000015 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000184 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019675 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000034 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000024 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000026 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000184 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019656 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000032 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000015 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000187 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019694 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000181 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019672 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000026 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000182 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019683 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000026 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000010 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000185 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019684 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000024 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000182 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019697 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000045 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000019 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000016 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 1/7
+[0m[pid 1686242]      0.000316 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000024 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019516 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000038 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000019 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 2/12
+[0m[pid 1686242]      0.000246 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019603 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000037 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000033 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000019 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000017 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 3/12
+[0m[pid 1686242]      0.000242 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000023 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019590 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000033 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000025 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000017 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 4/12
+[0m[pid 1686242]      0.000240 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019612 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000033 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000028 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000013 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 5/12
+[0m[pid 1686242]      0.000241 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000023 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019616 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000041 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000015 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 6/12
+[0m[pid 1686242]      0.000232 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000023 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019606 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000042 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000021 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000019 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 7/12
+[0m[pid 1686242]      0.000237 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019618 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000032 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000026 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 8/12
+[0m[pid 1686242]      0.000227 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019636 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000032 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000015 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 9/12
+[0m[pid 1686242]      0.000232 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019648 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000046 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000017 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000029 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000018 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 10/12
+[0m[pid 1686242]      0.000248 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000041 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019545 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000034 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000029 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000013 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000016 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 11/12
+[0m[pid 1686242]      0.000243 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000023 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019608 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000033 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000021 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000020 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 12/12
+[0m[pid 1686242]      0.000241 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000023 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019609 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000042 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000022 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000019 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000263 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019584 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000033 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000024 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000191 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000037 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019652 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000183 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019685 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000183 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019682 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000181 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019686 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000194 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019657 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000184 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019683 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000032 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000015 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000195 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000020 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019677 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000182 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019674 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000026 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000182 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000028 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019689 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000190 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019663 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000015 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000183 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000020 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019683 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000185 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019690 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 1/7
+[0m[pid 1686242]      0.000295 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019559 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000033 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000024 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 2/12
+[0m[pid 1686242]      0.000234 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019631 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000026 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 3/12
+[0m[pid 1686242]      0.000232 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019636 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000026 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 4/12
+[0m[pid 1686242]      0.000228 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019626 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000026 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000022 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 5/12
+[0m[pid 1686242]      0.000231 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019628 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000032 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 6/12
+[0m[pid 1686242]      0.000230 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019645 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000032 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 7/12
+[0m[pid 1686242]      0.000231 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019632 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000045 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000020 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000016 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 8/12
+[0m[pid 1686242]      0.000246 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000024 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019592 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000042 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000025 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000014 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 9/12
+[0m[pid 1686242]      0.000230 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019598 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000036 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000025 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000008 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 10/12
+[0m[pid 1686242]      0.000234 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019625 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 11/12
+[0m[pid 1686242]      0.000230 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019629 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 12/12
+[0m[pid 1686242]      0.000230 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019635 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000024 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000024 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000253 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019607 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000045 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000024 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000020 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000016 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000222 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000024 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019623 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000057 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000020 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000021 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000191 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019615 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000033 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000021 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000018 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000185 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019681 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000024 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000015 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000184 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019666 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000024 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 1/7
+[0m[pid 1686242]      0.000289 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019582 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000032 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000026 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 2/12
+[0m[pid 1686242]      0.000232 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019621 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000015 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 3/12
+[0m[pid 1686242]      0.000239 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019634 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000029 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 4/12
+[0m[pid 1686242]      0.000230 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019616 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000024 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 5/12
+[0m[pid 1686242]      0.000241 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019628 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 6/12
+[0m[pid 1686242]      0.000229 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019634 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000029 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000015 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 7/12
+[0m[pid 1686242]      0.000231 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019631 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000024 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000015 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 8/12
+[0m[pid 1686242]      0.000232 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019640 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 9/12
+[0m[pid 1686242]      0.000233 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019634 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 10/12
+[0m[pid 1686242]      0.000232 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019619 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000015 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 11/12
+[0m[pid 1686242]      0.000231 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019630 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000032 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000026 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 12/12
+[0m[pid 1686242]      0.000231 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019649 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000045 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000021 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000025 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000016 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000269 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000031 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019568 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000034 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000025 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000017 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000194 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019648 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000034 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000025 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000017 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000206 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000023 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019658 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000035 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000021 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000019 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000194 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019648 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000034 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000026 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000016 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000193 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019670 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000033 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000025 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000017 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000189 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000023 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019652 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000042 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000022 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000018 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000197 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019658 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000047 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000057 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000022 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000023 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000192 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019596 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000032 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000020 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000019 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000182 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019683 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000181 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019677 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000013 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000183 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000030 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019677 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000015 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000182 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019684 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000196 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019667 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000026 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000181 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000020 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019684 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000180 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000027 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019671 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000015 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000183 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019696 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000029 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000186 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019679 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000029 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000180 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019690 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000042 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000025 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000185 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000032 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019640 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000033 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000184 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019681 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000033 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000026 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000187 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019671 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000032 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 1/7
+[0m[pid 1686242]      0.000292 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019573 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000032 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000024 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 2/12
+[0m[pid 1686242]      0.000234 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000027 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019631 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 3/12
+[0m[pid 1686242]      0.000230 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019634 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 4/12
+[0m[pid 1686242]      0.000231 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000020 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019624 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000029 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 5/12
+[0m[pid 1686242]      0.000231 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019635 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 6/12
+[0m[pid 1686242]      0.000235 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019632 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000033 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000024 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000015 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 7/12
+[0m[pid 1686242]      0.000232 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019638 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 8/12
+[0m[pid 1686242]      0.000230 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019621 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000017 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 9/12
+[0m[pid 1686242]      0.000232 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019638 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000032 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000024 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000009 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 10/12
+[0m[pid 1686242]      0.000233 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019616 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000024 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000017 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 11/12
+[0m[pid 1686242]      0.000233 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019630 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[0;35m[D] [1;97mDEBUG: [0mcalibration stage 12/12
+[0m[pid 1686242]      0.000230 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019634 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000037 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000250 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019608 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000011 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000186 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019672 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000020 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000018 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000186 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019678 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000013 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000180 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019684 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000015 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000184 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019684 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000015 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000009 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000187 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019673 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000016 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000183 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019678 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000159 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000057 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019673 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000185 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019681 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000015 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000009 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000181 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019681 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000042 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000022 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000019 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000185 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019661 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000030 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000027 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000013 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000182 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019669 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000015 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000175 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019702 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000031 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000026 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000012 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000014 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000014 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000180 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019670 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000042 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000022 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000018 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000185 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000021 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019675 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000044 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000023 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000019 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000016 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000197 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000023 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019648 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000034 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000022 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000020 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000016 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000191 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019656 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000034 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000025 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000017 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000015 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000017 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000193 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000029 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019637 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000034 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000026 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000017 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000016 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000190 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019664 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000035 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000022 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000020 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000015 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000194 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000022 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+[pid 1686251]      0.019658 --- SIGSTOP {si_signo=SIGSTOP, si_code=SI_TKILL, si_pid=1686243, si_uid=0} ---
+[pid 1686251]      0.000036 --- stopped by SIGSTOP ---
+[pid 1686250]      0.000022 --- stopped by SIGSTOP ---
+[pid 1686249]      0.000019 --- stopped by SIGSTOP ---
+[pid 1686248]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686247]      0.000005 --- stopped by SIGSTOP ---
+[pid 1686246]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686245]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686244]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686243]      0.000004 --- stopped by SIGSTOP ---
+[pid 1686242]      0.000016 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_STOPPED, si_pid=1686243, si_uid=0, si_status=SIGSTOP, si_utime=0, si_stime=0} ---
+[pid 1686242]      0.000193 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_CONTINUED, si_pid=1686243, si_uid=0, si_status=SIGCONT, si_utime=0, si_stime=0} ---
+[pid 1686251]      0.000023 --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1686242, si_uid=0} ---
+strace: Process 1686241 detached
+strace: Process 1686242 detached
+strace: Process 1686243 detached
+strace: Process 1686244 detached
+strace: Process 1686245 detached
+strace: Process 1686246 detached
+strace: Process 1686247 detached
+strace: Process 1686248 detached
+strace: Process 1686249 detached
+strace: Process 1686250 detached
+strace: Process 1686251 detached
+[1;93m[!] [1;97mWARNING: [0minstability detected during calibration[0m
+[1;93m[!] [1;97mWARNING: [0minstability detected during calibration[0m
+[1;93m[!] [1;97mWARNING: [0minstability detected during calibration[0m
+[1;93m[!] [1;97mWARNING: [0minstability detected during calibration[0m
+[?25h[1;91m
+
++++ Testing aborted by user +++
+[0m[1;94m[*] [0mStatistics: 4 new corpus items found, 5.16% coverage achieved, 0 crashes saved, 0 timeouts saved, total runtime 0 days, 0 hrs, 0 min, 2 sec[0m
+[1;92m[+] [0mWe're done here. Have a nice day!
+[0m

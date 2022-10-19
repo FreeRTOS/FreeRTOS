@@ -240,6 +240,8 @@
   <ItemGroup>
     <ProjectReference Include="FreeRTOS-Kernel.vcxproj">
       <Project>{72c209c4-49a4-4942-a201-44706c9d77ec}</Project>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <Private>false</Private>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -251,28 +253,28 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -297,8 +299,11 @@
   <PropertyGroup>
     <OutDir>build\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <PublicIncludeDirectories>..\ThirdParty\mbedtls\include;..\ThirdParty\mbedtls\library;.;$(PublicIncludeDirectories)</PublicIncludeDirectories>
+    <PublicIncludeDirectories>..\ThirdParty\mbedtls\include;.\;$(PublicIncludeDirectories)</PublicIncludeDirectories>
     <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnabled>false</VcpkgEnabled>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -306,7 +311,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h"</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>mbedtls_port;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\mbedtls_port;..\ThirdParty\mbedtls\library;..\ThirdParty\mbedtls\include</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -321,7 +327,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h"</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>mbedtls_port;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\mbedtls_port;..\ThirdParty\mbedtls\library;..\ThirdParty\mbedtls\include</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -336,7 +343,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h"</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>mbedtls_port;.;..\ThirdParty\mbedtls\library;..\ThirdParty\mbedtls\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\mbedtls_port;..\ThirdParty\mbedtls\library;..\ThirdParty\mbedtls\include</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -351,7 +359,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h"</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>mbedtls_port;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\mbedtls_port;..\ThirdParty\mbedtls\library;..\ThirdParty\mbedtls\include</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

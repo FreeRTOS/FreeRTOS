@@ -21,3 +21,8 @@ __pycache__/
 # Ignore certificate files.
 *.pem
 *.crt
+
+# Ignore Visual Studio user files
+*.suo
+*.vcxproj.user
+

@@ -28,6 +28,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "FreeRTOSConfig.h"
+
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "semphr.h"
@@ -111,7 +113,7 @@ static void mbedtls_platform_mutex_init( mbedtls_threading_mutex_t * pMutex )
         * storage is provided. */
 
         pMutex->mutexHandle = xSemaphoreCreateMutexStatic( &( pMutex->mutexStorage ) );
-    #elif( configSUPPORT_DYNAMIC ALLOCATION == 1 )
+    #elif( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
         pMutex->mutexHandle = xSemaphoreCreateMutex();
     #endif
 

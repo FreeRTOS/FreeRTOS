@@ -39,6 +39,10 @@
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 
+/* FreeRTOS+TCP includes. */
+#include "FreeRTOS_IP.h"
+#include "FreeRTOS_Sockets.h"
+
 /* TLS transport header. */
 #include "using_mbedtls_pkcs11.h"
 
@@ -526,25 +530,12 @@ static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
     CK_RV xResult = CKR_OK;
     CK_ATTRIBUTE xTemplate = { 0 };
     CK_OBJECT_HANDLE xCertObj = 0;
-    size_t labelLength;
-    char * pcNullTerminator = NULL;
-
-    /* Check for NULL character within pkcs11configMAX_LABEL_LENGTH. */
-    pcNullTerminator = memchr( pcLabelName, '\0', pkcs11configMAX_LABEL_LENGTH );
-    if( NULL != pcNullTerminator )
-    {
-        labelLength = ( size_t )( pcNullTerminator - pcLabelName );
-    }
-    else
-    {
-        /* If NULL character not found set length to pkcs11configMAX_LABEL_LENGTH. */
-        labelLength = pkcs11configMAX_LABEL_LENGTH;
-    }
 
     /* Get the handle of the certificate. */
     xResult = xFindObjectWithLabelAndClass( pSslContext->xP11Session,
                                             pcLabelName,
-                                            labelLength,
+                                            strnlen( pcLabelName,
+                                                     pkcs11configMAX_LABEL_LENGTH ),
                                             xClass,
                                             &xCertObj );
 
@@ -657,25 +648,11 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
 
     if( CKR_OK == xResult )
     {
-        size_t labelLength;
-        char * pcNullTerminator = NULL;
-
-        /* Check for NULL character within pkcs11configMAX_LABEL_LENGTH. */
-        pcNullTerminator = memchr( pcLabelName, '\0', pkcs11configMAX_LABEL_LENGTH );
-        if( NULL != pcNullTerminator )
-        {
-            labelLength = ( size_t )( pcNullTerminator - pcLabelName );
-        }
-        else
-        {
-            /* If NULL character not found set length to pkcs11configMAX_LABEL_LENGTH. */
-            labelLength = pkcs11configMAX_LABEL_LENGTH;
-        }
-
         /* Get the handle of the device private key. */
         xResult = xFindObjectWithLabelAndClass( pxCtx->xP11Session,
                                                 pcLabelName,
-                                                labelLength,
+                                                strnlen( pcLabelName,
+                                                         pkcs11configMAX_LABEL_LENGTH ),
                                                 CKO_PRIVATE_KEY,
                                                 &pxCtx->xP11PrivateKey );
     }
@@ -924,10 +901,9 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     if( returnStatus != TLS_TRANSPORT_SUCCESS )
     {
         if( ( pNetworkContext != NULL ) &&
-            ( pTlsTransportParams != NULL ) &&
-            ( pTlsTransportParams->tcpSocket != SOCKETS_INVALID_SOCKET ) )
+            ( pTlsTransportParams->tcpSocket != FREERTOS_INVALID_SOCKET ) )
         {
-            ( void ) Sockets_Disconnect( pTlsTransportParams->tcpSocket );
+            ( void ) FreeRTOS_closesocket( pTlsTransportParams->tcpSocket );
         }
     }
     else

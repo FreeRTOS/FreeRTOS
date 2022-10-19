@@ -65,23 +65,36 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Platform)'=='Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>..\ThirdParty\winpcap\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Platform)'=='x64'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>..\ThirdParty\winpcap\lib\x64;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup>
-    <OutDir>build\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
-    <PublicIncludeDirectories>..\Source\FreeRTOS-Plus-TCP\source\portable\NetworkInterface\WinPCap;..\Source\FreeRTOS-Plus-TCP\source\portable\Compiler\MSVC;.;..\Source\FreeRTOS-Plus-TCP\source\include;$(PublicIncludeDirectories)</PublicIncludeDirectories>
-    <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ReferencePath>..\ThirdParty\winpcap\lib\x64;$(ReferencePath)</ReferencePath>
+    <PublicIncludeDirectories>..\Source\FreeRTOS-Plus-TCP\source\include;..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include;..\Source\FreeRTOS-Plus-TCP\source\portable\Compiler\MSVC;.\;$(PublicIncludeDirectories)</PublicIncludeDirectories>
+    <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
+    <OutDir>build\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ReferencePath>..\ThirdParty\winpcap\lib\x64;$(ReferencePath)</ReferencePath>
+    <PublicIncludeDirectories>..\Source\FreeRTOS-Plus-TCP\source\include;..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include;..\Source\FreeRTOS-Plus-TCP\source\portable\Compiler\MSVC;.\;$(PublicIncludeDirectories)</PublicIncludeDirectories>
+    <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
+    <OutDir>build\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PublicIncludeDirectories>..\Source\FreeRTOS-Plus-TCP\source\include;..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include;..\Source\FreeRTOS-Plus-TCP\source\portable\Compiler\MSVC;.\;$(PublicIncludeDirectories)</PublicIncludeDirectories>
+    <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
+    <OutDir>build\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PublicIncludeDirectories>..\Source\FreeRTOS-Plus-TCP\source\include;..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include;..\Source\FreeRTOS-Plus-TCP\source\portable\Compiler\MSVC;.\;$(PublicIncludeDirectories)</PublicIncludeDirectories>
+    <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
+    <OutDir>build\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnabled>false</VcpkgEnabled>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -90,6 +103,8 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>..\Source\FreeRTOS-Plus-TCP\source\include;..\Source\FreeRTOS-Plus-TCP\source\portable\Compiler\MSVC;..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include;..\ThirdParty\winpcap\include;..\ThirdParty\winpcap\include\pcap;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
@@ -103,6 +118,8 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>..\Source\FreeRTOS-Plus-TCP\source\include;..\Source\FreeRTOS-Plus-TCP\source\portable\Compiler\MSVC;..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include;..\ThirdParty\winpcap\include;..\ThirdParty\winpcap\include\pcap;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
@@ -112,13 +129,20 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile />
     <ClCompile>
-      <AdditionalIncludeDirectories>..\Source\FreeRTOS-Plus-TCP\source\portable\Compiler\MSVC;..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include;..\Source\FreeRTOS-Plus-TCP\source\include;..\ThirdParty\winpcap\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\FreeRTOS-Plus-TCP\source\include;..\Source\FreeRTOS-Plus-TCP\source\portable\Compiler\MSVC;..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include;..\ThirdParty\winpcap\include;..\ThirdParty\winpcap\include\pcap;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <Lib>
-      <AdditionalDependencies>wpcap.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\FreeRTOS-Plus-TCP\source\include;..\Source\FreeRTOS-Plus-TCP\source\portable\Compiler\MSVC;..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\include;..\ThirdParty\winpcap\include;..\ThirdParty\winpcap\include\pcap;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_ARP.c" />
@@ -202,6 +226,7 @@
   <ItemGroup>
     <ProjectReference Include="FreeRTOS-Kernel.vcxproj">
       <Project>{72c209c4-49a4-4942-a201-44706c9d77ec}</Project>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

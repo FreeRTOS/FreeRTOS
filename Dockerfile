@@ -4,18 +4,22 @@ LABEL maintainer="Adam Scislowicz <adam.scislowicz@gmail.com>"
 
 ENV UID=1000
 ENV GID=1000
-ENV USER=ubuntu
-
+ARG USER
 ARG ESP_IDF_TAG=release-v5.0
 
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+
 WORKDIR /tmp
+
 RUN apt-get update \
     && apt-get install -y curl gnupg2 lsb-release software-properties-common \
     && curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - \
     && apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" \
     && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 93C4A3FD7BB9C367 \
     && apt-add-repository "deb http://ppa.launchpad.net/ansible/ansible/ubuntu focal main" \
-    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - \
+    && curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - \
     && echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
     && add-apt-repository ppa:kelleyk/emacs \
     && apt-get update \
@@ -74,16 +78,12 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-ENV LANG en_US.UTF-8  
-ENV LANGUAGE en_US:en  
-ENV LC_ALL en_US.UTF-8
-
 USER $USER
 WORKDIR /home/$USER
 ENV PICO_SDK_PATH=/home/$USER/pico/pico-sdk
-ENV FREERTOS_KERNEL_PATH=/workspaces/FreeRTOS/FreeRTOS/Source
+ENV FREERTOS_KERNEL_PATH=/home/$USER/FreeRTOS/FreeRTOS/Source
 ENV IDF_PATH=/opt/esp/idf
 RUN curl https://raw.githubusercontent.com/raspberrypi/pico-setup/master/pico_setup.sh | SKIP_VSCODE=1 SKIP_UART=1 bash
 COPY --from=espressif/idf:release-v5.0 /opt/esp /opt/esp
 RUN $IDF_PATH/install.sh
-RUN echo . $IDF_PATH/export.sh >> ~/.bashrc
+RUN echo source $IDF_PATH/export.sh >> ~/.bashrc

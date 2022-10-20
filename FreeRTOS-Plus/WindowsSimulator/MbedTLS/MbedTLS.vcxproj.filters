@@ -375,9 +375,9 @@
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\ssl_tls13_keys.h">
       <Filter>MbedTLS Source</Filter>
     </ClInclude>
-    <ClInclude Include="mbedtls_port\mbedtls_freertos_port.h" />
-    <ClInclude Include="mbedtls_port\threading_alt.h" />
     <ClInclude Include="mbedtls_config_v3.2.1.h" />
+    <ClInclude Include="mbedtls_freertos_port.h" />
+    <ClInclude Include="threading_alt.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\timing.c">
@@ -659,6 +659,6 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\threading.c">
       <Filter>MbedTLS Source</Filter>
     </ClCompile>
-    <ClCompile Include="mbedtls_port\mbedtls_freertos_port.c" />
+    <ClCompile Include="mbedtls_freertos_port.c" />
   </ItemGroup>
 </Project>

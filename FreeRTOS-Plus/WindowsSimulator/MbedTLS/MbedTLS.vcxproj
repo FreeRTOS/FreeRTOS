@@ -138,8 +138,8 @@
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\ssl_tls13_invasive.h" />
     <ClInclude Include="..\..\ThirdParty\mbedtls\library\ssl_tls13_keys.h" />
     <ClInclude Include="mbedtls_config_v3.2.1.h" />
-    <ClInclude Include="mbedtls_port\mbedtls_freertos_port.h" />
-    <ClInclude Include="mbedtls_port\threading_alt.h" />
+    <ClInclude Include="mbedtls_freertos_port.h" />
+    <ClInclude Include="threading_alt.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\aes.c" />
@@ -235,7 +235,7 @@
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509_crl.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509_crt.c" />
     <ClCompile Include="..\..\ThirdParty\mbedtls\library\x509_csr.c" />
-    <ClCompile Include="mbedtls_port\mbedtls_freertos_port.c" />
+    <ClCompile Include="mbedtls_freertos_port.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FreeRTOS-Kernel\FreeRTOS-Kernel.vcxproj">

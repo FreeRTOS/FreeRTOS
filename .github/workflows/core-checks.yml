@@ -78,4 +78,4 @@ jobs:
             submodules: 'recursive'
             fetch-depth: 1
       - name: Qemu MPS2 build Cortex M3
-        run: cd workspace/FreeRTOS/Demo/CORTEX_M3_MPS2_QEMU_GCC && make
+        run: cd workspace/FreeRTOS/Demo/CORTEX_M3_MPS2_QEMU_GCC && make && make clean && make FULL_DEMO=1

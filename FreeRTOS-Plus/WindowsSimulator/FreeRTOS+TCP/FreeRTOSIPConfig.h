@@ -318,4 +318,7 @@ extern UBaseType_t uxRand();
 #endif /* INTPTR_MAX == INT64_MAX */
 
 
+#define configMAC
+
+
 #endif /* FREERTOS_IP_CONFIG_H */

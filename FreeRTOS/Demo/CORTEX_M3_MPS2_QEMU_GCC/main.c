@@ -55,6 +55,7 @@ StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
 int main()
 {
+    custom_error();
     #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
         {
             main_blinky();

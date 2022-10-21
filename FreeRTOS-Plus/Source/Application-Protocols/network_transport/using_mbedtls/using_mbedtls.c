@@ -53,6 +53,10 @@
 /* FreeRTOS Socket wrapper include. */
 #include "sockets_wrapper.h"
 
+/* FreeRTOS mbdetls include. */
+#include "mbedtls_bio_freertos.h"
+
+
 /*-----------------------------------------------------------*/
 
 /**

@@ -321,10 +321,11 @@ void vFakePortYieldFromISR()
     HOOK_DIAG();
 }
 
-void vFakePortDisableInterrupts()
+uint32_t vFakePortDisableInterrupts()
 {
     port_disable_interrupts_called = true;
     HOOK_DIAG();
+    return 0;
 }
 
 void vFakePortEnableInterrupts()
@@ -383,6 +384,32 @@ void vApplicationStackOverflowHook( TaskHandle_t xTask,
 {
     HOOK_DIAG();
     vApplicationStackOverflowHook_called = true;
+}
+
+unsigned int vFakePortGetCoreID( void )
+{
+    HOOK_DIAG();
+    return 0;
+}
+
+void vFakePortReleaseTaskLock (void )
+{
+    HOOK_DIAG();
+}
+
+void vFakePortGetTaskLock( void )
+{
+    HOOK_DIAG();
+}
+
+void vFakePortGetISRLock( void )
+{
+    HOOK_DIAG();
+}
+
+void vFakePortReleaseISRLock( void )
+{
+    HOOK_DIAG();
 }
 
 /* ============================  Unity Fixtures  ============================ */

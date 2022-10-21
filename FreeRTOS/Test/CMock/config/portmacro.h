@@ -93,6 +93,7 @@ typedef unsigned long    UBaseType_t;
 
 /* Requires definition of UBaseType_t */
 #include "fake_port.h"
+#include <FreeRTOS.h>
 
 /* Hardware specifics. */
 #define portTICK_PERIOD_MS    ( ( TickType_t ) 1000 / configTICK_RATE_HZ )
@@ -140,37 +141,50 @@ typedef unsigned long    UBaseType_t;
     vFakePortAssertIfInterruptPriorityInvalid()
 #define portENTER_CRITICAL()             vFakePortEnterCriticalSection()
 #define portEXIT_CRITICAL()              vFakePortExitCriticalSection()
+#define portGET_ISR_LOCK()               vFakePortGetISRLock()
+#define portRELEASE_ISR_LOCK()           vFakePortReleaseISRLock()
+#define portGET_TASK_LOCK()              vFakePortGetTaskLock()
+#define portRELEASE_TASK_LOCK()          vFakePortReleaseTaskLock()
 
+#define portCHECK_IF_IN_ISR()            vFakePortCheckIfInISR()
+#define portRESTORE_INTERRUPTS( x )      vFakePortRestoreInterrupts( x )
 #define portPRE_TASK_DELETE_HOOK( pvTaskToDelete, pxPendYield ) \
     vPortCurrentTaskDying( ( pvTaskToDelete ), ( pxPendYield ) )
 #define portSETUP_TCB( pxTCB )           portSetupTCB_CB( pxTCB );
 #define  portASSERT_IF_IN_ISR()          vFakePortAssertIfISR();
 
+#define portGET_CORE_ID()                vFakePortGetCoreID()
+#define portYIELD_CORE( x )              vFakePortYieldCore(x)
 
-static uint8_t ucPortCountLeadingZeros( uint32_t ulBitmap )
-{
-    uint8_t ucReturn;
+#if ( configNUM_CORES > 1 )
+    #define portTASK_FUNCTION_PROTO( vFunction, pvParameters )    void vFunction( void * pvParameters )
+    #define portTASK_FUNCTION( vFunction, pvParameters )          void vFunction( void * pvParameters )
+#else
+    #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) \
+        volatile int fool_static = 0;                          \
+        void vFunction( void * ( pvParameters ) )
 
-    ucReturn = __builtin_clz( ulBitmap );
-    return ucReturn;
-}
+    #define portTASK_FUNCTION( vFunction, pvParameters ) \
+        volatile int fool_static2 = 0;                   \
+        void vFunction( void * ( pvParameters ) )
+#endif
 
+#if ( configUSE_PORT_OPTIMISED_TASK_SELECTION == 1 )
+    static uint8_t ucPortCountLeadingZeros( uint32_t ulBitmap )
+    {
+        uint8_t ucReturn;
 
-#define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities ) \
-    ( uxReadyPriorities ) |= ( 1UL << ( uxPriority ) )
-#define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities ) \
-    ( uxReadyPriorities ) &= ~( 1UL << ( uxPriority ) )
-#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) \
-    uxTopPriority = ( 31UL - ( uint32_t ) ucPortCountLeadingZeros( ( uxReadyPriorities ) ) )
+        ucReturn = __builtin_clz( ulBitmap );
+        return ucReturn;
+    }
 
-/* Task function macros as described on the FreeRTOS.org WEB site. */
-#define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) \
-    volatile int fool_static = 0;                          \
-    void vFunction( void * ( pvParameters ) )
-
-#define portTASK_FUNCTION( vFunction, pvParameters ) \
-    volatile int fool_static2 = 0;                   \
-    void vFunction( void * ( pvParameters ) )
+    #define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities ) \
+        ( uxReadyPriorities ) |= ( 1UL << ( uxPriority ) )
+    #define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities ) \
+        ( uxReadyPriorities ) &= ~( 1UL << ( uxPriority ) )
+    #define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) \
+        uxTopPriority = ( 31UL - ( uint32_t ) ucPortCountLeadingZeros( ( uxReadyPriorities ) ) )
+#endif
 
 /*-----------------------------------------------------------*/
 

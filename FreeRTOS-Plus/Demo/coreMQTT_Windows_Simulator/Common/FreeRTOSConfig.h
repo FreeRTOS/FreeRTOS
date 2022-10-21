@@ -129,17 +129,6 @@
  * priority of the task used to simulate Ethernet interrupts. */
 #define configMAC_ISR_SIMULATOR_PRIORITY    ( configMAX_PRIORITIES - 1 )
 
-/* This demo creates a virtual network connection by accessing the raw Ethernet
- * or WiFi data to and from a real network connection.  Many computers have more
- * than one real network port, and configNETWORK_INTERFACE_TO_USE is used to tell
- * the demo which real port should be used to create the virtual port.  The ports
- * available are displayed on the console when the application is executed.  For
- * example, on my development laptop setting configNETWORK_INTERFACE_TO_USE to 4
- * results in the wired network being used, while setting
- * configNETWORK_INTERFACE_TO_USE to 2 results in the wireless network being
- * used. */
-#define configNETWORK_INTERFACE_TO_USE      ( 0L )
-
 /* The address to which logging is sent should UDP logging be enabled. */
 #define configUDP_LOGGING_ADDR0             192
 #define configUDP_LOGGING_ADDR1             168

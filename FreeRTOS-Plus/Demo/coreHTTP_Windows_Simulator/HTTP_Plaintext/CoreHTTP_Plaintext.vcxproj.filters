@@ -12,22 +12,18 @@
     <ClCompile Include="..\Common\main.c" />
     <ClCompile Include="..\Common\http_demo_utils.c" />
     <ClCompile Include="DemoTasks\PlainTextHTTPExample.c" />
-    <ClCompile Include="..\..\Common\Logging\windows\Logging_WinSim.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c">
-      <Filter>network_transport</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\using_plaintext\using_plaintext.c">
       <Filter>network_transport</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
       <Filter>backoff_algorithm</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\transport_plaintext.c">
+      <Filter>network_transport</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\http_demo_utils.h" />
-    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\using_plaintext\using_plaintext.h">
-      <Filter>network_transport</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h">
       <Filter>network_transport</Filter>
     </ClInclude>
@@ -35,5 +31,8 @@
       <Filter>backoff_algorithm</Filter>
     </ClInclude>
     <ClInclude Include="demo_config.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\transport_plaintext.h">
+      <Filter>network_transport</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

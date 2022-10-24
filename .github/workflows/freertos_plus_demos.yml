@@ -49,6 +49,62 @@ jobs:
         working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Cellular_Interface_Windows_Simulator/MQTT_Mutual_Auth_Demo_with_SARA_R4
         run: msbuild mqtt_mutual_auth_demo_with_sara_r4.sln -t:rebuild -property:Configuration=Debug
 
+  winsim_coreHTTP:
+    name: coreHTTP Windows Simulator Demos
+    runs-on: windows-2019
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Submodules
+        run: git submodule update --checkout --init --recursive
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: Configure coreHTTP Demos
+        shell: bash
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator
+        run: |
+          echo '#ifndef DEMO_CONFIG_H_TEST_BUILD' | tee -a */demo_config.h
+          echo '    #define DEMO_CONFIG_H_TEST_BUILD' | tee -a */demo_config.h
+          echo '    #define democonfigSERVER_HOSTNAME ""' | tee -a */demo_config.h
+          echo '    #define democonfigAWS_IOT_ENDPOINT ""' | tee -a */demo_config.h
+          echo '    #define democonfigROOT_CA_PEM ""' | tee -a */demo_config.h
+          echo '    #define democonfigCLIENT_CERTIFICATE_PEM ""' | tee -a */demo_config.h
+          echo '    #define democonfigCLIENT_PRIVATE_KEY_PEM ""' | tee -a */demo_config.h
+          echo '    #define democonfigIOT_CRED_PROVIDER_ROOT_CA_PEM ""' | tee -a */demo_config.h
+          echo '    #define democonfigIOT_CREDENTIAL_PROVIDER_ENDPOINT ""' | tee -a */demo_config.h
+          echo '    #define democonfigIOT_CREDENTIAL_PROVIDER_ROLE ""' | tee -a */demo_config.h
+          echo '    #define democonfigIOT_THING_NAME ""' | tee -a */demo_config.h
+          echo '    #define democonfigS3_PRESIGNED_GET_URL ""' | tee -a */demo_config.h
+          echo '    #define democonfigS3_PRESIGNED_PUT_URL ""' | tee -a */demo_config.h
+          echo '    #define democonfigS3_ROOT_CA_PEM ""' | tee -a */demo_config.h
+          echo '    #define democonfigS3_BUCKET_NAME ""' | tee -a */demo_config.h
+          echo '    #define democonfigS3_BUCKET_REGION ""' | tee -a */demo_config.h
+          echo '    #define democonfigS3_OBJECT_NAME ""' | tee -a */demo_config.h
+          echo '#endif /* DEMO_CONFIG_H_TEST_BUILD */' | tee -a */demo_config.h
+
+      - name: Build HTTP Mutual Auth Demo
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth
+        run: msbuild CoreHTTP_Mutual_Auth.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: Build HTTP Plain Text Demo
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Plaintext
+        run: msbuild CoreHTTP_Plaintext.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: Build HTTP S3 Download Demo
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download
+        run: msbuild CoreHTTP_S3_Download.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: Build HTTP S3 Download Multithreaded Demo
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download_Multithreaded
+        run: msbuild CoreHTTP_S3_Download_Multithreaded.sln -t:rebuild -property:Configuration=Debug -m
+
+      - name: Build HTTP S3 Upload Demo
+        working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Upload
+        run: msbuild CoreHTTP_S3_Upload.sln -t:rebuild -property:Configuration=Debug -m
+
   winsim_corelibs:
     name: core Library Windows Simulator Demos
     runs-on: windows-2019

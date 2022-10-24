@@ -1370,7 +1370,11 @@ static JSONStatus_t prvParseCredentials( HTTPResponse_t * pxResponse,
 static int32_t prvSha256Init( void * pxHashContext )
 {
     mbedtls_sha256_init( ( mbedtls_sha256_context * ) pxHashContext );
-    return mbedtls_sha256_starts_ret( ( mbedtls_sha256_context * ) pxHashContext, 0 );
+    #if MBEDTLS_VERSION_NUMBER < 0x03000000
+        return mbedtls_sha256_starts_ret( ( mbedtls_sha256_context * ) pxHashContext, 0 );
+    #else
+        return mbedtls_sha256_starts( ( mbedtls_sha256_context * ) pxHashContext, 0 );
+    #endif
 }
 
 /*-----------------------------------------------------------*/
@@ -1379,9 +1383,15 @@ static int32_t prvSha256Update( void * pxHashContext,
                                 const uint8_t * pucInput,
                                 size_t xInputLen )
 {
-    return mbedtls_sha256_update_ret( ( mbedtls_sha256_context * ) pxHashContext,
+    #if MBEDTLS_VERSION_NUMBER < 0x03000000
+        return mbedtls_sha256_update_ret( ( mbedtls_sha256_context * ) pxHashContext,
+                                          ( const unsigned char * ) pucInput,
+                                          xInputLen );
+    #else
+        return mbedtls_sha256_update( ( mbedtls_sha256_context * ) pxHashContext,
                                       ( const unsigned char * ) pucInput,
                                       xInputLen );
+    #endif
 }
 
 /*-----------------------------------------------------------*/
@@ -1394,8 +1404,13 @@ static int32_t prvSha256Final( void * pxHashContext,
 
     ( void ) xOutputLen;
 
-    return mbedtls_sha256_finish_ret( ( mbedtls_sha256_context * ) pxHashContext,
+    #if MBEDTLS_VERSION_NUMBER < 0x03000000
+        return mbedtls_sha256_finish_ret( ( mbedtls_sha256_context * ) pxHashContext,
+                                        ( unsigned char * ) pucOutput );
+    #else
+        return mbedtls_sha256_finish( ( mbedtls_sha256_context * ) pxHashContext,
                                       ( unsigned char * ) pucOutput );
+    #endif
 }
 
 static void prvGetHeaderStartLocFromHttpRequest( HTTPRequestHeaders_t * pxRequestHeaders,
@@ -1446,7 +1461,11 @@ static void prvSha256Encode( const char * pcInputStr,
     char * pcOutputChar = pcHexOutput;
     static uint8_t ucSha256[ SHA256_HASH_DIGEST_LENGTH ];
 
-    mbedtls_sha256_ret( pcInputStr, xInputStrLen, ucSha256, 0 );
+    #if MBEDTLS_VERSION_NUMBER < 0x03000000
+        mbedtls_sha256_ret( pcInputStr, xInputStrLen, ucSha256, 0 );
+    #else
+        mbedtls_sha256( pcInputStr, xInputStrLen, ucSha256, 0 );
+    #endif
 
     for(size_t i = 0; i < SHA256_HASH_DIGEST_LENGTH; i++ )
     {

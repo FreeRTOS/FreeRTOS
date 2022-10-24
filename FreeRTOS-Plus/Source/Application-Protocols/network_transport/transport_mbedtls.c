@@ -48,7 +48,7 @@
 #include "FreeRTOS_Sockets.h"
 
 /* TLS transport header. */
-#include "using_mbedtls.h"
+#include "transport_mbedtls.h"
 
 /* FreeRTOS Socket wrapper include. */
 #include "sockets_wrapper.h"

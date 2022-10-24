@@ -72,7 +72,7 @@
 #include "backoff_algorithm.h"
 
 /* mbedTLS transport interface header.*/
-#include "using_mbedtls.h"
+#include "transport_mbedtls.h"
 
 /* OTA Library include. */
 #include "ota.h"

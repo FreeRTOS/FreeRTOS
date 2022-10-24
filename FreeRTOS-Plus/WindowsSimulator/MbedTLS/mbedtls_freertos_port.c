@@ -37,7 +37,7 @@
 #if defined( MBEDTLS_CONFIG_FILE )
 #include MBEDTLS_CONFIG_FILE
 #else
-#include "mbedtls/config.h"
+#include "mbedtls/mbedtls_config.h"
 #endif
 #include "mbedtls/entropy.h"
 
@@ -347,10 +347,10 @@ int mbedtls_platform_threading_init( void )
 
 #else /* !MBEDTLS_THREADING_ALT */
 
-void (* mbedtls_mutex_init)( mbedtls_threading_mutex_t * ) = mbedtls_platform_mutex_init;
-void (* mbedtls_mutex_free)( mbedtls_threading_mutex_t * ) = mbedtls_platform_mutex_free;
-int (* mbedtls_mutex_lock)( mbedtls_threading_mutex_t * ) = mbedtls_platform_mutex_lock;
-int (* mbedtls_mutex_unlock)( mbedtls_threading_mutex_t * ) = mbedtls_platform_mutex_unlock;
+void (* mbedtls_mutex_init)( mbedtls_threading_mutex_t * mutex ) = mbedtls_platform_mutex_init;
+void (* mbedtls_mutex_free)( mbedtls_threading_mutex_t * mutex ) = mbedtls_platform_mutex_free;
+int (* mbedtls_mutex_lock)( mbedtls_threading_mutex_t * mutex ) = mbedtls_platform_mutex_lock;
+int (* mbedtls_mutex_unlock)( mbedtls_threading_mutex_t * mutex ) = mbedtls_platform_mutex_unlock;
 
 #endif /* !MBEDTLS_THREADING_ALT */
 

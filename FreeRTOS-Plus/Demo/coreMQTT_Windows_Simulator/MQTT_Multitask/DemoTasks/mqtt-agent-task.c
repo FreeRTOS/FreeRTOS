@@ -87,9 +87,9 @@
 
 /* Transport interface include. */
 #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
-    #include "using_mbedtls.h"
+    #include "transport_mbedtls.h"
 #else
-    #include "using_plaintext.h"
+    #include "transport_plaintext.h"
 #endif
 
 /* This demo uses compile time options to select the demo tasks to created.

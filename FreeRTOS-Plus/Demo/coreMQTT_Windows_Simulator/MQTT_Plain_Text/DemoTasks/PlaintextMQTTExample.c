@@ -64,7 +64,7 @@
 #include "backoff_algorithm.h"
 
 /* Transport interface include. */
-#include "using_plaintext.h"
+#include "transport_plaintext.h"
 
 /*-----------------------------------------------------------*/
 

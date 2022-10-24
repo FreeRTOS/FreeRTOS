@@ -87,7 +87,7 @@
 #include "core_http_client.h"
 
 /* Transport interface implementation include header for TLS. */
-#include "using_mbedtls.h"
+#include "transport_mbedtls.h"
 
 /* Common HTTP demo utilities. */
 #include "http_demo_utils.h"
@@ -196,8 +196,8 @@
  */
 #define DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS    ( pdMS_TO_TICKS( 5000U ) )
 
-/** 
- * @brief Each compilation unit that consumes the NetworkContext must define it. 
+/**
+ * @brief Each compilation unit that consumes the NetworkContext must define it.
  * It should contain a single pointer to the type of your desired transport.
  * When using multiple transports in the same compilation unit, define this pointer as void *.
  *

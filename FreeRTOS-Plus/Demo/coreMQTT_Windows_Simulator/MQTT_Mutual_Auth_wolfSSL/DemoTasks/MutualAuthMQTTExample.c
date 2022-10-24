@@ -55,7 +55,7 @@
 #include "core_mqtt.h"
 
 /* Transport interface implementation include header for TLS. */
-#include "using_wolfSSL.h"
+#include "transport_wolfSSL.h"
 
 /*-----------------------------------------------------------*/
 

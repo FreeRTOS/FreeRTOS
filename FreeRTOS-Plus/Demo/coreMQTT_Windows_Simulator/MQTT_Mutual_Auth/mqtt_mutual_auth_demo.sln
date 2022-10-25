@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32929.386
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MQTT_Multitask", "MQTT_Multitask.vcxproj", "{C35A89CA-0A40-49FF-A7F8-6E6830809B26}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MQTT_Mutual_Auth", "MQTT_Mutual_Auth.vcxproj", "{DD2281B6-6D9B-4477-BA0A-8842F2E917C7}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS+TCP", "..\..\..\WindowsSimulator\FreeRTOS+TCP\FreeRTOS+TCP.vcxproj", "{C90E6CC5-818B-4C97-8876-0986D989387C}"
 EndProject
@@ -21,14 +21,14 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C35A89CA-0A40-49FF-A7F8-6E6830809B26}.Debug|x64.ActiveCfg = Debug|x64
-		{C35A89CA-0A40-49FF-A7F8-6E6830809B26}.Debug|x64.Build.0 = Debug|x64
-		{C35A89CA-0A40-49FF-A7F8-6E6830809B26}.Debug|x86.ActiveCfg = Debug|Win32
-		{C35A89CA-0A40-49FF-A7F8-6E6830809B26}.Debug|x86.Build.0 = Debug|Win32
-		{C35A89CA-0A40-49FF-A7F8-6E6830809B26}.Release|x64.ActiveCfg = Release|x64
-		{C35A89CA-0A40-49FF-A7F8-6E6830809B26}.Release|x64.Build.0 = Release|x64
-		{C35A89CA-0A40-49FF-A7F8-6E6830809B26}.Release|x86.ActiveCfg = Release|Win32
-		{C35A89CA-0A40-49FF-A7F8-6E6830809B26}.Release|x86.Build.0 = Release|Win32
+		{DD2281B6-6D9B-4477-BA0A-8842F2E917C7}.Debug|x64.ActiveCfg = Debug|x64
+		{DD2281B6-6D9B-4477-BA0A-8842F2E917C7}.Debug|x64.Build.0 = Debug|x64
+		{DD2281B6-6D9B-4477-BA0A-8842F2E917C7}.Debug|x86.ActiveCfg = Debug|Win32
+		{DD2281B6-6D9B-4477-BA0A-8842F2E917C7}.Debug|x86.Build.0 = Debug|Win32
+		{DD2281B6-6D9B-4477-BA0A-8842F2E917C7}.Release|x64.ActiveCfg = Release|x64
+		{DD2281B6-6D9B-4477-BA0A-8842F2E917C7}.Release|x64.Build.0 = Release|x64
+		{DD2281B6-6D9B-4477-BA0A-8842F2E917C7}.Release|x86.ActiveCfg = Release|Win32
+		{DD2281B6-6D9B-4477-BA0A-8842F2E917C7}.Release|x86.Build.0 = Release|Win32
 		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug|x64.ActiveCfg = Debug|x64
 		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug|x64.Build.0 = Debug|x64
 		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug|x86.ActiveCfg = Debug|Win32
@@ -66,6 +66,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {BB2A157E-F3C3-4F17-BD43-49F15AD91A13}
+		SolutionGuid = {159FDB3F-FFEE-450A-9618-80588C4710B6}
 	EndGlobalSection
 EndGlobal

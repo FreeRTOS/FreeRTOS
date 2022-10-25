@@ -42,7 +42,7 @@
 #include "threading_alt.h"
 #include "mbedtls/entropy.h"
 #include "mbedtls/ssl.h"
-
+#include "mbedtls_bio_freertos_plus_tcp.h"
 /*-----------------------------------------------------------*/
 
 /**

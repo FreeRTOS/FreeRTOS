@@ -61,6 +61,7 @@ def get_args():
     pars = argparse.ArgumentParser(
         description=DESCRIPTION, epilog=EPILOG,
         formatter_class=argparse.RawDescriptionHelpFormatter)
+    tools = ["cbmc", "verifast"]
     for arg in [{
             "flags": ["-j", "--parallel-jobs"],
             "type": int,
@@ -80,6 +81,14 @@ def get_args():
             "metavar": "NAME",
             "default": "FreeRTOS",
             "help": "Project name for report. Default: %(default)s",
+    }, {
+            "flags": ["--verification-tool"],
+            "metavar": "T",
+            "help": "which verification tools to run. default: all of them, "
+                    "choices: %(choices)s",
+            "choices": tools,
+            "default": tools,
+            "nargs": "+",
     }, {
             "flags": ["--verbose"],
             "action": "store_true",
@@ -264,18 +273,8 @@ def configure_proof_dirs(proof_dirs, proof_root, counter):
         counter["complete"] += 1
 
 
-def main():
-    args = get_args()
-    set_up_logging(args.verbose)
-
-    proof_root = pathlib.Path(__file__).resolve().parent
-
-    run_cmd(["./prepare.py"], check=True, cwd=str(proof_root))
-    if not args.no_standalone:
-        run_cmd(
-            ["litani", "init", "--project", args.project_name], check=True)
-
-    proof_dirs = list(get_proof_dirs(proof_root, args.proofs))
+def add_cbmc_proofs(proof_root, proofs):
+    proof_dirs = list(get_proof_dirs(proof_root, proofs))
     if not proof_dirs:
         logging.error("No proof directories found")
         sys.exit(1)
@@ -298,10 +297,66 @@ def main():
             "Failed to configure the following proofs:\n%s", "\n".join(
                 [str(f) for f in counter["fail"]]))
 
+
+def add_verifast_proofs(verifast_root):
+    with open(verifast_root / "proof-configuration") as handle:
+        for line in handle:
+            line = line.strip()
+            if line.startswith("*") or line.startswith("/*") or not line:
+                continue
+            parts = line.split()
+            coverage, proof_name, flags = parts[0], parts[1], ""
+            if len(parts) > 2:
+                flags = " ".join(parts[2:])
+            fyle = verifast_root / proof_name
+
+            out_file = verifast_root / "out" / f"{proof_name}.stdout"
+            cmd = f"verifast -I include -c {flags} {fyle.resolve()}"
+
+            run_cmd([
+                "litani", "add-job",
+                "--command", cmd,
+                "--outputs", str(out_file),
+                "--stdout-file", str(out_file),
+                "--pipeline-name", f"VeriFast/{proof_name}",
+                "--ci-stage", "test",
+                "--cwd", str(verifast_root),
+                "--tags", "tool:verifast",
+                "--description", f"{proof_name}: running VeriFast",
+            ], check=True)
+
+            run_cmd([
+                "litani", "add-job",
+                "--command", f"grep '{coverage} statements verified' < {out_file}",
+                "--inputs", str(out_file),
+                "--phony-outputs", f"{proof_name}_coverage_result",
+                "--pipeline-name", f"VeriFast/{proof_name}",
+                "--ci-stage", "report",
+                "--cwd", str(verifast_root),
+                "--tags", "tool:verifast",
+                "--description", f"{proof_name}: checking VeriFast coverage",
+            ], check=True)
+
+
+def main():
+    args = get_args()
+    set_up_logging(args.verbose)
+
+    proof_root = pathlib.Path(__file__).resolve().parent
+    run_cmd(["./prepare.py"], check=True, cwd=str(proof_root))
+
+    if not args.no_standalone:
+        run_cmd(
+            ["litani", "init", "--project", args.project_name], check=True)
+
+    if "cbmc" in args.verification_tool:
+        add_cbmc_proofs(proof_root, args.proofs)
+    if "verifast" in args.verification_tool:
+        add_verifast_proofs(proof_root.parent.parent / "VeriFast")
+
     if not args.no_standalone:
         run_build(args.parallel_jobs)
 
 
 if __name__ == "__main__":
     main()
-

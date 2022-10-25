@@ -56,6 +56,7 @@ Then click `Verify` and `Verify Program` (or press F5). Note that the following
 proofs require arithmetic overflow checking to be turned off (click `Verify`
 and uncheck `Check arithmetic overflow`).
 
+  - `queue/create.c`
   - `queue/prvCopyDataToQueue.c`
   - `queue/xQueueGenericSendFromISR.c`
   - `queue/xQueueReceiveFromISR.c`
@@ -80,21 +81,28 @@ queue/xQueueGenericSend.c
 0 errors found (335 statements verified)
 ```
 
+To make the proof run as part of the regression suite (see below) in continuous
+integration, add the name of the proof to the `proof-configuration` file
+together with its coverage number.
+
+
 ## Running proof regression
 
-The following will check all proofs in the repo along with a statement coverage
-regression.
+The VeriFast proofs are run together with the CBMC proofs, with the results
+collected on a single dashboard. Change into the Test/CBMC/proof directory and
+run
 
 ```
-$ VERIFAST=/path/to/verifast make
+$ run-cbmc-proofs.py
 ```
 
-If you have made changes to the proofs so the statement coverage no longer
-matches then you can temporarily turn off coverage checking:
+This runs all the proofs in parallel. To run only the VeriFast proofs, you can
+run
 
 ```
-$ VERIFAST=/path/to/verifast NO_COVERAGE=1 make
+$ run-cbmc-proofs.py --verification-tool verifast
 ```
+
 
 ## Annotation burden
 

@@ -24,22 +24,33 @@
  *
  */
 
-/* *INDENT-OFF* */
+/*
+ *Expected Coverage
+ * -- Proof Filename
+ * -------------------------------------- Verifast Flags
+ */
 
-#include "proof/list.h"
-
-void vListInitialiseItem( ListItem_t * const pxItem )
-/*@requires xLIST_ITEM(pxItem, _, _, _, _);@*/
-/*@ensures xLIST_ITEM(pxItem, _, _, _, NULL);@*/
-{
-    /* Make sure the list item is not recorded as being on a list. */
-    pxItem->pxContainer = NULL;
-
-    /* Write known values into the list item if
-     * configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES is set to 1. */
-    listSET_FIRST_LIST_ITEM_INTEGRITY_CHECK_VALUE( pxItem );
-    listSET_SECOND_LIST_ITEM_INTEGRITY_CHECK_VALUE( pxItem );
-    /*@close xLIST_ITEM(pxItem, _, _, _, NULL);@*/
-}
-
-/* *INDENT-ON* */
+314   list/listLIST_IS_EMPTY.c
+440   list/uxListRemove.c
+329   list/vListInitialise.c
+316   list/vListInitialiseItem.c
+308   queue/prvCopyDataFromQueue.c
+289   queue/prvIsQueueEmpty.c
+289   queue/prvIsQueueFull.c
+290   queue/prvLockQueue.c
+304   queue/prvUnlockQueue.c
+292   queue/uxQueueMessagesWaiting.c
+290   queue/uxQueueSpacesAvailable.c
+287   queue/vQueueDelete.c
+335   queue/xQueueGenericSend.c
+287   queue/xQueueIsQueueEmptyFromISR.c
+287   queue/xQueueIsQueueFullFromISR.c
+335   queue/xQueuePeek.c
+300   queue/xQueuePeekFromISR.c
+337   queue/xQueueReceive.c
+314   queue/xQueueReceiveFromISR.c        -disable_overflow_check
+317   queue/xQueueGenericSendFromISR.c    -disable_overflow_check
+456   list/vListInsert.c                  -disable_overflow_check
+410   list/vListInsertEnd.c               -disable_overflow_check
+315   queue/create.c                      -disable_overflow_check
+336   queue/prvCopyDataToQueue.c          -disable_overflow_check

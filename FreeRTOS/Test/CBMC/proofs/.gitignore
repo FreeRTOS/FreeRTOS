@@ -7,4 +7,7 @@ cbmc-batch.yaml
 **/*.txt
 **/*.goto
 
+.litani_cache_dir
+Makefile.json
+
 !CMakeLists.txt

@@ -79,11 +79,6 @@ int main( void )
     BaseType_t xReturned;
     TaskHandle_t xHandle = NULL;
 
-    mbedtls_threading_set_alt( aws_mbedtls_mutex_init,
-                               aws_mbedtls_mutex_free,
-                               aws_mbedtls_mutex_lock,
-                               aws_mbedtls_mutex_unlock );
-
     /* Create the PKCS #11 demo task. */
     xReturned = xTaskCreate(
         ( TaskFunction_t ) prvStartPKCS11Demo,
@@ -145,36 +140,6 @@ void vAssertCalled( const char * pcFile,
     taskENABLE_INTERRUPTS();
 }
 /*-----------------------------------------------------------*/
-
-int mbedtls_hardware_poll( void * data,
-                           unsigned char * output,
-                           size_t len,
-                           size_t * olen )
-{
-    int lStatus = MBEDTLS_ERR_ENTROPY_SOURCE_FAILED;
-    HCRYPTPROV hProv = 0;
-
-    /* Unferenced parameter. */
-    ( void ) data;
-
-    /*
-     * This is port-specific for the Windows simulator, so just use Crypto API.
-     */
-
-    if( TRUE == CryptAcquireContextA(
-            &hProv, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT ) )
-    {
-        if( TRUE == CryptGenRandom( hProv, len, output ) )
-        {
-            lStatus = 0;
-            *olen = len;
-        }
-
-        CryptReleaseContext( hProv, 0 );
-    }
-
-    return lStatus;
-}
 
 /* configUSE_STATIC_ALLOCATION is set to 1, so the application must provide an
  * implementation of vApplicationGetIdleTaskMemory() to provide the memory that is

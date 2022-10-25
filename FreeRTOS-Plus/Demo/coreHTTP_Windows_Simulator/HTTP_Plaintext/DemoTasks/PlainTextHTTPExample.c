@@ -57,7 +57,7 @@
 #include "core_http_client.h"
 
 /* Transport interface implementation include for plaintext communication. */
-#include "transport_plaintext.h"
+#include "using_plaintext.h"
 
 /* Common HTTP demo utilities. */
 #include "http_demo_utils.h"
@@ -164,8 +164,8 @@
  */
 #define httpexampleNUMBER_HTTP_PATHS          ( 4 )
 
-/**
- * @brief Each compilation unit that consumes the NetworkContext must define it.
+/** 
+ * @brief Each compilation unit that consumes the NetworkContext must define it. 
  * It should contain a single pointer to the type of your desired transport.
  * When using multiple transports in the same compilation unit, define this pointer as void *.
  *

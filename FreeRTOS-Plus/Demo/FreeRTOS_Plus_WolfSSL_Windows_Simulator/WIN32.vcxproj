@@ -1,0 +1,380 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C686325E-3261-42F7-AEB1-DDE5280E1CEB}</ProjectGuid>
+    <ProjectName>RTOSDemo</ProjectName>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <TypeLibraryName>.\Debug/WIN32.tlb</TypeLibraryName>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\ThirdParty\WolfSSL;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WOLFSSL_USER_SETTINGS</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>.\Debug/WIN32.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4206;4214;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Link>
+      <OutputFile>$(TargetDir)/$(TargetFileName)</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Debug/WIN32.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug/WIN32.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TypeLibraryName>.\Debug/WIN32.tlb</TypeLibraryName>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\ThirdParty\WolfSSL;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WOLFSSL_USER_SETTINGS</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>.\Debug/WIN32.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4206;4214;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Link>
+      <OutputFile>$(TargetDir)/$(TargetFileName)</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Debug/WIN32.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug/WIN32.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <TypeLibraryName>.\Release/WIN32.tlb</TypeLibraryName>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <PreprocessorDefinitions>WOLFSSL_USER_SETTINGS</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\Release/WIN32.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalIncludeDirectories>..\..\Source\include;..\..\Source\portable\MSVC-MingW;..\Common\Include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Link>
+      <OutputFile>$(TargetDir)/$(TargetFileName)</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <ProgramDatabaseFile>.\Release/WIN32.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>..\Common\ethernet\lwip-1.4.0\ports\win32\WinPCap</AdditionalLibraryDirectories>
+      <AdditionalDependencies>wpcap.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release/WIN32.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TypeLibraryName>.\Release/WIN32.tlb</TypeLibraryName>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <PreprocessorDefinitions>WOLFSSL_USER_SETTINGS</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\Release/WIN32.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalIncludeDirectories>..\..\Source\include;..\..\Source\portable\MSVC-MingW;..\Common\Include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Link>
+      <OutputFile>$(TargetDir)/$(TargetFileName)</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <ProgramDatabaseFile>.\Release/WIN32.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <AdditionalLibraryDirectories>..\Common\ethernet\lwip-1.4.0\ports\win32\WinPCap</AdditionalLibraryDirectories>
+      <AdditionalDependencies>wpcap.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release/WIN32.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\list.c" />
+    <ClCompile Include="..\..\..\FreeRTOS\Source\portable\MemMang\heap_3.c" />
+    <ClCompile Include="..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c" />
+    <ClCompile Include="..\..\..\FreeRTOS\Source\queue.c" />
+    <ClCompile Include="..\..\..\FreeRTOS\Source\tasks.c" />
+    <ClCompile Include="..\..\..\FreeRTOS\Source\timers.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\src\crl.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\src\internal.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\src\keys.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\src\ocsp.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\src\sniffer.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\src\ssl.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\src\tls.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\src\tls13.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\src\wolfio.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\aes.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\arc4.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\asm.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\asn.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\blake2b.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\blake2s.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\camellia.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\chacha.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\chacha20_poly1305.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\cmac.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\coding.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\compress.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\cpuid.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\cryptocb.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\curve25519.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\curve448.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\des3.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\dh.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\dsa.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\ecc.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\ed25519.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\ed448.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\error.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fe_448.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fe_low_mem.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fe_operations.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\ge_448.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\ge_low_mem.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\ge_operations.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\hash.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\hc128.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\hmac.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\idea.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\integer.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\logging.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\md2.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\md4.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\md5.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\memory.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\pkcs12.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\pkcs7.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\poly1305.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\pwdbased.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\rabbit.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\random.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\ripemd.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\rsa.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\sha.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\sha256.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\sha3.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\sha512.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\signature.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\sp_arm32.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\sp_arm64.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\sp_armthumb.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\sp_c32.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\sp_c64.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\sp_cortexm.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\sp_dsp32.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\sp_int.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\sp_x86_64.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\srp.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\tfm.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\wc_dsp.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\wc_encrypt.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\wc_pkcs11.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\wc_port.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\wolfevent.c" />
+    <ClCompile Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\wolfmath.c" />
+    <ClCompile Include="main.c">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="SecureTCPClientTask.c" />
+    <ClCompile Include="SecureTCPServerTask.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FreeRTOSConfig.h" />
+    <ClInclude Include="user_settings.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fe_x25519_128.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_mont_small.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_mul_comba_12.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_mul_comba_17.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_mul_comba_20.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_mul_comba_24.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_mul_comba_28.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_mul_comba_3.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_mul_comba_32.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_mul_comba_4.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_mul_comba_48.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_mul_comba_6.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_mul_comba_64.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_mul_comba_7.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_mul_comba_8.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_mul_comba_9.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_mul_comba_small_set.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_sqr_comba_12.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_sqr_comba_17.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_sqr_comba_20.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_sqr_comba_24.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_sqr_comba_28.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_sqr_comba_3.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_sqr_comba_32.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_sqr_comba_4.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_sqr_comba_48.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_sqr_comba_6.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_sqr_comba_64.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_sqr_comba_7.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_sqr_comba_8.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_sqr_comba_9.i" />
+    <None Include="..\..\ThirdParty\WolfSSL\wolfcrypt\src\fp_sqr_comba_small_set.i" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

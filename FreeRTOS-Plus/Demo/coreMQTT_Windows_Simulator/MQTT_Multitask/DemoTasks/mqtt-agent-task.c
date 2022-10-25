@@ -501,10 +501,8 @@ static MQTTStatus_t prvMQTTInit( void )
     };
 
     LogDebug( ( "Creating command queue." ) );
-    xCommandQueue.queue = xQueueCreateStatic( MQTT_AGENT_COMMAND_QUEUE_LENGTH,
-                                              sizeof( MQTTAgentCommand_t * ),
-                                              staticQueueStorageArea,
-                                              &staticQueueStructure );
+    xCommandQueue.queue = xQueueCreate( MQTT_AGENT_COMMAND_QUEUE_LENGTH,
+                                              sizeof( MQTTAgentCommand_t * ) );
     configASSERT( xCommandQueue.queue );
     messageInterface.pMsgCtx = &xCommandQueue;
 

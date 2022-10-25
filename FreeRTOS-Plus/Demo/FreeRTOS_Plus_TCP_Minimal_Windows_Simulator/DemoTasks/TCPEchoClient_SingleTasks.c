@@ -50,8 +50,6 @@
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
 
-#include "tcp_echo_config.h"
-
 /* Exclude the whole file if FreeRTOSIPConfig.h is configured to use UDP only. */
 #if( ipconfigUSE_TCP == 1 )
 
@@ -153,7 +151,10 @@ TickType_t xTimeOnEntering;
 	server is configured by the constants configECHO_SERVER_ADDR0 to
 	configECHO_SERVER_ADDR3 in FreeRTOSConfig.h. */
 	xEchoServerAddress.sin_port = FreeRTOS_htons( echoECHO_PORT );
-	xEchoServerAddress.sin_addr = FreeRTOS_inet_addr( configECHO_SERVER_ADDR );
+	xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0,
+															configECHO_SERVER_ADDR1,
+															configECHO_SERVER_ADDR2,
+															configECHO_SERVER_ADDR3 );
 
 	for( ;; )
 	{

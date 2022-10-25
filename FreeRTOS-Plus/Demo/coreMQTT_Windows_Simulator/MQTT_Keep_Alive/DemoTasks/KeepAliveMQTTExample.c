@@ -536,19 +536,17 @@ static void prvMQTTDemoTask( void * pvParameters )
         prvCreateMQTTConnectionWithBroker( &xMQTTContext, &xNetworkContext );
 
         /* Create timers to handle keep-alive. */
-        xPingReqTimer = xTimerCreateStatic( "PingReqTimer",
+        xPingReqTimer = xTimerCreate( "PingReqTimer",
                                             mqttexamplePING_REQUEST_DELAY,
                                             pdTRUE,
                                             ( void * ) &xMQTTContext.transportInterface,
-                                            prvPingReqTimerCallback,
-                                            &xPingReqTimerBuffer );
+                                            prvPingReqTimerCallback);
         configASSERT( xPingReqTimer );
-        xPingRespTimer = xTimerCreateStatic( "PingRespTimer",
+        xPingRespTimer = xTimerCreate( "PingRespTimer",
                                              mqttexamplePING_RESPONSE_DELAY,
                                              pdFALSE,
                                              NULL,
-                                             prvPingRespTimerCallback,
-                                             &xPingRespTimerBuffer );
+                                             prvPingRespTimerCallback);
         configASSERT( xPingRespTimer );
 
         /* Start the timer to send a PINGREQ. */

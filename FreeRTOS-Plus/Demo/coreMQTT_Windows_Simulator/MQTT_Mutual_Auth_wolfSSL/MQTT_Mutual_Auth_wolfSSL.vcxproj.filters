@@ -1,0 +1,603 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Libraries">
+      <UniqueIdentifier>{4bfa274f-eb65-4125-b774-50d75c660eb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\coreMQTT">
+      <UniqueIdentifier>{276230c3-be0a-4d6f-95e1-afb9e5f69569}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\backoff_algorithm">
+      <UniqueIdentifier>{4347f268-c5ac-4de7-8393-79ac68f734bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\backoff_algorithm\include">
+      <UniqueIdentifier>{91d52b9b-b9e0-4e30-9fb0-62c80f3e787a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\coreMQTT\include">
+      <UniqueIdentifier>{59b84a22-f5ee-4b8d-b126-194d2420669c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\network_transport">
+      <UniqueIdentifier>{b67ca9f0-3556-4f60-81af-938db60f0a0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\network_transport\sockets_wrapper">
+      <UniqueIdentifier>{facf6067-3175-4a93-aaf3-9c07fb87fabd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\network_transport\sockets_wrapper\freertos_plus_tcp">
+      <UniqueIdentifier>{03978e2b-5ded-47d9-bbc8-fc7a773e3064}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\wolfSSL">
+      <UniqueIdentifier>{ace8161d-d962-4c11-8a1e-94f0b77c07dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\wolfSSL\include">
+      <UniqueIdentifier>{4edfa493-382a-4f15-991c-7d9265027d9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\wolfcrypt">
+      <UniqueIdentifier>{eeebebdf-c3a7-4808-a92a-208993ad4636}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\wolfcrypt\include">
+      <UniqueIdentifier>{17319889-4af9-4a37-9658-2c8b0b11a8cb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DemoTasks\MutualAuthMQTTExample.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
+      <Filter>Libraries\backoff_algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c">
+      <Filter>Libraries\coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c">
+      <Filter>Libraries\coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c">
+      <Filter>Libraries\coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c">
+      <Filter>Libraries\network_transport\sockets_wrapper\freertos_plus_tcp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\transport_wolfSSL.c">
+      <Filter>Libraries\network_transport\sockets_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\bio.c">
+      <Filter>Libraries\wolfSSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\crl.c">
+      <Filter>Libraries\wolfSSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\internal.c">
+      <Filter>Libraries\wolfSSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\keys.c">
+      <Filter>Libraries\wolfSSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\ocsp.c">
+      <Filter>Libraries\wolfSSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\sniffer.c">
+      <Filter>Libraries\wolfSSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\ssl.c">
+      <Filter>Libraries\wolfSSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\tls.c">
+      <Filter>Libraries\wolfSSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\tls13.c">
+      <Filter>Libraries\wolfSSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\src\wolfio.c">
+      <Filter>Libraries\wolfSSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\aes.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\arc4.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\asm.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\asn.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\blake2b.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\blake2s.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\camellia.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\chacha.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\chacha20_poly1305.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\cmac.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\coding.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\compress.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\cpuid.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\cryptocb.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\curve448.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\curve25519.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\des3.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\dh.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\dsa.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\ecc.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\ecc_fp.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\ed448.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\ed25519.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\error.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\evp.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\fe_448.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\fe_low_mem.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\fe_operations.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\ge_448.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\ge_low_mem.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\ge_operations.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\hash.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\hc128.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\hmac.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\idea.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\integer.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\logging.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\md2.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\md4.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\md5.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\memory.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\misc.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\pkcs7.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\pkcs12.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\poly1305.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\pwdbased.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\rabbit.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\random.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\ripemd.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\rsa.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sha.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sha3.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sha256.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sha512.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\signature.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_arm32.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_arm64.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_armthumb.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_c32.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_c64.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_cortexm.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_dsp32.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_int.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_x86_64.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\srp.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\tfm.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\wc_dsp.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\wc_encrypt.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\wc_pkcs11.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\wc_port.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\wolfevent.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\wolfmath.c">
+      <Filter>Libraries\wolfcrypt</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Common\core_mqtt_config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="demo_config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="user_settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h">
+      <Filter>Libraries\backoff_algorithm\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt.h">
+      <Filter>Libraries\coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_config_defaults.h">
+      <Filter>Libraries\coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_serializer.h">
+      <Filter>Libraries\coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_state.h">
+      <Filter>Libraries\coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h">
+      <Filter>Libraries\network_transport\sockets_wrapper\freertos_plus_tcp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\transport_wolfSSL.h">
+      <Filter>Libraries\network_transport\sockets_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\callbacks.h">
+      <Filter>Libraries\wolfSSL\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\certs_test.h">
+      <Filter>Libraries\wolfSSL\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\crl.h">
+      <Filter>Libraries\wolfSSL\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\error-ssl.h">
+      <Filter>Libraries\wolfSSL\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\internal.h">
+      <Filter>Libraries\wolfSSL\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\ocsp.h">
+      <Filter>Libraries\wolfSSL\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\sniffer.h">
+      <Filter>Libraries\wolfSSL\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\sniffer_error.h">
+      <Filter>Libraries\wolfSSL\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\ssl.h">
+      <Filter>Libraries\wolfSSL\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\test.h">
+      <Filter>Libraries\wolfSSL\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\version.h">
+      <Filter>Libraries\wolfSSL\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfio.h">
+      <Filter>Libraries\wolfSSL\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\aes.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\arc4.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\asn.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\asn_public.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\blake2.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\blake2-impl.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\blake2-int.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\camellia.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\chacha.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\chacha20_poly1305.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\cmac.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\coding.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\compress.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\cpuid.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\cryptocb.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\curve448.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\curve25519.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\des3.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\dh.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\dsa.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\ecc.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\ed448.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\ed25519.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\error-crypt.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\fe_448.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\fe_operations.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\fips_test.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\ge_448.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\ge_operations.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\hash.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\hc128.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\hmac.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\idea.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\integer.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\logging.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\md2.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\md4.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\md5.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\mem_track.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\memory.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\misc.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\mpi_class.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\mpi_superclass.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\pkcs7.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\pkcs11.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\pkcs12.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\poly1305.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\pwdbased.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\rabbit.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\random.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\ripemd.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\rsa.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\selftest.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\settings.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\sha.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\sha3.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\sha256.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\sha512.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\signature.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\sp.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\sp_int.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\srp.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\tfm.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\types.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\visibility.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\wc_encrypt.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\wc_pkcs11.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\wc_port.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\wolfevent.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\wolfmath.h">
+      <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

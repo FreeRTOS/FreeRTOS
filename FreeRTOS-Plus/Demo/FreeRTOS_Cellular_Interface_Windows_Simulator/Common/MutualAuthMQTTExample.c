@@ -66,7 +66,7 @@
 #include "backoff_algorithm.h"
 
 /* Transport interface implementation include header for TLS. */
-#include "transport_mbedtls.h"
+#include "using_mbedtls.h"
 
 /*-----------------------------------------------------------*/
 

@@ -77,8 +77,8 @@ jobs:
           echo '    #define democonfigIOT_CREDENTIAL_PROVIDER_ENDPOINT ""' | tee -a */demo_config.h
           echo '    #define democonfigIOT_CREDENTIAL_PROVIDER_ROLE ""' | tee -a */demo_config.h
           echo '    #define democonfigIOT_THING_NAME ""' | tee -a */demo_config.h
-          echo '    #define democonfigS3_PRESIGNED_GET_URL ""' | tee -a */demo_config.h
-          echo '    #define democonfigS3_PRESIGNED_PUT_URL ""' | tee -a */demo_config.h
+          echo '    #define democonfigS3_PRESIGNED_GET_URL "ABCDEF"' | tee -a */demo_config.h
+          echo '    #define democonfigS3_PRESIGNED_PUT_URL "ABCDEF"' | tee -a */demo_config.h
           echo '    #define democonfigS3_ROOT_CA_PEM ""' | tee -a */demo_config.h
           echo '    #define democonfigS3_BUCKET_NAME ""' | tee -a */demo_config.h
           echo '    #define democonfigS3_BUCKET_REGION ""' | tee -a */demo_config.h

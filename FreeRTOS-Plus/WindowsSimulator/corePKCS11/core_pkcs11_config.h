@@ -64,6 +64,7 @@
 extern void vLoggingPrintf( const char * pcFormatString,
                             ... );
 
+
 /* Map the SdkLog macro to the logging function to enable logging
  * on Windows simulator. */
 #ifndef SdkLog
@@ -71,6 +72,10 @@ extern void vLoggingPrintf( const char * pcFormatString,
 #endif
 
 #include "logging_stack.h"
+
+/************ End of logging configuration ****************/
+
+#include <stdlib.h>
 
 /**
  * @brief Malloc API used by core_pkcs11.h
@@ -100,19 +105,19 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * @brief Maximum length (in characters) for a PKCS #11 CKA_LABEL
  * attribute.
  */
-#define pkcs11configMAX_LABEL_LENGTH                       32
+#define pkcs11configMAX_LABEL_LENGTH                       32UL
 
 /**
  * @brief Maximum number of token objects that can be stored
  * by the PKCS #11 module.
  */
-#define pkcs11configMAX_NUM_OBJECTS                        6
+#define pkcs11configMAX_NUM_OBJECTS                        6UL
 
 /**
  * @brief Maximum number of sessions that can be stored
  * by the PKCS #11 module.
  */
-#define pkcs11configMAX_SESSIONS                           10
+#define pkcs11configMAX_SESSIONS                           10UL
 
 /**
  * @brief Set to 1 if a PAL destroy object is implemented.
@@ -120,7 +125,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * If set to 0, no PAL destroy object is implemented, and this functionality
  * is implemented in the common PKCS #11 layer.
  */
-#define pkcs11configPAL_DESTROY_SUPPORTED                  0
+#define pkcs11configPAL_DESTROY_SUPPORTED                  1
 
 /**
  * @brief Set to 1 if OTA image verification via PKCS #11 module is supported.
@@ -128,7 +133,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * If set to 0, OTA code signing certificate is built in via
  * aws_ota_codesigner_certificate.h.
  */
-#define pkcs11configOTA_SUPPORTED                          0
+#define pkcs11configOTA_SUPPORTED                          1
 
 /**
  * @brief Set to 1 if PAL supports storage for JITP certificate,
@@ -137,7 +142,17 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * If set to 0, PAL does not support storage mechanism for these, and
  * they are accessed via headers compiled into the code.
  */
-#define pkcs11configJITP_CODEVERIFY_ROOT_CERT_SUPPORTED    0
+#define pkcs11configJITP_CODEVERIFY_ROOT_CERT_SUPPORTED    1
+
+/**
+ * @brief The PKCS #11 label for the object to be used for HMAC operations.
+ */
+#define pkcs11configLABEL_HMAC_KEY                         "HMAC Key"
+
+/**
+ * @brief The PKCS #11 label for the object to be used for CMAC operations.
+ */
+#define pkcs11configLABEL_CMAC_KEY                         "CMAC Key"
 
 /**
  * @brief The PKCS #11 label for device private key.
@@ -167,6 +182,16 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * Used by over-the-air update code to verify an incoming signed image.
  */
 #define pkcs11configLABEL_CODE_VERIFICATION_KEY            "Code Verify Key"
+
+/**
+ * @brief The PKCS #11 label for the claim certificate for Fleet Provisioning.
+ */
+#define pkcs11configLABEL_CLAIM_CERTIFICATE                "Claim Cert"
+
+/**
+ * @brief The PKCS #11 label for the claim private key for Fleet Provisioning.
+ */
+#define pkcs11configLABEL_CLAIM_PRIVATE_KEY                "Claim Key"
 
 /**
  * @brief The PKCS #11 label for Just-In-Time-Provisioning.

@@ -15,7 +15,22 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Fetch Submodules
-        run: git submodule update --checkout --init --recursive
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/bg96 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/hl7802 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/sara-r4 \
+            FreeRTOS-Plus/Source/Application-Protocols/coreMQTT \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP \
+            FreeRTOS-Plus/Source/Utilities/backoff_algorithm \
+            FreeRTOS-Plus/Source/coreJSON \
+            FreeRTOS-Plus/Source/corePKCS11 \
+            FreeRTOS-Plus/ThirdParty/mbedtls \
+            FreeRTOS-Plus/ThirdParty/tinycbor
+          git -C FreeRTOS-Plus/Source/corePKCS11 submodule update --checkout --init --depth 1 source/dependency/3rdparty/pkcs11
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
@@ -57,7 +72,34 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Fetch Submodules
-        run: git submodule update --checkout --init --recursive
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/AWS/device-defender \
+            FreeRTOS-Plus/Source/AWS/device-shadow \
+            FreeRTOS-Plus/Source/AWS/fleet-provisioning \
+            FreeRTOS-Plus/Source/AWS/jobs \
+            FreeRTOS-Plus/Source/AWS/ota \
+            FreeRTOS-Plus/Source/AWS/sigv4 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/bg96 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/hl7802 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/sara-r4 \
+            FreeRTOS-Plus/Source/Application-Protocols/coreHTTP \
+            FreeRTOS-Plus/Source/Application-Protocols/coreMQTT \
+            FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent \
+            FreeRTOS-Plus/Source/Application-Protocols/coreSNTP \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP \
+            FreeRTOS-Plus/Source/Utilities/backoff_algorithm \
+            FreeRTOS-Plus/Source/coreJSON \
+            FreeRTOS-Plus/Source/corePKCS11 \
+            FreeRTOS-Plus/ThirdParty/mbedtls \
+            FreeRTOS-Plus/ThirdParty/tinycbor \
+            FreeRTOS-Plus/ThirdParty/wolfSSL
+
+          git -C FreeRTOS-Plus/Source/Application-Protocols/coreHTTP submodule update --checkout --init --depth 1 source/dependency/3rdparty/llhttp
+          git -C FreeRTOS-Plus/Source/corePKCS11 submodule update --checkout --init --depth 1 source/dependency/3rdparty/pkcs11
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
@@ -113,7 +155,34 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Fetch Submodules
-        run: git submodule update --checkout --init --recursive
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/AWS/device-defender \
+            FreeRTOS-Plus/Source/AWS/device-shadow \
+            FreeRTOS-Plus/Source/AWS/fleet-provisioning \
+            FreeRTOS-Plus/Source/AWS/jobs \
+            FreeRTOS-Plus/Source/AWS/ota \
+            FreeRTOS-Plus/Source/AWS/sigv4 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/bg96 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/hl7802 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/sara-r4 \
+            FreeRTOS-Plus/Source/Application-Protocols/coreHTTP \
+            FreeRTOS-Plus/Source/Application-Protocols/coreMQTT \
+            FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent \
+            FreeRTOS-Plus/Source/Application-Protocols/coreSNTP \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP \
+            FreeRTOS-Plus/Source/Utilities/backoff_algorithm \
+            FreeRTOS-Plus/Source/coreJSON \
+            FreeRTOS-Plus/Source/corePKCS11 \
+            FreeRTOS-Plus/ThirdParty/mbedtls \
+            FreeRTOS-Plus/ThirdParty/tinycbor \
+            FreeRTOS-Plus/ThirdParty/wolfSSL
+
+          git -C FreeRTOS-Plus/Source/Application-Protocols/coreHTTP submodule update --checkout --init --depth 1 source/dependency/3rdparty/llhttp
+          git -C FreeRTOS-Plus/Source/corePKCS11 submodule update --checkout --init --depth 1 source/dependency/3rdparty/pkcs11
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
@@ -213,7 +282,34 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Fetch Submodules
-        run: git submodule update --checkout --init --recursive
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/AWS/device-defender \
+            FreeRTOS-Plus/Source/AWS/device-shadow \
+            FreeRTOS-Plus/Source/AWS/fleet-provisioning \
+            FreeRTOS-Plus/Source/AWS/jobs \
+            FreeRTOS-Plus/Source/AWS/ota \
+            FreeRTOS-Plus/Source/AWS/sigv4 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/bg96 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/hl7802 \
+            FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/sara-r4 \
+            FreeRTOS-Plus/Source/Application-Protocols/coreHTTP \
+            FreeRTOS-Plus/Source/Application-Protocols/coreMQTT \
+            FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent \
+            FreeRTOS-Plus/Source/Application-Protocols/coreSNTP \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP \
+            FreeRTOS-Plus/Source/Utilities/backoff_algorithm \
+            FreeRTOS-Plus/Source/coreJSON \
+            FreeRTOS-Plus/Source/corePKCS11 \
+            FreeRTOS-Plus/ThirdParty/mbedtls \
+            FreeRTOS-Plus/ThirdParty/tinycbor \
+            FreeRTOS-Plus/ThirdParty/wolfSSL
+
+          git -C FreeRTOS-Plus/Source/Application-Protocols/coreHTTP submodule update --checkout --init --depth 1 source/dependency/3rdparty/llhttp
+          git -C FreeRTOS-Plus/Source/corePKCS11 submodule update --checkout --init --depth 1 source/dependency/3rdparty/pkcs11
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
@@ -268,7 +364,13 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Fetch Submodules
-        run: git submodule update --checkout --init --recursive
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP \
+            FreeRTOS-Plus/ThirdParty/mbedtls \
+            FreeRTOS-Plus/ThirdParty/wolfSSL
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
@@ -298,7 +400,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Fetch Submodules
-        run: git submodule update --checkout --init --recursive
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1

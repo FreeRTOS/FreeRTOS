@@ -69,6 +69,8 @@ static void prvStartPKCS11Demo( void )
         vPKCS11SignVerifyDemo();
     #endif
     configPRINTF( ( "---------Finished DEMO---------\r\n" ) );
+
+    exit( 0 );
 }
 
 /*-----------------------------------------------------------*/
@@ -105,14 +107,14 @@ int main( void )
 }
 /*-----------------------------------------------------------*/
 
-void vLoggingPrintf( const char *pcFormat,
-					 ... )
+void vLoggingPrintf( const char * pcFormat,
+                     ... )
 {
-va_list arg;
+    va_list arg;
 
-	va_start( arg, pcFormat );
-	vprintf( pcFormat, arg );
-	va_end( arg );
+    va_start( arg, pcFormat );
+    vprintf( pcFormat, arg );
+    va_end( arg );
 }
 /*-----------------------------------------------------------*/
 

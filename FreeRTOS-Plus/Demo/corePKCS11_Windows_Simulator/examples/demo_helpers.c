@@ -44,7 +44,7 @@
 #include "demo_helpers.h"
 
 void vStart( CK_SESSION_HANDLE * pxSession,
-               CK_SLOT_ID ** ppxSlotId )
+             CK_SLOT_ID ** ppxSlotId )
 {
     CK_RV xResult = CKR_OK;
 
@@ -101,7 +101,7 @@ void vStart( CK_SESSION_HANDLE * pxSession,
 /*-----------------------------------------------------------*/
 
 void vEnd( CK_SESSION_HANDLE xSession,
-             CK_SLOT_ID * pxSlotId )
+           CK_SLOT_ID * pxSlotId )
 {
     C_CloseSession( xSession );
     C_Finalize( NULL );

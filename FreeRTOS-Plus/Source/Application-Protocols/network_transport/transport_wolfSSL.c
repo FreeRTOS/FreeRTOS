@@ -41,7 +41,7 @@
 #include "FreeRTOS_Sockets.h"
 
 /* TLS transport header. */
-#include "using_wolfSSL.h"
+#include "transport_wolfSSL.h"
 
 /* FreeRTOS Socket wrapper include. */
 #include "sockets_wrapper.h"

@@ -46,6 +46,7 @@
 /* FreeRTOS+TCP includes. */
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
+#include "mbedtls_bio_freertos_plus_tcp.h"
 
 /* TLS transport header. */
 #include "transport_mbedtls.h"

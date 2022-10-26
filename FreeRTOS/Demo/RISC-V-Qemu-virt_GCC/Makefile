@@ -47,7 +47,7 @@ SRCS = main.c main_blinky.c riscv-virt.c ns16550.c \
 	$(RTOS_SOURCE_DIR)/portable/MemMang/heap_4.c \
 	$(RTOS_SOURCE_DIR)/portable/GCC/RISC-V/port.c
 
-ASMS = start.S vector.s\
+ASMS = start.S vector.S\
 	$(RTOS_SOURCE_DIR)/portable/GCC/RISC-V/portASM.S
 
 OBJS = $(SRCS:%.c=$(BUILD_DIR)/%.o) $(ASMS:%.S=$(BUILD_DIR)/%.o)

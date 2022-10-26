@@ -321,6 +321,9 @@
     <ClCompile Include="..\..\..\ThirdParty\wolfSSL\wolfcrypt\src\wolfmath.c">
       <Filter>Libraries\wolfcrypt</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_freertos_plus_tcp.c">
+      <Filter>Libraries\network_transport</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\core_mqtt_config.h">
@@ -598,6 +601,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt\wolfmath.h">
       <Filter>Libraries\wolfcrypt\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_freertos_plus_tcp.h">
+      <Filter>Libraries\network_transport</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

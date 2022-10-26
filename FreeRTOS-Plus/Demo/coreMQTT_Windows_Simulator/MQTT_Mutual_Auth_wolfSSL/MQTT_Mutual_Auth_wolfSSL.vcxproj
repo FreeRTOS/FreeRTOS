@@ -22,6 +22,7 @@
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_freertos_plus_tcp.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\transport_wolfSSL.c" />
     <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c" />
@@ -115,6 +116,7 @@
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_config_defaults.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_serializer.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_state.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_freertos_plus_tcp.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\transport_wolfSSL.h" />
     <ClInclude Include="..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h" />
@@ -316,9 +318,9 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WOLFSSL_USER_SETTINGS;WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;_WIN32_WCE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\;..\Common;..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\Common\WinPCap;..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp;..\..\..\Source\Application-Protocols\network_transport;..\..\..\Source\Utilities\mbedtls_freertos;..\..\..\..\Source\mbedtls_utils;..\..\..\ThirdParty\wolfSSL;..\..\..\ThirdParty\wolfSSL\wolfssl\;..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\Common;..\..\..\Source\Application-Protocols\network_transport;..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp;..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\ThirdParty\wolfSSL\wolfssl\wolfcrypt;..\..\..\ThirdParty\wolfSSL\wolfssl\;..\..\..\ThirdParty\wolfSSL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

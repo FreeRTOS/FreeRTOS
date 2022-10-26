@@ -28,3 +28,4 @@ target_include_directories(unity PUBLIC
 
 add_subdirectory(tests/template)
 add_subdirectory(tests/hello_world)
+add_subdirectory(tests/fr8)

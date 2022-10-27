@@ -74,7 +74,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
 /************ End of logging configuration ****************/
 
 /* FreeRTOS+TCP include. */
-#include "FreeRTOS_Sockets.h"
+#include "sockets_wrapper.h"
 
 /* Transport interface include. */
 #include "transport_interface.h"

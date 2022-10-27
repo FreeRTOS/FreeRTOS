@@ -48,10 +48,10 @@ CFLAGS                +=    -Wstrict-aliasing
 CFLAGS                +=    -Wno-error=address-of-packed-member
 CFLAGS                +=    $(INCLUDE_DIRS)
 
-LDFLAGS                =    -T ./scripts/mps2_m3.ld 
+LDFLAGS                =    -T ./scripts/mps2_m3.ld
 LDFLAGS               +=    -mthumb
 
-LDFLAGS               +=    -Xlinker -Map=${BUILD_DIR}/output.map 
+LDFLAGS               +=    -Xlinker -Map=${BUILD_DIR}/output.map
 LDFLAGS               +=    -nostartfiles -nostdlib -nolibc -nodefaultlibs
 
 ifeq ($(DEBUG), 1)

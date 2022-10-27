@@ -20,8 +20,8 @@ CFLAGS  = -march=rv32ima -mabi=ilp32 -mcmodel=medany \
 	-ffunction-sections \
 	-fdata-sections \
 	-fno-builtin-printf
-ASFLAGS = -march=rv32ima -mabi=ilp32 -mcmodel=medany
 LDFLAGS = -nostartfiles -Tfake_rom.lds \
+	-march=rv32ima -mabi=ilp32 -mcmodel=medany \
 	-Xlinker --gc-sections \
 	-Xlinker --defsym=__stack_size=300
 
@@ -62,7 +62,7 @@ $(BUILD_DIR)/%.o: %.c Makefile
 
 $(BUILD_DIR)/%.o: %.S Makefile
 	@mkdir -p $(@D)
-	$(CC) $(CPPFLAGS) $(ASFLAGS) -MMD -MP -c $< -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
 
 clean:
 	rm -rf $(BUILD_DIR)

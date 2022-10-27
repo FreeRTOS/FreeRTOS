@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202112.00
- * Copyright (C) Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -24,6 +24,8 @@
  *
  */
 
+/* *INDENT-OFF* */
+
 #include "proof/queue.h"
 
 /* In this case we cannot wrap the macro in a function call to give a function
@@ -46,12 +48,11 @@
 void wrapper_prvLockQueue( QueueHandle_t xQueue )
 
 /*@requires [1/2]queuehandle(xQueue, ?N, ?M, ?is_isr) &*& is_isr == false &*&
- *  [1/2]queuelock(xQueue);@*/
-
+    [1/2]queuelock(xQueue);@*/
 /*@ensures [1/2]queuehandle(xQueue, N, M, is_isr) &*&
- *  [1/2]xQueue->locked |-> ?m &*&
- *  mutex_held(m, queue_locked_invariant(xQueue), currentThread, 1/2) &*&
- *  queue_locked_invariant(xQueue)();@*/
+    [1/2]xQueue->locked |-> ?m &*&
+    mutex_held(m, queue_locked_invariant(xQueue), currentThread, 1/2) &*&
+    queue_locked_invariant(xQueue)();@*/
 {
     taskENTER_CRITICAL();
     /*@open queue(xQueue, ?Storage, N, M, ?W, ?R, ?K, ?is_locked, ?abs);@*/
@@ -68,7 +69,9 @@ void wrapper_prvLockQueue( QueueHandle_t xQueue )
     }
     /*@close queue(xQueue, Storage, N, M, W, R, K, true, abs);@*/
     taskEXIT_CRITICAL();
-    #ifdef VERIFAST /*< ghost action */
-        mutex_acquire( xQueue->locked );
-    #endif
+#ifdef VERIFAST /*< ghost action */
+    mutex_acquire( xQueue->locked );
+#endif
 }
+
+/* *INDENT-ON* */

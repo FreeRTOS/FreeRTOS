@@ -264,7 +264,7 @@ jobs:
 
       - name: Build corePKCS11 + coreMQTT Mutual Auth Demo
         working-directory: FreeRTOS-Plus/Demo/corePKCS11_MQTT_Mutual_Auth_Windows_Simulator
-        run: msbuild pkcs11_mqtt_mutual_auth_demo.sln -t:rebuild -property:Configuration=Debug -m
+        run: msbuild corePKCS11_MQTT_Mutual_Auth.sln -t:rebuild
 
       - name: Configure coreSNTP_Windows_Simulator
         shell: bash

@@ -113,23 +113,23 @@ jobs:
 
       - name: Build HTTP Mutual Auth Demo
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth
-        run: msbuild CoreHTTP_Mutual_Auth.sln -t:rebuild -property:Configuration=Debug -m
+        run: msbuild CoreHTTP_Mutual_Auth.sln -t:rebuild
 
       - name: Build HTTP Plain Text Demo
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Plaintext
-        run: msbuild CoreHTTP_Plaintext.sln -t:rebuild -property:Configuration=Debug -m
+        run: msbuild CoreHTTP_Plaintext.sln -t:rebuild
 
       - name: Build HTTP S3 Download Demo
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download
-        run: msbuild CoreHTTP_S3_Download.sln -t:rebuild -property:Configuration=Debug -m
+        run: msbuild CoreHTTP_S3_Download.sln -t:rebuild
 
       - name: Build HTTP S3 Download Multithreaded Demo
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download_Multithreaded
-        run: msbuild CoreHTTP_S3_Download_Multithreaded.sln -t:rebuild -property:Configuration=Debug -m
+        run: msbuild CoreHTTP_S3_Download_Multithreaded.sln -t:rebuild
 
       - name: Build HTTP S3 Upload Demo
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Upload
-        run: msbuild CoreHTTP_S3_Upload.sln -t:rebuild -property:Configuration=Debug -m
+        run: msbuild CoreHTTP_S3_Upload.sln -t:rebuild
 
 
   winsim_corePKCS11:

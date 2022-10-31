@@ -24,6 +24,13 @@
  *
  */
 
+#include "logging_levels.h"
+
+#define LIBRARY_LOG_NAME     "P11MQTTDemo"
+#define LIBRARY_LOG_LEVEL    LOG_INFO
+
+#include "logging_stack.h"
+
 /***
  * See https://www.FreeRTOS.org/pkcs11/ for configuration and usage instructions.
  ***/
@@ -37,7 +44,7 @@
 #include <intrin.h>
 
 /* FreeRTOS includes. */
-#include <FreeRTOS.h>
+#include "FreeRTOS.h"
 #include "task.h"
 
 /* TCP/IP stack includes. */
@@ -224,6 +231,8 @@ static void prvMiscInitialisation( void )
 
     ulLoggingIPAddress = FreeRTOS_inet_addr_quick( configUDP_LOGGING_ADDR0, configUDP_LOGGING_ADDR1, configUDP_LOGGING_ADDR2, configUDP_LOGGING_ADDR3 );
     vLoggingInit( xLogToStdout, xLogToFile, xLogToUDP, ulLoggingIPAddress, configPRINT_PORT );
+
+    LogInfo(("Testing 123"));
 
     /*
      * Seed random number generator.

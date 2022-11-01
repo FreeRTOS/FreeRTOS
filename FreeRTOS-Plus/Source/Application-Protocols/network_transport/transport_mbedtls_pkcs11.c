@@ -44,7 +44,7 @@
 #include "FreeRTOS_Sockets.h"
 
 /* TLS transport header. */
-#include "using_mbedtls_pkcs11.h"
+#include "transport_mbedtls_pkcs11.h"
 
 /* FreeRTOS Socket wrapper include. */
 #include "sockets_wrapper.h"
@@ -402,8 +402,8 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
             /* coverity[misra_c_2012_rule_11_2_violation] */
             mbedtls_ssl_set_bio( &( pTlsTransportParams->sslContext.context ),
                                  ( void * ) pTlsTransportParams->tcpSocket,
-                                 MBEDTLS_SSL_SEND,
-                                 MBEDTLS_SSL_RECV,
+                                 mbedtls_platform_send,
+                                 mbedtls_platform_recv,
                                  NULL );
         }
     }
@@ -486,11 +486,14 @@ static TlsTransportStatus_t initMbedtls( void )
 {
     TlsTransportStatus_t returnStatus = TLS_TRANSPORT_SUCCESS;
 
+
+#if defined(MBEDTLS_THREADING_ALT)
     /* Set the mutex functions for mbed TLS thread safety. */
     mbedtls_threading_set_alt( mbedtls_platform_mutex_init,
                                mbedtls_platform_mutex_free,
                                mbedtls_platform_mutex_lock,
                                mbedtls_platform_mutex_unlock );
+#endif
 
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
@@ -961,9 +964,10 @@ void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
         /* Free mbed TLS contexts. */
         sslContextFree( &( pTlsTransportParams->sslContext ) );
     }
-
+#if defined MBEDTLS_THREADING_ALT
     /* Clear the mutex functions for mbed TLS thread safety. */
     mbedtls_threading_free_alt();
+#endif
 }
 
 /*-----------------------------------------------------------*/

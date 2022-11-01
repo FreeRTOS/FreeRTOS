@@ -43,6 +43,7 @@
 /* TCP/IP stack includes. */
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
+#include "mbedtls_bio_freertos_plus_tcp.h"
 
 /* Demo logging includes. */
 #include "logging.h"
@@ -156,11 +157,12 @@ void vStartSntpDemo( void )
     initializeSystemClock();
 
     /* Configure mbedTLS to use FreeRTOS specific threading function. */
+    /*
     mbedtls_threading_set_alt( mbedtls_platform_mutex_init,
                                mbedtls_platform_mutex_free,
                                mbedtls_platform_mutex_lock,
                                mbedtls_platform_mutex_unlock );
-
+                               */
     /* Create the SNTP client task that is responsible for synchronizing system time with the time servers
      * periodically. This is created as a high priority task to keep the SNTP client operation unhindered. */
     xTaskCreate( sntpTask,                 /* Function that implements the task. */

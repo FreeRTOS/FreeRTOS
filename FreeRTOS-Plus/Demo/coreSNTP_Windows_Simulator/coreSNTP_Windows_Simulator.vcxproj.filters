@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Libraries">
+      <UniqueIdentifier>{c663c29c-c056-4190-8dc7-879edcafb14f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\backoff_algorithm">
+      <UniqueIdentifier>{63e406e7-d613-45b1-a81e-1a7c23b7b60a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\network_transport">
+      <UniqueIdentifier>{a37ed779-c21b-4e71-bb4d-e13bd1f8ac33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\network_transport\sockets_wrapper">
+      <UniqueIdentifier>{bed26d24-bb0e-4de5-9487-e0ddc9dec394}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\backoff_algorithm\include">
+      <UniqueIdentifier>{54564f9b-6f28-4345-bead-cb15aa8b79c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\coreSNTP">
+      <UniqueIdentifier>{d49114ba-f4e5-4da7-a358-86f6d503fa0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\coreSNTP\include">
+      <UniqueIdentifier>{63b19a58-7a70-4da9-99ea-efe354f60cd8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common_demo_include.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core_sntp_config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="demo_config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mbedtls_config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Application-Protocols\network_transport\mbedtls_bio_freertos_plus_tcp.h">
+      <Filter>Libraries\network_transport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h">
+      <Filter>Libraries\network_transport\sockets_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h">
+      <Filter>Libraries\backoff_algorithm\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Application-Protocols\network_transport\transport_mbedtls_pkcs11.h">
+      <Filter>Libraries\network_transport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h">
+      <Filter>Libraries\network_transport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Application-Protocols\coreSNTP\source\include\core_sntp_client.h">
+      <Filter>Libraries\coreSNTP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Application-Protocols\coreSNTP\source\include\core_sntp_config_defaults.h">
+      <Filter>Libraries\coreSNTP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Application-Protocols\coreSNTP\source\include\core_sntp_serializer.h">
+      <Filter>Libraries\coreSNTP\include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DemoTasks\SampleAppTask.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DemoTasks\SNTPClientTask.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Application-Protocols\network_transport\mbedtls_bio_freertos_plus_tcp.c">
+      <Filter>Libraries\network_transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c">
+      <Filter>Libraries\network_transport\sockets_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
+      <Filter>Libraries\backoff_algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Application-Protocols\network_transport\transport_mbedtls_pkcs11.c">
+      <Filter>Libraries\network_transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Application-Protocols\coreSNTP\source\core_sntp_client.c">
+      <Filter>Libraries\coreSNTP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Application-Protocols\coreSNTP\source\core_sntp_serializer.c">
+      <Filter>Libraries\coreSNTP</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

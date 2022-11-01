@@ -1291,7 +1291,7 @@ void initializeSystemClock( void )
     printTime( &systemClock.baseTime );
 
     /* Initialize semaphore for guarding access to system clock variables. */
-    xMutex = xSemaphoreCreateMutexStatic( &xSemaphoreMutex );
+    xMutex = xSemaphoreCreateMutex( &xSemaphoreMutex );
     configASSERT( xMutex );
 
     /* Clear the first time sync completed flag of the system clock object so that a "step" correction

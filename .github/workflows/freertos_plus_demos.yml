@@ -365,7 +365,49 @@ jobs:
         working-directory: FreeRTOS-Plus/Demo/AWS/Ota_Windows_Simulator/Ota_Over_Http_Demo
         run: msbuild ota_over_http_demo.sln -t:rebuild -property:Configuration=Debug -m
 
-  winsim_plus_tcp:
+  plus_tcp_posix:
+    name: FreeRTOS+TCP Posix Simulator Demo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Submodules
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP
+
+      - name: Install prerequisite packages
+        run: sudo apt-get install -y git build-essential libpcap-dev
+
+      - name: Build FreeRTOS+TCP Minimal Demo
+        working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix
+        run: make -j
+
+  plus_tcp_arm:
+    name: FreeRTOS+TCP QEMU ARM MPS2 AN385
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Submodules
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP
+
+      - name: Install prerequisite packages
+        run: sudo apt-get install -y git make gcc-arm-none-eabi
+
+      - name: Build FreeRTOS+TCP Minimal Demo
+        working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Qemu_mps2
+        run: make -j
+
+  plus_tcp_winsim:
     name: FreeRTOS+TCP Windows Simulator Demos
     runs-on: windows-2019
     continue-on-error: true

@@ -25,13 +25,21 @@
  */
 
 /**
- * @file tls_freertos_pkcs11.c
+ * @file transport_mbedtls_pkcs11.c
  * @brief TLS transport interface implementations. This implementation uses
  * mbedTLS.
- * @note This file is derived from the tls_freertos.c source file found in the mqtt
- * section of IoT Libraries source code. The file has been modified to support using
- * PKCS #11 when using TLS.
  */
+
+#include "logging_levels.h"
+
+#define LIBRARY_LOG_NAME     "PkcsTlsTransport"
+#define LIBRARY_LOG_LEVEL    LOG_INFO
+
+#include "logging_stack.h"
+
+#define MBEDTLS_ALLOW_PRIVATE_ACCESS
+
+#include "mbedtls/private_access.h"
 
 /* Standard includes. */
 #include <string.h>
@@ -44,7 +52,8 @@
 #include "FreeRTOS_Sockets.h"
 
 /* TLS transport header. */
-#include "using_mbedtls_pkcs11.h"
+#include "transport_mbedtls_pkcs11.h"
+#include "mbedtls_pk_pkcs11.h"
 
 /* FreeRTOS Socket wrapper include. */
 #include "sockets_wrapper.h"
@@ -130,13 +139,6 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
                                       const char * pHostName,
                                       const NetworkCredentials_t * pNetworkCredentials );
 
-/**
- * @brief Initialize mbedTLS.
- *
- * @return #TLS_TRANSPORT_SUCCESS, or #TLS_TRANSPORT_INTERNAL_ERROR.
- */
-static TlsTransportStatus_t initMbedtls( void );
-
 /*-----------------------------------------------------------*/
 
 /**
@@ -208,9 +210,9 @@ static int32_t privateKeySigningCallback( void * pvContext,
                                           size_t xHashLen,
                                           unsigned char * pucSig,
                                           size_t * pxSigLen,
-                                          int32_t ( *piRng )( void *,
-                                                              unsigned char *,
-                                                              size_t ),
+                                          int32_t ( * piRng )( void *,
+                                                               unsigned char *,
+                                                               size_t ),
                                           void * pvRng );
 
 
@@ -238,6 +240,9 @@ static void sslContextFree( SSLContext_t * pSslContext )
     mbedtls_x509_crt_free( &( pSslContext->rootCa ) );
     mbedtls_x509_crt_free( &( pSslContext->clientCert ) );
     mbedtls_ssl_config_free( &( pSslContext->config ) );
+
+
+    ( void ) lPKCS11PkMbedtlsCloseSessionAndFree( &( pSslContext->privKey ) );
 
     pSslContext->pxP11FunctionList->C_CloseSession( pSslContext->xP11Session );
 }
@@ -402,8 +407,8 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
             /* coverity[misra_c_2012_rule_11_2_violation] */
             mbedtls_ssl_set_bio( &( pTlsTransportParams->sslContext.context ),
                                  ( void * ) pTlsTransportParams->tcpSocket,
-                                 MBEDTLS_SSL_SEND,
-                                 MBEDTLS_SSL_RECV,
+                                 mbedtls_platform_send,
+                                 mbedtls_platform_recv,
                                  NULL );
         }
     }
@@ -475,26 +480,6 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
     {
         LogInfo( ( "(Network connection %p) TLS handshake successful.",
                    pNetworkContext ) );
-    }
-
-    return returnStatus;
-}
-
-/*-----------------------------------------------------------*/
-
-static TlsTransportStatus_t initMbedtls( void )
-{
-    TlsTransportStatus_t returnStatus = TLS_TRANSPORT_SUCCESS;
-
-    /* Set the mutex functions for mbed TLS thread safety. */
-    mbedtls_threading_set_alt( mbedtls_platform_mutex_init,
-                               mbedtls_platform_mutex_free,
-                               mbedtls_platform_mutex_lock,
-                               mbedtls_platform_mutex_unlock );
-
-    if( returnStatus == TLS_TRANSPORT_SUCCESS )
-    {
-        LogDebug( ( "Successfully initialized mbedTLS." ) );
     }
 
     return returnStatus;
@@ -663,172 +648,17 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx,
         LogError( ( "Could not find private key." ) );
     }
 
-    /* Query the device private key type. */
     if( xResult == CKR_OK )
     {
-        xTemplate[ 0 ].type = CKA_KEY_TYPE;
-        xTemplate[ 0 ].pValue = &pxCtx->xKeyType;
-        xTemplate[ 0 ].ulValueLen = sizeof( CK_KEY_TYPE );
-        xResult = pxCtx->pxP11FunctionList->C_GetAttributeValue( pxCtx->xP11Session,
-                                                                 pxCtx->xP11PrivateKey,
-                                                                 xTemplate,
-                                                                 1 );
-    }
-
-    /* Map the PKCS #11 key type to an mbedTLS algorithm. */
-    if( xResult == CKR_OK )
-    {
-        switch( pxCtx->xKeyType )
-        {
-            case CKK_RSA:
-                xKeyAlgo = MBEDTLS_PK_RSA;
-                break;
-
-            case CKK_EC:
-                xKeyAlgo = MBEDTLS_PK_ECKEY;
-                break;
-
-            default:
-                xResult = CKR_ATTRIBUTE_VALUE_INVALID;
-                break;
-        }
-    }
-
-    /* Map the mbedTLS algorithm to its internal metadata. */
-    if( xResult == CKR_OK )
-    {
-        memcpy( &pxCtx->privKeyInfo, mbedtls_pk_info_from_type( xKeyAlgo ), sizeof( mbedtls_pk_info_t ) );
-
-        /* Assign unimplemented function pointers to NULL */
-        pxCtx->privKeyInfo.get_bitlen = NULL;
-        pxCtx->privKeyInfo.can_do = canDoStub;
-        pxCtx->privKeyInfo.verify_func = NULL;
-        #if defined( MBEDTLS_ECDSA_C ) && defined( MBEDTLS_ECP_RESTARTABLE )
-            pxCtx->privKeyInfo.verify_rs_func = NULL;
-            pxCtx->privKeyInfo.sign_rs_func = NULL;
-        #endif /* MBEDTLS_ECDSA_C && MBEDTLS_ECP_RESTARTABLE */
-        pxCtx->privKeyInfo.decrypt_func = NULL;
-        pxCtx->privKeyInfo.encrypt_func = NULL;
-        pxCtx->privKeyInfo.check_pair_func = NULL;
-        pxCtx->privKeyInfo.ctx_alloc_func = NULL;
-        pxCtx->privKeyInfo.ctx_free_func = NULL;
-        #if defined( MBEDTLS_ECDSA_C ) && defined( MBEDTLS_ECP_RESTARTABLE )
-            pxCtx->privKeyInfo.rs_alloc_func = NULL;
-            pxCtx->privKeyInfo.rs_free_func = NULL;
-        #endif /* MBEDTLS_ECDSA_C && MBEDTLS_ECP_RESTARTABLE */
-        pxCtx->privKeyInfo.debug_func = NULL;
-
-        pxCtx->privKeyInfo.sign_func = privateKeySigningCallback;
-        pxCtx->privKey.pk_info = &pxCtx->privKeyInfo;
-        pxCtx->privKey.pk_ctx = pxCtx;
+        xResult = xPKCS11_initMbedtlsPkContext( &( pxCtx->privKey ),
+                                                pxCtx->xP11Session,
+                                                pxCtx->xP11PrivateKey );
     }
 
     /* Free memory. */
     vPortFree( pxSlotIds );
 
     return xResult;
-}
-
-/*-----------------------------------------------------------*/
-
-static int32_t privateKeySigningCallback( void * pvContext,
-                                          mbedtls_md_type_t xMdAlg,
-                                          const unsigned char * pucHash,
-                                          size_t xHashLen,
-                                          unsigned char * pucSig,
-                                          size_t * pxSigLen,
-                                          int32_t ( *piRng )( void *,
-                                                              unsigned char *,
-                                                              size_t ),
-                                          void * pvRng )
-{
-    CK_RV xResult = CKR_OK;
-    int32_t lFinalResult = 0;
-    SSLContext_t * pxTLSContext = ( SSLContext_t * ) pvContext;
-    CK_MECHANISM xMech = { 0 };
-    CK_BYTE xToBeSigned[ 256 ];
-    CK_ULONG xToBeSignedLen = sizeof( xToBeSigned );
-
-    /* Unreferenced parameters. */
-    ( void ) ( piRng );
-    ( void ) ( pvRng );
-    ( void ) ( xMdAlg );
-
-    /* Sanity check buffer length. */
-    if( xHashLen > sizeof( xToBeSigned ) )
-    {
-        xResult = CKR_ARGUMENTS_BAD;
-    }
-
-    /* Format the hash data to be signed. */
-    if( CKK_RSA == pxTLSContext->xKeyType )
-    {
-        xMech.mechanism = CKM_RSA_PKCS;
-
-        /* mbedTLS expects hashed data without padding, but PKCS #11 C_Sign function performs a hash
-         * & sign if hash algorithm is specified.  This helper function applies padding
-         * indicating data was hashed with SHA-256 while still allowing pre-hashed data to
-         * be provided. */
-        xResult = vAppendSHA256AlgorithmIdentifierSequence( ( uint8_t * ) pucHash, xToBeSigned );
-        xToBeSignedLen = pkcs11RSA_SIGNATURE_INPUT_LENGTH;
-    }
-    else if( CKK_EC == pxTLSContext->xKeyType )
-    {
-        xMech.mechanism = CKM_ECDSA;
-        memcpy( xToBeSigned, pucHash, xHashLen );
-        xToBeSignedLen = xHashLen;
-    }
-    else
-    {
-        xResult = CKR_ARGUMENTS_BAD;
-    }
-
-    if( CKR_OK == xResult )
-    {
-        /* Use the PKCS#11 module to sign. */
-        xResult = pxTLSContext->pxP11FunctionList->C_SignInit( pxTLSContext->xP11Session,
-                                                               &xMech,
-                                                               pxTLSContext->xP11PrivateKey );
-    }
-
-    if( CKR_OK == xResult )
-    {
-        *pxSigLen = sizeof( xToBeSigned );
-        xResult = pxTLSContext->pxP11FunctionList->C_Sign( ( CK_SESSION_HANDLE ) pxTLSContext->xP11Session,
-                                                           xToBeSigned,
-                                                           xToBeSignedLen,
-                                                           pucSig,
-                                                           ( CK_ULONG_PTR ) pxSigLen );
-    }
-
-    if( ( xResult == CKR_OK ) && ( CKK_EC == pxTLSContext->xKeyType ) )
-    {
-        /* PKCS #11 for P256 returns a 64-byte signature with 32 bytes for R and 32 bytes for S.
-         * This must be converted to an ASN.1 encoded array. */
-        if( *pxSigLen != pkcs11ECDSA_P256_SIGNATURE_LENGTH )
-        {
-            xResult = CKR_FUNCTION_FAILED;
-        }
-
-        if( xResult == CKR_OK )
-        {
-            PKI_pkcs11SignatureTombedTLSSignature( pucSig, pxSigLen );
-        }
-    }
-
-    if( xResult != CKR_OK )
-    {
-        LogError( ( "Failed to sign message using PKCS #11 with error code %02X.", xResult ) );
-    }
-
-    return lFinalResult;
-}
-
-/*-----------------------------------------------------------*/
-
-int canDoStub( mbedtls_pk_type_t type )
-{
-    return 1;
 }
 
 /*-----------------------------------------------------------*/
@@ -883,12 +713,6 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
                         socketStatus ) );
             returnStatus = TLS_TRANSPORT_CONNECT_FAILURE;
         }
-    }
-
-    /* Initialize mbedtls. */
-    if( returnStatus == TLS_TRANSPORT_SUCCESS )
-    {
-        returnStatus = initMbedtls();
     }
 
     /* Perform TLS handshake. */
@@ -946,14 +770,6 @@ void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
                             mbedtlsLowLevelCodeOrDefault( tlsStatus ) ) );
             }
         }
-        else
-        {
-            /* WANT_READ and WANT_WRITE can be ignored. Logging for debugging purposes. */
-            LogInfo( ( "(Network connection %p) TLS close-notify sent; ",
-                       "received %s as the TLS status can be ignored for close-notify."
-                       ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ? "WANT_READ" : "WANT_WRITE",
-                       pNetworkContext ) );
-        }
 
         /* Call socket shutdown function to close connection. */
         Sockets_Disconnect( pTlsTransportParams->tcpSocket );
@@ -961,9 +777,6 @@ void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
         /* Free mbed TLS contexts. */
         sslContextFree( &( pTlsTransportParams->sslContext ) );
     }
-
-    /* Clear the mutex functions for mbed TLS thread safety. */
-    mbedtls_threading_free_alt();
 }
 
 /*-----------------------------------------------------------*/

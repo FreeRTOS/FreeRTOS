@@ -24,22 +24,24 @@
  *
  */
 
-/* *INDENT-OFF* */
+#ifndef MBEDTLS_PK_PKCS11_H
+#define MBEDTLS_PK_PKCS11_H
 
-#include "proof/list.h"
+#include <string.h>
+#include "mbedtls/pk.h"
+#include "core_pkcs11_config.h"
+#include "core_pkcs11.h"
 
-void vListInitialiseItem( ListItem_t * const pxItem )
-/*@requires xLIST_ITEM(pxItem, _, _, _, _);@*/
-/*@ensures xLIST_ITEM(pxItem, _, _, _, NULL);@*/
-{
-    /* Make sure the list item is not recorded as being on a list. */
-    pxItem->pxContainer = NULL;
+/*-----------------------------------------------------------*/
 
-    /* Write known values into the list item if
-     * configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES is set to 1. */
-    listSET_FIRST_LIST_ITEM_INTEGRITY_CHECK_VALUE( pxItem );
-    listSET_SECOND_LIST_ITEM_INTEGRITY_CHECK_VALUE( pxItem );
-    /*@close xLIST_ITEM(pxItem, _, _, _, NULL);@*/
-}
+CK_RV xPKCS11_initMbedtlsPkContext( mbedtls_pk_context * pxMbedtlsPkCtx,
+                                    CK_SESSION_HANDLE xSessionHandle,
+                                    CK_OBJECT_HANDLE xPkHandle );
 
-/* *INDENT-ON* */
+int lPKCS11PkMbedtlsCloseSessionAndFree( mbedtls_pk_context * pxMbedtlsPkCtx );
+
+int lPKCS11RandomCallback( void * pvCtx,
+                           unsigned char * pucOutput,
+                           size_t uxLen );
+
+#endif /* MBEDTLS_PK_PKCS11_H */

@@ -25,53 +25,19 @@
  */
 
 /**
- * @file tls_freertos_pkcs11.h
+ * @file transport_mbedtls_pkcs11.h
  * @brief TLS transport interface header.
  * @note This file is derived from the tls_freertos.h header file found in the mqtt
  * section of IoT Libraries source code. The file has been modified to support using
  * PKCS #11 when using TLS.
  */
 
-#ifndef USING_MBEDTLS_PKCS11
-#define USING_MBEDTLS_PKCS11
+#ifndef TRANSPORT_MBEDTLS_PKCS11
+#define TRANSPORT_MBEDTLS_PKCS11
 
-/**************************************************/
-/******* DO NOT CHANGE the following order ********/
-/**************************************************/
+#define MBEDTLS_ALLOW_PRIVATE_ACCESS
 
-/* Logging related header files are required to be included in the following order:
- * 1. Include the header file "logging_levels.h".
- * 2. Define LIBRARY_LOG_NAME and  LIBRARY_LOG_LEVEL.
- * 3. Include the header file "logging_stack.h".
- */
-
-/* Include header that defines log levels. */
-#include "logging_levels.h"
-
-/* Logging configuration for the Sockets. */
-#ifndef LIBRARY_LOG_NAME
-    #define LIBRARY_LOG_NAME     "PkcsTlsTransport"
-#endif
-#ifndef LIBRARY_LOG_LEVEL
-    #define LIBRARY_LOG_LEVEL    LOG_ERROR
-#endif
-
-/* Prototype for the function used to print to console on Windows simulator
- * of FreeRTOS.
- * The function prints to the console before the network is connected;
- * then a UDP port after the network has connected. */
-extern void vLoggingPrintf( const char * pcFormatString,
-                            ... );
-
-/* Map the SdkLog macro to the logging function to enable logging
- * on Windows simulator. */
-#ifndef SdkLog
-    #define SdkLog( message )    vLoggingPrintf message
-#endif
-
-#include "logging_stack.h"
-
-/************ End of logging configuration ****************/
+#include "mbedtls/private_access.h"
 
 /* FreeRTOS+TCP include. */
 #include "sockets_wrapper.h"
@@ -86,8 +52,9 @@ extern void vLoggingPrintf( const char * pcFormatString,
 #include "mbedtls/threading.h"
 #include "mbedtls/x509.h"
 #include "mbedtls/pk.h"
-#include "mbedtls/pk_internal.h"
 #include "mbedtls/error.h"
+
+#include "pk_wrap.h"
 
 /* PKCS #11 includes. */
 #include "core_pkcs11.h"
@@ -109,7 +76,6 @@ typedef struct SSLContext
     CK_FUNCTION_LIST_PTR pxP11FunctionList;
     CK_SESSION_HANDLE xP11Session;
     CK_OBJECT_HANDLE xP11PrivateKey;
-    CK_KEY_TYPE xKeyType;
 } SSLContext_t;
 
 /**
@@ -144,12 +110,12 @@ typedef struct NetworkCredentials
 
     const unsigned char * pRootCa;   /**< @brief String representing a trusted server root certificate. */
     size_t rootCaSize;               /**< @brief Size associated with #NetworkCredentials.pRootCa. */
-    const unsigned char * pUserName; /**< @brief String representing the username for MQTT. */
+    const unsigned char * pUserName; /**< @brief username for MQTT. */
     size_t userNameSize;             /**< @brief Size associated with #NetworkCredentials.pUserName. */
     const unsigned char * pPassword; /**< @brief String representing the password for MQTT. */
     size_t passwordSize;             /**< @brief Size associated with #NetworkCredentials.pPassword. */
-    const char * pClientCertLabel;   /**< @brief String representing the PKCS #11 label for the client certificate. */
-    const char * pPrivateKeyLabel;   /**< @brief String representing the PKCS #11 label for the private key. */
+    const char * pClientCertLabel;   /**< @brief PKCS #11 label string of the client certificate. */
+    const char * pPrivateKeyLabel;   /**< @brief PKCS #11 label for the private key. */
 } NetworkCredentials_t;
 
 /**
@@ -230,4 +196,4 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
                            const void * pBuffer,
                            size_t bytesToSend );
 
-#endif /* ifndef USING_MBEDTLS_PKCS11 */
+#endif /* ifndef TRANSPORT_MBEDTLS_PKCS11 */

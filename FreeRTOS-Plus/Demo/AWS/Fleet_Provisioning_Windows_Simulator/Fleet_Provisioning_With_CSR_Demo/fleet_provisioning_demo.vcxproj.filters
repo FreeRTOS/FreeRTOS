@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="backoff_algorithm">
+      <UniqueIdentifier>{a442e1bd-e141-45a4-860d-a8eccab1b8c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network_transport">
+      <UniqueIdentifier>{ec612a95-3f21-4e0a-b9cd-0ba89d62067e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="coreMQTT">
+      <UniqueIdentifier>{c69eabd6-7eed-4959-9351-41b8c3b731b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="coreMQTT\include">
+      <UniqueIdentifier>{64a78119-97f6-4252-b793-87cb6e7902d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tinycbor">
+      <UniqueIdentifier>{58f51daa-dd72-4e9c-939d-3113f97234ca}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c">
+      <Filter>network_transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
+      <Filter>backoff_algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_freertos_plus_tcp.c">
+      <Filter>network_transport</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c" />
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c">
+      <Filter>coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c">
+      <Filter>coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c">
+      <Filter>coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls_pkcs11.c">
+      <Filter>network_transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_pk_pkcs11.c">
+      <Filter>network_transport</Filter>
+    </ClCompile>
+    <ClCompile Include="pkcs11_operations.c" />
+    <ClCompile Include="tinycbor_serializer.c" />
+    <ClCompile Include="FleetProvisioningDemoExample.c" />
+    <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborvalidation.c">
+      <Filter>tinycbor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborencoder.c">
+      <Filter>tinycbor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborencoder_close_container_checked.c">
+      <Filter>tinycbor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborencoder_float.c">
+      <Filter>tinycbor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborerrorstrings.c">
+      <Filter>tinycbor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborparser.c">
+      <Filter>tinycbor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborparser_dup_string.c">
+      <Filter>tinycbor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\ThirdParty\tinycbor\src\cborparser_float.c">
+      <Filter>tinycbor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\AWS\fleet-provisioning\source\fleet_provisioning.c" />
+    <ClCompile Include="..\..\Mqtt_Demo_Helpers\mqtt_pkcs11_demo_helpers.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h">
+      <Filter>network_transport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h">
+      <Filter>backoff_algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="demo_config.h" />
+    <ClInclude Include="core_mqtt_config.h" />
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_config_defaults.h">
+      <Filter>coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_serializer.h">
+      <Filter>coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_state.h">
+      <Filter>coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt.h">
+      <Filter>coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h">
+      <Filter>coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls_pkcs11.h">
+      <Filter>network_transport</Filter>
+    </ClInclude>
+    <ClInclude Include="pkcs11_operations.h" />
+    <ClInclude Include="tinycbor_serializer.h" />
+    <ClInclude Include="fleet_provisioning_config.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\tinycbor\src\cbor.h">
+      <Filter>tinycbor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\ThirdParty\tinycbor\src\cborinternal_p.h">
+      <Filter>tinycbor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\ThirdParty\tinycbor\src\cborjson.h">
+      <Filter>tinycbor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\ThirdParty\tinycbor\src\compilersupport_p.h">
+      <Filter>tinycbor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\ThirdParty\tinycbor\src\tinycbor-version.h">
+      <Filter>tinycbor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\ThirdParty\tinycbor\src\utf8_p.h">
+      <Filter>tinycbor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_pk_pkcs11.h">
+      <Filter>network_transport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\AWS\fleet-provisioning\source\include\fleet_provisioning.h" />
+    <ClInclude Include="..\..\..\..\Source\AWS\fleet-provisioning\source\include\fleet_provisioning_config_defaults.h" />
+    <ClInclude Include="..\..\Mqtt_Demo_Helpers\mqtt_pkcs11_demo_helpers.h" />
+  </ItemGroup>
+</Project>

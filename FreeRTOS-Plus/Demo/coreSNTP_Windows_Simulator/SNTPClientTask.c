@@ -270,8 +270,6 @@ static SystemClock_t systemClock;
  * system clock parameters.
  */
 static SemaphoreHandle_t xMutex = NULL;
-static StaticSemaphore_t xSemaphoreMutex;
-
 
 /*
  * @brief Stores the configured time servers in an array.
@@ -511,7 +509,7 @@ static CK_RV setupPkcs11ObjectForAesCmac( const SntpAuthContext_t * pAuthContext
  * @param[in] pServer The time server whose information is filled in the context.
  * @param[out] pAuthContext The authentication context to update with information about the @p pServer.
  */
-static bool populateAuthContextForServer( const char * pServer,
+static void populateAuthContextForServer( const char * pServer,
                                           SntpAuthContext_t * pAuthContext );
 
 /**
@@ -913,7 +911,7 @@ static void sntpClient_SetTime( const SntpServerInfo_t * pTimeServer,
 }
 
 /**************************** Authentication Utilities and Interface Functions ***********************************************/
-static bool populateAuthContextForServer( const char * pServer,
+static void populateAuthContextForServer( const char * pServer,
                                           SntpAuthContext_t * pAuthContext )
 
 {
@@ -1291,7 +1289,7 @@ void initializeSystemClock( void )
     printTime( &systemClock.baseTime );
 
     /* Initialize semaphore for guarding access to system clock variables. */
-    xMutex = xSemaphoreCreateMutexStatic( &xSemaphoreMutex );
+    xMutex = xSemaphoreCreateMutex();
     configASSERT( xMutex );
 
     /* Clear the first time sync completed flag of the system clock object so that a "step" correction

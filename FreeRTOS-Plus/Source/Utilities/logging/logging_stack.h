@@ -63,16 +63,18 @@
     #define LOG_METADATA_ARGS    __FUNCTION__, __LINE__  /**< @brief Arguments into the metadata logging prefix format. */
 #endif
 
+
 /**
  * @brief Common macro that maps all the logging interfaces,
  * (#LogDebug, #LogInfo, #LogWarn, #LogError) to the platform-specific logging
  * function.
  *
- * @note The default definition of the macro is an empty definition that does not
- * generate any logging.
+ * @note The default definition of this macro generates logging via a printf-like
+ * vLoggingPrintf function.
  */
 #ifndef SdkLog
-    #define SdkLog( string )
+    extern void vLoggingPrintf(const char* pcFormat, ...);
+    #define SdkLog( message )    vLoggingPrintf message
 #endif
 
 /**

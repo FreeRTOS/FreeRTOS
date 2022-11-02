@@ -8,9 +8,6 @@
     <Filter Include="DemoTasks\Include">
       <UniqueIdentifier>{81f2ab97-f9d2-4dbe-a790-939e4bb7f7ae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Logging">
-      <UniqueIdentifier>{e745047e-1cb7-49f9-8761-94c8f2b67322}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DemoTasks\SimpleTCPEchoServer.c">
@@ -23,9 +20,6 @@
       <Filter>DemoTasks</Filter>
     </ClCompile>
     <ClCompile Include="main.c" />
-    <ClCompile Include="..\Common\Logging\windows\Logging_WinSim.c">
-      <Filter>Logging</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DemoTasks\include\TCPEchoClient_SingleTasks.h">
@@ -38,14 +32,5 @@
       <Filter>DemoTasks\Include</Filter>
     </ClInclude>
     <ClInclude Include="tcp_echo_config.h" />
-    <ClInclude Include="..\..\Source\Utilities\logging\logging_levels.h">
-      <Filter>Logging</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Utilities\logging\logging_stack.h">
-      <Filter>Logging</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Utilities\logging\logging.h">
-      <Filter>Logging</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

@@ -113,23 +113,23 @@ jobs:
 
       - name: Build HTTP Mutual Auth Demo
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Mutual_Auth
-        run: msbuild CoreHTTP_Mutual_Auth.sln -t:rebuild -property:Configuration=Debug -m
+        run: msbuild CoreHTTP_Mutual_Auth.sln -t:rebuild
 
       - name: Build HTTP Plain Text Demo
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_Plaintext
-        run: msbuild CoreHTTP_Plaintext.sln -t:rebuild -property:Configuration=Debug -m
+        run: msbuild CoreHTTP_Plaintext.sln -t:rebuild
 
       - name: Build HTTP S3 Download Demo
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download
-        run: msbuild CoreHTTP_S3_Download.sln -t:rebuild -property:Configuration=Debug -m
+        run: msbuild CoreHTTP_S3_Download.sln -t:rebuild
 
       - name: Build HTTP S3 Download Multithreaded Demo
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Download_Multithreaded
-        run: msbuild CoreHTTP_S3_Download_Multithreaded.sln -t:rebuild -property:Configuration=Debug -m
+        run: msbuild CoreHTTP_S3_Download_Multithreaded.sln -t:rebuild
 
       - name: Build HTTP S3 Upload Demo
         working-directory: FreeRTOS-Plus/Demo/coreHTTP_Windows_Simulator/HTTP_S3_Upload
-        run: msbuild CoreHTTP_S3_Upload.sln -t:rebuild -property:Configuration=Debug -m
+        run: msbuild CoreHTTP_S3_Upload.sln -t:rebuild
 
 
   winsim_corePKCS11:
@@ -264,7 +264,7 @@ jobs:
 
       - name: Build corePKCS11 + coreMQTT Mutual Auth Demo
         working-directory: FreeRTOS-Plus/Demo/corePKCS11_MQTT_Mutual_Auth_Windows_Simulator
-        run: msbuild pkcs11_mqtt_mutual_auth_demo.sln -t:rebuild -property:Configuration=Debug -m
+        run: msbuild corePKCS11_MQTT_Mutual_Auth.sln -t:rebuild
 
       - name: Configure coreSNTP_Windows_Simulator
         shell: bash
@@ -280,7 +280,7 @@ jobs:
 
       - name: coreSNTP Demo
         working-directory: FreeRTOS-Plus/Demo/coreSNTP_Windows_Simulator
-        run: msbuild core_sntp_demo.sln -t:rebuild -property:Configuration=Debug -m
+        run: msbuild coreSNTP_Demo.sln -t:rebuild
 
 
   winsim_aws_iot:
@@ -365,7 +365,49 @@ jobs:
         working-directory: FreeRTOS-Plus/Demo/AWS/Ota_Windows_Simulator/Ota_Over_Http_Demo
         run: msbuild ota_over_http_demo.sln -t:rebuild -property:Configuration=Debug -m
 
-  winsim_plus_tcp:
+  plus_tcp_posix:
+    name: FreeRTOS+TCP Posix Simulator Demo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Submodules
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP
+
+      - name: Install prerequisite packages
+        run: sudo apt-get install -y git build-essential libpcap-dev
+
+      - name: Build FreeRTOS+TCP Minimal Demo
+        working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Posix
+        run: make -j
+
+  plus_tcp_arm:
+    name: FreeRTOS+TCP QEMU ARM MPS2 AN385
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Submodules
+        shell: bash
+        run: |
+          git submodule update --checkout --init --depth 1 \
+            FreeRTOS/Source \
+            FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP
+
+      - name: Install prerequisite packages
+        run: sudo apt-get install -y git make gcc-arm-none-eabi
+
+      - name: Build FreeRTOS+TCP Minimal Demo
+        working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Echo_Qemu_mps2
+        run: make -j
+
+  plus_tcp_winsim:
     name: FreeRTOS+TCP Windows Simulator Demos
     runs-on: windows-2019
     continue-on-error: true

@@ -32,9 +32,6 @@
 #include "core_pkcs11_config.h"
 #include "core_pkcs11.h"
 
-mbedtls_pk_info_t mbedtls_pkcs11_pk_ecdsa;
-mbedtls_pk_info_t mbedtls_pkcs11_pk_rsa;
-
 /*-----------------------------------------------------------*/
 
 CK_RV xPKCS11_initMbedtlsPkContext( mbedtls_pk_context * pxMbedtlsPkCtx,

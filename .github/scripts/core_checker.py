@@ -268,6 +268,7 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*/trcConfig\.h.*',
     r'.*/trcConfig\.c.*',
     r'.*/trcSnapshotConfig\.h.*',
+    r'.*/trcKernelPortConfig\.h.*',
     r'.*/MicroZed_hw_platform.*',
     r'.*/ThirdParty/.*',
     r'FreeRTOS\-Plus/Demo/Common/WinPCap/.*',

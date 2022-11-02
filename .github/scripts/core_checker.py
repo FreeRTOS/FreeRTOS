@@ -270,7 +270,8 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*/trcSnapshotConfig\.h.*',
     r'.*/MicroZed_hw_platform.*',
     r'.*/ThirdParty/.*',
-    r'FreeRTOS\-Plus/Demo/Common/WinPCap/.*'
+    r'FreeRTOS\-Plus/Demo/Common/WinPCap/.*',
+    r'FreeRTOS\-Plus/Source/FreeRTOS-Plus-Trace'
 ]
 
 FREERTOS_IGNORED_FILES = [

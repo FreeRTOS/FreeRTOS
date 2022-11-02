@@ -2735,6 +2735,45 @@ void test_xTaskIncrementTick_success_unblock_tasks2( void )
     ASSERT_APP_TICK_HOOK_CALLED();
     TEST_ASSERT_EQUAL( portMAX_DELAY, xNextTaskUnblockTime );
 }
+
+void test_xTaskIncrementTick_success_unblock_tasks3( void )
+{
+    BaseType_t ret_task_incrementtick;
+    TaskHandle_t task_handle;
+
+    /* Setup. */
+    create_task_priority = 4;
+    task_handle = create_task();
+    block_task( task_handle );
+    create_task_priority = 3;
+    ( void ) create_task();
+    ptcb = task_handle;
+    xPendedTicks = 3;
+    xTickCount = 50;
+    xNextTaskUnblockTime = 49; /* Task 2 is due unblocking. */
+    uxSchedulerSuspended = pdFALSE;
+
+    /* Expectations. */
+    listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdFALSE );
+    listGET_OWNER_OF_HEAD_ENTRY_ExpectAndReturn( pxDelayedTaskList, task_handle );
+    listGET_LIST_ITEM_VALUE_ExpectAndReturn( &task_handle->xStateListItem,
+                                             xTickCount - 5 );
+    listREMOVE_ITEM_Expect( &( task_handle->xStateListItem ) );
+    listLIST_ITEM_CONTAINER_ExpectAndReturn( &task_handle->xEventListItem, NULL );
+    listINSERT_END_Expect( &pxReadyTasksLists[ task_handle->uxPriority ],
+                           &task_handle->xStateListItem );
+    listLIST_IS_EMPTY_ExpectAndReturn( pxDelayedTaskList, pdTRUE );
+    listCURRENT_LIST_LENGTH_ExpectAndReturn( &pxReadyTasksLists[ task_handle->uxPriority ], 1 );
+
+    /* API Call */
+    ret_task_incrementtick = xTaskIncrementTick();
+
+    /* Validations */
+    TEST_ASSERT_EQUAL( pdTRUE, ret_task_incrementtick );
+    ASSERT_APP_TICK_HOOK_NOT_CALLED();
+    TEST_ASSERT_EQUAL( portMAX_DELAY, xNextTaskUnblockTime );
+}
+
 /* testing INCLUDE_xTaskAbortDelay */
 void test_xTaskAbortDelay_fail_current_task( void )
 {

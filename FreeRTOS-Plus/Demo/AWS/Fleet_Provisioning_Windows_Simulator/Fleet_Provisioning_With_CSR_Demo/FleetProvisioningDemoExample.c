@@ -81,7 +81,6 @@
 #include "mqtt_pkcs11_demo_helpers.h"
 #include "pkcs11_operations.h"
 #include "tinycbor_serializer.h"
-#include "using_mbedtls_pkcs11.h"
 
 /**
  * These configurations are required. Throw compilation error if it is not
@@ -520,12 +519,6 @@ static bool prvUnsubscribeFromRegisterThingResponseTopics( void )
  */
 void vStartFleetProvisioningDemo()
 {
-    /* Configure mbedTLS to use FreeRTOS specific threading function. */
-    mbedtls_threading_set_alt( mbedtls_platform_mutex_init,
-                               mbedtls_platform_mutex_free,
-                               mbedtls_platform_mutex_lock,
-                               mbedtls_platform_mutex_unlock );
-
     /* This example uses a single application task, which shows that how to use
      * Fleet Provisioning library to generate and sign certificates with AWS IoT
      * and create new IoT Things using the AWS IoT Fleet Provisioning API */

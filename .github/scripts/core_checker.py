@@ -271,7 +271,8 @@ FREERTOS_IGNORED_PATTERNS = [
     r'.*/MicroZed_hw_platform.*',
     r'.*/ThirdParty/.*',
     r'FreeRTOS\-Plus/Demo/Common/WinPCap/.*',
-    r'FreeRTOS\-Plus/Source/FreeRTOS-Plus-Trace'
+    r'FreeRTOS\-Plus/Source/FreeRTOS-Plus-Trace/.*',
+    r'FreeRTOS-Plus/Demo/FreeRTOS_Plus_CLI_with_Trace_Windows_Simulator/Trace_Recorder_Configuration/.*'
 ]
 
 FREERTOS_IGNORED_FILES = [

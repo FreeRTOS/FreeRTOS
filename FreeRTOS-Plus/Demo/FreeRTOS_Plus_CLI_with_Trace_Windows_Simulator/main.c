@@ -242,4 +242,19 @@ const unsigned long ulLongSleep = 1000UL;
 }
 /*-----------------------------------------------------------*/
 
+static uint32_t ulEntryTime = 0;
 
+void vTraceTimerReset( void )
+{
+    ulEntryTime = xTaskGetTickCount();
+}
+
+uint32_t uiTraceTimerGetFrequency( void )
+{
+    return configTICK_RATE_HZ;
+}
+
+uint32_t uiTraceTimerGetValue( void )
+{
+    return ( xTaskGetTickCount() - ulEntryTime );
+}

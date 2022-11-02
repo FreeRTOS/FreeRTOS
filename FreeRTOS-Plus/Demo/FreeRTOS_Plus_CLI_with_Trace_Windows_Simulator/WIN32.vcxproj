@@ -19,13 +19,13 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -130,10 +130,12 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\event_groups.c" />
     <ClCompile Include="..\..\..\FreeRTOS\Source\list.c" />
     <ClCompile Include="..\..\..\FreeRTOS\Source\portable\MemMang\heap_3.c" />
     <ClCompile Include="..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c" />
     <ClCompile Include="..\..\..\FreeRTOS\Source\queue.c" />
+    <ClCompile Include="..\..\..\FreeRTOS\Source\stream_buffer.c" />
     <ClCompile Include="..\..\..\FreeRTOS\Source\tasks.c" />
     <ClCompile Include="..\..\..\FreeRTOS\Source\timers.c" />
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-CLI\FreeRTOS_CLI.c" />

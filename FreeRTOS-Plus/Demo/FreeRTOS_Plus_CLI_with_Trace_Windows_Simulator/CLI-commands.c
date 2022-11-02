@@ -335,7 +335,9 @@ BaseType_t lParameterStringLength;
 		/* Start or restart the trace. */
 		vTraceStop();
 		vTraceClear();
-		uiTraceStart();
+
+        vTraceEnable( TRC_START );
+        traceSTART();
 
 		sprintf( pcWriteBuffer, "Trace recording (re)started.\r\n" );
 	}

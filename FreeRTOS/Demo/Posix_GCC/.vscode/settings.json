@@ -1,0 +1,16 @@
+{   
+    "terminal.integrated.profiles.windows": {
+        "Ubuntu (WSL)": {
+            "path": "C:\\Windows\\Sysnative\\bash.exe",
+        },
+        "MSYS2": {
+            "path": "C:\\msys64\\usr\\bin\\bash.exe",
+            "args": ["--login", "-i"],
+            "env": {
+                "MSYSTEM": "MSYS",
+                "CHERE_INVOKING": "1",
+            }
+        }
+    },
+    "terminal.integrated.defaultProfile.windows": "MSYS2",
+}

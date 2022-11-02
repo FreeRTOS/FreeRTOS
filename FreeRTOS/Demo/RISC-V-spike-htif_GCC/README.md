@@ -8,7 +8,7 @@
 
 ## How to build toolchain
 
-Clone the Crosstool-NG and build.
+Clone the Crosstool-NG and configure Crosstool-NG.
 
 ```
 $ git clone https://github.com/crosstool-ng/crosstool-ng
@@ -16,36 +16,42 @@ $ cd crosstool-ng
 $ ./bootstrap
 $ ./configure --enable-local
 $ make
-$ ./ct-ng menuconfig
 ```
 
-For RV32 builds, change the following configs:
+Generate toolchain configuration:
+- For RV32 builds:
 
-```
-CT_EXPERIMENTAL=y
-CT_ARCH_RISCV=y
-CT_ARCH_64=n
-CT_ARCH_ARCH=rv32ima
-CT_ARCH_ABI=ilp32
-CT_TARGET_CFLAGS="-mcmodel=medany"
-CT_TARGET_LDFLAGS="-mcmodel=medany"
-CT_MULTILIB=y
-CT_DEBUG_GDB=y
-```
+  Create a file name as "defconfig" ( should be exactly the same, no file extension ) with the below content:
+  ```
+  CT_EXPERIMENTAL=y
+  CT_ARCH_RISCV=y
+  CT_ARCH_64=n
+  CT_ARCH_ARCH="rv32ima"
+  CT_ARCH_ABI="ilp32"
+  CT_TARGET_CFLAGS="-mcmodel=medany"
+  CT_TARGET_LDFLAGS="-mcmodel=medany"
+  CT_MULTILIB=y
+  CT_DEBUG_GDB=y
+  ```
 
-For RV64 builds, change the following configs:
+- For RV64 builds:
+  Create a file name as "defconfig" ( should be exactly the same, no file extension ) with the below content:
+  ```
+  CT_EXPERIMENTAL=y
+  CT_ARCH_RISCV=y
+  CT_ARCH_64=y
+  CT_ARCH_ARCH="rv64ima"
+  CT_ARCH_ABI="lp64"
+  CT_TARGET_CFLAGS="-mcmodel=medany"
+  CT_TARGET_LDFLAGS="-mcmodel=medany"
+  CT_MULTILIB=y
+  CT_DEBUG_GDB=y
+  ```
 
-```
-CT_EXPERIMENTAL=y
-CT_ARCH_RISCV=y
-CT_ARCH_64=y
-CT_ARCH_ARCH=rv32ima
-CT_ARCH_ABI=ilp32
-CT_TARGET_CFLAGS="-mcmodel=medany"
-CT_TARGET_LDFLAGS="-mcmodel=medany"
-CT_MULTILIB=y
-CT_DEBUG_GDB=y
-```
+Run the below command. The configurations will be save to .config file.:
+  ```
+  ./ct-ng defconfig
+  ```
 
 Build the GNU toolchain for RISC-V.
 
@@ -53,7 +59,7 @@ Build the GNU toolchain for RISC-V.
 $ ./ct-ng build
 ```
 
-A toolchain is installed at ~/x-tools/riscv64-unknown-elf directory.
+A toolchain is installed at ~/x-tools/riscv32-unknown-elf or  ~/x-tools/riscv64-unknown-elf directory depends on your build.
 
 
 ## How to build
@@ -61,7 +67,7 @@ A toolchain is installed at ~/x-tools/riscv64-unknown-elf directory.
 Add path of toolchain that is described above section.
 
 ```
-$ export PATH=~/x-tools/riscv64-unknown-elf/bin:$PATH
+$ export PATH=~/x-tools/{YOUR_TOOLCHAIN}/bin:$PATH
 ```
 
 To build, simply run `make`. If you want a debug build, pass `DEBUG=1`. If

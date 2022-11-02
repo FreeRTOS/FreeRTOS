@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -74,25 +74,25 @@
 #include "demo_specific_io.h"
 
 /* Priorities at which the tasks are created. */
-#define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
+#define mainQUEUE_RECEIVE_TASK_PRIORITY        ( tskIDLE_PRIORITY + 2 )
+#define mainQUEUE_SEND_TASK_PRIORITY           ( tskIDLE_PRIORITY + 1 )
 
 /* The rate at which data is sent to the queue.  The 200ms value is converted
 to ticks using the portTICK_PERIOD_MS constant. */
-#define mainQUEUE_SEND_FREQUENCY_MS			( 200 / portTICK_PERIOD_MS )
+#define mainQUEUE_SEND_FREQUENCY_MS            ( 200 / portTICK_PERIOD_MS )
 
 /* The number of items the queue can hold.  This is 1 as the receive task
 will remove items as they are added, meaning the send task should always find
 the queue empty. */
-#define mainQUEUE_LENGTH					( 1 )
+#define mainQUEUE_LENGTH                       ( 1 )
 
 /* Used to check the task parameter passing in both supported memory models. */
 #if __DATA_MODEL__ == __DATA_MODEL_FAR__
-	#define mainQUEUE_SEND_PARAMETER	( ( void * ) 0x12345678UL )
-	#define mainQUEUE_RECEIVE_PARAMETER	( ( void * ) 0x11223344UL )
+    #define mainQUEUE_SEND_PARAMETER           ( ( void * ) 0x12345678UL )
+    #define mainQUEUE_RECEIVE_PARAMETER        ( ( void * ) 0x11223344UL )
 #else
-	#define mainQUEUE_SEND_PARAMETER	( ( void * ) 0x1234U )
-	#define mainQUEUE_RECEIVE_PARAMETER	( ( void * ) 0x1122U )
+    #define mainQUEUE_SEND_PARAMETER           ( ( void * ) 0x1234U )
+    #define mainQUEUE_RECEIVE_PARAMETER        ( ( void * ) 0x1122U )
 #endif
 /*-----------------------------------------------------------*/
 
@@ -117,32 +117,32 @@ static QueueHandle_t xQueue = NULL;
 
 void main_blinky( void )
 {
-	/* Create the queue. */
-	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
+    /* Create the queue. */
+    xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
 
-	if( xQueue != NULL )
-	{
-		/* Start the two tasks as described in the comments at the top of this
-		file. */
-		xTaskCreate( prvQueueReceiveTask,			/* The function that implements the task. */
-					"Rx", 							/* The text name assigned to the task - for debug only as it is not used by the kernel. */
-					configMINIMAL_STACK_SIZE, 		/* The size of the stack to allocate to the task. */
-					mainQUEUE_RECEIVE_PARAMETER,	/* The parameter passed to the task - just used to check the port in this case. */
-					mainQUEUE_RECEIVE_TASK_PRIORITY,/* The priority assigned to the task. */
-					NULL );							/* The task handle is not required, so NULL is passed. */
+    if( xQueue != NULL )
+    {
+        /* Start the two tasks as described in the comments at the top of this
+        file. */
+        xTaskCreate( prvQueueReceiveTask,             /* The function that implements the task. */
+                    "Rx",                             /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+                    configMINIMAL_STACK_SIZE,         /* The size of the stack to allocate to the task. */
+                    mainQUEUE_RECEIVE_PARAMETER,      /* The parameter passed to the task - just used to check the port in this case. */
+                    mainQUEUE_RECEIVE_TASK_PRIORITY,  /* The priority assigned to the task. */
+                    NULL );                           /* The task handle is not required, so NULL is passed. */
 
-		xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, mainQUEUE_SEND_PARAMETER, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+        xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, mainQUEUE_SEND_PARAMETER, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
-		/* Start the tasks and timer running. */
-		vTaskStartScheduler();
-	}
+        /* Start the tasks and timer running. */
+        vTaskStartScheduler();
+    }
 
-	/* If all is well, the scheduler will now be running, and the following
-	line will never be reached.  If the following line does execute, then
-	there was insufficient FreeRTOS heap memory available for the idle and/or
-	timer tasks	to be created.  See the memory management section on the
-	FreeRTOS web site for more details.  http://www.freertos.org/a00111.html. */
-	for( ;; );
+    /* If all is well, the scheduler will now be running, and the following
+    line will never be reached.  If the following line does execute, then
+    there was insufficient FreeRTOS heap memory available for the idle and/or
+    timer tasks    to be created.  See the memory management section on the
+    FreeRTOS web site for more details.  http://www.freertos.org/a00111.html. */
+    for( ;; );
 }
 /*-----------------------------------------------------------*/
 
@@ -151,23 +151,25 @@ static void prvQueueSendTask( void *pvParameters )
 TickType_t xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
 
-	/* Check the parameter was passed in correctly. */
-	configASSERT( pvParameters == mainQUEUE_SEND_PARAMETER )
+    /* Check the parameter was passed in correctly. */
+    configASSERT( pvParameters == mainQUEUE_SEND_PARAMETER )
 
-	/* Initialise xNextWakeTime - this only needs to be done once. */
-	xNextWakeTime = xTaskGetTickCount();
+    /* Initialise xNextWakeTime - this only needs to be done once. */
+    xNextWakeTime = xTaskGetTickCount();
 
-	for( ;; )
-	{
-		/* Place this task in the blocked state until it is time to run again. */
-		vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_FREQUENCY_MS );
+    for( ;; )
+    {
+        /* Place this task in the blocked state until it is time to run again. */
+        vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_FREQUENCY_MS );
 
-		/* Send to the queue - causing the queue receive task to unblock and
-		toggle the LED.  0 is used as the block time so the sending operation
-		will not block - it shouldn't need to block as the queue should always
-		be empty at this point in the code. */
-		xQueueSend( xQueue, &ulValueToSend, 0U );
-	}
+        /*
+         * Send to the queue - causing the queue receive task to unblock and
+         * toggle the LED.  0 is used as the block time so the sending operation
+         * will not block - it shouldn't need to block as the queue should always
+         * be empty at this point in the code.
+         */
+        xQueueSend( xQueue, &ulValueToSend, 0U );
+    }
 }
 /*-----------------------------------------------------------*/
 
@@ -176,24 +178,27 @@ static void prvQueueReceiveTask( void *pvParameters )
 unsigned long ulReceivedValue;
 const unsigned long ulExpectedValue = 100UL;
 
-	/* Check the parameter was passed in correctly. */
-	configASSERT( pvParameters == mainQUEUE_RECEIVE_PARAMETER )
+    /* Check the parameter was passed in correctly. */
+    configASSERT( pvParameters == mainQUEUE_RECEIVE_PARAMETER )
 
-	for( ;; )
-	{
-		/* Wait until something arrives in the queue - this task will block
-		indefinitely provided INCLUDE_vTaskSuspend is set to 1 in
-		FreeRTOSConfig.h. */
-		xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
+    for( ;; )
+    {
+        /*
+         * Wait until something arrives in the queue - this task will block
+         * indefinitely provided INCLUDE_vTaskSuspend is set to 1 in
+         * FreeRTOSConfig.h.
+         */
+        xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
 
-		/*  To get here something must have been received from the queue, but
-		is it the expected value?  If it is, toggle the LED. */
-		if( ulReceivedValue == ulExpectedValue )
-		{
-			LED_BIT = !LED_BIT;
-			ulReceivedValue = 0U;
-		}
-	}
+        /*
+         * To get here something must have been received from the queue, but
+         * is it the expected value?  If it is, toggle the LED.
+         */
+        if( ulReceivedValue == ulExpectedValue )
+        {
+            LED_BIT = !LED_BIT;
+            ulReceivedValue = 0U;
+        }
+    }
 }
 /*-----------------------------------------------------------*/
-

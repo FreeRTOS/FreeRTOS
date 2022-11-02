@@ -20,7 +20,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
+ *
  */
 #ifndef COMMON_DEMO_INCLUDE_H
 #define COMMON_DEMO_INCLUDE_H

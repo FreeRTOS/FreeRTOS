@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -43,7 +43,12 @@
  * https://www.FreeRTOS.org/a00110.html
  *----------------------------------------------------------*/
 
-extern uint32_t SystemCoreClock;
+/* The #ifdef guards against the file being included from IAR assembly files. */
+#ifndef __IASMARM__
+
+  extern uint32_t SystemCoreClock;
+
+#endif /* __IASMARM__ */
 
 /* Cortex M33 port configuration. */
 #define configENABLE_MPU								1
@@ -63,7 +68,7 @@ extern uint32_t SystemCoreClock;
 #define configMINIMAL_STACK_SIZE						( ( uint16_t ) 128 )
 #define configMINIMAL_SECURE_STACK_SIZE					( 1024 )
 #define configMAX_TASK_NAME_LEN							( 12 )
-#define configTOTAL_HEAP_SIZE							( ( size_t ) ( 50 * 1024 ) )
+#define configTOTAL_HEAP_SIZE							( ( size_t ) ( 20 * 1024 ) )
 
 /* Constants that build features in or out. */
 #define configUSE_MUTEXES								1

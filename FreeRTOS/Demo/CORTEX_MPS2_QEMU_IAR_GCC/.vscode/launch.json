@@ -1,0 +1,19 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch QEMU RTOSDemo",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/gcc/output/RTOSDemo.out",
+            "cwd": "${workspaceFolder}",
+            "miDebuggerPath": "/Applications/ARM/bin/arm-none-eabi-gdb-py",
+            "miDebuggerServerAddress": "localhost:1234",
+            "stopAtEntry": true,
+            "preLaunchTask": "Run QEMU"
+        }
+    ]
+}

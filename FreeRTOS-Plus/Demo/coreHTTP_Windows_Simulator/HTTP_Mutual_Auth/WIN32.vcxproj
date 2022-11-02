@@ -58,7 +58,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\..\Common\WinPCap;..\..\..\..\FreeRTOS\Source\include;..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\Source\Application-Protocols\coreHTTP\source\include;..\..\..\Source\Application-Protocols\coreHTTP\source\interface;..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser;..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp;..\..\..\Source\Application-Protocols\network_transport\using_mbedtls;..\..\..\Source\Utilities\mbedtls_freertos;..\..\..\..\Source\mbedtls_utils;..\..\..\ThirdParty\mbedtls\include;..\Common;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\FreeRTOS-Plus\Source\Utilities\logging;..\..\Common\WinPCap;..\..\..\..\FreeRTOS\Source\include;..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\Source\Application-Protocols\coreHTTP\source\include;..\..\..\Source\Application-Protocols\coreHTTP\source\interface;..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\llhttp\include;..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp;..\..\..\Source\Application-Protocols\network_transport\using_mbedtls;..\..\..\Source\Utilities\mbedtls_freertos;..\..\..\..\Source\mbedtls_utils;..\..\..\ThirdParty\mbedtls\include;..\Common;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config.h";WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -163,7 +163,9 @@
     <ClCompile Include="..\..\..\Source\Utilities\mbedtls_freertos\mbedtls_freertos_port.c" />
     <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\core_http_client.c" />
-    <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser\http_parser.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\llhttp\src\api.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\llhttp\src\http.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\llhttp\src\llhttp.c" />
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\aes.c">
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
@@ -588,7 +590,7 @@
     <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_errno_TCP.h" />
     <ClInclude Include="..\..\..\Source\Utilities\mbedtls_freertos\threading_alt.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreHTTP\source\include\core_http_client.h" />
-    <ClInclude Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\http_parser\http_parser.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\llhttp\include\llhttp.h" />
     <ClInclude Include="..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h" />
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\aes.h" />
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\aesni.h" />

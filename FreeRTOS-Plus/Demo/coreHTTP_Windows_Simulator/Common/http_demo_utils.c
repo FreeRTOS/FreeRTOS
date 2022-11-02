@@ -32,9 +32,6 @@
 /* Exponential backoff retry include. */
 #include "backoff_algorithm.h"
 
-/* Parser utilities. */
-#include "http_parser.h"
-
 /*-----------------------------------------------------------*/
 
 /**
@@ -53,6 +50,16 @@
  * retry attempts.
  */
 #define RETRY_BACKOFF_BASE_MS         ( 500U )
+
+/**
+ * @brief The separator between the "https" scheme and the host in a URL.
+ */
+#define SCHEME_SEPARATOR              "://"
+
+/**
+ * @brief The length of the "://" separator.
+ */
+#define SCHEME_SEPARATOR_LEN          ( sizeof( SCHEME_SEPARATOR ) - 1 )
 
 /*-----------------------------------------------------------*/
 
@@ -134,57 +141,74 @@ HTTPStatus_t getUrlPath( const char * pcUrl,
                          const char ** pcPath,
                          size_t * pxPathLen )
 {
-    /* http-parser status. Initialized to 1 to signify failure. */
-    int lParserStatus = 1;
-    struct http_parser_url xUrlParser;
-    HTTPStatus_t xHTTPStatus = HTTPSuccess;
-
-    /* Sets all members in xUrlParser to 0. */
-    http_parser_url_init( &xUrlParser );
+    HTTPStatus_t xHttpStatus = HTTPSuccess;
+    const char * pcHostStart = NULL;
+    const char * pcPathStart = NULL;
+    size_t xHostLen = 0, i = 0, xPathStartIndex = 0, xPathLen = 0;
 
     if( ( pcUrl == NULL ) || ( pcPath == NULL ) || ( pxPathLen == NULL ) )
     {
         LogError( ( "NULL parameter passed to getUrlPath()." ) );
-        xHTTPStatus = HTTPInvalidParameter;
+        xHttpStatus = HTTPInvalidParameter;
     }
 
-    if( xHTTPStatus == HTTPSuccess )
+    if( xHttpStatus == HTTPSuccess )
     {
-        lParserStatus = http_parser_parse_url( pcUrl, xUrlLen, 0, &xUrlParser );
+        xHttpStatus = getUrlAddress( pcUrl, xUrlLen, &pcHostStart, &xHostLen );
+    }
 
-        if( lParserStatus != 0 )
+    if( xHttpStatus == HTTPSuccess )
+    {
+        /* Search for the start of the path. */
+        for( i = ( pcHostStart - pcUrl ) + xHostLen; i < xUrlLen; i++ )
         {
-            LogError( ( "Error parsing the input URL %.*s. Error code: %d.",
+            if( pcUrl[ i ] == '/' )
+            {
+                pcPathStart = &pcUrl[ i ];
+                xPathStartIndex = i;
+                break;
+            }
+        }
+
+        if( pcPathStart != NULL )
+        {
+            /* The end of the path will be either the start of the query,
+             * start of the fragment, or end of the URL. If this is an S3
+             * presigned URL, then there must be a query. */
+            for( i = xPathStartIndex; i < xUrlLen; i++ )
+            {
+                if( pcUrl[ i ] == '?' )
+                {
+                    break;
+                }
+            }
+
+            xPathLen = i - xPathStartIndex;
+        }
+
+        if( xPathLen == 0 )
+        {
+            LogError( ( "Could not parse path from input URL %.*s",
                         ( int32_t ) xUrlLen,
-                        pcUrl,
-                        lParserStatus ) );
-            xHTTPStatus = HTTPParserInternalError;
+                        pcUrl ) );
+            xHttpStatus = HTTPNoResponse;
         }
     }
 
-    if( xHTTPStatus == HTTPSuccess )
+    if( xHttpStatus == HTTPSuccess )
     {
-        *pxPathLen = ( size_t ) ( xUrlParser.field_data[ UF_PATH ].len );
-
-        if( *pxPathLen == 0 )
-        {
-            xHTTPStatus = HTTPNoResponse;
-            *pcPath = NULL;
-        }
-        else
-        {
-            *pcPath = &pcUrl[ xUrlParser.field_data[ UF_PATH ].off ];
-        }
+        *pxPathLen = xPathLen;
+        *pcPath = pcPathStart;
     }
 
-    if( xHTTPStatus != HTTPSuccess )
+    if( xHttpStatus != HTTPSuccess )
     {
         LogError( ( "Error parsing the path from URL %s. Error code: %d",
                     pcUrl,
-                    xHTTPStatus ) );
+                    xHttpStatus ) );
     }
 
-    return xHTTPStatus;
+    return xHttpStatus;
 }
 
 /*-----------------------------------------------------------*/
@@ -194,55 +218,76 @@ HTTPStatus_t getUrlAddress( const char * pcUrl,
                             const char ** pcAddress,
                             size_t * pxAddressLen )
 {
-    /* http-parser status. Initialized to 1 to signify failure. */
-    int lParserStatus = 1;
-    struct http_parser_url xUrlParser;
-    HTTPStatus_t xHTTPStatus = HTTPSuccess;
-
-    /* Sets all members in xUrlParser to 0. */
-    http_parser_url_init( &xUrlParser );
+    HTTPStatus_t xHttpStatus = HTTPSuccess;
+    const char * pcHostStart = NULL;
+    const char * pcHostEnd = NULL;
+    size_t i = 0, xHostLen = 0;
 
     if( ( pcUrl == NULL ) || ( pcAddress == NULL ) || ( pxAddressLen == NULL ) )
     {
         LogError( ( "NULL parameter passed to getUrlAddress()." ) );
-        xHTTPStatus = HTTPInvalidParameter;
+        xHttpStatus = HTTPInvalidParameter;
     }
 
-    if( xHTTPStatus == HTTPSuccess )
+    if( xHttpStatus == HTTPSuccess )
     {
-        lParserStatus = http_parser_parse_url( pcUrl, xUrlLen, 0, &xUrlParser );
-
-        if( lParserStatus != 0 )
+        /* Search for the start of the hostname using the "://" separator. */
+        for( i = 0; i < ( xUrlLen - SCHEME_SEPARATOR_LEN ); i++ )
         {
-            LogError( ( "Error parsing the input URL %.*s. Error code: %d.",
+            if( strncmp( &( pcUrl[ i ] ), SCHEME_SEPARATOR, SCHEME_SEPARATOR_LEN ) == 0 )
+            {
+                pcHostStart = pcUrl + i + SCHEME_SEPARATOR_LEN;
+                break;
+            }
+        }
+
+        if( pcHostStart == NULL )
+        {
+            LogError( ( "Could not find \"://\" scheme separator in input URL %.*s",
                         ( int32_t ) xUrlLen,
-                        pcUrl,
-                        lParserStatus ) );
-            xHTTPStatus = HTTPParserInternalError;
+                        pcUrl ) );
+            xHttpStatus = HTTPParserInternalError;
+        }
+        else
+        {
+            /* Search for the end of the hostname assuming that the object path
+             * is next. Assume that there is no port number as this is used for
+             * S3 presigned URLs. */
+            for( pcHostEnd = pcHostStart; pcHostEnd < ( pcUrl + xUrlLen ); pcHostEnd++ )
+            {
+                if( *pcHostEnd == '/' )
+                {
+                    xHostLen = ( size_t ) ( pcHostEnd - pcHostStart );
+                    break;
+                }
+            }
         }
     }
 
-    if( xHTTPStatus == HTTPSuccess )
+    if( xHttpStatus == HTTPSuccess )
     {
-        *pxAddressLen = ( size_t ) ( xUrlParser.field_data[ UF_HOST ].len );
+        *pxAddressLen = xHostLen;
 
-        if( *pxAddressLen == 0 )
+        if( xHostLen == 0 )
         {
-            xHTTPStatus = HTTPNoResponse;
+            LogError( ( "Could not find end of host in input URL %.*s",
+                        ( int32_t ) xUrlLen,
+                        pcUrl ) );
+            xHttpStatus = HTTPNoResponse;
             *pcAddress = NULL;
         }
         else
         {
-            *pcAddress = &pcUrl[ xUrlParser.field_data[ UF_HOST ].off ];
+            *pcAddress = pcHostStart;
         }
     }
 
-    if( xHTTPStatus != HTTPSuccess )
+    if( xHttpStatus != HTTPSuccess )
     {
         LogError( ( "Error parsing the address from URL %s. Error code %d",
                     pcUrl,
-                    xHTTPStatus ) );
+                    xHttpStatus ) );
     }
 
-    return xHTTPStatus;
+    return xHttpStatus;
 }

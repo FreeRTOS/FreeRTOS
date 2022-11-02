@@ -20,7 +20,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
+ *
  */
 #ifndef CORE_SNTP_CONFIG_H
 #define CORE_SNTP_CONFIG_H

@@ -4,7 +4,7 @@ description: "This is the standard distribution of FreeRTOS."
 
 dependencies:
   - name: "FreeRTOS-Kernel"
-    version: "d5a10e459"
+    version: "b0a8bd8"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Kernel.git"
@@ -32,7 +32,7 @@ dependencies:
       path: "FreeRTOS-Plus/Source/AWS/sigv4"
 
   - name: "coreHTTP"
-    version: "v2.1.0"
+    version: "7fbd7c3"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/coreHTTP.git"
@@ -130,11 +130,32 @@ dependencies:
       path: "FreeRTOS/Demo/ThirdParty/Partner-Supported-Demos"
 
   - name: "FreeRTOS-Cellular-Interface"
-    version: "2bd3f79"
+    version: "v1.3.0"
     repository:
       type: "git"
       url: "https://github.com/FreeRTOS/FreeRTOS-Cellular-Interface.git"
       path: "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface"
+
+  - name: "Lab-FreeRTOS-Cellular-Interface-Reference-Quectel-BG96"
+    version: "c33a362"
+    repository:
+      type: "git"
+      url: "https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-Quectel-BG96.git"
+      path: "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/bg96"
+
+  - name: "Lab-FreeRTOS-Cellular-Interface-Reference-Sierra-Wireless-HL7802"
+    version: "6893670"
+    repository:
+      type: "git"
+      url: "https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-Sierra-Wireless-HL7802.git"
+      path: "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/hl7802"
+
+  - name: "Lab-FreeRTOS-Cellular-Interface-Reference-ublox-SARA-R4"
+    version: "a2d84ff"
+    repository:
+      type: "git"
+      url: "https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-ublox-SARA-R4.git"
+      path: "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/sara-r4"
 
   - name: "fleet-provisioning"
     version: "v1.0.1"

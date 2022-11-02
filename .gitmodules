@@ -40,9 +40,6 @@
 [submodule "FreeRTOS-Plus/ThirdParty/wolfSSL"]
 	path = FreeRTOS-Plus/ThirdParty/wolfSSL
 	url = https://github.com/wolfSSL/wolfssl.git
-[submodule "FreeRTOS/Test/aws-build-accumulator"]
-	path = FreeRTOS/Test/litani
-	url = https://github.com/awslabs/aws-build-accumulator.git
 [submodule "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent"]
 	path = FreeRTOS-Plus/Source/Application-Protocols/coreMQTT-Agent
 	url = https://github.com/FreeRTOS/coreMQTT-Agent.git
@@ -63,10 +60,19 @@
 	url = https://github.com/aws/SigV4-for-AWS-IoT-embedded-sdk.git
 [submodule "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface"]
 	path = FreeRTOS-Plus/Source/FreeRTOS-Cellular-Interface
-	url = https://github.com/FreeRTOS/Lab-Project-FreeRTOS-Cellular-Library.git
+	url = https://github.com/FreeRTOS/FreeRTOS-Cellular-Interface.git
 [submodule "FreeRTOS-Plus/ThirdParty/tinycbor"]
 	path = FreeRTOS-Plus/ThirdParty/tinycbor
 	url = https://github.com/intel/tinycbor.git
 [submodule "FreeRTOS-Plus/Source/AWS/fleet-provisioning"]
 	path = FreeRTOS-Plus/Source/AWS/fleet-provisioning
 	url = https://github.com/aws/Fleet-Provisioning-for-AWS-IoT-embedded-sdk.git
+[submodule "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/bg96"]
+	path = FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/bg96
+	url = https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-Quectel-BG96.git
+[submodule "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/hl7802"]
+	path = FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/hl7802
+	url = https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-Sierra-Wireless-HL7802.git
+[submodule "FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/sara-r4"]
+	path = FreeRTOS-Plus/Source/FreeRTOS-Cellular-Modules/sara-r4
+	url = https://github.com/FreeRTOS/Lab-FreeRTOS-Cellular-Interface-Reference-ublox-SARA-R4.git

@@ -166,6 +166,7 @@
     <ClCompile Include="..\..\..\..\Source\AWS\jobs\source\jobs.c" />
     <ClCompile Include="..\..\..\..\Source\coreJSON\source\core_json.c" />
     <ClCompile Include="..\..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c" />
+    <ClCompile Include="..\..\Mqtt_Demo_Helpers\mqtt_demo_helpers.c" />
     <ClCompile Include="DemoTasks\JobsDemoExample.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
@@ -181,6 +182,7 @@
     <ClInclude Include="..\..\..\..\Source\AWS\jobs\source\include\jobs.h" />
     <ClInclude Include="..\..\..\..\Source\coreJSON\source\include\core_json.h" />
     <ClInclude Include="..\..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h" />
+    <ClInclude Include="..\..\Mqtt_Demo_Helpers\mqtt_demo_helpers.h" />
     <ClInclude Include="core_mqtt_config.h" />
     <ClInclude Include="demo_config.h" />
   </ItemGroup>

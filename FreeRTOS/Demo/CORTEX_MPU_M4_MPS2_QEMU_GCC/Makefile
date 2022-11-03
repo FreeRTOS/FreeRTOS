@@ -55,7 +55,7 @@ CFLAGS                +=    -ggdb3 -Og -save-temps=obj
 LDFLAGS                =    -T mps2_m4.ld
 LDFLAGS               +=    -Xlinker -Map=${BUILD_DIR}/output.map
 LDFLAGS               +=    -nostartfiles
-LDFLAGS               +=    -specs=/opt/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi/lib/thumb/v7-r+fp.sp/softfp/nosys.specs
+LDFLAGS               +=    -specs=nosys.specs
 LDFLAGS               +=    -fno-builtin
 
 OBJ_FILES             :=    $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.o)

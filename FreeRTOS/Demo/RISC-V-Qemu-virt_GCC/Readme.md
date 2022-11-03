@@ -35,6 +35,7 @@ CT_ARCH_64=y
 CT_ARCH_ARCH=rv32ima
 CT_ARCH_ABI=ilp32
 CT_MULTILIB=y
+CT_DEBUG=y
 ```
 
 These configurations can be found through the menuconfig though they are not immediately obvious. You will need to read the help page for each option to see what `CT_XXX` flag it corresponds to. For the flags above, the settings to edit are...
@@ -50,6 +51,8 @@ These configurations can be found through the menuconfig though they are not imm
   * Target options -> Generate code for the specific ABI -> Enter "ilp32"
 * CT_MULTILIB
   * Target options -> Build a multilib toolchain
+* CT_DEBUG
+  * Debug facilities -> gdb
 
 
 Build the GNU toolchain for RISC-V.
@@ -137,3 +140,9 @@ You'll need to swap the `-march` flag from `-march=rv32ima` to `-march=rv32ima_z
 #### -pie not supported
 If you receive this error while linking, add the `-no-pie` flag to your linker flags.
 See https://man.archlinux.org/man/community/riscv64-elf-binutils/riscv64-elf-ld.1.en#no~24 for more.
+
+#### Generating a map
+Append the `-Xlinker -Map=RTOSDemo.map` flag to your LD flags in the Makefile to generate a map file
+in the current directory when building.
+
+This can be useful when determining address validity.

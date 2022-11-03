@@ -2693,6 +2693,9 @@ void test_xTaskIncrementTick_success_unblock_tasks( void )
     TEST_ASSERT_EQUAL( portMAX_DELAY, xNextTaskUnblockTime );
 }
 
+/* Tests the scenario when a task with priority equal to the
+ * currently executing task is unblocked as a result of the
+ * xTaskIncrementTick call. */
 void test_xTaskIncrementTick_success_unblock_tasks2( void )
 {
     BaseType_t ret_task_incrementtick;
@@ -2736,6 +2739,9 @@ void test_xTaskIncrementTick_success_unblock_tasks2( void )
     TEST_ASSERT_EQUAL( portMAX_DELAY, xNextTaskUnblockTime );
 }
 
+/* Tests the scenario when a task with priority higher than the
+ * currently executing task is unblocked as a result of the
+ * xTaskIncrementTick call. */
 void test_xTaskIncrementTick_success_unblock_tasks3( void )
 {
     BaseType_t ret_task_incrementtick;

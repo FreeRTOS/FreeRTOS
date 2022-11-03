@@ -313,7 +313,7 @@ static BaseType_t prvSignatureVerificationStart(void** ppvContext,
          * Initialize the requested hash type
          */
         mbedtls_sha256_init(&pxCtx->xSHA256Context);
-        (void)mbedtls_sha256_starts_ret(&pxCtx->xSHA256Context, 0);
+        (void)mbedtls_sha256_starts(&pxCtx->xSHA256Context, 0);
     }
 
     return xResult;
@@ -331,7 +331,7 @@ static void prvSignatureVerificationUpdate(void* pvContext,
     /*
      * Add the data to the hash of the requested type
      */
-    (void)mbedtls_sha256_update_ret(&pxCtx->xSHA256Context, pucData, xDataLength);
+    (void)mbedtls_sha256_update(&pxCtx->xSHA256Context, pucData, xDataLength);
 
 }
 
@@ -361,7 +361,7 @@ static BaseType_t prvSignatureVerificationFinal(void* pvContext,
             /*
              * Finish the hash.
              */
-            (void)mbedtls_sha256_finish_ret(&pxCtx->xSHA256Context, ucSHA256);
+            (void)mbedtls_sha256_finish(&pxCtx->xSHA256Context, ucSHA256);
             pucHash = ucSHA256;
             xHashLength = SHA256_DIGEST_BYTES;
 

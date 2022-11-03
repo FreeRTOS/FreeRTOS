@@ -38,38 +38,6 @@
 void vApplicationIdleHook( void );
 void vApplicationTickHook( void );
 
-#define mainALIGN_TO( x )                __attribute__((aligned(x)))
-
-#define mainREAD_WRITE_ARRAY_SIZE 130
-#define mainREAD_WRITE_ALIGN_SIZE 128
-char cReadWriteArray[ mainREAD_WRITE_ARRAY_SIZE ] mainALIGN_TO( mainREAD_WRITE_ALIGN_SIZE );
-
-#define mainREAD_ONLY_ARRAY_SIZE 260
-#define mainREAD_ONLY_ALIGN_SIZE 256
-char cReadOnlyArray[ mainREAD_ONLY_ARRAY_SIZE ] mainALIGN_TO( mainREAD_ONLY_ALIGN_SIZE );
-
-#define mainPRIVILEGED_ONLY_ACCESS_ARRAY_SIZE 130
-#define mainPRIVILEGED_ONLY_ACCESS_ALIGN_SIZE 128
-
-char cPrivilegedOnlyAccessArray[ mainPRIVILEGED_ONLY_ACCESS_ALIGN_SIZE ] mainALIGN_TO( mainPRIVILEGED_ONLY_ACCESS_ALIGN_SIZE );
-QueueHandle_t xGlobalScopeCheckQueue = NULL;
-volatile uint32_t *pulRegTest3LoopCounter = ( uint32_t * ) &( cReadWriteArray[ 0 ] ), *pulRegTest4LoopCounter = ( uint32_t * ) &( cReadWriteArray[ 4 ] );
-
-void vMainDeleteMe( void );
-void vMainSendImAlive( QueueHandle_t xHandle, uint32_t ulTaskNumber );
-
-void vMainDeleteMe( void )
-{
-    vTaskDelete( NULL );
-}
-
-void vMainSendImAlive( QueueHandle_t xHandle, uint32_t ulTaskNumber )
-{
-    if( xHandle != NULL )
-    {
-        xQueueSend( xHandle, &ulTaskNumber, 0 );
-    }
-}
 int main()
 {
     app_main();

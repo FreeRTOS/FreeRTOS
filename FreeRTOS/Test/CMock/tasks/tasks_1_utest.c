@@ -2652,6 +2652,10 @@ void test_xTaskIncrementTick_success_update_next_unblock( void )
     TEST_ASSERT_EQUAL( xTickCount + 4, xNextTaskUnblockTime );
 }
 
+/* Tests the scenario when a task with priority equal to the
+ * currently executing task is unblocked as a result of the
+ * xTaskIncrementTick call. Also, xPendedTicks is set to
+ * non-zero to ensure that tick hook is not called. */
 void test_xTaskIncrementTick_success_unblock_tasks( void )
 {
     BaseType_t ret_task_incrementtick;
@@ -2695,7 +2699,8 @@ void test_xTaskIncrementTick_success_unblock_tasks( void )
 
 /* Tests the scenario when a task with priority equal to the
  * currently executing task is unblocked as a result of the
- * xTaskIncrementTick call. */
+ * xTaskIncrementTick call. Also, xPendedTicks is set to 0 to
+ * ensure that tick hook is called. */
 void test_xTaskIncrementTick_success_unblock_tasks2( void )
 {
     BaseType_t ret_task_incrementtick;
@@ -2741,7 +2746,8 @@ void test_xTaskIncrementTick_success_unblock_tasks2( void )
 
 /* Tests the scenario when a task with priority higher than the
  * currently executing task is unblocked as a result of the
- * xTaskIncrementTick call. */
+ * xTaskIncrementTick call. Also, xPendedTicks is set to
+ * non-zero to ensure that tick hook is not called. */
 void test_xTaskIncrementTick_success_unblock_tasks3( void )
 {
     BaseType_t ret_task_incrementtick;

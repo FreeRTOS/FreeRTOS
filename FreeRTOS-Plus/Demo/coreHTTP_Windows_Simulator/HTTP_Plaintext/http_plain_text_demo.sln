@@ -1,23 +1,72 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29215.179
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32819.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RTOSDemo", "WIN32.vcxproj", "{C686325E-3261-42F7-AEB1-DDE5280E1CEB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS-Kernel", "..\..\..\WindowsSimulator\FreeRTOS-Kernel\FreeRTOS-Kernel.vcxproj", "{72C209C4-49A4-4942-A201-44706C9D77EC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS+TCP", "..\..\..\WindowsSimulator\FreeRTOS+TCP\FreeRTOS+TCP.vcxproj", "{C90E6CC5-818B-4C97-8876-0986D989387C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreHTTP_Plaintext", "CoreHTTP_Plaintext.vcxproj", "{382DC80F-E278-4BC9-9DB6-59014486DA0F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "coreHTTP", "..\..\..\WindowsSimulator\coreHTTP\coreHTTP.vcxproj", "{EE39FA0F-CEFB-4C29-A571-05A28FDD47FD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Logging", "..\..\..\WindowsSimulator\Logging\Logging.vcxproj", "{BE362AC0-B10B-4276-B84E-6304652BA228}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C686325E-3261-42F7-AEB1-DDE5280E1CEB}.Debug|Win32.ActiveCfg = Debug|Win32
-		{C686325E-3261-42F7-AEB1-DDE5280E1CEB}.Debug|Win32.Build.0 = Debug|Win32
+		{72C209C4-49A4-4942-A201-44706C9D77EC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{72C209C4-49A4-4942-A201-44706C9D77EC}.Debug|Win32.Build.0 = Debug|Win32
+		{72C209C4-49A4-4942-A201-44706C9D77EC}.Debug|x64.ActiveCfg = Debug|x64
+		{72C209C4-49A4-4942-A201-44706C9D77EC}.Debug|x64.Build.0 = Debug|x64
+		{72C209C4-49A4-4942-A201-44706C9D77EC}.Release|Win32.ActiveCfg = Release|Win32
+		{72C209C4-49A4-4942-A201-44706C9D77EC}.Release|Win32.Build.0 = Release|Win32
+		{72C209C4-49A4-4942-A201-44706C9D77EC}.Release|x64.ActiveCfg = Release|x64
+		{72C209C4-49A4-4942-A201-44706C9D77EC}.Release|x64.Build.0 = Release|x64
+		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug|Win32.Build.0 = Debug|Win32
+		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug|x64.ActiveCfg = Debug|x64
+		{C90E6CC5-818B-4C97-8876-0986D989387C}.Debug|x64.Build.0 = Debug|x64
+		{C90E6CC5-818B-4C97-8876-0986D989387C}.Release|Win32.ActiveCfg = Release|Win32
+		{C90E6CC5-818B-4C97-8876-0986D989387C}.Release|Win32.Build.0 = Release|Win32
+		{C90E6CC5-818B-4C97-8876-0986D989387C}.Release|x64.ActiveCfg = Release|x64
+		{C90E6CC5-818B-4C97-8876-0986D989387C}.Release|x64.Build.0 = Release|x64
+		{382DC80F-E278-4BC9-9DB6-59014486DA0F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{382DC80F-E278-4BC9-9DB6-59014486DA0F}.Debug|Win32.Build.0 = Debug|Win32
+		{382DC80F-E278-4BC9-9DB6-59014486DA0F}.Debug|x64.ActiveCfg = Debug|x64
+		{382DC80F-E278-4BC9-9DB6-59014486DA0F}.Debug|x64.Build.0 = Debug|x64
+		{382DC80F-E278-4BC9-9DB6-59014486DA0F}.Release|Win32.ActiveCfg = Release|Win32
+		{382DC80F-E278-4BC9-9DB6-59014486DA0F}.Release|Win32.Build.0 = Release|Win32
+		{382DC80F-E278-4BC9-9DB6-59014486DA0F}.Release|x64.ActiveCfg = Release|x64
+		{382DC80F-E278-4BC9-9DB6-59014486DA0F}.Release|x64.Build.0 = Release|x64
+		{EE39FA0F-CEFB-4C29-A571-05A28FDD47FD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EE39FA0F-CEFB-4C29-A571-05A28FDD47FD}.Debug|Win32.Build.0 = Debug|Win32
+		{EE39FA0F-CEFB-4C29-A571-05A28FDD47FD}.Debug|x64.ActiveCfg = Debug|x64
+		{EE39FA0F-CEFB-4C29-A571-05A28FDD47FD}.Debug|x64.Build.0 = Debug|x64
+		{EE39FA0F-CEFB-4C29-A571-05A28FDD47FD}.Release|Win32.ActiveCfg = Release|Win32
+		{EE39FA0F-CEFB-4C29-A571-05A28FDD47FD}.Release|Win32.Build.0 = Release|Win32
+		{EE39FA0F-CEFB-4C29-A571-05A28FDD47FD}.Release|x64.ActiveCfg = Release|x64
+		{EE39FA0F-CEFB-4C29-A571-05A28FDD47FD}.Release|x64.Build.0 = Release|x64
+		{BE362AC0-B10B-4276-B84E-6304652BA228}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BE362AC0-B10B-4276-B84E-6304652BA228}.Debug|Win32.Build.0 = Debug|Win32
+		{BE362AC0-B10B-4276-B84E-6304652BA228}.Debug|x64.ActiveCfg = Debug|x64
+		{BE362AC0-B10B-4276-B84E-6304652BA228}.Debug|x64.Build.0 = Debug|x64
+		{BE362AC0-B10B-4276-B84E-6304652BA228}.Release|Win32.ActiveCfg = Release|Win32
+		{BE362AC0-B10B-4276-B84E-6304652BA228}.Release|Win32.Build.0 = Release|Win32
+		{BE362AC0-B10B-4276-B84E-6304652BA228}.Release|x64.ActiveCfg = Release|x64
+		{BE362AC0-B10B-4276-B84E-6304652BA228}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {150F08BF-9D61-4CC2-8DBF-1335172A1EA4}
+		SolutionGuid = {3876F3F5-8086-4F8E-BB5E-D8840E7D926C}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = FreeRTOS_Plus_TCP_Minimal.vsmdi

@@ -26,14 +26,9 @@
 
 /* Standard includes. */
 #include <stdio.h>
-#include <time.h>
-
-/* Visual studio intrinsics used so the __debugbreak() function is available
- * should an assert get hit. */
-#include <intrin.h>
 
 /* FreeRTOS includes. */
-#include <FreeRTOS.h>
+#include "FreeRTOS.h"
 #include "task.h"
 
 /* TCP/IP stack includes. */
@@ -174,4 +169,11 @@ void vPlatformInitIpStack( void )
     configASSERT( xResult == pdTRUE );
 }
 
+/*-----------------------------------------------------------*/
 
+BaseType_t xPlatformIsNetworkUp( void )
+{
+    return FreeRTOS_IsNetworkUp();
+}
+
+/*-----------------------------------------------------------*/

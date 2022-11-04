@@ -4,15 +4,11 @@
     <Filter Include="include">
       <UniqueIdentifier>{03334b83-3266-4cf4-9640-4962e653bdba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="port">
-      <UniqueIdentifier>{3bd8627d-a57b-4847-9d16-23c7676efd72}</UniqueIdentifier>
-      <Extensions>c;h</Extensions>
+    <Filter Include="Kernel">
+      <UniqueIdentifier>{7eca6f04-3532-407e-990c-0ec553526fea}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\FreeRTOS\Source\portable\MSVC-MingW\portmacro.h">
-      <Filter>port</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\FreeRTOS\Source\include\list.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -68,21 +64,33 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="FreeRTOSConfig.h" />
+    <ClInclude Include="..\..\..\FreeRTOS\Source\portable\MSVC-MingW\portmacro.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\FreeRTOS\Source\list.c" />
-    <ClCompile Include="..\..\..\FreeRTOS\Source\event_groups.c" />
-    <ClCompile Include="..\..\..\FreeRTOS\Source\croutine.c" />
-    <ClCompile Include="..\..\..\FreeRTOS\Source\stream_buffer.c" />
-    <ClCompile Include="..\..\..\FreeRTOS\Source\queue.c" />
-    <ClCompile Include="..\..\..\FreeRTOS\Source\tasks.c" />
-    <ClCompile Include="..\..\..\FreeRTOS\Source\timers.c" />
-    <ClCompile Include="..\..\..\FreeRTOS\Source\portable\MemMang\heap_4.c">
-      <Filter>port</Filter>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\list.c">
+      <Filter>Kernel</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c">
-      <Filter>port</Filter>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\queue.c">
+      <Filter>Kernel</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\stream_buffer.c">
+      <Filter>Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\tasks.c">
+      <Filter>Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\timers.c">
+      <Filter>Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\event_groups.c">
+      <Filter>Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\croutine.c">
+      <Filter>Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\portable\MemMang\heap_4.c" />
+    <ClCompile Include="..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c" />
+    <ClCompile Include="freertos_hooks_winsim.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\FreeRTOS\Source\include\stdint.readme">

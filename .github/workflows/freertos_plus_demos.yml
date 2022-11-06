@@ -280,7 +280,7 @@ jobs:
 
       - name: coreSNTP Demo
         working-directory: FreeRTOS-Plus/Demo/coreSNTP_Windows_Simulator
-        run: msbuild coreSNTP_Demo.sln -t:rebuild
+        run: msbuild core_sntp_demo.sln -t:rebuild
 
 
   winsim_aws_iot:

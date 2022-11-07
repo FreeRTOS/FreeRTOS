@@ -83,3 +83,5 @@ jobs:
         run: cd workspace/FreeRTOS/Demo/CORTEX_MPU_M3_MPS2_QEMU_GCC && make
       - name: Qemu MPS2 IAR build Cortex M3
         run: cd workspace/FreeRTOS/Demo/CORTEX_MPS2_QEMU_IAR_GCC/build/gcc && sed -i '/configUSE_STATS_FORMATTING_FUNCTIONS/c\#define configUSE_STATS_FORMATTING_FUNCTIONS 0' ../../FreeRTOSConfig.h && make
+      - name: Qemu MPS2 MPU build Cortex M4
+        run: cd workspace/FreeRTOS/Demo/CORTEX_MPU_M4_MPS2_QEMU_GCC/build/gcc && make clean && make

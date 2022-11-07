@@ -189,6 +189,28 @@ static int mbedtls_platform_mutex_unlock( mbedtls_threading_mutex_t * pMutex )
 
 /*-----------------------------------------------------------*/
 
+#if defined( MBEDTLS_THREADING_ALT )
+int mbedtls_platform_threading_init( void )
+{
+    mbedtls_threading_set_alt( mbedtls_platform_mutex_init,
+                               mbedtls_platform_mutex_free,
+                               mbedtls_platform_mutex_lock,
+                               mbedtls_platform_mutex_unlock );
+    return 0;
+}
+
+#else /* !MBEDTLS_THREADING_ALT */
+
+void (* mbedtls_mutex_init)( mbedtls_threading_mutex_t * mutex ) = mbedtls_platform_mutex_init;
+void (* mbedtls_mutex_free)( mbedtls_threading_mutex_t * mutex ) = mbedtls_platform_mutex_free;
+int (* mbedtls_mutex_lock)( mbedtls_threading_mutex_t * mutex ) = mbedtls_platform_mutex_lock;
+int (* mbedtls_mutex_unlock)( mbedtls_threading_mutex_t * mutex ) = mbedtls_platform_mutex_unlock;
+
+#endif /* !MBEDTLS_THREADING_ALT */
+
+#endif /* MBEDTLS_THREADING_C */
+/*-----------------------------------------------------------*/
+
 #if defined( MBEDTLS_ENTROPY_HARDWARE_ALT )
     /* Determine which API is available */
     #if defined(_WIN32)
@@ -334,25 +356,4 @@ static int mbedtls_platform_mutex_unlock( mbedtls_threading_mutex_t * pMutex )
         }
     #endif
 #endif
-
-#if defined( MBEDTLS_THREADING_ALT )
-int mbedtls_platform_threading_init( void )
-{
-    mbedtls_threading_set_alt( mbedtls_platform_mutex_init,
-                               mbedtls_platform_mutex_free,
-                               mbedtls_platform_mutex_lock,
-                               mbedtls_platform_mutex_unlock );
-    return 0;
-}
-
-#else /* !MBEDTLS_THREADING_ALT */
-
-void (* mbedtls_mutex_init)( mbedtls_threading_mutex_t * mutex ) = mbedtls_platform_mutex_init;
-void (* mbedtls_mutex_free)( mbedtls_threading_mutex_t * mutex ) = mbedtls_platform_mutex_free;
-int (* mbedtls_mutex_lock)( mbedtls_threading_mutex_t * mutex ) = mbedtls_platform_mutex_lock;
-int (* mbedtls_mutex_unlock)( mbedtls_threading_mutex_t * mutex ) = mbedtls_platform_mutex_unlock;
-
-#endif /* !MBEDTLS_THREADING_ALT */
-
-#endif /* MBEDTLS_THREADING_C */
 /*-----------------------------------------------------------*/

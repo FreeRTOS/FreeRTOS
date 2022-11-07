@@ -50,10 +50,7 @@
 /* mbedTLS include for configuring
  * threading functions. */
 #include "mbedtls/threading.h"
-#include "mbedtls/build_info.h"
-#ifdef MBEDTLS_THREADING_ALT
-    #include "threading_alt.h"
-#endif /* MBEDTLS_THREADING_ALT */
+#include "threading_alt.h"
 
 /* Demo Specific configs. */
 #include "demo_config.h"
@@ -158,10 +155,6 @@ void vStartSntpDemo( void )
 {
     initializeSystemClock();
 
-    #ifdef MBEDTLS_THREADING_ALT
-        mbedtls_platform_threading_init();
-    #endif /* MBEDTLS_THREADING_ALT */
-
     /* Create the SNTP client task that is responsible for synchronizing system time with the time servers
      * periodically. This is created as a high priority task to keep the SNTP client operation unhindered. */
     xTaskCreate( sntpTask,                 /* Function that implements the task. */
@@ -173,7 +166,7 @@ void vStartSntpDemo( void )
 
     /* Create the task that represents an application needing wall-clock time. */
     xTaskCreate( sampleAppTask,            /* Function that implements the task. */
-                 "SampleAppTask",          /* Text name for the task - only used for debugging. */
+                 "SampleAppTask",              /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
                  NULL,                     /* Task parameter - not used in this case. */
                  tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */

@@ -197,10 +197,10 @@ static eReportBuilderStatus prvWriteTaskIdArray( char * pcBuffer,
 /*-----------------------------------------------------------*/
 
 static eReportBuilderStatus prvWritePortsArray( char * pcBuffer,
-                                                uint32_t xBufferLength,
+                                                size_t xBufferLength,
                                                 const uint16_t * pusOpenPortsArray,
-                                                uint32_t xOpenPortsArrayLength,
-                                                uint32_t * pxOutCharsWritten )
+                                                size_t xOpenPortsArrayLength,
+                                                size_t * pxOutCharsWritten )
 {
     char * pcCurrentWritePos = pcBuffer;
     uint32_t i;
@@ -435,7 +435,7 @@ eReportBuilderStatus eGenerateJsonReport( char * pcBuffer,
 {
     char * pcCurrentWritePos = pcBuffer;
     size_t xRemainingBufferLength = xBufferLength;
-    uint32_t bufferWritten;
+    size_t bufferWritten;
     eReportBuilderStatus eStatus = eReportBuilderSuccess;
     int32_t lCharactersWritten;
 

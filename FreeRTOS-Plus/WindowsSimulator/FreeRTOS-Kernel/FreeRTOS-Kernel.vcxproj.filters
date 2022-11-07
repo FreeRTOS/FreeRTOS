@@ -91,6 +91,7 @@
     <ClCompile Include="..\..\..\FreeRTOS\Source\portable\MemMang\heap_4.c" />
     <ClCompile Include="..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c" />
     <ClCompile Include="freertos_hooks_winsim.c" />
+    <ClCompile Include="runtime_stats_winsim.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\FreeRTOS\Source\include\stdint.readme">

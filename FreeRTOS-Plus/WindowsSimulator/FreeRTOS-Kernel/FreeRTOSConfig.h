@@ -119,15 +119,13 @@
 
 
 /* Run time stats gathering definitions. */
-//unsigned long ulGetRunTimeCounterValue( void );
-//void vConfigureTimerForRunTimeStats( void );
+unsigned long ulGetRunTimeCounterValue( void );
+void vConfigureTimerForRunTimeStats( void );
 
-#define configGENERATE_RUN_TIME_STATS	0
-//#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()    vConfigureTimerForRunTimeStats()
-//#define portGET_RUN_TIME_COUNTER_VALUE()            ulGetRunTimeCounterValue()
+#define configGENERATE_RUN_TIME_STATS	1
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()    vConfigureTimerForRunTimeStats()
+#define portGET_RUN_TIME_COUNTER_VALUE()            ulGetRunTimeCounterValue()
 
-/* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
-// #include "trcRecorder.h"
 
 /* Application specific definitions follow. **********************************/
 

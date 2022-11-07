@@ -167,6 +167,7 @@
     <ClCompile Include="..\..\..\FreeRTOS\Source\tasks.c" />
     <ClCompile Include="..\..\..\FreeRTOS\Source\timers.c" />
     <ClCompile Include="freertos_hooks_winsim.c" />
+    <ClCompile Include="runtime_stats_winsim.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\FreeRTOS\Source\include\stdint.readme" />

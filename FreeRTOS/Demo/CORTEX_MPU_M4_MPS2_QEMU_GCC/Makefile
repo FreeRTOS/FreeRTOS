@@ -7,8 +7,6 @@ FREERTOS_DIR_REL      :=    ../../../FreeRTOS
 FREERTOS_DIR          :=    $(abspath $(FREERTOS_DIR_REL))
 KERNEL_DIR            :=    $(FREERTOS_DIR)/Source
 
-FREERTOS_PLUS_DIR_REL :=    ../../../FreeRTOS-Plus
-FREERTOS_PLUS_DIR     :=    $(abspath $(FREERTOS_PLUS_DIR_REL))
 
 SOURCE_FILES          +=    $(KERNEL_DIR)/portable/GCC/ARM_CM4_MPU/port.c
 SOURCE_FILES          +=    $(KERNEL_DIR)/portable/Common/mpu_wrappers.c

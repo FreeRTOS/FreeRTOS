@@ -54,7 +54,7 @@ a file named __./build/RTOSDemo.axf__ will be generated
 
 8. Run the MPU Demo
 ```
-sudo qemu-system-arm -machine mps2-an386 -monitor null -semihosting --semihosting-config enable=on,target=native -kernel ./build/RTOSDemo.axf -serial stdio -nographic -s -S
+sudo qemu-system-arm -machine mps2-an386 -monitor null -kernel ./build/RTOSDemo.axf -serial stdio -nographic -s -S
 ```
 The options __ -s -S __ in the above command will start the program waiting
 for the debugger. Check the next section on how to attach the debugger to the
@@ -70,8 +70,7 @@ $ make DEBUG=1
 ```
 2. Run the binary with `-s` and `-S` flags:
 ```
-$ sudo qemu-system-arm -machine mps2-an386 -monitor null -semihosting \
-        --semihosting-config enable=on,target=native \
+$ sudo qemu-system-arm -machine mps2-an386 -monitor null \
         -kernel ./build/RTOSDemo.axf \
         -serial stdio -nographic -s -S
 ```

@@ -30,7 +30,11 @@
 
 /* FreeRTOS+CLI includes. */
 #include "FreeRTOS_CLI.h"
+#include "trcRecorder.h"
 
+/* Standard includes. */
+#include <stdio.h>
+#include <stdint.h>
 /*
  * Writes trace data to a disk file when the trace recording is stopped.
  * This function will simply overwrite any trace files that already exist.

@@ -320,5 +320,7 @@ extern UBaseType_t uxRand();
 
 #define configMAC
 
+extern BaseType_t xPlatformIsNetworkUp(void);
+
 
 #endif /* FREERTOS_IP_CONFIG_H */

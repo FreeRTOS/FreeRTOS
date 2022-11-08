@@ -118,9 +118,9 @@ extern void freertos_vector_table( void );
  * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
  */
 #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
-	extern void main_blinky( void );
+    extern void main_blinky( void );
 #else
-	extern void main_full( void );
+    extern void main_full( void );
 #endif /* #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 */
 
 /*
@@ -147,55 +147,55 @@ void vTogglelED( void );
 
 int main( void )
 {
-	prvSetupHardware();
+    prvSetupHardware();
 
-	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
-	of this file. */
-	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
-	{
-		main_blinky();
-	}
-	#else
-	{
-		main_full();
-	}
-	#endif
+    /* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
+    of this file. */
+    #if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
+    {
+        main_blinky();
+    }
+    #else
+    {
+        main_full();
+    }
+    #endif
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
-	/* Set all interrupt enable bits to 0. */
-	mainPLIC_ENABLE_0 = 0UL;
-	mainPLIC_ENABLE_1 = 0UL;
+    /* Set all interrupt enable bits to 0. */
+    mainPLIC_ENABLE_0 = 0UL;
+    mainPLIC_ENABLE_1 = 0UL;
 
-	/* Clear all pending interrupts. */
-	mainPLIC_PENDING_0 = 0UL;
-	mainPLIC_PENDING_1 = 0UL;
+    /* Clear all pending interrupts. */
+    mainPLIC_PENDING_0 = 0UL;
+    mainPLIC_PENDING_1 = 0UL;
 
-	/* Disable Red LED input. */
-	mainRED_LED_INPUT_ENABLE_REG &= ~mainRED_LED_PIN;
+    /* Disable Red LED input. */
+    mainRED_LED_INPUT_ENABLE_REG &= ~mainRED_LED_PIN;
 
-	/* Enable Red LED output. */
-	mainRED_LED_OUTPUT_ENABLE_REG |= mainRED_LED_PIN;
+    /* Enable Red LED output. */
+    mainRED_LED_OUTPUT_ENABLE_REG |= mainRED_LED_PIN;
 
-	/* Set UART baud rate. */
-	mainUART0_DIV_REG = ( mainUART_CLOCK_RATE / mainUART_BAUD_RATE ) - 1;
+    /* Set UART baud rate. */
+    mainUART0_DIV_REG = ( mainUART_CLOCK_RATE / mainUART_BAUD_RATE ) - 1;
 
-	/* Enable UART Tx. */
-	mainUART0_TXCTRL_REG |= mainUART_TXEN_BIT;
-	mainUART0_GPIO_SEL_REG &= mainUART0_PIN;
-	mainUART0_GPIO_SEL_EN |= mainUART0_PIN;
+    /* Enable UART Tx. */
+    mainUART0_TXCTRL_REG |= mainUART_TXEN_BIT;
+    mainUART0_GPIO_SEL_REG &= mainUART0_PIN;
+    mainUART0_GPIO_SEL_EN |= mainUART0_PIN;
 
-	#if( mainVECTOR_MODE_DIRECT == 1 )
-	{
-		__asm__ volatile( "csrw mtvec, %0" :: "r"( freertos_risc_v_trap_handler ) );
-	}
-	#else
-	{
-		__asm__ volatile( "csrw mtvec, %0" :: "r"( ( uintptr_t )freertos_vector_table | 0x1 ) );
-	}
-	#endif
+    #if( mainVECTOR_MODE_DIRECT == 1 )
+    {
+        __asm__ volatile( "csrw mtvec, %0" :: "r"( freertos_risc_v_trap_handler ) );
+    }
+    #else
+    {
+        __asm__ volatile( "csrw mtvec, %0" :: "r"( ( uintptr_t )freertos_vector_table | 0x1 ) );
+    }
+    #endif
 }
 /*-----------------------------------------------------------*/
 
@@ -203,15 +203,15 @@ void vToggleLED( void )
 {
 static uint32_t ulLEDState = 0;
 
-	if( ulLEDState == 0 )
-	{
-		mainRED_LED_OUTPUT_ENABLE_REG |= mainRED_LED_PIN;
-	}
-	else
-	{
-		mainRED_LED_OUTPUT_ENABLE_REG &= ~mainRED_LED_PIN;
-	}
-	ulLEDState = !ulLEDState;
+    if( ulLEDState == 0 )
+    {
+        mainRED_LED_OUTPUT_ENABLE_REG |= mainRED_LED_PIN;
+    }
+    else
+    {
+        mainRED_LED_OUTPUT_ENABLE_REG &= ~mainRED_LED_PIN;
+    }
+    ulLEDState = !ulLEDState;
 }
 /*-----------------------------------------------------------*/
 
@@ -219,71 +219,71 @@ void vSendString( const char * const pcString )
 {
 uint32_t ulIndex = 0;
 
-	/* Crude polling UART Tx. */
-	while( pcString[ ulIndex ] != 0x00 )
-	{
-		while( ( mainUART0_TX_DATA_REG & mainUART_TX_FULL_BIT ) != 0UL );
-		mainUART0_TX_DATA_BYTE_REG = pcString[ ulIndex ];
-		ulIndex++;
-	}
+    /* Crude polling UART Tx. */
+    while( pcString[ ulIndex ] != 0x00 )
+    {
+        while( ( mainUART0_TX_DATA_REG & mainUART_TX_FULL_BIT ) != 0UL );
+        mainUART0_TX_DATA_BYTE_REG = pcString[ ulIndex ];
+        ulIndex++;
+    }
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
-	/* vApplicationMallocFailedHook() will only be called if
-	configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
-	function that will get called if a call to pvPortMalloc() fails.
-	pvPortMalloc() is called internally by the kernel whenever a task, queue,
-	timer or semaphore is created.  It is also called by various parts of the
-	demo application.  If heap_1.c or heap_2.c are used, then the size of the
-	heap available to pvPortMalloc() is defined by configTOTAL_HEAP_SIZE in
-	FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
-	to query the size of free heap space that remains (although it does not
-	provide information on how the remaining heap might be fragmented). */
-	taskDISABLE_INTERRUPTS();
-	__asm volatile( "ebreak" );
-	for( ;; );
+    /* vApplicationMallocFailedHook() will only be called if
+    configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
+    function that will get called if a call to pvPortMalloc() fails.
+    pvPortMalloc() is called internally by the kernel whenever a task, queue,
+    timer or semaphore is created.  It is also called by various parts of the
+    demo application.  If heap_1.c or heap_2.c are used, then the size of the
+    heap available to pvPortMalloc() is defined by configTOTAL_HEAP_SIZE in
+    FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
+    to query the size of free heap space that remains (although it does not
+    provide information on how the remaining heap might be fragmented). */
+    taskDISABLE_INTERRUPTS();
+    __asm volatile( "ebreak" );
+    for( ;; );
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
 {
-	/* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
-	to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle
-	task.  It is essential that code added to this hook function never attempts
-	to block in any way (for example, call xQueueReceive() with a block time
-	specified, or call vTaskDelay()).  If the application makes use of the
-	vTaskDelete() API function (as this demo application does) then it is also
-	important that vApplicationIdleHook() is permitted to return to its calling
-	function, because it is the responsibility of the idle task to clean up
-	memory allocated by the kernel to any task that has since been deleted. */
+    /* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
+    to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle
+    task.  It is essential that code added to this hook function never attempts
+    to block in any way (for example, call xQueueReceive() with a block time
+    specified, or call vTaskDelay()).  If the application makes use of the
+    vTaskDelete() API function (as this demo application does) then it is also
+    important that vApplicationIdleHook() is permitted to return to its calling
+    function, because it is the responsibility of the idle task to clean up
+    memory allocated by the kernel to any task that has since been deleted. */
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
-	( void ) pcTaskName;
-	( void ) pxTask;
+    ( void ) pcTaskName;
+    ( void ) pxTask;
 
-	/* Run time stack overflow checking is performed if
-	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-	function is called if a stack overflow is detected. */
-	taskDISABLE_INTERRUPTS();
-	__asm volatile( "ebreak" );
-	for( ;; );
+    /* Run time stack overflow checking is performed if
+    configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+    function is called if a stack overflow is detected. */
+    taskDISABLE_INTERRUPTS();
+    __asm volatile( "ebreak" );
+    for( ;; );
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationTickHook( void )
 {
-	/* The tests in the full demo expect some interaction with interrupts. */
-	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
-	{
-		extern void vFullDemoTickHook( void );
-		vFullDemoTickHook();
-	}
-	#endif
+    /* The tests in the full demo expect some interaction with interrupts. */
+    #if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
+    {
+        extern void vFullDemoTickHook( void );
+        vFullDemoTickHook();
+    }
+    #endif
 }
 /*-----------------------------------------------------------*/
 
@@ -293,22 +293,22 @@ void vApplicationHandleTrap( uint32_t mcause )
 {
 char pcCause[ 20 ];
 
-	#warning vApplicationHandleTrap not implemented.
-	/* Not implemented yet! */
-	sprintf( pcCause, "%u", mcause );
-	configPRINT_STRING( pcCause );
-	configASSERT( mcause == 0 );
+    #warning vApplicationHandleTrap not implemented.
+    /* Not implemented yet! */
+    sprintf( pcCause, "%u", mcause );
+    configPRINT_STRING( pcCause );
+    configASSERT( mcause == 0 );
 }
 
 /*-----------------------------------------------------------*/
 
 void *malloc( size_t xSize )
 {
-	/* The linker script does not define a heap so artificially force an assert()
-	if something unexpectedly uses the C library heap.  See
-	https://www.freertos.org/a00111.html for more information. */
-	configASSERT( xTaskGetTickCount() == 0x00 );
-	return NULL;
+    /* The linker script does not define a heap so artificially force an assert()
+    if something unexpectedly uses the C library heap.  See
+    https://www.freertos.org/a00111.html for more information. */
+    configASSERT( xTaskGetTickCount() == 0x00 );
+    return NULL;
 }
 /*-----------------------------------------------------------*/
 

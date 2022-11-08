@@ -145,39 +145,39 @@ volatile uint32_t *pulRegTest2LoopCounter = &ulRegTest2LoopCounter;
 
 void main_full( void )
 {
-	/* Start all the other standard demo/test tasks.  They have no particular
-	functionality, but do demonstrate how to use the FreeRTOS API and test the
-	kernel port. */
-	vCreateBlockTimeTasks();
-	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
-	vStartDynamicPriorityTasks();
-	vStartTaskNotifyTask();
+    /* Start all the other standard demo/test tasks.  They have no particular
+    functionality, but do demonstrate how to use the FreeRTOS API and test the
+    kernel port. */
+    vCreateBlockTimeTasks();
+    vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
+    vStartDynamicPriorityTasks();
+    vStartTaskNotifyTask();
 
-	/* Create the register check tasks, as described at the top of this	file.
-	Use xTaskCreateStatic() to create a task using only statically allocated
-	memory. */
-	xTaskCreate( prvRegTestTaskEntry1, 			/* The function that implements the task. */
-				 "Reg1", 						/* The name of the task. */
-				 mainREG_TEST_STACK_SIZE_WORDS, /* Size of stack to allocate for the task - in words not bytes!. */
-				 mainREG_TEST_TASK_1_PARAMETER, /* Parameter passed into the task. */
-				 tskIDLE_PRIORITY, 				/* Priority of the task. */
-				 NULL );						/* Can be used to pass out a handle to the created task. */
-	xTaskCreate( prvRegTestTaskEntry2, "Reg2", mainREG_TEST_STACK_SIZE_WORDS, mainREG_TEST_TASK_2_PARAMETER, tskIDLE_PRIORITY, NULL );
+    /* Create the register check tasks, as described at the top of this	file.
+    Use xTaskCreateStatic() to create a task using only statically allocated
+    memory. */
+    xTaskCreate( prvRegTestTaskEntry1, 			/* The function that implements the task. */
+                 "Reg1", 						/* The name of the task. */
+                 mainREG_TEST_STACK_SIZE_WORDS, /* Size of stack to allocate for the task - in words not bytes!. */
+                 mainREG_TEST_TASK_1_PARAMETER, /* Parameter passed into the task. */
+                 tskIDLE_PRIORITY, 				/* Priority of the task. */
+                 NULL );						/* Can be used to pass out a handle to the created task. */
+    xTaskCreate( prvRegTestTaskEntry2, "Reg2", mainREG_TEST_STACK_SIZE_WORDS, mainREG_TEST_TASK_2_PARAMETER, tskIDLE_PRIORITY, NULL );
 
-	/* Create the task that performs the 'check' functionality,	as described at
-	the top of this file. */
-	xTaskCreate( prvCheckTask, "Check", mainCHECK_TASK_STACK_SIZE_WORDS, NULL, mainCHECK_TASK_PRIORITY, NULL );
+    /* Create the task that performs the 'check' functionality,	as described at
+    the top of this file. */
+    xTaskCreate( prvCheckTask, "Check", mainCHECK_TASK_STACK_SIZE_WORDS, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
-	/* Start the scheduler. */
-	vTaskStartScheduler();
+    /* Start the scheduler. */
+    vTaskStartScheduler();
 
-	/* If all is well, the scheduler will now be running, and the following
-	line will never be reached.  If the following line does execute, then
-	there was insufficient FreeRTOS heap memory available for the Idle and/or
-	timer tasks to be created.  See the memory management section on the
-	FreeRTOS web site for more details on the FreeRTOS heap
-	http://www.freertos.org/a00111.html. */
-	for( ;; );
+    /* If all is well, the scheduler will now be running, and the following
+    line will never be reached.  If the following line does execute, then
+    there was insufficient FreeRTOS heap memory available for the Idle and/or
+    timer tasks to be created.  See the memory management section on the
+    FreeRTOS web site for more details on the FreeRTOS heap
+    http://www.freertos.org/a00111.html. */
+    for( ;; );
 }
 /*-----------------------------------------------------------*/
 
@@ -190,124 +190,124 @@ char * const pcPassMessage = mainDEMO_SUCCESS_MESSAGE;
 char * pcStatusMessage = pcPassMessage;
 extern void vToggleLED( void );
 
-	/* Just to stop compiler warnings. */
-	( void ) pvParameters;
+    /* Just to stop compiler warnings. */
+    ( void ) pvParameters;
 
-	/* Demo start marker. */
-	configPRINT_STRING( "FreeRTOS Demo Start\r\n" );
+    /* Demo start marker. */
+    configPRINT_STRING( "FreeRTOS Demo Start\r\n" );
 
-	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
-	works correctly. */
-	xLastExecutionTime = xTaskGetTickCount();
+    /* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
+    works correctly. */
+    xLastExecutionTime = xTaskGetTickCount();
 
-	/* Cycle for ever, delaying then checking all the other tasks are still
-	operating without error.  The onboard LED is toggled on each iteration.
-	If an error is detected then the delay period is decreased from
-	mainNO_ERROR_CHECK_TASK_PERIOD to mainERROR_CHECK_TASK_PERIOD.  This has the
-	effect of increasing the rate at which the onboard LED toggles, and in so
-	doing gives visual feedback of the system status. */
-	for( ;; )
-	{
-		/* Delay until it is time to execute again. */
-		vTaskDelayUntil( &xLastExecutionTime, xDelayPeriod );
+    /* Cycle for ever, delaying then checking all the other tasks are still
+    operating without error.  The onboard LED is toggled on each iteration.
+    If an error is detected then the delay period is decreased from
+    mainNO_ERROR_CHECK_TASK_PERIOD to mainERROR_CHECK_TASK_PERIOD.  This has the
+    effect of increasing the rate at which the onboard LED toggles, and in so
+    doing gives visual feedback of the system status. */
+    for( ;; )
+    {
+        /* Delay until it is time to execute again. */
+        vTaskDelayUntil( &xLastExecutionTime, xDelayPeriod );
 
-		/* Check all the demo tasks (other than the flash tasks) to ensure
-		that they are all still running, and that none have detected an error. */
-		if( xAreDynamicPriorityTasksStillRunning() == pdFALSE )
-		{
-			pcStatusMessage = "FreeRTOS Demo ERROR: Dynamic priority demo/tests.\r\n";
-		}
+        /* Check all the demo tasks (other than the flash tasks) to ensure
+        that they are all still running, and that none have detected an error. */
+        if( xAreDynamicPriorityTasksStillRunning() == pdFALSE )
+        {
+            pcStatusMessage = "FreeRTOS Demo ERROR: Dynamic priority demo/tests.\r\n";
+        }
 
-		if( xAreBlockTimeTestTasksStillRunning() == pdFALSE )
-		{
-			pcStatusMessage = "FreeRTOS Demo ERROR: Block time demo/tests.\r\n";
-		}
+        if( xAreBlockTimeTestTasksStillRunning() == pdFALSE )
+        {
+            pcStatusMessage = "FreeRTOS Demo ERROR: Block time demo/tests.\r\n";
+        }
 
-		if( xAreTimerDemoTasksStillRunning( ( TickType_t ) xDelayPeriod ) == pdFALSE )
-		{
-			pcStatusMessage = "FreeRTOS Demo ERROR: Timer demo/tests.\r\n";
-		}
+        if( xAreTimerDemoTasksStillRunning( ( TickType_t ) xDelayPeriod ) == pdFALSE )
+        {
+            pcStatusMessage = "FreeRTOS Demo ERROR: Timer demo/tests.\r\n";
+        }
 
-		if( xAreTaskNotificationTasksStillRunning() == pdFALSE )
-		{
-			pcStatusMessage = "FreeRTOS Demo ERROR: Task notification demo/tests.\r\n";
-		}
+        if( xAreTaskNotificationTasksStillRunning() == pdFALSE )
+        {
+            pcStatusMessage = "FreeRTOS Demo ERROR: Task notification demo/tests.\r\n";
+        }
 
-		/* Check that the register test 1 task is still running. */
-		if( ulLastRegTest1Value == ulRegTest1LoopCounter )
-		{
-			pcStatusMessage = "FreeRTOS Demo ERROR: Register test 1.\r\n";
-		}
-		ulLastRegTest1Value = ulRegTest1LoopCounter;
+        /* Check that the register test 1 task is still running. */
+        if( ulLastRegTest1Value == ulRegTest1LoopCounter )
+        {
+            pcStatusMessage = "FreeRTOS Demo ERROR: Register test 1.\r\n";
+        }
+        ulLastRegTest1Value = ulRegTest1LoopCounter;
 
-		/* Check that the register test 2 task is still running. */
-		if( ulLastRegTest2Value == ulRegTest2LoopCounter )
-		{
-			pcStatusMessage = "FreeRTOS Demo ERROR: Register test 2.\r\n";
-		}
-		ulLastRegTest2Value = ulRegTest2LoopCounter;
+        /* Check that the register test 2 task is still running. */
+        if( ulLastRegTest2Value == ulRegTest2LoopCounter )
+        {
+            pcStatusMessage = "FreeRTOS Demo ERROR: Register test 2.\r\n";
+        }
+        ulLastRegTest2Value = ulRegTest2LoopCounter;
 
-		/* Write the status message to the UART and toggle the LED to show the
-		system status if the UART is not connected. */
-		vToggleLED();
+        /* Write the status message to the UART and toggle the LED to show the
+        system status if the UART is not connected. */
+        vToggleLED();
 
 
 
-		/* If an error has been found then increase the LED toggle rate by
-		increasing the cycle frequency. */
-		if( pcStatusMessage != pcPassMessage )
-		{
-			xDelayPeriod = mainERROR_CHECK_TASK_PERIOD;
-		}
+        /* If an error has been found then increase the LED toggle rate by
+        increasing the cycle frequency. */
+        if( pcStatusMessage != pcPassMessage )
+        {
+            xDelayPeriod = mainERROR_CHECK_TASK_PERIOD;
+        }
 
-		configPRINT_STRING( pcStatusMessage );
-	}
+        configPRINT_STRING( pcStatusMessage );
+    }
 }
 /*-----------------------------------------------------------*/
 
 static void prvRegTestTaskEntry1( void *pvParameters )
 {
-	/* Although the regtest task is written in assembler, its entry point is
-	written in C for convenience of checking the task parameter is being passed
-	in correctly. */
-	if( pvParameters == mainREG_TEST_TASK_1_PARAMETER )
-	{
-		/* Start the part of the test that is written in assembler. */
-		vRegTest1Implementation();
-	}
+    /* Although the regtest task is written in assembler, its entry point is
+    written in C for convenience of checking the task parameter is being passed
+    in correctly. */
+    if( pvParameters == mainREG_TEST_TASK_1_PARAMETER )
+    {
+        /* Start the part of the test that is written in assembler. */
+        vRegTest1Implementation();
+    }
 
-	/* The following line will only execute if the task parameter is found to
-	be incorrect.  The check task will detect that the regtest loop counter is
-	not being incremented and flag an error. */
-	vTaskDelete( NULL );
+    /* The following line will only execute if the task parameter is found to
+    be incorrect.  The check task will detect that the regtest loop counter is
+    not being incremented and flag an error. */
+    vTaskDelete( NULL );
 }
 /*-----------------------------------------------------------*/
 
 static void prvRegTestTaskEntry2( void *pvParameters )
 {
-	/* Although the regtest task is written in assembler, its entry point is
-	written in C for convenience of checking the task parameter is being passed
-	in correctly. */
-	if( pvParameters == mainREG_TEST_TASK_2_PARAMETER )
-	{
-		/* Start the part of the test that is written in assembler. */
-		vRegTest2Implementation();
-	}
+    /* Although the regtest task is written in assembler, its entry point is
+    written in C for convenience of checking the task parameter is being passed
+    in correctly. */
+    if( pvParameters == mainREG_TEST_TASK_2_PARAMETER )
+    {
+        /* Start the part of the test that is written in assembler. */
+        vRegTest2Implementation();
+    }
 
-	/* The following line will only execute if the task parameter is found to
-	be incorrect.  The check task will detect that the regtest loop counter is
-	not being incremented and flag an error. */
-	vTaskDelete( NULL );
+    /* The following line will only execute if the task parameter is found to
+    be incorrect.  The check task will detect that the regtest loop counter is
+    not being incremented and flag an error. */
+    vTaskDelete( NULL );
 }
 /*-----------------------------------------------------------*/
 
 void vFullDemoTickHook( void )
 {
-	/* Called from vApplicationTickHook() when the project is configured to
-	build the full test/demo applications. */
+    /* Called from vApplicationTickHook() when the project is configured to
+    build the full test/demo applications. */
 
-	/* Use task notifications from an interrupt. */
-	xNotifyTaskFromISR();
+    /* Use task notifications from an interrupt. */
+    xNotifyTaskFromISR();
 }
 /*-----------------------------------------------------------*/
 

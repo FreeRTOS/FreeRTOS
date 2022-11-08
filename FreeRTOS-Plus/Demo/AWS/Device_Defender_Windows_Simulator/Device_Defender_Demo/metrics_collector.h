@@ -51,10 +51,10 @@ typedef enum
  */
 typedef struct NetworkStats
 {
-    uint32_t ulBytesReceived;   /**< Number of bytes received. */
-    uint32_t ulBytesSent;       /**< Number of bytes sent. */
-    uint32_t ulPacketsReceived; /**< Number of packets (ethernet frames) received. */
-    uint32_t ulPacketsSent;     /**< Number of packets (ethernet frames) sent. */
+    size_t uxBytesReceived;   /**< Number of bytes received. */
+    size_t uxBytesSent;       /**< Number of bytes sent. */
+    size_t uxPacketsReceived; /**< Number of packets (ethernet frames) received. */
+    size_t uxPacketsSent;     /**< Number of packets (ethernet frames) sent. */
 } NetworkStats_t;
 
 /**

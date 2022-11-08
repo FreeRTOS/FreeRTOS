@@ -29,6 +29,22 @@
  * @brief FreeRTOS Sockets connect and disconnect wrapper implementation.
  */
 
+/* Include header that defines log levels. */
+#include "logging_levels.h"
+
+/* Logging configuration for the Sockets. */
+#ifndef LIBRARY_LOG_NAME
+    #define LIBRARY_LOG_NAME     "SocketsWrapper"
+#endif
+#ifndef LIBRARY_LOG_LEVEL
+    #define LIBRARY_LOG_LEVEL    LOG_INFO
+#endif
+
+extern void vLoggingPrintf( const char * pcFormatString,
+                            ... );
+
+#include "logging_stack.h"
+
 /* Standard includes. */
 #include <string.h>
 

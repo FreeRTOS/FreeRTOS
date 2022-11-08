@@ -32,34 +32,6 @@
 #ifndef SOCKETS_WRAPPER_H
 #define SOCKETS_WRAPPER_H
 
-/**************************************************/
-/******* DO NOT CHANGE the following order ********/
-/**************************************************/
-
-/* Logging related header files are required to be included in the following order:
- * 1. Include the header file "logging_levels.h".
- * 2. Define LIBRARY_LOG_NAME and  LIBRARY_LOG_LEVEL.
- * 3. Include the header file "logging_stack.h".
- */
-
-/* Include header that defines log levels. */
-#include "logging_levels.h"
-
-/* Logging configuration for the Sockets. */
-#ifndef LIBRARY_LOG_NAME
-    #define LIBRARY_LOG_NAME     "Sockets"
-#endif
-#ifndef LIBRARY_LOG_LEVEL
-    #define LIBRARY_LOG_LEVEL    LOG_INFO
-#endif
-
-extern void vLoggingPrintf( const char * pcFormatString,
-                            ... );
-
-#include "logging_stack.h"
-
-/************ End of logging configuration ****************/
-
 #define SOCKETS_ERROR_NONE          ( 0 )          /*!< No error. */
 #define SOCKETS_SOCKET_ERROR        ( -1 )         /*!< Catch-all sockets error code. */
 #define SOCKETS_EWOULDBLOCK         ( -11 )        /*!< A resource is temporarily unavailable. */

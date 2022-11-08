@@ -1525,6 +1525,8 @@ void sntpTask( void * pParameters )
          * APIs for sending time request to the server and receiving time response from the server. */
         while( 1 )
         {
+            bool socketStatus = false;
+
             /* For security, this demo keeps a UDP socket open only for one iteration of SNTP request-response cycle.
              * There is a security risk of a UDP socket being flooded with invalid or malicious server response packets
              * when a UDP socket is kept open across multiple time polling cycles. In such a scenario where the UDP
@@ -1535,8 +1537,18 @@ void sntpTask( void * pParameters )
              * timeout window), any extraneous or malicious server response packets for the same time request will be
              * ignored by the demo. */
 
+            /* Wait for Networking */
+            if( xPlatformIsNetworkUp() == pdFALSE )
+            {
+                LogInfo( ( "Waiting for the network link up event..." ) );
+                while( xPlatformIsNetworkUp() == pdFALSE )
+                {
+                    vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+                }
+            }
+
             /* Create a UDP socket for the current iteration of time polling. */
-            bool socketStatus = createUdpSocket( &udpContext.socket );
+            socketStatus = createUdpSocket( &udpContext.socket );
             configASSERT( socketStatus == true );
 
             status = Sntp_SendTimeRequest( &clientContext, generateRandomNumber(), democonfigSEND_TIME_REQUEST_TIMEOUT_MS );

@@ -35,7 +35,6 @@ DEFINES               +=    -DportUSING_MPU_WRAPPERS=1
 
 CPPFLAGS              +=    $(DEFINES)
 
-CFLAGS                +=    -mthumb
 CFLAGS                +=    -mfloat-abi=softfp
 CFLAGS                +=    -mcpu=cortex-m4
 CFLAGS                +=    -Wno-error=implicit-function-declaration
@@ -51,6 +50,7 @@ CFLAGS                +=    -fno-builtin
 CFLAGS                +=    -ggdb3 -Og -save-temps=obj
 
 LDFLAGS                =    -T mps2_m4.ld
+LDFLAGS               +=    -mthumb
 LDFLAGS               +=    -Xlinker -Map=${BUILD_DIR}/output.map
 LDFLAGS               +=    -nostartfiles
 LDFLAGS               +=    -specs=nosys.specs

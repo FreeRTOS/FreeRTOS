@@ -12,6 +12,8 @@
 
 #define LED_PIN (PICO_DEFAULT_LED_PIN)
 
+typedef void (* softwareInterruptHandler)(void);
+
 extern void initTestEnvironment(void);
 extern void sendReport(char *buffer, size_t len);
 extern void setPin(int pinNum);
@@ -21,6 +23,11 @@ extern void busyWaitMicroseconds(uint32_t us);
 extern uint64_t getCPUTime(void);
 
 extern int AMPLaunchOnCore(int coreNum, void (*function)(void));
+
+extern int registerSoftwareInterruptHandler(softwareInterruptHandler handler);
+extern void deleteSoftwareInterruptHandler(int num, softwareInterruptHandler handler);
+extern void triggerSoftwareInterrupt(int num);
+
 
 #define CPUTIME_TO_MS(CPUTIME_INPUT)                                           \
   ((uin32_t)(CPUTIME_INPUT / CPUTIME_TO_MS_DIVISOR))

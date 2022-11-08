@@ -40,3 +40,16 @@ int AMPLaunchOnCore(int coreNum, void (*function)(void)) {
 
   return rvb;
 }
+
+int registerSoftwareInterruptHandler(softwareInterruptHandler handler) {
+  irq_add_shared_handler(26, (irq_handler_t)handler, 0);
+  return 26;
+}
+
+void deleteSoftwareInterruptHandler(int num, softwareInterruptHandler handler) {
+  irq_remove_handler(num, (irq_handler_t)handler);
+}
+
+void triggerSoftwareInterrupt(int num) {
+  irq_set_pending(num);
+}

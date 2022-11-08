@@ -17,26 +17,22 @@ as ( configMAX_PRIORITIES - 1 ). */
 #define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 1)
 #define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 1)
 
-#define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(1000)
+#define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
 
 static void prvTaskA(void *pvParameters);
 static void prvTaskB(void *pvParameters);
+
 
 #if configNUM_CORES != 2
 #error Require two cores be configured for FreeRTOS
 #endif
 
-void test_fr8(void) {
+void setup_test_fr8_001(void) {
   xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
               mainTASK_A_PRIORITY, NULL);
 
   xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
               mainTASK_B_PRIORITY, NULL);
-
-  vTaskStartScheduler();
-
-  /* should never reach here */
-  panic_unsupported();
 }
 
 void setUp(void) {} /* Is run before every test, put unit init calls here. */
@@ -48,38 +44,111 @@ int main(void) {
 
   UNITY_BEGIN();
 
-  RUN_TEST(test_fr8);
+  RUN_TEST(setup_test_fr8_001);
+
+  vTaskStartScheduler();
+  
+  /* should never reach here */
+  panic_unsupported();
 
   return 0; // UNITY_END is unreachable via this path. a state machine and
             // counter is used so that just one child task will call it
             // instead.
 }
 
-static uint32_t taskAState = 1;
-static uint32_t taskBState = 1;
+static uint32_t taskBState = 0;
+
+static void softwareInterruptHandlerSimple(void) {
+  char strbuf_a[] = "ISR enter";
+  size_t strbuf_a_len = sizeof(char) / sizeof(strbuf_a);
+
+  char strbuf_b[] = "ISR exit";
+  size_t strbuf_b_len = sizeof(char) / sizeof(strbuf_b);
+
+  sendReport(strbuf_a, strbuf_a_len);
+  taskENTER_CRITICAL( );
+
+  TEST_ASSERT_EQUAL_INT(taskBState, 6);
+
+  taskEXIT_CRITICAL( );
+  sendReport(strbuf_b, strbuf_b_len);
+}
 
 static void prvTaskA(void *pvParameters) {
-  int bStateCopy;
-  int iter=1;
-  int numIters=5;
+  int handlerNum = -1;
 
-  bStateCopy = taskBState;
+  // wait for Task B to enter the critical section
+  for (;;) {
+    if (taskBState > 0) {
+      break;
+    }
+  }
+
+  handlerNum = registerSoftwareInterruptHandler(softwareInterruptHandlerSimple);
+  triggerSoftwareInterrupt(handlerNum);
+
+  // idle the task
+  for (;;) {
+    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+  }
+}
+
+static void prvTaskB(void *pvParameters) {
+  int iter=1;
+  int numIters=10;
+  char strbuf[] = "task B enter critical section";
+  size_t strbuf_len = sizeof(char) / sizeof(strbuf);
+
+  vTaskDelay(pdMS_TO_TICKS(5000));
+
+  sendReport(strbuf, strbuf_len);
 
   taskENTER_CRITICAL( );
 
   for (iter=1;iter< numIters;iter++) {
+    taskBState++;
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
-    TEST_ASSERT_EQUAL_INT(bStateCopy, taskBState);
-    taskAState++;
+    if ((iter % 2) == 0) {
+      clearPin(LED_PIN);
+    } else {
+      setPin(LED_PIN);
+    }
   }
 
-  taskEXIT_CRITICAL( );
+  taskBState++;
+  taskEXIT_CRITICAL(  );
+
+  // idle the task
+  for (;;) {
+    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+  }
 }
 
-static void prvTaskB(void *pvParameters) {
+#if 0
+static void prvTaskC(void *pvParameters) {
+  BaseType_t xReturned;
+
+  while (fr8_001_taskCompletions < 2) {
+    vTaskDelay(pdMS_TO_TICKS(33));
+  }
+
+  xReturned = xTaskNotify( xTaskD, 0x00, eSetValueWithOverwrite );
+  configASSERT( xReturned == pdPASS );
+  ( void ) xReturned; /* In case configASSERT() is not defined. */
+
+  xReturned = xTaskNotify( xTaskD, 0x01, eSetValueWithOverwrite );
+  configASSERT( xReturned == pdPASS );
+  ( void ) xReturned; /* In case configASSERT() is not defined. */
+}
+
+static void prvTaskD(void *pvParameters) {
   int aStateCopy;
   int iter=1;
   int numIters=5;
+
+  while (fr8_001_taskCompletions < 2) {
+    vTaskDelay(pdMS_TO_TICKS(33));
+  }
 
   aStateCopy = taskAState;
 
@@ -93,6 +162,7 @@ static void prvTaskB(void *pvParameters) {
 
   taskEXIT_CRITICAL(  );
 }
+#endif
 
 void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) {
   (void)pcTaskName;

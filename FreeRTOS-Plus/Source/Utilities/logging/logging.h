@@ -27,6 +27,8 @@
 #ifndef DEMO_LOGGING_H
 #define DEMO_LOGGING_H
 
+#include "FreeRTOS.h"
+
 /*
  * Initialize a logging system that can be used from FreeRTOS tasks and Win32
  * threads.  Do not call printf() directly while the scheduler is running.
@@ -42,5 +44,9 @@ void vLoggingInit( BaseType_t xLogToStdout,
                    BaseType_t xLogToUDP,
                    uint32_t ulRemoteIPAddress,
                    uint16_t usRemotePort );
+
+void vPlatformInitLogging(void);
+
+void vLoggingPrintf(const char* pcFormat, ...);
 
 #endif /* DEMO_LOGGING_H */

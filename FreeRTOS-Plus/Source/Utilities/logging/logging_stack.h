@@ -35,6 +35,8 @@
 /* Include header for logging level macros. */
 #include "logging_levels.h"
 
+#include "logging.h"
+
 /* Standard Include. */
 #include <stdio.h>
 #include <stdint.h>
@@ -73,7 +75,6 @@
  * vLoggingPrintf function.
  */
 #ifndef SdkLog
-    extern void vLoggingPrintf(const char* pcFormat, ...);
     #define SdkLog( message )    vLoggingPrintf message
 #endif
 

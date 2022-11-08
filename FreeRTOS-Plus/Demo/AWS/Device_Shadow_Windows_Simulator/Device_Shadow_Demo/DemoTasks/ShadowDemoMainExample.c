@@ -216,8 +216,8 @@
 
 /*-----------------------------------------------------------*/
 
-/** 
- * @brief Each compilation unit that consumes the NetworkContext must define it. 
+/**
+ * @brief Each compilation unit that consumes the NetworkContext must define it.
  * It should contain a single pointer to the type of your desired transport.
  * When using multiple transports in the same compilation unit, define this pointer as void *.
  *
@@ -768,25 +768,6 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
 }
 /*-----------------------------------------------------------*/
 
-/*
- * @brief Create the task that demonstrates the Device Shadow library API via a
- * MQTT mutually authenticated network connection with the AWS IoT broker.
- */
-void vStartShadowDemo( void )
-{
-    /* This example uses a single application task, which shows that how to
-     * use Device Shadow library to generate and validate AWS IoT Device Shadow
-     * MQTT topics, and use the coreMQTT library to communicate with the AWS IoT
-     * Device Shadow service. */
-    xTaskCreate( prvShadowDemoTask,        /* Function that implements the task. */
-                 "DemoTask",               /* Text name for the task - only used for debugging. */
-                 democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
-                 NULL,                     /* Task parameter - not used in this case. */
-                 tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
-                 NULL );                   /* Used to pass out a handle to the created task - not used in this case. */
-}
-/*-----------------------------------------------------------*/
-
 /**
  * @brief Entry point of shadow demo.
  *
@@ -830,6 +811,15 @@ void prvShadowDemoTask( void * pvParameters )
      * SHADOW_MAX_DEMO_LOOP_COUNT times. */
     do
     {
+        if( xPlatformIsNetworkUp() == pdFALSE )
+        {
+            LogInfo( ( "Waiting for the network link up event..." ) );
+            while( xPlatformIsNetworkUp() == pdFALSE )
+            {
+                vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+            }
+        }
+
         /****************************** Connect. ******************************/
 
         xDemoStatus = xEstablishMqttSession( &xMqttContext,

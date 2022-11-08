@@ -438,6 +438,16 @@ static void prvMQTTDemoTask( void * pvParameters )
     {
         /****************************** Connect. ******************************/
 
+        /* Wait for Networking */
+        if( xPlatformIsNetworkUp() == pdFALSE )
+        {
+            LogInfo( ( "Waiting for the network link up event..." ) );
+            while( xPlatformIsNetworkUp() == pdFALSE )
+            {
+                vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+            }
+        }
+
         /* Attempt to establish a TLS connection with the MQTT broker. This example
          * connects to the MQTT broker specified in democonfigMQTT_BROKER_ENDPOINT, using
          * the port number specified in democonfigMQTT_BROKER_PORT (these macros are defined

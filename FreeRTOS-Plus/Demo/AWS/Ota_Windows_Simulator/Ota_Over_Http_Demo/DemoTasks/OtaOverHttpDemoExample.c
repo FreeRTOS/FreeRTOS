@@ -2546,6 +2546,16 @@ void vOtaDemoTask( void * pParam )
         xReturnStatus = pdFAIL;
     }
 
+    /* Wait for Networking */
+    if( xPlatformIsNetworkUp() == pdFALSE )
+    {
+        LogInfo( ( "Waiting for the network link up event..." ) );
+        while( xPlatformIsNetworkUp() == pdFALSE )
+        {
+            vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+        }
+    }
+
     /****************************** Init MQTT ******************************/
 
     if( xReturnStatus == pdPASS )
@@ -2595,23 +2605,4 @@ void vOtaDemoTask( void * pParam )
         /* Cleanup semaphore created for buffer operations. */
         vSemaphoreDelete( xBufferSemaphore );
     }
-}
-
-/*
- * @brief Create the task that demonstrates the Ota demo.
- */
-void vStartOtaDemo( void )
-{
-    /*
-     * vOtaDemoTask() connects to the MQTT broker, creates the
-     * MQTT Agent task and calls the Ota demo loop prvRunOTADemo()
-     * which creates the OTA Agent task.
-     */
-
-    xTaskCreate( vOtaDemoTask,             /* Function that implements the task. */
-                 "OTA Demo Task",          /* Text name for the task - only used for debugging. */
-                 democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
-                 NULL,                     /* Optional - task parameter - not used in this case. */
-                 tskIDLE_PRIORITY + 1,     /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
-                 NULL );                   /* Optional - used to pass out a handle to the created task. */
 }

@@ -1018,6 +1018,16 @@ static void prvConnectAndCreateDemoTasks( void * pvParameters )
         xNetworkContext.pParams = &xPlaintextTransportParams;
     #endif
 
+    /* Wait for Networking */
+    if( xPlatformIsNetworkUp() == pdFALSE )
+    {
+        LogInfo( ( "Waiting for the network link up event..." ) );
+        while( xPlatformIsNetworkUp() == pdFALSE )
+        {
+            vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+        }
+    }
+
     /* Create the TCP connection to the broker, then the MQTT connection to the
      * same. */
     prvConnectToMQTTBroker();

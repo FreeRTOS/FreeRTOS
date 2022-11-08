@@ -768,25 +768,6 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
 
 /*-----------------------------------------------------------*/
 
-/*
- * @brief Create the task that demonstrates the Jobs library API via a
- * MQTT mutually authenticated network connection with the AWS IoT broker.
- */
-void vStartJobsDemo( void )
-{
-    /* This example uses a single application task, which shows that how to
-    * use Jobs library to generate and validate AWS IoT Jobs service MQTT topics
-    * via coreMQTT library to communicate with the AWS IoT Jobs service. */
-    xTaskCreate( prvJobsDemoTask,          /* Function that implements the task. */
-                 "DemoTask",               /* Text name for the task - only used for debugging. */
-                 democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
-                 NULL,                     /* Task parameter - not used in this case. */
-                 tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
-                 NULL );                   /* Used to pass out a handle to the created task - not used in this case. */
-}
-
-/*-----------------------------------------------------------*/
-
 /**
  * @brief Entry point of the Jobs demo.
  *
@@ -821,6 +802,15 @@ void prvJobsDemoTask( void * pvParameters )
      * JOBS_MAX_DEMO_LOOP_COUNT times. */
     do
     {
+        if( xPlatformIsNetworkUp() == pdFALSE )
+        {
+            LogInfo( ( "Waiting for the network link up event..." ) );
+            while( xPlatformIsNetworkUp() == pdFALSE )
+            {
+                vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+            }
+        }
+
         /* Establish an MQTT connection with AWS IoT over a mutually authenticated TLS session. */
         xDemoStatus = xEstablishMqttSession( &xMqttContext,
                                              &xNetworkContext,

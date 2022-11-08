@@ -125,24 +125,6 @@ const unsigned long ulMSToSleep = 5;
 }
 /*-----------------------------------------------------------*/
 
-void vAssertCalled( const char *pcFile, unsigned long ulLine )
-{
-volatile uint32_t ulSetToNonZeroToExitLoop = 0;
-
-	printf( "ASSERT FAILED: File %s, line %u\r\n", pcFile, ulLine );
-
-	taskENTER_CRITICAL();
-	{
-		while( ulSetToNonZeroToExitLoop == 0 )
-		{
-			/* Do not leave the assert function unless the debugger is used to
-			set ulSetToNonZeroToExitLoop to a non-zero value. */
-		}
-	}
-	taskEXIT_CRITICAL();
-}
-/*-----------------------------------------------------------*/
-
 void vApplicationMallocFailedHook( void )
 {
 	/* vApplicationMallocFailedHook() will only be called if

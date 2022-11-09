@@ -168,6 +168,9 @@
     <ClInclude Include="core_http_config.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FreeRTOS-Kernel\FreeRTOS-Kernel.vcxproj">
+      <Project>{72c209c4-49a4-4942-a201-44706c9d77ec}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Logging\Logging.vcxproj">
       <Project>{be362ac0-b10b-4276-b84e-6304652ba228}</Project>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>

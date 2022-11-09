@@ -348,7 +348,7 @@ static void prvUpdateAcceptedHandler( MQTTPublishInfo_t * pxPublishInfo );
  * @param[in] pvParameters Parameters as passed at the time of task creation. Not
  * used in this example.
  */
-static void prvShadowDemoTask( void * pvParameters );
+void prvShadowDemoTask( void * pvParameters );
 
 /**
  * @brief Process payload from `/delete/rejected` topic.

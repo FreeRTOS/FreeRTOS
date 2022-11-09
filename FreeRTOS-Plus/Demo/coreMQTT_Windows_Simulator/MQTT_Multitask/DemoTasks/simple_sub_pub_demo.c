@@ -435,6 +435,8 @@ static void prvSimpleSubscribePublishTask( void * pvParameters )
     MQTTAgentCommandInfo_t xCommandParams = { 0 };
     char * pcTopicBuffer = topicBuf[ ulTaskNumber ];
 
+    LogInfo( ( "Task: %s: ---------STARTING DEMO---------\r\n", taskName ) );
+
     /* Have different tasks use different QoS.  0 and 1.  2 can also be used
      * if supported by the broker. */
     xQoS = ( MQTTQoS_t ) ( ulTaskNumber % 2UL );
@@ -512,8 +514,9 @@ static void prvSimpleSubscribePublishTask( void * pvParameters )
         configASSERT( ulNotification == ulValueToNotify );
 
         /* Log statement to indicate successful reception of publish. */
-        LogInfo( ( "Demo completed successfully.\r\n" ) );
-        LogInfo( ( "Short delay before next publish... \r\n\r\n" ) );
+        LogInfo( ( "Task: %s: Demo completed successfully.\r\n", taskName ) );
+        LogInfo( ( "Task: %s: -------DEMO FINISHED-------\r\n", taskName ) );
+        LogInfo( ( "Task: %s: Short delay before next iteration... \r\n\r\n", taskName ) );
 
         /* Add a little randomness into the delay so the tasks don't remain
          * in lockstep. */

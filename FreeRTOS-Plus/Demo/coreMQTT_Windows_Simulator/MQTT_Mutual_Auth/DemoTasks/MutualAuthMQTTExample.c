@@ -52,24 +52,24 @@
 
 /* Logging configuration for the Demo. */
 #ifndef LIBRARY_LOG_NAME
-#define LIBRARY_LOG_NAME    "MqttMutualAuth"
+    #define LIBRARY_LOG_NAME    "MqttMutualAuth"
 #endif
 
 #ifndef LIBRARY_LOG_LEVEL
-#define LIBRARY_LOG_LEVEL    LOG_INFO
+    #define LIBRARY_LOG_LEVEL    LOG_INFO
 #endif
 
 /* Prototype for the function used to print to console on Windows simulator
  * of FreeRTOS.
  * The function prints to the console before the network is connected;
  * then a UDP port after the network has connected. */
-extern void vLoggingPrintf(const char* pcFormatString,
-    ...);
+extern void vLoggingPrintf( const char * pcFormatString,
+                            ... );
 
 /* Map the SdkLog macro to the logging function to enable logging
  * on Windows simulator. */
 #ifndef SdkLog
-#define SdkLog( message )    vLoggingPrintf message
+    #define SdkLog( message )    vLoggingPrintf message
 #endif
 
 #include "logging_stack.h"
@@ -520,12 +520,14 @@ static void prvMQTTDemoTask( void * pvParameters )
 
     for( ; ; )
     {
+        LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
         /****************************** Connect. ******************************/
 
         /* Wait for Networking */
         if( xPlatformIsNetworkUp() == pdFALSE )
         {
             LogInfo( ( "Waiting for the network link up event..." ) );
+
             while( xPlatformIsNetworkUp() == pdFALSE )
             {
                 vTaskDelay( pdMS_TO_TICKS( 1000U ) );
@@ -608,6 +610,7 @@ static void prvMQTTDemoTask( void * pvParameters )
                    "Total free heap is %u.\r\n",
                    xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully.\r\n" ) );
+        LogInfo( ( "-------DEMO FINISHED-------\r\n" ) );
         LogInfo( ( "Short delay before starting the next iteration.... \r\n\r\n" ) );
         vTaskDelay( mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS_TICKS );
     }
@@ -622,28 +625,27 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
     BackoffAlgorithmContext_t xReconnectParams;
     uint16_t usNextRetryBackOff = 0U;
 
-   #if defined( democonfigCLIENT_USERNAME )
+    #if defined( democonfigCLIENT_USERNAME )
         /*
-        * When democonfigCLIENT_USERNAME is defined, use the "mqtt" alpn to connect
-        * to AWS IoT Core with Custom Authentication on port 443.
-        *
-        * Custom Authentication uses the contents of the username and password
-        * fields of the MQTT CONNECT packet to authenticate the client.
-        *
-        * For more information, refer to the documentation at:
-        * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
-        */
+         * When democonfigCLIENT_USERNAME is defined, use the "mqtt" alpn to connect
+         * to AWS IoT Core with Custom Authentication on port 443.
+         *
+         * Custom Authentication uses the contents of the username and password
+         * fields of the MQTT CONNECT packet to authenticate the client.
+         *
+         * For more information, refer to the documentation at:
+         * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
+         */
         static const char * ppcAlpnProtocols[] = { "mqtt", NULL };
         #if democonfigMQTT_BROKER_PORT != 443U
-            #error "Connections to AWS IoT Core with custom authentication must connect to TCP port 443 with the \"mqtt\" alpn."
+        #error "Connections to AWS IoT Core with custom authentication must connect to TCP port 443 with the \"mqtt\" alpn."
         #endif /* democonfigMQTT_BROKER_PORT != 443U */
     #else /* if !defined( democonfigCLIENT_USERNAME ) */
         /*
-        * Otherwise, use the "x-amzn-mqtt-ca" alpn to connect to AWS IoT Core using
-        * x509 Certificate Authentication.
-        */
+         * Otherwise, use the "x-amzn-mqtt-ca" alpn to connect to AWS IoT Core using
+         * x509 Certificate Authentication.
+         */
         static const char * ppcAlpnProtocols[] = { "x-amzn-mqtt-ca", NULL };
-
     #endif /* !defined( democonfigCLIENT_USERNAME ) */
 
     /*
@@ -656,7 +658,7 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
         pxNetworkCredentials->pAlpnProtos = NULL;
     #else /* democonfigMQTT_BROKER_PORT != 8883U */
         pxNetworkCredentials->pAlpnProtos = NULL;
-        #error "MQTT connections to AWS IoT Core are only allowed on ports 443 and 8883."
+    #error "MQTT connections to AWS IoT Core are only allowed on ports 443 and 8883."
     #endif /* democonfigMQTT_BROKER_PORT != 443U */
 
     pxNetworkCredentials->disableSni = democonfigDISABLE_SNI;

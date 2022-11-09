@@ -489,7 +489,7 @@ void vStartSimpleMQTTDemo( void )
 }
 /*-----------------------------------------------------------*/
 
- /* Also see https://www.freertos.org/mqtt/mqtt-agent-demo.html? for an
+/* Also see https://www.freertos.org/mqtt/mqtt-agent-demo.html? for an
  * alternative run time model whereby coreMQTT runs in an autonomous
  * background agent task.  Executing the MQTT protocol in an agent task
  * removes the need for the application writer to explicitly manage any MQTT
@@ -519,12 +519,14 @@ static void prvMQTTDemoTask( void * pvParameters )
 
     for( ; ; )
     {
+        LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
         /****************************** Connect. ******************************/
 
         /* Wait for Networking */
         if( xPlatformIsNetworkUp() == pdFALSE )
         {
             LogInfo( ( "Waiting for the network link up event..." ) );
+
             while( xPlatformIsNetworkUp() == pdFALSE )
             {
                 vTaskDelay( pdMS_TO_TICKS( 1000U ) );
@@ -547,16 +549,16 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         /* Create timers to handle keep-alive. */
         xPingReqTimer = xTimerCreate( "PingReqTimer",
-                                            mqttexamplePING_REQUEST_DELAY,
-                                            pdTRUE,
-                                            ( void * ) &xMQTTContext.transportInterface,
-                                            prvPingReqTimerCallback);
+                                      mqttexamplePING_REQUEST_DELAY,
+                                      pdTRUE,
+                                      ( void * ) &xMQTTContext.transportInterface,
+                                      prvPingReqTimerCallback );
         configASSERT( xPingReqTimer );
         xPingRespTimer = xTimerCreate( "PingRespTimer",
-                                             mqttexamplePING_RESPONSE_DELAY,
-                                             pdFALSE,
-                                             NULL,
-                                             prvPingRespTimerCallback);
+                                       mqttexamplePING_RESPONSE_DELAY,
+                                       pdFALSE,
+                                       NULL,
+                                       prvPingRespTimerCallback );
         configASSERT( xPingRespTimer );
 
         /* Start the timer to send a PINGREQ. */
@@ -654,6 +656,7 @@ static void prvMQTTDemoTask( void * pvParameters )
                    "Total free heap is %u.",
                    xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully." ) );
+        LogInfo( ( "-------DEMO FINISHED-------\r\n" ) );
         LogInfo( ( "Short delay before starting the next iteration.... \r\n" ) );
         vTaskDelay( mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS );
     }

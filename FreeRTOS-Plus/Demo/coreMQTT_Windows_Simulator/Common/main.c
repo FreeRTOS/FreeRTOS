@@ -66,8 +66,10 @@ extern void vStartSimpleMQTTDemo( void );
 
 int main( void )
 {
+    /* Initialize logging */
     vPlatformInitLogging();
 
+    /* Start demo task */
     vStartSimpleMQTTDemo();
 
     /* Initialize FreeRTOS+TCP */

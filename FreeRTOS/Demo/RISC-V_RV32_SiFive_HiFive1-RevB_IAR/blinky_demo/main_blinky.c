@@ -72,20 +72,20 @@
 #include "queue.h"
 
 /* Priorities used by the tasks. */
-#define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
+#define mainQUEUE_RECEIVE_TASK_PRIORITY         ( tskIDLE_PRIORITY + 2 )
+#define    mainQUEUE_SEND_TASK_PRIORITY         ( tskIDLE_PRIORITY + 1 )
 
 /* The rate at which data is sent to the queue.  The 200ms value is converted
-to ticks using the pdMS_TO_TICKS() macro. */
-#define mainQUEUE_SEND_FREQUENCY_MS			pdMS_TO_TICKS( 1000 )
+ * to ticks using the pdMS_TO_TICKS() macro. */
+#define mainQUEUE_SEND_FREQUENCY_MS             pdMS_TO_TICKS( 1000 )
 
 /* The maximum number items the queue can hold.  The priority of the receiving
-task is above the priority of the sending task, so the receiving task will
-preempt the sending task and remove the queue items each time the sending task
-writes to the queue.  Therefore the queue will never have more than one item in
-it at any time, and even with a queue length of 1, the sending task will never
-find the queue full. */
-#define mainQUEUE_LENGTH					( 1 )
+ * task is above the priority of the sending task, so the receiving task will
+ * preempt the sending task and remove the queue items each time the sending task
+ * writes to the queue.  Therefore the queue will never have more than one item in
+ * it at any time, and even with a queue length of 1, the sending task will never
+ * find the queue full. */
+#define mainQUEUE_LENGTH                        ( 1 )
 
 /*-----------------------------------------------------------*/
 
@@ -116,13 +116,13 @@ void main_blinky( void )
     if( xQueue != NULL )
     {
         /* Start the two tasks as described in the comments at the top of this
-        file. */
-        xTaskCreate( prvQueueReceiveTask,				/* The function that implements the task. */
-                    "Rx", 								/* The text name assigned to the task - for debug only as it is not used by the kernel. */
-                    configMINIMAL_STACK_SIZE * 2U, 			/* The size of the stack to allocate to the task. */
-                    NULL, 								/* The parameter passed to the task - not used in this case. */
-                    mainQUEUE_RECEIVE_TASK_PRIORITY, 	/* The priority assigned to the task. */
-                    NULL );								/* The task handle is not required, so NULL is passed. */
+         ( file. */
+        xTaskCreate( prvQueueReceiveTask,               /* The function that implements the task. */
+                    "Rx",                               /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+                    configMINIMAL_STACK_SIZE * 2U,      /* The size of the stack to allocate to the task. */
+                    NULL,                               /* The parameter passed to the task - not used in this case. */
+                    mainQUEUE_RECEIVE_TASK_PRIORITY,    /* The priority assigned to the task. */
+                    NULL );                             /* The task handle is not required, so NULL is passed. */
 
         xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE * 2U, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
@@ -131,11 +131,11 @@ void main_blinky( void )
     }
 
     /* If all is well, the scheduler will now be running, and the following
-    line will never be reached.  If the following line does execute, then
-    there was insufficient FreeRTOS heap memory available for the Idle and/or
-    timer tasks to be created.  See the memory management section on the
-    FreeRTOS web site for more details on the FreeRTOS heap
-    http://www.freertos.org/a00111.html. */
+     * line will never be reached.  If the following line does execute, then
+     * there was insufficient FreeRTOS heap memory available for the Idle and/or
+     * timer tasks to be created.  See the memory management section on the
+     * FreeRTOS web site for more details on the FreeRTOS heap
+     * http://www.freertos.org/a00111.html. */
     for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -158,9 +158,9 @@ BaseType_t xReturned;
         vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_FREQUENCY_MS );
 
         /* Send to the queue - causing the queue receive task to unblock and
-        toggle the LED.  0 is used as the block time so the sending operation
-        will not block - it shouldn't need to block as the queue should always
-        be empty at this point in the code. */
+         * toggle the LED.  0 is used as the block time so the sending operation
+         * will not block - it shouldn't need to block as the queue should always
+         * be empty at this point in the code. */
         xReturned = xQueueSend( xQueue, &ulValueToSend, 0U );
         configASSERT( xReturned == pdPASS );
     }
@@ -181,12 +181,12 @@ extern void vToggleLED( void );
     for( ;; )
     {
         /* Wait until something arrives in the queue - this task will block
-        indefinitely provided INCLUDE_vTaskSuspend is set to 1 in
-        FreeRTOSConfig.h. */
+         * indefinitely provided INCLUDE_vTaskSuspend is set to 1 in
+         * FreeRTOSConfig.h. */
         xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
 
-        /*  To get here something must have been received from the queue, but
-        is it the expected value?  If it is, toggle the LED. */
+        /* To get here something must have been received from the queue, but
+         * is it the expected value?  If it is, toggle the LED. */
         if( ulReceivedValue == ulExpectedValue )
         {
             configPRINT_STRING( pcPassMessage );
@@ -200,4 +200,3 @@ extern void vToggleLED( void );
     }
 }
 /*-----------------------------------------------------------*/
-

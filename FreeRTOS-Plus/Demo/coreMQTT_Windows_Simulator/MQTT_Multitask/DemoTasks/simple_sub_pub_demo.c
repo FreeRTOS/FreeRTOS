@@ -435,8 +435,6 @@ static void prvSimpleSubscribePublishTask( void * pvParameters )
     MQTTAgentCommandInfo_t xCommandParams = { 0 };
     char * pcTopicBuffer = topicBuf[ ulTaskNumber ];
 
-    LogInfo( ( "Task: %s: ---------STARTING DEMO---------\r\n", taskName ) );
-
     /* Have different tasks use different QoS.  0 and 1.  2 can also be used
      * if supported by the broker. */
     xQoS = ( MQTTQoS_t ) ( ulTaskNumber % 2UL );
@@ -447,6 +445,8 @@ static void prvSimpleSubscribePublishTask( void * pvParameters )
 
     /* Create a topic name for this task to publish to. */
     snprintf( pcTopicBuffer, mqttexampleSTRING_BUFFER_LENGTH, "/filter/%s", taskName );
+
+    LogInfo( ( "Task: %s: ---------STARTING DEMO---------\r\n", taskName ) );
 
     /* Subscribe to the same topic to which this task will publish.  That will
      * result in each published message being published from the server back to

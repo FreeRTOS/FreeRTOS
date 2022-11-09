@@ -47,6 +47,9 @@
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
 
+/* Demo Includes */
+#include "user_settings.h"
+
 /* Small delay used between attempts to obtain a zero copy buffer. */
 #define echoTINY_DELAY	( ( portTickType ) 2 )
 

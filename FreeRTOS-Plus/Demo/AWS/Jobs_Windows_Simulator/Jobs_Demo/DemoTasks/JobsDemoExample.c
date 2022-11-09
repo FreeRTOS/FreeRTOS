@@ -385,7 +385,7 @@ static void prvProcessJobDocument( char * pcJobId,
  * @param[in] pvParameters Parameters as passed at the time of task creation.
  * Not used in this example.
  */
-static void prvJobsDemoTask( void * pvParameters );
+void prvJobsDemoTask( void * pvParameters );
 
 
 /*-----------------------------------------------------------*/

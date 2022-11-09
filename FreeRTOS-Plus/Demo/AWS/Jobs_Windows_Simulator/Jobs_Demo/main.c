@@ -52,7 +52,7 @@
 
 /*-----------------------------------------------------------*/
 
-extern void prvDefenderDemoTask( void * pvParameters );
+extern void prvJobsDemoTask( void * pvParameters );
 extern void vPlatformInitLogging( void );
 
 /*-----------------------------------------------------------*/

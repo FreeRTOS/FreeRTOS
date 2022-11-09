@@ -88,15 +88,3 @@ const unsigned long ulMSToSleep = 5;
 }
 /*-----------------------------------------------------------*/
 
-void vAssertCalled( void )
-{
-const unsigned long ulLongSleep = 1000UL;
-
-	taskDISABLE_INTERRUPTS();
-	for( ;; )
-	{
-		Sleep( ulLongSleep );
-	}
-}
-/*-----------------------------------------------------------*/
-

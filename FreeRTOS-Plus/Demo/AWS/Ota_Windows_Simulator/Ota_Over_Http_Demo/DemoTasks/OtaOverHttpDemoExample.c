@@ -773,7 +773,7 @@ static void prvOTAAgentTask( void * pvParam );
  * It reports OTA update statistics (which includes number of blocks received, processed and dropped),
  * at regular intervals.
  */
-static void vOtaDemoTask( void * pvParam );
+void vOtaDemoTask( void * pvParam );
 
 /**
  * @brief The function which implements the flow for OTA demo.

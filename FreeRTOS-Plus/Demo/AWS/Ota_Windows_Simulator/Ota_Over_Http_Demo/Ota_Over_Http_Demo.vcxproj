@@ -86,7 +86,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\Common\HTTP_Utils;..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp;..\..\..\..\Source\Application-Protocols\network_transport;..\..\..\Common\coreMQTT_Agent_Interface\include;..\..\..\..\ThirdParty\tinycbor\src;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\..\..\Source\AWS\ota\source\include;..\..\..\..\Source\AWS\ota\source\portable\os;..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\Common\Ota_PAL\Win32\Code_Signature_Verification;..\Common\Ota_PAL\Win32;..\Common\subscription-manager;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>

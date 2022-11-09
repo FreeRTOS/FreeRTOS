@@ -30,100 +30,100 @@
     <None Include="server-key.pem">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fe_x25519_128.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fe_x25519_128.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_mont_small.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_mont_small.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_3.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_3.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_4.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_4.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_6.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_6.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_7.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_7.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_8.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_8.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_9.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_9.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_12.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_12.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_17.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_17.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_20.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_20.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_24.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_24.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_28.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_28.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_32.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_32.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_48.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_48.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_64.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_64.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_small_set.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_mul_comba_small_set.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_3.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_3.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_4.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_4.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_6.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_6.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_7.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_7.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_8.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_8.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_9.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_9.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_12.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_12.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_17.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_17.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_20.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_20.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_24.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_24.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_28.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_28.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_32.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_32.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_48.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_48.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_64.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_64.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
-    <None Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_small_set.i">
+    <None Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fp_sqr_comba_small_set.i">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </None>
   </ItemGroup>
@@ -137,250 +137,247 @@
     <ClCompile Include="SecureTCPServerTask.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\src\wolfio.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\src\crl.c">
       <Filter>wolfSSL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\src\tls13.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\src\internal.c">
       <Filter>wolfSSL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\src\tls.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\src\keys.c">
       <Filter>wolfSSL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\src\ssl.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\src\ocsp.c">
       <Filter>wolfSSL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\src\sniffer.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\src\sniffer.c">
       <Filter>wolfSSL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\src\ocsp.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\src\ssl.c">
       <Filter>wolfSSL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\src\keys.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\src\tls.c">
       <Filter>wolfSSL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\src\internal.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\src\tls13.c">
       <Filter>wolfSSL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\src\crl.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\src\wolfio.c">
       <Filter>wolfSSL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\src\bio.c">
-      <Filter>wolfSSL</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\aes.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\aes.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\arc4.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\arc4.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\asm.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\asm.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\asn.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\asn.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\blake2b.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\blake2b.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\blake2s.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\blake2s.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\camellia.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\camellia.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\chacha.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\chacha.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\chacha20_poly1305.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\chacha20_poly1305.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\cmac.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\cmac.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\coding.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\coding.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\compress.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\compress.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\cpuid.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\cpuid.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\cryptocb.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\cryptocb.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\curve448.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\curve448.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\curve25519.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\curve25519.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\des3.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\des3.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\dh.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\dh.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\dsa.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\dsa.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\ecc.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\ecc.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\ecc_fp.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\ecc_fp.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\ed448.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\ed448.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\ed25519.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\ed25519.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\error.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\error.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\evp.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\evp.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fe_448.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fe_448.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fe_low_mem.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fe_low_mem.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\fe_operations.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\fe_operations.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\ge_448.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\ge_448.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\ge_low_mem.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\ge_low_mem.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\ge_operations.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\ge_operations.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\hash.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\hash.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\hc128.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\hc128.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\hmac.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\hmac.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\idea.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\idea.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\integer.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\integer.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\logging.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\logging.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\md2.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\md2.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\md4.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\md4.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\md5.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\md5.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\memory.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\memory.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\misc.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\misc.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\pkcs7.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\pkcs7.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\pkcs12.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\pkcs12.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\poly1305.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\poly1305.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\pwdbased.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\pwdbased.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\rabbit.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\rabbit.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\random.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\random.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\ripemd.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\ripemd.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\rsa.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\rsa.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\sha.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\sha.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\sha3.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\sha3.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\sha256.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\sha256.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\sha512.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\sha512.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\signature.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\signature.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\sp_arm32.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_arm32.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\sp_arm64.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_arm64.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\sp_armthumb.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_armthumb.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\sp_c32.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_c32.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\sp_c64.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_c64.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\sp_cortexm.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_cortexm.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\sp_dsp32.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_dsp32.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\sp_int.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_int.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\sp_x86_64.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\sp_x86_64.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\srp.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\srp.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\tfm.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\tfm.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\wc_dsp.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\wc_dsp.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\wc_encrypt.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\wc_encrypt.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\wc_pkcs11.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\wc_pkcs11.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\wc_port.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\wc_port.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\wolfevent.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\wolfevent.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\FreeRTOS_MainBranch\FreeRTOS-Plus\ThirdParty\wolfSSL\wolfcrypt\src\wolfmath.c">
+    <ClCompile Include="..\..\ThirdParty\wolfSSL\wolfcrypt\src\wolfmath.c">
       <Filter>wolfSSL\wolfcrypt</Filter>
     </ClCompile>
   </ItemGroup>

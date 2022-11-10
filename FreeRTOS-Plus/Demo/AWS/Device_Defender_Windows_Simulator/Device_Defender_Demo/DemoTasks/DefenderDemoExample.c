@@ -475,8 +475,8 @@ static bool prvCollectDeviceMetrics( void )
     if( eStatus == eMetricsCollectorSuccess )
     {
         eStatus = eGetOpenTcpPorts( &( pusOpenTcpPorts[ 0 ] ),
-                                                    democonfigOPEN_TCP_PORTS_ARRAY_SIZE,
-                                                    &( uxNumOpenTcpPorts ) );
+                                    democonfigOPEN_TCP_PORTS_ARRAY_SIZE,
+                                    &( uxNumOpenTcpPorts ) );
 
         if( eStatus != eMetricsCollectorSuccess )
         {
@@ -489,8 +489,8 @@ static bool prvCollectDeviceMetrics( void )
     if( eStatus == eMetricsCollectorSuccess )
     {
         eStatus = eGetOpenUdpPorts( &( pusOpenUdpPorts[ 0 ] ),
-                                                    democonfigOPEN_UDP_PORTS_ARRAY_SIZE,
-                                                    &( uxNumOpenUdpPorts ) );
+                                    democonfigOPEN_UDP_PORTS_ARRAY_SIZE,
+                                    &( uxNumOpenUdpPorts ) );
 
         if( eStatus != eMetricsCollectorSuccess )
         {
@@ -503,8 +503,8 @@ static bool prvCollectDeviceMetrics( void )
     if( eStatus == eMetricsCollectorSuccess )
     {
         eStatus = eGetEstablishedConnections( &( pxEstablishedConnections[ 0 ] ),
-                                                              democonfigESTABLISHED_CONNECTIONS_ARRAY_SIZE,
-                                                              &( uxNumEstablishedConnections ) );
+                                              democonfigESTABLISHED_CONNECTIONS_ARRAY_SIZE,
+                                              &( uxNumEstablishedConnections ) );
 
         if( eStatus != eMetricsCollectorSuccess )
         {
@@ -534,8 +534,8 @@ static bool prvCollectDeviceMetrics( void )
     if( eStatus == eMetricsCollectorSuccess )
     {
         /* Get the current task's status information. The usStackHighWaterMark
-        * field of the task status will be included in the report as a "number"
-        * custom metric. */
+         * field of the task status will be included in the report as a "number"
+         * custom metric. */
         vTaskGetInfo(
             /* Query this task. */
             NULL,
@@ -544,6 +544,7 @@ static bool prvCollectDeviceMetrics( void )
             pdTRUE,
             /* Don't include the task state in the TaskStatus_t structure. */
             0 );
+
         /* Get the task status information for all running tasks. The task IDs
          * of each task is then extracted to include in the report as a "list of
          * numbers" custom metric */
@@ -710,9 +711,12 @@ void prvDefenderDemoTask( void * pvParameters )
      * DEFENDER_MAX_DEMO_LOOP_COUNT times. */
     do
     {
+        LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
+
         if( xPlatformIsNetworkUp() == pdFALSE )
         {
             LogInfo( ( "Waiting for the network link up event..." ) );
+
             while( xPlatformIsNetworkUp() == pdFALSE )
             {
                 vTaskDelay( pdMS_TO_TICKS( 1000U ) );
@@ -938,6 +942,8 @@ void prvDefenderDemoTask( void * pvParameters )
     {
         LogError( ( "Demo failed." ) );
     }
+
+    LogInfo( ( "-------DEMO FINISHED-------\r\n" ) );
 
     /* Delete this task. */
     LogInfo( ( "Deleting Defender Demo task." ) );

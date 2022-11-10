@@ -207,7 +207,7 @@
 /**
  * @brief The length of #democonfigTHING_NAME.
  */
-#define THING_NAME_LENGTH    ( ( uint16_t ) ( sizeof( democonfigTHING_NAME ) - 1 ) )
+#define THING_NAME_LENGTH     ( ( uint16_t ) ( sizeof( democonfigTHING_NAME ) - 1 ) )
 
 /**
  * @brief The length of #democonfigSHADOW_NAME.
@@ -811,9 +811,12 @@ void prvShadowDemoTask( void * pvParameters )
      * SHADOW_MAX_DEMO_LOOP_COUNT times. */
     do
     {
+        LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
+
         if( xPlatformIsNetworkUp() == pdFALSE )
         {
             LogInfo( ( "Waiting for the network link up event..." ) );
+
             while( xPlatformIsNetworkUp() == pdFALSE )
             {
                 vTaskDelay( pdMS_TO_TICKS( 1000U ) );
@@ -1111,6 +1114,8 @@ void prvShadowDemoTask( void * pvParameters )
     {
         LogError( ( "Shadow Demo failed." ) );
     }
+
+    LogInfo( ( "-------DEMO FINISHED-------\r\n" ) );
 
     /* Delete this task. */
     LogInfo( ( "Deleting Shadow Demo task." ) );

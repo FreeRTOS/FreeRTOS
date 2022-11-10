@@ -802,9 +802,12 @@ void prvJobsDemoTask( void * pvParameters )
      * JOBS_MAX_DEMO_LOOP_COUNT times. */
     do
     {
+        LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
+
         if( xPlatformIsNetworkUp() == pdFALSE )
         {
             LogInfo( ( "Waiting for the network link up event..." ) );
+
             while( xPlatformIsNetworkUp() == pdFALSE )
             {
                 vTaskDelay( pdMS_TO_TICKS( 1000U ) );
@@ -968,6 +971,8 @@ void prvJobsDemoTask( void * pvParameters )
     {
         LogInfo( ( "Demo completed successfully." ) );
     }
+
+    LogInfo( ( "-------DEMO FINISHED-------\r\n" ) );
 
     /* Delete this demo task. */
     LogInfo( ( "Deleting Jobs Demo task." ) );

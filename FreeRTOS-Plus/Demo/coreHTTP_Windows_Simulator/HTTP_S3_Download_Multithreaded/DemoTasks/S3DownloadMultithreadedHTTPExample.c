@@ -501,6 +501,8 @@ static void prvHTTPDemoTask( void * pvParameters )
      * HTTP_MAX_DEMO_LOOP_COUNT times. */
     do
     {
+        LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
+
         /**************************** Parse Signed URL. ******************************/
 
         /* Retrieve the path location from democonfigS3_PRESIGNED_GET_URL. This
@@ -534,6 +536,17 @@ static void prvHTTPDemoTask( void * pvParameters )
         }
 
         /**************************** Connect. ******************************/
+
+        /* Wait for Networking */
+        if( xPlatformIsNetworkUp() == pdFALSE )
+        {
+            LogInfo( ( "Waiting for the network link up event..." ) );
+
+            while( xPlatformIsNetworkUp() == pdFALSE )
+            {
+                vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+            }
+        }
 
         if( xDemoStatus == pdPASS )
         {
@@ -645,6 +658,7 @@ static void prvHTTPDemoTask( void * pvParameters )
                    "Total free heap is %u.\r\n",
                    xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully.\r\n" ) );
+        LogInfo( ( "-------DEMO FINISHED-------\r\n" ) );
         vTaskDelete( NULL );
     }
 }

@@ -1525,6 +1525,7 @@ void sntpTask( void * pParameters )
          * APIs for sending time request to the server and receiving time response from the server. */
         while( 1 )
         {
+            LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
             bool socketStatus = false;
 
             /* For security, this demo keeps a UDP socket open only for one iteration of SNTP request-response cycle.
@@ -1541,6 +1542,7 @@ void sntpTask( void * pParameters )
             if( xPlatformIsNetworkUp() == pdFALSE )
             {
                 LogInfo( ( "Waiting for the network link up event..." ) );
+
                 while( xPlatformIsNetworkUp() == pdFALSE )
                 {
                     vTaskDelay( pdMS_TO_TICKS( 1000U ) );

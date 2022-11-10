@@ -364,6 +364,19 @@ static void prvHTTPDemoTask( void * pvParameters )
      * times. */
     do
     {
+        LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
+
+        /* Wait for Networking */
+        if( xPlatformIsNetworkUp() == pdFALSE )
+        {
+            LogInfo( ( "Waiting for the network link up event..." ) );
+
+            while( xPlatformIsNetworkUp() == pdFALSE )
+            {
+                vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+            }
+        }
+
         /**************************** Connect. ******************************/
 
         /* Attempt to connect to the HTTP server. If connection fails, retry after a
@@ -474,6 +487,7 @@ static void prvHTTPDemoTask( void * pvParameters )
                    "Total free heap is %u.\r\n",
                    xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully.\r\n" ) );
+        LogInfo( ( "-------DEMO FINISHED-------\r\n" ) );
         vTaskDelete( NULL );
     }
 }

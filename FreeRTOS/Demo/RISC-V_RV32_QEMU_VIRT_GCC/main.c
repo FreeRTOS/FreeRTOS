@@ -315,7 +315,7 @@ void *malloc( size_t size )
 	/* This project uses heap_4 so doesn't set up a heap for use by the C
 	library - but something is calling the C library malloc().  See
 	https://freertos.org/a00111.html for more information. */
-	printf( "\r\n\r\nUnexpected call to malloc() - should be usine pvPortMalloc()\r\n" );
+	printf( "\r\n\r\nUnexpected call to malloc() - should be using pvPortMalloc()\r\n" );
 	portDISABLE_INTERRUPTS();
 	for( ;; );
 

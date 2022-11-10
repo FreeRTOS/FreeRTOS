@@ -58,12 +58,6 @@ static BaseType_t xNetworkStatus = pdFALSE;
 
 /*-----------------------------------------------------------*/
 
-BaseType_t xPlatformIsNetworkUp( void )
-{
-    return xNetworkStatus;
-}
-
-/*-----------------------------------------------------------*/
 
 static void vCellularConnectTask( void * pvParameters )
 {

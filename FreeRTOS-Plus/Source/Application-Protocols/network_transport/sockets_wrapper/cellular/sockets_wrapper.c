@@ -336,7 +336,7 @@ static BaseType_t prvNetworkRecvCellular( const cellularSocketWrapper_t * pCellu
         }
         else
         {
-            IotLogInfo( "prvNetworkRecv timeout" );
+            LogInfo( ( "prvNetworkRecv timeout" ) );
             socketStatus = CELLULAR_SUCCESS;
             recvLength = 0;
         }
@@ -348,11 +348,11 @@ static BaseType_t prvNetworkRecvCellular( const cellularSocketWrapper_t * pCellu
     }
     else
     {
-        IotLogError( "prvNetworkRecv failed %d", socketStatus );
+        LogError( ( "prvNetworkRecv failed %d", socketStatus ) );
         retRecvLength = SOCKETS_SOCKET_ERROR;
     }
 
-    IotLogDebug( "prvNetworkRecv expect %d read %d", len, recvLength );
+    LogDebug( ( "prvNetworkRecv expect %d read %d", len, recvLength ) );
     return retRecvLength;
 }
 
@@ -368,8 +368,8 @@ static void prvCellularSocketOpenCallback( CellularUrcEvent_t urcEvent,
 
     if( pCellularSocketContext != NULL )
     {
-        IotLogDebug( "Socket open callback on Socket %p %d %d.",
-                     pCellularSocketContext, socketHandle, urcEvent );
+        LogDebug( ( "Socket open callback on Socket %p %d %d.",
+                     pCellularSocketContext, socketHandle, urcEvent ) );
 
         if( urcEvent == CELLULAR_URC_SOCKET_OPENED )
         {
@@ -386,7 +386,7 @@ static void prvCellularSocketOpenCallback( CellularUrcEvent_t urcEvent,
     }
     else
     {
-        IotLogError( "Spurious socket open callback." );
+        LogError( ( "Spurious socket open callback." ) );
     }
 }
 
@@ -401,13 +401,13 @@ static void prvCellularSocketDataReadyCallback( CellularSocketHandle_t socketHan
 
     if( pCellularSocketContext != NULL )
     {
-        IotLogDebug( "Data ready on Socket %p", pCellularSocketContext );
+        LogDebug( ( "Data ready on Socket %p", pCellularSocketContext ) );
         ( void ) xEventGroupSetBits( pCellularSocketContext->socketEventGroupHandle,
                                      SOCKET_DATA_RECEIVED_CALLBACK_BIT );
     }
     else
     {
-        IotLogError( "spurious data callback" );
+        LogError( ( "spurious data callback" ) );
     }
 }
 
@@ -422,14 +422,14 @@ static void prvCellularSocketClosedCallback( CellularSocketHandle_t socketHandle
 
     if( pCellularSocketContext != NULL )
     {
-        IotLogInfo( "Socket Close on Socket %p", pCellularSocketContext );
+        LogInfo( ( "Socket Close on Socket %p", pCellularSocketContext ) );
         pCellularSocketContext->ulFlags = pCellularSocketContext->ulFlags & ( ~CELLULAR_SOCKET_CONNECT_FLAG );
         ( void ) xEventGroupSetBits( pCellularSocketContext->socketEventGroupHandle,
                                      SOCKET_CLOSE_CALLBACK_BIT );
     }
     else
     {
-        IotLogError( "spurious socket close callback" );
+        LogError( ( "spurious socket close callback" ) );
     }
 }
 
@@ -484,8 +484,8 @@ static BaseType_t prvSetupSocketSendTimeout( cellularSocketWrapper_t * pCellular
         }
         else if( sendTimeout >= portMAX_DELAY )
         {
-            IotLogWarn( "Sendtimeout %d longer than portMAX_DELAY, %d ms is used instead",
-                        sendTimeout, UINT32_MAX_DELAY_MS );
+            LogWarn( ( "Sendtimeout %d longer than portMAX_DELAY, %d ms is used instead",
+                        sendTimeout, UINT32_MAX_DELAY_MS ) );
             pCellularSocketContext->sendTimeout = portMAX_DELAY;
             sendTimeoutMs = UINT32_MAX_DELAY_MS;
         }
@@ -519,7 +519,7 @@ static BaseType_t prvCellularSocketRegisterCallback( CellularSocketHandle_t cell
 
         if( socketStatus != CELLULAR_SUCCESS )
         {
-            IotLogError( "Failed to SocketRegisterDataReadyCallback. Socket status %d.", socketStatus );
+            LogError( ( "Failed to SocketRegisterDataReadyCallback. Socket status %d.", socketStatus ) );
             retRegCallback = SOCKETS_SOCKET_ERROR;
         }
     }
@@ -531,7 +531,7 @@ static BaseType_t prvCellularSocketRegisterCallback( CellularSocketHandle_t cell
 
         if( socketStatus != CELLULAR_SUCCESS )
         {
-            IotLogError( "Failed to SocketRegisterSocketOpenCallbac. Socket status %d.", socketStatus );
+            LogError( ( "Failed to SocketRegisterSocketOpenCallbac. Socket status %d.", socketStatus ) );
             retRegCallback = SOCKETS_SOCKET_ERROR;
         }
     }
@@ -543,7 +543,7 @@ static BaseType_t prvCellularSocketRegisterCallback( CellularSocketHandle_t cell
 
         if( socketStatus != CELLULAR_SUCCESS )
         {
-            IotLogError( "Failed to SocketRegisterClosedCallback. Socket status %d.", socketStatus );
+            LogError( ( "Failed to SocketRegisterClosedCallback. Socket status %d.", socketStatus ) );
             retRegCallback = SOCKETS_SOCKET_ERROR;
         }
     }
@@ -614,7 +614,7 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
 
     if( cellularSocketStatus != CELLULAR_SUCCESS )
     {
-        IotLogError( "Failed to create cellular sockets. %d", cellularSocketStatus );
+        LogError( ( "Failed to create cellular sockets. %d", cellularSocketStatus ) );
         retConnect = SOCKETS_SOCKET_ERROR;
     }
 
@@ -625,14 +625,14 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
 
         if( pCellularSocketContext == NULL )
         {
-            IotLogError( "Failed to allocate new socket context." );
+            LogError( ( "Failed to allocate new socket context." ) );
             ( void ) Cellular_SocketClose( CellularHandle, cellularSocketHandle );
             retConnect = SOCKETS_ENOMEM;
         }
         else
         {
             /* Initialize all the members to sane values. */
-            IotLogDebug( "Created CELLULAR Socket %p.", pCellularSocketContext );
+            LogDebug( ( "Created CELLULAR Socket %p.", pCellularSocketContext ) );
             ( void ) memset( pCellularSocketContext, 0, sizeof( cellularSocketWrapper_t ) );
             pCellularSocketContext->cellularSocketHandle = cellularSocketHandle;
             pCellularSocketContext->ulFlags |= CELLULAR_SOCKET_OPEN_FLAG;
@@ -647,7 +647,7 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
 
         if( pCellularSocketContext->socketEventGroupHandle == NULL )
         {
-            IotLogError( "Failed create cellular socket eventGroupHandle %p.", pCellularSocketContext );
+            LogError( ( "Failed create cellular socket eventGroupHandle %p.", pCellularSocketContext ) );
             retConnect = SOCKETS_ENOMEM;
         }
     }
@@ -659,7 +659,7 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
         strncpy( serverAddress.ipAddress.ipAddress, pHostName, CELLULAR_IP_ADDRESS_MAX_SIZE );
         serverAddress.port = port;
 
-        IotLogDebug( "Ip address %s port %d\r\n", serverAddress.ipAddress.ipAddress, serverAddress.port );
+        LogDebug( ( "Ip address %s port %d\r\n", serverAddress.ipAddress.ipAddress, serverAddress.port ) );
         retConnect = prvCellularSocketRegisterCallback( cellularSocketHandle, pCellularSocketContext );
     }
 
@@ -683,7 +683,7 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
 
         if( cellularSocketStatus != CELLULAR_SUCCESS )
         {
-            IotLogError( "Failed to establish new connection. Socket status %d.", cellularSocketStatus );
+            LogError( ( "Failed to establish new connection. Socket status %d.", cellularSocketStatus ) );
             retConnect = SOCKETS_SOCKET_ERROR;
         }
     }
@@ -699,7 +699,7 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
 
         if( waitEventBits != SOCKET_OPEN_CALLBACK_BIT )
         {
-            IotLogError( "Socket connect timeout." );
+            LogError( ( "Socket connect timeout." ) );
             retConnect = SOCKETS_ENOTCONN;
         }
     }
@@ -753,7 +753,7 @@ void Sockets_Disconnect( Socket_t xSocket )
     /* coverity[misra_c_2012_rule_11_4_violation] */
     if( ( pCellularSocketContext == NULL ) || ( xSocket == SOCKETS_INVALID_SOCKET ) )
     {
-        IotLogError( "Invalid xSocket %p", pCellularSocketContext );
+        LogError( ( "Invalid xSocket %p", pCellularSocketContext ) );
         retClose = SOCKETS_EINVAL;
     }
     else
@@ -770,13 +770,13 @@ void Sockets_Disconnect( Socket_t xSocket )
             {
                 recvLength = 0;
                 cellularSocketStatus = Cellular_SocketRecv( CellularHandle, cellularSocketHandle, buf, 128, &recvLength );
-                IotLogDebug( "%u bytes received in close", recvLength );
+                LogDebug( ( "%u bytes received in close", recvLength ) );
             } while( ( recvLength != 0 ) && ( cellularSocketStatus == CELLULAR_SUCCESS ) );
 
             /* Close sockets. */
             if( Cellular_SocketClose( CellularHandle, cellularSocketHandle ) != CELLULAR_SUCCESS )
             {
-                IotLogWarn( "Failed to destroy connection." );
+                LogWarn( ( "Failed to destroy connection." ) );
                 retClose = SOCKETS_SOCKET_ERROR;
             }
 
@@ -795,7 +795,7 @@ void Sockets_Disconnect( Socket_t xSocket )
         vPortFree( pCellularSocketContext );
     }
 
-    IotLogDebug( "Sockets close exit with code %d", retClose );
+    LogDebug( ( "Sockets close exit with code %d", retClose ) );
 }
 
 /*-----------------------------------------------------------*/
@@ -810,14 +810,14 @@ int32_t Sockets_Recv( Socket_t xSocket,
 
     if( pCellularSocketContext == NULL )
     {
-        IotLogError( "Cellular prvNetworkRecv Invalid xSocket %p", pCellularSocketContext );
+        LogError( ( "Cellular prvNetworkRecv Invalid xSocket %p", pCellularSocketContext ) );
         retRecvLength = ( BaseType_t ) SOCKETS_EINVAL;
     }
     else if( ( ( pCellularSocketContext->ulFlags & CELLULAR_SOCKET_OPEN_FLAG ) == 0U ) ||
              ( ( pCellularSocketContext->ulFlags & CELLULAR_SOCKET_CONNECT_FLAG ) == 0U ) )
     {
-        IotLogError( "Cellular prvNetworkRecv Invalid xSocket flag %p %u",
-                     pCellularSocketContext, pCellularSocketContext->ulFlags );
+        LogError( ( "Cellular prvNetworkRecv Invalid xSocket flag %p %u",
+                     pCellularSocketContext, pCellularSocketContext->ulFlags ) );
         retRecvLength = ( BaseType_t ) SOCKETS_ENOTCONN;
     }
     else
@@ -851,14 +851,14 @@ int32_t Sockets_Send( Socket_t xSocket,
 
     if( pCellularSocketContext == NULL )
     {
-        IotLogError( "Cellular Sockets_Send Invalid xSocket %p", pCellularSocketContext );
+        LogError( ( "Cellular Sockets_Send Invalid xSocket %p", pCellularSocketContext ) );
         retSendLength = ( BaseType_t ) SOCKETS_SOCKET_ERROR;
     }
     else if( ( ( pCellularSocketContext->ulFlags & CELLULAR_SOCKET_OPEN_FLAG ) == 0U ) ||
              ( ( pCellularSocketContext->ulFlags & CELLULAR_SOCKET_CONNECT_FLAG ) == 0U ) )
     {
-        IotLogError( "Cellular Sockets_Send Invalid xSocket flag %p 0x%08x",
-                     pCellularSocketContext, pCellularSocketContext->ulFlags );
+        LogError( ( "Cellular Sockets_Send Invalid xSocket flag %p 0x%08x",
+                     pCellularSocketContext, pCellularSocketContext->ulFlags ) );
         retSendLength = ( BaseType_t ) SOCKETS_SOCKET_ERROR;
     }
     else
@@ -909,7 +909,7 @@ int32_t Sockets_Send( Socket_t xSocket,
             }
         }
 
-        IotLogDebug( "Sockets_Send expect %d write %d", xDataLength, sentLength );
+        LogDebug( ( "Sockets_Send expect %d write %d", xDataLength, sentLength ) );
     }
 
     return retSendLength;

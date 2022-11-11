@@ -3076,7 +3076,7 @@ vlistinsertend
 vlistintert
 vlistintertend
 vlogginginit
-vloggingprintf 
+vloggingprintf
 vlt
 vlwipappsreleasetxbuffer
 vmain

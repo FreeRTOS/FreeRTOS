@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import argparse
 import boto3
 import botocore
 from convert_credentials_to_der import convert_pem_to_der
@@ -104,13 +105,20 @@ def update_demo_config():
     template_file.close()
     print("Successfully updated demo_config.h")
 
+# Get arguments
+def get_args():
+    parser = argparse.ArgumentParser(description="Fleet Provisioning Demo setup script.")
+    parser.add_argument("--force", action="store_true", help="Used to skip the user prompt before executing.")
+    args = parser.parse_args()
+    return args
 
 # Parse arguments and execute appropriate functions
 def main():
     # Check arguments and go appropriately
+    args = get_args();
     print("\nThis script will set up the AWS resources required for the Fleet Provisioning demo.")
     print("It may take several minutes for the resources to be provisioned.")
-    if input("Are you sure you want to do this? (y/n) ") == "y":
+    if args.force or input("Are you sure you want to do this? (y/n) ") == "y":
         print()
         create_resources()
         create_credentials()

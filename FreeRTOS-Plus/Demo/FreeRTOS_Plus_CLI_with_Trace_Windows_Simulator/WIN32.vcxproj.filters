@@ -80,6 +80,12 @@
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-Trace\trcStreamingRecorder.c">
       <Filter>FreeRTOS+\FreeRTOS+Trace</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\event_groups.c">
+      <Filter>FreeRTOS\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\stream_buffer.c">
+      <Filter>FreeRTOS\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeRTOSConfig.h">

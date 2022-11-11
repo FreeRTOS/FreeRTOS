@@ -52,8 +52,6 @@
 extern "C" {
 #endif
 
-#include "trcPortDefines.h"
-
 /******************************************************************************
  * Include of processor header file
  *
@@ -98,32 +96,6 @@ extern "C" {
  * TRC_RECORDER_MODE_STREAMING
  ******************************************************************************/
 #define TRC_CFG_RECORDER_MODE TRC_RECORDER_MODE_SNAPSHOT
-
-/******************************************************************************
- * TRC_CFG_FREERTOS_VERSION
- *
- * Specify what version of FreeRTOS that is used (don't change unless using the
- * trace recorder library with an older version of FreeRTOS).
- *
- * TRC_FREERTOS_VERSION_7_3_X				If using FreeRTOS v7.3.X
- * TRC_FREERTOS_VERSION_7_4_X				If using FreeRTOS v7.4.X 
- * TRC_FREERTOS_VERSION_7_5_X				If using FreeRTOS v7.5.X
- * TRC_FREERTOS_VERSION_7_6_X				If using FreeRTOS v7.6.X
- * TRC_FREERTOS_VERSION_8_X_X				If using FreeRTOS v8.X.X
- * TRC_FREERTOS_VERSION_9_0_0				If using FreeRTOS v9.0.0
- * TRC_FREERTOS_VERSION_9_0_1				If using FreeRTOS v9.0.1
- * TRC_FREERTOS_VERSION_9_0_2				If using FreeRTOS v9.0.2
- * TRC_FREERTOS_VERSION_10_0_0				If using FreeRTOS v10.0.0
- * TRC_FREERTOS_VERSION_10_0_1				If using FreeRTOS v10.0.1
- * TRC_FREERTOS_VERSION_10_1_0				If using FreeRTOS v10.1.0
- * TRC_FREERTOS_VERSION_10_1_1				If using FreeRTOS v10.1.1
- * TRC_FREERTOS_VERSION_10_2_0				If using FreeRTOS v10.2.0
- * TRC_FREERTOS_VERSION_10_2_1				If using FreeRTOS v10.2.1
- * TRC_FREERTOS_VERSION_10_3_0				If using FreeRTOS v10.3.0
- * TRC_FREERTOS_VERSION_10_3_1				If using FreeRTOS v10.3.1
- * TRC_FREERTOS_VERSION_10_4_0				If using FreeRTOS v10.4.0 or later
- *****************************************************************************/
-#define TRC_CFG_FREERTOS_VERSION TRC_FREERTOS_VERSION_10_4_0
 
 /*******************************************************************************
  * TRC_CFG_SCHEDULING_ONLY
@@ -225,17 +197,6 @@ extern "C" {
 #define TRC_CFG_INCLUDE_OSTICK_EVENTS 1
 
  /*****************************************************************************
- * TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS
- *
- * Macro which should be defined as either zero (0) or one (1).
- *
- * If this is zero (0), the trace will exclude any "event group" events.
- *
- * Default value is 0 (excluded) since dependent on event_groups.c
- *****************************************************************************/
-#define TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS 0
-
- /*****************************************************************************
  * TRC_CFG_INCLUDE_TIMER_EVENTS
  *
  * Macro which should be defined as either zero (0) or one (1).
@@ -257,18 +218,6 @@ extern "C" {
  * Default value is 0 since dependent on timers.c
  *****************************************************************************/
 #define TRC_CFG_INCLUDE_PEND_FUNC_CALL_EVENTS 1
-
-/*******************************************************************************
- * Configuration Macro: TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS
- *
- * Macro which should be defined as either zero (0) or one (1).
- *
- * If this is zero (0), the trace will exclude any stream buffer or message
- * buffer events.
- *
- * Default value is 0 since dependent on stream_buffer.c (new in FreeRTOS v10)
- ******************************************************************************/
-#define TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS 0
 
  /******************************************************************************
  * TRC_CFG_ENABLE_STACK_MONITOR
@@ -387,15 +336,19 @@ extern "C" {
  *****************************************************************************/
 #define TRC_CFG_MAX_ISR_NESTING 8
 
-/******************************************************************************
- * TRC_CFG_ACKNOWLEDGE_QUEUE_SET_SEND
- *
- * When using FreeRTOS v10.3.0 or v10.3.1, please make sure that the trace
- * point in prvNotifyQueueSetContainer() in queue.c is renamed from
- * traceQUEUE_SEND to traceQUEUE_SET_SEND in order to tell them apart from
- * other traceQUEUE_SEND trace points. Then set this to TRC_ACKNOWLEDGED.
- *****************************************************************************/
-#define TRC_CFG_ACKNOWLEDGE_QUEUE_SET_SEND TRC_ACKNOWLEDGED /* 0 or TRC_ACKNOWLEDGED */
+ /**
+  * @def TRC_CFG_RECORDER_DATA_ATTRIBUTE
+  * @brief When setting TRC_CFG_RECORDER_DATA_INIT to 0, you might also need to make
+  * sure certain recorder data is placed in a specific RAM section to avoid being
+  * zeroed out after initialization. Define TRC_CFG_RECORDER_DATA_ATTRIBUTE as
+  * that attribute.
+  *
+  * Example:
+  * #define TRC_CFG_RECORDER_DATA_ATTRIBUTE __attribute__((section(".bss.trace_recorder_data")))
+  *
+  * Default value is empty.
+  */
+#define TRC_CFG_RECORDER_DATA_ATTRIBUTE 
 
 /* Specific configuration, depending on Streaming/Snapshot mode */
 #if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_SNAPSHOT)

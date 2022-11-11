@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import argparse
 import boto3
 import botocore
@@ -10,6 +11,7 @@ CERT_OUT_NAME = "corePKCS11_Claim_Certificate.dat"
 
 RESOURCE_STACK_NAME = "FPDemoStack"
 
+script_file_dir_abs_path = os.path.abspath(os.path.dirname(__file__))
 cf = boto3.client("cloudformation")
 iot = boto3.client("iot")
 
@@ -45,7 +47,7 @@ def create_resources():
                             + "\nView the stack in the CloudFormation console here:\n" + convert_cf_arn_to_link(stack_response["StackId"]))
     else:
         # Read the cloudformation template file contained in the same directory
-        cf_template_file = open("cloudformation_template.json", "r")
+        cf_template_file = open(f"{script_file_dir_abs_path}/cloudformation_template.json", "r")
         cf_template = cf_template_file.read()
         cf_template_file.close()
 
@@ -94,12 +96,12 @@ def create_credentials():
 def update_demo_config():
     endpoint = iot.describe_endpoint(endpointType='iot:Data-ATS')
 
-    template_file = open("demo_config.templ", 'r')
+    template_file = open(f"{script_file_dir_abs_path}/demo_config.templ", 'r')
     file_text = template_file.read()
     file_text = file_text.replace(
         "<IOTEndpoint>", "\"" + endpoint["endpointAddress"] + "\"")
 
-    header_file = open("../demo_config.h", "w")
+    header_file = open("{script_file_dir_abs_path}/../demo_config.h", "w")
     header_file.write(file_text)
     header_file.close()
     template_file.close()

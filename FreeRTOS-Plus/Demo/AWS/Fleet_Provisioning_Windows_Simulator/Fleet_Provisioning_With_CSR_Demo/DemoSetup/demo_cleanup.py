@@ -126,25 +126,26 @@ def delete_resources():
 
 # Delete the files created by the demo and reset demo_config.h
 def reset_files():
+    script_file_dir_abs_path = os.path.abspath(os.path.dirname(__file__))
     # Remove Claim credentials
-    if os.path.exists(f"../{KEY_OUT_NAME}"):
-        os.remove(f"../{KEY_OUT_NAME}")
-    if os.path.exists(f"../{CERT_OUT_NAME}"):
-        os.remove(f"../{CERT_OUT_NAME}")
+    if os.path.exists(f"{script_file_dir_abs_path}/../{KEY_OUT_NAME}"):
+        os.remove(f"{script_file_dir_abs_path}/../{KEY_OUT_NAME}")
+    if os.path.exists(f"{script_file_dir_abs_path}/../{CERT_OUT_NAME}"):
+        os.remove(f"{script_file_dir_abs_path}/../{CERT_OUT_NAME}")
 
     # Remove demo-generated Thing credentials
-    if os.path.exists(f"../{THING_PRIVATE_KEY_NAME}"):
-        os.remove(f"../{THING_PRIVATE_KEY_NAME}")
-    if os.path.exists(f"../{THING_PUBLIC_KEY_NAME}"):
-        os.remove(f"../{THING_PUBLIC_KEY_NAME}")
-    if os.path.exists(f"../{THING_CERT_NAME}"):
-        os.remove(f"../{THING_CERT_NAME}")
+    if os.path.exists(f"{script_file_dir_abs_path}/../{THING_PRIVATE_KEY_NAME}"):
+        os.remove(f"{script_file_dir_abs_path}/../{THING_PRIVATE_KEY_NAME}")
+    if os.path.exists(f"{script_file_dir_abs_path}/../{THING_PUBLIC_KEY_NAME}"):
+        os.remove(f"{script_file_dir_abs_path}/../{THING_PUBLIC_KEY_NAME}")
+    if os.path.exists(f"{script_file_dir_abs_path}/../{THING_CERT_NAME}"):
+        os.remove(f"{script_file_dir_abs_path}/../{THING_CERT_NAME}")
 
     # Reset demo_config.h
-    template_file = open("demo_config_empty.templ", 'r')
+    template_file = open(f"{script_file_dir_abs_path}/demo_config_empty.templ", 'r')
     file_text = template_file.read()
 
-    header_file = open("../demo_config.h", "w")
+    header_file = open(f"{script_file_dir_abs_path}/../demo_config.h", "w")
     header_file.write(file_text)
     header_file.close()
     template_file.close()

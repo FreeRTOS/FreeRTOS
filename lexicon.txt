@@ -204,6 +204,7 @@ cd
 cdatastring
 cdc
 cec
+cellularconnect
 cellularconnectionloop
 cellulardemo
 cellulardemotask
@@ -607,8 +608,10 @@ echobuffer
 echomultitx
 ecmd
 ecp
+ecparameters
 ecparams
 ecparamsptr
+ecpoint
 edbg
 edk
 edrx
@@ -2066,6 +2069,7 @@ putchar
 puxstackbuffer
 pv
 pvargs
+pvalue
 pvbuffer
 pvcontext
 pvctx
@@ -2085,6 +2089,7 @@ pwm
 pwpr
 pwr
 pxaddresslen
+pxattrs
 pxbuffer
 pxcallback
 pxcertificatebufferlength
@@ -2199,6 +2204,7 @@ queuesuspend
 ra
 rampz
 rand
+random
 randomisation
 randomise
 randomised
@@ -2647,6 +2653,7 @@ topiclen
 topiclength
 tp
 tracelisttasks
+traceonenter
 tracetask
 trafic
 transmaskget
@@ -2859,6 +2866,7 @@ ultimer
 ultotalframelength
 ultrascale
 ultx
+ulvaluelen
 ulvaluetosend
 ulwantedbaud
 umount
@@ -2946,6 +2954,8 @@ uxbitsgetval
 uxbitssetval
 uxbufferlength
 uxbytesleft
+uxbytesreceived
+uxbytessent
 uxcreatortaskstackbuffer
 uxerrorhasoccurred
 uxeventgroupgetnumber
@@ -2966,6 +2976,8 @@ uxmessageswaiting
 uxnewpriority
 uxnumbertocreate
 uxparameternumber
+uxpacketsreceived
+uxpacketssent
 uxpriority
 uxqueue
 uxqueuegetqueuenumber
@@ -3017,6 +3029,7 @@ vblink
 vbus
 vbuttonhandlertask
 vbuttonisrhandler
+vcellularconnecttask
 vclearemactxbuffer
 vconfiguretimerforruntimestats
 vcore
@@ -3063,6 +3076,8 @@ vlistinsertend
 vlistintert
 vlistintertend
 vlogginginit
+vloggingprintf
+vlt
 vlwipappsreleasetxbuffer
 vmain
 vmaindeleteme

@@ -3,6 +3,7 @@
 import os
 import boto3
 import botocore
+import argparse
 
 KEY_OUT_NAME = "corePKCS11_Claim_Key.dat"
 CERT_OUT_NAME = "corePKCS11_Claim_Certificate.dat"
@@ -149,13 +150,20 @@ def reset_files():
     template_file.close()
     print("Credentials removed and demo_config.h reset.")
 
+# Get arguments
+def get_args():
+    parser = argparse.ArgumentParser(description="Fleet Provisioning Demo setup script.")
+    parser.add_argument("--force", action="store_true", help="Used to skip the user prompt before executing.")
+    args = parser.parse_args()
+    return args
 
 # Parse arguments and execute appropriate functions
 def main():
     # Check arguments and go appropriately
+    args = get_args();
     print("\nThis script will delete ALL Things, credentials, and resources which were created by demo_setup.py and the Fleet Provisioning demo.")
     print("It may take several minutes for all of the resources to be deleted.")
-    if input("Are you sure you want to do this? (y/n) ") == "y":
+    if args.force or input("Are you sure you want to do this? (y/n) ") == "y":
         print()
         reset_files()
         delete_resources()

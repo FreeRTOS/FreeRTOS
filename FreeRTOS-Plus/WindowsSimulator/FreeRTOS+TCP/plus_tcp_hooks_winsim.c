@@ -148,7 +148,7 @@ void vPlatformInitIpStack( void )
     uint8_t ucNullAddress[ 4 ] = { 0, 0, 0, 0 };
     uint8_t ucMACAddress[ 6 ];
 
-    /* Generate a ramdom number */
+    /* Generate a random number */
     uxRandomNumber = uxRand();
 
     /* Generate a random MAC address in the reserved range */

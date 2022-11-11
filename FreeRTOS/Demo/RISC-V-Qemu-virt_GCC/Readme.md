@@ -1,19 +1,95 @@
+# Emulating generic RISC-V 32bit machine on QEMU
 There is an updated version of this original submission from Katsuhiro Suzuki
 in the FreeRTOS/Demo/RISC-V_RV32_QEMU_VIRT_GCC directory.
 
-# Emulating generic RISC-V 32bit machine on QEMU
+## Demo Summary
+This demo prints Tx/Rx message of queue to serial port, using no
+other hardware and usinh only the primary core (currently hart 0).
+Other cores are simply going to wfi state and execute nothing else.
 
 ## Requirements
 
-1. GNU RISC-V toolchains (tested on Crosstool-NG)
+1. GNU RISC-V toolchains (tested on SiFive + Crosstool-NG toolchains)
 1. qemu-riscv32-system (tested on Debian 10 package)
-1. Linux OS (tested on Debian 10)
+1. Linux OS (tested on Debian 10/Ubuntu)
 
-### Host OS Tips
-* Crosstools-ng requires a case-sensitive file system if used on a Mac.
-* For officially supported OSes, check https://crosstool-ng.github.io/docs/os-setup/
 
-## How to build toolchain
+## Prerequisites
+### QEMU installation
+This is OS specific. For Debian, some general instructions can be found [here](https://wiki.debian.org/RISC-V/32).
+
+### RISC-V Toolchain Setup
+You can download a RISC-V toolchain from SiFive at [this url](https://www.sifive.com/software). You'll need to extract this somewhere you'll remember as you need to add it to your PATH.
+
+You can add the toolchain to you path with the following command
+```
+export PATH=<your-toolchain-path>/<your-toolchain>/bin:$PATH
+```
+
+For example, if you install the SiFive v2020.12.8 toolchain on an Ubuntu machine in your user home directory, it would be something like
+```
+export PATH=~/riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14/bin:$PATH
+```
+
+___________
+
+## Building and Running the Demo
+The demo is built using a makefile, so the command to build the demo is simply...
+```
+make
+```
+This file can become important if you want to change your RISC-V microarchitecture or Application Binary Interface (ABI).
+
+To run the demo in Qemu...
+```
+qemu-system-riscv32 -nographic -machine virt -net none \
+  -chardev stdio,id=con,mux=on -serial chardev:con \
+  -mon chardev=con,mode=readline -bios none \
+  -smp 4 -kernel ./build/RTOSDemo.axf
+```
+
+This command is quite lengthy but essentially spins up an emulated 32-bit RISC-V procressor without any display running the demo you just built as the kernel on 4 simulated cores. Textual output of this simulation will be directed to standard I/O.
+
+## Building and Debugging the Demo
+The debuggable demo is also built using a makefile, so the command to build the demo is simply...
+```
+make DEBUG=1
+```
+Notice the addition of the `DEBUG=1` parameter. This is what tells the makefile to include debugging information when building the demo.
+
+To run the demo in Qemu...
+```
+qemu-system-riscv32 -nographic -machine virt -net none \
+  -chardev stdio,id=con,mux=on -serial chardev:con \
+  -mon chardev=con,mode=readline -bios none \
+  -smp 4 -kernel ./build/RTOSDemo.axf \
+  -s -S 
+```
+This command is nearly identical to the one above with the exception of the `-s` and `-S` flags. The `-s` flag attaches Qemu to port 1234 for GDB to connect to. The `-S` flag starts the simulation halted and waits for GDB to connect.
+
+At this point you'll need to attach GDB before the demo runs. To do so you'll need to run a RISC-V compatible GDB. This should be provided in the toolchain you've downloaded. The command to start GDB will be...
+
+```
+riscv64-unknown-elf-gdb build/RTOSDemo.axf
+```
+Note - You'll need to run this command from the same directory as this readme.
+
+From here, there are three GDB commands you'll want to run
+
+```
+target remote localhost:1234
+
+break main
+
+continue
+```
+
+The first attaches GDB to the port Qemu is running against. The second sets a breakpoint at the main function. The third runs the program until the breakpoint. You can run `continue` or `c` again to continue the program after the breakpoint.
+
+## Unsucessful methods
+This section guarantees mixed results - and should be viewed as more experimental. While some of these steps have reportedly worked, they have also failed for others. Take these steps as more of a starting off point than a dead set way to run the demo.
+
+### Building your own toolchain
 
 Clone the Crosstool-NG and build.
 
@@ -61,75 +137,11 @@ Build the GNU toolchain for RISC-V.
 $ ./ct-ng build
 ```
 
-A toolchain is installed at ~/x-tools/riscv64-unknown-elf directory.
-
-
-## How to build
-
-Add path of toolchain that is described above section.
-
-```
-$ export PATH=~/x-tools/riscv64-unknown-elf/bin:$PATH
-```
-
-For release build:
-
-```
-$ make
-```
-
-For debug build:
-
-```
-$ make DEBUG=1
-```
-
-If success to build, executable file RTOSDemo.axf in ./build directory.
-
-
-## How to run
-
-```
-$ qemu-system-riscv32 -nographic -machine virt -net none \
-  -chardev stdio,id=con,mux=on -serial chardev:con \
-  -mon chardev=con,mode=readline -bios none \
-  -smp 4 -kernel ./build/RTOSDemo.axf
-```
-
-
-## How to debug with gdb
-
-Append -s and -S options to the previous qemu command.
-
-- -s: enable to attach gdb to QEMU at port 1234
-- -S: start and halted CPU (wait for attach from gdb)
-
-This is just recommend to use 'debug build' for more efficient debugging.
-Run these commands after starting the QEMU with above options:
-
-```
-$ riscv64-unknown-elf-gdb build/RTOSDemo.axf
-
-(gdb) target remote localhost:1234
-(gdb) break main
-Breakpoint 1 at 0x80000110
-
-(gdb) c
-Continuing.
-
-Breakpoint 1, 0x80000110 in main ()
-```
-
-
-## Description
-
-This demo just prints Tx/Rx message of queue to serial port, use no
-other hardware and use only primary core (currently hart 0).
-Other cores are simply going to wfi state and execute nothing else.
+A toolchain is installed at ~/x-tools/riscv64-unknown-elf directory. You can now follow the 'Building and Running/Debugging" steps above
 
 ## Troubleshooting
-### Builds
-#### ZICSR Failures
+### Your own toolchain Builds
+### ZICSR Failures
 If you receive the following while building
 ```
 main.c: Assembler messages:
@@ -137,11 +149,11 @@ main.c:70: Error: unrecognized opcode `csrc mstatus,8', extension `zicsr' requir
 ```
 You'll need to swap the `-march` flag from `-march=rv32ima` to `-march=rv32ima_zicsr`
 
-#### -pie not supported
+### -pie not supported
 If you receive this error while linking, add the `-no-pie` flag to your linker flags.
 See https://man.archlinux.org/man/community/riscv64-elf-binutils/riscv64-elf-ld.1.en#no~24 for more.
 
-#### Generating a map
+### Generating a map
 Append the `-Xlinker -Map=RTOSDemo.map` flag to your LD flags in the Makefile to generate a map file
 in the current directory when building.
 

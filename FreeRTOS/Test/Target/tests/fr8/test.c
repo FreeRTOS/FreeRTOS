@@ -15,7 +15,7 @@
 /* Priorities at which the tasks are created.  The max priority can be specified
 as ( configMAX_PRIORITIES - 1 ). */
 #define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 1)
-#define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 1)
+#define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 2)
 
 #define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
 
@@ -69,7 +69,9 @@ static void softwareInterruptHandlerSimple(void) {
   sendReport(strbuf_a, strbuf_a_len);
   taskENTER_CRITICAL();
 
-  TEST_ASSERT_EQUAL_INT(taskBState, 6);
+  //TEST_ASSERT_EQUAL_INT(taskBState, 6);
+
+  clearPin(LED_PIN);
 
   taskEXIT_CRITICAL();
   sendReport(strbuf_b, strbuf_b_len);
@@ -128,9 +130,7 @@ static void prvTaskB(void *pvParameters) {
     taskEXIT_CRITICAL();
   }
 
-  taskENTER_CRITICAL();
   taskBState++;
-  taskEXIT_CRITICAL();
 
   // idle the task
   for (;;) {

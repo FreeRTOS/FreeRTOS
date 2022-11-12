@@ -41,7 +41,7 @@
  *----------------------------------------------------------*/
 
 /* Scheduler Related */
-#define configUSE_PREEMPTION                    1
+#define configUSE_PREEMPTION                    0
 #define configUSE_TICKLESS_IDLE                 0
 #define configUSE_IDLE_HOOK                     0
 #define configUSE_TICK_HOOK                     1

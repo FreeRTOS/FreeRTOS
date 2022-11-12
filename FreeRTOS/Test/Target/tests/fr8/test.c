@@ -22,7 +22,6 @@ as ( configMAX_PRIORITIES - 1 ). */
 static void prvTaskA(void *pvParameters);
 static void prvTaskB(void *pvParameters);
 
-
 #if configNUM_CORES != 2
 #error Require two cores be configured for FreeRTOS
 #endif
@@ -47,7 +46,8 @@ int main(void) {
   RUN_TEST(setup_test_fr8_001);
 
   vTaskStartScheduler();
-  
+  // AMPLaunchOnCore(1, vTaskStartScheduler);
+
   /* should never reach here */
   panic_unsupported();
 
@@ -59,6 +59,7 @@ int main(void) {
 static uint32_t taskBState = 0;
 
 static void softwareInterruptHandlerSimple(void) {
+  int i;
   char strbuf_a[] = "ISR enter";
   size_t strbuf_a_len = sizeof(char) / sizeof(strbuf_a);
 
@@ -66,23 +67,35 @@ static void softwareInterruptHandlerSimple(void) {
   size_t strbuf_b_len = sizeof(char) / sizeof(strbuf_b);
 
   sendReport(strbuf_a, strbuf_a_len);
-  taskENTER_CRITICAL( );
+  taskENTER_CRITICAL();
 
   TEST_ASSERT_EQUAL_INT(taskBState, 6);
 
-  taskEXIT_CRITICAL( );
+  taskEXIT_CRITICAL();
   sendReport(strbuf_b, strbuf_b_len);
+
+  for (i = 0;; i++) {
+    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS * 100);
+    if ((i % 2) == 0) {
+      clearPin(LED_PIN);
+    } else {
+      setPin(LED_PIN);
+    }
+  }
 }
 
 static void prvTaskA(void *pvParameters) {
   int handlerNum = -1;
 
-  // wait for Task B to enter the critical section
+  // wait for Task B to exit the critical section
   for (;;) {
-    if (taskBState > 0) {
+    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
+    if (taskBState > 5) {
       break;
     }
   }
+
+  setPin(LED_PIN);
 
   handlerNum = registerSoftwareInterruptHandler(softwareInterruptHandlerSimple);
   triggerSoftwareInterrupt(handlerNum);
@@ -94,8 +107,8 @@ static void prvTaskA(void *pvParameters) {
 }
 
 static void prvTaskB(void *pvParameters) {
-  int iter=1;
-  int numIters=10;
+  int iter = 1;
+  int numIters = 10;
   char strbuf[] = "task B enter critical section";
   size_t strbuf_len = sizeof(char) / sizeof(strbuf);
 
@@ -103,20 +116,21 @@ static void prvTaskB(void *pvParameters) {
 
   sendReport(strbuf, strbuf_len);
 
-  taskENTER_CRITICAL( );
-
-  for (iter=1;iter< numIters;iter++) {
+  for (iter = 1; iter < numIters; iter++) {
+    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS * 100);
+    taskENTER_CRITICAL();
     taskBState++;
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
     if ((iter % 2) == 0) {
       clearPin(LED_PIN);
     } else {
       setPin(LED_PIN);
     }
+    taskEXIT_CRITICAL();
   }
 
+  taskENTER_CRITICAL();
   taskBState++;
-  taskEXIT_CRITICAL(  );
+  taskEXIT_CRITICAL();
 
   // idle the task
   for (;;) {
@@ -181,7 +195,6 @@ void vApplicationTickHook(void) {
   static uint32_t ulCount = 0;
   ulCount++;
 }
-
 
 void vApplicationMallocFailedHook(void) {
   char strbuf[] = "Malloc Failed";

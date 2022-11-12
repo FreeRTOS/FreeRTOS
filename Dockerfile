@@ -87,3 +87,18 @@ RUN curl https://raw.githubusercontent.com/raspberrypi/pico-setup/master/pico_se
 COPY --from=espressif/idf:release-v5.0 /opt/esp /opt/esp
 RUN $IDF_PATH/install.sh
 RUN echo source $IDF_PATH/export.sh >> ~/.bashrc
+
+#    && cd pico \
+#    && cd pico-sdk \
+#    && git clone https://github.com/raspberrypi/openocd.git --recursive --branch picoprobe --depth=1 --no-single-branch \
+#    && cd openocd \
+#    && ./bootstrap \
+#    && make -j4
+
+#    && git clone --recurse-submodules https://github.com/raspberrypi/picoprobe.git \
+#    && cd picoprobe \
+#    && mkdir build \
+#    && cd build \
+#    && cmake -G “Unix Makefiles” .. \
+#    && make \
+#    && cd ../.. \

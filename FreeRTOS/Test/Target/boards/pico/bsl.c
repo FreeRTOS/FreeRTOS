@@ -16,6 +16,12 @@ void initTestEnvironment(void) {
   /* And flash LED */
   gpio_init(PICO_DEFAULT_LED_PIN);
   gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
+  gpio_set_irq_enabled(PICO_DEFAULT_LED_PIN,
+    GPIO_IRQ_LEVEL_LOW |
+    GPIO_IRQ_LEVEL_HIGH |
+    GPIO_IRQ_EDGE_FALL |
+    GPIO_IRQ_EDGE_RISE,
+    false);
 }
 
 void sendReport(char *buffer, size_t len) { printf("%.*s", len, buffer); }

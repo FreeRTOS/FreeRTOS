@@ -50,16 +50,12 @@ extern bool setupCellular( void );
 extern void vStartSimpleMQTTDemo( void );
 
 /* Task to handle connecting the cellular module. */
-static void vCellularConnectTask( void * pvParameters );
-
-/*-----------------------------------------------------------*/
-
-static BaseType_t xNetworkStatus = pdFALSE;
+static void vCellularDemoTask( void * pvParameters );
 
 /*-----------------------------------------------------------*/
 
 
-static void vCellularConnectTask( void * pvParameters )
+static void vCellularDemoTask( void * pvParameters )
 {
     bool xResult = true;
 
@@ -80,6 +76,8 @@ static void vCellularConnectTask( void * pvParameters )
     /* Stop here if we fail to initialize cellular. */
     configASSERT( xResult == true );
 
+    vStartSimpleMQTTDemo();
+
     vTaskDelete( NULL );
 }
 
@@ -89,12 +87,10 @@ int main( void )
 {
     vPlatformInitLogging();
 
-    vStartSimpleMQTTDemo();
-
     /* FreeRTOS Cellular Library init needs thread ready environment.
      * CellularDemoTask invoke setupCellular to init FreeRTOS Cellular Library and register network.
      * Then it runs the MQTT demo. */
-    xTaskCreate(vCellularConnectTask,     /* Function that implements the task. */
+    xTaskCreate(vCellularDemoTask,     /* Function that implements the task. */
                 "CellularConnect",        /* Text name for the task - only used for debugging. */
                 democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
                 NULL,                     /* Task parameter - not used in this case. */

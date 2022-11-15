@@ -9,7 +9,7 @@ Other cores are simply going to wfi state and execute nothing else.
 
 ## Requirements
 
-1. GNU RISC-V toolchains (tested on SiFive + Crosstool-NG toolchains)
+1. GNU RISC-V toolchains (tested on [SiFive](https://www.sifive.com/software) + [Crosstool-NG](https://github.com/crosstool-ng/crosstool-ng) toolchains)
 1. qemu-riscv32-system (tested on Debian 10 package)
 1. Linux OS (tested on Debian 10/Ubuntu)
 
@@ -86,10 +86,10 @@ continue
 
 The first attaches GDB to the port Qemu is running against. The second sets a breakpoint at the main function. The third runs the program until the breakpoint. You can run `continue` or `c` again to continue the program after the breakpoint.
 
-## Unsucessful methods
-This section guarantees mixed results - and should be viewed as more experimental. While some of these steps have reportedly worked, they have also failed for others. Take these steps as more of a starting off point than a dead set way to run the demo.
+## Building Your Own Toolchain
+This section should be viewed as experimental. Take these steps as more of a starting off point than a dead set way to build a toolchain for your demo.
 
-### Building your own toolchain
+### CrossTools-NG
 
 Clone the Crosstool-NG and build.
 
@@ -152,9 +152,3 @@ You'll need to swap the `-march` flag from `-march=rv32ima` to `-march=rv32ima_z
 ### -pie not supported
 If you receive this error while linking, add the `-no-pie` flag to your linker flags.
 See https://man.archlinux.org/man/community/riscv64-elf-binutils/riscv64-elf-ld.1.en#no~24 for more.
-
-### Generating a map
-Append the `-Xlinker -Map=RTOSDemo.map` flag to your LD flags in the Makefile to generate a map file
-in the current directory when building.
-
-This can be useful when determining address validity.

@@ -57,24 +57,10 @@ static void vCellularDemoTask( void * pvParameters );
 
 static void vCellularDemoTask( void * pvParameters )
 {
-    bool xResult = true;
-
     ( void ) pvParameters;
 
     /* Setup cellular. */
-    xResult = setupCellular();
-
-    if( xResult == false )
-    {
-        LogError( ( "Cellular connection failed to initialize." ) );
-    }
-    else
-    {
-        xNetworkStatus = pdTRUE;
-    }
-
-    /* Stop here if we fail to initialize cellular. */
-    configASSERT( xResult == true );
+    configASSERT( setupCellular() == true );
 
     vStartSimpleMQTTDemo();
 
@@ -90,12 +76,12 @@ int main( void )
     /* FreeRTOS Cellular Library init needs thread ready environment.
      * CellularDemoTask invoke setupCellular to init FreeRTOS Cellular Library and register network.
      * Then it runs the MQTT demo. */
-    xTaskCreate(vCellularDemoTask,     /* Function that implements the task. */
-                "CellularConnect",        /* Text name for the task - only used for debugging. */
-                democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
-                NULL,                     /* Task parameter - not used in this case. */
-                democonfigDEMO_PRIORITY,  /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
-                NULL);                    /* Used to pass out a handle to the created task - not used in this case. */
+    xTaskCreate( vCellularDemoTask,        /* Function that implements the task. */
+                 "CellularConnect",        /* Text name for the task - only used for debugging. */
+                 democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
+                 NULL,                     /* Task parameter - not used in this case. */
+                 democonfigDEMO_PRIORITY,  /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
+                 NULL );                   /* Used to pass out a handle to the created task - not used in this case. */
 
     /* Start the RTOS scheduler. */
     vTaskStartScheduler();

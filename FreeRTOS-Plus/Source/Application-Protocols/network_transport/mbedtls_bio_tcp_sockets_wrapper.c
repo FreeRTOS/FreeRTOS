@@ -108,7 +108,7 @@ int xMbedTLSBioTCPSocketsWrapperRecv( void * ctx,
     configASSERT( ctx != NULL );
     configASSERT( buf != NULL );
 
-    xReturnStatus = FreeRTOS_recv( ( Socket_t ) ctx, buf, len, 0 );
+    xReturnStatus = TCP_Sockets_Recv( ( Socket_t ) ctx, buf, len, 0 );
 
     switch( xReturnStatus )
     {

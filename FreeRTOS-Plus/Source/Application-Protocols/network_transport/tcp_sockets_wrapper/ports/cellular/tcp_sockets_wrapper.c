@@ -24,7 +24,7 @@
  *
  */
 
- /* Include header that defines log levels. */
+/* Include header that defines log levels. */
 #include "logging_levels.h"
 
 /* Logging configuration for the Sockets. */
@@ -119,6 +119,9 @@ extern uint8_t CellularSocketPdnContextId;
 #define _MILLISECONDS_PER_SECOND               ( 1000 )                                          /**< @brief Milliseconds per second. */
 #define _MILLISECONDS_PER_TICK                 ( _MILLISECONDS_PER_SECOND / configTICK_RATE_HZ ) /**< Milliseconds per FreeRTOS tick. */
 
+/* Invalid socket. */
+#define CELLULAR_INVALID_SOCKET                ( ( Socket_t ) ~0U )
+
 /*-----------------------------------------------------------*/
 
 typedef struct xSOCKET
@@ -202,7 +205,7 @@ static void prvCellularSocketClosedCallback( CellularSocketHandle_t socketHandle
  * @param[in] pCellularSocketContext Cellular socket wrapper context for socket operations.
  * @param[out] receiveTimeout Socket receive timeout in TickType_t.
  *
- * @return On success, SOCKETS_ERROR_NONE is returned. If an error occurred, error code defined
+ * @return On success, TCP_SOCKETS_ERRNO_NONE is returned. If an error occurred, error code defined
  * in sockets_wrapper.h is returned.
  */
 static BaseType_t prvSetupSocketRecvTimeout( cellularSocketWrapper_t * pCellularSocketContext,
@@ -218,7 +221,7 @@ static BaseType_t prvSetupSocketRecvTimeout( cellularSocketWrapper_t * pCellular
  * Any send timeout greater than UINT32_MAX_MS_TICKS( UINT32_MAX_DELAY_MS/MS_PER_TICKS ) or
  * portMAX_DELAY is regarded as UINT32_MAX_DELAY_MS for cellular API.
  *
- * @return On success, SOCKETS_ERROR_NONE is returned. If an error occurred, error code defined
+ * @return On success, TCP_SOCKETS_ERRNO_NONE is returned. If an error occurred, error code defined
  * in sockets_wrapper.h is returned.
  */
 static BaseType_t prvSetupSocketSendTimeout( cellularSocketWrapper_t * pCellularSocketContext,
@@ -230,7 +233,7 @@ static BaseType_t prvSetupSocketSendTimeout( cellularSocketWrapper_t * pCellular
  * @param[in] CellularSocketHandle_t Cellular socket handle for cellular socket operations.
  * @param[in] pCellularSocketContext Cellular socket wrapper context for socket operations.
  *
- * @return On success, SOCKETS_ERROR_NONE is returned. If an error occurred, error code defined
+ * @return On success, TCP_SOCKETS_ERRNO_NONE is returned. If an error occurred, error code defined
  * in sockets_wrapper.h is returned.
  */
 static BaseType_t prvCellularSocketRegisterCallback( CellularSocketHandle_t cellularSocketHandle,
@@ -349,7 +352,7 @@ static BaseType_t prvNetworkRecvCellular( const cellularSocketWrapper_t * pCellu
     else
     {
         LogError( ( "prvNetworkRecv failed %d", socketStatus ) );
-        retRecvLength = SOCKETS_SOCKET_ERROR;
+        retRecvLength = TCP_SOCKETS_ERRNO_ERROR;
     }
 
     LogDebug( ( "prvNetworkRecv expect %d read %d", len, recvLength ) );
@@ -369,7 +372,7 @@ static void prvCellularSocketOpenCallback( CellularUrcEvent_t urcEvent,
     if( pCellularSocketContext != NULL )
     {
         LogDebug( ( "Socket open callback on Socket %p %d %d.",
-                     pCellularSocketContext, socketHandle, urcEvent ) );
+                    pCellularSocketContext, socketHandle, urcEvent ) );
 
         if( urcEvent == CELLULAR_URC_SOCKET_OPENED )
         {
@@ -438,11 +441,11 @@ static void prvCellularSocketClosedCallback( CellularSocketHandle_t socketHandle
 static BaseType_t prvSetupSocketRecvTimeout( cellularSocketWrapper_t * pCellularSocketContext,
                                              TickType_t receiveTimeout )
 {
-    BaseType_t retSetSockOpt = SOCKETS_ERROR_NONE;
+    BaseType_t retSetSockOpt = TCP_SOCKETS_ERRNO_NONE;
 
     if( pCellularSocketContext == NULL )
     {
-        retSetSockOpt = SOCKETS_EINVAL;
+        retSetSockOpt = TCP_SOCKETS_ERRNO_EINVAL;
     }
     else
     {
@@ -464,13 +467,13 @@ static BaseType_t prvSetupSocketRecvTimeout( cellularSocketWrapper_t * pCellular
 static BaseType_t prvSetupSocketSendTimeout( cellularSocketWrapper_t * pCellularSocketContext,
                                              TickType_t sendTimeout )
 {
-    BaseType_t retSetSockOpt = SOCKETS_ERROR_NONE;
+    BaseType_t retSetSockOpt = TCP_SOCKETS_ERRNO_NONE;
     uint32_t sendTimeoutMs = 0;
     CellularSocketHandle_t cellularSocketHandle = NULL;
 
     if( pCellularSocketContext == NULL )
     {
-        retSetSockOpt = SOCKETS_EINVAL;
+        retSetSockOpt = TCP_SOCKETS_ERRNO_EINVAL;
     }
     else
     {
@@ -485,7 +488,7 @@ static BaseType_t prvSetupSocketSendTimeout( cellularSocketWrapper_t * pCellular
         else if( sendTimeout >= portMAX_DELAY )
         {
             LogWarn( ( "Sendtimeout %d longer than portMAX_DELAY, %d ms is used instead",
-                        sendTimeout, UINT32_MAX_DELAY_MS ) );
+                       sendTimeout, UINT32_MAX_DELAY_MS ) );
             pCellularSocketContext->sendTimeout = portMAX_DELAY;
             sendTimeoutMs = UINT32_MAX_DELAY_MS;
         }
@@ -504,15 +507,15 @@ static BaseType_t prvSetupSocketSendTimeout( cellularSocketWrapper_t * pCellular
 static BaseType_t prvCellularSocketRegisterCallback( CellularSocketHandle_t cellularSocketHandle,
                                                      cellularSocketWrapper_t * pCellularSocketContext )
 {
-    BaseType_t retRegCallback = SOCKETS_ERROR_NONE;
+    BaseType_t retRegCallback = TCP_SOCKETS_ERRNO_NONE;
     CellularError_t socketStatus = CELLULAR_SUCCESS;
 
     if( cellularSocketHandle == NULL )
     {
-        retRegCallback = SOCKETS_EINVAL;
+        retRegCallback = TCP_SOCKETS_ERRNO_EINVAL;
     }
 
-    if( retRegCallback == SOCKETS_ERROR_NONE )
+    if( retRegCallback == TCP_SOCKETS_ERRNO_NONE )
     {
         socketStatus = Cellular_SocketRegisterDataReadyCallback( CellularHandle, cellularSocketHandle,
                                                                  prvCellularSocketDataReadyCallback, ( void * ) pCellularSocketContext );
@@ -520,11 +523,11 @@ static BaseType_t prvCellularSocketRegisterCallback( CellularSocketHandle_t cell
         if( socketStatus != CELLULAR_SUCCESS )
         {
             LogError( ( "Failed to SocketRegisterDataReadyCallback. Socket status %d.", socketStatus ) );
-            retRegCallback = SOCKETS_SOCKET_ERROR;
+            retRegCallback = TCP_SOCKETS_ERRNO_ERROR;
         }
     }
 
-    if( retRegCallback == SOCKETS_ERROR_NONE )
+    if( retRegCallback == TCP_SOCKETS_ERRNO_NONE )
     {
         socketStatus = Cellular_SocketRegisterSocketOpenCallback( CellularHandle, cellularSocketHandle,
                                                                   prvCellularSocketOpenCallback, ( void * ) pCellularSocketContext );
@@ -532,11 +535,11 @@ static BaseType_t prvCellularSocketRegisterCallback( CellularSocketHandle_t cell
         if( socketStatus != CELLULAR_SUCCESS )
         {
             LogError( ( "Failed to SocketRegisterSocketOpenCallbac. Socket status %d.", socketStatus ) );
-            retRegCallback = SOCKETS_SOCKET_ERROR;
+            retRegCallback = TCP_SOCKETS_ERRNO_ERROR;
         }
     }
 
-    if( retRegCallback == SOCKETS_ERROR_NONE )
+    if( retRegCallback == TCP_SOCKETS_ERRNO_NONE )
     {
         socketStatus = Cellular_SocketRegisterClosedCallback( CellularHandle, cellularSocketHandle,
                                                               prvCellularSocketClosedCallback, ( void * ) pCellularSocketContext );
@@ -544,7 +547,7 @@ static BaseType_t prvCellularSocketRegisterCallback( CellularSocketHandle_t cell
         if( socketStatus != CELLULAR_SUCCESS )
         {
             LogError( ( "Failed to SocketRegisterClosedCallback. Socket status %d.", socketStatus ) );
-            retRegCallback = SOCKETS_SOCKET_ERROR;
+            retRegCallback = TCP_SOCKETS_ERRNO_ERROR;
         }
     }
 
@@ -602,7 +605,7 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
 
     CellularSocketAddress_t serverAddress = { 0 };
     EventBits_t waitEventBits = 0;
-    BaseType_t retConnect = SOCKETS_ERROR_NONE;
+    BaseType_t retConnect = TCP_SOCKETS_ERRNO_NONE;
 
     /* Create a new TCP socket. */
     cellularSocketStatus = Cellular_CreateSocket( CellularHandle,
@@ -615,11 +618,11 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
     if( cellularSocketStatus != CELLULAR_SUCCESS )
     {
         LogError( ( "Failed to create cellular sockets. %d", cellularSocketStatus ) );
-        retConnect = SOCKETS_SOCKET_ERROR;
+        retConnect = TCP_SOCKETS_ERRNO_ERROR;
     }
 
     /* Allocate socket context. */
-    if( retConnect == SOCKETS_ERROR_NONE )
+    if( retConnect == TCP_SOCKETS_ERRNO_NONE )
     {
         pCellularSocketContext = pvPortMalloc( sizeof( cellularSocketWrapper_t ) );
 
@@ -627,7 +630,7 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
         {
             LogError( ( "Failed to allocate new socket context." ) );
             ( void ) Cellular_SocketClose( CellularHandle, cellularSocketHandle );
-            retConnect = SOCKETS_ENOMEM;
+            retConnect = TCP_SOCKETS_ERRNO_ENOMEM;
         }
         else
         {
@@ -641,19 +644,19 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
     }
 
     /* Allocate event group for callback function. */
-    if( retConnect == SOCKETS_ERROR_NONE )
+    if( retConnect == TCP_SOCKETS_ERRNO_NONE )
     {
         pCellularSocketContext->socketEventGroupHandle = xEventGroupCreate();
 
         if( pCellularSocketContext->socketEventGroupHandle == NULL )
         {
             LogError( ( "Failed create cellular socket eventGroupHandle %p.", pCellularSocketContext ) );
-            retConnect = SOCKETS_ENOMEM;
+            retConnect = TCP_SOCKETS_ERRNO_ENOMEM;
         }
     }
 
     /* Register cellular socket callback function. */
-    if( retConnect == SOCKETS_ERROR_NONE )
+    if( retConnect == TCP_SOCKETS_ERRNO_NONE )
     {
         serverAddress.ipAddress.ipAddressType = CELLULAR_IP_ADDRESS_V4;
         strncpy( serverAddress.ipAddress.ipAddress, pHostName, CELLULAR_IP_ADDRESS_MAX_SIZE );
@@ -664,18 +667,18 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
     }
 
     /* Setup cellular socket send/recv timeout. */
-    if( retConnect == SOCKETS_ERROR_NONE )
+    if( retConnect == TCP_SOCKETS_ERRNO_NONE )
     {
         retConnect = prvSetupSocketSendTimeout( pCellularSocketContext, pdMS_TO_TICKS( sendTimeoutMs ) );
     }
 
-    if( retConnect == SOCKETS_ERROR_NONE )
+    if( retConnect == TCP_SOCKETS_ERRNO_NONE )
     {
         retConnect = prvSetupSocketRecvTimeout( pCellularSocketContext, pdMS_TO_TICKS( receiveTimeoutMs ) );
     }
 
     /* Cellular socket connect. */
-    if( retConnect == SOCKETS_ERROR_NONE )
+    if( retConnect == TCP_SOCKETS_ERRNO_NONE )
     {
         ( void ) xEventGroupClearBits( pCellularSocketContext->socketEventGroupHandle,
                                        SOCKET_DATA_RECEIVED_CALLBACK_BIT | SOCKET_OPEN_FAILED_CALLBACK_BIT );
@@ -684,12 +687,12 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
         if( cellularSocketStatus != CELLULAR_SUCCESS )
         {
             LogError( ( "Failed to establish new connection. Socket status %d.", cellularSocketStatus ) );
-            retConnect = SOCKETS_SOCKET_ERROR;
+            retConnect = TCP_SOCKETS_ERRNO_ERROR;
         }
     }
 
     /* Wait the socket connection. */
-    if( retConnect == SOCKETS_ERROR_NONE )
+    if( retConnect == TCP_SOCKETS_ERRNO_NONE )
     {
         waitEventBits = xEventGroupWaitBits( pCellularSocketContext->socketEventGroupHandle,
                                              SOCKET_OPEN_CALLBACK_BIT | SOCKET_OPEN_FAILED_CALLBACK_BIT,
@@ -700,12 +703,12 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
         if( waitEventBits != SOCKET_OPEN_CALLBACK_BIT )
         {
             LogError( ( "Socket connect timeout." ) );
-            retConnect = SOCKETS_ENOTCONN;
+            retConnect = TCP_SOCKETS_ERRNO_ENOTCONN;
         }
     }
 
     /* Cleanup the socket if any error. */
-    if( retConnect != SOCKETS_ERROR_NONE )
+    if( retConnect != TCP_SOCKETS_ERRNO_NONE )
     {
         if( cellularSocketHandle != NULL )
         {
@@ -740,9 +743,9 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
 
 /*-----------------------------------------------------------*/
 
-void Sockets_Disconnect( Socket_t xSocket )
+void TCP_Sockets_Disconnect( Socket_t xSocket )
 {
-    int32_t retClose = SOCKETS_ERROR_NONE;
+    int32_t retClose = TCP_SOCKETS_ERRNO_NONE;
     cellularSocketWrapper_t * pCellularSocketContext = ( cellularSocketWrapper_t * ) xSocket;
     CellularSocketHandle_t cellularSocketHandle = NULL;
     uint32_t recvLength = 0;
@@ -751,17 +754,17 @@ void Sockets_Disconnect( Socket_t xSocket )
 
     /* xSocket need to be check against SOCKET_INVALID_SOCKET. */
     /* coverity[misra_c_2012_rule_11_4_violation] */
-    if( ( pCellularSocketContext == NULL ) || ( xSocket == SOCKETS_INVALID_SOCKET ) )
+    if( ( pCellularSocketContext == NULL ) || ( xSocket == CELLULAR_INVALID_SOCKET ) )
     {
         LogError( ( "Invalid xSocket %p", pCellularSocketContext ) );
-        retClose = SOCKETS_EINVAL;
+        retClose = TCP_SOCKETS_ERRNO_EINVAL;
     }
     else
     {
         cellularSocketHandle = pCellularSocketContext->cellularSocketHandle;
     }
 
-    if( retClose == SOCKETS_ERROR_NONE )
+    if( retClose == TCP_SOCKETS_ERRNO_NONE )
     {
         if( cellularSocketHandle != NULL )
         {
@@ -777,7 +780,7 @@ void Sockets_Disconnect( Socket_t xSocket )
             if( Cellular_SocketClose( CellularHandle, cellularSocketHandle ) != CELLULAR_SUCCESS )
             {
                 LogWarn( ( "Failed to destroy connection." ) );
-                retClose = SOCKETS_SOCKET_ERROR;
+                retClose = TCP_SOCKETS_ERRNO_ERROR;
             }
 
             ( void ) Cellular_SocketRegisterDataReadyCallback( CellularHandle, cellularSocketHandle, NULL, NULL );
@@ -800,7 +803,7 @@ void Sockets_Disconnect( Socket_t xSocket )
 
 /*-----------------------------------------------------------*/
 
-int32_t Sockets_Recv( Socket_t xSocket,
+int32_t TCP_Sockets_Recv( Socket_t xSocket,
                       void * pvBuffer,
                       size_t xBufferLength )
 {
@@ -811,14 +814,14 @@ int32_t Sockets_Recv( Socket_t xSocket,
     if( pCellularSocketContext == NULL )
     {
         LogError( ( "Cellular prvNetworkRecv Invalid xSocket %p", pCellularSocketContext ) );
-        retRecvLength = ( BaseType_t ) SOCKETS_EINVAL;
+        retRecvLength = ( BaseType_t ) TCP_SOCKETS_ERRNO_EINVAL;
     }
     else if( ( ( pCellularSocketContext->ulFlags & CELLULAR_SOCKET_OPEN_FLAG ) == 0U ) ||
              ( ( pCellularSocketContext->ulFlags & CELLULAR_SOCKET_CONNECT_FLAG ) == 0U ) )
     {
         LogError( ( "Cellular prvNetworkRecv Invalid xSocket flag %p %u",
-                     pCellularSocketContext, pCellularSocketContext->ulFlags ) );
-        retRecvLength = ( BaseType_t ) SOCKETS_ENOTCONN;
+                    pCellularSocketContext, pCellularSocketContext->ulFlags ) );
+        retRecvLength = ( BaseType_t ) TCP_SOCKETS_ERRNO_ENOTCONN;
     }
     else
     {
@@ -834,7 +837,7 @@ int32_t Sockets_Recv( Socket_t xSocket,
  * Send timeout unit is TickType_t. Any timeout value greater than UINT32_MAX_MS_TICKS
  * or portMAX_DELAY will be regarded as MAX delay. In this case, this function
  * will not return until all bytes of data are sent successfully or until an error occurs. */
-int32_t Sockets_Send( Socket_t xSocket,
+int32_t TCP_Sockets_Send( Socket_t xSocket,
                       const void * pvBuffer,
                       size_t xDataLength )
 {
@@ -851,15 +854,15 @@ int32_t Sockets_Send( Socket_t xSocket,
 
     if( pCellularSocketContext == NULL )
     {
-        LogError( ( "Cellular Sockets_Send Invalid xSocket %p", pCellularSocketContext ) );
-        retSendLength = ( BaseType_t ) SOCKETS_SOCKET_ERROR;
+        LogError( ( "Cellular TCP_Sockets_Send Invalid xSocket %p", pCellularSocketContext ) );
+        retSendLength = ( BaseType_t ) TCP_SOCKETS_ERRNO_ERROR;
     }
     else if( ( ( pCellularSocketContext->ulFlags & CELLULAR_SOCKET_OPEN_FLAG ) == 0U ) ||
              ( ( pCellularSocketContext->ulFlags & CELLULAR_SOCKET_CONNECT_FLAG ) == 0U ) )
     {
-        LogError( ( "Cellular Sockets_Send Invalid xSocket flag %p 0x%08x",
-                     pCellularSocketContext, pCellularSocketContext->ulFlags ) );
-        retSendLength = ( BaseType_t ) SOCKETS_SOCKET_ERROR;
+        LogError( ( "Cellular TCP_Sockets_Send Invalid xSocket flag %p 0x%08x",
+                    pCellularSocketContext, pCellularSocketContext->ulFlags ) );
+        retSendLength = ( BaseType_t ) TCP_SOCKETS_ERRNO_ERROR;
     }
     else
     {
@@ -902,14 +905,14 @@ int32_t Sockets_Send( Socket_t xSocket,
                 }
                 else if( socketStatus != CELLULAR_SUCCESS )
                 {
-                    retSendLength = ( BaseType_t ) SOCKETS_SOCKET_ERROR;
+                    retSendLength = ( BaseType_t ) TCP_SOCKETS_ERRNO_ERROR;
                 }
 
                 break;
             }
         }
 
-        LogDebug( ( "Sockets_Send expect %d write %d", xDataLength, sentLength ) );
+        LogDebug( ( "TCP_Sockets_Send expect %d write %d", xDataLength, sentLength ) );
     }
 
     return retSendLength;

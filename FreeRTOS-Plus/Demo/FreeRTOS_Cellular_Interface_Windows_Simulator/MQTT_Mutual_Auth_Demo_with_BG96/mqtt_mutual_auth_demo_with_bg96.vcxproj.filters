@@ -22,12 +22,6 @@
     <Filter Include="Libraries\network_transport">
       <UniqueIdentifier>{ac15826d-05e3-4123-a69b-b8a7324492d8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\network_transport\sockets_wrapper">
-      <UniqueIdentifier>{e2635dd9-7099-45bb-ad1d-a54b849c21bd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Libraries\network_transport\sockets_wrapper\cellular">
-      <UniqueIdentifier>{c1cf6a38-0503-40dd-a8de-0a37fb58160f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Libraries\cellular">
       <UniqueIdentifier>{26846a50-0d36-4873-968c-cccdc24355b6}</UniqueIdentifier>
     </Filter>
@@ -58,6 +52,15 @@
     <Filter Include="Libraries\backoff_algorithm\include">
       <UniqueIdentifier>{d34ccce7-a7e3-45b3-9ab9-78519144db41}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Libraries\network_transport\tcp_sockets_wrapper">
+      <UniqueIdentifier>{e2635dd9-7099-45bb-ad1d-a54b849c21bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\network_transport\tcp_sockets_wrapper\cellular">
+      <UniqueIdentifier>{c1cf6a38-0503-40dd-a8de-0a37fb58160f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\network_transport\tcp_sockets_wrapper\include">
+      <UniqueIdentifier>{3824b829-824c-4188-abc7-7304392c558f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Common\cellular_platform.c">
@@ -76,13 +79,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.c">
-      <Filter>Libraries\network_transport\sockets_wrapper</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\cellular\sockets_wrapper.c">
-      <Filter>Libraries\network_transport\sockets_wrapper\cellular</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_freertos_cellular.c">
-      <Filter>Libraries\network_transport\sockets_wrapper</Filter>
+      <Filter>Libraries\network_transport\tcp_sockets_wrapper</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\cellular_3gpp_api.c">
       <Filter>Libraries\cellular</Filter>
@@ -129,8 +126,11 @@
     <ClCompile Include="..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
       <Filter>Libraries\backoff_algorithm</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_freertos_plus_tcp.c">
-      <Filter>Libraries\network_transport\sockets_wrapper</Filter>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\ports\cellular\tcp_sockets_wrapper.c">
+      <Filter>Libraries\network_transport\tcp_sockets_wrapper\cellular</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.c">
+      <Filter>Libraries\network_transport\tcp_sockets_wrapper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -140,14 +140,8 @@
     <ClInclude Include="..\Common\core_mqtt_config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_freertos_plus_tcp.h">
-      <Filter>Libraries\network_transport\sockets_wrapper</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.h">
-      <Filter>Libraries\network_transport\sockets_wrapper</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\cellular\sockets_wrapper.h">
-      <Filter>Libraries\network_transport\sockets_wrapper\cellular</Filter>
+      <Filter>Libraries\network_transport\tcp_sockets_wrapper</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Source\FreeRTOS-Cellular-Interface\source\include\cellular_api.h">
       <Filter>Libraries\cellular\include</Filter>
@@ -205,6 +199,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h">
       <Filter>Libraries\backoff_algorithm\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include\tcp_sockets_wrapper.h">
+      <Filter>Libraries\network_transport\tcp_sockets_wrapper\include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

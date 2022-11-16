@@ -40,20 +40,22 @@ typedef struct tskTaskControlBlock       /* The old naming convention is used to
         xMPU_SETTINGS xMPUSettings; /*< The MPU settings are defined as part of the port layer.  THIS MUST BE THE SECOND MEMBER OF THE TCB STRUCT. */
     #endif
 
-    #if ( configUSE_CORE_AFFINITY == 1 && configNUM_CORES > 1 )
-        UBaseType_t uxCoreAffinityMask; /*< Used to link the task to certain cores.  UBaseType_t must have >= the same number of bits as SMP confNUM_CORES */
+    #if ( configUSE_CORE_AFFINITY == 1 ) && ( configNUMBER_OF_CORES > 1 )
+        UBaseType_t uxCoreAffinityMask; /*< Used to link the task to certain cores.  UBaseType_t must have greater than or equal to the number of bits as confNUM_CORES. */
     #endif
 
     ListItem_t xStateListItem;                  /*< The list that the state list item of a task is reference from denotes the state of that task (Ready, Blocked, Suspended ). */
     ListItem_t xEventListItem;                  /*< Used to reference a task from an event list. */
     UBaseType_t uxPriority;                     /*< The priority of the task.  0 is the lowest priority. */
     StackType_t * pxStack;                      /*< Points to the start of the stack. */
-    volatile TaskRunning_t xTaskRunState;       /*< Used to identify the core the task is running on, if any. */
-    BaseType_t xIsIdle;                         /*< Used to identify the idle tasks. */
+    #if ( configNUMBER_OF_CORES > 1 )
+        volatile TaskRunning_t xTaskRunState;   /*< Used to identify the core the task is running on, if the task is running. Otherwise, identifies the task's state - not running or yielding. */
+        UBaseType_t uxTaskAttributes;           /*< Task's attributes - currently used to identify the idle tasks. */
+    #endif
     char pcTaskName[ configMAX_TASK_NAME_LEN ]; /*< Descriptive name given to the task when created.  Facilitates debugging only. */ /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
     #if ( configUSE_TASK_PREEMPTION_DISABLE == 1 )
-        BaseType_t xPreemptionDisable; /*< Used to prevent the task from being preempted */
+        BaseType_t xPreemptionDisable; /*< Used to prevent the task from being preempted. */
     #endif
 
     #if ( ( portSTACK_GROWTH > 0 ) || ( configRECORD_STACK_HIGH_ADDRESS == 1 ) )
@@ -83,21 +85,11 @@ typedef struct tskTaskControlBlock       /* The old naming convention is used to
     #endif
 
     #if ( configGENERATE_RUN_TIME_STATS == 1 )
-        uint32_t ulRunTimeCounter; /*< Stores the amount of time the task has spent in the Running state. */
+        configRUN_TIME_COUNTER_TYPE ulRunTimeCounter; /*< Stores the amount of time the task has spent in the Running state. */
     #endif
 
-    #if ( configUSE_NEWLIB_REENTRANT == 1 )
-        /* Allocate a Newlib reent structure that is specific to this task.
-         * Note Newlib support has been included by popular demand, but is not
-         * used by the FreeRTOS maintainers themselves.  FreeRTOS is not
-         * responsible for resulting newlib operation.  User must be familiar with
-         * newlib and must provide system-wide implementations of the necessary
-         * stubs. Be warned that (at the time of writing) the current newlib design
-         * implements a system-wide malloc() that must be provided with locks.
-         *
-         * See the third party link http://www.nadler.com/embedded/newlibAndFreeRTOS.html
-         * for additional information. */
-        struct  _reent xNewLib_reent;
+    #if ( ( configUSE_NEWLIB_REENTRANT == 1 ) || ( configUSE_C_RUNTIME_TLS_SUPPORT == 1 ) )
+        configTLS_BLOCK_TYPE xTLSBlock; /*< Memory block used as Thread Local Storage (TLS) Block for the task. */
     #endif
 
     #if ( configUSE_TASK_NOTIFICATIONS == 1 )

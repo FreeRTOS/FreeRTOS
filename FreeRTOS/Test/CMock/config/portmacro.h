@@ -156,7 +156,7 @@ typedef unsigned long    UBaseType_t;
 #define portGET_CORE_ID()                vFakePortGetCoreID()
 #define portYIELD_CORE( x )              vFakePortYieldCore(x)
 
-#if ( configNUM_CORES > 1 )
+#if ( configNUMBER_OF_CORES > 1 )
     #define portTASK_FUNCTION_PROTO( vFunction, pvParameters )    void vFunction( void * pvParameters )
     #define portTASK_FUNCTION( vFunction, pvParameters )          void vFunction( void * pvParameters )
 #else

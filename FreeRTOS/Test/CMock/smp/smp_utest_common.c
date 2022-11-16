@@ -59,13 +59,13 @@ extern volatile TickType_t xPendedTicks;
 extern volatile BaseType_t xNumOfOverflows;
 extern volatile TickType_t xNextTaskUnblockTime;
 extern UBaseType_t uxTaskNumber;
-extern TaskHandle_t xIdleTaskHandles[configNUM_CORES];
+extern TaskHandle_t xIdleTaskHandles[configNUMBER_OF_CORES];
 extern volatile UBaseType_t uxSchedulerSuspended;
 extern volatile UBaseType_t uxDeletedTasksWaitingCleanUp;
 extern List_t * volatile pxDelayedTaskList;
-extern volatile TCB_t *  pxCurrentTCBs[ configNUM_CORES ];
+extern volatile TCB_t *  pxCurrentTCBs[ configNUMBER_OF_CORES ];
 
-static BaseType_t xCoreYields[ configNUM_CORES ] = { 0 };
+static BaseType_t xCoreYields[ configNUMBER_OF_CORES ] = { 0 };
 
 /* portGET_CORE_ID() returns the xCurrentCoreId. The task choose order is dependent on
  * which core calls the FreeRTOS APIs. Setup xCurrentCoreId is required before calling
@@ -75,8 +75,8 @@ static BaseType_t xCurrentCoreId = 0;
 /* Each core maintains it's lock count. However, only one core has lock count value > 0.
  * In real world case, this value is read when interrupt disabled while increased when
  * lock is acquired. */
-static BaseType_t xIsrLockCount[ configNUM_CORES ] = { 0 };
-static BaseType_t xTaskLockCount[ configNUM_CORES ] = { 0 };
+static BaseType_t xIsrLockCount[ configNUMBER_OF_CORES ] = { 0 };
+static BaseType_t xTaskLockCount[ configNUMBER_OF_CORES ] = { 0 };
 
 /* ==========================  EXTERN FUNCTIONS  ========================== */
 
@@ -107,8 +107,8 @@ BaseType_t xPortStartScheduler( void )
     uint8_t i;
 
     /* Initialize each core with a task */
-    for (i = 0; i < configNUM_CORES; i++) {
-        vTaskSwitchContextForCore(i);
+    for (i = 0; i < configNUMBER_OF_CORES; i++) {
+        vTaskSwitchContext(i);
     }
 
     return pdTRUE;
@@ -126,7 +126,7 @@ void vFakePortYieldCoreStubCallback( int xCoreID, int cmock_num_calls )
     int i;
 
     /* Check if the lock is acquired by any core. */
-    for( i = 0; i < configNUM_CORES; i++ )
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
         if( ( xIsrLockCount[ i ] > 0 ) || ( xTaskLockCount[ i ] > 0 ) )
         {
@@ -143,14 +143,14 @@ void vFakePortYieldCoreStubCallback( int xCoreID, int cmock_num_calls )
     } else {
         /* No task is in the critical section. We can yield this core. */
         xCurrentCoreId = xCoreID;
-        vTaskSwitchContextForCore( xCurrentCoreId );
+        vTaskSwitchContext( xCurrentCoreId );
         xCurrentCoreId = xPreviousCoreId;
     }
 }
 
 void vFakePortYieldStubCallback( int cmock_num_calls )
 {
-    vTaskSwitchContextForCore( xCurrentCoreId );
+    vTaskSwitchContext( xCurrentCoreId );
 }
 
 void vFakePortEnterCriticalSection( void )
@@ -181,13 +181,13 @@ static void vYieldCores( void )
     BaseType_t i;
     BaseType_t xPreviousCoreId = xCurrentCoreId;
 
-    for( i = 0; i < configNUM_CORES; i++ )
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
         if( xCoreYields[ i ] == pdTRUE )
         {
             xCurrentCoreId = i;
             xCoreYields[ i ] = pdFALSE;
-            vTaskSwitchContextForCore( i );
+            vTaskSwitchContext( i );
         }
     }
     xCurrentCoreId = xPreviousCoreId;
@@ -203,7 +203,7 @@ void vFakePortGetISRLock( void )
     int i;
 
     /* Ensure that no other core is in the critical section. */
-    for( i = 0; i < configNUM_CORES; i++ )
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
         if( i != xCurrentCoreId )
         {
@@ -226,7 +226,7 @@ void vFakePortGetTaskLock( void )
     int i;
 
     /* Ensure that no other core is in the critical section. */
-    for( i = 0; i < configNUM_CORES; i++ )
+    for( i = 0; i < configNUMBER_OF_CORES; i++ )
     {
         if( i != xCurrentCoreId )
         {
@@ -276,8 +276,8 @@ void commonSetUp( void )
     memset( &pxReadyTasksLists, 0x00, configMAX_PRIORITIES * sizeof( List_t ) );
     memset( &xDelayedTaskList1, 0x00, sizeof( List_t ) );
     memset( &xDelayedTaskList2, 0x00, sizeof( List_t ) );
-    memset( &xIdleTaskHandles, 0x00, (configNUM_CORES * sizeof( TaskHandle_t )) );
-    memset( &pxCurrentTCBs, 0x00, (configNUM_CORES * sizeof( TCB_t * )) );
+    memset( &xIdleTaskHandles, 0x00, (configNUMBER_OF_CORES * sizeof( TaskHandle_t )) );
+    memset( &pxCurrentTCBs, 0x00, (configNUMBER_OF_CORES * sizeof( TCB_t * )) );
 
     uxDeletedTasksWaitingCleanUp = 0;
     uxCurrentNumberOfTasks = ( UBaseType_t ) 0U;
@@ -325,7 +325,7 @@ void verifyIdleTask( BaseType_t index, TaskRunning_t xTaskRunState)
     vTaskGetInfo(xIdleTaskHandles[index], &xTaskDetails, pdTRUE, eInvalid );
     ret = strncmp( xTaskDetails.xHandle->pcTaskName, "IDLE", 4 );
     TEST_ASSERT_EQUAL_INT_MESSAGE( 0, ret, "Idle Task Verification Failed: Incorrect task name" );
-    TEST_ASSERT_EQUAL_INT_MESSAGE( pdTRUE, xTaskDetails.xHandle->xIsIdle, "Idle Task Verification Failed: Incorrect xIsIdle" );
+    TEST_ASSERT_EQUAL_INT_MESSAGE( pdTRUE, xTaskDetails.xHandle->uxTaskAttributes, "Idle Task Verification Failed: Incorrect xIsIdle" );
     TEST_ASSERT_EQUAL_INT_MESSAGE( xTaskRunState, xTaskDetails.xHandle->xTaskRunState, "Idle Task Verification Failed: Incorrect xTaskRunState" );
     TEST_ASSERT_EQUAL_INT_MESSAGE( eRunning, xTaskDetails.eCurrentState, "Idle Task Verification Failed: Incorrect eCurrentState" );
 }

@@ -593,11 +593,11 @@ static bool _calculateElapsedTime( uint64_t entryTimeMs,
 
 /*-----------------------------------------------------------*/
 
-BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
-                            const char * pHostName,
-                            uint16_t port,
-                            uint32_t receiveTimeoutMs,
-                            uint32_t sendTimeoutMs )
+BaseType_t TCP_Sockets_Connect( Socket_t * pTcpSocket,
+                                const char * pHostName,
+                                uint16_t port,
+                                uint32_t receiveTimeoutMs,
+                                uint32_t sendTimeoutMs )
 {
     CellularSocketHandle_t cellularSocketHandle = NULL;
     cellularSocketWrapper_t * pCellularSocketContext = NULL;
@@ -804,8 +804,8 @@ void TCP_Sockets_Disconnect( Socket_t xSocket )
 /*-----------------------------------------------------------*/
 
 int32_t TCP_Sockets_Recv( Socket_t xSocket,
-                      void * pvBuffer,
-                      size_t xBufferLength )
+                          void * pvBuffer,
+                          size_t xBufferLength )
 {
     cellularSocketWrapper_t * pCellularSocketContext = ( cellularSocketWrapper_t * ) xSocket;
     uint8_t * buf = ( uint8_t * ) pvBuffer;
@@ -838,8 +838,8 @@ int32_t TCP_Sockets_Recv( Socket_t xSocket,
  * or portMAX_DELAY will be regarded as MAX delay. In this case, this function
  * will not return until all bytes of data are sent successfully or until an error occurs. */
 int32_t TCP_Sockets_Send( Socket_t xSocket,
-                      const void * pvBuffer,
-                      size_t xDataLength )
+                          const void * pvBuffer,
+                          size_t xDataLength )
 {
     uint8_t * buf = ( uint8_t * ) pvBuffer;
     CellularSocketHandle_t cellularSocketHandle = NULL;

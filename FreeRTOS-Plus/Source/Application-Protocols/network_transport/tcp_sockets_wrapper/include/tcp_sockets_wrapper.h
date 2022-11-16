@@ -26,27 +26,37 @@
 
 /**
  * @file sockets_wrapper.h
- * @brief FreeRTOS Sockets connect and disconnect function wrapper.
+ * @brief TCP transport functions wrapper.
  */
 
-#ifndef SOCKETS_WRAPPER_H
-#define SOCKETS_WRAPPER_H
+#ifndef TCP_SOCKETS_WRAPPER_H
+#define TCP_SOCKETS_WRAPPER_H
 
-#define SOCKETS_ERROR_NONE          ( 0 )          /*!< No error. */
-#define SOCKETS_SOCKET_ERROR        ( -1 )         /*!< Catch-all sockets error code. */
-#define SOCKETS_EWOULDBLOCK         ( -11 )        /*!< A resource is temporarily unavailable. */
-#define SOCKETS_ENOMEM              ( -12 )        /*!< Memory allocation failed. */
-#define SOCKETS_EINVAL              ( -22 )        /*!< Invalid argument. */
-#define SOCKETS_ENOPROTOOPT         ( -109 )       /*!< A bad option was specified . */
-#define SOCKETS_ENOTCONN            ( -126 )       /*!< The supplied socket is not connected. */
-#define SOCKETS_EISCONN             ( -127 )       /*!< The supplied socket is already connected. */
-#define SOCKETS_ECLOSED             ( -128 )       /*!< The supplied socket has already been closed. */
-#define SOCKETS_PERIPHERAL_RESET    ( -1006 )      /*!< Communications peripheral has been reset. */
 
-#define SOCKETS_INVALID_SOCKET      ( ( Socket_t ) ~0U )
+/* Standard includes. */
+#include <stdint.h>
 
-struct xSOCKET;
-typedef struct xSOCKET * Socket_t; /**< @brief Socket handle data type. */
+/* FreeRTOS Kernel includes. */
+#include "FreeRTOS.h"
+
+/* Error codes. */
+#define TCP_SOCKETS_ERRNO_NONE                ( 0 )   /*!< No error. */
+#define TCP_SOCKETS_ERRNO_ERROR               ( -1 )  /*!< Catch-all sockets error code. */
+#define TCP_SOCKETS_ERRNO_EWOULDBLOCK         ( -2 )  /*!< A resource is temporarily unavailable. */
+#define TCP_SOCKETS_ERRNO_ENOMEM              ( -3 )  /*!< Memory allocation failed. */
+#define TCP_SOCKETS_ERRNO_EINVAL              ( -4 )  /*!< Invalid argument. */
+#define TCP_SOCKETS_ERRNO_ENOPROTOOPT         ( -5 )  /*!< A bad option was specified . */
+#define TCP_SOCKETS_ERRNO_ENOTCONN            ( -6 )  /*!< The supplied socket is not connected. */
+#define TCP_SOCKETS_ERRNO_EISCONN             ( -7 )  /*!< The supplied socket is already connected. */
+#define TCP_SOCKETS_ERRNO_ECLOSED             ( -8 )  /*!< The supplied socket has already been closed. */
+#define TCP_SOCKETS_ERRNO_PERIPHERAL_RESET    ( -9 )  /*!< Communications peripheral has been reset. */
+#define TCP_SOCKETS_ERRNO_ENOSPC              ( -10 ) /*!< No space left on device */
+#define TCP_SOCKETS_ERRNO_EINTR               ( -11 ) /*!< Interrupted system call */
+
+#ifndef SOCKET_T_TYPEDEFED
+    struct xSOCKET;
+    typedef struct xSOCKET * Socket_t; /**< @brief Socket handle data type. */
+#endif
 
 /**
  * @brief Establish a connection to server.
@@ -61,23 +71,23 @@ typedef struct xSOCKET * Socket_t; /**< @brief Socket handle data type. */
  *
  * @return Non-zero value on error, 0 on success.
  */
-BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
-                            const char * pHostName,
-                            uint16_t port,
-                            uint32_t receiveTimeoutMs,
-                            uint32_t sendTimeoutMs );
+BaseType_t TCP_Sockets_Connect( Socket_t * pTcpSocket,
+                                const char * pHostName,
+                                uint16_t port,
+                                uint32_t receiveTimeoutMs,
+                                uint32_t sendTimeoutMs );
 
 /**
  * @brief End connection to server.
  *
  * @param[in] tcpSocket The socket descriptor.
  */
-void Sockets_Disconnect( Socket_t tcpSocket );
+void TCP_Sockets_Disconnect( Socket_t tcpSocket );
 
 /**
  * @brief Transmit data to the remote socket.
  *
- * The socket must have already been created using a call to Sockets_Connect().
+ * The socket must have already been created using a call to TCP_Sockets_Connect().
  *
  * @param[in] xSocket The handle of the sending socket.
  * @param[in] pvBuffer The buffer containing the data to be sent.
@@ -87,14 +97,14 @@ void Sockets_Disconnect( Socket_t tcpSocket );
  * * On success, the number of bytes actually sent is returned.
  * * If an error occurred, a negative value is returned. @ref SocketsErrors
  */
-int32_t Sockets_Send( Socket_t xSocket,
-                      const void * pvBuffer,
-                      size_t xDataLength );
+int32_t TCP_Sockets_Send( Socket_t xSocket,
+                          const void * pvBuffer,
+                          size_t xDataLength );
 
 /**
  * @brief Receive data from a TCP socket.
  *
- * The socket must have already been created using a call to Sockets_Connect().
+ * The socket must have already been created using a call to TCP_Sockets_Connect().
  *
  * @param[in] xSocket The handle of the socket from which data is being received.
  * @param[out] pvBuffer The buffer into which the received data will be placed.
@@ -108,8 +118,8 @@ int32_t Sockets_Send( Socket_t xSocket,
  *   is set using @ref SOCKETS_SO_RCVTIMEO).
  * * If an error occurred, a negative value is returned. @ref SocketsErrors
  */
-int32_t Sockets_Recv( Socket_t xSocket,
-                      void * pvBuffer,
-                      size_t xBufferLength );
+int32_t TCP_Sockets_Recv( Socket_t xSocket,
+                          void * pvBuffer,
+                          size_t xBufferLength );
 
-#endif /* ifndef SOCKETS_WRAPPER_H */
+#endif /* ifndef TCP_SOCKETS_WRAPPER_H */

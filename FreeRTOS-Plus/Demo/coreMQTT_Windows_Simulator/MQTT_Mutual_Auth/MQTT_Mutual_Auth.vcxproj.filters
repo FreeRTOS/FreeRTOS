@@ -25,27 +25,24 @@
     <Filter Include="Libraries\network_transport">
       <UniqueIdentifier>{bb1fcecb-0b74-4ba7-bed0-692572d5ffac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\network_transport\sockets_wrapper">
-      <UniqueIdentifier>{b99db9c9-e15b-48e7-9a84-c13b2beb1b6b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Libraries\network_transport\sockets_wrapper\freertos_plus_tcp">
-      <UniqueIdentifier>{5dd8708c-c8c7-410b-9707-a85e39acaeb8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Libraries\coreMQTT\include">
       <UniqueIdentifier>{436a06e1-8dc3-4620-a7bb-55f3479fd51c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Libraries\backoff_algorithm\include">
       <UniqueIdentifier>{e96dc04e-c4ea-497d-a8b2-a6d3fe28d2f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Libraries\network_transport\tcp_sockets_wrapper">
+      <UniqueIdentifier>{b99db9c9-e15b-48e7-9a84-c13b2beb1b6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\network_transport\tcp_sockets_wrapper\freertos_plus_tcp">
+      <UniqueIdentifier>{5dd8708c-c8c7-410b-9707-a85e39acaeb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\network_transport\tcp_sockets_wrapper\include">
+      <UniqueIdentifier>{cbbb933e-96a0-4e36-9803-cfa84580fd71}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c">
-      <Filter>Libraries\network_transport\sockets_wrapper\freertos_plus_tcp</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.c">
-      <Filter>Libraries\network_transport</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_freertos_plus_tcp.c">
       <Filter>Libraries\network_transport</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c">
@@ -66,15 +63,15 @@
     <ClCompile Include="..\Common\main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\ports\freertos_plus_tcp\tcp_sockets_wrapper.c">
+      <Filter>Libraries\network_transport\tcp_sockets_wrapper\freertos_plus_tcp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.c">
+      <Filter>Libraries\network_transport</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h">
-      <Filter>Libraries\network_transport\sockets_wrapper\freertos_plus_tcp</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.h">
-      <Filter>Libraries\network_transport</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_freertos_plus_tcp.h">
       <Filter>Libraries\network_transport</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt.h">
@@ -97,6 +94,12 @@
     </ClInclude>
     <ClInclude Include="demo_config.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include\tcp_sockets_wrapper.h">
+      <Filter>Libraries\network_transport\tcp_sockets_wrapper\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.h">
+      <Filter>Libraries\network_transport</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

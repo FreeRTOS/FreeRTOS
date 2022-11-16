@@ -30,10 +30,10 @@
  * mbedTLS.
  */
 
- #include "logging_levels.h"
+#include "logging_levels.h"
 
-#define LIBRARY_LOG_NAME "MbedtlsTransport"
-#define LIBRARY_LOG_LEVEL LOG_INFO
+#define LIBRARY_LOG_NAME     "MbedtlsTransport"
+#define LIBRARY_LOG_LEVEL    LOG_INFO
 
 #include "logging_stack.h"
 
@@ -43,16 +43,11 @@
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 
-/* FreeRTOS+TCP includes. */
-#include "FreeRTOS_IP.h"
-#include "FreeRTOS_Sockets.h"
-#include "mbedtls_bio_freertos_plus_tcp.h"
+/* MbedTLS Bio TCP sockets wrapper include. */
+#include "mbedtls_bio_tcp_sockets_wrapper.h"
 
 /* TLS transport header. */
 #include "transport_mbedtls.h"
-
-/* FreeRTOS Socket wrapper include. */
-#include "sockets_wrapper.h"
 
 /*-----------------------------------------------------------*/
 
@@ -327,7 +322,7 @@ static int32_t setPrivateKey( SSLContext_t * pSslContext,
                                              NULL, 0,
                                              mbedtls_ctr_drbg_random,
                                              &( pSslContext->ctrDrgbContext ) );
-    #endif
+    #endif /* if MBEDTLS_VERSION_NUMBER < 0x03000000 */
 
     if( mbedtlsError != 0 )
     {
@@ -434,7 +429,6 @@ static void setOptionalConfigurations( SSLContext_t * pSslContext,
 
     /* Set Maximum Fragment Length if enabled. */
     #ifdef MBEDTLS_SSL_MAX_FRAGMENT_LENGTH
-
         /* Enable the max fragment extension. 4096 bytes is currently the largest fragment size permitted.
          * See RFC 8449 https://tools.ietf.org/html/rfc8449 for more information.
          *
@@ -546,8 +540,8 @@ static TlsTransportStatus_t tlsHandshake( NetworkContext_t * pNetworkContext,
          */
         mbedtls_ssl_set_bio( &( pTlsTransportParams->sslContext.context ),
                              ( void * ) pTlsTransportParams->tcpSocket,
-                             mbedtls_platform_send,
-                             mbedtls_platform_recv,
+                             xMbedTLSBioTCPSocketsWrapperSend,
+                             xMbedTLSBioTCPSocketsWrapperRecv,
                              NULL );
     }
 
@@ -666,11 +660,11 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
         pTlsTransportParams = pNetworkContext->pParams;
-        socketStatus = Sockets_Connect( &( pTlsTransportParams->tcpSocket ),
-                                        pHostName,
-                                        port,
-                                        receiveTimeoutMs,
-                                        sendTimeoutMs );
+        socketStatus = TCP_Sockets_Connect( &( pTlsTransportParams->tcpSocket ),
+                                            pHostName,
+                                            port,
+                                            receiveTimeoutMs,
+                                            sendTimeoutMs );
 
         if( socketStatus != 0 )
         {
@@ -707,10 +701,7 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
         {
             sslContextFree( &( pTlsTransportParams->sslContext ) );
 
-            if( pTlsTransportParams->tcpSocket != FREERTOS_INVALID_SOCKET )
-            {
-                ( void ) FreeRTOS_closesocket( pTlsTransportParams->tcpSocket );
-            }
+            TCP_Sockets_Disconnect(pTlsTransportParams->tcpSocket);
         }
     }
     else
@@ -762,7 +753,7 @@ void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
         }
 
         /* Call socket shutdown function to close connection. */
-        Sockets_Disconnect( pTlsTransportParams->tcpSocket );
+        TCP_Sockets_Disconnect( pTlsTransportParams->tcpSocket );
 
         /* Free mbed TLS contexts. */
         sslContextFree( &( pTlsTransportParams->sslContext ) );

@@ -29,7 +29,7 @@
 
 /* Logging configuration for the Sockets. */
 #ifndef LIBRARY_LOG_NAME
-    #define LIBRARY_LOG_NAME     "Sockets"
+    #define LIBRARY_LOG_NAME     "TCP Sockets"
 #endif
 #ifndef LIBRARY_LOG_LEVEL
     #define LIBRARY_LOG_LEVEL    LOG_ERROR
@@ -59,8 +59,8 @@ extern void vLoggingPrintf( const char * pcFormatString,
 #include "FreeRTOS.h"
 #include "event_groups.h"
 
-/* Sockets wrapper includes. */
-#include "sockets_wrapper.h"
+/* TCP sockets wrapper includes. */
+#include "tcp_sockets_wrapper.h"
 
 /* FreeRTOS Cellular Library api includes. */
 #include "cellular_config.h"

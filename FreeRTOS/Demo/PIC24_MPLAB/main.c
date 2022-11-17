@@ -31,27 +31,27 @@
  * defined and/or created within this file:
  *
  * "Fast Interrupt Test" - A high frequency periodic interrupt is generated
- * using a free running timer to demonstrate the use of the 
- * configKERNEL_INTERRUPT_PRIORITY configuration constant.  The interrupt 
+ * using a free running timer to demonstrate the use of the
+ * configKERNEL_INTERRUPT_PRIORITY configuration constant.  The interrupt
  * service routine measures the number of processor clocks that occur between
- * each interrupt - and in so doing measures the jitter in the interrupt 
- * timing.  The maximum measured jitter time is latched in the usMaxJitter 
- * variable, and displayed on the LCD by the 'Check' as described below.  
- * The fast interrupt is configured and handled in the timer_test.c source 
+ * each interrupt - and in so doing measures the jitter in the interrupt
+ * timing.  The maximum measured jitter time is latched in the usMaxJitter
+ * variable, and displayed on the LCD by the 'Check' as described below.
+ * The fast interrupt is configured and handled in the timer_test.c source
  * file.
  *
  * "LCD" task - the LCD task is a 'gatekeeper' task.  It is the only task that
  * is permitted to access the LCD directly.  Other tasks wishing to write a
- * message to the LCD send the message on a queue to the LCD task instead of 
- * accessing the LCD themselves.  The LCD task just blocks on the queue waiting 
+ * message to the LCD send the message on a queue to the LCD task instead of
+ * accessing the LCD themselves.  The LCD task just blocks on the queue waiting
  * for messages - waking and displaying the messages as they arrive.  The LCD
- * task is defined in lcd.c.  
- * 
- * "Check" task -  This only executes every three seconds but has the highest 
- * priority so is guaranteed to get processor time.  Its main function is to 
+ * task is defined in lcd.c.
+ *
+ * "Check" task -  This only executes every three seconds but has the highest
+ * priority so is guaranteed to get processor time.  Its main function is to
  * check that all the standard demo tasks are still operational.  Should any
  * unexpected behaviour within a demo task be discovered the 'check' task will
- * write "FAIL #n" to the LCD (via the LCD task).  If all the demo tasks are 
+ * write "FAIL #n" to the LCD (via the LCD task).  If all the demo tasks are
  * executing with their expected behaviour then the check task writes the max
  * jitter time to the LCD (again via the LCD task), as described above.
  */
@@ -63,11 +63,9 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
-#include "croutine.h"
 
 /* Demo application includes. */
 #include "BlockQ.h"
-#include "crflash.h"
 #include "blocktim.h"
 #include "integer.h"
 #include "comtest2.h"
@@ -85,9 +83,6 @@
 
 /* The execution period of the check task. */
 #define mainCHECK_TASK_PERIOD				( ( TickType_t ) 3000 / portTICK_PERIOD_MS )
-
-/* The number of flash co-routines to create. */
-#define mainNUM_FLASH_COROUTINES			( 5 )
 
 /* Baud rate used by the comtest tasks. */
 #define mainCOM_TEST_BAUD_RATE				( 19200 )
@@ -142,9 +137,8 @@ int main( void )
 	prvSetupHardware();
 
 	/* Create the standard demo tasks. */
-	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );	
+	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
-	vStartFlashCoRoutines( mainNUM_FLASH_COROUTINES );
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 	vCreateBlockTimeTasks();
 
@@ -176,7 +170,7 @@ static void prvSetupHardware( void )
 static void vCheckTask( void *pvParameters )
 {
 /* Used to wake the task at the correct frequency. */
-TickType_t xLastExecutionTime; 
+TickType_t xLastExecutionTime;
 
 /* The maximum jitter time measured by the fast interrupt test. */
 extern unsigned short usMaxJitter ;
@@ -212,7 +206,7 @@ unsigned short usErrorDetected = pdFALSE;
 			usErrorDetected = pdTRUE;
 			sprintf( cStringBuffer, "FAIL #1" );
 		}
-	
+
 		if( xAreComTestTasksStillRunning() != pdTRUE )
 		{
 			usErrorDetected = pdTRUE;
@@ -246,8 +240,6 @@ unsigned short usErrorDetected = pdFALSE;
 
 void vApplicationIdleHook( void )
 {
-	/* Schedule the co-routines from within the idle task hook. */
-	vCoRoutineSchedule();
 }
 /*-----------------------------------------------------------*/
 

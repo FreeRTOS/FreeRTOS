@@ -160,7 +160,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\Source\Application-Protocols\coreSNTP\source\core_sntp_client.c" />
     <ClCompile Include="..\..\Source\Application-Protocols\coreSNTP\source\core_sntp_serializer.c" />
-    <ClCompile Include="..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c" />
     <ClCompile Include="..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="SampleAppTask.c" />
@@ -170,7 +169,6 @@
     <ClInclude Include="..\..\Source\Application-Protocols\coreSNTP\source\include\core_sntp_client.h" />
     <ClInclude Include="..\..\Source\Application-Protocols\coreSNTP\source\include\core_sntp_config_defaults.h" />
     <ClInclude Include="..\..\Source\Application-Protocols\coreSNTP\source\include\core_sntp_serializer.h" />
-    <ClInclude Include="..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h" />
     <ClInclude Include="..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h" />
     <ClInclude Include="common_demo_include.h" />
     <ClInclude Include="core_sntp_config.h" />

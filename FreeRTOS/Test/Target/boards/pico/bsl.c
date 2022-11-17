@@ -9,6 +9,7 @@
 #include <stddef.h>
 #include <stdio.h>
 
+
 void initTestEnvironment(void) {
   /* Want to be able to printf */
   stdio_init_all();

@@ -368,6 +368,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
     for( ; ; )
     {
+        LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
         /****************************** Connect. ******************************/
 
         /* Establish a TLS connection with the MQTT broker. This example connects
@@ -452,6 +453,7 @@ static void prvMQTTDemoTask( void * pvParameters )
                    "Total free heap is %u.",
                    xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully." ) );
+        LogInfo( ( "-------DEMO FINISHED-------\r\n" ) );
         LogInfo( ( "Short delay before starting the next iteration.... " ) );
         vTaskDelay( mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS_TICKS );
     }

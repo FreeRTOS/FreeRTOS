@@ -31,24 +31,6 @@
     <Filter Include="Additional Network Transport Files">
       <UniqueIdentifier>{5bce4131-4166-4cf0-a174-9501b84a59d1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Additional Network Transport Files\FreeRTOS+TCP MbedTLS Bio">
-      <UniqueIdentifier>{e9e63dfc-2d4c-48eb-8864-fb8b7b25be2f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Additional Network Transport Files\FreeRTOS+TCP MbedTLS Bio\include">
-      <UniqueIdentifier>{2d932c0a-e4e8-4064-9fc7-848434e71606}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Additional Network Transport Files\FreeRTOS+TCP MbedTLS Transport Functions">
-      <UniqueIdentifier>{d467e0b6-3362-436b-a2fc-b9b4a8898874}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Additional Network Transport Files\FreeRTOS+TCP Sockets Wrapper">
-      <UniqueIdentifier>{0af8d8b4-b647-4c37-8482-3c4edf1675a5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Additional Network Transport Files\FreeRTOS+TCP MbedTLS Transport Functions\include">
-      <UniqueIdentifier>{2046d230-6c00-40f2-aba5-cb0db204c603}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Additional Network Transport Files\FreeRTOS+TCP Sockets Wrapper\include">
-      <UniqueIdentifier>{63e694d9-5347-4102-90e5-24bded521b07}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Additional Libraries\AWS IoT Device Shadow\include">
       <UniqueIdentifier>{c90b8caf-7b86-4667-a408-616c9de28018}</UniqueIdentifier>
     </Filter>
@@ -64,26 +46,29 @@
     <Filter Include="Additional Libraries\coreJSON\include">
       <UniqueIdentifier>{8d194642-3f5f-4ad2-aae2-c1822303b0d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper">
+      <UniqueIdentifier>{a54febab-66c8-49c4-8f14-66b98f5507ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport">
+      <UniqueIdentifier>{3f9ffdaf-339e-4ec0-8191-dc24bc8cfa78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include">
+      <UniqueIdentifier>{9ef7993e-bc65-4a5d-8004-f7c59786ba20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\include">
+      <UniqueIdentifier>{c31d06d1-374f-46ab-b93f-f9a6e7411114}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\ports">
+      <UniqueIdentifier>{cf1a86db-4855-4457-9da6-8fa329e4e85e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\ports\freertos_plus_tcp">
+      <UniqueIdentifier>{dc36bf1d-c1a0-49a3-ae7f-e5030fcacf3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{bff12cfa-4535-4d9d-8177-c40bf4fd3fb9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="core_mqtt_config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="demo_config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="shadow_config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_freertos_plus_tcp.h">
-      <Filter>Additional Network Transport Files\FreeRTOS+TCP MbedTLS Bio\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.h">
-      <Filter>Additional Network Transport Files\FreeRTOS+TCP MbedTLS Transport Functions\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h">
-      <Filter>Additional Network Transport Files\FreeRTOS+TCP Sockets Wrapper\include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\Source\AWS\device-shadow\source\include\shadow.h">
       <Filter>Additional Libraries\AWS IoT Device Shadow\include</Filter>
     </ClInclude>
@@ -114,6 +99,24 @@
     <ClInclude Include="..\..\Mqtt_Demo_Helpers\mqtt_demo_helpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include\tcp_sockets_wrapper.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="core_mqtt_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="demo_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="shadow_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DemoTasks\ShadowDemoMainExample.c">
@@ -121,15 +124,6 @@
     </ClCompile>
     <ClCompile Include="..\Common\main.c">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_freertos_plus_tcp.c">
-      <Filter>Additional Network Transport Files\FreeRTOS+TCP MbedTLS Bio</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.c">
-      <Filter>Additional Network Transport Files\FreeRTOS+TCP MbedTLS Transport Functions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c">
-      <Filter>Additional Network Transport Files\FreeRTOS+TCP Sockets Wrapper</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\Source\AWS\device-shadow\source\shadow.c">
       <Filter>Additional Libraries\AWS IoT Device Shadow</Filter>
@@ -151,6 +145,15 @@
     </ClCompile>
     <ClCompile Include="..\..\Mqtt_Demo_Helpers\mqtt_demo_helpers.c">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\ports\freertos_plus_tcp\tcp_sockets_wrapper.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper\ports\freertos_plus_tcp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

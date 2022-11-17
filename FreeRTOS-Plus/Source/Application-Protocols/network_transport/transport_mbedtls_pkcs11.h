@@ -39,8 +39,8 @@
 
 #include "mbedtls/private_access.h"
 
-/* FreeRTOS+TCP include. */
-#include "sockets_wrapper.h"
+/* TCP Sockets Wrapper include.*/
+#include "tcp_sockets_wrapper.h"
 
 /* Transport interface include. */
 #include "transport_interface.h"

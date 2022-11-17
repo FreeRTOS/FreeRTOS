@@ -88,7 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\;..\..\Mqtt_Demo_Helpers;..\..\..\..\Source\Application-Protocols\network_transport;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp;..\..\..\..\Source\AWS\device-defender\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\..\Mqtt_Demo_Helpers;..\..\..\..\Source\Application-Protocols\network_transport;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\..\Source\AWS\device-defender\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -103,7 +103,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\;..\..\Mqtt_Demo_Helpers;..\..\..\..\Source\Application-Protocols\network_transport;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp;..\..\..\..\Source\AWS\device-defender\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\..\Mqtt_Demo_Helpers;..\..\..\..\Source\Application-Protocols\network_transport;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\..\Source\AWS\device-defender\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -118,7 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\;..\..\Mqtt_Demo_Helpers;..\..\..\..\Source\Application-Protocols\network_transport;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp;..\..\..\..\Source\AWS\device-defender\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\..\Mqtt_Demo_Helpers;..\..\..\..\Source\Application-Protocols\network_transport;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\..\Source\AWS\device-defender\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,7 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;MBEDTLS_CONFIG_FILE="medtls_config_v3.2.1.h";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\;..\..\Mqtt_Demo_Helpers;..\..\..\..\Source\Application-Protocols\network_transport;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp;..\..\..\..\Source\AWS\device-defender\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\..\Mqtt_Demo_Helpers;..\..\..\..\Source\Application-Protocols\network_transport;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\..\Source\AWS\device-defender\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -146,8 +146,8 @@
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c" />
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c" />
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c" />
-    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_freertos_plus_tcp.c" />
-    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c" />
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.c" />
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\ports\freertos_plus_tcp\tcp_sockets_wrapper.c" />
     <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.c" />
     <ClCompile Include="..\..\..\..\Source\AWS\device-defender\source\defender.c" />
     <ClCompile Include="..\..\..\..\Source\coreJSON\source\core_json.c" />
@@ -164,8 +164,8 @@
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_serializer.h" />
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_state.h" />
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h" />
-    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_freertos_plus_tcp.h" />
-    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h" />
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.h" />
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include\tcp_sockets_wrapper.h" />
     <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.h" />
     <ClInclude Include="..\..\..\..\Source\AWS\device-defender\source\include\defender.h" />
     <ClInclude Include="..\..\..\..\Source\AWS\device-defender\source\include\defender_config_defaults.h" />

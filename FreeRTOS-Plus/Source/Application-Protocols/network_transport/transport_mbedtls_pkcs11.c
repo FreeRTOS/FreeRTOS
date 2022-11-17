@@ -47,16 +47,12 @@
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 
-/* FreeRTOS+TCP includes. */
-#include "FreeRTOS_IP.h"
-#include "FreeRTOS_Sockets.h"
+/* MbedTLS Bio TCP sockets wrapper include. */
+#include "mbedtls_bio_tcp_sockets_wrapper.h"
 
 /* TLS transport header. */
 #include "transport_mbedtls_pkcs11.h"
 #include "mbedtls_pk_pkcs11.h"
-
-/* FreeRTOS Socket wrapper include. */
-#include "sockets_wrapper.h"
 
 /* PKCS #11 includes. */
 #include "core_pkcs11_config.h"
@@ -407,8 +403,8 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
             /* coverity[misra_c_2012_rule_11_2_violation] */
             mbedtls_ssl_set_bio( &( pTlsTransportParams->sslContext.context ),
                                  ( void * ) pTlsTransportParams->tcpSocket,
-                                 mbedtls_platform_send,
-                                 mbedtls_platform_recv,
+                                 xMbedTLSBioTCPSocketsWrapperSend,
+                                 xMbedTLSBioTCPSocketsWrapperRecv,
                                  NULL );
         }
     }
@@ -700,11 +696,11 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
         pTlsTransportParams = pNetworkContext->pParams;
-        socketStatus = Sockets_Connect( &( pTlsTransportParams->tcpSocket ),
-                                        pHostName,
-                                        port,
-                                        receiveTimeoutMs,
-                                        sendTimeoutMs );
+        socketStatus = TCP_Sockets_Connect( &( pTlsTransportParams->tcpSocket ),
+                                            pHostName,
+                                            port,
+                                            receiveTimeoutMs,
+                                            sendTimeoutMs );
 
         if( socketStatus != 0 )
         {
@@ -724,11 +720,7 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     /* Clean up on failure. */
     if( returnStatus != TLS_TRANSPORT_SUCCESS )
     {
-        if( ( pNetworkContext != NULL ) &&
-            ( pTlsTransportParams->tcpSocket != FREERTOS_INVALID_SOCKET ) )
-        {
-            ( void ) FreeRTOS_closesocket( pTlsTransportParams->tcpSocket );
-        }
+        TCP_Sockets_Disconnect( pTlsTransportParams->tcpSocket );
     }
     else
     {
@@ -772,7 +764,7 @@ void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
         }
 
         /* Call socket shutdown function to close connection. */
-        Sockets_Disconnect( pTlsTransportParams->tcpSocket );
+        TCP_Sockets_Disconnect( pTlsTransportParams->tcpSocket );
 
         /* Free mbed TLS contexts. */
         sslContextFree( &( pTlsTransportParams->sslContext ) );

@@ -57,6 +57,7 @@
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "timers.h"
 
 /* Demo Specific configs. */
 #include "demo_config.h"

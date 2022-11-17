@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS-Kernel", "..\..\Wi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Logging", "..\..\WindowsSimulator\Logging\Logging.vcxproj", "{BE362AC0-B10B-4276-B84E-6304652BA228}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Statically Linked Libraries", "Statically Linked Libraries", "{47B3A148-EE71-4F1C-A12A-F9710200C254}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -72,6 +74,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C90E6CC5-818B-4C97-8876-0986D989387C} = {47B3A148-EE71-4F1C-A12A-F9710200C254}
+		{72C209C4-49A4-4942-A201-44706C9D77EC} = {47B3A148-EE71-4F1C-A12A-F9710200C254}
+		{BE362AC0-B10B-4276-B84E-6304652BA228} = {47B3A148-EE71-4F1C-A12A-F9710200C254}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7B4BB00-8925-4FDA-B434-783DE200DAB4}

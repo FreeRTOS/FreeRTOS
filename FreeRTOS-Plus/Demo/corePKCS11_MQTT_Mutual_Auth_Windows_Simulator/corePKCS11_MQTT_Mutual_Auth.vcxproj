@@ -91,8 +91,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h";_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\Common;DemoTasks\include;..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\Source\Application-Protocols\network_transport;..\..\..\Source\Utilities\backoff_algorithm\source\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -109,8 +108,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h";_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\Common;DemoTasks\include;..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\Source\Application-Protocols\network_transport;..\..\..\Source\Utilities\backoff_algorithm\source\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -127,8 +125,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h";_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\Common;DemoTasks\include;..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\Source\Application-Protocols\network_transport;..\..\..\Source\Utilities\backoff_algorithm\source\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -145,8 +142,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h";_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\Common;DemoTasks\include;..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\Source\Application-Protocols\network_transport;..\..\..\Source\Utilities\backoff_algorithm\source\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>

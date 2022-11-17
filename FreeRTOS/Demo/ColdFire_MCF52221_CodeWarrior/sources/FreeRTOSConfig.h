@@ -24,11 +24,11 @@
  *
  */
 
-/* CodeWarrior often thinks it knows better than you which files you want to 
+/* CodeWarrior often thinks it knows better than you which files you want to
 build - and changes the port.c and portasm.S files included in the project from
 the ColdFire V1 versions to the x86 versions.  If you get lots of errors output
 when either file is compiled then delete the files from the project and then
-add back in the port.c and portasm.S files that are located in the 
+add back in the port.c and portasm.S files that are located in the
 FreeRTOS\Source\portable\GCC\ColdFire_V2 directory.  Remove the line below
 before compiling. */
 
@@ -47,7 +47,7 @@ before compiling. */
  * application requirements.
  *
  * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
- * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE. 
+ * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
  *
  * See http://www.freertos.org/a00110.html
  *----------------------------------------------------------*/
@@ -63,7 +63,6 @@ before compiling. */
 #define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			0
-#define configUSE_CO_ROUTINES 			1
 #define configUSE_MUTEXES				1
 #define configCHECK_FOR_STACK_OVERFLOW	2
 #define configUSE_RECURSIVE_MUTEXES		1
@@ -71,7 +70,6 @@ before compiling. */
 #define configUSE_COUNTING_SEMAPHORES	0
 
 #define configMAX_PRIORITIES		( 6 )
-#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */

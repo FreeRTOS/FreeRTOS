@@ -40,23 +40,23 @@
 /*
  * Timer instance  |  Value
  * ----------------|---------
- *     TCB0        |    0  
- *     TCB1        |    1  
- *     TCB2        |    2  
- *     TCB3        |    3  
- *     RTC         |    4  
+ *     TCB0        |    0
+ *     TCB1        |    1
+ *     TCB2        |    2
+ *     TCB3        |    3
+ *     RTC         |    4
  */
 
 #define configUSE_TIMER_INSTANCE 0
 #define configCALL_STACK_SIZE 30
 
 #define configUSE_PREEMPTION 1
-   
+
 /* NOTE: You can choose the following clock frequencies (Hz):
-20000000, 10000000, 5000000, 2000000. 
+20000000, 10000000, 5000000, 2000000.
 For other frequency values, update clock_config.h with your own settings. */
 #define configCPU_CLOCK_HZ 10000000
-   
+
 #define configTICK_RATE_HZ 1000
 #define configMAX_PRIORITIES 4
 #define configMINIMAL_STACK_SIZE 110
@@ -91,10 +91,6 @@ For other frequency values, update clock_config.h with your own settings. */
 #define configGENERATE_RUN_TIME_STATS 0
 #define configUSE_TRACE_FACILITY 0
 #define configUSE_STATS_FORMATTING_FUNCTIONS 0
-
-/* Co-routine related definitions. */
-#define configUSE_CO_ROUTINES 1
-#define configMAX_CO_ROUTINE_PRIORITIES 2
 
 /* Software timer related definitions. */
 #define configUSE_TIMERS 1

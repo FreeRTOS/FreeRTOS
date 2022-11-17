@@ -16,24 +16,6 @@
     <Filter Include="Additional Network Transport Files">
       <UniqueIdentifier>{d8a6eab8-52e5-4e4f-a9b9-cd5d8eb3454a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Additional Network Transport Files\FreeRTOS+TCP MbedTLS Bio">
-      <UniqueIdentifier>{7d01180f-bc2c-4e0c-8537-da1fd90edc44}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Additional Network Transport Files\FreeRTOS+TCP MbedTLS Transport Functions">
-      <UniqueIdentifier>{ce11df67-cbdf-40c9-842d-be8cae60315a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Additional Network Transport Files\FreeRTOS+TCP Sockets Wrapper">
-      <UniqueIdentifier>{51dae793-8c67-4788-9d1b-f23f8bab3efd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Additional Network Transport Files\FreeRTOS+TCP MbedTLS Bio\include">
-      <UniqueIdentifier>{0487a644-d37e-4535-9b29-c12bbcf0a2fc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Additional Network Transport Files\FreeRTOS+TCP MbedTLS Transport Functions\include">
-      <UniqueIdentifier>{807d9241-7fe2-4759-810a-4054cea492d1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Additional Network Transport Files\FreeRTOS+TCP Sockets Wrapper\include">
-      <UniqueIdentifier>{a09a8d34-6722-4e5e-afd1-3e79f4143618}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Additional Libraries">
       <UniqueIdentifier>{18d8589f-6af4-4627-b7fe-e1c9bdfecdd8}</UniqueIdentifier>
     </Filter>
@@ -100,17 +82,26 @@
     <Filter Include="Port Files\coreMQTT Agent Interface\include">
       <UniqueIdentifier>{9df90bb5-248f-42cb-8a1c-4b657078898e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{9d109ee1-e478-4150-98b3-e76597cecb83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper">
+      <UniqueIdentifier>{146d613c-d6d6-428a-8506-82924c74a9c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport">
+      <UniqueIdentifier>{7e781ff5-e562-4412-b8e9-8b215c6d7c39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include">
+      <UniqueIdentifier>{b44e49dc-4b85-41cc-a37a-22c6d33950f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\include">
+      <UniqueIdentifier>{041aed9a-2876-41f7-859d-e257a7faf509}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\ports">
+      <UniqueIdentifier>{5fe3deb2-b82c-4366-98c5-51742c6c1228}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_freertos_plus_tcp.c">
-      <Filter>Additional Network Transport Files\FreeRTOS+TCP MbedTLS Bio</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.c">
-      <Filter>Additional Network Transport Files\FreeRTOS+TCP MbedTLS Transport Functions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c">
-      <Filter>Additional Network Transport Files\FreeRTOS+TCP Sockets Wrapper</Filter>
-    </ClCompile>
     <ClCompile Include="main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -198,30 +189,18 @@
     <ClCompile Include="DemoTasks\OtaOverMqttDemoExample.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\ports\freertos_plus_tcp\tcp_sockets_wrapper.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper\ports</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h">
-      <Filter>Additional Network Transport Files\FreeRTOS+TCP Sockets Wrapper\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.h">
-      <Filter>Additional Network Transport Files\FreeRTOS+TCP MbedTLS Transport Functions\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_freertos_plus_tcp.h">
-      <Filter>Additional Network Transport Files\FreeRTOS+TCP MbedTLS Bio\include</Filter>
-    </ClInclude>
-    <ClInclude Include="demo_config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="core_mqtt_config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ota_config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Common\subscription-manager\subscription_manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\Ota_PAL\Win32\Code_Signature_Verification\aws_ota_codesigner_certificate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\Source\AWS\ota\source\portable\os\ota_os_freertos.h">
@@ -325,6 +304,27 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Common\coreMQTT_Agent_Interface\include\freertos_command_pool.h">
       <Filter>Port Files\coreMQTT Agent Interface\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Ota_PAL\Win32\Code_Signature_Verification\aws_ota_codesigner_certificate.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="core_mqtt_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="demo_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="ota_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include\tcp_sockets_wrapper.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper\include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

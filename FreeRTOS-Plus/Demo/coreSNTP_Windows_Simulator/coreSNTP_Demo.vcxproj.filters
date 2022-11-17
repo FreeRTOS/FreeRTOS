@@ -1,51 +1,84 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="backoff_algorithm">
-      <UniqueIdentifier>{a442e1bd-e141-45a4-860d-a8eccab1b8c2}</UniqueIdentifier>
+    <Filter Include="Additional Libraries">
+      <UniqueIdentifier>{e75a932b-e8df-40b5-b7ed-c318c9723bac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="network_transport">
-      <UniqueIdentifier>{ec612a95-3f21-4e0a-b9cd-0ba89d62067e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="coreSNTP">
+    <Filter Include="Additional Libraries\coreSNTP">
       <UniqueIdentifier>{e68c7733-fa69-477a-ae55-3569a957d412}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Additional Libraries\coreSNTP\include">
+      <UniqueIdentifier>{5b936e71-8fab-4a48-8512-a1fe9531d284}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header">
+      <UniqueIdentifier>{6637a227-4fb9-41f1-84c4-4cb8a07cfc0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{7383e95d-b7a9-4e7c-baaa-d630b915a707}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{014f6179-2ad2-4f47-9bae-93104b6442fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TCP Sockets Wrapper">
+      <UniqueIdentifier>{ec612a95-3f21-4e0a-b9cd-0ba89d62067e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\Backoff Algorithm">
+      <UniqueIdentifier>{a442e1bd-e141-45a4-860d-a8eccab1b8c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TCP Sockets Wrapper\include">
+      <UniqueIdentifier>{166d5e0b-b312-472a-9b37-893682d06e3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TCP Sockets Wrapper\ports">
+      <UniqueIdentifier>{1bc64542-47d9-4d78-aa26-5de8b7fdc3a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c">
-      <Filter>network_transport</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
-      <Filter>backoff_algorithm</Filter>
+      <Filter>Additional Libraries\Backoff Algorithm</Filter>
     </ClCompile>
-    <ClCompile Include="main.c" />
-    <ClCompile Include="SampleAppTask.c" />
-    <ClCompile Include="SNTPClientTask.c" />
     <ClCompile Include="..\..\Source\Application-Protocols\coreSNTP\source\core_sntp_client.c">
-      <Filter>coreSNTP</Filter>
+      <Filter>Additional Libraries\coreSNTP</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Application-Protocols\coreSNTP\source\core_sntp_serializer.c">
-      <Filter>coreSNTP</Filter>
+      <Filter>Additional Libraries\coreSNTP</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="SampleAppTask.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="SNTPClientTask.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\ports\freertos_plus_tcp\tcp_sockets_wrapper.c">
+      <Filter>TCP Sockets Wrapper\ports</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h">
-      <Filter>network_transport</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h">
-      <Filter>backoff_algorithm</Filter>
-    </ClInclude>
-    <ClInclude Include="demo_config.h" />
-    <ClInclude Include="core_sntp_config.h" />
-    <ClInclude Include="common_demo_include.h" />
-    <ClInclude Include="..\..\Source\Application-Protocols\coreSNTP\source\include\core_sntp_client.h">
-      <Filter>coreSNTP</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Application-Protocols\coreSNTP\source\include\core_sntp_config_defaults.h">
-      <Filter>coreSNTP</Filter>
+      <Filter>Additional Libraries\Backoff Algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Application-Protocols\coreSNTP\source\include\core_sntp_serializer.h">
-      <Filter>coreSNTP</Filter>
+      <Filter>Additional Libraries\coreSNTP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Application-Protocols\coreSNTP\source\include\core_sntp_config_defaults.h">
+      <Filter>Additional Libraries\coreSNTP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Application-Protocols\coreSNTP\source\include\core_sntp_client.h">
+      <Filter>Additional Libraries\coreSNTP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="core_sntp_config.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="demo_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="common_demo_include.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include\tcp_sockets_wrapper.h">
+      <Filter>TCP Sockets Wrapper\include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

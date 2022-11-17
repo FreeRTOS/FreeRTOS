@@ -29,16 +29,6 @@
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
-#if ( configUSE_PREEMPTION == 0 )
-    #include "task.h"
-#endif
-
-/* FreeRTOS+TCP includes. */
-#include "FreeRTOS_IP.h"
-#include "FreeRTOS_Sockets.h"
-
-/* FreeRTOS Socket wrapper include. */
-#include "sockets_wrapper.h"
 
 /* Transport interface include. */
 #include "transport_plaintext.h"
@@ -82,11 +72,11 @@ PlaintextTransportStatus_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetwo
     {
         pPlaintextTransportParams = pNetworkContext->pParams;
         /* Establish a TCP connection with the server. */
-        socketStatus = Sockets_Connect( &( pPlaintextTransportParams->tcpSocket ),
-                                        pHostName,
-                                        port,
-                                        receiveTimeoutMs,
-                                        sendTimeoutMs );
+        socketStatus = TCP_Sockets_Connect( &( pPlaintextTransportParams->tcpSocket ),
+                                            pHostName,
+                                            port,
+                                            receiveTimeoutMs,
+                                            sendTimeoutMs );
 
         /* A non zero status is an error. */
         if( socketStatus != 0 )
@@ -120,7 +110,7 @@ PlaintextTransportStatus_t Plaintext_FreeRTOS_Disconnect( const NetworkContext_t
     {
         pPlaintextTransportParams = pNetworkContext->pParams;
         /* Call socket disconnect function to close connection. */
-        Sockets_Disconnect( pPlaintextTransportParams->tcpSocket );
+        TCP_Sockets_Disconnect( pPlaintextTransportParams->tcpSocket );
     }
 
     return plaintextStatus;
@@ -152,27 +142,9 @@ int32_t Plaintext_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
     {
         pPlaintextTransportParams = pNetworkContext->pParams;
 
-        /* The TCP socket may have a receive block time.  If bytesToRecv is greater
-         * than 1 then a frame is likely already part way through reception and
-         * blocking to wait for the desired number of bytes to be available is the
-         * most efficient thing to do.  If bytesToRecv is 1 then this may be a
-         * speculative call to read to find the start of a new frame, in which case
-         * blocking is not desirable as it could block an entire protocol agent
-         * task for the duration of the read block time and therefore negatively
-         * impact performance.  So if bytesToRecv is 1 then don't call recv unless
-         * it is known that bytes are already available. */
-        if( bytesToRecv == 1 )
-        {
-            socketStatus = ( int32_t ) FreeRTOS_recvcount( pPlaintextTransportParams->tcpSocket );
-        }
-
-        if( socketStatus > 0 )
-        {
-            socketStatus = FreeRTOS_recv( pPlaintextTransportParams->tcpSocket,
-                                          pBuffer,
-                                          bytesToRecv,
-                                          0 );
-        }
+        socketStatus = TCP_Sockets_Recv( pPlaintextTransportParams->tcpSocket,
+                                         pBuffer,
+                                         bytesToRecv );
     }
 
     return socketStatus;
@@ -203,28 +175,9 @@ int32_t Plaintext_FreeRTOS_send( NetworkContext_t * pNetworkContext,
     else
     {
         pPlaintextTransportParams = pNetworkContext->pParams;
-        socketStatus = FreeRTOS_send( pPlaintextTransportParams->tcpSocket,
-                                      pBuffer,
-                                      bytesToSend,
-                                      0 );
-
-        if( socketStatus == -pdFREERTOS_ERRNO_ENOSPC )
-        {
-            /* The TCP buffers could not accept any more bytes so zero bytes were sent.
-             * This is not necessarily an error that should cause a disconnect
-             * unless it persists. */
-            socketStatus = 0;
-        }
-
-        #if ( configUSE_PREEMPTION == 0 )
-            {
-                /* FreeRTOS_send adds the packet to be sent to the IP task's queue for later processing.
-                 * The packet is sent later by the IP task. When FreeRTOS is used in collaborative
-                 * mode (i.e. configUSE_PREEMPTION is 0), call taskYIELD to give IP task a chance to run
-                 * so that the packet is actually sent before this function returns. */
-                taskYIELD();
-            }
-        #endif
+        socketStatus = TCP_Sockets_Send( pPlaintextTransportParams->tcpSocket,
+                                         pBuffer,
+                                         bytesToSend );
     }
 
     return socketStatus;

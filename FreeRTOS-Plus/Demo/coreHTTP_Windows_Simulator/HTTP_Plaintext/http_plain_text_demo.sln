@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.3.32819.101
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33027.164
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS-Kernel", "..\..\..\WindowsSimulator\FreeRTOS-Kernel\FreeRTOS-Kernel.vcxproj", "{72C209C4-49A4-4942-A201-44706C9D77EC}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "coreHTTP", "..\..\..\WindowsSimulator\coreHTTP\coreHTTP.vcxproj", "{EE39FA0F-CEFB-4C29-A571-05A28FDD47FD}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Logging", "..\..\..\WindowsSimulator\Logging\Logging.vcxproj", "{BE362AC0-B10B-4276-B84E-6304652BA228}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Statically Linked Libraries", "Statically Linked Libraries", "{1AC61810-E7F4-41F3-80A3-D471CF819F40}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,6 +66,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{72C209C4-49A4-4942-A201-44706C9D77EC} = {1AC61810-E7F4-41F3-80A3-D471CF819F40}
+		{C90E6CC5-818B-4C97-8876-0986D989387C} = {1AC61810-E7F4-41F3-80A3-D471CF819F40}
+		{EE39FA0F-CEFB-4C29-A571-05A28FDD47FD} = {1AC61810-E7F4-41F3-80A3-D471CF819F40}
+		{BE362AC0-B10B-4276-B84E-6304652BA228} = {1AC61810-E7F4-41F3-80A3-D471CF819F40}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3876F3F5-8086-4F8E-BB5E-D8840E7D926C}

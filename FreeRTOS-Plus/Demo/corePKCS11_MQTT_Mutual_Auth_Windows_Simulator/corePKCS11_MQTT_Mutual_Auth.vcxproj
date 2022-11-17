@@ -71,16 +71,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);.;..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp;..\..\Source\Application-Protocols\network_transport;..\..\Source\Utilities\backoff_algorithm\source\include;..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\Source\Application-Protocols\coreMQTT\source\interface;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);.;..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\Source\Application-Protocols\network_transport;..\..\Source\Utilities\backoff_algorithm\source\include;..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\Source\Application-Protocols\coreMQTT\source\interface;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);.;..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp;..\..\Source\Application-Protocols\network_transport;..\..\Source\Utilities\backoff_algorithm\source\include;..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\Source\Application-Protocols\coreMQTT\source\interface;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);.;..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\Source\Application-Protocols\network_transport;..\..\Source\Utilities\backoff_algorithm\source\include;..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\Source\Application-Protocols\coreMQTT\source\interface;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);.;..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp;..\..\Source\Application-Protocols\network_transport;..\..\Source\Utilities\backoff_algorithm\source\include;..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\Source\Application-Protocols\coreMQTT\source\interface;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);.;..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\Source\Application-Protocols\network_transport;..\..\Source\Utilities\backoff_algorithm\source\include;..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\Source\Application-Protocols\coreMQTT\source\interface;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);.;..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp;..\..\Source\Application-Protocols\network_transport;..\..\Source\Utilities\backoff_algorithm\source\include;..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\Source\Application-Protocols\coreMQTT\source\interface;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);.;..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\Source\Application-Protocols\network_transport;..\..\Source\Utilities\backoff_algorithm\source\include;..\..\Source\Application-Protocols\coreMQTT\source\include;..\..\Source\Application-Protocols\coreMQTT\source\interface;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg">
     <VcpkgEnabled>false</VcpkgEnabled>
@@ -161,9 +161,9 @@
     <ClCompile Include="..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c" />
     <ClCompile Include="..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c" />
     <ClCompile Include="..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c" />
-    <ClCompile Include="..\..\Source\Application-Protocols\network_transport\mbedtls_bio_freertos_plus_tcp.c" />
+    <ClCompile Include="..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.c" />
     <ClCompile Include="..\..\Source\Application-Protocols\network_transport\mbedtls_pk_pkcs11.c" />
-    <ClCompile Include="..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.c" />
+    <ClCompile Include="..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\ports\freertos_plus_tcp\tcp_sockets_wrapper.c" />
     <ClCompile Include="..\..\Source\Application-Protocols\network_transport\transport_mbedtls_pkcs11.c" />
     <ClCompile Include="..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c" />
     <ClCompile Include="main.c" />
@@ -175,7 +175,9 @@
     <ClInclude Include="..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_serializer.h" />
     <ClInclude Include="..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_state.h" />
     <ClInclude Include="..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h" />
-    <ClInclude Include="..\..\Source\Application-Protocols\network_transport\sockets_wrapper\freertos_plus_tcp\sockets_wrapper.h" />
+    <ClInclude Include="..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.h" />
+    <ClInclude Include="..\..\Source\Application-Protocols\network_transport\mbedtls_pk_pkcs11.h" />
+    <ClInclude Include="..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include\tcp_sockets_wrapper.h" />
     <ClInclude Include="..\..\Source\Application-Protocols\network_transport\transport_mbedtls_pkcs11.h" />
     <ClInclude Include="..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h" />
     <ClInclude Include="core_mqtt_config.h" />

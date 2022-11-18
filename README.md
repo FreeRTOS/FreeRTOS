@@ -69,3 +69,26 @@ The `FreeRTOS/Test/CBMC/proofs` directory contains CBMC proofs.
 To learn more about CBMC and proofs specifically, review the training material [here](https://model-checking.github.io/cbmc-training).
 
 In order to run these proofs you will need to install CBMC and other tools by following the instructions [here](https://model-checking.github.io/cbmc-training/installation.html).
+
+## Git Configuration Tips
+
+### Line Endings
+To ensure the best compatibility with git on a variety of operating systems, the line endings in this repository have been normalized to LF or unix-style line endings. This is common for most cross-platform projects and simplifies many maintenance tasks. LF line endings are enforced using the .gitattributes file and a few github actions checks.
+
+On windows, the default git setting is to automatically convert line endings to CRLF on checkout and back to LF when commiting code. You can set this setting for just the current repository using the following command:
+```
+git config core.autocrlf true
+```
+
+Alternatively, you may set autocrlf to true globally with the following command:
+```
+git config --global core.autocrlf true
+```
+
+### Ignore refactor / formatting commits in Git Blame
+
+Some commits change formatting for a large number of lines and can be misleading when using the git blame feature. You may be configure git to ignore our list of large refactoring commits using the following config command:
+
+```
+git config blame.ignoreRevsFile .git-blame-ignore-revs
+```

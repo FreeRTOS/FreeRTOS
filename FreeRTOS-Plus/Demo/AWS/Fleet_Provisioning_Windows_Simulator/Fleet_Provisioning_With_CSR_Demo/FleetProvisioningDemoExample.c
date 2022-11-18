@@ -562,6 +562,19 @@ int prvFleetProvisioningTask( void * pvParameters )
 
     do
     {
+        LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
+
+        /* Wait for network to link up. */
+        if( xPlatformIsNetworkUp() == pdFALSE )
+        {
+            LogInfo( ( "Waiting for the network link up event..." ) );
+
+            while( xPlatformIsNetworkUp() == pdFALSE )
+            {
+                vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+            }
+        }
+
         /* Initialize the buffer lengths to their max lengths. */
         xCertificateLength = fpdemoCERT_BUFFER_LENGTH;
         xCertificateIdLength = fpdemoCERT_ID_BUFFER_LENGTH;
@@ -832,6 +845,7 @@ int prvFleetProvisioningTask( void * pvParameters )
     if( xStatus == true )
     {
         LogInfo( ( "Demo completed successfully." ) );
+        LogInfo( ( "-------DEMO FINISHED-------\r\n" ) );
     }
 
     /* Delete this task. */

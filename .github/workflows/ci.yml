@@ -55,6 +55,18 @@ jobs:
             fi
             exit 0
           fi
+      - name: Check for CRLF
+        working-directory: ${{ inputs.path }}
+        run: |
+          set +e
+          find . -path ./.git -prune -o -exec file {} + |  grep "CRLF"
+          if [ "$?" = "0" ]; then
+            echo "Files have CRLF line endings."
+            exit 1
+          else
+            exit 0
+          fi
+        shell: bash
 
   doxygen:
     runs-on: ubuntu-20.04

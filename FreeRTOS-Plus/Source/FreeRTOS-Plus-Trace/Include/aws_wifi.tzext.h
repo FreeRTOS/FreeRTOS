@@ -1,8 +1,9 @@
-/*******************************************************************************
- * Trace Recorder Library for Tracealyzer v4.4.0
- * Percepio AB, www.percepio.com
+/*
+ * Trace Recorder for Tracealyzer v4.6.0
+ * Copyright 2021 Percepio AB
+ * www.percepio.com
  *
- * aws_secure_socket.tzext.h
+ * SPDX-License-Identifier: Apache-2.0
  *
  * An example of a Tracealyzer extension for tracing API calls, in this case
  * for tracing selected functions in Amazon FreeRTOS/aws_wifi.
@@ -21,42 +22,7 @@
  * See the below comments for details about these definitions. Note that you
  * also need a matching .xml file for Tracealyzer to understand the data.
  * See trcExtensions.h for further information.
- *
- * Terms of Use
- * This file is part of the trace recorder library (RECORDER), which is the
- * intellectual property of Percepio AB (PERCEPIO) and provided under a
- * license as follows.
- * The RECORDER may be used free of charge for the purpose of recording data
- * intended for analysis in PERCEPIO products. It may not be used or modified
- * for other purposes without explicit permission from PERCEPIO.
- * You may distribute the RECORDER in its original source code form, assuming
- * this text (terms of use, disclaimer, copyright notice) is unchanged. You are
- * allowed to distribute the RECORDER with minor modifications intended for
- * configuration or porting of the RECORDER, e.g., to allow using it on a
- * specific processor, processor family or with a specific communication
- * interface. Any such modifications should be documented directly below
- * this comment block.
- *
- * Disclaimer
- * The RECORDER is being delivered to you AS IS and PERCEPIO makes no warranty
- * as to its use or performance. PERCEPIO does not and cannot warrant the
- * performance or results you may obtain by using the RECORDER or documentation.
- * PERCEPIO make no warranties, express or implied, as to noninfringement of
- * third party rights, merchantability, or fitness for any particular purpose.
- * In no event will PERCEPIO, its technology partners, or distributors be liable
- * to you for any consequential, incidental or special damages, including any
- * lost profits or lost savings, even if a representative of PERCEPIO has been
- * advised of the possibility of such damages, or for any claim by any third
- * party. Some jurisdictions do not allow the exclusion or limitation of
- * incidental, consequential or special damages, or the exclusion of implied
- * warranties or limitations on how long an implied warranty may last, so the
- * above limitations may not apply to you.
- *
- * Tabs are used for indent in this file (1 tab = 4 spaces)
- *
- * Copyright Percepio AB, 2018.
- * www.percepio.com
- ******************************************************************************/
+ */
 
 #ifndef _AWS_WIFI_TZEXT_H
 #define _AWS_WIFI_TZEXT_H
@@ -125,7 +91,7 @@
 
 /***** Trace Wrappers *****/
 
-#include "aws_wifi.h" /* Including the original header file, so that custom data types are understood. */
+#include <aws_wifi.h> /* Including the original header file, so that custom data types are understood. */
 
 static inline WIFIReturnCode_t WIFI_On__trace( void )
 {

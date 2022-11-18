@@ -58,6 +58,17 @@
 or 0 to run the more comprehensive test and demo application. */
 #define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY  0
 
+/* Set to 1 to use direct mode and set to 0 to use vectored mode.
+ *
+ * VECTOR MODE=Direct --> all traps into machine mode cause the pc to be set to the
+ * vector base address (BASE) in the mtvec register.
+ *
+ * VECTOR MODE=Vectored --> all synchronous exceptions into machine mode cause the
+ * pc to be set to the BASE, whereas interrupts cause the pc to be set to the
+ * address BASE plus four times the interrupt cause number.
+*/
+#define mainVECTOR_MODE_DIRECT              0
+
 /* UART hardware constants. */
 #define mainUART_BASE_ADDRESS               ( *( volatile uint32_t * ) 0x20000000UL )
 #define mainUART_TX_DATA                    0x00
@@ -98,6 +109,9 @@ or 0 to run the more comprehensive test and demo application. */
 #define mainPLIC_ENABLE_1                   ( * ( ( volatile uint32_t * ) 0x0C002004UL ) )
 
 /*-----------------------------------------------------------*/
+
+extern void freertos_risc_v_trap_handler( void );
+extern void freertos_vector_table( void );
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -172,6 +186,16 @@ static void prvSetupHardware( void )
     mainUART0_TXCTRL_REG |= mainUART_TXEN_BIT;
     mainUART0_GPIO_SEL_REG &= mainUART0_PIN;
     mainUART0_GPIO_SEL_EN |= mainUART0_PIN;
+
+    #if( mainVECTOR_MODE_DIRECT == 1 )
+    {
+        __asm__ volatile( "csrw mtvec, %0" :: "r"( freertos_risc_v_trap_handler ) );
+    }
+    #else
+    {
+        __asm__ volatile( "csrw mtvec, %0" :: "r"( ( uintptr_t )freertos_vector_table | 0x1 ) );
+    }
+    #endif
 }
 /*-----------------------------------------------------------*/
 
@@ -263,19 +287,26 @@ void vApplicationTickHook( void )
 }
 /*-----------------------------------------------------------*/
 
-/* Called from the kernel's port layer to handle device specific external
- * interrupts. */
-void vApplicationHandleTrap( uint32_t mcause )
+void freertos_risc_v_application_interrupt_handler( uint32_t ulMcause )
 {
 char pcCause[ 20 ];
 
-    #warning vApplicationHandleTrap not implemented.
     /* Not implemented yet! */
-    sprintf( pcCause, "%u", mcause );
-    vSendString( pcCause );
-    configASSERT( mcause == 0 );
+    sprintf( pcCause, "%u", ulMcause );
+    configPRINT_STRING( pcCause );
+    configASSERT( ulMcause == 0 );
 }
+/*-----------------------------------------------------------*/
 
+void freertos_risc_v_application_exception_handler( uint32_t ulMcause )
+{
+char pcCause[ 20 ];
+
+    /* Not implemented yet! */
+    sprintf( pcCause, "%u", ulMcause );
+    configPRINT_STRING( pcCause );
+    configASSERT( ulMcause == 0 );
+}
 /*-----------------------------------------------------------*/
 
 void *malloc( size_t xSize )

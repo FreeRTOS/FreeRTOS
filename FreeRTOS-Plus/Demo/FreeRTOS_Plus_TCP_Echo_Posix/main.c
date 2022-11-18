@@ -51,6 +51,9 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdarg.h>
+#include <time.h>
+#include <errno.h>
+#include <string.h>
 
 /* FreeRTOS kernel includes. */
 #include "FreeRTOS.h"
@@ -58,6 +61,8 @@
 
 /* Local includes. */
 #include "console.h"
+
+#include <trcRecorder.h>
 
 #define    ECHO_CLIENT_DEMO  0
 
@@ -89,7 +94,7 @@ void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer,
  * Writes trace data to a disk file when the trace recording is stopped.
  * This function will simply overwrite any trace files that already exist.
  */
-// static void prvSaveTraceFile( void );
+static void prvSaveTraceFile( void );
 
 /*-----------------------------------------------------------*/
 
@@ -101,12 +106,32 @@ in a different file. */
 StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
 /* Notes if the trace is running or not. */
-// static BaseType_t xTraceRunning = pdTRUE;
+static BaseType_t xTraceRunning = pdTRUE;
+
+static clockid_t cid = CLOCK_THREAD_CPUTIME_ID;
+
+static uint32_t frequency;
 
 /*-----------------------------------------------------------*/
 
 int main( void )
 {
+    /* Do not include trace code when performing a code coverage analysis. */
+    #if ( projCOVERAGE_TEST != 1 )
+    {
+        /* Initialise the trace recorder.  Use of the trace recorder is optional.
+        See http://www.FreeRTOS.org/trace for more information. */
+        vTraceEnable( TRC_START );
+
+        /* Start the trace recording - the recording is written to a file if
+        configASSERT() is called. */
+        printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
+        printf( "\r\nThe trace will be dumped to disk if Enter is hit.\r\n" );
+        traceSTART();
+    }
+    #endif
+
+
     console_init();
     #if ( mainSELECTED_APPLICATION == ECHO_CLIENT_DEMO )
     {
@@ -215,9 +240,59 @@ void vAssertCalled( const char * const pcFileName,
     /* Called if an assertion passed to configASSERT() fails.  See
     http://www.freertos.org/a00110.html#configASSERT for more information. */
 
-	printf( "vAssertCalled( %s, %u )\n", pcFileName, ulLine );
+	printf( "vAssertCalled( %s, %lu )\n", pcFileName, ulLine );
     exit(1);
 
+    taskENTER_CRITICAL();
+    {
+        /* Stop the trace recording. */
+        if( xPrinted == pdFALSE )
+        {
+            xPrinted = pdTRUE;
+
+            if( xTraceRunning == pdTRUE )
+            {
+                prvSaveTraceFile();
+            }
+        }
+
+        /* You can step out of this function to debug the assertion by using
+        the debugger to set ulSetToNonZeroInDebuggerToContinue to a non-zero
+        value. */
+        while( ulSetToNonZeroInDebuggerToContinue == 0 )
+        {
+            __asm volatile ( "NOP" );
+            __asm volatile ( "NOP" );
+        }
+    }
+    taskEXIT_CRITICAL();
+}
+/*-----------------------------------------------------------*/
+
+static void prvSaveTraceFile( void )
+{
+    /* Tracing is not used when code coverage analysis is being performed. */
+    #if ( projCOVERAGE_TEST != 1 )
+    {
+    FILE * pxOutputFile;
+    extern RecorderDataType * RecorderDataPtr;
+
+        vTraceStop();
+
+        pxOutputFile = fopen( "Trace.dump", "wb" );
+
+        if( pxOutputFile != NULL )
+        {
+            fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
+            fclose( pxOutputFile );
+            printf( "\r\nTrace output saved to Trace.dump\r\n" );
+        }
+        else
+        {
+            printf( "\r\nFailed to create trace dump file\r\n" );
+        }
+    }
+    #endif /* if ( projCOVERAGE_TEST != 1 ) */
 }
 /*-----------------------------------------------------------*/
 
@@ -271,4 +346,58 @@ the stack and so not exists after this function exits. */
     Note that, as the array is necessarily of type StackType_t,
     configMINIMAL_STACK_SIZE is specified in words, not bytes. */
     *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
+}
+
+void vTraceTimerReset( void )
+{
+    int xRet;
+    struct timespec ts;
+    ts.tv_sec = 0;
+    ts.tv_nsec = 0;
+
+    xRet = clock_settime( cid, &ts );
+    if( xRet != 0 )
+    {
+        printf( "Could not reset time: %s\n", strerror( errno ) );
+    }
+}
+
+uint32_t uiTraceTimerGetFrequency( void )
+{
+    struct timespec res;
+    int xRet;
+
+    res.tv_nsec = 0;
+    res.tv_sec = 0;
+
+    xRet = clock_getres( cid, &res );
+    if( xRet == 0 )
+    {
+        // calculate frequency from timer definition
+        frequency = (uint64_t) 1000000000 / res.tv_nsec;
+    }
+    else
+    {
+        printf( "Could not get clock frequency: %s\n", strerror( errno ) );
+    }
+    return frequency;
+}
+
+uint32_t uiTraceTimerGetValue( void )
+{
+    int xRet;
+    struct timespec tp;
+    uint32_t result = 0;
+
+    xRet = clock_gettime( cid, &tp );
+    if( xRet == 0 )
+    {
+        result = tp.tv_nsec / frequency;
+        result += (tp.tv_sec * 1000000000) / frequency;
+    }
+    else
+    {
+        printf( "Could not get time: %s\n", strerror( errno ) );
+    }
+    return result;
 }

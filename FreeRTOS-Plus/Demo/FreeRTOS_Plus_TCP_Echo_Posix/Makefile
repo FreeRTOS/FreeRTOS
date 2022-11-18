@@ -17,6 +17,8 @@ INCLUDE_DIRS += -I${FREERTOS_DIR}/Demo/Common/include
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/linux/
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/include/
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/Compiler/GCC/
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/Include
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/config
 
 # FreeRTOS Kernel source files
 SOURCE_FILES :=
@@ -69,7 +71,41 @@ SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_UD
 SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/BufferManagement/BufferAllocation_2.c
 SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/source/portable/NetworkInterface/linux/NetworkInterface.c
 
-CFLAGS := -ggdb3 -O0 -DprojCOVERAGE_TEST=0 -D_WINDOWS_
+# Demo library.
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/AbortDelay.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/BlockQ.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/blocktim.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/countsem.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/death.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/dynamic.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/EventGroupsDemo.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/flop.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/GenQTest.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/integer.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/IntSemTest.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/MessageBufferAMP.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/MessageBufferDemo.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/PollQ.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/QPeek.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/QueueOverwrite.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/QueueSet.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/QueueSetPolling.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/recmutex.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/semtest.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/StaticAllocation.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/StreamBufferDemo.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/StreamBufferInterrupt.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/TaskNotify.c
+SOURCE_FILES += ${FREERTOS_DIR}/Demo/Common/Minimal/TimerDemo.c
+
+# Trace library.
+SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/trcKernelPort.c
+SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/trcSnapshotRecorder.c
+
+
+CFLAGS := -ggdb3 -O0
+CPPFLAGS := -DprojCOVERAGE_TEST=0 -D_DEFAULT_SOURCE -D_WINDOWS_ -DTRACE_ON_ENTER=0
+
 LDFLAGS := -ggdb3 -O0 -pthread -lpcap
 
 OBJ_FILES = $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.o)
@@ -80,16 +116,16 @@ ${BIN} : $(BUILD_DIR)/$(BIN)
 
 ${BUILD_DIR}/${BIN} : ${OBJ_FILES}
 	-mkdir -p ${@D}
-	$(CC) $^ $(CFLAGS) $(INCLUDE_DIRS) ${LDFLAGS} -o $@
-
+	$(CC) $^ ${LDFLAGS} -o $@
 
 -include ${DEP_FILE}
 
-${BUILD_DIR}/%.o : %.c
+${BUILD_DIR}/%.o : %.c Makefile
 	-mkdir -p $(@D)
-	$(CC) $(CFLAGS) ${INCLUDE_DIRS} -MMD -c $< -o $@
+	$(CC) $(CFLAGS) ${CPPFLAGS} ${INCLUDE_DIRS} -MMD -c $< -o $@
 
 .PHONY: clean
 
 clean:
 	-rm -rf $(BUILD_DIR)
+

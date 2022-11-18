@@ -255,7 +255,7 @@ ciconfiguration
 cid
 circleos
 ciphersuite
-ciphertext 
+ciphertext
 ck
 cka
 ckc
@@ -1330,7 +1330,7 @@ memoryleak
 memorysanitizer
 mems
 memset
-merkle 
+merkle
 messagebufferlocations
 messagetype
 metadata
@@ -2534,7 +2534,7 @@ somewebsite
 sp
 spdx
 spe
-specifiedecdomain 
+specifiedecdomain
 spbrg
 spen
 spi

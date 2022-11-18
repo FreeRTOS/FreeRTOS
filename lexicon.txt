@@ -3030,6 +3030,7 @@ vbus
 vbuttonhandlertask
 vbuttonisrhandler
 vcellularconnecttask
+vcellulardemotask
 vclearemactxbuffer
 vconfiguretimerforruntimestats
 vcore

@@ -46,7 +46,7 @@
 #define configMINIMAL_STACK_SIZE				( ( unsigned short ) 70 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the win32 thread. */
 #define configTOTAL_HEAP_SIZE					( ( size_t ) ( 65 * 1024 ) )
 #define configMAX_TASK_NAME_LEN					( 12 )
-#define configUSE_TRACE_FACILITY				1
+#define configUSE_TRACE_FACILITY				0
 #define configUSE_16_BIT_TICKS					0
 #define configIDLE_SHOULD_YIELD					1
 #define configUSE_MUTEXES						1
@@ -126,32 +126,15 @@ used with multiple project configurations.  If it is
 	#error projCOVERAGE_TEST should be defined to 1 or 0 on the command line.
 #endif
 
-#if( projCOVERAGE_TEST == 1 )
-	/* Insert NOPs in empty decision paths to ensure both true and false paths
-	are being tested. */
-	#define mtCOVERAGE_TEST_MARKER() __asm volatile( "NOP" )
+/* Insert NOPs in empty decision paths to ensure both true and false paths
+are being tested. */
+#define mtCOVERAGE_TEST_MARKER() __asm volatile( "NOP" )
 
-	/* Ensure the tick count overflows during the coverage test. */
-	#define configINITIAL_TICK_COUNT 0xffffd800UL
+/* Ensure the tick count overflows during the coverage test. */
+#define configINITIAL_TICK_COUNT 0xffffd800UL
 
-	/* Allows tests of trying to allocate more than the heap has free. */
-	#define configUSE_MALLOC_FAILED_HOOK			0
-
-	/* To test builds that remove the static qualifier for debug builds. */
-	#define portREMOVE_STATIC_QUALIFIER
-#else
-	/* It is a good idea to define configASSERT() while developing.  configASSERT()
-	uses the same semantics as the standard C assert() macro.  Don't define
-	configASSERT() when performing code coverage tests though, as it is not
-	intended to asserts() to fail, some some code is intended not to run if no
-	errors are present. */
-	#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled(  __FILE__, __LINE__ )
-
-	#define configUSE_MALLOC_FAILED_HOOK			1
-
-	/* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
-	#include "trcRecorder.h"
-#endif
+/* Allows tests of trying to allocate more than the heap has free. */
+#define configUSE_MALLOC_FAILED_HOOK			0
 
 /* networking definitions */
 #define configMAC_ISR_SIMULATOR_PRIORITY	( configMAX_PRIORITIES - 1 )

@@ -20,7 +20,7 @@ def convert_pem_to_der(cert_pem, key_pem):
         serialization.PrivateFormat.TraditionalOpenSSL,
         serialization.NoEncryption(),
     )
-    with open(f"{script_file_dir_abs_path}/../{KEY_OUT_NAME}", "wb") as key_out:
+    with open(f"{KEY_OUT_NAME}", "wb") as key_out:
         key_out.write(key_der)
     print(
         f"Successfully converted key PEM to DER. Output file named: {KEY_OUT_NAME}"
@@ -28,7 +28,7 @@ def convert_pem_to_der(cert_pem, key_pem):
 
     cert = x509.load_pem_x509_certificate(
         bytes(cert_pem, "utf-8"), default_backend())
-    with open(f"{script_file_dir_abs_path}/../{CERT_OUT_NAME}", "wb") as cert_out:
+    with open(f"{CERT_OUT_NAME}", "wb") as cert_out:
         cert_out.write(cert.public_bytes(serialization.Encoding.DER))
 
     print(

@@ -63,11 +63,9 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
-#include "croutine.h"
 
 /* Demo application includes. */
 #include "BlockQ.h"
-#include "crflash.h"
 #include "blocktim.h"
 #include "integer.h"
 #include "comtest2.h"
@@ -85,9 +83,6 @@
 
 /* The execution period of the check task. */
 #define mainCHECK_TASK_PERIOD				( ( TickType_t ) 3000 / portTICK_PERIOD_MS )
-
-/* The number of flash co-routines to create. */
-#define mainNUM_FLASH_COROUTINES			( 5 )
 
 /* Baud rate used by the comtest tasks. */
 #define mainCOM_TEST_BAUD_RATE				( 19200 )
@@ -140,7 +135,6 @@ int main( void )
 	/* Create the standard demo tasks. */
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
-	vStartFlashCoRoutines( mainNUM_FLASH_COROUTINES );
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 	vCreateBlockTimeTasks();
 
@@ -239,8 +233,6 @@ unsigned short usErrorDetected = pdFALSE;
 
 void vApplicationIdleHook( void )
 {
-	/* Schedule the co-routines from within the idle task hook. */
-	vCoRoutineSchedule();
 }
 /*-----------------------------------------------------------*/
 

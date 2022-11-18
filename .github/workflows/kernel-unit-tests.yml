@@ -4,7 +4,7 @@ on: [push, pull_request]
 jobs:
   run-submodule:
     name: FreeRTOS/Source Submodule Revision
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
@@ -39,7 +39,7 @@ jobs:
         path: FreeRTOS/Test/CMock/build/coverage
   run-upstream:
     name: FreeRTOS-Kernel Main Branch
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2

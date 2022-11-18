@@ -55,6 +55,7 @@
 #include <errno.h>
 #include <string.h>
 
+
 /* FreeRTOS kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -72,7 +73,7 @@
 
 /*-----------------------------------------------------------*/
 extern void main_tcp_echo_client_tasks( void );
-// static void traceOnEnter( void );
+static void traceOnEnter( void );
 
 /*
  * Prototypes for the standard FreeRTOS application hook (callback) functions
@@ -131,7 +132,6 @@ int main( void )
     }
     #endif
 
-
     console_init();
     #if ( mainSELECTED_APPLICATION == ECHO_CLIENT_DEMO )
     {
@@ -180,7 +180,7 @@ void vApplicationIdleHook( void )
 
 
     usleep(15000);
-    // traceOnEnter();
+    traceOnEnter();
 }
 /*-----------------------------------------------------------*/
 
@@ -208,6 +208,26 @@ void vApplicationTickHook( void )
     functions can be used (those that end in FromISR()). */
 }
 
+void traceOnEnter()
+{
+    int ret;
+    struct timeval tv = { 0L, 0L };
+    fd_set fds;
+    FD_ZERO(&fds);
+    FD_SET(0, &fds);
+    ret = select(1, &fds, NULL, NULL, &tv);
+    if ( ret > 0 )
+    {
+    if( xTraceRunning == pdTRUE )
+    {
+        prvSaveTraceFile();
+    }
+    /* clear the buffer */
+    char buffer[200];
+    read(1, &buffer, 200);
+    }
+}
+
 void vLoggingPrintf( const char *pcFormat,
                      ... )
 {
@@ -231,17 +251,16 @@ void vApplicationDaemonTaskStartupHook( void )
 void vAssertCalled( const char * const pcFileName,
                     unsigned long ulLine )
 {
-    static BaseType_t xPrinted = pdFALSE;
-    volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
-    /* Copy the parameters to local volatile variables, just for debugging */
-    volatile char * pcFile = ( volatile char * ) pcFileName;
-    volatile uint32_t ulLineNumber = ulLine;
+static BaseType_t xPrinted = pdFALSE;
+volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
+/* Copy the parameters to local volatile variables, just for debugging */
+volatile char * pcFile = ( volatile char * ) pcFileName;
+volatile uint32_t ulLineNumber = ulLine;
 
     /* Called if an assertion passed to configASSERT() fails.  See
     http://www.freertos.org/a00110.html#configASSERT for more information. */
 
-	printf( "vAssertCalled( %s, %lu )\n", pcFileName, ulLine );
-    exit(1);
+	printf( "vAssertCalled( %s, %u )\n", pcFileName, ulLine );
 
     taskENTER_CRITICAL();
     {

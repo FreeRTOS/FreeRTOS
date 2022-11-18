@@ -1,0 +1,38 @@
+# Set the default behavior, in case users do not have core.autocrlf set.
+* text=auto
+
+# Files to always normalize
+*.c text
+*.h text
+*.s text
+*.S text
+
+# Binary files
+*.r79 binary
+*u-boot-spl binary
+*.bit binary
+
+# precompiled library files
+*.lib binary
+*.a binary
+
+# Archive files
+*.zip binary
+
+# Images / Docs
+*.gif binary
+*.pdf binary
+
+# Xilinx toolchain files
+*.hdf binary
+
+# MPLAB project / workspace files
+*.mcp binary
+*.mcw binary
+
+# Cypress / Infineon PSoC binary files
+*.cydwr binary
+*.cysch binary
+
+# Borland? ide files
+*.ide binary

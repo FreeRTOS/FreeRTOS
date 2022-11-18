@@ -18,7 +18,9 @@ addvectoredexceptionhandler
 adel
 ades
 adp
+aead
 aes
+aesni
 afer
 afio
 ahb
@@ -26,6 +28,7 @@ aic
 aiec
 ajax
 alpn
+aka
 alt
 altera
 amazonrootca
@@ -75,6 +78,7 @@ aws
 backlight
 backoff
 backoffalgorithm
+backtrace
 balternatesetting
 baltimore
 barry
@@ -157,6 +161,7 @@ brdiv
 brdl
 brgh
 brs
+bsd
 bsl
 bslaveinterface
 bsp
@@ -183,7 +188,9 @@ cac
 cachable
 calender
 calloc
+cas
 cb
+cbc
 cbconfigurationvalue
 cbdescriptortype
 cbio
@@ -226,7 +233,9 @@ ceu
 cexception
 cexpectednumberofparameters
 cexpectedstring
+cfb
 cfginitialize
+cflags
 cg
 cgreg
 ch
@@ -239,10 +248,14 @@ checktimer
 checkval
 checkvalue
 checon
+chinese
 chunked
 ci
 ciconfiguration
+cid
 circleos
+ciphersuite
+ciphertext 
 ck
 cka
 ckc
@@ -272,6 +285,7 @@ clocksource
 closesession
 cloudformation
 cmac
+cmake
 cmaxpower
 cmcnt
 cmd
@@ -436,6 +450,7 @@ cren
 crend
 crflash
 crfmax
+crl
 crgflg
 crossstudio
 crredentials
@@ -445,13 +460,16 @@ crxlock
 crxstring
 crypotki
 crypto
+cryptoapi
 cryptointerface
 cryptoki
 csamplepagefirstpart
 csamplepagesecondpart
 cserialputchar
 cserverhost
+crls
 csr
+csrs
 csrc
 css
 cstring
@@ -526,6 +544,7 @@ demoiptrace
 demosetup
 demotask
 demotimer
+demultiplexing
 der
 des
 desc
@@ -544,9 +563,11 @@ dfreertos
 dgram
 dgst
 dhcp
+dhe
 dhm
 didn
 diff
+diffie
 digicert
 digitcounter
 dimentions
@@ -603,7 +624,11 @@ eblocked
 ebset
 ebwait
 ec
+ecc
+ecdh
+ecdhe
 ecdsa
+ecjpake
 echobuffer
 echomultitx
 ecmd
@@ -788,6 +813,7 @@ fp
 fpe
 fpga
 fpidiv
+fprintf
 fpu
 fr
 framming
@@ -806,6 +832,7 @@ freq
 freqency
 fromisr
 fs
+fsanitize
 fseek
 fsl
 fsram
@@ -825,6 +852,7 @@ fx
 fxp
 fxx
 galileo
+galois
 gc
 gcc
 gcm
@@ -848,6 +876,7 @@ getstate
 getsubackstatuscodes
 gettopic
 gettopicstring
+gf
 gic
 gio
 giosetbit
@@ -855,7 +884,9 @@ gir
 girq
 girqm
 github
+glibc
 gmon
+gmtime
 gnd
 gnuc
 googleapis
@@ -870,6 +901,7 @@ gpios
 greacefully
 grec
 gree
+grp
 gsm
 hal
 halboardinit
@@ -880,6 +912,8 @@ hcomm
 hcs
 hed
 hein
+helloverifyrequest
+hellman
 het
 hetbase
 hetport
@@ -927,6 +961,7 @@ hw
 hwmax
 hyperterminal
 hz
+ia
 iar
 iasmarm
 ibe
@@ -1103,6 +1138,7 @@ kib
 kickstart
 knowns
 kx
+kw
 lapic
 lastsynctickcount
 latestversion
@@ -1285,13 +1321,16 @@ mec
 mechanims
 mechansim
 mem
+memcheck
 memcmp
 memcpy
 memfault
 memmanage
 memoryleak
+memorysanitizer
 mems
 memset
+merkle 
 messagebufferlocations
 messagetype
 metadata
@@ -1304,6 +1343,7 @@ microcontrollers
 microsemi
 microsoft
 microzed
+middlebox
 mii
 mikroc
 miliseconds
@@ -1321,6 +1361,7 @@ mkdir
 mmcr
 mno
 mnos
+montgomery
 mosquitto
 mov
 movs
@@ -1329,6 +1370,7 @@ mpc
 mpi
 mps
 mpsoc
+mpis
 mpu
 mpudemo
 mpuregionsettings
@@ -1391,6 +1433,7 @@ netstat
 networkcontext
 networkcredentials
 nextjobexecutionchanged
+ni
 nic
 nirq
 nist
@@ -1413,6 +1456,7 @@ notifyuint
 ns
 nsc
 nscfunction
+nspe
 nsec
 nt
 ntp
@@ -1424,14 +1468,18 @@ num
 numaker
 numberofitems
 numofservers
+nv
 nvic
 nvs
 nxp
+oaep
 ocd
 oe
 oer
 oerr
+ofb
 oid
+oids
 ok
 oled
 olen
@@ -1491,6 +1539,7 @@ pacdata
 packetid
 pactopic
 palpnprotos
+pake
 param
 paramater
 pargument
@@ -1508,6 +1557,7 @@ payloadlength
 pb
 pbasetime
 pbclk
+pbe
 pbuf
 pbuffer
 pbufs
@@ -1671,6 +1721,8 @@ pj
 pk
 pkcs
 pki
+pkparse
+pkwrite
 plaformimagestate
 plaintext
 plaintexthttpexample
@@ -1974,9 +2026,12 @@ prvupdatedeltahandler
 prvwin
 prvzerocopyechoclienttask
 ps
+psa
 psc
 pscheckvariable
 psel
+psk
+pss
 pserver
 pserverinfo
 pservertime
@@ -1995,6 +2050,7 @@ psslcontext
 pstartheaderloc
 pstplatformimagestate
 psval
+pthread
 psw
 pt
 ptal
@@ -2263,8 +2319,10 @@ reportid
 reqds
 reqenc
 reqens
+reseed
 resending
 resetart
+restartable
 resetprg
 resoltion
 resp
@@ -2304,6 +2362,8 @@ rootdelay
 rootdispersion
 rowley
 rsa
+rsaes
+rsassa
 rsk
 rskrl
 rskrx
@@ -2321,6 +2381,7 @@ rtccdaycomparemodemonth
 rtccinedgenone
 rtccprsch
 rti
+rtp
 rtos
 rtosdemo
 rts
@@ -2370,6 +2431,7 @@ sdk
 sdklog
 sec
 secretaccesskey
+seedfile
 seg
 segfault
 sel
@@ -2402,6 +2464,7 @@ serverhost
 serverport
 sessiontoken
 setbaudratevalue
+setbuf
 setfaketaskpriority
 setimagestate
 setpollisr
@@ -2469,15 +2532,20 @@ softbank
 softbaugh
 somewebsite
 sp
+spdx
+spe
+specifiedecdomain 
 spbrg
 spen
 spi
+spm
 sprintf
 spu
 sr
 sram
 src
 sren
+srtp
 ss
 sscanf
 ssi
@@ -2507,6 +2575,7 @@ statictask
 statictimer
 statusmessage
 stdarg
+stderr
 stdint
 stdlib
 stdout
@@ -2677,6 +2746,7 @@ trustzone
 tscr
 tskidle
 tskyield
+tt
 ttc
 ttl
 twoechoclient
@@ -2743,6 +2813,7 @@ uctempbuffer
 ucthingnamelength
 ucxbrf
 ucxbrs
+undefine
 udp
 udpck
 udpclient
@@ -2892,6 +2963,7 @@ unusued
 updatejobexecution
 uploadhttpexample
 upto
+urandom
 urc
 urcevent
 uri
@@ -3008,6 +3080,7 @@ uxtick
 uxtxstackbuffer
 uxvariabletoincrement
 valdiate
+valgrind
 vanexampleisr
 vapplicationfpusafeirqhandler
 vapplicationftpreceivedhook
@@ -3131,6 +3204,7 @@ vsetandcheckregisters
 vsetuphighfrequencytimer
 vsetuptimertest
 vsimplesubscribepublishtask
+vsnprintf
 vstart
 vstartdefenderdemo
 vstartfleetprovisioningdemo
@@ -3184,6 +3258,7 @@ wasn
 wdt
 wdtm
 webmax
+weierstrass
 wether
 wi
 wifi
@@ -3658,6 +3733,7 @@ xtransfercompletedelay
 xtransfersocket
 xtransmitted
 xtrueobject
+xts
 xttcps
 xtxbuffermutex
 xtxdescriptors

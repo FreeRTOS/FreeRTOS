@@ -167,10 +167,10 @@
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-CLI\FreeRTOS_CLI.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\aws_secure_sockets.tzext.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\aws_wifi.tzext.h" />
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcDefines.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcExtensions.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcHardwarePort.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcKernelPort.h" />
-    <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcPortDefines.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcRecorder.h" />
     <ClInclude Include="Trace_Recorder_Configuration\trcConfig.h" />
     <ClInclude Include="Trace_Recorder_Configuration\trcSnapshotConfig.h" />

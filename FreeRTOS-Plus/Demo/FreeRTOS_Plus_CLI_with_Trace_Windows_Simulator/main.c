@@ -78,8 +78,9 @@
 #include "task.h"
 #include "queue.h"
 
-#include <trcPortDefines.h>
-#include <trcRecorder.h>
+/* FreeRTOS+Trace includes. */
+#include "trcDefines.h"
+#include "trcRecorder.h"
 
 /* Priorities at which the tasks are created. */
 #define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
@@ -233,6 +234,7 @@ const unsigned long ulMSToSleep = 5;
 }
 /*-----------------------------------------------------------*/
 
+static uint32_t ulEntryTime = 0;
 
 void vTraceTimerReset( void )
 {

@@ -74,10 +74,10 @@
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcKernelPort.h">
       <Filter>FreeRTOS+Trace\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcPortDefines.h">
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcRecorder.h">
       <Filter>FreeRTOS+Trace\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcRecorder.h">
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcDefines.h">
       <Filter>FreeRTOS+Trace\include</Filter>
     </ClInclude>
   </ItemGroup>

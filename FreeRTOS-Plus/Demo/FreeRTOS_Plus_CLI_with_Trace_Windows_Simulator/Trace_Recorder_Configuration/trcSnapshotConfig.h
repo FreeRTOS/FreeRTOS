@@ -84,6 +84,39 @@
  ******************************************************************************/
 #define TRC_CFG_EVENT_BUFFER_SIZE 15000
 
+/*******************************************************************************
+ * TRC_CFG_NTASK, TRC_CFG_NISR, TRC_CFG_NQUEUE, TRC_CFG_NSEMAPHORE...
+ *
+ * A group of macros which should be defined as integer values, zero or larger.
+ *
+ * These define the capacity of the Object Property Table, i.e., the maximum
+ * number of objects active at any given point, within each object class (e.g.,
+ * task, queue, semaphore, ...).
+ *
+ * If tasks or other objects are deleted in your system, this
+ * setting does not limit the total amount of objects created, only the number
+ * of objects that have been successfully created but not yet deleted.
+ *
+ * Using too small values will cause vTraceError to be called, which stores an
+ * error message in the trace that is shown when opening the trace file. The
+ * error message can also be retrieved using xTraceGetLastError.
+ *
+ * It can be wise to start with large values for these constants,
+ * unless you are very confident on these numbers. Then do a recording and
+ * check the actual usage by selecting View menu -> Trace Details ->
+ * Resource Usage -> Object Table.
+ ******************************************************************************/
+#define TRC_CFG_NTASK			150
+#define TRC_CFG_NISR			90
+#define TRC_CFG_NQUEUE			90
+#define TRC_CFG_NSEMAPHORE		90
+#define TRC_CFG_NMUTEX			90
+#define TRC_CFG_NTIMER			250
+#define TRC_CFG_NEVENTGROUP		90
+#define TRC_CFG_NSTREAMBUFFER	50
+#define TRC_CFG_NMESSAGEBUFFER	50
+
+
 /******************************************************************************
  * TRC_CFG_INCLUDE_FLOAT_SUPPORT
  *

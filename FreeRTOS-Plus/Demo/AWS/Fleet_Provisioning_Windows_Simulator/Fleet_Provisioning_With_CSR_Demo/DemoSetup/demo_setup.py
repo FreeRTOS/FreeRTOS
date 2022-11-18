@@ -6,8 +6,8 @@ import boto3
 import botocore
 from convert_credentials_to_der import convert_pem_to_der
 
-KEY_OUT_NAME = "corePKCS11_Claim_Key.dat"
-CERT_OUT_NAME = "corePKCS11_Claim_Certificate.dat"
+KEY_OUT_NAME = f"{os.getcwd()}corePKCS11_Claim_Key.dat"
+CERT_OUT_NAME = f"{os.getcwd()}corePKCS11_Claim_Certificate.dat"
 
 RESOURCE_STACK_NAME = "FPDemoStack"
 
@@ -101,7 +101,7 @@ def update_demo_config():
     file_text = file_text.replace(
         "<IOTEndpoint>", "\"" + endpoint["endpointAddress"] + "\"")
 
-    header_file = open("{script_file_dir_abs_path}/../demo_config.h", "w")
+    header_file = open(f"{script_file_dir_abs_path}/../demo_config.h", "w")
     header_file.write(file_text)
     header_file.close()
     template_file.close()

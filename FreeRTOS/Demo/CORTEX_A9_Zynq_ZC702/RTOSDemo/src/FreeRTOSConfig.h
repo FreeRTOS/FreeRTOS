@@ -95,9 +95,6 @@
 /* Include the query-heap CLI command to query the free heap space. */
 #define configINCLUDE_QUERY_HEAP_COMMAND		1
 
-/* Co-routine definitions. */
-#define configUSE_CO_ROUTINES 					0
-#define configMAX_CO_ROUTINE_PRIORITIES 		( 2 )
 
 /* Software timer definitions. */
 #define configUSE_TIMERS						1

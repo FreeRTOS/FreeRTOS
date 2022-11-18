@@ -75,9 +75,6 @@ or 0 to run the more comprehensive test and demo application. */
 #define configUSE_COUNTING_SEMAPHORES			1
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION	1
 
-/* Co-routine definitions. */
-#define configUSE_CO_ROUTINES 			0
-#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* Software timer definitions. */
 #define configUSE_TIMERS				1

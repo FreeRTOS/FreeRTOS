@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Logging", "..\..\..\Windows
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MbedTLS", "..\..\..\WindowsSimulator\MbedTLS\MbedTLS.vcxproj", "{E1016F3E-94E9-4864-9FD8-1D7C1FEFBFD7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Statically Linked Libraries", "Statically Linked Libraries", "{18C74643-B0CA-4709-8835-F4E8F4F3005A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -63,6 +65,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C90E6CC5-818B-4C97-8876-0986D989387C} = {18C74643-B0CA-4709-8835-F4E8F4F3005A}
+		{72C209C4-49A4-4942-A201-44706C9D77EC} = {18C74643-B0CA-4709-8835-F4E8F4F3005A}
+		{BE362AC0-B10B-4276-B84E-6304652BA228} = {18C74643-B0CA-4709-8835-F4E8F4F3005A}
+		{E1016F3E-94E9-4864-9FD8-1D7C1FEFBFD7} = {18C74643-B0CA-4709-8835-F4E8F4F3005A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {150F08BF-9D61-4CC2-8DBF-1335172A1EA4}

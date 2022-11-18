@@ -44,8 +44,7 @@
 #include "transport_wolfSSL.h"
 
 /* FreeRTOS Socket wrapper include. */
-#include "sockets_wrapper.h"
-
+#include "tcp_sockets_wrapper.h"
 
 /* wolfSSL user settings header */
 #include "user_settings.h"
@@ -141,14 +140,14 @@ static int wolfSSL_IORecvGlue( WOLFSSL * ssl,
     Socket_t xSocket = ( Socket_t ) context;
 
 
-    read = FreeRTOS_recv( xSocket, ( void * ) buf, ( size_t ) sz, 0 );
+    read = TCP_Sockets_Recv( xSocket, ( void * ) buf, ( size_t ) sz );
 
     if( ( read == 0 ) ||
-        ( read == -pdFREERTOS_ERRNO_EWOULDBLOCK ) )
+        ( read == -TCP_SOCKETS_ERRNO_EWOULDBLOCK) )
     {
         read = WOLFSSL_CBIO_ERR_WANT_READ;
     }
-    else if( read == -pdFREERTOS_ERRNO_ENOTCONN )
+    else if( read == -TCP_SOCKETS_ERRNO_ENOTCONN )
     {
         read = WOLFSSL_CBIO_ERR_CONN_CLOSE;
     }
@@ -168,13 +167,13 @@ static int wolfSSL_IOSendGlue( WOLFSSL * ssl,
 {
     ( void ) ssl; /* to prevent unused warning*/
     Socket_t xSocket = ( Socket_t ) context;
-    BaseType_t sent = FreeRTOS_send( xSocket, ( void * ) buf, ( size_t ) sz, 0 );
+    BaseType_t sent = TCP_Sockets_Send( xSocket, ( void * ) buf, ( size_t ) sz );
 
-    if( sent == -pdFREERTOS_ERRNO_EWOULDBLOCK )
+    if( sent == -TCP_SOCKETS_ERRNO_EWOULDBLOCK)
     {
         sent = WOLFSSL_CBIO_ERR_WANT_WRITE;
     }
-    else if( sent == -pdFREERTOS_ERRNO_ENOTCONN )
+    else if( sent == -TCP_SOCKETS_ERRNO_ENOTCONN )
     {
         sent = WOLFSSL_CBIO_ERR_CONN_CLOSE;
     }
@@ -403,7 +402,7 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     /* Establish a TCP connection with the server. */
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
-        socketStatus = Sockets_Connect( &( pNetworkContext->tcpSocket ),
+        socketStatus = TCP_Sockets_Connect( &( pNetworkContext->tcpSocket ),
                                         pHostName,
                                         port,
                                         receiveTimeoutMs,
@@ -433,10 +432,7 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     /* Clean up on failure. */
     if( returnStatus != TLS_TRANSPORT_SUCCESS )
     {
-        if( pNetworkContext->tcpSocket != FREERTOS_INVALID_SOCKET )
-        {
-            FreeRTOS_closesocket( pNetworkContext->tcpSocket );
-        }
+        TCP_Sockets_Disconnect( pNetworkContext->tcpSocket );
     }
     else
     {
@@ -463,7 +459,7 @@ void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
     pNetworkContext->sslContext.ssl = NULL;
 
     /* Call socket shutdown function to close connection. */
-    Sockets_Disconnect( pNetworkContext->tcpSocket );
+    TCP_Sockets_Disconnect( pNetworkContext->tcpSocket );
 
     /* free WOLFSSL_CTX object*/
     pCtx = pNetworkContext->sslContext.ctx;

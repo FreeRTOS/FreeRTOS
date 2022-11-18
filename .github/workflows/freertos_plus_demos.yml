@@ -367,7 +367,7 @@ jobs:
 
   plus_tcp_posix:
     name: FreeRTOS+TCP Posix Simulator Demo
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -388,7 +388,7 @@ jobs:
 
   plus_tcp_arm:
     name: FreeRTOS+TCP QEMU ARM MPS2 AN385
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2

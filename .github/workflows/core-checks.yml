@@ -5,7 +5,7 @@ on: [pull_request]
 jobs:
   core-checker:
     name: FreeRTOS Core Checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       # Install python 3
       - name: Tool Setup

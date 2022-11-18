@@ -54,11 +54,9 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
-#include "croutine.h"
 
 /* Demo application include files. */
 #include "partest.h"
-#include "crflash.h"
 
 /* Library include files. */
 #include "DriverLib.h"

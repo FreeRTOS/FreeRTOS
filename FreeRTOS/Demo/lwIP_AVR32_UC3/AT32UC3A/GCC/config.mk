@@ -140,7 +140,6 @@ CSRCS = \
   $(FREERTOS_PATH)/Source/tasks.c \
   $(FREERTOS_PATH)/Source/queue.c \
   $(FREERTOS_PATH)/Source/list.c \
-  $(FREERTOS_PATH)/Source/croutine.c \
   $(FREERTOS_PATH)/Demo/Common/Minimal/flash.c \
   $(FREERTOS_PORT_PATH)/port.c \
   $(FREERTOS_MEM_PATH)/heap_3.c \

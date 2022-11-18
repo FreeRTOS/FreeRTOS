@@ -100,9 +100,6 @@
     <ClCompile Include="Run-time-stats-utils.c">
       <Filter>Demo App Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\croutine.c">
-      <Filter>FreeRTOS Source\Source</Filter>
-    </ClCompile>
     <ClCompile Include="..\Common\Minimal\QueueOverwrite.c">
       <Filter>Demo App Source\Full_Demo\Common Demo Tasks</Filter>
     </ClCompile>
@@ -167,9 +164,6 @@
   <ItemGroup>
     <ClInclude Include="FreeRTOSConfig.h">
       <Filter>Configuration Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\include\croutine.h">
-      <Filter>FreeRTOS Source\Include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\include\FreeRTOS.h">
       <Filter>FreeRTOS Source\Include</Filter>

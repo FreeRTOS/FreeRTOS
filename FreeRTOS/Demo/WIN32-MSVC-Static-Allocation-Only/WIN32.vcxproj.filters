@@ -45,9 +45,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\include\croutine.h">
-      <Filter>FreeRTOS Source\Include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\include\FreeRTOS.h">
       <Filter>FreeRTOS Source\Include</Filter>
     </ClInclude>

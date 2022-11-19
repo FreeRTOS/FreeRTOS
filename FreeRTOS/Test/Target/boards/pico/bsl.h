@@ -1,33 +1,42 @@
 #ifndef _BOARD_SUPPORT_LIBRARY_H
 #define _BOARD_SUPPORT_LIBRARY_H
 
+#include "FreeRTOSConfig.h"
+#include "FreeRTOS.h"
+#include "semphr.h"
+#include "task.h"
 #include "pico/stdlib.h"
 
 #include <stddef.h>
 #include <stdint.h>
-#include "FreeRTOSConfig.h"
 
 #define CPUTIME_TO_MS_DIVISOR                                                  \
   (123456) // XXXADS must tune to platform if needed. some platforms will have a
            // time-sycned source but it will be relative to something
 
 #define LED_PIN (PICO_DEFAULT_LED_PIN)
+#define MAX_CORES (2)
 
 typedef void (* softwareInterruptHandler)(void);
 
-typedef struct SchedTraceLogEntry {
+typedef struct SchedTraceLogRow {
   bool valid;
-  uint64_t index;
-  TaskStatus_t taskStatus;
-} SchedTraceLogEntry;
+  uint64_t number;
+  struct xTASK_STATUS taskStatus[MAX_CORES];
+} SchedTraceLogRow;
 
-typedef SchedTraceLogEntry[configNUM_CORES] SchedTraceLogRow;
 #define MAX_SCHED_TRACE_LOG_ROWS (128)
 
 typedef struct SchedTraceLog {
   UBaseType_t offset;
   SchedTraceLogRow rows[MAX_SCHED_TRACE_LOG_ROWS];
 } SchedTraceLog;
+
+// traceTASK_SWITCHED_IN();
+// vTaskStartScheduler() ... -> traceTASK_SWITCHED_IN()
+//                           -> vxPortStartScheduler()
+extern int logSchedTrace(SchedTraceLog *traceLog);
+extern int reportSchedTraceLog(SchedTraceLog *traceLog);
 
 extern void initTestEnvironment(void);
 extern void sendReport(char *buffer, size_t len);

@@ -9,12 +9,13 @@ target_sources(fr2_common INTERFACE
         test.c)
 target_include_directories(fr2_common INTERFACE
         ${CMAKE_CURRENT_LIST_DIR}
-        ${BSL_PATH}
+        ${BSL_PATHS}
         )
+bsl_library_variant(bsl_fr2 ${CMAKE_CURRENT_LIST_DIR})
 target_link_libraries(fr2_common INTERFACE
         FreeRTOS-Kernel
         FreeRTOS-Kernel-Heap1
-        ${BSL_LINK_LIBRARIES})
+        ${BSL_LINK_LIBRARIES} bsl_fr2)
 
 add_executable(test_fr2)
 bsl_executable_modifiers(test_fr2)

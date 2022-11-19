@@ -3,8 +3,7 @@
 # This can be dropped into an external project to help locate this SDK
 # It should be include()ed prior to project()
 
-set(BSL_PATH ${CMAKE_CURRENT_LIST_DIR})
-set(BSL_LINK_LIBRARIES pico_stdlib pico_multicore bsl unity)
+set(BSL_LINK_LIBRARIES pico_stdlib pico_multicore unity)
 set(BSL_DEFINES PICO_STACK_SIZE=0x1000 TARGET_RASPBERRY_PICO=1)
 set(BSL_ON_CORE_ONE_DEFINES mainRUN_FREE_RTOS_template_on_core=1)
 set(BSL_INCLUDE_PATHS "${UNITY_DIR}/src/")
@@ -69,6 +68,8 @@ include(${PICO_SDK_INIT_CMAKE_FILE})
 
 include(${CMAKE_CURRENT_LIST_DIR}/FreeRTOS_Kernel_import.cmake)
 
+set(BSL_PATHS ${CMAKE_CURRENT_LIST_DIR} ${TARGET_INCLUDE_PATH})
+
 pico_sdk_init()
 
 macro(bsl_executable_modifiers EXECUTABLE_NAME)
@@ -86,9 +87,13 @@ foreach (_variableName ${_variableNames})
     message(STATUS "${_variableName}=${${_variableName}}")
 endforeach()
 
-add_library(bsl STATIC "${CMAKE_CURRENT_LIST_DIR}/bsl.c")
-pico_enable_stdio_usb(bsl 1)
-target_include_directories(bsl PUBLIC ${BSL_PATH} ${PICO_INCLUDE_DIRS})
-target_link_libraries(bsl PUBLIC pico_stdlib pico_multicore)
+set(BSL_LIBRARY_DIR ${CMAKE_CURRENT_LIST_DIR} CACHE INTERNAL "")
+
+macro(bsl_library_variant VARIANT_NAME INCLUDE_DIR)
+    add_library(${VARIANT_NAME} STATIC "${BSL_LIBRARY_DIR}/bsl.c")
+    pico_enable_stdio_usb(${VARIANT_NAME} 1)
+    target_include_directories(${VARIANT_NAME} PUBLIC ${BSL_PATHS} ${PICO_INCLUDE_DIRS} ${BSL_LIBRARY_DIR}/../../../../Source/include ${INCLUDE_DIR})
+    target_link_libraries(${VARIANT_NAME} PUBLIC pico_stdlib pico_multicore)
+endmacro()
 
 

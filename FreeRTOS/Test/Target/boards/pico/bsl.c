@@ -8,7 +8,78 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <string.h>
 
+static SemaphoreHandle_t xSemLogSchedTrace = NULL;
+uint64_t logSchedTraceNumber = 0;
+
+int logSchedTrace(SchedTraceLog *traceLog) {
+  UBaseType_t index, numTasksRunning;
+  TaskStatus_t taskStatus[16];
+  UBaseType_t taskStatusArraySize = 16;
+  unsigned long totalRunTime;
+  int coreIndex = 0;
+  SchedTraceLogRow *logRow;
+  int retcode = 0;
+  
+  if (xSemaphoreTake(xSemLogSchedTrace, portMAX_DELAY) == pdPASS)
+  {
+    numTasksRunning = uxTaskGetSystemState((TaskStatus_t * const)&taskStatus, taskStatusArraySize, &totalRunTime);
+
+    for(index = 0; index < numTasksRunning; index++)
+    {
+        // ASSERT(coreIndex < MAX_CORES)
+        if (taskStatus[index].eCurrentState == eRunning)
+        {
+          logRow = &(traceLog->rows[traceLog->offset]);
+          logRow->valid = pdTRUE;
+          logRow->number = logSchedTraceNumber++;
+          memcpy(&logRow->taskStatus[coreIndex], &taskStatus[index], sizeof(struct xTASK_STATUS));
+
+          coreIndex++;
+        }
+    }
+
+    traceLog->offset++;
+    if (traceLog->offset >= MAX_SCHED_TRACE_LOG_ROWS) {
+      traceLog->offset = 0;
+    }
+
+    if (xSemaphoreGive(xSemLogSchedTrace) == pdFALSE)
+    {
+      retcode = -1;
+    }
+  }
+
+  return retcode;
+}
+
+int reportSchedTraceLog(SchedTraceLog *traceLog)
+{
+  UBaseType_t idx, coreNum;
+  SchedTraceLogRow *logRow;
+  int retcode = 0;
+
+  if (xSemaphoreTake(xSemLogSchedTrace, portMAX_DELAY) == pdPASS)
+  {
+    for(idx=0; idx < MAX_SCHED_TRACE_LOG_ROWS; idx++)
+    {
+      logRow = &traceLog->rows[idx];
+
+      printf("SchedTraceLog: %lld", logRow->number);
+      for(coreNum=0; coreNum < MAX_CORES; coreNum++) {
+        printf("  CORE %d: %s", coreNum, logRow->taskStatus[coreNum].pcTaskName);
+      }
+    }
+
+    if (xSemaphoreGive(xSemLogSchedTrace) == pdFAIL)
+    {
+      retcode = -1;
+    }
+  }
+
+  return retcode;
+}
 
 void initTestEnvironment(void) {
   /* Want to be able to printf */

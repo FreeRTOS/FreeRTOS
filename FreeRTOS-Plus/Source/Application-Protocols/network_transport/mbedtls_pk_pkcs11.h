@@ -62,7 +62,7 @@ int lPKCS11PkMbedtlsCloseSessionAndFree( mbedtls_pk_context * pxMbedtlsPkCtx );
  * @param[in] pucRandom Byte array to fill with random data.
  * @param[in] xRandomLength Length of byte array.
  *
- * @return Zero on success.
+ * @return 0 on success.
  */
 int lPKCS11RandomCallback( void * pvCtx,
                            unsigned char * pucOutput,

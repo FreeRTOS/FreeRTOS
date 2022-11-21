@@ -1140,7 +1140,7 @@ static CK_RV p11_rsa_ctx_init( void * pvCtx,
     /*
      * TODO: corePKCS11 does not allow exporting RSA public attributes.
      * This function should be updated to properly initialize the
-     * mbedtls_rsa_context when this addressed.
+     * mbedtls_rsa_context when this is addressed.
      */
 
     /* CK_ATTRIBUTE pxAttrs[ 2 ] = */

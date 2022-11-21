@@ -20,13 +20,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
 /*
 	Changes from V2.5.2
-		
+
 	+ All LED's are turned off to start.
 */
 
@@ -69,9 +69,9 @@ unsigned long ulLED = partstFIRST_IO;
 		}
 		else
 		{
-			GPIO_IOSET = ulLED;			
+			GPIO_IOSET = ulLED;
 		}
-	}	
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -93,8 +93,8 @@ unsigned long ulLED = partstFIRST_IO, ulCurrentState;
 		}
 		else
 		{
-			GPIO_IOSET = ulLED;			
+			GPIO_IOSET = ulLED;
 		}
-	}	
+	}
 }
 

@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -76,7 +76,7 @@ unsigned short usBit;
 			}
 
 			GPIO_Write( GPIOC, usOutputValue );
-		}	
+		}
 	}
 	xTaskResumeAll();
 }

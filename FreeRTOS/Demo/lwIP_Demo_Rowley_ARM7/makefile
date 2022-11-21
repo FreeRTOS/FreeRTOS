@@ -20,7 +20,7 @@
 # * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # *
 # * https://www.FreeRTOS.org
-# * https://aws.amazon.com/freertos
+# * https://github.com/FreeRTOS
 # *
 # * 1 tab == 4 spaces!
 # */
@@ -84,7 +84,7 @@ DEMO_APP_THMUB_SRC= \
   ../Common/Minimal/PollQ.c \
   ../Common/Minimal/semtest.c \
   BasicWEB.c \
-  USB/USB-CDC.c 
+  USB/USB-CDC.c
 
 LWIP_THUMB_SRC= \
   lwip-1.1.0/src/core/tcp_out.c \
@@ -119,7 +119,7 @@ ARM_SRC= \
   ../../Source/portable/GCC/ARM7_AT91SAM7S/portISR.c \
   EMAC/SAM7_EMAC_ISR.c \
   USB/USBIsr.c \
-  Cstartup_SAM7.c  
+  Cstartup_SAM7.c
 
 
 #

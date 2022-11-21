@@ -20,19 +20,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
 /*
 	BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR USART1.
-	
+
 	***Note*** This example uses queues to send each character into an interrupt
 	service routine and out of an interrupt service routine individually.  This
 	is done to demonstrate queues being used in an interrupt, and to deliberately
-	load the system to test the FreeRTOS port.  It is *NOT* meant to be an 
+	load the system to test the FreeRTOS port.  It is *NOT* meant to be an
 	example of an efficient implementation.  An efficient implementation should
-	use FIFO's or DMA if available, and only use FreeRTOS API functions when 
+	use FIFO's or DMA if available, and only use FreeRTOS API functions when
 	enough has been received to warrant a task being unblocked to process the
 	data.
 */
@@ -78,20 +78,20 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
 {
 uint32_t ulChar;
 xComPortHandle xReturn;
-const sam_usart_opt_t xUSARTSettings = 
+const sam_usart_opt_t xUSARTSettings =
 {
 	ulWantedBaud,
 	US_MR_CHRL_8_BIT,
 	US_MR_PAR_NO,
 	US_MR_NBSTOP_1_BIT,
-	US_MR_CHMODE_NORMAL,	
+	US_MR_CHMODE_NORMAL,
 	0 /* Only used in IrDA mode. */
 };
 
 	/* Create the queues used to hold Rx/Tx characters. */
 	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
-	
+
 	/* If the queues were created correctly then setup the serial port
 	hardware. */
 	if( ( xRxedChars != serINVALID_QUEUE ) && ( xCharsForTx != serINVALID_QUEUE ) )
@@ -108,10 +108,10 @@ const sam_usart_opt_t xUSARTSettings =
 		/* Enable the receiver and transmitter. */
 		usart_enable_tx( serUSART_PORT );
 		usart_enable_rx( serUSART_PORT );
-		
+
 		/* Clear any characters before enabling interrupt. */
 		usart_getchar( serUSART_PORT, &ulChar );
-		
+
 		/* Enable Rx end interrupt. */
 		usart_enable_interrupt( serUSART_PORT, US_IER_RXRDY );
 
@@ -165,7 +165,7 @@ signed char *pxNext;
 	/* Send each character in the string, one at a time. */
 	pxNext = ( signed char * ) pcString;
 	while( *pxNext )
-	{		
+	{
 		xSerialPutChar( pxPort, *pxNext, serNO_BLOCK );
 		pxNext++;
 	}
@@ -200,12 +200,12 @@ void vSerialClose( xComPortHandle xPort )
 }
 /*-----------------------------------------------------------*/
 
-/* 
- * It should be noted that the com test tasks (which use make use of this file) 
- * are included to demonstrate queues being used to communicate between tasks 
- * and interrupts, and to demonstrate a context switch being performed from 
- * inside an interrupt service routine.  The serial driver used here is *not* 
- * intended to represent an efficient implementation.  Real applications should 
+/*
+ * It should be noted that the com test tasks (which use make use of this file)
+ * are included to demonstrate queues being used to communicate between tasks
+ * and interrupts, and to demonstrate a context switch being performed from
+ * inside an interrupt service routine.  The serial driver used here is *not*
+ * intended to represent an efficient implementation.  Real applications should
  * make use of the USARTS peripheral DMA channel (PDC).
  */
 void USART1_Handler( void )
@@ -221,7 +221,7 @@ uint32_t ulUSARTStatus, ulUSARTMask;
 
 	if( ( ulUSARTStatus & US_CSR_TXRDY ) != 0UL )
 	{
-		/* The interrupt was caused by the TX register becoming empty.  Are 
+		/* The interrupt was caused by the TX register becoming empty.  Are
 		there any more characters to transmit? */
 		if( xQueueReceiveFromISR( xCharsForTx, &ucChar, &xHigherPriorityTaskWoken ) == pdTRUE )
 		{
@@ -231,10 +231,10 @@ uint32_t ulUSARTStatus, ulUSARTMask;
 		}
 		else
 		{
-			usart_disable_interrupt( serUSART_PORT, US_IER_TXRDY );		
-		}		
+			usart_disable_interrupt( serUSART_PORT, US_IER_TXRDY );
+		}
 	}
-	
+
 	if( ( ulUSARTStatus & US_CSR_RXRDY ) != 0UL )
 	{
 		/* A character has been received on the USART, send it to the Rx
@@ -242,13 +242,13 @@ uint32_t ulUSARTStatus, ulUSARTMask;
 		usart_getchar( serUSART_PORT, &ulChar );
 		ucChar = ( uint8_t ) ( ulChar & 0xffUL );
 		xQueueSendFromISR( xRxedChars, &ucChar, &xHigherPriorityTaskWoken );
-	}	
+	}
 
 	/* If sending or receiving from a queue has caused a task to unblock, and
-	the unblocked task has a priority equal to or higher than the currently 
-	running task (the task this ISR interrupted), then xHigherPriorityTaskWoken 
-	will have automatically been set to pdTRUE within the queue send or receive 
-	function.  portEND_SWITCHING_ISR() will then ensure that this ISR returns 
+	the unblocked task has a priority equal to or higher than the currently
+	running task (the task this ISR interrupted), then xHigherPriorityTaskWoken
+	will have automatically been set to pdTRUE within the queue send or receive
+	function.  portEND_SWITCHING_ISR() will then ensure that this ISR returns
 	directly to the higher priority unblocked task. */
 	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
@@ -257,4 +257,4 @@ uint32_t ulUSARTStatus, ulUSARTMask;
 
 
 
-	
+

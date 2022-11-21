@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -50,7 +50,7 @@
  * use the CLI:
  *  - Power the SAMD20 XPlained board through the USB debugger connector.  This
  *    will create a virtual COM port through the USB.
- *  - Build and run the demo application.  
+ *  - Build and run the demo application.
  *  - Start a dumb terminal program such as TerraTerm or Hyper Terminal.
  *  - In the dumb terminal select the UART port associated with the XPlained
  *    debugger connection, using 19200 baud.
@@ -162,9 +162,9 @@ const size_t xRegTestStackSize = 25U;
 	vStartQueueSetTasks();
 	vStartGenericQueueTasks( tskIDLE_PRIORITY );
 	vStartQueuePeekTasks();
-	
+
 	/* Start the task that manages the command console for FreeRTOS+CLI. */
-	vUARTCommandConsoleStart( ( configMINIMAL_STACK_SIZE * 3 ), tskIDLE_PRIORITY );	
+	vUARTCommandConsoleStart( ( configMINIMAL_STACK_SIZE * 3 ), tskIDLE_PRIORITY );
 
 	/* Create the register test tasks as described at the top of this file.
 	These are naked functions that don't use any stack.  A stack still has
@@ -257,7 +257,7 @@ unsigned long ulErrorFound = pdFALSE;
 	}
 	ulLastRegTest2Value = ulRegTest2LoopCounter;
 
-	
+
 	if( xAreQueueSetTasksStillRunning() != pdPASS )
 	{
 		ulErrorFound = pdTRUE;
@@ -267,12 +267,12 @@ unsigned long ulErrorFound = pdFALSE;
 	{
 		ulErrorFound = pdTRUE;
 	}
-	
+
 	if( xAreGenericQueueTasksStillRunning() != pdPASS )
 	{
 		ulErrorFound = pdTRUE;
 	}
-	
+
 	if( xAreQueuePeekTasksStillRunning() != pdPASS )
 	{
 		ulErrorFound = pdTRUE;

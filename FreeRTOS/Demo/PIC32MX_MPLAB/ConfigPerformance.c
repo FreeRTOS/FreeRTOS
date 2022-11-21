@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -123,7 +123,7 @@ extern unsigned long _ebase_address[];
 
 	/* Setup EBase. */
 	_CP0_SET_EBASE( ( unsigned long ) _ebase_address );
-	
+
 	/* Space vectors by 0x20 bytes. */
 	_CP0_XCH_INTCTL( 0x20 );
 
@@ -138,7 +138,7 @@ extern unsigned long _ebase_address[];
 
 	/* Set MVEC bit. */
 	INTCONbits.MVEC = 1;
-	
+
 	/* Finally enable interrupts again. */
 	ulStatus |= hwGLOBAL_INTERRUPT_BIT;
 	_CP0_SET_STATUS( ulStatus );

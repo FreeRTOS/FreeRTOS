@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -60,11 +60,11 @@ or 0 to run the more comprehensive test and demo application. */
 /*-----------------------------------------------------------*/
 
 /*
- * Perform any application specific hardware configuration.  
+ * Perform any application specific hardware configuration.
  */
 static void prvSetupHardware( void );
 
-/* 
+/*
  * Prototypes for the FreeRTOS hook/callback functions.  See the comments in
  * the implementation of each function for more information.
  */
@@ -180,7 +180,7 @@ void vApplicationTickHook( void )
 void vMainConfigureTimerForRunTimeStats( void )
 {
 	/* Used by the optional run-time stats gathering functionality. */
-	
+
 	/* How many clocks are there per tenth of a millisecond? */
 	ulClocksPer10thOfAMilliSecond = configCPU_CLOCK_HZ / 10000UL;
 }
@@ -205,7 +205,7 @@ const unsigned long ulSysTickPendingBit = 0x04000000UL;
 	/* The SysTick is a down counter.  How many clocks have passed since it was
 	last reloaded? */
 	ulSysTickCounts = ulSysTickReloadValue - *pulCurrentSysTickCount;
-	
+
 	/* How many times has it overflowed? */
 	ulTickCount = xTaskGetTickCountFromISR();
 
@@ -214,28 +214,28 @@ const unsigned long ulSysTickPendingBit = 0x04000000UL;
 	section, and the ISR safe critical sections are not designed to nest,
 	so reset the critical section. */
 	portSET_INTERRUPT_MASK_FROM_ISR();
-	
+
 	/* Is there a SysTick interrupt pending? */
 	if( ( *pulInterruptCTRLState & ulSysTickPendingBit ) != 0UL )
 	{
 		/* There is a SysTick interrupt pending, so the SysTick has overflowed
 		but the tick count not yet incremented. */
 		ulTickCount++;
-		
+
 		/* Read the SysTick again, as the overflow might have occurred since
 		it was read last. */
 		ulSysTickCounts = ulSysTickReloadValue - *pulCurrentSysTickCount;
-	}	
-	
+	}
+
 	/* Convert the tick count into tenths of a millisecond.  THIS ASSUMES
 	configTICK_RATE_HZ is 1000! */
 	ulReturn = ( ulTickCount * 10UL ) ;
-		
+
 	/* Add on the number of tenths of a millisecond that have passed since the
 	tick count last got updated. */
 	ulReturn += ( ulSysTickCounts / ulClocksPer10thOfAMilliSecond );
-	
-	return ulReturn;	
+
+	return ulReturn;
 }
 /*-----------------------------------------------------------*/
 

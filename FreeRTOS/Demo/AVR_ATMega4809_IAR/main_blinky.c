@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -88,7 +88,7 @@ void main_blinky( void )
 {
     /* Create the queue. */
      xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( uint32_t ) );
- 
+
     if( xQueue != NULL )
     {
         /* Start the two tasks as described in the comments at the top of this
@@ -114,7 +114,7 @@ void main_blinky( void )
     more details on the FreeRTOS heap http://www.freertos.org/a00111.html.  The
     mode from which main() is called is set in the C start up code and must be
     a privileged mode (not user mode). */
-    for( ;; );  
+    for( ;; );
 }
 
 void init_blinky( void )

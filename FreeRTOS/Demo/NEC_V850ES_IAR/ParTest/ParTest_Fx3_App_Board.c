@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -60,7 +60,7 @@ unsigned portBASE_TYPE uxLEDMask;
 	if( uxLED < partstNUM_LEDs )
 	{
 		uxLEDMask = xLEDs[ uxLED ];
-		
+
 		taskENTER_CRITICAL();
 		{
 			if( xValue )
@@ -84,7 +84,7 @@ unsigned portBASE_TYPE uxLEDMask;
 	if( uxLED < partstNUM_LEDs )
 	{
 		uxLEDMask = xLEDs[ uxLED ];
-		
+
 		taskENTER_CRITICAL();
 		{
 			if( P3 & uxLEDMask )

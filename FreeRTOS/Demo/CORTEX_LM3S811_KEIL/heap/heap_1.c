@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -51,7 +51,7 @@ static size_t xNextFreeByte = ( size_t ) 0;
 
 void *pvPortMalloc( size_t xWantedSize )
 {
-void *pvReturn = NULL; 
+void *pvReturn = NULL;
 
 	/* Ensure that blocks are always aligned to the required number of bytes. */
 	#if portBYTE_ALIGNMENT != 1
@@ -71,8 +71,8 @@ void *pvReturn = NULL;
 			/* Return the next free byte then increment the index past this
 			block. */
 			pvReturn = &( xHeap.ucHeap[ xNextFreeByte ] );
-			xNextFreeByte += xWantedSize;			
-		}	
+			xNextFreeByte += xWantedSize;
+		}
 	}
 	xTaskResumeAll();
 
@@ -82,8 +82,8 @@ void *pvReturn = NULL;
 
 void vPortFree( void *pv )
 {
-	/* Memory cannot be freed using this scheme.  See heap_2.c and heap_3.c 
-	for alternative implementations, and the memory management pages of 
+	/* Memory cannot be freed using this scheme.  See heap_2.c and heap_3.c
+	for alternative implementations, and the memory management pages of
 	http://www.FreeRTOS.org for more information. */
 	( void ) pv;
 }

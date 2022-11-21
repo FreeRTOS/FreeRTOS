@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -30,7 +30,7 @@
 
 	.set	nomips16
  	.set 	noreorder
- 	
+
  	.extern vT2InterruptHandler
 	.extern xISRStackTop
  	.global	vT2InterruptWrapper

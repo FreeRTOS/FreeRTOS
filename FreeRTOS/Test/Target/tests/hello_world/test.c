@@ -17,7 +17,7 @@ void tearDown(void) {
 
 void hello_world(void) {
   char strbuf[] = "Hello World\n";
-  size_t strbuf_len = sizeof(char) / sizeof(strbuf);
+  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
 
   sendReport(strbuf, strbuf_len);
 
@@ -43,7 +43,7 @@ void vApplicationTickHook(void) {
 
 void vApplicationMallocFailedHook(void) {
   char strbuf[] = "Malloc Failed";
-  size_t strbuf_len = sizeof(char) / sizeof(strbuf);
+  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
 
   sendReport(strbuf, strbuf_len);
 }

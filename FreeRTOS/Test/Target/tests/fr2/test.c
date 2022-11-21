@@ -134,7 +134,7 @@ void vApplicationTickHook(void) {
 
 void vApplicationMallocFailedHook(void) {
   char strbuf[] = "Malloc Failed";
-  size_t strbuf_len = sizeof(char) / sizeof(strbuf);
+  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
 
   sendReport(strbuf, strbuf_len);
 }

@@ -93,7 +93,7 @@ static void prvTaskB(void *pvParameters) {
   int iter = 1;
   int numIters = 10;
   char strbuf[] = "task B enter critical section";
-  size_t strbuf_len = sizeof(char) / sizeof(strbuf);
+  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
 
   clearPin(LED_PIN);
   taskBState++;
@@ -124,7 +124,7 @@ void vApplicationTickHook(void) {
 
 void vApplicationMallocFailedHook(void) {
   char strbuf[] = "Malloc Failed";
-  size_t strbuf_len = sizeof(char) / sizeof(strbuf);
+  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
 
   sendReport(strbuf, strbuf_len);
 }

@@ -66,20 +66,20 @@
 
 /* Hook function related definitions. */
 #ifndef configUSE_TICK_HOOK
-    #define configUSE_TICK_HOOK            0
+    #define configUSE_TICK_HOOK           0
 #endif
-#define configUSE_IDLE_HOOK                1
-#define configUSE_MALLOC_FAILED_HOOK       1
-#define configCHECK_FOR_STACK_OVERFLOW     0              /* Not applicable to the Win32 port. */
+#define configUSE_IDLE_HOOK               1
+#define configUSE_MALLOC_FAILED_HOOK      1
+#define configCHECK_FOR_STACK_OVERFLOW    0               /* Not applicable to the Win32 port. */
 
 /* Software timer related definitions. */
-#define configUSE_TIMERS                   1
-#define configTIMER_TASK_PRIORITY          ( configMAX_PRIORITIES - 1 )
-#define configTIMER_QUEUE_LENGTH           5
-#define configTIMER_TASK_STACK_DEPTH       ( configMINIMAL_STACK_SIZE * 2 )
+#define configUSE_TIMERS                  1
+#define configTIMER_TASK_PRIORITY         ( configMAX_PRIORITIES - 1 )
+#define configTIMER_QUEUE_LENGTH          5
+#define configTIMER_TASK_STACK_DEPTH      ( configMINIMAL_STACK_SIZE * 2 )
 
 /* Event group related definitions. */
-#define configUSE_EVENT_GROUPS             1
+#define configUSE_EVENT_GROUPS            1
 
 /* Memory allocation strategy. */
 #ifndef configSUPPORT_DYNAMIC_ALLOCATION

@@ -107,15 +107,15 @@ static void p11_ecdsa_ctx_free( void * pvCtx );
 /**
  * @brief Perform an ecdsa sign operation with the given P11EcDsaCtx_t.
  *
- * @param pvCtx Void pointer to the relevant P11EcDsaCtx_t.
- * @param xMdAlg Hashing algorithm used to generate pucHash.
- * @param pucHash Pointer to a buffer containing the has of the data to be signed.
- * @param xHashLen Length of the hash of data to be signed.
- * @param pucSig Pointer to a buffer in which the signature should be stored.
- * @param xSigBufferSize Length of the buffer provided in pucSig.
- * @param pxSigLen Pointer to a size_t in which the length of the genrated signature will be stored.
- * @param plRng Function pointer to the RNG function.
- * @param pvRng Void pointer to the RNG function context.
+ * @param pvCtx Void pointer to the relevant P11EcDsaCtx_t
+ * @param xMdAlg Hashing algorithm used to generate pucHash
+ * @param pucHash Pointer to a buffer containing the has of the data to be signed
+ * @param xHashLen Length of the hash of data to be signed
+ * @param pucSig Pointer to a buffer in which the signature should be stored
+ * @param xSigBufferSize Length of the buffer provided in pucSig
+ * @param pxSigLen Pointer to a size_t in which the length of the generated signature will be stored
+ * @param plRng Function pointer to the RNG function
+ * @param pvRng Void pointer to the RNG function context
  * @return 0 on success
  * @return A negative number on failure
  */
@@ -148,7 +148,7 @@ static int p11_ecdsa_can_do( mbedtls_pk_type_t xType );
 /**
  * @brief Perform an ECDSA verify operation with the given pk context.
  *
- * Validates that the signature given in the pucSig and xSigLen arugments
+ * Validates that the signature given in the pucSig and xSigLen arguments
  * matches the hash given in pucHash and xSigLen for the P11EcDsaCtx_t
  * specified in pvCtx.
  *
@@ -157,7 +157,7 @@ static int p11_ecdsa_can_do( mbedtls_pk_type_t xType );
  * @param pucHash Pointer to a buffer containing the hash to validate against
  * @param xHashLen Length of the hash in pucHash
  * @param pucSig Pointer to a buffer containing the signature to validate
- * @param xSigLen Length of the signature givne in pucSig
+ * @param xSigLen Length of the signature given in pucSig
  * @return 0 on success
  */
 static int p11_ecdsa_verify( void * pvCtx,

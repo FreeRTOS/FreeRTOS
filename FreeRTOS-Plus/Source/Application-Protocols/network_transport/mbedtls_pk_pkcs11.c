@@ -90,7 +90,7 @@ static void * p11_ecdsa_ctx_alloc( void );
  * @param pxFunctionList Pointer to a CK_FUNCTION_LIST for the PKCS11 module.
  * @param xSessionHandle An initialized CK_SESSION_HANDLE for the given PKCS11 module.
  * @param xPkHandle The CK_OBJECT_HANDLE for the target private key.
- * @return CK_RV
+ * @return CKR_OK on success
  */
 static CK_RV p11_ecdsa_ctx_init( void * pvCtx,
                                  CK_FUNCTION_LIST_PTR pxFunctionList,

@@ -34,14 +34,40 @@
 
 /*-----------------------------------------------------------*/
 
+/**
+ * @brief Initialize an mbedtls_pk_context for the given PKCS11 object handle.
+ *
+ * @param pxMbedtlsPkCtx Pointer to an MbedTLS PK context to initialize.
+ * @param xSessionHandle Handle of an initialize PKCS#11 session.
+ * @param xPkHandle Handle of a PKCS11 Private Key object.
+ * @return CK_RV CKR_OK on success.
+ */
 CK_RV xPKCS11_initMbedtlsPkContext( mbedtls_pk_context * pxMbedtlsPkCtx,
                                     CK_SESSION_HANDLE xSessionHandle,
                                     CK_OBJECT_HANDLE xPkHandle );
 
+/**
+ * @brief Close the PKCS11 session and free the relevant pk context.
+ *
+ * @param pxMbedtlsPkCtx Pointer to the mbedtls_pk_context to free
+ * @return 0 on success
+ * @return A negative number on failure
+ */
 int lPKCS11PkMbedtlsCloseSessionAndFree( mbedtls_pk_context * pxMbedtlsPkCtx );
 
+/**
+ * @brief Callback to generate random data with the PKCS11 module.
+ *
+ * @param[in] pvCtx void pointer to the
+ * @param[in] pucRandom Byte array to fill with random data.
+ * @param[in] xRandomLength Length of byte array.
+ *
+ * @return 0 on success.
+ */
 int lPKCS11RandomCallback( void * pvCtx,
                            unsigned char * pucOutput,
                            size_t uxLen );
+
+
 
 #endif /* MBEDTLS_PK_PKCS11_H */

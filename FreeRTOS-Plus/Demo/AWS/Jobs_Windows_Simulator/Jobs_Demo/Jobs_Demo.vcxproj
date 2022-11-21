@@ -143,16 +143,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\WindowsSimulator\FreeRTOS+TCP\FreeRTOS+TCP.vcxproj">
+    <ProjectReference Include="..\..\..\..\VisualStudio_StaticProjects\FreeRTOS+TCP\FreeRTOS+TCP.vcxproj">
       <Project>{c90e6cc5-818b-4c97-8876-0986d989387c}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\WindowsSimulator\FreeRTOS-Kernel\FreeRTOS-Kernel.vcxproj">
+    <ProjectReference Include="..\..\..\..\VisualStudio_StaticProjects\FreeRTOS-Kernel\FreeRTOS-Kernel.vcxproj">
       <Project>{72c209c4-49a4-4942-a201-44706c9d77ec}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\WindowsSimulator\Logging\Logging.vcxproj">
+    <ProjectReference Include="..\..\..\..\VisualStudio_StaticProjects\Logging\Logging.vcxproj">
       <Project>{be362ac0-b10b-4276-b84e-6304652ba228}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\WindowsSimulator\MbedTLS\MbedTLS.vcxproj">
+    <ProjectReference Include="..\..\..\..\VisualStudio_StaticProjects\MbedTLS\MbedTLS.vcxproj">
       <Project>{e1016f3e-94e9-4864-9fd8-1d7c1fefbfd7}</Project>
     </ProjectReference>
   </ItemGroup>

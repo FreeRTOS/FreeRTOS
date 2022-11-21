@@ -7,15 +7,15 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ota_Over_Http_Demo", "Ota_O
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Statically Linked Libraries", "Statically Linked Libraries", "{9799AFF4-25E2-43CD-8829-C066177E3748}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS+TCP", "..\..\..\..\WindowsSimulator\FreeRTOS+TCP\FreeRTOS+TCP.vcxproj", "{C90E6CC5-818B-4C97-8876-0986D989387C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS+TCP", "..\..\..\..\VisualStudio_StaticProjects\FreeRTOS+TCP\FreeRTOS+TCP.vcxproj", "{C90E6CC5-818B-4C97-8876-0986D989387C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ww", "..\..\..\..\WindowsSimulator\FreeRTOS-Kernel\FreeRTOS-Kernel.vcxproj", "{72C209C4-49A4-4942-A201-44706C9D77EC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ww", "..\..\..\..\VisualStudio_StaticProjects\FreeRTOS-Kernel\FreeRTOS-Kernel.vcxproj", "{72C209C4-49A4-4942-A201-44706C9D77EC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Logging", "..\..\..\..\WindowsSimulator\Logging\Logging.vcxproj", "{BE362AC0-B10B-4276-B84E-6304652BA228}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Logging", "..\..\..\..\VisualStudio_StaticProjects\Logging\Logging.vcxproj", "{BE362AC0-B10B-4276-B84E-6304652BA228}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MbedTLS", "..\..\..\..\WindowsSimulator\MbedTLS\MbedTLS.vcxproj", "{E1016F3E-94E9-4864-9FD8-1D7C1FEFBFD7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MbedTLS", "..\..\..\..\VisualStudio_StaticProjects\MbedTLS\MbedTLS.vcxproj", "{E1016F3E-94E9-4864-9FD8-1D7C1FEFBFD7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "coreHTTP", "..\..\..\..\WindowsSimulator\coreHTTP\coreHTTP.vcxproj", "{EE39FA0F-CEFB-4C29-A571-05A28FDD47FD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "coreHTTP", "..\..\..\..\VisualStudio_StaticProjects\coreHTTP\coreHTTP.vcxproj", "{EE39FA0F-CEFB-4C29-A571-05A28FDD47FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -5,13 +5,13 @@ VisualStudioVersion = 16.0.32929.386
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MQTT_Keep_Alive", "MQTT_Keep_Alive.vcxproj", "{7260CB0D-0BBF-4DAC-91D9-D091022C1F9A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS+TCP", "..\..\..\WindowsSimulator\FreeRTOS+TCP\FreeRTOS+TCP.vcxproj", "{C90E6CC5-818B-4C97-8876-0986D989387C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS+TCP", "..\..\..\VisualStudio_StaticProjects\FreeRTOS+TCP\FreeRTOS+TCP.vcxproj", "{C90E6CC5-818B-4C97-8876-0986D989387C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS-Kernel", "..\..\..\WindowsSimulator\FreeRTOS-Kernel\FreeRTOS-Kernel.vcxproj", "{72C209C4-49A4-4942-A201-44706C9D77EC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS-Kernel", "..\..\..\VisualStudio_StaticProjects\FreeRTOS-Kernel\FreeRTOS-Kernel.vcxproj", "{72C209C4-49A4-4942-A201-44706C9D77EC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Logging", "..\..\..\WindowsSimulator\Logging\Logging.vcxproj", "{BE362AC0-B10B-4276-B84E-6304652BA228}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Logging", "..\..\..\VisualStudio_StaticProjects\Logging\Logging.vcxproj", "{BE362AC0-B10B-4276-B84E-6304652BA228}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MbedTLS", "..\..\..\WindowsSimulator\MbedTLS\MbedTLS.vcxproj", "{E1016F3E-94E9-4864-9FD8-1D7C1FEFBFD7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MbedTLS", "..\..\..\VisualStudio_StaticProjects\MbedTLS\MbedTLS.vcxproj", "{E1016F3E-94E9-4864-9FD8-1D7C1FEFBFD7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Statically Linked Libraries", "Statically Linked Libraries", "{75B2B370-3E3C-46AE-98F2-66BC80A8175A}"
 EndProject

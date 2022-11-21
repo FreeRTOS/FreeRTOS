@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.32929.386
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS_Plus_Reliance_Edge_with_CLI", "FreeRTOS_Plus_Reliance_Edge_with_CLI.vcxproj", "{292E0A6B-B7FA-4AF5-BD35-D3EE63CED2FF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS+TCP", "..\..\WindowsSimulator\FreeRTOS+TCP\FreeRTOS+TCP.vcxproj", "{C90E6CC5-818B-4C97-8876-0986D989387C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS+TCP", "..\..\VisualStudio_StaticProjects\FreeRTOS+TCP\FreeRTOS+TCP.vcxproj", "{C90E6CC5-818B-4C97-8876-0986D989387C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS-Kernel", "..\..\WindowsSimulator\FreeRTOS-Kernel\FreeRTOS-Kernel.vcxproj", "{72C209C4-49A4-4942-A201-44706C9D77EC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeRTOS-Kernel", "..\..\VisualStudio_StaticProjects\FreeRTOS-Kernel\FreeRTOS-Kernel.vcxproj", "{72C209C4-49A4-4942-A201-44706C9D77EC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Logging", "..\..\WindowsSimulator\Logging\Logging.vcxproj", "{BE362AC0-B10B-4276-B84E-6304652BA228}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Logging", "..\..\VisualStudio_StaticProjects\Logging\Logging.vcxproj", "{BE362AC0-B10B-4276-B84E-6304652BA228}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Statically Linked Libraries", "Statically Linked Libraries", "{BB78C687-07C7-4DFA-A8B0-80547662AC5D}"
 EndProject

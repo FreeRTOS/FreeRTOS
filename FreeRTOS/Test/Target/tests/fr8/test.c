@@ -61,10 +61,10 @@ static uint32_t taskBState = 0;
 static void softwareInterruptHandlerSimple(void) {
   int i;
   char strbuf_a[] = "ISR enter";
-  size_t strbuf_a_len = sizeof(char) / sizeof(strbuf_a);
+  size_t strbuf_a_len = sizeof(strbuf_a) / sizeof(char);
 
   char strbuf_b[] = "ISR exit";
-  size_t strbuf_b_len = sizeof(char) / sizeof(strbuf_b);
+  size_t strbuf_b_len = sizeof(strbuf_b) / sizeof(char);
 
   sendReport(strbuf_a, strbuf_a_len);
   taskENTER_CRITICAL();
@@ -112,7 +112,7 @@ static void prvTaskB(void *pvParameters) {
   int iter = 1;
   int numIters = 10;
   char strbuf[] = "task B enter critical section";
-  size_t strbuf_len = sizeof(char) / sizeof(strbuf);
+  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
 
   vTaskDelay(pdMS_TO_TICKS(5000));
 
@@ -198,7 +198,7 @@ void vApplicationTickHook(void) {
 
 void vApplicationMallocFailedHook(void) {
   char strbuf[] = "Malloc Failed";
-  size_t strbuf_len = sizeof(char) / sizeof(strbuf);
+  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
 
   sendReport(strbuf, strbuf_len);
 }

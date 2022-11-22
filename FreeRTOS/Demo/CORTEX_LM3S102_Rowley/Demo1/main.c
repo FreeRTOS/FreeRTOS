@@ -24,44 +24,28 @@
  *
  */
 
-/* 
- * This demo application creates six co-routines and two tasks (three including 
- * the idle task).  The co-routines execute as part of the idle task hook.
- *
- * Five of the created co-routines are the standard 'co-routine flash' 
- * co-routines contained within the Demo/Common/Minimal/crflash.c file and 
- * documented on the FreeRTOS.org WEB site.  
+/*
+ * This demo application creates two tasks (three including
+ * the idle task).
  *
  * The 'LCD Task' rotates a string on the LCD, delaying between each character
  * as necessitated by the slow interface, and delaying between each string just
  * long enough to enable the text to be read.
  *
- * The sixth co-routine and final task control the transmission and reception
- * of a string to UART 0.  The co-routine periodically sends the first 
- * character of the string to the UART, with the UART's TxEnd interrupt being
- * used to transmit the remaining characters.  The UART's RxEnd interrupt 
- * receives the characters and places them on a queue to be processed by the 
- * 'COMs Rx' task.  An error is latched should an unexpected character be 
- * received, or any character be received out of sequence.  
  *
- * A loopback connector is required to ensure that each character transmitted 
+ * A loopback connector is required to ensure that each character transmitted
  * on the UART is also received on the same UART.  For test purposes the UART
  * FIFO's are not utalised in order to maximise the interrupt overhead.  Also
- * a pseudo random interval is used between the start of each transmission in 
- * order that the resultant interrupts are more randomly distributed and 
+ * a pseudo random interval is used between the start of each transmission in
+ * order that the resultant interrupts are more randomly distributed and
  * therefore more likely to highlight any problems.
  *
- * The flash co-routines control LED's zero to four.  LED five is toggled each
- * time the string is transmitted on the UART.  LED six is toggled each time
- * the string is CORRECTLY received on the UART.  LED seven is latched on should
- * an error be detected in any task or co-routine.
- *
- * In addition the idle task makes repetitive calls to 
- * prvSetAndCheckRegisters().  This simply loads the general purpose registers 
- * with a known value, then checks each register to ensure the held value is 
- * still correct.  As a low priority task this checking routine is likely to 
- * get repeatedly swapped in and out.  A register being found to contain an 
- * incorrect value is therefore indicative of an error in the task switching 
+ * In addition the idle task makes repetitive calls to
+ * prvSetAndCheckRegisters().  This simply loads the general purpose registers
+ * with a known value, then checks each register to ensure the held value is
+ * still correct.  As a low priority task this checking routine is likely to
+ * get repeatedly swapped in and out.  A register being found to contain an
+ * incorrect value is therefore indicative of an error in the task switching
  * mechansim.
  *
  */
@@ -70,11 +54,9 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
-#include "croutine.h"
 
 /* Demo application include files. */
 #include "partest.h"
-#include "crflash.h"
 
 /* Library include files. */
 #include "DriverLib.h"
@@ -85,19 +67,9 @@
 /* The time to delay between writing each string to the LCD. */
 #define mainSTRING_WRITE_DELAY		( 400 / portTICK_PERIOD_MS )
 
-/* The number of flash co-routines to create. */
-#define mainNUM_FLASH_CO_ROUTINES	( 5 )
-
 /* The length of the queue used to pass received characters to the Comms Rx
 task. */
 #define mainRX_QUEUE_LEN			( 5 )
-
-/* The priority of the co-routine used to initiate the transmission of the 
-string on UART 0. */
-#define mainTX_CO_ROUTINE_PRIORITY	( 1 )
-
-/* Only one co-routine is created so its index is not important. */
-#define mainTX_CO_ROUTINE_INDEX		( 0 )
 
 /* The time between transmissions of the string on UART 0.   This is pseudo
 random in order to generate a bit or randomness to when the interrupts occur.*/
@@ -120,13 +92,13 @@ the timing of the transmission. */
 #define mainCOMMS_RX_LED			( 6 )
 #define mainCOMMS_TX_LED			( 5 )
 
-/* The baud rate used by the UART comms tasks/co-routine. */
+/* The baud rate used by the UART comms tasks. */
 #define mainBAUD_RATE				( 57600 )
 
 /* FIFO setting for the UART.  The FIFO is not used to create a better test. */
 #define mainFIFO_SET				( 0x10 )
 
-/* The string that is transmitted on the UART contains sequentially the 
+/* The string that is transmitted on the UART contains sequentially the
 characters from mainFIRST_TX_CHAR to mainLAST_TX_CHAR. */
 #define mainFIRST_TX_CHAR '0'
 #define mainLAST_TX_CHAR 'z'
@@ -157,12 +129,6 @@ static void vLCDTask( void * pvParameters );
 static void vCommsRxTask( void * pvParameters );
 
 /*
- * The co-routine that periodically initiates the transmission of the string on
- * the UART.
- */
-static void vSerialTxCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex );
-
-/* 
  * Writes a string the the LCD.
  */
 static void prvWriteString( const char *pcString );
@@ -185,7 +151,7 @@ static void prvPDCWrite( char cAddress, char cData );
 void prvSetAndCheckRegisters( void );
 
 /*
- * Latch the LED that indicates that an error has occurred. 
+ * Latch the LED that indicates that an error has occurred.
  */
 void vSetErrorLED( void );
 
@@ -196,7 +162,7 @@ static void prvSetupHardware( void );
 
 /*-----------------------------------------------------------*/
 
-/* Error flag set to pdFAIL if an error is encountered in the tasks/co-routines
+/* Error flag set to pdFAIL if an error is encountered in the tasks
 defined within this file. */
 unsigned portBASE_TYPE uxErrorStatus = pdPASS;
 
@@ -218,18 +184,11 @@ int main( void )
 	/* Setup the ports used by the demo and the clock. */
 	prvSetupHardware();
 
-	/* Create the co-routines that flash the LED's. */
-	vStartFlashCoRoutines( mainNUM_FLASH_CO_ROUTINES );
-
-	/* Create the co-routine that initiates the transmission of characters
-	on the UART. */
-	xCoRoutineCreate( vSerialTxCoRoutine, mainTX_CO_ROUTINE_PRIORITY, mainTX_CO_ROUTINE_INDEX );
-
 	/* Create the LCD and Comms Rx tasks. */
 	xTaskCreate( vLCDTask, "LCD", configMINIMAL_STACK_SIZE, NULL, mainLCD_TASK_PRIORITY, NULL );
 	xTaskCreate( vCommsRxTask, "CMS", configMINIMAL_STACK_SIZE, NULL, mainCOMMS_RX_TASK_PRIORITY, NULL );
 
-	/* Start the scheduler running the tasks and co-routines just created. */
+	/* Start the scheduler running the tasks just created. */
 	vTaskStartScheduler();
 
 	/* Should not get here unless we did not have enough memory to start the
@@ -253,14 +212,9 @@ static void prvSetupHardware( void )
 
 void vApplicationIdleHook( void )
 {
-	/* The co-routines are executed in the idle task using the idle task 
-	hook. */
 	for( ;; )
 	{
-		/* Schedule the co-routines. */
-		vCoRoutineSchedule();
-
-		/* Run the register check function between each co-routine. */
+		/* Run the register check function */
 		prvSetAndCheckRegisters();
 	}
 }
@@ -269,7 +223,7 @@ void vApplicationIdleHook( void )
 static void prvWriteString( const char *pcString )
 {
 	/* Write pcString to the LED, pausing between each character. */
-	prvPDCWrite(PDC_LCD_CSR, LCD_CLEAR);        
+	prvPDCWrite(PDC_LCD_CSR, LCD_CLEAR);
 	while( *pcString )
 	{
 		vTaskDelay( mainCHAR_WRITE_DELAY );
@@ -282,7 +236,7 @@ static void prvWriteString( const char *pcString )
 void vLCDTask( void * pvParameters )
 {
 unsigned portBASE_TYPE uxIndex;
-const unsigned char ucCFGData[] = {	
+const unsigned char ucCFGData[] = {
 											0x30,   /* Set data bus to 8-bits. */
 											0x30,
 											0x30,
@@ -291,10 +245,10 @@ const unsigned char ucCFGData[] = {
 											0x01,   /* Display clear. */
 											0x06,   /* Entry mode [cursor dir][shift]. */
 											0x0C	/* Display on [display on][curson on][blinking on]. */
-									  };  
+									  };
 
 /* The strings that are written to the LCD. */
-const char *pcStringsToDisplay[] = {										
+const char *pcStringsToDisplay[] = {
 											"Stellaris",
 											"Demo",
 											"One",
@@ -316,14 +270,14 @@ const char *pcStringsToDisplay[] = {
 
 	/* Clear display. */
 	vTaskDelay( mainCHAR_WRITE_DELAY );
-	prvPDCWrite( PDC_LCD_CSR, LCD_CLEAR ); 
+	prvPDCWrite( PDC_LCD_CSR, LCD_CLEAR );
 
 	uxIndex = 0;
-	for( ;; )    
+	for( ;; )
 	{
 		/* Display the string on the LCD. */
 		prvWriteString( pcStringsToDisplay[ uxIndex ] );
-		
+
 		/* Move on to the next string - wrapping if necessary. */
 		uxIndex++;
 		if( *( pcStringsToDisplay[ uxIndex ] ) == 0x00 )
@@ -372,8 +326,8 @@ static char cRxedChar, cExpectedChar;
 		{
 			if( cExpectedChar == mainLAST_TX_CHAR )
 			{
-				/* We have reached the end of the string - we now expect to 
-				receive the first character in the string again.   The LED is 
+				/* We have reached the end of the string - we now expect to
+				receive the first character in the string again.   The LED is
 				toggled to indicate that the entire string was received without
 				error. */
 				vParTestToggleLED( mainCOMMS_RX_LED );
@@ -387,71 +341,6 @@ static char cRxedChar, cExpectedChar;
 			}
 		}
 	}
-}
-/*-----------------------------------------------------------*/
-
-static void vSerialTxCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
-{
-TickType_t xDelayPeriod;
-static unsigned long *pulRandomBytes = mainFIRST_PROGRAM_BYTES;
-
-	/* Co-routine MUST start with a call to crSTART. */
-	crSTART( xHandle );
-
-	for(;;)
-    {	
-		/* Was the previously transmitted string received correctly? */
-		if( uxErrorStatus != pdPASS )
-		{
-			/* An error was encountered so set the error LED. */
-			vSetErrorLED();
-		}
-
-		/* The next character to Tx is the first in the string. */
-		cNextChar = mainFIRST_TX_CHAR;
-
-		UARTIntDisable( UART0_BASE, UART_INT_TX );
-		{
-			/* Send the first character. */
-			if( !( HWREG( UART0_BASE + UART_O_FR ) & UART_FR_TXFF ) )
-			{
-				HWREG( UART0_BASE + UART_O_DR ) = cNextChar;
-			}
-
-			/* Move the variable to the char to Tx on so the ISR transmits
-			the next character in the string once this one has completed. */
-			cNextChar++;
-		}
-		UARTIntEnable(UART0_BASE, UART_INT_TX);
-
-		/* Toggle the LED to show a new string is being transmitted. */
-        vParTestToggleLED( mainCOMMS_TX_LED );
-
-		/* Delay before we start the string off again.  A pseudo-random delay
-		is used as this will provide a better test. */
-		xDelayPeriod = xTaskGetTickCount() + ( *pulRandomBytes );
-
-		pulRandomBytes++;
-		if( pulRandomBytes > mainTOTAL_PROGRAM_MEMORY )
-		{
-			pulRandomBytes = mainFIRST_PROGRAM_BYTES;
-		}
-
-		/* Make sure we don't wait too long... */
-		xDelayPeriod &= mainMAX_TX_DELAY;
-
-		/* ...but we do want to wait. */
-		if( xDelayPeriod < mainMIN_TX_DELAY )
-		{
-			xDelayPeriod = mainMIN_TX_DELAY;
-		}
-
-		/* Block for the random(ish) time. */
-		crDELAY( xHandle, xDelayPeriod );
-    }
-
-	/* Co-routine MUST end with a call to crEND. */
-	crEND();
 }
 /*-----------------------------------------------------------*/
 
@@ -495,11 +384,11 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		if( ( HWREG(UART0_BASE + UART_O_FR ) & UART_FR_RXFF ) )
 		{
 			/* Get the char from the buffer and post it onto the queue of
-			Rxed chars.  Posting the character should wake the task that is 
+			Rxed chars.  Posting the character should wake the task that is
 			blocked on the queue waiting for characters. */
 			cRxedChar = ( char ) HWREG( UART0_BASE + UART_O_DR );
 			xQueueSendFromISR( xCommsQueue, &cRxedChar, &xHigherPriorityTaskWoken );
-		}		
+		}
 	}
 
 	/* Was a Tx interrupt pending? */
@@ -515,10 +404,10 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 			cNextChar++;
 		}
 	}
-	
+
 	/* If a task was woken by the character being received then we force
 	a context switch to occur in case the task is of higher priority than
-	the currently executing task (i.e. the task that this interrupt 
+	the currently executing task (i.e. the task that this interrupt
 	interrupted.) */
 	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
@@ -544,7 +433,7 @@ void prvSetAndCheckRegisters( void )
 {
 	/* Fill the general purpose registers with known values. */
 	__asm volatile
-	( 
+	(
 	"	mov r11, #10		\n"
 	"	add r0, r11, #1		\n"
 	"	add r1, r11, #2		\n"
@@ -557,12 +446,12 @@ void prvSetAndCheckRegisters( void )
 	"	add r8, r11, #9		\n"
 	"	add r9, r11, #10	\n"
 	"	add r10, r11, #11	\n"
-	"	add r12, r11, #12" 
+	"	add r12, r11, #12"
 	);
 
 	/* Check the values are as expected. */
 	__asm volatile
-	( 
+	(
 	"	cmp r11, #10		\n"
 	"	bne set_error_led	\n"
 	"	cmp r0, #11			\n"
@@ -589,7 +478,7 @@ void prvSetAndCheckRegisters( void )
 	"	bne set_error_led	\n"
 	"	cmp r12, #22		\n"
 	"	bne set_error_led	\n"
-	"	bx lr" 
+	"	bx lr"
 	);
 
 	__asm volatile

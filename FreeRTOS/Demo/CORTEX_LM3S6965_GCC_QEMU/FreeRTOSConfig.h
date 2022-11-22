@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -50,7 +50,6 @@
 #define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			0
-#define configUSE_CO_ROUTINES 			0
 #define configUSE_MUTEXES				1
 #define configUSE_RECURSIVE_MUTEXES		1
 #define configCHECK_FOR_STACK_OVERFLOW	2
@@ -58,7 +57,6 @@
 #define configUSE_COUNTING_SEMAPHORES	1
 
 #define configMAX_PRIORITIES			( 6UL )
-#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 #define configQUEUE_REGISTRY_SIZE		10
 #define configSUPPORT_STATIC_ALLOCATION	1
 

@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -66,7 +66,7 @@ signed portBASE_TYPE xReturn = pdPASS;
 /*-----------------------------------------------------------*/
 
 void vSerialClose( xComPortHandle xPort )
-{	
+{
 	/* Not supported. */
 	( void ) xPort;
 }

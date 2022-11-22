@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -30,11 +30,11 @@
 /* The function that implements the WEB server task. */
 void            vBasicWEBServer( void *pvParameters );
 
- 
+
 /* Initialisation required by lwIP. */
 void            vlwIPInit( void );
 
- 
-#endif  /* 
+
+#endif  /*
  */
 

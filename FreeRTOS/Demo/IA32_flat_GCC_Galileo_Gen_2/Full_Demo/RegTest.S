@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -46,7 +46,7 @@
 	.extern dRegTest2_st1
 	.extern vGenerateYieldInterrupt
 	.extern vHPETIRQHandler1
-	
+
 	.global vRegTest1
 	.global vRegTest2
 	.global vApplicationHPETTimer1Wrapper

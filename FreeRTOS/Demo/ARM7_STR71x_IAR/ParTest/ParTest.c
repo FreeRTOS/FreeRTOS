@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -48,10 +48,10 @@
 
 #define partstFIRST_LED_BIT 4
 
-/* This demo application uses files that are common to all port demo 
+/* This demo application uses files that are common to all port demo
 applications.  These files assume 6 LED's are available, whereas I have
 only 5 (including the LED built onto the development board).  To prevent
-two tasks trying to use the same LED a bit of remapping is performed. 
+two tasks trying to use the same LED a bit of remapping is performed.
 The ComTest tasks will try and use LED's 6 and 7.  LED 6 is ignored and
 has no effect, LED 7 is mapped to LED3.   The LED usage is described in
 the port documentation available from the FreeRTOS.org WEB site. */
@@ -61,7 +61,7 @@ the port documentation available from the FreeRTOS.org WEB site. */
 /*-----------------------------------------------------------*/
 
 void vParTestInitialise( void )
-{	
+{
     /* Configure the bits used to flash LED's on port 1 as output. */
     GPIO_Config(GPIO1, partstALL_LEDs, GPIO_OUT_OD);
 }

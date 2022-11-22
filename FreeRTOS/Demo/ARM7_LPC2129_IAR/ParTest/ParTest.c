@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -42,7 +42,7 @@
 /*-----------------------------------------------------------*/
 
 void vParTestInitialise( void )
-{	
+{
 	/* The ports are setup within prvInitialiseHardware(), called by main(). */
 }
 /*-----------------------------------------------------------*/
@@ -64,9 +64,9 @@ unsigned long ulLED = partstFIRST_IO;
 		}
 		else
 		{
-			IO1CLR = ulLED;			
+			IO1CLR = ulLED;
 		}
-	}	
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -88,9 +88,9 @@ unsigned long ulLED = partstFIRST_IO, ulCurrentState;
 		}
 		else
 		{
-			IO1SET = ulLED;			
+			IO1SET = ulLED;
 		}
-	}	
+	}
 }
 
 

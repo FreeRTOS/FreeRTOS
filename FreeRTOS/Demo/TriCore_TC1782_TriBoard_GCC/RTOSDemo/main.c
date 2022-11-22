@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -87,7 +87,6 @@
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
-#include "croutine.h"
 
 /* Demo application includes. */
 #include "partest.h"

@@ -8,7 +8,6 @@
         <itemPath>../../../Source/portable/MPLAB/PIC32MX/portmacro.h</itemPath>
         <itemPath>../../../Source/include/portable.h</itemPath>
         <itemPath>../../../Source/include/task.h</itemPath>
-        <itemPath>../../../Source/include/croutine.h</itemPath>
         <itemPath>../../../Source/include/FreeRTOS.h</itemPath>
         <itemPath>../../../Source/include/list.h</itemPath>
         <itemPath>../../../Source/include/projdefs.h</itemPath>

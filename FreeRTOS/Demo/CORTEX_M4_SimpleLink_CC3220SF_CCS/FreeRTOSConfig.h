@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -92,7 +92,6 @@ in main.c. */
 #define configUSE_TICKLESS_IDLE					1
 #define configUSE_APPLICATION_TASK_TAG			0
 #define configUSE_NEWLIB_REENTRANT 				0
-#define configUSE_CO_ROUTINES 					0
 #define configUSE_COUNTING_SEMAPHORES 			1
 #define configUSE_RECURSIVE_MUTEXES				1
 #define configUSE_QUEUE_SETS					0

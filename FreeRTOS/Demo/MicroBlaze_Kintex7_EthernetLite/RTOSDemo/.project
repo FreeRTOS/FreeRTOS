@@ -57,15 +57,6 @@
 	</linkedResources>
 	<filteredResources>
 		<filter>
-			<id>1420634088772</id>
-			<name>src/FreeRTOS_Source</name>
-			<type>6</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-croutine.c</arguments>
-			</matcher>
-		</filter>
-		<filter>
 			<id>1420634120346</id>
 			<name>src/FreeRTOS_Source/portable</name>
 			<type>9</type>

@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -35,7 +35,7 @@
  *-----------------------------------------------------------*/
 
 void vParTestInitialise( void )
-{	
+{
 unsigned long ul;
 
 	for( ul = 0; ul < partstNUM_LEDS; ul++ )

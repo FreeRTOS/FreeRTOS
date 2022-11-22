@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -36,7 +36,7 @@
  * application requirements.
  *
  * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
- * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE. 
+ * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
  *
  * See http://www.freertos.org/a00110.html
  *----------------------------------------------------------*/
@@ -54,9 +54,6 @@
 #define configUSE_16_BIT_TICKS		1
 #define configIDLE_SHOULD_YIELD		1
 
-/* Co-routine definitions. */
-#define configUSE_CO_ROUTINES 		0
-#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */

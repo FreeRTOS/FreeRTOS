@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -53,7 +53,7 @@ Changes from V3.0.1
 		 * Queue to interface between comms API and interrupt routine.
 		*/
 		extern QueueHandle_t xRxedChars;
-		
+
 		/*
 		 * Because we are not allowed to use local variables here,
 		 * PRODL is (ab)used as temporary storage.  This is allowed
@@ -87,7 +87,7 @@ Changes from V3.0.1
 			if( bOERR )
 			{
 				bCREN = serCLEAR_OVERRUN;
-				bCREN = serCONTINUOUS_RX;	
+				bCREN = serCONTINUOUS_RX;
 			}
 
 			xHigherPriorityTaskWoken = pdFALSE;

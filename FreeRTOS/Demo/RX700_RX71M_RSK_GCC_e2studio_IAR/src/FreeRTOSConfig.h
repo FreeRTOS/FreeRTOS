@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -61,7 +61,6 @@
 #define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			1
-#define configUSE_CO_ROUTINES 			0
 #define configUSE_MUTEXES				1
 #define configGENERATE_RUN_TIME_STATS	0
 #define configCHECK_FOR_STACK_OVERFLOW	2
@@ -72,7 +71,6 @@
 #define configUSE_QUEUE_SETS			1
 #define configUSE_COUNTING_SEMAPHORES	1
 #define configMAX_PRIORITIES			( 7 )
-#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* This demo makes use of one or more example stats formatting functions.  These
 format the raw data provided by the uxTaskGetSystemState() function in to human

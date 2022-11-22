@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -157,7 +157,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 	( void ) pxTask;
 
 	/* Run time task stack overflow checking is performed if
-	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook	function is 
+	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook	function is
 	called if a task stack overflow is detected.  Note the system/interrupt
 	stack is not checked. */
 	taskDISABLE_INTERRUPTS();
@@ -177,7 +177,7 @@ void vApplicationTickHook( void )
 
 void _general_exception_handler( unsigned long ulCause, unsigned long ulStatus )
 {
-	/* This overrides the definition provided by the kernel.  Other exceptions 
+	/* This overrides the definition provided by the kernel.  Other exceptions
 	should be handled here. */
 	for( ;; );
 }

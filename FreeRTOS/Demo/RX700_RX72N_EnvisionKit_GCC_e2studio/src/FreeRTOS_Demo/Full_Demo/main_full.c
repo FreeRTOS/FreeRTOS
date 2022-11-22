@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -453,7 +453,7 @@ static void prvRegTest1Task( void *pvParameters )
 
 #if defined(__DPFPU)
 
-	/* Tell the kernel that this task require a DPFPU context before any DPFPU 
+	/* Tell the kernel that this task require a DPFPU context before any DPFPU
 	instructions are executed. */
 	portTASK_USES_DPFPU();
 
@@ -479,7 +479,7 @@ static void prvRegTest2Task( void *pvParameters )
 
 #if defined(__DPFPU)
 
-	/* Tell the kernel that this task require a DPFPU context before any DPFPU 
+	/* Tell the kernel that this task require a DPFPU context before any DPFPU
 	instructions are executed. */
 	portTASK_USES_DPFPU();
 

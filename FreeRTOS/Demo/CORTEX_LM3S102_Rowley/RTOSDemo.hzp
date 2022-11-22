@@ -7,13 +7,11 @@
     <folder Name="Source Files" >
       <configuration filter="c;cpp;cxx;cc;h;s;asm;inc" Name="Common" />
       <folder Name="Demo Source" >
-        <file file_name="../Common/Minimal/crflash.c" Name="crflash.c" />
         <file file_name="Demo1/main.c" Name="main.c" />
         <file file_name="Demo1/ParTest.c" Name="ParTest.c" />
       </folder>
       <folder Name="RTOS Source" >
         <file file_name="../../Source/tasks.c" Name="tasks.c" />
-        <file file_name="../../Source/croutine.c" Name="croutine.c" />
         <file file_name="../../Source/list.c" Name="list.c" />
         <file file_name="../../Source/queue.c" Name="queue.c" />
         <file file_name="../../Source/portable/GCC/ARM_CM3/port.c" Name="port.c" >
@@ -45,13 +43,11 @@
     <folder Name="Source Files" >
       <configuration filter="c;cpp;cxx;cc;h;s;asm;inc" Name="Common" />
       <folder Name="Demo Source" >
-        <file file_name="../Common/Minimal/crflash.c" Name="crflash.c" />
         <file file_name="Demo2/main.c" Name="main.c" />
         <file file_name="Demo2/ParTest.c" Name="ParTest.c" />
       </folder>
       <folder Name="RTOS Source" >
         <file file_name="../../Source/tasks.c" Name="tasks.c" />
-        <file file_name="../../Source/croutine.c" Name="croutine.c" />
         <file file_name="../../Source/list.c" Name="list.c" />
         <file file_name="../../Source/queue.c" Name="queue.c" />
         <file file_name="../../Source/portable/GCC/ARM_CM3/port.c" Name="port.c" >
@@ -85,7 +81,6 @@
       </folder>
       <folder Name="RTOS Source" >
         <file file_name="../../Source/tasks.c" Name="tasks.c" />
-        <file file_name="../../Source/croutine.c" Name="croutine.c" />
         <file file_name="../../Source/list.c" Name="list.c" />
         <file file_name="../../Source/queue.c" Name="queue.c" />
         <file file_name="../../Source/portable/GCC/ARM_CM3/port.c" Name="port.c" >

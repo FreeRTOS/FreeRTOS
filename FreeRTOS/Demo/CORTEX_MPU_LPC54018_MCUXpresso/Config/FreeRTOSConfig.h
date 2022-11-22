@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -86,10 +86,6 @@
 
 /* Task aware debugging. */
 #define configRECORD_STACK_HIGH_ADDRESS				1
-
-/* Co-routine related definitions. */
-#define configUSE_CO_ROUTINES						0
-#define configMAX_CO_ROUTINE_PRIORITIES				2
 
 /* Software timer related definitions. */
 #define configUSE_TIMERS						1

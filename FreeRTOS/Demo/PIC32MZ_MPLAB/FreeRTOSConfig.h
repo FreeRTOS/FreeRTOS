@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -69,13 +69,10 @@
 /* Enable support for Task based FPU operations. This will enable support for
 FPU context saving during switches only on architectures with hardware FPU.
 
-NOTE: This constant is defined in the project options as configurations are 
-provided that both enable and disable floating point support. 
+NOTE: This constant is defined in the project options as configurations are
+provided that both enable and disable floating point support.
 #define configUSE_TASK_FPU_SUPPORT				0 */
 
-/* Co-routine definitions. */
-#define configUSE_CO_ROUTINES					0
-#define configMAX_CO_ROUTINE_PRIORITIES			( 2 )
 
 /* Software timer definitions. */
 #define configUSE_TIMERS						1
@@ -111,5 +108,5 @@ interrupts. */
 	extern void vAssertCalled( const char * pcFile, unsigned long ulLine );
 	#define configASSERT( x ) if( ( x ) == 0  ) vAssertCalled( __FILE__, __LINE__ )
 #endif
-    
+
 #endif /* FREERTOS_CONFIG_H */

@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -105,7 +105,7 @@ unsigned char ucLED;
 			portENTER_CRITICAL();
 				P2DR &= ~ucLED;
 			portEXIT_CRITICAL();
-		}		
+		}
 	}
 }
 /*-----------------------------------------------------------*/
@@ -133,7 +133,7 @@ unsigned char ucLED;
 			}
 		}
 		portEXIT_CRITICAL();
-	}	
+	}
 }
 
 

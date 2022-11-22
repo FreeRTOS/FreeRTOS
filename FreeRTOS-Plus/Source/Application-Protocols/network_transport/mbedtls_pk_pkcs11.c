@@ -397,11 +397,11 @@ int lPKCS11PkMbedtlsCloseSessionAndFree( mbedtls_pk_context * pxMbedtlsPkCtx )
 
     if( pxMbedtlsPkCtx )
     {
-        if( pxMbedtlsPkCtx->pk_info.type == MBEDTLS_PK_ECKEY )
+        if( pxMbedtlsPkCtx->pk_info->type == MBEDTLS_PK_ECKEY )
         {
             pxP11Ctx = &( ( ( P11EcDsaCtx_t * ) ( pxMbedtlsPkCtx->pk_ctx ) )->xP11PkCtx );
         }
-        else if( pxMbedtlsPkCtx->pk_info.type == MBEDTLS_PK_RSA )
+        else if( pxMbedtlsPkCtx->pk_info->type == MBEDTLS_PK_RSA )
         {
             pxP11Ctx = &( ( ( P11RsaCtx_t * ) ( pxMbedtlsPkCtx->pk_ctx ) )->xP11PkCtx );
         }

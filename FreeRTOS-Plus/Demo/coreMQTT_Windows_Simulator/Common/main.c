@@ -46,7 +46,6 @@
 
 /* Standard includes. */
 #include <stdio.h>
-#include <time.h>
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -60,57 +59,15 @@
 
 /*-----------------------------------------------------------*/
 
-/* Use by the pseudo random number generator. */
-static UBaseType_t ulNextRand;
-
-/*-----------------------------------------------------------*/
-
 extern void vPlatformInitIpStack( void );
 extern void vStartSimpleMQTTDemo( void );
 
 /*-----------------------------------------------------------*/
 
-UBaseType_t uxRand( void )
-{
-    const uint32_t ulMultiplier = 0x015a4e35UL, ulIncrement = 1UL;
-
-    /*
-     * Utility function to generate a pseudo random number.
-     *
-     * !!!NOTE!!!
-     * This is not a secure method of generating a random number.  Production
-     * devices should use a True Random Number Generator (TRNG).
-     */
-    ulNextRand = ( ulMultiplier * ulNextRand ) + ulIncrement;
-    return( ( int ) ( ulNextRand >> 16UL ) & 0x7fffUL );
-}
-/*-----------------------------------------------------------*/
-
-static void prvSRand( UBaseType_t ulSeed )
-{
-    /* Utility function to seed the pseudo random number generator. */
-    ulNextRand = ulSeed;
-}
-
-/*-----------------------------------------------------------*/
-
 int main( void )
 {
-    time_t xTimeNow;
-    
     /* Initialize logging */
     vPlatformInitLogging();
-
-    /*
-     * Seed random number generator.
-     *
-     * !!!NOTE!!!
-     * This is not a secure method of generating a random number.  Production
-     * devices should use a True Random Number Generator (TRNG).
-     */
-    time( &xTimeNow );
-    LogDebug( ( "Seed for randomizer: %lu\n", xTimeNow ) );
-    prvSRand( ( uint32_t ) xTimeNow );
 
     /* Start demo task */
     vStartSimpleMQTTDemo();

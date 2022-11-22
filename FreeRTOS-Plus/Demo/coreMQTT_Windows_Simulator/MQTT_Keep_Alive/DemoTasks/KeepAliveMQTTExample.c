@@ -57,6 +57,7 @@
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "timers.h"
 
 /* Demo Specific configs. */
 #include "demo_config.h"
@@ -248,7 +249,6 @@ struct NetworkContext
  * used in this example.
  */
 static void prvMQTTDemoTask( void * pvParameters );
-
 
 /**
  * @brief Connect to MQTT broker with reconnection retries.

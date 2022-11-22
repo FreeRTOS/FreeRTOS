@@ -56,10 +56,7 @@ extern void vAssertCalled( void );
 #define configUSE_TRACE_FACILITY    0
 #define configUSE_16_BIT_TICKS      0
 #define configIDLE_SHOULD_YIELD     0
-#define configUSE_CO_ROUTINES       0
-
 #define configMAX_PRIORITIES            ( 10 )
-#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 #define configTIMER_QUEUE_LENGTH          20
 #define configTIMER_TASK_PRIORITY       ( configMAX_PRIORITIES - 3 )
 #define configUSE_COUNTING_SEMAPHORES 1

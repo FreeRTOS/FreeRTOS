@@ -743,7 +743,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
     /* Get a unique packet id. */
     usSubscribePacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
 
-    /* Populate subsciption list. */
+    /* Populate subscription list. */
     for(ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++)
     {
         xMQTTSubscription[ ulTopicCount ].qos = MQTTQoS2;
@@ -1012,7 +1012,7 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo )
                     pxPublishInfo->pTopicName ) );
     }
 
-    /* Verify the message recieved matches the message sent. */
+    /* Verify the message received matches the message sent. */
     if( strncmp( mqttexampleMESSAGE, ( const char * ) ( pxPublishInfo->pPayload ), pxPublishInfo->payloadLength ) != 0 )
     {
         LogError( ( "Incoming Publish Message: %.*s does not match Expected Message: %s.\r\n",

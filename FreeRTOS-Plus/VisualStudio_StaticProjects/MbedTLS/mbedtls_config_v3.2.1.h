@@ -1489,7 +1489,6 @@ void mbedtls_platform_free( void * ptr );
  *
  * Comment this macro to disable support for the max_fragment_length extension
  */
-#define MBEDTLS_SSL_MAX_FRAGMENT_LENGTH
 
 /**
  * \def MBEDTLS_SSL_PROTO_TLS1_2
@@ -1683,7 +1682,6 @@ void mbedtls_platform_free( void * ptr );
  *
  * Requires: MBEDTLS_SSL_MAX_FRAGMENT_LENGTH
  */
-#define MBEDTLS_SSL_VARIABLE_BUFFER_LENGTH
 
 /**
  * \def MBEDTLS_TEST_CONSTANT_FLOW_MEMSAN

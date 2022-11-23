@@ -202,6 +202,18 @@
  */
 #define mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS    ( 200U )
 
+/**
+ * @brief The length of the outgoing publish records array used by the coreMQTT
+ * library to track QoS > 0 packet ACKS for outgoing publishes.
+ */
+#define mqttexampleOUTGOING_PUBLISH_RECORD_LEN       ( 10U )
+
+/**
+ * @brief The length of the incoming publish records array used by the coreMQTT
+ * library to track QoS > 0 packet ACKS for incoming publishes.
+ */
+#define mqttexampleINCOMING_PUBLISH_RECORD_LEN       ( 10U )
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -237,7 +249,6 @@ struct NetworkContext
  * used in this example.
  */
 static void prvMQTTDemoTask( void * pvParameters );
-
 
 /**
  * @brief Connect to MQTT broker with reconnection retries.
@@ -470,6 +481,24 @@ static MQTTFixedBuffer_t xBuffer =
     .size    = mqttexampleSHARED_BUFFER_SIZE
 };
 
+/**
+ * @brief Array to track the outgoing publish records for outgoing publishes
+ * with QoS > 0.
+ *
+ * This is passed into #MQTT_InitStatefulQoS to allow for QoS > 0.
+ *
+ */
+static MQTTPubAckInfo_t pOutgoingPublishRecords[ mqttexampleOUTGOING_PUBLISH_RECORD_LEN ];
+
+/**
+ * @brief Array to track the incoming publish records for incoming publishes
+ * with QoS > 0.
+ *
+ * This is passed into #MQTT_InitStatefulQoS to allow for QoS > 0.
+ *
+ */
+static MQTTPubAckInfo_t pIncomingPublishRecords[ mqttexampleINCOMING_PUBLISH_RECORD_LEN ];
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -596,7 +625,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
             vTaskDelay( mqttexampleRECEIVE_LOOP_ITERATION_DELAY );
 
-            xMQTTStatus = MQTT_ReceiveLoop( &xMQTTContext, 0U );
+            xMQTTStatus = MQTT_ReceiveLoop( &xMQTTContext );
             configASSERT( xMQTTStatus == MQTTSuccess );
         }
 
@@ -616,7 +645,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
             vTaskDelay( mqttexampleRECEIVE_LOOP_ITERATION_DELAY );
 
-            xMQTTStatus = MQTT_ReceiveLoop( &xMQTTContext, 0U );
+            xMQTTStatus = MQTT_ReceiveLoop( &xMQTTContext );
             configASSERT( xMQTTStatus == MQTTSuccess );
         }
 
@@ -738,9 +767,16 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     xTransport.pNetworkContext = pxNetworkContext;
     xTransport.send = Plaintext_FreeRTOS_send;
     xTransport.recv = Plaintext_FreeRTOS_recv;
+    xTransport.writev = NULL;
 
     /* Initialize MQTT library. */
     xResult = MQTT_Init( pxMQTTContext, &xTransport, prvMockedGetTime, prvEventCallback, &xBuffer );
+    configASSERT( xResult == MQTTSuccess );
+    xResult = MQTT_InitStatefulQoS( pxMQTTContext,
+                                    pOutgoingPublishRecords,
+                                    mqttexampleOUTGOING_PUBLISH_RECORD_LEN,
+                                    pIncomingPublishRecords,
+                                    mqttexampleINCOMING_PUBLISH_RECORD_LEN );
     configASSERT( xResult == MQTTSuccess );
 
     /* Many fields not used in this demo so start with everything at 0. */
@@ -860,7 +896,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
 
             vTaskDelay( mqttexampleRECEIVE_LOOP_ITERATION_DELAY );
 
-            xResult = MQTT_ReceiveLoop( pxMQTTContext, 0U );
+            xResult = MQTT_ReceiveLoop( pxMQTTContext );
             configASSERT( xResult == MQTTSuccess );
         }
 

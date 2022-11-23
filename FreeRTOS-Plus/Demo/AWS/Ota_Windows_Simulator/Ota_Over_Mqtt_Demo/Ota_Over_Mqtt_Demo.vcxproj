@@ -91,7 +91,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>WIN32;__little_endian__=1;_DEBUG;_CONSOLE;WIN32;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MQTT_AGENT_DO_NOT_USE_CUSTOM_CONFIG;WIN32;__little_endian__=1;_DEBUG;_CONSOLE;WIN32;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h"</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\..\Source\Application-Protocols\network_transport;..\..\..\Common\coreMQTT_Agent_Interface\include;..\..\..\..\ThirdParty\tinycbor\src;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\..\..\Source\AWS\ota\source\include;..\..\..\..\Source\AWS\ota\source\portable\os;..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\Common\Ota_PAL\Win32\Code_Signature_Verification;..\Common\Ota_PAL\Win32;..\Common\subscription-manager;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -106,7 +106,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>WIN32;__little_endian__=1;WIN32;NDEBUG;_CONSOLE;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MQTT_AGENT_DO_NOT_USE_CUSTOM_CONFIG;WIN32;__little_endian__=1;WIN32;NDEBUG;_CONSOLE;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h"</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\..\Source\Application-Protocols\network_transport;..\..\..\Common\coreMQTT_Agent_Interface\include;..\..\..\..\ThirdParty\tinycbor\src;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\..\..\Source\AWS\ota\source\include;..\..\..\..\Source\AWS\ota\source\portable\os;..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\Common\Ota_PAL\Win32\Code_Signature_Verification;..\Common\Ota_PAL\Win32;..\Common\subscription-manager;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -121,7 +121,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>WIN32;__little_endian__=1;_DEBUG;_CONSOLE;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MQTT_AGENT_DO_NOT_USE_CUSTOM_CONFIG;WIN32;__little_endian__=1;_DEBUG;_CONSOLE;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h"</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\..\Source\Application-Protocols\network_transport;..\..\..\Common\coreMQTT_Agent_Interface\include;..\..\..\..\ThirdParty\tinycbor\src;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\..\..\Source\AWS\ota\source\include;..\..\..\..\Source\AWS\ota\source\portable\os;..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\Common\Ota_PAL\Win32\Code_Signature_Verification;..\Common\Ota_PAL\Win32;..\Common\subscription-manager;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -136,7 +136,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>WIN32;__little_endian__=1;NDEBUG;_CONSOLE;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MQTT_AGENT_DO_NOT_USE_CUSTOM_CONFIG;WIN32;__little_endian__=1;NDEBUG;_CONSOLE;MBEDTLS_CONFIG_FILE="mbedtls_config_v3.2.1.h"</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include;..\..\..\..\Source\Application-Protocols\network_transport;..\..\..\Common\coreMQTT_Agent_Interface\include;..\..\..\..\ThirdParty\tinycbor\src;..\..\..\..\Source\Utilities\backoff_algorithm\source\include;..\..\..\..\Source\coreJSON\source\include;..\..\..\..\Source\AWS\ota\source\include;..\..\..\..\Source\AWS\ota\source\portable\os;..\..\..\..\Source\Application-Protocols\coreMQTT-Agent\source\include;..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface;..\..\..\..\Source\Application-Protocols\coreMQTT\source\include;..\Common\Ota_PAL\Win32\Code_Signature_Verification;..\Common\Ota_PAL\Win32;..\Common\subscription-manager;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>

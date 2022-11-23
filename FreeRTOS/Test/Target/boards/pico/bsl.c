@@ -82,6 +82,8 @@ int reportSchedTraceLog(SchedTraceLog *traceLog)
 }
 
 void initTestEnvironment(void) {
+  xSemLogSchedTrace = xSemaphoreCreateBinary();
+
   /* Want to be able to printf */
   stdio_init_all();
 

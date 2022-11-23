@@ -16,9 +16,9 @@
 
 /* Priorities at which the tasks are created.  The max priority can be specified
 as ( configMAX_PRIORITIES - 1 ). */
-#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 2)
+#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 1)
 #define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 1)
-#define mainTASK_C_PRIORITY (tskIDLE_PRIORITY + 3)
+#define mainTASK_C_PRIORITY (tskIDLE_PRIORITY + 1)
 
 #define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
 
@@ -30,9 +30,9 @@ static void prvTaskC(void *pvParameters);
 #error Require two cores be configured for FreeRTOS
 #endif
 
-#define traceTASK_SWITCHED_IN() test_fr2TASK_SWITCHED_IN()
+#define traceTASK_SWITCHED_IN() test_fr3TASK_SWITCHED_IN()
 
-void test_fr2TASK_SWITCHED_IN(void) {
+void test_fr3TASK_SWITCHED_IN(void) {
   static SchedTraceLog schedTraceLog;
 
   setPin(LED_PIN);
@@ -42,7 +42,7 @@ void test_fr2TASK_SWITCHED_IN(void) {
   reportSchedTraceLog(&schedTraceLog);
 }
 
-void setup_test_fr2_001(void) {
+void setup_test_fr3_001(void) {
   xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
               mainTASK_A_PRIORITY, NULL);
 
@@ -62,7 +62,7 @@ int main(void) {
 
   UNITY_BEGIN();
 
-  RUN_TEST(setup_test_fr2_001);
+  RUN_TEST(setup_test_fr3_001);
 
   clearPin(LED_PIN);
 

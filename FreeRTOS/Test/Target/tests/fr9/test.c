@@ -16,8 +16,8 @@
 
 /* Priorities at which the tasks are created.  The max priority can be specified
 as ( configMAX_PRIORITIES - 1 ). */
-#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 2)
-#define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 1)
+#define mainTASK_A_PRIORITY (tskIDLE_PRIORITY + 1)
+#define mainTASK_B_PRIORITY (tskIDLE_PRIORITY + 2)
 #define mainTASK_C_PRIORITY (tskIDLE_PRIORITY + 3)
 
 #define mainSOFTWARE_TIMER_PERIOD_MS pdMS_TO_TICKS(10)
@@ -26,13 +26,15 @@ static void prvTaskA(void *pvParameters);
 static void prvTaskB(void *pvParameters);
 static void prvTaskC(void *pvParameters);
 
+TaskHandle_t taskAHandle;
+
 #if configNUM_CORES != 2
 #error Require two cores be configured for FreeRTOS
 #endif
 
-#define traceTASK_SWITCHED_IN() test_fr2TASK_SWITCHED_IN()
+#define traceTASK_SWITCHED_IN() test_fr9TASK_SWITCHED_IN()
 
-void test_fr2TASK_SWITCHED_IN(void) {
+void test_fr9TASK_SWITCHED_IN(void) {
   static SchedTraceLog schedTraceLog;
 
   setPin(LED_PIN);
@@ -42,9 +44,9 @@ void test_fr2TASK_SWITCHED_IN(void) {
   reportSchedTraceLog(&schedTraceLog);
 }
 
-void setup_test_fr2_001(void) {
+void setup_test_fr9_001(void) {
   xTaskCreate(prvTaskA, "TaskA", configMINIMAL_STACK_SIZE, NULL,
-              mainTASK_A_PRIORITY, NULL);
+              mainTASK_A_PRIORITY, &taskAHandle);
 
   xTaskCreate(prvTaskB, "TaskB", configMINIMAL_STACK_SIZE, NULL,
               mainTASK_B_PRIORITY, NULL);
@@ -62,7 +64,7 @@ int main(void) {
 
   UNITY_BEGIN();
 
-  RUN_TEST(setup_test_fr2_001);
+  RUN_TEST(setup_test_fr9_001);
 
   clearPin(LED_PIN);
 
@@ -95,7 +97,10 @@ static void prvTaskB(void *pvParameters) {
 }
 
 static void prvTaskC(void *pvParameters) {
+  vTaskSuspendAll()
+  vTaskPrioritySet(taskAHandle, tskIDLE_PRIORITY + 4);
   vTaskDelay(pdMS_TO_TICKS(5000));
+  xTaskResumeAll()
   // idle the task
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);

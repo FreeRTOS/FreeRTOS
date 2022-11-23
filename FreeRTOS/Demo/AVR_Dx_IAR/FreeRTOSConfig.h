@@ -1,6 +1,6 @@
 /*
  * FreeRTOS V202112.00
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -10,8 +10,7 @@
  * subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software. If you wish to use our Amazon
- * FreeRTOS name, please do so in a fair use way that does not cause confusion.
+ * copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
@@ -21,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -40,12 +39,12 @@
 /*
  * Timer instance  |  Value
  * ----------------|---------
- *     TCB0        |    0  
- *     TCB1        |    1  
- *     TCB2        |    2  
- *     TCB3        |    3  
- *     TCB4        |    4  
- *     RTC         |    5  
+ *     TCB0        |    0
+ *     TCB1        |    1
+ *     TCB2        |    2
+ *     TCB3        |    3
+ *     TCB4        |    4
+ *     RTC         |    5
  */
 
 #define configUSE_TIMER_INSTANCE 0
@@ -93,10 +92,6 @@ For other frequency values, update clock_config.h with your own settings */
 #define configGENERATE_RUN_TIME_STATS 0
 #define configUSE_TRACE_FACILITY 0
 #define configUSE_STATS_FORMATTING_FUNCTIONS 0
-
-/* Co-routine related definitions. */
-#define configUSE_CO_ROUTINES 1
-#define configMAX_CO_ROUTINE_PRIORITIES 2
 
 /* Software timer related definitions. */
 #define configUSE_TIMERS 1

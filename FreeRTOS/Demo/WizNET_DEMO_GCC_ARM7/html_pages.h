@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -32,7 +32,7 @@
 const char * const cSamplePageFirstPart =
 "HTTP/1.0 200 OK\r\n"
 "Content-type: text/html\r\n"
-"\r\n"																				 
+"\r\n"
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n"
 "<html>\r\n"
 "<head>\r\n"

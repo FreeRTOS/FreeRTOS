@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -121,10 +121,6 @@ extern "C" {
 
 /* Run time stats gathering related definitions. */
 #define configGENERATE_RUN_TIME_STATS			( 0 )
-
-/* Co-routine related definitions. */
-#define configUSE_CO_ROUTINES					( 0 )
-#define configMAX_CO_ROUTINE_PRIORITIES			( 1 )
 
 /* Software timer related definitions. */
 #define configUSE_TIMERS						( 1 )

@@ -20,14 +20,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
 /*
 Changes from V1.00:
-	
-	+ Call to the more efficient portSWITCH_CONTEXT() replaces the call to 
+
+	+ Call to the more efficient portSWITCH_CONTEXT() replaces the call to
 	  taskYIELD() in the ISR.
 
 Changes from V1.01:
@@ -42,7 +42,7 @@ Changes from V1.2.0:
 
 Changes from V1.2.3
 
-	+ The function xPortInitMinimal() has been renamed to 
+	+ The function xPortInitMinimal() has been renamed to
 	  xSerialPortInitMinimal() and the function xPortInit() has been renamed
 	  to xSerialPortInit().
 
@@ -104,70 +104,70 @@ Changes from V2.0.0
 #define serDONT_BLOCK				( ( TickType_t ) 0 )
 
 typedef enum
-{ 
-	serCOM1 = 0, 
-	serCOM2, 
-	serCOM3, 
-	serCOM4, 
-	serCOM5, 
-	serCOM6, 
-	serCOM7, 
-	serCOM8 
+{
+	serCOM1 = 0,
+	serCOM2,
+	serCOM3,
+	serCOM4,
+	serCOM5,
+	serCOM6,
+	serCOM7,
+	serCOM8
 } eCOMPort;
 
-typedef enum 
-{ 
-	serNO_PARITY, 
-	serODD_PARITY, 
-	serEVEN_PARITY, 
-	serMARK_PARITY, 
-	serSPACE_PARITY 
+typedef enum
+{
+	serNO_PARITY,
+	serODD_PARITY,
+	serEVEN_PARITY,
+	serMARK_PARITY,
+	serSPACE_PARITY
 } eParity;
 
-typedef enum 
-{ 
-	serSTOP_1, 
-	serSTOP_2 
+typedef enum
+{
+	serSTOP_1,
+	serSTOP_2
 } eStopBits;
 
-typedef enum 
-{ 
-	serBITS_5, 
-	serBITS_6, 
-	serBITS_7, 
-	serBITS_8 
+typedef enum
+{
+	serBITS_5,
+	serBITS_6,
+	serBITS_7,
+	serBITS_8
 } eDataBits;
 
-typedef enum 
-{ 
+typedef enum
+{
 	ser50 = 0,
-	ser75,		
-	ser110,		
-	ser134,		
-	ser150,    
+	ser75,
+	ser110,
+	ser134,
+	ser150,
 	ser200,
-	ser300,		
-	ser600,		
-	ser1200,	
-	ser1800,	
-	ser2400,   
+	ser300,
+	ser600,
+	ser1200,
+	ser1800,
+	ser2400,
 	ser4800,
-	ser9600,		
-	ser19200,	
-	ser38400,	
-	ser57600,	
+	ser9600,
+	ser19200,
+	ser38400,
+	ser57600,
 	ser115200
 } eBaud;
 
 /* Must be same order as eBaud definitions. */
-static const unsigned short usBaudRateDivisor[] = 
+static const unsigned short usBaudRateDivisor[] =
 {
 	0, /* Not sure if the first 6 are correct.  First cannot be used. */
 	29127,
 	19859,
 	16302,
 	14564,
-	10923,	
+	10923,
 	6879,
 	3437,
 	1718,
@@ -196,7 +196,7 @@ typedef struct xCOM_PORT
 	unsigned short usIRQVector;
 
 	/* Queues used for communications with com test task. */
-	QueueHandle_t xRxedChars; 
+	QueueHandle_t xRxedChars;
 	QueueHandle_t xCharsForTx;
 
 	/* This semaphore does nothing useful except test a feature of the
@@ -205,7 +205,7 @@ typedef struct xCOM_PORT
 
 } xComPort;
 
-static xComPort xPorts[ serMAX_PORTS ] = 
+static xComPort xPorts[ serMAX_PORTS ] =
 {
 	{ pdFALSE, serPORT_0_INT_REG, serPORT_0_BAUD_REG, serPORT_0_RX_REG, serPORT_0_TX_REG, serPORT_0_STATUS_REG, serPORT_0_CTRL_REG, serPORT_0_IRQ, NULL, NULL, NULL },
 	{ pdFALSE, serPORT_1_INT_REG, serPORT_1_BAUD_REG, serPORT_1_RX_REG, serPORT_1_TX_REG, serPORT_1_STATUS_REG, serPORT_1_CTRL_REG, serPORT_1_IRQ, NULL, NULL, NULL }
@@ -239,7 +239,7 @@ unsigned short usIn;														\
 		}																		\
 	}																			\
 	portEXIT_CRITICAL();															\
-}																				
+}
 /*-----------------------------------------------------------*/
 
 #define vInterruptOff( pxPort, usInterrupt )									\
@@ -264,14 +264,14 @@ unsigned short usIn;														\
 		}                                                       \
 	}
 
-  
+
 
 COM_IRQ_WRAPPER( 0 )
 COM_IRQ_WRAPPER( 1 )
 
-static pxISR xISRs[ serMAX_PORTS ] = 
+static pxISR xISRs[ serMAX_PORTS ] =
 {
-	COM_IRQ0_WRAPPER, 
+	COM_IRQ0_WRAPPER,
 	COM_IRQ1_WRAPPER
 };
 
@@ -293,7 +293,7 @@ xComPortHandle pxPort = NULL;
 	/* Currently only n,8,1 is supported. */
 
 	usPort = ( unsigned short ) ePort;
-	
+
 	if( usPort < serMAX_PORTS )
 	{
 		pxPort = &( xPorts[ usPort ] );
@@ -348,7 +348,7 @@ char *pcNextChar;
 
 portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, char *pcRxedChar, TickType_t xBlockTime )
 {
-	/* Get the next character from the buffer, note that this routine is only 
+	/* Get the next character from the buffer, note that this routine is only
 	called having checked that the is (at least) one to get */
 	if( xQueueReceive( pxPort->xRxedChars, pcRxedChar, xBlockTime ) )
 	{
@@ -378,7 +378,7 @@ portBASE_TYPE xSerialWaitForSemaphore( xComPortHandle xPort )
 {
 const TickType_t xBlockTime = ( TickType_t ) 0xffff;
 
-	/* This function does nothing interesting, but test the 
+	/* This function does nothing interesting, but test the
 	semaphore from ISR mechanism. */
 	return xSemaphoreTake( xPort->xTestSem, xBlockTime );
 }

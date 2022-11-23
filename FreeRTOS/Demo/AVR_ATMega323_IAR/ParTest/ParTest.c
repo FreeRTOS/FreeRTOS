@@ -20,11 +20,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
-/* 
+/*
 Changes from V2.0.0
 
 	+ Use scheduler suspends in place of critical sections.
@@ -110,7 +110,7 @@ unsigned char ucBit;
 
 			PORTB = ucCurrentOutputValue;
 		}
-		xTaskResumeAll();			
+		xTaskResumeAll();
 	}
 }
 

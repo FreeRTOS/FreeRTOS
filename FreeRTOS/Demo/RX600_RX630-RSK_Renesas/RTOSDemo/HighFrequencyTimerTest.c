@@ -20,12 +20,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
-/* 
- * High frequency timer test as described in main.c. 
+/*
+ * High frequency timer test as described in main.c.
  */
 
 /* Scheduler includes. */
@@ -71,24 +71,24 @@ void vSetupHighFrequencyTimer( void )
 	/* Enable compare match timer 2 and 3. */
 	MSTP( CMT2 ) = 0;
 	MSTP( CMT3 ) = 0;
-	
+
 	/* Interrupt on compare match. */
 	CMT2.CMCR.BIT.CMIE = 1;
-	
+
 	/* Set the compare match value. */
 	CMT2.CMCOR = ( unsigned short ) ( ( ( configPERIPHERAL_CLOCK_HZ / timerINTERRUPT_FREQUENCY ) -1 ) / 8 );
-	
+
 	/* Divide the PCLK by 8. */
 	CMT2.CMCR.BIT.CKS = 0;
 	CMT3.CMCR.BIT.CKS = 0;
-	
+
 	/* Enable the interrupt... */
 	_IEN( _CMT2_CMI2 ) = 1;
-	
+
 	/* ...and set its priority to the maximum possible, this is above the priority
 	set by configMAX_SYSCALL_INTERRUPT_PRIORITY so will nest. */
 	_IPR( _CMT2_CMI2 ) = timerHIGHEST_PRIORITY;
-	
+
 	/* Start the timers. */
 	CMT.CMSTR1.BIT.STR2 = 1;
 	CMT.CMSTR1.BIT.STR3 = 1;
@@ -121,16 +121,16 @@ static unsigned long ulErrorCount = 0UL;
 			/* This should not happen! */
 			ulErrorCount++;
 		}
-		
+
 		usMaxCount = usCurrentCount;
 	}
 
 	/* Used to generate the run time stats. */
 	ulHighFrequencyTickCount++;
-	
+
 	/* Clear the timer. */
 	timerTIMER_3_COUNT_VALUE = 0;
-	
+
 	/* Then start the clock again. */
 	CMT.CMSTR1.BIT.STR3 = 1;
 }

@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -108,9 +108,6 @@ uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 #define configUSE_TICK_HOOK						1
 #define configUSE_DAEMON_TASK_STARTUP_HOOK		1
 
-/* Co-routine definitions. */
-#define configUSE_CO_ROUTINES 					0
-#define configMAX_CO_ROUTINE_PRIORITIES 		( 2 )
 
 /* Software timer definitions. */
 #define configUSE_TIMERS						1

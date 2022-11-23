@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -35,7 +35,7 @@
 #include "partest.h"
 
 /*-----------------------------------------------------------
- * Simple parallel port IO routines for the LED's 
+ * Simple parallel port IO routines for the LED's
  *-----------------------------------------------------------*/
 
 #define partstNUM_LEDS	4
@@ -51,14 +51,14 @@ static GPIO_MAP xLEDMap[ partstNUM_LEDS ] =
 {
 	{ ( GPIO_TypeDef	* )GPIO1_BASE, GPIO_Pin_1, 0UL },
 	{ ( GPIO_TypeDef	* )GPIO0_BASE, GPIO_Pin_16, 0UL },
-	{ ( GPIO_TypeDef	* )GPIO2_BASE, GPIO_Pin_18, 0UL },	
-	{ ( GPIO_TypeDef	* )GPIO2_BASE, GPIO_Pin_19, 0UL }	
+	{ ( GPIO_TypeDef	* )GPIO2_BASE, GPIO_Pin_18, 0UL },
+	{ ( GPIO_TypeDef	* )GPIO2_BASE, GPIO_Pin_19, 0UL }
 };
 
 /*-----------------------------------------------------------*/
 
 void vParTestInitialise( void )
-{	
+{
 GPIO_InitTypeDef GPIO_InitStructure ;
 
     /* Configure the bits used to flash LED's on port 1 as output. */
@@ -97,7 +97,7 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 			else
 			{
 				GPIO_WriteBit( xLEDMap[ uxLED ].pxPort, xLEDMap[ uxLED ].ulPin, Bit_SET );
-				xLEDMap[ uxLED ].ulValue = 1;			
+				xLEDMap[ uxLED ].ulValue = 1;
 			}
 		}
 		portEXIT_CRITICAL();
@@ -119,7 +119,7 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 			else
 			{
 				GPIO_WriteBit( xLEDMap[ uxLED ].pxPort, xLEDMap[ uxLED ].ulPin, Bit_SET );
-				xLEDMap[ uxLED ].ulValue = 1;			
+				xLEDMap[ uxLED ].ulValue = 1;
 			}
 		}
 		portEXIT_CRITICAL();

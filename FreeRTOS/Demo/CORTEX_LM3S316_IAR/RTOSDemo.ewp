@@ -908,9 +908,6 @@
       <name>$PROJ_DIR$\commstest.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\Common\Minimal\crflash.c</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\main.c</name>
     </file>
     <file>
@@ -922,9 +919,6 @@
   </group>
   <group>
     <name>FreeRTOS Source</name>
-    <file>
-      <name>$PROJ_DIR$\..\..\Source\croutine.c</name>
-    </file>
     <file>
       <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_1.c</name>
     </file>
@@ -957,5 +951,3 @@
     </file>
   </group>
 </project>
-
-

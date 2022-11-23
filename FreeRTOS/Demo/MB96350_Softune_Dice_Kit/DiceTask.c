@@ -20,12 +20,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
 
-/* 
+/*
  * Defines the 'dice' tasks as described at the top of main.c
  */
 
@@ -67,7 +67,7 @@ extern volatile unsigned char *pucDisplayOutput[ 2 ];
 
 /*-----------------------------------------------------------*/
 
-/* 
+/*
  * Defines the 'dice' tasks as described at the top of main.c
  */
 void vDiceTask( void *pvParameters )
@@ -83,12 +83,12 @@ extern void vSuspendFlashTasks( unsigned char ucIndex, short sSuspendTasks );
 	the left side or right side display.  The constant is used as an index
 	into the arrays defined at file scope within this file. */
 	ucIndex = ( unsigned char ) pvParameters;
-	
+
 	/* A binary semaphore is used to signal button push events.  Create the
 	semaphore before it is used. */
 	vSemaphoreCreateBinary( xSemaphores[ ucIndex ] );
 
-	/* Make sure the semaphore starts in the wanted state - no button pushes 
+	/* Make sure the semaphore starts in the wanted state - no button pushes
 	pending. This call will just clear any button pushes that are latched.
 	Passing in 0 as the block time means the call will not wait for any further
 	button pushes but instead return immediately. */
@@ -101,18 +101,18 @@ extern void vSuspendFlashTasks( unsigned char ucIndex, short sSuspendTasks );
 
 
 	/* Start the task proper.  A loop will be performed each time a button is
-	pushed.  The task will remain in the blocked state (sleeping) until a 
+	pushed.  The task will remain in the blocked state (sleeping) until a
 	button is pushed. */
 	for( ;; )
 	{
 		/* Wait for a button push.  This task will enter the Blocked state
 		(will not run again) until after a button has been pushed. */
 		prvButtonHit( ucIndex, portMAX_DELAY );
-		
+
 		/* The next line will only execute after a button has been pushed -
 		initialise the variable used to control the time the dice is shaken
 		for. */
-		ulDiceRunTime = diceSHAKE_TIME;				
+		ulDiceRunTime = diceSHAKE_TIME;
 
 		/* Suspend the flash tasks so this task has exclusive access to the
 		display. */
@@ -141,7 +141,7 @@ extern void vSuspendFlashTasks( unsigned char ucIndex, short sSuspendTasks );
 
 
 		/* Clear any button pushes that are pending because a button bounced, or
-		was pressed while the dice were shaking.  Again a block time of zero is 
+		was pressed while the dice were shaking.  Again a block time of zero is
 		used so the function does not wait for any pushes but instead returns
 		immediately. */
 		prvButtonHit( ucIndex, 0 );
@@ -151,11 +151,11 @@ extern void vSuspendFlashTasks( unsigned char ucIndex, short sSuspendTasks );
 		a button push.  If a button is pressed xQueuePeek() will return but the
 		button push will remain pending to be read again at the top of this for
 		loop.  It is safe to uses a queue function on a semaphore handle as
-		semaphores are implemented as macros that uses queues, so the two are 
+		semaphores are implemented as macros that uses queues, so the two are
 		basically the same thing. */
 		xQueuePeek( xSemaphores[ ucIndex ], NULL, diceDELAY_WHILE_DISPLAYING_RESULT );
 
-		/* Clear the display then resume the tasks or co-routines that were using
+		/* Clear the display then resume the tasks that were using
 		the segments of the display. */
 		*pucDisplayOutput[ ucIndex ] = 0xff;
 		vSuspendFlashTasks( ucIndex, pdFALSE );

@@ -11,8 +11,28 @@
 [Ll]og/
 [Ll]ogs/
 
+# CodeWarrior temporary files
+*.tdt
+CWSettingsWindows.stg
+
+# Executable Files
+*.exe
+*.hex
+*.bin
+*.elf
+*.out
+*.rom
+
+# MS Word Files
+*.doc
+*.docx
+
 # Visual Studio cache/options directory
 .vs/
+
+# Visual Studio Solution / project User Option files
+*.suo
+*.vcxproj.user
 
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
@@ -26,3 +46,13 @@ __pycache__/
 *.suo
 *.vcxproj.user
 
+# Atmel Studio user files
+*.atsuo
+
+# Image Files
+*.png
+*.jpg
+*.jpeg
+
+# Renesas IDE temporary files
+*.nav

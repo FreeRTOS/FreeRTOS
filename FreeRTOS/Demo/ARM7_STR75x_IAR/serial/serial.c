@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -68,7 +68,7 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
 xComPortHandle xReturn;
 UART_InitTypeDef UART_InitStructure;
 GPIO_InitTypeDef GPIO_InitStructure;
-EIC_IRQInitTypeDef  EIC_IRQInitStructure;	
+EIC_IRQInitTypeDef  EIC_IRQInitStructure;
 
 	/* Create the queues used to hold Rx and Tx characters. */
 	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
@@ -82,17 +82,17 @@ EIC_IRQInitTypeDef  EIC_IRQInitStructure;
 		{
 			/* Enable the UART0 Clock. */
 			MRCC_PeripheralClockConfig( MRCC_Peripheral_UART0, ENABLE );
-			
+
 			/* Configure the UART0_Tx as alternate function */
 			GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
 			GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_11;
 			GPIO_Init(GPIO0, &GPIO_InitStructure);
-			
+
 			/* Configure the UART0_Rx as input floating */
 			GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 			GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
 			GPIO_Init(GPIO0, &GPIO_InitStructure);
-			
+
 			/* Configure UART0. */
 			UART_InitStructure.UART_WordLength = UART_WordLength_8D;
 			UART_InitStructure.UART_StopBits = UART_StopBits_1;
@@ -107,12 +107,12 @@ EIC_IRQInitTypeDef  EIC_IRQInitStructure;
 			/* Enable the UART0 */
 			UART_Cmd(UART0, ENABLE);
 
-			/* Configure the IEC for the UART interrupts. */			
+			/* Configure the IEC for the UART interrupts. */
 			EIC_IRQInitStructure.EIC_IRQChannelCmd = ENABLE;
 			EIC_IRQInitStructure.EIC_IRQChannel = UART0_IRQChannel;
 			EIC_IRQInitStructure.EIC_IRQChannelPriority = 1;
 			EIC_IRQInit(&EIC_IRQInitStructure);
-			
+
 			xQueueEmpty = pdTRUE;
 			UART_ITConfig( UART0, UART_IT_Transmit | UART_IT_Receive, ENABLE );
 		}
@@ -188,13 +188,13 @@ portBASE_TYPE xReturn;
 			if( xQueueSend( xCharsForTx, &cOutChar, xBlockTime ) != pdPASS )
 			{
 				xReturn = pdFAIL;
-			}			
+			}
 			else
 			{
-				xReturn = pdPASS;				
+				xReturn = pdPASS;
 			}
 		}
-		
+
 		xQueueEmpty = pdFALSE;
 	}
 	portEXIT_CRITICAL();
@@ -228,12 +228,12 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 			}
 			else
 			{
-				xQueueEmpty = pdTRUE;		
-			}		
+				xQueueEmpty = pdTRUE;
+			}
 
 			UART_ClearITPendingBit( UART0, UART_IT_Transmit );
 		}
-	
+
 		if( UART0->MIS & UART_IT_Receive )
 		{
 			/* The interrupt was caused by a character being received.  Grab the
@@ -254,4 +254,4 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 
 
-	
+

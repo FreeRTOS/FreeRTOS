@@ -21,7 +21,7 @@
 ; * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ; *
 ; * https://www.FreeRTOS.org
-; * https://aws.amazon.com/freertos
+; * https://github.com/FreeRTOS
 ; *
 ; * 1 tab == 4 spaces!
 ; */
@@ -43,12 +43,12 @@
 	.global usRegTest1Counter
 	.global usRegTest2Counter
 	.global vPortYield
-	
+
 	.def vRegTest1Task
 	.def vRegTest2Task
 
 	.text
-	
+
 	.align 2
 vRegTest1Task: .asmfunc
 
@@ -65,7 +65,7 @@ vRegTest1Task: .asmfunc
 	mov_x	#0xdddd, r13
 	mov_x	#0xeeee, r14
 	mov_x	#0xffff, r15
-	
+
 prvRegTest1Loop:
 
 	; Test each general purpose register to check that it still contains the
@@ -95,19 +95,19 @@ prvRegTest1Loop:
 	jne		vRegTest1Error
 	cmp_x	#0xffff, r15
 	jne		vRegTest1Error
-	
+
 	; This task is still running without jumping to vRegTest1Error, so increment
 	; the loop counter so the check task knows the task is running error free.
 	inc_x	&usRegTest1Counter
-	
+
 	; Loop again, performing the same tests.
 	jmp		prvRegTest1Loop
 	nop
-	
+
 vRegTest1Error:
 	jmp vRegTest1Error
 	nop
-	.endasmfunc	
+	.endasmfunc
 ; -----------------------------------------------------------
 
 ; See the comments in vRegTest1Task.  This task is the same, it just uses
@@ -127,7 +127,7 @@ vRegTest2Task: .asmfunc
 	mov_x	#0xddd1, r13
 	mov_x	#0xeee1, r14
 	mov_x	#0xfff1, r15
-	
+
 prvRegTest2Loop:
 
 	cmp_x	#0x4441, r4
@@ -154,21 +154,21 @@ prvRegTest2Loop:
 	jne		vRegTest2Error
 	cmp_x	#0xfff1, r15
 	jne		vRegTest2Error
-	
+
 	; Also perform a manual yield, just to increase the scope of the test.
 	call_x 	#vPortYield
-	
+
 	inc_x	&usRegTest2Counter
 	jmp		prvRegTest2Loop
 	nop
 
-	
+
 vRegTest2Error:
 	jmp vRegTest2Error
 	nop
 	.endasmfunc
 ; /*-----------------------------------------------------------
 
-     		
+
 	.end
-		
+

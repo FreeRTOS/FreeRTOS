@@ -25,7 +25,7 @@
  */
 
 /**
- * @file sockets_wrapper.h
+ * @file tcp_sockets_wrapper.h
  * @brief TCP transport functions wrapper.
  */
 
@@ -38,6 +38,8 @@
 
 /* FreeRTOS Kernel includes. */
 #include "FreeRTOS.h"
+
+#define SOCKETS_INVALID_SOCKET      ( ( Socket_t ) ~0U )
 
 /* Error codes. */
 #define TCP_SOCKETS_ERRNO_NONE                ( 0 )   /*!< No error. */

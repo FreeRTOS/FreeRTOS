@@ -380,7 +380,7 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
 {
     TlsTransportStatus_t returnStatus = TLS_TRANSPORT_SUCCESS;
     BaseType_t socketStatus = 0;
-
+    BaseType_t isSocketConnected = pdFALSE;
 
     if( ( pNetworkContext == NULL ) ||
         ( pHostName == NULL ) ||
@@ -402,11 +402,13 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     /* Establish a TCP connection with the server. */
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
+        pNetworkContext->tcpSocket = SOCKETS_INVALID_SOCKET;
+
         socketStatus = TCP_Sockets_Connect( &( pNetworkContext->tcpSocket ),
-                                        pHostName,
-                                        port,
-                                        receiveTimeoutMs,
-                                        sendTimeoutMs );
+                                            pHostName,
+                                            port,
+                                            receiveTimeoutMs,
+                                            sendTimeoutMs );
 
         if( socketStatus != 0 )
         {
@@ -420,6 +422,8 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     /* Initialize tls. */
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
+        isSocketConnected = pdTRUE;
+        
         returnStatus = initTLS();
     }
 
@@ -432,7 +436,11 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     /* Clean up on failure. */
     if( returnStatus != TLS_TRANSPORT_SUCCESS )
     {
-        TCP_Sockets_Disconnect( pNetworkContext->tcpSocket );
+        if( isSocketConnected == pdTRUE )
+        {
+            TCP_Sockets_Disconnect( pNetworkContext->tcpSocket );
+            pNetworkContext->tcpSocket = SOCKETS_INVALID_SOCKET;
+        }
     }
     else
     {

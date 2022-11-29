@@ -7,7 +7,7 @@ on:
 
 jobs:
   git-secrets:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -93,7 +93,7 @@ jobs:
           retention-days: 2
 
   spell-check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout Parent Repo
         uses: actions/checkout@v2
@@ -125,7 +125,7 @@ jobs:
           fi
 
   verify-manifest:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -143,7 +143,7 @@ jobs:
           fail-on-incorrect-version: true
 
   memory-statistics:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       ARM_GCC_TOOLCHAIN_URL: "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2?revision=05382cca-1721-44e1-ae19-1e7c3dc96118&la=en&hash=D7C9D18FCA2DD9F894FD9F3C3DC9228498FA281A"
     steps:

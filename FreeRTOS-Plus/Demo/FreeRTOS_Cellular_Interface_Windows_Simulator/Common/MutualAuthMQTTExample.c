@@ -66,7 +66,7 @@
 #include "backoff_algorithm.h"
 
 /* Transport interface implementation include header for TLS. */
-#include "using_mbedtls.h"
+#include "transport_mbedtls.h"
 
 /*-----------------------------------------------------------*/
 
@@ -211,6 +211,23 @@
  * @brief Transport timeout in milliseconds for transport send and receive.
  */
 #define mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS         ( 5000U )
+
+/**
+ * @brief Transport timeout in milliseconds for transport send and receive.
+ */
+#define mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS         ( 200U )
+
+/**
+ * @brief The length of the outgoing publish records array used by the coreMQTT
+ * library to track QoS > 0 packet ACKS for outgoing publishes.
+ */
+#define mqttexampleOUTGOING_PUBLISH_RECORD_LEN            ( 10U )
+
+/**
+ * @brief The length of the incoming publish records array used by the coreMQTT
+ * library to track QoS > 0 packet ACKS for incoming publishes.
+ */
+#define mqttexampleINCOMING_PUBLISH_RECORD_LEN            ( 10U )
 
 /**
  * Provide default values for undefined configuration settings.
@@ -368,6 +385,18 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
                               MQTTPacketInfo_t * pxPacketInfo,
                               MQTTDeserializedInfo_t * pxDeserializedInfo );
 
+/**
+ * @brief Call #MQTT_ProcessLoop in a loop for the duration of a timeout or
+ * #MQTT_ProcessLoop returns a failure.
+ *
+ * @param[in] pMqttContext MQTT context pointer.
+ * @param[in] ulTimeoutMs Duration to call #MQTT_ProcessLoop for.
+ *
+ * @return Returns the return value of the last call to #MQTT_ProcessLoop.
+ */
+static MQTTStatus_t prvProcessLoopWithTimeout( MQTTContext_t * pMqttContext,
+                                               uint32_t ulTimeoutMs );
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -427,6 +456,24 @@ static MQTTFixedBuffer_t xBuffer =
     ucSharedBuffer,
     democonfigNETWORK_BUFFER_SIZE
 };
+
+/**
+ * @brief Array to track the outgoing publish records for outgoing publishes
+ * with QoS > 0.
+ *
+ * This is passed into #MQTT_InitStatefulQoS to allow for QoS > 0.
+ *
+ */
+static MQTTPubAckInfo_t pOutgoingPublishRecords[ mqttexampleOUTGOING_PUBLISH_RECORD_LEN ];
+
+/**
+ * @brief Array to track the incoming publish records for incoming publishes
+ * with QoS > 0.
+ *
+ * This is passed into #MQTT_InitStatefulQoS to allow for QoS > 0.
+ *
+ */
+static MQTTPubAckInfo_t pIncomingPublishRecords[ mqttexampleINCOMING_PUBLISH_RECORD_LEN ];
 
 /*-----------------------------------------------------------*/
 
@@ -488,6 +535,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
     for( ; ; )
     {
+        LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
         /****************************** Connect. ******************************/
 
         /* Attempt to establish TLS session with MQTT broker. If connection fails,
@@ -523,7 +571,7 @@ static void prvMQTTDemoTask( void * pvParameters )
              * same topic, the broker will send publish message back to the
              * application. */
             LogInfo( ( "Attempt to receive publish message from broker.\r\n" ) );
-            xMQTTStatus = MQTT_ProcessLoop( &xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
+            xMQTTStatus = prvProcessLoopWithTimeout( &xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
             configASSERT( xMQTTStatus == MQTTSuccess );
 
             /* Leave Connection Idle for some time. */
@@ -536,7 +584,7 @@ static void prvMQTTDemoTask( void * pvParameters )
         prvMQTTUnsubscribeFromTopic( &xMQTTContext );
 
         /* Process incoming UNSUBACK packet from the broker. */
-        xMQTTStatus = MQTT_ProcessLoop( &xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
+        xMQTTStatus = prvProcessLoopWithTimeout( &xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
         configASSERT( xMQTTStatus == MQTTSuccess );
 
         /**************************** Disconnect. *****************************/
@@ -566,6 +614,7 @@ static void prvMQTTDemoTask( void * pvParameters )
                    "Total free heap is %u.\r\n",
                    xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully.\r\n" ) );
+        LogInfo( ( "-------DEMO FINISHED-------\r\n" ) );
         LogInfo( ( "Short delay before starting the next iteration.... \r\n\r\n" ) );
         vTaskDelay( mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS_TICKS );
     }
@@ -583,41 +632,40 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
     #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
         #if defined( democonfigCLIENT_USERNAME )
             /*
-            * When democonfigCLIENT_USERNAME is defined, use the "mqtt" alpn to connect
-            * to AWS IoT Core with Custom Authentication on port 443.
-            *
-            * Custom Authentication uses the contents of the username and password
-            * fields of the MQTT CONNECT packet to authenticate the client.
-            *
-            * For more information, refer to the documentation at:
-            * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
-            */
+             * When democonfigCLIENT_USERNAME is defined, use the "mqtt" alpn to connect
+             * to AWS IoT Core with Custom Authentication on port 443.
+             *
+             * Custom Authentication uses the contents of the username and password
+             * fields of the MQTT CONNECT packet to authenticate the client.
+             *
+             * For more information, refer to the documentation at:
+             * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
+             */
             static const char * ppcAlpnProtocols[] = { "mqtt", NULL };
             #if democonfigMQTT_BROKER_PORT != 443U
-                #error "Connections to AWS IoT Core with custom authentication must connect to TCP port 443 with the \"mqtt\" alpn."
+            #error "Connections to AWS IoT Core with custom authentication must connect to TCP port 443 with the \"mqtt\" alpn."
             #endif /* democonfigMQTT_BROKER_PORT != 443U */
         #else /* if !defined( democonfigCLIENT_USERNAME ) */
             /*
-            * Otherwise, use the "x-amzn-mqtt-ca" alpn to connect to AWS IoT Core using
-            * x509 Certificate Authentication.
-            */
+             * Otherwise, use the "x-amzn-mqtt-ca" alpn to connect to AWS IoT Core using
+             * x509 Certificate Authentication.
+             */
             static const char * ppcAlpnProtocols[] = { "x-amzn-mqtt-ca", NULL };
-
         #endif /* !defined( democonfigCLIENT_USERNAME ) */
 
         /*
-        * An ALPN identifier is only required when connecting to AWS IoT core on port 443.
-        * https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html
-        */
+         * An ALPN identifier is only required when connecting to AWS IoT core on port 443.
+         * https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html
+         */
         #if democonfigMQTT_BROKER_PORT == 443U
             pxNetworkCredentials->pAlpnProtos = ppcAlpnProtocols;
         #elif democonfigMQTT_BROKER_PORT == 8883U
             pxNetworkCredentials->pAlpnProtos = NULL;
         #else /* democonfigMQTT_BROKER_PORT != 8883U */
             pxNetworkCredentials->pAlpnProtos = NULL;
-            #error "MQTT connections to AWS IoT Core are only allowed on ports 443 and 8883."
+        #error "MQTT connections to AWS IoT Core are only allowed on ports 443 and 8883."
         #endif /* democonfigMQTT_BROKER_PORT != 443U */
-    #else
+    #else /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
         pxNetworkCredentials->pAlpnProtos = NULL;
     #endif /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
 
@@ -701,9 +749,16 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     xTransport.pNetworkContext = pxNetworkContext;
     xTransport.send = TLS_FreeRTOS_send;
     xTransport.recv = TLS_FreeRTOS_recv;
+    xTransport.writev = NULL;
 
     /* Initialize MQTT library. */
     xResult = MQTT_Init( pxMQTTContext, &xTransport, prvGetTimeMs, prvEventCallback, &xBuffer );
+    configASSERT( xResult == MQTTSuccess );
+    xResult = MQTT_InitStatefulQoS( pxMQTTContext,
+                                    pOutgoingPublishRecords,
+                                    mqttexampleOUTGOING_PUBLISH_RECORD_LEN,
+                                    pIncomingPublishRecords,
+                                    mqttexampleINCOMING_PUBLISH_RECORD_LEN );
     configASSERT( xResult == MQTTSuccess );
 
     /* Some fields are not used in this demo so start with everything at 0. */
@@ -840,7 +895,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
          * receiving Publish message before subscribe ack is zero; but application
          * must be ready to receive any packet.  This demo uses the generic packet
          * processing function everywhere to highlight this fact. */
-        xResult = MQTT_ProcessLoop( pxMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
+        xResult = prvProcessLoopWithTimeout( pxMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
         configASSERT( xResult == MQTTSuccess );
 
         /* Reset flag before checking suback responses. */
@@ -1067,6 +1122,36 @@ static uint32_t prvGetTimeMs( void )
     ulTimeMs = ( uint32_t ) ( ulTimeMs - ulGlobalEntryTimeMs );
 
     return ulTimeMs;
+}
+
+/*-----------------------------------------------------------*/
+
+static MQTTStatus_t prvProcessLoopWithTimeout( MQTTContext_t * pMqttContext,
+                                               uint32_t ulTimeoutMs )
+{
+    uint32_t ulMqttProcessLoopTimeoutTime;
+    uint32_t ulCurrentTime;
+
+    MQTTStatus_t eMqttStatus = MQTTSuccess;
+
+    ulCurrentTime = pMqttContext->getTime();
+    ulMqttProcessLoopTimeoutTime = ulCurrentTime + ulTimeoutMs;
+
+    /* Call MQTT_ProcessLoop multiple times a timeout happens, or
+     * MQTT_ProcessLoop fails. */
+    while( ( ulCurrentTime < ulMqttProcessLoopTimeoutTime ) &&
+           ( eMqttStatus == MQTTSuccess || eMqttStatus == MQTTNeedMoreBytes ) )
+    {
+        eMqttStatus = MQTT_ProcessLoop( pMqttContext );
+        ulCurrentTime = pMqttContext->getTime();
+    }
+
+    if( eMqttStatus == MQTTNeedMoreBytes )
+    {
+        eMqttStatus = MQTTSuccess;
+    }
+
+    return eMqttStatus;
 }
 
 /*-----------------------------------------------------------*/

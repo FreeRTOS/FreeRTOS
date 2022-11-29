@@ -57,6 +57,7 @@
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "timers.h"
 
 /* Demo Specific configs. */
 #include "demo_config.h"
@@ -68,7 +69,7 @@
 #include "backoff_algorithm.h"
 
 /* Transport interface include. */
-#include "using_plaintext.h"
+#include "transport_plaintext.h"
 
 /*-----------------------------------------------------------*/
 
@@ -201,6 +202,18 @@
  */
 #define mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS    ( 200U )
 
+/**
+ * @brief The length of the outgoing publish records array used by the coreMQTT
+ * library to track QoS > 0 packet ACKS for outgoing publishes.
+ */
+#define mqttexampleOUTGOING_PUBLISH_RECORD_LEN       ( 10U )
+
+/**
+ * @brief The length of the incoming publish records array used by the coreMQTT
+ * library to track QoS > 0 packet ACKS for incoming publishes.
+ */
+#define mqttexampleINCOMING_PUBLISH_RECORD_LEN       ( 10U )
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -236,7 +249,6 @@ struct NetworkContext
  * used in this example.
  */
 static void prvMQTTDemoTask( void * pvParameters );
-
 
 /**
  * @brief Connect to MQTT broker with reconnection retries.
@@ -469,6 +481,24 @@ static MQTTFixedBuffer_t xBuffer =
     .size    = mqttexampleSHARED_BUFFER_SIZE
 };
 
+/**
+ * @brief Array to track the outgoing publish records for outgoing publishes
+ * with QoS > 0.
+ *
+ * This is passed into #MQTT_InitStatefulQoS to allow for QoS > 0.
+ *
+ */
+static MQTTPubAckInfo_t pOutgoingPublishRecords[ mqttexampleOUTGOING_PUBLISH_RECORD_LEN ];
+
+/**
+ * @brief Array to track the incoming publish records for incoming publishes
+ * with QoS > 0.
+ *
+ * This is passed into #MQTT_InitStatefulQoS to allow for QoS > 0.
+ *
+ */
+static MQTTPubAckInfo_t pIncomingPublishRecords[ mqttexampleINCOMING_PUBLISH_RECORD_LEN ];
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -489,7 +519,7 @@ void vStartSimpleMQTTDemo( void )
 }
 /*-----------------------------------------------------------*/
 
- /* Also see https://www.freertos.org/mqtt/mqtt-agent-demo.html? for an
+/* Also see https://www.freertos.org/mqtt/mqtt-agent-demo.html? for an
  * alternative run time model whereby coreMQTT runs in an autonomous
  * background agent task.  Executing the MQTT protocol in an agent task
  * removes the need for the application writer to explicitly manage any MQTT
@@ -519,7 +549,19 @@ static void prvMQTTDemoTask( void * pvParameters )
 
     for( ; ; )
     {
+        LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
         /****************************** Connect. ******************************/
+
+        /* Wait for Networking */
+        if( xPlatformIsNetworkUp() == pdFALSE )
+        {
+            LogInfo( ( "Waiting for the network link up event..." ) );
+
+            while( xPlatformIsNetworkUp() == pdFALSE )
+            {
+                vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+            }
+        }
 
         /* Attempt to connect to the MQTT broker. If connection fails, retry
          * after a timeout. The timeout value will be exponentially increased
@@ -536,19 +578,17 @@ static void prvMQTTDemoTask( void * pvParameters )
         prvCreateMQTTConnectionWithBroker( &xMQTTContext, &xNetworkContext );
 
         /* Create timers to handle keep-alive. */
-        xPingReqTimer = xTimerCreateStatic( "PingReqTimer",
-                                            mqttexamplePING_REQUEST_DELAY,
-                                            pdTRUE,
-                                            ( void * ) &xMQTTContext.transportInterface,
-                                            prvPingReqTimerCallback,
-                                            &xPingReqTimerBuffer );
+        xPingReqTimer = xTimerCreate( "PingReqTimer",
+                                      mqttexamplePING_REQUEST_DELAY,
+                                      pdTRUE,
+                                      ( void * ) &xMQTTContext.transportInterface,
+                                      prvPingReqTimerCallback );
         configASSERT( xPingReqTimer );
-        xPingRespTimer = xTimerCreateStatic( "PingRespTimer",
-                                             mqttexamplePING_RESPONSE_DELAY,
-                                             pdFALSE,
-                                             NULL,
-                                             prvPingRespTimerCallback,
-                                             &xPingRespTimerBuffer );
+        xPingRespTimer = xTimerCreate( "PingRespTimer",
+                                       mqttexamplePING_RESPONSE_DELAY,
+                                       pdFALSE,
+                                       NULL,
+                                       prvPingRespTimerCallback );
         configASSERT( xPingRespTimer );
 
         /* Start the timer to send a PINGREQ. */
@@ -585,7 +625,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
             vTaskDelay( mqttexampleRECEIVE_LOOP_ITERATION_DELAY );
 
-            xMQTTStatus = MQTT_ReceiveLoop( &xMQTTContext, 0U );
+            xMQTTStatus = MQTT_ReceiveLoop( &xMQTTContext );
             configASSERT( xMQTTStatus == MQTTSuccess );
         }
 
@@ -605,7 +645,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
             vTaskDelay( mqttexampleRECEIVE_LOOP_ITERATION_DELAY );
 
-            xMQTTStatus = MQTT_ReceiveLoop( &xMQTTContext, 0U );
+            xMQTTStatus = MQTT_ReceiveLoop( &xMQTTContext );
             configASSERT( xMQTTStatus == MQTTSuccess );
         }
 
@@ -646,6 +686,7 @@ static void prvMQTTDemoTask( void * pvParameters )
                    "Total free heap is %u.",
                    xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully." ) );
+        LogInfo( ( "-------DEMO FINISHED-------\r\n" ) );
         LogInfo( ( "Short delay before starting the next iteration.... \r\n" ) );
         vTaskDelay( mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS );
     }
@@ -726,9 +767,16 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     xTransport.pNetworkContext = pxNetworkContext;
     xTransport.send = Plaintext_FreeRTOS_send;
     xTransport.recv = Plaintext_FreeRTOS_recv;
+    xTransport.writev = NULL;
 
     /* Initialize MQTT library. */
     xResult = MQTT_Init( pxMQTTContext, &xTransport, prvMockedGetTime, prvEventCallback, &xBuffer );
+    configASSERT( xResult == MQTTSuccess );
+    xResult = MQTT_InitStatefulQoS( pxMQTTContext,
+                                    pOutgoingPublishRecords,
+                                    mqttexampleOUTGOING_PUBLISH_RECORD_LEN,
+                                    pIncomingPublishRecords,
+                                    mqttexampleINCOMING_PUBLISH_RECORD_LEN );
     configASSERT( xResult == MQTTSuccess );
 
     /* Many fields not used in this demo so start with everything at 0. */
@@ -848,7 +896,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
 
             vTaskDelay( mqttexampleRECEIVE_LOOP_ITERATION_DELAY );
 
-            xResult = MQTT_ReceiveLoop( pxMQTTContext, 0U );
+            xResult = MQTT_ReceiveLoop( pxMQTTContext );
             configASSERT( xResult == MQTTSuccess );
         }
 

@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="llhttp">
+      <UniqueIdentifier>{25550967-a280-49b0-a199-9d2d754afb4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="coreHTTP">
+      <UniqueIdentifier>{be7b37ec-e95c-4fe8-8bab-707d7b545230}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\llhttp\src\http.c">
+      <Filter>llhttp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\llhttp\src\llhttp.c">
+      <Filter>llhttp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\llhttp\src\api.c">
+      <Filter>llhttp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Application-Protocols\coreHTTP\source\core_http_client.c">
+      <Filter>coreHTTP</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\Application-Protocols\coreHTTP\source\dependency\3rdparty\llhttp\include\llhttp.h">
+      <Filter>llhttp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Application-Protocols\coreHTTP\source\include\core_http_client.h">
+      <Filter>coreHTTP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Application-Protocols\coreHTTP\source\include\core_http_client_private.h">
+      <Filter>coreHTTP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Application-Protocols\coreHTTP\source\include\core_http_config_defaults.h">
+      <Filter>coreHTTP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Application-Protocols\coreHTTP\source\interface\transport_interface.h">
+      <Filter>coreHTTP</Filter>
+    </ClInclude>
+    <ClInclude Include="core_http_config.h" />
+  </ItemGroup>
+</Project>

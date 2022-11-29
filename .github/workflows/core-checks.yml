@@ -46,7 +46,7 @@ jobs:
           exit $?
   build-checker:
     name: FreeRTOS Posix Build Check
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Clone This Repo
         uses: actions/checkout@v2
@@ -65,7 +65,7 @@ jobs:
             bash workspace/.github/scripts/posix_network_build_checker.sh workspace
   arm-gcc-build-checker:
     name: FreeRTOS ARM GCC Build Check
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       ARM_GCC_TOOLCHAIN_URL: "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2?revision=05382cca-1721-44e1-ae19-1e7c3dc96118&la=en&hash=D7C9D18FCA2DD9F894FD9F3C3DC9228498FA281A"
     steps:

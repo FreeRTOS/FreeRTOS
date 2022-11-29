@@ -54,7 +54,7 @@
 #include "backoff_algorithm.h"
 
 /* Transport interface implementation include header for TLS. */
-#include "using_mbedtls_pkcs11.h"
+#include "transport_mbedtls_pkcs11.h"
 
 /* Demo specific config. */
 #include "demo_config.h"
@@ -134,6 +134,18 @@
  * @brief Transport timeout in milliseconds for transport send and receive.
  */
 #define mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS    ( 200U )
+
+/**
+ * @brief The length of the outgoing publish records array used by the coreMQTT
+ * library to track QoS > 0 packet ACKS for outgoing publishes.
+ */
+#define mqttexampleOUTGOING_PUBLISH_RECORD_LEN       ( 10U )
+
+/**
+ * @brief The length of the incoming publish records array used by the coreMQTT
+ * library to track QoS > 0 packet ACKS for incoming publishes.
+ */
+#define mqttexampleINCOMING_PUBLISH_RECORD_LEN       ( 10U )
 
 /**
  * @brief Maximum number of outgoing publishes maintained in the application
@@ -226,6 +238,25 @@ static uint16_t globalUnsubscribePacketIdentifier = 0U;
  */
 static PublishPackets_t outgoingPublishPackets[ MAX_OUTGOING_PUBLISHES ] = { 0 };
 
+/**
+ * @brief Array to track the outgoing publish records for outgoing publishes
+ * with QoS > 0.
+ *
+ * This is passed into #MQTT_InitStatefulQoS to allow for QoS > 0.
+ *
+ */
+static MQTTPubAckInfo_t pOutgoingPublishRecords[ mqttexampleOUTGOING_PUBLISH_RECORD_LEN ];
+
+/**
+ * @brief Array to track the incoming publish records for incoming publishes
+ * with QoS > 0.
+ *
+ * This is passed into #MQTT_InitStatefulQoS to allow for QoS > 0.
+ *
+ */
+static MQTTPubAckInfo_t pIncomingPublishRecords[ mqttexampleINCOMING_PUBLISH_RECORD_LEN ];
+
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -311,6 +342,18 @@ static BaseType_t xHandlePublishResend( MQTTContext_t * pxMqttContext );
  */
 static uint32_t prvGetTimeMs( void );
 
+/**
+ * @brief Call #MQTT_ProcessLoop in a loop for the duration of a timeout or
+ * #MQTT_ProcessLoop returns a failure.
+ *
+ * @param[in] pMqttContext MQTT context pointer.
+ * @param[in] ulTimeoutMs Duration to call #MQTT_ProcessLoop for.
+ *
+ * @return Returns the return value of the last call to #MQTT_ProcessLoop.
+ */
+static MQTTStatus_t prvProcessLoopWithTimeout( MQTTContext_t * pMqttContext,
+                                               uint32_t ulTimeoutMs );
+
 /*-----------------------------------------------------------*/
 
 static int32_t prvGenerateRandomNumber()
@@ -332,26 +375,25 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext
 
     #if defined( democonfigCLIENT_USERNAME )
         /*
-        * When democonfigCLIENT_USERNAME is defined, use the "mqtt" alpn to connect
-        * to AWS IoT Core with Custom Authentication on port 443.
-        *
-        * Custom Authentication uses the contents of the username and password
-        * fields of the MQTT CONNECT packet to authenticate the client.
-        *
-        * For more information, refer to the documentation at:
-        * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
-        */
+         * When democonfigCLIENT_USERNAME is defined, use the "mqtt" alpn to connect
+         * to AWS IoT Core with Custom Authentication on port 443.
+         *
+         * Custom Authentication uses the contents of the username and password
+         * fields of the MQTT CONNECT packet to authenticate the client.
+         *
+         * For more information, refer to the documentation at:
+         * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
+         */
         static const char * ppcAlpnProtocols[] = { "mqtt", NULL };
         #if democonfigMQTT_BROKER_PORT != 443U
-            #error "Connections to AWS IoT Core with custom authentication must connect to TCP port 443 with the \"mqtt\" alpn."
+        #error "Connections to AWS IoT Core with custom authentication must connect to TCP port 443 with the \"mqtt\" alpn."
         #endif /* democonfigMQTT_BROKER_PORT != 443U */
     #else /* if !defined( democonfigCLIENT_USERNAME ) */
         /*
-        * Otherwise, use the "x-amzn-mqtt-ca" alpn to connect to AWS IoT Core using
-        * x509 Certificate Authentication.
-        */
+         * Otherwise, use the "x-amzn-mqtt-ca" alpn to connect to AWS IoT Core using
+         * x509 Certificate Authentication.
+         */
         static const char * ppcAlpnProtocols[] = { "x-amzn-mqtt-ca", NULL };
-
     #endif /* !defined( democonfigCLIENT_USERNAME ) */
 
     /*
@@ -364,7 +406,7 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext
         xNetworkCredentials.pAlpnProtos = NULL;
     #else /* democonfigMQTT_BROKER_PORT != 8883U */
         xNetworkCredentials.pAlpnProtos = NULL;
-        #error "MQTT connections to AWS IoT Core are only allowed on ports 443 and 8883."
+    #error "MQTT connections to AWS IoT Core are only allowed on ports 443 and 8883."
     #endif /* democonfigMQTT_BROKER_PORT != 443U */
 
     configASSERT( pxNetworkContext != NULL );
@@ -453,6 +495,37 @@ static BaseType_t prvGetNextFreeIndexForOutgoingPublishes( uint8_t * pucIndex )
 
     return xReturnStatus;
 }
+
+/*-----------------------------------------------------------*/
+
+static MQTTStatus_t prvProcessLoopWithTimeout( MQTTContext_t * pMqttContext,
+                                               uint32_t ulTimeoutMs )
+{
+    uint32_t ulMqttProcessLoopTimeoutTime;
+    uint32_t ulCurrentTime;
+
+    MQTTStatus_t eMqttStatus = MQTTSuccess;
+
+    ulCurrentTime = pMqttContext->getTime();
+    ulMqttProcessLoopTimeoutTime = ulCurrentTime + ulTimeoutMs;
+
+    /* Call MQTT_ProcessLoop multiple times a timeout happens, or
+     * MQTT_ProcessLoop fails. */
+    while( ( ulCurrentTime < ulMqttProcessLoopTimeoutTime ) &&
+           ( eMqttStatus == MQTTSuccess || eMqttStatus == MQTTNeedMoreBytes ) )
+    {
+        eMqttStatus = MQTT_ProcessLoop( pMqttContext );
+        ulCurrentTime = pMqttContext->getTime();
+    }
+
+    if( eMqttStatus == MQTTNeedMoreBytes )
+    {
+        eMqttStatus = MQTTSuccess;
+    }
+
+    return eMqttStatus;
+}
+
 /*-----------------------------------------------------------*/
 
 static void vCleanupOutgoingPublishAt( uint8_t ucIndex )
@@ -623,6 +696,7 @@ BaseType_t xEstablishMqttSession( MQTTContext_t * pxMqttContext,
         xTransport.pNetworkContext = pxNetworkContext;
         xTransport.send = TLS_FreeRTOS_send;
         xTransport.recv = TLS_FreeRTOS_recv;
+        xTransport.writev = NULL;
 
         /* Initialize MQTT library. */
         xMQTTStatus = MQTT_Init( pxMqttContext,
@@ -634,102 +708,117 @@ BaseType_t xEstablishMqttSession( MQTTContext_t * pxMqttContext,
         if( xMQTTStatus != MQTTSuccess )
         {
             xReturnStatus = pdFAIL;
-            LogError( ( "MQTT init failed with status %s.",
+            LogError( ( "MQTT_Init failed with status %s.",
                         MQTT_Status_strerror( xMQTTStatus ) ) );
         }
         else
         {
-            /* Establish MQTT session by sending a CONNECT packet. */
-
-            /* Many fields not used in this demo so start with everything at 0. */
-            ( void ) memset( ( void * ) &xConnectInfo, 0x00, sizeof( xConnectInfo ) );
-
-            /* Start with a clean session i.e. direct the MQTT broker to discard any
-             * previous session data. Also, establishing a connection with clean session
-             * will ensure that the broker does not store any data when this client
-             * gets disconnected. */
-            xConnectInfo.cleanSession = true;
-
-            /* The client identifier is used to uniquely identify this MQTT client to
-             * the MQTT broker. In a production device the identifier can be something
-             * unique, such as a device serial number. */
-            xConnectInfo.pClientIdentifier = democonfigCLIENT_IDENTIFIER;
-            xConnectInfo.clientIdentifierLength = ( uint16_t ) strlen( democonfigCLIENT_IDENTIFIER );
-
-            /* The maximum time interval in seconds which is allowed to elapse
-             * between two Control Packets.
-             * It is the responsibility of the Client to ensure that the interval between
-             * Control Packets being sent does not exceed this Keep Alive value. In the
-             * absence of sending any other Control Packets, the Client MUST send a
-             * PINGREQ Packet. */
-            xConnectInfo.keepAliveSeconds = mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS;
-
-            #if defined( democonfigCLIENT_USERNAME )
-                /* Append metrics string when connecting to AWS IoT Core with custom auth */
-                xConnectInfo.pUserName = democonfigCLIENT_USERNAME AWS_IOT_METRICS_STRING;
-                xConnectInfo.userNameLength = ( uint16_t ) strlen( democonfigCLIENT_USERNAME AWS_IOT_METRICS_STRING );
-
-                /* Use the provided password as-is */
-                xConnectInfo.pPassword = democonfigCLIENT_PASSWORD;
-                xConnectInfo.passwordLength = ( uint16_t ) strlen( democonfigCLIENT_PASSWORD );
-            #else
-                /* If no username is needed, only send the metrics string */
-                xConnectInfo.pUserName = AWS_IOT_METRICS_STRING;
-                xConnectInfo.userNameLength = ( uint16_t ) strlen( AWS_IOT_METRICS_STRING );
-
-                /* Password for authentication is not used. */
-                xConnectInfo.pPassword = NULL;
-                xConnectInfo.passwordLength = 0U;
-            #endif /* defined( democonfigCLIENT_USERNAME ) */
-
-            /* Send MQTT CONNECT packet to broker. */
-            xMQTTStatus = MQTT_Connect( pxMqttContext,
-                                        &xConnectInfo,
-                                        NULL,
-                                        mqttexampleCONNACK_RECV_TIMEOUT_MS,
-                                        &sessionPresent );
+            xMQTTStatus = MQTT_InitStatefulQoS( pxMqttContext,
+                                                pOutgoingPublishRecords,
+                                                mqttexampleOUTGOING_PUBLISH_RECORD_LEN,
+                                                pIncomingPublishRecords,
+                                                mqttexampleINCOMING_PUBLISH_RECORD_LEN );
 
             if( xMQTTStatus != MQTTSuccess )
             {
                 xReturnStatus = pdFAIL;
-                LogError( ( "Connection with MQTT broker failed with status %s.",
+                LogError( ( "MQTT_InitStatefulQos failed with status %s.",
                             MQTT_Status_strerror( xMQTTStatus ) ) );
             }
             else
             {
-                LogInfo( ( "MQTT connection successfully established with broker.\n\n" ) );
+                /* Establish MQTT session by sending a CONNECT packet. */
+
+                /* Many fields not used in this demo so start with everything at 0. */
+                ( void ) memset( ( void * ) &xConnectInfo, 0x00, sizeof( xConnectInfo ) );
+
+                /* Start with a clean session i.e. direct the MQTT broker to discard any
+                 * previous session data. Also, establishing a connection with clean session
+                 * will ensure that the broker does not store any data when this client
+                 * gets disconnected. */
+                xConnectInfo.cleanSession = true;
+
+                /* The client identifier is used to uniquely identify this MQTT client to
+                 * the MQTT broker. In a production device the identifier can be something
+                 * unique, such as a device serial number. */
+                xConnectInfo.pClientIdentifier = democonfigCLIENT_IDENTIFIER;
+                xConnectInfo.clientIdentifierLength = ( uint16_t ) strlen( democonfigCLIENT_IDENTIFIER );
+
+                /* The maximum time interval in seconds which is allowed to elapse
+                 * between two Control Packets.
+                 * It is the responsibility of the Client to ensure that the interval between
+                 * Control Packets being sent does not exceed this Keep Alive value. In the
+                 * absence of sending any other Control Packets, the Client MUST send a
+                 * PINGREQ Packet. */
+                xConnectInfo.keepAliveSeconds = mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS;
+
+                #if defined( democonfigCLIENT_USERNAME )
+                    /* Append metrics string when connecting to AWS IoT Core with custom auth */
+                    xConnectInfo.pUserName = democonfigCLIENT_USERNAME AWS_IOT_METRICS_STRING;
+                    xConnectInfo.userNameLength = ( uint16_t ) strlen( democonfigCLIENT_USERNAME AWS_IOT_METRICS_STRING );
+
+                    /* Use the provided password as-is */
+                    xConnectInfo.pPassword = democonfigCLIENT_PASSWORD;
+                    xConnectInfo.passwordLength = ( uint16_t ) strlen( democonfigCLIENT_PASSWORD );
+                #else
+                    /* If no username is needed, only send the metrics string */
+                    xConnectInfo.pUserName = AWS_IOT_METRICS_STRING;
+                    xConnectInfo.userNameLength = ( uint16_t ) strlen( AWS_IOT_METRICS_STRING );
+
+                    /* Password for authentication is not used. */
+                    xConnectInfo.pPassword = NULL;
+                    xConnectInfo.passwordLength = 0U;
+                #endif /* defined( democonfigCLIENT_USERNAME ) */
+
+                /* Send MQTT CONNECT packet to broker. */
+                xMQTTStatus = MQTT_Connect( pxMqttContext,
+                                            &xConnectInfo,
+                                            NULL,
+                                            mqttexampleCONNACK_RECV_TIMEOUT_MS,
+                                            &sessionPresent );
+
+                if( xMQTTStatus != MQTTSuccess )
+                {
+                    xReturnStatus = pdFAIL;
+                    LogError( ( "Connection with MQTT broker failed with status %s.",
+                                MQTT_Status_strerror( xMQTTStatus ) ) );
+                }
+                else
+                {
+                    LogInfo( ( "MQTT connection successfully established with broker.\n\n" ) );
+                }
             }
-        }
 
-        if( xReturnStatus == pdFAIL )
-        {
-            /* Keep a flag for indicating if MQTT session is established. This
-             * flag will mark that an MQTT DISCONNECT has to be sent at the end
-             * of the demo even if there are intermediate failures. */
-            xMqttSessionEstablished = true;
-        }
-
-        if( xReturnStatus == pdFAIL )
-        {
-            /* Check if session is present and if there are any outgoing publishes
-             * that need to resend. This is only valid if the broker is
-             * re-establishing a session which was already present. */
-            if( sessionPresent == true )
+            if( xReturnStatus == pdFAIL )
             {
-                LogInfo( ( "An MQTT session with broker is re-established. "
-                           "Resending unacked publishes." ) );
-
-                /* Handle all the resend of publish messages. */
-                xReturnStatus = xHandlePublishResend( pxMqttContext );
+                /* Keep a flag for indicating if MQTT session is established. This
+                 * flag will mark that an MQTT DISCONNECT has to be sent at the end
+                 * of the demo even if there are intermediate failures. */
+                xMqttSessionEstablished = true;
             }
-            else
-            {
-                LogInfo( ( "A clean MQTT connection is established."
-                           " Cleaning up all the stored outgoing publishes.\n\n" ) );
 
-                /* Clean up the outgoing publishes waiting for ack as this new
-                 * connection doesn't re-establish an existing session. */
-                vCleanupOutgoingPublishes();
+            if( xReturnStatus == pdFAIL )
+            {
+                /* Check if session is present and if there are any outgoing publishes
+                 * that need to resend. This is only valid if the broker is
+                 * re-establishing a session which was already present. */
+                if( sessionPresent == true )
+                {
+                    LogInfo( ( "An MQTT session with broker is re-established. "
+                               "Resending unacked publishes." ) );
+
+                    /* Handle all the resend of publish messages. */
+                    xReturnStatus = xHandlePublishResend( pxMqttContext );
+                }
+                else
+                {
+                    LogInfo( ( "A clean MQTT connection is established."
+                               " Cleaning up all the stored outgoing publishes.\n\n" ) );
+
+                    /* Clean up the outgoing publishes waiting for ack as this new
+                     * connection doesn't re-establish an existing session. */
+                    vCleanupOutgoingPublishes();
+                }
             }
         }
     }
@@ -817,7 +906,7 @@ BaseType_t xSubscribeToTopic( MQTTContext_t * pxMqttContext,
          * of receiving publish message before subscribe ack is zero; but application
          * must be ready to receive any packet. This demo uses MQTT_ProcessLoop to
          * receive packet from network. */
-        xMQTTStatus = MQTT_ProcessLoop( pxMqttContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
+        xMQTTStatus = prvProcessLoopWithTimeout( pxMqttContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
 
         if( xMQTTStatus != MQTTSuccess )
         {
@@ -874,7 +963,7 @@ BaseType_t xUnsubscribeFromTopic( MQTTContext_t * pxMqttContext,
                    pcTopicFilter ) );
 
         /* Process the incoming packet from the broker. */
-        xMQTTStatus = MQTT_ProcessLoop( pxMqttContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
+        xMQTTStatus = prvProcessLoopWithTimeout( pxMqttContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
 
         if( xMQTTStatus != MQTTSuccess )
         {
@@ -951,7 +1040,7 @@ BaseType_t xPublishToTopic( MQTTContext_t * pxMqttContext,
              * sends ping request to broker if MQTT_KEEP_ALIVE_INTERVAL_SECONDS
              * has expired since the last MQTT packet sent and receive
              * ping responses. */
-            xMQTTStatus = MQTT_ProcessLoop( pxMqttContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
+            xMQTTStatus = prvProcessLoopWithTimeout( pxMqttContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
 
             if( xMQTTStatus != MQTTSuccess )
             {
@@ -973,7 +1062,7 @@ BaseType_t xProcessLoop( MQTTContext_t * pxMqttContext,
     BaseType_t xReturnStatus = pdFAIL;
     MQTTStatus_t xMQTTStatus = MQTTSuccess;
 
-    xMQTTStatus = MQTT_ProcessLoop( pxMqttContext, ulTimeoutMs );
+    xMQTTStatus = prvProcessLoopWithTimeout( pxMqttContext, ulTimeoutMs );
 
     if( xMQTTStatus != MQTTSuccess )
     {

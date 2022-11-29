@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * https://www.FreeRTOS.org
- * https://aws.amazon.com/freertos
+ * https://github.com/FreeRTOS
  *
  */
 
@@ -42,7 +42,7 @@
 #include <ctype.h>
 
 /* FreeRTOS includes. */
-#include <FreeRTOS.h>
+#include "FreeRTOS.h"
 #include "task.h"
 
 /* FreeRTOS+TCP includes. */
@@ -534,5 +534,11 @@ static void prvLogToFile( const char * pcMessage,
             ulSizeOfLoggingFile = 0;
         }
     }
+}
+/*-----------------------------------------------------------*/
+
+void vPlatformInitLogging(void)
+{
+    vLoggingInit(pdTRUE, pdFALSE, pdFALSE, 0U, 0U);
 }
 /*-----------------------------------------------------------*/

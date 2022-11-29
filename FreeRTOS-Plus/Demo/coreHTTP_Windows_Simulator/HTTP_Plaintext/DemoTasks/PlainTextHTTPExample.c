@@ -57,7 +57,7 @@
 #include "core_http_client.h"
 
 /* Transport interface implementation include for plaintext communication. */
-#include "using_plaintext.h"
+#include "transport_plaintext.h"
 
 /* Common HTTP demo utilities. */
 #include "http_demo_utils.h"
@@ -164,8 +164,8 @@
  */
 #define httpexampleNUMBER_HTTP_PATHS          ( 4 )
 
-/** 
- * @brief Each compilation unit that consumes the NetworkContext must define it. 
+/**
+ * @brief Each compilation unit that consumes the NetworkContext must define it.
  * It should contain a single pointer to the type of your desired transport.
  * When using multiple transports in the same compilation unit, define this pointer as void *.
  *
@@ -332,6 +332,19 @@ static void prvHTTPDemoTask( void * pvParameters )
      * HTTP_MAX_DEMO_LOOP_COUNT times. */
     do
     {
+        LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
+
+        /* Wait for Networking */
+        if( xPlatformIsNetworkUp() == pdFALSE )
+        {
+            LogInfo( ( "Waiting for the network link up event..." ) );
+
+            while( xPlatformIsNetworkUp() == pdFALSE )
+            {
+                vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+            }
+        }
+
         /**************************** Connect. ******************************/
 
         /* Attempt to connect to the HTTP server. If connection fails, retry after a
@@ -418,6 +431,7 @@ static void prvHTTPDemoTask( void * pvParameters )
                    "Total free heap is %u.\r\n",
                    xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully.\r\n" ) );
+        LogInfo( ( "-------DEMO FINISHED-------\r\n" ) );
         vTaskDelete( NULL );
     }
 }

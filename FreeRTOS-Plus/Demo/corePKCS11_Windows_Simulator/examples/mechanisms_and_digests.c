@@ -78,7 +78,7 @@ void vPKCS11MechanismsAndDigestDemo( void )
     CK_MECHANISM_TYPE xMechanismType = 0;
 
     /* This variable is not directly used, but is instantiated for demonstration
-     * purposes. 
+     * purposes.
      */
     ( void ) xMechanismType;
 
@@ -252,9 +252,9 @@ void vPKCS11MechanismsAndDigestDemo( void )
     {
         configPRINTF( ( "%x", xDigestResult[ ulIndex ] ) );
     }
+
     configPRINTF( ( "\r\n" ) );
 
     configPRINTF( ( "Finished PKCS #11 Mechanisms and Digest Demo.\r\n" ) );
     vEnd( hSession, pxSlotId );
 }
-

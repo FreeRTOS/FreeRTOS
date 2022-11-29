@@ -24,12 +24,19 @@
  *
  */
 
+/* Standard Includes */
+#include <stdio.h>
+
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 
 /* FreeRTOS+CLI includes. */
 #include "FreeRTOS_CLI.h"
+
+/* FreeRTOS+Trace includes.*/
+#include "trcDefines.h"
+#include "trcRecorder.h"
 
 /*
  * Writes trace data to a disk file when the trace recording is stopped.

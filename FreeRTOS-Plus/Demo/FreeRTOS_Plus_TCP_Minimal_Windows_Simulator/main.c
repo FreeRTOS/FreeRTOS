@@ -39,6 +39,8 @@
 #include <FreeRTOS.h>
 #include "task.h"
 
+#include "FreeRTOSIPConfig.h"
+
 /* Demo application includes. */
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
@@ -113,12 +115,9 @@ static const uint8_t ucDNSServerAddress[ 4 ] = { configDNS_SERVER_ADDR0, configD
 
 /* Set the following constant to pdTRUE to log using the method indicated by the
  * name of the constant, or pdFALSE to not log using the method indicated by the
- * name of the constant.  Options include to standard out (xLogToStdout), to a disk
- * file (xLogToFile), and to a UDP port (xLogToUDP).  If xLogToUDP is set to pdTRUE
- * then UDP messages are sent to the IP address configured as the echo server
- * address (see the configECHO_SERVER_ADDR0 definitions in FreeRTOSConfig.h) and
- * the port number set by configPRINT_PORT in FreeRTOSConfig.h. */
-const BaseType_t xLogToStdout = pdTRUE, xLogToFile = pdFALSE, xLogToUDP = pdFALSE;
+ * name of the constant.  Options include to standard out (xLogToStdout) and to a
+ * file on disk (xLogToFile). */
+const BaseType_t xLogToStdout = pdTRUE, xLogToFile = pdFALSE;
 
 /* Default MAC address configuration.  The demo creates a virtual network
  * connection that uses this MAC address by accessing the raw Ethernet data
@@ -184,31 +183,6 @@ void vApplicationIdleHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vAssertCalled( const char * pcFile,
-                    uint32_t ulLine )
-{
-    const uint32_t ulLongSleep = 1000UL;
-    volatile uint32_t ulBlockVariable = 0UL;
-    volatile char * pcFileName = ( volatile char * ) pcFile;
-    volatile uint32_t ulLineNumber = ulLine;
-
-    ( void ) pcFileName;
-    ( void ) ulLineNumber;
-
-    FreeRTOS_debug_printf( ( "vAssertCalled( %s, %ld\r\n", pcFile, ulLine ) );
-
-    /* Setting ulBlockVariable to a non-zero value in the debugger will allow
-     * this function to be exited. */
-    taskDISABLE_INTERRUPTS();
-    {
-        while( ulBlockVariable == 0UL )
-        {
-            Sleep( ulLongSleep );
-        }
-    }
-    taskENABLE_INTERRUPTS();
-}
-/*-----------------------------------------------------------*/
 
 /* Called by FreeRTOS+TCP when the network connects or disconnects.  Disconnect
  * events are only received if implemented in the MAC driver. */
@@ -278,16 +252,6 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
-UBaseType_t uxRand( void )
-{
-    const uint32_t ulMultiplier = 0x015a4e35UL, ulIncrement = 1UL;
-
-    /* Utility function to generate a pseudo random number. */
-
-    ulNextRand = ( ulMultiplier * ulNextRand ) + ulIncrement;
-    return( ( int ) ( ulNextRand >> 16UL ) & 0x7fffUL );
-}
-/*-----------------------------------------------------------*/
 
 static void prvSRand( UBaseType_t ulSeed )
 {
@@ -299,11 +263,9 @@ static void prvSRand( UBaseType_t ulSeed )
 static void prvMiscInitialisation( void )
 {
     time_t xTimeNow;
-    uint32_t ulLoggingIPAddress;
     uint32_t ulRandomNumbers[ 4 ];
 
-    ulLoggingIPAddress = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0, configECHO_SERVER_ADDR1, configECHO_SERVER_ADDR2, configECHO_SERVER_ADDR3 );
-    vLoggingInit( xLogToStdout, xLogToFile, xLogToUDP, ulLoggingIPAddress, configPRINT_PORT );
+    vLoggingInit( xLogToStdout, xLogToFile, pdFALSE, 0, 0 );
 
     /* Seed the random number generator. */
     time( &xTimeNow );

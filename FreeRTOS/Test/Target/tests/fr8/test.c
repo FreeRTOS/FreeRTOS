@@ -57,6 +57,7 @@ int main(void) {
 }
 
 static uint32_t taskBState = 0;
+static bool isrAssertionComplete = false;
 
 static void softwareInterruptHandlerSimple(void) {
   int i;
@@ -71,12 +72,14 @@ static void softwareInterruptHandlerSimple(void) {
   sendReport(strbuf_a, strbuf_a_len);
   uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
 
-  // TEST_ASSERT_EQUAL_INT(taskBState, 6);
+  TEST_ASSERT_EQUAL_INT(taskBState, 6);
 
   clearPin(LED_PIN);
 
   taskEXIT_CRITICAL_FROM_ISR(uxSavedInterruptStatus);
   sendReport(strbuf_b, strbuf_b_len);
+
+  isrAssertionComplete = true;
 
   for (i = 0;; i++) {
     if ((i % 2) == 0) {
@@ -120,7 +123,9 @@ static void prvTaskB(void *pvParameters) {
   sendReport(strbuf, strbuf_len);
 
   for (iter = 1; iter < numIters; iter++) {
-    vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS * 100);
+    while (taskBState == 6 && !isrAssertionComplete) {
+      vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS * 100);
+    }
     taskENTER_CRITICAL();
     taskBState++;
     if ((iter % 2) == 0) {

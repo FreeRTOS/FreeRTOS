@@ -30,8 +30,6 @@ static void prvTaskC(void *pvParameters);
 #error Require two cores be configured for FreeRTOS
 #endif
 
-#define traceTASK_SWITCHED_IN() test_fr2TASK_SWITCHED_IN()
-
 void test_fr2TASK_SWITCHED_IN(void) {
   static SchedTraceLog schedTraceLog;
 
@@ -79,7 +77,6 @@ int main(void) {
 
 static void prvTaskA(void *pvParameters) {
   vTaskDelay(pdMS_TO_TICKS(5000));
-  setPin(LED_PIN);
   // idle the task
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);

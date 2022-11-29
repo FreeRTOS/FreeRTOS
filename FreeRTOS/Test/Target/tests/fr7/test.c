@@ -81,25 +81,25 @@ static void prvTaskB(void *pvParameters) {
   int numIters = 10;
   char strbuf[] = "task B enter critical section";
   size_t strbuf_len = sizeof(strbuf) / sizeof(char);
-  HeapStats_t heapStats;
-  size_t bytesAvailBefore, bytesAvailDelta;
+  //HeapStats_t heapStats;
+  //size_t bytesAvailBefore, bytesAvailDelta;
 
   while(taskAState < 1) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);
   }
 
-  vPortGetHeapState(&heapStats);
-  bytesAvailBefore = heapStats.xAvailableHeapSpaceInBytes;
+  //vPortGetHeapState(&heapStats);
+  //bytesAvailBefore = heapStats.xAvailableHeapSpaceInBytes;
 
   vTaskDelete(taskAHandle);
   vTaskDelay(pdMS_TO_TICKS(1000));
 
   setPin(LED_PIN);
 
-  vPortGetHeapState(&heapStats);
+  //vPortGetHeapState(&heapStats);
   // XXXADS assert that before - current isn't negative. That would indicate
   // test failure.
-  bytesAvailDelta = bytesAvailBefore - heapStats.xAvailableHeapSpaceInBytes;
+  //bytesAvailDelta = bytesAvailBefore - heapStats.xAvailableHeapSpaceInBytes;
 
   // idle the task
   for (;;) {

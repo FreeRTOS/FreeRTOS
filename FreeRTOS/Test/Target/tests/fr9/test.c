@@ -32,8 +32,6 @@ TaskHandle_t taskAHandle;
 #error Require two cores be configured for FreeRTOS
 #endif
 
-#define traceTASK_SWITCHED_IN() test_fr9TASK_SWITCHED_IN()
-
 void test_fr9TASK_SWITCHED_IN(void) {
   static SchedTraceLog schedTraceLog;
 
@@ -97,10 +95,10 @@ static void prvTaskB(void *pvParameters) {
 }
 
 static void prvTaskC(void *pvParameters) {
-  vTaskSuspendAll()
+  vTaskSuspendAll();
   vTaskPrioritySet(taskAHandle, tskIDLE_PRIORITY + 4);
   vTaskDelay(pdMS_TO_TICKS(5000));
-  xTaskResumeAll()
+  xTaskResumeAll();
   // idle the task
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);

@@ -97,10 +97,10 @@ static void prvTaskB(void *pvParameters) {
 }
 
 static void prvTaskC(void *pvParameters) {
-  vTaskSuspendAll()
+  vTaskSuspendAll();
   vTaskPrioritySet(taskAHandle, tskIDLE_PRIORITY + 4);
   vTaskDelay(pdMS_TO_TICKS(5000));
-  xTaskResumeAll()
+  xTaskResumeAll();
   // idle the task
   for (;;) {
     vTaskDelay(mainSOFTWARE_TIMER_PERIOD_MS);

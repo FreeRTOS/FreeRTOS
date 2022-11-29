@@ -92,8 +92,6 @@ static void prvTaskA(void *pvParameters) {
 static void prvTaskB(void *pvParameters) {
   int iter = 1;
   int numIters = 10;
-  char strbuf[] = "task B enter critical section";
-  size_t strbuf_len = sizeof(strbuf) / sizeof(char);
 
   clearPin(LED_PIN);
   taskBState++;

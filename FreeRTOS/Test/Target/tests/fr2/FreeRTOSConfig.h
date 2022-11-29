@@ -138,6 +138,8 @@ to exclude the API function. */
 #define INCLUDE_xQueueGetMutexHolder            1
 
 /* A header file that defines trace macro can be included here. */
+extern void test_fr2TASK_SWITCHED_IN(void);
+#define traceTASK_SWITCHED_IN() test_fr2TASK_SWITCHED_IN()
 
 #endif /* FREERTOS_CONFIG_H */
 

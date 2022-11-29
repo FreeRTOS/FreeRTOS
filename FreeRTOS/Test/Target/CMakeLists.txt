@@ -1,6 +1,8 @@
 # Note that this file can be used as a top level CMakeLists.txt to build all the Demos (it includes
 # them all, but they are usable in their own right, which is why no common work is done here)
 
+# The tests are defined here: https://quip-amazon.com/78LdAeL2txGu/Test-Plan
+
 cmake_minimum_required(VERSION 3.13)
 
 

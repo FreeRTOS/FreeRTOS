@@ -143,7 +143,7 @@
 #define JTAG_TCLK_PORT         PORTA
 #define JTAG_TDI_PORT          PORTA
 #define JTAG_TDO_PORT          PORTA
-#define JTAG_TMS_PORT          PORTA 
+#define JTAG_TMS_PORT          PORTA
 
 #define NMI_GPIO               GPIOA
 #define JTAG_TCLK_GPIO         GPIOA

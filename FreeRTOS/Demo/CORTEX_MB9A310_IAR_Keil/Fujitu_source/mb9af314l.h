@@ -42,7 +42,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif 
+#endif
 
 
 /******************************************************************************
@@ -13782,4 +13782,3 @@ typedef struct
 #endif
 
 #endif /* _MB9AF314L_H_ */
-

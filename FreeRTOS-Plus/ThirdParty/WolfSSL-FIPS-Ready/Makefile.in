@@ -1058,7 +1058,7 @@ check_PROGRAMS = $(am__EXEEXT_1) $(am__EXEEXT_2) $(am__EXEEXT_3)
 @BUILD_DISTRO_FALSE@	IDE/Espressif IDE/zephyr \
 @BUILD_DISTRO_FALSE@	IDE/OPENSTM32/README.md
 @BUILD_DISTRO_FALSE@@BUILD_MCAPI_TRUE@am__append_149 = mcapi/test
-@BUILD_DISTRO_FALSE@@BUILD_MCAPI_TRUE@am__append_150 = mcapi/test 
+@BUILD_DISTRO_FALSE@@BUILD_MCAPI_TRUE@am__append_150 = mcapi/test
 @BUILD_DISTRO_FALSE@am__append_151 = mcapi/crypto.h
 @BUILD_SNIFFTEST_TRUE@am__append_152 = scripts/sniffer-testsuite.test
 @BUILD_EXAMPLE_SERVERS_TRUE@am__append_153 = scripts/resume.test
@@ -1437,7 +1437,7 @@ src_libwolfssl_la_OBJECTS = $(am_src_libwolfssl_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
-am__v_lt_1 = 
+am__v_lt_1 =
 src_libwolfssl_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(src_libwolfssl_la_CFLAGS) $(CFLAGS) \
@@ -1555,11 +1555,11 @@ am__v_P_1 = :
 AM_V_GEN = $(am__v_GEN_@AM_V@)
 am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
 am__v_GEN_0 = @echo "  GEN     " $@;
-am__v_GEN_1 = 
+am__v_GEN_1 =
 AM_V_at = $(am__v_at_@AM_V@)
 am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
 am__v_at_0 = @
-am__v_at_1 = 
+am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__maybe_remake_depfiles = depfiles
@@ -1724,7 +1724,7 @@ LTCPPASCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 AM_V_CPPAS = $(am__v_CPPAS_@AM_V@)
 am__v_CPPAS_ = $(am__v_CPPAS_@AM_DEFAULT_V@)
 am__v_CPPAS_0 = @echo "  CPPAS   " $@;
-am__v_CPPAS_1 = 
+am__v_CPPAS_1 =
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
@@ -1734,7 +1734,7 @@ LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 AM_V_CC = $(am__v_CC_@AM_V@)
 am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
 am__v_CC_0 = @echo "  CC      " $@;
-am__v_CC_1 = 
+am__v_CC_1 =
 CCLD = $(CC)
 LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
@@ -1742,7 +1742,7 @@ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
-am__v_CCLD_1 = 
+am__v_CCLD_1 =
 SOURCES = $(src_libwolfssl_la_SOURCES) \
 	$(examples_benchmark_tls_bench_SOURCES) \
 	$(examples_client_client_SOURCES) \
@@ -2389,7 +2389,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 
 # includes append to these:
-SUFFIXES = 
+SUFFIXES =
 TESTS = $(check_PROGRAMS) $(check_SCRIPTS)
 CLEANFILES = cert.der cert.pem certecc.der certecc.pem certreq.der \
 	certreq.pem key.der key.pem ntru-cert.der ecc-key-pkcs8.der \
@@ -2504,8 +2504,8 @@ noinst_HEADERS = cyassl/ctaocrypt/port/pic32/pic32mz-crypt.h \
 	$(am__append_138) $(am__append_140) $(am__append_142) \
 	$(am__append_151)
 lib_LTLIBRARIES = src/libwolfssl.la
-man_MANS = 
-noinst_LTLIBRARIES = 
+man_MANS =
+noinst_LTLIBRARIES =
 include_HEADERS = $(am__append_19)
 nobase_include_HEADERS = cyassl/ctaocrypt/aes.h \
 	cyassl/ctaocrypt/arc4.h cyassl/ctaocrypt/asn.h \
@@ -2618,8 +2618,8 @@ nobase_include_HEADERS = cyassl/ctaocrypt/aes.h \
 	wolfssl/sniffer_error.h wolfssl/sniffer.h wolfssl/callbacks.h \
 	wolfssl/certs_test.h wolfssl/test.h wolfssl/version.h \
 	wolfssl/ocsp.h wolfssl/crl.h wolfssl/wolfio.h $(am__append_17)
-EXTRA_HEADERS = 
-BUILT_SOURCES = 
+EXTRA_HEADERS =
+BUILT_SOURCES =
 
 # wolfSSL CSharp wrapper files
 
@@ -3281,7 +3281,7 @@ pkgconfig_DATA = support/wolfssl.pc
 @BUILD_DISTRO_FALSE@@BUILD_MCAPI_TRUE@mcapi_test_SOURCES = mcapi/crypto.c \
 @BUILD_DISTRO_FALSE@@BUILD_MCAPI_TRUE@                     mcapi/mcapi_test.c
 
-@BUILD_DISTRO_FALSE@@BUILD_MCAPI_TRUE@mcapi_test_LDADD = src/libwolfssl.la 
+@BUILD_DISTRO_FALSE@@BUILD_MCAPI_TRUE@mcapi_test_LDADD = src/libwolfssl.la
 @BUILD_DISTRO_FALSE@@BUILD_MCAPI_TRUE@mcapi_test_DEPENDENCIES = src/libwolfssl.la
 
 # Exclude references to non-DFSG sources from build files
@@ -3334,7 +3334,7 @@ config.h: stamp-h1
 stamp-h1: $(srcdir)/config.in $(top_builddir)/config.status
 	@rm -f stamp-h1
 	cd $(top_builddir) && $(SHELL) ./config.status config.h
-$(srcdir)/config.in:  $(am__configure_deps) 
+$(srcdir)/config.in:  $(am__configure_deps)
 	($(am__cd) $(top_srcdir) && $(AUTOHEADER))
 	rm -f stamp-h1
 	touch $@

@@ -1,20 +1,20 @@
 /******************************************************************************
  *
  * Copyright 2013 Altera Corporation. All Rights Reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * 3. The name of the author may not be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
@@ -25,7 +25,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  ******************************************************************************/
 
 #include "alt_i2c.h"
@@ -172,7 +172,7 @@ ALT_STATUS_CODE alt_i2c_init(const ALT_I2C_CTLR_t i2c,
 {
     // Save i2c start address to the instance
     i2c_dev->location = (void *)i2c;
-    
+
     if (alt_i2c_checking(i2c_dev) == ALT_E_FALSE)
     {
         return ALT_E_BAD_ARG;
@@ -224,7 +224,7 @@ ALT_STATUS_CODE alt_i2c_reset(ALT_I2C_DEV_t * i2c_dev)
             return status;
         }
     }
-    
+
     // Reset i2c module by reset manager
     alt_i2c_rstmgr_strobe(i2c_dev);
 
@@ -239,7 +239,7 @@ ALT_STATUS_CODE alt_i2c_reset(ALT_I2C_DEV_t * i2c_dev)
 
     alt_i2c_master_config_set(i2c_dev, &cfg);
 
-    // Active master mode 
+    // Active master mode
     alt_i2c_op_mode_set(i2c_dev, ALT_I2C_MODE_MASTER);
 
     // Reset the last target address cache.
@@ -297,7 +297,7 @@ ALT_STATUS_CODE alt_i2c_enable(ALT_I2C_DEV_t * i2c_dev)
     }
 
     // Enable DMA by default.
-    alt_write_word(ALT_I2C_DMA_CR_ADDR(i2c_dev->location), 
+    alt_write_word(ALT_I2C_DMA_CR_ADDR(i2c_dev->location),
                    ALT_I2C_DMA_CR_TDMAE_SET_MSK | ALT_I2C_DMA_CR_RDMAE_SET_MSK);
 
     alt_setbits_word(ALT_I2C_EN_ADDR(i2c_dev->location), ALT_I2C_EN_EN_SET_MSK);
@@ -323,7 +323,7 @@ ALT_STATUS_CODE alt_i2c_disable(ALT_I2C_DEV_t * i2c_dev)
 
     // Else clear enable bit of i2c_enable register
     alt_clrbits_word(ALT_I2C_EN_ADDR(i2c_dev->location), ALT_I2C_EN_EN_SET_MSK);
-    
+
     uint32_t timeout = ALT_I2C_MAX_T_POLL_COUNT;
 
     // Wait to complete all transfer operations or timeout
@@ -437,15 +437,15 @@ ALT_STATUS_CODE alt_i2c_master_config_set(ALT_I2C_DEV_t *i2c_dev,
     alt_replbits_word(ALT_I2C_CON_ADDR(i2c_dev->location),
                       ALT_I2C_CON_SPEED_SET_MSK | ALT_I2C_CON_IC_RESTART_EN_SET_MSK,
                       ALT_I2C_CON_SPEED_SET(cfg->speed_mode) | ALT_I2C_CON_IC_RESTART_EN_SET(cfg->restart_enable));
-    
+
     alt_replbits_word(ALT_I2C_TAR_ADDR(i2c_dev->location),
-                      ALT_I2C_TAR_IC_10BITADDR_MST_SET_MSK, 
+                      ALT_I2C_TAR_IC_10BITADDR_MST_SET_MSK,
                       ALT_I2C_TAR_IC_10BITADDR_MST_SET(cfg->addr_mode));
 
     alt_replbits_word(ALT_I2C_FS_SPKLEN_ADDR(i2c_dev->location),
                       ALT_I2C_FS_SPKLEN_SPKLEN_SET_MSK,
                       ALT_I2C_FS_SPKLEN_SPKLEN_SET(cfg->fs_spklen));
-    
+
     alt_replbits_word(ALT_I2C_SS_SCL_LCNT_ADDR(i2c_dev->location),
                       ALT_I2C_SS_SCL_LCNT_IC_SS_SCL_LCNT_SET_MSK,
                       ALT_I2C_SS_SCL_LCNT_IC_SS_SCL_LCNT_SET(cfg->ss_scl_lcnt));
@@ -486,7 +486,7 @@ ALT_STATUS_CODE alt_i2c_master_config_speed_get(ALT_I2C_DEV_t *i2c_dev,
     {
         return ALT_E_BAD_ARG;
     }
-    
+
     *speed_in_hz = i2c_dev->clock_freq / (scl_lcnt << 1);
 
     return ALT_E_SUCCESS;
@@ -497,7 +497,7 @@ ALT_STATUS_CODE alt_i2c_master_config_speed_get(ALT_I2C_DEV_t *i2c_dev,
 //
 ALT_STATUS_CODE alt_i2c_master_config_speed_set(ALT_I2C_DEV_t *i2c_dev,
                                                 ALT_I2C_MASTER_CONFIG_t * cfg,
-                                                uint32_t speed_in_hz)    
+                                                uint32_t speed_in_hz)
 {
     if (alt_i2c_checking(i2c_dev) == ALT_E_FALSE)
     {
@@ -509,7 +509,7 @@ ALT_STATUS_CODE alt_i2c_master_config_speed_set(ALT_I2C_DEV_t *i2c_dev,
     {
         return ALT_E_ARG_RANGE;
     }
-    
+
     if (speed_in_hz > ALT_I2C_FS_MIN_SPEED)
     {
         cfg->speed_mode = ALT_I2C_SPEED_FAST;
@@ -617,7 +617,7 @@ ALT_STATUS_CODE alt_i2c_slave_config_set(ALT_I2C_DEV_t *i2c_dev,
 //
 // Get hold time (use during slave mode)
 //
-ALT_STATUS_CODE alt_i2c_sda_hold_time_get(ALT_I2C_DEV_t *i2c_dev, 
+ALT_STATUS_CODE alt_i2c_sda_hold_time_get(ALT_I2C_DEV_t *i2c_dev,
                                           uint16_t *hold_time)
 {
     if (alt_i2c_checking(i2c_dev) == ALT_E_FALSE)
@@ -630,11 +630,11 @@ ALT_STATUS_CODE alt_i2c_sda_hold_time_get(ALT_I2C_DEV_t *i2c_dev,
 
     return ALT_E_SUCCESS;
 }
-    
+
 //
 // Set hold time (use during slave mode)
 //
-ALT_STATUS_CODE alt_i2c_sda_hold_time_set(ALT_I2C_DEV_t *i2c_dev, 
+ALT_STATUS_CODE alt_i2c_sda_hold_time_set(ALT_I2C_DEV_t *i2c_dev,
                                           const uint16_t hold_time)
 {
     if (alt_i2c_checking(i2c_dev) == ALT_E_FALSE)
@@ -668,7 +668,7 @@ ALT_STATUS_CODE alt_i2c_sda_hold_time_set(ALT_I2C_DEV_t *i2c_dev,
 
     return status;
 }
-    
+
 //
 // Gets the current operational mode of the I2C controller.
 //
@@ -679,13 +679,13 @@ ALT_STATUS_CODE alt_i2c_op_mode_get(ALT_I2C_DEV_t *i2c_dev,
     {
         return ALT_E_BAD_ARG;
     }
-    
+
     uint32_t cfg_register = alt_read_word(ALT_I2C_CON_ADDR(i2c_dev->location));
     uint32_t mst_mod_stat = ALT_I2C_CON_MST_MOD_GET(cfg_register);
     uint32_t slv_mod_stat = ALT_I2C_CON_IC_SLV_DIS_GET(cfg_register);
 
     // Return error if master and slave modes enable or disable at the same time
-    if (   (mst_mod_stat == ALT_I2C_CON_MST_MOD_E_EN  && slv_mod_stat == ALT_I2C_CON_IC_SLV_DIS_E_EN) 
+    if (   (mst_mod_stat == ALT_I2C_CON_MST_MOD_E_EN  && slv_mod_stat == ALT_I2C_CON_IC_SLV_DIS_E_EN)
         || (mst_mod_stat == ALT_I2C_CON_MST_MOD_E_DIS && slv_mod_stat == ALT_I2C_CON_IC_SLV_DIS_E_DIS))
     {
         return ALT_E_ERROR;
@@ -695,12 +695,12 @@ ALT_STATUS_CODE alt_i2c_op_mode_get(ALT_I2C_DEV_t *i2c_dev,
 
     return ALT_E_SUCCESS;
 }
-    
+
 //
 // Sets the operational mode of the I2C controller.
 //
 ALT_STATUS_CODE alt_i2c_op_mode_set(ALT_I2C_DEV_t *i2c_dev,
-                                    const ALT_I2C_MODE_t mode)    
+                                    const ALT_I2C_MODE_t mode)
 {
     if (alt_i2c_checking(i2c_dev) == ALT_E_FALSE)
     {
@@ -712,7 +712,7 @@ ALT_STATUS_CODE alt_i2c_op_mode_set(ALT_I2C_DEV_t *i2c_dev,
     {
         return ALT_E_ARG_RANGE;
     }
-    
+
     ALT_STATUS_CODE status = ALT_E_SUCCESS;
 
     bool already_enabled = (alt_i2c_is_enabled_helper(i2c_dev) == ALT_E_TRUE);
@@ -741,16 +741,16 @@ ALT_STATUS_CODE alt_i2c_op_mode_set(ALT_I2C_DEV_t *i2c_dev,
                           ALT_I2C_CON_IC_SLV_DIS_SET_MSK | ALT_I2C_CON_MST_MOD_SET_MSK,
                           ALT_I2C_CON_IC_SLV_DIS_SET(ALT_I2C_CON_IC_SLV_DIS_E_EN) | ALT_I2C_CON_MST_MOD_SET(ALT_I2C_CON_MST_MOD_E_DIS));
     }
-        
+
     if (already_enabled)
     {
         // Re-enable controller
         status = alt_i2c_enable(i2c_dev);
     }
-    
+
     return status;
 }
-    
+
 //
 // Returns ALT_E_TRUE if the I2C controller is busy
 //
@@ -760,7 +760,7 @@ ALT_STATUS_CODE alt_i2c_is_busy(ALT_I2C_DEV_t *i2c_dev)
     {
         return ALT_E_BAD_ARG;
     }
-    
+
     if ( ALT_I2C_STAT_ACTIVITY_GET(alt_read_word(ALT_I2C_STAT_ADDR(i2c_dev->location))))
     {
         return ALT_E_TRUE;
@@ -971,7 +971,7 @@ static ALT_STATUS_CODE alt_i2c_master_transmit_helper(ALT_I2C_DEV_t * i2c_dev,
         }
 
         /////
-            
+
         // Middle byte(s)
 
         if (status == ALT_E_SUCCESS)
@@ -998,7 +998,7 @@ static ALT_STATUS_CODE alt_i2c_master_transmit_helper(ALT_I2C_DEV_t * i2c_dev,
 
                     continue;
                 }
-                
+
                 // Subtract 1 because the last byte may need to issue_stop
                 space = MIN(space, size - 1);
 
@@ -1059,7 +1059,7 @@ ALT_STATUS_CODE alt_i2c_master_transmit(ALT_I2C_DEV_t *i2c_dev,
     {
         return ALT_E_SUCCESS;
     }
-    
+
     ALT_STATUS_CODE status = ALT_E_SUCCESS;
 
     if (status == ALT_E_SUCCESS)
@@ -1217,7 +1217,7 @@ ALT_STATUS_CODE alt_i2c_master_receive_helper(ALT_I2C_DEV_t *i2c_dev,
 // data bytes transmitted from a slave in response to read requests issued from
 // this master.
 //
-ALT_STATUS_CODE alt_i2c_master_receive(ALT_I2C_DEV_t *i2c_dev, 
+ALT_STATUS_CODE alt_i2c_master_receive(ALT_I2C_DEV_t *i2c_dev,
                                        void * data,
                                        const size_t size,
                                        const bool issue_restart,
@@ -1565,7 +1565,7 @@ ALT_STATUS_CODE alt_i2c_general_call_ack_is_enabled(ALT_I2C_DEV_t *i2c_dev)
     }
 
     uint32_t tar_register = alt_read_word(ALT_I2C_TAR_ADDR(i2c_dev->location));
-    
+
     if (   (ALT_I2C_TAR_SPECIAL_GET(tar_register)     == ALT_I2C_TAR_SPECIAL_E_GENCALL)
         && (ALT_I2C_TAR_GC_OR_START_GET(tar_register) == ALT_I2C_TAR_GC_OR_START_E_GENCALL)
        )
@@ -1627,7 +1627,7 @@ ALT_STATUS_CODE alt_i2c_int_clear(ALT_I2C_DEV_t *i2c_dev, const uint32_t mask)
         alt_read_word(ALT_I2C_CLR_INTR_ADDR(i2c_dev->location));
         return ALT_E_SUCCESS;
     }
-    
+
     // For different status clear different register
 
     if (mask & ALT_I2C_STATUS_RX_UNDER)
@@ -1685,7 +1685,7 @@ ALT_STATUS_CODE alt_i2c_int_disable(ALT_I2C_DEV_t *i2c_dev, const uint32_t mask)
         return ALT_E_BAD_ARG;
     }
 
-    alt_clrbits_word(ALT_I2C_INTR_MSK_ADDR(i2c_dev->location), mask);    
+    alt_clrbits_word(ALT_I2C_INTR_MSK_ADDR(i2c_dev->location), mask);
 
     return ALT_E_SUCCESS;
 }

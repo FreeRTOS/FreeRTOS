@@ -183,7 +183,7 @@ const intvec_elem __vector_table[] =
     USART1_Handler, /* 14 USART 1 */
     USART2_Handler, /* 15 USART 2 */
     PIOD_Handler,   /* 16 Parallel I/O Controller D */
-    PIOE_Handler,   /* 17 Parallel I/O Controller E */    
+    PIOE_Handler,   /* 17 Parallel I/O Controller E */
     HSMCI_Handler,  /* 18 Multimedia Card Interface */
     TWI0_Handler,   /* 19 Two Wire Interface 0 HS */
     TWI1_Handler,   /* 20 Two Wire Interface 1 HS */
@@ -248,12 +248,12 @@ int __low_level_init(void)
 //        uint32_t *pSrc = __section_begin(".intvec");
         LowLevelInit();
 //        SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
-        
-        SCB_EnableICache();        
+
+        SCB_EnableICache();
         SCB_EnableDCache();
-        
-        
-        
+
+
+
         return 1; /* if return 0, the data sections will not be initialized */
 }
 
@@ -271,7 +271,7 @@ int __low_level_init(void)
 #define SCB_ITCMCR_EN_Msk                  (0x1FFUL << SCB_ITCMCR_EN_Pos)                   /*!< SCB ITCMCR: EN Mask */
 
 
-__STATIC_INLINE void TCM_Enable(void) 
+__STATIC_INLINE void TCM_Enable(void)
 {
 
   __DSB();
@@ -294,8 +294,8 @@ void Reset_Handler(void)
     LowLevelInit() ;
 		SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
 
-    SCB_EnableICache();        
-    SCB_EnableDCache(); 
+    SCB_EnableICache();
+    SCB_EnableDCache();
 
     /* Branch to main function */
     __main() ;

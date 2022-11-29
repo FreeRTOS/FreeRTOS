@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -78,7 +78,7 @@ void WM8904_Write(Twid *pTwid,
                   uint16_t data)
 {
     uint8_t tmpData[2];
-    
+
     tmpData[0] = (data & 0xff00) >> 8;
     tmpData[1] = data & 0xff;
     TWID_Write(pTwid, device, regAddr, 1, tmpData, 2, 0);
@@ -93,7 +93,7 @@ void WM8904_Write(Twid *pTwid,
  */
 uint8_t WM8904_Init(Twid     *pTwid,
                     uint32_t device)
- 
+
 {
     /* Software reset */
     WM8904_Write(pTwid, device, WM8904_REG_RESET, 0x0000);
@@ -103,7 +103,7 @@ uint8_t WM8904_Init(Twid     *pTwid,
 
     /* VMID_BUF_ENA=1, VMID_RES=01, VMID_ENA=1   */
     WM8904_Write(pTwid, device, WM8904_REG_VMID_CTRL0, 0x0043);
-    
+
     /* MICDET_ENA=1, MICBIAS_ENA=1   */
     WM8904_Write(pTwid, device, WM8904_REG_MICBIAS_CTRL0, 0x0003);
 
@@ -174,13 +174,13 @@ uint8_t WM8904_Init(Twid     *pTwid,
     WM8904_Write(pTwid, device, WM8904_REG_FLL_CRTL4, 0x1760);
     WM8904_Write(pTwid, device, WM8904_REG_END, 0x55AA);
     return 0;
-}  
+}
 
 void WM8904_IN2R_IN1L(Twid *pTwid, uint32_t device)
 {
-    //{ 0x0005, 44},  /** R44  - Analogue Left Input 0 */ 
-    //{ 0x0005, 45},  /** R45  - Analogue Right Input 0 */ 
-    //{ 0x0000, 46},  /** R46  - Analogue Left Input 1 */ 
+    //{ 0x0005, 44},  /** R44  - Analogue Left Input 0 */
+    //{ 0x0005, 45},  /** R45  - Analogue Right Input 0 */
+    //{ 0x0000, 46},  /** R46  - Analogue Left Input 1 */
     //{ 0x0010, 47},  /** R47  - Analogue Right Input 1 */
     WM8904_Write(pTwid, device, 0x2C, 0x0008);
     WM8904_Write(pTwid, device, 0x2D, 0x0005);

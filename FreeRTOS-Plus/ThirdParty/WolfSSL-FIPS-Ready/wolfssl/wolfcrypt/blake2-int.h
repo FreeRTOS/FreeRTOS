@@ -181,4 +181,3 @@
 #endif
 
 #endif  /* WOLFCRYPT_BLAKE2_INT_H */
-

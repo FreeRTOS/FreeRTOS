@@ -136,4 +136,3 @@ int wc_curve448_size(curve448_key* key);
 
 #endif /* HAVE_CURVE448 */
 #endif /* WOLF_CRYPT_CURVE448_H */
-

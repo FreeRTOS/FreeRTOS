@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -113,4 +113,3 @@ void REF_A_setBufferedBandgapVoltageOneTimeTrigger(void)
 {
     BITBAND_PERI(REF_A->CTL0,REF_A_CTL0_BGOT_OFS) = 1;
 }
-

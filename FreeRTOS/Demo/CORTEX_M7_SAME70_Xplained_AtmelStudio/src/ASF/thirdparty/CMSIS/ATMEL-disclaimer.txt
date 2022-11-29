@@ -10,9 +10,9 @@
  * should be manual modified. The library thirdparty/CMSIS/Lib/GCC/libarm_cortexM4lf_math.a is used for
  * -mfloat-abi=hard configration.
  *
- * __CORTEX_SC is not defined for cortex-m0+, and may cause compiler warning, so the include file 
+ * __CORTEX_SC is not defined for cortex-m0+, and may cause compiler warning, so the include file
  * thirdparty/CMSIS/Include/core_cmInstr.h was modified to void such warning.
- * Modified from: 
+ * Modified from:
  *  #if       (__CORTEX_M >= 0x03) || (__CORTEX_SC >= 300)
  * to:
  * #if       (__CORTEX_M >= 0x03) || ((defined(__CORTEX_SC)) && (__CORTEX_SC >= 300))

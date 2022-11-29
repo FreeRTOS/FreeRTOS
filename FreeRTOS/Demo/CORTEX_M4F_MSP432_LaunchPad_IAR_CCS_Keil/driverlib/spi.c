@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -62,7 +62,7 @@ bool SPI_initMaster(uint32_t moduleInstance, const eUSCI_SPI_MasterConfig *confi
     {
         return false;
     }
-    
+
     if (is_A_Module(moduleInstance))
     {
         ASSERT(
@@ -92,7 +92,7 @@ bool SPI_initMaster(uint32_t moduleInstance, const eUSCI_SPI_MasterConfig *confi
                         == config->spiMode)
                 || (EUSCI_A_SPI_4PIN_UCxSTE_ACTIVE_LOW
                         == config->spiMode));
-                        
+
         //Disable the USCI Module
         BITBAND_PERI(EUSCI_B_CMSIS(moduleInstance)->CTLW0, EUSCI_A_CTLW0_SWRST_OFS) = 1;
 
@@ -110,7 +110,7 @@ bool SPI_initMaster(uint32_t moduleInstance, const eUSCI_SPI_MasterConfig *confi
                         | (config->selectClockSource + config->msbFirst
                                 + config->clockPhase + config->clockPolarity
                                 + EUSCI_A_CTLW0_MST + EUSCI_A_CTLW0_SYNC + config->spiMode);
-        
+
         EUSCI_A_CMSIS(moduleInstance)->BRW =
                 (uint16_t) (config->clockSourceFrequency
                         / config->desiredSpiClock);

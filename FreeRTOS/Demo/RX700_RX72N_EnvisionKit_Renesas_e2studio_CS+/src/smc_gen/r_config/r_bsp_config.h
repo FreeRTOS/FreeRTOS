@@ -1,17 +1,17 @@
 /* Generated configuration header file - do not edit */
 /***********************************************************************************************************************
 * DISCLAIMER
-* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No 
-* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all 
-* applicable laws, including copyright laws. 
+* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No
+* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
+* applicable laws, including copyright laws.
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
-* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, 
-* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM 
-* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES 
-* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS 
+* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM
+* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES
+* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS
 * SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of 
-* this software. By using this software, you agree to the additional terms and conditions found by accessing the 
+* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of
+* this software. By using this software, you agree to the additional terms and conditions found by accessing the
 * following link:
 * http://www.renesas.com/disclaimer
 *
@@ -48,7 +48,7 @@ Configuration Options
    NOTE: This setting is available only when using CCRX. */
 #define BSP_CFG_STARTUP_DISABLE (0)
 
-/* Enter the product part number for your MCU. This information will be used to obtain information about your MCU such 
+/* Enter the product part number for your MCU. This information will be used to obtain information about your MCU such
    as package and memory size.
    To help parse this information, the part number will be defined using multiple macros.
    R 5 F 57 2N N D D BD
@@ -126,7 +126,7 @@ NOTE: The RAM areas are not contiguous.It is separated by 512 KB each.
 
 /* If only 1 stack is chosen using BSP_CFG_USER_STACK_ENABLE then no RAM will be allocated for the user stack. */
 #if BSP_CFG_USER_STACK_ENABLE == 1
-/* User Stack size in bytes. 
+/* User Stack size in bytes.
  * NOTE: This setting is available only when using CCRX and GNUC.
  *       This is invalid when using Renesas RTOS with CCRX. */
 #define BSP_CFG_USTACK_BYTES            (0x0)
@@ -140,7 +140,7 @@ NOTE: The RAM areas are not contiguous.It is separated by 512 KB each.
    To disable the heap you must follow these steps:
    1) Set this macro (BSP_CFG_HEAP_BYTES) to 0.
    2) Set the macro BSP_CFG_IO_LIB_ENABLE to 0.
-   3) Disable stdio from being built into the project library. This is done by going into the Renesas RX Toolchain 
+   3) Disable stdio from being built into the project library. This is done by going into the Renesas RX Toolchain
       settings and choosing the Standard Library section. After that choose 'Contents' in e2 studio.
       This will present a list of modules that can be included. Uncheck the box for stdio.h.
    NOTE: This setting is available only when using CCRX and GNUC. */
@@ -168,10 +168,10 @@ NOTE: The RAM areas are not contiguous.It is separated by 512 KB each.
 */
 #define BSP_CFG_RUN_IN_USER_MODE        (0)
 
-/* Set your desired ID code. NOTE, leave at the default (all 0xFF's) if you do not wish to use an ID code. If you set 
-   this value and program it into the MCU then you will need to remember the ID code because the debugger will ask for 
+/* Set your desired ID code. NOTE, leave at the default (all 0xFF's) if you do not wish to use an ID code. If you set
+   this value and program it into the MCU then you will need to remember the ID code because the debugger will ask for
    it when trying to connect. Note that the E1/E20 will ignore the ID code when programming the MCU during debugging.
-   If you set this value and then forget it then you can clear the ID code by connecting up in serial boot mode using 
+   If you set this value and then forget it then you can clear the ID code by connecting up in serial boot mode using
    FDT. The ID Code is 16 bytes long. The macro below define the ID Code in 4-byte sections. */
 /* Lowest 4-byte section, address 0xFE7F5D50. From MSB to LSB: ID code 4, ID code 3, ID code 2, ID code 1/Control Code.
  */
@@ -241,7 +241,7 @@ NOTE: The RAM areas are not contiguous.It is separated by 512 KB each.
 /* Clock configuration options.
    The input clock frequency is specified and then the system clocks are set by specifying the multipliers used. The
    multiplier settings are used to set the clock registers in resetprg.c. If a 24MHz clock is used and the
-   ICLK is 120MHz, PCLKA is 120MHz, PCLKB is 60MHz, PCLKC is 60MHz, PCLKD is 60MHz, FCLK is 60MHz, BCLK is 80MHz, 
+   ICLK is 120MHz, PCLKA is 120MHz, PCLKB is 60MHz, PCLKC is 60MHz, PCLKD is 60MHz, FCLK is 60MHz, BCLK is 80MHz,
    USB Clock is 48MHz, ESC Clock is 100MHz, Ether-Phy Clock is 25MHz then the settings would be:
 
    BSP_CFG_XTAL_HZ   = 24000000
@@ -250,21 +250,21 @@ NOTE: The RAM areas are not contiguous.It is separated by 512 KB each.
    BSP_CFG_PPLL_DIV  = 3       (divide by 3)
    BSP_CFG_PPLL_MUL  = 25.0    (8MHz x 25.0 = 200MHz)
    BSP_CFG_PPLCK_DIV = 2       (divide by 2)
-   BSP_CFG_ICK_DIV   = 1     : System Clock (ICLK)        = 
+   BSP_CFG_ICK_DIV   = 1     : System Clock (ICLK)        =
                               (((BSP_CFG_XTAL_HZ/BSP_CFG_PLL_DIV) * BSP_CFG_PLL_MUL) / BSP_CFG_ICK_DIV)  = 240MHz
-   BSP_CFG_PCKA_DIV  = 2     : Peripheral Clock A (PCLKA) = 
+   BSP_CFG_PCKA_DIV  = 2     : Peripheral Clock A (PCLKA) =
                               (((BSP_CFG_XTAL_HZ/BSP_CFG_PLL_DIV) * BSP_CFG_PLL_MUL) / BSP_CFG_PCKA_DIV) = 120MHz
-   BSP_CFG_PCKB_DIV  = 4     : Peripheral Clock B (PCLKB) = 
+   BSP_CFG_PCKB_DIV  = 4     : Peripheral Clock B (PCLKB) =
                               (((BSP_CFG_XTAL_HZ/BSP_CFG_PLL_DIV) * BSP_CFG_PLL_MUL) / BSP_CFG_PCKB_DIV) = 60MHz
-   BSP_CFG_PCKC_DIV  = 4     : Peripheral Clock C (PCLKC) = 
+   BSP_CFG_PCKC_DIV  = 4     : Peripheral Clock C (PCLKC) =
                               (((BSP_CFG_XTAL_HZ/BSP_CFG_PLL_DIV) * BSP_CFG_PLL_MUL) / BSP_CFG_PCKC_DIV) = 60MHz
-   BSP_CFG_PCKD_DIV  = 4     : Peripheral Clock D (PCLKD) = 
+   BSP_CFG_PCKD_DIV  = 4     : Peripheral Clock D (PCLKD) =
                               (((BSP_CFG_XTAL_HZ/BSP_CFG_PLL_DIV) * BSP_CFG_PLL_MUL) / BSP_CFG_PCKD_DIV) = 60MHz
-   BSP_CFG_FCK_DIV   = 4     : Flash IF Clock (FCLK)      = 
+   BSP_CFG_FCK_DIV   = 4     : Flash IF Clock (FCLK)      =
                               (((BSP_CFG_XTAL_HZ/BSP_CFG_PLL_DIV) * BSP_CFG_PLL_MUL) / BSP_CFG_FCK_DIV)  = 60MHz
-   BSP_CFG_BCK_DIV   = 3     : External Bus Clock (BCK)   = 
+   BSP_CFG_BCK_DIV   = 3     : External Bus Clock (BCK)   =
                               (((BSP_CFG_XTAL_HZ/BSP_CFG_PLL_DIV) * BSP_CFG_PLL_MUL) / BSP_CFG_BCK_DIV)  = 80MHz
-   BSP_CFG_UCK_DIV   = 5     : USB Clock (UCLK)           = 
+   BSP_CFG_UCK_DIV   = 5     : USB Clock (UCLK)           =
                               (((BSP_CFG_XTAL_HZ/BSP_CFG_PLL_DIV) * BSP_CFG_PLL_MUL) / BSP_CFG_UCK_DIV)  = 48MHz
 */
 
@@ -341,12 +341,12 @@ NOTE: The RAM areas are not contiguous.It is separated by 512 KB each.
 */
 #define BSP_CFG_PPLL_DIV                (1) /* Generated value. Do not edit this manually */
 
-/* PPLL Frequency Multiplication Factor Select (PPLSTC). 
+/* PPLL Frequency Multiplication Factor Select (PPLSTC).
    Available multipliers = x10.0 to x30.0 in 0.5 increments (e.g. 10.0, 10.5, 11.0, 11.5, ..., 29.0, 29.5, 30.0)
 */
 #define BSP_CFG_PPLL_MUL                (10.0) /* Generated value. Do not edit this manually */
 
-/* PPLL Clock Divider Select. 
+/* PPLL Clock Divider Select.
    Available divisors = /2, /3, /4, /5
 */
 #define BSP_CFG_PPLCK_DIV               (2) /* Generated value. Do not edit this manually */
@@ -380,13 +380,13 @@ NOTE: The RAM areas are not contiguous.It is separated by 512 KB each.
 #define BSP_CFG_CLKOUT_OUTPUT           (0) /* Generated value. Do not edit this manually */
 
 /* Main Clock Oscillator Wait Time (MOSCWTCR).
-   The value of MOSCWTCR register required for correspondence with the waiting time required to secure stable 
+   The value of MOSCWTCR register required for correspondence with the waiting time required to secure stable
    oscillation by the main clock oscillator is obtained by using the maximum frequency for fLOCO in the formula below.
 
    BSP_CFG_MOSC_WAIT_TIME > (tMAINOSC * (fLOCO_max) + 16)/32
    (tMAINOSC: main clock oscillation stabilization time; fLOCO_max: maximum frequency for fLOCO)
 
-   If tMAINOSC is 9.98 ms and fLOCO_max is 264 kHz (the period is 1/3.78 us), the formula gives 
+   If tMAINOSC is 9.98 ms and fLOCO_max is 264 kHz (the period is 1/3.78 us), the formula gives
    BSP_CFG_MOSC_WAIT_TIME > (9.98 ms * (264 kHZ) + 16)/32 = 82.83, so set the BSP_CFG_MOSC_WAIT_TIME to 83(53h).
 
    NOTE: The waiting time is not required when an external clock signal is input for the main clock oscillator.
@@ -409,7 +409,7 @@ NOTE: The RAM areas are not contiguous.It is separated by 512 KB each.
 /* ROM Cache Enable Register (ROMCE).
    0 = ROM cache operation disabled.
    1 = ROM cache operation enabled.
-*/ 
+*/
 #define BSP_CFG_ROM_CACHE_ENABLE        (1)
 
 /* Configure non-cacheable area 0 of the ROM cache function.
@@ -539,13 +539,13 @@ NOTE: The RAM areas are not contiguous.It is separated by 512 KB each.
 */
 #define BSP_CFG_OFS1_REG_VALUE  (0xFFFFFFFF) /* Generated value. Do not edit this manually */
 
-/* Trusted memory is facility to prevent the reading of blocks 8 and 9 and blocks 78 and 79 (in dual mode) in 
+/* Trusted memory is facility to prevent the reading of blocks 8 and 9 and blocks 78 and 79 (in dual mode) in
    the code flash memory by third party software. This feature is disabled by default.
    TMEF - TM Enable Flag Register
        b31     Reserved (set to 1)
-       b30:b28 TMEFDB - Dual-Bank TM Enable - 000: The TM function in the address range from FFDE 0000h to 
+       b30:b28 TMEFDB - Dual-Bank TM Enable - 000: The TM function in the address range from FFDE 0000h to
                                                    FFDE FFFFh is enabled in dual mode.
-                                            - 111: The TM function in the address range from FFDE 0000h to 
+                                            - 111: The TM function in the address range from FFDE 0000h to
                                                    FFDE FFFFh is disabled in dual mode.
        b27     Reserved (set to 1)
        b26:b24 TMEFF  - TM Enable - 000: TM function is enabled.
@@ -557,7 +557,7 @@ NOTE: The RAM areas are not contiguous.It is separated by 512 KB each.
 */
 #define BSP_CFG_TRUSTED_MODE_FUNCTION  (0xFFFFFFFF)
 
-/* Configure FAW register is used to set the write protection flag and boot area select flag 
+/* Configure FAW register is used to set the write protection flag and boot area select flag
    for setting the flash access window startaddress and flash access window end address.
    FAW - Flash Access Window Setting Register
        b31      BTFLG - Boot Area Select Flag - 0: FFFF C000h to FFFF DFFFh are used as the boot area
@@ -567,9 +567,9 @@ NOTE: The RAM areas are not contiguous.It is separated by 512 KB each.
        b15      FSPR - Access Window Protection Flag - 0: With protection (P/E disabled)
                                                      - 1: Without protection (P/E enabled)
        b14:b12  Reserved - When reading, these bits return the value written by the user.The write value should be 1.
-       b11:b0   FAWS - Flash Access Window Start Address - Flash access window start address 
+       b11:b0   FAWS - Flash Access Window Start Address - Flash access window start address
        NOTE: Once 0 is written to this bit, the bit can never be restored to 1.
-             Therefore, the access window and the BTFLG bit never be set again or the TM function 
+             Therefore, the access window and the BTFLG bit never be set again or the TM function
              never be disabled once it has been enabled.
              Exercise extra caution when handling the FSPR bit.
    Default value is 0xFFFFFFFF.
@@ -647,7 +647,7 @@ NOTE: The RAM areas are not contiguous.It is separated by 512 KB each.
 #define BSP_CFG_USER_LOCKING_ENABLED    (0)
 
 /* If the user decides to use their own locking mechanism with FIT modules then they will need to redefine the typedef
-   that is used for the locks. If the user is using a RTOS then they would likely redefine the typedef to be 
+   that is used for the locks. If the user is using a RTOS then they would likely redefine the typedef to be
    a semaphore/mutex type of their RTOS. Use the macro below to set the type that will be used for the locks.
    NOTE: If BSP_CFG_USER_LOCKING_ENABLED == 0 then this typedef is ignored.
    NOTE: Do not surround the type with parentheses '(' ')'.
@@ -660,12 +660,12 @@ NOTE: The RAM areas are not contiguous.It is separated by 512 KB each.
    R_BSP_HardwareLock(mcu_lock_t hw_index) will call BSP_CFG_USER_LOCKING_HW_LOCK_FUNCTION(mcu_lock_t hw_index)
    R_BSP_HardwareUnlock(mcu_lock_t hw_index) will call BSP_CFG_USER_LOCKING_HW_UNLOCK_FUNCTION(mcu_lock_t hw_index)
        NOTE:With these functions the index into the array holding the global hardware locks is passed as the parameter.
-   R_BSP_SoftwareLock(BSP_CFG_USER_LOCKING_TYPE * plock) will call 
+   R_BSP_SoftwareLock(BSP_CFG_USER_LOCKING_TYPE * plock) will call
    BSP_CFG_USER_LOCKING_SW_LOCK_FUNCTION(BSP_CFG_USER_LOCKING_TYPE * plock)
-   R_BSP_SoftwareUnlock(BSP_CFG_USER_LOCKING_TYPE * plock) will call 
+   R_BSP_SoftwareUnlock(BSP_CFG_USER_LOCKING_TYPE * plock) will call
    BSP_CFG_USER_LOCKING_SW_UNLOCK_FUNCTION(BSP_CFG_USER_LOCKING_TYPE * plock)
        NOTE:With these functions the actual address of the lock to use is passed as the parameter.
-   NOTE: These functions must return a boolean. If lock was obtained or released successfully then return true. Else, 
+   NOTE: These functions must return a boolean. If lock was obtained or released successfully then return true. Else,
          return false.
    NOTE: If BSP_CFG_USER_LOCKING_ENABLED == 0 then this typedef is ignored.
    NOTE: Do not surround the type with parentheses '(' ')'.
@@ -694,7 +694,7 @@ NOTE: The RAM areas are not contiguous.It is separated by 512 KB each.
    This macro is a global setting for enabling or disabling parameter checking. Each FIT module will also have its
    own local macro for this same purpose. By default the local macros will take the global value from here though
    they can be overridden. Therefore, the local setting has priority over this global setting. Disabling parameter
-   checking should only used when inputs are known to be good and the increase in speed or decrease in code space is 
+   checking should only used when inputs are known to be good and the increase in speed or decrease in code space is
    needed.
    0 = Global setting for parameter checking is disabled.
    1 = Global setting for parameter checking is enabled (Default).
@@ -735,8 +735,8 @@ NOTE: The RAM areas are not contiguous.It is separated by 512 KB each.
 */
 #define BSP_CFG_CONFIGURATOR_SELECT                 (1) /* Generated value. Do not edit this manually */
 
-/* For some BSP functions, it is necessary to ensure that, while these functions are executing, interrupts from other 
-   FIT modules do not occur. By controlling the IPL, these functions disable interrupts that are at or below the 
+/* For some BSP functions, it is necessary to ensure that, while these functions are executing, interrupts from other
+   FIT modules do not occur. By controlling the IPL, these functions disable interrupts that are at or below the
    specified interrupt priority level.
    This macro sets the IPL. Range is 0x0 - 0xF.
    Please set this macro more than IPR for other FIT module interrupts.
@@ -748,7 +748,7 @@ NOTE: The RAM areas are not contiguous.It is separated by 512 KB each.
 /* Software Interrupt (SWINT).
    0 = Software interrupt is not used.
    1 = Software interrupt is used.
-   NOTE: When this macro is set to 1, the software interrupt is initialized in bsp startup routine. 
+   NOTE: When this macro is set to 1, the software interrupt is initialized in bsp startup routine.
 */
 #define BSP_CFG_SWINT_UNIT1_ENABLE    (0)
 #define BSP_CFG_SWINT_UNIT2_ENABLE    (1)
@@ -757,18 +757,17 @@ NOTE: The RAM areas are not contiguous.It is separated by 512 KB each.
    For software interrupt, this value is number of buffering user tasks.
    So user can increase this value if user system would have many software interrupt tasks
    and user system has enough buffer. This value requires 9 byte per task.
-   NOTE: This setting is common to all units. It can not be set individually. 
+   NOTE: This setting is common to all units. It can not be set individually.
          The maximum value is 254.
 */
 #define BSP_CFG_SWINT_TASK_BUFFER_NUMBER     (8)
 
 /* Initial value of the software interrupt priority.
    For software interrupt, this value is interrupt priority. Range is 0x0 - 0xF.
-   NOTE: This setting is common to all units. It can not be set individually. 
+   NOTE: This setting is common to all units. It can not be set individually.
          Please be careful that this setting is the initial value of the interrupt priority register(IPR).
          It is possible to dynamically change the IPR.
 */
 #define BSP_CFG_SWINT_IPR_INITIAL_VALUE     (0x1)
 
 #endif /* R_BSP_CONFIG_REF_HEADER_FILE */
-

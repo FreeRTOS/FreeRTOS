@@ -97,4 +97,3 @@ unsigned portBASE_TYPE uxLEDMask;
 		taskEXIT_CRITICAL();
 	}
 }
-

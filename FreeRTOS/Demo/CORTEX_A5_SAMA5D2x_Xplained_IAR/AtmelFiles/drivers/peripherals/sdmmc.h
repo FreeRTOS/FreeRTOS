@@ -80,7 +80,7 @@ struct sdmmc_set
  *----------------------------------------------------------------------------*/
 
 /**
- * \brief Initialize the specified driver instance and the associated SDMMC 
+ * \brief Initialize the specified driver instance and the associated SDMMC
  * peripheral.
  * \param set  Pointer to uninitialized driver instance data.
  * \param regs  Base address of registers of the SDMMC peripheral.

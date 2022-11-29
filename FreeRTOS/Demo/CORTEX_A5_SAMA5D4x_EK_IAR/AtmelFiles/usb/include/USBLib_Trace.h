@@ -206,4 +206,3 @@
 #endif
 
 #endif /* #ifndef _USBLIB_TRACE_H */
-

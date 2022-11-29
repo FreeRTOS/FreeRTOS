@@ -31,7 +31,7 @@
 /// \page "mci"
 ///
 /// !Purpose
-///  
+///
 /// mci-interface driver
 ///
 /// !Usage
@@ -169,4 +169,3 @@ extern void MCI_Close(Mci *pMci);
 extern void MCI_SetBusWidth(Mci *pMci, unsigned char busWidth);
 
 #endif //#ifndef MCI_H
-

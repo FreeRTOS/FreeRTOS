@@ -93,5 +93,3 @@ void vT4InterruptHandler( void )
 	IFS0CLR = _IFS0_T4IF_MASK;
 	portEND_SWITCHING_ISR( xSecondTimerHandler() );
 }
-
-

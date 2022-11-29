@@ -11,7 +11,7 @@
   ==============================================================================
                     ##### I2S Extension features #####
   ==============================================================================
-  The I2S Full duplex feature is not supported by this HAL Driver  
+  The I2S Full duplex feature is not supported by this HAL Driver
   ******************************************************************************
   * @attention
   *

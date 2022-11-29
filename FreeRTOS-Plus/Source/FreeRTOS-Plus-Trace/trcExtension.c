@@ -65,7 +65,7 @@ traceResult xTraceExtensionGetBaseEventId(TraceExtensionHandle_t xExtensionHandl
 
 	/* This should never fail */
 	TRC_ASSERT(puiBaseEventId != 0);
-	
+
 	/* This should never fail */
 	TRC_ASSERT_ALWAYS_EVALUATE(xTraceEntryGetState((TraceEntryHandle_t)xExtensionHandle, TRC_EXTENSION_STATE_INDEX_BASE_EVENT_ID, &uxBaseEventId) == TRC_SUCCESS);
 
@@ -80,7 +80,7 @@ traceResult xTraceExtensionGetEventId(TraceExtensionHandle_t xExtensionHandle, u
 
 	/* This should never fail */
 	TRC_ASSERT(puiGlobalEventId != 0);
-	
+
 	/* This should never fail */
 	TRC_ASSERT_ALWAYS_EVALUATE(xTraceEntryGetState((TraceEntryHandle_t)xExtensionHandle, TRC_EXTENSION_STATE_INDEX_BASE_EVENT_ID, &uxBaseEventId) == TRC_SUCCESS);
 

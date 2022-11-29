@@ -69,4 +69,3 @@ void SW3_CALLBACK_FUNCTION(void);
 #endif
 
 #endif /* SWITCHES_API_HEADER_FILE */
-

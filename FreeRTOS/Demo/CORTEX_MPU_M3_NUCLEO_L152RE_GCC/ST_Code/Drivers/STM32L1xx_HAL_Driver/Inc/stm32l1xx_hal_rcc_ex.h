@@ -1027,4 +1027,3 @@ void              HAL_RCCEx_LSECSS_Callback(void);
 #endif /* __STM32L1xx_HAL_RCC_EX_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

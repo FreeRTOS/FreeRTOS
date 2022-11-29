@@ -502,4 +502,3 @@ WOLFSSL_API int wc_PKCS7_DecodeCompressedData(PKCS7* pkcs7, byte* pkiMsg,
 
 #endif /* HAVE_PKCS7 */
 #endif /* WOLF_CRYPT_PKCS7_H */
-

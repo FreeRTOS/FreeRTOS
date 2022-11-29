@@ -1,20 +1,20 @@
 /******************************************************************************
 *
 * Copyright 2013 Altera Corporation. All Rights Reserved.
-* 
+*
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are met:
-* 
+*
 * 1. Redistributions of source code must retain the above copyright notice,
 * this list of conditions and the following disclaimer.
-* 
+*
 * 2. Redistributions in binary form must reproduce the above copyright notice,
 * this list of conditions and the following disclaimer in the documentation
 * and/or other materials provided with the distribution.
-* 
+*
 * 3. The name of the author may not be used to endorse or promote products
 * derived from this software without specific prior written permission.
-* 
+*
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
@@ -25,7 +25,7 @@
 * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 * OF SUCH DAMAGE.
-* 
+*
 ******************************************************************************/
 
 #ifndef __ALT_INT_COMMON_H__
@@ -137,7 +137,7 @@ typedef enum ALT_INT_INTERRUPT_e
      *  * PARITYFAIL interrupts in this group are edge triggered.
      *  * DEFFLAGS interrupts in this group are level triggered.
      */
-    
+
     ALT_INT_INTERRUPT_SCU_PARITYFAIL0 =  64, /*!< # */
     ALT_INT_INTERRUPT_SCU_PARITYFAIL1 =  65, /*!< # */
     ALT_INT_INTERRUPT_SCU_EV_ABORT    =  66,
@@ -145,7 +145,7 @@ typedef enum ALT_INT_INTERRUPT_e
      * Interrupts sourced from the Snoop Control Unit (SCU).
      *  * All interrupts in this group are edge triggered.
      */
-    
+
     ALT_INT_INTERRUPT_L2_ECC_BYTE_WR_IRQ     = 67, /*!< # */
     ALT_INT_INTERRUPT_L2_ECC_CORRECTED_IRQ   = 68, /*!< # */
     ALT_INT_INTERRUPT_L2_ECC_UNCORRECTED_IRQ = 69, /*!< # */
@@ -371,7 +371,7 @@ typedef enum ALT_INT_INTERRUPT_e
      * Interrupts sourced from the GPIO 0 - 2.
      *  * All interrupts in this group are level triggered.
      */
-    
+
     ALT_INT_INTERRUPT_TIMER_L4SP_0_IRQ = 199, /*!< # */
     ALT_INT_INTERRUPT_TIMER_L4SP_1_IRQ = 200, /*!< # */
     ALT_INT_INTERRUPT_TIMER_OSC1_0_IRQ = 201, /*!< # */

@@ -255,4 +255,3 @@ void vPreSleepProcessing( uint32_t ulExpectedIdleTime )
 	}
 
 #endif
-

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -320,7 +320,7 @@ static void UDPHS_EndOfTransfer(uint8_t bEndpoint, uint8_t bStatus)
         Transfer *pXfr = (Transfer*)&(pEp->transfer);
         uint32_t transferred = pXfr->transferred;
         uint32_t remaining   = pXfr->remaining + pXfr->buffered;
-        
+
         TRACE_DEBUG_WP("EoT ");
         if (pEp->state == UDPHS_ENDPOINT_SENDING)
             pEp->sendZLP = 0;
@@ -464,7 +464,7 @@ static uint8_t UDPHS_MblWriteFifo(uint8_t bEndpoint)
  */
 static uint8_t UDPHS_MblReadFifo(uint8_t bEndpoint, uint16_t wPacketSize)
 {
-   
+
     return 0;
 }
 */
@@ -584,11 +584,11 @@ static void UDPHS_EndpointHandler(uint8_t bEndpoint)
                 pXfr->transferred += pXfr->buffered;
                 pXfr->buffered = 0;
             }
-            if((pXfr->transferred % pEp->size == 0) && ( pXfr->remaining == 0) && ( pXfr->transferred > 0)&&(pEp->sendZLP == 0)) 
-            { 
-              pEp->sendZLP = 1; // Force ZLP transmission in total length is  a multiple of endpoint size 
-  
-            } 
+            if((pXfr->transferred % pEp->size == 0) && ( pXfr->remaining == 0) && ( pXfr->transferred > 0)&&(pEp->sendZLP == 0))
+            {
+              pEp->sendZLP = 1; // Force ZLP transmission in total length is  a multiple of endpoint size
+
+            }
             if (   pXfr->buffered == 0
                 && pXfr->transferred == 0
                 && pXfr->remaining == 0
@@ -602,10 +602,10 @@ static void UDPHS_EndpointHandler(uint8_t bEndpoint)
                 || pEp->sendZLP == 1)
             {
           if(pEp->sendZLP == 1)
-            { 
-                // A null packet will be send, keep trace of it : Change this value only if ZLP will be send!!! 
-                pEp->sendZLP = 2; 
-            } 
+            {
+                // A null packet will be send, keep trace of it : Change this value only if ZLP will be send!!!
+                pEp->sendZLP = 2;
+            }
 
                 /* Transfer remaining */
                 TRACE_DEBUG_WP("%d ", pEp->size);
@@ -732,7 +732,7 @@ static void UDPHS_EndpointHandler(uint8_t bEndpoint)
         else
         {
             TRACE_DEBUG_WP("Stup ");
-            
+
             /* Copy setup */
             UDPHS_ReadRequest(pReq);
             /* Acknowledge setup packet */
@@ -760,7 +760,7 @@ static inline void UDPHS_DmaSingle(uint8_t bEndpoint, Transfer *pXfr, uint32_t d
     pUdp->UDPHS_DMA[bEndpoint].UDPHS_DMASTATUS;
     /* Interrupt enable */
     pUdp->UDPHS_IEN |= (1 << SHIFT_DMA << bEndpoint);
-    
+
     TRACE_DEBUG_WP("Dma[B%d:T%d] ", pXfr->buffered, pXfr->transferred);
     /* DMA Configure */
     pUdp->UDPHS_DMA[bEndpoint].UDPHS_DMACONTROL = 0;
@@ -819,7 +819,7 @@ static void UDPHS_DmaHandler(uint8_t bEndpoint)
         TRACE_DEBUG_WP("[B%d:T%d:R%d] ", pXfr->buffered, pXfr->transferred, pXfr->remaining);
         /* There is still data */
         if (pXfr->remaining + pXfr->buffered > 0)
-        {   
+        {
             if (pXfr->remaining > DMA_MAX_FIFO_SIZE)
             {
                 pXfr->buffered = DMA_MAX_FIFO_SIZE;
@@ -855,9 +855,9 @@ static void UDPHS_DmaHandler(uint8_t bEndpoint)
     if (pXfr->remaining == 0)
     {
         UDPHS_EndOfTransfer(bEndpoint, bRc);
-        
+
     }
-    
+
 }
 #endif
 /**
@@ -884,7 +884,7 @@ static inline uint8_t UDPHS_Write(uint8_t    bEndpoint,
 {
     Udphs    *pUdp  = UDPHS;
     UdphsEpt *pHwEp = &pUdp->UDPHS_EPT[bEndpoint];
-  
+
     Endpoint *pEp  = &(endpoints[bEndpoint]);
     Transfer *pXfr = (Transfer*)&(pEp->transfer);
     /* Return if busy */
@@ -1081,7 +1081,7 @@ static inline uint8_t UDPHS_Read(uint8_t  bEndpoint,
     /* Enable IT */
     pUdp->UDPHS_IEN |= ( UDPHS_IEN_EPT_0 << bEndpoint );
     pHwEp->UDPHS_EPTCTLENB = UDPHS_EPTCTLENB_RXRDY_TXKL;
-    
+
     return USBD_STATUS_SUCCESS;
 }
 #if 0
@@ -1265,7 +1265,7 @@ void USBD_HAL_ResetEPs(uint32_t bmEPs, uint8_t bStatus, uint8_t bKeepCfg)
             pHwEp->UDPHS_EPTSETSTA = UDPHS_EPTSETSTA_KILL_BANK;
             pHwEp->UDPHS_EPTSETSTA = UDPHS_EPTSETSTA_KILL_BANK;
             #endif
-            
+
             /* Reset transfer information */
             pEndpoint = &(endpoints[ep]);
             /* Reset endpoint state */
@@ -1458,9 +1458,9 @@ uint8_t USBD_HAL_ConfigureEP(const USBEndpointDescriptor *pDescriptor)
         pUdp->UDPHS_IEN |= (UDPHS_IEN_EPT_0 << bEndpoint);
     }
 
-    pEpt->UDPHS_EPTCFG =    bSizeEpt 
-                        | ( bEndpointDir << 3) 
-                        | ( bType << 4) 
+    pEpt->UDPHS_EPTCFG =    bSizeEpt
+                        | ( bEndpointDir << 3)
+                        | ( bType << 4)
                         | ((pEndpoint->bank) << 6)
                         | ( bNbTrans << 8)
                         ;
@@ -1478,7 +1478,7 @@ uint8_t USBD_HAL_ConfigureEP(const USBEndpointDescriptor *pDescriptor)
 
     if (bType == USBEndpointDescriptor_CONTROL)
     {
-        pEpt->UDPHS_EPTCTLENB = UDPHS_EPTCTLENB_RXRDY_TXKL 
+        pEpt->UDPHS_EPTCTLENB = UDPHS_EPTCTLENB_RXRDY_TXKL
                               | UDPHS_EPTCTLENB_RX_SETUP
                               | UDPHS_EPTCTLENB_EPT_ENABL;
     }
@@ -1755,7 +1755,7 @@ uint8_t USBD_HAL_WrWithHdr(uint8_t bEndpoint,
         return USBD_STATUS_SUCCESS;
     }
 #endif
-    
+
     /* Enable IT */
     pUdp->UDPHS_IEN |= ( UDPHS_IEN_EPT_0 << bEndpoint );
     pHwEp->UDPHS_EPTCTLENB = UDPHS_EPTCTLENB_TXRDY;
@@ -2189,4 +2189,3 @@ extern void USBD_HAL_ForceFs(void)
 }
 
 /**@}*/
-

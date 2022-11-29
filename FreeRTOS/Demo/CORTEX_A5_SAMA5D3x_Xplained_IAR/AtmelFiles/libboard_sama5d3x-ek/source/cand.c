@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -223,20 +223,20 @@ static void CAND_ErrorHandler(sCand *pCand, uint32_t dwErrS)
     if (dwErrS & CAN_SR_ERRA)
     {
 
-        TRACE_ERROR_WP("-E- Active Mode: TEC %u, REC %u\n\r", 
-                  (unsigned int)((ecr & CAN_ECR_TEC_Msk) >> CAN_ECR_TEC_Pos), 
+        TRACE_ERROR_WP("-E- Active Mode: TEC %u, REC %u\n\r",
+                  (unsigned int)((ecr & CAN_ECR_TEC_Msk) >> CAN_ECR_TEC_Pos),
                   (unsigned int)((ecr & CAN_ECR_REC_Msk) >> CAN_ECR_REC_Pos));
     }
     if (dwErrS & CAN_SR_WARN)
     {
-        TRACE_ERROR_WP("Warning Limit: TEC %u, REC %u\n\r", 
-                      (unsigned int)((ecr & CAN_ECR_TEC_Msk) >> CAN_ECR_TEC_Pos), 
+        TRACE_ERROR_WP("Warning Limit: TEC %u, REC %u\n\r",
+                      (unsigned int)((ecr & CAN_ECR_TEC_Msk) >> CAN_ECR_TEC_Pos),
                       (unsigned int)((ecr & CAN_ECR_REC_Msk) >> CAN_ECR_REC_Pos));
     }
     if (dwErrS & CAN_SR_ERRP)
     {
-        TRACE_ERROR_WP("-E- Passive Mode: TEC %u, REC %u\n\r", 
-                      (unsigned int)((ecr & CAN_ECR_TEC_Msk) >> CAN_ECR_TEC_Pos), 
+        TRACE_ERROR_WP("-E- Passive Mode: TEC %u, REC %u\n\r",
+                      (unsigned int)((ecr & CAN_ECR_TEC_Msk) >> CAN_ECR_TEC_Pos),
                       (unsigned int)((ecr & CAN_ECR_REC_Msk) >> CAN_ECR_REC_Pos));
     }
     if (dwErrS & CAN_SR_BOFF)
@@ -378,7 +378,7 @@ void CAND_Activate(sCand *pCand)
     Can *pCan = pCand->pHw;
     if (pCand->bState > CAND_STATE_SYNC)
         return;
-    /* Disable low-power mode */    
+    /* Disable low-power mode */
     CAN_EnableLowPower(pCan, 0);
     /* Start sync state */
     pCand->bState = CAND_STATE_SYNC;
@@ -614,4 +614,3 @@ uint8_t CAND_IsTransferDone(sCandTransfer *pXfr)
 
 #endif
 /**@}*/
-

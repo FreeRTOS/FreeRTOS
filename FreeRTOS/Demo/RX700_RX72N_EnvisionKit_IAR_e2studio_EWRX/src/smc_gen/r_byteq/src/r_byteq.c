@@ -1,26 +1,26 @@
 /*****************************************************************************
 * DISCLAIMER
-* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No 
-* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all 
-* applicable laws, including copyright laws. 
+* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No
+* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
+* applicable laws, including copyright laws.
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
-* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, 
-* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM 
-* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES 
-* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS 
+* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM
+* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES
+* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS
 * SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of 
-* this software. By using this software, you agree to the additional terms and conditions found by accessing the 
+* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of
+* this software. By using this software, you agree to the additional terms and conditions found by accessing the
 * following link:
-* http://www.renesas.com/disclaimer 
+* http://www.renesas.com/disclaimer
 *
 * Copyright (C) 2013 Renesas Electronics Corporation. All rights reserved.
 ******************************************************************************/
 /*****************************************************************************
 * File Name    : r_byteq.c
-* Description  : Functions for using byte queues/circular buffers. 
+* Description  : Functions for using byte queues/circular buffers.
 ******************************************************************************
-* History : DD.MM.YYYY Version Description  
+* History : DD.MM.YYYY Version Description
 *         : 24.07.2013 1.00     Initial Release
 *         : 11.21.2014 1.20     Removed dependency to BSP
 *         : 30.09.2015 1.50     Added dependency to BSP
@@ -65,9 +65,9 @@ static byteq_ctrl_t     g_qcb[BYTEQ_CFG_MAX_CTRL_BLKS];
 
 /*****************************************************************************
 * Function Name: R_BYTEQ_Open
-* Description  : Allocates or assigns a queue control block for the buffer 
+* Description  : Allocates or assigns a queue control block for the buffer
 *                pointed to by p_buf (see BYTEQ_CFG_USE_HEAP_FOR_CTRL_BLKS in
-*                config.h). Initializes the queue to an empty state and 
+*                config.h). Initializes the queue to an empty state and
 *                provides a Handle to its control structure in p_hdl which is
 *                then used as a queue ID for the other API functions.
 * Arguments    : p_buf -
@@ -115,7 +115,7 @@ byteq_err_t R_BYTEQ_Open(uint8_t * const        p_buf,
 #endif
 
     /* GET QUEUE CONTROL BLOCK */
-    
+
 #if BYTEQ_CFG_USE_HEAP_FOR_CTRL_BLKS
 
     /* allocate memory for a QCB */
@@ -146,7 +146,7 @@ byteq_err_t R_BYTEQ_Open(uint8_t * const        p_buf,
             break;
         }
     }
-    
+
     /* return error if none available */
     if (BYTEQ_CFG_MAX_CTRL_BLKS == i)
     {
@@ -156,16 +156,16 @@ byteq_err_t R_BYTEQ_Open(uint8_t * const        p_buf,
 
 
     /* INITIALIZE QCB FIELDS */
-    
+
     p_qcb->buffer = p_buf;
     p_qcb->size = size;
     p_qcb->count = 0;
     p_qcb->in_index = 0;
     p_qcb->out_index = 0;
-    
-    
+
+
     /* SET HANDLE */
-    
+
     *p_hdl = p_qcb;
     return BYTEQ_SUCCESS;
 }
@@ -179,7 +179,7 @@ byteq_err_t R_BYTEQ_Open(uint8_t * const        p_buf,
 *       accessed from both the interrupt and application level, the app must
 *       disable/enable interrupts before/after calling this routine.
 *
-* Arguments    : hdl - 
+* Arguments    : hdl -
 *                    Handle for queue.
 *                byte -
 *                    Byte to add to queue.
@@ -212,7 +212,7 @@ byteq_err_t R_BYTEQ_Put(byteq_hdl_t const   hdl,
         hdl->in_index = 0;
     }
     hdl->count++;                           // adjust count
-        
+
     return BYTEQ_SUCCESS;
 }
 
@@ -225,15 +225,15 @@ byteq_err_t R_BYTEQ_Put(byteq_hdl_t const   hdl,
 *       accessed from both the interrupt and application level, the app must
 *       disable/enable interrupts before/after calling this routine.
 *
-* Arguments    : hdl - 
+* Arguments    : hdl -
 *                    Handle for queue.
 *                p_byte -
 *                    Pointer to load byte to.
 * Return Value : BYTEQ_SUCCESS -
 *                    Successful; byte sent or queued for transmit
-*                BYTEQ_ERR_NULL_PTR - 
+*                BYTEQ_ERR_NULL_PTR -
 *                    hdl is NULL
-*                BYTEQ_ERR_INVALID_ARG - 
+*                BYTEQ_ERR_INVALID_ARG -
 *                    p_byte is NULL
 *                BYTEQ_ERR_QUEUE_EMPTY -
 *                    Queue empty; no data available to fetch
@@ -254,7 +254,7 @@ byteq_err_t R_BYTEQ_Get(byteq_hdl_t const   hdl,
 
     if (0 == hdl->count)
     {
-        return BYTEQ_ERR_QUEUE_EMPTY;       // return if queue empty        
+        return BYTEQ_ERR_QUEUE_EMPTY;       // return if queue empty
     }
 
     *p_byte = hdl->buffer[hdl->out_index++]; // get byte
@@ -265,7 +265,7 @@ byteq_err_t R_BYTEQ_Get(byteq_hdl_t const   hdl,
     hdl->count--;                           // adjust count
 
     return BYTEQ_SUCCESS;
-}        
+}
 
 
 /*****************************************************************************
@@ -276,11 +276,11 @@ byteq_err_t R_BYTEQ_Get(byteq_hdl_t const   hdl,
 *       accessed from both the interrupt and application level, the app must
 *       disable/enable interrupts before/after calling this routine.
 *
-* Arguments    : hdl - 
+* Arguments    : hdl -
 *                    Handle for queue.
 * Return Value : BYTEQ_SUCCESS -
 *                    Successful; queue is reset to en ampty state
-*                BYTEQ_ERR_NULL_PTR - 
+*                BYTEQ_ERR_NULL_PTR -
 *                    hdl is NULL
 ******************************************************************************/
 byteq_err_t R_BYTEQ_Flush(byteq_hdl_t const hdl)
@@ -293,7 +293,7 @@ byteq_err_t R_BYTEQ_Flush(byteq_hdl_t const hdl)
 #endif
 
     /* RESET QUEUE */
-    
+
     hdl->in_index = 0;
     hdl->out_index = 0;
     hdl->count = 0;
@@ -305,15 +305,15 @@ byteq_err_t R_BYTEQ_Flush(byteq_hdl_t const hdl)
 /*****************************************************************************
 * Function Name: R_BYTEQ_Used
 * Description  : This function provides the number of data bytes in the queue.
-* Arguments    : hdl - 
+* Arguments    : hdl -
 *                    Handle for queue.
 *                p_cnt -
 *                    Pointer to load queue data count to.
 * Return Value : BYTEQ_SUCCESS -
 *                    Successful; *p_cnt loaded with number of bytes in queue
-*                BYTEQ_ERR_NULL_PTR - 
+*                BYTEQ_ERR_NULL_PTR -
 *                    hdl is NULL
-*                BYTEQ_ERR_INVALID_ARG - 
+*                BYTEQ_ERR_INVALID_ARG -
 *                    p_cnt is NULL
 ******************************************************************************/
 byteq_err_t R_BYTEQ_Used(byteq_hdl_t const  hdl,
@@ -337,18 +337,18 @@ byteq_err_t R_BYTEQ_Used(byteq_hdl_t const  hdl,
 
 /*****************************************************************************
 * Function Name: R_BYTEQ_Unused
-* Description  : This function provides the number of data bytes available 
+* Description  : This function provides the number of data bytes available
 *                for storage in the queue.
-* Arguments    : hdl - 
+* Arguments    : hdl -
 *                    Handle for queue.
 *                p_cnt -
 *                    Pointer to load queue unused byte count to.
 * Return Value : BYTEQ_SUCCESS -
 *                    Successful; *p_cnt loaded with number of bytes available in
 *                    queue
-*                BYTEQ_ERR_NULL_PTR - 
+*                BYTEQ_ERR_NULL_PTR -
 *                    hdl is NULL
-*                BYTEQ_ERR_INVALID_ARG - 
+*                BYTEQ_ERR_INVALID_ARG -
 *                    p_cnt is NULL
 ******************************************************************************/
 byteq_err_t R_BYTEQ_Unused(byteq_hdl_t const  hdl,
@@ -372,15 +372,15 @@ byteq_err_t R_BYTEQ_Unused(byteq_hdl_t const  hdl,
 
 /*****************************************************************************
 * Function Name: R_BYTEQ_Close
-* Description  : If the control block associated with this Handle was allocated 
+* Description  : If the control block associated with this Handle was allocated
 *                dynamically at run time (BYTEQ_CFG_USE_HEAP_FOR_CTRL_BLKS set to 1
-*                in config.h), then that memory is free()d by this function. If 
-*                the control block was statically allocated at compile time 
+*                in config.h), then that memory is free()d by this function. If
+*                the control block was statically allocated at compile time
 *                (BYTEQ_CFG_USE_HEAP_FOR_CTRL_BLKS set to 0 in config.h), then this
-*                function marks the control block as available for use by another 
-*                buffer. Nothing is done to the contents of the buffer referenced 
+*                function marks the control block as available for use by another
+*                buffer. Nothing is done to the contents of the buffer referenced
 *                by this Handle.
-* Arguments    : hdl - 
+* Arguments    : hdl -
 *                    handle for queue
 * Return Value : BYTEQ_SUCCESS -
 *                    Successful; control block freed
@@ -401,14 +401,14 @@ byteq_err_t R_BYTEQ_Close(byteq_hdl_t const hdl)
 #else
     hdl->buffer = NULL;                 // mark QCB as free
 #endif
-    
+
     return BYTEQ_SUCCESS;
 }
 
 
 /*****************************************************************************
 * Function Name: R_BYTEQ_GetVersion
-* Description  : Returns the version of this module. The version number is 
+* Description  : Returns the version of this module. The version number is
 *                encoded such that the top two bytes are the major version
 *                number and the bottom two bytes are the minor version number.
 * Arguments    : none

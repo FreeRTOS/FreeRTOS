@@ -3464,7 +3464,7 @@ static void SPI_RxISR_8BIT(SPI_HandleTypeDef *hspi)
       /* Disable RXP interrupts */
       __HAL_SPI_DISABLE_IT(hspi, SPI_IT_RXP);
     }
-#else 
+#else
     /* Disable RXP interrupts */
     __HAL_SPI_DISABLE_IT(hspi, SPI_IT_RXP);
 #endif /* USE_HSPI_RELOAD_TRANSFER */
@@ -3507,7 +3507,7 @@ static void SPI_RxISR_16BIT(SPI_HandleTypeDef *hspi)
       /* Disable RXP interrupts */
       __HAL_SPI_DISABLE_IT(hspi, SPI_IT_RXP);
     }
-#else 
+#else
     /* Disable RXP interrupts */
     __HAL_SPI_DISABLE_IT(hspi, SPI_IT_RXP);
 #endif /* USE_HSPI_RELOAD_TRANSFER */
@@ -3544,7 +3544,7 @@ static void SPI_RxISR_32BIT(SPI_HandleTypeDef *hspi)
       /* Disable RXP interrupts */
       __HAL_SPI_DISABLE_IT(hspi, SPI_IT_RXP);
     }
-#else 
+#else
     /* Disable RXP interrupts */
     __HAL_SPI_DISABLE_IT(hspi, SPI_IT_RXP);
 #endif /* USE_HSPI_RELOAD_TRANSFER */
@@ -3581,7 +3581,7 @@ static void SPI_TxISR_8BIT(SPI_HandleTypeDef *hspi)
       /* Disable TXP interrupts */
       __HAL_SPI_DISABLE_IT(hspi, SPI_IT_TXP);
     }
-#else 
+#else
     /* Disable TXP interrupts */
     __HAL_SPI_DISABLE_IT(hspi, SPI_IT_TXP);
 #endif /* USE_HSPI_RELOAD_TRANSFER */
@@ -3623,7 +3623,7 @@ static void SPI_TxISR_16BIT(SPI_HandleTypeDef *hspi)
       /* Disable TXP interrupts */
       __HAL_SPI_DISABLE_IT(hspi, SPI_IT_TXP);
     }
-#else 
+#else
     /* Disable TXP interrupts */
     __HAL_SPI_DISABLE_IT(hspi, SPI_IT_TXP);
 #endif /* USE_HSPI_RELOAD_TRANSFER */
@@ -3659,7 +3659,7 @@ static void SPI_TxISR_32BIT(SPI_HandleTypeDef *hspi)
       /* Disable TXP interrupts */
       __HAL_SPI_DISABLE_IT(hspi, SPI_IT_TXP);
     }
-#else 
+#else
     /* Disable TXP interrupts */
     __HAL_SPI_DISABLE_IT(hspi, SPI_IT_TXP);
 #endif /* USE_HSPI_RELOAD_TRANSFER */

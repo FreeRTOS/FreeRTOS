@@ -7,8 +7,8 @@
 */
 
 /**
- * @file 
- * 
+ * @file
+ *
  * @brief Public trace heap APIs.
  */
 
@@ -39,23 +39,23 @@ extern "C" {
 
 /**
  * @brief Creates trace heap.
- * 
+ *
  * @param[in] szName Name.
  * @param[in] uxCurrent Current level.
  * @param[in] uxHighWaterMark High water mark
  * @param[in] uxMax Maximum level.
  * @param[out] pxHeapHandle Pointer to uninitialized trace heap handle.
- * @return traceResult 
+ * @return traceResult
  */
 traceResult xTraceHeapCreate(const char *szName, TraceUnsignedBaseType_t uxCurrent, TraceUnsignedBaseType_t uxHighWaterMark, TraceUnsignedBaseType_t uxMax, TraceHeapHandle_t *pxHeapHandle);
 
 /**
  * @brief Signals trace heap alloc.
- * 
+ *
  * @param[in] xHeapHandle Pointer to initialized trace heap handle.
- * @param[in] pvAddress Address. 
+ * @param[in] pvAddress Address.
  * @param[in] uxSize Size.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -63,11 +63,11 @@ traceResult xTraceHeapAlloc(TraceHeapHandle_t xHeapHandle, void *pvAddress, Trac
 
 /**
  * @brief Signals trace heap free.
- * 
+ *
  * @param[in] xHeapHandle Pointer to initialized trace heap handle.
  * @param[in] pvAddress Address.
  * @param[in] uxSize Size.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -75,10 +75,10 @@ traceResult xTraceHeapFree(TraceHeapHandle_t xHeapHandle, void* pvAddress, Trace
 
 /**
  * @brief Gets trace heap current allocation size.
- * 
+ *
  * @param[in] xHeapHandle Pointer to initialized trace heap handle.
  * @param[out] puxCurrent Current.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -86,10 +86,10 @@ traceResult xTraceHeapGetCurrent(TraceHeapHandle_t xHeapHandle, TraceUnsignedBas
 
 /**
  * @brief Gets trace heap high water mark.
- * 
+ *
  * @param[in] xHeapHandle Pointer to initialized trace heap handle.
  * @param[out] puxHighWaterMark High water mark.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -97,10 +97,10 @@ traceResult xTraceHeapGetHighWaterMark(TraceHeapHandle_t xHeapHandle, TraceUnsig
 
 /**
  * @brief Gets trace heap max size.
- * 
+ *
  * @param[in] xHeapHandle Pointer to initialized trace heap handle.
  * @param[out] puxMax Max.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */

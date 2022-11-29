@@ -1,20 +1,20 @@
 /******************************************************************************
 *
 * Copyright 2013 Altera Corporation. All Rights Reserved.
-* 
+*
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are met:
-* 
+*
 * 1. Redistributions of source code must retain the above copyright notice,
 * this list of conditions and the following disclaimer.
-* 
+*
 * 2. Redistributions in binary form must reproduce the above copyright notice,
 * this list of conditions and the following disclaimer in the documentation
 * and/or other materials provided with the distribution.
-* 
+*
 * 3. The name of the author may not be used to endorse or promote products
 * derived from this software without specific prior written permission.
-* 
+*
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
@@ -25,7 +25,7 @@
 * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 * OF SUCH DAMAGE.
-* 
+*
 ******************************************************************************/
 
 /*! \file
@@ -56,7 +56,7 @@ typedef struct  {
 //
 // flash memory characterization
 //
-typedef struct 
+typedef struct
 {
   uint32_t                    manufacturer_id;
   uint32_t                    device_id;
@@ -116,7 +116,7 @@ typedef uint32_t (*nand_interrupt_handler_t)(uint32_t interrup_status_register, 
 
 #define ALT_HHP_NAND_NUM_OF_LUNS	        (2)
 #define ALT_HHP_NAND_NUM_OF_BLOCK_PER_LUNS	(4096)
-#define ALT_HHP_NAND_NUM_OF_BLOCK_TOTAL		(ALT_HHP_NAND_NUM_OF_LUNS * ALT_HHP_NAND_NUM_OF_BLOCK_PER_LUNS)	   	  
+#define ALT_HHP_NAND_NUM_OF_BLOCK_TOTAL		(ALT_HHP_NAND_NUM_OF_LUNS * ALT_HHP_NAND_NUM_OF_BLOCK_PER_LUNS)
 
 //
 // Constants from 8.1. Address Mapping

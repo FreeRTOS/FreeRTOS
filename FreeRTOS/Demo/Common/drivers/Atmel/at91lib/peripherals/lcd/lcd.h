@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -89,4 +89,3 @@ extern void LCD_SetContrastValue(unsigned int value);
 extern void LCD_EnableContrast();
 
 #endif //#ifndef LCD_H
-

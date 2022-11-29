@@ -3535,4 +3535,3 @@ static uint32_t RCCEx_GetSAIxPeriphCLKFreq(uint32_t PeriphClk, uint32_t InputFre
   */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

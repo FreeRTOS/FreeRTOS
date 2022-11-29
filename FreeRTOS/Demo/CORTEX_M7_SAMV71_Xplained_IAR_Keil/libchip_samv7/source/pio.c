@@ -498,4 +498,3 @@ void PIO_SetPinType( Pin * pin, uint8_t pinType)
 {
     pin->type = pinType;
 }
-

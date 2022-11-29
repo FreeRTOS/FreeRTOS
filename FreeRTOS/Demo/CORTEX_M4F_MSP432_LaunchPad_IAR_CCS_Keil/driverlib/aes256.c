@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -352,4 +352,3 @@ uint32_t AES256_getInterruptStatus(uint32_t moduleInstance)
 {
     return AES256_getInterruptFlagStatus(moduleInstance);
 }
-

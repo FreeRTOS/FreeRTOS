@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -965,7 +965,7 @@ extern void DMA_clearInterruptFlag(uint32_t intChannel);
 //! \return None.
 //
 //*****************************************************************************
-extern void DMA_registerInterrupt(uint32_t intChannel, 
+extern void DMA_registerInterrupt(uint32_t intChannel,
                                     void (*intHandler)(void));
 
 //*****************************************************************************

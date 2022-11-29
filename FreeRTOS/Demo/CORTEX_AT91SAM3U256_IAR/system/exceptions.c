@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -56,8 +56,8 @@ void IrqHandlerNotUsed(void)
 }
 
 //------------------------------------------------------------------------------
-// Provide weak aliases for each Exception handler to the IrqHandlerNotUsed. 
-// As they are weak aliases, any function with the same name will override 
+// Provide weak aliases for each Exception handler to the IrqHandlerNotUsed.
+// As they are weak aliases, any function with the same name will override
 // this definition.
 //------------------------------------------------------------------------------
 
@@ -65,7 +65,7 @@ void IrqHandlerNotUsed(void)
 // System interrupt
 //------------------------------------------------------------------------------
 WEAK void NMI_Handler(void)
-{   
+{
     while(1);
 }
 

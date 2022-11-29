@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -31,11 +31,11 @@
 /// \unit
 ///
 /// !Purpose
-/// 
+///
 /// Interface for configuration the Image Sensor Interface (ISI) peripheral.
-/// 
+///
 /// !Usage
-/// 
+///
 /// -# ISI_Init: initialize ISI with default parameters
 /// -# ISI_EnableInterrupt: enable one or more interrupts
 /// -# ISI_DisableInterrupt: disable one or more interrupts
@@ -96,4 +96,3 @@ extern void ISI_Init(AT91PS_VIDEO pVideo);
 extern unsigned int ISI_StatusRegister(void);
 
 #endif //#ifndef ISI_H
-

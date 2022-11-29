@@ -10,5 +10,3 @@ Directories:
 
 + Utililties/mbedtls_freertos contains a few FreeRTOS specifics required by
   mbedTLS.
-
-

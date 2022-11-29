@@ -45,4 +45,3 @@ extern void BOARD_ConfigureSdram( void );
 extern uint32_t BOARD_SdramValidation(uint32_t baseAddr, uint32_t size);
 
 #endif /* #ifndef BOARD_MEMORIES_H */
-

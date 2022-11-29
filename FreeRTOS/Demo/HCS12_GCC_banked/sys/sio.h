@@ -77,4 +77,3 @@ extern void serial_getline (char *buf);
 };
 #endif
 #endif /* _SYS_SIO_H */
-

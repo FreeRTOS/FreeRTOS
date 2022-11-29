@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -33,11 +33,11 @@
  * \section Usage
  *
  * <ul>
- * <li> SPID_Configure() initializes and configures the SPI peripheral and xDMA 
+ * <li> SPID_Configure() initializes and configures the SPI peripheral and xDMA
  * for data transfer.</li>
- * <li> Configures the parameters for the device corresponding to the cs value 
+ * <li> Configures the parameters for the device corresponding to the cs value
  * by SPID_ConfigureCS(). </li>
- * <li> Starts a SPI master transfer. This is a non blocking function 
+ * <li> Starts a SPI master transfer. This is a non blocking function
  * SPID_SendCommand(). It will
  * return as soon as the transfer is started..</li>
  * </ul>
@@ -89,8 +89,8 @@ static uint32_t spiDmaRxChannel;
  * \brief SPI xDMA Rx callback
  * Invoked on SPi DMA reception done.
  * \param channel DMA channel.
- * \param pArg Pointer to callback argument - Pointer to Spid instance.   
- */ 
+ * \param pArg Pointer to callback argument - Pointer to Spid instance.
+ */
 static void SPID_Rx_Cb(uint32_t channel, Spid* pArg)
 {
 	SpidCmd *pSpidCmd = pArg->pCurrentCommand;
@@ -102,7 +102,7 @@ static void SPID_Rx_Cb(uint32_t channel, Spid* pArg)
 	SPI_Disable ( pSpiHw );
 	TRACE_INFO("SPI Rx DMA Callback has been called %d bytes received\n\r",
 			pArg->pCurrentCommand->RxSize);
-	/* Configure and enable interrupt on RC compare */    
+	/* Configure and enable interrupt on RC compare */
 	NVIC_ClearPendingIRQ(XDMAC_IRQn);
 	NVIC_DisableIRQ(XDMAC_IRQn);
 
@@ -118,7 +118,7 @@ static void SPID_Rx_Cb(uint32_t channel, Spid* pArg)
 	SCB_CleanInvalidateDCache();
 	/* Release the dataflash semaphore */
 	pArg->semaphore++;
-	
+
 	printf(" %s\n\r",pArg->pCurrentCommand->pRxBuff);
 
 	/* Invoke the callback associated with the current command */
@@ -143,20 +143,20 @@ static uint8_t _spid_configureDmaChannels( Spid* pSpid )
 	XDMAD_FreeChannel( pSpid->pXdmad, spiDmaRxChannel);
 
 	/* Allocate a DMA channel for SPI0/1 TX. */
-	spiDmaTxChannel = XDMAD_AllocateChannel( pSpid->pXdmad, 
+	spiDmaTxChannel = XDMAD_AllocateChannel( pSpid->pXdmad,
 			XDMAD_TRANSFER_MEMORY, pSpid->spiId);
 	if ( spiDmaTxChannel == XDMAD_ALLOC_FAILED ) {
 		return SPID_ERROR;
 	}
 	/* Allocate a DMA channel for SPI0/1 RX. */
-	spiDmaRxChannel = 
+	spiDmaRxChannel =
 		XDMAD_AllocateChannel( pSpid->pXdmad, pSpid->spiId, XDMAD_TRANSFER_MEMORY);
 	if ( spiDmaRxChannel == XDMAD_ALLOC_FAILED ) {
 		return SPID_ERROR;
 	}
-	
+
 	/* Setup callbacks for SPI0/1 RX */
-	XDMAD_SetCallback(pSpid->pXdmad, spiDmaRxChannel, 
+	XDMAD_SetCallback(pSpid->pXdmad, spiDmaRxChannel,
 		(XdmadTransferCallback)SPID_Rx_Cb, pSpid);
 	if (XDMAD_PrepareChannel( pSpid->pXdmad, spiDmaRxChannel ))
 		return SPID_ERROR;
@@ -172,7 +172,7 @@ static uint8_t _spid_configureDmaChannels( Spid* pSpid )
  * \brief Configure the DMA source and destination with Linker List mode.
  *
  * \param pCommand Pointer to command
- * \returns 0 if the dma multibuffer configuration successfully; otherwise 
+ * \returns 0 if the dma multibuffer configuration successfully; otherwise
  * returns SPID_ERROR_XXX.
  */
 static uint8_t _spid_configureLinkList(Spi *pSpiHw, void *pXdmad, SpidCmd *pCommand)
@@ -183,9 +183,9 @@ static uint8_t _spid_configureLinkList(Spi *pSpiHw, void *pXdmad, SpidCmd *pComm
 	if ((unsigned int)pSpiHw == (unsigned int)SPI0 ) spiId = ID_SPI0;
 	if ((unsigned int)pSpiHw == (unsigned int)SPI1 ) spiId = ID_SPI1;
 
-	/* Setup TX  */ 
+	/* Setup TX  */
 
-	xdmadTxCfg.mbr_sa = (uint32_t)pCommand->pTxBuff;    
+	xdmadTxCfg.mbr_sa = (uint32_t)pCommand->pTxBuff;
 
 	xdmadTxCfg.mbr_da = (uint32_t)&pSpiHw->SPI_TDR;
 
@@ -243,7 +243,7 @@ static uint8_t _spid_configureLinkList(Spi *pSpiHw, void *pXdmad, SpidCmd *pComm
 				   XDMAC_CIE_RBIE  |
 				   XDMAC_CIE_WBIE  |
 				   XDMAC_CIE_ROIE);
-	  
+
 	if (XDMAD_ConfigureTransfer( pXdmad, spiDmaRxChannel, &xdmadRxCfg, xdmaCndc, 0, xdmaInt))
 		return SPID_ERROR;
 
@@ -265,10 +265,10 @@ static uint8_t _spid_configureLinkList(Spi *pSpiHw, void *pXdmad, SpidCmd *pComm
  * \param pSpid  Pointer to a Spid instance.
  * \param pSpiHw Associated SPI peripheral.
  * \param spiId  SPI peripheral identifier.
- * \param pDmad  Pointer to a Dmad instance. 
+ * \param pDmad  Pointer to a Dmad instance.
  */
 uint32_t SPID_Configure( Spid *pSpid ,
-		Spi *pSpiHw , 
+		Spi *pSpiHw ,
 		uint8_t spiId,
 		uint32_t spiMode,
 		sXdmad *pXdmad )
@@ -280,7 +280,7 @@ uint32_t SPID_Configure( Spid *pSpid ,
 	pSpid->pCurrentCommand = 0;
 	pSpid->pXdmad = pXdmad;
 
-	/* Enable the SPI Peripheral ,Execute a software reset of the SPI, 
+	/* Enable the SPI Peripheral ,Execute a software reset of the SPI,
 		Configure SPI in Master Mode*/
 	SPI_Configure ( pSpiHw, pSpid->spiId, spiMode );
 
@@ -294,8 +294,8 @@ uint32_t SPID_Configure( Spid *pSpid ,
  * \param cs number corresponding to the SPI chip select.
  * \param csr SPI_CSR value to setup.
  */
-void SPID_ConfigureCS( Spid *pSpid, 
-		uint32_t dwCS, 
+void SPID_ConfigureCS( Spid *pSpid,
+		uint32_t dwCS,
 		uint32_t dwCsr)
 {
 	Spi *pSpiHw = pSpid->pSpiHw;
@@ -343,7 +343,7 @@ uint32_t SPID_SendCommand( Spid *pSpid, SpidCmd *pCommand)
 	if (_spid_configureDmaChannels(pSpid) )
 		return SPID_ERROR_LOCK;
 
-	/* Configure and enable interrupt on RC compare */    
+	/* Configure and enable interrupt on RC compare */
 	NVIC_ClearPendingIRQ(XDMAC_IRQn);
 	NVIC_SetPriority( XDMAC_IRQn ,1);
 	NVIC_EnableIRQ(XDMAC_IRQn);
@@ -356,9 +356,9 @@ uint32_t SPID_SendCommand( Spid *pSpid, SpidCmd *pCommand)
 	SPI_Enable (pSpiHw );
 	SCB_CleanInvalidateDCache();
 	/* Start DMA 0(RX) && 1(TX) */
-	if (XDMAD_StartTransfer( pSpid->pXdmad, spiDmaRxChannel )) 
+	if (XDMAD_StartTransfer( pSpid->pXdmad, spiDmaRxChannel ))
 		return SPID_ERROR_LOCK;
-	if (XDMAD_StartTransfer( pSpid->pXdmad, spiDmaTxChannel )) 
+	if (XDMAD_StartTransfer( pSpid->pXdmad, spiDmaTxChannel ))
 		return SPID_ERROR_LOCK;
 
 	return 0;

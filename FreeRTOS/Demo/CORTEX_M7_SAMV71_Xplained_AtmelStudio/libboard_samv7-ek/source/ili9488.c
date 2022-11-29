@@ -61,7 +61,7 @@ static const Pin ILI9488_CDS[] = {BOARD_LCD_PIN_CDS};
 /**
  * \brief ILI9488 Hardware Initialization for SPI/SMC LCD.
  */
-static void _ILI9488_HW_Initialize(void) 
+static void _ILI9488_HW_Initialize(void)
 {
     /* Pin configurations */
     PIO_Configure(ILI9488_Reset, PIO_LISTSIZE(ILI9488_Reset));
@@ -88,9 +88,9 @@ static void _ILI9488_HW_Initialize(void)
     PWMC_EnableChannel(PWM0, CHANNEL_PWM_LCD);
 
     SPI_Configure(ILI9488, ILI9488_ID, (SPI_MR_MSTR | SPI_MR_MODFDIS | SPI_PCS( SMC_EBI_LCD_CS )));
-    SPI_ConfigureNPCS( ILI9488, 
+    SPI_ConfigureNPCS( ILI9488,
                        SMC_EBI_LCD_CS,
-                       SPI_CSR_CPOL | SPI_CSR_BITS_8_BIT | SPI_DLYBS(6, BOARD_MCK) | SPI_DLYBCT(100, BOARD_MCK) | 
+                       SPI_CSR_CPOL | SPI_CSR_BITS_8_BIT | SPI_DLYBS(6, BOARD_MCK) | SPI_DLYBCT(100, BOARD_MCK) |
                        SPI_SCBR( 20000000, BOARD_MCK) ) ;
     SPI_Enable(ILI9488);
 #else

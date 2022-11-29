@@ -15,4 +15,3 @@ Creates a THUMB mode release build suitable for programming into flash.
 + ram_thumb.bat
 
 Creates a THUMB mode debug build suitable for running from RAM.
-

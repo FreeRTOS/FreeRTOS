@@ -4,7 +4,7 @@
   * @author  MCD Application Team
   * @version V1.0.0RC1
   * @date    27-January-2012
-  * @brief   This file provides firmware functions to manage the following 
+  * @brief   This file provides firmware functions to manage the following
   *          functionalities of the Direct Memory Access controller (DMA):
   *           + Initialization and Configuration
   *           + Data Counter
@@ -15,26 +15,26 @@
                       ##### How to use this driver #####
   ==============================================================================
     [..]
-    (#) Enable The DMA controller clock using 
+    (#) Enable The DMA controller clock using
         RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE) function for DMA1.
     (#) Enable and configure the peripheral to be connected to the DMA channel
        (except for internal SRAM / FLASH memories: no initialization is necessary).
-    (#) For a given Channel, program the Source and Destination addresses, 
-        the transfer Direction, the Buffer Size, the Peripheral and Memory 
-        Incrementation mode and Data Size, the Circular or Normal mode, 
-        the channel transfer Priority and the Memory-to-Memory transfer 
+    (#) For a given Channel, program the Source and Destination addresses,
+        the transfer Direction, the Buffer Size, the Peripheral and Memory
+        Incrementation mode and Data Size, the Circular or Normal mode,
+        the channel transfer Priority and the Memory-to-Memory transfer
         mode (if needed) using the DMA_Init() function.
-    (#) Enable the NVIC and the corresponding interrupt(s) using the function 
+    (#) Enable the NVIC and the corresponding interrupt(s) using the function
         DMA_ITConfig() if you need to use DMA interrupts.
     (#) Enable the DMA channel using the DMA_Cmd() function.
-    (#) Activate the needed channel Request using PPP_DMACmd() function for 
-        any PPP peripheral except internal SRAM and FLASH (ie. SPI, USART ...) 
-        The function allowing this operation is provided in each PPP peripheral 
+    (#) Activate the needed channel Request using PPP_DMACmd() function for
+        any PPP peripheral except internal SRAM and FLASH (ie. SPI, USART ...)
+        The function allowing this operation is provided in each PPP peripheral
         driver (ie. SPI_DMACmd for SPI peripheral).
     (#) Optionally, you can configure the number of data to be transferred
         when the channel is disabled (ie. after each Transfer Complete event
         or when a Transfer Error occurs) using the function DMA_SetCurrDataCounter().
-        And you can get the number of remaining data to be transferred using 
+        And you can get the number of remaining data to be transferred using
         the function DMA_GetCurrDataCounter() at run time (when the DMA channel is
         enabled and running).
     (#) To control DMA events you can use one of the following two methods:
@@ -43,7 +43,7 @@
              phase and DMA_GetITStatus() function into interrupt routines in
              communication phase.
              After checking on a flag you should clear it using DMA_ClearFlag()
-             function. And after checking on an interrupt event you should 
+             function. And after checking on an interrupt event you should
              clear it using DMA_ClearITPendingBit() function.
     @endverbatim
   *
@@ -71,7 +71,7 @@
   * @{
   */
 
-/** @defgroup DMA 
+/** @defgroup DMA
   * @brief DMA driver modules
   * @{
   */
@@ -92,31 +92,31 @@
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
-/** @defgroup DMA_Private_Functions 
+/** @defgroup DMA_Private_Functions
   * @{
   */
 
 /** @defgroup DMA_Group1 Initialization and Configuration functions
  *  @brief   Initialization and Configuration functions
  *
-@verbatim   
+@verbatim
  ===============================================================================
             ##### Initialization and Configuration functions #####
  ===============================================================================
-    [..] This subsection provides functions allowing to initialize the DMA channel 
-         source and destination addresses, incrementation and data sizes, transfer 
-         direction, buffer size, circular/normal mode selection, memory-to-memory 
+    [..] This subsection provides functions allowing to initialize the DMA channel
+         source and destination addresses, incrementation and data sizes, transfer
+         direction, buffer size, circular/normal mode selection, memory-to-memory
          mode selection and channel priority value.
-    [..] The DMA_Init() function follows the DMA configuration procedures as described 
+    [..] The DMA_Init() function follows the DMA configuration procedures as described
          in reference manual (RM0091).
 @endverbatim
   * @{
   */
-    
+
 /**
   * @brief  Deinitializes the DMAy Channelx registers to their default reset
   *         values.
-  * @param  DMAy_Channelx: where y can be 1 to select the DMA and 
+  * @param  DMAy_Channelx: where y can be 1 to select the DMA and
   *         x can be 1 to 5 for DMA1 to select the DMA Channel.
   * @retval None
   */
@@ -162,7 +162,7 @@ void DMA_DeInit(DMA_Channel_TypeDef* DMAy_Channelx)
   }
   else
   {
-    if (DMAy_Channelx == DMA1_Channel5) 
+    if (DMAy_Channelx == DMA1_Channel5)
     {
       /* Reset interrupt pending bits for DMA1 Channel5 */
       DMA1->IFCR |= DMA1_CHANNEL5_IT_MASK;
@@ -171,7 +171,7 @@ void DMA_DeInit(DMA_Channel_TypeDef* DMAy_Channelx)
 }
 
 /**
-  * @brief  Initializes the DMAy Channelx according to the specified parameters 
+  * @brief  Initializes the DMAy Channelx according to the specified parameters
   *         in the DMA_InitStruct.
   * @param  DMAy_Channelx: where y can be 1 to select the DMA and x can be 1 to 5
   *         for DMA1 to select the DMA Channel.
@@ -269,7 +269,7 @@ void DMA_StructInit(DMA_InitTypeDef* DMA_InitStruct)
   * @brief  Enables or disables the specified DMAy Channelx.
   * @param  DMAy_Channelx: where y can be 1 to select the DMA and
   *         x can be 1 to 5 for DMA1 to select the DMA Channel.
-  * @param  NewState: new state of the DMAy Channelx. 
+  * @param  NewState: new state of the DMAy Channelx.
   *         This parameter can be: ENABLE or DISABLE.
   * @retval None
   */
@@ -296,25 +296,25 @@ void DMA_Cmd(DMA_Channel_TypeDef* DMAy_Channelx, FunctionalState NewState)
   */
 
 /** @defgroup DMA_Group2 Data Counter functions
- *  @brief   Data Counter functions 
+ *  @brief   Data Counter functions
  *
 @verbatim
  ===============================================================================
                       ##### Data Counter functions #####
  ===============================================================================
-    [..] This subsection provides function allowing to configure and read the buffer 
-         size (number of data to be transferred).The DMA data counter can be written 
+    [..] This subsection provides function allowing to configure and read the buffer
+         size (number of data to be transferred).The DMA data counter can be written
          only when the DMA channel is disabled (ie. after transfer complete event).
     [..] The following function can be used to write the Channel data counter value:
-         (+) void DMA_SetCurrDataCounter(DMA_Channel_TypeDef* DMAy_Channelx, uint16_t 
+         (+) void DMA_SetCurrDataCounter(DMA_Channel_TypeDef* DMAy_Channelx, uint16_t
              DataNumber).
-    -@- It is advised to use this function rather than DMA_Init() in situations 
+    -@- It is advised to use this function rather than DMA_Init() in situations
         where only the Data buffer needs to be reloaded.
-    [..] The DMA data counter can be read to indicate the number of remaining transfers 
-         for the relative DMA channel. This counter is decremented at the end of each 
-         data transfer and when the transfer is complete: 
+    [..] The DMA data counter can be read to indicate the number of remaining transfers
+         for the relative DMA channel. This counter is decremented at the end of each
+         data transfer and when the transfer is complete:
          (+) If Normal mode is selected: the counter is set to 0.
-         (+) If Circular mode is selected: the counter is reloaded with the initial 
+         (+) If Circular mode is selected: the counter is reloaded with the initial
          value(configured before enabling the DMA channel).
     [..] The following function can be used to read the Channel data counter value:
          (+) uint16_t DMA_GetCurrDataCounter(DMA_Channel_TypeDef* DMAy_Channelx).
@@ -325,7 +325,7 @@ void DMA_Cmd(DMA_Channel_TypeDef* DMAy_Channelx, FunctionalState NewState)
 
 /**
   * @brief  Sets the number of data units in the current DMAy Channelx transfer.
-  * @param  DMAy_Channelx: where y can be 1 to select the DMA and x can be 
+  * @param  DMAy_Channelx: where y can be 1 to select the DMA and x can be
   *         1 to 5 for DMA1 to select the DMA Channel.
   * @param  DataNumber: The number of data units in the current DMAy Channelx
   *         transfer.
@@ -363,26 +363,26 @@ uint16_t DMA_GetCurrDataCounter(DMA_Channel_TypeDef* DMAy_Channelx)
   */
 
 /** @defgroup DMA_Group3 Interrupts and flags management functions
- *  @brief   Interrupts and flags management functions 
+ *  @brief   Interrupts and flags management functions
  *
 @verbatim
  ===============================================================================
           ##### Interrupts and flags management functions #####
  ===============================================================================
-    [..] This subsection provides functions allowing to configure the DMA Interrupts 
+    [..] This subsection provides functions allowing to configure the DMA Interrupts
          sources and check or clear the flags or pending bits status.
-         The user should identify which mode will be used in his application to manage 
-         the DMA controller events: Polling mode or Interrupt mode. 
+         The user should identify which mode will be used in his application to manage
+         the DMA controller events: Polling mode or Interrupt mode.
   *** Polling Mode ***
   ====================
-    [..] Each DMA channel can be managed through 4 event Flags:(y : DMA Controller 
+    [..] Each DMA channel can be managed through 4 event Flags:(y : DMA Controller
          number  x : DMA channel number ).
          (#) DMAy_FLAG_TCx : to indicate that a Transfer Complete event occurred.
          (#) DMAy_FLAG_HTx : to indicate that a Half-Transfer Complete event occurred.
          (#) DMAy_FLAG_TEx : to indicate that a Transfer Error occurred.
-         (#) DMAy_FLAG_GLx : to indicate that at least one of the events described 
+         (#) DMAy_FLAG_GLx : to indicate that at least one of the events described
              above occurred.
-    -@- Clearing DMAy_FLAG_GLx results in clearing all other pending flags of the 
+    -@- Clearing DMAy_FLAG_GLx results in clearing all other pending flags of the
         same channel (DMAy_FLAG_TCx, DMAy_FLAG_HTx and DMAy_FLAG_TEx).
     [..]In this Mode it is advised to use the following functions:
         (+) FlagStatus DMA_GetFlagStatus(uint32_t DMA_FLAG);
@@ -392,17 +392,17 @@ uint16_t DMA_GetCurrDataCounter(DMA_Channel_TypeDef* DMAy_Channelx)
   ======================
     [..] Each DMA channel can be managed through 4 Interrupts:
     (+) Interrupt Source
-       (##) DMA_IT_TC: specifies the interrupt source for the Transfer Complete 
+       (##) DMA_IT_TC: specifies the interrupt source for the Transfer Complete
             event.
-       (##) DMA_IT_HT : specifies the interrupt source for the Half-transfer Complete 
+       (##) DMA_IT_HT : specifies the interrupt source for the Half-transfer Complete
             event.
        (##) DMA_IT_TE : specifies the interrupt source for the transfer errors event.
-       (##) DMA_IT_GL : to indicate that at least one of the interrupts described 
+       (##) DMA_IT_GL : to indicate that at least one of the interrupts described
             above occurred.
-    -@@- Clearing DMA_IT_GL interrupt results in clearing all other interrupts of 
+    -@@- Clearing DMA_IT_GL interrupt results in clearing all other interrupts of
         the same channel (DMA_IT_TCx, DMA_IT_HT and DMA_IT_TE).
     [..]In this Mode it is advised to use the following functions:
-        (+) void DMA_ITConfig(DMA_Channel_TypeDef* DMAy_Channelx, uint32_t DMA_IT, 
+        (+) void DMA_ITConfig(DMA_Channel_TypeDef* DMAy_Channelx, uint32_t DMA_IT,
             FunctionalState NewState);
         (+) ITStatus DMA_GetITStatus(uint32_t DMA_IT);
         (+) void DMA_ClearITPendingBit(uint32_t DMA_IT);
@@ -416,7 +416,7 @@ uint16_t DMA_GetCurrDataCounter(DMA_Channel_TypeDef* DMAy_Channelx)
   * @param  DMAy_Channelx: where y can be 1 to select the DMA and
   *         x can be 1 to 5 for DMA1 to select the DMA Channel.
   * @param  DMA_IT: specifies the DMA interrupts sources to be enabled
-  *         or disabled. 
+  *         or disabled.
   *   This parameter can be any combination of the following values:
   *     @arg DMA_IT_TC: Transfer complete interrupt mask
   *     @arg DMA_IT_HT: Half transfer interrupt mask
@@ -468,13 +468,13 @@ void DMA_ITConfig(DMA_Channel_TypeDef* DMAy_Channelx, uint32_t DMA_IT, Functiona
   *     @arg DMA1_FLAG_TC5: DMA1 Channel5 transfer complete flag.
   *     @arg DMA1_FLAG_HT5: DMA1 Channel5 half transfer flag.
   *     @arg DMA1_FLAG_TE5: DMA1 Channel5 transfer error flag.
-  *     
+  *
   * @note
-  *    The Global flag (DMAy_FLAG_GLx) is set whenever any of the other flags 
-  *    relative to the same channel is set (Transfer Complete, Half-transfer 
-  *    Complete or Transfer Error flags: DMAy_FLAG_TCx, DMAy_FLAG_HTx or 
-  *    DMAy_FLAG_TEx). 
-  *      
+  *    The Global flag (DMAy_FLAG_GLx) is set whenever any of the other flags
+  *    relative to the same channel is set (Transfer Complete, Half-transfer
+  *    Complete or Transfer Error flags: DMAy_FLAG_TCx, DMAy_FLAG_HTx or
+  *    DMAy_FLAG_TEx).
+  *
   * @retval The new state of DMA_FLAG (SET or RESET).
   */
 FlagStatus DMA_GetFlagStatus(uint32_t DMA_FLAG)
@@ -543,7 +543,7 @@ void DMA_ClearFlag(uint32_t DMA_FLAG)
 
 /**
   * @brief  Checks whether the specified DMAy Channelx interrupt has occurred or not.
-  * @param  DMA_IT: specifies the DMA interrupt source to check. 
+  * @param  DMA_IT: specifies the DMA interrupt source to check.
   *   This parameter can be one of the following values:
   *     @arg DMA1_IT_GL1: DMA1 Channel1 global interrupt.
   *     @arg DMA1_IT_TC1: DMA1 Channel1 transfer complete interrupt.
@@ -565,13 +565,13 @@ void DMA_ClearFlag(uint32_t DMA_FLAG)
   *     @arg DMA1_IT_TC5: DMA1 Channel5 transfer complete interrupt.
   *     @arg DMA1_IT_HT5: DMA1 Channel5 half transfer interrupt.
   *     @arg DMA1_IT_TE5: DMA1 Channel5 transfer error interrupt.
-  *     
+  *
   * @note
-  *    The Global interrupt (DMAy_FLAG_GLx) is set whenever any of the other 
-  *    interrupts relative to the same channel is set (Transfer Complete, 
-  *    Half-transfer Complete or Transfer Error interrupts: DMAy_IT_TCx, 
-  *    DMAy_IT_HTx or DMAy_IT_TEx). 
-  *      
+  *    The Global interrupt (DMAy_FLAG_GLx) is set whenever any of the other
+  *    interrupts relative to the same channel is set (Transfer Complete,
+  *    Half-transfer Complete or Transfer Error interrupts: DMAy_IT_TCx,
+  *    DMAy_IT_HTx or DMAy_IT_TEx).
+  *
   * @retval The new state of DMA_IT (SET or RESET).
   */
 ITStatus DMA_GetITStatus(uint32_t DMA_IT)
@@ -620,13 +620,13 @@ ITStatus DMA_GetITStatus(uint32_t DMA_IT)
   *     @arg DMA1_IT_TC5: DMA1 Channel5 transfer complete interrupt.
   *     @arg DMA1_IT_HT5: DMA1 Channel5 half transfer interrupt.
   *     @arg DMA1_IT_TE5: DMA1 Channel5 transfer error interrupt.
-  *     
+  *
   * @note
-  *    Clearing the Global interrupt (DMAy_IT_GLx) results in clearing all other 
-  *    interrupts relative to the same channel (Transfer Complete, Half-transfer 
-  *    Complete and Transfer Error interrupts: DMAy_IT_TCx, DMAy_IT_HTx and 
-  *    DMAy_IT_TEx).  
-  *        
+  *    Clearing the Global interrupt (DMAy_IT_GLx) results in clearing all other
+  *    interrupts relative to the same channel (Transfer Complete, Half-transfer
+  *    Complete and Transfer Error interrupts: DMAy_IT_TCx, DMAy_IT_HTx and
+  *    DMAy_IT_TEx).
+  *
   * @retval None
   */
 void DMA_ClearITPendingBit(uint32_t DMA_IT)

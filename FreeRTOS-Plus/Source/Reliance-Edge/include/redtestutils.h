@@ -68,4 +68,3 @@ int32_t RedVSNPrintf(char *pcBuffer, uint32_t ulBufferLen, const char *pszFormat
 
 
 #endif
-

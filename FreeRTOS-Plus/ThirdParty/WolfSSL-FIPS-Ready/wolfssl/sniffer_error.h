@@ -135,4 +135,3 @@
 
 
 #endif /* wolfSSL_SNIFFER_ERROR_H */
-

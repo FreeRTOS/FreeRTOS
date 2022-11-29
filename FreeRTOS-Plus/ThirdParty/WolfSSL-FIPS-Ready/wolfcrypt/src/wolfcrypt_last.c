@@ -51,4 +51,3 @@ const unsigned int wolfCrypt_FIPS_ro_end[] =
 
 
 #endif /* HAVE_FIPS */
-

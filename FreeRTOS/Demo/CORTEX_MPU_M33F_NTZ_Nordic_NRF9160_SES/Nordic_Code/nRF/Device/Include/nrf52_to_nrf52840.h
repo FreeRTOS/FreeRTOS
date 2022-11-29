@@ -41,7 +41,7 @@ POSSIBILITY OF SUCH DAMAGE.
  * It redefines the old nRF51 or nRF52832 names into the new ones as long as the functionality is still supported. If the
  * functionality is gone, there old names are not defined, so compilation will fail. Note that also includes macros
  * from the nrf52_namechange.h file. */
- 
+
 /* Differences between latest nRF52 headers and nRF52840 headers. */
 
 /* UART */
@@ -49,7 +49,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #ifndef PSELRTS
     #define PSELRTS       PSEL.RTS
 #endif
-#ifndef PSELTXD    
+#ifndef PSELTXD
     #define PSELTXD       PSEL.TXD
 #endif
 #ifndef PSELCTS
@@ -151,4 +151,3 @@ POSSIBILITY OF SUCH DAMAGE.
 /*lint --flb "Leave library region" */
 
 #endif /* NRF51_TO_NRF52840_H */
-

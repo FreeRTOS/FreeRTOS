@@ -30,17 +30,17 @@ then the internal buffer must be enabled to avoid infinite recursion. */
 
 /**
 * @def TRC_CFG_STREAM_PORT_RTT_UP_BUFFER_SIZE
-* 
+*
 * @brief Defines the size of the "up" RTT buffer (target -> host) to use for writing
 * the trace data, for RTT buffer 1 or higher.
 *
 * This setting is ignored for RTT buffer 0, which can't be reconfigured
 * in runtime and therefore hard-coded to use the defines in SEGGER_RTT_Conf.h.
 *
-* Default buffer size for Tracealyzer is 5000 bytes. 
+* Default buffer size for Tracealyzer is 5000 bytes.
 *
 * If you have a stand-alone J-Link probe, the can be decreased to around 1 KB.
-* But integrated J-Link OB interfaces are slower and needs about 5-10 KB, 
+* But integrated J-Link OB interfaces are slower and needs about 5-10 KB,
 * depending on the amount of data produced.
 */
 #define TRC_CFG_STREAM_PORT_RTT_UP_BUFFER_SIZE 5000
@@ -106,12 +106,12 @@ then the internal buffer must be enabled to avoid infinite recursion. */
 
 /**
  * @def TRC_CFG_STREAM_PORT_RTT_NO_LOCK_WRITE
- * 
+ *
  * @brief Sets if RTT should write without locking or not when writing
  * RTT data. This should normally be disabled with an exception being
  * Zephyr, where the SEGGER RTT locks aren't necessary and causes
  * problems if enabled.
- * 
+ *
  * Default: 0
  */
 #define TRC_CFG_STREAM_PORT_RTT_NO_LOCK_WRITE 0

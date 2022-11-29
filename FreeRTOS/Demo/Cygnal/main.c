@@ -553,5 +553,3 @@ static void vRegisterCheck( void *pvParameters )
 		}
 	}
 }
-
-

@@ -560,8 +560,8 @@ typedef struct
      * |        |          |0 = 4~24 MHz external high speed crystal oscillator (HXT) clock is not stable or disabled.
      * |        |          |1 = 4~24 MHz external high speed crystal oscillator (HXT) clock is stable and enabled.
      * |[1]     |LXTSTB    |LXT Clock Source Stable Flag (Read Only)
-     * |        |          |LXT clock source can be selected as extLXT or LIRC32 by setting C32KS(RTC_LXTCTL[7]). 
-     * |        |          |If C32KS is set to 0 the LXT stable flag is set when extLXT clock source is stable. 
+     * |        |          |LXT clock source can be selected as extLXT or LIRC32 by setting C32KS(RTC_LXTCTL[7]).
+     * |        |          |If C32KS is set to 0 the LXT stable flag is set when extLXT clock source is stable.
      * |        |          |If C32KS is set to 1 the LXT stable flag is set when LIRC32 clock source is stable.
      * |        |          |0 = 32.768 kHz external low speed crystal oscillator (LXT) clock is not stable or disabled.
      * |        |          |1 = 32.768 kHz external low speed crystal oscillator (LXT) clock is stabled and enabled.
@@ -808,7 +808,7 @@ typedef struct
      * |        |          |1111 = GPA.15 wake-up function enabled.
      * |[8]     |DBEN      |GPA Input Signal De-bounce Enable Bit
      * |        |          |The DBEN bit is used to enable the de-bounce function for each corresponding IO.
-     * |        |          |If the input signal pulse width cannot be sampled by continuous two de-bounce sample cycle, the input signal transition is seen as the signal bounce and will not trigger the wakeup. 
+     * |        |          |If the input signal pulse width cannot be sampled by continuous two de-bounce sample cycle, the input signal transition is seen as the signal bounce and will not trigger the wakeup.
      * |        |          |The de-bounce clock source is the 10 kHz internal low speed RC oscillator (LIRC).
      * |        |          |0 = Standby power-down wake-up pin De-bounce function Disable.
      * |        |          |1 = Standby power-down wake-up pin De-bounce function Enable.

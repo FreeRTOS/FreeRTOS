@@ -38,7 +38,7 @@
 *                               - R_BSP_ATTRIB_STATIC_INTERRUPT
 *                               - R_BSP_PRAGMA_INTERRUPT_DEFAULT
 *                               - R_BSP_PRAGMA_STATIC_INTERRUPT_DEFAULT
-*                               Changed the following definitions to definition without __no_init for ICCRX so that 
+*                               Changed the following definitions to definition without __no_init for ICCRX so that
 *                               there is no warning when the initial value is specified.
 *                               - _R_BSP_ATTRIB_SECTION_CHANGE_C1
 *                               - _R_BSP_ATTRIB_SECTION_CHANGE_C2
@@ -454,7 +454,7 @@ extern void * const                   exvectors_start[];
 #define R_BSP_ATTRIB_INTERRUPT                                        extern /* only this one because of no corresponding keyword */
 
 #if BSP_CFG_RTOS_USED == 4    /* Renesas RI600V4 & RI600PX */
-#define R_BSP_ATTRIB_STATIC_INTERRUPT                                 
+#define R_BSP_ATTRIB_STATIC_INTERRUPT
 #else /* BSP_CFG_RTOS_USED !=4 */
 #define R_BSP_ATTRIB_STATIC_INTERRUPT                                 static /* only this one because of no corresponding keyword */
 #endif /* BSP_CFG_RTOS_USED */
@@ -509,7 +509,7 @@ extern void * const                   exvectors_start[];
 
 #define R_BSP_ATTRIB_FAST_INTERRUPT                                   extern /* __attribute__((interrupt(fast))) Not necessary,
                                                                                 but Don't forget a R_BSP_PRAGMA_FAST_INTERRUPT() declaration */
-#define R_BSP_ATTRIB_STATIC_FAST_INTERRUPT                            static /* __attribute__((interrupt(fast)), used) Not necessary, 
+#define R_BSP_ATTRIB_STATIC_FAST_INTERRUPT                            static /* __attribute__((interrupt(fast)), used) Not necessary,
                                                                                 but Don't forget a R_BSP_PRAGMA_STATIC_FAST_INTERRUPT() declaration */
 
 /* Default */
@@ -1635,4 +1635,3 @@ R_BSP_PRAGMA(bitfields=default)\
 #endif
 
 #endif /* R_RX_COMPILER_H */
-

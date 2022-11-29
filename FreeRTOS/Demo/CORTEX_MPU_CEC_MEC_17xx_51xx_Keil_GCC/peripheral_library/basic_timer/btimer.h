@@ -20,16 +20,16 @@
 
 Version Control Information (Perforce)
 ******************************************************************************
-$Revision: #1 $ 
-$DateTime: 2016/09/22 08:03:49 $ 
+$Revision: #1 $
+$DateTime: 2016/09/22 08:03:49 $
 $Author: pramans $
 Last Change:	Updated with unit testing feedbacks
 ******************************************************************************/
 /** @file btimer.h
 * \brief Basic Timer Peripheral Header file
 * \author jvasanth
-* 
-* This file is the header file for Basic Timer Peripheral 
+*
+* This file is the header file for Basic Timer Peripheral
 ******************************************************************************/
 
 /** @defgroup Basic_Timer
@@ -41,7 +41,7 @@ Last Change:	Updated with unit testing feedbacks
 
 /******************************************************************************/
 /**  Logical Timer ID for APIs.
- * This is the timer IDs passed to Basic Timer API function calls 
+ * This is the timer IDs passed to Basic Timer API function calls
  *******************************************************************************/
 enum _PID_BTIMER_
 {
@@ -51,7 +51,7 @@ enum _PID_BTIMER_
 	PID_BTIMER_3,
 	PID_BTIMER_4,
 	PID_BTIMER_5,
-	PID_BTIMER_MAX	
+	PID_BTIMER_MAX
 };
 
 /* ---------------------------------------------------------------------- */
@@ -97,9 +97,9 @@ enum _PID_BTIMER_
  * @param tmr_cntl Logical flags for Timer Control
  * @param initial_count Initial Count
  * @param preload_count Preload Count
- * @note Performs a soft reset of the timer before configuration 
+ * @note Performs a soft reset of the timer before configuration
  */
-void btimer_init(uint8_t btimer_id, 
+void btimer_init(uint8_t btimer_id,
                uint16_t tmr_cntl,
                uint16_t prescaler,
                uint32_t initial_count,
@@ -110,16 +110,16 @@ void btimer_init(uint8_t btimer_id,
 /* ---------------------------------------------------------------------- */
 /** Program timer's counter register.
  * @param btimer_id Basic Timer ID
- * @param count new counter value 
- * @note Timer hardware may implement a 16-bit or 32-bit 
+ * @param count new counter value
+ * @note Timer hardware may implement a 16-bit or 32-bit
  *       hardware counter. If the timer is 16-bit only the lower
  *       16-bits of the count paramter are used.
  */
 void btimer_count_set(uint8_t btimer_id, uint32_t count);
 
 /** Return current value of timer's count register.
- * @param btimer_id Basic Timer ID. 
- * @return uint32_t timer count may be 32 or 16 bits depending 
+ * @param btimer_id Basic Timer ID.
+ * @return uint32_t timer count may be 32 or 16 bits depending
  *         upon the hardware.  Timers 0-3 are 16-bit
  *         and Timers 4-5 are 32-bit.
  */
@@ -128,10 +128,10 @@ uint32_t btimer_count_get(uint8_t btimer_id);
 /* ---------------------------------------------------------------------- */
 /*  API -   Function to reload counter from Preload Register              */
 /* ---------------------------------------------------------------------- */
-/** Force timer to reload counter from preload 
- * register.  
- * @param btimer_id Basic Timer ID. 
- * @note Hardware will only reload counter if timer is running. 
+/** Force timer to reload counter from preload
+ * register.
+ * @param btimer_id Basic Timer ID.
+ * @note Hardware will only reload counter if timer is running.
  */
 void btimer_reload(uint8_t btimer_id);
 
@@ -143,15 +143,15 @@ void btimer_reload(uint8_t btimer_id);
  */
 void btimer_start(uint8_t btimer_id);
 
-/** Stop timer. 
- * @param btimer_id Basic Timer ID. 
- * @note When a stopped timer is started again it will reload 
+/** Stop timer.
+ * @param btimer_id Basic Timer ID.
+ * @note When a stopped timer is started again it will reload
  *       the count register from preload value.
  */
 void btimer_stop(uint8_t btimer_id);
 
-/** Return state of timer's START bit. 
- * @param btimer_id Basic Timer ID. 
+/** Return state of timer's START bit.
+ * @param btimer_id Basic Timer ID.
  * @return uint8_t 0(timer not started), 1 (timer started)
  */
 uint8_t btimer_is_started(uint8_t btimer_id);
@@ -159,25 +159,25 @@ uint8_t btimer_is_started(uint8_t btimer_id);
 /* ---------------------------------------------------------------------- */
 /*  API -         Function to perform basic timer soft reset              */
 /* ---------------------------------------------------------------------- */
-/** Peform soft reset of specified timer. 
- * @param btimer_id Basic Timer ID 
+/** Peform soft reset of specified timer.
+ * @param btimer_id Basic Timer ID
  * @note Soft reset set all registers to POR values.
- * Spins 256 times waiting on hardware to clear reset bit. 
+ * Spins 256 times waiting on hardware to clear reset bit.
  */
 void btimer_reset(uint8_t btimer_id);
 
 /* ---------------------------------------------------------------------- */
 /*   API -        Functions to halt/unhalt the timer counting             */
 /* ---------------------------------------------------------------------- */
-/** Halt timer counting with no reload on unhalt.   
- * @param btimer_id Basic Timer ID. 
- * @note A halted timer will not reload the count register when 
+/** Halt timer counting with no reload on unhalt.
+ * @param btimer_id Basic Timer ID.
+ * @note A halted timer will not reload the count register when
  *       unhalted, it will continue counting from the current
  *       count value.
  */
 void btimer_halt(uint8_t btimer_id);
 
-/** Unhalt timer counting. 
+/** Unhalt timer counting.
  * @param btimer_id Basic Timer ID.
  */
 void btimer_unhalt(uint8_t btimer_id);
@@ -185,17 +185,17 @@ void btimer_unhalt(uint8_t btimer_id);
 /* ---------------------------------------------------------------------- */
 /*   API -        Functions for Basic Timer interrupt                     */
 /* ---------------------------------------------------------------------- */
-/** Enable specified timer's interrupt from the block. 
+/** Enable specified timer's interrupt from the block.
  * @param btimer_id Basic Timer ID.
- * @param ien Non-zero enable interrupt in timer block, 0 
+ * @param ien Non-zero enable interrupt in timer block, 0
  *            disable.
  */
 void btimer_interrupt_enable(uint8_t btimer_id, uint8_t ien);
 
-/** Read Timer interrupt status and clear if set 
- * @param btimer_id Basic Timer ID. 
- * @return uint8_t 1 (Timer interrupt status set) else 0. 
- * @note If timer interrupt status is set then clear it before 
+/** Read Timer interrupt status and clear if set
+ * @param btimer_id Basic Timer ID.
+ * @return uint8_t 1 (Timer interrupt status set) else 0.
+ * @note If timer interrupt status is set then clear it before
  *       returning.
  */
 uint8_t btimer_interrupt_status_get_clr(uint8_t btimer_id);
@@ -203,28 +203,28 @@ uint8_t btimer_interrupt_status_get_clr(uint8_t btimer_id);
 /* ---------------------------------------------------------------------- */
 /*  API -         Functions for Basic Timer GIRQ                          */
 /* ---------------------------------------------------------------------- */
-/** Enables GIRQ enable bit for the timer 
+/** Enables GIRQ enable bit for the timer
  * @param btimer_id Basic Timer ID.
  */
 void btimer_girq_enable_set(uint8_t btimer_id);
 
-/** Clears GIRQ enable bit for the timer 
+/** Clears GIRQ enable bit for the timer
  * @param btimer_id Basic Timer ID.
  */
 void btimer_girq_enable_clr(uint8_t btimer_id);
 
-/** Returns GIRQ source bit for the timer 
+/** Returns GIRQ source bit for the timer
  * @param btimer_id Basic Timer ID.
  * @return uint8_t 0(src bit not set), Non-zero (src bit set)
  */
 uint8_t btimer_girq_src_get(uint8_t btimer_id);
 
-/** Clears GIRQ source bit for the timer 
+/** Clears GIRQ source bit for the timer
  * @param btimer_id Basic Timer ID.
  */
 void btimer_girq_src_clr(uint8_t btimer_id);
 
-/** Returns GIRQ result bit for the timer 
+/** Returns GIRQ result bit for the timer
  * @param btimer_id Basic Timer ID.
  * @return uint8_t 0(result bit not set), Non-zero (result bit set)
  */
@@ -233,7 +233,7 @@ uint8_t btimer_girq_result_get(uint8_t btimer_id);
 /* ---------------------------------------------------------------------- */
 /*  API -         Functions for Basic Timer Sleep                         */
 /* ---------------------------------------------------------------------- */
-/** Enable/Disable clock gating on idle of a timer  
+/** Enable/Disable clock gating on idle of a timer
  * @param btimer_id Basic Timer ID.
  * @param sleep_en 1 = Sleep enable, 0 = Sleep disable
  */
@@ -245,7 +245,7 @@ void btimer_sleep(uint8_t btimer_id, uint8_t sleep_en);
  */
 uint32_t btimer_clk_reqd_sts_get(uint8_t btimer_id);
 
-/** Enable/Disable reset on sleep for the timer block 
+/** Enable/Disable reset on sleep for the timer block
  * @param btimer_id Basic Timer ID.
  * @param reset_en 1 to enable, 0 to disable
  */
@@ -256,13 +256,13 @@ void btimer_reset_on_sleep(uint8_t btimer_id, uint8_t reset_en);
 /* ---------------------------------------------------------------------- */
 /** Sets timer counter
  * @param btimer_id Basic Timer ID
- * @param count	- 32-bit counter  
+ * @param count	- 32-bit counter
  */
 void p_btimer_count_set(uint8_t btimer_id, uint32_t count);
 
 /** Read the timer counter
  * @param btimer_id Basic Timer ID
- * @return count	- 32-bit counter  
+ * @return count	- 32-bit counter
  */
 uint32_t p_btimer_count_get(uint8_t btimer_id);
 
@@ -272,7 +272,7 @@ uint32_t p_btimer_count_get(uint8_t btimer_id);
 /* ---------------------------------------------------------------------- */
 /** Sets preload for the counter
  * @param btimer_id Basic Timer ID
- * @param preload_count	- 32-bit pre-load value 
+ * @param preload_count	- 32-bit pre-load value
  */
 void p_btimer_preload_set(uint8_t btimer_id, uint32_t preload_count);
 
@@ -280,23 +280,23 @@ void p_btimer_preload_set(uint8_t btimer_id, uint32_t preload_count);
 /* Peripheral Functions - Functions for basic timer interrupts            */
 /* ---------------------------------------------------------------------- */
 /** Reads the interrupt status bit in the timer block
- * @param btimer_id Basic Timer ID 
+ * @param btimer_id Basic Timer ID
  * @return status - 1 if interrupt status set, else 0
  */
 uint8_t p_btimer_int_status_get(uint8_t btimer_id);
 
 /** Clears interrupt status bit in the timer block
- * @param btimer_id Basic Timer ID 
+ * @param btimer_id Basic Timer ID
  */
 void p_btimer_int_status_clr(uint8_t btimer_id);
 
 /** Sets interrupt enable bit in the timer block
- * @param btimer_id Basic Timer ID  
+ * @param btimer_id Basic Timer ID
  */
 void p_btimer_int_enable_set(uint8_t btimer_id);
 
 /** Clears interrupt enable bit for the timer block
- * @param btimer_id Basic Timer ID  
+ * @param btimer_id Basic Timer ID
  */
 void p_btimer_int_enable_clr(uint8_t btimer_id);
 
@@ -309,7 +309,7 @@ void p_btimer_int_enable_clr(uint8_t btimer_id);
  */
 void p_btimer_ctrl_write(uint8_t btimer_id, uint32_t value);
 
-/** Reads the control register 
+/** Reads the control register
  * @param btimer_id Basic Timer ID
  * @return uint32_t	- 32-bit value
  */
@@ -346,56 +346,56 @@ void p_btimer_ctrl_auto_restart_set(uint8_t btimer_id);
 void p_btimer_ctrl_auto_restart_clr(uint8_t btimer_id);
 
 /** Sets soft reset bit in the control register
- * @param btimer_id Basic Timer ID 
+ * @param btimer_id Basic Timer ID
  */
 void p_btimer_ctrl_soft_reset_set(uint8_t btimer_id);
 
-/** Read Soft Reset bit 
+/** Read Soft Reset bit
  * @param btimer_id Basic Timer ID
  * @return 0 if soft reset status bit cleared; else non-zero value
  */
 uint8_t p_btimer_ctrl_soft_reset_sts_get(uint8_t btimer_id);
 
 /** Sets start bit in the control register
- * @param btimer_id Basic Timer ID 
+ * @param btimer_id Basic Timer ID
  */
 void p_btimer_ctrl_start_set(uint8_t btimer_id);
 
 /** Read start bit in the control register
- * @param btimer_id Basic Timer ID 
+ * @param btimer_id Basic Timer ID
  * @return 0 if start bit not set; else non-zero value
  */
 uint8_t p_btimer_ctrl_start_get(uint8_t btimer_id);
 
 /** Clears start bit in the control register
- * @param btimer_id Basic Timer ID 
+ * @param btimer_id Basic Timer ID
  */
 void p_btimer_ctrl_start_clr(uint8_t btimer_id);
 
 /** Sets reload bit in the control register
- * @param btimer_id Basic Timer ID 
+ * @param btimer_id Basic Timer ID
  */
 void p_btimer_ctrl_reload_set(uint8_t btimer_id);
 
 /** Clears reload bit in the control register
- * @param btimer_id Basic Timer ID 
+ * @param btimer_id Basic Timer ID
  */
 void p_btimer_ctrl_reload_clr(uint8_t btimer_id);
 
 /** Sets halt bit in the control register
- * @param btimer_id Basic Timer ID 
+ * @param btimer_id Basic Timer ID
  */
 void p_btimer_ctrl_halt_set(uint8_t btimer_id);
 
 /** Clears halt bit in the control register
- * @param btimer_id Basic Timer ID 
+ * @param btimer_id Basic Timer ID
  */
 
 void p_btimer_ctrl_halt_clr(uint8_t btimer_id);
 
 /** Sets prescale value
  * @param btimer_id Basic Timer ID
- * @param prescaler	- 16-bit pre-scale value 
+ * @param prescaler	- 16-bit pre-scale value
  */
 void p_btimer_ctrl_prescale_set(uint8_t btimer_id, uint16_t prescaler);
 
@@ -406,4 +406,3 @@ void p_btimer_ctrl_prescale_set(uint8_t btimer_id, uint16_t prescaler);
 
 /**   @} //Peripherals Basic_Timer
  */
-

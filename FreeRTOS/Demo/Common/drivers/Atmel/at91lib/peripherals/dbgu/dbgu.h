@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -30,11 +30,11 @@
 //------------------------------------------------------------------------------
 /// \dir
 /// !Purpose
-/// 
+///
 /// This module provides definitions and functions for using the DBGU.
 ///
 /// !Usage
-/// 
+///
 /// -# Enable the DBGU pins (see pio.h).
 /// -# Configure the DBGU using DBGU_Configure.
 ///
@@ -54,7 +54,7 @@
 /// This page lists several common operating modes for the DBGU.
 /// !Modes
 /// - DBGU_STANDARD
- 
+
 /// Standard operating mode (asynchronous, 8bit, no parity)
 #define DBGU_STANDARD           AT91C_US_PAR_NONE
 //------------------------------------------------------------------------------
@@ -69,4 +69,3 @@ extern void DBGU_Configure(unsigned int mode,
 extern unsigned char DBGU_GetChar();
 
 #endif //#ifndef DBGU_H
-

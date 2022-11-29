@@ -314,7 +314,7 @@ void HAL_GPIO_DeInit(GPIO_TypeDef  *GPIOx, uint32_t GPIO_Pin)
         /* Clear Rising Falling edge configuration */
         EXTI->RTSR &= ~((uint32_t)iocurrent);
         EXTI->FTSR &= ~((uint32_t)iocurrent);
-        
+
         tmp = (0x0FUL) << (4U * (position & 0x03U));
         SYSCFG->EXTICR[position >> 2U] &= ~tmp;
       }
@@ -529,4 +529,3 @@ __weak void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

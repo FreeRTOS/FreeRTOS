@@ -267,5 +267,3 @@ void vMainAssertCalled( const char *pcFileName, uint32_t ulLineNumber )
 	taskENTER_CRITICAL();
 	for( ;; );
 }
-
-

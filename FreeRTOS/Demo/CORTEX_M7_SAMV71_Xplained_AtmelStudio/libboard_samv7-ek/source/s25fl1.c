@@ -88,7 +88,7 @@ static sXdmad qspiDmaInst;
  *        Definition
  *----------------------------------------------------------------------------*/
 #define READ_DEV        0
-#define WRITE_DEV       1 
+#define WRITE_DEV       1
 
 #define PAGE_SIZE       256
 /**
@@ -101,7 +101,7 @@ void XDMAC_Handler(void)
 
 /**
  * \brief Start S25FL1D Send command with/without data write/read.
- * \param Instr Instruct 
+ * \param Instr Instruct
  * \param pTxData point to Tx buffer address
  * \param pRxData point to Rx buffer address
  * \param ReadWrite Command/Write/Read access
@@ -112,7 +112,7 @@ static uint8_t S25FL1D_SendCommand(uint8_t Instr, uint32_t *pTxData,
 		uint32_t *pRxData, Access_t ReadWrite, uint32_t size)
 {
 	qspiDma.Qspid.qspiCommand.Instruction = Instr;
-	
+
 	if(qspiDma.Qspid.qspiMode) {
 		pDev->InstFrame.bm.bInstEn = 1;
 		qspiDma.Qspid.pQspiFrame =  pDev;
@@ -125,21 +125,21 @@ static uint8_t S25FL1D_SendCommand(uint8_t Instr, uint32_t *pTxData,
 		}
 
 	if(ReadWrite == CmdAccess) {
-		pDev->InstFrame.bm.bXfrType 
+		pDev->InstFrame.bm.bXfrType
 			= (QSPI_IFR_TFRTYP_TRSFR_READ >> QSPI_IFR_TFRTYP_Pos);
 		pDev->InstFrame.bm.bDataEn = 0;
-		
+
 		QSPI_SendCommand(&qspiDma.Qspid, 0);
-		
+
 	} else if (ReadWrite == WriteAccess) {
 		pDev->InstFrame.bm.bDataEn = 1;
-		pDev->InstFrame.bm.bXfrType 
+		pDev->InstFrame.bm.bXfrType
 			= (QSPI_IFR_TFRTYP_TRSFR_WRITE >> QSPI_IFR_TFRTYP_Pos);
 		qspiDma.Qspid.qspiBuffer.TxDataSize  = size;
 		QSPI_SendCommandWithData(&qspiDma.Qspid, 0);
-		
+
 	} else {
-			pDev->InstFrame.bm.bXfrType 
+			pDev->InstFrame.bm.bXfrType
 				= (QSPI_IFR_TFRTYP_TRSFR_READ >> QSPI_IFR_TFRTYP_Pos);
 			pDev->InstFrame.bm.bDataEn = 1;
 			qspiDma.Qspid.qspiBuffer.RxDataSize  = size;
@@ -148,27 +148,27 @@ static uint8_t S25FL1D_SendCommand(uint8_t Instr, uint32_t *pTxData,
 	} else {
 		if((ReadWrite == CmdAccess) || (ReadWrite == WriteAccess)) {
 			qspiDma.Qspid.qspiBuffer.pDataTx = malloc(size+1);
-			qspiDma.Qspid.qspiBuffer.pDataTx[0] 
+			qspiDma.Qspid.qspiBuffer.pDataTx[0]
 				= qspiDma.Qspid.qspiCommand.Instruction;
 			if(size) {
 				memcpy(&qspiDma.Qspid.qspiBuffer.pDataTx[1], pTxData, size);
 			}
 			qspiDma.Qspid.qspiBuffer.TxDataSize  = size+1;
 
-			QSPI_MultiWriteSPI(&qspiDma.Qspid, 
-				(uint16_t const*)qspiDma.Qspid.qspiBuffer.pDataTx, 
-				qspiDma.Qspid.qspiBuffer.TxDataSize); 
+			QSPI_MultiWriteSPI(&qspiDma.Qspid,
+				(uint16_t const*)qspiDma.Qspid.qspiBuffer.pDataTx,
+				qspiDma.Qspid.qspiBuffer.TxDataSize);
 
 			free(qspiDma.Qspid.qspiBuffer.pDataTx);
-		} else if (ReadWrite == ReadAccess) { 
+		} else if (ReadWrite == ReadAccess) {
 			qspiDma.Qspid.qspiBuffer.pDataRx = pRxData;
 			QSPI_SingleWriteSPI(&qspiDma.Qspid,
 					(uint16_t const*)&qspiDma.Qspid.qspiCommand.Instruction);
-			QSPI_MultiReadSPI(&qspiDma.Qspid, 
+			QSPI_MultiReadSPI(&qspiDma.Qspid,
 					(uint16_t *)qspiDma.Qspid.qspiBuffer.pDataRx, size);
 		} else {
 			TRACE_ERROR("%s Wrong access parameter \n\r", __FUNCTION__);
-		} 
+		}
 		QSPI_EndTransfer(qspiDma.Qspid.pQspiHw);
 	}
 	return 0;
@@ -177,20 +177,20 @@ static uint8_t S25FL1D_SendCommand(uint8_t Instr, uint32_t *pTxData,
 
 /**
  * \brief Start S25FL1D Memory access with/without data write/read.
- * \param Instr Instruct 
+ * \param Instr Instruct
  * \param pTxData point to Tx buffer address
  * \param pRxData point to Rx buffer address
  * \param ReadWrite Command/Write/Read access
  * \param Size buffer size in byte
  * \returns 0
  */
-static uint8_t S25FL1D_MemoryAccess(uint8_t Instr, uint32_t Addr, 
-				uint32_t *pTxData, uint32_t *pRxData, Access_t ReadWrite, 
+static uint8_t S25FL1D_MemoryAccess(uint8_t Instr, uint32_t Addr,
+				uint32_t *pTxData, uint32_t *pRxData, Access_t ReadWrite,
 				uint32_t size, uint8_t Secure)
 {
 	uint8_t SpiBuffer[4];
 	qspiDma.Qspid.qspiCommand.Instruction = Instr;
-	
+
 	if(qspiDma.Qspid.qspiMode) {
 		qspiDma.Qspid.qspiBuffer.pDataTx = pTxData;
 		qspiDma.Qspid.qspiBuffer.pDataRx = pRxData;
@@ -200,11 +200,11 @@ static uint8_t S25FL1D_MemoryAccess(uint8_t Instr, uint32_t Addr,
 		pMem->InstFrame.bm.bAddrEn = 1;
 		qspiDma.Qspid.pQspiFrame =  pMem;
 		if (ReadWrite == WriteAccess) {
-		pMem->InstFrame.bm.bXfrType 
+		pMem->InstFrame.bm.bXfrType
 			= (QSPI_IFR_TFRTYP_TRSFR_WRITE_MEMORY >> QSPI_IFR_TFRTYP_Pos);
 		qspiDma.Qspid.qspiBuffer.TxDataSize = size;
 		} else {
-		pMem->InstFrame.bm.bXfrType 
+		pMem->InstFrame.bm.bXfrType
 			= (QSPI_IFR_TFRTYP_TRSFR_READ_MEMORY >> QSPI_IFR_TFRTYP_Pos);
 		qspiDma.Qspid.qspiBuffer.RxDataSize = size;
 		}
@@ -219,21 +219,21 @@ static uint8_t S25FL1D_MemoryAccess(uint8_t Instr, uint32_t Addr,
 		SpiBuffer[0] = Instr;
 		SpiBuffer[1] = (uint8_t)(Addr >> 16);
 		SpiBuffer[2] = (uint8_t)(Addr >> 8);
-		SpiBuffer[3] = (uint8_t)(Addr); 
+		SpiBuffer[3] = (uint8_t)(Addr);
 		memcpy(qspiDma.Qspid.qspiBuffer.pDataTx, SpiBuffer, 4);
         if(pTxData !=NULL) {
           memcpy((qspiDma.Qspid.qspiBuffer.pDataTx+1), pTxData, size);
         }
-		
+
 		if (ReadWrite == WriteAccess) {
 		qspiDma.Qspid.qspiBuffer.TxDataSize  = size+4;
 #ifdef USE_QSPI_DMA
 		qspiDma.Qspid.qspiBuffer.RxDataSize  = size+4;
 		qspiDma.Qspid.qspiBuffer.pDataRx = qspiDma.Qspid.qspiBuffer.pDataTx;
 		QSPID_ReadWriteSPI(&qspiDma, ReadWrite);
-#else        
-		
-		QSPI_MultiWriteSPI(&qspiDma.Qspid, 
+#else
+
+		QSPI_MultiWriteSPI(&qspiDma.Qspid,
 						(uint16_t *)qspiDma.Qspid.qspiBuffer.pDataTx,
 						qspiDma.Qspid.qspiBuffer.TxDataSize);
 #endif
@@ -253,10 +253,10 @@ static uint8_t S25FL1D_MemoryAccess(uint8_t Instr, uint32_t Addr,
 		qspiDma.Qspid.qspiBuffer.pDataRx = pRxData;
 		qspiDma.Qspid.qspiBuffer.RxDataSize  = size;
 		qspiDma.Qspid.qspiBuffer.TxDataSize  = 4;
-		QSPI_MultiWriteSPI(&qspiDma.Qspid, 
+		QSPI_MultiWriteSPI(&qspiDma.Qspid,
 						(uint16_t *)qspiDma.Qspid.qspiBuffer.pDataTx,
 						qspiDma.Qspid.qspiBuffer.TxDataSize);
-		QSPI_MultiReadSPI(&qspiDma.Qspid, 
+		QSPI_MultiReadSPI(&qspiDma.Qspid,
 						(uint16_t *)qspiDma.Qspid.qspiBuffer.pDataRx,
 						size);
         QSPI_EndTransfer(qspiDma.Qspid.pQspiHw);
@@ -279,10 +279,10 @@ static uint32_t S25FL1D_ReadStatus(void)
 
 	S25FL1D_SendCommand(READ_STATUS_1, 0, &ReadStatus, ReadAccess, 1);
 	status = ReadStatus;
-	
+
 	S25FL1D_SendCommand(READ_STATUS_2, 0, &ReadStatus, ReadAccess, 1);
 	status |= ((ReadStatus << 8) & 0xFF00);
-	
+
 	S25FL1D_SendCommand(READ_STATUS_3, 0, &ReadStatus, ReadAccess, 1);
 	status |= ((ReadStatus << 16) & 0xFF0000);
 	return status;
@@ -331,7 +331,7 @@ static uint8_t S25FL1D_ReadStatus3(void)
  */
 static void S25FL1D_IsBusy(void)
 {
-#ifdef USE_QSPI_DMA  
+#ifdef USE_QSPI_DMA
 	while(QSPID_IsBusy(&qspiDma.progress) ) {
 		Wait(1);
 	}
@@ -374,7 +374,7 @@ static void S25FL1D_WriteStatus( uint8_t *pStatus)
 	S25FL1D_EnableWrite();
 
 	S25FL1D_SendCommand(WRITE_STATUS, (uint32_t *)pStatus, 0, WriteAccess, 3);
-	
+
 	S25FL1D_DisableWrite();
 }
 
@@ -389,9 +389,9 @@ static void S25FL1D_WriteVolatileStatus( uint8_t *pStatus)
 {
 	uint32_t DataWr = 0;
 	DataWr = *pStatus;
-	
+
 	S25FL1D_SendCommand(0x50, 0, 0 , CmdAccess, 0);
-	
+
 	S25FL1D_SendCommand(WRITE_STATUS,&DataWr, 0 , WriteAccess, 3);
 	S25FL1D_DisableWrite();
 }
@@ -399,10 +399,10 @@ static void S25FL1D_WriteVolatileStatus( uint8_t *pStatus)
 
 static uint8_t S25FL1D_CheckProtectedAddr(uint8_t Status1, uint32_t Addr)
 {
-	const uint32_t AddrJump 
+	const uint32_t AddrJump
 			= (Status1 & SEC_PROTECT_Msk) ? 0x001000UL : 0x010000UL;
 	static uint8_t Protected = 0;
-	
+
 	const uint8_t blockBits = ((Status1 & BLOCK_PROTECT_Msk) >> 2);
 
 	switch(blockBits) {
@@ -417,7 +417,7 @@ static uint8_t S25FL1D_CheckProtectedAddr(uint8_t Status1, uint32_t Addr)
 		}
 	}
 	break;
-	
+
 	case 2:
 	if (Status1 & TOP_BTM_PROTECT_Msk) {
 		if( ( Addr > 0x000000) && ( Addr < (0x000000 + (2* AddrJump)- 1 )) ) {
@@ -440,7 +440,7 @@ static uint8_t S25FL1D_CheckProtectedAddr(uint8_t Status1, uint32_t Addr)
 		}
 	}
 	break;
-	
+
 	case 4:
 	if (Status1 & TOP_BTM_PROTECT_Msk) {
 		if( ( Addr > 0x000000) && ( Addr < (0x000000 + (8 * AddrJump) - 1) )) {
@@ -451,7 +451,7 @@ static uint8_t S25FL1D_CheckProtectedAddr(uint8_t Status1, uint32_t Addr)
 		Protected = 1;
 		}
 	}
-	break; 
+	break;
 	case 5:
 	if( !(Status1 & SEC_PROTECT_Msk) ) {
 		if (Status1 & TOP_BTM_PROTECT_Msk) {
@@ -465,11 +465,11 @@ static uint8_t S25FL1D_CheckProtectedAddr(uint8_t Status1, uint32_t Addr)
 		}
 	}
 	break;
-	
+
 	case 6:
-	
+
 	if( !(Status1 & SEC_PROTECT_Msk) ) {
-	
+
 		if (Status1 & TOP_BTM_PROTECT_Msk) {
 		if( ( Addr > 0x000000) && ( Addr < (0x000000 + (32 * AddrJump) - 1) )) {
 			Protected = 1;
@@ -486,12 +486,12 @@ static uint8_t S25FL1D_CheckProtectedAddr(uint8_t Status1, uint32_t Addr)
  *         Global functions
  *----------------------------------------------------------------------------*/
 void S25FL1D_InitFlashInterface(uint8_t Mode)
-{   
+{
 	if(Mode) {
 		QSPID_Configure(&qspiDma, QspiMemMode,
 						QSPI_MR_CSMODE_LASTXFER, &qspiDmaInst);
 		qspiDma.Qspid.qspiMode = (QspiMode_t)QSPI_MR_SMM_MEMORY;
-		
+
 		pDev = (QspiInstFrame_t *)malloc (sizeof(QspiInstFrame_t));
 		memset(pDev, 0, sizeof(QspiInstFrame_t));
 		pDev->InstFrame.bm.bwidth = QSPI_IFR_WIDTH_SINGLE_BIT_SPI;
@@ -506,11 +506,11 @@ void S25FL1D_InitFlashInterface(uint8_t Mode)
 						&qspiDmaInst);
 		qspiDma.Qspid.qspiMode = (QspiMode_t)QSPI_MR_SMM_SPI;
 	}
-	
+
 	QSPI_ConfigureClock(QSPI, ClockMode_00, QSPI_SCR_SCBR(1));
-	
+
 	QSPI_Enable(QSPI);
-	
+
 }
 
 /**
@@ -527,7 +527,7 @@ uint32_t S25FL1D_ReadJedecId(void)
 }
 
 /**
- * \brief Enables critical writes operation on a serial flash device, such as 
+ * \brief Enables critical writes operation on a serial flash device, such as
  * sector protection, status register, etc.
  *
  * \para pS25fl1  Pointer to an S25FL1 driver instance.
@@ -536,7 +536,7 @@ void S25FL1D_QuadMode(uint8_t Enable)
 {
 
 	uint8_t status[3];
-	
+
 	status[0] = S25FL1D_ReadStatus1();
 	status[1] = S25FL1D_ReadStatus2();
 	status[2] = S25FL1D_ReadStatus3();
@@ -560,7 +560,7 @@ void S25FL1D_QuadMode(uint8_t Enable)
 
 
 /**
- * \brief Enables critical writes operation on a serial flash device, such as 
+ * \brief Enables critical writes operation on a serial flash device, such as
  * sector protection, status register, etc.
  *
  * \para pS25fl1  Pointer to an S25FL1 driver instance.
@@ -704,7 +704,7 @@ unsigned char S25FL1D_EraseChip(void)
 	uint8_t i=0;
 	uint8_t Status = STATUS_RDYBSY;
 	uint8_t ChipStatus= S25FL1D_ReadStatus1();
-	
+
 	if(ChipStatus & CHIP_PROTECT_Msk) {
 		TRACE_ERROR("Chip is Protected \n\r");
 		TRACE_INFO("Flash Status Register 1 is %x", ChipStatus);
@@ -714,7 +714,7 @@ unsigned char S25FL1D_EraseChip(void)
 		S25FL1D_SendCommand(CHIP_ERASE_2, 0, 0, CmdAccess, 0);
 
 		while(Status & STATUS_RDYBSY) {
-			 
+
 			Wait(200);
 			printf("Erasing flash memory %c\r", wait_ch[i]);
 			i++;
@@ -813,7 +813,7 @@ unsigned char S25FL1D_Erase64KBlock( unsigned int address)
 		QSPID_DisableSpiChannel(&qspiDma);
 #endif
 	}
-	
+
 	/* Wait for transfer to finish */
 	S25FL1D_IsBusy();
 	return 0;
@@ -839,11 +839,11 @@ unsigned char S25FL1D_Write(
 		uint8_t Secure)
 {
 	unsigned int i = 0;
-	
+
 	uint32_t  NumberOfWrites = (size >> 8); //  ( (Size / pagezize)  )
 	uint32_t Addrs = address;
-  
-#ifdef USE_QSPI_DMA    
+
+#ifdef USE_QSPI_DMA
 	if(qspiDma.Qspid.qspiMode) {
 		if(QSPID_EnableQspiTxChannel(&qspiDma) == QSPID_ERROR_LOCK)
 		return 1;
@@ -855,7 +855,7 @@ unsigned char S25FL1D_Write(
 	// if less than page size
 	if(NumberOfWrites == 0) {
 		S25FL1D_EnableWrite();
-		S25FL1D_MemoryAccess(BYTE_PAGE_PROGRAM , Addrs, pData, 0, 
+		S25FL1D_MemoryAccess(BYTE_PAGE_PROGRAM , Addrs, pData, 0,
 						WriteAccess, size, Secure);
 	// multiple page
 	} else {
@@ -869,20 +869,20 @@ unsigned char S25FL1D_Write(
 		}
 		if(size % PAGE_SIZE ) {
 			S25FL1D_EnableWrite();
-			S25FL1D_MemoryAccess(BYTE_PAGE_PROGRAM , Addrs, pData, 0, 
+			S25FL1D_MemoryAccess(BYTE_PAGE_PROGRAM , Addrs, pData, 0,
 							WriteAccess, (size - (NumberOfWrites * PAGE_SIZE)),
 							Secure);
 			S25FL1D_IsBusy();
 		}
 	}
 #ifdef USE_QSPI_DMA
-	  
+
 		if(qspiDma.Qspid.qspiMode) {
 		QSPID_DisableQspiTxChannel(&qspiDma);
 		} else {
 		QSPID_DisableSpiChannel(&qspiDma);
 		}
-	  
+
 #endif
 	S25FL1D_DisableWrite();
 	return 0;
@@ -902,9 +902,9 @@ unsigned char S25FL1D_Read(
 		uint32_t *pData,
 		uint32_t size,
 		uint32_t address)
-{    
+{
 	uint8_t Secure = 0;
-	
+
 #ifdef USE_QSPI_DMA
 	if(qspiDma.Qspid.qspiMode) {
 		if(QSPID_EnableQspiRxChannel(&qspiDma) == QSPID_ERROR_LOCK)
@@ -914,12 +914,12 @@ unsigned char S25FL1D_Read(
 		return 1;
 	}
 #endif
-		
-		S25FL1D_MemoryAccess(READ_ARRAY , address, 0, pData, 
+
+		S25FL1D_MemoryAccess(READ_ARRAY , address, 0, pData,
 						ReadAccess, size , Secure);
-    
+
 #ifdef USE_QSPI_DMA
-		
+
 		if(qspiDma.Qspid.qspiMode) {
 			QSPID_DisableQspiRxChannel(&qspiDma);
 		} else {
@@ -927,7 +927,7 @@ unsigned char S25FL1D_Read(
 		}
 #endif
 		return 0;
-	
+
 }
 
 /**
@@ -945,9 +945,9 @@ unsigned char S25FL1D_ReadDual(
 		uint32_t size,
 		uint32_t address)
 {
-  
+
 	uint8_t Secure = 0;
-#ifdef USE_QSPI_DMA  
+#ifdef USE_QSPI_DMA
 	if(qspiDma.Qspid.qspiMode) {
 		if(QSPID_EnableQspiRxChannel(&qspiDma) == QSPID_ERROR_LOCK)
 		return 1;
@@ -958,10 +958,10 @@ unsigned char S25FL1D_ReadDual(
 #endif
 		pMem->InstFrame.bm.bDummyCycles = 8;
 		pMem->InstFrame.bm.bwidth = QSPI_IFR_WIDTH_DUAL_OUTPUT;
-	  
-		S25FL1D_MemoryAccess(READ_ARRAY_DUAL , address, 0, pData, 
+
+		S25FL1D_MemoryAccess(READ_ARRAY_DUAL , address, 0, pData,
 						ReadAccess, size, Secure);
-	  
+
 #ifdef USE_QSPI_DMA
 	while(QSPID_IsBusy(&qspiDma.progress) ) {
 		Wait(1);
@@ -1004,7 +1004,7 @@ unsigned char S25FL1D_ReadQuad(
 	pMem->InstFrame.bm.bwidth = QSPI_IFR_WIDTH_QUAD_OUTPUT;
 	S25FL1D_MemoryAccess(READ_ARRAY_QUAD,	address, 0, pData,
 					ReadAccess, size, Secure);
-	
+
 #ifdef USE_QSPI_DMA
 	while(QSPID_IsBusy(&qspiDma.progress) ) {
 		Wait(1);
@@ -1035,7 +1035,7 @@ unsigned char S25FL1D_ReadDualIO(
 		uint8_t ContMode,
 		uint8_t Secure)
 {
-#ifdef USE_QSPI_DMA  
+#ifdef USE_QSPI_DMA
 	if(qspiDma.Qspid.qspiMode) {
 		if(QSPID_EnableQspiRxChannel(&qspiDma) == QSPID_ERROR_LOCK)
 		return 1;
@@ -1087,7 +1087,7 @@ unsigned char S25FL1D_ReadQuadIO(
 		uint8_t ContMode,
 		uint8_t Secure)
 {
-#ifdef USE_QSPI_DMA  
+#ifdef USE_QSPI_DMA
 	if(qspiDma.Qspid.qspiMode) {
 		if(QSPID_EnableQspiRxChannel(&qspiDma) == QSPID_ERROR_LOCK)
 		return 1;
@@ -1123,4 +1123,3 @@ unsigned char S25FL1D_ReadQuadIO(
 #endif
 	return 0;
 }
-

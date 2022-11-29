@@ -73,5 +73,3 @@ signed long xSerialGetChar( long lPort, signed char *pcRxedChar, TickType_t xBlo
 long lSerialPutString( long lPort, const char * const pcString, unsigned long ulStringLength );
 
 #endif
-
-

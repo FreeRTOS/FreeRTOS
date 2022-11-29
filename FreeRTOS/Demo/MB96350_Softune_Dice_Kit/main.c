@@ -178,4 +178,3 @@ static void prvSetupHardware( void )
 	EIRR1_ER9 = 0;
 	ENIR1_EN9 = 1;
 }
-

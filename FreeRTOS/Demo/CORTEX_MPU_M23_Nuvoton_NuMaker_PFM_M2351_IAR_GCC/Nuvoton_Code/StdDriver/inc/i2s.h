@@ -360,4 +360,3 @@ void I2S_ConfigureTDM(I2S_T *i2s, uint32_t u32ChannelWidth, uint32_t u32ChannelN
 #endif /* __I2S_H__ */
 
 /*** (C) COPYRIGHT 2016 Nuvoton Technology Corp. ***/
-

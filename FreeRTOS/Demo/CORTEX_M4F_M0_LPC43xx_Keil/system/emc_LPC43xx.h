@@ -84,6 +84,3 @@ void EMC_Init_SRDRAM( uint32_t u32BaseAddr, uint32_t u32Width, uint32_t u32Size,
 
 
 #endif	 /* EMC_LPC43XX_H_ */
-
-
-

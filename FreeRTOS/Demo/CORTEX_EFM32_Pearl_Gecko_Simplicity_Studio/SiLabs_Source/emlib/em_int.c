@@ -45,11 +45,11 @@
  * @details
  *  This module contains functions to safely disable and enable interrupts
  *  at CPU level. INT_Disable() disables interrupts globally and increments a lock
- *  level counter (counting semaphore). INT_Enable() decrements the lock level 
+ *  level counter (counting semaphore). INT_Enable() decrements the lock level
  *  counter and enable interrupts if the counter reaches zero.
  *
- *  These functions would normally be used to secure critical regions, and 
- *  to make sure that a critical section that calls into another critical 
+ *  These functions would normally be used to secure critical regions, and
+ *  to make sure that a critical section that calls into another critical
  *  section does not unintentionally terminate the callee critical section.
  *
  *  These functions should also be used inside interrupt handlers:

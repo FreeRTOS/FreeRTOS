@@ -597,7 +597,7 @@ default_tx_handler
             /* Read the Line Status Register and update the sticky record. */
             status = HAL_get_8bit_reg( this_uart->base_address,LSR);
             this_uart->status |= status;
-    
+
             /*
              * This function should only be called as a result of a THRE interrupt.
              * Verify that this is true before proceeding to transmit data.
@@ -607,13 +607,13 @@ default_tx_handler
                 uint32_t size_sent = 0U;
                 uint32_t fill_size = TX_FIFO_SIZE;
                 uint32_t tx_remain = this_uart->tx_buff_size - this_uart->tx_idx;
-    
+
                 /* Calculate the number of bytes to transmit. */
                 if ( tx_remain < TX_FIFO_SIZE )
                 {
                     fill_size = tx_remain;
                 }
-    
+
                 /* Fill the TX FIFO with the calculated the number of bytes. */
                 for ( size_sent = 0U; size_sent < fill_size; ++size_sent )
                 {
@@ -623,7 +623,7 @@ default_tx_handler
                     ++this_uart->tx_idx;
                 }
             }
-    
+
             /* Flag Tx as complete if all data has been pushed into the Tx FIFO. */
             if ( this_uart->tx_idx == this_uart->tx_buff_size )
             {
@@ -686,7 +686,7 @@ UART_16550_disable_irq
          * bit 3 - Modem Status Interrupt
          */
         /* read present interrupts for enabled ones */
-        irq_mask = (( (uint8_t)~irq_mask ) & 
+        irq_mask = (( (uint8_t)~irq_mask ) &
                     HAL_get_8bit_reg( this_uart->base_address, IER ));
         /* Disable interrupts */
         HAL_set_8bit_reg( this_uart->base_address, IER, irq_mask );
@@ -851,15 +851,3 @@ UART_16550_get_tx_status
 #ifdef __cplusplus
 }
 #endif
-
-
-
-
-
-
-
-
-
-
-
-

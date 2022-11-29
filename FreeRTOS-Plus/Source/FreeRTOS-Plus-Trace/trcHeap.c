@@ -47,7 +47,7 @@ traceResult xTraceHeapAlloc(TraceHeapHandle_t xHeapHandle, void *pvAddress, Trac
 {
 	TraceUnsignedBaseType_t uxCurrent, uxHighWaterMark;
 	TraceEventHandle_t xEventHandle = 0;
-	
+
 	if (xHeapHandle == 0)
 	{
 		/* This can happen */

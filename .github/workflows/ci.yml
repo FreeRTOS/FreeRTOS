@@ -181,8 +181,3 @@ jobs:
           name: freertos-memory-estimates
           path: ./freertos_lts_memory_estimates.json
           retention-days: 2
-
-
-
-
-

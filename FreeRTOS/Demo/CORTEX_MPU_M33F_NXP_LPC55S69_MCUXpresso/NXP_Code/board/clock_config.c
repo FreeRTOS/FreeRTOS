@@ -371,4 +371,3 @@ void BOARD_BootClockPLL1_150M(void)
     SystemCoreClock = BOARD_BOOTCLOCKPLL1_150M_CORE_CLOCK;
 #endif
 }
-

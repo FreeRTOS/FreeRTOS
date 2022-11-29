@@ -41,12 +41,11 @@ extern "C"
 /*
  * Component : FPGA Slaves Accessed Via Lightweight HPS2FPGA AXI Bridge - ALT_LWFPGASLVS
  * FPGA Slaves Accessed Via Lightweight HPS2FPGA AXI Bridge
- * 
- * 
+ *
+ *
  */
 
 #ifdef __cplusplus
 }
 #endif  /* __cplusplus */
 #endif  /* __ALTERA_ALT_LWFPGASLVS_H__ */
-

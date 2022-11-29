@@ -131,5 +131,3 @@ void __attribute__((__interrupt__, auto_psv)) _T2Interrupt( void )
 	/* Clear the timer interrupt. */
 	IFS0bits.T2IF = 0;
 }
-
-

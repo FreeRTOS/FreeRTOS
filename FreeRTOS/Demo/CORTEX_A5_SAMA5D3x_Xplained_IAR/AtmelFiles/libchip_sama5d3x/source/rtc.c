@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -461,4 +461,3 @@ extern uint32_t RTC_GetSR( Rtc* pRtc, uint32_t dwMask )
 
     return (dwEvent & dwMask) ;
 }
-

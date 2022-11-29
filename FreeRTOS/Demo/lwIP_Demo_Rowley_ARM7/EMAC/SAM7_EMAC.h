@@ -72,13 +72,13 @@ SemaphoreHandle_t xEMACInit( void );
  * Send ulLength bytes from pcFrom.  This copies the buffer to one of the
  * EMAC Tx buffers, then indicates to the EMAC that the buffer is ready.
  * If lEndOfFrame is true then the data being copied is the end of the frame
- * and the frame can be transmitted. 
+ * and the frame can be transmitted.
  */
 long lEMACSend( char *pcFrom, unsigned long ulLength, long lEndOfFrame );
 
 /*
  * Frames can be read from the EMAC in multiple sections.
- * Read ulSectionLength bytes from the EMAC receive buffers to pcTo.  
+ * Read ulSectionLength bytes from the EMAC receive buffers to pcTo.
  * ulTotalFrameLength is the size of the entire frame.  Generally vEMACRead
  * will be repeatedly called until the sum of all the ulSectionLenths totals
  * the value of ulTotalFrameLength.
@@ -86,13 +86,13 @@ long lEMACSend( char *pcFrom, unsigned long ulLength, long lEndOfFrame );
 void vEMACRead( char *pcTo, unsigned long ulSectionLength, unsigned long ulTotalFrameLength );
 
 /*
- * The EMAC driver and interrupt service routines are defined in different 
+ * The EMAC driver and interrupt service routines are defined in different
  * files as the driver is compiled to THUMB, and the ISR to ARM.  This function
  * simply passes the semaphore used to communicate between the two.
  */
 void vPassEMACSemaphore( SemaphoreHandle_t xCreatedSemaphore );
 
-/* 
+/*
  * Called by the Tx interrupt, this function traverses the buffers used to
  * hold the frame that has just completed transmission and marks each as
  * free again.
@@ -100,7 +100,7 @@ void vPassEMACSemaphore( SemaphoreHandle_t xCreatedSemaphore );
 void vClearEMACTxBuffer( void );
 
 /*
- * Suspend on a semaphore waiting either for the semaphore to be obtained 
+ * Suspend on a semaphore waiting either for the semaphore to be obtained
  * or a timeout.  The semaphore is used by the EMAC ISR to indicate that
  * data has been received and is ready for processing.
  */

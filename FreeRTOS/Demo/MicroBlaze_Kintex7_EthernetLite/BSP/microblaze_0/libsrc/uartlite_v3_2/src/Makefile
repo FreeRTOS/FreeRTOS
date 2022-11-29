@@ -13,17 +13,16 @@ INCLUDES=-I./. -I${INCLUDEDIR}
 INCLUDEFILES=*.h
 LIBSOURCES=*.c
 
-OUTS = *.o 
+OUTS = *.o
 
 libs:
 	echo "Compiling uartlite"
 	$(COMPILER) $(COMPILER_FLAGS) $(EXTRA_COMPILER_FLAGS) $(INCLUDES) $(LIBSOURCES)
-	$(ARCHIVER) -r ${RELEASEDIR}/${LIB} ${OUTS} 
+	$(ARCHIVER) -r ${RELEASEDIR}/${LIB} ${OUTS}
 	make clean
 
-include: 
+include:
 	${CP} $(INCLUDEFILES) $(INCLUDEDIR)
 
 clean:
 	rm -rf ${OUTS}
-

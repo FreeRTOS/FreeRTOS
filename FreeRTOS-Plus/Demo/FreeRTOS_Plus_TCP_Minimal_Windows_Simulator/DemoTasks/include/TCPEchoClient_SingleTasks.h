@@ -35,5 +35,3 @@ void vStartTCPEchoClientTasks_SingleTasks( uint16_t usTaskStackSize, UBaseType_t
 BaseType_t xAreSingleTaskTCPEchoClientsStillRunning( void );
 
 #endif /* SINGLE_TASK_TCP_ECHO_CLIENTS_H */
-
-

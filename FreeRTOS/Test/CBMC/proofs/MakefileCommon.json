@@ -44,4 +44,3 @@
         "$(FREERTOS)/Source/queue.c"
     ]
 }
-

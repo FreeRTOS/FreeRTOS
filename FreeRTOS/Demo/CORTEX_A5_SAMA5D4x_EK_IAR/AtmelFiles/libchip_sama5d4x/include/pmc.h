@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -81,4 +81,3 @@ extern uint32_t PMC_SetPeriMaxClock( uint32_t dwId, uint32_t mck);
 #endif
 
 #endif /* #ifndef _PMC_ */
-

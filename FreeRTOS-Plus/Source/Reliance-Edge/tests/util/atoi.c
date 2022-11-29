@@ -475,4 +475,3 @@ const char *RedSizeToUL(
 
     return pszReturn;
 }
-

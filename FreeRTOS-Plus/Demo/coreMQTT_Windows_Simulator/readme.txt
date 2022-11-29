@@ -12,4 +12,3 @@ a re-usable agent component.
 ! Plain text examples are for ease of evaluation only - product devices should
 ! always use authenticated and encrypted communication.  Never send private or
 ! sensitive data on an unencrypted connection.
-

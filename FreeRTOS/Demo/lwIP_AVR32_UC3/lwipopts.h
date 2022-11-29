@@ -48,8 +48,8 @@
 #include "conf_eth.h"
 // #include "lwip/debug.h"
 
-#define LWIP_PLATFORM_DIAG(x)   
-#define LWIP_PLATFORM_ASSERT(x)   
+#define LWIP_PLATFORM_DIAG(x)
+#define LWIP_PLATFORM_ASSERT(x)
 
 /* Define default values for unconfigured parameters. */
 #define LWIP_NOASSERT 1 // To suppress some errors for now (no debug output)

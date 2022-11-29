@@ -72,4 +72,3 @@ WOLFSSL_API int wolfSSL_i2d_ECDSA_SIG(const WOLFSSL_ECDSA_SIG *sig,
 #endif
 
 #endif /* header */
-

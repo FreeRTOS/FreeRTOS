@@ -16,20 +16,20 @@ GRPOPT 2,(Libraries),0,0,0
 GRPOPT 3,(RTOS_Source),0,0,0
 GRPOPT 4,(Documentation),0,0,0
 
-OPTFFF 1,1,2,301989888,0,0,0,0,<.\startup_rvmdk.S><startup_rvmdk.S> 
-OPTFFF 1,2,1,167772160,0,0,0,0,<.\LuminaryCode\osram96x16.c><osram96x16.c> 
+OPTFFF 1,1,2,301989888,0,0,0,0,<.\startup_rvmdk.S><startup_rvmdk.S>
+OPTFFF 1,2,1,167772160,0,0,0,0,<.\LuminaryCode\osram96x16.c><osram96x16.c>
 OPTFFF 1,3,1,2,0,148,161,0,<.\main.c><main.c> { 44,0,0,0,0,0,0,0,1,0,0,0,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,100,0,0,0,12,0,0,0,27,4,0,0,178,1,0,0 }
-OPTFFF 1,4,1,0,0,0,0,0,<..\Common\Minimal\semtest.c><semtest.c> 
-OPTFFF 1,5,1,989855744,0,0,0,0,<..\Common\Minimal\integer.c><integer.c> 
-OPTFFF 1,6,1,939524096,0,0,0,0,<..\Common\Minimal\PollQ.c><PollQ.c> 
-OPTFFF 1,7,1,201326592,0,0,0,0,<..\Common\Minimal\BlockQ.c><BlockQ.c> 
-OPTFFF 1,8,1,0,0,0,0,0,<.\heap\heap_1.c><heap_1.c> 
-OPTFFF 2,9,4,0,0,0,0,0,<C:\Devtools\Keil\ARM\RV30\LIB\Luminary\driverlib.lib><driverlib.lib> 
-OPTFFF 3,10,1,0,0,0,0,0,<..\..\Source\tasks.c><tasks.c> 
-OPTFFF 3,11,1,0,0,0,0,0,<..\..\Source\list.c><list.c> 
-OPTFFF 3,12,1,0,0,0,0,0,<..\..\Source\queue.c><queue.c> 
-OPTFFF 3,13,1,335544320,0,0,0,0,<..\..\Source\portable\RVDS\ARM_CM3\port.c><port.c> 
-OPTFFF 4,14,5,0,0,0,0,0,<.\readme.txt><readme.txt> 
+OPTFFF 1,4,1,0,0,0,0,0,<..\Common\Minimal\semtest.c><semtest.c>
+OPTFFF 1,5,1,989855744,0,0,0,0,<..\Common\Minimal\integer.c><integer.c>
+OPTFFF 1,6,1,939524096,0,0,0,0,<..\Common\Minimal\PollQ.c><PollQ.c>
+OPTFFF 1,7,1,201326592,0,0,0,0,<..\Common\Minimal\BlockQ.c><BlockQ.c>
+OPTFFF 1,8,1,0,0,0,0,0,<.\heap\heap_1.c><heap_1.c>
+OPTFFF 2,9,4,0,0,0,0,0,<C:\Devtools\Keil\ARM\RV30\LIB\Luminary\driverlib.lib><driverlib.lib>
+OPTFFF 3,10,1,0,0,0,0,0,<..\..\Source\tasks.c><tasks.c>
+OPTFFF 3,11,1,0,0,0,0,0,<..\..\Source\list.c><list.c>
+OPTFFF 3,12,1,0,0,0,0,0,<..\..\Source\queue.c><queue.c>
+OPTFFF 3,13,1,335544320,0,0,0,0,<..\..\Source\portable\RVDS\ARM_CM3\port.c><port.c>
+OPTFFF 4,14,5,0,0,0,0,0,<.\readme.txt><readme.txt>
 
 
 TARGOPT 1, (FreeRTOS_Demo)
@@ -51,4 +51,3 @@ TARGOPT 1, (FreeRTOS_Demo)
   OPTLE <>
   OPTLC <>
 EndOpt
-

@@ -314,7 +314,3 @@ char cFileName[ fsMAX_FILE_NAME_LEN ];
 	/* Obtain and print out the working directory. */
 	f_getcwd( cRAMBuffer, fsRAM_BUFFER_SIZE );
 }
-
-
-
-

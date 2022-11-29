@@ -851,4 +851,3 @@ WOLFSSL_API word32 CheckRunTimeFastMath(void);
 #endif
 
 #endif  /* WOLF_CRYPT_TFM_H */
-

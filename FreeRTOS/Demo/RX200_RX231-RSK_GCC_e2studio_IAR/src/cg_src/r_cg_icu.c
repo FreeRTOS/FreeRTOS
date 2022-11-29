@@ -2,15 +2,15 @@
 * DISCLAIMER
 * This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products.
 * No other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
-* applicable laws, including copyright laws. 
+* applicable laws, including copyright laws.
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIESREGARDING THIS SOFTWARE, WHETHER EXPRESS, IMPLIED
 * OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 * NON-INFRINGEMENT.  ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED.TO THE MAXIMUM EXTENT PERMITTED NOT PROHIBITED BY
 * LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE FOR ANY DIRECT,
 * INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS SOFTWARE, EVEN IF RENESAS OR
 * ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability 
-* of this software. By using this software, you agree to the additional terms and conditions found by accessing the 
+* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability
+* of this software. By using this software, you agree to the additional terms and conditions found by accessing the
 * following link:
 * http://www.renesas.com/disclaimer
 *
@@ -56,7 +56,7 @@ Global variables and functions
 void R_ICU_Create(void)
 {
     /* Disable IRQ0~7 interrupts */
-    ICU.IER[0x08].BYTE = _00_ICU_IRQ0_DISABLE | _00_ICU_IRQ1_DISABLE | _00_ICU_IRQ2_DISABLE | _00_ICU_IRQ3_DISABLE | 
+    ICU.IER[0x08].BYTE = _00_ICU_IRQ0_DISABLE | _00_ICU_IRQ1_DISABLE | _00_ICU_IRQ2_DISABLE | _00_ICU_IRQ3_DISABLE |
                          _00_ICU_IRQ4_DISABLE | _00_ICU_IRQ5_DISABLE | _00_ICU_IRQ6_DISABLE | _00_ICU_IRQ7_DISABLE;
 
     /* Set IRQ settings */
@@ -88,7 +88,7 @@ void R_ICU_Create(void)
 void R_ICU_IRQ1_Start(void)
 {
     /* Enable IRQ1 interrupt */
-    IEN(ICU,IRQ1) = 1U; 
+    IEN(ICU,IRQ1) = 1U;
 }
 /***********************************************************************************************************************
 * Function Name: R_ICU_IRQ1_Stop
@@ -99,7 +99,7 @@ void R_ICU_IRQ1_Start(void)
 void R_ICU_IRQ1_Stop(void)
 {
     /* Disable IRQ1 interrupt */
-    IEN(ICU,IRQ1) = 0U; 
+    IEN(ICU,IRQ1) = 0U;
 }
 /***********************************************************************************************************************
 * Function Name: R_ICU_IRQ4_Start
@@ -110,7 +110,7 @@ void R_ICU_IRQ1_Stop(void)
 void R_ICU_IRQ4_Start(void)
 {
     /* Enable IRQ4 interrupt */
-    IEN(ICU,IRQ4) = 1U; 
+    IEN(ICU,IRQ4) = 1U;
 }
 /***********************************************************************************************************************
 * Function Name: R_ICU_IRQ4_Stop
@@ -121,7 +121,7 @@ void R_ICU_IRQ4_Start(void)
 void R_ICU_IRQ4_Stop(void)
 {
     /* Disable IRQ4 interrupt */
-    IEN(ICU,IRQ4) = 0U; 
+    IEN(ICU,IRQ4) = 0U;
 }
 
 /* Start user code for adding. Do not edit comment generated here */

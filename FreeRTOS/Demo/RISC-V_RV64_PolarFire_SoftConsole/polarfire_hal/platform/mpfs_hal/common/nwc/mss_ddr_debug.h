@@ -235,5 +235,3 @@ uint32_t size
 #endif
 
 #endif /* __MSS_DDRC_H_ */
-
-

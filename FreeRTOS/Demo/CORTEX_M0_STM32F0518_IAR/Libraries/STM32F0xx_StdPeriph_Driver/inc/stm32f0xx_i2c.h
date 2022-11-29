@@ -81,10 +81,10 @@ typedef struct
 
 #define IS_I2C_ALL_PERIPH(PERIPH)       (((PERIPH) == I2C1) || \
                                          ((PERIPH) == I2C2))
-                                         
-#define IS_I2C_1_PERIPH(PERIPH)         ((PERIPH) == I2C1) 
 
-/** @defgroup I2C_Analog_Filter 
+#define IS_I2C_1_PERIPH(PERIPH)         ((PERIPH) == I2C1)
+
+/** @defgroup I2C_Analog_Filter
   * @{
   */
 
@@ -106,7 +106,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup I2C_mode 
+/** @defgroup I2C_mode
   * @{
   */
 
@@ -145,7 +145,7 @@ typedef struct
                                              ((ADDRESS) == I2C_AcknowledgedAddress_10bit))
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup I2C_own_address1
   * @{
@@ -156,7 +156,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup I2C_transfer_direction 
+/** @defgroup I2C_transfer_direction
   * @{
   */
 
@@ -169,7 +169,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup I2C_DMA_transfer_requests 
+/** @defgroup I2C_DMA_transfer_requests
   * @{
   */
 
@@ -206,7 +206,7 @@ typedef struct
   */
 
 #define I2C_OA2_NoMask                  ((uint8_t)0x00)
-#define I2C_OA2_Mask01                  ((uint8_t)0x01)                 
+#define I2C_OA2_Mask01                  ((uint8_t)0x01)
 #define I2C_OA2_Mask02                  ((uint8_t)0x02)
 #define I2C_OA2_Mask03                  ((uint8_t)0x03)
 #define I2C_OA2_Mask04                  ((uint8_t)0x04)
@@ -221,7 +221,7 @@ typedef struct
                                          ((MASK) == I2C_OA2_Mask04) || \
                                          ((MASK) == I2C_OA2_Mask05) || \
                                          ((MASK) == I2C_OA2_Mask06) || \
-                                         ((MASK) == I2C_OA2_Mask07))  
+                                         ((MASK) == I2C_OA2_Mask07))
 
 /**
   * @}
@@ -237,7 +237,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup I2C_registers 
+/** @defgroup I2C_registers
   * @{
   */
 
@@ -268,7 +268,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup I2C_interrupts_definition 
+/** @defgroup I2C_interrupts_definition
   * @{
   */
 
@@ -286,7 +286,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup I2C_flags_definition 
+/** @defgroup I2C_flags_definition
   * @{
   */
 
@@ -322,7 +322,7 @@ typedef struct
   */
 
 
-/** @defgroup I2C_interrupts_definition 
+/** @defgroup I2C_interrupts_definition
   * @{
   */
 
@@ -341,7 +341,7 @@ typedef struct
 #define  I2C_IT_ALERT                   I2C_ISR_ALERT
 
 #define IS_I2C_CLEAR_IT(IT)             ((((IT) & (uint32_t)0xFFFFC001) == 0x00) && ((IT) != 0x00))
-                               
+
 #define IS_I2C_GET_IT(IT)               (((IT) == I2C_IT_TXIS) || ((IT) == I2C_IT_RXNE) || \
                                          ((IT) == I2C_IT_ADDR) || ((IT) == I2C_IT_NACKF) || \
                                          ((IT) == I2C_IT_STOPF) || ((IT) == I2C_IT_TC) || \
@@ -349,13 +349,13 @@ typedef struct
                                          ((IT) == I2C_IT_ARLO) || ((IT) == I2C_IT_OVR) || \
                                          ((IT) == I2C_IT_PECERR) || ((IT) == I2C_IT_TIMEOUT) || \
                                          ((IT) == I2C_IT_ALERT))
-                               
+
 
 /**
   * @}
   */
 
-/** @defgroup I2C_ReloadEndMode_definition 
+/** @defgroup I2C_ReloadEndMode_definition
   * @{
   */
 
@@ -363,17 +363,17 @@ typedef struct
 #define  I2C_AutoEnd_Mode               I2C_CR2_AUTOEND
 #define  I2C_SoftEnd_Mode               ((uint32_t)0x00000000)
 
-                              
+
 #define IS_RELOAD_END_MODE(MODE)        (((MODE) == I2C_Reload_Mode) || \
                                          ((MODE) == I2C_AutoEnd_Mode) || \
                                          ((MODE) == I2C_SoftEnd_Mode))
-                               
+
 
 /**
   * @}
   */
 
-/** @defgroup I2C_StartStopMode_definition 
+/** @defgroup I2C_StartStopMode_definition
   * @{
   */
 
@@ -381,11 +381,11 @@ typedef struct
 #define  I2C_Generate_Start_Read          (uint32_t)(I2C_CR2_START | I2C_CR2_RD_WRN)
 #define  I2C_Generate_Start_Write         I2C_CR2_START
 
-                              
+
 #define IS_START_STOP_MODE(MODE)        (((MODE) == I2C_Generate_Stop) || \
                                          ((MODE) == I2C_Generate_Start_Read) || \
                                          ((MODE) == I2C_Generate_Start_Write))
-                               
+
 
 /**
   * @}

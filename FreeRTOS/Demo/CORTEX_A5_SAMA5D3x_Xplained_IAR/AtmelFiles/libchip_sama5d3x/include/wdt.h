@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -71,4 +71,3 @@ extern uint32_t WDT_GetPeriod( uint32_t dwMs ) ;
 #endif
 
 #endif /* #ifndef _WDT_ */
-

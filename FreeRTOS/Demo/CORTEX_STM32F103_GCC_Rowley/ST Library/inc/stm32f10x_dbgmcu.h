@@ -39,7 +39,7 @@
 #define DBGMCU_TIM6_STOP             ((u32)0x00040000)
 #define DBGMCU_TIM7_STOP             ((u32)0x00080000)
 #define DBGMCU_TIM8_STOP             ((u32)0x00100000)
-                                           
+
 #define IS_DBGMCU_PERIPH(PERIPH) ((((PERIPH) & 0xFFE000F8) == 0x00) && ((PERIPH) != 0x00))
 
 /* Exported macro ------------------------------------------------------------*/
@@ -51,5 +51,3 @@ void DBGMCU_Config(u32 DBGMCU_Periph, FunctionalState NewState);
 #endif /* __STM32F10x_DBGMCU_H */
 
 /******************* (C) COPYRIGHT 2008 STMicroelectronics *****END OF FILE****/
-
-

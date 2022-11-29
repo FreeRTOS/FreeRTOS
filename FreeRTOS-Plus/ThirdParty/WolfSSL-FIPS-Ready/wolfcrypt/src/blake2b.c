@@ -449,4 +449,3 @@ int wc_Blake2bFinal(Blake2b* b2b, byte* final, word32 requestSz)
 /* end CTaoCrypt API */
 
 #endif  /* HAVE_BLAKE2 */
-

@@ -6539,4 +6539,3 @@ typedef void (* __SFR_FARPTR)();
 #endif /* extern "C" */
 
 #endif /* #ifndef __msp430FR5XX_FR6XXGENERIC */
-

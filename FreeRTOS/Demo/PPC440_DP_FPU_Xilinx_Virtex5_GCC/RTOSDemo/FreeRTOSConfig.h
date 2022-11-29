@@ -85,5 +85,3 @@ to exclude the API function. */
 #endif
 
 #endif /* FREERTOS_CONFIG_H */
-
-

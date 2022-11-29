@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -157,7 +157,7 @@ void RTC_GetTime(
 			*pHour += 12;
 		}
 	}
-	
+
 	// Minute
 	if (pMinute) {
 
@@ -335,4 +335,3 @@ void RTC_SetDateAlarm(unsigned char *pMonth, unsigned char *pDay)
     // Set alarm
     AT91C_BASE_RTC->RTC_CALALR = alarm;
 }
-

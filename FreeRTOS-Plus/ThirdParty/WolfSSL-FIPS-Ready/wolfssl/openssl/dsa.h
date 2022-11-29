@@ -109,7 +109,7 @@ WOLFSSL_API int wolfSSL_DSA_do_verify_ex(const unsigned char* digest, int digest
 #define DSA_SIG                    WOLFSSL_DSA_SIG
 
 #ifdef __cplusplus
-    }  /* extern "C" */ 
+    }  /* extern "C" */
 #endif
 
 #endif /* header */

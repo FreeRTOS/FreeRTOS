@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -54,4 +54,3 @@ extern const struct ov_reg ov9740_yuv_sxga[];
 extern const struct ov_reg ov9740_yuv_vga[];
 
 #endif // #ifndef _YUV_H_
-

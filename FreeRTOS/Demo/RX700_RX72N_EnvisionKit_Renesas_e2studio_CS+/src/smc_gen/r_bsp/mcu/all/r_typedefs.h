@@ -56,4 +56,3 @@ typedef unsigned int _Bool;
 typedef unsigned long size_t;
 
 #endif  /* End of multiple inclusion prevention macro */
-

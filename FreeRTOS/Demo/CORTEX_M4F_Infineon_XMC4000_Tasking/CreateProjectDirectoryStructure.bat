@@ -17,14 +17,14 @@ IF EXIST FreeRTOS_Source Goto END
 
     REM Create the required directory structure.
     MD FreeRTOS_Source
-    MD FreeRTOS_Source\include    
+    MD FreeRTOS_Source\include
     MD FreeRTOS_Source\portable\
 	MD FreeRTOS_Source\portable\Tasking
     MD FreeRTOS_Source\portable\Tasking\ARM_CM4F
-    MD FreeRTOS_Source\portable\MemMang    
+    MD FreeRTOS_Source\portable\MemMang
     MD Common_Demo_Source
     MD Common_Demo_Source\include
-    
+
     REM Copy the core kernel files into the SDK projects directory
     copy %FREERTOS_SOURCE%\tasks.c FreeRTOS_Source
     copy %FREERTOS_SOURCE%\queue.c FreeRTOS_Source
@@ -33,10 +33,10 @@ IF EXIST FreeRTOS_Source Goto END
 
     REM Copy the common header files into the SDK projects directory
     copy %FREERTOS_SOURCE%\include\*.* FreeRTOS_Source\include
-    
+
     REM Copy the portable layer files into the projects directory
     copy %FREERTOS_SOURCE%\portable\Tasking\ARM_CM4F\*.* FreeRTOS_Source\portable\Tasking\ARM_CM4F
-    
+
     REM Copy the basic memory allocation files into the SDK projects directory
     copy %FREERTOS_SOURCE%\portable\MemMang\heap_2.c FreeRTOS_Source\portable\MemMang
 
@@ -48,8 +48,8 @@ IF EXIST FreeRTOS_Source Goto END
     copy %COMMON_SOURCE%\QueueSet.c        Common_Demo_Source
 	copy %COMMON_SOURCE%\QueueOverwrite.c  Common_Demo_Source
 	copy %COMMON_SOURCE%\GenQTest.c        Common_Demo_Source
-    
+
     REM Copy the common demo file headers.
     copy %COMMON_INCLUDE%\*.h              Common_Demo_Source\include
-    
+
 : END

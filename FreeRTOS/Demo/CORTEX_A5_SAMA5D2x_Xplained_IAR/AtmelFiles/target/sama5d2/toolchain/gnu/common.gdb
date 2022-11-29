@@ -27,7 +27,7 @@ end
 # to avoid corrupted RAM data on soft reset.
 define disable_ddr
   set *0xF0014004 = 0x4
-  set *0xF0014014 = (1 << 13)  
+  set *0xF0014014 = (1 << 13)
 end
 
 define reset_registers
@@ -66,15 +66,15 @@ define reset_registers
   mon reg r11_usr = 0
   mon reg r12_usr = 0
   mon reg sp_usr = 0
-  mon reg lr_usr = 0  
+  mon reg lr_usr = 0
 end
 
-define init_ddr  
+define init_ddr
 
   reset_registers
-  
+
   load target/bootstrap.elf
-  
+
   # Initialize PC
   mon reg pc = 0x00200000
   mon reg pc = 0x00200000
@@ -87,7 +87,7 @@ define load_in_ddr
   reset_registers
 
   load
-  
+
   # Initialize PC
   mon reg pc = 0x20000000
 end

@@ -30148,4 +30148,3 @@ then
     { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Building with shared and static library at the same time on this system may cause export/import problems when using non contemporary GNU tools." >&5
 $as_echo "$as_me: WARNING: Building with shared and static library at the same time on this system may cause export/import problems when using non contemporary GNU tools." >&2;}
 fi
-

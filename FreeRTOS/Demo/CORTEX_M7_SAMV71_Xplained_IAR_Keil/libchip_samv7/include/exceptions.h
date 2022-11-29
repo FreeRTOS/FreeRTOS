@@ -91,7 +91,7 @@ extern void UART0_IrqHandler( void ) ;
 extern void UART1_IrqHandler( void ) ;
 extern void USART0_IrqHandler( void ) ;
 extern void USART1_IrqHandler( void ) ;
-extern void USART2_IrqHandler( void ) ; 
+extern void USART2_IrqHandler( void ) ;
 extern void USBD_IrqHandler(void);
 extern void WDT_IrqHandler( void ) ;
 

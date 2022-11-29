@@ -2,7 +2,7 @@
  * Copyright 2019-2020 Microchip FPGA Embedded Systems Solutions.
  *
  * SPDX-License-Identifier: MIT
- * 
+ *
  * PolarFire SoC microprocessor subsystem GPIO bare metal driver implementation.
  *
  * This driver is based on SmartFusion2 MSS GPIO driver v2.1.102
@@ -14,7 +14,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif 
+#endif
 
 /*-------------------------------------------------------------------------*//**
  * Defines.
@@ -211,7 +211,7 @@ void MSS_GPIO_set_output
 )
 {
     uint32_t gpio_setting;
-    
+
     if (0U == gpio_number_validate(gpio, port_id))
     {
         /* Setting the bit in GPIO_SET_BITS (offset 0xA4) sets the corresponding
@@ -247,7 +247,7 @@ void MSS_GPIO_drive_inout
 {
     uint32_t outputs_state;
     uint32_t config;
-    
+
     if (0U == gpio_number_validate(gpio, port_id))
     {
         switch (inout_state)

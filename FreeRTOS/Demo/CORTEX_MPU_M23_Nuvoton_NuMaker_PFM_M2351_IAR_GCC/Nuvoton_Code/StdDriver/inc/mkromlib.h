@@ -97,7 +97,7 @@ typedef struct
     CRPT_T      *crpt;       /*!< The pointer of the CRYPTO module */
     ECC_CURVE   *pCurve;     /*!< Internal use for ECC */
     ECC_CURVE   Curve_Copy;  /*!< Internal use for ECC */
-    uint32_t    AES_CTL[4];  /*!< AES channel selection */ 
+    uint32_t    AES_CTL[4];  /*!< AES channel selection */
     uint32_t    TDES_CTL[4]; /*!< TDES channel selection */
 } XCRPT_T;
 
@@ -184,9 +184,9 @@ typedef struct
 
     uint32_t        IsConnectOK;        /* Internal use in SecureISP */
     uint32_t        timeout;            /* Timeout period for connecting to SecureISP Tool */
-    
+
     __attribute__((aligned(4))) uint8_t rcvbuf[MAX_PKT_SIZE]; /* Internal use in SecureISP */
-    __attribute__((aligned(4))) uint8_t rspbuf[MAX_PKT_SIZE]; /* Internal use in SecureISP */       
+    __attribute__((aligned(4))) uint8_t rspbuf[MAX_PKT_SIZE]; /* Internal use in SecureISP */
 
     USBDEPFunc      pfnUSBDEP[USBD_MAX_EP]; /* Internal use in SecureISP */
     uint32_t        IsUSBDataReady;     /* Internal use in SecureISP */
@@ -199,7 +199,7 @@ typedef struct
 
     uint32_t        tmp0[8];            /* Internal use in SecureISP */
     uint32_t        tmp1[8];            /* Internal use in SecureISP */
-  
+
 } ISP_INFO_T;
 
 
@@ -209,8 +209,8 @@ typedef struct
   */
 typedef struct
 {
-    uint8_t             g_usbd_SetupPacket[8];  
-    volatile uint8_t    g_usbd_RemoteWakeupEn;  
+    uint8_t             g_usbd_SetupPacket[8];
+    volatile uint8_t    g_usbd_RemoteWakeupEn;
     volatile uint8_t    g_usbd_u8ZeroFlag;
 
     volatile uint8_t    *g_usbd_CtrlInPointer;
@@ -223,13 +223,13 @@ typedef struct
     volatile uint32_t   g_usbd_CtrlMaxPktSize;
     volatile uint32_t   g_usbd_UsbAltInterface;
 
-    S_USBD_INFO_T       *g_usbd_sInfo;                  
+    S_USBD_INFO_T       *g_usbd_sInfo;
 
-    VENDOR_REQ          g_usbd_pfnVendorRequest;        
-    CLASS_REQ           g_usbd_pfnClassRequest;         
-    SET_INTERFACE_REQ   g_usbd_pfnSetInterface;         
+    VENDOR_REQ          g_usbd_pfnVendorRequest;
+    CLASS_REQ           g_usbd_pfnClassRequest;
+    SET_INTERFACE_REQ   g_usbd_pfnSetInterface;
     SET_CONFIG_CB       g_usbd_pfnSetConfigCallback;
-    uint32_t            g_u32EpStallLock;              
+    uint32_t            g_u32EpStallLock;
 
 } BL_USBD_INFO_T;
 

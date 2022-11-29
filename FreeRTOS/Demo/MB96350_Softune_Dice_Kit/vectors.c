@@ -28,8 +28,8 @@
 void InitIrqLevels(void)
 {
   volatile int irq;
-  
-  for (irq = MIN_ICR; irq <= MAX_ICR; irq++) 
+
+  for (irq = MIN_ICR; irq <= MAX_ICR; irq++)
   {
     ICR = (irq << 8) | DEFAULT_ILM_MASK;
   }
@@ -37,7 +37,7 @@ void InitIrqLevels(void)
 	ICR = ( (54 & 0xFF) << 8 ) | configKERNEL_INTERRUPT_PRIORITY;	/* Reload Timer 0 */
 	ICR = ( (12 & 0xFF) << 8 ) | configKERNEL_INTERRUPT_PRIORITY;	/* Delayed interrupt of 16FX Family */
 	ICR = ( (24 & 0xFF) << 8 ) | configKERNEL_INTERRUPT_PRIORITY;	/* INT8 */
-	ICR = ( (25 & 0xFF) << 8 ) | configKERNEL_INTERRUPT_PRIORITY;	/* INT9 */	
+	ICR = ( (25 & 0xFF) << 8 ) | configKERNEL_INTERRUPT_PRIORITY;	/* INT9 */
 }
 
 /*---------------------------------------------------------------------------
@@ -58,7 +58,7 @@ extern __interrupt void vExternalInt9Handler( void );
    Use following statements to define vectors. All resource related
    vectors are predefined. Remaining software interrupts can be added here
    as well.
-   NOTE: If software interrupts 0 to 7 are defined here, this might 
+   NOTE: If software interrupts 0 to 7 are defined here, this might
    conflict with the reset vector in the start-up file.
 -----------------------------------------------------------------------------*/
 
@@ -143,7 +143,7 @@ extern __interrupt void vExternalInt9Handler( void );
 /*---------------------------------------------------------------------------
    DefaultIRQHandler()
    This function is a placeholder for all vector definitions. Either use
-   your own placeholder or add necessary code here. 
+   your own placeholder or add necessary code here.
 -----------------------------------------------------------------------------*/
 __interrupt void DefaultIRQHandler( void )
 {

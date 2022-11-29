@@ -46,4 +46,3 @@
 #define PKCS12_PBE_add wolfSSL_PKCS12_PBE_add
 
 #endif /* WOLFSSL_PKCS12_COMPAT_H_ */
-

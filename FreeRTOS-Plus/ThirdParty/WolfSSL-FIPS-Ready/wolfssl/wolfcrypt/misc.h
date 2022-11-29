@@ -119,4 +119,3 @@ WOLFSSL_LOCAL byte ctSetLTE(int a, int b);
 
 
 #endif /* WOLF_CRYPT_MISC_H */
-

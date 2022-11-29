@@ -81,11 +81,11 @@ extern "C" {
 typedef struct {
 	//! Set baud rate of the USART (unused in slave modes).
 	uint32_t baudrate;
-	
+
 	//! Number of bits, which should be one of the following: US_MR_CHRL_5_BIT,
 	//! US_MR_CHRL_6_BIT, US_MR_CHRL_7_BIT, US_MR_CHRL_8_BIT or US_MR_MODE9.
 	uint32_t char_length;
-	
+
 	//! Parity type, which should be one of the following: US_MR_PAR_EVEN, US_MR_PAR_ODD,
 	//! US_MR_PAR_SPACE, US_MR_PAR_MARK, US_MR_PAR_NO or US_MR_PAR_MULTIDROP.
 	uint32_t parity_type;
@@ -99,7 +99,7 @@ typedef struct {
 	//! US_MR_CHMODE_AUTOMATIC, US_MR_CHMODE_LOCAL_LOOPBACK, US_MR_CHMODE_REMOTE_LOOPBACK
 	uint32_t channel_mode;
 
-	//! Filter of IrDA mode, useless in other modes. 
+	//! Filter of IrDA mode, useless in other modes.
 	uint32_t irda_filter;
 } sam_usart_opt_t;
 
@@ -107,7 +107,7 @@ typedef struct {
 typedef struct {
 	//! Set the frequency of the ISO7816 clock.
 	uint32_t iso7816_hz;
-	
+
 	//! The number of ISO7816 clock ticks in every bit period (1 to 2047, 0 = disable clock).
 	//! Baudrate rate = iso7816_hz / fidi_ratio
 	uint32_t fidi_ratio;
@@ -137,7 +137,7 @@ typedef struct {
 	//!   - 0: LSB first;
 	//!   - 1: MSB first.
 	uint32_t bit_order;
-	
+
 	//! Which protocol is used:
 	//!   - 0: T = 0;
 	//!   - 1: T = 1.
@@ -305,7 +305,7 @@ void usart_man_disable_drift_compensation(Usart *p_usart);
  * -# \ref pmc_group "Power Management Controller (pmc)"
  *
  * \subsection usart_basic_use_case_setup_code Example code
- * The following configuration must be added to the project (typically to a 
+ * The following configuration must be added to the project (typically to a
  * conf_usart.h file, but it can also be added to your main application file.)
  * \code
  *    #define USART_SERIAL                 USART0
@@ -326,7 +326,7 @@ void usart_man_disable_drift_compensation(Usart *p_usart);
  *
  *    pio_configure(USART_SERIAL_PIO, USART_SERIAL_TYPE,
  *                  USART_SERIAL_MASK, USART_SERIAL_ATTR);
- *    
+ *
  *    const sam_usart_opt_t usart_console_settings = {
  *        USART_SERIAL_BAUDRATE,
  *        USART_SERIAL_CHAR_LENGTH,
@@ -334,9 +334,9 @@ void usart_man_disable_drift_compensation(Usart *p_usart);
  *        USART_SERIAL_STOP_BIT,
  *        US_MR_CHMODE_NORMAL
  *    };
- *    
+ *
  *    pmc_enable_periph_clk(USART_SERIAL_ID);
- *   
+ *
  *    usart_init_rs232(USART_SERIAL, &usart_console_settings, sysclk_get_main_hz());
  *    usart_enable_tx(USART_SERIAL);
  *    usart_enable_rx(USART_SERIAL);
@@ -411,7 +411,7 @@ void usart_man_disable_drift_compensation(Usart *p_usart);
  * -# \ref pmc_group "Power Management Controller (pmc)"
  *
  * \subsection usart_use_case_1_setup_code Example code
- * The following configuration must be added to the project (typically to a 
+ * The following configuration must be added to the project (typically to a
  * conf_usart.h file, but it can also be added to your main application file.):
  * \code
  *    #define USART_SERIAL                 USART0
@@ -437,7 +437,7 @@ void usart_man_disable_drift_compensation(Usart *p_usart);
  *
  *    pio_configure(USART_SERIAL_PIO, USART_SERIAL_TYPE,
  *                  USART_SERIAL_MASK, USART_SERIAL_ATTR);
- *    
+ *
  *    const sam_usart_opt_t usart_console_settings = {
  *        USART_SERIAL_BAUDRATE,
  *        USART_SERIAL_CHAR_LENGTH,
@@ -445,9 +445,9 @@ void usart_man_disable_drift_compensation(Usart *p_usart);
  *        USART_SERIAL_STOP_BIT,
  *        US_MR_CHMODE_NORMAL
  *    };
- *    
+ *
  *    pmc_enable_periph_clk(USART_SERIAL_ID);
- *   
+ *
  *    usart_init_rs232(USART_SERIAL, &usart_console_settings, sysclk_get_main_hz());
  *    usart_enable_tx(USART_SERIAL);
  *    usart_enable_rx(USART_SERIAL);
@@ -523,7 +523,7 @@ void usart_man_disable_drift_compensation(Usart *p_usart);
  * -# \ref pmc_group "Power Management Controller (pmc)"
  *
  * \subsection usart_use_case_2_setup_code Example code
- * The following configuration must be added to the project (typically to a 
+ * The following configuration must be added to the project (typically to a
  * conf_usart.h file, but it can also be added to your main application file.):
  * \code
  *    #define USART_SERIAL                 USART0
@@ -550,7 +550,7 @@ void usart_man_disable_drift_compensation(Usart *p_usart);
  *
  *    pio_configure(USART_SERIAL_PIO, USART_SERIAL_TYPE,
  *                  USART_SERIAL_MASK, USART_SERIAL_ATTR);
- *    
+ *
  *    const sam_usart_opt_t usart_console_settings = {
  *        USART_SERIAL_BAUDRATE,
  *        USART_SERIAL_CHAR_LENGTH,
@@ -558,13 +558,13 @@ void usart_man_disable_drift_compensation(Usart *p_usart);
  *        USART_SERIAL_STOP_BIT,
  *        US_MR_CHMODE_NORMAL
  *    };
- *    
+ *
  *    pmc_enable_periph_clk(USART_SERIAL_ID);
- *   
+ *
  *    usart_init_rs232(USART_SERIAL, &usart_console_settings, sysclk_get_main_hz());
  *    usart_enable_tx(USART_SERIAL);
  *    usart_enable_rx(USART_SERIAL);
- * 
+ *
  *    usart_enable_interrupt(USART_SERIAL, US_IER_RXRDY);
  *    NVIC_EnableIRQ(USART_SERIAL_IRQ);
  * \endcode
@@ -611,10 +611,10 @@ void usart_man_disable_drift_compensation(Usart *p_usart);
  * void USART_SERIAL_ISR_HANDLER(void)
  * {
  *    uint32_t dw_status = usart_get_status(USART_SERIAL);
- * 
+ *
  *    if (dw_status & US_CSR_RXRDY) {
  *        uint32_t received_byte;
- * 
+ *
  *        usart_read(USART_SERIAL, &received_byte);
  *        usart_write(USART_SERIAL, received_byte);
  *    }

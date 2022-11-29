@@ -36,7 +36,7 @@ void RCCU_PLL1Config ( RCCU_PLL1_Mul New_Mul, RCCU_PLL_Div New_Div )
 /*******************************************************************************
 * Function Name  : RCCU_PLL2Config
 * Description    : Configures the PLL2 div & mul factors.
-* Input          : New_Mul ( RCCU_PLL2_Mul_12, RCCU_PLL2_Mul_16, RCCU_PLL2_Mul_20, 
+* Input          : New_Mul ( RCCU_PLL2_Mul_12, RCCU_PLL2_Mul_16, RCCU_PLL2_Mul_20,
 *                  RCCU_Mul_PLL2_28 )
 *                : New_Div ( RCCU_Div_1, RCCU_Div_2, RCCU_Div_3, RCCU_Div_4,
 *                  RCCU_Div_5, RCCU_Div_6, RCCU_Div_7)

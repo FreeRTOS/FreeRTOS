@@ -430,4 +430,3 @@ static const char *pcGetContentsType (const char *apFname)
 }
 
 #endif /* ipconfigUSE_HTTP */
-

@@ -37,10 +37,10 @@
  * bit in the TDES Mode Register (TDES_MR) is used to select either the single DES or the Triple
  * DES mode by function TDES_Configure().
  * A DES is capable of using cryptographic keys of 64 bits to encrypt and decrypt data in blocks of
- * 64 bits, Date input can be set with TDES_SetInput(). This 64-bit key is defined in the Key 1 Word 
- * Registers (TDES_KEY1WRx) and set by TDES_WriteKey1. A TDES key consists of three DES keys, 
- * which is also referred to as a key bundle. These three 64-bit keys are defined, respectively, 
- * in the Key 1, 2 and 3 Word Registers (TDES_KEY1WRx, TDES_KEY2WRx and TDES_KEY3WRx). 
+ * 64 bits, Date input can be set with TDES_SetInput(). This 64-bit key is defined in the Key 1 Word
+ * Registers (TDES_KEY1WRx) and set by TDES_WriteKey1. A TDES key consists of three DES keys,
+ * which is also referred to as a key bundle. These three 64-bit keys are defined, respectively,
+ * in the Key 1, 2 and 3 Word Registers (TDES_KEY1WRx, TDES_KEY2WRx and TDES_KEY3WRx).
  * In Triple DES mode (TDESMOD set to 1), the KEYMOD bit in the TDES Mode Register is used to choose between a two- and a three-key
  * algorithm:
  *
@@ -110,7 +110,7 @@ void TDES_Recount(void)
  */
 void TDES_Configure(uint32_t mode)
 {
-    TDES->TDES_MR = mode; 
+    TDES->TDES_MR = mode;
 }
 
 /**
@@ -215,4 +215,3 @@ void TDES_SetXteaRounds(uint32_t rounds)
 {
     TDES->TDES_XTEA_RNDR = TDES_XTEA_RNDR_XTEA_RNDS(rounds);
 }
-

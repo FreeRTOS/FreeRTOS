@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -359,4 +359,3 @@ uint32_t XDMAC_GetChDestinationAddr(Xdmac *pXdmac, uint8_t channel)
 }
 
 /**@}*/
-

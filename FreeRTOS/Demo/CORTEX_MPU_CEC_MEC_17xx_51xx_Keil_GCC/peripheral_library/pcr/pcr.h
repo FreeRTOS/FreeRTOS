@@ -20,16 +20,16 @@
 
 Version Control Information (Perforce)
 ******************************************************************************
-$Revision: #1 $ 
-$DateTime: 2016/09/22 08:03:49 $ 
+$Revision: #1 $
+$DateTime: 2016/09/22 08:03:49 $
 $Author: pramans $
 Last Change:	Updated for tabs
 ******************************************************************************/
 /** @file pcr.h
 * \brief Power, Clocks, and Resets Header file
 * \author jvasanth
-* 
-* This file is the PCR header file  
+*
+* This file is the PCR header file
 ******************************************************************************/
 
 /** @defgroup PCR
@@ -41,12 +41,12 @@ Last Change:	Updated for tabs
 
 
 /******************************************************************************/
-/**  PCR Register IDS 
+/**  PCR Register IDS
  *******************************************************************************/
 enum _PCR_REGSET_ID_
 {
-	PCR_REG_SYSTEM_SLEEP_CTRL = 0,	
-  PCR_REG_PROCESSOR_CLK_CTRL,	
+	PCR_REG_SYSTEM_SLEEP_CTRL = 0,
+  PCR_REG_PROCESSOR_CLK_CTRL,
 	PCR_REG_SLOW_CLK_CTRL,
 	PCR_REG_OSCILLATOR_ID,
 	PCR_REG_PWR_RESET_STS,
@@ -57,8 +57,8 @@ enum _PCR_REGSET_ID_
 	PCR_REG_EC_SLEEP_ENABLE_0 = 12,
 	PCR_REG_EC_SLEEP_ENABLE_1,
 	PCR_REG_EC_SLEEP_ENABLE_2,
-	PCR_REG_EC_SLEEP_ENABLE_3,	
-	PCR_REG_EC_SLEEP_ENABLE_4,	
+	PCR_REG_EC_SLEEP_ENABLE_3,
+	PCR_REG_EC_SLEEP_ENABLE_4,
 	PCR_REG_EC_CLK_REQD_STS_0 = 20,
 	PCR_REG_EC_CLK_REQD_STS_1,
 	PCR_REG_EC_CLK_REQD_STS_2,
@@ -69,7 +69,7 @@ enum _PCR_REGSET_ID_
 	PCR_REG_EC_RESET_ENABLE_2,
 	PCR_REG_EC_RESET_ENABLE_3,
 	PCR_REG_EC_RESET_ENABLE_4,
-	
+
 };
 /* ---------------------------------------------------------------------- */
 
@@ -93,12 +93,12 @@ enum _PCR_REGSET_ID_
 #define PCR3_REGS_EC		(((uint32_t)(PCR_REG_EC_SLEEP_ENABLE_3) & 0xFF) + \
 							(((uint32_t)(PCR_REG_EC_CLK_REQD_STS_3) & 0xFF)<<8u) + \
 							(((uint32_t)(PCR_REG_EC_RESET_ENABLE_3) & 0xFF)<<16u))
-							
+
 //PCR register group 4 - EC 4
 #define PCR4_REGS_EC		(((uint32_t)(PCR_REG_EC_SLEEP_ENABLE_4) & 0xFF) + \
 							(((uint32_t)(PCR_REG_EC_CLK_REQD_STS_4) & 0xFF)<<8u) + \
 							(((uint32_t)(PCR_REG_EC_RESET_ENABLE_4) & 0xFF)<<16u))
-													
+
 //PCR0_EC -> SLEEP_ENABLE, CLK REQD STS, RESET_ENABLE Bit Positions
 #define PCR0_EC_JTAG_STAP_BITPOS     (0u)
 #define PCR0_EC_EFUSE_BITPOS         (1u)
@@ -200,47 +200,47 @@ enum _PCR_REGSET_ID_
  *  n = b[7:0]   = PCR Reg Bit Position
  *  m = b[31:8]  = PCRx Regs IDs
  */
-//#define PCRx_REGS_BIT(m,n) ((((uint32_t)(m)&0xFFFFFFul)<<8u) + ((uint32_t)(n)&0xFFul)) 
+//#define PCRx_REGS_BIT(m,n) ((((uint32_t)(m)&0xFFFFFFul)<<8u) + ((uint32_t)(n)&0xFFul))
 
-//PCRx_REGS_BIT positions 													
+//PCRx_REGS_BIT positions
 #define	PCRx_REGS_POS_SLEEP_ENABLE				(8u)
 #define	PCRx_REGS_POS_CLK_REQD_STS				(16u)
-#define	PCRx_REGS_POS_RESET_ENABLE				(24u)													
+#define	PCRx_REGS_POS_RESET_ENABLE				(24u)
 
 
 /******************************************************************************/
-/**  PCR Block IDS. 
- * These IDs are used to directly refer to a block 
+/**  PCR Block IDS.
+ * These IDs are used to directly refer to a block
  *******************************************************************************/
 typedef enum {
 	PCR_JTAG			= (((uint32_t)(PCR0_REGS_EC) << 8) + (uint32_t)(PCR0_EC_JTAG_STAP_BITPOS & 0xFFu)),
 	PCR_EFUSE			= (((uint32_t)(PCR0_REGS_EC) << 8) + (uint32_t)(PCR0_EC_EFUSE_BITPOS & 0xFFu)),
   PCR_ISPI			= (((uint32_t)(PCR0_REGS_EC) << 8) + (uint32_t)(PCR0_EC_ISPI_BITPOS & 0xFFu)),
-	
-	PCR_INT				= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_INT_BITPOS & 0xFFu)),  	
-	PCR_PECI			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PECI_BITPOS & 0xFFu)), 	
-	PCR_TACH0			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_TACH0_BITPOS & 0xFFu)), 	
-	PCR_PWM0			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PWM0_BITPOS & 0xFFu)),  	
-	PCR_PMC				= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PMC_BITPOS & 0xFFu)),   	
-	PCR_DMA				= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_DMA_BITPOS & 0xFFu)),  	
-	PCR_TFDP			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_TFDP_BITPOS & 0xFFu)),  	
-	PCR_CPU				= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_CPU_BITPOS & 0xFFu)),   	
-	PCR_WDT				= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_WDT_BITPOS & 0xFFu)),   	
-	PCR_SMB0			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_SMB0_BITPOS & 0xFFu)), 	
+
+	PCR_INT				= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_INT_BITPOS & 0xFFu)),
+	PCR_PECI			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PECI_BITPOS & 0xFFu)),
+	PCR_TACH0			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_TACH0_BITPOS & 0xFFu)),
+	PCR_PWM0			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PWM0_BITPOS & 0xFFu)),
+	PCR_PMC				= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PMC_BITPOS & 0xFFu)),
+	PCR_DMA				= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_DMA_BITPOS & 0xFFu)),
+	PCR_TFDP			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_TFDP_BITPOS & 0xFFu)),
+	PCR_CPU				= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_CPU_BITPOS & 0xFFu)),
+	PCR_WDT				= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_WDT_BITPOS & 0xFFu)),
+	PCR_SMB0			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_SMB0_BITPOS & 0xFFu)),
 	PCR_TACH1			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_TACH1_BITPOS & 0xFFu)),
-	PCR_TACH2			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_TACH2_BITPOS & 0xFFu)), 	
-	PCR_PWM1			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PWM1_BITPOS & 0xFFu)),  	
-	PCR_PWM2			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PWM2_BITPOS & 0xFFu)),  	
-	PCR_PWM3			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PWM3_BITPOS & 0xFFu)),  	
-	PCR_PWM4			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PWM4_BITPOS & 0xFFu)),  	
-	PCR_PWM5			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PWM5_BITPOS & 0xFFu)),  	
-	PCR_PWM6			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PWM6_BITPOS & 0xFFu)),  	
-	PCR_PWM7			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PWM7_BITPOS & 0xFFu)),  	
-	PCR_PWM8			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PWM8_BITPOS & 0xFFu)),  	
-	PCR_REG				= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_REG_BITPOS & 0xFFu)),   	
-	PCR_BTIMER0		= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_BTIMER0_BITPOS & 0xFFu)),	
-	PCR_BTIMER1		= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_BTIMER1_BITPOS & 0xFFu)),	
-	
+	PCR_TACH2			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_TACH2_BITPOS & 0xFFu)),
+	PCR_PWM1			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PWM1_BITPOS & 0xFFu)),
+	PCR_PWM2			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PWM2_BITPOS & 0xFFu)),
+	PCR_PWM3			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PWM3_BITPOS & 0xFFu)),
+	PCR_PWM4			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PWM4_BITPOS & 0xFFu)),
+	PCR_PWM5			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PWM5_BITPOS & 0xFFu)),
+	PCR_PWM6			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PWM6_BITPOS & 0xFFu)),
+	PCR_PWM7			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PWM7_BITPOS & 0xFFu)),
+	PCR_PWM8			= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_PWM8_BITPOS & 0xFFu)),
+	PCR_REG				= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_REG_BITPOS & 0xFFu)),
+	PCR_BTIMER0		= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_BTIMER0_BITPOS & 0xFFu)),
+	PCR_BTIMER1		= (((uint32_t)(PCR1_REGS_EC) << 8) + (uint32_t)(PCR1_EC_BTIMER1_BITPOS & 0xFFu)),
+
 	PCR_LPC				= (((uint32_t)(PCR2_REGS_EC) << 8) + (uint32_t)(PCR2_EC_LPC_BITPOS & 0xFFu)),
 	PCR_UART0			= (((uint32_t)(PCR2_REGS_EC) << 8) + (uint32_t)(PCR2_EC_UART0_BITPOS & 0xFFu)),
 	PCR_UART1			= (((uint32_t)(PCR2_REGS_EC) << 8) + (uint32_t)(PCR2_EC_UART1_BITPOS & 0xFFu)),
@@ -257,56 +257,56 @@ typedef enum {
 	PCR_ACPI_EC	  = (((uint32_t)(PCR2_REGS_EC) << 8) + (uint32_t)(PCR2_EC_ACPI_EC_BITPOS & 0xFFu)),
 	PCR_PORT80_0  = (((uint32_t)(PCR2_REGS_EC) << 8) + (uint32_t)(PCR2_EC_PORT80_0_BITPOS & 0xFFu)),
 	PCR_PORT80_1  = (((uint32_t)(PCR2_REGS_EC) << 8) + (uint32_t)(PCR2_EC_PORT80_1_BITPOS & 0xFFu)),
-		
+
 	PCR_ADC				= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_ADC_BITPOS & 0xFFu)),
-	PCR_PS2_0			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_PS2_0_BITPOS & 0xFFu)),    	
-	PCR_PS2_1			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_PS2_1_BITPOS & 0xFFu)),    	
-	PCR_PS2_2			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_PS2_2_BITPOS & 0xFFu)),    		
-	PCR_SPI0			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_SPI0_BITPOS & 0xFFu)),     	
-	PCR_HTIMER		= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_HTIMER_BITPOS & 0xFFu)),      	
-	PCR_KEYSCAN		= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_KEYSCAN_BITPOS & 0xFFu)),      	
-	PCR_RPM_PWM		= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_RPM_PWM_BITPOS & 0xFFu)),      	
-	PCR_SMB1			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_SMB1_BITPOS & 0xFFu)),     	
-	PCR_SMB2			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_SMB2_BITPOS & 0xFFu)),    	
-	PCR_SMB3			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_SMB3_BITPOS & 0xFFu)),     	
-	PCR_LED0			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_LED0_BITPOS & 0xFFu)),     	
-	PCR_LED1			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_LED1_BITPOS & 0xFFu)),     	
-	PCR_LED2			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_LED2_BITPOS & 0xFFu)),     	
-	PCR_BCM				= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_BCM_BITPOS & 0xFFu)),   
-	PCR_SPI1			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_SPI1_BITPOS & 0xFFu)),     	
-	PCR_BTIMER2		= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_BTIMER2_BITPOS & 0xFFu)),   	
-	PCR_BTIMER3		= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_BTIMER3_BITPOS & 0xFFu)),   	
-	PCR_BTIMER4		= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_BTIMER4_BITPOS & 0xFFu)),   	
-	PCR_BTIMER5		= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_BTIMER5_BITPOS & 0xFFu)),   	
-	PCR_LED3			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_LED3_BITPOS & 0xFFu)),	
-	PCR_PKE 			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_PKE_BITPOS & 0xFFu)),	
-	PCR_RNG 			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_RNG_BITPOS & 0xFFu)),	
-	PCR_AES 			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_AES_BITPOS & 0xFFu)),	
-	PCR_HTIMER_1	= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_HTIMER_1_BITPOS & 0xFFu)),      	
-	PCR_C_C_TIMER	= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_C_C_TIMER_BITPOS & 0xFFu)),      	
+	PCR_PS2_0			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_PS2_0_BITPOS & 0xFFu)),
+	PCR_PS2_1			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_PS2_1_BITPOS & 0xFFu)),
+	PCR_PS2_2			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_PS2_2_BITPOS & 0xFFu)),
+	PCR_SPI0			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_SPI0_BITPOS & 0xFFu)),
+	PCR_HTIMER		= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_HTIMER_BITPOS & 0xFFu)),
+	PCR_KEYSCAN		= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_KEYSCAN_BITPOS & 0xFFu)),
+	PCR_RPM_PWM		= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_RPM_PWM_BITPOS & 0xFFu)),
+	PCR_SMB1			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_SMB1_BITPOS & 0xFFu)),
+	PCR_SMB2			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_SMB2_BITPOS & 0xFFu)),
+	PCR_SMB3			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_SMB3_BITPOS & 0xFFu)),
+	PCR_LED0			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_LED0_BITPOS & 0xFFu)),
+	PCR_LED1			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_LED1_BITPOS & 0xFFu)),
+	PCR_LED2			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_LED2_BITPOS & 0xFFu)),
+	PCR_BCM				= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_BCM_BITPOS & 0xFFu)),
+	PCR_SPI1			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_SPI1_BITPOS & 0xFFu)),
+	PCR_BTIMER2		= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_BTIMER2_BITPOS & 0xFFu)),
+	PCR_BTIMER3		= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_BTIMER3_BITPOS & 0xFFu)),
+	PCR_BTIMER4		= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_BTIMER4_BITPOS & 0xFFu)),
+	PCR_BTIMER5		= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_BTIMER5_BITPOS & 0xFFu)),
+	PCR_LED3			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_LED3_BITPOS & 0xFFu)),
+	PCR_PKE 			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_PKE_BITPOS & 0xFFu)),
+	PCR_RNG 			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_RNG_BITPOS & 0xFFu)),
+	PCR_AES 			= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_AES_BITPOS & 0xFFu)),
+	PCR_HTIMER_1	= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_HTIMER_1_BITPOS & 0xFFu)),
+	PCR_C_C_TIMER	= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_C_C_TIMER_BITPOS & 0xFFu)),
 	PCR_PWM9  		= (((uint32_t)(PCR3_REGS_EC) << 8) + (uint32_t)(PCR3_EC_PWM9_BITPOS & 0xFFu)),
-	
-  PCR_PWM10  		= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_PWM10_BITPOS & 0xFFu)),      		
-	PCR_PWM11  		= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_PWM11_BITPOS & 0xFFu)),      		
-	PCR_CTIMER0 	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_CTIMER0_BITPOS & 0xFFu)),      		
-	PCR_CTIMER1 	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_CTIMER1_BITPOS & 0xFFu)), 
-	PCR_CTIMER2 	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_CTIMER2_BITPOS & 0xFFu)), 
-	PCR_CTIMER3 	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_CTIMER3_BITPOS & 0xFFu)), 
-	PCR_RTOS_TIMER = (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_RTOS_TIMER_BITPOS & 0xFFu)), 
-	PCR_RPM2_PWM	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_RPM2_PWM_BITPOS & 0xFFu)),      	
-	PCR_QMSPI	    = (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_QMSPI_BITPOS & 0xFFu)),      	
-	PCR_BCM1    	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_BCM_1_BITPOS & 0xFFu)),      	
-	PCR_RCID0    	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_RC_ID0_BITPOS & 0xFFu)),      	
-	PCR_RCID1    	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_RC_ID1_BITPOS & 0xFFu)),      	
-	PCR_RCID2    	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_RC_ID2_BITPOS & 0xFFu)),      	
-	PCR_PROCHOT  	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_PROCHOT_BITPOS & 0xFFu)),      	
-	PCR_EEPROM   	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_EEPROM_BITPOS & 0xFFu)),      	
-	PCR_CUST_LOG 	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_CUST_LOG_BITPOS & 0xFFu)),      	
+
+  PCR_PWM10  		= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_PWM10_BITPOS & 0xFFu)),
+	PCR_PWM11  		= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_PWM11_BITPOS & 0xFFu)),
+	PCR_CTIMER0 	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_CTIMER0_BITPOS & 0xFFu)),
+	PCR_CTIMER1 	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_CTIMER1_BITPOS & 0xFFu)),
+	PCR_CTIMER2 	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_CTIMER2_BITPOS & 0xFFu)),
+	PCR_CTIMER3 	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_CTIMER3_BITPOS & 0xFFu)),
+	PCR_RTOS_TIMER = (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_RTOS_TIMER_BITPOS & 0xFFu)),
+	PCR_RPM2_PWM	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_RPM2_PWM_BITPOS & 0xFFu)),
+	PCR_QMSPI	    = (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_QMSPI_BITPOS & 0xFFu)),
+	PCR_BCM1    	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_BCM_1_BITPOS & 0xFFu)),
+	PCR_RCID0    	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_RC_ID0_BITPOS & 0xFFu)),
+	PCR_RCID1    	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_RC_ID1_BITPOS & 0xFFu)),
+	PCR_RCID2    	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_RC_ID2_BITPOS & 0xFFu)),
+	PCR_PROCHOT  	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_PROCHOT_BITPOS & 0xFFu)),
+	PCR_EEPROM   	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_EEPROM_BITPOS & 0xFFu)),
+	PCR_CUST_LOG 	= (((uint32_t)(PCR4_REGS_EC) << 8) + (uint32_t)(PCR4_EC_CUST_LOG_BITPOS & 0xFFu)),
 } PCR_BLK_ID;
 
 
 /******************************************************************************/
-/**  PCR Processor ClK Divide Values 
+/**  PCR Processor ClK Divide Values
  *******************************************************************************/
 enum PROCESSOR_CLK_DIVIDE_VALUE
 {
@@ -315,15 +315,15 @@ enum PROCESSOR_CLK_DIVIDE_VALUE
 	PCR_CPU_CLK_DIVIDE_3 = 3,
 	PCR_CPU_CLK_DIVIDE_4 = 4,
 	PCR_CPU_CLK_DIVIDE_16 = 16,
-	PCR_CPU_CLK_DIVIDE_48 = 48	
+	PCR_CPU_CLK_DIVIDE_48 = 48
 };
 
 /******************************************************************************/
-/**  System Sleep Modes 
+/**  System Sleep Modes
  *******************************************************************************/
 enum SYSTEM_SLEEP_MODES
 {
-	SYSTEM_LIGHT_SLEEP = 0,	
+	SYSTEM_LIGHT_SLEEP = 0,
 	SYSTEM_HEAVY_SLEEP = 1,
 	SYSTEM_SLEEP_ALL = 4
 };
@@ -368,19 +368,19 @@ enum SYSTEM_SLEEP_MODES
  *  Reset Enable for a block                                              *
  * ---------------------------------------------------------------------- */
  /** Sets or Clears block specific bit in PCR Sleep Enable Register
- * @param pcr_block_id - pcr block id encoded using PCRx_REGS_BIT 
+ * @param pcr_block_id - pcr block id encoded using PCRx_REGS_BIT
  * @param set_clr_flag - Flag to set (1) or clear (0) bit in the PCR Sleep Enable Register
  */
 void pcr_sleep_enable(uint32_t pcr_block_id, uint8_t set_clr_flag);
 
 /** Get Clock Required Status for the block
- * @param pcr_block_id - pcr block id encoded using PCRx_REGS_BIT 
+ * @param pcr_block_id - pcr block id encoded using PCRx_REGS_BIT
  * @return uint8_t - 1 if Clock Required Status set, else 0
  */
 uint8_t pcr_clock_reqd_status_get(uint32_t pcr_block_id);
 
 /** Sets or Clears Reset Enable register bit for the block
- * @param pcr_block_id - pcr block id encoded using PCRx_REGS_BIT 
+ * @param pcr_block_id - pcr block id encoded using PCRx_REGS_BIT
  * @param set_clr_flag - Flag to set (1) or clear (0) bit in the PCR Reset Enable Register
  */
 void pcr_reset_enable(uint32_t pcr_block_id, uint8_t set_clr_flag);
@@ -459,52 +459,52 @@ uint8_t pcr_osc_cal_read(void);
  * from PCR Registers                                                     *
  * ---------------------------------------------------------------------- */
  /** Write 32-bit value in the PCR Register
- * @param pcr_reg_id - pcr register id 
+ * @param pcr_reg_id - pcr register id
  * @param value - 32-bit value
  */
 void p_pcr_reg_write(uint8_t pcr_reg_id, uint32_t value);
 
 /** Reads 32-bit value from the PCR Register
- * @param pcr_reg_id - pcr register id 
+ * @param pcr_reg_id - pcr register id
  * @return value - 32-bit value
  */
 uint32_t p_pcr_reg_read(uint8_t pcr_reg_id);
 
 /* ---------------------------------------------------------------------- */
 /* Peripheral Function - Functions to set, clr and get bits in            *
- * PCR Registers                                                          * 
+ * PCR Registers                                                          *
  * ---------------------------------------------------------------------- */
  /** Sets bits in a PCR Register
- * @param pcr_reg_id - pcr register id 
- * @param bit_mask - Bit mask of bits to set 
+ * @param pcr_reg_id - pcr register id
+ * @param bit_mask - Bit mask of bits to set
  */
 void p_pcr_reg_set(uint8_t pcr_reg_id, uint32_t bit_mask);
 
 /** Clears bits in a PCR Register
- * @param pcr_reg_id - pcr register id 
- * @param bit_mask - Bit mask of bits to clear 
+ * @param pcr_reg_id - pcr register id
+ * @param bit_mask - Bit mask of bits to clear
  */
 void p_pcr_reg_clr(uint8_t pcr_reg_id, uint32_t bit_mask);
 
 /** Read bits in a PCR Register
- * @param pcr_reg_id - pcr register id 
- * @param bit_mask - Bit mask of bits to read 
+ * @param pcr_reg_id - pcr register id
+ * @param bit_mask - Bit mask of bits to read
  * @return value - 32-bit value
  */
 uint32_t p_pcr_reg_get(uint8_t pcr_reg_id, uint32_t bit_mask);
 
 /** Sets or Clears bits in a PCR Register - Helper Function
- * @param pcr_reg_id - pcr register id 
+ * @param pcr_reg_id - pcr register id
  * @param bit_mask - Bit mask of bits to set or clear
  * @param set_clr_flag - Flag to set (1) or clear (0) bits in the PCR Register
  */
 void p_pcr_reg_update(uint8_t pcr_reg_id, uint32_t bit_mask, uint8_t set_clr_flag);
-	
-//Functions to operate on System Sleep Control Register	
+
+//Functions to operate on System Sleep Control Register
 
 /* ---------------------------------------------------------------------- */
 /* Peripheral Function - Functions to operate on System Sleep Control     *
- * Register                                                               * 
+ * Register                                                               *
  * ---------------------------------------------------------------------- */
 /** Writes required sleep mode in System Sleep Control Register
  * @param sleep_value - System Sleep control value - [D2, D1, D0]
@@ -517,7 +517,7 @@ void p_pcr_system_sleep_ctrl_write(uint8_t sleep_value);
 uint8_t p_pcr_system_sleep_ctrl_read(void);
 
 /* ---------------------------------------------------------------------- */
-/* Peripheral Function - Function to program to CLK Divide Value          * 
+/* Peripheral Function - Function to program to CLK Divide Value          *
  * ---------------------------------------------------------------------- */
  /** Writes the clock divide value in the Processor Clock Control Register
  * @param clk_divide_value - clk divide values, valid values in enum PROCESSOR_CLK_DIVIDE_VALUE
@@ -534,7 +534,7 @@ void p_pcr_processor_clk_ctrl_write(uint8_t clk_divide_value);
 void p_pcr_slow_clk_ctrl_write(uint16_t slow_clk_divide_value);
 
 /* ---------------------------------------------------------------------- */
-/* Peripheral Function - Function to read the Oscillator Lock Status      */ 
+/* Peripheral Function - Function to read the Oscillator Lock Status      */
 /* ---------------------------------------------------------------------- */
 /** Reads the Oscillator Lock status bit in the Oscillator ID Register
  * @return 1 if Oscillator Lock Status bit is set, else 0
@@ -550,53 +550,53 @@ uint16_t p_pcr_oscillator_id_reg_read(void);
 /* Peripheral Function - Functions to read various power status in        *
  * Power Reset register                                               *
  * ---------------------------------------------------------------------- */
- /** Reads the VCC Reset Status bit 
+ /** Reads the VCC Reset Status bit
  *        in the Power Reset Status Register
  * @return 1 if VCC Reset Status bit is set, else 0
  */
 uint8_t p_pcr_pwr_reset_vcc_reset_sts_get(void);
 
-/** Reads the Host Reset Status bit 
+/** Reads the Host Reset Status bit
  *        in the Power Reset Status Register
  * @return 1 if Host Reset Status bit is set, else 0
  */
 uint8_t p_pcr_pwr_reset_host_reset_sts_get(void);
 
-/** Reads the VBAT Reset Status bit 
+/** Reads the VBAT Reset Status bit
  *        in the Power Reset Status Register
  * @return 1 if VBAT Reset Status bit is set, else 0
  */
 uint8_t p_pcr_pwr_reset_vbat_reset_sts_get(void);
 
-/** Clears the VBAT Reset Status bit 
- *        in the Power Reset Status Register 
+/** Clears the VBAT Reset Status bit
+ *        in the Power Reset Status Register
  */
 void p_pcr_pwr_reset_vbat_reset_sts_clr(void);
 
-/** Reads the VTR Reset Status bit 
+/** Reads the VTR Reset Status bit
  *        in the Power Reset Status Register
  * @return 1 if VCC1 Reset Status bit is set, else 0
  */
 uint8_t p_pcr_pwr_reset_vtr_reset_sts_get(void);
 
-/** Clears the VTR Reset Status bit 
- *        in the Power Reset Status Register 
+/** Clears the VTR Reset Status bit
+ *        in the Power Reset Status Register
  */
 void p_pcr_chip_subsystem_vtr_reset_sts_clr(void);
 
-/** Reads the 32K_ACTIVE status bit 
+/** Reads the 32K_ACTIVE status bit
  *        in the Chip Subsystem Power Reset Status Register
  * @return 1 if 32_ACTIVE bit is set, else 0
  */
 uint8_t p_pcr_pwr_reset_32K_active_sts_get(void);
 
-/** Reads the PCICLK_ACTIVE status bit 
+/** Reads the PCICLK_ACTIVE status bit
  *        in the Power Reset Status Register
  * @return 1 if CICLK_ACTIVE bit is set, else 0
  */
 uint8_t p_pcr_pwr_reset_pciclk_active_sts_get(void);
 
-/** Reads the ESPICLK_ACTIVE status bit 
+/** Reads the ESPICLK_ACTIVE status bit
  *        in the Power Reset Status Register
  * @return 1 if ESPICLK_ACTIVE bit is set, else 0
  */
@@ -608,7 +608,7 @@ uint8_t p_pcr_pwr_reset_espiclk_active_sts_get(void);
 uint16_t p_pcr_pwr_reset_sts_get(void);
 
 /* ---------------------------------------------------------------------- */
-/* Peripheral Function - Functions for Power Reset Control Register       */ 
+/* Peripheral Function - Functions for Power Reset Control Register       */
 /* ---------------------------------------------------------------------- */
 
 /** Reads the Power Reset Control Register
@@ -629,7 +629,7 @@ void p_pcr_pwr_reset_ctrl_pwr_inv_set_clr(uint8_t set_clr);
 void p_pcr_pwr_reset_ctrl_host_rst_set_clr(uint8_t set_clr);
 
 /* ---------------------------------------------------------------------- */
-/* Peripheral Function - Functions for System Reset Register       */ 
+/* Peripheral Function - Functions for System Reset Register       */
 /* ---------------------------------------------------------------------- */
 /** Set the SOFT_SYS_RESET bit in the System Reset Register
  * @param none
@@ -639,26 +639,26 @@ void p_pcr_system_reset_set(void);
 
 
 /** Set the value in PKE CLOCK Register
- * @param PKE Clock value 
+ * @param PKE Clock value
  * @return none
  */
 void p_pcr_pke_clock_write(uint8_t pke_clk_val);
 
 /** Read the value in PKE CLOCK Register
- * @none 
- * @return PKE Clock value 
+ * @none
+ * @return PKE Clock value
  */
 uint8_t p_pcr_pke_clock_read(void);
 
 /** Set the value in Oscillator calibration Register
- * @param Oscillator calibration value 
+ * @param Oscillator calibration value
  * @return none
  */
 void p_pcr_osc_cal_write(uint8_t osc_cal_val);
 
 /** Read the value in Osc cal Register
- * @none 
- * @return Osc cal value 
+ * @none
+ * @return Osc cal value
  */
 uint8_t p_pcr_osc_cal_read(void);
 
@@ -666,6 +666,3 @@ uint8_t p_pcr_osc_cal_read(void);
 /* end pcr.h */
 /**   @}
  */
-
-
-

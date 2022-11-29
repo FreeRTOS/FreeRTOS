@@ -156,10 +156,3 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	/* Clear the ISR in the VIC. */
 	VICVectAddr = serCLEAR_VIC_INTERRUPT;
 }
-
-
-
-
-
-
-

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -240,24 +240,24 @@ extern uint32_t PMC_IsPeriphEnabled( uint32_t dwId )
  * \brief Select external 32K crystal.
  */
 extern void PMC_SelectExt32KCrystal(void)
-{ 
+{
     volatile uint32_t count;
     /* Switch from internal RC 32kHz to external OSC 32 kHz */
     /* before switch slow clock source, switch MCK to Main Clock*/
     //PMC->PMC_MCKR = (PMC->PMC_MCKR & ~PMC_MCKR_CSS_Msk) | PMC_MCKR_CSS_MAIN_CLK;
     //while(!(PMC->PMC_SR & PMC_SR_MCKRDY));
     /* enable external OSC 32 kHz */
-    SCKC->SCKC_CR |= SCKC_CR_OSC32EN; 
+    SCKC->SCKC_CR |= SCKC_CR_OSC32EN;
     /* Wait 32,768 Hz Startup Time for clock stabilization (software loop) */
     for (count = 0; count < 0x1000; count++);
     /* disable OSC 32 kHz bypass */
-    SCKC->SCKC_CR &= ~SCKC_CR_OSC32BYP; 
+    SCKC->SCKC_CR &= ~SCKC_CR_OSC32BYP;
     /* switch slow clock source to external OSC 32 kHz */
     SCKC->SCKC_CR = (SCKC->SCKC_CR & ~SCKC_CR_OSCSEL) | SCKC_CR_OSCSEL_XTAL;
     /* Wait 5 slow clock cycles for internal resynchronization*/
     for (count = 0; count < 0x1000; count++);
     /* wait slow clock status change for external OSC 32 kHz selection */
-    // while(!(PMC->PMC_SR & PMC_SR_OSCSELS));   
+    // while(!(PMC->PMC_SR & PMC_SR_OSCSELS));
     /* disable internal RC 32 kHz */
     SCKC->SCKC_CR &= ~SCKC_CR_RCEN;
 }
@@ -290,18 +290,18 @@ extern void PMC_SelectInt32kCrystal(void)
  * \brief Select external 12M OSC.
  */
 extern void PMC_SelectExt12M_Osc(void)
-{ 
+{
     /* switch from internal RC 12 MHz to external OSC 12 MHz */
     /* wait Main XTAL Oscillator stabilisation*/
     if ((PMC->CKGR_MOR & CKGR_MOR_MOSCSEL ) == CKGR_MOR_MOSCSEL) return;
     /* enable external OSC 12 MHz */
-    PMC->CKGR_MOR |= CKGR_MOR_MOSCXTEN | CKGR_MOR_KEY(0x37); 
+    PMC->CKGR_MOR |= CKGR_MOR_MOSCXTEN | CKGR_MOR_KEY(0x37);
     /* wait Main CLK Ready */
-    while(!(PMC->CKGR_MCFR & CKGR_MCFR_MAINFRDY)); 
+    while(!(PMC->CKGR_MCFR & CKGR_MCFR_MAINFRDY));
     /* disable external OSC 12 MHz bypass */
-    PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTBY) | CKGR_MOR_KEY(0x37); 
+    PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTBY) | CKGR_MOR_KEY(0x37);
     /* switch MAIN clock to external OSC 12 MHz*/
-    PMC->CKGR_MOR |= CKGR_MOR_MOSCSEL | CKGR_MOR_KEY(0x37); 
+    PMC->CKGR_MOR |= CKGR_MOR_MOSCSEL | CKGR_MOR_KEY(0x37);
     /* wait MAIN clock status change for external OSC 12 MHz selection*/
     while(!(PMC->PMC_SR & PMC_SR_MOSCSELS));
     /* in case where MCK is running on MAIN CLK */
@@ -318,9 +318,9 @@ extern void PMC_SelectInt12M_Osc(void)
     uint32_t  count;
     /* switch from external OSC 12 MHz to internal RC 12 MHz*/
     /* enable internal RC 12 MHz */
-    PMC->CKGR_MOR |= CKGR_MOR_MOSCRCEN | CKGR_MOR_KEY(0x37); 
+    PMC->CKGR_MOR |= CKGR_MOR_MOSCRCEN | CKGR_MOR_KEY(0x37);
     /* Wait internal 12 MHz RC Startup Time for clock stabilization (software loop) */
-    for (count = 0; count < 0x100000; count++); 
+    for (count = 0; count < 0x100000; count++);
     /* switch MAIN clock to internal RC 12 MHz */
     PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCSEL) | CKGR_MOR_KEY(0x37);
     /* wait MAIN clock status change for internal RC 12 MHz selection*/
@@ -425,4 +425,3 @@ extern void PMC_DisablePllA(void)
 {
     PMC->CKGR_PLLAR = (PMC->CKGR_PLLAR & ~CKGR_PLLAR_MULA_Msk) | CKGR_PLLAR_MULA(0);
 }
-

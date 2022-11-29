@@ -137,9 +137,9 @@ static void prvCheckTask( void *pvParameters );
  *
  * It is not possible to use xTaskCreate() to create an unprivileged task since
  * heap moved to the privileged data section, so the access tests implemented by
- * this function are now called from an unprivileged register check task created 
- * using the xTaskCreateRestricted() API. 
- */ 
+ * this function are now called from an unprivileged register check task created
+ * using the xTaskCreateRestricted() API.
+ */
 static void prvOldStyleUserModeTask( void );
 
 /*
@@ -812,7 +812,7 @@ static void prvTaskToDelete( void *pvParameters )
 	configASSERT( uxTaskGetStackHighWaterMark2( NULL ) > 0 );
 	/* Run time stats are not being gathered - this is just to exercise
 	API. */
-	configASSERT( ulTaskGetIdleRunTimeCounter() == 0 ); 
+	configASSERT( ulTaskGetIdleRunTimeCounter() == 0 );
 	vTaskSuspend( NULL );
 }
 /*-----------------------------------------------------------*/
@@ -1232,7 +1232,7 @@ static void prvRegTest3Task( void *pvParameters )
 		Since the heap moved to the privileged data section xTaskCreate() can
 		no longer be used to create unprivileged tasks. */
 		prvOldStyleUserModeTask();
-		
+
 		/* Start the part of the test that is written in assembler. */
 		vRegTest3Implementation();
 	}
@@ -1261,4 +1261,3 @@ static void prvRegTest4Task( void *pvParameters )
 	vTaskDelete( NULL );
 }
 /*-----------------------------------------------------------*/
-

@@ -203,4 +203,3 @@ const uint8_t g_gpio_dscr2_support[GPIO_INFO_NUM_PORTS] =
 #endif /* GPIO_CFG_PARAM_CHECKING_ENABLE */
 
 #endif /* BSP_MCU_RX72N */
-

@@ -71,7 +71,7 @@
 
 #include "chip.h"
 #include "stdlib.h"
-#include "string.h"   
+#include "string.h"
 
 #include <stdint.h>
 
@@ -346,7 +346,7 @@ extern uint32_t QSPI_IsEOFInst( Qspi* qspi )
  * returns 0.
  */
 extern void QSPI_SendFrame( Qspi* qspi, qspiFrame *pFrame, AccesType  ReadWrite)
-{  
+{
     uint32_t regIFR, regICR, DummyRead;
     uint32_t *pQspiBuffer = (uint32_t *)QSPIMEM_ADDR;
 
@@ -361,38 +361,38 @@ extern void QSPI_SendFrame( Qspi* qspi, qspiFrame *pFrame, AccesType  ReadWrite)
         regIFR|=QSPI_IFR_OPTEN;
     }
 
-    /* Instruction frame without Data, only Instruction**/  
-    if(!(pFrame->DataSize))               
+    /* Instruction frame without Data, only Instruction**/
+    if(!(pFrame->DataSize))
     {
-        if(pFrame->InstAddrFlag)                            // If contain Address, put in IAr reg        
+        if(pFrame->InstAddrFlag)                            // If contain Address, put in IAr reg
         {
             qspi->QSPI_IAR = pFrame->InstAddr;
             regIFR |= QSPI_IFR_ADDREN;
-        }    
+        }
         qspi->QSPI_ICR = regICR;                            //  update Instruction code reg
-        qspi->QSPI_IFR = regIFR;                            // Instruction Frame reg 
+        qspi->QSPI_IFR = regIFR;                            // Instruction Frame reg
     }
     else  /* Instruction frame with Data and Instruction**/
-    {    
-        regIFR |= QSPI_IFR_DATAEN;    
+    {
+        regIFR |= QSPI_IFR_DATAEN;
         if(ReadWrite)
         {
-            regIFR |= QSPI_IFR_TFRTYP_TRSFR_WRITE;      
+            regIFR |= QSPI_IFR_TFRTYP_TRSFR_WRITE;
             qspi->QSPI_ICR = regICR;
             qspi->QSPI_IFR = regIFR ;
-            DummyRead =  qspi->QSPI_IFR;                        // to synchronize system bus accesses   
+            DummyRead =  qspi->QSPI_IFR;                        // to synchronize system bus accesses
             if(pFrame->InstAddrFlag)
             {
                 pQspiBuffer +=  pFrame->InstAddr;
             }
-            memcpy(pQspiBuffer  ,pFrame->pData,  pFrame->DataSize); 
-        } 
+            memcpy(pQspiBuffer  ,pFrame->pData,  pFrame->DataSize);
+        }
         else
-        {      
+        {
             qspi->QSPI_ICR = regICR;
             qspi->QSPI_IFR = regIFR ;
-            DummyRead =  qspi->QSPI_IFR;                        // to synchronize system bus accesses   
-            memcpy(pFrame->pData,  pQspiBuffer,  pFrame->DataSize); 
+            DummyRead =  qspi->QSPI_IFR;                        // to synchronize system bus accesses
+            memcpy(pFrame->pData,  pQspiBuffer,  pFrame->DataSize);
         }
 
     }
@@ -418,7 +418,7 @@ extern void QSPI_SendFrameToMem( Qspi* qspi, qspiFrame *pFrame, AccesType  ReadW
     uint32_t regIFR, regICR, DummyRead ;
     uint8_t *pQspiMem = (uint8_t *)QSPIMEM_ADDR;
 
-    assert((qspi->QSPI_MR) & QSPI_MR_SMM);  
+    assert((qspi->QSPI_MR) & QSPI_MR_SMM);
 
     regIFR = (pFrame->spiMode | QSPI_IFR_INSTEN | QSPI_IFR_DATAEN | QSPI_IFR_ADDREN | (pFrame->OptionLen << QSPI_IFR_OPTL_Pos) | (pFrame->DummyCycles << QSPI_IFR_NBDUM_Pos) | (pFrame->ContinuousRead << 14)) ;
     // Write the instruction to reg
@@ -429,14 +429,14 @@ extern void QSPI_SendFrameToMem( Qspi* qspi, qspiFrame *pFrame, AccesType  ReadW
     }
     pQspiMem +=  pFrame->InstAddr;
     if(ReadWrite)
-    {   
+    {
         regIFR |= QSPI_IFR_TFRTYP_TRSFR_WRITE_MEMORY;
         memory_barrier();
         qspi->QSPI_ICR = regICR;
         qspi->QSPI_IFR = regIFR ;
-        DummyRead =  qspi->QSPI_IFR;                // to synchronize system bus accesses  
+        DummyRead =  qspi->QSPI_IFR;                // to synchronize system bus accesses
 
-        memcpy(pQspiMem  ,pFrame->pData,  pFrame->DataSize); 
+        memcpy(pQspiMem  ,pFrame->pData,  pFrame->DataSize);
 
     }
     else
@@ -445,13 +445,12 @@ extern void QSPI_SendFrameToMem( Qspi* qspi, qspiFrame *pFrame, AccesType  ReadW
         memory_barrier();
         qspi->QSPI_ICR = regICR;
         qspi->QSPI_IFR = regIFR ;
-        DummyRead =  qspi->QSPI_IFR;                                                // to synchronize system bus accesses 
-        memcpy(pFrame->pData, pQspiMem , pFrame->DataSize);   //  Read QSPI AHB memory space 
+        DummyRead =  qspi->QSPI_IFR;                                                // to synchronize system bus accesses
+        memcpy(pFrame->pData, pQspiMem , pFrame->DataSize);   //  Read QSPI AHB memory space
 
-    } 
+    }
     memory_barrier();
     qspi->QSPI_CR = QSPI_CR_LASTXFER;             // End transmission after all data has been sent
     while(!(qspi->QSPI_SR & QSPI_SR_INSTRE));     // poll CR reg to know status if Intrustion has end
 
 }
-

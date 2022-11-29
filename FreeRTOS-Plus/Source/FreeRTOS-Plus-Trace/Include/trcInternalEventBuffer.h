@@ -7,8 +7,8 @@
  */
 
 /**
- * @file 
- * 
+ * @file
+ *
  * @brief Public internal event buffer APIs.
  */
 
@@ -39,10 +39,10 @@ extern "C" {
 
 /**
  * @internal Initializes the internal trace event buffer used by certain stream ports.
- * 
+ *
  * @param[in] puiBuffer Pointer to previously allocated memory buffer
  * @param[in] uiSize Size of buffer
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -50,28 +50,28 @@ traceResult xTraceInternalEventBufferInitialize(uint8_t* puiBuffer, uint32_t uiS
 
 /**
  * @brief Pushes data to the internal trace event buffer.
- * 
+ *
  * @param[in] pvData Pointer to data
  * @param[in] uiSize Size of data
  * @param[out] piBytesWritten Bytes written.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
 traceResult xTraceInternalEventBufferPush(void *pvData, uint32_t uiSize, int32_t *piBytesWritten);
 
 /**
- * @brief Transfers all internal trace event buffer data using the function 
+ * @brief Transfers all internal trace event buffer data using the function
  * xTraceStreamPortWriteData(...) as defined in trcStreamPort.h.
  *
- * This function is intended to be called by the periodic TzCtrl task with a 
+ * This function is intended to be called by the periodic TzCtrl task with a
  * suitable delay (e.g. 10-100 ms).
  *
  * In case of errors from the streaming interface, it registers a warning
  * (TRC_WARNING_STREAM_PORT_WRITE) provided by xTraceErrorGetLast().
- * 
+ *
  * @param[out] piBytesWritten Bytes written.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -79,7 +79,7 @@ traceResult xTraceInternalEventBufferTransfer(int32_t *piBytesWritten);
 
 /**
  * @brief Clears all trace events in the internal trace event buffer.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */

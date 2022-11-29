@@ -4,7 +4,7 @@
   * @author  MCD Application Team
   * @version V1.0.0RC1
   * @date    27-January-2012
-  * @brief   This file contains all the functions prototypes for the WWDG 
+  * @brief   This file contains all the functions prototypes for the WWDG
   *          firmware library.
   ******************************************************************************
   * @attention
@@ -40,18 +40,18 @@
 
 /** @addtogroup WWDG
   * @{
-  */ 
+  */
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 
 /** @defgroup WWDG_Exported_Constants
   * @{
-  */ 
-  
-/** @defgroup WWDG_Prescaler 
+  */
+
+/** @defgroup WWDG_Prescaler
   * @{
-  */ 
-  
+  */
+
 #define WWDG_Prescaler_1    ((uint32_t)0x00000000)
 #define WWDG_Prescaler_2    ((uint32_t)0x00000080)
 #define WWDG_Prescaler_4    ((uint32_t)0x00000100)
@@ -65,15 +65,15 @@
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-/*  Function used to set the WWDG configuration to the default reset state ****/  
+/*  Function used to set the WWDG configuration to the default reset state ****/
 void WWDG_DeInit(void);
 
 /* Prescaler, Refresh window and Counter configuration functions **************/
@@ -97,10 +97,10 @@ void WWDG_ClearFlag(void);
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /******************* (C) COPYRIGHT 2012 STMicroelectronics *****END OF FILE****/

@@ -436,5 +436,3 @@ void IntDefaultHandler(void)
     {
     }
 }
-
-

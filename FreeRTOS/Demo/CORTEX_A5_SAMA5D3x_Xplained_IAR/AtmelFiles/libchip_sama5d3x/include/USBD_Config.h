@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -301,5 +301,3 @@
 
 /**@}*/
 #endif //#ifndef USBD_CONFIG_H
-
-

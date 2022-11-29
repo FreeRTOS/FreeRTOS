@@ -257,8 +257,3 @@ uint_fast8_t xInterruptStatus;
 	to xSemaphoreGiveFromISR() and xQueueSendFromISR() within this function. */
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
-
-
-
-
-

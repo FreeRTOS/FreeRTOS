@@ -53,10 +53,10 @@ extern "C" {
 #define prvGetStreamBufferType(x) 0
 #endif
 
-/* Added mainly for our internal testing. This makes it easier to create test applications that 
+/* Added mainly for our internal testing. This makes it easier to create test applications that
    runs on multiple FreeRTOS versions. */
 #if (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_8_X_X)
-	/* FreeRTOS v7.x */	
+	/* FreeRTOS v7.x */
 	#define STRING_CAST(x) ( (signed char*) x )
 	#define TickType portTickType
 	#define TaskType xTaskHandle
@@ -104,7 +104,7 @@ typedef struct TraceKernelPortDataBuffer
 
 /**
  * @internal Initializes the kernel port
- * 
+ *
  * @param[in] pxBuffer Kernel port data buffer
  *
  * @retval TRC_FAIL Failure
@@ -114,7 +114,7 @@ traceResult xTraceKernelPortInitialize(TraceKernelPortDataBuffer_t* pxBuffer);
 
 /**
  * @internal Enables the kernel port
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -124,7 +124,7 @@ traceResult xTraceKernelPortEnable(void);
  * @internal Calls on FreeRTOS vTaskDelay(...)
  *
  * @param[in] uiTicks Tick count to delay
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -141,7 +141,7 @@ unsigned char xTraceKernelPortIsSchedulerSuspended(void);
 /**
  * @brief Kernel specific way to properly allocate critical sections
  */
-#define TRC_KERNEL_PORT_ALLOC_CRITICAL_SECTION() 
+#define TRC_KERNEL_PORT_ALLOC_CRITICAL_SECTION()
 
 /**
  * @brief Kernel specific way to properly allocate critical sections
@@ -330,7 +330,7 @@ traceResult xTraceKernelPortGetUnusedStack(void* pvTask, TraceUnsignedBaseType_t
 /**
  * @internal Kernel specific malloc definition
  */
-#define TRACE_MALLOC(size) pvPortMalloc(size) 	
+#define TRACE_MALLOC(size) pvPortMalloc(size)
 
 #if (defined(configUSE_TIMERS) && (configUSE_TIMERS == 1))
 
@@ -1225,11 +1225,11 @@ extern traceObjectClass TraceQueueClassTable[5];
 #define TRACE_GET_TASK_PRIORITY(pxTCB) ((uint8_t)pxTCB->uxPriority)
 #define TRACE_GET_TASK_NAME(pxTCB) ((char*)pxTCB->pcTaskName)
 
-/*** The trace macros for snapshot mode **************************************/	
+/*** The trace macros for snapshot mode **************************************/
 
 /* A macro that will update the tick count when returning from tickless idle */
 #undef traceINCREASE_TICK_COUNT
-#define traceINCREASE_TICK_COUNT( xCount ) 
+#define traceINCREASE_TICK_COUNT( xCount )
 
 /* Called for each task that becomes ready */
 #undef traceMOVED_TASK_TO_READY_STATE
@@ -1244,7 +1244,7 @@ extern traceObjectClass TraceQueueClassTable[5];
 #define traceTASK_INCREMENT_TICK( xTickCount ) \
 	if (uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdTRUE || xPendedTicks == 0) { trcKERNEL_HOOKS_INCREMENT_TICK(); } \
 	if (uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdFALSE) { trcKERNEL_HOOKS_NEW_TIME(DIV_NEW_TIME, xTickCount + 1); }
-	
+
 #elif (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_7_5_X)
 
 #define traceTASK_INCREMENT_TICK( xTickCount ) \
@@ -1370,7 +1370,7 @@ extern volatile uint32_t uiTraceSystemState;
 #undef traceCREATE_MUTEX
 #define traceCREATE_MUTEX( pxNewQueue ) \
 	trcKERNEL_HOOKS_OBJECT_CREATE(TRACE_GET_OBJECT_EVENT_CODE(CREATE_OBJ, TRCSUCCESS, QUEUE, pxNewQueue), QUEUE, pxNewQueue);
-	
+
 /* Called in xQueueCreateMutex when the operation fails (when memory allocation fails) */
 #undef traceCREATE_MUTEX_FAILED
 #define traceCREATE_MUTEX_FAILED() \
@@ -1799,7 +1799,7 @@ extern void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, int32_t si
 		prvTraceStoreKernelCall(TRACE_TASK_NOTIFY_FROM_ISR, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(xTaskToNotify));
 
 #endif
-	
+
 #undef traceTASK_NOTIFY_GIVE_FROM_ISR
 #if (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_10_4_0)
 
@@ -1824,7 +1824,7 @@ extern void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, int32_t si
 #undef traceSTREAM_BUFFER_CREATE_FAILED
 #define traceSTREAM_BUFFER_CREATE_FAILED( xIsMessageBuffer ) \
 	trcKERNEL_HOOKS_OBJECT_CREATE_FAILED(TRACE_GET_CLASS_EVENT_CODE(CREATE_OBJ, TRCFAILED, STREAMBUFFER, xIsMessageBuffer), TRACE_GET_CLASS_TRACE_CLASS(STREAMBUFFER, xIsMessageBuffer))
-	
+
 #undef traceSTREAM_BUFFER_CREATE_STATIC_FAILED
 #define traceSTREAM_BUFFER_CREATE_STATIC_FAILED( xReturn, xIsMessageBuffer ) \
 	traceSTREAM_BUFFER_CREATE_FAILED( xIsMessageBuffer )
@@ -1842,7 +1842,7 @@ extern void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, int32_t si
 #define traceSTREAM_BUFFER_SEND( xStreamBuffer, xReturn ) \
 	trcKERNEL_HOOKS_KERNEL_SERVICE(TRACE_GET_OBJECT_EVENT_CODE(SEND, TRCSUCCESS, STREAMBUFFER, xStreamBuffer), STREAMBUFFER, xStreamBuffer); \
 	trcKERNEL_HOOKS_SET_OBJECT_STATE(STREAMBUFFER, xStreamBuffer, prvBytesInBuffer(xStreamBuffer));
-	
+
 #undef traceBLOCKING_ON_STREAM_BUFFER_SEND
 #define traceBLOCKING_ON_STREAM_BUFFER_SEND( xStreamBuffer ) \
 	trcKERNEL_HOOKS_KERNEL_SERVICE(TRACE_GET_OBJECT_EVENT_CODE(SEND, TRCBLOCK, STREAMBUFFER, xStreamBuffer), STREAMBUFFER, xStreamBuffer);
@@ -2010,7 +2010,7 @@ TraceHeapHandle_t xTraceKernelPortGetSystemHeapHandle(void);
 #define PSF_EVENT_MUTEX_PEEK								0x72
 
 #define PSF_EVENT_QUEUE_PEEK_FAILED							0x73
-#define PSF_EVENT_SEMAPHORE_PEEK_FAILED						0x74	
+#define PSF_EVENT_SEMAPHORE_PEEK_FAILED						0x74
 #define PSF_EVENT_MUTEX_PEEK_FAILED							0x75
 
 #define PSF_EVENT_QUEUE_PEEK_BLOCK							0x76
@@ -2644,7 +2644,7 @@ TraceHeapHandle_t xTraceKernelPortGetSystemHeapHandle(void);
 #undef traceTASK_PRIORITY_SET
 #define traceTASK_PRIORITY_SET( pxTask, uxNewPriority ) \
 	xTraceTaskSetPriorityWithoutHandle(pxTask, uxNewPriority)
-	
+
 /* Called in vTaskPriorityInherit, which is called by Mutex operations */
 #undef traceTASK_PRIORITY_INHERIT
 #define traceTASK_PRIORITY_INHERIT( pxTask, uxNewPriority ) \
@@ -2953,7 +2953,7 @@ TraceHeapHandle_t xTraceKernelPortGetSystemHeapHandle(void);
 #endif
 
 #else
-	
+
 /* When recorder is disabled */
 #define vTraceSetQueueName(object, name)
 #define vTraceSetSemaphoreName(object, name)
@@ -2961,7 +2961,7 @@ TraceHeapHandle_t xTraceKernelPortGetSystemHeapHandle(void);
 #define vTraceSetEventGroupName(object, name)
 #define vTraceSetStreamBufferName(object, name)
 #define vTraceSetMessageBufferName(object, name)
-	
+
 #endif
 
 #ifdef __cplusplus

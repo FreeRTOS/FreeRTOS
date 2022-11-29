@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -202,4 +202,3 @@
 
 /**@}*/
 #endif // #ifndef _MII_DEFINE_H
-

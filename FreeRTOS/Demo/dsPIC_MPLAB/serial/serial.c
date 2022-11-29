@@ -221,5 +221,3 @@ portBASE_TYPE xTaskWoken = pdFALSE;
 		taskYIELD();
 	}
 }
-
-

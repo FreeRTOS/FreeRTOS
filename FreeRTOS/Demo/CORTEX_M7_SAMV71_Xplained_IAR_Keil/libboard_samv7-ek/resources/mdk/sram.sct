@@ -31,7 +31,7 @@
 ; *----------------------------------------------------------------------------*/
 LR_IRAM1 0x20400000 0x00040000  ; load region size_region
 {
-	Vector_region 0x20400000 0x0005E000 
+	Vector_region 0x20400000 0x0005E000
 	{
 		startup_sam.o (vectors, +First)
 	}
@@ -48,6 +48,5 @@ LR_IRAM1 0x20400000 0x00040000  ; load region size_region
 
     ARM_LIB_STACK 0x20460000 EMPTY -0x1000
     {
-    }	
+    }
 }
-

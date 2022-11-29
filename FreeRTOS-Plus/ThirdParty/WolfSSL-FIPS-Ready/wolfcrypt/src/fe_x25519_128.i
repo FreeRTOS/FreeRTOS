@@ -622,4 +622,3 @@ uint64_t load_4(const unsigned char *in)
 
     return result;
 }
-

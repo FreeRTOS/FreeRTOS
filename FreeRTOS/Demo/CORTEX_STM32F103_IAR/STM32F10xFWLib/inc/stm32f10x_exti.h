@@ -34,12 +34,12 @@ typedef enum
 }EXTIMode_TypeDef;
 
 #define IS_EXTI_MODE(MODE) ((MODE == EXTI_Mode_Interrupt) || (MODE == EXTI_Mode_Event))
-                            
+
 /* EXTI Trigger enumeration --------------------------------------------------*/
 typedef enum
 {
   EXTI_Trigger_Rising = 0x08,
-  EXTI_Trigger_Falling = 0x0C,  
+  EXTI_Trigger_Falling = 0x0C,
   EXTI_Trigger_Rising_Falling = 0x10
 }EXTITrigger_TypeDef;
 
@@ -76,10 +76,10 @@ typedef struct
 #define EXTI_Line15      ((u32)0x08000)  /* External interrupt line 15 */
 #define EXTI_Line16      ((u32)0x10000)  /* External interrupt line 16
                                             Connected to the PVD Output */
-#define EXTI_Line17      ((u32)0x20000)  /* External interrupt line 17 
+#define EXTI_Line17      ((u32)0x20000)  /* External interrupt line 17
                                             Connected to the RTC Alarm event */
-#define EXTI_Line18      ((u32)0x40000)  /* External interrupt line 18 
-                                            Connected to the USB Wakeup from 
+#define EXTI_Line18      ((u32)0x40000)  /* External interrupt line 18
+                                            Connected to the USB Wakeup from
                                             suspend event */
 
 #define IS_EXTI_LINE(LINE) (((LINE & (u32)0xFFF80000) == 0x00) && (LINE != (u16)0x00))
@@ -94,7 +94,7 @@ typedef struct
                             (LINE == EXTI_Line14) || (LINE == EXTI_Line15) || \
                             (LINE == EXTI_Line16) || (LINE == EXTI_Line17) || \
                             (LINE == EXTI_Line18))
-                                 
+
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 void EXTI_DeInit(void);

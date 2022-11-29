@@ -224,5 +224,3 @@ SOCKET xSocket = INVALID_SOCKET;
 
 	return xSocket;
 }
-
-

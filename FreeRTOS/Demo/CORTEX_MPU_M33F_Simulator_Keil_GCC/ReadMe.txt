@@ -5,4 +5,3 @@ Instructions to Build and Run:
  - Set the FreeRTOSDemo_ns project as Active - Right click on "Project: FreeRTOSDemo_ns" and select "Set as Active Project".
  - Build the FreeRTOSDemo_ns project using "Project --> Build" or by pressing "F7".
  - Start Debug Session using "Debug -> Start/Stop Debug Session" or by pressing "Ctrl+F5".
-

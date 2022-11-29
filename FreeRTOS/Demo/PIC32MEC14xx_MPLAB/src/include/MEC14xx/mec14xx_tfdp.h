@@ -37,11 +37,11 @@ extern "C" {
 #define TFDP_NUM_INSTANCES  (1u)
 
 #define TFDP_FRAME_START   (0xFD)
-    
-    
+
+
 //
 // Offset +00h TFDP Data Register: 8-bit R/W
-//     
+//
 #define TFDP_DATA_REG_OFS       (0ul)
 #define TFDP_DATA_REG_MASK      (0xFFul)
 
@@ -66,7 +66,7 @@ extern "C" {
 #define TFDP_CTRL_CLK_DIV8          (2u << (TFDP_CTRL_DIVSEL_BITPOS))
 #define TFDP_CTRL_CLK_DIV2_RSVD     (3u << (TFDP_CTRL_DIVSEL_BITPOS))
 // Number of clocks to delay between each byte
-// Note: this will affect time TFDP block holds off CPU on next 
+// Note: this will affect time TFDP block holds off CPU on next
 // write to TFDP data register.
 #define TFDP_CTRL_IP_1CLKS          (0u << (TFDP_CTRL_IP_DELAY_BITPOS))
 #define TFDP_CTRL_IP_2CLKS          (1u << (TFDP_CTRL_IP_DELAY_BITPOS))
@@ -86,4 +86,3 @@ extern "C" {
 /* end mec14xx_tfdp.h */
 /**   @}
  */
-

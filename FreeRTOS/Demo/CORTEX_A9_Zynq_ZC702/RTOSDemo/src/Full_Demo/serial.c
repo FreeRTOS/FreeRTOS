@@ -275,8 +275,3 @@ char cChar;
 	/* Clear the interrupt status. */
 	XUartPs_WriteReg( XPAR_PS7_UART_1_BASEADDR, XUARTPS_ISR_OFFSET, ulActiveInterrupts );
 }
-
-
-
-
-

@@ -9,4 +9,3 @@ pic_object='.libs/src_libwolfssl_la-keys.o'
 
 # Name of the non-PIC object
 non_pic_object=none
-

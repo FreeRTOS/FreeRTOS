@@ -101,7 +101,7 @@ void main( void )
 	/* See https://www.freertos.org/freertos-on-qemu-mps2-an385-model.html for
 	instructions. */
 
-	
+
 	/* Hardware initialisation.  printf() output uses the UART for IO. */
 	prvUARTInit();
 
@@ -307,6 +307,3 @@ void *malloc( size_t size )
 	for( ;; );
 
 }
-
-
-

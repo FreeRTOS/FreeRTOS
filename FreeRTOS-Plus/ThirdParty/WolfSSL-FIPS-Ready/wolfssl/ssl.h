@@ -3925,9 +3925,9 @@ WOLFSSL_API int wolfSSL_AllowEncryptThenMac(WOLFSSL *s, int);
 /* This feature is used to set a fixed ephemeral key and is for testing only */
 /* Currently allows ECDHE and DHE only */
 #ifdef WOLFSSL_STATIC_EPHEMERAL
-WOLFSSL_API int wolfSSL_CTX_set_ephemeral_key(WOLFSSL_CTX* ctx, int keyAlgo, 
+WOLFSSL_API int wolfSSL_CTX_set_ephemeral_key(WOLFSSL_CTX* ctx, int keyAlgo,
     const char* key, unsigned int keySz, int format);
-WOLFSSL_API int wolfSSL_set_ephemeral_key(WOLFSSL* ssl, int keyAlgo, 
+WOLFSSL_API int wolfSSL_set_ephemeral_key(WOLFSSL* ssl, int keyAlgo,
     const char* key, unsigned int keySz, int format);
 #endif
 

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -69,4 +69,3 @@ extern uint8_t SSC_IsRxReady(Ssc *ssc);
 #endif
 
 #endif /* #ifndef _SSC_ */
-

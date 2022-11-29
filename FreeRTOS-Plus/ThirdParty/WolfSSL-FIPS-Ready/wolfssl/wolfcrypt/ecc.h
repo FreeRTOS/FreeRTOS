@@ -283,12 +283,12 @@ typedef struct ecc_set_type {
  * mp_ints for the components of the point. With ALT_ECC_SIZE, the components
  * of the point are pointers that are set to each of a three item array of
  * alt_fp_ints. While an mp_int will have 4096 bits of digit inside the
- * structure, the alt_fp_int will only have 512 bits for ECC 256-bit and 
- * 1056-bits for ECC 521-bit. A size value was added in the ALT case, as well, 
- * and is set by mp_init() and alt_fp_init(). The functions fp_zero() and 
- * fp_copy() use the size parameter. An int needs to be initialized before 
- * using it instead of just fp_zeroing it, the init will call zero. The 
- * FP_MAX_BITS_ECC defaults to calculating based on MAX_ECC_BITS, but 
+ * structure, the alt_fp_int will only have 512 bits for ECC 256-bit and
+ * 1056-bits for ECC 521-bit. A size value was added in the ALT case, as well,
+ * and is set by mp_init() and alt_fp_init(). The functions fp_zero() and
+ * fp_copy() use the size parameter. An int needs to be initialized before
+ * using it instead of just fp_zeroing it, the init will call zero. The
+ * FP_MAX_BITS_ECC defaults to calculating based on MAX_ECC_BITS, but
  * can be set to change the number of bits used in the alternate FP_INT.
  *
  * The ALT_ECC_SIZE option only applies to stack based fast math USE_FAST_MATH.

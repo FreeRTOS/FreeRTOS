@@ -101,4 +101,3 @@ system. */
 #define recmuCONTROLLING_TASK_PRIORITY ( configMAX_PRIORITIES - 1 )
 
 #endif /* FREERTOS_CONFIG_H */
-

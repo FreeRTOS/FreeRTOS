@@ -41,32 +41,32 @@ extern "C"
 /*
  * Component : MPU L2 cache controller Module Address Space - ALT_MPUL2
  * MPU L2 cache controller Module Address Space
- * 
+ *
  * Address space allocated to the MPU L2 cache controller. For detailed information
  * about the use of this address space,
  * [url=http://infocenter.arm.com/help/topic/com.arm.doc.ddi0246e/index.html]click
  * here[/url] to access the ARM documentation for the L2C-301.
- * 
+ *
  */
 /*
  * Register : Empty - reg
- * 
+ *
  * Placeholder
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:------------
- *  [31:0] | RW     | Unknown | Empty      
- * 
+ *  [31:0] | RW     | Unknown | Empty
+ *
  */
 /*
  * Field : Empty - fld
- * 
+ *
  * Placeholder
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_MPUL2_REG_FLD register field. */
 #define ALT_MPUL2_REG_FLD_LSB        0
@@ -93,7 +93,7 @@ extern "C"
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_MPUL2_REG.
  */
 struct ALT_MPUL2_REG_s
@@ -116,7 +116,7 @@ typedef volatile struct ALT_MPUL2_REG_s  ALT_MPUL2_REG_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_MPUL2.
  */
 struct ALT_MPUL2_s
@@ -141,4 +141,3 @@ typedef volatile struct ALT_MPUL2_raw_s  ALT_MPUL2_raw_t;
 }
 #endif  /* __cplusplus */
 #endif  /* __ALTERA_ALT_MPUL2_H__ */
-

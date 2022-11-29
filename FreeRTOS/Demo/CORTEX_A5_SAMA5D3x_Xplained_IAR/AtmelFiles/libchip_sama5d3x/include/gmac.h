@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -235,4 +235,3 @@ extern void GMAC_TransmissionStart(Gmac *pGmac);
 extern void GMAC_TransmissionHalt(Gmac *pGmac);
 extern void GMAC_EnableRGMII(Gmac *pGmac, uint32_t duplex, uint32_t speed);
 #endif // #ifndef GMAC_H
-

@@ -220,7 +220,7 @@
         sz = header->thisSize;
 
     #ifdef DO_MEM_LIST
-        if (pthread_mutex_lock(&memLock) == 0) 
+        if (pthread_mutex_lock(&memLock) == 0)
         {
     #endif
 
@@ -339,7 +339,7 @@
         ourMemStats.peakBytes    = 0;
         ourMemStats.currentBytes = 0;
     #endif
-    
+
     #ifdef DO_MEM_LIST
         XMEMSET(&ourMemList, 0, sizeof(ourMemList));
 
@@ -398,4 +398,3 @@
 #endif /* USE_WOLFSSL_MEMORY */
 
 #endif /* WOLFSSL_MEM_TRACK_H */
-

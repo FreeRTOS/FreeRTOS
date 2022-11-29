@@ -249,4 +249,3 @@ static void lcd_write(uint8_t data_or_ctrl, uint8_t value)
 	/* Write lower nibble second */
 	lcd_nibble_write(data_or_ctrl, (uint8_t)(value & 0x0F));
 }
-

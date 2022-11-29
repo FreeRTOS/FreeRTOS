@@ -82,24 +82,24 @@ void TFDPTrace12( uint16_t nbr, uint8_t b, uint32_t p1, uint32_t p2);
 #else // #ifdef ENABLE_TFDP_TRACE
 
 #define tfdp_sleep_en(sleep_en)
-#define tfdp_enable(en,pin_cfg) 
-#define TRACE0(nbr,cat,b,str) 
-#define TRACE1(nbr,cat,b,str,p1) 
-#define TRACE2(nbr,cat,b,str,p1,p2) 
-#define TRACE3(nbr,cat,b,str,p1,p2,p3) 
-#define TRACE4(nbr,cat,b,str,p1,p2,p3,p4) 
-#define TRACE11(nbr,cat,b,str,p1) 
-#define TRACE12(nbr,cat,b,str,p1,p2) 
+#define tfdp_enable(en,pin_cfg)
+#define TRACE0(nbr,cat,b,str)
+#define TRACE1(nbr,cat,b,str,p1)
+#define TRACE2(nbr,cat,b,str,p1,p2)
+#define TRACE3(nbr,cat,b,str,p1,p2,p3)
+#define TRACE4(nbr,cat,b,str,p1,p2,p3,p4)
+#define TRACE11(nbr,cat,b,str,p1)
+#define TRACE12(nbr,cat,b,str,p1,p2)
 
 #endif // #ifdef ENABLE_TFDP_TRACE
 
-#define trace0(nbr,cat,b,str) 
-#define trace1(nbr,cat,b,str,p1) 
-#define trace2(nbr,cat,b,str,p1,p2) 
-#define trace3(nbr,cat,b,str,p1,p2,p3) 
-#define trace4(nbr,cat,b,str,p1,p2,p3,p4) 
-#define trace11(nbr,cat,b,str,p1) 
-#define trace12(nbr,cat,b,str,p1,p2) 
+#define trace0(nbr,cat,b,str)
+#define trace1(nbr,cat,b,str,p1)
+#define trace2(nbr,cat,b,str,p1,p2)
+#define trace3(nbr,cat,b,str,p1,p2,p3)
+#define trace4(nbr,cat,b,str,p1,p2,p3,p4)
+#define trace11(nbr,cat,b,str,p1)
+#define trace12(nbr,cat,b,str,p1,p2)
 
 #ifdef __cplusplus
 }

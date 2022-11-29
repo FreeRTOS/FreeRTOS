@@ -140,12 +140,12 @@ SECTIONS
     } >FLASH
 
     .ARM.extab :
-    { 
+    {
         . = ALIGN(4);
         *(.ARM.extab* .gnu.linkonce.armextab.*)
         . = ALIGN(4);
     } >FLASH
-    
+
     .ARM :
     {
         . = ALIGN(4);
@@ -163,7 +163,7 @@ SECTIONS
         PROVIDE_HIDDEN (__preinit_array_end = .);
         . = ALIGN(4);
     } >FLASH
-    
+
     .init_array :
     {
         . = ALIGN(4);
@@ -173,7 +173,7 @@ SECTIONS
         PROVIDE_HIDDEN (__init_array_end = .);
         . = ALIGN(4);
     } >FLASH
-    
+
     .fini_array :
     {
         . = ALIGN(4);
@@ -204,7 +204,7 @@ SECTIONS
     } >RAM AT> FLASH
 
     /* Initialized data sections into "RAM" Ram type memory. */
-    .data : 
+    .data :
     {
         . = ALIGN(4);
         *(.data)           /* .data sections. */

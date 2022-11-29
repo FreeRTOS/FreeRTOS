@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2009, Atmel Corporation
  *
@@ -36,11 +36,11 @@
 ///
 /// !Usage
 ///
-/// -# Enable/disable %flash ready interrupt sources using EFC_EnableFrdyIt() 
+/// -# Enable/disable %flash ready interrupt sources using EFC_EnableFrdyIt()
 ///    and EFC_DisableFrdyIt().
-/// -# Translates the given address into which EEFC, page and offset values 
+/// -# Translates the given address into which EEFC, page and offset values
 ///    for difference density %flash memory using EFC_TranslateAddress().
-/// -# Computes the address of a %flash access given the EFC, page and offset 
+/// -# Computes the address of a %flash access given the EFC, page and offset
 ///    for difference density %flash memory using EFC_ComputeAddress().
 /// -# Start the executing command with EFC_StartCommand()
 /// -# Retrieve the current status of the EFC using EFC_GetStatus().
@@ -85,27 +85,27 @@ typedef struct _AT91S_EFC {
 #define AT91C_EFC_FWS_3WS           AT91C_MC_FWS_3WS
 #define AT91C_EFC_FCMD              AT91C_MC_FCMD
 #define AT91C_EFC_FCMD_GETD         AT91C_MC_FCMD_GETD
-#define AT91C_EFC_FCMD_WP           AT91C_MC_FCMD_WP  
-#define AT91C_EFC_FCMD_WPL          AT91C_MC_FCMD_WPL 
-#define AT91C_EFC_FCMD_EWP          AT91C_MC_FCMD_EWP 
+#define AT91C_EFC_FCMD_WP           AT91C_MC_FCMD_WP
+#define AT91C_EFC_FCMD_WPL          AT91C_MC_FCMD_WPL
+#define AT91C_EFC_FCMD_EWP          AT91C_MC_FCMD_EWP
 #define AT91C_EFC_FCMD_EWPL         AT91C_MC_FCMD_EWPL
-#define AT91C_EFC_FCMD_EA           AT91C_MC_FCMD_EA  
-#define AT91C_EFC_FCMD_EPL          AT91C_MC_FCMD_EPL 
-#define AT91C_EFC_FCMD_EPA          AT91C_MC_FCMD_EPA 
-#define AT91C_EFC_FCMD_SLB          AT91C_MC_FCMD_SLB 
-#define AT91C_EFC_FCMD_CLB          AT91C_MC_FCMD_CLB 
-#define AT91C_EFC_FCMD_GLB          AT91C_MC_FCMD_GLB 
-#define AT91C_EFC_FCMD_SFB          AT91C_MC_FCMD_SFB 
-#define AT91C_EFC_FCMD_CFB          AT91C_MC_FCMD_CFB 
-#define AT91C_EFC_FCMD_GFB          AT91C_MC_FCMD_GFB 
-#define AT91C_EFC_FARG              AT91C_MC_FARG     
-#define AT91C_EFC_FKEY              AT91C_MC_FKEY     
-#define AT91C_EFC_FRDY_S            AT91C_MC_FRDY_S   
-#define AT91C_EFC_FCMDE             AT91C_MC_FCMDE   
-#define AT91C_EFC_LOCKE             AT91C_MC_LOCKE    
-#define AT91C_EFC_FVALUE            AT91C_MC_FVALUE   
+#define AT91C_EFC_FCMD_EA           AT91C_MC_FCMD_EA
+#define AT91C_EFC_FCMD_EPL          AT91C_MC_FCMD_EPL
+#define AT91C_EFC_FCMD_EPA          AT91C_MC_FCMD_EPA
+#define AT91C_EFC_FCMD_SLB          AT91C_MC_FCMD_SLB
+#define AT91C_EFC_FCMD_CLB          AT91C_MC_FCMD_CLB
+#define AT91C_EFC_FCMD_GLB          AT91C_MC_FCMD_GLB
+#define AT91C_EFC_FCMD_SFB          AT91C_MC_FCMD_SFB
+#define AT91C_EFC_FCMD_CFB          AT91C_MC_FCMD_CFB
+#define AT91C_EFC_FCMD_GFB          AT91C_MC_FCMD_GFB
+#define AT91C_EFC_FARG              AT91C_MC_FARG
+#define AT91C_EFC_FKEY              AT91C_MC_FKEY
+#define AT91C_EFC_FRDY_S            AT91C_MC_FRDY_S
+#define AT91C_EFC_FCMDE             AT91C_MC_FCMDE
+#define AT91C_EFC_LOCKE             AT91C_MC_LOCKE
+#define AT91C_EFC_FVALUE            AT91C_MC_FVALUE
 
-#define AT91C_BASE_EFC              (AT91_CAST(AT91PS_EFC) 	0xFFFFFF60)    
+#define AT91C_BASE_EFC              (AT91_CAST(AT91PS_EFC) 	0xFFFFFF60)
 
 #endif //#if !defined(AT91C_BASE_EFC) && defined(AT91C_BASE_MC)
 
@@ -144,4 +144,3 @@ extern unsigned int EFC_GetStatus(AT91S_EFC *pEfc);
 extern unsigned int EFC_GetResult(AT91S_EFC *pEfc);
 
 #endif //#ifndef EEFC_H
-

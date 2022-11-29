@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -30,10 +30,10 @@
 //------------------------------------------------------------------------------
 /// \unit
 /// !Purpose
-/// 
+///
 ///
 /// !Usage
-/// 
+///
 //------------------------------------------------------------------------------
 
 #ifndef BOARD_MEMORIES_H
@@ -48,4 +48,3 @@ extern void BOARD_ConfigureSdram(unsigned char busWidth);
 extern void BOARD_ConfigureNandFlash(unsigned char busWidth);
 
 #endif //#ifndef BOARD_MEMORIES_H
-

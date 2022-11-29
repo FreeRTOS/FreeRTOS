@@ -10,4 +10,3 @@ Directories:
   and not deterministic when executed in a simulated environment.
 
 + See http://www.freertos.org/plus
-

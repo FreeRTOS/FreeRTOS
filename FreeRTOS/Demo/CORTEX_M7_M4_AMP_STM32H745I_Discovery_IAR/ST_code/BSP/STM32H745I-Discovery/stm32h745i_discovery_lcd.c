@@ -22,7 +22,7 @@
     -----------------------
      - This driver is used to drive directly an LCD TFT using the LTDC controller.
      - This driver uses timing and setting for RK043FN48H LCD.
-  
+
     Driver description:
     ------------------
     + Initialization steps:
@@ -30,7 +30,7 @@
        o Apply the Layer configuration using the BSP_LCD_LayerDefaultInit() function.
        o Select the LCD layer to be used using the BSP_LCD_SelectLayer() function.
        o Enable the LCD display using the BSP_LCD_DisplayOn() function.
-  
+
     + Options
        o Configure and enable the colour keying functionality using the
          BSP_LCD_SetColorKeying() function.
@@ -141,7 +141,7 @@ uint8_t BSP_LCD_Init(void)
   hltdc_discovery.Init.AccumulatedActiveW = (RK043FN48H_WIDTH + RK043FN48H_HSYNC + (RK043FN48H_HBP-11) - 1);/*RK043FN48H_HBP-11: adjust timing to be updated in the component*/
   hltdc_discovery.Init.TotalHeigh = (RK043FN48H_HEIGHT + RK043FN48H_VSYNC + RK043FN48H_VBP + RK043FN48H_VFP - 1);
   hltdc_discovery.Init.TotalWidth = (RK043FN48H_WIDTH + RK043FN48H_HSYNC + (RK043FN48H_HBP-11) + RK043FN48H_HFP - 1);/*RK043FN48H_HBP-11: adjust timing to be updated in the component*/
-  
+
 
 
   /* Initialize the LCD pixel width and pixel height */
@@ -1240,7 +1240,7 @@ __weak void BSP_LCD_MspInit(LTDC_HandleTypeDef *hltdc, void *Params)
   gpio_init_structure.Speed     = GPIO_SPEED_FREQ_HIGH;
   gpio_init_structure.Alternate = GPIO_AF14_LTDC;
   HAL_GPIO_Init(GPIOK, &gpio_init_structure);
-  
+
   /* GPIOH configuration */
   gpio_init_structure.Pin       =  GPIO_PIN_9 | GPIO_PIN_1;
   gpio_init_structure.Mode      = GPIO_MODE_AF_PP;
@@ -1249,13 +1249,13 @@ __weak void BSP_LCD_MspInit(LTDC_HandleTypeDef *hltdc, void *Params)
   gpio_init_structure.Alternate = GPIO_AF14_LTDC;
   HAL_GPIO_Init(GPIOH, &gpio_init_structure);
 
-  
+
   gpio_init_structure.Pin       = GPIO_PIN_7;     /* LCD_DISP pin has to be manually controlled */
   gpio_init_structure.Mode      = GPIO_MODE_OUTPUT_PP;
-  HAL_GPIO_Init(GPIOD, &gpio_init_structure);  
+  HAL_GPIO_Init(GPIOD, &gpio_init_structure);
     /* Assert display enable LCD_DISP pin */
   HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_SET);
-  
+
 }
 
 /**
@@ -1318,7 +1318,7 @@ __weak void BSP_LCD_ClockConfig(LTDC_HandleTypeDef *hltdc, void *Params)
   periph_clk_init_struct.PLL3.PLL3Q = 2;
   periph_clk_init_struct.PLL3.PLL3R = 83;
   HAL_RCCEx_PeriphCLKConfig(&periph_clk_init_struct);
- 
+
 }
 
 /**
@@ -1665,4 +1665,3 @@ static void TIMx_PWM_DeInit(TIM_HandleTypeDef *htim)
   */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

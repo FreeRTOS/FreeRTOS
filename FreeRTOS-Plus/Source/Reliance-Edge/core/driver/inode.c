@@ -1117,4 +1117,3 @@ static uint32_t InodeBlock(
 
     return gpRedCoreVol->ulInodeTableStartBN + ((ulInode - INODE_FIRST_VALID) * 2U) + bWhich;
 }
-

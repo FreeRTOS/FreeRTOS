@@ -94,5 +94,3 @@ static unsigned long ulMaxNestingDepth = 0;
 	/* Clear the timer interrupt. */
 	IFS0CLR = _IFS0_T2IF_MASK;
 }
-
-

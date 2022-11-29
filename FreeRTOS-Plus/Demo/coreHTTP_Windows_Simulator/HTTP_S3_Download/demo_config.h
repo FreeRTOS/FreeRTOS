@@ -94,7 +94,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * "...base64 data...\n"\
  * "-----END CERTIFICATE-----\n"
  *
- * #define democonfigS3_ROOT_CA_PEM   "...insert here..." 
+ * #define democonfigS3_ROOT_CA_PEM   "...insert here..."
  */
 
 /**
@@ -109,7 +109,7 @@ extern void vLoggingPrintf( const char * pcFormatString,
  * "-----BEGIN CERTIFICATE-----\n"\
  * "...base64 data...\n"\
  * "-----END CERTIFICATE-----\n"
- * #define democonfigIOT_CRED_PROVIDER_ROOT_CA_PEM   "...insert here..." 
+ * #define democonfigIOT_CRED_PROVIDER_ROOT_CA_PEM   "...insert here..."
  */
 
 

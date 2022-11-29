@@ -766,7 +766,7 @@ proc mask_delay { addr val } {
         set curval "0x[string range [mrd $addr] end-8 end]"
         set maskedval [expr {$curval < $delay}]
     }
-    perf_reset_clock 
+    perf_reset_clock
 }
 
 proc ps_version { } {
@@ -776,22 +776,22 @@ proc ps_version { } {
 }
 
 proc ps7_post_config {} {
-    set saved_mode [configparams force-mem-accesses]                  
-    configparams force-mem-accesses 1 
-    
+    set saved_mode [configparams force-mem-accesses]
+    configparams force-mem-accesses 1
+
 	variable PCW_SILICON_VER_1_0
     variable PCW_SILICON_VER_2_0
     variable PCW_SILICON_VER_3_0
     set sil_ver [ps_version]
 
     if { $sil_ver == $PCW_SILICON_VER_1_0} {
-        ps7_post_config_1_0   
+        ps7_post_config_1_0
     } elseif { $sil_ver == $PCW_SILICON_VER_2_0 } {
-        ps7_post_config_2_0   
+        ps7_post_config_2_0
     } else {
-        ps7_post_config_3_0   
+        ps7_post_config_3_0
     }
-	configparams force-mem-accesses $saved_mode                                       
+	configparams force-mem-accesses $saved_mode
 }
 
 proc ps7_debug {} {
@@ -801,11 +801,11 @@ proc ps7_debug {} {
     set sil_ver [ps_version]
 
     if { $sil_ver == $PCW_SILICON_VER_1_0} {
-        ps7_debug_1_0   
+        ps7_debug_1_0
     } elseif { $sil_ver == $PCW_SILICON_VER_2_0 } {
-        ps7_debug_2_0   
+        ps7_debug_2_0
     } else {
-        ps7_debug_3_0   
+        ps7_debug_3_0
     }
 }
 proc ps7_init {} {
@@ -838,9 +838,9 @@ proc ps7_init {} {
 }
 
 
-# For delay calculation using global timer 
+# For delay calculation using global timer
 
-# start timer 
+# start timer
  proc perf_start_clock { } {
 
     #writing SCU_GLOBAL_TIMER_CONTROL register
@@ -848,7 +848,7 @@ proc ps7_init {} {
     mask_write 0xF8F00208 0x00000109 0x00000009
 }
 
-# stop timer and reset timer count regs 
+# stop timer and reset timer count regs
  proc perf_reset_clock { } {
 	perf_disable_clock
     mask_write 0xF8F00200 0xFFFFFFFF 0x00000000
@@ -864,14 +864,12 @@ proc get_number_of_cycles_for_delay { delay } {
 }
 
 
-# stop timer 
+# stop timer
 proc perf_disable_clock {} {
-    mask_write 0xF8F00208 0xFFFFFFFF 0x00000000 
+    mask_write 0xF8F00208 0xFFFFFFFF 0x00000000
 }
 
 proc perf_reset_and_start_timer {} {
-  	    perf_reset_clock 
-	    perf_start_clock 
+  	    perf_reset_clock
+	    perf_start_clock
 }
-
-

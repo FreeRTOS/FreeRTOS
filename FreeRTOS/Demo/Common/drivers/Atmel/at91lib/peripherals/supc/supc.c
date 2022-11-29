@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -220,4 +220,3 @@ void SUPC_SetWakeUpInputs(unsigned int inputs)
     AT91C_BASE_SUPC->SUPC_WUIR &= ~0xFFFF;
     AT91C_BASE_SUPC->SUPC_WUIR |= inputs;
 }
-

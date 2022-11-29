@@ -47,5 +47,3 @@ PROJECT         :=  $(lastword $(subst /, ,$(dir $(abspath $(MAKEFILE_ABSPATH)))
 export
 
 include ../testdir.mk
-
-

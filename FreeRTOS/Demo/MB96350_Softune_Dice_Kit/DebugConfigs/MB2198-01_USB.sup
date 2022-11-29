@@ -13,7 +13,7 @@ Monitor Load=1
 Monitor Load Condition=Enable
 Mode=FFFFFFFF
 [Device]
-Communication=USB 
+Communication=USB
 ProductID=2002
 Protocol=3
 [Target]

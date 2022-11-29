@@ -37,7 +37,7 @@
 /** @file common.h
 * \brief header file including common headers from various modules
 * \author App Firmware Team
-* 
+*
 **********************************************************************************/
 #ifndef _COMMON_LIB_H_
 #define _COMMON_LIB_H_
@@ -48,7 +48,7 @@
 #include "ARM_REG.h"
 #include "MCHP_CEC1302.h"
 /* Cortex-M4 processor and core peripherals */
-#include "core_cm4.h" 
+#include "core_cm4.h"
 #include "defs.h"
 #include "string.h"
 //#include "build.h"
@@ -59,5 +59,3 @@
 
 /**   @}
  */
-
-

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -26,23 +26,23 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
 #include "board.h"
 
 /** Slave address of OMNIVISION chips. */
-#define OV_CAPTOR_ADDRESS_1   0x30 
+#define OV_CAPTOR_ADDRESS_1   0x30
 #define OV_CAPTOR_ADDRESS_2   0x21
-#define OV_CAPTOR_ADDRESS_3   0x3c 
+#define OV_CAPTOR_ADDRESS_3   0x3c
 #define OV_CAPTOR_ADDRESS_4   0x10
 
 /** terminating list entry for register in configuration file */
 #define OV_REG_TERM 0xFF
 #define OV_REG_DELAY 0xFFFF
 /** terminating list entry for value in configuration file */
-#define OV_VAL_TERM 0xFF 
+#define OV_VAL_TERM 0xFF
 
 static const Pin pin_ISI_RST= PIN_ISI_RST;
 static uint8_t twiSlaveAddr = OV_CAPTOR_ADDRESS_1;
@@ -232,9 +232,9 @@ uint32_t ov_write_regs8(Twid *pTwid, const struct ov_reg* pReglist)
     TRACE_DEBUG("ov_write_regs:");
     while (!((pNext->reg == OV_REG_TERM) && (pNext->val == OV_VAL_TERM))) {
         err = ov_write_reg8(pTwid, pNext->reg, pNext->val);
-        
+
         size++;
-        for(delay=0;delay<=10000;delay++); 
+        for(delay=0;delay<=10000;delay++);
         if (err == TWID_ERROR_BUSY){
             TRACE_ERROR("ov_write_regs: TWI ERROR\n\r");
             return err;
@@ -265,7 +265,7 @@ uint32_t ov_write_regs16(Twid *pTwid, const struct ov_reg* pReglist)
     while (!((pNext->reg == OV_REG_TERM) && (pNext->val == OV_VAL_TERM))) {
         err = ov_write_reg16(pTwid, pNext->reg, pNext->val);
         size++;
-        for(delay = 0;delay <= 10000; delay++); 
+        for(delay = 0;delay <= 10000; delay++);
         if (err == TWID_ERROR_BUSY){
             TRACE_ERROR("ov_write_regs: TWI ERROR\n\r");
             return err;
@@ -359,7 +359,7 @@ void ov_DumpRegisters8(Twid *pTwid)
         TRACE_INFO_WP("[0x%02x]=0x%02x ", i, value);
         if( ((i+1)%5) == 0 ) {
             TRACE_INFO_WP("\n\r");
-        }        
+        }
     }
     TRACE_INFO_WP("\n\r");
 }
@@ -380,7 +380,7 @@ void ov_DumpRegisters16(Twid *pTwid)
         TRACE_INFO_WP("[0x%02x]=0x%02x ", i, value);
         if( ((i+1)%5) == 0 ) {
             TRACE_INFO_WP("\n\r");
-        }        
+        }
     }
     TRACE_INFO_WP("\n\r");
 }
@@ -406,7 +406,7 @@ uint8_t ov_init(Twid *pTwid)
         case 0x2642: case 0x2640:
             ovType =  OV_2640;
             break;
-        case 0x2643: 
+        case 0x2643:
             ovType =  OV_2643;
             break;
         case 0x5640:

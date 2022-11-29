@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -129,10 +129,10 @@ uint32_t TimeTick_Configure( void )
 uint32_t GetDelayInTicks(uint32_t startTick, uint32_t endTick)
 {
 	assert(SysTickConfigured);
-	
+
 	if (endTick >= startTick) return (endTick - startTick);
 	return (endTick + (0xFFFFFFFF - startTick) + 1);
-	
+
 }
 
 /**
@@ -143,7 +143,7 @@ uint32_t GetDelayInTicks(uint32_t startTick, uint32_t endTick)
 uint32_t GetTicks(void)
 {
 	assert(SysTickConfigured);
-	
+
 	return _dwTickCount;
 }
 
@@ -154,9 +154,9 @@ uint32_t GetTicks(void)
 void Wait( volatile uint32_t dwMs )
 {
 	uint32_t dwStart , dwEnd;
-	
+
 	assert(SysTickConfigured);
-	
+
 	dwStart = _dwTickCount ;
 	dwEnd = _dwTickCount;
 	while(GetDelayInTicks(dwStart, dwEnd) < dwMs ){
@@ -171,9 +171,9 @@ void Wait( volatile uint32_t dwMs )
 void Sleep( volatile uint32_t dwMs )
 {
 	uint32_t dwStart , dwEnd;
-	 
+
 	assert(SysTickConfigured);
-   
+
 	__ASM("CPSIE   I");
 	dwStart = _dwTickCount ;
 	dwEnd = _dwTickCount;

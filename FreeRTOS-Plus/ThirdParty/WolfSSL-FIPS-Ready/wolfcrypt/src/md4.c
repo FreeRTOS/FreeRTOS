@@ -208,4 +208,3 @@ void wc_Md4Final(Md4* md4, byte* hash)
 
 
 #endif /* NO_MD4 */
-

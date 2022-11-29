@@ -117,7 +117,7 @@ void AESB_Recount(void)
  */
 void AESB_Configure(uint32_t mode)
 {
-    AESB->AESB_MR = mode; 
+    AESB->AESB_MR = mode;
 }
 
 /**
@@ -178,7 +178,7 @@ void AESB_SetInput(uint32_t *data)
 void AESB_GetOutput(uint32_t *data)
 {
     uint8_t i;
-    for (i = 0; i < 4; i++) 
+    for (i = 0; i < 4; i++)
         data[i] = AESB->AESB_ODATAR[i];
 }
 
@@ -194,4 +194,3 @@ void AESB_SetVector(const uint32_t *pVector)
     AESB->AESB_IVR[2] = pVector[2];
     AESB->AESB_IVR[3] = pVector[3];
 }
-

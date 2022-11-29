@@ -19,7 +19,7 @@
  *                  Function Prototypes
  *----------------------------------------------------------------
  */
-static void halBoardGetSystemClockSettings(unsigned char systemClockSpeed, 
+static void halBoardGetSystemClockSettings(unsigned char systemClockSpeed,
                                            unsigned char *setDcoRange,
                                            unsigned char *setVCore,
                                            unsigned int  *setMultiplier);

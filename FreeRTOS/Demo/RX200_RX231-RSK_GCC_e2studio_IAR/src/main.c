@@ -228,6 +228,3 @@ const uint32_t ulEnableRegisterWrite = 0xA50BUL, ulDisableRegisterWrite = 0xA500
 	}
 
 #endif /* __ICCRX__ */
-
-
-

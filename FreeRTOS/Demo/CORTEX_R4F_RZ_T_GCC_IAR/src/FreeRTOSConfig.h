@@ -144,4 +144,3 @@ used. */
 #define configTASK_RETURN_ADDRESS NULL
 
 #endif /* FREERTOS_CONFIG_H */
-

@@ -554,4 +554,3 @@ bool alt_globaltmr_int_if_pending_clear(void)
 
     return  ret;
 }
-

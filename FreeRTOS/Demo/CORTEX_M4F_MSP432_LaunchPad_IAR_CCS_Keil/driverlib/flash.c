@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -877,7 +877,7 @@ bool FlashCtl_eraseSector(uint32_t addr)
      */
     intStatus = CPU_primask();
     Interrupt_disableMaster();
-    
+
     /* Assuming Failure */
     res = false;
 
@@ -957,7 +957,7 @@ bool FlashCtl_eraseSector(uint32_t addr)
 SectorEraseCleanup:
 
     BITBAND_PERI(FLCTL->ERASE_CTLSTAT, FLCTL_ERASE_CTLSTAT_CLR_STAT_OFS) = 1;
-    
+
     if(intStatus == 0)
         Interrupt_enableMaster();
 

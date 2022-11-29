@@ -70,4 +70,3 @@ void system_set_ec_clock(void)
     MMCR_PCR_PROCESSOR_CLOCK_CONTROL = CPU_CLOCK_DIVIDER;
 
 } /* End system_set_ec_clock() */
-

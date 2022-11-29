@@ -134,7 +134,7 @@ static int TLSX_PopulateSupportedGroups(WOLFSSL* ssl, TLSX** extensions);
 #endif
 
 #ifdef WOLFSSL_RENESAS_TSIP_TLS
-    
+
     #if (WOLFSSL_RENESAS_TSIP_VER >=109)
 
     int tsip_generateMasterSecretEx(
@@ -146,14 +146,14 @@ static int TLSX_PopulateSupportedGroups(WOLFSSL* ssl, TLSX** extensions);
             byte*       ms);
 
     #elif (WOLFSSL_RENESAS_TSIP_VER >=106)
-    
+
     int tsip_generateMasterSecret(
             const byte* pre,
             const byte* cr,
             const byte* sr,
             byte*       ms);
-    
-    #endif     
+
+    #endif
 
     int tsip_useable(const WOLFSSL *ssl);
     int tsip_generateSeesionKey(WOLFSSL *ssl);
@@ -555,17 +555,17 @@ int MakeTlsMasterSecret(WOLFSSL* ssl)
 #if defined(WOLFSSL_RENESAS_TSIP_TLS) && \
     !defined(NO_WOLFSSL_RENESAS_TSIP_TLS_SESSION)
         if (tsip_useable(ssl)) {
-            
+
             #if (WOLFSSL_RENESAS_TSIP_VER>=109)
 
             ret = tsip_generateMasterSecretEx(
                             ssl->options.cipherSuite0,
-                            ssl->options.cipherSuite,                
+                            ssl->options.cipherSuite,
                             &ssl->arrays->preMasterSecret[VERSION_SZ],
                             ssl->arrays->clientRandom,
                             ssl->arrays->serverRandom,
                             ssl->arrays->tsip_masterSecret);
-            
+
             #elif (WOLFSSL_RENESAS_TSIP_VER>=106)
 
             ret = tsip_generateMasterSecret(
@@ -573,7 +573,7 @@ int MakeTlsMasterSecret(WOLFSSL* ssl)
                             ssl->arrays->clientRandom,
                             ssl->arrays->serverRandom,
                             ssl->arrays->tsip_masterSecret);
-            
+
             #endif
         } else
 #endif

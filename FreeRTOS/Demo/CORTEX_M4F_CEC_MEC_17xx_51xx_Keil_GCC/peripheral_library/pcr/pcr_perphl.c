@@ -20,16 +20,16 @@
 
 Version Control Information (Perforce)
 ******************************************************************************
-$Revision: #1 $ 
-$DateTime: 2016/09/22 08:03:49 $ 
+$Revision: #1 $
+$DateTime: 2016/09/22 08:03:49 $
 $Author: pramans $
 Last Change:	Updated for tabs
 ******************************************************************************/
 /** @file pcr_perphl.c
 * \brief Power, Clocks, and Resets Peripheral Source file
 * \author jvasanth
-* 
-* This file implements the PCR Peripheral functions  
+*
+* This file implements the PCR Peripheral functions
 ******************************************************************************/
 
 /** @defgroup PCR
@@ -43,22 +43,22 @@ Last Change:	Updated for tabs
 /* Generic functions to program and read 32-bit values from PCR Registers */
 /* ---------------------------------------------------------------------- */
 /** Writes 32-bit value in the PCR Register
- * @param pcr_reg_id - pcr register id 
+ * @param pcr_reg_id - pcr register id
  * @param value - 32-bit value
  */
 void p_pcr_reg_write(uint8_t pcr_reg_id, uint32_t value)
 {
     __IO uint32_t *pPCR_Reg;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE);		
+    pPCR_Reg = (uint32_t *)(PCR_BASE);
 
     pPCR_Reg += pcr_reg_id;
 
-    *pPCR_Reg = value;			
+    *pPCR_Reg = value;
 }
 
 /** Reads 32-bit value from the PCR Register
- * @param pcr_reg_id - pcr register id 
+ * @param pcr_reg_id - pcr register id
  * @return value - 32-bit value
  */
 uint32_t p_pcr_reg_read(uint8_t pcr_reg_id)
@@ -66,9 +66,9 @@ uint32_t p_pcr_reg_read(uint8_t pcr_reg_id)
     __IO uint32_t *pPCR_Reg;
     uint32_t retVal;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE);		
+    pPCR_Reg = (uint32_t *)(PCR_BASE);
 
-    pPCR_Reg += pcr_reg_id;	
+    pPCR_Reg += pcr_reg_id;
 
     retVal = *pPCR_Reg;
 
@@ -80,38 +80,38 @@ uint32_t p_pcr_reg_read(uint8_t pcr_reg_id)
 /* ---------------------------------------------------------------------- */
 
 /** Sets bits in a PCR Register
- * @param pcr_reg_id - pcr register id 
- * @param bit_mask - Bit mask of bits to set 
+ * @param pcr_reg_id - pcr register id
+ * @param bit_mask - Bit mask of bits to set
  */
 void p_pcr_reg_set(uint8_t pcr_reg_id, uint32_t bit_mask)
 {
     __IO uint32_t *pPCR_Reg;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE);		
+    pPCR_Reg = (uint32_t *)(PCR_BASE);
 
     pPCR_Reg += pcr_reg_id;
 
-    *pPCR_Reg |= bit_mask;			
+    *pPCR_Reg |= bit_mask;
 }
 
 /** Clears bits in a PCR Register
- * @param pcr_reg_id - pcr register id 
- * @param bit_mask - Bit mask of bits to clear 
+ * @param pcr_reg_id - pcr register id
+ * @param bit_mask - Bit mask of bits to clear
  */
 void p_pcr_reg_clr(uint8_t pcr_reg_id, uint32_t bit_mask)
 {
     __IO uint32_t *pPCR_Reg;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE);		
+    pPCR_Reg = (uint32_t *)(PCR_BASE);
 
     pPCR_Reg += pcr_reg_id;
 
-    *pPCR_Reg &= ~bit_mask;			
+    *pPCR_Reg &= ~bit_mask;
 }
 
 /** Read bits in a PCR Register
- * @param pcr_reg_id - pcr register id 
- * @param bit_mask - Bit mask of bits to read 
+ * @param pcr_reg_id - pcr register id
+ * @param bit_mask - Bit mask of bits to read
  * @return value - 32-bit value
  */
 uint32_t p_pcr_reg_get(uint8_t pcr_reg_id, uint32_t bit_mask)
@@ -119,9 +119,9 @@ uint32_t p_pcr_reg_get(uint8_t pcr_reg_id, uint32_t bit_mask)
     __IO uint32_t *pPCR_Reg;
     uint32_t retVal;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE);		
+    pPCR_Reg = (uint32_t *)(PCR_BASE);
 
-    pPCR_Reg += pcr_reg_id;		
+    pPCR_Reg += pcr_reg_id;
 
     retVal = (*pPCR_Reg) & bit_mask;
 
@@ -129,7 +129,7 @@ uint32_t p_pcr_reg_get(uint8_t pcr_reg_id, uint32_t bit_mask)
 }
 
 /** Sets or Clears bits in a PCR Register - Helper Function
- * @param pcr_reg_id - pcr register id 
+ * @param pcr_reg_id - pcr register id
  * @param bit_mask - Bit mask of bits to set or clear
  * @param set_clr_flag - Flag to set (1) or clear (0) bits in the PCR Register
  */
@@ -142,7 +142,7 @@ void p_pcr_reg_update(uint8_t pcr_reg_id, uint32_t bit_mask, uint8_t set_clr_fla
     else
     {
             p_pcr_reg_clr(pcr_reg_id, bit_mask);
-    }        
+    }
 }
 
 /* ---------------------------------------------------------------------- */
@@ -156,15 +156,15 @@ void p_pcr_reg_update(uint8_t pcr_reg_id, uint32_t bit_mask, uint8_t set_clr_fla
 void p_pcr_system_sleep_ctrl_write(uint8_t sleep_value)
 {
     __IO uint32_t *pPCR_Reg;
-	
+
    /* Check for valid value */
-   if ((sleep_value == SYSTEM_LIGHT_SLEEP) || 
+   if ((sleep_value == SYSTEM_LIGHT_SLEEP) ||
 		    (sleep_value == SYSTEM_LIGHT_SLEEP) ||
 	       (sleep_value == SYSTEM_LIGHT_SLEEP))
-	 {    
-			pPCR_Reg = (uint32_t *)(PCR_BASE)	+ PCR_REG_SYSTEM_SLEEP_CTRL;	
+	 {
+			pPCR_Reg = (uint32_t *)(PCR_BASE)	+ PCR_REG_SYSTEM_SLEEP_CTRL;
 
-			*pPCR_Reg = (sleep_value & 0x7);		
+			*pPCR_Reg = (sleep_value & 0x7);
 	 }
 }
 
@@ -175,8 +175,8 @@ uint8_t p_pcr_system_sleep_ctrl_read(void)
 {
     __IO uint32_t *pPCR_Reg;
     uint8_t retVal;
-    
-    pPCR_Reg = (uint32_t *)(PCR_BASE)	+ PCR_REG_SYSTEM_SLEEP_CTRL;		
+
+    pPCR_Reg = (uint32_t *)(PCR_BASE)	+ PCR_REG_SYSTEM_SLEEP_CTRL;
 
     retVal = (uint8_t)((*pPCR_Reg) & 0xFF);
 
@@ -194,19 +194,19 @@ uint8_t p_pcr_system_sleep_ctrl_read(void)
  */
 void p_pcr_processor_clk_ctrl_write(uint8_t clk_divide_value)
 {
-    __IO uint32_t *pPCR_Reg;		
+    __IO uint32_t *pPCR_Reg;
 
    /* Check for valid value */
-   if (((clk_divide_value >= PCR_CPU_CLK_DIVIDE_1) && 
+   if (((clk_divide_value >= PCR_CPU_CLK_DIVIDE_1) &&
 		    (clk_divide_value <= PCR_CPU_CLK_DIVIDE_4)) ||
 	       (clk_divide_value == PCR_CPU_CLK_DIVIDE_16) ||
 	        (clk_divide_value == PCR_CPU_CLK_DIVIDE_48))
-	 {	
-			pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PROCESSOR_CLK_CTRL;		
+	 {
+			pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PROCESSOR_CLK_CTRL;
 
 			*pPCR_Reg = (clk_divide_value & 0xFF);
 	 }
-	
+
 }
 
 /** Writes the clock divide value in the Processor Clock Control Register
@@ -216,14 +216,14 @@ void p_pcr_processor_clk_ctrl_write(uint8_t clk_divide_value)
 uint8_t p_pcr_processor_clk_ctrl_read(void)
 {
     __IO uint32_t *pPCR_Reg;
-    uint8_t retVal;	
+    uint8_t retVal;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PROCESSOR_CLK_CTRL;		
+    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PROCESSOR_CLK_CTRL;
 
 	  retVal = ((uint8_t)((*pPCR_Reg) & 0xFF));
-	
+
     return retVal;
-	
+
 }
 
 /* ---------------------------------------------------------------------- */
@@ -235,11 +235,11 @@ uint8_t p_pcr_processor_clk_ctrl_read(void)
  */
 void p_pcr_slow_clk_ctrl_write(uint16_t slow_clk_divide_value)
 {
-    __IO uint32_t *pPCR_Reg;		
+    __IO uint32_t *pPCR_Reg;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_SLOW_CLK_CTRL;		
+    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_SLOW_CLK_CTRL;
 
-    *pPCR_Reg = (slow_clk_divide_value & 0x3FF);	
+    *pPCR_Reg = (slow_clk_divide_value & 0x3FF);
 
 }
 
@@ -255,16 +255,16 @@ uint8_t p_pcr_oscillator_lock_sts_get(void)
     __IO uint32_t *pPCR_Reg;
     uint8_t retVal;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_OSCILLATOR_ID;	
+    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_OSCILLATOR_ID;
 
     retVal = 0;
     if (*pPCR_Reg & PCR_OSCILLATOR_LOCK_STATUS_BITMASK)
     {
             retVal = 1;
     }
-    
+
     return retVal;
-	
+
 }
 
 
@@ -276,19 +276,19 @@ uint16_t p_pcr_oscillator_id_reg_read(void)
     __IO uint32_t *pPCR_Reg;
     uint16_t retVal;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_OSCILLATOR_ID;	
+    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_OSCILLATOR_ID;
 
     retVal = ((uint16_t)((*pPCR_Reg) & 0x1FFu));
-    
+
     return retVal;
-	
+
 }
 
 /* ---------------------------------------------------------------------- */
 /*  Functions to read various power status in Power Reset register    */
 /* ---------------------------------------------------------------------- */
 
-/** Reads the VCC PWRGD Status bit 
+/** Reads the VCC PWRGD Status bit
  *        in the Power Reset Status Register
  * @return 1 if VCC PWRGD Status bit is set, else 0
  */
@@ -297,18 +297,18 @@ uint8_t p_pcr_pwr_reset_vcc_pwrdg_sts_get(void)
     __IO uint32_t *pPCR_Reg;
     uint8_t retVal;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_STS;	
+    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_STS;
 
     retVal = 0;
     if (*pPCR_Reg & PCR_PWR_RESET_STS_VCC_PWRGD_RESET_STS_BITMASK)
     {
             retVal = 1;
     }
-    
-    return retVal;	
+
+    return retVal;
 }
 
-/** Reads the Host Reset Status bit 
+/** Reads the Host Reset Status bit
  *        in the Power Reset Status Register
  * @return 1 if Host Reset Status bit is set, else 0
  */
@@ -317,18 +317,18 @@ uint8_t p_pcr_pwr_reset_host_reset_sts_get(void)
     __IO uint32_t *pPCR_Reg;
     uint8_t retVal;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_STS;	
+    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_STS;
 
     retVal = 0;
     if (*pPCR_Reg & PCR_PWR_RESET_STS_HOST_RESET_STS_BITMASK)
     {
             retVal = 1;
     }
-    
-    return retVal;	
+
+    return retVal;
 }
 
-/** Reads the VBAT Reset Status bit 
+/** Reads the VBAT Reset Status bit
  *        in the Power Reset Status Register
  * @return 1 if VBAT Reset Status bit is set, else 0
  */
@@ -337,32 +337,32 @@ uint8_t p_pcr_pwr_reset_vbat_reset_sts_get(void)
     __IO uint32_t *pPCR_Reg;
     uint8_t retVal;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_STS;	
+    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_STS;
 
     retVal = 0;
     if (*pPCR_Reg & PCR_PWR_RESET_STS_VBAT_RESET_STS_BITMASK)
     {
             retVal = 1;
     }
-    
-    return retVal;	
+
+    return retVal;
 }
 
-/** Clears the VBAT Reset Status bit 
- *        in the Power Reset Status Register 
+/** Clears the VBAT Reset Status bit
+ *        in the Power Reset Status Register
  */
 void p_pcr_pwr_reset_vbat_reset_sts_clr(void)
 {
-    __IO uint32_t *pPCR_Reg;		
+    __IO uint32_t *pPCR_Reg;
 
     pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_STS;
 
     // Write to clear
     *pPCR_Reg |= PCR_PWR_RESET_STS_VBAT_RESET_STS_BITMASK;
-	
+
 }
 
-/** Reads the VTR Reset Status bit 
+/** Reads the VTR Reset Status bit
  *        in the Power Reset Status Register
  * @return 1 if VTR Reset Status bit is set, else 0
  */
@@ -371,32 +371,32 @@ uint8_t p_pcr_pwr_reset_vtr_reset_sts_get(void)
     __IO uint32_t *pPCR_Reg;
     uint8_t retVal;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_STS;	
+    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_STS;
 
     retVal = 0;
     if (*pPCR_Reg & PCR_PWR_RESET_STS_VTR_RESET_STS_BITMASK)
     {
             retVal = 1;
     }
-    
-    return retVal;	
+
+    return retVal;
 }
 
-/** Clears the VTR Reset Status bit 
- *        in the Power Reset Status Register 
+/** Clears the VTR Reset Status bit
+ *        in the Power Reset Status Register
  */
 void p_pcr_pwr_reset_vtr_reset_sts_clr(void)
 {
-    __IO uint32_t *pPCR_Reg;		
+    __IO uint32_t *pPCR_Reg;
 
     pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_STS;
 
     // Write to clear
     *pPCR_Reg |= PCR_PWR_RESET_STS_VTR_RESET_STS_BITMASK;
-	
+
 }
 
-/** Reads the JTAG Reset Status bit 
+/** Reads the JTAG Reset Status bit
  *        in the Power Reset Status Register
  * @return 1 if JTAG Reset Status bit is set, else 0
  */
@@ -405,32 +405,32 @@ uint8_t p_pcr_pwr_reset_jtag_reset_sts_get(void)
     __IO uint32_t *pPCR_Reg;
     uint8_t retVal;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_STS;	
+    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_STS;
 
     retVal = 0;
     if (*pPCR_Reg & PCR_PWR_RESET_STS_JTAG_RESET_STS_BITMASK)
     {
             retVal = 1;
     }
-    
-    return retVal;	
+
+    return retVal;
 }
 
-/** Clears the JTAG Reset Status bit 
- *        in the Power Reset Status Register 
+/** Clears the JTAG Reset Status bit
+ *        in the Power Reset Status Register
  */
 void p_pcr_pwr_reset_jtag_reset_sts_clr(void)
 {
-    __IO uint32_t *pPCR_Reg;		
+    __IO uint32_t *pPCR_Reg;
 
     pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_STS;
 
     // Write to clear
     *pPCR_Reg |= PCR_PWR_RESET_STS_JTAG_RESET_STS_BITMASK;
-	
+
 }
 
-/** Reads the 32K_ACTIVE status bit 
+/** Reads the 32K_ACTIVE status bit
  *        in the Chip Subsystem Power Reset Status Register
  * @return 1 if 32_ACTIVE bit is set, else 0
  */
@@ -439,18 +439,18 @@ uint8_t p_pcr_pwr_reset_32K_active_sts_get(void)
     __IO uint32_t *pPCR_Reg;
     uint8_t retVal;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_STS;	
+    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_STS;
 
     retVal = 0;
     if (*pPCR_Reg & PCR_PWR_RESET_STS_32K_ACTIVE_STS_BITMASK)
     {
             retVal = 1;
     }
-    
-    return retVal;	
+
+    return retVal;
 }
 
-/** Reads the PCICLK_ACTIVE status bit 
+/** Reads the PCICLK_ACTIVE status bit
  *        in the Power Reset Status Register
  * @return 1 if PCICLK_ACTIVE bit is set, else 0
  */
@@ -459,17 +459,17 @@ uint8_t p_pcr_pwr_reset_pciclk_active_sts_get(void)
     __IO uint32_t *pPCR_Reg;
     uint8_t retVal;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_STS;	
+    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_STS;
 
     retVal = 0;
     if (*pPCR_Reg & PCR_PWR_RESET_STS_PCICLK_ACTIVE_STS_BITMASK)
     {
             retVal = 1;
-    }		
-    return retVal;	
+    }
+    return retVal;
 }
 
-/** Reads the ESPI status bit 
+/** Reads the ESPI status bit
  *        in the Power Reset Status Register
  * @return 1 if ESPICLK_ACTIVE bit is set, else 0
  */
@@ -478,14 +478,14 @@ uint8_t p_pcr_pwr_reset_espiclk_active_sts_get(void)
     __IO uint32_t *pPCR_Reg;
     uint8_t retVal;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_STS;	
+    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_STS;
 
     retVal = 0;
     if (*pPCR_Reg & PCR_PWR_RESET_STS_ESPICLK_ACTIVE_STS_BITMASK)
     {
             retVal = 1;
-    }		
-    return retVal;	
+    }
+    return retVal;
 }
 
 /** Reads the Power status reg
@@ -496,11 +496,11 @@ uint16_t p_pcr_pwr_reset_sts_get(void)
     __IO uint32_t *pPCR_Reg;
     uint16_t retVal;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_STS;	
+    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_STS;
 
     retVal = (uint16_t)((*pPCR_Reg) & 0xFFF);
-	
-	  return (retVal);    
+
+	  return (retVal);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -515,11 +515,11 @@ uint16_t p_pcr_pwr_reset_ctrl_read(void)
     __IO uint32_t *pPCR_Reg;
     uint16_t retVal;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_CTRL;	
+    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_CTRL;
 
-    retVal = (uint16_t)((*pPCR_Reg) & 0x1FFUL);    
-    
-    return retVal;	
+    retVal = (uint16_t)((*pPCR_Reg) & 0x1FFUL);
+
+    return retVal;
 }
 
 /** Set the PWR_INV bit in the Power Reset Control Register
@@ -528,9 +528,9 @@ uint16_t p_pcr_pwr_reset_ctrl_read(void)
  */
 void p_pcr_pwr_reset_ctrl_pwr_inv_set_clr(uint8_t set_clr)
 {
-    __IO uint32_t *pPCR_Reg;    
+    __IO uint32_t *pPCR_Reg;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_CTRL;	
+    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_CTRL;
 
 	  if (set_clr)
 		{
@@ -548,17 +548,17 @@ void p_pcr_pwr_reset_ctrl_pwr_inv_set_clr(uint8_t set_clr)
  */
 void p_pcr_pwr_reset_ctrl_host_rst_set_clr(uint8_t set_clr)
 {
-    __IO uint32_t *pPCR_Reg;    
+    __IO uint32_t *pPCR_Reg;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_CTRL;	
+    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_PWR_RESET_CTRL;
 
 	  if (set_clr)
 		{
-        *pPCR_Reg |= (PCR_PWR_RESET_CTRL_HOST_RST_SELECT_BITMASK);       
+        *pPCR_Reg |= (PCR_PWR_RESET_CTRL_HOST_RST_SELECT_BITMASK);
 		}
 		else
 		{
-        *pPCR_Reg &= ~(PCR_PWR_RESET_CTRL_HOST_RST_SELECT_BITMASK);       			
+        *pPCR_Reg &= ~(PCR_PWR_RESET_CTRL_HOST_RST_SELECT_BITMASK);
 		}
 }
 
@@ -572,38 +572,38 @@ void p_pcr_pwr_reset_ctrl_host_rst_set_clr(uint8_t set_clr)
  */
 void p_pcr_system_reset_set()
 {
-    __IO uint32_t *pPCR_Reg;    
+    __IO uint32_t *pPCR_Reg;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_SYSTEM_RESET;	
+    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_REG_SYSTEM_RESET;
 
-    *pPCR_Reg |= (1<<8);       
+    *pPCR_Reg |= (1<<8);
 }
 
 /* ---------------------------------------------------------------------- */
 /*           Functions for PKE Clock Register                   */
 /* ---------------------------------------------------------------------- */
 /** Set the value in PKE CLOCK Register
- * @param PKE Clock value 
+ * @param PKE Clock value
  * @return none
  */
 void p_pcr_pke_clock_write(uint8_t pke_clk_val)
 {
-    __IO uint32_t *pPCR_Reg;    
+    __IO uint32_t *pPCR_Reg;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_TEST0;	
+    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_TEST0;
 
     *pPCR_Reg = pke_clk_val;
 }
 
 /** Read the value in PKE CLOCK Register
- * @none 
- * @return PKE Clock value 
+ * @none
+ * @return PKE Clock value
  */
 uint8_t p_pcr_pke_clock_read(void)
 {
-    __IO uint32_t *pPCR_Reg;    
+    __IO uint32_t *pPCR_Reg;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_TEST0;	
+    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_TEST0;
 
     return ((uint8_t)(*pPCR_Reg & 0xFF));
 }
@@ -612,27 +612,27 @@ uint8_t p_pcr_pke_clock_read(void)
 /*           Functions for Oscillator calibration Register                   */
 /* ---------------------------------------------------------------------- */
 /** Set the value in Oscillator calibration Register
- * @param Oscillator calibration value 
+ * @param Oscillator calibration value
  * @return none
  */
 void p_pcr_osc_cal_write(uint8_t osc_cal_val)
 {
-    __IO uint32_t *pPCR_Reg;    
+    __IO uint32_t *pPCR_Reg;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_TEST1;	
+    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_TEST1;
 
     *pPCR_Reg = osc_cal_val;
 }
 
 /** Read the value in Osc cal Register
- * @none 
- * @return Osc cal value 
+ * @none
+ * @return Osc cal value
  */
 uint8_t p_pcr_osc_cal_read(void)
 {
-    __IO uint32_t *pPCR_Reg;    
+    __IO uint32_t *pPCR_Reg;
 
-    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_TEST1;	
+    pPCR_Reg = (uint32_t *)(PCR_BASE) + PCR_TEST1;
 
     return ((uint8_t)(*pPCR_Reg & 0xFF));
 }

@@ -160,4 +160,3 @@ extern uint32_t ACC_GetComparisonResult( Acc *pAcc, uint32_t dwStatus )
         }
     }
 }
-

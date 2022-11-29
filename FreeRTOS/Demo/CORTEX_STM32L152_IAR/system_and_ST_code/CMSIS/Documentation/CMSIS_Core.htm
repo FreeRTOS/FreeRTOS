@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html xmlns:p="urn:schemas-microsoft-com:office:powerpoint" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"><head>
-  
+
   <title>CMSIS: Cortex Microcontroller Software Interface Standard</title><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
   <meta name="ProgId" content="FrontPage.Editor.Document">
   <style>
@@ -96,16 +96,16 @@ td.kt { color: #000000; background-color: #E0E0E0; border-top: 1pt solid #A0A0A0
 <p>
   The <strong>Cortex Microcontroller Software Interface Standard (CMSIS)</strong> answers the challenges
   that are faced when software components are deployed to physical microcontroller devices based on a
-  Cortex-M0 or Cortex-M3 processor. The CMSIS will be also expanded to future Cortex-M 
+  Cortex-M0 or Cortex-M3 processor. The CMSIS will be also expanded to future Cortex-M
   processor cores (the term Cortex-M is used to indicate that). The CMSIS is defined in close co-operation
-  with various silicon and software vendors and provides a common approach to interface to peripherals, 
+  with various silicon and software vendors and provides a common approach to interface to peripherals,
   real-time operating systems, and middleware components.
 </p>
 
 <p>ARM provides as part of the CMSIS the following software layers that are
 available for various compiler implementations:</p>
 <ul>
-  <li><strong>Core Peripheral Access Layer</strong>: contains name definitions, 
+  <li><strong>Core Peripheral Access Layer</strong>: contains name definitions,
     address definitions and helper functions to
     access core registers and peripherals. It defines also a device
     independent interface for RTOS Kernels that includes debug channel
@@ -132,20 +132,20 @@ available for various compiler implementations:</p>
 </ul>
 
 <p>
-  By using CMSIS compliant software components, the user can easier re-use template code. 
+  By using CMSIS compliant software components, the user can easier re-use template code.
   CMSIS is intended to enable the combination of software components from multiple middleware vendors.
 </p>
 
 <h2><a name="2"></a>Coding Rules and Conventions</h2>
 
 <p>
-  The following section describes the coding rules and conventions used in the CMSIS 
+  The following section describes the coding rules and conventions used in the CMSIS
   implementation. It contains also information about data types and version number information.
 </p>
 
 <h3>Essentials</h3>
 <ul>
-  <li>The CMSIS C code conforms to MISRA 2004 rules. In case of MISRA violations, 
+  <li>The CMSIS C code conforms to MISRA 2004 rules. In case of MISRA violations,
       there are disable and enable sequences for PC-LINT inserted.</li>
   <li>ANSI standard data types defined in the ANSI C header file
     <strong>&lt;stdint.h&gt;</strong> are used.</li>
@@ -178,8 +178,8 @@ available for various compiler implementations:</p>
 <b>Comments</b>
 
 <ul>
-  <li>Comments use the ANSI C90 style (<em>/* comment */</em>) or C++ style 
-  (<em>// comment</em>). It is assumed that the programming tools support today 
+  <li>Comments use the ANSI C90 style (<em>/* comment */</em>) or C++ style
+  (<em>// comment</em>). It is assumed that the programming tools support today
 	consistently the C++ comment style.</li>
   <li><strong>Function Comments</strong> provide for each function the following information:
   <ul>
@@ -190,7 +190,7 @@ available for various compiler implementations:</p>
   </ul>
   <p><b>Doxygen Example:</b></p>
   <pre>
-/** 
+/**
  * @brief  Enable Interrupt in NVIC Interrupt Controller
  * @param  IRQn  interrupt number that specifies the interrupt
  * @return none.
@@ -205,7 +205,7 @@ available for various compiler implementations:</p>
 <p>
   The <strong>Cortex-M HAL</strong> uses the standard types from the standard ANSI C header file
   <strong>&lt;stdint.h&gt;</strong>. <strong>IO Type Qualifiers</strong> are used to specify the access
-  to peripheral variables. IO Type Qualifiers are indented to be used for automatic generation of 
+  to peripheral variables. IO Type Qualifiers are indented to be used for automatic generation of
   debug information of peripheral registers.
 </p>
 
@@ -286,7 +286,7 @@ available for various compiler implementations:</p>
     <tr>
       <td class="kt" nowrap="nowrap"><i>device.h</i></td>
       <td class="kt">Device specific (provided by silicon partner)</td>
-      <td class="kt">Defines the peripherals for the actual device. The file may use 
+      <td class="kt">Defines the peripherals for the actual device. The file may use
         several other include files to define the peripherals of the actual device.</td>
     </tr>
     <tr>
@@ -317,7 +317,7 @@ available for various compiler implementations:</p>
     <tr>
       <td class="kt" nowrap="nowrap">system<i>_device</i></td>
       <td class="kt">ARM (adapted by silicon partner)</td>
-      <td class="kt">Provides a device specific configuration file for the device. It configures the device initializes 
+      <td class="kt">Provides a device specific configuration file for the device. It configures the device initializes
         typically the oscillator (PLL) that is part of the microcontroller device</td>
     </tr>
   </tbody>
@@ -326,37 +326,37 @@ available for various compiler implementations:</p>
 <h3><em>device.h</em></h3>
 
 <p>
-  The file <em><strong>device.h</strong></em> is provided by the silicon vendor and is the 
-  <u><strong>central include file</strong></u> that the application programmer is using in 
+  The file <em><strong>device.h</strong></em> is provided by the silicon vendor and is the
+  <u><strong>central include file</strong></u> that the application programmer is using in
   the C source code. This file contains:
 </p>
 <ul>
   <li>
-	<p><strong>Interrupt Number Definition</strong>: provides interrupt numbers 
+	<p><strong>Interrupt Number Definition</strong>: provides interrupt numbers
 	(IRQn) for all core and device specific exceptions and interrupts.</p>
 	</li>
 	<li>
-	<p><strong>Configuration for core_cm0.h / core_cm3.h</strong>: reflects the 
-	actual configuration of the Cortex-M processor that is part of the actual 
-	device. As such the file <strong>core_cm0.h / core_cm3.h</strong> is included that 
+	<p><strong>Configuration for core_cm0.h / core_cm3.h</strong>: reflects the
+	actual configuration of the Cortex-M processor that is part of the actual
+	device. As such the file <strong>core_cm0.h / core_cm3.h</strong> is included that
 	implements access to processor registers and core peripherals. </p>
 	</li>
 	<li>
 	<p><strong>Device Peripheral Access Layer</strong>: provides definitions
-    for all device peripherals. It contains all data structures and the address 
+    for all device peripherals. It contains all data structures and the address
 	mapping for the device specific peripherals. </p>
 	</li>
   <li><strong>Access Functions for Peripherals (optional)</strong>: provides
-    additional helper functions for peripherals that are useful for programming 
-	of these peripherals. Access Functions may be provided as inline functions 
-	or can be extern references to a device specific library provided by the 
+    additional helper functions for peripherals that are useful for programming
+	of these peripherals. Access Functions may be provided as inline functions
+	or can be extern references to a device specific library provided by the
 	silicon vendor.</li>
 </ul>
 
 
 <h4><strong>Interrupt Number Definition</strong></h4>
 
-<p>To access the device specific interrupts the device.h file defines IRQn 
+<p>To access the device specific interrupts the device.h file defines IRQn
 numbers for the complete device using a enum typedef as shown below:</p>
 <pre>
 typedef enum IRQn
@@ -381,12 +381,12 @@ typedef enum IRQn
 
 <h4>Configuration for core_cm0.h / core_cm3.h</h4>
 <p>
-  The Cortex-M core configuration options which are defined for each device implementation. Some 
+  The Cortex-M core configuration options which are defined for each device implementation. Some
   configuration options are reflected in the CMSIS layer using the #define settings described below.
 </p>
 <p>
   To access core peripherals file <em><strong>device.h</strong></em> includes file <b>core_cm0.h / core_cm3.h</b>.
-  Several features in <strong>core_cm0.h / core_cm3.h</strong> are configured by the following defines that must be 
+  Several features in <strong>core_cm0.h / core_cm3.h</strong> are configured by the following defines that must be
   defined before <strong>#include &lt;core_cm0.h&gt;</strong> / <strong>#include &lt;core_cm3.h&gt;</strong>
   preprocessor command.
 </p>
@@ -421,8 +421,8 @@ typedef enum IRQn
       <td class="kt" nowrap="nowrap">__Vendor_SysTickConfig</td>
       <td class="kt">core_cm0.h, core_cm3.h</td>
       <td class="kt" nowrap="nowrap">(1)</td>
-      <td class="kt">When this define is setup to 1, the <strong>SysTickConfig</strong> function 
-		in <strong>core_cm3.h</strong> is excluded. In this case the <em><strong>device.h</strong></em> 
+      <td class="kt">When this define is setup to 1, the <strong>SysTickConfig</strong> function
+		in <strong>core_cm3.h</strong> is excluded. In this case the <em><strong>device.h</strong></em>
 		file must contain a vendor specific implementation of this function.</td>
     </tr>
   </tbody>
@@ -431,10 +431,10 @@ typedef enum IRQn
 
 <h4>Device Peripheral Access Layer</h4>
 <p>
-  Each peripheral uses a prefix which consists of <strong>&lt;device abbreviation&gt;_</strong> 
-  and <strong>&lt;peripheral name&gt;_</strong> to identify peripheral registers that access this 
+  Each peripheral uses a prefix which consists of <strong>&lt;device abbreviation&gt;_</strong>
+  and <strong>&lt;peripheral name&gt;_</strong> to identify peripheral registers that access this
   specific peripheral. The intention of this is to avoid name collisions caused
-  due to short names. If more than one peripheral of the same type exists, 
+  due to short names. If more than one peripheral of the same type exists,
   identifiers have a postfix (digit or letter). For example:
 </p>
 <ul>
@@ -472,7 +472,7 @@ typedef struct
   __I  uint8_t  FIFOLVL;                 /*!< Offset: 0x058   FIFO Level Register         */
 } LPC_UART_TypeDef;</pre>
   </li>
-	<li>&lt;device abbreviation&gt;_UART1: is a pointer to a register structure that refers to a specific UART. 
+	<li>&lt;device abbreviation&gt;_UART1: is a pointer to a register structure that refers to a specific UART.
       For example UART1-&gt;DR is the data register of UART1.
       <pre>
 #define LPC_UART2             ((LPC_UART_TypeDef      *) LPC_UART2_BASE    )
@@ -482,7 +482,7 @@ typedef struct
 
 <h5>Minimal Requiements</h5>
 <p>
-  To access the peripheral registers and related function in a device the files <strong><em>device.h</em></strong> 
+  To access the peripheral registers and related function in a device the files <strong><em>device.h</em></strong>
   and <strong>core_cm0.h</strong> / <strong>core_cm3.h</strong> defines as a minimum:
 </p>
 <ul>
@@ -499,15 +499,15 @@ typedef struct {
   </li>
 
   <li>
-    <strong>Base Address</strong> for each peripheral (in case of multiple peripherals 
+    <strong>Base Address</strong> for each peripheral (in case of multiple peripherals
     that use the same <strong>register layout typedef</strong> multiple base addresses are defined). For example:
     <pre>
 #define SysTick_BASE (SCS_BASE + 0x0010)            /* SysTick Base Address */</pre>
   </li>
 
   <li>
-    <strong>Access Definition</strong> for each peripheral (in case of multiple peripherals that use 
-    the same <strong>register layout typedef</strong> multiple access definitions exist, i.e. LPC_UART0, 
+    <strong>Access Definition</strong> for each peripheral (in case of multiple peripherals that use
+    the same <strong>register layout typedef</strong> multiple access definitions exist, i.e. LPC_UART0,
     LPC_UART2). For Example:
     <pre>
 #define SysTick ((SysTick_Type *) SysTick_BASE)     /* SysTick access definition */</pre>
@@ -523,23 +523,23 @@ typedef struct {
 <p>In addition the <em> <strong>device.h </strong></em>file may define:</p>
 <ul>
 	<li>
-    #define constants that simplify access to the peripheral registers. 
-	  These constant define bit-positions or other specific patterns are that required for the 
-    programming of the peripheral registers. The identifiers used start with 
-    <strong>&lt;device abbreviation&gt;_</strong> and <strong>&lt;peripheral name&gt;_</strong>. 
+    #define constants that simplify access to the peripheral registers.
+	  These constant define bit-positions or other specific patterns are that required for the
+    programming of the peripheral registers. The identifiers used start with
+    <strong>&lt;device abbreviation&gt;_</strong> and <strong>&lt;peripheral name&gt;_</strong>.
     It is recommended to use CAPITAL letters for such #define constants.
   </li>
 	<li>
-    Functions that perform more complex functions with the peripheral (i.e. status query before 
-    a sending register is accessed). Again these function start with 
-    <strong>&lt;device abbreviation&gt;_</strong> and <strong>&lt;peripheral name&gt;_</strong>. 
+    Functions that perform more complex functions with the peripheral (i.e. status query before
+    a sending register is accessed). Again these function start with
+    <strong>&lt;device abbreviation&gt;_</strong> and <strong>&lt;peripheral name&gt;_</strong>.
   </li>
 </ul>
 
 <h3>core_cm0.h and core_cm0.c</h3>
 <p>
-  File <b>core_cm0.h</b> describes the data structures for the Cortex-M0 core peripherals and does 
-  the address mapping of this structures. It also provides basic access to the Cortex-M0 core registers 
+  File <b>core_cm0.h</b> describes the data structures for the Cortex-M0 core peripherals and does
+  the address mapping of this structures. It also provides basic access to the Cortex-M0 core registers
   and core peripherals with efficient functions (defined as <strong>static inline</strong>).
 </p>
 <p>
@@ -549,8 +549,8 @@ typedef struct {
 
 <h3>core_cm3.h and core_cm3.c</h3>
 <p>
-  File <b>core_cm3.h</b> describes the data structures for the Cortex-M3 core peripherals and does 
-  the address mapping of this structures. It also provides basic access to the Cortex-M3 core registers 
+  File <b>core_cm3.h</b> describes the data structures for the Cortex-M3 core peripherals and does
+  the address mapping of this structures. It also provides basic access to the Cortex-M3 core registers
   and core peripherals with efficient functions (defined as <strong>static inline</strong>).
 </p>
 <p>
@@ -561,9 +561,9 @@ typedef struct {
 <h3>startup_<em>device</em></h3>
 <p>
   A template file for <strong>startup_<em>device</em></strong> is provided by ARM for each supported
-  compiler. It is adapted by the silicon vendor to include interrupt vectors for all device specific 
-  interrupt handlers. Each interrupt handler is defined as <strong><em>weak</em></strong> function 
-  to an dummy handler. Therefore the interrupt handler can be directly used in application software 
+  compiler. It is adapted by the silicon vendor to include interrupt vectors for all device specific
+  interrupt handlers. Each interrupt handler is defined as <strong><em>weak</em></strong> function
+  to an dummy handler. Therefore the interrupt handler can be directly used in application software
   without any requirements to adapt the <strong>startup_<em>device</em></strong> file.
 </p>
 <p>
@@ -618,7 +618,7 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     TAMPER_IRQHandler         ; Tamper</pre>
 
 <p>
-  Device specific interrupts must have a dummy function that can be overwritten in user code. 
+  Device specific interrupts must have a dummy function that can be overwritten in user code.
   Below is an example for this dummy function.
 </p>
 <pre>
@@ -635,7 +635,7 @@ Default_Handler PROC
                 :
                 B .
                 ENDP</pre>
-                
+
 <p>
   The user application may simply define an interrupt handler function by using the handler name
   as shown below.
@@ -650,10 +650,10 @@ void WWDG_IRQHandler(void)
 
 <h3><a name="4"></a>system_<em>device</em>.c</h3>
 <p>
-  A template file for <strong>system_<em>device</em>.c</strong> is provided by ARM but adapted by 
-  the silicon vendor to match their actual device. As a <strong>minimum requirement</strong> 
-  this file must provide a device specific system configuration function and a global variable 
-  that contains the system frequency. It configures the device and initializes typically the 
+  A template file for <strong>system_<em>device</em>.c</strong> is provided by ARM but adapted by
+  the silicon vendor to match their actual device. As a <strong>minimum requirement</strong>
+  this file must provide a device specific system configuration function and a global variable
+  that contains the system frequency. It configures the device and initializes typically the
   oscillator (PLL) that is part of the microcontroller device.
 </p>
 <p>
@@ -669,14 +669,14 @@ void WWDG_IRQHandler(void)
     </tr>
     <tr>
       <td class="kt" nowrap="nowrap">void SystemInit (void)</td>
-      <td class="kt">Setup the microcontroller system. Typically this function configures the 
-                     oscillator (PLL) that is part of the microcontroller device. For systems 
+      <td class="kt">Setup the microcontroller system. Typically this function configures the
+                     oscillator (PLL) that is part of the microcontroller device. For systems
                      with variable clock speed it also updates the variable SystemCoreClock.<br>
                      SystemInit is called from startup<i>_device</i> file.</td>
     </tr>
     <tr>
       <td class="kt" nowrap="nowrap">void SystemCoreClockUpdate (void)</td>
-      <td class="kt">Updates the variable SystemCoreClock and must be called whenever the 
+      <td class="kt">Updates the variable SystemCoreClock and must be called whenever the
                      core clock is changed during program execution. SystemCoreClockUpdate()
                      evaluates the clock register settings and calculates the current core clock.
 </td>
@@ -685,7 +685,7 @@ void WWDG_IRQHandler(void)
 </table>
 
 <p>
-  Also part of the file <strong>system_</strong><em><strong>device</strong></em><strong>.c</strong> 
+  Also part of the file <strong>system_</strong><em><strong>device</strong></em><strong>.c</strong>
   is the variable <strong>SystemCoreClock</strong> which contains the current CPU clock speed shown below.
 </p>
 
@@ -697,15 +697,15 @@ void WWDG_IRQHandler(void)
     </tr>
     <tr>
       <td class="kt" nowrap="nowrap">uint32_t SystemCoreClock</td>
-      <td class="kt">Contains the system core clock (which is the system clock	frequency supplied 
-                     to the SysTick timer and the processor core clock). This variable can be 
-                     used by the user application to setup the SysTick timer or configure other 
-                     parameters. It may also be used by debugger to query the frequency of the 
+      <td class="kt">Contains the system core clock (which is the system clock	frequency supplied
+                     to the SysTick timer and the processor core clock). This variable can be
+                     used by the user application to setup the SysTick timer or configure other
+                     parameters. It may also be used by debugger to query the frequency of the
                      debug timer or configure the trace clock speed.<br>
                      SystemCoreClock is initialized with a correct predefined value.<br><br>
-		                 The compiler must be configured to avoid the removal of this variable in 
-		                 case that the application program is not using it. It is important for 
-		                 debug systems that the variable is physically present in memory so that 
+		                 The compiler must be configured to avoid the removal of this variable in
+		                 case that the application program is not using it. It is important for
+		                 debug systems that the variable is physically present in memory so that
 		                 it can be examined to configure the debugger.</td>
     </tr>
   </tbody>
@@ -714,8 +714,8 @@ void WWDG_IRQHandler(void)
 <p class="Note">Note</p>
 <ul>
   <li><p>The above definitions are the minimum requirements for the file <strong>
-	system_</strong><em><strong>device</strong></em><strong>.c</strong>. This 
-	file may export more functions or variables that provide a more flexible 
+	system_</strong><em><strong>device</strong></em><strong>.c</strong>. This
+	file may export more functions or variables that provide a more flexible
 	configuration of the microcontroller system.</p>
   </li>
 </ul>
@@ -741,7 +741,7 @@ void WWDG_IRQHandler(void)
       <td class="kt" nowrap="nowrap">void __enable_irq (void)</td>
       <td class="kt">M0, M3</td>
       <td class="kt">PRIMASK = 0</td>
-      <td class="kt">Global Interrupt enable (using the instruction <strong>CPSIE 
+      <td class="kt">Global Interrupt enable (using the instruction <strong>CPSIE
 		i</strong>)</td>
     </tr>
     <tr>
@@ -755,36 +755,36 @@ void WWDG_IRQHandler(void)
       <td class="kt" nowrap="nowrap">void __set_PRIMASK (uint32_t value)</td>
       <td class="kt">M0, M3</td>
       <td class="kt">PRIMASK = value</td>
-      <td class="kt">Assign value to Priority Mask Register (using the instruction 
+      <td class="kt">Assign value to Priority Mask Register (using the instruction
 		<strong>MSR</strong>)</td>
     </tr>
     <tr>
       <td class="kt" nowrap="nowrap">uint32_t __get_PRIMASK (void)</td>
       <td class="kt">M0, M3</td>
       <td class="kt">return PRIMASK</td>
-      <td class="kt">Return Priority Mask Register (using the instruction 
+      <td class="kt">Return Priority Mask Register (using the instruction
 		<strong>MRS</strong>)</td>
     </tr>
     <tr>
       <td class="kt" nowrap="nowrap">void __enable_fault_irq (void)</td>
       <td class="kt">M3</td>
       <td class="kt">FAULTMASK = 0</td>
-      <td class="kt">Global Fault exception and Interrupt enable (using the 
-		instruction <strong>CPSIE 
+      <td class="kt">Global Fault exception and Interrupt enable (using the
+		instruction <strong>CPSIE
 		f</strong>)</td>
     </tr>
     <tr>
       <td class="kt" nowrap="nowrap">void __disable_fault_irq (void)</td>
       <td class="kt">M3</td>
       <td class="kt">FAULTMASK = 1</td>
-      <td class="kt">Global Fault exception and Interrupt disable (using the 
+      <td class="kt">Global Fault exception and Interrupt disable (using the
 		instruction <strong>CPSID f</strong>)</td>
     </tr>
     <tr>
       <td class="kt" nowrap="nowrap">void __set_FAULTMASK (uint32_t value)</td>
       <td class="kt">M3</td>
       <td class="kt">FAULTMASK = value</td>
-      <td class="kt">Assign value to Fault Mask Register (using the instruction 
+      <td class="kt">Assign value to Fault Mask Register (using the instruction
 		<strong>MSR</strong>)</td>
     </tr>
     <tr>
@@ -849,7 +849,7 @@ void WWDG_IRQHandler(void)
 <h3>Cortex-M Instruction Access</h3>
 <p>
   The following functions are defined in <strong>core_cm0.h</strong> / <strong>core_cm3.h</strong>and
-  generate specific Cortex-M instructions. The functions are implemented in the file 
+  generate specific Cortex-M instructions. The functions are implemented in the file
   <strong>core_cm0.c</strong> / <strong>core_cm3.c</strong>.
 </p>
 
@@ -976,12 +976,12 @@ void WWDG_IRQHandler(void)
 <h3>NVIC Access Functions</h3>
 <p>
   The CMSIS provides access to the NVIC via the register interface structure and several helper
-  functions that simplify the setup of the NVIC. The CMSIS HAL uses IRQ numbers (IRQn) to 
-  identify the interrupts. The first device interrupt has the IRQn value 0. Therefore negative 
+  functions that simplify the setup of the NVIC. The CMSIS HAL uses IRQ numbers (IRQn) to
+  identify the interrupts. The first device interrupt has the IRQn value 0. Therefore negative
   IRQn values are used for processor core exceptions.
 </p>
 <p>
-  For the IRQn values of core exceptions the file <strong><em>device.h</em></strong> provides 
+  For the IRQn values of core exceptions the file <strong><em>device.h</em></strong> provides
   the following enum names.
 </p>
 
@@ -1145,7 +1145,7 @@ The functions are defined as <strong>static inline</strong>.</p>
 </table>
 <p class="Note">Note</p>
 <ul>
-  <li><p>The processor exceptions have negative enum values. Device specific interrupts 
+  <li><p>The processor exceptions have negative enum values. Device specific interrupts
 	       have positive enum values and start with 0. The values are defined in
          <b><em>device.h</em></b> file.
       </p>
@@ -1160,7 +1160,7 @@ The functions are defined as <strong>static inline</strong>.</p>
 
 <h3>SysTick Configuration Function</h3>
 
-<p>The following function is used to configure the SysTick timer and start the 
+<p>The following function is used to configure the SysTick timer and start the
 SysTick interrupt.</p>
 
 <table class="kt" border="0" cellpadding="0" cellspacing="0">
@@ -1171,11 +1171,11 @@ SysTick interrupt.</p>
       <th class="kt">Description</th>
     </tr>
     <tr>
-      <td class="kt" nowrap="nowrap">uint32_t Sys<span class="style1">TickConfig 
+      <td class="kt" nowrap="nowrap">uint32_t Sys<span class="style1">TickConfig
 		(uint32_t ticks)</span></td>
       <td class="kt">ticks is SysTick counter reload value</td>
-      <td class="kt">Setup the SysTick timer and enable the SysTick interrupt. After this 
-		call the SysTick timer creates interrupts with the specified time 
+      <td class="kt">Setup the SysTick timer and enable the SysTick interrupt. After this
+		call the SysTick timer creates interrupts with the specified time
 		interval. <br>
 		<br>
 		Return: 0 when successful, 1 on failure.<br>
@@ -1187,28 +1187,28 @@ SysTick interrupt.</p>
 
 <h3>Cortex-M3 ITM Debug Access</h3>
 
-<p>The Cortex-M3 incorporates the Instrumented Trace Macrocell (ITM) that 
-provides together with the Serial Viewer Output trace capabilities for the 
-microcontroller system. The ITM has 32 communication channels; two ITM 
+<p>The Cortex-M3 incorporates the Instrumented Trace Macrocell (ITM) that
+provides together with the Serial Viewer Output trace capabilities for the
+microcontroller system. The ITM has 32 communication channels; two ITM
 communication channels are used by CMSIS to output the following information:</p>
 <ul>
-	<li>ITM Channel 0: implements the <strong>ITM_SendChar</strong> function 
+	<li>ITM Channel 0: implements the <strong>ITM_SendChar</strong> function
 	which can be used for printf-style output via the debug interface.</li>
-	<li>ITM Channel 31: is reserved for the RTOS kernel and can be used for 
+	<li>ITM Channel 31: is reserved for the RTOS kernel and can be used for
 	kernel awareness debugging.</li>
 </ul>
 <p class="Note">Note</p>
 <ul>
-  <li><p>The ITM channel 31 is selected for the RTOS kernel since some kernels 
-	may use the Privileged level for program execution. ITM 
-	channels have 4 groups with 8 channels each, whereby each group can be 
-	configured for access rights in the Unprivileged level. The ITM channel 0 
-	may be therefore enabled for the user task whereas ITM channel 31 may be 
+  <li><p>The ITM channel 31 is selected for the RTOS kernel since some kernels
+	may use the Privileged level for program execution. ITM
+	channels have 4 groups with 8 channels each, whereby each group can be
+	configured for access rights in the Unprivileged level. The ITM channel 0
+	may be therefore enabled for the user task whereas ITM channel 31 may be
 	accessible only in Privileged level from the RTOS kernel itself.</p>
   </li>
 </ul>
 
-<p>The prototype of the <strong>ITM_SendChar</strong> routine is shown in the 
+<p>The prototype of the <strong>ITM_SendChar</strong> routine is shown in the
 table below.</p>
 
 <table class="kt" border="0" cellpadding="0" cellspacing="0">
@@ -1221,9 +1221,9 @@ table below.</p>
     <tr>
       <td class="kt" nowrap="nowrap">void uint32_t ITM_SendChar(uint32_t chr)</td>
       <td class="kt">character to output</td>
-      <td class="kt">The function outputs a character via the ITM channel 0. The 
-		                 function returns when no debugger is connected that has booked the 
-		                 output. It is blocking when a debugger is connected, but the 
+      <td class="kt">The function outputs a character via the ITM channel 0. The
+		                 function returns when no debugger is connected that has booked the
+		                 output. It is blocking when a debugger is connected, but the
 		                 previous character send is not transmitted. <br><br>
 		                 Return: the input character 'chr'.</td>
     </tr>
@@ -1251,7 +1251,7 @@ table below.</p>
 <p>CMSIS provides additional debug functions to enlarge the Cortex-M3 Debug Access.
 Data can be transmitted via a certain global buffer variable towards the target system.</p>
 
-<p>The buffer variable and the prototypes of the additional functions are shown in the 
+<p>The buffer variable and the prototypes of the additional functions are shown in the
 table below.</p>
 
 <table class="kt" border="0" cellpadding="0" cellspacing="0">
@@ -1270,7 +1270,7 @@ table below.</p>
     <tr>
       <td class="kt" nowrap="nowrap">int ITM_ReceiveChar (void)</td>
       <td class="kt">none</td>
-      <td class="kt">The nonblocking functions returns the character stored in 
+      <td class="kt">The nonblocking functions returns the character stored in
                      ITM_RxBuffer. <br><br>
 		                 Return: -1 indicates that no character was received.</td>
     </tr>
@@ -1322,9 +1322,9 @@ int main (void) {
     ;                                            /* Handle Error */
     while (1);
   }
-  
-  LED_Config();                                  /* configure the LEDs */                            
- 
+
+  LED_Config();                                  /* configure the LEDs */
+
   while(1) {
     LED_On (0x100);                              /* Turn  on the LED   */
     Delay (100);                                 /* delay  100 Msec    */

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -91,7 +91,7 @@ uint32_t QSPID_Configure( QspiDma_t *pQspidma, QspiMode_t Mode,
 		uint32_t dwConfiguration,  sXdmad* pXdmad);
 
 uint32_t QSPID_EnableQspiRxChannel(QspiDma_t *pQspidma);
-  
+
 uint32_t QSPID_EnableQspiTxChannel(QspiDma_t *pQspidma);
 
 uint32_t QSPID_DisableQspiRxChannel(QspiDma_t *pQspidma);

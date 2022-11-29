@@ -201,4 +201,3 @@ const uint32_t ulTxFifoFullBit = 0x80000000UL;
 		pcString++;
 	}
 }
-

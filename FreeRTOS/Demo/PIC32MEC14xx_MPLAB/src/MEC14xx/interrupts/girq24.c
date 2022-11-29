@@ -38,11 +38,11 @@ typedef void (* GIRQ24_FPVU8)(uint8_t);
 
 
 /* MIPS M14K internal counter is connected to GIRQ24 bit[0]
- * It is a simple counter which fires an interrupt when its 
+ * It is a simple counter which fires an interrupt when its
  * count value is equal to a match value.
- * 
+ *
  */
- 
+
 #if GIRQ24_DISAGG == 0
 
 
@@ -89,7 +89,7 @@ void __attribute__((weak)) m14k_soft_irq1(uint8_t inum)
     (void) inum;
 
     JTVIC_GIRQ->REGS[MEC14xx_GIRQ24_ID].SOURCE = (1ul << 2);
-    
+
 }
 
 void girq24_b_0_2( void )
@@ -138,12 +138,12 @@ void __attribute__((weak, interrupt, nomips16))
 girq24_b0(void)
 {
     uint32_t r;
-    
+
     r = _CP0_GET_COUNT();
     r += (M14K_TIMER_COMPARE);
     _CP0_SET_COUNT(r);
 
-    JTVIC_GIRQ->REGS[MEC14xx_GIRQ24_ID].SOURCE = (1ul << 0);    
+    JTVIC_GIRQ->REGS[MEC14xx_GIRQ24_ID].SOURCE = (1ul << 0);
 }
 
 void __attribute__((weak, interrupt, nomips16))
@@ -151,7 +151,7 @@ girq24_b1(void)
 {
 
     _CP0_BIC_CAUSE(0x100ul);
- 
+
     jtvic_clr_source(MEC14xx_GIRQ24_ID, 1);
 }
 
@@ -169,4 +169,3 @@ girq24_b2(void)
 /* end girq24.c */
 /**   @}
  */
-

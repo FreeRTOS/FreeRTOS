@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -378,16 +378,16 @@ void PIO_EnableIt(const Pin *pPin)
 
     pPin->pio->PIO_ISR;
     pPin->pio->PIO_IER = pPin->mask;
-    
+
 
 #if defined(AT91C_PIOA_AIMMR)
     //PIO3 with additional interrupt support
     //configure additional interrupt mode registers
     if(pPin->mask&pPin->itMode.itMask) {
-   
+
     //enable additional interrupt mode
     pPin->pio->PIO_AIMER  = pPin->itMode.itMask;
-    
+
     if(pPin->mask&pPin->itMode.edgeLvlSel)
         //if bit field of selected pin is 1, set as Level detection source
         pPin->pio->PIO_LSR = pPin->itMode.edgeLvlSel;

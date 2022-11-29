@@ -195,4 +195,3 @@ int wc_DeCompress(byte* out, word32 outSz, const byte* in, word32 inSz)
 
 
 #endif /* HAVE_LIBZ */
-

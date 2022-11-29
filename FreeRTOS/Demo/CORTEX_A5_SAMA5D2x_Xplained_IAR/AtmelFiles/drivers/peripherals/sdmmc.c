@@ -955,7 +955,7 @@ static uint32_t sdmmc_release(void *_set)
 	return SDMMC_OK;
 }
 
-/** 
+/**
  * Here is the fSdmmcIOCtrl-type callback.
  * IO control functions.
  * \param _set  Pointer to driver instance data (struct sdmmc_set).

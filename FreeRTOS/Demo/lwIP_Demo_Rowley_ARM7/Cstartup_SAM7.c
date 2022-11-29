@@ -64,6 +64,3 @@ void AT91F_LowLevelInit( void )
         pPMC->PMC_MCKR |= AT91C_PMC_CSS_PLL_CLK ;
         while(!(pPMC->PMC_SR & AT91C_PMC_MCKRDY));
 }
-
-
-

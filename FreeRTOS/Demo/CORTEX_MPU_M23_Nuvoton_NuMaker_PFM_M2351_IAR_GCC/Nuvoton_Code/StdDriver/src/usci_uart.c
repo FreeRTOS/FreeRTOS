@@ -729,4 +729,3 @@ void UUART_DisableFlowCtrl(UUART_T* uuart)
 /*@}*/ /* end of group Standard_Driver */
 
 /*** (C) COPYRIGHT 2016 Nuvoton Technology Corp. ***/
-

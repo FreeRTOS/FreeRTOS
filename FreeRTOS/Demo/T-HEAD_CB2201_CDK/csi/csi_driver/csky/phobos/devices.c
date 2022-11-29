@@ -840,4 +840,3 @@ int32_t target_get_dmac(int32_t idx, uint32_t *base, uint32_t *irq)
     return idx;
 }
 #endif
-

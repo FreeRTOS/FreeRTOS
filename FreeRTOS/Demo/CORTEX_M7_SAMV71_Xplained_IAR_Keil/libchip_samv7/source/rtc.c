@@ -477,4 +477,3 @@ extern void RTC_SetWaveForm( Rtc* pRtc, uint32_t dwWaveMode )
     pRtc->RTC_MR = dwRtcMode | dwWaveMode;
 }
 #endif
-

@@ -32,4 +32,3 @@ signed char *pcLwipAppsBlockingGetTxBuffer( void );
 void vLwipAppsReleaseTxBuffer( void );
 
 #endif /* LWIP_APPS_H */
-

@@ -918,6 +918,3 @@ uint32_t test_ddr(uint32_t no_of_iterations, uint32_t size)
     }
     return error;
 }
-
-
-

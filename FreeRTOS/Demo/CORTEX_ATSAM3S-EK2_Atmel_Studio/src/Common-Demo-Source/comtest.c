@@ -261,4 +261,3 @@ portBASE_TYPE xReturn;
 
 	return xReturn;
 }
-

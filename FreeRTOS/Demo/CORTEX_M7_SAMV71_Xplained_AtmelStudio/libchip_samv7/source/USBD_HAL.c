@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -102,7 +102,7 @@
 #define UDPHS_ENDPOINT_SENDINGM       5
 /**  Endpoint states: Endpoint is receiving MBL */
 #define UDPHS_ENDPOINT_RECEIVINGM     6
-      
+
 
 /** Get Number of buffer in Multi-Buffer-List
  *  \param i    input index
@@ -255,7 +255,7 @@ static void UDPHS_EndOfTransfer(uint8_t bEndpoint, uint8_t bStatus)
         Transfer *pXfr = (Transfer*)&(pEp->transfer);
         uint32_t transferred = pXfr->transferred;
         uint32_t remaining   = pXfr->remaining + pXfr->buffered;
-        
+
         TRACE_DEBUG_WP("EoT ");
         if (pEp->state == UDPHS_ENDPOINT_SENDING)
             pEp->sendZLP = 0;
@@ -400,7 +400,7 @@ static uint8_t UDPHS_MblWriteFifo(uint8_t bEndpoint)
  */
 static uint8_t UDPHS_MblReadFifo(uint8_t bEndpoint, uint16_t wPacketSize)
 {
-   
+
     return 0;
 }
 */
@@ -435,7 +435,7 @@ static void UDPHS_WritePayload(uint8_t bEndpoint, int32_t size)
         *(pFifo ++) = *(pTransfer->pData ++);
     }
     memory_sync();
-   
+
 }
 
 /**
@@ -468,7 +468,7 @@ static void UDPHS_ReadPayload(uint8_t bEndpoint, int32_t wPacketSize)
         memory_sync();
         wPacketSize--;
     }
-    
+
 }
 
 /**
@@ -496,7 +496,7 @@ static void UDPHS_ReadRequest(USBGenericRequest *pRequest)
 static void UDPHS_EndpointHandler(uint8_t bEndpoint)
 {
     Usbhs    *pUdp = USBHS;
-    
+
     //UdphsDma *pDma = &pUdp->USBHS_DEVDMA[bEndpoint];
 
     Endpoint *pEp      = &(endpoints[bEndpoint]);
@@ -508,7 +508,7 @@ static void UDPHS_EndpointHandler(uint8_t bEndpoint)
     USBGenericRequest *pReq = (USBGenericRequest *)reqBuf;
     uint16_t wPktSize;
 
-    
+
     TRACE_DEBUG_WP("Ep%d ", bEndpoint);
     /* IN packet sent */
     if ( (  status & USBHS_DEVEPTISR_TXINI) && USBHS_IsEpIntEnable(pUdp, bEndpoint, USBHS_DEVEPTIMR_TXINE))
@@ -527,10 +527,10 @@ static void UDPHS_EndpointHandler(uint8_t bEndpoint)
                 pXfr->transferred += pXfr->buffered;
                 pXfr->buffered = 0;
             }
-            if((pXfr->transferred % pEp->size == 0) && ( pXfr->remaining == 0) && ( pXfr->transferred > 0)&&(pEp->sendZLP == 0)) 
-            { 
-              pEp->sendZLP = 1; // Force ZLP transmission in total length is  a multiple of endpoint size  
-            } 
+            if((pXfr->transferred % pEp->size == 0) && ( pXfr->remaining == 0) && ( pXfr->transferred > 0)&&(pEp->sendZLP == 0))
+            {
+              pEp->sendZLP = 1; // Force ZLP transmission in total length is  a multiple of endpoint size
+            }
             if (   pXfr->buffered == 0
                 && pXfr->transferred == 0
                 && pXfr->remaining == 0
@@ -543,17 +543,17 @@ static void UDPHS_EndpointHandler(uint8_t bEndpoint)
             if (   pXfr->remaining  || pEp->sendZLP == 1)
             {
               if(pEp->sendZLP == 1)
-              { 
-                // A null packet will be send, keep trace of it : Change this value only if ZLP will be send!!! 
+              {
+                // A null packet will be send, keep trace of it : Change this value only if ZLP will be send!!!
                 pEp->sendZLP = 2;
-              } 
+              }
 
               /* Transfer remaining */
               TRACE_DEBUG_WP("%d ", pEp->size);
               /* Send next packet */
               UDPHS_WritePayload(bEndpoint, pEp->size);
               USBHS_AckEpInterrupt(USBHS, 0, USBHS_DEVEPTICR_TXINIC);
-              
+
             }
             else
             {
@@ -565,9 +565,9 @@ static void UDPHS_EndpointHandler(uint8_t bEndpoint)
                 }
 
                 USBHS_DisableEPIntType(pUdp, bEndpoint, USBHS_DEVEPTIDR_TXINEC);
-                
+
                 UDPHS_EndOfTransfer(bEndpoint, USBD_STATUS_SUCCESS);
-                
+
                 pEp->sendZLP = 0;
             }
         }
@@ -591,7 +591,7 @@ static void UDPHS_EndpointHandler(uint8_t bEndpoint)
                 TRACE_INFO_WP("Ack ");
                 USBHS_AckEpInterrupt(pUdp, bEndpoint, USBHS_DEVEPTICR_RXOUTIC);
                 UDPHS_EndOfTransfer(bEndpoint, USBD_STATUS_SUCCESS);
-                
+
             }
             /* data has been STALLed */
             else if (USBHS_DEVEPTISR_STALLEDI & status)
@@ -614,7 +614,7 @@ static void UDPHS_EndpointHandler(uint8_t bEndpoint)
             TRACE_DEBUG_WP("%d ", wPktSize);
             UDPHS_ReadPayload(bEndpoint, wPktSize);
             USBHS_AckEpInterrupt(pUdp, bEndpoint, USBHS_DEVEPTICR_RXOUTIC);
-            
+
             /* Check if transfer is finished */
             if (pXfr->remaining == 0 || wPktSize < pEp->size)
             {
@@ -625,7 +625,7 @@ static void UDPHS_EndpointHandler(uint8_t bEndpoint)
                 {
                     USBHS_DisableIntEP(pUdp, bEndpoint);
                 }
-                UDPHS_EndOfTransfer(bEndpoint, USBD_STATUS_SUCCESS);    
+                UDPHS_EndOfTransfer(bEndpoint, USBD_STATUS_SUCCESS);
                 USBHS_AckEpInterrupt(pUdp, bEndpoint, USBHS_DEVEPTICR_NAKINIC);
                 USBHS_AckEpInterrupt(pUdp, bEndpoint, USBHS_DEVEPTICR_TXINIC);
             }
@@ -675,19 +675,19 @@ static void UDPHS_EndpointHandler(uint8_t bEndpoint)
         {
             TRACE_WARNING("IsoFE[%d]\n\r", bEndpoint);
             /* Acknowledge setup packet */
-            USBHS_AckEpInterrupt(pUdp, bEndpoint, USBHS_DEVEPTICR_RXSTPIC);            
+            USBHS_AckEpInterrupt(pUdp, bEndpoint, USBHS_DEVEPTICR_RXSTPIC);
         }
         else
         {
-            TRACE_DEBUG_WP("Stup ");            
+            TRACE_DEBUG_WP("Stup ");
             /* Copy setup */
-            UDPHS_ReadRequest(pReq);            
+            UDPHS_ReadRequest(pReq);
             /* Acknowledge setup packet */
             USBHS_AckEpInterrupt(pUdp, bEndpoint, USBHS_DEVEPTICR_RXSTPIC);
-            
+
             /* Handler */
-            USBD_RequestHandler(bEndpoint, pReq);   
-            
+            USBD_RequestHandler(bEndpoint, pReq);
+
         }
     }
 }
@@ -705,16 +705,16 @@ static inline void UDPHS_DmaSingle(uint8_t bEndpoint, Transfer *pXfr, uint32_t d
 
     /* Single transfer */
     SCB_CleanInvalidateDCache();
-    
+
     USBHS_SetDmaBuffAdd(pUsbDma,  (uint32_t)&pXfr->pData[pXfr->transferred]);
     USBHS_GetDmaStatus(pUsbDma);
-    
-    
+
+
     TRACE_DEBUG_WP("Dma[B%d:T%d] ", pXfr->buffered, pXfr->transferred);
     /* DMA Configure */
     USBHS_ConfigureDma(pUsbDma, 0);
     USBHS_ConfigureDma(pUsbDma, (USBHS_DEVDMACONTROL_BUFF_LENGTH(pXfr->buffered) | dwCfg) );
-    
+
     /* Interrupt enable */
     USBHS_EnableDMAIntEP(pUdp, bEndpoint);
 }
@@ -735,7 +735,7 @@ static void UDPHS_DmaHandler(uint8_t bEndpoint)
     int32_t iRemain, iXfred;
     uint8_t bRc = USBD_STATUS_SUCCESS;
     UsbhsDevdma *pUsbDma = &pUdp->USBHS_DEVDMA[bDmaEndpoint];
-    
+
     dwDmaSr = USBHS_GetDmaStatus(pUsbDma);
     TRACE_DEBUG_WP("iDma%d,%x ", bDmaEndpoint, dwDmaSr);
     /* Mbl transfer */
@@ -770,7 +770,7 @@ static void UDPHS_DmaHandler(uint8_t bEndpoint)
         TRACE_DEBUG_WP("[B%d:T%d:R%d] ", pXfr->buffered, pXfr->transferred, pXfr->remaining);
         /* There is still data */
         if (pXfr->remaining + pXfr->buffered > 0)
-        {   
+        {
             if (pXfr->remaining > DMA_MAX_FIFO_SIZE)
             {
                 pXfr->buffered = DMA_MAX_FIFO_SIZE;
@@ -806,9 +806,9 @@ static void UDPHS_DmaHandler(uint8_t bEndpoint)
     if (pXfr->remaining == 0)
     {
         UDPHS_EndOfTransfer(bEndpoint, bRc);
-        
+
     }
-    
+
 }
 #endif
 /**
@@ -835,7 +835,7 @@ static inline uint8_t UDPHS_Write(uint8_t    bEndpoint,
 {
     Usbhs    *pUdp  = USBHS;
     uint8_t bDmaEndpoint = bEndpoint -1;
-      
+
     Endpoint *pEp  = &(endpoints[bEndpoint]);
     Transfer *pXfr = (Transfer*)&(pEp->transfer);
     /* Return if busy */
@@ -852,7 +852,7 @@ static inline uint8_t UDPHS_Write(uint8_t    bEndpoint,
     pXfr->remaining   = dLength;
     pXfr->buffered    = 0;
     pXfr->transferred = 0;
-    
+
   #ifdef DMA
     SCB_CleanInvalidateDCache();
     /* 1. DMA supported, 2. Not ZLP */
@@ -906,7 +906,7 @@ static inline uint8_t UDPHS_AddWr(uint8_t   bEndpoint,
                                 uint32_t    dLength)
 {
     Usbhs    *pUdp  = USBHS;
-    
+
     Endpoint *pEp  = &(endpoints[bEndpoint]);
     MblTransfer *pMbl = (MblTransfer*)&(pEp->transfer);
     USBDTransferBuffer *pTx;
@@ -1008,7 +1008,7 @@ static inline uint8_t UDPHS_Read(uint8_t  bEndpoint,
     pXfr->remaining   = dLength;
     pXfr->buffered    = 0;
     pXfr->transferred = 0;
-    
+
   #ifdef DMA
     SCB_CleanInvalidateDCache();
     /* If: 1. DMA supported, 2. Has data */
@@ -1033,7 +1033,7 @@ static inline uint8_t UDPHS_Read(uint8_t  bEndpoint,
     /* Enable IT */
     USBHS_EnableIntEP(pUdp, bEndpoint);
     USBHS_EnableEPIntType(pUdp, bEndpoint,  USBHS_DEVEPTIER_RXOUTES);
-    
+
     return USBD_STATUS_SUCCESS;
 }
 #if 0
@@ -1076,7 +1076,7 @@ void USBHS_Handler(void)
     status  = USBHS_ReadIntStatus(pUdp, 0xFFFFFFFF);
     IntStatus = status & USBHS_IsIntEnable(pUdp, 0xFFFFFFFF);
 
-    
+
     /* Handle all USBHS interrupts */
     TRACE_DEBUG_WP("\n\r%c ", USBD_HAL_IsHighSpeed() ? 'H' : 'F');
     //while( status )
@@ -1095,10 +1095,10 @@ void USBHS_Handler(void)
         else if (IntStatus & USBHS_DEVISR_MSOF)
         {
             TRACE_DEBUG_WP("Mosf ");
-            
+
             /* Acknowledge interrupt */
             USBHS_AckInt(pUdp,  USBHS_DEVICR_MSOFC);
-            
+
         }
         /* Suspend, treated last */
         else if (IntStatus & USBHS_DEVISR_SUSP)
@@ -1106,10 +1106,10 @@ void USBHS_Handler(void)
             TRACE_WARNING_WP("Susp ");
             USBHS_FreezeClock(pUdp, false);
             USBHS_DisableInt(pUdp, USBHS_DEVIDR_SUSPEC);
-            
+
             /* Enable wakeup */
             USBHS_EnableInt(pUdp, USBHS_DEVIER_WAKEUPES  );
-            
+
             USBHS_FreezeClock(pUdp, true);      // Mandatory to exit of sleep mode after a wakeup event
             /* Acknowledge interrupt */
             //USBHS_AckInt(pUdp,  (USBHS_DEVICR_SUSPC | USBHS_DEVICR_WAKEUPC) );
@@ -1123,14 +1123,14 @@ void USBHS_Handler(void)
             TRACE_INFO_WP("Rsm ");
             USBHS_FreezeClock(pUdp, false);
 
-            while( !USBHS_ISUsableClock(pUdp) ) 
+            while( !USBHS_ISUsableClock(pUdp) )
             {
               if(status & USBHS_DEVISR_SUSP)
               {
                 break;   // In case of USB state change in HS
               }
             }
-        
+
             /* Acknowledge interrupt */
             /*USBHS_AckInt(pUdp,  (USBHS_DEVICR_SUSPC |
                                  USBHS_DEVICR_WAKEUPC |
@@ -1139,14 +1139,14 @@ void USBHS_Handler(void)
             USBHS_DisableInt(pUdp, USBHS_DEVIDR_WAKEUPEC);
             USBHS_EnableInt(pUdp, USBHS_DEVIER_SUSPES );
             //USBHS_AckInt(pUdp,  (USBHS_DEVIER_EORSMES | USBHS_DEVICR_WAKEUPC) );
-            
-            
+
+
         }
         /* Bus reset */
         else if (IntStatus & USBHS_DEVISR_EORST)
         {
             TRACE_DEBUG_WP("EoB ");
-            
+
             /* Acknowledge interrupt */
             USBHS_AckInt(pUdp,  USBHS_DEVICR_EORSTC);
             /* Flush and enable the suspend interrupt */
@@ -1156,7 +1156,7 @@ void USBHS_Handler(void)
             /* Reset handler */
             USBD_ResetHandler();
 
-            
+
         }
         /* Upstream resume */
         else if (IntStatus & USBHS_DEVISR_UPRSM)
@@ -1165,7 +1165,7 @@ void USBHS_Handler(void)
             /* Acknowledge interrupt */
             USBHS_AckInt(pUdp,  USBHS_DEVICR_UPRSMC);
         }
-        
+
         /* Endpoints */
         else
         {
@@ -1197,7 +1197,7 @@ void USBHS_Handler(void)
             }
           #endif
         }
-        
+
         /* Update interrupt status */
         //status  = USBHS_ReadIntStatus(pUdp, 0xFFFFFFFF);
         //status &= USBHS_IsIntEnable(pUdp, 0xFFFFFFFF);
@@ -1210,7 +1210,7 @@ void USBHS_Handler(void)
     }
     //NVIC_ClearPendingIRQ(USBHS_IRQn); //  clear l'IRQ
     memory_sync();
-    
+
 }
 
 /**
@@ -1237,7 +1237,7 @@ void USBD_HAL_ResetEPs(uint32_t bmEPs, uint8_t bStatus, uint8_t bKeepCfg)
     {
         if (tmp & epBit)
         {
-            
+
 
             /* Disable ISR */
             pUdp->USBHS_DEVIDR |= (epBit << SHIFT_INTERUPT);
@@ -1249,7 +1249,7 @@ void USBD_HAL_ResetEPs(uint32_t bmEPs, uint8_t bStatus, uint8_t bKeepCfg)
                while(USBHS_IsBankKilled(pUdp, ep));
              }
             #endif
-            
+
             /* Reset transfer information */
             pEndpoint = &(endpoints[ep]);
             /* Reset endpoint state */
@@ -1318,7 +1318,7 @@ void USBD_HAL_CancelIo(uint32_t bmEPs)
 uint8_t USBD_HAL_ConfigureEP(const USBEndpointDescriptor *pDescriptor)
 {
     Usbhs    *pUdp = USBHS;
-    
+
     Endpoint *pEndpoint;
     uint8_t  bEndpoint;
     uint8_t  bType;
@@ -1378,7 +1378,7 @@ uint8_t USBD_HAL_ConfigureEP(const USBEndpointDescriptor *pDescriptor)
             {
                 bNbTrans = 0;
             }
-            
+
 
             /* Mask, bit 10..0 is the size */
             pEndpoint->size &= 0x7FF;
@@ -1397,8 +1397,8 @@ uint8_t USBD_HAL_ConfigureEP(const USBEndpointDescriptor *pDescriptor)
         UDPHS_EndOfTransfer(bEndpoint, USBD_STATUS_RESET);
     }
     pEndpoint->state = UDPHS_ENDPOINT_IDLE;
-    
-    
+
+
     /* Configure endpoint size */
     if( pEndpoint->size <= 8 )
         bSizeEpt = 0;
@@ -1416,15 +1416,15 @@ uint8_t USBD_HAL_ConfigureEP(const USBEndpointDescriptor *pDescriptor)
         bSizeEpt = 6;
     else if ( pEndpoint->size <= 1024 )
         bSizeEpt = 7;
-   
+
     /* Configure endpoint */
     if (bType == USBEndpointDescriptor_CONTROL)
-    {        
+    {
         USBHS_EnableIntEP(pUdp, bEndpoint);
     }
 
     USBHS_ConfigureEPs(pUdp, bEndpoint, bType, bEndpointDir, bSizeEpt, ((pEndpoint->bank) - 1));
-    
+
     USBHS_AllocateMemory(pUdp, bEndpoint);
     while( (USBHS_DEVEPTISR_CFGOK & pUdp->USBHS_DEVEPTISR[bEndpoint]) == 0 ) {
 
@@ -1592,7 +1592,7 @@ uint8_t USBD_HAL_WrWithHdr(uint8_t bEndpoint,
                            const void * pData,uint32_t dLength)
 {
     Usbhs    *pUdp  = USBHS;
-    
+
     Endpoint *pEp  = &(endpoints[bEndpoint]);
     uint8_t bDmaEndpoint = (bEndpoint-1);
     Transfer *pXfr = (Transfer*)&(pEp->transfer);
@@ -1619,7 +1619,7 @@ uint8_t USBD_HAL_WrWithHdr(uint8_t bEndpoint,
     pXfr->remaining   = bHdrLen + dLength;
     pXfr->buffered    = 0;
     pXfr->transferred = 0;
-    
+
     SCB_CleanInvalidateDCache();
     /* 1. DMA supported always, 2. Not ZLP */
     if (bHdrLen + dLength > 0)
@@ -1678,7 +1678,7 @@ uint8_t USBD_HAL_WrWithHdr(uint8_t bEndpoint,
                                | USBHS_DEVDMACONTROL_BUFF_LENGTH(pktLen)
                                | USBHS_DEVDMACONTROL_END_B_EN
                                | USBHS_DEVDMACONTROL_LDNXT_DSC;
-                
+
                 dLength -= pktLen; ndxData += pktLen;
                 /* LD3: data  - bank 1 */
                 pktLen = pEp->size;
@@ -1728,7 +1728,7 @@ uint8_t USBD_HAL_WrWithHdr(uint8_t bEndpoint,
         return USBD_STATUS_SUCCESS;
     }
 #endif
-    
+
     /* Enable IT */
     USBHS_EnableIntEP( pUdp, bEndpoint );
     USBHS_EnableEPIntType(pUdp, bEndpoint, USBHS_DEVEPTIER_TXINES);
@@ -1768,12 +1768,12 @@ uint8_t USBD_HAL_Read(uint8_t    bEndpoint,
  */
 void USBD_HAL_Connect(void)
 {
-    
-    // At startup the USB bus state is unknown, 
+
+    // At startup the USB bus state is unknown,
     // therefore the state is considered IDLE to not miss any USB event
-    
+
     USBHS_FreezeClock(USBHS, false);
-    
+
     // Authorize attach
     USBHS_DetachUsb(USBHS, false);
 
@@ -1782,23 +1782,23 @@ void USBD_HAL_Connect(void)
     // Thus, the USB Reset state is not detected and endpoint control is not allocated
     // In this case, a Reset is do automatically after attach.
     USBD_HAL_ConfigureEP(0);
-    
+
     // Enable USB line events
     USBHS_EnableInt(USBHS,  (USBHS_DEVIER_EORSTES  | USBHS_DEVIER_WAKEUPES | USBHS_DEVIER_SUSPES | USBHS_DEVIER_SOFES) );
-    
+
 #ifdef USB_DEVICE_HS_SUPPORT
     USBHS_EnableInt(USBHS, USBHS_DEVIER_MSOFES);
 #endif
-    
+
     // Reset following interrupts flag
     USBHS_AckInt(USBHS, ( USBHS_DEVICR_EORSTC | USBHS_DEVICR_SOFC | USBHS_DEVICR_MSOFC ) );
-    
-   
+
+
      // The first suspend interrupt is not detected else raise it
     USBHS_RaiseInt(USBHS, USBHS_DEVIFR_SUSPS);
-   
+
     USBHS_AckInt(USBHS, USBHS_DEVICR_WAKEUPC);
-    
+
     USBHS_FreezeClock(USBHS, true);
 }
 
@@ -1866,7 +1866,7 @@ void USBD_HAL_SetConfiguration(uint8_t cfgnum)
  */
 void USBD_HAL_Init(void)
 {
-  
+
 #ifdef DMA
     /* DMA Link list should be 16-bytes aligned */
     if ((uint32_t)dmaLL & 0xFFFFFFF0)
@@ -1876,12 +1876,12 @@ void USBD_HAL_Init(void)
 #endif
 /** Disable USB hardware */
     USBHS_UsbEnable(USBHS, false);
-    
+
     USBHS_UsbMode(USBHS, DEVICE_MODE);
-    
+
     /** Enable USB hardware*/
     USBHS_UsbEnable(USBHS, true);
-    
+
     USBHS_FreezeClock(USBHS, false);
 
     if(ForceFS)
@@ -1894,14 +1894,14 @@ void USBD_HAL_Init(void)
     }
         /*  Check USB clock */
     while( !USBHS_ISUsableClock(USBHS) );
-    
+
     USBHS_FreezeClock(USBHS, true);
-    
+
     /* Clear IRQ */
     NVIC_ClearPendingIRQ(USBHS_IRQn);
     /* IRQ */
     NVIC_EnableIRQ(USBHS_IRQn) ;
-    
+
 }
 
 /**
@@ -1949,36 +1949,36 @@ uint8_t USBD_HAL_Halt(uint8_t bEndpoint, uint8_t ctl)
     uint8_t status = 0;
     /* SET Halt */
     if (ctl == 1)
-    {      
+    {
         /* Check that endpoint is enabled and not already in Halt state */
         if ((pEndpoint->state != UDPHS_ENDPOINT_DISABLED)
             && (pEndpoint->state != UDPHS_ENDPOINT_HALTED))
         {
 
              TRACE_INFO_WP("Halt%d ", bEndpoint);
-           
+
              /* Abort the current transfer if necessary */
              UDPHS_EndOfTransfer(bEndpoint, USBD_STATUS_ABORTED);
-            
+
              /* Put endpoint into Halt state */
              pEndpoint->state = UDPHS_ENDPOINT_HALTED;
              memory_sync();
              //SCB_CleanInvalidateDCache();
-             
+
              while(!USBHS_IsBankFree(pUdp, bEndpoint))
              {
                USBHS_KillBank(pUdp, bEndpoint);
                while(USBHS_IsBankKilled(pUdp, bEndpoint));
              }
-             
+
              if(USBHS_IsBankFree(pUdp, bEndpoint))
              {
                USBHS_AutoSwitchBankEnable(pUdp, bEndpoint, false);
-               USBHS_EnableEPIntType(pUdp, bEndpoint, (USBHS_DEVEPTIER_STALLRQS | USBHS_DEVEPTIER_RSTDTS) );               
+               USBHS_EnableEPIntType(pUdp, bEndpoint, (USBHS_DEVEPTIER_STALLRQS | USBHS_DEVEPTIER_RSTDTS) );
              }
              else
-             {              
-               USBHS_EnableEPIntType(pUdp, bEndpoint, USBHS_DEVEPTIER_NBUSYBKES );               
+             {
+               USBHS_EnableEPIntType(pUdp, bEndpoint, USBHS_DEVEPTIER_NBUSYBKES );
 #ifdef DMA
                if (CHIP_USB_ENDPOINTS_DMA(bDmaEndpoint))
                {
@@ -2029,7 +2029,7 @@ uint8_t USBD_HAL_Halt(uint8_t bEndpoint, uint8_t ctl)
  */
 uint8_t USBD_HAL_IsHighSpeed(void)
 {
-    Usbhs    *pUdp = USBHS; 
+    Usbhs    *pUdp = USBHS;
     uint32_t tmp = USBHS_GetUsbSpeed(pUdp);
     return ((tmp & USBHS_SR_SPEED_HIGH_SPEED) >> USBHS_SR_SPEED_Pos) ;
 }
@@ -2062,7 +2062,7 @@ void USBD_HAL_Disable(void)
 {
     //** Disable USB hardware
     USBHS_UsbEnable(USBHS, false);
-       
+
     /* Clear IRQ */
     NVIC_ClearPendingIRQ(USBHS_IRQn);
     /* IRQ */
@@ -2084,7 +2084,7 @@ void USBD_HAL_Test( uint8_t bIndex )
     USBHS_DisableInt(pUdp, USBHS_DEVIDR_SUSPEC);
     /* force High Speed (remove suspend) */
     pUdp->USBHS_DEVCTRL |= USBHS_DEVCTRL_SPDCONF_HIGH_SPEED;
-    
+
     USBHS_EnableTestMode(pUdp, USBHS_DEVCTRL_OPMODE2);
 
     switch( bIndex ) {
@@ -2141,4 +2141,3 @@ void USBD_HAL_Test( uint8_t bIndex )
 
 
 /**@}*/
-

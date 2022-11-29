@@ -291,7 +291,7 @@ extern void PIO_EnableIt( const Pin *pPin )
 {
 		uint32_t i = 0;
 	uint32_t dwFound = 0;
-	
+
 	TRACE_DEBUG( "PIO_EnableIt()\n\r" ) ;
 
 	assert( pPin != NULL ) ;
@@ -324,4 +324,3 @@ extern void PIO_DisableIt( const Pin *pPin )
 
 	pPin->pio->PIO_IDR = pPin->mask;
 }
-

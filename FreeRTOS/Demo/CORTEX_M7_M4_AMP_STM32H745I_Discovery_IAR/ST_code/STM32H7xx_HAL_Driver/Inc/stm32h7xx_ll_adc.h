@@ -1442,7 +1442,7 @@ typedef struct
   *         @arg @ref LL_ADC_CHANNEL_VBAT         (1)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH1_ADC2 (2)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH2_ADC2 (2)
-  *         
+  *
   *         (1) On STM32H7, parameter available only on ADC instance: ADC3.\n
   *         (2) On STM32H7, parameter available only on ADC instance: ADC2.\n
   *         (3) On STM32H7, fast channel (0.125 us for 14-bit resolution (ADC conversion rate up to 8 Ms/s)).
@@ -1493,7 +1493,7 @@ typedef struct
   *         @arg @ref LL_ADC_CHANNEL_VBAT         (1)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH1_ADC2 (2)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH2_ADC2 (2)
-  *         
+  *
   *         (1) On STM32H7, parameter available only on ADC instance: ADC3.\n
   *         (2) On STM32H7, parameter available only on ADC instance: ADC2.\n
   *         (3) On STM32H7, fast channel (0.125 us for 14-bit resolution (ADC conversion rate up to 8 Ms/s)).
@@ -1560,7 +1560,7 @@ typedef struct
   *         @arg @ref LL_ADC_CHANNEL_VBAT         (1)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH1_ADC2 (2)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH2_ADC2 (2)
-  *         
+  *
   *         (1) On STM32H7, parameter available only on ADC instance: ADC3.\n
   *         (2) On STM32H7, parameter available only on ADC instance: ADC2.\n
   *         (3) On STM32H7, fast channel (0.125 us for 14-bit resolution (ADC conversion rate up to 8 Ms/s)).
@@ -1610,7 +1610,7 @@ typedef struct
   *         @arg @ref LL_ADC_CHANNEL_VBAT         (1)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH1_ADC2 (2)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH2_ADC2 (2)
-  *         
+  *
   *         (1) On STM32H7, parameter available only on ADC instance: ADC3.\n
   *         (2) On STM32H7, parameter available only on ADC instance: ADC2.\n
   *         (3) On STM32H7, fast channel (0.125 us for 14-bit resolution (ADC conversion rate up to 8 Ms/s)).
@@ -1660,7 +1660,7 @@ typedef struct
   *         @arg @ref LL_ADC_CHANNEL_VBAT         (1)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH1_ADC2 (2)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH2_ADC2 (2)
-  *         
+  *
   *         (1) On STM32H7, parameter available only on ADC instance: ADC3.\n
   *         (2) On STM32H7, parameter available only on ADC instance: ADC2.
   * @retval Value "0" if the internal channel selected is not available on the ADC instance selected.
@@ -1717,7 +1717,7 @@ typedef struct
   *         @arg @ref LL_ADC_CHANNEL_VBAT         (1)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH1_ADC2 (2)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH2_ADC2 (2)
-  *         
+  *
   *         (1) On STM32H7, parameter available only on ADC instance: ADC3.\n
   *         (2) On STM32H7, parameter available only on ADC instance: ADC2.\n
   *         (3) On STM32H7, fast channel (0.125 us for 14-bit resolution (ADC conversion rate up to 8 Ms/s)).
@@ -1809,7 +1809,7 @@ typedef struct
   *         @arg @ref LL_ADC_AWD_CH_DAC1CH2_ADC2_REG     (0)(2)
   *         @arg @ref LL_ADC_AWD_CH_DAC1CH2_ADC2_INJ     (0)(2)
   *         @arg @ref LL_ADC_AWD_CH_DAC1CH2_ADC2_REG_INJ    (2)
-  *         
+  *
   *         (0) On STM32H7, parameter available only on analog watchdog number: AWD1.\n
   *         (1) On STM32H7, parameter available only on ADC instance: ADC3.\n
   *         (2) On STM32H7, parameter available only on ADC instance: ADC2.
@@ -2776,7 +2776,7 @@ __STATIC_INLINE uint32_t LL_ADC_GetLowPowerMode(ADC_TypeDef *ADCx)
   *         @arg @ref LL_ADC_CHANNEL_VBAT         (1)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH1_ADC2 (2)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH2_ADC2 (2)
-  *         
+  *
   *         (1) On STM32H7, parameter available only on ADC instance: ADC3.\n
   *         (2) On STM32H7, parameter available only on ADC instance: ADC2.\n
   *         (3) On STM32H7, fast channel (0.125 us for 14-bit resolution (ADC conversion rate up to 8 Ms/s)).
@@ -2847,7 +2847,7 @@ __STATIC_INLINE void LL_ADC_SetOffset(ADC_TypeDef *ADCx, uint32_t Offsety, uint3
   *         @arg @ref LL_ADC_CHANNEL_VBAT         (1)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH1_ADC2 (2)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH2_ADC2 (2)
-  *         
+  *
   *         (1) On STM32H7, parameter available only on ADC instance: ADC3.\n
   *         (2) On STM32H7, parameter available only on ADC instance: ADC2.\n
   *         (3) On STM32H7, fast channel (0.125 us for 14-bit resolution (ADC conversion rate up to 8 Ms/s)).
@@ -3387,7 +3387,7 @@ __STATIC_INLINE uint32_t LL_ADC_REG_GetSequencerDiscont(ADC_TypeDef *ADCx)
   *         @arg @ref LL_ADC_CHANNEL_VBAT         (1)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH1_ADC2 (2)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH2_ADC2 (2)
-  *         
+  *
   *         (1) On STM32H7, parameter available only on ADC instance: ADC3.\n
   *         (2) On STM32H7, parameter available only on ADC instance: ADC2.\n
   *         (3) On STM32H7, fast channel (0.125 us for 14-bit resolution (ADC conversion rate up to 8 Ms/s)).
@@ -3487,7 +3487,7 @@ __STATIC_INLINE void LL_ADC_REG_SetSequencerRanks(ADC_TypeDef *ADCx, uint32_t Ra
   *         @arg @ref LL_ADC_CHANNEL_VBAT         (1)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH1_ADC2 (2)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH2_ADC2 (2)
-  *         
+  *
   *         (1) On STM32H7, parameter available only on ADC instance: ADC3.\n
   *         (2) On STM32H7, parameter available only on ADC instance: ADC2.\n
   *         (3) On STM32H7, fast channel (0.125 us for 14-bit resolution (ADC conversion rate up to 8 Ms/s)).
@@ -3918,7 +3918,7 @@ __STATIC_INLINE uint32_t LL_ADC_INJ_GetSequencerDiscont(ADC_TypeDef *ADCx)
   *         @arg @ref LL_ADC_CHANNEL_VBAT         (1)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH1_ADC2 (2)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH2_ADC2 (2)
-  *         
+  *
   *         (1) On STM32H7, parameter available only on ADC instance: ADC3.\n
   *         (2) On STM32H7, parameter available only on ADC instance: ADC2.\n
   *         (3) On STM32H7, fast channel (0.125 us for 14-bit resolution (ADC conversion rate up to 8 Ms/s)).
@@ -3988,7 +3988,7 @@ __STATIC_INLINE void LL_ADC_INJ_SetSequencerRanks(ADC_TypeDef *ADCx, uint32_t Ra
   *         @arg @ref LL_ADC_CHANNEL_VBAT         (1)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH1_ADC2 (2)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH2_ADC2 (2)
-  *         
+  *
   *         (1) On STM32H7, parameter available only on ADC instance: ADC3.\n
   *         (2) On STM32H7, parameter available only on ADC instance: ADC2.\n
   *         (3) On STM32H7, fast channel (0.125 us for 14-bit resolution (ADC conversion rate up to 8 Ms/s)).
@@ -4211,7 +4211,7 @@ __STATIC_INLINE uint32_t LL_ADC_INJ_GetQueueMode(ADC_TypeDef *ADCx)
   *         @arg @ref LL_ADC_CHANNEL_VBAT         (1)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH1_ADC2 (2)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH2_ADC2 (2)
-  *         
+  *
   *         (1) On STM32H7, parameter available only on ADC instance: ADC3.\n
   *         (2) On STM32H7, parameter available only on ADC instance: ADC2.\n
   *         (3) On STM32H7, fast channel (0.125 us for 14-bit resolution (ADC conversion rate up to 8 Ms/s)).
@@ -4242,7 +4242,7 @@ __STATIC_INLINE uint32_t LL_ADC_INJ_GetQueueMode(ADC_TypeDef *ADCx)
   *         @arg @ref LL_ADC_CHANNEL_VBAT         (1)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH1_ADC2 (2)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH2_ADC2 (2)
-  *         
+  *
   *         (1) On STM32H7, parameter available only on ADC instance: ADC3.\n
   *         (2) On STM32H7, parameter available only on ADC instance: ADC2.\n
   *         (3) On STM32H7, fast channel (0.125 us for 14-bit resolution (ADC conversion rate up to 8 Ms/s)).
@@ -4273,7 +4273,7 @@ __STATIC_INLINE uint32_t LL_ADC_INJ_GetQueueMode(ADC_TypeDef *ADCx)
   *         @arg @ref LL_ADC_CHANNEL_VBAT         (1)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH1_ADC2 (2)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH2_ADC2 (2)
-  *         
+  *
   *         (1) On STM32H7, parameter available only on ADC instance: ADC3.\n
   *         (2) On STM32H7, parameter available only on ADC instance: ADC2.\n
   *         (3) On STM32H7, fast channel (0.125 us for 14-bit resolution (ADC conversion rate up to 8 Ms/s)).
@@ -4304,7 +4304,7 @@ __STATIC_INLINE uint32_t LL_ADC_INJ_GetQueueMode(ADC_TypeDef *ADCx)
   *         @arg @ref LL_ADC_CHANNEL_VBAT         (1)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH1_ADC2 (2)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH2_ADC2 (2)
-  *         
+  *
   *         (1) On STM32H7, parameter available only on ADC instance: ADC3.\n
   *         (2) On STM32H7, parameter available only on ADC instance: ADC2.\n
   *         (3) On STM32H7, fast channel (0.125 us for 14-bit resolution (ADC conversion rate up to 8 Ms/s)).
@@ -4425,7 +4425,7 @@ __STATIC_INLINE void LL_ADC_INJ_ConfigQueueContext(ADC_TypeDef *ADCx,
   *         @arg @ref LL_ADC_CHANNEL_VBAT         (1)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH1_ADC2 (2)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH2_ADC2 (2)
-  *         
+  *
   *         (1) On STM32H7, parameter available only on ADC instance: ADC3.\n
   *         (2) On STM32H7, parameter available only on ADC instance: ADC2.\n
   *         (3) On STM32H7, fast channel (0.125 us for 14-bit resolution (ADC conversion rate up to 8 Ms/s)).
@@ -4511,7 +4511,7 @@ __STATIC_INLINE void LL_ADC_SetChannelSamplingTime(ADC_TypeDef *ADCx, uint32_t C
   *         @arg @ref LL_ADC_CHANNEL_VBAT         (1)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH1_ADC2 (2)
   *         @arg @ref LL_ADC_CHANNEL_DAC1CH2_ADC2 (2)
-  *         
+  *
   *         (1) On STM32H7, parameter available only on ADC instance: ADC3.\n
   *         (2) On STM32H7, parameter available only on ADC instance: ADC2.\n
   *         (3) On STM32H7, fast channel (0.125 us for 14-bit resolution (ADC conversion rate up to 8 Ms/s)).
@@ -4778,7 +4778,7 @@ __STATIC_INLINE uint32_t LL_ADC_GetChannelSingleDiff(ADC_TypeDef *ADCx, uint32_t
   *         @arg @ref LL_ADC_AWD_CH_DAC1CH2_ADC2_REG     (0)(2)
   *         @arg @ref LL_ADC_AWD_CH_DAC1CH2_ADC2_INJ     (0)(2)
   *         @arg @ref LL_ADC_AWD_CH_DAC1CH2_ADC2_REG_INJ    (2)
-  *         
+  *
   *         (0) On STM32H7, parameter available only on analog watchdog number: AWD1.\n
   *         (1) On STM32H7, parameter available only on ADC instance: ADC3.\n
   *         (2) On STM32H7, parameter available only on ADC instance: ADC2.
@@ -4920,7 +4920,7 @@ __STATIC_INLINE void LL_ADC_SetAnalogWDMonitChannels(ADC_TypeDef *ADCx, uint32_t
   *         @arg @ref LL_ADC_AWD_CHANNEL_19_REG          (0)
   *         @arg @ref LL_ADC_AWD_CHANNEL_19_INJ          (0)
   *         @arg @ref LL_ADC_AWD_CHANNEL_19_REG_INJ
-  *         
+  *
   *         (0) On STM32H7, parameter available only on analog watchdog number: AWD1.
   */
 __STATIC_INLINE uint32_t LL_ADC_GetAnalogWDMonitChannels(ADC_TypeDef *ADCx, uint32_t AWDy)

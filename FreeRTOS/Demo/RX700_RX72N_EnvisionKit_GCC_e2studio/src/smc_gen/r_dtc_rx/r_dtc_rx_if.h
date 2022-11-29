@@ -294,4 +294,3 @@ uint32_t  R_DTC_GetVersion(void);
 #endif /* DTC_RX_IF_H */
 
 /* End of File */
-

@@ -39,7 +39,7 @@
 * Input          : - IWDG_WriteAccess: new state of write access to IWDG_PR and
 *                    IWDG_RLR registers.
 *                    This parameter can be one of the following values:
-*                       - IWDG_WriteAccess_Enable: Enable write access to 
+*                       - IWDG_WriteAccess_Enable: Enable write access to
 *                         IWDG_PR and IWDG_RLR registers
 *                       - IWDG_WriteAccess_Disable: Disable write access to
 *                         IWDG_PR and IWDG_RLR registers

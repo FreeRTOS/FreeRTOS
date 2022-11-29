@@ -442,4 +442,3 @@ static void prvRegTest2Task( void *pvParameters )
 	vRegTest2Implementation();
 }
 /*-----------------------------------------------------------*/
-

@@ -56,4 +56,3 @@ WOLFSSL_API const char* wolfCrypt_GetCoreHash_fips(void);
 #endif
 
 #endif /* WOLF_CRYPT_FIPS_TEST_H */
-

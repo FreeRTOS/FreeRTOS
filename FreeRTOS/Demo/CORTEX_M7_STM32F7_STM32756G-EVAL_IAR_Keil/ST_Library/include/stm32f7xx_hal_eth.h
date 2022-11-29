@@ -33,7 +33,7 @@
   * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32F7xx_HAL_ETH_H
@@ -52,8 +52,8 @@
 
 /** @addtogroup ETH
   * @{
-  */ 
-  
+  */
+
 /** @addtogroup ETH_Private_Macros
   * @{
   */
@@ -67,7 +67,7 @@
 #define IS_ETH_DUPLEX_MODE(MODE)  (((MODE) == ETH_MODE_FULLDUPLEX) || \
                                   ((MODE) == ETH_MODE_HALFDUPLEX))
 #define IS_ETH_RX_MODE(MODE)    (((MODE) == ETH_RXPOLLING_MODE) || \
-                                 ((MODE) == ETH_RXINTERRUPT_MODE)) 
+                                 ((MODE) == ETH_RXINTERRUPT_MODE))
 #define IS_ETH_RX_MODE(MODE)    (((MODE) == ETH_RXPOLLING_MODE) || \
                                  ((MODE) == ETH_RXINTERRUPT_MODE))
 #define IS_ETH_RX_MODE(MODE)    (((MODE) == ETH_RXPOLLING_MODE) || \
@@ -271,7 +271,7 @@
                                           ((BUFFER) == ETH_DMARXDESC_BUFFER2))
 #define IS_ETH_PMT_GET_FLAG(FLAG) (((FLAG) == ETH_PMT_FLAG_WUFR) || \
                                    ((FLAG) == ETH_PMT_FLAG_MPR))
-#define IS_ETH_DMA_FLAG(FLAG) ((((FLAG) & (uint32_t)0xC7FE1800) == 0x00) && ((FLAG) != 0x00)) 
+#define IS_ETH_DMA_FLAG(FLAG) ((((FLAG) & (uint32_t)0xC7FE1800) == 0x00) && ((FLAG) != 0x00))
 #define IS_ETH_DMA_GET_FLAG(FLAG) (((FLAG) == ETH_DMA_FLAG_TST) || ((FLAG) == ETH_DMA_FLAG_PMT) || \
                                    ((FLAG) == ETH_DMA_FLAG_MMC) || ((FLAG) == ETH_DMA_FLAG_DATATRANSFERERROR) || \
                                    ((FLAG) == ETH_DMA_FLAG_READWRITEERROR) || ((FLAG) == ETH_DMA_FLAG_ACCESSERROR) || \
@@ -348,7 +348,7 @@
 #define ETH_MACMIIAR_CR_MASK    ((uint32_t)0xFFFFFFE3)
 
 /* ETHERNET MACCR register Mask */
-#define ETH_MACCR_CLEAR_MASK    ((uint32_t)0xFF20810F)  
+#define ETH_MACCR_CLEAR_MASK    ((uint32_t)0xFF20810F)
 
 /* ETHERNET MACFCR register Mask */
 #define ETH_MACFCR_CLEAR_MASK   ((uint32_t)0x0000FF41)
@@ -365,14 +365,14 @@
   * @}
   */
 
-/* Exported types ------------------------------------------------------------*/ 
+/* Exported types ------------------------------------------------------------*/
 /** @defgroup ETH_Exported_Types ETH Exported Types
   * @{
   */
 
-/** 
-  * @brief  HAL State structures definition  
-  */ 
+/**
+  * @brief  HAL State structures definition
+  */
 typedef enum
 {
   HAL_ETH_STATE_RESET             = 0x00,    /*!< Peripheral not yet Initialized or disabled         */
@@ -387,8 +387,8 @@ typedef enum
   HAL_ETH_STATE_ERROR             = 0x04     /*!< Reception process is ongoing                       */
 }HAL_ETH_StateTypeDef;
 
-/** 
-  * @brief  ETH Init Structure definition  
+/**
+  * @brief  ETH Init Structure definition
   */
 
 typedef struct
@@ -403,26 +403,26 @@ typedef struct
 
   uint32_t             DuplexMode;                /*!< Selects the MAC duplex mode: Half-Duplex or Full-Duplex mode
                                                            This parameter can be a value of @ref ETH_Duplex_Mode */
-  
+
   uint16_t             PhyAddress;                /*!< Ethernet PHY address.
                                                            This parameter must be a number between Min_Data = 0 and Max_Data = 32 */
-  
+
   uint8_t             *MACAddr;                   /*!< MAC Address of used Hardware: must be pointer on an array of 6 bytes */
-  
+
   uint32_t             RxMode;                    /*!< Selects the Ethernet Rx mode: Polling mode, Interrupt mode.
                                                            This parameter can be a value of @ref ETH_Rx_Mode */
-  
-  uint32_t             ChecksumMode;              /*!< Selects if the checksum is check by hardware or by software. 
+
+  uint32_t             ChecksumMode;              /*!< Selects if the checksum is check by hardware or by software.
                                                          This parameter can be a value of @ref ETH_Checksum_Mode */
-  
-  uint32_t             MediaInterface    ;               /*!< Selects the media-independent interface or the reduced media-independent interface. 
+
+  uint32_t             MediaInterface    ;               /*!< Selects the media-independent interface or the reduced media-independent interface.
                                                          This parameter can be a value of @ref ETH_Media_Interface */
 
 } ETH_InitTypeDef;
 
 
- /** 
-  * @brief  ETH MAC Configuration Structure definition  
+ /**
+  * @brief  ETH MAC Configuration Structure definition
   */
 
 typedef struct
@@ -430,7 +430,7 @@ typedef struct
   uint32_t             Watchdog;                  /*!< Selects or not the Watchdog timer
                                                            When enabled, the MAC allows no more then 2048 bytes to be received.
                                                            When disabled, the MAC can receive up to 16384 bytes.
-                                                           This parameter can be a value of @ref ETH_Watchdog */  
+                                                           This parameter can be a value of @ref ETH_Watchdog */
 
   uint32_t             Jabber;                    /*!< Selects or not Jabber timer
                                                            When enabled, the MAC allows no more then 2048 bytes to be sent.
@@ -438,7 +438,7 @@ typedef struct
                                                            This parameter can be a value of @ref ETH_Jabber */
 
   uint32_t             InterFrameGap;             /*!< Selects the minimum IFG between frames during transmission.
-                                                           This parameter can be a value of @ref ETH_Inter_Frame_Gap */   
+                                                           This parameter can be a value of @ref ETH_Inter_Frame_Gap */
 
   uint32_t             CarrierSense;              /*!< Selects or not the Carrier Sense.
                                                            This parameter can be a value of @ref ETH_Carrier_Sense */
@@ -446,70 +446,70 @@ typedef struct
   uint32_t             ReceiveOwn;                /*!< Selects or not the ReceiveOwn,
                                                            ReceiveOwn allows the reception of frames when the TX_EN signal is asserted
                                                            in Half-Duplex mode.
-                                                           This parameter can be a value of @ref ETH_Receive_Own */  
+                                                           This parameter can be a value of @ref ETH_Receive_Own */
 
   uint32_t             LoopbackMode;              /*!< Selects or not the internal MAC MII Loopback mode.
-                                                           This parameter can be a value of @ref ETH_Loop_Back_Mode */  
+                                                           This parameter can be a value of @ref ETH_Loop_Back_Mode */
 
   uint32_t             ChecksumOffload;           /*!< Selects or not the IPv4 checksum checking for received frame payloads' TCP/UDP/ICMP headers.
-                                                           This parameter can be a value of @ref ETH_Checksum_Offload */    
+                                                           This parameter can be a value of @ref ETH_Checksum_Offload */
 
   uint32_t             RetryTransmission;         /*!< Selects or not the MAC attempt retries transmission, based on the settings of BL,
                                                            when a collision occurs (Half-Duplex mode).
                                                            This parameter can be a value of @ref ETH_Retry_Transmission */
 
   uint32_t             AutomaticPadCRCStrip;      /*!< Selects or not the Automatic MAC Pad/CRC Stripping.
-                                                           This parameter can be a value of @ref ETH_Automatic_Pad_CRC_Strip */ 
+                                                           This parameter can be a value of @ref ETH_Automatic_Pad_CRC_Strip */
 
   uint32_t             BackOffLimit;              /*!< Selects the BackOff limit value.
                                                            This parameter can be a value of @ref ETH_Back_Off_Limit */
 
   uint32_t             DeferralCheck;             /*!< Selects or not the deferral check function (Half-Duplex mode).
-                                                           This parameter can be a value of @ref ETH_Deferral_Check */                                                                                                        
+                                                           This parameter can be a value of @ref ETH_Deferral_Check */
 
   uint32_t             ReceiveAll;                /*!< Selects or not all frames reception by the MAC (No filtering).
-                                                           This parameter can be a value of @ref ETH_Receive_All */   
+                                                           This parameter can be a value of @ref ETH_Receive_All */
 
-  uint32_t             SourceAddrFilter;          /*!< Selects the Source Address Filter mode.                                                           
-                                                           This parameter can be a value of @ref ETH_Source_Addr_Filter */                  
+  uint32_t             SourceAddrFilter;          /*!< Selects the Source Address Filter mode.
+                                                           This parameter can be a value of @ref ETH_Source_Addr_Filter */
 
-  uint32_t             PassControlFrames;         /*!< Sets the forwarding mode of the control frames (including unicast and multicast PAUSE frames)                                                          
-                                                           This parameter can be a value of @ref ETH_Pass_Control_Frames */ 
+  uint32_t             PassControlFrames;         /*!< Sets the forwarding mode of the control frames (including unicast and multicast PAUSE frames)
+                                                           This parameter can be a value of @ref ETH_Pass_Control_Frames */
 
   uint32_t             BroadcastFramesReception;  /*!< Selects or not the reception of Broadcast Frames.
                                                            This parameter can be a value of @ref ETH_Broadcast_Frames_Reception */
 
   uint32_t             DestinationAddrFilter;     /*!< Sets the destination filter mode for both unicast and multicast frames.
-                                                           This parameter can be a value of @ref ETH_Destination_Addr_Filter */ 
+                                                           This parameter can be a value of @ref ETH_Destination_Addr_Filter */
 
   uint32_t             PromiscuousMode;           /*!< Selects or not the Promiscuous Mode
                                                            This parameter can be a value of @ref ETH_Promiscuous_Mode */
 
   uint32_t             MulticastFramesFilter;     /*!< Selects the Multicast Frames filter mode: None/HashTableFilter/PerfectFilter/PerfectHashTableFilter.
-                                                           This parameter can be a value of @ref ETH_Multicast_Frames_Filter */ 
+                                                           This parameter can be a value of @ref ETH_Multicast_Frames_Filter */
 
   uint32_t             UnicastFramesFilter;       /*!< Selects the Unicast Frames filter mode: HashTableFilter/PerfectFilter/PerfectHashTableFilter.
-                                                           This parameter can be a value of @ref ETH_Unicast_Frames_Filter */ 
+                                                           This parameter can be a value of @ref ETH_Unicast_Frames_Filter */
 
   uint32_t             HashTableHigh;             /*!< This field holds the higher 32 bits of Hash table.
                                                            This parameter must be a number between Min_Data = 0x0 and Max_Data = 0xFFFFFFFF */
 
   uint32_t             HashTableLow;              /*!< This field holds the lower 32 bits of Hash table.
-                                                           This parameter must be a number between Min_Data = 0x0 and Max_Data = 0xFFFFFFFF  */    
+                                                           This parameter must be a number between Min_Data = 0x0 and Max_Data = 0xFFFFFFFF  */
 
-  uint32_t             PauseTime;                 /*!< This field holds the value to be used in the Pause Time field in the transmit control frame. 
+  uint32_t             PauseTime;                 /*!< This field holds the value to be used in the Pause Time field in the transmit control frame.
                                                            This parameter must be a number between Min_Data = 0x0 and Max_Data = 0xFFFF */
 
   uint32_t             ZeroQuantaPause;           /*!< Selects or not the automatic generation of Zero-Quanta Pause Control frames.
-                                                           This parameter can be a value of @ref ETH_Zero_Quanta_Pause */  
+                                                           This parameter can be a value of @ref ETH_Zero_Quanta_Pause */
 
   uint32_t             PauseLowThreshold;         /*!< This field configures the threshold of the PAUSE to be checked for
                                                            automatic retransmission of PAUSE Frame.
                                                            This parameter can be a value of @ref ETH_Pause_Low_Threshold */
-                                                           
+
   uint32_t             UnicastPauseFrameDetect;   /*!< Selects or not the MAC detection of the Pause frames (with MAC Address0
                                                            unicast address and unique multicast address).
-                                                           This parameter can be a value of @ref ETH_Unicast_Pause_Frame_Detect */  
+                                                           This parameter can be a value of @ref ETH_Unicast_Pause_Frame_Detect */
 
   uint32_t             ReceiveFlowControl;        /*!< Enables or disables the MAC to decode the received Pause frame and
                                                            disable its transmitter for a specified time (Pause Time)
@@ -517,34 +517,34 @@ typedef struct
 
   uint32_t             TransmitFlowControl;       /*!< Enables or disables the MAC to transmit Pause frames (Full-Duplex mode)
                                                            or the MAC back-pressure operation (Half-Duplex mode)
-                                                           This parameter can be a value of @ref ETH_Transmit_Flow_Control */     
+                                                           This parameter can be a value of @ref ETH_Transmit_Flow_Control */
 
   uint32_t             VLANTagComparison;         /*!< Selects the 12-bit VLAN identifier or the complete 16-bit VLAN tag for
                                                            comparison and filtering.
-                                                           This parameter can be a value of @ref ETH_VLAN_Tag_Comparison */ 
+                                                           This parameter can be a value of @ref ETH_VLAN_Tag_Comparison */
 
   uint32_t             VLANTagIdentifier;         /*!< Holds the VLAN tag identifier for receive frames */
 
 } ETH_MACInitTypeDef;
 
 
-/** 
-  * @brief  ETH DMA Configuration Structure definition  
+/**
+  * @brief  ETH DMA Configuration Structure definition
   */
 
 typedef struct
 {
  uint32_t              DropTCPIPChecksumErrorFrame; /*!< Selects or not the Dropping of TCP/IP Checksum Error Frames.
-                                                             This parameter can be a value of @ref ETH_Drop_TCP_IP_Checksum_Error_Frame */ 
+                                                             This parameter can be a value of @ref ETH_Drop_TCP_IP_Checksum_Error_Frame */
 
   uint32_t             ReceiveStoreForward;         /*!< Enables or disables the Receive store and forward mode.
-                                                             This parameter can be a value of @ref ETH_Receive_Store_Forward */ 
+                                                             This parameter can be a value of @ref ETH_Receive_Store_Forward */
 
   uint32_t             FlushReceivedFrame;          /*!< Enables or disables the flushing of received frames.
-                                                             This parameter can be a value of @ref ETH_Flush_Received_Frame */ 
+                                                             This parameter can be a value of @ref ETH_Flush_Received_Frame */
 
   uint32_t             TransmitStoreForward;        /*!< Enables or disables Transmit store and forward mode.
-                                                             This parameter can be a value of @ref ETH_Transmit_Store_Forward */ 
+                                                             This parameter can be a value of @ref ETH_Transmit_Store_Forward */
 
   uint32_t             TransmitThresholdControl;    /*!< Selects or not the Transmit Threshold Control.
                                                              This parameter can be a value of @ref ETH_Transmit_Threshold_Control */
@@ -568,88 +568,88 @@ typedef struct
 
   uint32_t             FixedBurst;                  /*!< Enables or disables the AHB Master interface fixed burst transfers.
                                                              This parameter can be a value of @ref ETH_Fixed_Burst */
-                       
+
   uint32_t             RxDMABurstLength;            /*!< Indicates the maximum number of beats to be transferred in one Rx DMA transaction.
-                                                             This parameter can be a value of @ref ETH_Rx_DMA_Burst_Length */ 
+                                                             This parameter can be a value of @ref ETH_Rx_DMA_Burst_Length */
 
   uint32_t             TxDMABurstLength;            /*!< Indicates the maximum number of beats to be transferred in one Tx DMA transaction.
                                                              This parameter can be a value of @ref ETH_Tx_DMA_Burst_Length */
-  
+
   uint32_t             EnhancedDescriptorFormat;    /*!< Enables the enhanced descriptor format.
                                                              This parameter can be a value of @ref ETH_DMA_Enhanced_descriptor_format */
 
   uint32_t             DescriptorSkipLength;        /*!< Specifies the number of word to skip between two unchained descriptors (Ring mode)
-                                                             This parameter must be a number between Min_Data = 0 and Max_Data = 32 */                                                             
+                                                             This parameter must be a number between Min_Data = 0 and Max_Data = 32 */
 
   uint32_t             DMAArbitration;              /*!< Selects the DMA Tx/Rx arbitration.
-                                                             This parameter can be a value of @ref ETH_DMA_Arbitration */  
+                                                             This parameter can be a value of @ref ETH_DMA_Arbitration */
 } ETH_DMAInitTypeDef;
 
 
-/** 
+/**
   * @brief  ETH DMA Descriptors data structure definition
-  */ 
+  */
 
-typedef struct  
+typedef struct
 {
   __IO uint32_t   Status;           /*!< Status */
-  
+
   uint32_t   ControlBufferSize;     /*!< Control and Buffer1, Buffer2 lengths */
-  
+
   uint32_t   Buffer1Addr;           /*!< Buffer1 address pointer */
-  
+
   uint32_t   Buffer2NextDescAddr;   /*!< Buffer2 or next descriptor address pointer */
-  
+
   /*!< Enhanced ETHERNET DMA PTP Descriptors */
   uint32_t   ExtendedStatus;        /*!< Extended status for PTP receive descriptor */
-  
+
   uint32_t   Reserved1;             /*!< Reserved */
-  
+
   uint32_t   TimeStampLow;          /*!< Time Stamp Low value for transmit and receive */
-  
+
   uint32_t   TimeStampHigh;         /*!< Time Stamp High value for transmit and receive */
 
 } ETH_DMADescTypeDef;
 
 
-/** 
+/**
   * @brief  Received Frame Informations structure definition
-  */ 
-typedef struct  
+  */
+typedef struct
 {
   ETH_DMADescTypeDef *FSRxDesc;          /*!< First Segment Rx Desc */
-  
+
   ETH_DMADescTypeDef *LSRxDesc;          /*!< Last Segment Rx Desc */
-  
+
   uint32_t  SegCount;                    /*!< Segment count */
-  
+
   uint32_t length;                       /*!< Frame length */
-  
+
   uint32_t buffer;                       /*!< Frame buffer */
 
 } ETH_DMARxFrameInfos;
 
 
-/** 
-  * @brief  ETH Handle Structure definition  
+/**
+  * @brief  ETH Handle Structure definition
   */
-  
+
 typedef struct
 {
   ETH_TypeDef                *Instance;     /*!< Register base address       */
-  
+
   ETH_InitTypeDef            Init;          /*!< Ethernet Init Configuration */
-  
+
   uint32_t                   LinkStatus;    /*!< Ethernet link status        */
-  
+
   ETH_DMADescTypeDef         *RxDesc;       /*!< Rx descriptor to Get        */
-  
+
   ETH_DMADescTypeDef         *TxDesc;       /*!< Tx descriptor to Set        */
-  
+
   ETH_DMARxFrameInfos        RxFrameInfos;  /*!< last Rx frame infos         */
-  
+
   __IO HAL_ETH_StateTypeDef  State;         /*!< ETH communication state     */
-  
+
   HAL_LockTypeDef            Lock;          /*!< ETH Lock                    */
 
 } ETH_HandleTypeDef;
@@ -665,65 +665,65 @@ typedef struct
 
 /** @defgroup ETH_Buffers_setting ETH Buffers setting
   * @{
-  */ 
+  */
 #define ETH_MAX_PACKET_SIZE    ((uint32_t)1524)    /*!< ETH_HEADER + ETH_EXTRA + ETH_VLAN_TAG + ETH_MAX_ETH_PAYLOAD + ETH_CRC */
 #define ETH_HEADER               ((uint32_t)14)    /*!< 6 byte Dest addr, 6 byte Src addr, 2 byte length/type */
 #define ETH_CRC                   ((uint32_t)4)    /*!< Ethernet CRC */
-#define ETH_EXTRA                 ((uint32_t)2)    /*!< Extra bytes in some cases */   
+#define ETH_EXTRA                 ((uint32_t)2)    /*!< Extra bytes in some cases */
 #define ETH_VLAN_TAG              ((uint32_t)4)    /*!< optional 802.1q VLAN Tag */
 #define ETH_MIN_ETH_PAYLOAD       ((uint32_t)46)    /*!< Minimum Ethernet payload size */
 #define ETH_MAX_ETH_PAYLOAD       ((uint32_t)1500)    /*!< Maximum Ethernet payload size */
-#define ETH_JUMBO_FRAME_PAYLOAD   ((uint32_t)9000)    /*!< Jumbo frame payload size */      
+#define ETH_JUMBO_FRAME_PAYLOAD   ((uint32_t)9000)    /*!< Jumbo frame payload size */
 
  /* Ethernet driver receive buffers are organized in a chained linked-list, when
     an ethernet packet is received, the Rx-DMA will transfer the packet from RxFIFO
     to the driver receive buffers memory.
 
-    Depending on the size of the received ethernet packet and the size of 
+    Depending on the size of the received ethernet packet and the size of
     each ethernet driver receive buffer, the received packet can take one or more
-    ethernet driver receive buffer. 
+    ethernet driver receive buffer.
 
-    In below are defined the size of one ethernet driver receive buffer ETH_RX_BUF_SIZE 
+    In below are defined the size of one ethernet driver receive buffer ETH_RX_BUF_SIZE
     and the total count of the driver receive buffers ETH_RXBUFNB.
 
-    The configured value for ETH_RX_BUF_SIZE and ETH_RXBUFNB are only provided as 
-    example, they can be reconfigured in the application layer to fit the application 
-    needs */ 
+    The configured value for ETH_RX_BUF_SIZE and ETH_RXBUFNB are only provided as
+    example, they can be reconfigured in the application layer to fit the application
+    needs */
 
 /* Here we configure each Ethernet driver receive buffer to fit the Max size Ethernet
    packet */
 #ifndef ETH_RX_BUF_SIZE
- #define ETH_RX_BUF_SIZE         ETH_MAX_PACKET_SIZE 
+ #define ETH_RX_BUF_SIZE         ETH_MAX_PACKET_SIZE
 #endif
 
-/* 5 Ethernet driver receive buffers are used (in a chained linked list)*/ 
+/* 5 Ethernet driver receive buffers are used (in a chained linked list)*/
 #ifndef ETH_RXBUFNB
  #define ETH_RXBUFNB             ((uint32_t)5     /*  5 Rx buffers of size ETH_RX_BUF_SIZE */
 #endif
 
 
  /* Ethernet driver transmit buffers are organized in a chained linked-list, when
-    an ethernet packet is transmitted, Tx-DMA will transfer the packet from the 
+    an ethernet packet is transmitted, Tx-DMA will transfer the packet from the
     driver transmit buffers memory to the TxFIFO.
 
-    Depending on the size of the Ethernet packet to be transmitted and the size of 
-    each ethernet driver transmit buffer, the packet to be transmitted can take 
-    one or more ethernet driver transmit buffer. 
+    Depending on the size of the Ethernet packet to be transmitted and the size of
+    each ethernet driver transmit buffer, the packet to be transmitted can take
+    one or more ethernet driver transmit buffer.
 
-    In below are defined the size of one ethernet driver transmit buffer ETH_TX_BUF_SIZE 
+    In below are defined the size of one ethernet driver transmit buffer ETH_TX_BUF_SIZE
     and the total count of the driver transmit buffers ETH_TXBUFNB.
 
-    The configured value for ETH_TX_BUF_SIZE and ETH_TXBUFNB are only provided as 
-    example, they can be reconfigured in the application layer to fit the application 
-    needs */ 
+    The configured value for ETH_TX_BUF_SIZE and ETH_TXBUFNB are only provided as
+    example, they can be reconfigured in the application layer to fit the application
+    needs */
 
 /* Here we configure each Ethernet driver transmit buffer to fit the Max size Ethernet
    packet */
-#ifndef ETH_TX_BUF_SIZE 
+#ifndef ETH_TX_BUF_SIZE
  #define ETH_TX_BUF_SIZE         ETH_MAX_PACKET_SIZE
 #endif
 
-/* 5 ethernet driver transmit buffers are used (in a chained linked list)*/ 
+/* 5 ethernet driver transmit buffers are used (in a chained linked list)*/
 #ifndef ETH_TXBUFNB
  #define ETH_TXBUFNB             ((uint32_t)5      /* 5  Tx buffers of size ETH_TX_BUF_SIZE */
 #endif
@@ -749,9 +749,9 @@ typedef struct
   -----------------------------------------------------------------------------------------------
 */
 
-/** 
+/**
   * @brief  Bit definition of TDES0 register: DMA Tx descriptor status register
-  */ 
+  */
 #define ETH_DMATXDESC_OWN                     ((uint32_t)0x80000000)  /*!< OWN bit: descriptor is owned by DMA engine */
 #define ETH_DMATXDESC_IC                      ((uint32_t)0x40000000)  /*!< Interrupt on Completion */
 #define ETH_DMATXDESC_LS                      ((uint32_t)0x20000000)  /*!< Last Segment */
@@ -760,10 +760,10 @@ typedef struct
 #define ETH_DMATXDESC_DP                      ((uint32_t)0x04000000)  /*!< Disable Padding */
 #define ETH_DMATXDESC_TTSE                    ((uint32_t)0x02000000)  /*!< Transmit Time Stamp Enable */
 #define ETH_DMATXDESC_CIC                     ((uint32_t)0x00C00000)  /*!< Checksum Insertion Control: 4 cases */
-#define ETH_DMATXDESC_CIC_BYPASS              ((uint32_t)0x00000000)  /*!< Do Nothing: Checksum Engine is bypassed */ 
-#define ETH_DMATXDESC_CIC_IPV4HEADER          ((uint32_t)0x00400000)  /*!< IPV4 header Checksum Insertion */ 
-#define ETH_DMATXDESC_CIC_TCPUDPICMP_SEGMENT  ((uint32_t)0x00800000)  /*!< TCP/UDP/ICMP Checksum Insertion calculated over segment only */ 
-#define ETH_DMATXDESC_CIC_TCPUDPICMP_FULL     ((uint32_t)0x00C00000)  /*!< TCP/UDP/ICMP Checksum Insertion fully calculated */ 
+#define ETH_DMATXDESC_CIC_BYPASS              ((uint32_t)0x00000000)  /*!< Do Nothing: Checksum Engine is bypassed */
+#define ETH_DMATXDESC_CIC_IPV4HEADER          ((uint32_t)0x00400000)  /*!< IPV4 header Checksum Insertion */
+#define ETH_DMATXDESC_CIC_TCPUDPICMP_SEGMENT  ((uint32_t)0x00800000)  /*!< TCP/UDP/ICMP Checksum Insertion calculated over segment only */
+#define ETH_DMATXDESC_CIC_TCPUDPICMP_FULL     ((uint32_t)0x00C00000)  /*!< TCP/UDP/ICMP Checksum Insertion fully calculated */
 #define ETH_DMATXDESC_TER                     ((uint32_t)0x00200000)  /*!< Transmit End of Ring */
 #define ETH_DMATXDESC_TCH                     ((uint32_t)0x00100000)  /*!< Second Address Chained */
 #define ETH_DMATXDESC_TTSS                    ((uint32_t)0x00020000)  /*!< Tx Time Stamp Status */
@@ -782,20 +782,20 @@ typedef struct
 #define ETH_DMATXDESC_UF                      ((uint32_t)0x00000002)  /*!< Underflow Error: late data arrival from the memory */
 #define ETH_DMATXDESC_DB                      ((uint32_t)0x00000001)  /*!< Deferred Bit */
 
-/** 
+/**
   * @brief  Bit definition of TDES1 register
-  */ 
+  */
 #define ETH_DMATXDESC_TBS2  ((uint32_t)0x1FFF0000)  /*!< Transmit Buffer2 Size */
 #define ETH_DMATXDESC_TBS1  ((uint32_t)0x00001FFF)  /*!< Transmit Buffer1 Size */
 
-/** 
+/**
   * @brief  Bit definition of TDES2 register
-  */ 
+  */
 #define ETH_DMATXDESC_B1AP  ((uint32_t)0xFFFFFFFF)  /*!< Buffer1 Address Pointer */
 
-/** 
+/**
   * @brief  Bit definition of TDES3 register
-  */ 
+  */
 #define ETH_DMATXDESC_B2AP  ((uint32_t)0xFFFFFFFF)  /*!< Buffer2 Address Pointer */
 
   /*---------------------------------------------------------------------------------------------
@@ -812,7 +812,7 @@ typedef struct
 
 /**
   * @}
-  */ 
+  */
 /** @defgroup ETH_DMA_RX_Descriptor ETH DMA RX Descriptor
   * @{
   */
@@ -830,9 +830,9 @@ typedef struct
   ---------------------------------------------------------------------------------------------------------------------
 */
 
-/** 
+/**
   * @brief  Bit definition of RDES0 register: DMA Rx descriptor status register
-  */ 
+  */
 #define ETH_DMARXDESC_OWN         ((uint32_t)0x80000000)  /*!< OWN bit: descriptor is owned by DMA engine  */
 #define ETH_DMARXDESC_AFM         ((uint32_t)0x40000000)  /*!< DA Filter Fail for the rx frame  */
 #define ETH_DMARXDESC_FL          ((uint32_t)0x3FFF0000)  /*!< Receive descriptor frame length  */
@@ -843,8 +843,8 @@ typedef struct
 #define ETH_DMARXDESC_OE          ((uint32_t)0x00000800)  /*!< Overflow Error: Frame was damaged due to buffer overflow */
 #define ETH_DMARXDESC_VLAN        ((uint32_t)0x00000400)  /*!< VLAN Tag: received frame is a VLAN frame */
 #define ETH_DMARXDESC_FS          ((uint32_t)0x00000200)  /*!< First descriptor of the frame  */
-#define ETH_DMARXDESC_LS          ((uint32_t)0x00000100)  /*!< Last descriptor of the frame  */ 
-#define ETH_DMARXDESC_IPV4HCE     ((uint32_t)0x00000080)  /*!< IPC Checksum Error: Rx Ipv4 header checksum error   */    
+#define ETH_DMARXDESC_LS          ((uint32_t)0x00000100)  /*!< Last descriptor of the frame  */
+#define ETH_DMARXDESC_IPV4HCE     ((uint32_t)0x00000080)  /*!< IPC Checksum Error: Rx Ipv4 header checksum error   */
 #define ETH_DMARXDESC_LC          ((uint32_t)0x00000040)  /*!< Late collision occurred during reception   */
 #define ETH_DMARXDESC_FT          ((uint32_t)0x00000020)  /*!< Frame type - Ethernet, otherwise 802.3    */
 #define ETH_DMARXDESC_RWT         ((uint32_t)0x00000010)  /*!< Receive Watchdog Timeout: watchdog timer expired during reception    */
@@ -853,23 +853,23 @@ typedef struct
 #define ETH_DMARXDESC_CE          ((uint32_t)0x00000002)  /*!< CRC error */
 #define ETH_DMARXDESC_MAMPCE      ((uint32_t)0x00000001)  /*!< Rx MAC Address/Payload Checksum Error: Rx MAC address matched/ Rx Payload Checksum Error */
 
-/** 
+/**
   * @brief  Bit definition of RDES1 register
-  */ 
+  */
 #define ETH_DMARXDESC_DIC   ((uint32_t)0x80000000)  /*!< Disable Interrupt on Completion */
 #define ETH_DMARXDESC_RBS2  ((uint32_t)0x1FFF0000)  /*!< Receive Buffer2 Size */
 #define ETH_DMARXDESC_RER   ((uint32_t)0x00008000)  /*!< Receive End of Ring */
 #define ETH_DMARXDESC_RCH   ((uint32_t)0x00004000)  /*!< Second Address Chained */
 #define ETH_DMARXDESC_RBS1  ((uint32_t)0x00001FFF)  /*!< Receive Buffer1 Size */
 
-/** 
-  * @brief  Bit definition of RDES2 register  
-  */ 
+/**
+  * @brief  Bit definition of RDES2 register
+  */
 #define ETH_DMARXDESC_B1AP  ((uint32_t)0xFFFFFFFF)  /*!< Buffer1 Address Pointer */
 
-/** 
-  * @brief  Bit definition of RDES3 register  
-  */ 
+/**
+  * @brief  Bit definition of RDES3 register
+  */
 #define ETH_DMARXDESC_B2AP  ((uint32_t)0xFFFFFFFF)  /*!< Buffer2 Address Pointer */
 
 /*---------------------------------------------------------------------------------------------------------------------
@@ -887,12 +887,12 @@ typedef struct
 #define ETH_DMAPTPRXDESC_PTPFT    ((uint32_t)0x00001000)  /* PTP Frame Type */
 #define ETH_DMAPTPRXDESC_PTPMT    ((uint32_t)0x00000F00)  /* PTP Message Type */
   #define ETH_DMAPTPRXDESC_PTPMT_SYNC                      ((uint32_t)0x00000100)  /* SYNC message (all clock types) */
-  #define ETH_DMAPTPRXDESC_PTPMT_FOLLOWUP                  ((uint32_t)0x00000200)  /* FollowUp message (all clock types) */ 
-  #define ETH_DMAPTPRXDESC_PTPMT_DELAYREQ                  ((uint32_t)0x00000300)  /* DelayReq message (all clock types) */ 
-  #define ETH_DMAPTPRXDESC_PTPMT_DELAYRESP                 ((uint32_t)0x00000400)  /* DelayResp message (all clock types) */ 
-  #define ETH_DMAPTPRXDESC_PTPMT_PDELAYREQ_ANNOUNCE        ((uint32_t)0x00000500)  /* PdelayReq message (peer-to-peer transparent clock) or Announce message (Ordinary or Boundary clock) */ 
-  #define ETH_DMAPTPRXDESC_PTPMT_PDELAYRESP_MANAG          ((uint32_t)0x00000600)  /* PdelayResp message (peer-to-peer transparent clock) or Management message (Ordinary or Boundary clock)  */ 
-  #define ETH_DMAPTPRXDESC_PTPMT_PDELAYRESPFOLLOWUP_SIGNAL ((uint32_t)0x00000700)  /* PdelayRespFollowUp message (peer-to-peer transparent clock) or Signaling message (Ordinary or Boundary clock) */           
+  #define ETH_DMAPTPRXDESC_PTPMT_FOLLOWUP                  ((uint32_t)0x00000200)  /* FollowUp message (all clock types) */
+  #define ETH_DMAPTPRXDESC_PTPMT_DELAYREQ                  ((uint32_t)0x00000300)  /* DelayReq message (all clock types) */
+  #define ETH_DMAPTPRXDESC_PTPMT_DELAYRESP                 ((uint32_t)0x00000400)  /* DelayResp message (all clock types) */
+  #define ETH_DMAPTPRXDESC_PTPMT_PDELAYREQ_ANNOUNCE        ((uint32_t)0x00000500)  /* PdelayReq message (peer-to-peer transparent clock) or Announce message (Ordinary or Boundary clock) */
+  #define ETH_DMAPTPRXDESC_PTPMT_PDELAYRESP_MANAG          ((uint32_t)0x00000600)  /* PdelayResp message (peer-to-peer transparent clock) or Management message (Ordinary or Boundary clock)  */
+  #define ETH_DMAPTPRXDESC_PTPMT_PDELAYRESPFOLLOWUP_SIGNAL ((uint32_t)0x00000700)  /* PdelayRespFollowUp message (peer-to-peer transparent clock) or Signaling message (Ordinary or Boundary clock) */
 #define ETH_DMAPTPRXDESC_IPV6PR   ((uint32_t)0x00000080)  /* IPv6 Packet Received */
 #define ETH_DMAPTPRXDESC_IPV4PR   ((uint32_t)0x00000040)  /* IPv4 Packet Received */
 #define ETH_DMAPTPRXDESC_IPCB  ((uint32_t)0x00000020)  /* IP Checksum Bypassed */
@@ -900,7 +900,7 @@ typedef struct
 #define ETH_DMAPTPRXDESC_IPHE  ((uint32_t)0x00000008)  /* IP Header Error */
 #define ETH_DMAPTPRXDESC_IPPT  ((uint32_t)0x00000007)  /* IP Payload Type */
   #define ETH_DMAPTPRXDESC_IPPT_UDP                 ((uint32_t)0x00000001)  /* UDP payload encapsulated in the IP datagram */
-  #define ETH_DMAPTPRXDESC_IPPT_TCP                 ((uint32_t)0x00000002)  /* TCP payload encapsulated in the IP datagram */ 
+  #define ETH_DMAPTPRXDESC_IPPT_TCP                 ((uint32_t)0x00000002)  /* TCP payload encapsulated in the IP datagram */
   #define ETH_DMAPTPRXDESC_IPPT_ICMP                ((uint32_t)0x00000003)  /* ICMP payload encapsulated in the IP datagram */
 
 /* Bit definition of RDES6 register */
@@ -911,18 +911,18 @@ typedef struct
 /**
   * @}
   */
- /** @defgroup ETH_AutoNegotiation ETH AutoNegotiation 
+ /** @defgroup ETH_AutoNegotiation ETH AutoNegotiation
   * @{
-  */ 
+  */
 #define ETH_AUTONEGOTIATION_ENABLE     ((uint32_t)0x00000001)
 #define ETH_AUTONEGOTIATION_DISABLE    ((uint32_t)0x00000000)
 
 /**
   * @}
   */
-/** @defgroup ETH_Speed ETH Speed 
+/** @defgroup ETH_Speed ETH Speed
   * @{
-  */ 
+  */
 #define ETH_SPEED_10M        ((uint32_t)0x00000000)
 #define ETH_SPEED_100M       ((uint32_t)0x00004000)
 
@@ -931,7 +931,7 @@ typedef struct
   */
 /** @defgroup ETH_Duplex_Mode ETH Duplex Mode
   * @{
-  */ 
+  */
 #define ETH_MODE_FULLDUPLEX       ((uint32_t)0x00000800)
 #define ETH_MODE_HALFDUPLEX       ((uint32_t)0x00000000)
 /**
@@ -939,7 +939,7 @@ typedef struct
   */
 /** @defgroup ETH_Rx_Mode ETH Rx Mode
   * @{
-  */ 
+  */
 #define ETH_RXPOLLING_MODE      ((uint32_t)0x00000000)
 #define ETH_RXINTERRUPT_MODE    ((uint32_t)0x00000001)
 /**
@@ -948,7 +948,7 @@ typedef struct
 
 /** @defgroup ETH_Checksum_Mode ETH Checksum Mode
   * @{
-  */ 
+  */
 #define ETH_CHECKSUM_BY_HARDWARE      ((uint32_t)0x00000000)
 #define ETH_CHECKSUM_BY_SOFTWARE      ((uint32_t)0x00000001)
 /**
@@ -957,16 +957,16 @@ typedef struct
 
 /** @defgroup ETH_Media_Interface ETH Media Interface
   * @{
-  */ 
+  */
 #define ETH_MEDIA_INTERFACE_MII       ((uint32_t)0x00000000)
 #define ETH_MEDIA_INTERFACE_RMII      ((uint32_t)SYSCFG_PMC_MII_RMII_SEL)
 /**
   * @}
   */
 
-/** @defgroup ETH_Watchdog ETH Watchdog 
+/** @defgroup ETH_Watchdog ETH Watchdog
   * @{
-  */ 
+  */
 #define ETH_WATCHDOG_ENABLE       ((uint32_t)0x00000000)
 #define ETH_WATCHDOG_DISABLE      ((uint32_t)0x00800000)
 /**
@@ -975,16 +975,16 @@ typedef struct
 
 /** @defgroup ETH_Jabber ETH Jabber
   * @{
-  */ 
+  */
 #define ETH_JABBER_ENABLE    ((uint32_t)0x00000000)
 #define ETH_JABBER_DISABLE   ((uint32_t)0x00400000)
 /**
   * @}
   */
 
-/** @defgroup ETH_Inter_Frame_Gap ETH Inter Frame Gap 
+/** @defgroup ETH_Inter_Frame_Gap ETH Inter Frame Gap
   * @{
-  */ 
+  */
 #define ETH_INTERFRAMEGAP_96BIT   ((uint32_t)0x00000000)  /*!< minimum IFG between frames during transmission is 96Bit */
 #define ETH_INTERFRAMEGAP_88BIT   ((uint32_t)0x00020000)  /*!< minimum IFG between frames during transmission is 88Bit */
 #define ETH_INTERFRAMEGAP_80BIT   ((uint32_t)0x00040000)  /*!< minimum IFG between frames during transmission is 80Bit */
@@ -999,25 +999,25 @@ typedef struct
 
 /** @defgroup ETH_Carrier_Sense ETH Carrier Sense
   * @{
-  */ 
+  */
 #define ETH_CARRIERSENCE_ENABLE   ((uint32_t)0x00000000)
 #define ETH_CARRIERSENCE_DISABLE  ((uint32_t)0x00010000)
 /**
   * @}
   */
 
-/** @defgroup ETH_Receive_Own ETH Receive Own 
+/** @defgroup ETH_Receive_Own ETH Receive Own
   * @{
-  */ 
+  */
 #define ETH_RECEIVEOWN_ENABLE     ((uint32_t)0x00000000)
 #define ETH_RECEIVEOWN_DISABLE    ((uint32_t)0x00002000)
 /**
   * @}
   */
 
-/** @defgroup ETH_Loop_Back_Mode ETH Loop Back Mode 
+/** @defgroup ETH_Loop_Back_Mode ETH Loop Back Mode
   * @{
-  */ 
+  */
 #define ETH_LOOPBACKMODE_ENABLE        ((uint32_t)0x00001000)
 #define ETH_LOOPBACKMODE_DISABLE       ((uint32_t)0x00000000)
 /**
@@ -1026,7 +1026,7 @@ typedef struct
 
 /** @defgroup ETH_Checksum_Offload ETH Checksum Offload
   * @{
-  */ 
+  */
 #define ETH_CHECKSUMOFFLAOD_ENABLE     ((uint32_t)0x00000400)
 #define ETH_CHECKSUMOFFLAOD_DISABLE    ((uint32_t)0x00000000)
 /**
@@ -1035,7 +1035,7 @@ typedef struct
 
 /** @defgroup ETH_Retry_Transmission ETH Retry Transmission
   * @{
-  */ 
+  */
 #define ETH_RETRYTRANSMISSION_ENABLE   ((uint32_t)0x00000000)
 #define ETH_RETRYTRANSMISSION_DISABLE  ((uint32_t)0x00000200)
 /**
@@ -1044,7 +1044,7 @@ typedef struct
 
 /** @defgroup ETH_Automatic_Pad_CRC_Strip ETH Automatic Pad CRC Strip
   * @{
-  */ 
+  */
 #define ETH_AUTOMATICPADCRCSTRIP_ENABLE     ((uint32_t)0x00000080)
 #define ETH_AUTOMATICPADCRCSTRIP_DISABLE    ((uint32_t)0x00000000)
 /**
@@ -1053,7 +1053,7 @@ typedef struct
 
 /** @defgroup ETH_Back_Off_Limit ETH Back Off Limit
   * @{
-  */ 
+  */
 #define ETH_BACKOFFLIMIT_10  ((uint32_t)0x00000000)
 #define ETH_BACKOFFLIMIT_8   ((uint32_t)0x00000020)
 #define ETH_BACKOFFLIMIT_4   ((uint32_t)0x00000040)
@@ -1073,7 +1073,7 @@ typedef struct
 
 /** @defgroup ETH_Receive_All ETH Receive All
   * @{
-  */ 
+  */
 #define ETH_RECEIVEALL_ENABLE     ((uint32_t)0x80000000)
 #define ETH_RECEIVEAll_DISABLE    ((uint32_t)0x00000000)
 /**
@@ -1082,7 +1082,7 @@ typedef struct
 
 /** @defgroup ETH_Source_Addr_Filter ETH Source Addr Filter
   * @{
-  */ 
+  */
 #define ETH_SOURCEADDRFILTER_NORMAL_ENABLE       ((uint32_t)0x00000200)
 #define ETH_SOURCEADDRFILTER_INVERSE_ENABLE      ((uint32_t)0x00000300)
 #define ETH_SOURCEADDRFILTER_DISABLE             ((uint32_t)0x00000000)
@@ -1092,17 +1092,17 @@ typedef struct
 
 /** @defgroup ETH_Pass_Control_Frames ETH Pass Control Frames
   * @{
-  */ 
+  */
 #define ETH_PASSCONTROLFRAMES_BLOCKALL                ((uint32_t)0x00000040)  /*!< MAC filters all control frames from reaching the application */
 #define ETH_PASSCONTROLFRAMES_FORWARDALL              ((uint32_t)0x00000080)  /*!< MAC forwards all control frames to application even if they fail the Address Filter */
-#define ETH_PASSCONTROLFRAMES_FORWARDPASSEDADDRFILTER ((uint32_t)0x000000C0)  /*!< MAC forwards control frames that pass the Address Filter. */ 
+#define ETH_PASSCONTROLFRAMES_FORWARDPASSEDADDRFILTER ((uint32_t)0x000000C0)  /*!< MAC forwards control frames that pass the Address Filter. */
 /**
   * @}
   */
 
 /** @defgroup ETH_Broadcast_Frames_Reception ETH Broadcast Frames Reception
   * @{
-  */ 
+  */
 #define ETH_BROADCASTFRAMESRECEPTION_ENABLE     ((uint32_t)0x00000000)
 #define ETH_BROADCASTFRAMESRECEPTION_DISABLE    ((uint32_t)0x00000020)
 /**
@@ -1111,7 +1111,7 @@ typedef struct
 
 /** @defgroup ETH_Destination_Addr_Filter ETH Destination Addr Filter
   * @{
-  */ 
+  */
 #define ETH_DESTINATIONADDRFILTER_NORMAL    ((uint32_t)0x00000000)
 #define ETH_DESTINATIONADDRFILTER_INVERSE   ((uint32_t)0x00000008)
 /**
@@ -1120,7 +1120,7 @@ typedef struct
 
 /** @defgroup ETH_Promiscuous_Mode ETH Promiscuous Mode
   * @{
-  */ 
+  */
 #define ETH_PROMISCUOUS_MODE_ENABLE     ((uint32_t)0x00000001)
 #define ETH_PROMISCUOUS_MODE_DISABLE    ((uint32_t)0x00000000)
 /**
@@ -1129,7 +1129,7 @@ typedef struct
 
 /** @defgroup ETH_Multicast_Frames_Filter ETH Multicast Frames Filter
   * @{
-  */ 
+  */
 #define ETH_MULTICASTFRAMESFILTER_PERFECTHASHTABLE    ((uint32_t)0x00000404)
 #define ETH_MULTICASTFRAMESFILTER_HASHTABLE           ((uint32_t)0x00000004)
 #define ETH_MULTICASTFRAMESFILTER_PERFECT             ((uint32_t)0x00000000)
@@ -1140,7 +1140,7 @@ typedef struct
 
 /** @defgroup ETH_Unicast_Frames_Filter ETH Unicast Frames Filter
   * @{
-  */ 
+  */
 #define ETH_UNICASTFRAMESFILTER_PERFECTHASHTABLE ((uint32_t)0x00000402)
 #define ETH_UNICASTFRAMESFILTER_HASHTABLE        ((uint32_t)0x00000002)
 #define ETH_UNICASTFRAMESFILTER_PERFECT          ((uint32_t)0x00000000)
@@ -1148,9 +1148,9 @@ typedef struct
   * @}
   */
 
-/** @defgroup ETH_Zero_Quanta_Pause ETH Zero Quanta Pause 
+/** @defgroup ETH_Zero_Quanta_Pause ETH Zero Quanta Pause
   * @{
-  */ 
+  */
 #define ETH_ZEROQUANTAPAUSE_ENABLE     ((uint32_t)0x00000000)
 #define ETH_ZEROQUANTAPAUSE_DISABLE    ((uint32_t)0x00000080)
 /**
@@ -1159,7 +1159,7 @@ typedef struct
 
 /** @defgroup ETH_Pause_Low_Threshold ETH Pause Low Threshold
   * @{
-  */ 
+  */
 #define ETH_PAUSELOWTHRESHOLD_MINUS4        ((uint32_t)0x00000000)  /*!< Pause time minus 4 slot times */
 #define ETH_PAUSELOWTHRESHOLD_MINUS28       ((uint32_t)0x00000010)  /*!< Pause time minus 28 slot times */
 #define ETH_PAUSELOWTHRESHOLD_MINUS144      ((uint32_t)0x00000020)  /*!< Pause time minus 144 slot times */
@@ -1170,7 +1170,7 @@ typedef struct
 
 /** @defgroup ETH_Unicast_Pause_Frame_Detect ETH Unicast Pause Frame Detect
   * @{
-  */ 
+  */
 #define ETH_UNICASTPAUSEFRAMEDETECT_ENABLE  ((uint32_t)0x00000008)
 #define ETH_UNICASTPAUSEFRAMEDETECT_DISABLE ((uint32_t)0x00000000)
 /**
@@ -1179,7 +1179,7 @@ typedef struct
 
 /** @defgroup ETH_Receive_Flow_Control ETH Receive Flow Control
   * @{
-  */ 
+  */
 #define ETH_RECEIVEFLOWCONTROL_ENABLE       ((uint32_t)0x00000004)
 #define ETH_RECEIVEFLOWCONTROL_DISABLE      ((uint32_t)0x00000000)
 /**
@@ -1188,7 +1188,7 @@ typedef struct
 
 /** @defgroup ETH_Transmit_Flow_Control ETH Transmit Flow Control
   * @{
-  */ 
+  */
 #define ETH_TRANSMITFLOWCONTROL_ENABLE      ((uint32_t)0x00000002)
 #define ETH_TRANSMITFLOWCONTROL_DISABLE     ((uint32_t)0x00000000)
 /**
@@ -1197,7 +1197,7 @@ typedef struct
 
 /** @defgroup ETH_VLAN_Tag_Comparison ETH VLAN Tag Comparison
   * @{
-  */ 
+  */
 #define ETH_VLANTAGCOMPARISON_12BIT    ((uint32_t)0x00010000)
 #define ETH_VLANTAGCOMPARISON_16BIT    ((uint32_t)0x00000000)
 /**
@@ -1206,7 +1206,7 @@ typedef struct
 
 /** @defgroup ETH_MAC_addresses ETH MAC addresses
   * @{
-  */ 
+  */
 #define ETH_MAC_ADDRESS0     ((uint32_t)0x00000000)
 #define ETH_MAC_ADDRESS1     ((uint32_t)0x00000008)
 #define ETH_MAC_ADDRESS2     ((uint32_t)0x00000010)
@@ -1215,9 +1215,9 @@ typedef struct
   * @}
   */
 
-/** @defgroup ETH_MAC_addresses_filter_SA_DA ETH MAC addresses filter SA DA 
+/** @defgroup ETH_MAC_addresses_filter_SA_DA ETH MAC addresses filter SA DA
   * @{
-  */ 
+  */
 #define ETH_MAC_ADDRESSFILTER_SA       ((uint32_t)0x00000000)
 #define ETH_MAC_ADDRESSFILTER_DA       ((uint32_t)0x00000008)
 /**
@@ -1226,7 +1226,7 @@ typedef struct
 
 /** @defgroup ETH_MAC_addresses_filter_Mask_bytes ETH MAC addresses filter Mask bytes
   * @{
-  */ 
+  */
 #define ETH_MAC_ADDRESSMASK_BYTE6      ((uint32_t)0x20000000)  /*!< Mask MAC Address high reg bits [15:8] */
 #define ETH_MAC_ADDRESSMASK_BYTE5      ((uint32_t)0x10000000)  /*!< Mask MAC Address high reg bits [7:0] */
 #define ETH_MAC_ADDRESSMASK_BYTE4      ((uint32_t)0x08000000)  /*!< Mask MAC Address low reg bits [31:24] */
@@ -1239,7 +1239,7 @@ typedef struct
 
 /** @defgroup ETH_MAC_Debug_flags ETH MAC Debug flags
   * @{
-  */ 
+  */
 #define ETH_MAC_TXFIFO_FULL          ((uint32_t)0x02000000)  /* Tx FIFO full */
 #define ETH_MAC_TXFIFONOT_EMPTY      ((uint32_t)0x01000000)  /* Tx FIFO not empty */
 #define ETH_MAC_TXFIFO_WRITE_ACTIVE  ((uint32_t)0x00400000)  /* Tx FIFO write active */
@@ -1273,7 +1273,7 @@ typedef struct
 
 /** @defgroup ETH_Drop_TCP_IP_Checksum_Error_Frame ETH Drop TCP IP Checksum Error Frame
   * @{
-  */ 
+  */
 #define ETH_DROPTCPIPCHECKSUMERRORFRAME_ENABLE   ((uint32_t)0x00000000)
 #define ETH_DROPTCPIPCHECKSUMERRORFRAME_DISABLE  ((uint32_t)0x04000000)
 /**
@@ -1282,7 +1282,7 @@ typedef struct
 
 /** @defgroup ETH_Receive_Store_Forward ETH Receive Store Forward
   * @{
-  */ 
+  */
 #define ETH_RECEIVESTOREFORWARD_ENABLE      ((uint32_t)0x02000000)
 #define ETH_RECEIVESTOREFORWARD_DISABLE     ((uint32_t)0x00000000)
 /**
@@ -1291,7 +1291,7 @@ typedef struct
 
 /** @defgroup ETH_Flush_Received_Frame ETH Flush Received Frame
   * @{
-  */ 
+  */
 #define ETH_FLUSHRECEIVEDFRAME_ENABLE       ((uint32_t)0x00000000)
 #define ETH_FLUSHRECEIVEDFRAME_DISABLE      ((uint32_t)0x01000000)
 /**
@@ -1300,7 +1300,7 @@ typedef struct
 
 /** @defgroup ETH_Transmit_Store_Forward ETH Transmit Store Forward
   * @{
-  */ 
+  */
 #define ETH_TRANSMITSTOREFORWARD_ENABLE     ((uint32_t)0x00200000)
 #define ETH_TRANSMITSTOREFORWARD_DISABLE    ((uint32_t)0x00000000)
 /**
@@ -1309,7 +1309,7 @@ typedef struct
 
 /** @defgroup ETH_Transmit_Threshold_Control ETH Transmit Threshold Control
   * @{
-  */ 
+  */
 #define ETH_TRANSMITTHRESHOLDCONTROL_64BYTES     ((uint32_t)0x00000000)  /*!< threshold level of the MTL Transmit FIFO is 64 Bytes */
 #define ETH_TRANSMITTHRESHOLDCONTROL_128BYTES    ((uint32_t)0x00004000)  /*!< threshold level of the MTL Transmit FIFO is 128 Bytes */
 #define ETH_TRANSMITTHRESHOLDCONTROL_192BYTES    ((uint32_t)0x00008000)  /*!< threshold level of the MTL Transmit FIFO is 192 Bytes */
@@ -1324,7 +1324,7 @@ typedef struct
 
 /** @defgroup ETH_Forward_Error_Frames ETH Forward Error Frames
   * @{
-  */ 
+  */
 #define ETH_FORWARDERRORFRAMES_ENABLE       ((uint32_t)0x00000080)
 #define ETH_FORWARDERRORFRAMES_DISABLE      ((uint32_t)0x00000000)
 /**
@@ -1333,16 +1333,16 @@ typedef struct
 
 /** @defgroup ETH_Forward_Undersized_Good_Frames ETH Forward Undersized Good Frames
   * @{
-  */ 
+  */
 #define ETH_FORWARDUNDERSIZEDGOODFRAMES_ENABLE   ((uint32_t)0x00000040)
-#define ETH_FORWARDUNDERSIZEDGOODFRAMES_DISABLE  ((uint32_t)0x00000000)     
+#define ETH_FORWARDUNDERSIZEDGOODFRAMES_DISABLE  ((uint32_t)0x00000000)
 /**
   * @}
   */
 
 /** @defgroup ETH_Receive_Threshold_Control ETH Receive Threshold Control
   * @{
-  */ 
+  */
 #define ETH_RECEIVEDTHRESHOLDCONTROL_64BYTES      ((uint32_t)0x00000000)  /*!< threshold level of the MTL Receive FIFO is 64 Bytes */
 #define ETH_RECEIVEDTHRESHOLDCONTROL_32BYTES      ((uint32_t)0x00000008)  /*!< threshold level of the MTL Receive FIFO is 32 Bytes */
 #define ETH_RECEIVEDTHRESHOLDCONTROL_96BYTES      ((uint32_t)0x00000010)  /*!< threshold level of the MTL Receive FIFO is 96 Bytes */
@@ -1353,40 +1353,40 @@ typedef struct
 
 /** @defgroup ETH_Second_Frame_Operate ETH Second Frame Operate
   * @{
-  */ 
+  */
 #define ETH_SECONDFRAMEOPERARTE_ENABLE       ((uint32_t)0x00000004)
-#define ETH_SECONDFRAMEOPERARTE_DISABLE      ((uint32_t)0x00000000)  
+#define ETH_SECONDFRAMEOPERARTE_DISABLE      ((uint32_t)0x00000000)
 /**
   * @}
   */
 
-/** @defgroup ETH_Address_Aligned_Beats ETH Address Aligned Beats 
+/** @defgroup ETH_Address_Aligned_Beats ETH Address Aligned Beats
   * @{
-  */ 
+  */
 #define ETH_ADDRESSALIGNEDBEATS_ENABLE      ((uint32_t)0x02000000)
-#define ETH_ADDRESSALIGNEDBEATS_DISABLE     ((uint32_t)0x00000000) 
+#define ETH_ADDRESSALIGNEDBEATS_DISABLE     ((uint32_t)0x00000000)
 /**
   * @}
   */
 
 /** @defgroup ETH_Fixed_Burst ETH Fixed Burst
   * @{
-  */ 
+  */
 #define ETH_FIXEDBURST_ENABLE     ((uint32_t)0x00010000)
-#define ETH_FIXEDBURST_DISABLE    ((uint32_t)0x00000000) 
+#define ETH_FIXEDBURST_DISABLE    ((uint32_t)0x00000000)
 /**
   * @}
   */
 
 /** @defgroup ETH_Rx_DMA_Burst_Length ETH Rx DMA Burst Length
   * @{
-  */ 
+  */
 #define ETH_RXDMABURSTLENGTH_1BEAT          ((uint32_t)0x00020000)  /*!< maximum number of beats to be transferred in one RxDMA transaction is 1 */
 #define ETH_RXDMABURSTLENGTH_2BEAT          ((uint32_t)0x00040000)  /*!< maximum number of beats to be transferred in one RxDMA transaction is 2 */
 #define ETH_RXDMABURSTLENGTH_4BEAT          ((uint32_t)0x00080000)  /*!< maximum number of beats to be transferred in one RxDMA transaction is 4 */
 #define ETH_RXDMABURSTLENGTH_8BEAT          ((uint32_t)0x00100000)  /*!< maximum number of beats to be transferred in one RxDMA transaction is 8 */
 #define ETH_RXDMABURSTLENGTH_16BEAT         ((uint32_t)0x00200000)  /*!< maximum number of beats to be transferred in one RxDMA transaction is 16 */
-#define ETH_RXDMABURSTLENGTH_32BEAT         ((uint32_t)0x00400000)  /*!< maximum number of beats to be transferred in one RxDMA transaction is 32 */                
+#define ETH_RXDMABURSTLENGTH_32BEAT         ((uint32_t)0x00400000)  /*!< maximum number of beats to be transferred in one RxDMA transaction is 32 */
 #define ETH_RXDMABURSTLENGTH_4XPBL_4BEAT    ((uint32_t)0x01020000)  /*!< maximum number of beats to be transferred in one RxDMA transaction is 4 */
 #define ETH_RXDMABURSTLENGTH_4XPBL_8BEAT    ((uint32_t)0x01040000)  /*!< maximum number of beats to be transferred in one RxDMA transaction is 8 */
 #define ETH_RXDMABURSTLENGTH_4XPBL_16BEAT   ((uint32_t)0x01080000)  /*!< maximum number of beats to be transferred in one RxDMA transaction is 16 */
@@ -1399,13 +1399,13 @@ typedef struct
 
 /** @defgroup ETH_Tx_DMA_Burst_Length ETH Tx DMA Burst Length
   * @{
-  */ 
+  */
 #define ETH_TXDMABURSTLENGTH_1BEAT          ((uint32_t)0x00000100)  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 1 */
 #define ETH_TXDMABURSTLENGTH_2BEAT          ((uint32_t)0x00000200)  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 2 */
 #define ETH_TXDMABURSTLENGTH_4BEAT          ((uint32_t)0x00000400)  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 4 */
 #define ETH_TXDMABURSTLENGTH_8BEAT          ((uint32_t)0x00000800)  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 8 */
 #define ETH_TXDMABURSTLENGTH_16BEAT         ((uint32_t)0x00001000)  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 16 */
-#define ETH_TXDMABURSTLENGTH_32BEAT         ((uint32_t)0x00002000)  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 32 */                
+#define ETH_TXDMABURSTLENGTH_32BEAT         ((uint32_t)0x00002000)  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 32 */
 #define ETH_TXDMABURSTLENGTH_4XPBL_4BEAT    ((uint32_t)0x01000100)  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 4 */
 #define ETH_TXDMABURSTLENGTH_4XPBL_8BEAT    ((uint32_t)0x01000200)  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 8 */
 #define ETH_TXDMABURSTLENGTH_4XPBL_16BEAT   ((uint32_t)0x01000400)  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 16 */
@@ -1418,7 +1418,7 @@ typedef struct
 
 /** @defgroup ETH_DMA_Enhanced_descriptor_format ETH DMA Enhanced descriptor format
   * @{
-  */  
+  */
 #define ETH_DMAENHANCEDDESCRIPTOR_ENABLE              ((uint32_t)0x00000080)
 #define ETH_DMAENHANCEDDESCRIPTOR_DISABLE             ((uint32_t)0x00000000)
 /**
@@ -1427,7 +1427,7 @@ typedef struct
 
 /** @defgroup ETH_DMA_Arbitration ETH DMA Arbitration
   * @{
-  */ 
+  */
 #define ETH_DMAARBITRATION_ROUNDROBIN_RXTX_1_1   ((uint32_t)0x00000000)
 #define ETH_DMAARBITRATION_ROUNDROBIN_RXTX_2_1   ((uint32_t)0x00004000)
 #define ETH_DMAARBITRATION_ROUNDROBIN_RXTX_3_1   ((uint32_t)0x00008000)
@@ -1439,7 +1439,7 @@ typedef struct
 
 /** @defgroup ETH_DMA_Tx_descriptor_segment ETH DMA Tx descriptor segment
   * @{
-  */ 
+  */
 #define ETH_DMATXDESC_LASTSEGMENTS      ((uint32_t)0x40000000)  /*!< Last Segment */
 #define ETH_DMATXDESC_FIRSTSEGMENT      ((uint32_t)0x20000000)  /*!< First Segment */
 /**
@@ -1448,7 +1448,7 @@ typedef struct
 
 /** @defgroup ETH_DMA_Tx_descriptor_Checksum_Insertion_Control ETH DMA Tx descriptor Checksum Insertion Control
   * @{
-  */ 
+  */
 #define ETH_DMATXDESC_CHECKSUMBYPASS             ((uint32_t)0x00000000)   /*!< Checksum engine bypass */
 #define ETH_DMATXDESC_CHECKSUMIPV4HEADER         ((uint32_t)0x00400000)   /*!< IPv4 header checksum insertion  */
 #define ETH_DMATXDESC_CHECKSUMTCPUDPICMPSEGMENT  ((uint32_t)0x00800000)   /*!< TCP/UDP/ICMP checksum insertion. Pseudo header checksum is assumed to be present */
@@ -1457,9 +1457,9 @@ typedef struct
   * @}
   */
 
-/** @defgroup ETH_DMA_Rx_descriptor_buffers ETH DMA Rx descriptor buffers 
+/** @defgroup ETH_DMA_Rx_descriptor_buffers ETH DMA Rx descriptor buffers
   * @{
-  */ 
+  */
 #define ETH_DMARXDESC_BUFFER1     ((uint32_t)0x00000000)  /*!< DMA Rx Desc Buffer1 */
 #define ETH_DMARXDESC_BUFFER2     ((uint32_t)0x00000001)  /*!< DMA Rx Desc Buffer2 */
 /**
@@ -1468,7 +1468,7 @@ typedef struct
 
 /** @defgroup ETH_PMT_Flags ETH PMT Flags
   * @{
-  */ 
+  */
 #define ETH_PMT_FLAG_WUFFRPR      ((uint32_t)0x80000000)  /*!< Wake-Up Frame Filter Register Pointer Reset */
 #define ETH_PMT_FLAG_WUFR         ((uint32_t)0x00000040)  /*!< Wake-Up Frame Received */
 #define ETH_PMT_FLAG_MPR          ((uint32_t)0x00000020)  /*!< Magic Packet Received */
@@ -1478,7 +1478,7 @@ typedef struct
 
 /** @defgroup ETH_MMC_Tx_Interrupts ETH MMC Tx Interrupts
   * @{
-  */ 
+  */
 #define ETH_MMC_IT_TGF       ((uint32_t)0x00200000)  /*!< When Tx good frame counter reaches half the maximum value */
 #define ETH_MMC_IT_TGFMSC    ((uint32_t)0x00008000)  /*!< When Tx good multi col counter reaches half the maximum value */
 #define ETH_MMC_IT_TGFSC     ((uint32_t)0x00004000)  /*!< When Tx good single col counter reaches half the maximum value */
@@ -1498,7 +1498,7 @@ typedef struct
 
 /** @defgroup ETH_MAC_Flags ETH MAC Flags
   * @{
-  */ 
+  */
 #define ETH_MAC_FLAG_TST     ((uint32_t)0x00000200)  /*!< Time stamp trigger flag (on MAC) */
 #define ETH_MAC_FLAG_MMCT    ((uint32_t)0x00000040)  /*!< MMC transmit flag  */
 #define ETH_MAC_FLAG_MMCR    ((uint32_t)0x00000020)  /*!< MMC receive flag */
@@ -1510,7 +1510,7 @@ typedef struct
 
 /** @defgroup ETH_DMA_Flags ETH DMA Flags
   * @{
-  */ 
+  */
 #define ETH_DMA_FLAG_TST               ((uint32_t)0x20000000)  /*!< Time-stamp trigger interrupt (on DMA) */
 #define ETH_DMA_FLAG_PMT               ((uint32_t)0x10000000)  /*!< PMT interrupt (on DMA) */
 #define ETH_DMA_FLAG_MMC               ((uint32_t)0x08000000)  /*!< MMC interrupt (on DMA) */
@@ -1536,9 +1536,9 @@ typedef struct
   * @}
   */
 
-/** @defgroup ETH_MAC_Interrupts ETH MAC Interrupts 
+/** @defgroup ETH_MAC_Interrupts ETH MAC Interrupts
   * @{
-  */ 
+  */
 #define ETH_MAC_IT_TST       ((uint32_t)0x00000200)  /*!< Time stamp trigger interrupt (on MAC) */
 #define ETH_MAC_IT_MMCT      ((uint32_t)0x00000040)  /*!< MMC transmit interrupt */
 #define ETH_MAC_IT_MMCR      ((uint32_t)0x00000020)  /*!< MMC receive interrupt */
@@ -1548,9 +1548,9 @@ typedef struct
   * @}
   */
 
-/** @defgroup ETH_DMA_Interrupts ETH DMA Interrupts 
+/** @defgroup ETH_DMA_Interrupts ETH DMA Interrupts
   * @{
-  */ 
+  */
 #define ETH_DMA_IT_TST       ((uint32_t)0x20000000)  /*!< Time-stamp trigger interrupt (on DMA) */
 #define ETH_DMA_IT_PMT       ((uint32_t)0x10000000)  /*!< PMT interrupt (on DMA) */
 #define ETH_DMA_IT_MMC       ((uint32_t)0x08000000)  /*!< MMC interrupt (on DMA) */
@@ -1573,9 +1573,9 @@ typedef struct
   * @}
   */
 
-/** @defgroup ETH_DMA_transmit_process_state ETH DMA transmit process state 
+/** @defgroup ETH_DMA_transmit_process_state ETH DMA transmit process state
   * @{
-  */ 
+  */
 #define ETH_DMA_TRANSMITPROCESS_STOPPED     ((uint32_t)0x00000000)  /*!< Stopped - Reset or Stop Tx Command issued */
 #define ETH_DMA_TRANSMITPROCESS_FETCHING    ((uint32_t)0x00100000)  /*!< Running - fetching the Tx descriptor */
 #define ETH_DMA_TRANSMITPROCESS_WAITING     ((uint32_t)0x00200000)  /*!< Running - waiting for status */
@@ -1585,12 +1585,12 @@ typedef struct
 
 /**
   * @}
-  */ 
+  */
 
 
-/** @defgroup ETH_DMA_receive_process_state ETH DMA receive process state 
+/** @defgroup ETH_DMA_receive_process_state ETH DMA receive process state
   * @{
-  */ 
+  */
 #define ETH_DMA_RECEIVEPROCESS_STOPPED      ((uint32_t)0x00000000)  /*!< Stopped - Reset or Stop Rx Command issued */
 #define ETH_DMA_RECEIVEPROCESS_FETCHING     ((uint32_t)0x00020000)  /*!< Running - fetching the Rx descriptor */
 #define ETH_DMA_RECEIVEPROCESS_WAITING      ((uint32_t)0x00060000)  /*!< Running - waiting for packet */
@@ -1604,16 +1604,16 @@ typedef struct
 
 /** @defgroup ETH_DMA_overflow ETH DMA overflow
   * @{
-  */ 
+  */
 #define ETH_DMA_OVERFLOW_RXFIFOCOUNTER      ((uint32_t)0x10000000)  /*!< Overflow bit for FIFO overflow counter */
 #define ETH_DMA_OVERFLOW_MISSEDFRAMECOUNTER ((uint32_t)0x00010000)  /*!< Overflow bit for missed frame counter */
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup ETH_EXTI_LINE_WAKEUP ETH EXTI LINE WAKEUP
   * @{
-  */ 
+  */
 #define ETH_EXTI_LINE_WAKEUP              ((uint32_t)0x00080000)  /*!< External interrupt line 19 Connected to the ETH EXTI Line */
 
 /**
@@ -1629,14 +1629,14 @@ typedef struct
  *  @brief macros to handle interrupts and specific clock configurations
  * @{
  */
- 
+
 /** @brief Reset ETH handle state
   * @param  __HANDLE__: specifies the ETH handle.
   * @retval None
   */
 #define __HAL_ETH_RESET_HANDLE_STATE(__HANDLE__) ((__HANDLE__)->State = HAL_ETH_STATE_RESET)
 
-/** 
+/**
   * @brief  Checks whether the specified ETHERNET DMA Tx Desc flag is set or not.
   * @param  __HANDLE__: ETH Handle
   * @param  __FLAG__: specifies the flag of TDES0 to check.
@@ -1675,7 +1675,7 @@ typedef struct
 
 /**
   * @brief  Returns the specified ETHERNET DMA Tx Desc collision count.
-  * @param  __HANDLE__: ETH Handle                     
+  * @param  __HANDLE__: ETH Handle
   * @retval The Transmit descriptor collision counter value.
   */
 #define __HAL_ETH_DMATXDESC_GET_COLLISION_COUNT(__HANDLE__)                   (((__HANDLE__)->TxDesc->Status & ETH_DMATXDESC_CC) >> ETH_DMATXDESC_COLLISION_COUNTSHIFT)
@@ -1689,67 +1689,67 @@ typedef struct
 
 /**
   * @brief  Enables the specified DMA Tx Desc Transmit interrupt.
-  * @param  __HANDLE__: ETH Handle                   
+  * @param  __HANDLE__: ETH Handle
   * @retval None
   */
 #define __HAL_ETH_DMATXDESC_ENABLE_IT(__HANDLE__)                          ((__HANDLE__)->TxDesc->Status |= ETH_DMATXDESC_IC)
 
 /**
   * @brief  Disables the specified DMA Tx Desc Transmit interrupt.
-  * @param  __HANDLE__: ETH Handle             
+  * @param  __HANDLE__: ETH Handle
   * @retval None
   */
 #define __HAL_ETH_DMATXDESC_DISABLE_IT(__HANDLE__)                          ((__HANDLE__)->TxDesc->Status &= ~ETH_DMATXDESC_IC)
 
 /**
   * @brief  Selects the specified ETHERNET DMA Tx Desc Checksum Insertion.
-  * @param  __HANDLE__: ETH Handle  
+  * @param  __HANDLE__: ETH Handle
   * @param  __CHECKSUM__: specifies is the DMA Tx desc checksum insertion.
   *   This parameter can be one of the following values:
   *     @arg ETH_DMATXDESC_CHECKSUMBYPASS : Checksum bypass
   *     @arg ETH_DMATXDESC_CHECKSUMIPV4HEADER : IPv4 header checksum
   *     @arg ETH_DMATXDESC_CHECKSUMTCPUDPICMPSEGMENT : TCP/UDP/ICMP checksum. Pseudo header checksum is assumed to be present
-  *     @arg ETH_DMATXDESC_CHECKSUMTCPUDPICMPFULL : TCP/UDP/ICMP checksum fully in hardware including pseudo header                                                                
+  *     @arg ETH_DMATXDESC_CHECKSUMTCPUDPICMPFULL : TCP/UDP/ICMP checksum fully in hardware including pseudo header
   * @retval None
   */
 #define __HAL_ETH_DMATXDESC_CHECKSUM_INSERTION(__HANDLE__, __CHECKSUM__)     ((__HANDLE__)->TxDesc->Status |= (__CHECKSUM__))
 
 /**
   * @brief  Enables the DMA Tx Desc CRC.
-  * @param  __HANDLE__: ETH Handle 
+  * @param  __HANDLE__: ETH Handle
   * @retval None
   */
 #define __HAL_ETH_DMATXDESC_CRC_ENABLE(__HANDLE__)                          ((__HANDLE__)->TxDesc->Status &= ~ETH_DMATXDESC_DC)
 
 /**
   * @brief  Disables the DMA Tx Desc CRC.
-  * @param  __HANDLE__: ETH Handle 
+  * @param  __HANDLE__: ETH Handle
   * @retval None
   */
 #define __HAL_ETH_DMATXDESC_CRC_DISABLE(__HANDLE__)                         ((__HANDLE__)->TxDesc->Status |= ETH_DMATXDESC_DC)
 
 /**
   * @brief  Enables the DMA Tx Desc padding for frame shorter than 64 bytes.
-  * @param  __HANDLE__: ETH Handle 
+  * @param  __HANDLE__: ETH Handle
   * @retval None
   */
 #define __HAL_ETH_DMATXDESC_SHORT_FRAME_PADDING_ENABLE(__HANDLE__)            ((__HANDLE__)->TxDesc->Status &= ~ETH_DMATXDESC_DP)
 
 /**
   * @brief  Disables the DMA Tx Desc padding for frame shorter than 64 bytes.
-  * @param  __HANDLE__: ETH Handle 
+  * @param  __HANDLE__: ETH Handle
   * @retval None
   */
 #define __HAL_ETH_DMATXDESC_SHORT_FRAME_PADDING_DISABLE(__HANDLE__)           ((__HANDLE__)->TxDesc->Status |= ETH_DMATXDESC_DP)
 
-/** 
+/**
  * @brief  Enables the specified ETHERNET MAC interrupts.
   * @param  __HANDLE__   : ETH Handle
   * @param  __INTERRUPT__: specifies the ETHERNET MAC interrupt sources to be
   *   enabled or disabled.
   *   This parameter can be any combination of the following values:
-  *     @arg ETH_MAC_IT_TST : Time stamp trigger interrupt 
-  *     @arg ETH_MAC_IT_PMT : PMT interrupt 
+  *     @arg ETH_MAC_IT_TST : Time stamp trigger interrupt
+  *     @arg ETH_MAC_IT_PMT : PMT interrupt
   * @retval None
   */
 #define __HAL_ETH_MAC_ENABLE_IT(__HANDLE__, __INTERRUPT__)                 ((__HANDLE__)->Instance->MACIMR |= (__INTERRUPT__))
@@ -1760,7 +1760,7 @@ typedef struct
   * @param  __INTERRUPT__: specifies the ETHERNET MAC interrupt sources to be
   *   enabled or disabled.
   *   This parameter can be any combination of the following values:
-  *     @arg ETH_MAC_IT_TST : Time stamp trigger interrupt 
+  *     @arg ETH_MAC_IT_TST : Time stamp trigger interrupt
   *     @arg ETH_MAC_IT_PMT : PMT interrupt
   * @retval None
   */
@@ -1799,16 +1799,16 @@ typedef struct
   * @param  __HANDLE__: ETH Handle
   * @param  __FLAG__: specifies the flag to check.
   *   This parameter can be one of the following values:
-  *     @arg ETH_MAC_FLAG_TST  : Time stamp trigger flag   
-  *     @arg ETH_MAC_FLAG_MMCT : MMC transmit flag  
-  *     @arg ETH_MAC_FLAG_MMCR : MMC receive flag   
-  *     @arg ETH_MAC_FLAG_MMC  : MMC flag  
-  *     @arg ETH_MAC_FLAG_PMT  : PMT flag  
+  *     @arg ETH_MAC_FLAG_TST  : Time stamp trigger flag
+  *     @arg ETH_MAC_FLAG_MMCT : MMC transmit flag
+  *     @arg ETH_MAC_FLAG_MMCR : MMC receive flag
+  *     @arg ETH_MAC_FLAG_MMC  : MMC flag
+  *     @arg ETH_MAC_FLAG_PMT  : PMT flag
   * @retval The state of ETHERNET MAC flag.
   */
 #define __HAL_ETH_MAC_GET_FLAG(__HANDLE__, __FLAG__)                   (((__HANDLE__)->Instance->MACSR &( __FLAG__)) == ( __FLAG__))
 
-/** 
+/**
   * @brief  Enables the specified ETHERNET DMA interrupts.
   * @param  __HANDLE__   : ETH Handle
   * @param  __INTERRUPT__: specifies the ETHERNET DMA interrupt sources to be
@@ -1864,12 +1864,12 @@ typedef struct
 /**
   * @brief  Set the DMA Receive status watchdog timer register value
   * @param  __HANDLE__: ETH Handle
-  * @param  __VALUE__: DMA Receive status watchdog timer register value   
+  * @param  __VALUE__: DMA Receive status watchdog timer register value
   * @retval None
   */
 #define __HAL_ETH_SET_RECEIVE_WATCHDOG_TIMER(__HANDLE__, __VALUE__)       ((__HANDLE__)->Instance->DMARSWTR = (__VALUE__))
 
-/** 
+/**
   * @brief  Enables any unicast packet filtered by the MAC address
   *   recognition to be a wake-up frame.
   * @param  __HANDLE__: ETH Handle.
@@ -1932,14 +1932,14 @@ typedef struct
   * @param  __HANDLE__: ETH Handle.
   * @param  __FLAG__: specifies the flag to check.
   *   This parameter can be one of the following values:
-  *     @arg ETH_PMT_FLAG_WUFFRPR : Wake-Up Frame Filter Register Pointer Reset 
-  *     @arg ETH_PMT_FLAG_WUFR    : Wake-Up Frame Received 
+  *     @arg ETH_PMT_FLAG_WUFFRPR : Wake-Up Frame Filter Register Pointer Reset
+  *     @arg ETH_PMT_FLAG_WUFR    : Wake-Up Frame Received
   *     @arg ETH_PMT_FLAG_MPR     : Magic Packet Received
   * @retval The new state of ETHERNET PMT Flag (SET or RESET).
   */
 #define __HAL_ETH_GET_PMT_FLAG_STATUS(__HANDLE__, __FLAG__)               (((__HANDLE__)->Instance->MACPMTCSR &( __FLAG__)) == ( __FLAG__))
 
-/** 
+/**
   * @brief  Preset and Initialize the MMC counters to almost-full value: 0xFFFF_FFF0 (full - 16)
   * @param   __HANDLE__: ETH Handle.
   * @retval None
@@ -2007,9 +2007,9 @@ typedef struct
   * @brief  Enables the specified ETHERNET MMC Rx interrupts.
   * @param   __HANDLE__: ETH Handle.
   * @param  __INTERRUPT__: specifies the ETHERNET MMC interrupt sources to be enabled or disabled.
-  *   This parameter can be one of the following values:  
-  *     @arg ETH_MMC_IT_RGUF  : When Rx good unicast frames counter reaches half the maximum value 
-  *     @arg ETH_MMC_IT_RFAE  : When Rx alignment error counter reaches half the maximum value 
+  *   This parameter can be one of the following values:
+  *     @arg ETH_MMC_IT_RGUF  : When Rx good unicast frames counter reaches half the maximum value
+  *     @arg ETH_MMC_IT_RFAE  : When Rx alignment error counter reaches half the maximum value
   *     @arg ETH_MMC_IT_RFCE  : When Rx crc error counter reaches half the maximum value
   * @retval None
   */
@@ -2018,9 +2018,9 @@ typedef struct
   * @brief  Disables the specified ETHERNET MMC Rx interrupts.
   * @param   __HANDLE__: ETH Handle.
   * @param  __INTERRUPT__: specifies the ETHERNET MMC interrupt sources to be enabled or disabled.
-  *   This parameter can be one of the following values: 
-  *     @arg ETH_MMC_IT_RGUF  : When Rx good unicast frames counter reaches half the maximum value 
-  *     @arg ETH_MMC_IT_RFAE  : When Rx alignment error counter reaches half the maximum value 
+  *   This parameter can be one of the following values:
+  *     @arg ETH_MMC_IT_RGUF  : When Rx good unicast frames counter reaches half the maximum value
+  *     @arg ETH_MMC_IT_RFAE  : When Rx alignment error counter reaches half the maximum value
   *     @arg ETH_MMC_IT_RFCE  : When Rx crc error counter reaches half the maximum value
   * @retval None
   */
@@ -2029,10 +2029,10 @@ typedef struct
   * @brief  Enables the specified ETHERNET MMC Tx interrupts.
   * @param   __HANDLE__: ETH Handle.
   * @param  __INTERRUPT__: specifies the ETHERNET MMC interrupt sources to be enabled or disabled.
-  *   This parameter can be one of the following values:  
-  *     @arg ETH_MMC_IT_TGF   : When Tx good frame counter reaches half the maximum value 
-  *     @arg ETH_MMC_IT_TGFMSC: When Tx good multi col counter reaches half the maximum value 
-  *     @arg ETH_MMC_IT_TGFSC : When Tx good single col counter reaches half the maximum value 
+  *   This parameter can be one of the following values:
+  *     @arg ETH_MMC_IT_TGF   : When Tx good frame counter reaches half the maximum value
+  *     @arg ETH_MMC_IT_TGFMSC: When Tx good multi col counter reaches half the maximum value
+  *     @arg ETH_MMC_IT_TGFSC : When Tx good single col counter reaches half the maximum value
   * @retval None
   */
 #define __HAL_ETH_MMC_TX_IT_ENABLE(__HANDLE__, __INTERRUPT__)            ((__HANDLE__)->Instance->MMCRIMR &= ~ (__INTERRUPT__))
@@ -2041,10 +2041,10 @@ typedef struct
   * @brief  Disables the specified ETHERNET MMC Tx interrupts.
   * @param   __HANDLE__: ETH Handle.
   * @param  __INTERRUPT__: specifies the ETHERNET MMC interrupt sources to be enabled or disabled.
-  *   This parameter can be one of the following values:  
-  *     @arg ETH_MMC_IT_TGF   : When Tx good frame counter reaches half the maximum value 
-  *     @arg ETH_MMC_IT_TGFMSC: When Tx good multi col counter reaches half the maximum value 
-  *     @arg ETH_MMC_IT_TGFSC : When Tx good single col counter reaches half the maximum value 
+  *   This parameter can be one of the following values:
+  *     @arg ETH_MMC_IT_TGF   : When Tx good frame counter reaches half the maximum value
+  *     @arg ETH_MMC_IT_TGFMSC: When Tx good multi col counter reaches half the maximum value
+  *     @arg ETH_MMC_IT_TGFSC : When Tx good single col counter reaches half the maximum value
   * @retval None
   */
 #define __HAL_ETH_MMC_TX_IT_DISABLE(__HANDLE__, __INTERRUPT__)           ((__HANDLE__)->Instance->MMCRIMR |= (__INTERRUPT__))
@@ -2090,17 +2090,17 @@ typedef struct
   * @retval None
   */
 #define __HAL_ETH_WAKEUP_EXTI_ENABLE_RISING_EDGE_TRIGGER()  EXTI->RTSR |= ETH_EXTI_LINE_WAKEUP
-                                                            
+
 /**
   * @brief  Disables the rising edge trigger to the ETH External interrupt line.
   * @retval None
   */
-#define __HAL_ETH_WAKEUP_EXTI_DISABLE_RISING_EDGE_TRIGGER()  EXTI->RTSR &= ~(ETH_EXTI_LINE_WAKEUP)                                                          
+#define __HAL_ETH_WAKEUP_EXTI_DISABLE_RISING_EDGE_TRIGGER()  EXTI->RTSR &= ~(ETH_EXTI_LINE_WAKEUP)
 
 /**
   * @brief  Enables falling edge trigger to the ETH External interrupt line.
   * @retval None
-  */                                                      
+  */
 #define __HAL_ETH_WAKEUP_EXTI_ENABLE_FALLING_EDGE_TRIGGER()  EXTI->FTSR |= (ETH_EXTI_LINE_WAKEUP)
 
 /**
@@ -2186,7 +2186,7 @@ HAL_StatusTypeDef HAL_ETH_ConfigMAC(ETH_HandleTypeDef *heth, ETH_MACInitTypeDef 
 HAL_StatusTypeDef HAL_ETH_ConfigDMA(ETH_HandleTypeDef *heth, ETH_DMAInitTypeDef *dmaconf);
 /**
   * @}
-  */ 
+  */
 
 /* Peripheral State functions  ************************************************/
 

@@ -671,6 +671,3 @@ volatile signed char *pcTaskNameIn = pcTaskName;
 
 	for( ;; );
 }
-
-
-

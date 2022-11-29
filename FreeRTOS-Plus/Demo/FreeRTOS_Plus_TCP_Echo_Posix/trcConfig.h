@@ -126,13 +126,13 @@ extern "C" {
  *
  * Macro which should be defined as either zero (0) or one (1).
  *
- * If this is zero (0), all code related to User Events is excluded in order 
+ * If this is zero (0), all code related to User Events is excluded in order
  * to reduce code size. Any attempts of storing User Events are then silently
  * ignored.
  *
- * User Events are application-generated events, like "printf" but for the 
- * trace log, generated using vTracePrint and vTracePrintF. 
- * The formatting is done on host-side, by Tracealyzer. User Events are 
+ * User Events are application-generated events, like "printf" but for the
+ * trace log, generated using vTracePrint and vTracePrintF.
+ * The formatting is done on host-side, by Tracealyzer. User Events are
  * therefore much faster than a console printf and can often be used
  * in timing critical code without problems.
  *
@@ -216,7 +216,7 @@ extern "C" {
  *
  * Macro which should be defined as either zero (0) or one (1).
  *
- * If this is zero (0), the trace will exclude any "pending function call" 
+ * If this is zero (0), the trace will exclude any "pending function call"
  * events, such as xTimerPendFunctionCall().
  *
  * Default value is 0 since dependent on timers.c

@@ -96,5 +96,3 @@ FILE *pf;
     ( void ) ulBufferLength;
 #endif /*USE_STDIO*/
 }
-
-

@@ -24,7 +24,7 @@
  *
  */
 
-/* 
+/*
  * This file, along with DemoIPTrace.h, provides a basic example use of the
  * FreeRTOS+UDP trace macros.  The statistics gathered here can be viewed in
  * the command line interface.
@@ -34,7 +34,7 @@
 /* Standard includes. */
 #include <stdint.h>
 
-/* FreeRTOS includes. */ 
+/* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 
@@ -42,7 +42,7 @@
 #include "FreeRTOS_UDP_IP.h"
 #include "DemoIPTrace.h"
 
-/* It is possible to remove the trace macros using the 
+/* It is possible to remove the trace macros using the
 configINCLUDE_DEMO_DEBUG_STATS setting in FreeRTOSIPConfig.h. */
 #if configINCLUDE_DEMO_DEBUG_STATS == 1
 
@@ -143,7 +143,3 @@ static void prvStoreLowest( uint32_t *pulCurrentValue, uint32_t ulCount )
 
 
 #endif /* configINCLUDE_DEMO_DEBUG_STATS == 1 */
-
-
-
-

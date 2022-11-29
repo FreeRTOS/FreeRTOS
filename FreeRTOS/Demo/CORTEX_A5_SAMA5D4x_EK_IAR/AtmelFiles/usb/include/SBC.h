@@ -675,4 +675,3 @@ typedef union _SBCCommand {
 /**@}*/
 
 #endif /*#ifndef SBC_H */
-

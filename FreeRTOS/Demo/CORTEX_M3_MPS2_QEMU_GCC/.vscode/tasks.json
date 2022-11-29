@@ -11,7 +11,7 @@
             "problemMatcher": {
                 "owner": "cpp",
                 "fileLocation": ["relative", "/"],
-                "pattern": [ 
+                "pattern": [
                     {
                       "regexp": ".",
                       "file": 1,
@@ -33,11 +33,11 @@
             "label": "killallqemu",
             "type":"shell",
             "isBackground":true,
-            "command": "killall qemu-system-arm", 
+            "command": "killall qemu-system-arm",
             "presentation": {
                 "echo": false,
                 "reveal": "never",
-                "focus": false, 
+                "focus": false,
                 "showReuseMessage": false,
                 "clear": true,
             },
@@ -47,7 +47,7 @@
             "type":"shell",
             "isBackground":true,
             "dependsOn": "build",
-            "runOptions": 
+            "runOptions":
                 {
                     "instanceLimit": 1
                 },
@@ -55,7 +55,7 @@
             "presentation": {
                 "echo": true,
                 "reveal": "always",
-                "focus": true, 
+                "focus": true,
                 "panel": "dedicated",
                 "showReuseMessage": true,
                 "clear": true,
@@ -75,7 +75,7 @@
                     "activeOnStart": true,
                     "beginsPattern": ".",
                     "endsPattern": "."
-                }  
+                }
             }
         }
     ]

@@ -129,5 +129,3 @@ WOLFSSL_API int wolfSSL_OCSP_check_nonce(OcspRequest* req,
 
 #endif /* HAVE_OCSP */
 #endif /* WOLFSSL_OCSP_H */
-
-

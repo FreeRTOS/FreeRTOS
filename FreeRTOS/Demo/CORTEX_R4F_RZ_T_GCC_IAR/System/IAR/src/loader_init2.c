@@ -97,27 +97,27 @@ void cpg_init(void);
 * Return Value : none
 *******************************************************************************/
 void loader_init2(void)
-{ 
+{
     /* Check the reset source */
     reset_check();
-  
+
     /* Set CPU clock and LOCO clock */
     cpg_init();
-    
+
     /* Set ATCM access wait to 1-wait with optimization */
     /* Caution: ATCM_WAIT_0 is permitted if CPUCLK = 150MHz or 300MHz.
                 ATCM_WAIT_1_OPT is permitted if CPUCLK = 450MHz or 600MHz.*/
     R_ATCM_WaitSet(ATCM_WAIT_1_OPT);
-     
+
     /* Copy the variable data */
     __iar_data_init3();
 
     /* Initialize I1, D1 Cache and MPU setting */
     cache_init();
-    
+
     /* Set RZ/T1 to Low-vector (SCTLR.V = 0) */
-    set_low_vec();  
-                
+    set_low_vec();
+
     /* Jump to _main() */
     _main();
 
@@ -138,41 +138,41 @@ void reset_check(void)
 {
     volatile uint8_t result;
     volatile uint32_t dummy;
-    
+
     /* Check the reset status flag and execute the each sequence */
     if (RST_SOURCE_ECM == SYSTEM.RSTSR0.LONG) // ECM reset is generated
     {
-        /* Clear reset status flag */ 
+        /* Clear reset status flag */
         r_rst_write_enable();              // Enable writing to the RSTSR0 register
         SYSTEM.RSTSR0.LONG = 0x00000000;  // Clear reset factor flag
         r_rst_write_disable();             // Disable writing to the RSTSR0 register
-        
-        /* Please coding the User program */ 
-        
+
+        /* Please coding the User program */
+
     }
     else if (RST_SOURCE_SWR1 == SYSTEM.RSTSR0.LONG) // Software reset 1 is generated
     {
-        /* Clear reset status flag */ 
+        /* Clear reset status flag */
         r_rst_write_enable();              // Enable writing to the RSTSR0 register
         SYSTEM.RSTSR0.LONG = 0x00000000;  // Clear reset factor flag
         r_rst_write_disable();             // Disable writing to the RSTSR0 register
-        
-        /* Please coding the User program */  
-        
+
+        /* Please coding the User program */
+
     }
     else if (RST_SOURCE_RES == SYSTEM.RSTSR0.LONG) // RES# pin reset is generated
     {
-        /* Clear reset status flag */ 
+        /* Clear reset status flag */
         r_rst_write_enable();              // Enable writing to the RSTSR0 register
         SYSTEM.RSTSR0.LONG = 0x00000000;  // Clear reset factor flag
         r_rst_write_disable();             // Disable writing to the RSTSR0 register
-        
-        /* Please coding the User program */    
-        
+
+        /* Please coding the User program */
+
     }
     else // Any reset is not generated
-    {        
-        /* Please coding the User program */  
+    {
+        /* Please coding the User program */
     }
 
 }
@@ -189,38 +189,38 @@ void reset_check(void)
 *******************************************************************************/
 void cpg_init(void)
 {
-    volatile uint32_t dummy; 
-      
+    volatile uint32_t dummy;
+
     /* Enables writing to the registers related to CPG function */
     R_CPG_WriteEnable();
-    
+
     /* Enables LOCO clock operation */
     SYSTEM.LOCOCR.BIT.LCSTP = CPG_LOCO_ENABLE;
-    
+
     /* Set CPUCLK to 450MHz, and dummy read at three times */
     SYSTEM.PLL1CR.LONG = CPG_CPUCLK_450_MHz;
     dummy = SYSTEM.PLL1CR.LONG;
     dummy = SYSTEM.PLL1CR.LONG;
     dummy = SYSTEM.PLL1CR.LONG;
-     
+
     /* Enables PLL1 operation */
-    SYSTEM.PLL1CR2.LONG = CPG_PLL1_ON;    
-    
+    SYSTEM.PLL1CR2.LONG = CPG_PLL1_ON;
+
     /* Disables writing to the registers related to CPG function */
-    R_CPG_WriteDisable(); 
-    
+    R_CPG_WriteDisable();
+
     /* Wait about 100us for PLL1 (and LOCO) stabilization */
     R_CPG_PLL_Wait();
 
     /* Enables writing to the registers related to CPG function */
-    R_CPG_WriteEnable();  
-     
+    R_CPG_WriteEnable();
+
     /* Selects the PLL1 as clock source */
     SYSTEM.SCKCR2.LONG = CPG_SELECT_PLL1;
-    
+
     /* Disables writing to the registers related to CPG function */
     R_CPG_WriteDisable();
-  
+
 }
 
 /*******************************************************************************
@@ -229,5 +229,3 @@ void cpg_init(void)
 
 
 /* End of File */
-
-

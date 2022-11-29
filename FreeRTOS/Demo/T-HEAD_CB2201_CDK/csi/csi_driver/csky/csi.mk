@@ -11,4 +11,3 @@ include $(CSI_DIR)/csi_driver/csky/hobbit3/csi.mk
 endif
 
 include $(CSI_DIR)/csi_driver/csky/common/csi.mk
-

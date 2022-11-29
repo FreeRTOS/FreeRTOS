@@ -491,4 +491,3 @@ jobs:
       - name: Build FreeRTOS+RelianceEdge+CLI Demo
         working-directory: FreeRTOS-Plus/Demo/FreeRTOS_Plus_Reliance_Edge_and_CLI_Windows_Simulator
         run: msbuild FreeRTOS_Plus_Reliance_Edge_with_CLI.sln -t:rebuild -property:Configuration=Debug -m
-

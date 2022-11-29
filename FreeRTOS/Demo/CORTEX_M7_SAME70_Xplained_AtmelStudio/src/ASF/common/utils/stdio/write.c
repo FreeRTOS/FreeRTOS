@@ -144,4 +144,3 @@ int _write (char c, int *f)
 /**
  * \}
  */
-

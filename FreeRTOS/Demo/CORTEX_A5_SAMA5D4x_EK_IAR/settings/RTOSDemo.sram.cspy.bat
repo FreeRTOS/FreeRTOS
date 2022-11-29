@@ -16,9 +16,7 @@
 @REM                     session afterwards.
 @REM   --silent          Omits the sign-on message.
 @REM   --timeout         Limits the maximum allowed execution time.
-@REM 
+@REM
 
 
-"C:\DevTools\IAR Systems\Embedded Workbench 7.0\common\bin\cspybat" "C:\DevTools\IAR Systems\Embedded Workbench 7.0\arm\bin\armproc.dll" "C:\DevTools\IAR Systems\Embedded Workbench 7.0\arm\bin\armjlink.dll"  %1 --plugin "C:\DevTools\IAR Systems\Embedded Workbench 7.0\arm\bin\armbat.dll" --macro "C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_A5_SAMA5D4x_EK_IAR\AtmelFiles\libboard_sama5d4x-ek\resources\ewarm\sama5d4x-ek-sram.mac" --backend -B "--endian=little" "--cpu=Cortex-A5F" "--fpu=VFPv4Neon" "--drv_verify_download" "--semihosting=none" "--drv_communication=USB0" "--jlink_speed=auto" "--jlink_initial_speed=32" "--drv_catch_exceptions=0x000" 
-
-
+"C:\DevTools\IAR Systems\Embedded Workbench 7.0\common\bin\cspybat" "C:\DevTools\IAR Systems\Embedded Workbench 7.0\arm\bin\armproc.dll" "C:\DevTools\IAR Systems\Embedded Workbench 7.0\arm\bin\armjlink.dll"  %1 --plugin "C:\DevTools\IAR Systems\Embedded Workbench 7.0\arm\bin\armbat.dll" --macro "C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_A5_SAMA5D4x_EK_IAR\AtmelFiles\libboard_sama5d4x-ek\resources\ewarm\sama5d4x-ek-sram.mac" --backend -B "--endian=little" "--cpu=Cortex-A5F" "--fpu=VFPv4Neon" "--drv_verify_download" "--semihosting=none" "--drv_communication=USB0" "--jlink_speed=auto" "--jlink_initial_speed=32" "--drv_catch_exceptions=0x000"

@@ -33,4 +33,3 @@ do not initialize  { section .noinit };
 
 place in VEC_region { section .vectors };
 place in RAM_region { section .cstartup, readonly, readwrite, block IRQ_STACK, block SVC_STACK, block CSTACK, block HEAP };
-

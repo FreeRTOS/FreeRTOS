@@ -91,9 +91,9 @@ static void prvTraceStoreEntryTable(void);
 
 #else /* (TRC_EXTERNAL_BUFFERS == 0) */
 
-#define prvTraceStoreHeader() 
-#define prvTraceStoreTimestampInfo() 
-#define prvTraceStoreEntryTable() 
+#define prvTraceStoreHeader()
+#define prvTraceStoreTimestampInfo()
+#define prvTraceStoreEntryTable()
 
 #endif /* (TRC_EXTERNAL_BUFFERS == 0) */
 
@@ -125,7 +125,7 @@ static void prvSetRecorderDisabled(void);
 traceResult xTraceInitialize(void)
 {
 	TRC_ASSERT_EQUAL_SIZE(TraceRecorderDataBuffer_t, TraceRecorderData_t);
-	
+
 	if (RecorderInitialized != 0)
 	{
 		return TRC_SUCCESS;
@@ -176,7 +176,7 @@ traceResult xTraceInitialize(void)
 	{
 		return TRC_FAIL;
 	}
-	
+
 	if (xTraceStaticBufferInitialize(&pxTraceRecorderData->xStaticBufferBuffer) == TRC_FAIL)
 	{
 		return TRC_FAIL;
@@ -186,12 +186,12 @@ traceResult xTraceInitialize(void)
 	{
 		return TRC_FAIL;
 	}
-	
+
 	if (xTracePrintInitialize(&pxTraceRecorderData->xPrintBuffer) == TRC_FAIL)
 	{
 		return TRC_FAIL;
 	}
-	
+
 	if (xTraceErrorInitialize(&pxTraceRecorderData->xErrorBuffer) == TRC_FAIL)
 	{
 		return TRC_FAIL;
@@ -325,7 +325,7 @@ traceResult xTraceDisable(void)
 	prvSetRecorderDisabled();
 
 	xTraceStreamPortOnDisable();
-	
+
 	return TRC_SUCCESS;
 }
 
@@ -336,7 +336,7 @@ traceResult xTraceSetBuffer(TraceRecorderDataBuffer_t* pxBuffer)
 	{
 		return TRC_FAIL;
 	}
-	
+
 	pxTraceRecorderData = (TraceRecorderData_t*)pxBuffer;
 
 	return TRC_SUCCESS;
@@ -349,11 +349,11 @@ traceResult xTraceGetEventBuffer(void **ppvBuffer, TraceUnsignedBaseType_t *puiS
 	{
 		return TRC_FAIL;
 	}
-	
+
 	/* Returns the xStreamPortBuffer since that is the one containing trace data */
 	*ppvBuffer = (void*)&pxTraceRecorderData->xStreamPortBuffer;
 	*puiSize = sizeof(pxTraceRecorderData->xStreamPortBuffer);
-	
+
 	return TRC_SUCCESS;
 }
 
@@ -361,7 +361,7 @@ traceResult xTraceTzCtrl(void)
 {
 	TraceCommand_t xCommand;
 	int32_t iBytes = 0;
-	
+
 	do
 	{
 		/* Listen for new commands */
@@ -417,9 +417,9 @@ void vTraceSetFilterMask(uint16_t filterMask)
 static void prvSetRecorderEnabled(void)
 {
 	uint32_t timestampFrequency = 0;
-	
+
 	TRACE_ALLOC_CRITICAL_SECTION();
-	
+
 	if (pxTraceRecorderData->uiRecorderEnabled == 1)
 	{
 		return;
@@ -437,7 +437,7 @@ static void prvSetRecorderEnabled(void)
 
 	/* If the internal event buffer is used, we must clear it */
 	xTraceInternalEventBufferClear();
-	
+
 	xTraceStreamPortOnTraceBegin();
 
 	prvTraceStoreHeader();
@@ -462,7 +462,7 @@ static void prvSetRecorderDisabled(void)
 	}
 
 	TRACE_ENTER_CRITICAL_SECTION();
-	
+
 	pxTraceRecorderData->uiRecorderEnabled = 0;
 
 	xTraceStreamPortOnTraceEnd();
@@ -508,7 +508,7 @@ static void prvTraceStoreEntryTable(void)
 	void *pvEntryAddress;
 
 	xTraceEntryGetCount(&uiEntryCount);
-	
+
 	if (xTraceEventBeginRawOfflineBlocking(sizeof(uint32_t) + sizeof(uint32_t) + sizeof(uint32_t), &xEventHandle) == TRC_SUCCESS)
 	{
 		xTraceEventAdd32(xEventHandle, uiEntryCount);
@@ -516,7 +516,7 @@ static void prvTraceStoreEntryTable(void)
 		xTraceEventAdd32(xEventHandle, TRC_ENTRY_TABLE_STATE_COUNT);
 		xTraceEventEndOfflineBlocking(xEventHandle);
 	}
-	
+
 	for (i = 0; i < (TRC_ENTRY_TABLE_SLOTS); i++)
 	{
 		xTraceEntryGetAtIndex(i, &xEntryHandle);

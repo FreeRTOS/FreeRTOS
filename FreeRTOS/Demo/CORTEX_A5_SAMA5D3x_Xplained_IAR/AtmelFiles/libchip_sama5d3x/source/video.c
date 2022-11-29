@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -130,4 +130,3 @@ void VIDEO_Ycc2Rgb(uint8_t *ycc, uint16_t *rgb, uint32_t len)
                | ((((uint16_t)r_calc_i_incr & 0xF8) >> 3) << 11);
     }
 }
-

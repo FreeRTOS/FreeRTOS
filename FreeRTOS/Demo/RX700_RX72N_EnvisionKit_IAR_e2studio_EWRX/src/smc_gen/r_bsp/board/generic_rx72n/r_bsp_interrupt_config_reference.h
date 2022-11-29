@@ -1,16 +1,16 @@
 /***********************************************************************************************************************
 * DISCLAIMER
-* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No 
-* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all 
-* applicable laws, including copyright laws. 
+* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No
+* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
+* applicable laws, including copyright laws.
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
-* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, 
-* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM 
-* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES 
-* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS 
+* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM
+* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES
+* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS
 * SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of 
-* this software. By using this software, you agree to the additional terms and conditions found by accessing the 
+* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of
+* this software. By using this software, you agree to the additional terms and conditions found by accessing the
 * following link:
 * http://www.renesas.com/disclaimer
 *
@@ -131,7 +131,7 @@ Macro definitions
 
 /* Interrupt A Sources.
  * -Valid vector numbers are 208-255.
- * -There are more A sources than A vector slots. By default none of the GPTW interrupts and the ESC interrupts are 
+ * -There are more A sources than A vector slots. By default none of the GPTW interrupts and the ESC interrupts are
  *  mapped.
  * -If using the 'MTU1, TGI1A' interrupt it must be vector 208 or 209. It is set to 208 by default.
  */
@@ -182,7 +182,7 @@ Macro definitions
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCIB0
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCIC0
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCID0
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GDTE0 
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GDTE0
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCIE0
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCIF0
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW0_GTCIV0
@@ -191,7 +191,7 @@ Macro definitions
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCIB1
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCIC1
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCID1
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GDTE1 
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GDTE1
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCIE1
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCIF1
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW1_GTCIV1
@@ -200,7 +200,7 @@ Macro definitions
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCIB2
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCIC2
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCID2
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GDTE2 
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GDTE2
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCIE2
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCIF2
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW2_GTCIV2
@@ -209,7 +209,7 @@ Macro definitions
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCIB3
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCIC3
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCID3
-#define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GDTE3 
+#define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GDTE3
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCIE3
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCIF3
 #define BSP_MAPPED_INT_CFG_A_VECT_GPTW3_GTCIV3
@@ -219,4 +219,3 @@ Macro definitions
 #define BSP_MAPPED_INT_CFG_A_VECT_PMGI1_PMGI1I                            253
 
 #endif /* R_BSP_INTERRUPT_CONFIG_REF_HEADER_FILE */
-

@@ -129,4 +129,3 @@ PDCWrite(unsigned char ucAddr, unsigned char ucData)
     //
     SSIDataGet(SSI_BASE, &ulTemp);
 }
-

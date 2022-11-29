@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -95,4 +95,3 @@ extern void ISI_Init(pIsi_Video pVideo);
 extern uint32_t ISI_StatusRegister(void);
 
 #endif //#ifndef ISI_H
-

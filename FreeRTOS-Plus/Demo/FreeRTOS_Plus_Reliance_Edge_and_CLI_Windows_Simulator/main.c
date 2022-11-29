@@ -141,6 +141,3 @@ void vApplicationMallocFailedHook( void )
 	taskDISABLE_INTERRUPTS();
 	for( ;; );
 }
-
-
-

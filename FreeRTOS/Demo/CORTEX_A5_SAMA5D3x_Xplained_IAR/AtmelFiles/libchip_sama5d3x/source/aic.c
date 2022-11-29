@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -29,13 +29,13 @@
 
 /** \addtogroup aic_module
  *
- * The Advanced Interrupt Controller (AIC) is an 8-level priority, individually 
- * maskable, vectored interrupt controller, providing handling of up to thirty-two interrupt sources. 
+ * The Advanced Interrupt Controller (AIC) is an 8-level priority, individually
+ * maskable, vectored interrupt controller, providing handling of up to thirty-two interrupt sources.
  *
  * \section Usage
  * <ul>
  * <li> Each interrupt source can be enabled or disabled by using the IRQ_EnableIT() and IRQ_DisableIT()</li>
- * <li> Configure the AIC interrupt to its requirements and special needs,such as priorty 
+ * <li> Configure the AIC interrupt to its requirements and special needs,such as priorty
  * level, source type and configure the addresses of the corresponding handler for each interrupt source
  * could be setting by  IRQ_ConfigureIT(). </li>
  * <li> Start conversion by setting ADC_CR_START in ADC_CR. </li>
@@ -125,4 +125,3 @@ void IRQ_DisableIT(uint32_t source)
     AIC->AIC_SSR  = source;
     AIC->AIC_IDCR = AIC_IDCR_INTD ;
 }
-

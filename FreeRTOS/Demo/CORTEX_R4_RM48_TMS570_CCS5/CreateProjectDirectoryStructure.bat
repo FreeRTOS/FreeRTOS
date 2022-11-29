@@ -21,10 +21,10 @@ IF EXIST .\FreeRTOS_Source Goto END
     MD FreeRTOS\portable
     MD FreeRTOS\portable\CCS
     MD FreeRTOS\portable\CCS\ARM_Cortex-R4
-    MD FreeRTOS\portable\MemMang    
+    MD FreeRTOS\portable\MemMang
 	MD Common-Demo-Source
     MD Common-Demo-Source\include
-    
+
     REM Copy the core kernel files into the project directory
     copy %FREERTOS_SOURCE%\tasks.c FreeRTOS
     copy %FREERTOS_SOURCE%\queue.c FreeRTOS
@@ -33,10 +33,10 @@ IF EXIST .\FreeRTOS_Source Goto END
 
     REM Copy the common header files into the project directory
     copy %FREERTOS_SOURCE%\include\*.* FreeRTOS\include
-    
+
     REM Copy the portable layer files into the project directory
     copy %FREERTOS_SOURCE%\portable\CCS\ARM_Cortex-R4\*.* FreeRTOS\portable\CCS\ARM_Cortex-R4
-    
+
     REM Copy the memory allocation files into the project directory
     copy %FREERTOS_SOURCE%\portable\MemMang\heap_4.c FreeRTOS\portable\MemMang
 
@@ -52,8 +52,8 @@ IF EXIST .\FreeRTOS_Source Goto END
     copy %COMMON_SOURCE%\countsem.c        Common-Demo-Source
     copy %COMMON_SOURCE%\integer.c         Common-Demo-Source
     copy %COMMON_SOURCE%\comtest.c         Common-Demo-Source
-    
+
     REM Copy the common demo file headers.
     copy %COMMON_INCLUDE%\*.h              Common-Demo-Source\include
-    
+
 : END

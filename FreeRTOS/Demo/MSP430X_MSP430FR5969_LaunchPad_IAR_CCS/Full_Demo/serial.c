@@ -201,5 +201,3 @@ BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 	THIS MUST BE THE LAST THING DONE IN THE ISR. */
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
-
-

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -90,4 +90,3 @@ void RTT_SetAlarm(AT91S_RTTC *pRtt, unsigned int time)
 
     pRtt->RTTC_RTAR = time - 1;
 }
-

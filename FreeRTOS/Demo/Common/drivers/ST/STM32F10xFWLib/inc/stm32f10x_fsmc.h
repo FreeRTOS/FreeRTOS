@@ -4,7 +4,7 @@
   * @author  MCD Application Team
   * @version  V3.0.0
   * @date  04/06/2009
-  * @brief  This file contains all the functions prototypes for the FSMC 
+  * @brief  This file contains all the functions prototypes for the FSMC
   *         firmware library.
   ******************************************************************************
   * @copy
@@ -17,7 +17,7 @@
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
   * <h2><center>&copy; COPYRIGHT 2009 STMicroelectronics</center></h2>
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32F10x_FSMC_H
@@ -38,8 +38,8 @@
   * @{
   */
 
-/** 
-  * @brief  Timing parameters For NOR/SRAM Banks  
+/**
+  * @brief  Timing parameters For NOR/SRAM Banks
   */
 
 typedef struct
@@ -53,7 +53,7 @@ typedef struct
   uint32_t FSMC_AccessMode;
 }FSMC_NORSRAMTimingInitTypeDef;
 
-/** 
+/**
   * @brief  FSMC NOR/SRAM Init structure definition
   */
 
@@ -70,12 +70,12 @@ typedef struct
   uint32_t FSMC_WriteOperation;
   uint32_t FSMC_WaitSignal;
   uint32_t FSMC_ExtendedMode;
-  uint32_t FSMC_WriteBurst;  
+  uint32_t FSMC_WriteBurst;
   FSMC_NORSRAMTimingInitTypeDef* FSMC_ReadWriteTimingStruct;/* Timing Parameters for write and read access if the  ExtendedMode is not used*/
   FSMC_NORSRAMTimingInitTypeDef* FSMC_WriteTimingStruct;/* Timing Parameters for write access if the  ExtendedMode is used*/
 }FSMC_NORSRAMInitTypeDef;
 
-/** 
+/**
   * @brief  Timing parameters For FSMC NAND and PCCARD Banks
   */
 
@@ -87,7 +87,7 @@ typedef struct
   uint32_t FSMC_HiZSetupTime;
 }FSMC_NAND_PCCARDTimingInitTypeDef;
 
-/** 
+/**
   * @brief  FSMC NAND Init structure definition
   */
 
@@ -99,12 +99,12 @@ typedef struct
   uint32_t FSMC_ECC;
   uint32_t FSMC_ECCPageSize;
   uint32_t FSMC_TCLRSetupTime;
-  uint32_t FSMC_TARSetupTime;  
-  FSMC_NAND_PCCARDTimingInitTypeDef*  FSMC_CommonSpaceTimingStruct;/* FSMC Common Space Timing */ 
+  uint32_t FSMC_TARSetupTime;
+  FSMC_NAND_PCCARDTimingInitTypeDef*  FSMC_CommonSpaceTimingStruct;/* FSMC Common Space Timing */
   FSMC_NAND_PCCARDTimingInitTypeDef*  FSMC_AttributeSpaceTimingStruct;/* FSMC Attribute Space Timing */
 }FSMC_NANDInitTypeDef;
 
-/** 
+/**
   * @brief  FSMC PCCARD Init structure definition
   */
 
@@ -112,7 +112,7 @@ typedef struct
 {
   uint32_t FSMC_Waitfeature;
   uint32_t FSMC_TCLRSetupTime;
-  uint32_t FSMC_TARSetupTime;  
+  uint32_t FSMC_TARSetupTime;
   FSMC_NAND_PCCARDTimingInitTypeDef*  FSMC_CommonSpaceTimingStruct;/* FSMC Common Space Timing */
   FSMC_NAND_PCCARDTimingInitTypeDef*  FSMC_AttributeSpaceTimingStruct;  /* FSMC Attribute Space Timing */
   FSMC_NAND_PCCARDTimingInitTypeDef*  FSMC_IOSpaceTimingStruct;  /* FSMC IO Space Timing */
@@ -126,7 +126,7 @@ typedef struct
   * @{
   */
 
-/** @defgroup FSMC_Banks_definitions 
+/** @defgroup FSMC_Banks_definitions
   * @{
   */
 
@@ -157,11 +157,11 @@ typedef struct
   * @}
   */
 
-/** @defgroup NOR_SRAM_Banks 
+/** @defgroup NOR_SRAM_Banks
   * @{
   */
 
-/** @defgroup FSMC_Data_Address_Bus_Multiplexing 
+/** @defgroup FSMC_Data_Address_Bus_Multiplexing
   * @{
   */
 
@@ -174,7 +174,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_Memory_Type 
+/** @defgroup FSMC_Memory_Type
   * @{
   */
 
@@ -189,7 +189,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_Data_Width 
+/** @defgroup FSMC_Data_Width
   * @{
   */
 
@@ -202,11 +202,11 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_Burst_Access_Mode 
+/** @defgroup FSMC_Burst_Access_Mode
   * @{
   */
 
-#define FSMC_BurstAccessMode_Disable                    ((uint32_t)0x00000000) 
+#define FSMC_BurstAccessMode_Disable                    ((uint32_t)0x00000000)
 #define FSMC_BurstAccessMode_Enable                     ((uint32_t)0x00000100)
 #define IS_FSMC_BURSTMODE(STATE) (((STATE) == FSMC_BurstAccessMode_Disable) || \
                                   ((STATE) == FSMC_BurstAccessMode_Enable))
@@ -214,25 +214,25 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_Wait_Signal_Polarity 
+/** @defgroup FSMC_Wait_Signal_Polarity
   * @{
   */
 
 #define FSMC_WaitSignalPolarity_Low                     ((uint32_t)0x00000000)
 #define FSMC_WaitSignalPolarity_High                    ((uint32_t)0x00000200)
 #define IS_FSMC_WAIT_POLARITY(POLARITY) (((POLARITY) == FSMC_WaitSignalPolarity_Low) || \
-                                         ((POLARITY) == FSMC_WaitSignalPolarity_High)) 
+                                         ((POLARITY) == FSMC_WaitSignalPolarity_High))
 
 /**
   * @}
   */
 
-/** @defgroup FSMC_Wrap_Mode 
+/** @defgroup FSMC_Wrap_Mode
   * @{
   */
 
 #define FSMC_WrapMode_Disable                           ((uint32_t)0x00000000)
-#define FSMC_WrapMode_Enable                            ((uint32_t)0x00000400) 
+#define FSMC_WrapMode_Enable                            ((uint32_t)0x00000400)
 #define IS_FSMC_WRAP_MODE(MODE) (((MODE) == FSMC_WrapMode_Disable) || \
                                  ((MODE) == FSMC_WrapMode_Enable))
 
@@ -240,12 +240,12 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_Wait_Timing 
+/** @defgroup FSMC_Wait_Timing
   * @{
   */
 
 #define FSMC_WaitSignalActive_BeforeWaitState           ((uint32_t)0x00000000)
-#define FSMC_WaitSignalActive_DuringWaitState           ((uint32_t)0x00000800) 
+#define FSMC_WaitSignalActive_DuringWaitState           ((uint32_t)0x00000800)
 #define IS_FSMC_WAIT_SIGNAL_ACTIVE(ACTIVE) (((ACTIVE) == FSMC_WaitSignalActive_BeforeWaitState) || \
                                             ((ACTIVE) == FSMC_WaitSignalActive_DuringWaitState))
 
@@ -253,7 +253,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_Write_Operation 
+/** @defgroup FSMC_Write_Operation
   * @{
   */
 
@@ -261,24 +261,24 @@ typedef struct
 #define FSMC_WriteOperation_Enable                      ((uint32_t)0x00001000)
 #define IS_FSMC_WRITE_OPERATION(OPERATION) (((OPERATION) == FSMC_WriteOperation_Disable) || \
                                             ((OPERATION) == FSMC_WriteOperation_Enable))
-                              
+
 /**
   * @}
   */
 
-/** @defgroup FSMC_Wait_Signal 
+/** @defgroup FSMC_Wait_Signal
   * @{
   */
 
 #define FSMC_WaitSignal_Disable                         ((uint32_t)0x00000000)
-#define FSMC_WaitSignal_Enable                          ((uint32_t)0x00002000) 
+#define FSMC_WaitSignal_Enable                          ((uint32_t)0x00002000)
 #define IS_FSMC_WAITE_SIGNAL(SIGNAL) (((SIGNAL) == FSMC_WaitSignal_Disable) || \
                                       ((SIGNAL) == FSMC_WaitSignal_Enable))
 /**
   * @}
   */
 
-/** @defgroup FSMC_Extended_Mode 
+/** @defgroup FSMC_Extended_Mode
   * @{
   */
 
@@ -286,25 +286,25 @@ typedef struct
 #define FSMC_ExtendedMode_Enable                        ((uint32_t)0x00004000)
 
 #define IS_FSMC_EXTENDED_MODE(MODE) (((MODE) == FSMC_ExtendedMode_Disable) || \
-                                     ((MODE) == FSMC_ExtendedMode_Enable)) 
+                                     ((MODE) == FSMC_ExtendedMode_Enable))
 
 /**
   * @}
   */
 
-/** @defgroup FSMC_Write_Burst 
+/** @defgroup FSMC_Write_Burst
   * @{
   */
 
 #define FSMC_WriteBurst_Disable                         ((uint32_t)0x00000000)
-#define FSMC_WriteBurst_Enable                          ((uint32_t)0x00080000) 
+#define FSMC_WriteBurst_Enable                          ((uint32_t)0x00080000)
 #define IS_FSMC_WRITE_BURST(BURST) (((BURST) == FSMC_WriteBurst_Disable) || \
                                     ((BURST) == FSMC_WriteBurst_Enable))
 /**
   * @}
   */
 
-/** @defgroup FSMC_Address_Setup_Time 
+/** @defgroup FSMC_Address_Setup_Time
   * @{
   */
 
@@ -314,7 +314,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_Address_Hold_Time 
+/** @defgroup FSMC_Address_Hold_Time
   * @{
   */
 
@@ -324,7 +324,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_Data_Setup_Time 
+/** @defgroup FSMC_Data_Setup_Time
   * @{
   */
 
@@ -334,7 +334,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_Bus_Turn_around_Duration 
+/** @defgroup FSMC_Bus_Turn_around_Duration
   * @{
   */
 
@@ -344,7 +344,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_CLK_Division 
+/** @defgroup FSMC_CLK_Division
   * @{
   */
 
@@ -354,7 +354,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_Data_Latency 
+/** @defgroup FSMC_Data_Latency
   * @{
   */
 
@@ -364,18 +364,18 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_Access_Mode 
+/** @defgroup FSMC_Access_Mode
   * @{
   */
 
 #define FSMC_AccessMode_A                               ((uint32_t)0x00000000)
-#define FSMC_AccessMode_B                               ((uint32_t)0x10000000) 
+#define FSMC_AccessMode_B                               ((uint32_t)0x10000000)
 #define FSMC_AccessMode_C                               ((uint32_t)0x20000000)
 #define FSMC_AccessMode_D                               ((uint32_t)0x30000000)
 #define IS_FSMC_ACCESS_MODE(MODE) (((MODE) == FSMC_AccessMode_A) || \
                                    ((MODE) == FSMC_AccessMode_B) || \
                                    ((MODE) == FSMC_AccessMode_C) || \
-                                   ((MODE) == FSMC_AccessMode_D)) 
+                                   ((MODE) == FSMC_AccessMode_D))
 
 /**
   * @}
@@ -384,12 +384,12 @@ typedef struct
 /**
   * @}
   */
-  
-/** @defgroup NAND_and_PCCARD_Banks 
+
+/** @defgroup NAND_and_PCCARD_Banks
   * @{
   */
 
-/** @defgroup FSMC_Wait_feature 
+/** @defgroup FSMC_Wait_feature
   * @{
   */
 
@@ -402,9 +402,9 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_Memory_Data_Width 
+/** @defgroup FSMC_Memory_Data_Width
   * @{
-  */ 
+  */
 #define FSMC_MemoryDataWidth_8b                         ((uint32_t)0x00000000)
 #define FSMC_MemoryDataWidth_16b                        ((uint32_t)0x00000010)
 #define IS_FSMC_DATA_WIDTH(WIDTH) (((WIDTH) == FSMC_MemoryDataWidth_8b) || \
@@ -414,7 +414,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_ECC 
+/** @defgroup FSMC_ECC
   * @{
   */
 
@@ -427,7 +427,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_ECC_Page_Size 
+/** @defgroup FSMC_ECC_Page_Size
   * @{
   */
 
@@ -448,7 +448,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_TCLR_Setup_Time 
+/** @defgroup FSMC_TCLR_Setup_Time
   * @{
   */
 
@@ -458,7 +458,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_TAR_Setup_Time 
+/** @defgroup FSMC_TAR_Setup_Time
   * @{
   */
 
@@ -468,7 +468,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_Setup_Time 
+/** @defgroup FSMC_Setup_Time
   * @{
   */
 
@@ -478,7 +478,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_Wait_Setup_Time 
+/** @defgroup FSMC_Wait_Setup_Time
   * @{
   */
 
@@ -488,7 +488,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_Hold_Setup_Time 
+/** @defgroup FSMC_Hold_Setup_Time
   * @{
   */
 
@@ -498,7 +498,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_HiZ_Setup_Time 
+/** @defgroup FSMC_HiZ_Setup_Time
   * @{
   */
 
@@ -508,7 +508,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup FSMC_Interrupt_sources 
+/** @defgroup FSMC_Interrupt_sources
   * @{
   */
 
@@ -518,12 +518,12 @@ typedef struct
 #define IS_FSMC_IT(IT) ((((IT) & (uint32_t)0xFFFFFFC7) == 0x00000000) && ((IT) != 0x00000000))
 #define IS_FSMC_GET_IT(IT) (((IT) == FSMC_IT_RisingEdge) || \
                             ((IT) == FSMC_IT_Level) || \
-                            ((IT) == FSMC_IT_FallingEdge)) 
+                            ((IT) == FSMC_IT_FallingEdge))
 /**
   * @}
   */
 
-/** @defgroup FSMC_Flags 
+/** @defgroup FSMC_Flags
   * @{
   */
 
@@ -593,6 +593,6 @@ void FSMC_ClearITPendingBit(uint32_t FSMC_Bank, uint32_t FSMC_IT);
 
 /**
   * @}
-  */ 
+  */
 
 /******************* (C) COPYRIGHT 2009 STMicroelectronics *****END OF FILE****/

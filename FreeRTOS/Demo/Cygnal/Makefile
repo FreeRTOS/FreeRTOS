@@ -85,14 +85,3 @@ main : main.c Makefile ../../Source/portable/SDCC/Cygnal/portmacro.h $(OBJ)
 
 %.rel : %.c Makefile ../../Source/portable/SDCC/Cygnal/portmacro.h
 	$(CC) -c $(CFLAGS) $<
-
-
-
-
-
-
-
-
-
-
-

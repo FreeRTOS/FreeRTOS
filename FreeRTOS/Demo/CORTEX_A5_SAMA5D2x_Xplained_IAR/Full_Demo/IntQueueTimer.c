@@ -162,4 +162,3 @@ volatile uint32_t ulDummy;
 	run-time stats. */
 	ulHighFrequencyTimerCounts++;
 }
-

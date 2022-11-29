@@ -389,4 +389,3 @@ int32_t  ECC_VerifySignature(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *message,
 #endif  /* __CRYPTO_H__ */
 
 /*** (C) COPYRIGHT 2017 Nuvoton Technology Corp. ***/
-

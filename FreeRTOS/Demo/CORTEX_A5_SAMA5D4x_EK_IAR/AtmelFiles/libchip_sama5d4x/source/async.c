@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -50,4 +50,3 @@ uint32_t ASYNC_IsFinished( Async* pAsync )
 {
     return (pAsync->status != ASYNC_STATUS_PENDING) ;
 }
-

@@ -39,7 +39,7 @@ void jtvic_init(const JTVIC_CFG *ih_table, uint32_t disagg_bitmap, uint32_t cfla
 
     JTVIC_CTRL->w = (1ul << 0);  // Soft-Reset
     d = 0ul;
-    if ( cflags & (1ul << 0) ) 
+    if ( cflags & (1ul << 0) )
     {
         d = (1ul << 8);
     }
@@ -56,9 +56,9 @@ void jtvic_init(const JTVIC_CFG *ih_table, uint32_t disagg_bitmap, uint32_t cfla
         }
         JTVIC_ACTRL->REG32[i] = d;
     }
-    
+
     JTVIC_GROUP_EN_SET->w = 0xFFFFFFFFul;   // Enable GIRQ08 - GIRQ18 (all)
-    
+
 }
 
 /* Clear JTVIC GIRQn source bit
@@ -113,4 +113,3 @@ void jtvic_en_source(uint8_t girq_num, uint8_t bit_num, uint8_t clr_src)
 /* end mec14xx_jtvic.c */
 /**   @}
  */
-

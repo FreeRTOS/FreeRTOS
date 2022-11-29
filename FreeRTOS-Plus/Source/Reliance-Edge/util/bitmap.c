@@ -98,4 +98,3 @@ void RedBitClear(
         pbBitmap[ulBit >> 3U] &= ~(0x80U >> (ulBit & 7U));
     }
 }
-

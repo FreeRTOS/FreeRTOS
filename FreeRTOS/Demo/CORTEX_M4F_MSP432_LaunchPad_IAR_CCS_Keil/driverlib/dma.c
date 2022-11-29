@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -847,4 +847,3 @@ void DMA_unregisterInterrupt(uint32_t interruptNumber)
     //
     Interrupt_unregisterInterrupt(interruptNumber);
 }
-

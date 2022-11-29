@@ -140,7 +140,3 @@ void vIntQTimerISR1( void )
 
 	portYIELD_FROM_ISR( xSecondTimerHandler() );
 }
-
-
-
-

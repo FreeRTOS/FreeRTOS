@@ -582,4 +582,3 @@ __attribute__((weak)) uint8_t mss_get_apb_bus_cr(void)
 {
     return (SYSREG->APBBUS_CR);
 }
-

@@ -445,4 +445,3 @@ static bool PathHasMoreNames(
 }
 
 #endif /* REDCONF_API_POSIX */
-

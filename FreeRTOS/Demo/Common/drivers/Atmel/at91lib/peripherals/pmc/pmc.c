@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -130,4 +130,3 @@ void PMC_DisablePeripheral(unsigned int id)
         AT91C_BASE_PMC->PMC_PCDR = 1 << id;
     }
 }
-

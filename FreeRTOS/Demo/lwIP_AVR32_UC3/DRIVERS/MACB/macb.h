@@ -244,8 +244,8 @@
 //! @{
 typedef struct
 {
-  char *data;        
-  unsigned int len;  
+  char *data;
+  unsigned int len;
 } macb_packet_t;
 //! @}
 
@@ -343,10 +343,10 @@ typedef struct _AVR32_TxTdDescriptor {
 //! @}
 
 /**
- * \brief Initialise the MACB driver. 
- *  
+ * \brief Initialise the MACB driver.
+ *
  * \param *macb Base address of the MACB
- *  
+ *
  * \return TRUE if success, FALSE otherwise.
  */
 Bool xMACBInit( volatile avr32_macb_t * macb );
@@ -356,12 +356,12 @@ Bool xMACBInit( volatile avr32_macb_t * macb );
  * MACB Tx buffers, then indicates to the MACB that the buffer is ready.
  * If lEndOfFrame is true then the data being copied is the end of the frame
  * and the frame can be transmitted.
- *  
+ *
  * \param *macb        Base address of the MACB
  * \param *pcFrom      Address of the data buffer
  * \param ulLength     Length of the frame
  * \param lEndOfFrame  Flag for End Of Frame
- *  
+ *
  * \return length sent.
  */
 long lMACBSend(volatile avr32_macb_t * macb, char *pcFrom, unsigned long ulLength, long lEndOfFrame );
@@ -373,50 +373,49 @@ long lMACBSend(volatile avr32_macb_t * macb, char *pcFrom, unsigned long ulLengt
  * ulTotalFrameLength is the size of the entire frame.  Generally vMACBRead
  * will be repetedly called until the sum of all the ulSectionLenths totals
  * the value of ulTotalFrameLength.
- *  
+ *
  * \param *pcTo               Address of the buffer
  * \param ulSectionLength     Length of the buffer
  * \param ulTotalFrameLength  Length of the frame
- */ 
+ */
 void vMACBRead( char *pcTo, unsigned long ulSectionLength, unsigned long ulTotalFrameLength );
 
 /**
  * \brief Called by the Tx interrupt, this function traverses the buffers used to
  * hold the frame that has just completed transmission and marks each as
  * free again.
- */ 
+ */
 void vClearMACBTxBuffer( void );
 
 /**
  * \brief Suspend on a semaphore waiting either for the semaphore to be obtained
  * or a timeout.  The semaphore is used by the MACB ISR to indicate that
  * data has been received and is ready for processing.
- * 
+ *
  * \param ulTimeOut    time to wait for an input
- * 
+ *
  */
 void vMACBWaitForInput( unsigned long ulTimeOut );
 
 /**
- * \brief Function to get length of the next frame in the receive buffers 
- * 
+ * \brief Function to get length of the next frame in the receive buffers
+ *
  * \return the length of the next frame in the receive buffers.
  */
 unsigned long ulMACBInputLength( void );
 
 /**
  * \brief Set the MACB Physical address (SA1B & SA1T registers).
- * 
+ *
  * \param *MACAddress the MAC address to set.
- */ 
+ */
 void vMACBSetMACAddress(const char * MACAddress);
 
 /**
  * \brief Disable MACB operations (Tx and Rx).
- * 
+ *
  * \param *macb        Base address of the MACB
- */ 
+ */
 void vDisableMACBOperations(volatile avr32_macb_t * macb);
 
 #endif
-

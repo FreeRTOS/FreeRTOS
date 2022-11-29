@@ -80,7 +80,7 @@ traceResult xTraceTimestampGet(uint32_t *puiTimestamp)
 	}
 
 	pxTraceTimestamp->latestTimestamp = *puiTimestamp;
-	
+
 	return TRC_SUCCESS;
 }
 

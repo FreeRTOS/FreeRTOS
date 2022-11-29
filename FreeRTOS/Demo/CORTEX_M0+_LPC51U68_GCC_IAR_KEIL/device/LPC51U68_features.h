@@ -233,4 +233,3 @@
 #define FSL_FEATURE_USB_EP_NUM (5)
 
 #endif /* _LPC51U68_FEATURES_H_ */
-

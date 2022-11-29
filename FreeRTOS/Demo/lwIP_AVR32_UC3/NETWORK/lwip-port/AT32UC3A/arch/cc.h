@@ -61,8 +61,8 @@ typedef int sys_prot_t;
 #define U32_F   "d"
 #define S32_F   "d"
 
-#define LWIP_PLATFORM_DIAG(x)   
-#define LWIP_PLATFORM_ASSERT(x)   
+#define LWIP_PLATFORM_DIAG(x)
+#define LWIP_PLATFORM_ASSERT(x)
 
 /* */
 #if __GNUC__

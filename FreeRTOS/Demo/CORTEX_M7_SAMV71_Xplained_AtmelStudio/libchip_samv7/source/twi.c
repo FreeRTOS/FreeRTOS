@@ -43,11 +43,11 @@
  * <li> Starts a write operation on the TWI to access the selected slave using
  * TWI_StartWrite(). A byte of data must be provided to start the write;
  * other bytes are written next.</li>
- * <li> Sends a byte of data to one of the TWI slaves on the bus using 
+ * <li> Sends a byte of data to one of the TWI slaves on the bus using
  * TWI_WriteByte().
- * This function must be called once before TWI_StartWrite() with the first 
+ * This function must be called once before TWI_StartWrite() with the first
  * byte of data
- * to send, then it shall be called repeatedly after that to send the 
+ * to send, then it shall be called repeatedly after that to send the
  * remaining bytes.</li>
  * <li> Check if a byte has been received and can be read on the given TWI
  * peripheral using TWI_ByteReceived().<
@@ -92,7 +92,7 @@
 					  TWIHS_IER_ARBLST | TWIHS_IER_SCL_WS | TWIHS_IER_EOSACC | \
 					  TWIHS_IER_MCACK | TWIHS_IER_TOUT | TWIHS_IER_PECERR |\
 					  TWIHS_IER_SMBDAM | TWIHS_IER_SMBHHM)
-					  
+
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
@@ -186,7 +186,7 @@ void TWI_Stop( Twihs *pTwi )
 }
 
 /**
- * \brief Starts a read operation on the TWI bus with the specified slave, it 
+ * \brief Starts a read operation on the TWI bus with the specified slave, it
  * returns immediately. Data must then be read using TWI_ReadByte() whenever a
  * byte is available (poll using TWI_ByteReceived()).
  * \param pTwi  Pointer to an Twihs instance.
@@ -383,4 +383,3 @@ void TWI_SendSTOPCondition(Twihs *pTwi)
 
 	pTwi->TWIHS_CR |= TWIHS_CR_STOP;
 }
-

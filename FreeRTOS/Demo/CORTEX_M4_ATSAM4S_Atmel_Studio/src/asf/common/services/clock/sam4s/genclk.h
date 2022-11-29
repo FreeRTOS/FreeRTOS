@@ -158,7 +158,7 @@ static inline void genclk_config_set_divider(struct genclk_config *p_cfg,
 		enum genclk_divider e_divider)
 {
 	p_cfg->ctrl &= ~PMC_PCK_PRES_Msk;
-	p_cfg->ctrl |= e_divider;	
+	p_cfg->ctrl |= e_divider;
 }
 
 //@}
@@ -181,69 +181,69 @@ static inline void genclk_enable_source(enum genclk_source e_src)
 		if (!osc_is_ready(OSC_SLCK_32K_RC)) {
 			osc_enable(OSC_SLCK_32K_RC);
 			osc_wait_ready(OSC_SLCK_32K_RC);
-		}		
+		}
 		break;
-	
+
 	case GENCLK_PCK_SRC_SLCK_XTAL:
 		if (!osc_is_ready(OSC_SLCK_32K_XTAL)) {
 			osc_enable(OSC_SLCK_32K_XTAL);
 			osc_wait_ready(OSC_SLCK_32K_XTAL);
 		}
 		break;
-		
+
 	case GENCLK_PCK_SRC_SLCK_BYPASS:
 		if (!osc_is_ready(OSC_SLCK_32K_BYPASS)) {
 			osc_enable(OSC_SLCK_32K_BYPASS);
-			osc_wait_ready(OSC_SLCK_32K_BYPASS);		
-		}		
+			osc_wait_ready(OSC_SLCK_32K_BYPASS);
+		}
 		break;
-	
+
     case GENCLK_PCK_SRC_MAINCK_4M_RC:
 		if (!osc_is_ready(OSC_MAINCK_4M_RC)) {
 			osc_enable(OSC_MAINCK_4M_RC);
-			osc_wait_ready(OSC_MAINCK_4M_RC);		
-		}		
+			osc_wait_ready(OSC_MAINCK_4M_RC);
+		}
 		break;
 
     case GENCLK_PCK_SRC_MAINCK_8M_RC:
 		if (!osc_is_ready(OSC_MAINCK_8M_RC)) {
 			osc_enable(OSC_MAINCK_8M_RC);
-			osc_wait_ready(OSC_MAINCK_8M_RC);		
-		}		
+			osc_wait_ready(OSC_MAINCK_8M_RC);
+		}
 		break;
 
     case GENCLK_PCK_SRC_MAINCK_12M_RC:
 		if (!osc_is_ready(OSC_MAINCK_12M_RC)) {
 			osc_enable(OSC_MAINCK_12M_RC);
-			osc_wait_ready(OSC_MAINCK_12M_RC);		
-		}		
+			osc_wait_ready(OSC_MAINCK_12M_RC);
+		}
 		break;
 
     case GENCLK_PCK_SRC_MAINCK_XTAL:
 		if (!osc_is_ready(OSC_MAINCK_XTAL)) {
 			osc_enable(OSC_MAINCK_XTAL);
-			osc_wait_ready(OSC_MAINCK_XTAL);		
-		}		
+			osc_wait_ready(OSC_MAINCK_XTAL);
+		}
 		break;
 
     case GENCLK_PCK_SRC_MAINCK_BYPASS:
 		if (!osc_is_ready(OSC_MAINCK_BYPASS)) {
 			osc_enable(OSC_MAINCK_BYPASS);
-			osc_wait_ready(OSC_MAINCK_BYPASS);		
-		}		
+			osc_wait_ready(OSC_MAINCK_BYPASS);
+		}
 		break;
 
 #ifdef CONFIG_PLL0_SOURCE
 	case GENCLK_PCK_SRC_PLLACK:
-		pll_enable_config_defaults(0);		
-		break;	
+		pll_enable_config_defaults(0);
+		break;
 #endif
 
 #ifdef CONFIG_PLL1_SOURCE
 	case GENCLK_PCK_SRC_PLLBCK:
-		pll_enable_config_defaults(1);		
-		break;	
-#endif	
+		pll_enable_config_defaults(1);
+		break;
+#endif
 
 	default:
 		Assert(false);

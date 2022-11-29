@@ -1,35 +1,31 @@
-"-p" 
+"-p"
 
-"C:\Renesas\EWB\8.4\rx\config\debugger\ior5f572nn.ddf" 
+"C:\Renesas\EWB\8.4\rx\config\debugger\ior5f572nn.ddf"
 
-"--endian" 
+"--endian"
 
-"l" 
+"l"
 
-"--double" 
+"--double"
 
-"64" 
+"64"
 
-"--core" 
+"--core"
 
-"rxv3" 
+"rxv3"
 
-"--int" 
+"--int"
 
-"32" 
+"32"
 
-"--fpu" 
+"--fpu"
 
-"64" 
+"64"
 
-"-d" 
+"-d"
 
-"e2lite" 
+"e2lite"
 
-"--drv_mode" 
+"--drv_mode"
 
-"debugging" 
-
-
-
-
+"debugging"

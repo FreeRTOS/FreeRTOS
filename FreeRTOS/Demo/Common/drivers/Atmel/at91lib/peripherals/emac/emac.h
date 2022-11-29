@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -37,14 +37,14 @@
 /// !Purpose
 ///
 ///     Definition of methods and structures for using EMAC
-///     
+///
 /// !Usage
 ///
 /// -# Initialize EMAC with EMAC_Init.
 /// -# Setup EMAC with EMAC_SetupTx, EMAC_SetupRx, EMAC_SetupMacAddress
-///    and EMAC_SetupStack. 
+///    and EMAC_SetupStack.
 /// -# Drive the EMAC status machine by EMAC_Task.
-/// -# EMAC_GetStatus give EMAC status machine current status 
+/// -# EMAC_GetStatus give EMAC status machine current status
 /// -# Send a packet to network with EMAC_SendPacket.
 /// -# Get a packet from network with EMAC_GetPacket.
 ///
@@ -138,8 +138,8 @@ extern void EMAC_Init( unsigned char id, const unsigned char *pMacAddress,
 
 extern void EMAC_Handler(void);
 
-extern unsigned char EMAC_Send(void *pBuffer, 
-                               unsigned int size, 
+extern unsigned char EMAC_Send(void *pBuffer,
+                               unsigned int size,
                                EMAC_TxCallback fEMAC_TxCallback);
 /// Return for EMAC_Send function
 #define EMAC_TX_OK                     0
@@ -158,4 +158,3 @@ extern unsigned char EMAC_Poll(unsigned char *pFrame,
 extern void EMAC_GetStatistics(EmacStats *pStats, unsigned char reset);
 
 #endif // #ifndef EMAC_H
-

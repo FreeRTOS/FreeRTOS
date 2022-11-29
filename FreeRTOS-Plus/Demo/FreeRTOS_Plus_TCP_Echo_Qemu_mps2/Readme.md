@@ -114,13 +114,13 @@ sudo ip route add default via 192.168.1.254 dev virbr0
 
 6. Run the demo
 ```
-$ sudo qemu-system-arm -machine mps2-an385 -cpu cortex-m3 
+$ sudo qemu-system-arm -machine mps2-an385 -cpu cortex-m3
           -kernel ./build/RTOSDemo.axf \
           -netdev tap,id=mynet0,ifname=virbr0-nic,script=no \
           -net nic,macaddr=52:54:00:12:34:AD,model=lan9118,netdev=mynet0 \
           -object filter-dump,id=tap_dump,netdev=mynet0,file=/tmp/qemu_tap_dump\
           -display gtk -m 16M  -nographic -serial stdio \
-          -monitor null -semihosting -semihosting-config enable=on,target=native 
+          -monitor null -semihosting -semihosting-config enable=on,target=native
 ```
 Replace the value of macaddr=52:54:00:12:34:AD with your own value from
 ```
@@ -163,4 +163,3 @@ To monitor packets received to qemu running the qemu command (qemu-system-arm)
 ```
 $ sudo tcpdump -r /tmp/qemu_tap_dump  | less
 ```
-

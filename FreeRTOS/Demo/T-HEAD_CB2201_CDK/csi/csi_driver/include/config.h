@@ -26,4 +26,3 @@
 #define CONFIG_DISABLE_IRQ 1
 
 #endif /* __CSI_WIFI_H__ */
-

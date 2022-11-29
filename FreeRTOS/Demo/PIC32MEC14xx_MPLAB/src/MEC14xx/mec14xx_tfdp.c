@@ -71,7 +71,7 @@ static void tfdp_xmit_word(uint32_t word)
 
     for (i = 0u; i < 4; i++) {
         TFDP->DATA = (uint8_t)word;
-        word >>= 8; 
+        word >>= 8;
         TFDP_DELAY();
     }
 }
@@ -79,10 +79,10 @@ static void tfdp_xmit_word(uint32_t word)
 
 /**
  * tfdp_sleep_en - Gate clocks On/Off to TFDP block when idle
- * 
+ *
  * @author C21969 (2/4/2014)
- * 
- * @param sleep_en (1=Gate clocks when idle), (0=Do not gate 
+ *
+ * @param sleep_en (1=Gate clocks when idle), (0=Do not gate
  *                 clocks when idle)
  */
 void tfdp_sleep_en(uint8_t sleep_en)
@@ -97,18 +97,18 @@ void tfdp_sleep_en(uint8_t sleep_en)
 
 /**
  * tfdp_enable - Init Trace FIFO Data Port
- * @param boolean true=enable TFDP, false=disable TFDP 
- * @param boolean true=change TFDP pin configuration. 
- * If TFDP is enabled then GPIO103/104 set to Alt. Func. 1 
- * Else GPIO103/104 set to GPIO input, internal PU enabled. 
- * @note - 
+ * @param boolean true=enable TFDP, false=disable TFDP
+ * @param boolean true=change TFDP pin configuration.
+ * If TFDP is enabled then GPIO103/104 set to Alt. Func. 1
+ * Else GPIO103/104 set to GPIO input, internal PU enabled.
+ * @note -
  */
 void tfdp_enable(uint8_t en, uint8_t pin_cfg)
 {
     uint32_t delay;
 
     if (en) {
-        
+
         if (pin_cfg) {
             // Input with AltOut=1 to drive high when switched to output
             GPIO_CTRL->REG[TFDP_PIN_1].w = (1ul << 16);
@@ -136,17 +136,17 @@ void tfdp_enable(uint8_t en, uint8_t pin_cfg)
 
         }
         /* b[0]=1(Enable)
-         * b[1]=0(Shift data out on rising edge) 
+         * b[1]=0(Shift data out on rising edge)
          * b[3:2]=00b TFDP shift clocks = AHB_CLK/2
          * b[6:4]=000b 1 clock inter-packet delay
          */
         TFDP->CONTROL = 0x01u;
 
-    } 
+    }
     else
     {
         TFDP->CONTROL = 0x00u;
-        if (pin_cfg) 
+        if (pin_cfg)
         { /* Set to POR value (tri-stated input) */
             GPIO_CTRL->REG[TFDP_PIN_1].w = 0;
             GPIO_CTRL->REG[TFDP_PIN_2].w = 0;
@@ -156,18 +156,18 @@ void tfdp_enable(uint8_t en, uint8_t pin_cfg)
 
 
 /**
- * TFDPTrace0 - TRACE0: transmit 16-bit trace number lsb first 
- * over TFDP. 
- * 
- * @author sworley 
- * 
- * @param nbr 16-bit trace number 
+ * TFDPTrace0 - TRACE0: transmit 16-bit trace number lsb first
+ * over TFDP.
+ *
+ * @author sworley
+ *
+ * @param nbr 16-bit trace number
  * @param b unused
- * 
- * @return uint8_t always TRUE 
- * @note Function implements critical section. 
- * Uses tool kit __disable_irq()/__enable_irq() pair which may use 
- * priviledged Cortex-Mx instructions. 
+ *
+ * @return uint8_t always TRUE
+ * @note Function implements critical section.
+ * Uses tool kit __disable_irq()/__enable_irq() pair which may use
+ * priviledged Cortex-Mx instructions.
  */
 void TFDPTrace0 ( uint16_t nbr, uint8_t b )
 {
@@ -187,25 +187,25 @@ void TFDPTrace0 ( uint16_t nbr, uint8_t b )
 
 
 /**
- * TRDPTrace1 - TRACE1: transmit 16-bit trace number lsb first 
- * and 16-bit data lsb first over TFDP. 
- * 
- * @author sworley 
- * 
- * @param nbr 16-bit trace number 
- * @param b unused 
+ * TRDPTrace1 - TRACE1: transmit 16-bit trace number lsb first
+ * and 16-bit data lsb first over TFDP.
+ *
+ * @author sworley
+ *
+ * @param nbr 16-bit trace number
+ * @param b unused
  * @param uint32_t p1 16-bit data1 in b[15:0]
- * 
- * @return uint8_t always TRUE 
- * @note Function implements critical section. 
- * Uses tool kit __disable_irq()/__enable_irq() pair which may use 
- * priviledged Cortex-Mx instructions. 
+ *
+ * @return uint8_t always TRUE
+ * @note Function implements critical section.
+ * Uses tool kit __disable_irq()/__enable_irq() pair which may use
+ * priviledged Cortex-Mx instructions.
  */
 void TFDPTrace1 ( uint16_t nbr, uint8_t b, uint32_t p1 )
 {
 #ifdef ENABLE_TRACE_MASK_IRQ
     uint32_t isave;
-    
+
     isave = mips32r2_dis_intr();
 #endif
     (void)b;
@@ -219,18 +219,18 @@ void TFDPTrace1 ( uint16_t nbr, uint8_t b, uint32_t p1 )
 
 
 /**
- * TFDPTrace2 - TRACE2: transmit 16-bit trace number lsb first 
+ * TFDPTrace2 - TRACE2: transmit 16-bit trace number lsb first
  * and two 16-bit data parameters lsb first over TFDP.
- * 
- * @author sworley 
- * 
+ *
+ * @author sworley
+ *
  * @param nbr trace number
  * @param b unused
  * @param uint32_t p1 16-bit data1 in b[15:0]
  * @param uint32_t p2 16-bit data2 in b[15:0]
- * 
- * @return uint8_t always TRUE 
- * @note Uses tool kit functions to save/disable/restore 
+ *
+ * @return uint8_t always TRUE
+ * @note Uses tool kit functions to save/disable/restore
  *       interrupts for critical section. These may use
  *       priviledged instructions.
  */
@@ -238,7 +238,7 @@ void TFDPTrace2 ( uint16_t nbr, uint8_t b, uint32_t p1, uint32_t p2 )
 {
 #ifdef ENABLE_TRACE_MASK_IRQ
     uint32_t isave;
-    
+
     isave = mips32r2_dis_intr();
 #endif
     (void)b;
@@ -253,29 +253,29 @@ void TFDPTrace2 ( uint16_t nbr, uint8_t b, uint32_t p1, uint32_t p2 )
 
 
 /**
- * TFDPTrace3 - TRACE3: transmit 16-bit trace number lsb first 
+ * TFDPTrace3 - TRACE3: transmit 16-bit trace number lsb first
  * and three 16-bit data parameters lsb first over TFDP.
- * 
- * @author sworley 
- * 
+ *
+ * @author sworley
+ *
  * @param nbr trace number
  * @param b unused
  * @param uint32_t p1 16-bit data1 in b[15:0]
  * @param uint32_t p2 16-bit data2 in b[15:0]
  * @param uint32_t p3 16-bit data3 in b[15:0]
- * 
- * @return uint8_t always TRUE 
- * @note Uses tool kit functions to save/disable/restore 
+ *
+ * @return uint8_t always TRUE
+ * @note Uses tool kit functions to save/disable/restore
  *       interrupts for critical section. These may use
- *       priviledged instructions. 
+ *       priviledged instructions.
  */
 void TFDPTrace3 ( uint16_t nbr, uint8_t b, uint32_t p1, uint32_t p2, uint32_t p3)
 {
 #ifdef ENABLE_TRACE_MASK_IRQ
     uint32_t isave;
-    
+
     isave = mips32r2_dis_intr();
-#endif  
+#endif
     (void)b;
     tfdp_xmit_header(nbr);
     tfdp_xmit_hword(p1);
@@ -292,28 +292,28 @@ void TFDPTrace3 ( uint16_t nbr, uint8_t b, uint32_t p1, uint32_t p2, uint32_t p3
 
 
 /**
- * TFDPTrace4 - TRACE3: transmit 16-bit trace number lsb first 
+ * TFDPTrace4 - TRACE3: transmit 16-bit trace number lsb first
  * and four 16-bit data parameters lsb first over TFDP.
- * 
- * @author sworley 
- * 
+ *
+ * @author sworley
+ *
  * @param nbr trace number
  * @param b unused
  * @param uint32_t p1 16-bit data1 in b[15:0]
  * @param uint32_t p2 16-bit data2 in b[15:0]
  * @param uint32_t p3 16-bit data3 in b[15:0]
  * @param uint32_t p4 16-bit data4 in b[15:0]
- * 
- * @return uint8_t always TRUE 
- * @note Uses tool kit functions to save/disable/restore 
+ *
+ * @return uint8_t always TRUE
+ * @note Uses tool kit functions to save/disable/restore
  *       interrupts for critical section. These may use
- *       priviledged instructions. 
+ *       priviledged instructions.
  */
 void TFDPTrace4 ( uint16_t nbr, uint8_t b, uint32_t p1, uint32_t p2, uint32_t p3, uint32_t p4)
 {
 #ifdef ENABLE_TRACE_MASK_IRQ
     uint32_t isave;
-    
+
     isave = mips32r2_dis_intr();
 #endif
     (void)b;
@@ -322,7 +322,7 @@ void TFDPTrace4 ( uint16_t nbr, uint8_t b, uint32_t p1, uint32_t p2, uint32_t p3
     tfdp_xmit_hword(p2);
     tfdp_xmit_hword(p3);
     tfdp_xmit_hword(p4);
-      
+
 #ifdef ENABLE_TRACE_MASK_IRQ
     if ( isave & (1ul<<0) )
     {
@@ -332,25 +332,25 @@ void TFDPTrace4 ( uint16_t nbr, uint8_t b, uint32_t p1, uint32_t p2, uint32_t p3
 }
 
 
-/** 
- *  TFDPTrace11 - Transmit one 32-bit data item over TFDP 
- * 
+/**
+ *  TFDPTrace11 - Transmit one 32-bit data item over TFDP
+ *
  *  @param nbr trace number
- *  @param b unused 
+ *  @param b unused
  *  @param uint32_t p1 32-bit data to be transmitted
- * 
+ *
  */
 void TFDPTrace11( uint16_t nbr, uint8_t b, uint32_t p1)
 {
 #ifdef ENABLE_TRACE_MASK_IRQ
     uint32_t isave;
-    
+
     isave = mips32r2_dis_intr();
-#endif  
+#endif
     (void)b;
     tfdp_xmit_header(nbr);
     tfdp_xmit_word(p1);
-    
+
 #ifdef ENABLE_TRACE_MASK_IRQ
     if ( isave & (1ul<<0) )
     {
@@ -360,22 +360,22 @@ void TFDPTrace11( uint16_t nbr, uint8_t b, uint32_t p1)
 }
 
 
-/** 
- *  TFDPTrace12 - Transmit two 32-bit data items over TFDP 
- * 
+/**
+ *  TFDPTrace12 - Transmit two 32-bit data items over TFDP
+ *
  *  @param nbr trace number
- *  @param b unused 
+ *  @param b unused
  *  @param uint32_t p1 32-bit data1 to be transmitted
  *  @param uint32_t p2 32-bit data2 to be transmitted
- * 
+ *
  */
 void TFDPTrace12( uint16_t nbr, uint8_t b, uint32_t p1, uint32_t p2 )
 {
 #ifdef ENABLE_TRACE_MASK_IRQ
     uint32_t isave;
-    
+
     isave = mips32r2_dis_intr();
-#endif  
+#endif
     (void)b;
     tfdp_xmit_header(nbr);
     tfdp_xmit_word(p1);

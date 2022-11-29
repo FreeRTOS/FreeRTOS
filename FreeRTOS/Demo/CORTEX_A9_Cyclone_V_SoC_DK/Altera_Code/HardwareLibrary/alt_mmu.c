@@ -414,7 +414,7 @@ ALT_STATUS_CODE alt_mmu_ttb2_desc_set(const uint32_t* ttb1,
     {
         return ALT_E_BAD_ARG;
     }
-    
+
     // Locate TTB2 given [ttb1_desc]
     uint32_t * ttb2 = (uint32_t *)(ttb1_desc & ALT_MMU_TTB1_PAGE_TBL_BASE_ADDR_MASK);
 
@@ -800,7 +800,7 @@ static inline uint32_t alt_mmu_va_space_gen_pagetable(uintptr_t pagetable,
         return 0;
     }
 
-    return 
+    return
           ALT_MMU_TTB1_TYPE_SET(0x1)
         | ALT_MMU_TTB1_PAGE_TBL_NS_SET(mem->security)
         | ALT_MMU_TTB1_PAGE_TBL_DOMAIN_SET(0)
@@ -819,7 +819,7 @@ static inline uint32_t alt_mmu_va_space_gen_section(uintptr_t pa,
     int c   = (mem->attributes >> 1) & 0x1;
     int b   = (mem->attributes >> 0) & 0x1;
 
-    return 
+    return
           ALT_MMU_TTB1_TYPE_SET(0x2)
         | ALT_MMU_TTB1_SECTION_B_SET(b)
         | ALT_MMU_TTB1_SECTION_C_SET(c)
@@ -845,7 +845,7 @@ static inline uint32_t alt_mmu_va_space_gen_supersection(uintptr_t pa,
     int c   = (mem->attributes >> 1) & 0x1;
     int b   = (mem->attributes >> 0) & 0x1;
 
-    return 
+    return
           ALT_MMU_TTB1_TYPE_SET(0x2) | (1 << 18) // bit 18 marks section as being super.
         | ALT_MMU_TTB1_SUPERSECTION_B_SET(b)
         | ALT_MMU_TTB1_SUPERSECTION_C_SET(c)
@@ -873,7 +873,7 @@ static inline uint32_t alt_mmu_va_space_gen_smallpage(uintptr_t pa,
 
     // NS bit (mem->security) is ignored as it is set in TTB1.
 
-    return 
+    return
           ALT_MMU_TTB2_TYPE_SET(0x2)
         | ALT_MMU_TTB2_SMALL_PAGE_XN_SET(mem->execute)
         | ALT_MMU_TTB2_SMALL_PAGE_B_SET(b)

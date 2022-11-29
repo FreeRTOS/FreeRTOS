@@ -1,10 +1,10 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -242,4 +242,3 @@ extern void DMAC_SetDestPip( Dmac *pDmac,
 /**     @}*/
 /**@}*/
 #endif //#ifndef DMAC_H
-

@@ -208,10 +208,3 @@ short sHigherPriorityTaskWoken = pdFALSE;
 		portYIELD_FROM_ISR();
 	}
 }
-
-
-
-
-
-
-

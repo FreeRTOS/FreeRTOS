@@ -76,5 +76,3 @@ void vUSBSendByte( char cByte );
 
 
 #endif
-
-

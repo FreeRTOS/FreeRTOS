@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -185,7 +185,7 @@ extern void CS_setExternalClockSourceFrequency(uint32_t lfxt_XT_CLK_frequency,
 //! that this function is called for each clock signal. If not, the default
 //! state is assumed for the particular clock signal. Refer to DriverLib
 //! documentation for CS module or Device Family User's Guide for details of
-//! default clock signal states. 
+//! default clock signal states.
 //!
 //! Note that this function is blocking and will wait on the appropriate bit
 //! to be set in the CSSTAT READY register to be set before setting the clock
@@ -489,7 +489,7 @@ extern void CS_setDCOFrequency(uint32_t dcoFrequency);
 //!
 //! \note This function is not currently available on pre-release MSP432 devices.
 //!  On early release versions of MSP432, the DCO calibration information has not been
-//!  populated making the DCO only able to operate at the pre-calibrated centered 
+//!  populated making the DCO only able to operate at the pre-calibrated centered
 //!  frequencies accessible by the \link CS_setDCOCenteredFrequency \endlink
 //!  function. While this function will be added on the final devices being released,
 //!  for early silicon please default to the pre-calibrated DCO center frequencies.
@@ -565,7 +565,7 @@ extern uint32_t CS_getDCOFrequency(void);
 //!
 //! \note This function is not currently available on pre-release MSP432 devices.
 //!  On early release versions of MSP432, the DCO calibration information has not been
-//!  populated making the DCO only able to operate at the pre-calibrated centered 
+//!  populated making the DCO only able to operate at the pre-calibrated centered
 //!  frequencies accessible by the \link CS_setDCOCenteredFrequency \endlink
 //!  function. While this function will be added on the final devices being released,
 //!  for early silicon please default to the pre-calibrated DCO center frequencies.

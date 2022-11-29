@@ -137,7 +137,7 @@ static inline void __set_PRIMASK(uint32_t priMask)
 //  Only define M4 based intrinsics if we're not using an M4
 //
 #if defined (__TI_TMS470_V7M4__)
-//		
+//
 //	V5E, V6, Cortex-M4, Cortex-R4, and Cortex-A8 compiler intrinsics
 //
 #define __QADD		_sadd

@@ -300,4 +300,3 @@ void BURTC_IRQHandler( void )
 }
 
 #endif /* ( configCREATE_LOW_POWER_DEMO == 1 ) */
-

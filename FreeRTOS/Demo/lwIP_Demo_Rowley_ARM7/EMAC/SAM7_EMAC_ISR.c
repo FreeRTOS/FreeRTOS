@@ -107,4 +107,3 @@ void vPassEMACSemaphore( SemaphoreHandle_t xCreatedSemaphore )
 	/* Simply store the semaphore that should be used by the ISR. */
 	xSemaphore = xCreatedSemaphore;
 }
-

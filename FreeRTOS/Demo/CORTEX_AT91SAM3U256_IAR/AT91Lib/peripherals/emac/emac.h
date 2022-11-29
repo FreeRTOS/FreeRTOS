@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -37,7 +37,7 @@
 /// !Purpose
 ///
 ///     Definition of methods and structures for using EMAC
-///     
+///
 /// !Usage
 ///
 /// -# Initialize EMAC with EMAC_Init with MAC address.
@@ -45,7 +45,7 @@
 ///      driver.
 /// -# Get a packet from network
 ///      -# Interrupt mode: EMAC_Set_RxCb to register a function to process the frame packet
-///      -# Polling mode: EMAC_Poll for a data packet from network 
+///      -# Polling mode: EMAC_Poll for a data packet from network
 /// -# Send a packet to network with EMAC_Send.
 ///
 /// Please refer to the list of functions in the #Overview# tab of this unit
@@ -140,8 +140,8 @@ extern void EMAC_Init( unsigned char id, const unsigned char *pMacAddress,
 
 extern void EMAC_Handler(void);
 
-extern unsigned char EMAC_Send(void *pBuffer, 
-                               unsigned int size, 
+extern unsigned char EMAC_Send(void *pBuffer,
+                               unsigned int size,
                                EMAC_TxCallback fEMAC_TxCallback);
 /// Return for EMAC_Send function
 #define EMAC_TX_OK                     0
@@ -160,4 +160,3 @@ extern unsigned char EMAC_Poll(unsigned char *pFrame,
 extern void EMAC_GetStatistics(EmacStats *pStats, unsigned char reset);
 
 #endif // #ifndef EMAC_H
-

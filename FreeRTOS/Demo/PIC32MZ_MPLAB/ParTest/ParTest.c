@@ -84,6 +84,3 @@ unsigned portBASE_TYPE uxLEDBit;
 		LATHINV = uxLEDBit;
 	}
 }
-
-
-

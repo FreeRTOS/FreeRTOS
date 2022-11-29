@@ -8,7 +8,7 @@
  * @version  V1.0.6 (Reference Manual v1.0)
  * @date     26. March 2013
  *
- * @note     Generated with SVDConv V2.78b 
+ * @note     Generated with SVDConv V2.78b
  *           from CMSIS SVD File 'XMC1100_Processed_SVD.xml' Version 1.0.6 (Reference Manual v1.0),
  *******************************************************************************************************/
 
@@ -49,17 +49,17 @@ typedef enum {
   ERU0_1_IRQn         =   4,   /*!< ERU0 SR1 Interrupt                       */
   ERU0_2_IRQn         =   5,   /*!< ERU0 SR2 Interrupt                       */
   ERU0_3_IRQn         =   6,   /*!< ERU0 SR3 Interrupt                       */
-  
+
   USIC0_0_IRQn        =   9,   /*!< USIC SR0 Interrupt                       */
   USIC0_1_IRQn        =  10,   /*!< USIC SR1 Interrupt                       */
   USIC0_2_IRQn        =  11,   /*!< USIC SR2 Interrupt                       */
   USIC0_3_IRQn        =  12,   /*!< USIC SR3 Interrupt                       */
   USIC0_4_IRQn        =  13,   /*!< USIC SR4 Interrupt                       */
   USIC0_5_IRQn        =  14,   /*!< USIC SR5 Interrupt                       */
-  
+
   VADC0_C0_0_IRQn     =  15,   /*!< VADC SR0 Interrupt                       */
   VADC0_C0_1_IRQn     =  16,   /*!< VADC SR1 Interrupt                       */
-  
+
   CCU40_0_IRQn        =  21,   /*!< CCU40 SR0 Interrupt                      */
   CCU40_1_IRQn        =  22,   /*!< CCU40 SR1 Interrupt                      */
   CCU40_2_IRQn        =  23,   /*!< CCU40 SR2 Interrupt                      */
@@ -381,7 +381,7 @@ typedef struct {                                    /*!< (@ 0x48000000) USIC_CH 
   __IO uint32_t  DX5CR;                             /*!< (@ 0x48000030) Input Control Register 5                               */
   __IO uint32_t  SCTR;                              /*!< (@ 0x48000034) Shift Control Register                                 */
   __IO uint32_t  TCSR;                              /*!< (@ 0x48000038) Transmit Control/Status Register                       */
-  
+
   union {
     __IO uint32_t  PCR_IICMode;                     /*!< (@ 0x4800003C) Protocol Control Register [IIC Mode]                   */
     __IO uint32_t  PCR_IISMode;                     /*!< (@ 0x4800003C) Protocol Control Register [IIS Mode]                   */
@@ -391,7 +391,7 @@ typedef struct {                                    /*!< (@ 0x48000000) USIC_CH 
   };
   __IO uint32_t  CCR;                               /*!< (@ 0x48000040) Channel Control Register                               */
   __IO uint32_t  CMTR;                              /*!< (@ 0x48000044) Capture Mode Timer Register                            */
-  
+
   union {
     __IO uint32_t  PSR_IICMode;                     /*!< (@ 0x48000048) Protocol Status Register [IIC Mode]                    */
     __IO uint32_t  PSR_IISMode;                     /*!< (@ 0x48000048) Protocol Status Register [IIS Mode]                    */
@@ -4240,4 +4240,3 @@ typedef struct {                                    /*!< (@ 0x40040200) PORT2 St
 
 
 #endif  /* XMC1100_H */
-

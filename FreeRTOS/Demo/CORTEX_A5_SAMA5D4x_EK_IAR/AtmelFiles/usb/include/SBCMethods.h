@@ -114,5 +114,3 @@ unsigned char SBC_ProcessCommand(MSDLun               *lun,
 /**@}*/
 
 #endif /*#ifndef SBCMETHODS_H */
-
-

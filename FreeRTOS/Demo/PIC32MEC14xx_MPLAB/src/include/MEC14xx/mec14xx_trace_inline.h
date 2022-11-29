@@ -57,30 +57,30 @@ extern "C" {
 
 #else // #ifdef INLINE_TRACE_ENABLE
 
-#define TRACE0(nbr,cat,b,str) 
-#define TRACE1(nbr,cat,b,str,p1) 
-#define TRACE2(nbr,cat,b,str,p1,p2) 
-#define TRACE3(nbr,cat,b,str,p1,p2,p3) 
-#define TRACE4(nbr,cat,b,str,p1,p2,p3,p4) 
-#define TRACE11(nbr,cat,b,str,p1) 
-#define TRACE12(nbr,cat,b,str,p1,p2) 
-#define trace0(nbr,cat,b,str) 
-#define trace1(nbr,cat,b,str,p1) 
-#define trace2(nbr,cat,b,str,p1,p2) 
-#define trace3(nbr,cat,b,str,p1,p2,p3) 
-#define trace4(nbr,cat,b,str,p1,p2,p3,p4) 
-#define trace11(nbr,cat,b,str,p1) 
-#define trace12(nbr,cat,b,str,p1,p2) 
+#define TRACE0(nbr,cat,b,str)
+#define TRACE1(nbr,cat,b,str,p1)
+#define TRACE2(nbr,cat,b,str,p1,p2)
+#define TRACE3(nbr,cat,b,str,p1,p2,p3)
+#define TRACE4(nbr,cat,b,str,p1,p2,p3,p4)
+#define TRACE11(nbr,cat,b,str,p1)
+#define TRACE12(nbr,cat,b,str,p1,p2)
+#define trace0(nbr,cat,b,str)
+#define trace1(nbr,cat,b,str,p1)
+#define trace2(nbr,cat,b,str,p1,p2)
+#define trace3(nbr,cat,b,str,p1,p2,p3)
+#define trace4(nbr,cat,b,str,p1,p2,p3,p4)
+#define trace11(nbr,cat,b,str,p1)
+#define trace12(nbr,cat,b,str,p1,p2)
 
 #endif // #ifdef PLIB_TRACE_ENABLE
 
-#define trace0(nbr,cat,b,str) 
-#define trace1(nbr,cat,b,str,p1) 
-#define trace2(nbr,cat,b,str,p1,p2) 
-#define trace3(nbr,cat,b,str,p1,p2,p3) 
-#define trace4(nbr,cat,b,str,p1,p2,p3,p4) 
-#define trace11(nbr,cat,b,str,p1) 
-#define trace12(nbr,cat,b,str,p1,p2) 
+#define trace0(nbr,cat,b,str)
+#define trace1(nbr,cat,b,str,p1)
+#define trace2(nbr,cat,b,str,p1,p2)
+#define trace3(nbr,cat,b,str,p1,p2,p3)
+#define trace4(nbr,cat,b,str,p1,p2,p3,p4)
+#define trace11(nbr,cat,b,str,p1)
+#define trace12(nbr,cat,b,str,p1,p2)
 
 #ifdef __cplusplus
 }

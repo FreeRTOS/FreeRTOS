@@ -7,20 +7,20 @@
 /******************************************************************************
  *
  * Copyright 2013 Altera Corporation. All Rights Reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * 3. The name of the author may not be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
@@ -31,7 +31,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
- * 
+ *
  ******************************************************************************/
 
 #include <string.h>
@@ -289,7 +289,7 @@ static ALT_STATUS_CODE alt_qspi_N25Q_flag_wait_for_erase(uint32_t timeout)
             }
         }
     }
- 
+
     return status;
 }
 #endif
@@ -963,7 +963,7 @@ static ALT_STATUS_CODE alt_qspi_replace_bank(uint32_t dst, const char * src, siz
     // If there is a partial tail, then take 1 off the subsec_count. This way
     // the following loop will write out all the complete subsectors. The tail
     // will be written out afterwards.
-    
+
     if (subsec_partial_tail)
     {
         subsec_count--;
@@ -1164,9 +1164,9 @@ ALT_STATUS_CODE alt_qspi_chip_select_config_set(const uint32_t cs,
     // chip select cs:
     // four bit value, bit 0 = cs0, bit 1 = cs1, bit 2 = cs2, bit 3 = cs3
     // since cs is low true, the value of each bit should be zero if enable the cs.
-    // 
+    //
     // also allows multiple cs line enabled together.
- 
+
     if (cs > ((1 << ALT_QSPI_CFG_PERCSLINES_WIDTH) - 1))
     {
         // [cs] not within possible 4 bit chip select line value range.
@@ -1584,7 +1584,7 @@ ALT_STATUS_CODE alt_qspi_timing_config_set(const ALT_QSPI_TIMING_CONFIG_t * cfg)
     // Read Data Capture Register
 
     alt_write_word(ALT_QSPI_RDDATACAP_ADDR,
-                   ALT_QSPI_RDDATACAP_BYP_SET(1) | 
+                   ALT_QSPI_RDDATACAP_BYP_SET(1) |
                    ALT_QSPI_RDDATACAP_DELAY_SET(cfg->rd_datacap));
 
     return ALT_E_SUCCESS;
@@ -1963,7 +1963,7 @@ static ALT_STATUS_CODE alt_qspi_erase_subsector_bank(uint32_t addr)
     {
         status = alt_qspi_device_wren();
     }
-    
+
     if (status == ALT_E_SUCCESS)
     {
         status = alt_qspi_stig_addr_cmd(ALT_QSPI_STIG_OPCODE_SUBSEC_ERASE, 0, addr, 10000);
@@ -2054,7 +2054,7 @@ ALT_STATUS_CODE alt_qspi_erase_chip(void)
 
             if (status == ALT_E_SUCCESS)
             {
-                status = alt_qspi_device_wren(); 
+                status = alt_qspi_device_wren();
             }
 
             if (status == ALT_E_SUCCESS)
@@ -2269,7 +2269,7 @@ ALT_STATUS_CODE alt_qspi_stig_rd_cmd(uint8_t opcode,
         return ALT_E_BAD_ARG;
     }
 
-    uint32_t reg_value = 
+    uint32_t reg_value =
         ALT_QSPI_FLSHCMD_CMDOPCODE_SET(opcode)                              |
         ALT_QSPI_FLSHCMD_ENRDDATA_SET(ALT_QSPI_FLSHCMD_ENRDDATA_E_EN)       |
         ALT_QSPI_FLSHCMD_NUMRDDATABYTES_SET(num_bytes - 1)                  |
@@ -2300,7 +2300,7 @@ ALT_STATUS_CODE alt_qspi_stig_rd_cmd(uint8_t opcode,
 
 ALT_STATUS_CODE alt_qspi_stig_wr_cmd(uint8_t opcode,
                                      uint32_t dummy,
-                                     uint32_t num_bytes, 
+                                     uint32_t num_bytes,
                                      const uint32_t * input,
                                      uint32_t timeout)
 {
@@ -2359,13 +2359,13 @@ ALT_STATUS_CODE alt_qspi_stig_addr_cmd(uint8_t opcode,
 
 /////
 
-ALT_STATUS_CODE alt_qspi_device_wren(void) 
+ALT_STATUS_CODE alt_qspi_device_wren(void)
 {
     // Write enable through STIG (not required, auto send by controller during write)
     return alt_qspi_stig_cmd(ALT_QSPI_STIG_OPCODE_WREN, 0, 10000);
 }
 
-ALT_STATUS_CODE alt_qspi_device_wrdis(void) 
+ALT_STATUS_CODE alt_qspi_device_wrdis(void)
 {
     // Write disable through STIG (not required, auto send by controller during write)
     return alt_qspi_stig_cmd(ALT_QSPI_STIG_OPCODE_WRDIS, 0, 10000);
@@ -2384,7 +2384,7 @@ ALT_STATUS_CODE alt_qspi_discovery_parameter(uint32_t * param)
     return alt_qspi_stig_rd_cmd(ALT_QSPI_STIG_OPCODE_DISCVR_PARAM, 8, 8, param, 10000);
 }
 
-ALT_STATUS_CODE alt_qspi_device_bank_select(uint32_t bank) 
+ALT_STATUS_CODE alt_qspi_device_bank_select(uint32_t bank)
 {
     ALT_STATUS_CODE status = ALT_E_SUCCESS;
     dprintf("DEBUG[QSPI]: bank_select(): switching to bank 0x%" PRIu32 ".\n", bank);

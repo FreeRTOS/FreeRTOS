@@ -7,8 +7,8 @@
 */
 
 /**
- * @file 
- * 
+ * @file
+ *
  * @brief Public trace ISR APIs.
  */
 
@@ -64,10 +64,10 @@ typedef struct TraceISRInfoBuffer
 
 /**
  * @internal Initialize ISR trace system.
- * 
+ *
  * @param[in] pxBuffer Pointer to memory that will be used by the ISR
  * trace system.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -75,11 +75,11 @@ traceResult xTraceISRInitialize(TraceISRInfoBuffer_t *pxBuffer);
 
 /**
  * @brief Registers trace ISR.
- * 
+ *
  * This routine stores a name and priority level for an Interrupt Service Routine,
  * to allow for better visualization. Returns a TraceISRHandle_t used by
  * xTraceISRBegin/xTraceISREnd.
- * 
+ *
  * Example:
  * 	#define PRIO_OF_ISR_TIMER1 3 // the hardware priority of the interrupt
  *	TraceISRHandle_t xISRTimer1Handle = 0; // The ID set by the recorder
@@ -92,11 +92,11 @@ traceResult xTraceISRInitialize(TraceISRInfoBuffer_t *pxBuffer);
  *		...
  *		xTraceISREnd(0);
  *	}
- * 
+ *
  * @param[in] szName Name.
  * @param[in] uiPriority Priority.
  * @param[out] pxISRHandle Pointer to uninitialized ISR trace handle.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -104,12 +104,12 @@ traceResult xTraceISRRegister(const char* szName, uint32_t uiPriority, TraceISRH
 
 /**
  * @brief Registers the beginning of an Interrupt Service Routine.
- * 
+ *
  * This routine register the beginning of an ISR using a TraceISRHandle_t.
  * See xTraceISRRegister for and example of using ISR tracing.
- * 
+ *
  * @param[in] xISRHandle Pointer to initialized ISR trace handle.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -117,16 +117,16 @@ traceResult xTraceISRBegin(TraceISRHandle_t xISRHandle);
 
 /**
  * @brief Registers the end of an Interrupt Service Routine.
- * 
+ *
  * This routine register the end of an ISR using a TraceISRHandle_t.
  * See xTraceISRRegister for and example of using ISR tracing.
- * 
+ *
  * The parameter uxIsTaskSwitchRequired indicates if the interrupt has requested
  * a task-switch (= 1), e.g., by signaling a semaphore. Otherwise (= 0) the
  * interrupt is assumed to return to the previous context.
- * 
+ *
  * @param[in] xIsTaskSwitchRequired Task switch required.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -136,29 +136,29 @@ traceResult xTraceISREnd(TraceBaseType_t xIsTaskSwitchRequired);
 
 /**
  * @brief Gets current trace ISR nesting level.
- * 
+ *
  * This routine gets the current trace ISR nesting level for the
  * CPU on which it is called.
- * 
+ *
  * @param[out] puiValue Value.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
 traceResult xTraceISRGetCurrentNesting(int32_t* puiValue);
 
 /**
- * @brief 
- * 
- * @return int32_t 
+ * @brief
+ *
+ * @return int32_t
  */
 int32_t xTraceISRGetCurrentNestingReturned(void);
 
 /**
  * @brief Gets current ISR trace handle.
- * 
+ *
  * @param[out] pxISRHandle ISR Handle.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -168,32 +168,32 @@ traceResult xTraceISRGetCurrent(TraceISRHandle_t* pxISRHandle);
 
 /**
  * @brief Gets current trace ISR nesting level.
- * 
+ *
  * This routine gets the current trace ISR nesting level for the
  * CPU on which it is called.
- * 
+ *
  * @param[out] puiValue Value.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
 #define xTraceISRGetCurrentNesting(puiValue) TRC_COMMA_EXPR_TO_STATEMENT_EXPR_2(*(puiValue) = pxTraceISRInfo->coreInfos[TRC_CFG_GET_CURRENT_CORE()].stackIndex, TRC_SUCCESS)
 
 /**
- * @brief 
- * 
- * @return int32_t 
+ * @brief
+ *
+ * @return int32_t
  */
 #define xTraceISRGetCurrentNestingReturned() (pxTraceISRInfo->coreInfos[TRC_CFG_GET_CURRENT_CORE()].stackIndex)
 
 /**
  * @brief Gets current trace ISR nesting level.
- * 
+ *
  * This routine gets the current trace ISR nesting level for the
  * CPU on which it is called.
- * 
+ *
  * @param[out] puiValue Value.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */

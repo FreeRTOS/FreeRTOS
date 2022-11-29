@@ -20,16 +20,16 @@
 
 Version Control Information (Perforce)
 ******************************************************************************
-$Revision: #1 $ 
-$DateTime: 2016/04/08 10:18:28 $ 
+$Revision: #1 $
+$DateTime: 2016/04/08 10:18:28 $
 $Author: pramans $
 Last Change:	Updated for tabs
 ******************************************************************************/
 /** @file pcr_api.c
 * \brief Power, Clocks, and Resets API Source file
 * \author jvasanth
-* 
-* This file implements the PCR APIs  
+*
+* This file implements the PCR APIs
 ******************************************************************************/
 
 /** @defgroup PCR
@@ -45,30 +45,30 @@ Last Change:	Updated for tabs
 /* ------------------------------------------------------------------------------- */
 
 /** Sets or Clears block specific bit in PCR Sleep Enable Register
- * @param pcr_block_id - pcr block id encoded using PCRx_REGS_BIT 
+ * @param pcr_block_id - pcr block id encoded using PCRx_REGS_BIT
  * @param set_clr_flag - Flag to set (1) or clear (0) bit in the PCR Sleep Enable Register
  */
 void pcr_sleep_enable(uint32_t pcr_block_id, uint8_t set_clr_flag)
 {
     uint32_t bit_mask;
-    uint8_t pcr_reg_id;	
- 
+    uint8_t pcr_reg_id;
+
     bit_mask = 1UL<<(pcr_block_id & 0xFFu);
     pcr_reg_id = (uint8_t)((pcr_block_id >> PCRx_REGS_POS_SLEEP_ENABLE) & 0xFFu);
 
-    p_pcr_reg_update(pcr_reg_id, bit_mask, set_clr_flag);	
+    p_pcr_reg_update(pcr_reg_id, bit_mask, set_clr_flag);
 }
 
 
 /** Get Clock Required Status for the block
- * @param pcr_block_id - pcr block id encoded using PCRx_REGS_BIT 
+ * @param pcr_block_id - pcr block id encoded using PCRx_REGS_BIT
  * @return uint8_t - 1 if Clock Required Status set, else 0
  */
 uint8_t pcr_clock_reqd_status_get(uint32_t pcr_block_id)
 {
     uint32_t bit_mask;
-    uint8_t pcr_reg_id, retVal;	
- 
+    uint8_t pcr_reg_id, retVal;
+
     bit_mask = 1UL<<(pcr_block_id & 0xFFu);
     pcr_reg_id = (uint8_t)((pcr_block_id >> PCRx_REGS_POS_CLK_REQD_STS) & 0xFFu);
 
@@ -77,23 +77,23 @@ uint8_t pcr_clock_reqd_status_get(uint32_t pcr_block_id)
     {
         retVal = 1;
     }
-    
+
     return retVal;
 }
 
 /** Sets or Clears Reset Enable register bit for the block
- * @param pcr_block_id - pcr block id encoded using PCRx_REGS_BIT 
+ * @param pcr_block_id - pcr block id encoded using PCRx_REGS_BIT
  * @param set_clr_flag - Flag to set (1) or clear (0) bit in the PCR Reset Enable Register
  */
 void pcr_reset_enable(uint32_t pcr_block_id, uint8_t set_clr_flag)
 {
     uint32_t bit_mask;
-    uint8_t pcr_reg_id;	
- 
+    uint8_t pcr_reg_id;
+
     bit_mask = 1UL<<(pcr_block_id & 0xFFu);
     pcr_reg_id = (uint8_t)((pcr_block_id >> PCRx_REGS_POS_RESET_ENABLE) & 0xFFu);
 
-    p_pcr_reg_update(pcr_reg_id, bit_mask, set_clr_flag);					
+    p_pcr_reg_update(pcr_reg_id, bit_mask, set_clr_flag);
 }
 
 
@@ -107,7 +107,7 @@ void pcr_all_blocks_sleep(void)
 	p_pcr_reg_write(PCR_REG_CHIP_SLEEP_ENABLE, 0xFFFFFFFF);
 	p_pcr_reg_write(PCR_REG_EC_SLEEP_ENABLE, 0xFFFFFFFF);
 	p_pcr_reg_write(PCR_REG_HOST_SLEEP_ENABLE, 0xFFFFFFFF);
-	p_pcr_reg_write(PCR_REG_EC_SLEEP_ENABLE_2, 0xFFFFFFFF);		
+	p_pcr_reg_write(PCR_REG_EC_SLEEP_ENABLE_2, 0xFFFFFFFF);
 }
 
 /** Clears the Sleep Enable bits for all blocks */
@@ -116,7 +116,7 @@ void pcr_all_blocks_sleep(void)
 	p_pcr_reg_write(PCR_REG_CHIP_SLEEP_ENABLE, 0);
 	p_pcr_reg_write(PCR_REG_EC_SLEEP_ENABLE, 0);
 	p_pcr_reg_write(PCR_REG_HOST_SLEEP_ENABLE, 0);
-	p_pcr_reg_write(PCR_REG_EC_SLEEP_ENABLE_2, 0);		
+	p_pcr_reg_write(PCR_REG_EC_SLEEP_ENABLE_2, 0);
 }
 
 /** Programs required sleep mode in System Sleep Control Register

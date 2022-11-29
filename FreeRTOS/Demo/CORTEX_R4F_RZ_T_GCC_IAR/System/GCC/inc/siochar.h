@@ -52,6 +52,6 @@ char    io_get_char (void);
 void    io_put_char (char buffer);
 
 /* SIO_CHAR_H */
-#endif  
+#endif
 
 /* End of File */

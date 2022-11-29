@@ -94,4 +94,3 @@
 //#define CONFIG_DFLL0_DIV            2
 
 #endif /* CONF_CLOCK_H_INCLUDED */
-

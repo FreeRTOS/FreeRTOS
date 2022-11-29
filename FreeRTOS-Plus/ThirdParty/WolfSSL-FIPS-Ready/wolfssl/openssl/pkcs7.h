@@ -76,4 +76,3 @@ WOLFSSL_API int wolfSSL_PEM_write_bio_PKCS7(WOLFSSL_BIO* bio, PKCS7* p7);
 #endif
 
 #endif /* WOLFSSL_PKCS7_H_ */
-

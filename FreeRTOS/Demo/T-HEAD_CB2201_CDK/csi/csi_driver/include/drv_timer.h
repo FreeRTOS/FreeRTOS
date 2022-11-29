@@ -165,4 +165,3 @@ int32_t csi_timer_get_load_value(timer_handle_t handle, uint32_t *value);
 #endif
 
 #endif /* _CSI_TIMER_H_ */
-

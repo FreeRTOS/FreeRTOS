@@ -96,6 +96,3 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 		taskEXIT_CRITICAL();
 	}
 }
-
-
-

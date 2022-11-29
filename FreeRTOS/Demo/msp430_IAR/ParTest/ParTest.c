@@ -200,5 +200,3 @@ static unsigned short sState = pdFALSE;
 	sState = !sState;
 }
 /*-----------------------------------------------------------*/
-
-

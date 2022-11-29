@@ -369,4 +369,3 @@ void TWI_SendSTOPCondition(AT91S_TWI *pTwi)
 
     pTwi->TWI_CR |= AT91C_TWI_STOP;
 }
-

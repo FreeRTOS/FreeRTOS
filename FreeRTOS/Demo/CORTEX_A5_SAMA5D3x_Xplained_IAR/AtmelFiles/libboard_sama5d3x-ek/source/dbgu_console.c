@@ -453,5 +453,3 @@ extern WEAK signed int putchar( signed int c )
     return c ;
 }
 #endif // defined __ICCARM__
-
-

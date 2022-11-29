@@ -210,5 +210,3 @@ static struct netif EMAC_if;
 		}
 	}
 }
-
-

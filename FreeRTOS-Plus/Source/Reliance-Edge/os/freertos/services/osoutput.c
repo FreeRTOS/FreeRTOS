@@ -67,4 +67,3 @@ void RedOsOutputString(
 }
 
 #endif
-

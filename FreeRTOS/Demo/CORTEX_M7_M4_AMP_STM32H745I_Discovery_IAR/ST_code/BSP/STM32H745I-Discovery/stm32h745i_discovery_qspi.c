@@ -432,7 +432,7 @@ uint8_t BSP_QSPI_GetInfo(QSPI_Info* pInfo)
   pInfo->ProgPageSize       = MT25TL01G_PAGE_SIZE;
   pInfo->EraseSectorsNumber = (MT25TL01G_FLASH_SIZE/pInfo->EraseSectorSize);
   pInfo->ProgPagesNumber    = (MT25TL01G_FLASH_SIZE/pInfo->ProgPageSize);
-  
+
   return QSPI_OK;
 }
 
@@ -453,7 +453,7 @@ uint8_t BSP_QSPI_EnableMemoryMappedMode(void)
   s_command.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
   s_command.DataMode          = QSPI_DATA_4_LINES;
   s_command.DummyCycles       = MT25TL01G_DUMMY_CYCLES_READ_QUAD_DTR - 1;
-  
+
   s_command.DdrMode           = QSPI_DDR_MODE_ENABLE;
   s_command.DdrHoldHalfCycle  = QSPI_DDR_HHC_HALF_CLK_DELAY;
   s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
@@ -634,7 +634,7 @@ static uint8_t QSPI_ResetMemory(QSPI_HandleTypeDef *hqspi)
   {
     return QSPI_ERROR;
   }
-  
+
   s_command.InstructionMode   = QSPI_INSTRUCTION_4_LINES;
   s_command.Instruction       = RESET_ENABLE_CMD;
   /* Send the command */
@@ -649,13 +649,13 @@ static uint8_t QSPI_ResetMemory(QSPI_HandleTypeDef *hqspi)
   {
     return QSPI_ERROR;
   }
-  
+
   /* Enter QSPI memory in QPI mode */
   if(QSPI_EnterQPI(&QSPIHandle) != QSPI_OK)
   {
     return QSPI_ERROR;
   }
-  
+
   /* Configure automatic polling mode to wait the memory is ready */
   if (QSPI_AutoPollingMemReady(hqspi, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != QSPI_OK)
   {
@@ -850,7 +850,7 @@ static uint8_t QSPI_AutoPollingMemReady(QSPI_HandleTypeDef *hqspi, uint32_t Time
 
 /**
   * @brief  This function enter the QPSI memory in QPI mode
-  * @param  hqspi QSPI handle 
+  * @param  hqspi QSPI handle
   * @retval QSPI status
   */
 static uint8_t QSPI_EnterQPI(QSPI_HandleTypeDef *hqspi)
@@ -871,7 +871,7 @@ static uint8_t QSPI_EnterQPI(QSPI_HandleTypeDef *hqspi)
   {
     return QSPI_ERROR;
   }
-  
+
   return QSPI_OK;
 }
 
@@ -892,4 +892,3 @@ static uint8_t QSPI_EnterQPI(QSPI_HandleTypeDef *hqspi)
   */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

@@ -96,4 +96,3 @@ uint8_t RedFindVolumeNumber(
 
     return bVolNum;
 }
-

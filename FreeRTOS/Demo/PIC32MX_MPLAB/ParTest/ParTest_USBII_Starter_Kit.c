@@ -83,6 +83,3 @@ unsigned portBASE_TYPE uxLEDBit;
 		PORTDINV = uxLEDBit;
 	}
 }
-
-
-

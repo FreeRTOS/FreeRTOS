@@ -16,7 +16,7 @@ To perform an anonymous CVS checkout of the main trunk (this is where
 bug fixes and incremental enhancements occur), do this:
 
 cvs -z3 -d:pserver:anonymous@cvs.sv.gnu.org:/sources/lwip checkout lwip
- 
+
 Or, obtain a stable branch (updated with bug fixes only) as follows:
 cvs -z3 -d:pserver:anonymous@cvs.sv.gnu.org:/sources/lwip checkout \
   -r STABLE-0_7 -d lwip-0.7 lwip
@@ -54,7 +54,7 @@ are allowed to use SSH for CVS only. Now, you should be able to do this:
 
 export CVS_RSH=ssh
 cvs -z3 -d:ext:your_login@cvs.sv.gnu.org:/sources/lwip co lwip
- 
+
 after which you can edit your local files with bug fixes or new features and
 commit them. Make sure you know what you are doing when using CVS to make
 changes on the repository. If in doubt, ask on the lwip-members mailing list.
@@ -82,18 +82,18 @@ MERGE ACTION (REPLACING EXISTING TAGS WITH THE SAME NAME).
 Merge all changes in DEVEL since our last merge to main:
 
 In the working copy of the main trunk:
-cvs update -P -jmerged_from_DEVEL_to_main -jDEVEL 
+cvs update -P -jmerged_from_DEVEL_to_main -jDEVEL
 
 (This will apply the changes between 'merged_from_DEVEL_to_main'
 and 'DEVEL' to your work set of files)
 
 We can now commit the merge result.
-cvs commit -R -m "Merged from DEVEL to main." 
+cvs commit -R -m "Merged from DEVEL to main."
 
 If this worked out OK, we now move the tag in the DEVEL branch
 to this merge point, so we can use this point for future merges:
 
-cvs rtag -F -r DEVEL merged_from_DEVEL_to_main lwip 
+cvs rtag -F -r DEVEL merged_from_DEVEL_to_main lwip
 
 4 How to release lwIP
 ---------------------
@@ -103,7 +103,7 @@ tag name "STABLE-0_6_3". (I use release number 0.6.3 throughout this example).
 
 Login CVS using pserver authentication, then export a clean copy of the
 tagged tree. Export is similar to a checkout, except that the CVS metadata
-is not created locally. 
+is not created locally.
 
 export CVS_RSH=ssh
 cvs -z3 -d:pserver:anonymous@cvs.sv.gnu.org:/sources/lwip checkout \

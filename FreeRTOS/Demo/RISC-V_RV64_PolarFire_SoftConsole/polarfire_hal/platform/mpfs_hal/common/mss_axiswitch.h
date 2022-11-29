@@ -180,4 +180,3 @@ uint32_t MSS_AXISW_read_slave_ready(mss_axisw_mport_t master_port_num,
 #endif
 
 #endif /* __MSS_AXISW_H_ */
-

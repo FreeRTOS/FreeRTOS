@@ -73,4 +73,3 @@ extern unsigned char AT25D_Read(
     unsigned int address);
 
 #endif // #ifndef AT25D_H
-

@@ -25,11 +25,11 @@
 
 /* Platform specific definitions */
 #define PLATFORM_ZYNQ
- 
+
 /* Definitions for sleep timer configuration */
 #define XSLEEP_TIMER_IS_DEFAULT_TIMER
- 
- 
+
+
 /******************************************************************/
 /* Definitions for driver CANPS */
 #define XPAR_XCANPS_NUM_INSTANCES 1

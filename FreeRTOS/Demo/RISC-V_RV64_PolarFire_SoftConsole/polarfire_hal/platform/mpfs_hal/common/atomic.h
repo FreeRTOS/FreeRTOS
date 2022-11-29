@@ -59,4 +59,3 @@ extern "C" {
 #endif
 
 #endif  //RISCV_ATOMIC_H
-

@@ -1,18 +1,18 @@
 /***********************************************************************************************************************
 * DISCLAIMER
-* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No 
-* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all 
-* applicable laws, including copyright laws. 
+* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No
+* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
+* applicable laws, including copyright laws.
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
-* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, 
-* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM 
-* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES 
-* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS 
+* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM
+* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES
+* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS
 * SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of 
-* this software. By using this software, you agree to the additional terms and conditions found by accessing the 
+* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of
+* this software. By using this software, you agree to the additional terms and conditions found by accessing the
 * following link:
-* http://www.renesas.com/disclaimer 
+* http://www.renesas.com/disclaimer
 *
 * Copyright (C) 2013-2020 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
@@ -76,21 +76,21 @@ Configuration Options
  *
  * CH#  110 111 113 130 230 231 23T 24T 24U 64M 71M 65N 66T 72T 23W 72M 13T 72N 66N RX23E-A
  * ---  --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- -------
- * CH0           X   Xa  X   X               X   X   Xn              X       X   X      
+ * CH0           X   Xa  X   X               X   X   Xn              X       X   X
  * CH1   X   X*  X*  Xu  X   X   Xu  Xu  Xu  X   X   Xs  X   X   X   X   X   X   X     Xu
- * CH2           X                           X   X   Xu              X       X   X      
- * CH3                                       X   X   Xs              X       X   X      
- * CH4                                       X   X   Xn              X       X   X      
+ * CH2           X                           X   X   Xu              X       X   X
+ * CH3                                       X   X   Xs              X       X   X
+ * CH4                                       X   X   Xn              X       X   X
  * CH5   X   X   X   X   X   Xu  X   X   X   X   X   X   X   X   X   X   X   X   X     X
  * CH6           X   X   X   X       X   X   X   X   Xn  X   X       Xu      X   X     X
- * CH7                                       Xu  Xu  Xn              X       X   X      
- * CH8           X   Xa  X   X           X           X   X   X   Xu  X       X   X      
- * CH9           X   Xa  X   X           X           Xs  X   X       X       X   X      
- * CH10                                              X               X       X   X      
- * CH11                                  X           Xs  X   X       X       X   X      
+ * CH7                                       Xu  Xu  Xn              X       X   X
+ * CH8           X   Xa  X   X           X           X   X   X   Xu  X       X   X
+ * CH9           X   Xa  X   X           X           Xs  X   X       X       X   X
+ * CH10                                              X               X       X   X
+ * CH11                                  X           Xs  X   X       X       X   X
  * CH12  X   X   X   X   X   X               X   X   Xs  X   X   X   X   X   X   X     X
 */
-                                   
+
 #define SCI_CFG_CH0_INCLUDED    (0)
 #define SCI_CFG_CH1_INCLUDED    (1)
 #define SCI_CFG_CH2_INCLUDED    (0)
@@ -135,13 +135,13 @@ Configuration Options
 #define SCI_CFG_CH11_RX_BUFSIZ  (80)
 #define SCI_CFG_CH12_RX_BUFSIZ  (80)
 
-/* 
+/*
 * ENABLE TRANSMIT END INTERRUPT (ASYNCHRONOUS)
-* This interrupt only occurs when the last bit of the last byte of data 
+* This interrupt only occurs when the last bit of the last byte of data
 * has been sent and the transmitter has become idle. The interrupt calls
 * the user's callback function specified in R_SCI_Open() and passes it an
 * SCI_EVT_TEI event. A typical use of this feature is to disable an external
-* transceiver to save power. It would then be up to the user's code to 
+* transceiver to save power. It would then be up to the user's code to
 * re-enable the transceiver before sending again. Not including this feature
 * reduces code space used by the interrupt. Note that this equate is only
 * for including the TEI code. The interrupt itself must be enabled using an
@@ -149,7 +149,7 @@ Configuration Options
 */
 #define SCI_CFG_TEI_INCLUDED    (0)      /* 1=included, 0=not */
 
-/* 
+/*
 * SET GROUPBL0 (ERI, TEI) INTERRUPT PRIORITY; RX64M/RX71M/RX65N/RX72M/RX72N/RX66N ONLY
 * SET GROUPBL1; RX65N ONLY
 * SET GROUPAL0 (ERI,TEI) INTERRUPT PRIORITY; RX65N, RX72M, RX72N, RX66N ONLY

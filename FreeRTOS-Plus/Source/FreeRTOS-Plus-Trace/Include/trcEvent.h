@@ -7,8 +7,8 @@
 */
 
 /**
- * @file 
- * 
+ * @file
+ *
  * @brief Public trace event APIs.
  */
 
@@ -184,7 +184,7 @@ typedef struct {
 	uint32_t TS;			/**< */
 } TraceBaseEvent_t;
 
-/** 
+/**
  * @internal Trace Event Data Structure
  */
 typedef struct TraceEventData
@@ -194,7 +194,7 @@ typedef struct TraceEventData
 	uint32_t offset;	/**< */
 } TraceEventData_t;
 
-/** 
+/**
  * @internal Trace Core Event Data Structure
  */
 typedef struct TraceCoreEventData
@@ -203,7 +203,7 @@ typedef struct TraceCoreEventData
 	uint32_t eventCounter;										/**< */
 } TraceCoreEventData_t;
 
-/** 
+/**
  * @internal Trace Event Data Table Structure.
  */
 typedef struct TraceEventDataTable
@@ -213,7 +213,7 @@ typedef struct TraceEventDataTable
 
 #define TRC_EVENT_DATA_BUFFER_SIZE (sizeof(TraceEventDataTable_t))
 
-/** 
+/**
  * @internal Trace Event Data Buffer Structure.
  */
 typedef struct TraceEventDataBuffer
@@ -225,10 +225,10 @@ extern TraceEventDataTable_t* pxTraceEventDataTable;
 
 /**
  * @internal Initialize event trace system.
- * 
+ *
  * @param[in] pxBuffer Pointer to memory that will be used by the event
  * trace system.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -236,10 +236,10 @@ traceResult xTraceEventInitialize(TraceEventDataBuffer_t* pxBuffer);
 
 /**
  * @brief Gets trace event size.
- * 
+ *
  * @param[in] pvAddress Pointer to initialized trace event.
  * @param[out] puiSize Size.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -247,27 +247,27 @@ traceResult xTraceEventGetSize(void* pvAddress, uint32_t* puiSize);
 
 /**
  * @internal Begins a raw trace event offline.
- * 
+ *
  * This routine begins a trace event with specified size. Must call xTraceEventEnd()
  * to finalize event creation. Does not care about RecorderEnabled.
- * 
+ *
  * @param[in] uiSize Size.
  * @param[in] pxEventHandle Pointer to initialized trace event.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
 traceResult xTraceEventBeginRawOffline(uint32_t uiSize, TraceEventHandle_t* pxEventHandle);
 
 /**
- * @internal Begins a blocking trace event offline. 
- * 
+ * @internal Begins a blocking trace event offline.
+ *
  * This routine begins a trace event with specified size. Must call xTraceEventEnd()
  * to finalize event creation. Does not care about RecorderEnabled.
- * 
+ *
  * @param[in] uiSize Size.
  * @param[in] pxEventHandle Pointer to initialized trace event.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -275,13 +275,13 @@ traceResult xTraceEventBeginRawOfflineBlocking(uint32_t uiSize, TraceEventHandle
 
 /**
  * @internal Begins a trace event offline.
- * 
+ *
  * This routine begins a trace event with specified size. Must call xTraceEventEnd()
  * to finalize event creation. Does not care about RecorderEnabled.
- * 
+ *
  * @param[in] uiSize Size.
  * @param[in] pxEventHandle Pointer to initialized trace event.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -289,13 +289,13 @@ traceResult xTraceEventBeginRawOfflineBlocking(uint32_t uiSize, TraceEventHandle
 
 /**
  * @brief Begins a trace event.
- * 
+ *
  * This routine begins a trace event with specified size. Must call xTraceEventEnd()
  * to finalize event creation. Does not care about RecorderEnabled.
- * 
+ *
  * @param[in] uiSize Size.
  * @param[in] pxEventHandle Pointer to initialized trace event.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -303,13 +303,13 @@ traceResult xTraceEventBeginRawOfflineBlocking(uint32_t uiSize, TraceEventHandle
 	(xTraceIsRecorderEnabled() ? xTraceEventBeginOffline(uiEventCode, uiTotalPayloadSize, pxEventHandle) : TRC_FAIL)
 
 /**
- * @internal Ends a trace event offline. 
- * 
+ * @internal Ends a trace event offline.
+ *
  * This routine ends the event that was begun by calling on xTraceEventBegin().
  * Does not care about uiRecorderEnabled.
- * 
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -317,24 +317,24 @@ traceResult xTraceEventEndOffline(TraceEventHandle_t xEventHandle);
 
 /**
  * @internal Ends a blocking event offline.
- * 
+ *
  * Ends the event that was begun by calling on xTraceEventBegin()
- * 
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
 traceResult xTraceEventEndOfflineBlocking(TraceEventHandle_t xEventHandle);
 
 /**
- * @brief Ends a trace event. 
- * 
+ * @brief Ends a trace event.
+ *
  * This routine ends the event that was begun by calling on xTraceEventBegin().
  * Does not care about uiRecorderEnabled.
- * 
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -343,11 +343,11 @@ traceResult xTraceEventEndOfflineBlocking(TraceEventHandle_t xEventHandle);
 
 /**
  * @brief Adds data to event payload.
- * 
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
  * @param[in] pvData Pointer to data.
  * @param[in] uiSize Size.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -357,15 +357,15 @@ traceResult xTraceEventAddData(TraceEventHandle_t xEventHandle, void* pvData, ui
 
 /**
  * @brief Gets trace event data pointer with an offset.
- * 
+ *
  * This routine gets a trace event data pointer with an offset. It also verfies
- * that the size so it won't go outside its buffer. 
- * 
+ * that the size so it won't go outside its buffer.
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
  * @param[in] uiOffset Offset.
  * @param[in] uiSize Size.
  * @param[out] ppvData Data.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -373,15 +373,15 @@ traceResult xTraceEventGetRawData(TraceEventHandle_t xEventHandle, uint32_t uiOf
 
 /**
  * @brief Gets trace event payload pointer with an offset.
- * 
+ *
  * This routine gets a trace event payload pointer with an offset. It also verifies
  * that the size so it won't go outside its payload buffer.
- * 
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
  * @param[in] uiOffset Offset.
  * @param[in] uiSize Size.
  * @param[out] ppvData Data.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -389,10 +389,10 @@ traceResult xTraceEventGetPayload(TraceEventHandle_t xEventHandle, uint32_t uiOf
 
 /**
  * @brief Gets the amount of remaining trace event payload.
- * 
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
  * @param[out] puiValue Value.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -400,32 +400,32 @@ traceResult xTraceEventPayloadRemaining(TraceEventHandle_t xEventHandle, uint32_
 
 /**
  * @brief Gets the amount of used trace event payload.
- * 
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
- * @param[out] puiValue Value 
- * 
+ * @param[out] puiValue Value
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
 traceResult xTraceEventPayloadUsed(TraceEventHandle_t xEventHandle, uint32_t* puiValue);
 
 /**
- * @brief Gets trace event payload size. 
- * 
+ * @brief Gets trace event payload size.
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
  * @param[out] puiValue Value
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
 traceResult xTraceEventPayloadSize(TraceEventHandle_t xEventHandle, uint32_t* puiValue);
 
 /**
- * @brief Adds an unsigned base type value as trace event payload 
- * 
+ * @brief Adds an unsigned base type value as trace event payload
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
- * @param[in] uxValue Value. 
- * 
+ * @param[in] uxValue Value.
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -433,32 +433,32 @@ traceResult xTraceEventAddUnsignedBaseType(TraceEventHandle_t xEventHandle, Trac
 
 /**
  * @brief Adds a pointer address as trace event payload
- * 
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
  * @param[in] pvAddress Address.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
 traceResult xTraceEventAddPointer(TraceEventHandle_t xEventHandle, void *pvAddress);
 
 /**
- * @brief Adds an uint32_t as trace event payload 
- * 
+ * @brief Adds an uint32_t as trace event payload
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
  * @param[in] value Value.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
 traceResult xTraceEventAdd32(TraceEventHandle_t xEventHandle, uint32_t value);
 
 /**
- * @brief Adds an uint16_t as trace event payload 
- * 
+ * @brief Adds an uint16_t as trace event payload
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
  * @param[in] value Value.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -466,10 +466,10 @@ traceResult xTraceEventAdd16(TraceEventHandle_t xEventHandle, uint16_t value);
 
 /**
  * @brief Adds an uint8_t as trace event payload.
- * 
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
- * @param[in] value Value. 
- * 
+ * @param[in] value Value.
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -479,10 +479,10 @@ traceResult xTraceEventAdd8(TraceEventHandle_t xEventHandle, uint8_t value);
 
 /**
  * @brief Gets trace event size.
- * 
+ *
  * @param[in] pvAddress Pointer to initialized trace event.
  * @param[out] puiSize Size.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -490,15 +490,15 @@ traceResult xTraceEventAdd8(TraceEventHandle_t xEventHandle, uint8_t value);
 
 /**
  * @brief Gets trace event data pointer with an offset.
- * 
+ *
  * This routine gets a trace event data pointer with an offset. It also verfies
- * that the size so it won't go outside its buffer. 
- * 
+ * that the size so it won't go outside its buffer.
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
  * @param[in] uiOffset Offset.
  * @param[in] uiSize Size.
  * @param[out] ppvData Data.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -506,15 +506,15 @@ traceResult xTraceEventAdd8(TraceEventHandle_t xEventHandle, uint8_t value);
 
 /**
  * @brief Gets trace event payload pointer with an offset.
- * 
+ *
  * This routine gets a trace event payload pointer with an offset. It also verifies
  * that the size so it won't go outside its payload buffer.
- * 
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
  * @param[in] uiOffset Offset.
  * @param[in] uiSize Size.
  * @param[out] ppvData Data.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -522,10 +522,10 @@ traceResult xTraceEventAdd8(TraceEventHandle_t xEventHandle, uint8_t value);
 
 /**
  * @brief Gets the amount of remaining trace event payload.
- * 
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
  * @param[out] puiValue Value.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -533,21 +533,21 @@ traceResult xTraceEventAdd8(TraceEventHandle_t xEventHandle, uint8_t value);
 
 /**
  * @brief Gets the amount of used trace event payload.
- * 
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
- * @param[out] puiValue Value 
- * 
+ * @param[out] puiValue Value
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
 #define xTraceEventPayloadUsed TRC_EVENT_PAYLOAD_USED
 
 /**
- * @brief Gets trace event payload size. 
- * 
+ * @brief Gets trace event payload size.
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
  * @param[out] puiValue Value
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -557,33 +557,33 @@ traceResult xTraceEventAdd8(TraceEventHandle_t xEventHandle, uint8_t value);
 #define xTraceEventAddPointer TRC_EVENT_ADD_POINTER
 
 /**
- * @brief Adds an unsigned base type value as trace event payload 
- * 
+ * @brief Adds an unsigned base type value as trace event payload
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
- * @param[in] uxValue Value. 
- * 
+ * @param[in] uxValue Value.
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
 #define xTraceEventAddUnsignedBaseType TRC_EVENT_ADD_UNSIGNED_BASE_TYPE
 
 /**
- * @brief Adds an uint32_t as trace event payload 
- * 
+ * @brief Adds an uint32_t as trace event payload
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
  * @param[in] value Value.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
 #define xTraceEventAdd32 TRC_EVENT_ADD_32
 
 /**
- * @brief Adds an uint16_t as trace event payload 
- * 
+ * @brief Adds an uint16_t as trace event payload
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
  * @param[in] value Value.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -591,10 +591,10 @@ traceResult xTraceEventAdd8(TraceEventHandle_t xEventHandle, uint8_t value);
 
 /**
  * @brief Adds an uint8_t as trace event payload.
- * 
+ *
  * @param[in] xEventHandle Pointer to initialized trace event.
- * @param[in] value Value. 
- * 
+ * @param[in] value Value.
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */

@@ -15,12 +15,12 @@ LR_IROM1 0x1C000000 0x400000  {    ; load region size_region
 
 ; #define M4_RAM_START	0x10000000	/* 96 Kbytes */
 ; #define M4_RAM_LEN		0x18000
-  
+
   ; this region includes just the relocated vector table
   ; not used by anything else
   ER_RELOCIRQ 0x10000000 0xC0 {
   }
-  
+
   RW_IRAM1 +0 (0x18000 - 0xC0) {  ; RW data
 
    .ANY (+RW +ZI)
@@ -41,8 +41,3 @@ LR_IROM1 0x1C000000 0x400000  {    ; load region size_region
 
   }
 }
-
-
-
-
-

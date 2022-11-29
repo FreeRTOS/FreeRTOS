@@ -5,20 +5,20 @@
 /******************************************************************************
 *
 * Copyright 2013 Altera Corporation. All Rights Reserved.
-* 
+*
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are met:
-* 
+*
 * 1. Redistributions of source code must retain the above copyright notice,
 * this list of conditions and the following disclaimer.
-* 
+*
 * 2. Redistributions in binary form must reproduce the above copyright notice,
 * this list of conditions and the following disclaimer in the documentation
 * and/or other materials provided with the distribution.
-* 
+*
 * 3. The name of the author may not be used to endorse or promote products
 * derived from this software without specific prior written permission.
-* 
+*
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
@@ -29,7 +29,7 @@
 * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 * OF SUCH DAMAGE.
-* 
+*
 ******************************************************************************/
 
 #ifndef __ALT_ADDRESS_SPACE_H__
@@ -248,18 +248,18 @@ typedef enum ALT_ADDR_SPACE_LWH2F_BRIDGE_ATTR_e
  *
  * \param       mpu_attr
  *              The MPU address space configuration attributes.
- *              
+ *
  * \param       nonmpu_attr
  *              The non-MPU address space configuration attributes.
- *              
+ *
  * \param       h2f_attr
  *              The H2F Bridge attribute mapping and accessibility attributes.
- *              
+ *
  * \param       lwh2f_attr
  *              The Lightweight H2F Bridge attribute mapping and accessibility
  *              attributes.
- *              
- * 
+ *
+ *
  * \retval      ALT_E_SUCCESS       The operation was succesful.
  * \retval      ALT_E_ERROR         The operation failed.
  * \retval      ALT_E_INV_OPTION    One or more invalid attribute options were
@@ -290,7 +290,7 @@ ALT_STATUS_CODE alt_addr_space_remap(ALT_ADDR_SPACE_MPU_ATTR_t mpu_attr,
  * AXI (M1) master port by calling:
  *
  * alt_l2_addr_filter_cfg_set(0x0, <current_addr_filt_end_value>);
- * 
+ *
  * See: <em>ARM DDI 0246F, CoreLink Level 2 Cache Controller L2C-310 Technical
  * Reference Manual, Section 3.3.12 Address Filtering </em>.
  * \endinternal
@@ -311,7 +311,7 @@ ALT_STATUS_CODE alt_mpu_addr_space_remap_0_to_sdram(void);
  * The L2 cache has master port connections to the L3 interconnect and the SDRAM
  * controller. A programmable address filter controls which portions of the
  * 32-bit physical address space use each master.
- * 
+ *
  * When l2 address filtering is configured and enabled, a physical address will
  * be redirected to one master or the other based upon the address filter
  * configuration.
@@ -334,7 +334,7 @@ ALT_STATUS_CODE alt_mpu_addr_space_remap_0_to_sdram(void);
  *              start address for the range of physical addresses redirected to
  *              the SDRAM AXI master port. The value returned is always a 1 MiB
  *              aligned address.
- *              
+ *
  * \param       addr_filt_end
  *              [out] An output parameter variable for the address filtering
  *              end address for the range of physical addresses redirected to
@@ -361,14 +361,14 @@ ALT_STATUS_CODE alt_l2_addr_filter_cfg_get(uint32_t* addr_filt_start,
  *              [31:20] of the address are valid. Any bits outside the range
  *              [31:20] are invalid and will cause an error status to be
  *              returned.
- *              
+ *
  * \param       addr_filt_end
  *              The address filtering end address for the range of physical
  *              addresses redirected to the SDRAM AXI master port. Only bits
  *              [31:20] of the address are valid. Any bits outside the range
  *              [31:20] are invalid and will cause an error status to be
  *              returned.
- *              
+ *
  * \retval      ALT_E_SUCCESS   The operation was succesful.
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_ARG_RANGE An argument violates a range constraint. One or
@@ -400,7 +400,7 @@ ALT_STATUS_CODE alt_l2_addr_filter_cfg_set(uint32_t addr_filt_start,
  * * 1 GiB coherent window into 4 GiB MPU address space
  * * Remaps the 5-bit user sideband signals used by the Snoop Control Unit (SCU)
  *   and L2 cache.
- * 
+ *
  * The function of the ACP ID Mapper is to map 12-bit Advanced Microcontroller
  * Bus Architecture (AMBA) Advanced eXtensible Interface (AXI) IDs (input
  * identifiers) from the Level 3 (L3) interconnect to 3-bit AXI IDs (output
@@ -425,18 +425,18 @@ ALT_STATUS_CODE alt_l2_addr_filter_cfg_set(uint32_t addr_filt_start,
  * The following table summarizes the usage of the 3-bit ouput ID values by the
  * ACP ID Mapper and their settings at reset.
  *
- *  Output ID  | Usage                                             | Reset State     
+ *  Output ID  | Usage                                             | Reset State
  * :-----------|:--------------------------------------------------|:------------
- *         0   | Reserved for Cortex-A9 cores.                     | -               
- *         1   | Reserved for Cortex-A9 cores.                     | -               
- *         2   | Assigned to Debug Access Port (DAP) input ID at   | Fixed           
+ *         0   | Reserved for Cortex-A9 cores.                     | -
+ *         1   | Reserved for Cortex-A9 cores.                     | -
+ *         2   | Assigned to Debug Access Port (DAP) input ID at   | Fixed
  * :           | reset. After reset, can be reconfigured to either | DAP Master
  * :           | fixed or dynamic.                                 |:
- *         3   | Configurable fixed or dynamic mode.               | Dynamic         
- *         4   | Configurable fixed or dynamic mode.               | Dynamic         
- *         5   | Configurable fixed or dynamic mode.               | Dynamic         
- *         6   | Configurable fixed or dynamic mode.               | Dynamic         
- *         7   | Dynamic mode only.                                | Dynamic         
+ *         3   | Configurable fixed or dynamic mode.               | Dynamic
+ *         4   | Configurable fixed or dynamic mode.               | Dynamic
+ *         5   | Configurable fixed or dynamic mode.               | Dynamic
+ *         6   | Configurable fixed or dynamic mode.               | Dynamic
+ *         7   | Dynamic mode only.                                | Dynamic
  *
  * Where <em>Output ID</em> is the ACP ID Mapper output value that goes to the ACP.
  *
@@ -512,8 +512,8 @@ ALT_STATUS_CODE alt_l2_addr_filter_cfg_set(uint32_t addr_filt_start,
  */
 typedef enum ALT_ACP_ID_OUTPUT_ID_e
 {
-    ALT_ACP_ID_OUT_FIXED_ID_2 = 2,  /*!< Assigned to the input ID of the DAP at reset. 
-                                     *   After reset, can be either fixed or dynamic, 
+    ALT_ACP_ID_OUT_FIXED_ID_2 = 2,  /*!< Assigned to the input ID of the DAP at reset.
+                                     *   After reset, can be either fixed or dynamic,
                                      *   programmed by software.
                                      */
     ALT_ACP_ID_OUT_DYNAM_ID_3 = 3,  /*!< Fixed or dynamic, programmed by software output id */
@@ -681,7 +681,7 @@ ALT_STATUS_CODE alt_acp_id_map_dynamic_write_set(const uint32_t output_id);
  * \retval      ALT_E_ARG_RANGE An argument violates a range constraint. One or
  *                              more of the \e page and/or \e aruser
  *                              arguments violates its range constraint.
- * \retval      ALT_E_BAD_ARG   The \e mid argument is not a valid master 
+ * \retval      ALT_E_BAD_ARG   The \e mid argument is not a valid master
  *                              identifier.
  */
 ALT_STATUS_CODE alt_acp_id_map_dynamic_read_options_set(const ALT_ACP_ID_MAP_PAGE_t page,
@@ -707,7 +707,7 @@ ALT_STATUS_CODE alt_acp_id_map_dynamic_read_options_set(const ALT_ACP_ID_MAP_PAG
  * \retval      ALT_E_ARG_RANGE An argument violates a range constraint. One or
  *                              more of the \e page and/or \e awuser
  *                              arguments violates its range constraint.
- * \retval      ALT_E_BAD_ARG   The \e mid argument is not a valid master 
+ * \retval      ALT_E_BAD_ARG   The \e mid argument is not a valid master
  *                              identifier.
  */
 ALT_STATUS_CODE alt_acp_id_map_dynamic_write_options_set(const ALT_ACP_ID_MAP_PAGE_t page,
@@ -754,7 +754,7 @@ ALT_STATUS_CODE alt_acp_id_map_dynamic_write_options_set(const ALT_ACP_ID_MAP_PA
  * \retval      ALT_E_SUCCESS   The operation was succesful.
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_RESERVED  The argument value is reserved or unavailable.
- * \retval      ALT_E_ARG_RANGE An argument violates a range constraint. The \e 
+ * \retval      ALT_E_ARG_RANGE An argument violates a range constraint. The \e
  *                              output_id argument violates its range constraint.
  */
 ALT_STATUS_CODE alt_acp_id_map_read_options_get(const uint32_t output_id,
@@ -804,7 +804,7 @@ ALT_STATUS_CODE alt_acp_id_map_read_options_get(const uint32_t output_id,
  * \retval      ALT_E_SUCCESS   The operation was succesful.
  * \retval      ALT_E_ERROR     The operation failed.
  * \retval      ALT_E_RESERVED  The argument value is reserved or unavailable.
- * \retval      ALT_E_ARG_RANGE An argument violates a range constraint. The \e 
+ * \retval      ALT_E_ARG_RANGE An argument violates a range constraint. The \e
  *                              output_id argument violates its range constraint.
  */
 ALT_STATUS_CODE alt_acp_id_map_write_options_get(const uint32_t output_id,

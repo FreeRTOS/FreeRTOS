@@ -204,4 +204,3 @@ WOLFSSL_API int wc_HKDF(int type, const byte* inKey, word32 inKeySz,
 #endif /* WOLF_CRYPT_HMAC_H */
 
 #endif /* NO_HMAC */
-

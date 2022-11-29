@@ -28,7 +28,7 @@
   * @file code_signature_verification_mbedtls.c
   * @brief Code signature verification using mbedtls crypto.
   *
-  * The file demonstrates implements the code signature verification functionality on 
+  * The file demonstrates implements the code signature verification functionality on
   * the specified file using mbedtls for SHA256 ECDSA.
   */
 

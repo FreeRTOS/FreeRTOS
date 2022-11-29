@@ -41,37 +41,37 @@ extern "C"
 /*
  * Component : LWHPS2FPGA AXI Bridge Module - ALT_LWH2F
  * LWHPS2FPGA AXI Bridge Module
- * 
+ *
  * Registers in the LWHPS2FPGA AXI Bridge Module.
- * 
+ *
  */
 /*
  * Register Group : ID Register Group - ALT_LWH2F_ID
  * ID Register Group
- * 
+ *
  * Contains registers that identify the ARM NIC-301 IP Core.
- * 
+ *
  */
 /*
  * Register : Peripheral ID4 Register - periph_id_4
- * 
+ *
  * JEP106 continuation code
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description   
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------
  *  [7:0]  | R      | 0x4   | Peripheral ID4
- *  [31:8] | ???    | 0x0   | *UNDEFINED*   
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Peripheral ID4 - periph_id_4
- * 
+ *
  * JEP106 continuation code
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_LWH2F_ID_PERIPH_ID_4_PERIPH_ID_4 register field. */
 #define ALT_LWH2F_ID_PERIPH_ID_4_PERIPH_ID_4_LSB        0
@@ -98,7 +98,7 @@ extern "C"
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_LWH2F_ID_PERIPH_ID_4.
  */
 struct ALT_LWH2F_ID_PERIPH_ID_4_s
@@ -116,24 +116,24 @@ typedef volatile struct ALT_LWH2F_ID_PERIPH_ID_4_s  ALT_LWH2F_ID_PERIPH_ID_4_t;
 
 /*
  * Register : Peripheral ID0 Register - periph_id_0
- * 
+ *
  * Peripheral ID0
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description      
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------
  *  [7:0]  | R      | 0x1   | Part Number [7:0]
- *  [31:8] | ???    | 0x0   | *UNDEFINED*      
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Part Number [7:0] - pn7to0
- * 
+ *
  * Part Number [7:0]
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_LWH2F_ID_PERIPH_ID_0_PN7TO0 register field. */
 #define ALT_LWH2F_ID_PERIPH_ID_0_PN7TO0_LSB        0
@@ -160,7 +160,7 @@ typedef volatile struct ALT_LWH2F_ID_PERIPH_ID_4_s  ALT_LWH2F_ID_PERIPH_ID_4_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_LWH2F_ID_PERIPH_ID_0.
  */
 struct ALT_LWH2F_ID_PERIPH_ID_0_s
@@ -178,24 +178,24 @@ typedef volatile struct ALT_LWH2F_ID_PERIPH_ID_0_s  ALT_LWH2F_ID_PERIPH_ID_0_t;
 
 /*
  * Register : Peripheral ID1 Register - periph_id_1
- * 
+ *
  * Peripheral ID1
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
  *  [7:0]  | R      | 0xb3  | JEP106[3:0], Part Number [11:8]
- *  [31:8] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : JEP106[3:0], Part Number [11:8] - jep3to0_pn11to8
- * 
+ *
  * JEP106[3:0], Part Number [11:8]
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_LWH2F_ID_PERIPH_ID_1_JEP3TO0_PN11TO8 register field. */
 #define ALT_LWH2F_ID_PERIPH_ID_1_JEP3TO0_PN11TO8_LSB        0
@@ -222,7 +222,7 @@ typedef volatile struct ALT_LWH2F_ID_PERIPH_ID_0_s  ALT_LWH2F_ID_PERIPH_ID_0_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_LWH2F_ID_PERIPH_ID_1.
  */
 struct ALT_LWH2F_ID_PERIPH_ID_1_s
@@ -240,24 +240,24 @@ typedef volatile struct ALT_LWH2F_ID_PERIPH_ID_1_s  ALT_LWH2F_ID_PERIPH_ID_1_t;
 
 /*
  * Register : Peripheral ID2 Register - periph_id_2
- * 
+ *
  * Peripheral ID2
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [7:0]  | R      | 0x6b  | Revision, JEP106 code flag, JEP106[6:4]
- *  [31:8] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Revision, JEP106 code flag, JEP106[6:4] - rev_jepcode_jep6to4
- * 
+ *
  * Revision, JEP106 code flag, JEP106[6:4]
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_LWH2F_ID_PERIPH_ID_2_REV_JEPCODE_JEP6TO4 register field. */
 #define ALT_LWH2F_ID_PERIPH_ID_2_REV_JEPCODE_JEP6TO4_LSB        0
@@ -284,7 +284,7 @@ typedef volatile struct ALT_LWH2F_ID_PERIPH_ID_1_s  ALT_LWH2F_ID_PERIPH_ID_1_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_LWH2F_ID_PERIPH_ID_2.
  */
 struct ALT_LWH2F_ID_PERIPH_ID_2_s
@@ -302,25 +302,25 @@ typedef volatile struct ALT_LWH2F_ID_PERIPH_ID_2_s  ALT_LWH2F_ID_PERIPH_ID_2_t;
 
 /*
  * Register : Peripheral ID3 Register - periph_id_3
- * 
+ *
  * Peripheral ID3
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description          
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------
  *  [3:0]  | R      | 0x0   | Customer Model Number
- *  [7:4]  | R      | 0x0   | Revision             
- *  [31:8] | ???    | 0x0   | *UNDEFINED*          
- * 
+ *  [7:4]  | R      | 0x0   | Revision
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Customer Model Number - cust_mod_num
- * 
+ *
  * Customer Model Number
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_LWH2F_ID_PERIPH_ID_3_CUST_MOD_NUM register field. */
 #define ALT_LWH2F_ID_PERIPH_ID_3_CUST_MOD_NUM_LSB        0
@@ -341,11 +341,11 @@ typedef volatile struct ALT_LWH2F_ID_PERIPH_ID_2_s  ALT_LWH2F_ID_PERIPH_ID_2_t;
 
 /*
  * Field : Revision - rev_and
- * 
+ *
  * Revision
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_LWH2F_ID_PERIPH_ID_3_REV_AND register field. */
 #define ALT_LWH2F_ID_PERIPH_ID_3_REV_AND_LSB        4
@@ -372,7 +372,7 @@ typedef volatile struct ALT_LWH2F_ID_PERIPH_ID_2_s  ALT_LWH2F_ID_PERIPH_ID_2_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_LWH2F_ID_PERIPH_ID_3.
  */
 struct ALT_LWH2F_ID_PERIPH_ID_3_s
@@ -391,24 +391,24 @@ typedef volatile struct ALT_LWH2F_ID_PERIPH_ID_3_s  ALT_LWH2F_ID_PERIPH_ID_3_t;
 
 /*
  * Register : Component ID0 Register - comp_id_0
- * 
+ *
  * Component ID0
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [7:0]  | R      | 0xd   | Preamble   
+ *  [7:0]  | R      | 0xd   | Preamble
  *  [31:8] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Preamble - preamble
- * 
+ *
  * Preamble
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_LWH2F_ID_COMP_ID_0_PREAMBLE register field. */
 #define ALT_LWH2F_ID_COMP_ID_0_PREAMBLE_LSB        0
@@ -435,7 +435,7 @@ typedef volatile struct ALT_LWH2F_ID_PERIPH_ID_3_s  ALT_LWH2F_ID_PERIPH_ID_3_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_LWH2F_ID_COMP_ID_0.
  */
 struct ALT_LWH2F_ID_COMP_ID_0_s
@@ -453,24 +453,24 @@ typedef volatile struct ALT_LWH2F_ID_COMP_ID_0_s  ALT_LWH2F_ID_COMP_ID_0_t;
 
 /*
  * Register : Component ID1 Register - comp_id_1
- * 
+ *
  * Component ID1
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                         
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------------------
  *  [7:0]  | R      | 0xf0  | Generic IP component class, Preamble
- *  [31:8] | ???    | 0x0   | *UNDEFINED*                         
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Generic IP component class, Preamble - genipcompcls_preamble
- * 
+ *
  * Generic IP component class, Preamble
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_LWH2F_ID_COMP_ID_1_GENIPCOMPCLS_PREAMBLE register field. */
 #define ALT_LWH2F_ID_COMP_ID_1_GENIPCOMPCLS_PREAMBLE_LSB        0
@@ -497,7 +497,7 @@ typedef volatile struct ALT_LWH2F_ID_COMP_ID_0_s  ALT_LWH2F_ID_COMP_ID_0_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_LWH2F_ID_COMP_ID_1.
  */
 struct ALT_LWH2F_ID_COMP_ID_1_s
@@ -515,24 +515,24 @@ typedef volatile struct ALT_LWH2F_ID_COMP_ID_1_s  ALT_LWH2F_ID_COMP_ID_1_t;
 
 /*
  * Register : Component ID2 Register - comp_id_2
- * 
+ *
  * Component ID2
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [7:0]  | R      | 0x5   | Preamble   
+ *  [7:0]  | R      | 0x5   | Preamble
  *  [31:8] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Preamble - preamble
- * 
+ *
  * Preamble
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_LWH2F_ID_COMP_ID_2_PREAMBLE register field. */
 #define ALT_LWH2F_ID_COMP_ID_2_PREAMBLE_LSB        0
@@ -559,7 +559,7 @@ typedef volatile struct ALT_LWH2F_ID_COMP_ID_1_s  ALT_LWH2F_ID_COMP_ID_1_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_LWH2F_ID_COMP_ID_2.
  */
 struct ALT_LWH2F_ID_COMP_ID_2_s
@@ -577,24 +577,24 @@ typedef volatile struct ALT_LWH2F_ID_COMP_ID_2_s  ALT_LWH2F_ID_COMP_ID_2_t;
 
 /*
  * Register : Component ID3 Register - comp_id_3
- * 
+ *
  * Component ID3
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [7:0]  | R      | 0xb1  | Preamble   
+ *  [7:0]  | R      | 0xb1  | Preamble
  *  [31:8] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Preamble - preamble
- * 
+ *
  * Preamble
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_LWH2F_ID_COMP_ID_3_PREAMBLE register field. */
 #define ALT_LWH2F_ID_COMP_ID_3_PREAMBLE_LSB        0
@@ -621,7 +621,7 @@ typedef volatile struct ALT_LWH2F_ID_COMP_ID_2_s  ALT_LWH2F_ID_COMP_ID_2_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_LWH2F_ID_COMP_ID_3.
  */
 struct ALT_LWH2F_ID_COMP_ID_3_s
@@ -645,7 +645,7 @@ typedef volatile struct ALT_LWH2F_ID_COMP_ID_3_s  ALT_LWH2F_ID_COMP_ID_3_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_LWH2F_ID.
  */
 struct ALT_LWH2F_ID_s
@@ -689,57 +689,57 @@ typedef volatile struct ALT_LWH2F_ID_raw_s  ALT_LWH2F_ID_raw_t;
 /*
  * Register Group : Master Register Group - ALT_LWH2F_MST
  * Master Register Group
- * 
+ *
  * Registers associated with master interfaces.
- * 
+ *
  */
 /*
  * Register Group : FPGA2HPS AXI Bridge Registers - ALT_LWH2F_MST_F2H
  * FPGA2HPS AXI Bridge Registers
- * 
+ *
  * Registers associated with the FPGA2HPS master interface.
- * 
+ *
  * This master interface provides access to the registers in the FPGA2HPS AXI
  * Bridge.
- * 
+ *
  */
 /*
  * Register : Bus Matrix Issuing Functionality Modification Register - fn_mod_bm_iss
- * 
+ *
  * Sets the issuing capability of the preceding switch arbitration scheme to
  * multiple or single outstanding transactions.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description               
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------
  *  [0]    | RW     | 0x0   | ALT_LWH2F_FN_MOD_BM_ISS_RD
  *  [1]    | RW     | 0x0   | ALT_LWH2F_FN_MOD_BM_ISS_WR
- *  [31:2] | ???    | 0x0   | *UNDEFINED*               
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : rd
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description                               
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:-------------------------------------------
- *  ALT_LWH2F_FN_MOD_BM_ISS_RD_E_MULT   | 0x0   | Multiple outstanding read transactions    
+ *  ALT_LWH2F_FN_MOD_BM_ISS_RD_E_MULT   | 0x0   | Multiple outstanding read transactions
  *  ALT_LWH2F_FN_MOD_BM_ISS_RD_E_SINGLE | 0x1   | Only a single outstanding read transaction
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_LWH2F_FN_MOD_BM_ISS_RD
- * 
+ *
  * Multiple outstanding read transactions
  */
 #define ALT_LWH2F_FN_MOD_BM_ISS_RD_E_MULT   0x0
 /*
  * Enumerated value for register field ALT_LWH2F_FN_MOD_BM_ISS_RD
- * 
+ *
  * Only a single outstanding read transaction
  */
 #define ALT_LWH2F_FN_MOD_BM_ISS_RD_E_SINGLE 0x1
@@ -763,26 +763,26 @@ typedef volatile struct ALT_LWH2F_ID_raw_s  ALT_LWH2F_ID_raw_t;
 
 /*
  * Field : wr
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description                                
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:--------------------------------------------
- *  ALT_LWH2F_FN_MOD_BM_ISS_WR_E_MULT   | 0x0   | Multiple outstanding write transactions    
+ *  ALT_LWH2F_FN_MOD_BM_ISS_WR_E_MULT   | 0x0   | Multiple outstanding write transactions
  *  ALT_LWH2F_FN_MOD_BM_ISS_WR_E_SINGLE | 0x1   | Only a single outstanding write transaction
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_LWH2F_FN_MOD_BM_ISS_WR
- * 
+ *
  * Multiple outstanding write transactions
  */
 #define ALT_LWH2F_FN_MOD_BM_ISS_WR_E_MULT   0x0
 /*
  * Enumerated value for register field ALT_LWH2F_FN_MOD_BM_ISS_WR
- * 
+ *
  * Only a single outstanding write transaction
  */
 #define ALT_LWH2F_FN_MOD_BM_ISS_WR_E_SINGLE 0x1
@@ -812,7 +812,7 @@ typedef volatile struct ALT_LWH2F_ID_raw_s  ALT_LWH2F_ID_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_LWH2F_FN_MOD_BM_ISS.
  */
 struct ALT_LWH2F_FN_MOD_BM_ISS_s
@@ -833,43 +833,43 @@ typedef volatile struct ALT_LWH2F_FN_MOD_BM_ISS_s  ALT_LWH2F_FN_MOD_BM_ISS_t;
 
 /*
  * Register : AHB Control Register - ahb_cntl
- * 
+ *
  * Sets the block issuing capability to one outstanding transaction.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------
- *  [0]    | RW     | 0x0   | ALT_LWH2F_AHB_CNTL_DECERR_EN 
+ *  [0]    | RW     | 0x0   | ALT_LWH2F_AHB_CNTL_DECERR_EN
  *  [1]    | RW     | 0x0   | ALT_LWH2F_AHB_CNTL_FORCE_INCR
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                  
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : decerr_en
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                                     
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:-------------------------------------------------
- *  ALT_LWH2F_AHB_CNTL_DECERR_EN_E_DIS | 0x0   | No DECERR response.                             
+ *  ALT_LWH2F_AHB_CNTL_DECERR_EN_E_DIS | 0x0   | No DECERR response.
  *  ALT_LWH2F_AHB_CNTL_DECERR_EN_E_EN  | 0x1   | If the AHB protocol conversion function receives
- * :                                   |       | an unaligned address or a write data beat       
- * :                                   |       | without all the byte strobes set, creates a     
- * :                                   |       | DECERR response.                                
- * 
+ * :                                   |       | an unaligned address or a write data beat
+ * :                                   |       | without all the byte strobes set, creates a
+ * :                                   |       | DECERR response.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_LWH2F_AHB_CNTL_DECERR_EN
- * 
+ *
  * No DECERR response.
  */
 #define ALT_LWH2F_AHB_CNTL_DECERR_EN_E_DIS  0x0
 /*
  * Enumerated value for register field ALT_LWH2F_AHB_CNTL_DECERR_EN
- * 
+ *
  * If the AHB protocol conversion function receives an unaligned address or a write
  * data beat without all the byte strobes set, creates a DECERR response.
  */
@@ -894,30 +894,30 @@ typedef volatile struct ALT_LWH2F_FN_MOD_BM_ISS_s  ALT_LWH2F_FN_MOD_BM_ISS_t;
 
 /*
  * Field : force_incr
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description                                     
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:-------------------------------------------------
- *  ALT_LWH2F_AHB_CNTL_FORCE_INCR_E_DIS | 0x0   | Multiple outstanding write transactions         
- *  ALT_LWH2F_AHB_CNTL_FORCE_INCR_E_EN  | 0x1   | If a beat is received that has no write data    
- * :                                    |       | strobes set, that write data beat is replaced   
+ *  ALT_LWH2F_AHB_CNTL_FORCE_INCR_E_DIS | 0x0   | Multiple outstanding write transactions
+ *  ALT_LWH2F_AHB_CNTL_FORCE_INCR_E_EN  | 0x1   | If a beat is received that has no write data
+ * :                                    |       | strobes set, that write data beat is replaced
  * :                                    |       | with an IDLE beat. Also, causes all transactions
  * :                                    |       | that are to be output to the AHB domain to be an
- * :                                    |       | undefined length INCR.                          
- * 
+ * :                                    |       | undefined length INCR.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_LWH2F_AHB_CNTL_FORCE_INCR
- * 
+ *
  * Multiple outstanding write transactions
  */
 #define ALT_LWH2F_AHB_CNTL_FORCE_INCR_E_DIS 0x0
 /*
  * Enumerated value for register field ALT_LWH2F_AHB_CNTL_FORCE_INCR
- * 
+ *
  * If a beat is received that has no write data strobes set, that write data beat
  * is replaced with an IDLE beat. Also, causes all transactions that are to be
  * output to the AHB domain to be an undefined length INCR.
@@ -949,7 +949,7 @@ typedef volatile struct ALT_LWH2F_FN_MOD_BM_ISS_s  ALT_LWH2F_FN_MOD_BM_ISS_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_LWH2F_AHB_CNTL.
  */
 struct ALT_LWH2F_AHB_CNTL_s
@@ -976,7 +976,7 @@ typedef volatile struct ALT_LWH2F_AHB_CNTL_s  ALT_LWH2F_AHB_CNTL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_LWH2F_MST_F2H.
  */
 struct ALT_LWH2F_MST_F2H_s
@@ -1006,12 +1006,12 @@ typedef volatile struct ALT_LWH2F_MST_F2H_raw_s  ALT_LWH2F_MST_F2H_raw_t;
 /*
  * Register Group : HPS2FPGA AXI Bridge Registers - ALT_LWH2F_MST_H2F
  * HPS2FPGA AXI Bridge Registers
- * 
+ *
  * Registers associated with the HPS2FPGA master interface.
- * 
+ *
  * This master interface provides access to the registers in the HPS2FPGA AXI
  * Bridge.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -1021,7 +1021,7 @@ typedef volatile struct ALT_LWH2F_MST_F2H_raw_s  ALT_LWH2F_MST_F2H_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_LWH2F_MST_H2F.
  */
 struct ALT_LWH2F_MST_H2F_s
@@ -1051,34 +1051,34 @@ typedef volatile struct ALT_LWH2F_MST_H2F_raw_s  ALT_LWH2F_MST_H2F_raw_t;
 /*
  * Register Group : 32-bit Master - ALT_LWH2F_MST_B32
  * 32-bit Master
- * 
+ *
  * Registers associated with the 32-bit AXI master interface. This master provides
  * access to slaves in the FPGA.
- * 
+ *
  */
 /*
  * Register : Write Tidemark - wr_tidemark
- * 
+ *
  * Controls the release of the transaction in the write data FIFO.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [3:0]  | RW     | 0x4   | Level      
+ *  [3:0]  | RW     | 0x4   | Level
  *  [31:4] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Level - level
- * 
+ *
  * Stalls the transaction in the write data FIFO until the number of occupied slots
  * in the write data FIFO exceeds the level. Note that the transaction is released
  * before this level is achieved if the network receives the WLAST beat or the
  * write FIFO becomes full.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_LWH2F_WR_TIDEMARK_LEVEL register field. */
 #define ALT_LWH2F_WR_TIDEMARK_LEVEL_LSB        0
@@ -1105,7 +1105,7 @@ typedef volatile struct ALT_LWH2F_MST_H2F_raw_s  ALT_LWH2F_MST_H2F_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_LWH2F_WR_TIDEMARK.
  */
 struct ALT_LWH2F_WR_TIDEMARK_s
@@ -1125,41 +1125,41 @@ typedef volatile struct ALT_LWH2F_WR_TIDEMARK_s  ALT_LWH2F_WR_TIDEMARK_t;
 
 /*
  * Register : Issuing Functionality Modification Register - fn_mod
- * 
+ *
  * Sets the block issuing capability to multiple or single outstanding
  * transactions.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description        
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------
  *  [0]    | RW     | 0x0   | ALT_LWH2F_FN_MOD_RD
  *  [1]    | RW     | 0x0   | ALT_LWH2F_FN_MOD_WR
- *  [31:2] | ???    | 0x0   | *UNDEFINED*        
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : rd
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description                               
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:-------------------------------------------
- *  ALT_LWH2F_FN_MOD_RD_E_MULT   | 0x0   | Multiple outstanding read transactions    
+ *  ALT_LWH2F_FN_MOD_RD_E_MULT   | 0x0   | Multiple outstanding read transactions
  *  ALT_LWH2F_FN_MOD_RD_E_SINGLE | 0x1   | Only a single outstanding read transaction
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_LWH2F_FN_MOD_RD
- * 
+ *
  * Multiple outstanding read transactions
  */
 #define ALT_LWH2F_FN_MOD_RD_E_MULT      0x0
 /*
  * Enumerated value for register field ALT_LWH2F_FN_MOD_RD
- * 
+ *
  * Only a single outstanding read transaction
  */
 #define ALT_LWH2F_FN_MOD_RD_E_SINGLE    0x1
@@ -1183,26 +1183,26 @@ typedef volatile struct ALT_LWH2F_WR_TIDEMARK_s  ALT_LWH2F_WR_TIDEMARK_t;
 
 /*
  * Field : wr
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                         | Value | Description                                
+ *
+ *  Enum                         | Value | Description
  * :-----------------------------|:------|:--------------------------------------------
- *  ALT_LWH2F_FN_MOD_WR_E_MULT   | 0x0   | Multiple outstanding write transactions    
+ *  ALT_LWH2F_FN_MOD_WR_E_MULT   | 0x0   | Multiple outstanding write transactions
  *  ALT_LWH2F_FN_MOD_WR_E_SINGLE | 0x1   | Only a single outstanding write transaction
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_LWH2F_FN_MOD_WR
- * 
+ *
  * Multiple outstanding write transactions
  */
 #define ALT_LWH2F_FN_MOD_WR_E_MULT      0x0
 /*
  * Enumerated value for register field ALT_LWH2F_FN_MOD_WR
- * 
+ *
  * Only a single outstanding write transaction
  */
 #define ALT_LWH2F_FN_MOD_WR_E_SINGLE    0x1
@@ -1232,7 +1232,7 @@ typedef volatile struct ALT_LWH2F_WR_TIDEMARK_s  ALT_LWH2F_WR_TIDEMARK_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_LWH2F_FN_MOD.
  */
 struct ALT_LWH2F_FN_MOD_s
@@ -1259,7 +1259,7 @@ typedef volatile struct ALT_LWH2F_FN_MOD_s  ALT_LWH2F_FN_MOD_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_LWH2F_MST_B32.
  */
 struct ALT_LWH2F_MST_B32_s
@@ -1298,7 +1298,7 @@ typedef volatile struct ALT_LWH2F_MST_B32_raw_s  ALT_LWH2F_MST_B32_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_LWH2F_MST.
  */
 struct ALT_LWH2F_MST_s
@@ -1330,17 +1330,17 @@ typedef volatile struct ALT_LWH2F_MST_raw_s  ALT_LWH2F_MST_raw_t;
 /*
  * Register Group : Slave Register Group - ALT_LWH2F_SLV
  * Slave Register Group
- * 
+ *
  * Registers associated with slave interfaces.
- * 
+ *
  */
 /*
  * Register Group : L3 Slave Register Group - ALT_LWH2F_SLV_B32
  * L3 Slave Register Group
- * 
+ *
  * Registers associated with the 32-bit AXI slave interface. This slave connects to
  * the L3 Interconnect.
- * 
+ *
  */
 #ifndef __ASSEMBLY__
 /*
@@ -1350,7 +1350,7 @@ typedef volatile struct ALT_LWH2F_MST_raw_s  ALT_LWH2F_MST_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_LWH2F_SLV_B32.
  */
 struct ALT_LWH2F_SLV_B32_s
@@ -1381,7 +1381,7 @@ typedef volatile struct ALT_LWH2F_SLV_B32_raw_s  ALT_LWH2F_SLV_B32_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_LWH2F_SLV.
  */
 struct ALT_LWH2F_SLV_s
@@ -1412,7 +1412,7 @@ typedef volatile struct ALT_LWH2F_SLV_raw_s  ALT_LWH2F_SLV_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_LWH2F.
  */
 struct ALT_LWH2F_s
@@ -1447,4 +1447,3 @@ typedef volatile struct ALT_LWH2F_raw_s  ALT_LWH2F_raw_t;
 }
 #endif  /* __cplusplus */
 #endif  /* __ALTERA_ALT_LWH2F_H__ */
-

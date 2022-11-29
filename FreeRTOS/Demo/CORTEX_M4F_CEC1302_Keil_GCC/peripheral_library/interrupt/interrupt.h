@@ -20,16 +20,16 @@
 
 Version Control Information (Perforce)
 ******************************************************************************
-$Revision: #1 $ 
-$DateTime: 2016/04/08 10:18:28 $ 
+$Revision: #1 $
+$DateTime: 2016/04/08 10:18:28 $
 $Author: pramans $
 Last Change: Corrected several header definations
 ******************************************************************************/
 /** @file interrupt.h
 * \brief Interrupt Header File
 * \author jvasanth
-* 
-* This file implements the Interrupt Module Header file  
+*
+* This file implements the Interrupt Module Header file
 ******************************************************************************/
 
 /** @defgroup Interrupt
@@ -43,41 +43,41 @@ Last Change: Corrected several header definations
 enum MEC_GIRQ_IDS
 {
     MEC_GIRQ08_ID = 0,
-    MEC_GIRQ09_ID,                  
-    MEC_GIRQ10_ID,                  
-    MEC_GIRQ11_ID,                  
-    MEC_GIRQ12_ID,                  
-    MEC_GIRQ13_ID,                  
-    MEC_GIRQ14_ID,                  
-    MEC_GIRQ15_ID,                  
-    MEC_GIRQ16_ID,                  
-    MEC_GIRQ17_ID,                  
-    MEC_GIRQ18_ID,                  
-    MEC_GIRQ19_ID,                  
-    MEC_GIRQ20_ID,                  
-    MEC_GIRQ21_ID,                  
-    MEC_GIRQ22_ID,                  
-    MEC_GIRQ23_ID,                                   
+    MEC_GIRQ09_ID,
+    MEC_GIRQ10_ID,
+    MEC_GIRQ11_ID,
+    MEC_GIRQ12_ID,
+    MEC_GIRQ13_ID,
+    MEC_GIRQ14_ID,
+    MEC_GIRQ15_ID,
+    MEC_GIRQ16_ID,
+    MEC_GIRQ17_ID,
+    MEC_GIRQ18_ID,
+    MEC_GIRQ19_ID,
+    MEC_GIRQ20_ID,
+    MEC_GIRQ21_ID,
+    MEC_GIRQ22_ID,
+    MEC_GIRQ23_ID,
     MEC_GIRQ_ID_MAX
 };
 
 //Bitmask of GIRQ in ECIA Block Registers
 #define MEC_GIRQ08_BITMASK          (1UL << (MEC_GIRQ08_ID + 8))
-#define MEC_GIRQ09_BITMASK          (1UL << (MEC_GIRQ09_ID + 8))  
-#define MEC_GIRQ10_BITMASK          (1UL << (MEC_GIRQ10_ID + 8))  
-#define MEC_GIRQ11_BITMASK          (1UL << (MEC_GIRQ11_ID + 8)) 
-#define MEC_GIRQ12_BITMASK          (1UL << (MEC_GIRQ12_ID + 8)) 
-#define MEC_GIRQ13_BITMASK          (1UL << (MEC_GIRQ13_ID + 8)) 
-#define MEC_GIRQ14_BITMASK          (1UL << (MEC_GIRQ14_ID + 8)) 
-#define MEC_GIRQ15_BITMASK          (1UL << (MEC_GIRQ15_ID + 8)) 
-#define MEC_GIRQ16_BITMASK          (1UL << (MEC_GIRQ16_ID + 8)) 
-#define MEC_GIRQ17_BITMASK          (1UL << (MEC_GIRQ17_ID + 8)) 
-#define MEC_GIRQ18_BITMASK          (1UL << (MEC_GIRQ18_ID + 8)) 
-#define MEC_GIRQ19_BITMASK          (1UL << (MEC_GIRQ19_ID + 8)) 
-#define MEC_GIRQ20_BITMASK          (1UL << (MEC_GIRQ20_ID + 8)) 
-#define MEC_GIRQ21_BITMASK          (1UL << (MEC_GIRQ21_ID + 8)) 
-#define MEC_GIRQ22_BITMASK          (1UL << (MEC_GIRQ22_ID + 8)) 
-#define MEC_GIRQ23_BITMASK          (1UL << (MEC_GIRQ23_ID + 8)) 
+#define MEC_GIRQ09_BITMASK          (1UL << (MEC_GIRQ09_ID + 8))
+#define MEC_GIRQ10_BITMASK          (1UL << (MEC_GIRQ10_ID + 8))
+#define MEC_GIRQ11_BITMASK          (1UL << (MEC_GIRQ11_ID + 8))
+#define MEC_GIRQ12_BITMASK          (1UL << (MEC_GIRQ12_ID + 8))
+#define MEC_GIRQ13_BITMASK          (1UL << (MEC_GIRQ13_ID + 8))
+#define MEC_GIRQ14_BITMASK          (1UL << (MEC_GIRQ14_ID + 8))
+#define MEC_GIRQ15_BITMASK          (1UL << (MEC_GIRQ15_ID + 8))
+#define MEC_GIRQ16_BITMASK          (1UL << (MEC_GIRQ16_ID + 8))
+#define MEC_GIRQ17_BITMASK          (1UL << (MEC_GIRQ17_ID + 8))
+#define MEC_GIRQ18_BITMASK          (1UL << (MEC_GIRQ18_ID + 8))
+#define MEC_GIRQ19_BITMASK          (1UL << (MEC_GIRQ19_ID + 8))
+#define MEC_GIRQ20_BITMASK          (1UL << (MEC_GIRQ20_ID + 8))
+#define MEC_GIRQ21_BITMASK          (1UL << (MEC_GIRQ21_ID + 8))
+#define MEC_GIRQ22_BITMASK          (1UL << (MEC_GIRQ22_ID + 8))
+#define MEC_GIRQ23_BITMASK          (1UL << (MEC_GIRQ23_ID + 8))
 
 #define INTERRUPT_MODE_ALL_AGGREGATED        (0u)
 #define INTERRUPT_MODE_DIRECT                (1u)
@@ -284,7 +284,7 @@ enum MEC_GIRQ_IDS
 #define EM8042_OBF_IROUTE               IROUTE(13,15,64,22)
 #define EM8042_IBF_IROUTE               IROUTE(14,15,64,23)
 #define MBOX_IROUTE                     IROUTE(15,15,64,24)
-#define MBOX_DATA_IROUTE                IROUTE(16,15,64,40) 
+#define MBOX_DATA_IROUTE                IROUTE(16,15,64,40)
 
 //
 // GIRQ16
@@ -398,7 +398,7 @@ enum MEC_GIRQ_IDS
 #define GIRQ08_GPIO_0153_BITPOS         (11)
 #define GIRQ08_GPIO_0154_BITPOS         (12)
 #define GIRQ08_GPIO_0155_BITPOS         (13)
-#define GIRQ08_GPIO_0156_BITPOS         (14) 
+#define GIRQ08_GPIO_0156_BITPOS         (14)
 #define GIRQ08_GPIO_0157_BITPOS         (15)
 //
 #define GIRQ08_GPIO_0160_BITPOS         (16)
@@ -407,7 +407,7 @@ enum MEC_GIRQ_IDS
 #define GIRQ08_GPIO_0163_BITPOS         (19)
 #define GIRQ08_GPIO_0164_BITPOS         (20)
 #define GIRQ08_GPIO_0165_BITPOS         (21)
-#define GIRQ08_GPIO_0166_BITPOS         (22) 
+#define GIRQ08_GPIO_0166_BITPOS         (22)
 #define GIRQ08_GPIO_0167_BITPOS         (23)
 //
 #define GIRQ08_MASK                     (0x00FFFFBFul)
@@ -415,7 +415,7 @@ enum MEC_GIRQ_IDS
 //
 
 //
-// GIRQ09 Bit Positions 
+// GIRQ09 Bit Positions
 //
 #define GIRQ09_GPIO_0100_BITPOS         (0)
 #define GIRQ09_GPIO_0101_BITPOS         (1)
@@ -423,7 +423,7 @@ enum MEC_GIRQ_IDS
 #define GIRQ09_GPIO_0103_BITPOS         (3)
 #define GIRQ09_GPIO_0104_BITPOS         (4)
 #define GIRQ09_GPIO_0105_BITPOS         (5)
-#define GIRQ09_GPIO_0106_BITPOS         (6) 
+#define GIRQ09_GPIO_0106_BITPOS         (6)
 #define GIRQ09_GPIO_0107_BITPOS         (7)
 //
 #define GIRQ09_GPIO_0110_BITPOS         (8)
@@ -432,7 +432,7 @@ enum MEC_GIRQ_IDS
 #define GIRQ09_GPIO_0113_BITPOS         (11)
 #define GIRQ09_GPIO_0114_BITPOS         (12)
 #define GIRQ09_GPIO_0115_BITPOS         (13)
-#define GIRQ09_GPIO_0116_BITPOS         (14) 
+#define GIRQ09_GPIO_0116_BITPOS         (14)
 #define GIRQ09_GPIO_0117_BITPOS         (15)
 //
 #define GIRQ09_GPIO_0120_BITPOS         (16)
@@ -441,7 +441,7 @@ enum MEC_GIRQ_IDS
 #define GIRQ09_GPIO_0123_BITPOS         (19)
 #define GIRQ09_GPIO_0124_BITPOS         (20)
 #define GIRQ09_GPIO_0125_BITPOS         (21)
-#define GIRQ09_GPIO_0126_BITPOS         (22) 
+#define GIRQ09_GPIO_0126_BITPOS         (22)
 #define GIRQ09_GPIO_0127_BITPOS         (23)
 //
 #define GIRQ09_GPIO_0130_BITPOS         (24)
@@ -450,14 +450,14 @@ enum MEC_GIRQ_IDS
 #define GIRQ09_GPIO_0133_BITPOS         (27)
 #define GIRQ09_GPIO_0134_BITPOS         (28)
 #define GIRQ09_GPIO_0135_BITPOS         (29)
-#define GIRQ09_GPIO_0136_BITPOS         (30) 
+#define GIRQ09_GPIO_0136_BITPOS         (30)
 //
 #define GIRQ09_MASK                     (0x7FF7FFFFul)
 #define GIRQ09_WAKE_CAPABLE_MASK        (0x7FF7FFFFul)
 //
 
 //
-// GIRQ10 Bit Positions 
+// GIRQ10 Bit Positions
 //
 #define GIRQ10_GPIO_0040_BITPOS         (0)
 #define GIRQ10_GPIO_0041_BITPOS         (1)
@@ -465,7 +465,7 @@ enum MEC_GIRQ_IDS
 #define GIRQ10_GPIO_0043_BITPOS         (3)
 #define GIRQ10_GPIO_0044_BITPOS         (4)
 #define GIRQ10_GPIO_0045_BITPOS         (5)
-#define GIRQ10_GPIO_0046_BITPOS         (6) 
+#define GIRQ10_GPIO_0046_BITPOS         (6)
 #define GIRQ10_GPIO_0047_BITPOS         (7)
 //
 #define GIRQ10_GPIO_0050_BITPOS         (8)
@@ -474,7 +474,7 @@ enum MEC_GIRQ_IDS
 #define GIRQ10_GPIO_0053_BITPOS         (11)
 #define GIRQ10_GPIO_0054_BITPOS         (12)
 #define GIRQ10_GPIO_0055_BITPOS         (13)
-#define GIRQ10_GPIO_0056_BITPOS         (14) 
+#define GIRQ10_GPIO_0056_BITPOS         (14)
 #define GIRQ10_GPIO_0057_BITPOS         (15)
 //
 #define GIRQ10_GPIO_0060_BITPOS         (16)
@@ -483,21 +483,21 @@ enum MEC_GIRQ_IDS
 #define GIRQ10_GPIO_0063_BITPOS         (19)
 #define GIRQ10_GPIO_0064_BITPOS         (20)
 #define GIRQ10_GPIO_0065_BITPOS         (21)
-#define GIRQ10_GPIO_0066_BITPOS         (22) 
+#define GIRQ10_GPIO_0066_BITPOS         (22)
 #define GIRQ10_GPIO_0067_BITPOS         (23)
 //
 #define GIRQ10_MASK                     (0x7FFFFFFFul)
 #define GIRQ10_WAKE_CAPABLE_MASK        (0x7FFFFFFFul)
 //
 
-// GIRQ11 Bit Positions 
+// GIRQ11 Bit Positions
 #define GIRQ11_GPIO_0000_BITPOS         (0)
 #define GIRQ11_GPIO_0001_BITPOS         (1)
 #define GIRQ11_GPIO_0002_BITPOS         (2)
 #define GIRQ11_GPIO_0003_BITPOS         (3)
 #define GIRQ11_GPIO_0004_BITPOS         (4)
 #define GIRQ11_GPIO_0005_BITPOS         (5)
-#define GIRQ11_GPIO_0006_BITPOS         (6) 
+#define GIRQ11_GPIO_0006_BITPOS         (6)
 #define GIRQ11_GPIO_0007_BITPOS         (7)
 //
 #define GIRQ11_GPIO_0010_BITPOS         (8)
@@ -506,7 +506,7 @@ enum MEC_GIRQ_IDS
 #define GIRQ11_GPIO_0013_BITPOS         (11)
 #define GIRQ11_GPIO_0014_BITPOS         (12)
 #define GIRQ11_GPIO_0015_BITPOS         (13)
-#define GIRQ11_GPIO_0016_BITPOS         (14) 
+#define GIRQ11_GPIO_0016_BITPOS         (14)
 #define GIRQ11_GPIO_0017_BITPOS         (15)
 //
 #define GIRQ11_GPIO_0020_BITPOS         (16)
@@ -515,7 +515,7 @@ enum MEC_GIRQ_IDS
 #define GIRQ11_GPIO_0023_BITPOS         (19)
 #define GIRQ11_GPIO_0024_BITPOS         (20)
 #define GIRQ11_GPIO_0025_BITPOS         (21)
-#define GIRQ11_GPIO_0026_BITPOS         (22) 
+#define GIRQ11_GPIO_0026_BITPOS         (22)
 #define GIRQ11_GPIO_0027_BITPOS         (23)
 //
 #define GIRQ11_GPIO_0030_BITPOS         (24)
@@ -524,13 +524,13 @@ enum MEC_GIRQ_IDS
 #define GIRQ11_GPIO_0033_BITPOS         (27)
 #define GIRQ11_GPIO_0034_BITPOS         (28)
 #define GIRQ11_GPIO_0035_BITPOS         (29)
-#define GIRQ11_GPIO_0036_BITPOS         (30) 
+#define GIRQ11_GPIO_0036_BITPOS         (30)
 //
 #define GIRQ11_MASK                     (0x7FFFFFFFul)
 #define GIRQ11_WAKE_CAPABLE_MASK        (0x7FFFFFFFul)
 //
 
-// GIRQ12 Bit Positions 
+// GIRQ12 Bit Positions
 #define GIRQ12_SMBUS0_BITPOS            (0)
 #define GIRQ12_SMBUS1_BITPOS            (1)
 #define GIRQ12_SMBUS2_BITPOS            (2)
@@ -546,7 +546,7 @@ enum MEC_GIRQ_IDS
 //
 
 //
-// GIRQ13 Bit Positions 
+// GIRQ13 Bit Positions
 //
 #define GIRQ13_DMA0_BITPOS              (16)
 #define GIRQ13_DMA1_BITPOS              (17)
@@ -566,7 +566,7 @@ enum MEC_GIRQ_IDS
 //
 
 //
-// GIRQ14 Bit Positions 
+// GIRQ14 Bit Positions
 //
 #define GIRQ14_LPC_BITPOS               (2)
 //
@@ -575,7 +575,7 @@ enum MEC_GIRQ_IDS
 //
 
 //
-// GIRQ15 Bit Positions 
+// GIRQ15 Bit Positions
 //
 #define GIRQ15_UART0_BITPOS             (0)
 #define GIRQ15_IMAP_BITPOS              (2)
@@ -596,7 +596,7 @@ enum MEC_GIRQ_IDS
 //
 
 //
-// GIRQ16 Bit Positions 
+// GIRQ16 Bit Positions
 //
 #define GIRQ16_PECI_BITPOS              (3)
 //
@@ -605,7 +605,7 @@ enum MEC_GIRQ_IDS
 //
 
 //
-// GIRQ17 Bit Positions 
+// GIRQ17 Bit Positions
 //
 #define GIRQ17_TACH0_BITPOS             (0)
 #define GIRQ17_TACH1_BITPOS             (1)
@@ -670,7 +670,7 @@ enum MEC_GIRQ_IDS
 //
 
 //
-// GIRQ20 Bit Positions 
+// GIRQ20 Bit Positions
 //
 #define GIRQ20_GPIO_0200_BITPOS         (0)
 #define GIRQ20_GPIO_0201_BITPOS         (1)
@@ -684,25 +684,25 @@ enum MEC_GIRQ_IDS
 #define GIRQ20_GPIO_0211_BITPOS         (9)
 #define GIRQ20_GPIO_0212_BITPOS         (10)
 #define GIRQ20_GPIO_0213_BITPOS         (11)
-// 
+//
 #define GIRQ20_MASK                     (0x0F5Ful)
 #define GIRQ20_WAKE_CAPABLE_MASK        (0x0F5Ful)
 //
 
 //
-// GIRQ21 Bit Positions 
+// GIRQ21 Bit Positions
 //
 #define GIRQ21_MASK                     (0x00ul)
 #define GIRQ21_WAKE_CAPABLE_MASK        (0x00ul)
 
 //
-// GIRQ22 Bit Positions 
+// GIRQ22 Bit Positions
 //
 #define GIRQ22_MASK                     (0x00ul)
 #define GIRQ22_WAKE_CAPABLE_MASK        (0x00ul)
 
 //
-// GIRQ23 Bit Positions 
+// GIRQ23 Bit Positions
 //
 #define GIRQ23_TMR0_BITPOS              (0)
 #define GIRQ23_TMR1_BITPOS              (1)
@@ -721,84 +721,84 @@ enum MEC_GIRQ_IDS
 /* ------------------------------------------------------------------------------- */
 /* In Direct Mode, some interrupts could be configured to be used as aggregated.
  * Configuration:
- *      1. Always set ECS Interrupt Direct enable bit.         
+ *      1. Always set ECS Interrupt Direct enable bit.
  *      2. If GIRQn aggregated set Block Enable bit.
  *      3. If GIRQn direct then clear Block Enable bit and enable individual NVIC inputs.
  *  Switching issues:
  *  Aggregate enable/disable requires set/clear single GIRQn bit in GIRQ Block En/Clr registers.
  *  Also requires set/clear of individual NVIC Enables.
- *  
- * Note: interrupt_is_girq_direct() internal function uses this policy to detect 
+ *
+ * Note: interrupt_is_girq_direct() internal function uses this policy to detect
  * if any interrupt is configured as direct or aggregated
 */
 
 /** Initialize EC Interrupt Aggregator
- * @param mode 1 - Direct Map mode, 0 - Fully Aggregated Mode 
- * @param girq_bitmask - BitMask of GIRQ to be configured as aggregated 
+ * @param mode 1 - Direct Map mode, 0 - Fully Aggregated Mode
+ * @param girq_bitmask - BitMask of GIRQ to be configured as aggregated
  *                     This parameter is only applicable in direct mode.
- * @note All GPIO's and wake capable sources are always 
+ * @note All GPIO's and wake capable sources are always
  * aggregated! GPIO's interrupts will still work in direct mode.
- * Block wakes are not be routed to the processor in direct 
- * mode. 
- * Note2: This function disables and enables global interrupt  
+ * Block wakes are not be routed to the processor in direct
+ * mode.
+ * Note2: This function disables and enables global interrupt
  */
 void interrupt_init(uint8_t mode, uint32_t girq_bitmask);
 
-/** Set interrupt routing mode to aggregated or direct. 
- * @param mode 1 = Direct (except GPIO & wake), 0 = All Aggregated 
- * @note In direct mode, one could enable certain GIRQs as aggregated using 
+/** Set interrupt routing mode to aggregated or direct.
+ * @param mode 1 = Direct (except GPIO & wake), 0 = All Aggregated
+ * @note In direct mode, one could enable certain GIRQs as aggregated using
  * p_interrupt_ecia_block_enable_set function
  */
 void interrupt_mode_set(uint8_t mode);
 
 /** Clears all individual interrupts Enables and Source in ECIA,
- *  and Clears all NVIC external enables and pending bits  
+ *  and Clears all NVIC external enables and pending bits
  */
 void interrupt_reset(void);
 
-/** Enables interrupt for a device 
- * @param dev_iroute - source IROUTING information 
- * @note This function disables and enables global interrupt 
+/** Enables interrupt for a device
+ * @param dev_iroute - source IROUTING information
+ * @note This function disables and enables global interrupt
  */
 void interrupt_device_enable(uint32_t dev_iroute);
 
 /** Disables interrupt for a device
- * @param dev_iroute - source IROUTING information  
- * @note This function disables and enables global interrupt 
+ * @param dev_iroute - source IROUTING information
+ * @note This function disables and enables global interrupt
  */
 void interrupt_device_disable(uint32_t dev_iroute);
 
 /* ------------------------------------------------------------------------------- */
-/*                  ECIA APIs using device IROUTE() as input                       */ 
+/*                  ECIA APIs using device IROUTE() as input                       */
 /* ------------------------------------------------------------------------------- */
 
-/** Clear Source in the ECIA for the device  
- * @param devi - device IROUTING value  
+/** Clear Source in the ECIA for the device
+ * @param devi - device IROUTING value
  */
 void interrupt_device_ecia_source_clear(const uint32_t dev_iroute);
 
-/** Get the Source bit in the ECIA for the device  
- * @param devi - device IROUTING value  
+/** Get the Source bit in the ECIA for the device
+ * @param devi - device IROUTING value
  * @return 0 if source bit not set; else non-zero value
  */
 uint32_t interrupt_device_ecia_source_get(const uint32_t dev_iroute);
 
-/** Get the Result bit in the ECIA for the device  
- * @param devi - device IROUTING value  
+/** Get the Result bit in the ECIA for the device
+ * @param devi - device IROUTING value
  * @return 0 if result bit not set; else non-zero value
  */
 uint32_t interrupt_device_ecia_result_get(const uint32_t dev_iroute);
 
 /* ------------------------------------------------------------------------------- */
-/*                  NVIC APIs using device IROUTE() as input                       */ 
+/*                  NVIC APIs using device IROUTE() as input                       */
 /* ------------------------------------------------------------------------------- */
-/* Note that if the device interrupt is aggregated, then these APIs would affect the 
- * NVIC corresponding to the aggregated GIRQ 
+/* Note that if the device interrupt is aggregated, then these APIs would affect the
+ * NVIC corresponding to the aggregated GIRQ
  */
 
 /**  Enable/Disable the NVIC (in the NVIC controller) for the device
  * @param dev_iroute : source IROUTING information (encoded in a uint32_t)
- * @param en_flag : 1 = Enable the NVIC IRQ, 0 = Disable the NVIC IRQ 
+ * @param en_flag : 1 = Enable the NVIC IRQ, 0 = Disable the NVIC IRQ
  * @note Recommended to use interrupt_device_enable, interrupt_device_disable
  * to enable/disable interrupts for the device, since those APIs configure ECIA as well
  */
@@ -807,54 +807,54 @@ void interrupt_device_nvic_enable(uint32_t dev_iroute, uint8_t en_flag);
 /** Set NVIC priority for specified peripheral interrupt source
  * @param dev_iroute - source IROUTING information (encoded in a uint32_t)
  * @param nvic_pri - NVIC Priority
- * @note 1. If ECIA is in aggregated mode, the priority affects all interrupt 
- * sources in the GIRQ. 
- * 2. This function disables and enables global interrupt    
+ * @note 1. If ECIA is in aggregated mode, the priority affects all interrupt
+ * sources in the GIRQ.
+ * 2. This function disables and enables global interrupt
  */
 void interrupt_device_nvic_priority_set(const uint32_t dev_iroute, const uint8_t nvic_pri);
 
 /** Return NVIC priority for interrupt source
- * @param dev_iroute - source IROUTING information 
- * @return uint32_t  NVIC priority 
+ * @param dev_iroute - source IROUTING information
+ * @return uint32_t  NVIC priority
  */
 uint32_t interrupt_device_nvic_priority_get(const uint32_t dev_iroute);
 
 /** Return NVIC pending for interrupt source
- * @param dev_iroute - source IROUTING information 
- * @return uint8_t 0(not pending), 1 (pending in NVIC) 
- *  
+ * @param dev_iroute - source IROUTING information
+ * @return uint8_t 0(not pending), 1 (pending in NVIC)
+ *
  */
 uint8_t interrupt_device_nvic_pending_get(const uint32_t dev_iroute);
 
 /** Set NVIC pending for interrupt source
- * @param dev_iroute - source IROUTING information   
+ * @param dev_iroute - source IROUTING information
  */
 void interrupt_device_nvic_pending_set(const uint32_t dev_iroute);
 
 /** Clears NVIC pending for interrupt source
- * @param dev_iroute - source IROUTING information 
- * @return uint8_t 0(not pending), 1 (pending in NVIC) - before clear 
- * @note This function disables and enables global interrupt    
+ * @param dev_iroute - source IROUTING information
+ * @return uint8_t 0(not pending), 1 (pending in NVIC) - before clear
+ * @note This function disables and enables global interrupt
  */
 uint8_t interrupt_device_nvic_pending_clear(const uint32_t dev_iroute);
-    
+
 /* ------------------------------------------------------------------------------- */
 /* Peripheral Functions - Operations on GIRQ Block Enable Set, Enable Clear        *
  * and Status Register                                                             */
 /* ------------------------------------------------------------------------------- */
 
 /** Enable specified GIRQ in ECIA block
- * @param girq_id - enum MEC_GIRQ_IDS 
+ * @param girq_id - enum MEC_GIRQ_IDS
  */
  void p_interrupt_ecia_block_enable_set(uint8_t girq_id);
-  
- /** Enable GIRQs in ECIA Block 
- * @param girq_bitmask - Bitmask of GIRQs to be enabled in ECIA Block  
+
+ /** Enable GIRQs in ECIA Block
+ * @param girq_bitmask - Bitmask of GIRQs to be enabled in ECIA Block
  */
 void p_interrupt_ecia_block_enable_bitmask_set(uint32_t girq_bitmask);
 
 /** Check if specified GIRQ block enabled or not
- * @param girq_id - enum MEC_GIRQ_IDS 
+ * @param girq_id - enum MEC_GIRQ_IDS
  * @return retVal - 1 if the particular GIRQ block enabled, else 0
  */
 uint8_t p_interrupt_ecia_block_enable_get(uint8_t girq_id);
@@ -862,21 +862,21 @@ uint8_t p_interrupt_ecia_block_enable_get(uint8_t girq_id);
 /** Set all GIRQ block enables */
 void p_interrupt_ecia_block_enable_all_set(void);
 
-/** Clear specified GIRQ in ECIA Block 
- * @param girq_id - enum MEC_GIRQ_IDS 
+/** Clear specified GIRQ in ECIA Block
+ * @param girq_id - enum MEC_GIRQ_IDS
  */
 void p_interrupt_ecia_block_enable_clr(uint8_t girq_id);
 
-/** Clear GIRQs in ECIA Block 
- * @param girq_bitmask - Bitmask of GIRQs to be cleared in ECIA Block  
+/** Clear GIRQs in ECIA Block
+ * @param girq_bitmask - Bitmask of GIRQs to be cleared in ECIA Block
  */
 void p_interrupt_ecia_block_enable_bitmask_clr(uint32_t girq_bitmask);
 
 /** p_interrupt_ecia_block_enable_all_clr - Clears all GIRQ block enables */
 void p_interrupt_ecia_block_enable_all_clr(void);
- 
+
  /** Get status of GIRQ in ECIA Block
- * @param girq_id - enum MEC_GIRQ_IDS  
+ * @param girq_id - enum MEC_GIRQ_IDS
  * @return 0 if status bit not set; else non-zero value
  */
 uint32_t p_interrupt_ecia_block_irq_status_get(uint8_t girq_id);
@@ -939,17 +939,17 @@ void p_interrupt_ecia_girqs_source_reset(void);
 
 /** Clear all aggregator GIRQn enables */
  void p_interrupt_ecia_girqs_enable_reset(void);
- 
+
 /* ------------------------------------------------------------------------------- */
 /* Peripheral Function - Function to set interrupt control                         */
 /* ------------------------------------------------------------------------------- */
 
-/** Set interrupt control 
+/** Set interrupt control
  * @param nvic_en_flag : 0 = Alternate NVIC disabled, 1 = Alternate NVIC enabled
  */
 void p_interrupt_control_set(uint8_t nvic_en_flag);
-     
- /** Read interrupt control 
+
+ /** Read interrupt control
  * @return uint8_t - 0 = Alternate NVIC disabled, 1 = Alternate NVIC enabled
  */
 uint8_t p_interrupt_control_get(void);
@@ -964,8 +964,8 @@ uint8_t p_interrupt_control_get(void);
  * @note Application should perform this operation
  */
 void p_interrupt_nvic_enable(IRQn_Type nvic_num, uint8_t en_flag);
-     
- /**  ecia_nvic_clr_en - Clear all NVIC external enables */ 
+
+ /**  ecia_nvic_clr_en - Clear all NVIC external enables */
 void p_interrupt_nvic_extEnables_clr(void);
 
 /** Clear all NVIC external enables and pending bits */
@@ -977,8 +977,8 @@ void p_interrupt_nvic_priorities_default_set(void);
 /** Set NVIC external priorities to specified priority (0 - 7)
  * @param zero-based 3-bit priority value: 0=highest, 7=lowest.
  * @note NVIC highest priority is the value 0, lowest is all 1's.
- * Each external interrupt has an 8-bit register and the priority 
- * is left justified in the registers. MECxxx implements 8 priority 
+ * Each external interrupt has an 8-bit register and the priority
+ * is left justified in the registers. MECxxx implements 8 priority
  * levels or bits [7:5] in the register. Lowest priority = 0xE0
  */
 void p_interrupt_nvic_priorities_set(uint8_t new_pri);
@@ -987,6 +987,3 @@ void p_interrupt_nvic_priorities_set(uint8_t new_pri);
 /* end interrupt.h */
 /**   @}
  */
-
-
-

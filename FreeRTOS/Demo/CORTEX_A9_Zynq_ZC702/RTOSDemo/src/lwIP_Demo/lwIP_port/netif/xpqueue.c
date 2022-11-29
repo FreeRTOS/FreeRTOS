@@ -45,7 +45,7 @@ pq_create_queue()
 	return q;
 }
 
-int 
+int
 pq_enqueue(pq_queue_t *q, void *p)
 {
 	if (q->len == PQ_QUEUE_SIZE)
@@ -73,7 +73,7 @@ pq_dequeue(pq_queue_t *q)
 	return q->data[ptail];
 }
 
-int 
+int
 pq_qlength(pq_queue_t *q)
 {
 	return q->len;

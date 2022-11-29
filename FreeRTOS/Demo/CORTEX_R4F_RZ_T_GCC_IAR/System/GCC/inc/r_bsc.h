@@ -122,12 +122,12 @@ Macro definitions
 #define BSC_PRECHARGE_2 (0x00000010)
 #define BSC_PRECHARGE_3 (0x00000018)
 
-#define BSC_WTRCD_WAIT_0 (0) 
+#define BSC_WTRCD_WAIT_0 (0)
 #define BSC_WTRCD_WAIT_1 (1)
 #define BSC_WTRCD_WAIT_2 (2)
 #define BSC_WTRCD_WAIT_3 (3)
 
-#define BSC_WTRP_WAIT_0 (0) 
+#define BSC_WTRP_WAIT_0 (0)
 #define BSC_WTRP_WAIT_1 (1)
 #define BSC_WTRP_WAIT_2 (2)
 #define BSC_WTRP_WAIT_3 (3)

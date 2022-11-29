@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -68,7 +68,7 @@ void TWI_Configure(AT91S_TWI *pTwi, unsigned int twck, unsigned int mck)
 
     // Configure clock
     while (!ok) {
-        
+
         cldiv = ((mck / (2 * twck)) - 3) / power(2, ckdiv);
         if (cldiv <= 255) {
 
@@ -270,12 +270,11 @@ unsigned int TWI_GetStatus(AT91S_TWI *pTwi)
 unsigned int TWI_GetMaskedStatus(AT91S_TWI *pTwi)
 {
     unsigned int status;
-    
+
     SANITY_CHECK(pTwi);
-    
+
     status = pTwi->TWI_SR;
     status &= pTwi->TWI_IMR;
 
     return status;
 }
-

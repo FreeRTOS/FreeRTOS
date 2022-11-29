@@ -22,4 +22,3 @@ cop_optional_reset (void)
   cop_reset ();
 #endif
 }
-

@@ -1,10 +1,10 @@
 /*
  * File:        uart_support.h
- * Purpose:     Implements UART basic support, Derivative Specific Interrupt handler and need function needed 
+ * Purpose:     Implements UART basic support, Derivative Specific Interrupt handler and need function needed
  *              for MSL Support (printf\cout to terminal), defined in <UART.h>
  *
- * Notes:       
- *              
+ * Notes:
+ *
  */
 
 #ifndef __UART_SUPPORT_H__
@@ -17,10 +17,10 @@ extern "C" {
 
 #include "support_common.h"
 
-#if ENABLE_UART_SUPPORT==1 
+#if ENABLE_UART_SUPPORT==1
 
-/* 
- * Include the Freescale UART specific header file for printf/cout/scanf support 
+/*
+ * Include the Freescale UART specific header file for printf/cout/scanf support
  */
 #include <ansi_parms.h>
 #ifdef __cplusplus
@@ -53,7 +53,7 @@ char uart_getchar (int channel);
 /********************************************************************/
 /*
  * Wait for space in the UART Tx FIFO and then send a character
- */ 
+ */
 void uart_putchar (int channel, char ch);
 
 

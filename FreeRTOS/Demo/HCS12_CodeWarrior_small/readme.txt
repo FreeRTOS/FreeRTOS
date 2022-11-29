@@ -16,7 +16,7 @@ your choice:
 
 - SofTec:
   This target interface connects to any of the USB-based SofTec Microsystems tools for HC(S)12.
-  
+
 
 Additional connections can be chosen in the simulator/debugger,
 use the menu Component > Set Target.

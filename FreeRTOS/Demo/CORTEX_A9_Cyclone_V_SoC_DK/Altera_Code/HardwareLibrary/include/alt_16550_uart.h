@@ -5,20 +5,20 @@
 /*****************************************************************************
  *
  * Copyright 2013 Altera Corporation. All Rights Reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * 3. The name of the author may not be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED. IN NO
@@ -29,7 +29,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  *****************************************************************************/
 
 #ifndef __ALT_16550_UART_H__
@@ -468,7 +468,7 @@ ALT_STATUS_CODE alt_16550_fifo_clear_tx(ALT_16550_HANDLE_t * handle);
 ALT_STATUS_CODE alt_16550_fifo_clear_all(ALT_16550_HANDLE_t * handle);
 
 /*!
- * Queries the size of the receiver FIFO. 
+ * Queries the size of the receiver FIFO.
  *
  * \param       handle
  *              The UART device handle.
@@ -485,7 +485,7 @@ ALT_STATUS_CODE alt_16550_fifo_size_get_rx(ALT_16550_HANDLE_t * handle,
                                            uint32_t * size);
 
 /*!
- * Queries the size of the transmitter FIFO. 
+ * Queries the size of the transmitter FIFO.
  *
  * \param       handle
  *              The UART device handle.
@@ -734,8 +734,8 @@ ALT_STATUS_CODE alt_16550_divisor_set(ALT_16550_HANDLE_t * handle,
 /*!
  * \addtogroup UART_INT UART Interrupt Interface
  *
- * This group of APIs provides access, configuration, and control of the 
- * UART interrupts. 
+ * This group of APIs provides access, configuration, and control of the
+ * UART interrupts.
  *
  * @{
  */
@@ -749,7 +749,7 @@ ALT_STATUS_CODE alt_16550_divisor_set(ALT_16550_HANDLE_t * handle,
 typedef enum ALT_16550_INT_STATUS_e
 {
     /*!
-     * This interrupt signals that a overrun, parity, or framing error 
+     * This interrupt signals that a overrun, parity, or framing error
      * occurred, or a break event occured. The interrupt is cleared by reading
      * the line status by calling alt_16550_line_status_get() or by disabling
      * line status interrupts by calling alt_16550_int_disable_line().
@@ -1394,7 +1394,7 @@ typedef enum ALT_16550_LINE_STATUS_e
     ALT_16550_LINE_STATUS_TEMT = 1 << 6,
 
     /*!
-     * Transmitter Holding Register Empty. This status indicates that the 
+     * Transmitter Holding Register Empty. This status indicates that the
      * transmitter will run out of data soon. The definition of soon depends
      * on whether the FIFOs are enabled.
      *
@@ -1408,7 +1408,7 @@ typedef enum ALT_16550_LINE_STATUS_e
      * this status is cleared by writing a sufficiently large buffer to the
      * transmitter FIFO such that the FIFO is filled above the transmitter
      * trigger level specified by calling alt_16550_fifo_write() or by
-     * adjusting the transmitter trigger level appropriately by calling 
+     * adjusting the transmitter trigger level appropriately by calling
      * alt_16550_fifo_trigger_set_tx().
      *
      * \internal

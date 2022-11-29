@@ -143,4 +143,3 @@ files. */
 #endif /* __IAR_SYSTEMS_ASM__ */
 
 #endif /* FREERTOS_CONFIG_H */
-

@@ -244,4 +244,3 @@ static void prvBlinkyTimerCallback( TimerHandle_t xTimer )
 	vToggleLED( mainTIMER_LED );
 }
 /*-----------------------------------------------------------*/
-

@@ -154,4 +154,3 @@ __attribute__((weak))  uint8_t mss_config_clk_rst(mss_peripherals peripheral, ui
     }
     return result;
 }
-

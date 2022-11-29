@@ -34,4 +34,3 @@ bool RedConfirmOperation(const char *pszMessage);
 
 
 #endif
-

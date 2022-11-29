@@ -50,9 +50,8 @@ typedef WOLFSSL_RIPEMD_CTX RIPEMD_CTX;
 
 
 #ifdef __cplusplus
-    }  /* extern "C" */ 
+    }  /* extern "C" */
 #endif
 
 
 #endif /* WOLFSSL_MD5_H_ */
-

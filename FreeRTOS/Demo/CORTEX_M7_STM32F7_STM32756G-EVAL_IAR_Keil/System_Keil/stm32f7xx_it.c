@@ -1,11 +1,11 @@
 /**
   ******************************************************************************
-  * @file    Template/stm32f7xx_it.c 
+  * @file    Template/stm32f7xx_it.c
   * @author  MCD Application Team
   * @version V0.0.1
   * @date    21-October-2014
   * @brief   Main Interrupt Service Routines.
-  *          This file provides template for all exceptions handler and 
+  *          This file provides template for all exceptions handler and
   *          peripherals interrupt service routine.
   ******************************************************************************
   * @attention
@@ -155,7 +155,7 @@ __weak void PendSV_Handler(void)
 __weak void SysTick_Handler(void)
 {
 }
-  
+
 
 /******************************************************************************/
 /*                 STM32F7xx Peripherals Interrupt Handlers                   */
@@ -176,7 +176,7 @@ __weak void SysTick_Handler(void)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}

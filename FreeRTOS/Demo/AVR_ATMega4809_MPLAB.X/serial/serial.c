@@ -35,7 +35,7 @@
 #include <avr/interrupt.h>
 
 #define USART_BAUD_RATE(BAUD_RATE) ((float)(configCPU_CLOCK_HZ * 64 / (16 * (float)BAUD_RATE)) + 0.5)
- 
+
 static QueueHandle_t xRxedChars;
 static QueueHandle_t xCharsForTx;
 
@@ -61,9 +61,9 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
                      | USART_RXMODE_NORMAL_gc   /* Normal mode */
                      | 1 << USART_TXEN_bp;      /* Transmitter Enable: enabled */
     }
-    
+
     portEXIT_CRITICAL();
-    
+
     /* Unlike other ports, this serial code does not allow for more than one
     com port.  We therefore don't return a pointer to a port structure and can
     instead just return NULL. */
@@ -93,9 +93,9 @@ signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar
     {
         return pdFAIL;
     }
-    
+
     vInterruptOn();
-    
+
     return pdPASS;
 }
 /*-----------------------------------------------------------*/
@@ -129,7 +129,7 @@ signed char ucChar, xHigherPriorityTaskWoken = pdFALSE;
     {
         portYIELD_FROM_ISR();
     }
-        
+
 }
 
 ISR(USART3_DRE_vect)

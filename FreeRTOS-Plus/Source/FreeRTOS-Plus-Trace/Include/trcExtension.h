@@ -7,8 +7,8 @@
 */
 
 /**
- * @file 
- * 
+ * @file
+ *
  * @brief Public trace extension APIs.
  */
 
@@ -33,14 +33,14 @@ extern "C" {
 
 /**
  * @brief Creates trace extension.
- * 
+ *
  * @param[in] szName Name.
  * @param[in] uiMajor Major version.
  * @param[in] uiMinor Minor version.
  * @param[in] uiPatch Patch version.
  * @param[in] uiEventCount Event count.
  * @param[out] pxExtensionHandle Pointer to uninitialized extension handle.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -48,10 +48,10 @@ traceResult xTraceExtensionCreate(const char *szName, uint8_t uiMajor, uint8_t u
 
 /**
  * @brief Gets extension base event id.
- * 
+ *
  * @param[in] xExtensionHandle Pointer to initialized extension handle.
  * @param[out] puiBaseEventId Base event id.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -59,11 +59,11 @@ traceResult xTraceExtensionGetBaseEventId(TraceExtensionHandle_t xExtensionHandl
 
 /**
  * @brief Gets extension event id.
- * 
+ *
  * @param[in] xExtensionHandle Pointer to initialized extension handle.
  * @param[in] uiLocalEventId Local event id.
  * @param[out] puiGlobalEventId Global event id.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -71,10 +71,10 @@ traceResult xTraceExtensionGetEventId(TraceExtensionHandle_t xExtensionHandle, u
 
 /**
  * @brief Gets extension configuration name.
- * 
+ *
  * @param[in] xExtensionHandle Pointer to initialized extension handle.
  * @param[out] pszName Name.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */

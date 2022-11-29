@@ -147,4 +147,3 @@ typedef WOLFSSL_SHA3_512_CTX SHA3_512_CTX;
 
 
 #endif /* WOLFSSL_SHA3_H_ */
-

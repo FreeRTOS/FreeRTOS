@@ -30,4 +30,3 @@
 void vStart7SegTasks( unsigned portBASE_TYPE uxPriority );
 
 #endif
-

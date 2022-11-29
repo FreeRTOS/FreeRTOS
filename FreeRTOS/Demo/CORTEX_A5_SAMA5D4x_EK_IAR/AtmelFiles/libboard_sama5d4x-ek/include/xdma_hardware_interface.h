@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -55,4 +55,3 @@ extern uint8_t XDMAIF_IsValidatedPeripherOnDma( uint8_t bXdmac, uint8_t bPeriphI
 extern uint8_t XDMAIF_Get_ChannelNumber (uint8_t bXdmac, uint8_t bPeriphID, uint8_t bTransfer);
 
 #endif //#ifndef _XDMAD_IF_H
-

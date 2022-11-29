@@ -219,4 +219,3 @@ void osc_priv_disable_rcfast(void)
 	SCIF->SCIF_RCFASTCFG = temp;
 	cpu_irq_restore(flags);
 }
-

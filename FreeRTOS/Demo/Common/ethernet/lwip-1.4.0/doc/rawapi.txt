@@ -52,7 +52,7 @@ communicate with this main thread through message passing.
       an ISR (since only then, mem_free - for PBUF_RAM - may
       be called from an ISR: otherwise, the HEAP is only
       protected by semaphores).
-      
+
 
 ** The remainder of this document discusses the "raw" API. **
 
@@ -93,7 +93,7 @@ The function for setting the application connection state is:
   connection control block, and the "arg" argument is the argument
   that will be passed to the callbacks.
 
-  
+
 --- TCP connection setup
 
 The functions used for setting up connections is similar to that of
@@ -154,14 +154,14 @@ incoming connections or be explicitly connected to another host.
 
   Specified the callback function that should be called when a new
   connection arrives on a listening connection.
-      
+
 - err_t tcp_connect(struct tcp_pcb *pcb, struct ip_addr *ipaddr,
                     u16_t port, err_t (* connected)(void *arg,
                                                     struct tcp_pcb *tpcb,
                                                     err_t err));
 
   Sets up the pcb to connect to the remote host and sends the
-  initial SYN segment which opens the connection. 
+  initial SYN segment which opens the connection.
 
   The tcp_connect() function returns immediately; it does not wait for
   the connection to be properly setup. Instead, it will call the
@@ -176,7 +176,7 @@ incoming connections or be explicitly connected to another host.
   available for enqueueing the SYN segment. If the SYN indeed was
   enqueued successfully, the tcp_connect() function returns ERR_OK.
 
-  
+
 --- Sending TCP data
 
 TCP data is sent by enqueueing the data with a call to
@@ -214,7 +214,7 @@ callback function.
   host. The len argument passed to the callback function gives the
   amount bytes that was acknowledged by the last acknowledgment.
 
-  
+
 --- Receiving TCP data
 
 TCP data reception is callback based - an application specified
@@ -238,7 +238,7 @@ window.
 
   Must be called when the application has received the data. The len
   argument indicates the length of the received data.
-    
+
 
 --- Application polling
 
@@ -251,7 +251,7 @@ if a call to tcp_write() has failed because memory wasn't available,
 the application may use the polling functionality to call tcp_write()
 again when the connection has been idle for a while.
 
-- void tcp_poll(struct tcp_pcb *pcb, 
+- void tcp_poll(struct tcp_pcb *pcb,
                 err_t (* poll)(void *arg, struct tcp_pcb *tpcb),
 				u8_t interval)
 
@@ -272,7 +272,7 @@ again when the connection has been idle for a while.
   callback or the polling functionality. If the close succeeds, the
   function returns ERR_OK.
 
-  The pcb is deallocated by the TCP code after a call to tcp_close(). 
+  The pcb is deallocated by the TCP code after a call to tcp_close().
 
 - void tcp_abort(struct tcp_pcb *pcb)
 
@@ -304,7 +304,7 @@ to be called before any other TCP function is called. When the system
 is running, the two timer functions tcp_fasttmr() and tcp_slowtmr()
 must be called with regular intervals. The tcp_fasttmr() should be
 called every TCP_FAST_INTERVAL milliseconds (defined in tcp.h) and
-tcp_slowtmr() should be called every TCP_SLOW_INTERVAL milliseconds. 
+tcp_slowtmr() should be called every TCP_SLOW_INTERVAL milliseconds.
 
 
 --- UDP interface
@@ -320,8 +320,8 @@ level of complexity of UDP, the interface is significantly simpler.
 
 - void udp_remove(struct udp_pcb *pcb)
 
-  Removes and deallocates the pcb.  
-  
+  Removes and deallocates the pcb.
+
 - err_t udp_bind(struct udp_pcb *pcb, struct ip_addr *ipaddr,
                  u16_t port)
 
@@ -353,7 +353,7 @@ level of complexity of UDP, the interface is significantly simpler.
 
   Specifies a callback function that should be called when a UDP
   datagram is received.
-  
+
 
 --- System initalization
 
@@ -372,7 +372,7 @@ Call these functions in the order of appearance:
   Clears the structure where runtime statistics are gathered.
 
 - sys_init()
-  
+
   Not of much use since we set the NO_SYS 1 option in lwipopts.h,
   to be called for easy configuration changes.
 
@@ -387,7 +387,7 @@ Call these functions in the order of appearance:
 - pbuf_init()
 
   Initializes the pbuf memory pool defined by PBUF_POOL_SIZE.
-  
+
 - etharp_init()
 
   Initializes the ARP table and queue.
@@ -406,8 +406,8 @@ Call these functions in the order of appearance:
 
   Clears the TCP PCB list and clears some internal TCP timers.
   Note: you must call tcp_fasttmr() and tcp_slowtmr() at the
-  predefined regular intervals after this initialization. 
-  
+  predefined regular intervals after this initialization.
+
 - netif_add(struct netif *netif, struct ip_addr *ipaddr,
             struct ip_addr *netmask, struct ip_addr *gw,
             void *state, err_t (* init)(struct netif *netif),
@@ -420,20 +420,20 @@ Call these functions in the order of appearance:
 
   The init function pointer must point to a initialization function for
   your ethernet netif interface. The following code illustrates it's use.
-  
+
   err_t netif_if_init(struct netif *netif)
   {
     u8_t i;
-    
+
     for(i = 0; i < ETHARP_HWADDR_LEN; i++) netif->hwaddr[i] = some_eth_addr[i];
     init_my_eth_device();
     return ERR_OK;
   }
-  
+
   For ethernet drivers, the input function pointer must point to the lwip
   function ethernet_input() declared in "netif/etharp.h". Other drivers
   must use ip_input() declared in "lwip/ip.h".
-  
+
 - netif_set_default(struct netif *netif)
 
   Registers the default network interface.
@@ -447,7 +447,7 @@ Call these functions in the order of appearance:
   Creates a new DHCP client for this interface on the first call.
   Note: you must call dhcp_fine_tmr() and dhcp_coarse_tmr() at
   the predefined regular intervals after starting the client.
-  
+
   You can peek in the netif->dhcp struct for the actual DHCP status.
 
 

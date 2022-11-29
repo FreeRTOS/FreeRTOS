@@ -185,7 +185,6 @@ h E:\Dev\FreeRTOS\Demo\common\include\serial.h E:\Dev\FreeRTOS\Demo\Flshlite&
  @%write rtosdemo.lk1 FIL list.obj,heap_2.obj,portcomn.obj,port.obj,queue.ob&
 j,tasks.obj,blockq.obj,comtest.obj,death.obj,flash.obj,integer.obj,pollq.obj&
 ,print.obj,semtest.obj,fileio.obj,main.obj,partest.obj,serial.obj
- @%append rtosdemo.lk1 
+ @%append rtosdemo.lk1
  *wlink name rtosdemo SYS dos op m op maxe=25 op d op q op symf op el @rtosd&
 emo.lk1
-

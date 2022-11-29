@@ -141,4 +141,3 @@ extern WEAK void LowLevelInit( void )
     /* Remap */
     BOARD_RemapRam();
 }
-

@@ -65,4 +65,3 @@ void WDT_Open(uint32_t u32TimeoutInterval,
 /*@}*/ /* end of group Standard_Driver */
 
 /*** (C) COPYRIGHT 2016 Nuvoton Technology Corp. ***/
-

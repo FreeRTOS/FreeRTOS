@@ -20,16 +20,16 @@
 
 Version Control Information (Perforce)
 ******************************************************************************
-$Revision: #1 $ 
-$DateTime: 2016/04/08 10:18:28 $ 
+$Revision: #1 $
+$DateTime: 2016/04/08 10:18:28 $
 $Author: pramans $
 Last Change:  Updated for peripheral functions prefix p_
 ******************************************************************************/
 /** @file btimer.h
 * \brief Hibernation Timer Peripheral Header file
 * \author jvasanth
-* 
-* This file is the header file for Hibernation Timer Peripheral 
+*
+* This file is the header file for Hibernation Timer Peripheral
 ******************************************************************************/
 
 /** @defgroup Hibernation_Timer
@@ -41,12 +41,12 @@ Last Change:  Updated for peripheral functions prefix p_
 
 /******************************************************************************/
 /**  Logical Timer ID for APIs.
- * This is the timer IDs passed to Hibernation Timer function calls 
+ * This is the timer IDs passed to Hibernation Timer function calls
  *******************************************************************************/
 enum _PID_HTIMER_
 {
-	PID_HTIMER_0,	
-	PID_HTIMER_MAX	
+	PID_HTIMER_0,
+	PID_HTIMER_MAX
 };
 
 #define HTIMER_MAX_INSTANCE			PID_HTIMER_MAX
@@ -56,21 +56,21 @@ enum _PID_HTIMER_
 /* -------------------------------------------------------------------- */
 /** Enables hibernation timer
  * @param htimer_id Hibernation Timer ID
- * @param preload_value	- 16-bit preload value 
- * @param resolution_mode 0 - resolution of 30.5us per LSB, 
+ * @param preload_value	- 16-bit preload value
+ * @param resolution_mode 0 - resolution of 30.5us per LSB,
  *        1 - resolution of 0.125s per LSB
  */
 void htimer_enable(uint8_t htimer_id, uint16_t preload_value, uint8_t resolution_mode);
 
 /** Disables the hibernation timer by programming the prelaod value as 0
- * @param htimer_id Hibernation Timer ID 
+ * @param htimer_id Hibernation Timer ID
  */
 void htimer_disable(uint8_t htimer_id);
 
 
 /** Reloads new preload value for the hibernation timer
  * @param htimer_id Hibernation Timer ID
- * @param reload_value	- 16-bit preload value 
+ * @param reload_value	- 16-bit preload value
  */
 void htimer_reload(uint8_t htimer_id, uint16_t reload_value);
 
@@ -80,13 +80,13 @@ void htimer_reload(uint8_t htimer_id, uint16_t reload_value);
 /* -------------------------------------------------------------------- */
 /** Sets hibernation timer preload value
  * @param htimer_id Hibernation Timer ID
- * @param preload_value	- 16-bit preload value 
+ * @param preload_value	- 16-bit preload value
  */
 void p_htimer_preload_set(uint8_t htimer_id, uint16_t preload_value);
 
 /** Sets hibernation timer resolution
  * @param htimer_id Hibernation Timer ID
- * @param resolution_mode 0 - resolution of 30.5us per LSB, 
+ * @param resolution_mode 0 - resolution of 30.5us per LSB,
  *        1 - resolution of 0.125s per LSB
  */
 void p_htimer_resolution_set(uint8_t htimer_id, uint8_t resolution_mode);
@@ -94,7 +94,7 @@ void p_htimer_resolution_set(uint8_t htimer_id, uint8_t resolution_mode);
 
 /** Returns the Hibernation Timer current count value
  * @param htimer_id Hibernation Timer ID
- * @return 16-bit count value 
+ * @return 16-bit count value
  */
 uint16_t p_htimer_count_get(uint8_t htimer_id);
 
@@ -105,4 +105,3 @@ uint16_t p_htimer_count_get(uint8_t htimer_id);
 
 /**   @} //Peripherals Hibernation_Timer
  */
-

@@ -56,7 +56,7 @@
 #define L2CC_CR     0x00A00100
 
 #define REG_SFR_AICREDIR        0xF8028054
-#define REG_SFR_UID             0xF8028050   
+#define REG_SFR_UID             0xF8028050
 #define AICREDIR_KEY            0x5F67B102
 
 
@@ -174,26 +174,26 @@ IRQ_Handler:
         EXTERN  CP15_InvalidateDcacheBySetWay
         ARM
 
-resetHandler: 
-                
+resetHandler:
+
         LDR     r4, =SFE(CSTACK)     ; End of SVC stack
-        BIC     r4,r4,#0x7           ; Make sure SP is 8 aligned       
+        BIC     r4,r4,#0x7           ; Make sure SP is 8 aligned
         MOV     sp, r4
-                        
+
 
         ;; Set up the normal interrupt stack pointer.
 
         MSR     CPSR_c, #(ARM_MODE_IRQ | F_BIT | I_BIT)
         LDR     sp, =SFE(IRQ_STACK)     ; End of IRQ_STACK
         BIC     sp,sp,#0x7              ; Make sure SP is 8 aligned
-        
-        
+
+
         ;; Set up the fast interrupt stack pointer.
 
         MSR     CPSR_c, #(ARM_MODE_FIQ | F_BIT | I_BIT)
         LDR     sp, =SFE(FIQ_STACK)     ; End of FIQ_STACK
         BIC     sp,sp,#0x7              ; Make sure SP is 8 aligned
-        
+
         MSR     CPSR_c, #(ARM_MODE_ABT | F_BIT | I_BIT)
         LDR     sp, =SFE(ABT_STACK)     ; End of ABT_STACK
         BIC     sp,sp,#0x7              ; Make sure SP is 8 aligned
@@ -201,16 +201,16 @@ resetHandler:
         MSR     CPSR_c, #(ARM_MODE_UND | F_BIT | I_BIT)
         LDR     sp, =SFE(UND_STACK)     ; End of UND_STACK
         BIC     sp,sp,#0x7              ; Make sure SP is 8 aligned
-        
+
         MSR     CPSR_c, #(ARM_MODE_SYS | F_BIT | I_BIT)
         LDR     sp, =SFE(CSTACK-0x3000) ; 0x1000 bytes of SYS stack
         BIC     sp,sp,#0x7              ; Make sure SP is 8 aligned
-        
-        
+
+
         MSR     CPSR_c, #(ARM_MODE_SVC | F_BIT | I_BIT)
-        
+
         CPSIE   A
-        
+
         /* Enable VFP */
         /* - Enable access to CP10 and CP11 in CP15.CACR */
         MRC     p15, 0, r0, c1, c0, 2
@@ -218,46 +218,46 @@ resetHandler:
         MCR     p15, 0, r0, c1, c0, 2
         /* - Enable access to CP10 and CP11 in CP15.NSACR */
         /* - Set FPEXC.EN (B30) */
-#ifdef __ARMVFP__        
-        MOV     r3, #0x40000000 
+#ifdef __ARMVFP__
+        MOV     r3, #0x40000000
         VMSR    FPEXC, r3
-#endif        
+#endif
 
          // Redirect FIQ to IRQ
-        LDR  r0,  =AICREDIR_KEY 
+        LDR  r0,  =AICREDIR_KEY
         LDR  r1, = REG_SFR_UID
         LDR  r2, = REG_SFR_AICREDIR
         LDR  r3,[r1]
         EORS r0, r0, r3
         ORRS r0, r0, #0x01
         STR  r0, [r2]
-        
+
          /* Perform low-level initialization of the chip using LowLevelInit() */
         LDR     r0, =LowLevelInit
         BLX     r0
-        
-        
+
+
         MRC     p15, 0, r0, c1, c0, 0       ; Read CP15 Control Regsiter into r0
         TST     r0, #0x1                    ; Is the MMU enabled?
         BICNE   r0, r0, #0x1                ; Clear bit 0
         TST     r0, #0x4                    ; Is the Dcache enabled?
         BICNE   r0, r0, #0x4                ; Clear bit 2
         MCRNE   p15, 0, r0, c1, c0, 0       ; Write value back
-        
+
         // Disbale L2 cache
         LDR r1,=L2CC_CR
         MOV r2,#0
         STR r2, [r1]
-        
-        DMB        
+
+        DMB
         BL      CP15_InvalidateTranslationTable
         BL      CP15_InvalidateBTB
         BL      CP15_InvalidateIcache
         BL      CP15_InvalidateDcacheBySetWay
         DMB
         ISB
-        
-                
+
+
         /* Branch to main() */
         LDR     r0, =?main
         BLX     r0
@@ -308,6 +308,6 @@ FIQ_Handler:
         LDMIA   sp!, {r0}
         /* MSR     SPSR_cxsf, lr */
         LDMIA   sp!, {pc}^
-        
-        
+
+
  END

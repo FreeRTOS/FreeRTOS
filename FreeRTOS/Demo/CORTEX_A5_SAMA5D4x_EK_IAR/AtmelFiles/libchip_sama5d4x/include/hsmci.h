@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -148,4 +148,3 @@ extern uint32_t HSMCI_GetWPStatus(Hsmci *pRMci);
 /**     @}*/
 /**@}*/
 #endif //#ifndef HSMCID_H
-

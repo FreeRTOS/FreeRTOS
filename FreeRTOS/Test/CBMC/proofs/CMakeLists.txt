@@ -37,4 +37,3 @@ list(APPEND cbmc_flags
     --undefined-shift-check
     --unsigned-overflow-check
 )
-

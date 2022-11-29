@@ -159,4 +159,3 @@ extern void LCDD_DrawCharWithBGColor( uint32_t x, uint32_t y, uint8_t c, uint32_
         }
     }
 }
-

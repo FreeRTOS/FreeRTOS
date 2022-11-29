@@ -18,7 +18,7 @@
  * warranty that such application will be suitable for the specified
  * use without further testing or modification.
  **********************************************************************/
-#ifndef __SCU_H 
+#ifndef __SCU_H
 #define __SCU_H
 
 #define PORT_OFFSET 0x80
@@ -37,7 +37,7 @@
 #define MD_PLN_FAST (MD_PLN | MD_EHS | MD_EZI | MD_ZI)
 
 /* Pin modes
-*  ========= 
+*  =========
 *  The EPUN and EPD bits in the SFS registers allow the selection of weak on-chip
 *  pull-up or pull-down resistors with a typical value of 50 kOhm for each pin or the
 *  selection of the repeater mode.
@@ -49,16 +49,16 @@
 *  known state if it is configured as an input and is not driven externally. Repeater mode may
 *  typically be used to prevent a pin from floating (and potentially using significant power if it
 *  floats to an indeterminate state) if it is temporarily not driven.
-*  
+*
 *  To be able to receive a digital signal, the input buffer must be enabled through bit EZI in
 *  the pin configuration registers. By default, the input buffer is disabled.
 *  For pads that support both a digital and an analog function, the input buffer must be
 *  disabled before enabling the analog function
-*  
+*
 *  All digital pins support a programmable glitch filter (bit ZIF), which can be switched on or
 *  off. By default, the glitch filter is on. The glitch filter should be disabled for
 *  clocking signals with frequencies higher than 30 MHz.
-*  
+*
 *  Normal-drive and high-speed pins support a programmable slew rate (bit EHS) to select
 *  between lower noise and low speed or higher noise and high speed . The typical
 *  frequencies supported are 50 MHz/80 MHz for normal-drive pins and 75 MHz/180 MHz for
@@ -97,11 +97,11 @@
 
 
 // Configuration examples for external memory bus pins
-#define EMC_OUT	   (PUP_CLR | SLEWRATE_FAST | FILTER_DISABLE) 
+#define EMC_OUT	   (PUP_CLR | SLEWRATE_FAST | FILTER_DISABLE)
 #define EMC_IO	   (PUP_CLR | SLEWRATE_FAST | INBUF_ENABLE | FILTER_DISABLE)
 
-// Configuration examples 
-#define CLK_OUT	   (PUP_CLR | SLEWRATE_FAST | FILTER_DISABLE) 
+// Configuration examples
+#define CLK_OUT	   (PUP_CLR | SLEWRATE_FAST | FILTER_DISABLE)
 #define CLK_IN	   (PUP_CLR | SLEWRATE_FAST | INBUF_ENABLE | FILTER_DISABLE)
 
 /* Pin functions */

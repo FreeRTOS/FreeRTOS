@@ -364,4 +364,3 @@ static void prvRegTest2Entry( void *pvParameters )
     above will ever return. */
 }
 /*-----------------------------------------------------------*/
-

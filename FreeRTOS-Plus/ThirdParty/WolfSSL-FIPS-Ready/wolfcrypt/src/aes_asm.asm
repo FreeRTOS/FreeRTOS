@@ -814,7 +814,7 @@ DLAST_8:
         jne         DLOOP_8
         add         rsi, 128
 DREMAINDER_8:
-        cmp         r10, 0 
+        cmp         r10, 0
         je          DEND_8
 DLOOP_8_2:
         movdqu      xmm1, [rdi]

@@ -54,7 +54,7 @@
 //
 // INITIALIZE_TCM_SECTIONS
 //
-//   If defined, the .data_tcm, .text_tcm, .rodata_tcm and .bss_tcm sections 
+//   If defined, the .data_tcm, .text_tcm, .rodata_tcm and .bss_tcm sections
 //   will be initialized.
 //
 // INITIALIZE_USER_SECTIONS
@@ -65,11 +65,11 @@
 //
 // FULL_LIBRARY
 //
-//   If defined then 
+//   If defined then
 //     - argc, argv are setup by the debug_getargs.
 //     - the exit symbol is defined and executes on return from main.
 //     - the exit symbol calls destructors, atexit functions and then debug_exit.
-//  
+//
 //   If not defined then
 //     - argc and argv are zero.
 //     - the exit symbol is defined, executes on return from main and loops
@@ -241,7 +241,7 @@ _start:
   blt 1f
   movs r2, #0
   str r2, [r0]
-  str r1, [r0, #4] 
+  str r1, [r0, #4]
 1:
 #endif
 
@@ -261,7 +261,7 @@ ctor_loop:
   beq ctor_end
   ldr r2, [r0]
   adds r0, #4
-  push {r0-r1}  
+  push {r0-r1}
   blx r2
   pop {r0-r1}
   b ctor_loop
@@ -276,7 +276,7 @@ ctor_end:
 #ifdef FULL_LIBRARY
   movs r0, #ARGSSPACE
   ldr r1, =args
-  ldr r2, =debug_getargs  
+  ldr r2, =debug_getargs
   blx r2
   ldr r1, =args
 #else
@@ -288,7 +288,7 @@ ctor_end:
 
   .thumb_func
 exit:
-#ifdef FULL_LIBRARY  
+#ifdef FULL_LIBRARY
   mov r5, r0 // save the exit parameter/return result
 
   /* Call destructors */
@@ -306,12 +306,12 @@ dtor_loop:
 dtor_end:
 
   /* Call atexit functions */
-  ldr r2, =_execute_at_exit_fns  
+  ldr r2, =_execute_at_exit_fns
   blx r2
 
   /* Call debug_exit with return result/exit parameter */
   mov r0, r5
-  ldr r2, =debug_exit  
+  ldr r2, =debug_exit
   blx r2
 #endif
 
@@ -355,7 +355,7 @@ memory_set:
 
 .macro HELPER helper_name
   .section .text.\helper_name, "ax", %progbits
-  .balign 2 
+  .balign 2
   .weak \helper_name
   .thumb_func
 \helper_name:
@@ -394,15 +394,15 @@ HELPER __open
   JUMPTO debug_fopen
 HELPER __close
   JUMPTO debug_fclose
-HELPER __write   
+HELPER __write
   mov r3, r0
   mov r0, r1
-  movs r1, #1  
+  movs r1, #1
   JUMPTO debug_fwrite
-HELPER __read  
+HELPER __read
   mov r3, r0
   mov r0, r1
-  movs r1, #1 
+  movs r1, #1
   JUMPTO debug_fread
 HELPER __seek
   push {r4, lr}
@@ -437,4 +437,3 @@ args:
   .section .stack, "wa", %nobits
   .section .stack_process, "wa", %nobits
   .section .heap, "wa", %nobits
-

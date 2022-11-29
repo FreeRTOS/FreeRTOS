@@ -114,5 +114,3 @@ unsigned char ucBit;
 		xTaskResumeAll();
 	}
 }
-
-

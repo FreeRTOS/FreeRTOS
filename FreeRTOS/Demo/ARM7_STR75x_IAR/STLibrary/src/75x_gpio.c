@@ -115,7 +115,7 @@ void GPIO_Init(GPIO_TypeDef* GPIOx, GPIO_InitTypeDef* GPIO_InitStruct)
       break;
 
     case GPIO_Mode_AF_OD:
-      GPIOx->PD  |=  GPIO_InitStruct->GPIO_Pin;          
+      GPIOx->PD  |=  GPIO_InitStruct->GPIO_Pin;
       GPIOx->PC1 |=  GPIO_InitStruct->GPIO_Pin;
       GPIOx->PC0 &= ~GPIO_InitStruct->GPIO_Pin;
       GPIOx->PC2 |=  GPIO_InitStruct->GPIO_Pin;
@@ -266,10 +266,10 @@ u32 GPIO_GetPortMask(GPIO_TypeDef* GPIOx)
 * Description    : Changes the mapping of the specified pin.
 * Input          :- GPIO_Remap: selects the pin to remap.
 *                   This parameter can be one of the following values:
-*                     - GPIO_Remap_SMI_CS3_EN: Enable SMI CS3 
+*                     - GPIO_Remap_SMI_CS3_EN: Enable SMI CS3
 *                     - GPIO_Remap_SMI_CS2_EN: Enable SMI CS2
 *                     - GPIO_Remap_SMI_CS1_EN: Enable SMI CS1
-*                     - GPIO_Remap_SMI_EN: Enable SMI Alternate Functions: 
+*                     - GPIO_Remap_SMI_EN: Enable SMI Alternate Functions:
 *                       SMI_CS0, SMI_CK, SMI_DIN and SMI_DOUT
 *                     - GPIO_Remap_DBGOFF: JTAG Disable
 *                     - GPIO_Remap_UART1: UART1 Alternate Function mapping

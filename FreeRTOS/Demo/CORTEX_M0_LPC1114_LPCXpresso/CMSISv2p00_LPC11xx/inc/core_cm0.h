@@ -8,9 +8,9 @@
  * Copyright (C) 2009-2011 ARM Limited. All rights reserved.
  *
  * @par
- * ARM Limited (ARM) is supplying this software for use with Cortex-M 
- * processor based microcontrollers.  This file can be freely distributed 
- * within development tools that are supporting such ARM based processors. 
+ * ARM Limited (ARM) is supplying this software for use with Cortex-M
+ * processor based microcontrollers.  This file can be freely distributed
+ * within development tools that are supporting such ARM based processors.
  *
  * @par
  * THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
@@ -20,37 +20,37 @@
  * CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
  *
  ******************************************************************************/
-#if defined ( __ICCARM__ )                   
+#if defined ( __ICCARM__ )
  #pragma system_include  /* treat file as system include file for MISRA check */
 #endif
 
 #ifdef __cplusplus
  extern "C" {
-#endif 
+#endif
 
 #ifndef __CORE_CM0_H_GENERIC
 #define __CORE_CM0_H_GENERIC
 
 
 /** \mainpage CMSIS Cortex-M0
-   
+
   This documentation describes the CMSIS Cortex-M Core Peripheral Access Layer.
   It consists of:
- 
+
      - Cortex-M Core Register Definitions
      - Cortex-M functions
      - Cortex-M instructions
- 
-  The CMSIS Cortex-M0 Core Peripheral Access Layer contains C and assembly functions that ease 
+
+  The CMSIS Cortex-M0 Core Peripheral Access Layer contains C and assembly functions that ease
   access to the Cortex-M Core
- */ 
+ */
 
 /** \defgroup CMSIS_LintCinfiguration CMSIS Lint Configuration
   List of Lint messages which will be suppressed and not shown:
     - not yet checked
   .
   Note:  To re-enable a Message, insert a space before 'lint' *
- 
+
  */
 
 
@@ -60,7 +60,7 @@
 /** \defgroup CMSIS_core_definitions CMSIS Core Definitions
   This file defines all structures and symbols for CMSIS core:
    - CMSIS version number
-   - Cortex-M core 
+   - Cortex-M core
    - Cortex-M core Revision Number
   @{
  */
@@ -127,7 +127,7 @@
   - Core SysTick Register
 */
 
-/** \ingroup  CMSIS_core_register   
+/** \ingroup  CMSIS_core_register
     \defgroup CMSIS_CORE CMSIS Core
   Type definitions for the Cortex-M Core Registers
   @{
@@ -152,7 +152,7 @@ typedef union
     uint32_t Z:1;                        /*!< bit:     30  Zero condition code flag           */
     uint32_t N:1;                        /*!< bit:     31  Negative condition code flag       */
   } b;                                   /*!< Structure used for bit  access                  */
-  uint32_t w;                            /*!< Type      used for word access                  */ 
+  uint32_t w;                            /*!< Type      used for word access                  */
 } APSR_Type;
 
 
@@ -212,7 +212,7 @@ typedef union
 /*@} end of group CMSIS_CORE */
 
 
-/** \ingroup  CMSIS_core_register   
+/** \ingroup  CMSIS_core_register
     \defgroup CMSIS_NVIC CMSIS NVIC
   Type definitions for the Cortex-M NVIC Registers
   @{
@@ -237,7 +237,7 @@ typedef struct
 /*@} end of group CMSIS_NVIC */
 
 
-/** \ingroup  CMSIS_core_register   
+/** \ingroup  CMSIS_core_register
     \defgroup CMSIS_SCB CMSIS SCB
   Type definitions for the Cortex-M System Control Block Registers
   @{
@@ -249,13 +249,13 @@ typedef struct
 {
   __I  uint32_t CPUID;                   /*!< Offset: 0x000 (R/ )  CPU ID Base Register                                  */
   __IO uint32_t ICSR;                    /*!< Offset: 0x004 (R/W)  Interrupt Control State Register                      */
-       uint32_t RESERVED0;                                      
+       uint32_t RESERVED0;
   __IO uint32_t AIRCR;                   /*!< Offset: 0x00C (R/W)  Application Interrupt / Reset Control Register        */
   __IO uint32_t SCR;                     /*!< Offset: 0x010 (R/W)  System Control Register                               */
   __IO uint32_t CCR;                     /*!< Offset: 0x014 (R/W)  Configuration Control Register                        */
-       uint32_t RESERVED1;                                      
+       uint32_t RESERVED1;
   __IO uint32_t SHP[2];                  /*!< Offset: 0x01C (R/W)  System Handlers Priority Registers. [0] is RESERVED   */
-} SCB_Type;                                                
+} SCB_Type;
 
 /* SCB CPUID Register Definitions */
 #define SCB_CPUID_IMPLEMENTER_Pos          24                                             /*!< SCB CPUID: IMPLEMENTER Position */
@@ -337,7 +337,7 @@ typedef struct
 /*@} end of group CMSIS_SCB */
 
 
-/** \ingroup  CMSIS_core_register   
+/** \ingroup  CMSIS_core_register
     \defgroup CMSIS_SysTick CMSIS SysTick
   Type definitions for the Cortex-M System Timer Registers
   @{
@@ -387,9 +387,9 @@ typedef struct
 /*@} end of group CMSIS_SysTick */
 
 
-/** \ingroup  CMSIS_core_register   
+/** \ingroup  CMSIS_core_register
     \defgroup CMSIS_CoreDebug CMSIS Core Debug
-  Cortex-M0 Core Debug Registers (DCB registers, SHCSR, and DFSR) are only accessible over DAP 
+  Cortex-M0 Core Debug Registers (DCB registers, SHCSR, and DFSR) are only accessible over DAP
   and not via processor. Therefore they are not covered by the Cortex-M0 header file.
   @{
  */
@@ -397,10 +397,10 @@ typedef struct
 /*@} end of group CMSIS_CoreDebug */
 
 
-/** \ingroup  CMSIS_core_register   
+/** \ingroup  CMSIS_core_register
   @{
  */
- 
+
 /* Memory mapping of Cortex-M0 Hardware */
 #define SCS_BASE            (0xE000E000UL)                            /*!< System Control Space Base Address */
 #define CoreDebug_BASE      (0xE000EDF0UL)                            /*!< Core Debug Base Address           */
@@ -429,7 +429,7 @@ typedef struct
 
 
 /* ##########################   NVIC functions  #################################### */
-/** \ingroup  CMSIS_Core_FunctionInterface   
+/** \ingroup  CMSIS_Core_FunctionInterface
     \defgroup CMSIS_Core_NVICFunctions CMSIS Core NVIC Functions
   @{
  */
@@ -444,7 +444,7 @@ typedef struct
 /** \brief  Enable External Interrupt
 
     This function enables a device specific interrupt in the NVIC interrupt controller.
-    The interrupt number cannot be a negative value. 
+    The interrupt number cannot be a negative value.
 
     \param [in]      IRQn  Number of the external interrupt to enable
  */
@@ -457,7 +457,7 @@ static __INLINE void NVIC_EnableIRQ(IRQn_Type IRQn)
 /** \brief  Disable External Interrupt
 
     This function disables a device specific interupt in the NVIC interrupt controller.
-    The interrupt number cannot be a negative value. 
+    The interrupt number cannot be a negative value.
 
     \param [in]      IRQn  Number of the external interrupt to disable
  */
@@ -470,7 +470,7 @@ static __INLINE void NVIC_DisableIRQ(IRQn_Type IRQn)
 /** \brief  Get Pending Interrupt
 
     This function reads the pending register in the NVIC and returns the pending bit
-    for the specified interrupt. 
+    for the specified interrupt.
 
     \param [in]      IRQn  Number of the interrupt for get pending
     \return             0  Interrupt status is not pending
@@ -484,7 +484,7 @@ static __INLINE uint32_t NVIC_GetPendingIRQ(IRQn_Type IRQn)
 
 /** \brief  Set Pending Interrupt
 
-    This function sets the pending bit for the specified interrupt. 
+    This function sets the pending bit for the specified interrupt.
     The interrupt number cannot be a negative value.
 
     \param [in]      IRQn  Number of the interrupt for set pending
@@ -497,7 +497,7 @@ static __INLINE void NVIC_SetPendingIRQ(IRQn_Type IRQn)
 
 /** \brief  Clear Pending Interrupt
 
-    This function clears the pending bit for the specified interrupt. 
+    This function clears the pending bit for the specified interrupt.
     The interrupt number cannot be a negative value.
 
     \param [in]      IRQn  Number of the interrupt for clear pending
@@ -510,8 +510,8 @@ static __INLINE void NVIC_ClearPendingIRQ(IRQn_Type IRQn)
 
 /** \brief  Set Interrupt Priority
 
-    This function sets the priority for the specified interrupt. The interrupt 
-    number can be positive to specify an external (device specific) 
+    This function sets the priority for the specified interrupt. The interrupt
+    number can be positive to specify an external (device specific)
     interrupt, or negative to specify an internal (core) interrupt.
 
     Note: The priority cannot be set for every core interrupt.
@@ -522,7 +522,7 @@ static __INLINE void NVIC_ClearPendingIRQ(IRQn_Type IRQn)
 static __INLINE void NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority)
 {
   if(IRQn < 0) {
-    SCB->SHP[_SHP_IDX(IRQn)] = (SCB->SHP[_SHP_IDX(IRQn)] & ~(0xFF << _BIT_SHIFT(IRQn))) | 
+    SCB->SHP[_SHP_IDX(IRQn)] = (SCB->SHP[_SHP_IDX(IRQn)] & ~(0xFF << _BIT_SHIFT(IRQn))) |
         (((priority << (8 - __NVIC_PRIO_BITS)) & 0xFF) << _BIT_SHIFT(IRQn)); }
   else {
     NVIC->IPR[_IP_IDX(IRQn)] = (NVIC->IPR[_IP_IDX(IRQn)] & ~(0xFF << _BIT_SHIFT(IRQn))) |
@@ -532,8 +532,8 @@ static __INLINE void NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority)
 
 /** \brief  Get Interrupt Priority
 
-    This function reads the priority for the specified interrupt. The interrupt 
-    number can be positive to specify an external (device specific) 
+    This function reads the priority for the specified interrupt. The interrupt
+    number can be positive to specify an external (device specific)
     interrupt, or negative to specify an internal (core) interrupt.
 
     The returned priority value is automatically aligned to the implemented
@@ -559,10 +559,10 @@ static __INLINE uint32_t NVIC_GetPriority(IRQn_Type IRQn)
 static __INLINE void NVIC_SystemReset(void)
 {
   __DSB();                                                     /* Ensure all outstanding memory accesses included
-                                                                  buffered write are completed before reset */              
-  SCB->AIRCR  = ((0x5FA << SCB_AIRCR_VECTKEY_Pos)      | 
+                                                                  buffered write are completed before reset */
+  SCB->AIRCR  = ((0x5FA << SCB_AIRCR_VECTKEY_Pos)      |
                  SCB_AIRCR_SYSRESETREQ_Msk);
-  __DSB();                                                     /* Ensure completion of memory access */              
+  __DSB();                                                     /* Ensure completion of memory access */
   while(1);                                                    /* wait until reset */
 }
 
@@ -571,7 +571,7 @@ static __INLINE void NVIC_SystemReset(void)
 
 
 /* ##################################    SysTick function  ############################################ */
-/** \ingroup  CMSIS_Core_FunctionInterface   
+/** \ingroup  CMSIS_Core_FunctionInterface
     \defgroup CMSIS_Core_SysTickFunctions CMSIS Core SysTick Functions
   @{
  */
@@ -588,14 +588,14 @@ static __INLINE void NVIC_SystemReset(void)
     \return          1  Function failed
  */
 static __INLINE uint32_t SysTick_Config(uint32_t ticks)
-{ 
+{
   if (ticks > SysTick_LOAD_RELOAD_Msk)  return (1);            /* Reload value impossible */
-                                                               
+
   SysTick->LOAD  = (ticks & SysTick_LOAD_RELOAD_Msk) - 1;      /* set reload register */
   NVIC_SetPriority (SysTick_IRQn, (1<<__NVIC_PRIO_BITS) - 1);  /* set Priority for Cortex-M0 System Interrupts */
   SysTick->VAL   = 0;                                          /* Load the SysTick Counter Value */
-  SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk | 
-                   SysTick_CTRL_TICKINT_Msk   | 
+  SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk |
+                   SysTick_CTRL_TICKINT_Msk   |
                    SysTick_CTRL_ENABLE_Msk;                    /* Enable SysTick IRQ and SysTick Timer */
   return (0);                                                  /* Function successful */
 }

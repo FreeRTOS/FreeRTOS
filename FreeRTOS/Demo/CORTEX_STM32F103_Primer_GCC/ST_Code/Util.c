@@ -140,7 +140,7 @@ u16 UTIL_GetBat( void )
    u16 vbat;
 
    // Measure VBAT
-   vbat = ADC_ConvertedValue[0];  //*( (u16*)ADC1_DR_Address );      // <=== note changed 
+   vbat = ADC_ConvertedValue[0];  //*( (u16*)ADC1_DR_Address );      // <=== note changed
    vbat = vbat & 0xFFF;
    vbat = ( vbat * VDD_VOLTAGE_MV ) / 0x1000;
 
@@ -167,21 +167,21 @@ u16 UTIL_GetTemp( void )
    {
    s32 temp;
    s16 *p=&ADC_ConvertedValue[1];  //intent; point to first of 8 results from same source - use a short name for it!
-   
+
    // Measure temp
-   //temp = ADC_ConvertedValue[1];//*( (u16*)ADC1_DR_Address ); 
+   //temp = ADC_ConvertedValue[1];//*( (u16*)ADC1_DR_Address );
    temp = (p[0]+p[1]+p[2]+p[3]+p[4]+p[5]+p[6]+p[7])/8; //take avg of burst of 8 temp reads. may only help reject hi freq noise a bit
                                                        //will not help reduce mains ripple because conversions are SO FAST!!
    temp = temp & 0xFFF;
-   temp = ( temp * VDD_VOLTAGE_MV ) / 0x1000;  //finds mV  
+   temp = ( temp * VDD_VOLTAGE_MV ) / 0x1000;  //finds mV
    temp = (((1400-temp)*100000)/448)+25000;  //gives approx temp x 1000 degrees C
-   
+
    //Fahrenheit = 32 + 9 / 5 * Celsius
-   if ( fTemperatureInFahrenheit ) 
+   if ( fTemperatureInFahrenheit )
       {
       temp = 32000 + (9 * temp) / 5 ;
       }
-   
+
    return temp / 100;
    }
 
@@ -194,14 +194,14 @@ u16 UTIL_GetTemp( void )
 *
 *  Set the temperature mode (F/C)
 *
-*  @param[in]     mode       0: Celcius, 1: Fahrenheit 
+*  @param[in]     mode       0: Celcius, 1: Fahrenheit
 *
 **/
 /******************************************************************************/
 void UTIL_SetTempMode ( int mode )
    {
-   fTemperatureInFahrenheit = mode; 
-  
+   fTemperatureInFahrenheit = mode;
+
    return;
    }
 
@@ -298,9 +298,9 @@ void UTIL_SetPll( enum eSpeed speed )
    if( ( speed < SPEED_VERY_LOW ) || ( speed > SPEED_VERY_HIGH ) )
       {
       speed = SPEED_MEDIUM;
-      } 
+      }
 
-   CurrentSpeed = speed; 
+   CurrentSpeed = speed;
 
    switch( speed )
       {
@@ -317,7 +317,7 @@ void UTIL_SetPll( enum eSpeed speed )
          break;
 
       // 36MHz
-      case SPEED_MEDIUM    :   
+      case SPEED_MEDIUM    :
       default              :
          /* PLLCLK = 12MHz * 3 = 36 MHz */
          RCC_PLLConfig( RCC_PLLSource_HSE_Div1, RCC_PLLMul_3 );
@@ -460,7 +460,7 @@ void UTIL_SetIrqHandler( int Offs, tHandler pHDL )
 *
 *  Get the current IRQ handler.
 *  Since (V1.6) the vector table is relocated in RAM, the vectors can be easily modified
-*  by the applications. 
+*  by the applications.
 *
 *  @param[in]  Offs   Address in the NVIC table
 *  @return  A pointer to the current handler.
@@ -483,10 +483,10 @@ tHandler UTIL_GetIrqHandler( int Offs )
 /**
 *
 *  Redirect a SCHEDULER handler.
-*  Set the current SCHEDULER handler. With UTIL_GetSchHandler(), these functions 
-*  allow to take the control of the different handler. You can: 
+*  Set the current SCHEDULER handler. With UTIL_GetSchHandler(), these functions
+*  allow to take the control of the different handler. You can:
 *        - replace them (get-Set)by your own handler
-*        - disable a handler: UTIL_SetSchHandler(Ix,0);  
+*        - disable a handler: UTIL_SetSchHandler(Ix,0);
 *        - create a new handler (using the unused handlers).
 *  See scheduler.c to understand further...
 *
@@ -508,10 +508,10 @@ void UTIL_SetSchHandler( enum eSchHandler Ix, tHandler pHDL )
 *******************************************************************************/
 /**
 *
-*  Get the current SCHEDULER handler. With UTIL_SetSchHandler(), these functions 
-*  allow to take the control of the different handler. You can: 
+*  Get the current SCHEDULER handler. With UTIL_SetSchHandler(), these functions
+*  allow to take the control of the different handler. You can:
 *        - replace them (get-Set)by your own handler
-*        - disable a handler: UTIL_SetSchHandler(Ix,0);  
+*        - disable a handler: UTIL_SetSchHandler(Ix,0);
 *        - create a new handler (using the unused handlers).
 *  See scheduler.c to understand further...
 *
@@ -522,7 +522,6 @@ void UTIL_SetSchHandler( enum eSchHandler Ix, tHandler pHDL )
 /********************************************************************************/
 tHandler UTIL_GetSchHandler( enum eSchHandler Ix )
    {
-   if ( Ix<SCH_HDL_MAX ) 
-      return SchHandler [Ix] ; 
+   if ( Ix<SCH_HDL_MAX )
+      return SchHandler [Ix] ;
    }
-

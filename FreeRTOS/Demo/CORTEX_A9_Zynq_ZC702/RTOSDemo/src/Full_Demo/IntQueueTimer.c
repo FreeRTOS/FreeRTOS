@@ -251,4 +251,3 @@ BaseType_t xYieldRequired;
 	task.  xYieldRequired is tested inside the following macro. */
 	portYIELD_FROM_ISR( xYieldRequired );
 }
-

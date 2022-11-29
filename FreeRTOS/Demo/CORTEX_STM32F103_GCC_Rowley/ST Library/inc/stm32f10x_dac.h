@@ -28,7 +28,7 @@ typedef struct
   u32 DAC_Trigger;
   u32 DAC_WaveGeneration;
   u32 DAC_LFSRUnmask_TriangleAmplitude;
-  u32 DAC_OutputBuffer; 
+  u32 DAC_OutputBuffer;
 }DAC_InitTypeDef;
 
 /* Exported constants --------------------------------------------------------*/
@@ -145,7 +145,7 @@ typedef struct
                            ((WAVE) == DAC_Wave_Triangle))
 
 /* DAC data ------------------------------------------------------------------*/
-#define IS_DAC_DATA(DATA) ((DATA) <= 0xFFF0) 
+#define IS_DAC_DATA(DATA) ((DATA) <= 0xFFF0)
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/

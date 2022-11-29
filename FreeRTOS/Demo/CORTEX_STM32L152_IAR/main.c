@@ -567,6 +567,3 @@ void vApplicationIdleHook( void )
 	just enters a low(ish) power mode. */
 	PWR_EnterSleepMode( PWR_Regulator_ON, PWR_SLEEPEntry_WFI );
 }
-
-
-

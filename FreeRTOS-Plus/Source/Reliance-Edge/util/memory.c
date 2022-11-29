@@ -298,4 +298,3 @@ static int32_t RedMemCmpUnchecked(
     return lResult;
 }
 #endif
-

@@ -52,4 +52,3 @@
 #define ECerr(f,r)   ERR_put_error(0,(f),(r),__FILE__,__LINE__)
 
 #endif /* WOLFSSL_OPENSSL_ERR_ */
-

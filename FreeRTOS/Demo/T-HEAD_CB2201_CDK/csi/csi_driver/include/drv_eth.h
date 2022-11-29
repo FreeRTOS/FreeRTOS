@@ -102,4 +102,3 @@ typedef struct eth_mac_addr {
 #endif
 
 #endif /* CSI_NET_H_ */
-

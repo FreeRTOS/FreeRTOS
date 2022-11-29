@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -83,8 +83,8 @@ typedef struct _AT91S_EFC {
     AT91_REG EFC_FSR;
 
 } AT91S_EFC, *AT91PS_EFC;
-	#define AT91C_BASE_EFC       (AT91_CAST(AT91PS_EFC)	0xFFFFFF60) 
-#endif	
+	#define AT91C_BASE_EFC       (AT91_CAST(AT91PS_EFC)	0xFFFFFF60)
+#endif
 
 //------------------------------------------------------------------------------
 //         Functions
@@ -124,4 +124,3 @@ extern unsigned int EFC_GetStatus(AT91S_EFC *pEfc);
 
 #endif //#ifdef BOARD_FLASH_EFC
 #endif //#ifndef EFC_H
-

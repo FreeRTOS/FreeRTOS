@@ -180,5 +180,3 @@ static char prvCheckOtherTasksAreStillRunning( void )
 	return cErrorHasOccurred;
 }
 /*-----------------------------------------------------------*/
-
-

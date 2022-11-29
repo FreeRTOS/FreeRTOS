@@ -90,5 +90,3 @@ void vT3InterruptHandler( void )
 	TimerIntClear( TIMER3_BASE, TIMER_TIMA_TIMEOUT );
 	portEND_SWITCHING_ISR( xSecondTimerHandler() );
 }
-
-

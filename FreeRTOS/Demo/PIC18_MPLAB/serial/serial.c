@@ -220,6 +220,3 @@ char cChar, cTaskWoken = pdFALSE;
 		PIE1bits.TXIE = serINTERRUPT_DISABLED;
 	}
 }
-
-
-

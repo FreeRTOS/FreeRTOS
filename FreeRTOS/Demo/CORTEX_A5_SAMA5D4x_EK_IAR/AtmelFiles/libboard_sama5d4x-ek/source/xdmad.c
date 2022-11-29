@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -27,7 +27,7 @@
  * ----------------------------------------------------------------------------
  */
 
-/** \addtogroup xdmad_module 
+/** \addtogroup xdmad_module
  *
  * \section Xdma xDma Configuration Usage
  *
@@ -35,8 +35,8 @@
  * <ul>
  * <li> Initialize a XDMA driver instance by XDMAD_Initialize().</li>
  * <li> choose an available (disabled) channel using XDMAD_AllocateChannel().</li>
- * <li> After the XDMAC selected channel has been programmed, XDMAD_PrepareChannel() is to enable 
- * clock and dma peripheral of the DMA, and set Configuration register to set up the transfer type 
+ * <li> After the XDMAC selected channel has been programmed, XDMAD_PrepareChannel() is to enable
+ * clock and dma peripheral of the DMA, and set Configuration register to set up the transfer type
  * (memory or non-memory peripheral for source and destination) and flow control device.</li>
  * <li> Invoke XDMAD_StartTransfer() to start DMA transfer  or XDMAD_StopTransfer() to force stop DMA transfer.</li>
   * <li> Once the buffer of data is transferred, XDMAD_IsTransferDone() checks if DMA transfer is finished.</li>
@@ -52,7 +52,7 @@
 
 /** \addtogroup dmad_functions
   @{*/
- 
+
 /*----------------------------------------------------------------------------
  *        Includes
  *----------------------------------------------------------------------------*/
@@ -193,7 +193,7 @@ uint32_t XDMAD_AllocateChannel( sXdmad *pXdmad,
  * \param pXdmad     Pointer to xDMA driver instance.
  * \param dwChannel ControllerNumber << 8 | ChannelNumber.
  */
-eXdmadRC XDMAD_FreeChannel( sXdmad *pXdmad, 
+eXdmadRC XDMAD_FreeChannel( sXdmad *pXdmad,
                             uint32_t dwChannel )
 {
     uint8_t _iController = (dwChannel >> 8);
@@ -202,7 +202,7 @@ eXdmadRC XDMAD_FreeChannel( sXdmad *pXdmad,
     assert( pXdmad != NULL ) ;
     switch ( pXdmad->XdmaChannels[_iController][iChannel].state )
     {
-        case XDMAD_STATE_START: 
+        case XDMAD_STATE_START:
             return XDMAD_BUSY;
         case XDMAD_STATE_ALLOCATED: case XDMAD_STATE_DONE:
             pXdmad->XdmaChannels[_iController][iChannel].state = XDMAD_STATE_FREE;
@@ -219,9 +219,9 @@ eXdmadRC XDMAD_FreeChannel( sXdmad *pXdmad,
  * \param fCallback Pointer to callback function.
  * \param pArg Pointer to optional argument for callback.
  */
-eXdmadRC XDMAD_SetCallback( sXdmad *pXdmad, 
+eXdmadRC XDMAD_SetCallback( sXdmad *pXdmad,
                             uint32_t dwChannel,
-                            XdmadTransferCallback fCallback, 
+                            XdmadTransferCallback fCallback,
                             void* pArg )
 {
     uint8_t _iController = (dwChannel >> 8);
@@ -303,16 +303,16 @@ void XDMAD_Handler( sXdmad *pDmad)
         xdmaGlobaIntStatus = XDMAC_GetGIsr(pXdmac);
         if ((xdmaGlobaIntStatus & 0xFFFF) == 0) continue;
         xdmaGlobalChStatus = XDMAC_GetGlobalChStatus(pXdmac);
-        for (_iChannel = 0; _iChannel < pDmad->numChannels; _iChannel ++) 
+        for (_iChannel = 0; _iChannel < pDmad->numChannels; _iChannel ++)
         {
             if (!(xdmaGlobaIntStatus & (1<<_iChannel))) continue;
             pCh = &pDmad->XdmaChannels[_iController][_iChannel];
             if ( pCh->state == XDMAD_STATE_FREE) return ;
-            if ((xdmaGlobalChStatus & ( XDMAC_GS_ST0 << _iChannel)) == 0) 
+            if ((xdmaGlobalChStatus & ( XDMAC_GS_ST0 << _iChannel)) == 0)
             {
                 bExec = 0;
                 xdmaChannelIntStatus = XDMAC_GetChannelIsr( pXdmac, _iChannel);
-                if (xdmaChannelIntStatus & XDMAC_CIS_BIS) { 
+                if (xdmaChannelIntStatus & XDMAC_CIS_BIS) {
                     if((XDMAC_GetChannelItMask(pXdmac, _iChannel) & XDMAC_CIM_LIM) == 0 ) {
                         pCh->state = XDMAD_STATE_DONE ;
                         bExec = 1;
@@ -333,11 +333,11 @@ void XDMAD_Handler( sXdmad *pDmad)
                 }
                 if (xdmaChannelIntStatus & XDMAC_CIS_LIS) {
                    //printf("XDMAC_CIS_LIS\n\r");
-                  
+
                     pCh->state = XDMAD_STATE_DONE ;
                     bExec = 1;
                 }
-                if (xdmaChannelIntStatus & XDMAC_CIS_DIS ) 
+                if (xdmaChannelIntStatus & XDMAC_CIS_DIS )
                 {
                     pCh->state = XDMAD_STATE_DONE ;
                     bExec = 1;
@@ -489,9 +489,8 @@ eXdmadRC XDMAD_StopTransfer( sXdmad *pXdmad, uint32_t dwChannel )
     /* Clear pending status */
     XDMAC_GetChannelIsr( pXdmac, _iChannel);
     XDMAC_GetGlobalChStatus(pXdmac);
-  
+
     return XDMAD_OK;
 }
 
 /**@}*/
-

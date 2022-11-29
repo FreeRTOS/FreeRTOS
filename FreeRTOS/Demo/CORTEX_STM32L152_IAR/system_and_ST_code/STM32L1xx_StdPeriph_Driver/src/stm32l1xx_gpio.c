@@ -16,7 +16,7 @@
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
   * <h2><center>&copy; COPYRIGHT 2010 STMicroelectronics</center></h2>
-  */ 
+  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l1xx_gpio.h"
@@ -26,7 +26,7 @@
   * @{
   */
 
-/** @defgroup GPIO 
+/** @defgroup GPIO
   * @brief GPIO driver modules
   * @{
   */
@@ -41,7 +41,7 @@
 
 /** @defgroup GPIO_Private_Defines
   * @{
-  */ 
+  */
 
 /**
   * @}
@@ -73,7 +73,7 @@
   */
 
 /**
-  * @brief  Deinitializes the GPIOx peripheral registers to their default reset 
+  * @brief  Deinitializes the GPIOx peripheral registers to their default reset
   *         values.
   * @param  GPIOx: where x can be (A, B, C, D, E or H) to select the GPIO peripheral.
   * @retval None
@@ -86,7 +86,7 @@ void GPIO_DeInit(GPIO_TypeDef* GPIOx)
   if(GPIOx == GPIOA)
   {
     RCC_AHBPeriphResetCmd(RCC_AHBPeriph_GPIOA, ENABLE);
-    RCC_AHBPeriphResetCmd(RCC_AHBPeriph_GPIOA, DISABLE);  
+    RCC_AHBPeriphResetCmd(RCC_AHBPeriph_GPIOA, DISABLE);
   }
   else if(GPIOx == GPIOB)
   {
@@ -119,10 +119,10 @@ void GPIO_DeInit(GPIO_TypeDef* GPIOx)
 }
 
 /**
-  * @brief  Initializes the GPIOx peripheral according to the specified 
+  * @brief  Initializes the GPIOx peripheral according to the specified
   *         parameters in the GPIO_InitStruct.
   * @param  GPIOx: where x can be (A, B, C, D, E or H) to select the GPIO peripheral.
-  * @param  GPIO_InitStruct: pointer to a GPIO_InitTypeDef structure that 
+  * @param  GPIO_InitStruct: pointer to a GPIO_InitTypeDef structure that
   *         contains the configuration information for the specified GPIO
   *         peripheral.
   * @retval None
@@ -130,7 +130,7 @@ void GPIO_DeInit(GPIO_TypeDef* GPIOx)
 void GPIO_Init(GPIO_TypeDef* GPIOx, GPIO_InitTypeDef* GPIO_InitStruct)
 {
   uint32_t pinpos = 0x00, pos = 0x00 , currentpin = 0x00;
-  
+
   /* Check the parameters */
   assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
   assert_param(IS_GPIO_PIN(GPIO_InitStruct->GPIO_Pin));
@@ -178,7 +178,7 @@ void GPIO_Init(GPIO_TypeDef* GPIOx, GPIO_InitTypeDef* GPIO_InitStruct)
 
 /**
   * @brief  Fills each GPIO_InitStruct member with its default value.
-  * @param  GPIO_InitStruct : pointer to a GPIO_InitTypeDef structure which will 
+  * @param  GPIO_InitStruct : pointer to a GPIO_InitTypeDef structure which will
   *         be initialized.
   * @retval None
   */
@@ -202,7 +202,7 @@ void GPIO_StructInit(GPIO_InitTypeDef* GPIO_InitStruct)
 uint8_t GPIO_ReadInputDataBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
 {
   uint8_t bitstatus = 0x00;
-  
+
   /* Check the parameters */
   assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
   assert_param(IS_GET_GPIO_PIN(GPIO_Pin));
@@ -227,7 +227,7 @@ uint16_t GPIO_ReadInputData(GPIO_TypeDef* GPIOx)
 {
   /* Check the parameters */
   assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
-  
+
   return ((uint16_t)GPIOx->IDR);
 }
 
@@ -245,7 +245,7 @@ uint8_t GPIO_ReadOutputDataBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
   /* Check the parameters */
   assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
   assert_param(IS_GET_GPIO_PIN(GPIO_Pin));
-  
+
   if ((GPIOx->ODR & GPIO_Pin) != (uint32_t)Bit_RESET)
   {
     bitstatus = (uint8_t)Bit_SET;
@@ -266,7 +266,7 @@ uint16_t GPIO_ReadOutputData(GPIO_TypeDef* GPIOx)
 {
   /* Check the parameters */
   assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
-  
+
   return ((uint16_t)GPIOx->ODR);
 }
 
@@ -282,7 +282,7 @@ void GPIO_SetBits(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
   /* Check the parameters */
   assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
   assert_param(IS_GPIO_PIN(GPIO_Pin));
-  
+
   GPIOx->BSRRL = GPIO_Pin;
 }
 
@@ -298,7 +298,7 @@ void GPIO_ResetBits(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
   /* Check the parameters */
   assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
   assert_param(IS_GPIO_PIN(GPIO_Pin));
-  
+
   GPIOx->BSRRH = GPIO_Pin;
 }
 
@@ -319,7 +319,7 @@ void GPIO_WriteBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, BitAction BitVal)
   assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
   assert_param(IS_GET_GPIO_PIN(GPIO_Pin));
   assert_param(IS_GPIO_BIT_ACTION(BitVal));
-  
+
   if (BitVal != Bit_RESET)
   {
     GPIOx->BSRRL = GPIO_Pin;
@@ -333,7 +333,7 @@ void GPIO_WriteBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, BitAction BitVal)
 /**
   * @brief  Writes data to the specified GPIO data port.
   * @param  GPIOx: where x can be (A, B, C, D, E or H) to select the GPIO peripheral.
-  * @param  PortVal: specifies the value to be written to the port output data 
+  * @param  PortVal: specifies the value to be written to the port output data
   *                  register.
   * @retval None
   */
@@ -341,7 +341,7 @@ void GPIO_Write(GPIO_TypeDef* GPIOx, uint16_t PortVal)
 {
   /* Check the parameters */
   assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
-  
+
   GPIOx->ODR = PortVal;
 }
 
@@ -355,11 +355,11 @@ void GPIO_Write(GPIO_TypeDef* GPIOx, uint16_t PortVal)
 void GPIO_PinLockConfig(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
 {
   uint32_t tmp = 0x00010000;
-  
+
   /* Check the parameters */
   assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
   assert_param(IS_GPIO_PIN(GPIO_Pin));
-  
+
   tmp |= GPIO_Pin;
   /* Set LCKK bit */
   GPIOx->LCKR = tmp;
@@ -411,12 +411,12 @@ void GPIO_PinAFConfig(GPIO_TypeDef* GPIOx, uint16_t GPIO_PinSource, uint8_t GPIO
 {
   uint32_t temp = 0x00;
   uint32_t temp_2 = 0x00;
-  
+
   /* Check the parameters */
   assert_param(IS_GPIO_ALL_PERIPH(GPIOx));
   assert_param(IS_GPIO_PIN_SOURCE(GPIO_PinSource));
   assert_param(IS_GPIO_AF(GPIO_AF));
-  
+
   temp = ((uint32_t)(GPIO_AF) << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
   GPIOx->AFR[GPIO_PinSource >> 0x03] &= ~((uint32_t)0xF << ((uint32_t)((uint32_t)GPIO_PinSource & (uint32_t)0x07) * 4)) ;
   temp_2 = GPIOx->AFR[GPIO_PinSource >> 0x03] | temp;

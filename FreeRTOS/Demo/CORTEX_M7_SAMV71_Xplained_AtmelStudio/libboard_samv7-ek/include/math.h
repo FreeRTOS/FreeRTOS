@@ -39,4 +39,3 @@ extern uint32_t absv( int32_t lValue );
 extern uint32_t power( uint32_t dwX, uint32_t dwY );
 
 #endif /* #ifndef _MATH_ */
-

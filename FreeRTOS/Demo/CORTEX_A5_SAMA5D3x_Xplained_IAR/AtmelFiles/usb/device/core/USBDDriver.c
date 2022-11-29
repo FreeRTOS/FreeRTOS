@@ -133,14 +133,14 @@ static void SetConfiguration(USBDDriver *pDriver, uint8_t cfgnum)
  */
 static void GetConfiguration(const USBDDriver *pDriver)
 {
-    unsigned long tmp;   // Coud be unsigned char : unsigned long has been chose to avoid any potential alignment issue with DMA 
-  
-    if( USBD_GetState() <  USBD_STATE_CONFIGURED) 
-        tmp = 0;    // If device is unconfigured, returned configuration must be 0 
-    else 
-        tmp = pDriver->cfgnum; 
+    unsigned long tmp;   // Coud be unsigned char : unsigned long has been chose to avoid any potential alignment issue with DMA
 
-    USBD_Write(0, &tmp, 1, 0, 0); 
+    if( USBD_GetState() <  USBD_STATE_CONFIGURED)
+        tmp = 0;    // If device is unconfigured, returned configuration must be 0
+    else
+        tmp = pDriver->cfgnum;
+
+    USBD_Write(0, &tmp, 1, 0, 0);
 }
 
 /**

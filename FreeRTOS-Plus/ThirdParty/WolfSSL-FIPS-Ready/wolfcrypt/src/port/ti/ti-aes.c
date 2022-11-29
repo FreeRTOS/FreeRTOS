@@ -564,6 +564,3 @@ WOLFSSL_API void wc_AesFree(Aes* aes)
 #endif /* WOLFSSL_TI_CRYPT */
 
 #endif /* NO_AES */
-
-
-

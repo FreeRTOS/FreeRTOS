@@ -227,8 +227,3 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	being transmitted then we may need to switch to another task. */
 	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
-
-
-
-
-

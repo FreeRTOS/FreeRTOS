@@ -61,16 +61,16 @@
 
 /**
  * \brief Enter a critical region
- * 
- * Saves the contents of the status register, including the Global 
- * Interrupt Enable bit, so that it can be restored upon leaving the 
+ *
+ * Saves the contents of the status register, including the Global
+ * Interrupt Enable bit, so that it can be restored upon leaving the
  * critical region. Thereafter, clears the Global Interrupt Enable Bit.
  * This macro takes a parameter P that is unused for the GCC compiler,
  * but necessary for code compatibility with the IAR compiler. The IAR
  * compiler declares a variable with the name of the parameter for
  * holding the SREG value. Since a variable is declared in the macro,
  * this variable must have a name that is unique within the scope
- * that the critical region is declared within, otherwise compilation 
+ * that the critical region is declared within, otherwise compilation
  * will fail.
  *
  * \param[in] UNUSED(GCC)/P(IAR) Name of variable storing SREG
@@ -86,13 +86,13 @@
 
 /**
  * \brief Exit a critical region
- * 
- * Restores the contents of the status register, including the Global 
+ *
+ * Restores the contents of the status register, including the Global
  * Interrupt Enable bit, as it was when entering the critical region.
  * This macro takes a parameter P that is unused for the GCC compiler,
  * but necessary for code compatibility with the IAR compiler. The IAR
- * compiler uses this parameter as the name of a variable that holds 
- * the SREG value. The parameter must be identical to the parameter 
+ * compiler uses this parameter as the name of a variable that holds
+ * the SREG value. The parameter must be identical to the parameter
  * used in the corresponding ENTER_CRITICAL().
  *
  * \param[in] UNUSED(GCC)/P(IAR) Name of variable storing SREG

@@ -65,4 +65,3 @@ uint32_t RedOsTaskId(void)
 }
 
 #endif
-

@@ -32,7 +32,7 @@
  *
  * Interface for LCD driver.
  *
- */ 
+ */
 
 #ifndef LCDD_H
 #define LCDD_H

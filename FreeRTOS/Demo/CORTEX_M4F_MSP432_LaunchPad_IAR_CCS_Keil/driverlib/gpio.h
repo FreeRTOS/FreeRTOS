@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -75,7 +75,7 @@ extern "C"
 #define GPIO_PORT_PE                                                           9
 #define GPIO_PORT_PJ                                                          11
 
- 
+
 #define GPIO_PIN0                                                      (0x0001)
 #define GPIO_PIN1                                                      (0x0002)
 #define GPIO_PIN2                                                      (0x0004)
@@ -1002,11 +1002,11 @@ extern void GPIO_setDriveStrengthHigh(uint_fast8_t selectedPort,
 //*****************************************************************************
 extern void GPIO_setDriveStrengthLow(uint_fast8_t selectedPort,
         uint_fast8_t selectedPins);
-        
+
 /* Backwards Compatibility Layer */
 #define  GPIO_selectInterruptEdge       GPIO_interruptEdgeSelect
 #define  GPIO_clearInterrupt            GPIO_clearInterruptFlag
-  
+
 //*****************************************************************************
 //
 // Mark the end of the C bindings section for C++ compilers.

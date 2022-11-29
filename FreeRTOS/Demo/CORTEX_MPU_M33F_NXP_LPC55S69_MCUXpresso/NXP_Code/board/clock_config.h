@@ -170,4 +170,3 @@ void BOARD_BootClockPLL1_150M(void);
 #endif /* __cplusplus*/
 
 #endif /* _CLOCK_CONFIG_H_ */
-

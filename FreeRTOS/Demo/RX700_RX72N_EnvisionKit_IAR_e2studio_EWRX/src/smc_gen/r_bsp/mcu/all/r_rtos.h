@@ -62,4 +62,3 @@ Macro definitions
 #define R_RTOS_H
 
 #endif  /* R_RTOS_H */
-

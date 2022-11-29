@@ -83,4 +83,3 @@ void ACMP_Close(ACMP_T *acmp, uint32_t u32ChNum)
 #endif
 
 /*** (C) COPYRIGHT 2016 Nuvoton Technology Corp. ***/
-

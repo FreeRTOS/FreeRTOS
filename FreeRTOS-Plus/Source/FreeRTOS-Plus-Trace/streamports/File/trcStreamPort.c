@@ -5,9 +5,9 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  *
- * Supporting functions for trace streaming, used by the "stream ports" 
+ * Supporting functions for trace streaming, used by the "stream ports"
  * for reading and writing data to the interface.
- * Existing ports can easily be modified to fit another setup, e.g., a 
+ * Existing ports can easily be modified to fit another setup, e.g., a
  * different TCP/IP stack, or to define your own stream port.
  */
 
@@ -41,7 +41,7 @@ traceResult xTraceStreamPortOnTraceBegin(void)
 	{
 		return TRC_FAIL;
 	}
-	
+
 	if (pxStreamPortFile->pxFile == 0)
 	{
 		errno_t err = fopen_s(&pxStreamPortFile->pxFile, TRC_CFG_STREAM_PORT_TRACE_FILE, "wb");
@@ -56,7 +56,7 @@ traceResult xTraceStreamPortOnTraceBegin(void)
 			printf("Trace file created.\n");
 		}
 	}
-	
+
 	return TRC_SUCCESS;
 }
 
@@ -66,14 +66,14 @@ traceResult xTraceStreamPortOnTraceEnd(void)
 	{
 		return TRC_FAIL;
 	}
-	
+
 	if (pxStreamPortFile->pxFile != 0)
 	{
 		fclose(pxStreamPortFile->pxFile);
 		pxStreamPortFile->pxFile = 0;
 		printf("Trace file closed.\n");
 	}
-	
+
 	return TRC_SUCCESS;
 }
 

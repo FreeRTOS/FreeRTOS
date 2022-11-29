@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -166,7 +166,7 @@ static void PIO_SetPeripheralD(
 
     /* Enable the pull-up(s) if necessary */
     if (enablePullUp) {
-        
+
         pio->PIO_PPDDR = mask;
         pio->PIO_PUER = mask;
     }

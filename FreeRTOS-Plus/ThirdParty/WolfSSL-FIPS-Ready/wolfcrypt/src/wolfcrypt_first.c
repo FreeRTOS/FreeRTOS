@@ -50,4 +50,3 @@ int wolfCrypt_FIPS_first(void)
 
 
 #endif /* HAVE_FIPS */
-

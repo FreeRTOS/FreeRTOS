@@ -34,7 +34,7 @@
 #define CODE_SIGNATURE_VERIFICATION_H
 
 #include "FreeRTOS.h"
- 
+
  /**
  * @brief Validate the integrity of the new image to be activated.
  * @param[in] pFileContext pointer to File context

@@ -10,8 +10,8 @@
 #define TRC_RECORDER_H
 
 /**
- * @file 
- * 
+ * @file
+ *
  * @brief The public API of the Percepio trace recorder.
  */
 
@@ -66,20 +66,20 @@ typedef uint16_t traceHandle;
 #else /* (TRC_CFG_USE_16BIT_OBJECT_HANDLES == 1) */
 typedef uint8_t traceHandle;
 #endif /* (TRC_CFG_USE_16BIT_OBJECT_HANDLES == 1) */
-	
+
 #include <trcHardwarePort.h>
 #include <trcKernelPort.h>
 
 /* Not yet available in snapshot mode */
 #define vTraceConsoleChannelPrintF(fmt, ...) (void)
 #define xTraceConsoleChannelPrintF(fmt, ...) (void)
-#define prvTraceStoreEvent_None(...) 
-#define prvTraceStoreEvent_Handle(...) 
-#define prvTraceStoreEvent_Param(...) 
-#define prvTraceStoreEvent_HandleParam(...) 
-#define prvTraceStoreEvent_ParamParam(...) 
-#define prvTraceStoreEvent_HandleParamParam(...) 
-#define prvTraceStoreEvent_ParamParamParam(...) 
+#define prvTraceStoreEvent_None(...)
+#define prvTraceStoreEvent_Handle(...)
+#define prvTraceStoreEvent_Param(...)
+#define prvTraceStoreEvent_HandleParam(...)
+#define prvTraceStoreEvent_ParamParam(...)
+#define prvTraceStoreEvent_HandleParamParam(...)
+#define prvTraceStoreEvent_ParamParamParam(...)
 
 #endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_SNAPSHOT) */
 
@@ -159,8 +159,8 @@ typedef struct TraceHeaderBuffer
  *
  * Initializes the recorder data. xTraceInitialize() or xTraceEnable(...)
  * must be called before any attempts at adding trace data/information.
- * See xTraceEnable(...) for more information. 
- * 
+ * See xTraceEnable(...) for more information.
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -173,13 +173,13 @@ traceResult xTraceInitialize(void);
  * To use the trace recorder, the startup must call xTraceInitialize() or
  * xTraceEnable(...) before any RTOS calls are made (including "create" calls).
  * Three start options are provided:
- * 
- * 	TRC_START: Starts the tracing directly. In snapshot mode this allows for 
+ *
+ * 	TRC_START: Starts the tracing directly. In snapshot mode this allows for
  * 	starting the trace at any point in your code, assuming xTraceInitialize()
- * 	has been called in the startup. Can also be used for streaming without 
+ * 	has been called in the startup. Can also be used for streaming without
  * 	Tracealyzer control, e.g. to a local flash file system (assuming such a
  * 	"stream port", see trcStreamPort.h).
- * 
+ *
  * 	TRC_START_AWAIT_HOST: For streaming mode only. Initializes the trace recorder
  * 	if necessary and waits for a Start command from Tracealyzer ("Start Recording"
  * 	button). This call is intentionally blocking! By calling xTraceEnable with
@@ -191,7 +191,7 @@ traceResult xTraceInitialize(void);
  * 	Tracealyzer ("Start Recording" button). This call is not blocking.
  *
  * @example Usage examples
- * 
+ *
  * 	Snapshot trace, from startup:
  * 		<board init>
  * 		xTraceEnable(TRC_START); // Will call xTraceInitialize()
@@ -209,9 +209,9 @@ traceResult xTraceInitialize(void);
  *		xTraceInitialize();
  *		<RTOS startup>
  * 		xTraceEnable(TRC_START);
- * 
+ *
  * 	Streaming trace, from startup:
- *		<board init>	
+ *		<board init>
  *		xTraceEnable(TRC_START_AWAIT_HOST); // Blocks!
  *		<RTOS init>
  *
@@ -220,15 +220,15 @@ traceResult xTraceInitialize(void);
  *		xTraceInitialize();
  *		<RTOS startup>
  * 		xTraceEnable(TRC_START);
- * 
+ *
  * 	Streaming trace, system executes normally until host starts tracing:
  *		<board startup>
  *		xTraceInitialize();
  *		<RTOS startup>
  *		xTraceEnable(TRC_START_FROM_HOST)
- * 
+ *
  * @param[in] uiStartOption Start option.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -236,7 +236,7 @@ traceResult	xTraceEnable(uint32_t uiStartOption);
 
 /**
  * @brief Disables tracing.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -252,18 +252,18 @@ traceResult xTraceDisable(void);
  *
  * There are 16 filter groups named FilterGroup0 .. FilterGroup15.
  *
- * Note: We don't recommend filtering out the Idle task, so make sure to call 
+ * Note: We don't recommend filtering out the Idle task, so make sure to call
  * vTraceSetFilterGroup just before initializing the RTOS, in order to assign
  * such "default" objects to the right Filter Group (typically group 0).
  *
  * Example:
- *  
+ *
  *		// Assign tasks T1 to FilterGroup0 (default)
- *		<Create Task T1>  
+ *		<Create Task T1>
  *
  *		// Assign Q1 and Q2 to FilterGroup1
  *		vTraceSetFilterGroup(FilterGroup1);
- *		<Create Queue Q1> 
+ *		<Create Queue Q1>
  *		<Create Queue Q2>
  *
  *		// Assigns Q3 to FilterGroup2
@@ -288,7 +288,7 @@ traceResult xTraceDisable(void);
  *
  * Note that filtering per event type (regardless of object) is also available
  * in trcKernelPortConfig.h for certain kernels.
- * 
+ *
  * @param[in] filterGroup Filter group
  */
 void vTraceSetFilterGroup(uint16_t filterGroup);
@@ -305,12 +305,12 @@ void vTraceSetFilterGroup(uint16_t filterGroup);
  * excludes all events of certain kinds (e.g., OS ticks). See trcConfig.h.
  *
  * The filtering is based on bitwise AND with the Filter Group ID, assigned
- * to RTOS objects such as tasks, queues, semaphores and mutexes. 
+ * to RTOS objects such as tasks, queues, semaphores and mutexes.
  * This together with vTraceSetFilterGroup allows you to control what
  * events that are recorded, based on the objects they refer to.
  *
  * See example for vTraceSetFilterGroup.
- * 
+ *
  * @param[in] filterMask Filter mask
  */
 void vTraceSetFilterMask(uint16_t filterMask);
@@ -321,21 +321,21 @@ void vTraceSetFilterMask(uint16_t filterMask);
 
 /**
  * @brief Returns lower 16 bits of a value
- * 
+ *
  * @param[in] value The starting value
  */
 #define TRACE_GET_LOW16(value) ((uint16_t)((value) & 0x0000FFFF))
 
 /**
  * @brief Returns upper 16 bits
- * 
+ *
  * @param[in] value The starting value
  */
 #define TRACE_GET_HIGH16(value) ((uint16_t)(((value) >> 16) & 0x0000FFFF))
 
 /**
  * @brief Sets lower 16 bits
- * 
+ *
  * @param[in] current The starting value
  * @param[in] value The value to set
  */
@@ -343,7 +343,7 @@ void vTraceSetFilterMask(uint16_t filterMask);
 
 /**
  * @brief Sets upper 16 bits
- * 
+ *
  * @param[in] current The starting value
  * @param[in] value The value to set
  */
@@ -352,14 +352,14 @@ void vTraceSetFilterMask(uint16_t filterMask);
 #if defined (TRC_CFG_ENABLE_STACK_MONITOR) && (TRC_CFG_ENABLE_STACK_MONITOR == 1) && (TRC_CFG_SCHEDULING_ONLY == 0)
 /**
  * @brief Adds a task to the stack monitor
- * 
+ *
  * @param[in] task The task
  */
 void prvAddTaskToStackMonitor(void* task);
 
 /**
  * @brief Remove a task from the stack monitor
- * 
+ *
  * @param[in] task The task
  */
 void prvRemoveTaskFromStackMonitor(void* task);
@@ -371,23 +371,23 @@ void prvReportStackUsage(void);
 
 #else /* defined (TRC_CFG_ENABLE_STACK_MONITOR) && (TRC_CFG_ENABLE_STACK_MONITOR == 1) && (TRC_CFG_SCHEDULING_ONLY == 0) */
 
-#define prvAddTaskToStackMonitor(task) 
-#define prvRemoveTaskFromStackMonitor(task) 
+#define prvAddTaskToStackMonitor(task)
+#define prvRemoveTaskFromStackMonitor(task)
 #define prvReportStackUsage()
 
 #endif /* defined (TRC_CFG_ENABLE_STACK_MONITOR) && (TRC_CFG_ENABLE_STACK_MONITOR == 1) && (TRC_CFG_SCHEDULING_ONLY == 0) */
 
 /**
  * @brief Query if recorder is enabled
- * 
+ *
  * @retval 1 if recorder is enabled
  * @retval 0 if recorder is disabled
  */
 uint32_t xTraceIsRecorderEnabled(void);
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  * @retval 1 if recorder is initialized
  * @retval 0 if recorder isn't initialized
  */
@@ -399,7 +399,7 @@ uint32_t xTraceIsRecorderInitialized(void);
  * Creates an event that ends the current task instance at this very instant.
  * This makes the viewer to splits the current fragment at this point and begin
  * a new actor instance, even if no task-switch has occurred.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -415,7 +415,7 @@ traceResult xTraceTaskInstanceFinishedNow(void);
  * If the kernel call is not blocking, the viewer instead splits the current
  * fragment right before the kernel call, which makes this call the first event
  * of the next instance.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -423,10 +423,10 @@ traceResult xTraceTaskInstanceFinishedNext(void);
 
 /**
  * @brief Registers a string and returns a handle that can be used when tracing
- * 
+ *
  * @param[in] label Label
  * @param[out] pxString String handle
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -434,22 +434,22 @@ traceResult xTraceStringRegister(const char* label, TraceStringHandle_t* pxStrin
 
 /**
  * @brief Registers a string and returns a handle that can be used when tracing
- * 
+ *
  * @deprecated Backwards compatibility
- * 
+ *
  * @param[in] name Name.
- * 
+ *
  * @return TraceStringHandle_t String handle
  */
 TraceStringHandle_t xTraceRegisterString(const char* name);
 
 #if (TRC_CFG_SCHEDULING_ONLY == 0) && (TRC_CFG_INCLUDE_USER_EVENTS == 1)
 /**
- * @brief 
- * 
+ * @brief
+ *
  * Generates "User Events", with formatted text and data, similar to a "printf".
  * User Events can be used for very efficient logging from your application code.
- * It is very fast since the actual string formatting is done on the host side, 
+ * It is very fast since the actual string formatting is done on the host side,
  * when the trace is displayed. The execution time is just some microseconds on
  * a 32-bit MCU.
  *
@@ -459,9 +459,9 @@ TraceStringHandle_t xTraceRegisterString(const char* name);
  * Signal Plot" view, visualizing any data you log as User Events, discrete
  * states or control system signals (e.g. system inputs or outputs).
  *
- * You may group User Events into User Event Channels. The yellow User Event 
+ * You may group User Events into User Event Channels. The yellow User Event
  * labels show the logged string, preceded by the channel name within brackets.
- * 
+ *
  * Example:
  *
  *  "[MyChannel] Hello World!"
@@ -497,12 +497,12 @@ TraceStringHandle_t xTraceRegisterString(const char* name);
  *
  * Snapshot: xTracePrintF(myChn, "my string: %s", str);
  * Streaming: xTracePrintF(myChn, "my string: %s", strTraceString);
- * 
+ *
  * In snapshot mode you can specify 8-bit or 16-bit arguments to reduce RAM usage:
  *     %hd -> 16 bit (h) signed integer (d).
  *     %bu -> 8 bit (b) unsigned integer (u).
  *
- * However, in streaming mode all data arguments are assumed to be 32 bit wide. 
+ * However, in streaming mode all data arguments are assumed to be 32 bit wide.
  * Width specifiers (e.g. %hd) are accepted but ignored (%hd treated like %d).
  *
  * The maximum event size also differs between the modes. In streaming this is
@@ -513,12 +513,12 @@ TraceStringHandle_t xTraceRegisterString(const char* name);
  *
  * In snapshot mode you are limited to maximum 15 arguments, that must not exceed
  * 32 bytes in total (not counting the format string). If exceeded, the recorder
- * logs an internal error (displayed when opening the trace) and stops recording. 
- * 
+ * logs an internal error (displayed when opening the trace) and stops recording.
+ *
  * @param[in] chn Channel.
  * @param[in] fmt Formatting.
- * @param[in] ... 
- * 
+ * @param[in] ...
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -529,15 +529,15 @@ traceResult xTracePrintF(TraceStringHandle_t chn, const char* fmt, ...);
 
 #if (TRC_CFG_SCHEDULING_ONLY == 0) && (TRC_CFG_INCLUDE_USER_EVENTS == 1)
 /**
- * @brief 
- * 
+ * @brief
+ *
  * xTracePrintF variant that accepts a va_list.
  * See xTracePrintF documentation for further details.
- * 
- * @param[in] eventLabel 
- * @param[in] formatStr 
- * @param[in] vl 
- * 
+ *
+ * @param[in] eventLabel
+ * @param[in] formatStr
+ * @param[in] vl
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -557,9 +557,9 @@ traceResult xTraceVPrintF(TraceStringHandle_t eventLabel, const char* formatStr,
  *	 ...
  *	 xTracePrint(chn, "Hello World!");
  *
- * @param[in] chn Channel. 
+ * @param[in] chn Channel.
  * @param[in] str String.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -579,21 +579,21 @@ typedef void(*TRACE_STOP_HOOK)(void);
 
 /**
  * @brief Sets a function to be called when the recorder is stopped.
- * 
+ *
  * @note Snapshot mode only!
- * 
- * @param[in] stopHookFunction 
+ *
+ * @param[in] stopHookFunction
  */
 void vTraceSetStopHook(TRACE_STOP_HOOK stopHookFunction);
 
 /**
  * @brief
  *
- * Resets the recorder. 
- * 
+ * Resets the recorder.
+ *
  * Only necessary if a restart is desired - this is not
  * needed in the startup initialization.
- * 
+ *
  * @note Snapshot mode only!
  */
 void vTraceClear(void);
@@ -845,14 +845,14 @@ void prvTraceStoreTaskReady(traceHandle handle);
 
 /**
  * @brief Stores a Low Power mode event
- * 
+ *
  * @param[in] flag Flag
  */
 void prvTraceStoreLowPower(uint32_t flag);
 
 /**
  * @brief Stores a Task Switch event
- * 
+ *
  * @param[in] task_handle Task
  */
 void prvTraceStoreTaskswitch(traceHandle task_handle);
@@ -861,7 +861,7 @@ void prvTraceStoreTaskswitch(traceHandle task_handle);
 
 /**
  * @brief Stores a Kernel Service call event with an Object handle parameter
- * 
+ *
  * @param[in] eventcode Event code
  * @param[in] objectClass Object class
  * @param[in] objectNumber Object handle
@@ -870,7 +870,7 @@ void prvTraceStoreKernelCall(uint32_t eventcode, traceObjectClass objectClass, u
 
 /**
  * @brief Stores a Kernel Service call event with only a numeric parameter
- * 
+ *
  * @param[in] evtcode Event code
  * @param[in] param Parameter
  */
@@ -878,7 +878,7 @@ void prvTraceStoreKernelCallWithNumericParamOnly(uint32_t evtcode, uint32_t para
 
 /**
  * @brief Stores a Kernel Service call event with an Object handle and a numeric parameter
- * 
+ *
  * @param[in] evtcode Event code
  * @param[in] objectClass Object class
  * @param[in] objectNumber Object handle
@@ -896,14 +896,14 @@ void prvTraceStoreKernelCallWithParam(uint32_t evtcode, traceObjectClass objectC
 
 /**
  * @brief Flags a task instance as finished
- * 
+ *
  * @param[in] handle Task handle
  */
 void prvTraceSetTaskInstanceFinished(traceHandle handle);
 
 /**
  * @brief Set priority
- * 
+ *
  * @param[in] objectclass Object class
  * @param[in] id Object handle
  * @param[in] value Value
@@ -912,17 +912,17 @@ void prvTraceSetPriorityProperty(uint8_t objectclass, traceHandle id, uint8_t va
 
 /**
  * @brief Get priority
- * 
+ *
  * @param[in] objectclass Object class
  * @param[in] id Object handle
- * 
+ *
  * @return uint8_t Value
  */
 uint8_t prvTraceGetPriorityProperty(uint8_t objectclass, traceHandle id);
 
 /**
  * @brief Set object state
- * 
+ *
  * @param[in] objectclass Object class
  * @param[in] id Object handle
  * @param[in] value Value
@@ -931,7 +931,7 @@ void prvTraceSetObjectState(uint8_t objectclass, traceHandle id, uint8_t value);
 
 /**
  * @brief Mark object as used
- * 
+ *
  * @param[in] objectclass Object class
  * @param[in] handle Object handle
  */
@@ -939,7 +939,7 @@ void prvMarkObjectAsUsed(traceObjectClass objectclass, traceHandle handle);
 
 /**
  * @brief Stores the name of an object because it is being deleted
- * 
+ *
  * @param[in] evtcode Event code
  * @param[in] handle Object handle
  * @param[in] objectclass Object class
@@ -949,7 +949,7 @@ void prvTraceStoreObjectNameOnCloseEvent(uint8_t evtcode, traceHandle handle,
 
 /**
  * @brief Stores the property of an object because it is being deleted
- * 
+ *
  * @param[in] evtcode Event code
  * @param[in] handle Object handle
  * @param[in] objectclass Object class
@@ -979,24 +979,24 @@ void prvTraceStoreObjectPropertiesOnCloseEvent(uint8_t evtcode, traceHandle hand
 #endif /*(TRC_CFG_INCLUDE_ISR_TRACING == 0)*/
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  * Returns a pointer to the recorder data structure. Use this together with
  * uiTraceGetTraceBufferSize if you wish to implement an own store/upload
  * solution, e.g., in case a debugger connection is not available for uploading
  * the data.
- * 
+ *
  * @return void* Buffer pointer
  */
 void* xTraceGetTraceBuffer(void);
 
 /**
- * @brief 
+ * @brief
  *
  * Gets the size of the recorder data structure. For use together with
  * xTraceGetTraceBuffer if you wish to implement an own store/upload solution,
  * e.g., in case a debugger connection is not available for uploading the data.
- *  
+ *
  * @return uint32_t Buffer size
  */
 uint32_t uiTraceGetTraceBufferSize(void);
@@ -1010,25 +1010,25 @@ uint32_t uiTraceGetTraceBufferSize(void);
 
 /**
  * @brief Register a channel and fixed format string for use with the separate User Event Buffer functions
- * 
+ *
  * @param[in] channel Channel name handle
  * @param[in] formatStr Format string that will be used for all events on this channel
- * 
+ *
  * @return traceUBChannel Channel handle
  */
 traceUBChannel xTraceRegisterUBChannel(TraceStringHandle_t channel, TraceStringHandle_t formatStr);
 
 /**
  * @brief Creates a User Event using the channel, previously set format string and data parameters
- * 
+ *
  * @param[in] channel Channel
- * @param[in] ... 
+ * @param[in] ...
  */
 void vTraceUBData(traceUBChannel channel, ...);
 
 /**
  * @brief Creates a User Event using the channel and previously set string
- * 
+ *
  * @param[in] channel Channel
  */
 void vTraceUBEvent(traceUBChannel channel);
@@ -1055,7 +1055,7 @@ void vTraceUBEvent(traceUBChannel channel);
 
 /**
  * @brief Object handle stack struct.
- * 
+ *
  * This data-structure is used to provide a mechanism for 1-byte trace object
  * handles. This way, only 1 byte is necessary instead of 4 bytes (a pointer)
  * when storing a reference to an object. This allows for up to 255 objects of
@@ -1090,7 +1090,7 @@ extern objectHandleStackType objectHandleStacks;
 
 /**
  * @brief Object property table struct
- * 
+ *
  * The Object Table contains name and other properties of the objects (tasks,
  * queues, mutexes, etc). The below data structures defines the properties of
  * each object class and are used to cast the byte buffer into a cleaner format.
@@ -1347,7 +1347,7 @@ typedef struct
 	following vTraceISRBegin is above isrTailchainingThreshold, we assume a
 	return to the previous context in between the ISRs, otherwise we assume
 	the have executed back-to-back and don't show any fragment of the previous
-	context in between. */ 
+	context in between. */
 	uint32_t isrTailchainingThreshold;
 
 	/* The maximum amount of heap memory that was allocated */
@@ -1427,37 +1427,37 @@ extern RecorderDataType* RecorderDataPtr;
 
 /**
  * @brief Signals a trace error
- * 
+ *
  * @param[in] msg Message
  */
 void prvTraceError(const char* msg);
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  * Returns the current time based on the HWTC macros which provide a hardware
  * isolation layer towards the hardware timer/counter.
  *
  * The HWTC macros and prvTracePortGetTimeStamp is the main porting issue
  * or the trace recorder library. Typically you should not need to change
  * the code of prvTracePortGetTimeStamp if using the HWTC macros.
- * 
+ *
  * @param[out] puiTimestamp Timestamp
  */
 void prvTracePortGetTimeStamp(uint32_t *puiTimestamp);
 
 /**
  * @brief Reserve an object handle
- * 
+ *
  * @param[in] objectclass Object class
- * 
- * @return traceHandle 
+ *
+ * @return traceHandle
  */
 traceHandle prvTraceGetObjectHandle(traceObjectClass objectclass);
 
 /**
  * @brief Free an object handle
- * 
+ *
  * @param[in] objectclass Object class
  * @param[in] handle Handle
  */
@@ -1468,7 +1468,7 @@ void prvTraceFreeObjectHandle(traceObjectClass objectclass,
 
 /**
  * @brief Set the object name
- * 
+ *
  * @param[in] objectclass Object class
  * @param[in] handle Handle
  * @param[in] name Name
@@ -1549,9 +1549,9 @@ typedef struct TraceRecorderDataBuffer
 
 /**
  * @brief Initializes the header data
- * 
+ *
  * @param[in] pxBuffer Pointer to header buffer
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -1575,9 +1575,9 @@ traceResult xTraceHeaderInitialize(TraceHeaderBuffer_t* pxBuffer);
 
 /**
  * @brief Flag component as initialized
- * 
+ *
  * @param[in] uiComponentBit Component bit
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -1585,9 +1585,9 @@ traceResult xTraceHeaderInitialize(TraceHeaderBuffer_t* pxBuffer);
 
 /**
  * @brief Query if component is initialized
- * 
+ *
  * @param[in] uiComponentBit Component bit
- * 
+ *
  * @retval 1 Component initialized
  * @retval 0 Component not initialized
  */
@@ -1595,9 +1595,9 @@ traceResult xTraceHeaderInitialize(TraceHeaderBuffer_t* pxBuffer);
 
 /**
  * @brief Set the trace state
- * 
+ *
  * @param[in] uiState State
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -1605,9 +1605,9 @@ traceResult xTraceHeaderInitialize(TraceHeaderBuffer_t* pxBuffer);
 
 /**
  * @brief Query the trace state
- * 
+ *
  * @param[out] puiState State
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -1615,7 +1615,7 @@ traceResult xTraceHeaderInitialize(TraceHeaderBuffer_t* pxBuffer);
 
 /**
  * @brief Call this function periodically
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -1627,7 +1627,7 @@ traceResult xTraceTzCtrl(void);
 
 /**
  * @brief Stores an event without parameters
- * 
+ *
  * @param[in] _eventID Event id
  */
 #define prvTraceStoreEvent_None(_eventID) \
@@ -1641,7 +1641,7 @@ traceResult xTraceTzCtrl(void);
 
 /**
  * @brief Stores an event with a handle parameter
- * 
+ *
  * @param[in] _eventID Event id
  * @param[in] _handle Handle
  */
@@ -1657,7 +1657,7 @@ traceResult xTraceTzCtrl(void);
 
 /**
  * @brief Stores an event with one 32-bit parameter
- * 
+ *
  * @param[in] _eventID Event id
  * @param[in] _param1 Param
  */
@@ -1673,7 +1673,7 @@ traceResult xTraceTzCtrl(void);
 
 /**
  * @brief Stores an event with a handle and one 32-bit parameter
- * 
+ *
  * @param[in] _eventID Event id
  * @param[in] _handle Handle
  * @param[in] _param1 Param
@@ -1691,7 +1691,7 @@ traceResult xTraceTzCtrl(void);
 
 /**
  * @brief Stores an event with two 32-bit parameters
- * 
+ *
  * @param[in] _eventID Event id
  * @param[in] _param1 Param 1
  * @param[in] _param2 Param 2
@@ -1709,7 +1709,7 @@ traceResult xTraceTzCtrl(void);
 
 /**
  * @brief Stores an event with a handle and two 32-bit parameters
- * 
+ *
  * @param[in] _eventID Event id
  * @param[in] _handle Handle
  * @param[in] _param1 Param 1
@@ -1729,7 +1729,7 @@ traceResult xTraceTzCtrl(void);
 
 /**
  * @brief Stores an event with three 32-bit parameters
- * 
+ *
  * @param[in] _eventID Event id
  * @param[in] _param1 Param 1
  * @param[in] _param2 Param 2
@@ -1749,7 +1749,7 @@ traceResult xTraceTzCtrl(void);
 
 /**
  * @brief Snapshot mode only. Trace stop hook.
- * 
+ *
  * @param[in] x
  */
 #define vTraceSetStopHook(x) (void)(x)
@@ -1757,16 +1757,16 @@ traceResult xTraceTzCtrl(void);
 /**
  * @brief Snapshot mode only. Initialize timestamps.
  */
-#define vTraceInitTimestamps() 
+#define vTraceInitTimestamps()
 
 #endif /*(TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)*/
 
 #if (TRC_CFG_RECORDER_BUFFER_ALLOCATION == TRC_RECORDER_BUFFER_ALLOCATION_CUSTOM)
 /**
  * @brief Set the recorder data buffer
- * 
+ *
  * @param[in] pxBuffer Pointer to the recorder data buffer
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -1777,10 +1777,10 @@ traceResult xTraceSetBuffer(TraceRecorderDataBuffer_t *pxBuffer);
 
 /**
  * @brief Retrieve the event buffer and event buffer size
- * 
+ *
  * @param[out] ppvBuffer Pointer where event buffer pointer will be written
  * @param[out] puiSize Event buffer size
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */

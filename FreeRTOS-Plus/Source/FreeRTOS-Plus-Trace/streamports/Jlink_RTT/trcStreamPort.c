@@ -5,15 +5,15 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  *
- * Supporting functions for trace streaming, used by the "stream ports" 
+ * Supporting functions for trace streaming, used by the "stream ports"
  * for reading and writing data to the interface.
  *
  * Note that this stream port is more complex than the typical case, since
  * the J-Link interface uses a separate RAM buffer in SEGGER_RTT.c, instead
- * of the default buffer included in the recorder core. The other stream ports 
+ * of the default buffer included in the recorder core. The other stream ports
  * offer more typical examples of how to define a custom streaming interface.
  */
- 
+
 #include <trcRecorder.h>
 
 #if (TRC_USE_TRACEALYZER_RECORDER == 1)

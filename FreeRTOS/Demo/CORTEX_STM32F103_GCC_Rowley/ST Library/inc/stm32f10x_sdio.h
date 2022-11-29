@@ -58,16 +58,16 @@ typedef struct
 
 #define IS_SDIO_CLOCK_EDGE(EDGE) (((EDGE) == SDIO_ClockEdge_Rising) || \
                                   ((EDGE) == SDIO_ClockEdge_Falling))
-/* SDIO Clock Bypass ----------------------------------------------------------*/                                  
+/* SDIO Clock Bypass ----------------------------------------------------------*/
 #define SDIO_ClockBypass_Disable             ((u32)0x00000000)
-#define SDIO_ClockBypass_Enable              ((u32)0x00000400)    
+#define SDIO_ClockBypass_Enable              ((u32)0x00000400)
 
 #define IS_SDIO_CLOCK_BYPASS(BYPASS) (((BYPASS) == SDIO_ClockBypass_Disable) || \
-                                     ((BYPASS) == SDIO_ClockBypass_Enable))                             
+                                     ((BYPASS) == SDIO_ClockBypass_Enable))
 
-/* SDIO Clock Power Save  ----------------------------------------------------*/ 
+/* SDIO Clock Power Save  ----------------------------------------------------*/
 #define SDIO_ClockPowerSave_Disable         ((u32)0x00000000)
-#define SDIO_ClockPowerSave_Enable          ((u32)0x00000200) 
+#define SDIO_ClockPowerSave_Enable          ((u32)0x00000200)
 
 #define IS_SDIO_CLOCK_POWER_SAVE(SAVE) (((SAVE) == SDIO_ClockPowerSave_Disable) || \
                                         ((SAVE) == SDIO_ClockPowerSave_Enable))
@@ -79,19 +79,19 @@ typedef struct
 
 #define IS_SDIO_BUS_WIDE(WIDE) (((WIDE) == SDIO_BusWide_1b) || ((WIDE) == SDIO_BusWide_4b) || \
                                 ((WIDE) == SDIO_BusWide_8b))
-                                
-/* SDIO Hardware Flow Control  -----------------------------------------------*/ 
+
+/* SDIO Hardware Flow Control  -----------------------------------------------*/
 #define SDIO_HardwareFlowControl_Disable    ((u32)0x00000000)
 #define SDIO_HardwareFlowControl_Enable     ((u32)0x00004000)
 
 #define IS_SDIO_HARDWARE_FLOW_CONTROL(CONTROL) (((CONTROL) == SDIO_HardwareFlowControl_Disable) || \
                                                 ((CONTROL) == SDIO_HardwareFlowControl_Enable))
-                                  
+
 /* SDIO Power State ----------------------------------------------------------*/
 #define SDIO_PowerState_OFF                 ((u32)0x00000000)
 #define SDIO_PowerState_ON                  ((u32)0x00000003)
 
-#define IS_SDIO_POWER_STATE(STATE) (((STATE) == SDIO_PowerState_OFF) || ((STATE) == SDIO_PowerState_ON)) 
+#define IS_SDIO_POWER_STATE(STATE) (((STATE) == SDIO_PowerState_OFF) || ((STATE) == SDIO_PowerState_ON))
 
 /* SDIO Interrupt soucres ----------------------------------------------------*/
 #define SDIO_IT_CCRCFAIL                    ((u32)0x00000001)
@@ -190,21 +190,21 @@ typedef struct
                                   ((SIZE) == SDIO_DataBlockSize_2048b) || \
                                   ((SIZE) == SDIO_DataBlockSize_4096b) || \
                                   ((SIZE) == SDIO_DataBlockSize_8192b) || \
-                                  ((SIZE) == SDIO_DataBlockSize_16384b)) 
+                                  ((SIZE) == SDIO_DataBlockSize_16384b))
 
 /* SDIO Transfer Direction ---------------------------------------------------*/
 #define SDIO_TransferDir_ToCard             ((u32)0x00000000)
 #define SDIO_TransferDir_ToSDIO             ((u32)0x00000002)
 
 #define IS_SDIO_TRANSFER_DIR(DIR) (((DIR) == SDIO_TransferDir_ToCard) || \
-                                   ((DIR) == SDIO_TransferDir_ToSDIO))  
+                                   ((DIR) == SDIO_TransferDir_ToSDIO))
 
 /* SDIO Transfer Type --------------------------------------------------------*/
 #define SDIO_TransferMode_Block             ((u32)0x00000000)
 #define SDIO_TransferMode_Stream            ((u32)0x00000004)
 
 #define IS_SDIO_TRANSFER_MODE(MODE) (((MODE) == SDIO_TransferMode_Stream) || \
-                                     ((MODE) == SDIO_TransferMode_Block))                                
+                                     ((MODE) == SDIO_TransferMode_Block))
 
 /* SDIO DPSM State -----------------------------------------------------------*/
 #define SDIO_DPSM_Disable                    ((u32)0x00000000)
@@ -291,13 +291,13 @@ typedef struct
                             ((IT)  == SDIO_IT_CEATAEND))
 
 #define IS_SDIO_CLEAR_IT(IT) ((((IT) & (u32)0xFF3FF800) == 0x00) && ((IT) != (u32)0x00))
-                                                        
+
 /* SDIO Read Wait Mode -------------------------------------------------------*/
 #define SDIO_ReadWaitMode_CLK               ((u32)0x00000000)
 #define SDIO_ReadWaitMode_DATA2             ((u32)0x00000001)
 
 #define IS_SDIO_READWAIT_MODE(MODE) (((MODE) == SDIO_ReadWaitMode_CLK) || \
-                                     ((MODE) == SDIO_ReadWaitMode_DATA2))  
+                                     ((MODE) == SDIO_ReadWaitMode_DATA2))
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */

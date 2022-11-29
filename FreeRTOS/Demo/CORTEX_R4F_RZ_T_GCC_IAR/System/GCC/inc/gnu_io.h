@@ -65,4 +65,3 @@ extern void get_string(char *pString);
 #endif /* GNU_IO_H */
 
 /* End of File */
-

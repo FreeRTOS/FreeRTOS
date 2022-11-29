@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -26,7 +26,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 /** \file
  *
  *  Implement for SD/MMC low level commands.
@@ -244,7 +244,7 @@ if(pCmd->wBlockSize != 1){
     if (bRd)
     {
         for ( i = 0; i < pCmd->wNbBlocks; i++)
-        {   
+        {
             //LLI_R[i].dwSrcAddr = (uint32_t)&(pHw->HSMCI_FIFO[i]);
             LLI_R[i].dwSrcAddr = (uint32_t)&(pHw->HSMCI_RDR);
             LLI_R[i].dwDstAddr = (uint32_t)&pCmd->pData[i * pCmd->wBlockSize];
@@ -270,7 +270,7 @@ if(pCmd->wBlockSize != 1){
     }
     else {
         for ( i = 0; i < pCmd->wNbBlocks; i++)
-        {   
+        {
             LLI_W[i].dwSrcAddr = (uint32_t)&pCmd->pData[i * pCmd->wBlockSize];
             //LLI_W[i].dwDstAddr = (uint32_t)&(pHw->HSMCI_FIFO[i]);
             LLI_W[i].dwDstAddr = (uint32_t)&(pHw->HSMCI_TDR);
@@ -401,8 +401,8 @@ static uint32_t MCI_SetSpeed( sMcid* pMci, uint32_t mciSpeed, uint32_t mck )
     if((mck % mciSpeed) == 0)
     {
         clkdiv = mck /mciSpeed;
-    } 
-    else 
+    }
+    else
     {
         clkdiv = ((mck + mciSpeed)/mciSpeed);
     }
@@ -619,7 +619,7 @@ uint32_t MCID_SendCmd(sMcid *pMcid, void *pCommand)
                ier = HSMCI_IER_DMADONE| STATUS_ERRORS_DATA;
             }
             else {
-               //NOTBUSY DMADONE FIFOEMPTY XFRDONE 
+               //NOTBUSY DMADONE FIFOEMPTY XFRDONE
                ier = HSMCI_IER_XFRDONE | STATUS_ERRORS_DATA;
             }
         }
@@ -716,7 +716,7 @@ uint32_t MCID_SendCmd(sMcid *pMcid, void *pCommand)
         pHw->HSMCI_ARGR = pCmd->dwArg;
         pHw->HSMCI_CMDR = cmdr;
     }
-    
+
     /* Ignore CRC error for R3 & R4 */
     if (pCmd->cmdOp.bmBits.xfrData == SDMMC_CMD_STOPXFR)
     {
@@ -774,11 +774,11 @@ void MCID_Handler(sMcid *pMcid)
 
     /* Check command complete */
     if (dwMaskedSr & HSMCI_SR_CMDRDY)
-    {   
+    {
         HSMCI_DisableIt(pHw, HSMCI_IDR_CMDRDY);
         dwMsk &= ~(uint32_t)HSMCI_IMR_CMDRDY;
     }
-   
+
     /* Check transfer done */
     if (dwMaskedSr & HSMCI_SR_XFRDONE)
     {
@@ -795,7 +795,7 @@ void MCID_Handler(sMcid *pMcid)
     }
     /* Check if TX ready */
     if (dwMaskedSr & HSMCI_SR_TXRDY)
-    {    
+    {
         //printf("TXRDY ");
         dwMsk &= ~(uint32_t)HSMCI_IMR_TXRDY;
     }
@@ -824,10 +824,10 @@ void MCID_Handler(sMcid *pMcid)
                 else
                 {
                     dwMsk &= ~(uint32_t)HSMCI_IMR_DMADONE;
-                } 
+                }
             }
         }
-        else 
+        else
         {
             HSMCI_DisableIt(pHw, HSMCI_IDR_DMADONE);
             dwMsk &= ~(uint32_t)HSMCI_IMR_DMADONE;
@@ -849,7 +849,7 @@ void MCID_Handler(sMcid *pMcid)
         {
             MCI_Reset(pMcid, 1);
         }
-        else 
+        else
         {
             pCmd->bStatus = SDMMC_SUCCESS;
 
@@ -922,7 +922,7 @@ void MCID_Reset(sMcid * pMcid)
                                                  | HSMCI_MR_PWSDIV_Msk));
     /* BLKR reset */
     HSMCI_ConfigureTransfer(pHw, 0, 0);
-    
+
     /* Cancel ... */
     MCI_Reset(pMcid, 1);
     //_PeripheralDisable(pMcid->bID);
@@ -1009,7 +1009,7 @@ uint32_t MCID_IOCtrl(sMcid *pMcid, uint32_t bCtl, uint32_t param)
 
         default:
             return SDMMC_ERROR_NOT_SUPPORT;
-        
+
     }
     return SDMMC_OK;
 }
@@ -1024,4 +1024,3 @@ void SDD_InitializeSdmmcMode(sSdCard * pSd,void * pDrv,uint8_t bSlot)
 }
 
 /**@}*/
-

@@ -32,4 +32,3 @@ BaseType_t xTimer0Handler( void );
 BaseType_t xTimer1Handler( void );
 
 #endif
-

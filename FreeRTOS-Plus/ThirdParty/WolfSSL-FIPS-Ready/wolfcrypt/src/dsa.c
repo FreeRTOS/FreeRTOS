@@ -917,4 +917,3 @@ int wc_DsaVerify(const byte* digest, const byte* sig, DsaKey* key, int* answer)
 
 
 #endif /* NO_DSA */
-

@@ -1,4 +1,4 @@
-/** @file gio.c 
+/** @file gio.c
 *   @brief GIO Driver Inmplmentation File
 *   @date 10.June.2010
 *   @version 1.01.000
@@ -14,7 +14,7 @@
 /** @fn void gioInit(void)
 *   @brief Initializes the GIO Driver
 *
-*   This function initializes the GIO module and set the GIO ports 
+*   This function initializes the GIO module and set the GIO ports
 *   to the inital values.
 */
 void gioInit(void)
@@ -22,7 +22,7 @@ void gioInit(void)
     /** bring GIO module out of reset */
     gioREG->GCR0      = 1;
     gioREG->INTENACLR = 0xFF;
-    gioREG->LVLCLR    = 0xFF;              
+    gioREG->LVLCLR    = 0xFF;
 
     /** @b initalise @b Port @b A */
 

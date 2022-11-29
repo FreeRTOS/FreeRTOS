@@ -104,7 +104,7 @@ Reset_Handler:
 	 */
 	lrw 	a3, ckcpu_vsr_table
 	mtcr	a3, vbr
-	
+
 	/* Initialize the normal stack pointer from the linker definition. */
     lrw     r0, g_top_irqstack
     mov     sp, r0
@@ -159,7 +159,7 @@ Reset_Handler:
     cmpnei  r2, 0
     bt      .L_loop1
 .L_loop1_done:
-	
+
 	jbsr    main
 	/* Should never get here. */
 1:

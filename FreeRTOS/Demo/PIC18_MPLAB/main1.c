@@ -176,5 +176,3 @@ portBASE_TYPE xErrorHasOccurred = pdFALSE;
 	return xErrorHasOccurred;
 }
 /*-----------------------------------------------------------*/
-
-

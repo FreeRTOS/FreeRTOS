@@ -353,4 +353,3 @@ static void prvRegisterCheck2( void *pvParameters )
 		asm(	"STS	xRegTestError, r0"	);
 	}
 }
-

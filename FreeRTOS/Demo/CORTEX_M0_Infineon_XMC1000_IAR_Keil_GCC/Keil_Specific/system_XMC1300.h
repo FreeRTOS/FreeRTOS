@@ -1,6 +1,6 @@
 /******************************************************************************
  * @file     system_XMC1300.h
- * @brief    Device specific initialization for the XMC1300-Series according 
+ * @brief    Device specific initialization for the XMC1300-Series according
  * to CMSIS
  * @version  V1.2
  * @date     19 Jul 2013
@@ -10,12 +10,12 @@
 
  *
  * @par
- * Infineon Technologies AG (Infineon) is supplying this software for use with 
+ * Infineon Technologies AG (Infineon) is supplying this software for use with
  * Infineon’s microcontrollers.
- *   
- * This file can be freely distributed within development tools that are 
+ *
+ * This file can be freely distributed within development tools that are
  * supporting such microcontrollers.
- *  
+ *
  *
  * @par
  * THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED

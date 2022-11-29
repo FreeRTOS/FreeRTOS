@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2010, Atmel Corporation
  *
@@ -115,7 +115,7 @@ typedef struct _Dmad {
     Dmac *pDmacs[2];
     sDmadChannel dmaChannels[2][8];
     uint8_t  numControllers;
-    uint8_t  numChannels;  
+    uint8_t  numChannels;
     uint8_t  pollingMode;
     uint8_t  pollingTimeout;
 } sDmad;
@@ -144,13 +144,13 @@ extern eDmadRC DMAD_FreeChannel( sDmad *pDmad, uint32_t dwChannel );
 
 extern eDmadRC DMAD_SetCallback( sDmad *pDmad, uint32_t dwChannel,
                                   DmadTransferCallback fCallback, void* pArg );
-  
+
 extern eDmadRC DMAD_ConfigurePIP( sDmad *pDmad, uint32_t dwChannel,
                                   uint32_t dwSrcPIP, uint32_t dwDstPIP );
-  
+
 extern eDmadRC DMAD_PrepareChannel( sDmad *pDmad, uint32_t dwChannel,
                                    uint32_t dwCfg );
-   
+
 extern eDmadRC DMAD_IsTransferDone( sDmad *pDmad, uint32_t dwChannel );
 
 extern eDmadRC DMAD_StartTransfer( sDmad *pDmad, uint32_t dwChannel );
@@ -161,10 +161,9 @@ extern eDmadRC DMAD_StopTransfer( sDmad *pDmad, uint32_t dwChannel );
 extern void DMAD_ClearAuto( sDmad *pDmad, uint32_t _dwChannel );
 extern eDmadRC DMAD_PrepareSingleTransfer( sDmad *pDmad, uint32_t dwChannel,
                                            sDmaTransferDescriptor *pXfrDesc );
-   
+
 extern eDmadRC DMAD_PrepareMultiTransfer( sDmad *pDmad, uint32_t dwChannel,
                                           sDmaTransferDescriptor *pXfrDesc );
 /**     @}*/
 /**@}*/
 #endif //#ifndef _DMAD_H
-

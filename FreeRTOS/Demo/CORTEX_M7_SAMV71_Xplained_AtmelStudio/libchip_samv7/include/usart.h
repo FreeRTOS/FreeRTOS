@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -43,7 +43,7 @@
  * -# Enable the transmitter and/or the receiver of the USART using
  *    USART_SetTransmitterEnabled and USART_SetReceiverEnabled.
  * -# Send data through the USART using the USART_Write methods.
- * -# Receive data from the USART using the USART_Read functions; the 
+ * -# Receive data from the USART using the USART_Read functions; the
  * availability of data can be polled
  *    with USART_IsDataAvailable.
  * -# Disable the transmitter and/or the receiver of the USART with
@@ -101,7 +101,7 @@
 /*         Exported functions                                                   */
 /*------------------------------------------------------------------------------*/
 
-   
+
 void USART_Configure( Usart *pUsart, uint32_t mode, uint32_t baudrate,
 					uint32_t masterClock ) ;
 
@@ -161,4 +161,3 @@ void USART_AcknowledgeRxTimeOut(Usart *usart, uint8_t Periodic);
 #endif
 
 #endif /* #ifndef _USART_ */
-

@@ -245,6 +245,3 @@ Configuration Options
 #define IO_LIB_ENABLE           (0)
 
 #endif /* R_BSP_CONFIG_REF_HEADER_FILE */
-
-
-

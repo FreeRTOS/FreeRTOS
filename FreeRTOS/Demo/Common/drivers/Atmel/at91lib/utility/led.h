@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -63,4 +63,3 @@ extern unsigned char LED_Clear(unsigned int led);
 extern unsigned char LED_Toggle(unsigned int led);
 
 #endif //#ifndef LED_H
-

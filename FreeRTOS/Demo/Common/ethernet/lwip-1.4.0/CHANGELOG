@@ -260,7 +260,7 @@ HISTORY
   2011-03-27: Simon Goldschmidt
   * sockets.c: Fixed bug #32906: lwip_connect+lwip_send did not work for udp and
     raw pcbs with LWIP_TCPIP_CORE_LOCKING==1.
-  
+
   2011-03-27: Simon Goldschmidt
   * tcp_out.c: Fixed bug #32820 (Outgoing TCP connections created before route
     is present never times out) by starting retransmission timer before checking
@@ -313,7 +313,7 @@ HISTORY
   2010-11-23: Simon Goldschmidt
   * tcp_in.c: Fixed bug #30577: tcp_input: don't discard ACK-only packets after
     refusing 'refused_data' again.
-  
+
   2010-11-22: Simon Goldschmidt
   * sockets.c: Fixed bug #31590: getsockopt(... SO_ERROR ...) gives EINPROGRESS
     after a successful nonblocking connection.
@@ -358,21 +358,21 @@ HISTORY
   2010-08-01: Simon Goldschmidt (patch by Greg Renda)
   * ppp.c: Applied patch #7264 (PPP protocols are rejected incorrectly on big
     endian architectures)
-  
+
   2010-07-28: Simon Goldschmidt
   * api_lib.c, api_msg.c, sockets.c, mib2.c: Fixed compilation with TCP or UDP
     disabled.
-  
+
   2010-07-27: Simon Goldschmidt
   * tcp.c: Fixed bug #30565 (tcp_connect() check bound list): that check did no
     harm but never did anything
-  
+
   2010-07-21: Simon Goldschmidt
   * ip.c: Fixed invalid fix for bug #30402 (CHECKSUM_GEN_IP_INLINE does not
     add IP options)
 
   2010-07-16: Kieran Mansley
-  * msg_in.c: Fixed SNMP ASN constant defines to not use ! operator 
+  * msg_in.c: Fixed SNMP ASN constant defines to not use ! operator
 
   2010-07-10: Simon Goldschmidt
   * ip.c: Fixed bug #30402: CHECKSUM_GEN_IP_INLINE does not add IP options
@@ -476,7 +476,7 @@ HISTORY
 
   2010-03-05: Simon Goldschmidt
   * api_msg.c: Correctly set TCP_WRITE_FLAG_MORE when netconn_write is split
-    into multiple calls to tcp_write.    
+    into multiple calls to tcp_write.
 
   2010-02-21: Simon Goldschmidt
   * opt.h, mem.h, dns.c: task #10140: Remove DNS_USES_STATIC_BUF (keep
@@ -936,7 +936,7 @@ HISTORY
     sent to mbox
 
   2009-06-25 Kieran Mansley
-  * api_msg.c api.h: BUG26722: initialise netconn write variables 
+  * api_msg.c api.h: BUG26722: initialise netconn write variables
     in netconn_alloc
 
   2009-06-25 Kieran Mansley
@@ -944,7 +944,7 @@ HISTORY
 
   2009-06-25 Kieran Mansley
   * tcp.c, tcp_in.c, tcp_out.c, tcp.h: BUG26301 and BUG26267: correct
-    simultaneous close behaviour, and make snd_nxt have the same meaning 
+    simultaneous close behaviour, and make snd_nxt have the same meaning
     as in the RFCs.
 
   2009-05-12 Simon Goldschmidt
@@ -1080,7 +1080,7 @@ HISTORY
   * tcp.c, tcp_in.c, tcp.h: add tcp_abandon() to cope with dropping
     connections where no reset required (bug #25622)
 
-  * tcp_out.c: set TCP_ACK flag on keepalive and zero window probes 
+  * tcp_out.c: set TCP_ACK flag on keepalive and zero window probes
     (bug #20779)
 
   2009-02-18 Simon Goldschmidt (Jonathan Larmour and Bill Auerbach)
@@ -1116,7 +1116,7 @@ HISTORY
     out of pool pbufs.
 
   2008-12-19 Simon Goldschmidt
-  * many files: patch #6699: fixed some warnings on platform where sizeof(int) == 2 
+  * many files: patch #6699: fixed some warnings on platform where sizeof(int) == 2
 
   2008-12-10 Tamas Somogyi, Frédéric Bernon
   * sockets.c: fixed bug #25051: lwip_recvfrom problem with udp: fromaddr and
@@ -1201,7 +1201,7 @@ HISTORY
     made from lwipopts.h. Fix comment on how to override LWIP_CHKSUM.
 
   2008-01-22 Frédéric Bernon
-  * tcp.c, tcp_in.c, tcp.h, opt.h: Rename LWIP_CALCULATE_EFF_SEND_MSS in 
+  * tcp.c, tcp_in.c, tcp.h, opt.h: Rename LWIP_CALCULATE_EFF_SEND_MSS in
     TCP_CALCULATE_EFF_SEND_MSS to have coherent TCP options names.
 
   2008-01-14 Frédéric Bernon
@@ -1211,7 +1211,7 @@ HISTORY
 
   2008-01-14 Frédéric Bernon, Marc Chaland
   * ip.c: Integrate patch #6369" ip_input : checking before realloc".
-  
+
   2008-01-12 Frédéric Bernon
   * tcpip.h, tcpip.c, api.h, api_lib.c, api_msg.c, sockets.c: replace the field
     netconn::sem per netconn::op_completed like suggested for the task #7490
@@ -1237,8 +1237,8 @@ HISTORY
     Introduce changes for task #7490 "Add return value to sys_mbox_post" with some
     modifications in the sys_mbox api: sys_mbox_new take a "size" parameters which
     indicate the number of pointers query by the mailbox. There is three defines
-    in opt.h to indicate sizes for tcpip::mbox, netconn::recvmbox, and for the 
-    netconn::acceptmbox. Port maintainers, you can decide to just add this new 
+    in opt.h to indicate sizes for tcpip::mbox, netconn::recvmbox, and for the
+    netconn::acceptmbox. Port maintainers, you can decide to just add this new
     parameter in your implementation, but to ignore it to keep the previous behavior.
     The new sys_mbox_trypost function return a value to know if the mailbox is
     full or if the message is posted. Take a look to sys_arch.txt for more details.
@@ -1362,7 +1362,7 @@ HISTORY
     Note that previous "copy" parameter for "write" APIs is now called "apiflags".
 
   2007-10-24 Frédéric Bernon
-  * api.h, api_lib.c, api_msg.c: Add macro API_EVENT in the same spirit than 
+  * api.h, api_lib.c, api_msg.c: Add macro API_EVENT in the same spirit than
     TCP_EVENT_xxx macros to get a code more readable. It could also help to remove
     some code (like we have talk in "patch #5919 : Create compile switch to remove
     select code"), but it could be done later.
@@ -1382,7 +1382,7 @@ HISTORY
     all netifs (or ports) can use it.
 
   2007-10-05 Frédéric Bernon
-  * netifapi.h, netifapi.c: add function netifapi_netif_set_default. Change the 
+  * netifapi.h, netifapi.c: add function netifapi_netif_set_default. Change the
     common function to reduce a little bit the footprint (for all functions using
     only the "netif" parameter).
 
@@ -1406,7 +1406,7 @@ HISTORY
     or snmp_add_sysuptime(), and to define the SNMP_GET_SYSUPTIME(sysuptime) macro.
     This one is undefined by default in mib2.c. SNMP_GET_SYSUPTIME is called inside
     snmp_get_sysuptime(u32_t *value), and enable to change "sysuptime" value only
-    when it's queried (any direct call to "sysuptime" is changed by a call to 
+    when it's queried (any direct call to "sysuptime" is changed by a call to
     snmp_get_sysuptime).
 
   2007-09-09 Frédéric Bernon, Bill Florac
@@ -1487,7 +1487,7 @@ HISTORY
   2007-08-26 Marc Boucher
   * api_msg.c: do_close_internal(): Reset the callbacks and arg (conn) to NULL
     since they can under certain circumstances be called with an invalid conn
-    pointer after the connection has been closed (and conn has been freed). 
+    pointer after the connection has been closed (and conn has been freed).
 
   2007-08-25 Frédéric Bernon (Artem Migaev's Patch)
   * netif.h, netif.c: Integrate "patch #6163 : Function to check if link layer is up".
@@ -1499,11 +1499,11 @@ HISTORY
 
   2007-08-22 Frédéric Bernon
   * tcpip.h, tcpip.c, ethernetif.c, opt.h: remove options ETHARP_TCPIP_INPUT &
-    ETHARP_TCPIP_ETHINPUT, now, only "ethinput" code is supported, even if the 
+    ETHARP_TCPIP_ETHINPUT, now, only "ethinput" code is supported, even if the
     name is tcpip_input (we keep the name of 1.2.0 function).
 
   2007-08-17 Jared Grubb
-  * memp_std.h, memp.h, memp.c, mem.c, stats.c: (Task #7136) Centralize mempool 
+  * memp_std.h, memp.h, memp.c, mem.c, stats.c: (Task #7136) Centralize mempool
     settings into new memp_std.h and optional user file lwippools.h. This adds
     more dynamic mempools, and allows the user to create an arbitrary number of
     mempools for mem_malloc.
@@ -1710,32 +1710,32 @@ HISTORY
     snmp_set_sysname.
 
   2007-03-28 Frédéric Bernon
-  * netif.h, netif.c: A new NETIF_FLAG_ETHARP flag is defined in netif.h, to allow to 
+  * netif.h, netif.c: A new NETIF_FLAG_ETHARP flag is defined in netif.h, to allow to
     initialize a network interface's flag with. It tell this interface is an ethernet
     device, and we can use ARP with it to do a "gratuitous ARP" (RFC 3220 "IP Mobility
     Support for IPv4" section 4.6) when interface is "up" with netif_set_up().
 
   2007-03-26 Frédéric Bernon, Jonathan Larmour
   * opt.h, tcpip.c: New configuration option LWIP_ARP allow to disable ARP init at build
-    time if you only use PPP or SLIP. The default is enable. Note we don't have to call 
+    time if you only use PPP or SLIP. The default is enable. Note we don't have to call
     etharp_init in your port's initilization sequence if you use tcpip.c, because this call
     is done in tcpip_init function.
 
   2007-03-22 Frédéric Bernon
   * stats.h, stats.c, msg_in.c: Stats counters can be change to u32_t if necessary with the
     new option LWIP_STATS_LARGE. If you need this option, define LWIP_STATS_LARGE to 1 in
-    your lwipopts.h. More, unused counters are not defined in the stats structs, and not 
+    your lwipopts.h. More, unused counters are not defined in the stats structs, and not
     display by stats_display(). Note that some options (SYS_STATS and RAW_STATS) are defined
     but never used. Fix msg_in.c with the correct #if test for a stat display.
 
   2007-03-21 Kieran Mansley
-  * netif.c, netif.h: Apply patch#4197 with some changes (originator: rireland@hmgsl.com). 
+  * netif.c, netif.h: Apply patch#4197 with some changes (originator: rireland@hmgsl.com).
     Provides callback on netif up/down state change.
 
   2007-03-11 Frédéric Bernon, Mace Gael, Steve Reynolds
   * sockets.h, sockets.c, api.h, api_lib.c, api_msg.h, api_msg.c, igmp.h, igmp.c,
     ip.c, netif.h, tcpip.c, opt.h:
-    New configuration option LWIP_IGMP to enable IGMP processing. Based on only one 
+    New configuration option LWIP_IGMP to enable IGMP processing. Based on only one
     filter per all network interfaces. Declare a new function in netif to enable to
     control the MAC filter (to reduce lwIP traffic processing).
 
@@ -1758,7 +1758,7 @@ HISTORY
   * snmp_msg.h, msg_in.c: SNMP UDP ports can be configured at compile time.
 
   2007-03-06 Frédéric Bernon
-  * api.h, api_lib.c, sockets.h, sockets.c, tcpip.c, sys.h, sys.c, err.h: 
+  * api.h, api_lib.c, sockets.h, sockets.c, tcpip.c, sys.h, sys.c, err.h:
     Implement SO_RCVTIMEO on UDP sockets/netconn.
 
   2007-02-28 Kieran Mansley (based on patch from Simon Goldschmidt)
@@ -1800,7 +1800,7 @@ HISTORY
   and/or warnings on some systems where mem_size_t and size_t differ.
   * pbuf.c, ppp.c: Fix warnings on some systems with mem_malloc.
 
-  2008-03-04 Kieran Mansley (contributions by others) 
+  2008-03-04 Kieran Mansley (contributions by others)
   * Numerous small compiler error/warning fixes from contributions to
     mailing list after 1.3.0 release candidate made.
 
@@ -1917,7 +1917,7 @@ HISTORY
     type change. Any compiler should cause an error without any changes in
     yours netconn_peer calls (so, it can't be a "silent change"). It also
     reduce a little bit the footprint for socket layer (lwip_getpeername &
-    lwip_getsockname use now a common lwip_getaddrname function since 
+    lwip_getsockname use now a common lwip_getaddrname function since
     netconn_peer & netconn_addr have the same parameters).
 
   2007-09-20 Simon Goldschmidt
@@ -1937,13 +1937,13 @@ HISTORY
     if they are not defined in cc.h, in the same spirit than "lwip/opt.h" for lwipopts.h.
 
   2007-08-30 Frédéric Bernon
-  * igmp.h, igmp.c: Some changes to remove some redundant code, add some traces, 
+  * igmp.h, igmp.c: Some changes to remove some redundant code, add some traces,
     and fix some coding style.
 
   2007-08-28 Frédéric Bernon
   * tcpip.c: Fix TCPIP_MSG_INPKT processing: now, tcpip_input can be used for any
-    kind of packets. These packets are considered like Ethernet packets (payload 
-    pointing to ethhdr) if the netif got the NETIF_FLAG_ETHARP flag. Else, packets 
+    kind of packets. These packets are considered like Ethernet packets (payload
+    pointing to ethhdr) if the netif got the NETIF_FLAG_ETHARP flag. Else, packets
     are considered like IP packets (payload pointing to iphdr).
 
   2007-08-27 Frédéric Bernon
@@ -2041,7 +2041,7 @@ HISTORY
   2007-06-28 Frédéric Bernon
   * netifapi.h, netifapi.c, tcpip.h, tcpip.c: Update code to handle the option
     LWIP_TCPIP_CORE_LOCKING, and do some changes to be coherent with last modifications
-    in api_lib/api_msg (use pointers and not type with table, etc...) 
+    in api_lib/api_msg (use pointers and not type with table, etc...)
 
   2007-06-26 Simon Goldschmidt
   * udp.h: Fixed bug #20259: struct udp_hdr was lacking the packin defines.
@@ -2143,7 +2143,7 @@ HISTORY
 
   2007-05-16 Frédéric Bernon
   * tcpip.c, igmp.h, igmp.c: Fixed bug "#19800 : IGMP: igmp_tick() will not work
-    with NO_SYS=1". Note that igmp_init is always in tcpip_thread (and not in 
+    with NO_SYS=1". Note that igmp_init is always in tcpip_thread (and not in
     tcpip_init) because we have to be sure that network interfaces are already
     added (mac filter is updated only in igmp_init for the moment).
 
@@ -2290,7 +2290,7 @@ HISTORY
 
   2007-03-20 Frédéric Bernon
   * tcpip.c: Initialize tcpip's mbox, and verify if initialized in tcpip_input,
-    tcpip_ethinput, tcpip_callback, tcpip_apimsg, to fix a init problem with 
+    tcpip_ethinput, tcpip_callback, tcpip_apimsg, to fix a init problem with
     network interfaces. Also fix a compiler warning.
 
   2007-03-20 Kieran Mansley
@@ -2382,13 +2382,13 @@ HISTORY
   * rawapi.txt: Fix documentation mismatch with etharp.h about etharp_tmr's call
     interval.
 
-  2007-02-28 Kieran Mansley 
+  2007-02-28 Kieran Mansley
   * pbuf.c: Fix BUG#17645 - ensure pbuf payload pointer is not moved
     outside the region of the pbuf by pbuf_header()
 
-  2007-02-28 Kieran Mansley 
+  2007-02-28 Kieran Mansley
   * sockets.c: Fix BUG#19161 - ensure milliseconds timeout is non-zero
-    when supplied timeout is also non-zero 
+    when supplied timeout is also non-zero
 
 (STABLE-1.2.0)
 
@@ -2472,7 +2472,7 @@ HISTORY
     in accept() by Kevin Lawson.
 
   2006-05-26 Christiaan Simons
-  * api_lib.c: Removed conn->sem creation and destruction 
+  * api_lib.c: Removed conn->sem creation and destruction
     from netconn_write() and added sys_sem_new to netconn_new_*.
 
 (STABLE-1_1_1)
@@ -2542,7 +2542,7 @@ HISTORY
   * dhcp.c: Decline messages were not multicast but unicast.
   * etharp.c: ETHARP_CREATE is renamed to ETHARP_TRY_HARD.
     Do not try hard to insert arbitrary packet's source address,
-    etharp_ip_input() now calls etharp_update() without ETHARP_TRY_HARD. 
+    etharp_ip_input() now calls etharp_update() without ETHARP_TRY_HARD.
     etharp_query() now always DOES call ETHARP_TRY_HARD so that users
     querying an address will see it appear in the cache (DHCP could
     suffer from this when a server invalidly gave an in-use address.)

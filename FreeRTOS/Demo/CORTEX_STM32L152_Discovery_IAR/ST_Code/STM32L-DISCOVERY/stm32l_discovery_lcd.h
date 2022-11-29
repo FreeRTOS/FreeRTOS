@@ -17,14 +17,14 @@
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
   * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __stm32l_discovery_lcd
 #define __stm32l_discovery_lcd
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32l1xx.h"   
+#include "stm32l1xx.h"
 #include "discover_board.h"
 
 /* Define for scrolling sentences*/
@@ -55,9 +55,9 @@ COL |_| |\   |J  /|
 COL |_| --G-- --M--
         |   /| \  |
        E|  Q |  N |C
-     _  | /  |P  \|   
-DP  |_| -----------  
-	    D         
+     _  | /  |P  \|
+DP  |_| -----------
+	    D
 
  An LCD character coding is based on the following matrix:
       { E , D , P , N   }
@@ -82,8 +82,8 @@ MSB   { 1 , 1 , 0 , 0   }
 #define BAR1_OFF t_bar[0] &= ~8
 #define BAR2_ON  t_bar[1] |= 2
 #define BAR2_OFF t_bar[1] &= ~2
-#define BAR3_ON t_bar[0]  |= 2 
-#define BAR3_OFF t_bar[0] &= ~2 
+#define BAR3_ON t_bar[0]  |= 2
+#define BAR3_OFF t_bar[0] &= ~2
 
 /* code for 'µ' character */
 #define C_UMAP 0x6084

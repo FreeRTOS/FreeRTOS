@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -45,7 +45,7 @@
 /** Return count in buffer */
 #define GCIRC_CNT(head,tail,size) (((head) - (tail)) % (size))
 
-/** Return space available, 0..size-1. always leave one free char as a completely full buffer 
+/** Return space available, 0..size-1. always leave one free char as a completely full buffer
     has head == tail, which is the same as empty */
 #define GCIRC_SPACE(head,tail,size) GCIRC_CNT((tail),((head)+1),(size))
 
@@ -129,10 +129,10 @@ static void GMACD_ResetTx(sGmacd *pDrv )
     /* Transmit Buffer Queue Pointer Register */
     GMAC_SetTxQueue(pHw, (uint32_t)pTd);
 }
-    
+
 /**
  *  \brief Disable RX & reset registers and descriptor list
- *  \param pDrv Pointer to GMAC Driver instance. 
+ *  \param pDrv Pointer to GMAC Driver instance.
  */
 static void GMACD_ResetRx(sGmacd *pDrv )
 {
@@ -161,12 +161,12 @@ static void GMACD_ResetRx(sGmacd *pDrv )
     GMAC_SetRxQueue(pHw, (uint32_t) pRd);
 }
 
-    
+
 /*---------------------------------------------------------------------------
  *         Exported functions
  *---------------------------------------------------------------------------*/
- 
- 
+
+
 /**
  *  \brief GMAC Interrupt handler
  *  \param pGmacd Pointer to GMAC Driver instance.
@@ -179,7 +179,7 @@ void GMACD_Handler(sGmacd *pGmacd )
     uint32_t isr;
     uint32_t rsr;
     uint32_t tsr;
-   
+
     uint32_t rxStatusFlag;
     uint32_t txStatusFlag;
     isr = GMAC_GetItStatus(pHw);
@@ -204,7 +204,7 @@ void GMACD_Handler(sGmacd *pGmacd )
         /* Check HNO */
         if (rsr & GMAC_RSR_HNO) {
             rxStatusFlag |= GMAC_RSR_HNO;
-        }        
+        }
         /* Clear status */
         GMAC_ClearRxStatus(pHw, rxStatusFlag);
 
@@ -251,7 +251,7 @@ void GMACD_Handler(sGmacd *pGmacd )
         /* Check LCO */
         if (tsr & GMAC_TSR_LCO) {
             txStatusFlag |= GMAC_TSR_LCO;
-        }        
+        }
         /* Clear status */
         GMAC_ClearTxStatus(pHw, txStatusFlag);
 
@@ -273,14 +273,14 @@ void GMACD_Handler(sGmacd *pGmacd )
                 GCIRC_INC( pGmacd->wTxTail, pGmacd->wTxListSize );
             } while (GCIRC_CNT(pGmacd->wTxHead, pGmacd->wTxTail, pGmacd->wTxListSize));
         }
-        
+
         if (tsr & GMAC_TSR_RLE) {
             /* Notify upper layer RLE */
             if (*pTxCb) {
                 (*pTxCb)(txStatusFlag);
             }
         }
-        
+
         /* If a wakeup has been scheduled, notify upper layer that it can
            send other packets, send will be successfull. */
         if((GCIRC_SPACE(pGmacd->wTxHead,
@@ -299,7 +299,7 @@ void GMACD_Handler(sGmacd *pGmacd )
 
 /**
  * \brief Initialize the GMAC with the Gmac controller address
- *  \param pGmacd Pointer to GMAC Driver instance. 
+ *  \param pGmacd Pointer to GMAC Driver instance.
  *  \param pHw    Pointer to HW address for registers.
  *  \param bID     HW ID for power management
  *  \param enableCAF    Enable/Disable CopyAllFrame.
@@ -307,12 +307,12 @@ void GMACD_Handler(sGmacd *pGmacd )
  */
  void GMACD_Init(sGmacd *pGmacd,
                 Gmac *pHw,
-                uint8_t bID, 
-                uint8_t enableCAF, 
+                uint8_t bID,
+                uint8_t enableCAF,
                 uint8_t enableNBC )
 {
     uint32_t dwNcfgr;
-    
+
     /* Check parameters */
     assert(GRX_BUFFERS * GMAC_RX_UNITSIZE > GMAC_FRAME_LENTGH_MAX);
 
@@ -328,7 +328,7 @@ void GMACD_Handler(sGmacd *pGmacd )
     /* Disable TX & RX and more */
     GMAC_NetworkControl(pHw, 0);
     GMAC_DisableIt(pHw, ~0u);
-    
+
     GMAC_ClearStatistics(pHw);
     /* Clear all status bits in the receive status register. */
     GMAC_ClearRxStatus(pHw, GMAC_RSR_RXOVR | GMAC_RSR_REC | GMAC_RSR_BNA |GMAC_RSR_HNO);
@@ -350,7 +350,7 @@ void GMACD_Handler(sGmacd *pGmacd )
     if( enableNBC ) {
         dwNcfgr |= GMAC_NCFGR_NBC;
     }
-    
+
     GMAC_Configure(pHw, dwNcfgr);
 }
 
@@ -417,18 +417,18 @@ uint8_t GMACD_InitTransfer( sGmacd *pGmacd,
     GMAC_StatisticsWriteEnable(pHw, 1);
 
     /* Setup the interrupts for TX (and errors) */
-    GMAC_EnableIt(pHw, GMAC_IER_MFS 
+    GMAC_EnableIt(pHw, GMAC_IER_MFS
                       |GMAC_IER_RCOMP
                       |GMAC_IER_RXUBR
                       |GMAC_IER_TXUBR
                       |GMAC_IER_TUR
                       |GMAC_IER_RLEX
-                      |GMAC_IER_TFC 
+                      |GMAC_IER_TFC
                       |GMAC_IER_TCOMP
-                      |GMAC_IER_ROVR 
+                      |GMAC_IER_ROVR
                       |GMAC_IER_HRESP
-                      |GMAC_IER_PFNZ 
-                      |GMAC_IER_PTZ 
+                      |GMAC_IER_PFNZ
+                      |GMAC_IER_PTZ
                       |GMAC_IER_PFTR
                       |GMAC_IER_EXINT
                       |GMAC_IER_DRQFR
@@ -460,9 +460,9 @@ void GMACD_Reset(sGmacd *pGmacd)
 }
 
 /**
- * \brief Send a packet with GMAC. If the packet size is larger than transfer buffer size 
+ * \brief Send a packet with GMAC. If the packet size is larger than transfer buffer size
  * error returned. If packet transfer status is monitored, specify callback for each packet.
- *  \param pGmacd Pointer to GMAC Driver instance. 
+ *  \param pGmacd Pointer to GMAC Driver instance.
  *  \param buffer   The buffer to be send
  *  \param size     The size of buffer to be send
  *  \param fGMAC_TxCallback Threshold Wakeup callback
@@ -477,7 +477,7 @@ uint8_t GMACD_Send(sGmacd *pGmacd,
     Gmac *pHw = pGmacd->pHw;
     sGmacTxDescriptor      *pTxTd;
     volatile fGmacdTransferCallback *pfTxCb;
-    
+
     TRACE_DEBUG("GMAC_Send\n\r");
     /* Check parameter */
     if (size > GMAC_TX_UNITSIZE) {
@@ -506,15 +506,15 @@ uint8_t GMACD_Send(sGmacd *pGmacd,
     /* Update TD status. The buffer size defined is length of ethernet frame
       so it's always the last buffer of the frame. */
     if (pGmacd->wTxHead == pGmacd->wTxListSize-1) {
-        pTxTd->status.val = 
+        pTxTd->status.val =
             (size & GMAC_LENGTH_FRAME) | GMAC_TX_LAST_BUFFER_BIT | GMAC_TX_WRAP_BIT;
     }
     else {
         pTxTd->status.val = (size & GMAC_LENGTH_FRAME) | GMAC_TX_LAST_BUFFER_BIT;
     }
-    
+
     GCIRC_INC(pGmacd->wTxHead, pGmacd->wTxListSize);
-    
+
     //CP15_flush_dcache_for_dma ((uint32_t)(pTxTd), ((uint32_t)(pTxTd) + sizeof(pTxTd)));
     /* Tx packets count */
 
@@ -540,15 +540,15 @@ uint32_t GMACD_TxLoad(sGmacd *pGmacd)
  * \brief Receive a packet with GMAC.
  * If not enough buffer for the packet, the remaining data is lost but right
  * frame length is returned.
- *  \param pGmacd Pointer to GMAC Driver instance. 
+ *  \param pGmacd Pointer to GMAC Driver instance.
  *  \param pFrame           Buffer to store the frame
  *  \param frameSize        Size of the frame
  *  \param pRcvSize         Received size
  *  \return                 OK, no data, or frame too small
  */
-uint8_t GMACD_Poll(sGmacd * pGmacd, 
-                  uint8_t *pFrame, 
-                  uint32_t frameSize, 
+uint8_t GMACD_Poll(sGmacd * pGmacd,
+                  uint8_t *pFrame,
+                  uint32_t frameSize,
                   uint32_t *pRcvSize)
 {
 
@@ -558,12 +558,12 @@ uint8_t GMACD_Poll(sGmacd * pGmacd,
     uint32_t   tmpIdx = pGmacd->wRxI;
     volatile sGmacRxDescriptor *pRxTd = &pGmacd->pRxD[pGmacd->wRxI];
     uint8_t isFrame = 0;
-    
+
     if (pFrame == NULL) return GMACD_PARAM;
 
     /* Set the default return value */
     *pRcvSize = 0;
-    
+
     /* Process received RxTd */
     while ((pRxTd->addr.val & GMAC_RX_OWNERSHIP_BIT) == GMAC_RX_OWNERSHIP_BIT)
     {
@@ -605,7 +605,7 @@ uint8_t GMACD_Poll(sGmacd * pGmacd,
             {
                 bufferLength = frameSize - tmpFrameSize;
             }
-         
+
             memcpy(pTmpFrame, (void*)(pRxTd->addr.val & GMAC_ADDRESS_MASK), bufferLength);
             pTmpFrame += bufferLength;
             tmpFrameSize += bufferLength;
@@ -631,13 +631,13 @@ uint8_t GMACD_Poll(sGmacd * pGmacd,
                 return GMACD_OK;
             }
         }
-        
+
         /* SOF has not been detected, skip the fragment */
         else {
            pRxTd->addr.val &= ~(GMAC_RX_OWNERSHIP_BIT);
            pGmacd->wRxI = tmpIdx;
         }
-       
+
         /* Process the next buffer */
         pRxTd = &pGmacd->pRxD[tmpIdx];
     }
@@ -647,10 +647,10 @@ uint8_t GMACD_Poll(sGmacd * pGmacd,
 /**
  * \brief Registers pRxCb callback. Callback will be invoked after the next received
  * frame. When GMAC_Poll() returns GMAC_RX_NO_DATA the application task call GMAC_Set_RxCb()
- * to register pRxCb() callback and enters suspend state. The callback is in charge 
+ * to register pRxCb() callback and enters suspend state. The callback is in charge
  * to resume the task once a new frame has been received. The next time GMAC_Poll()
  * is called, it will be successfull.
- *  \param pGmacd Pointer to GMAC Driver instance. 
+ *  \param pGmacd Pointer to GMAC Driver instance.
  *  \param pRxCb   Pointer to callback function
  *  \return        OK, no data, or frame too small
  */
@@ -675,9 +675,9 @@ void GMACD_SetRxCallback(sGmacd * pGmacd, fGmacdTransferCallback fRxCb)
 /**
  * Register/Clear TX wakeup callback.
  *
- * When GMACD_Send() returns GMACD_TX_BUSY (all TD busy) the application 
- * task calls GMACD_SetTxWakeupCallback() to register fWakeup() callback and 
- * enters suspend state. The callback is in charge to resume the task once 
+ * When GMACD_Send() returns GMACD_TX_BUSY (all TD busy) the application
+ * task calls GMACD_SetTxWakeupCallback() to register fWakeup() callback and
+ * enters suspend state. The callback is in charge to resume the task once
  * several TD have been released. The next time GMACD_Send() will be called,
  * it shall be successfull.
  *

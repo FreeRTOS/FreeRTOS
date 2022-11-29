@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -40,7 +40,7 @@
  *    IRQ_EnableIT and IRQ_DisableIT.
  *  -# Start or stop the timer clock using TC_Start() and TC_Stop().
  */
- 
+
 #ifndef IRQ_H
 #define IRQ_H
 
@@ -55,7 +55,7 @@
 /*------------------------------------------------------------------------------
  *         Global functions
  *------------------------------------------------------------------------------*/
- 
+
  #ifdef __cplusplus
  extern "C" {
 #endif
@@ -72,4 +72,3 @@ extern void IRQ_DisableIT(uint32_t source);
 #endif
 
 #endif //#ifndef IRQ_H
-

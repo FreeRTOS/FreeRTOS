@@ -196,4 +196,3 @@ __interrupt void UART2_TxISR (void)
 		SSR02_TIE = 0;
 	}
 }
-

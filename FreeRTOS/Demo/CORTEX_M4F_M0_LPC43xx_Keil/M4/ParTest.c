@@ -158,4 +158,3 @@ static I2C_M_SETUP_Type xI2CMessage; /* Static so it is not on the stack as this
 	}
 }
 /*-----------------------------------------------------------*/
-

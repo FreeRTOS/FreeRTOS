@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -30,7 +30,7 @@
 /**
  * \file
  *
- * Implementation of USART (Universal Synchronous Asynchronous Receiver 
+ * Implementation of USART (Universal Synchronous Asynchronous Receiver
  * Transmitter) controller.
  *
  */
@@ -65,7 +65,7 @@ void USART_SetBaudrate(Usart *pUsart,
 					uint32_t masterClock)
 {
 	unsigned int CD, FP, BaudError, ActualBaudRate;
-	/* Configure baudrate*/  
+	/* Configure baudrate*/
 	BaudError = 10;
 	OverSamp = 0;
 
@@ -73,9 +73,9 @@ void USART_SetBaudrate(Usart *pUsart,
 		if ((pUsart->US_MR & US_MR_SYNC) == 0)
 		{
 			/* 7816 mode */
-			if( ((pUsart->US_MR & US_MR_USART_MODE_IS07816_T_0) 
+			if( ((pUsart->US_MR & US_MR_USART_MODE_IS07816_T_0)
 					== US_MR_USART_MODE_IS07816_T_0 )
-				|| ((pUsart->US_MR & US_MR_USART_MODE_IS07816_T_1) 
+				|| ((pUsart->US_MR & US_MR_USART_MODE_IS07816_T_1)
 					== US_MR_USART_MODE_IS07816_T_1 ))
 			{
 				/* Define the baud rate divisor register */
@@ -93,10 +93,10 @@ void USART_SetBaudrate(Usart *pUsart,
 				ActualBaudRate = (masterClock/(CD * 8 + FP)) / ( 2 - OverSamp);
 				BaudError = (100 - ((baudrate * 100 / ActualBaudRate)));
 
-				if (BaudError > 5) 
+				if (BaudError > 5)
 				{
 					OverSamp++;
-					if(OverSamp >= 2) 
+					if(OverSamp >= 2)
 					{
 						TRACE_ERROR("Canont set this baudrate \n\r");
 								break;
@@ -106,7 +106,7 @@ void USART_SetBaudrate(Usart *pUsart,
 			}
 		}
 		/*Synchronous SPI  */
-		if((pUsart->US_MR & US_MR_USART_MODE_SPI_MASTER) 
+		if((pUsart->US_MR & US_MR_USART_MODE_SPI_MASTER)
 				== US_MR_USART_MODE_SPI_MASTER
 			|| ((pUsart->US_MR & US_MR_SYNC) == US_MR_SYNC) )
 		{
@@ -116,9 +116,9 @@ void USART_SetBaudrate(Usart *pUsart,
 				FP = ((masterClock / baudrate) - CD);
 			}
 		}
-		
+
 	pUsart->US_BRGR = ( US_BRGR_CD(CD) | US_BRGR_FP(FP));
-	
+
 	/* Configure OverSamp*/
 	pUsart->US_MR |= (OverSamp << 19);
 }
@@ -143,8 +143,8 @@ void USART_Configure(Usart *pUsart,
 		| US_CR_RXDIS | US_CR_TXDIS | US_CR_RSTSTA;
 	pUsart->US_IDR = 0xFFFFFFFF;
 
-	pUsart->US_MR = mode; 
-	/* Configure baudrate*/  
+	pUsart->US_MR = mode;
+	/* Configure baudrate*/
 	USART_SetBaudrate(pUsart, 0, baudrate, masterClock);
 
 	/* Enable receiver and transmitter */
@@ -154,7 +154,7 @@ void USART_Configure(Usart *pUsart,
 #if ( defined (__GNUC__) && !defined (__SAMBA__) )
 	setvbuf(stdout, (char *)NULL, _IONBF, 0);
 #endif
- 
+
 }
 /**
  * \brief Enables or disables the transmitter of an USART peripheral.
@@ -296,7 +296,7 @@ void USART_Write( Usart *pUsart, uint16_t data, volatile uint32_t timeOut)
 }
 
 /**
- * \brief  Reads and return a packet of data on the specified USART peripheral. 
+ * \brief  Reads and return a packet of data on the specified USART peripheral.
  * This function operates asynchronously, so it waits until some data has been
  * received.
  *
@@ -320,7 +320,7 @@ uint16_t USART_Read( Usart *pUsart, volatile uint32_t timeOut)
 }
 
 /**
- * \brief  Returns 1 if some data has been received and can be read from an 
+ * \brief  Returns 1 if some data has been received and can be read from an
  * USART; otherwise returns 0.
  *
  * \param pUsart  Pointer to an USART instance.
@@ -442,7 +442,7 @@ void USART_EnableRecvTimeOut(Usart *pUsart, uint32_t Timeout)
  */
 void USART_EnableTxTimeGaurd(Usart *pUsart, uint32_t TimeGaurd)
 {
-	if( ( (pUsart->US_MR & US_MR_USART_MODE_LON ) && TimeGaurd <= 16777215) || 
+	if( ( (pUsart->US_MR & US_MR_USART_MODE_LON ) && TimeGaurd <= 16777215) ||
 			((pUsart->US_MR & US_MR_USART_MODE_LON ) && TimeGaurd <= 255) ) {
 	  pUsart->US_TTGR = TimeGaurd;
 	} else {
@@ -462,6 +462,6 @@ void USART_AcknowledgeRxTimeOut(Usart *pUsart, uint8_t Periodic)
 		pUsart->US_CR = US_CR_RETTO;     // Restart timeout timer
 	} else {
 		// Puts USARt in Idle mode and waits for a char after timeout
-		pUsart->US_CR = US_CR_STTTO; 
+		pUsart->US_CR = US_CR_STTTO;
 	}
 }

@@ -85,4 +85,3 @@ girq20_b5(void)
 /* end girq20.c */
 /**   @}
  */
-

@@ -129,4 +129,3 @@ an interrupt in the M4 core.  See the comments at the top of main.c. */
 #define sbSEND_COMPLETED( pxStreamBuffer ) vGenerateM7ToM4Interrupt( pxStreamBuffer )
 
 #endif /* FREERTOS_CONFIG_H */
-

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -61,4 +61,3 @@ uint8_t RSTC_IsBusy(void);
 uint32_t RSTC_GetStatus(void);
 
 #endif /* #ifndef _RSTC_H */
-

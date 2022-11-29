@@ -5,10 +5,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  *
- * Supporting functions for trace streaming, used by the "stream ports" 
+ * Supporting functions for trace streaming, used by the "stream ports"
  * for reading and writing data to the interface.
  */
- 
+
 #include <trcRecorder.h>
 #include <xscope.h>
 

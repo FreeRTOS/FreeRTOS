@@ -257,4 +257,3 @@ const unsigned char ucWrite2 = ( unsigned char ) 0x02;
 void vApplicationIdleHook( void )
 {
 }
-

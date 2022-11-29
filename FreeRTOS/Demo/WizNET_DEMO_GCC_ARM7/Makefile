@@ -101,13 +101,3 @@ $(ARM_OBJ) : %.o : %.c $(LDSCRIPT) Makefile
 
 clean :
 	touch makefile
-
-
-
-
-
-
-
-
-
-

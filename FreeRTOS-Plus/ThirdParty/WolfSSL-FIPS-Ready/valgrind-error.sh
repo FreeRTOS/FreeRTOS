@@ -21,4 +21,3 @@ fi
 rm $TMP
 
 exit $result
-

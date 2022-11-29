@@ -2543,4 +2543,3 @@ int wc_Pkcs11_CryptoDevCb(int devId, wc_CryptoInfo* info, void* ctx)
 }
 
 #endif /* HAVE_PKCS11 */
-

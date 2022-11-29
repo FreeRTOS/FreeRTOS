@@ -372,6 +372,3 @@ portBASE_TYPE xReturn = pdTRUE, xTask;
 
 	return xReturn;
 }
-
-
-

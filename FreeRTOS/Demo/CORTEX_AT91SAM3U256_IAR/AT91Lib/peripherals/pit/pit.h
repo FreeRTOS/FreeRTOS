@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -74,4 +74,3 @@ extern unsigned int PIT_GetPIIR(void);
 extern unsigned int PIT_GetPIVR(void);
 
 #endif //#ifndef PIT_H
-

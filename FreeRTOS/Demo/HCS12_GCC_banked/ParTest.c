@@ -69,4 +69,3 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 		LEDIO ^= (1<<uxLED);           /* Invert appropriate bit on port */
 	portEXIT_CRITICAL();
 }
-

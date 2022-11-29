@@ -975,4 +975,3 @@ uint32_t pmc_get_audio_pad_clock(void)
 	return (uint32_t)clk;
 }
 #endif /* CONFIG_HAVE_PMC_AUDIO_CLOCK */
-

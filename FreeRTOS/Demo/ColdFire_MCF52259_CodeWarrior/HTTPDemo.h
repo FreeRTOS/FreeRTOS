@@ -37,4 +37,3 @@ void            vlwIPInit( void );
 
 #endif  /*
  */
-

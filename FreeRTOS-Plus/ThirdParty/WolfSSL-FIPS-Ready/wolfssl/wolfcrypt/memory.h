@@ -234,4 +234,3 @@ WOLFSSL_API int wolfSSL_GetAllocators(wolfSSL_Malloc_cb*,
 #endif
 
 #endif /* WOLFSSL_MEMORY_H */
-

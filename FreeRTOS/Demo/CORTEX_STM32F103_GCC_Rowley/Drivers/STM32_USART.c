@@ -292,8 +292,3 @@ char cChar;
 void USART2_IRQHandler( void )
 {
 }
-
-
-
-
-

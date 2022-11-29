@@ -184,4 +184,3 @@ extern void SDRAMC_Configure( SSdramc_Memory* pMemory, uint32_t dwClockFrequency
     dw/=1000000u ;
     SDRAMC->SDRAMC_TR = SDRAMC_TR_COUNT( dw ) ;
 }
-

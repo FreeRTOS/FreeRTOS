@@ -1,6 +1,6 @@
 /*******************************************************************************
  * (c) Copyright 2007-2015 Microsemi SoC Products Group. All rights reserved.
- * 
+ *
  * SVN $Revision: 7967 $
  * SVN $Date: 2015-10-09 18:48:26 +0530 (Fri, 09 Oct 2015) $
  */

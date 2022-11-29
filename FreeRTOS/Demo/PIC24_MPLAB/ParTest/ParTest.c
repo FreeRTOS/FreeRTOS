@@ -94,4 +94,3 @@ unsigned portBASE_TYPE uxLEDBit;
 	}
 	portEXIT_CRITICAL();
 }
-

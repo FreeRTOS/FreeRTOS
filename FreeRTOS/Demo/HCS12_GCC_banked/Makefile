@@ -61,4 +61,3 @@ main.elf:	$(OBJS)
 
 clean::
 	$(RM) $(OBJS) *.elf *.s19
-

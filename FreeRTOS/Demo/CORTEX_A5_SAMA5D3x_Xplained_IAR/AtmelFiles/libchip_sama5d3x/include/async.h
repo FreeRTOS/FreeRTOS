@@ -77,4 +77,3 @@ extern uint32_t ASYNC_IsFinished( Async* pAsync ) ;
 #endif
 
 #endif /* #ifndef _ASYNC_ */
-

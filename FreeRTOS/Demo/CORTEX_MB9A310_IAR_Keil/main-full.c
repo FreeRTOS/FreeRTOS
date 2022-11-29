@@ -638,4 +638,3 @@ void vApplicationTickHook( void )
 	vTimerPeriodicISRTests();
 }
 /*-----------------------------------------------------------*/
-

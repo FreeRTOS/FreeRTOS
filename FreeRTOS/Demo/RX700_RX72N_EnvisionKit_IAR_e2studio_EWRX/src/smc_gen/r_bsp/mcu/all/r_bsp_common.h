@@ -141,4 +141,3 @@ uint32_t R_BSP_GetIClkFreqHz(void);
 
 /* End of multiple inclusion prevention macro */
 #endif  /* R_BSP_COMMON_H */
-

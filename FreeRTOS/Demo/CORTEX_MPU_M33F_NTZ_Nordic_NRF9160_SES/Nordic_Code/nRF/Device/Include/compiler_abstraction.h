@@ -76,7 +76,7 @@ POSSIBILITY OF SUCH DAMAGE.
         #define NRF_STATIC_ASSERT(cond, msg) \
             ;enum { NRF_STRING_CONCATENATE(static_assert_on_line_, __LINE__) = 1 / (!!(cond)) }
     #endif
-    
+
 #elif defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
 
     #ifndef __ASM
@@ -150,7 +150,7 @@ POSSIBILITY OF SUCH DAMAGE.
     #ifndef __UNUSED
         #define __UNUSED
     #endif
-    
+
     #define GET_SP()                __get_SP()
 
     #ifndef NRF_STATIC_ASSERT
@@ -176,7 +176,7 @@ POSSIBILITY OF SUCH DAMAGE.
     #endif
 
     #ifndef __PACKED
-        #define __PACKED           __attribute__((packed)) 
+        #define __PACKED           __attribute__((packed))
     #endif
 
     #ifndef __UNUSED
@@ -218,7 +218,7 @@ POSSIBILITY OF SUCH DAMAGE.
     #ifndef __ALIGN
         #define __ALIGN(n)          __align(n)
     #endif
-    
+
     /* Not defined for TASKING. */
     #ifndef __PACKED
         #define __PACKED

@@ -829,5 +829,3 @@ void EMAC_Clear_TxWakeUpCb(void)
 {
     txTd.wakeupCb = (EMAC_WakeupCallback) 0;
 }
-
-

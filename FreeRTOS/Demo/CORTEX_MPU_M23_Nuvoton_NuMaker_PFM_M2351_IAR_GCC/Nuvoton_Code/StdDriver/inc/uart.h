@@ -469,4 +469,3 @@ uint32_t UART_Write(UART_T* uart, uint8_t pu8TxBuf[], uint32_t u32WriteBytes);
 #endif /* __UART_H__ */
 
 /*** (C) COPYRIGHT 2016 Nuvoton Technology Corp. ***/
-

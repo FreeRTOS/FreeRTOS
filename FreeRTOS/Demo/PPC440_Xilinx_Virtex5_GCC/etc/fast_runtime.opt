@@ -4,7 +4,7 @@ FLOWTYPE = FPGA;
 ##
 ## Option File For Xilinx FPGA Implementation Flow for Fast
 ## Runtime.
-## 
+##
 ## Version: 4.1.1
 ###############################################################
 #
@@ -12,10 +12,10 @@ FLOWTYPE = FPGA;
 #
 # Type "ngdbuild -h" for a detailed list of ngdbuild command line options
 #
-Program ngdbuild 
+Program ngdbuild
 -p <partname>;        # Partname to use - picked from xflow commandline
 -nt timestamp;        # NGO File generation. Regenerate only when
-                      # source netlist is newer than existing 
+                      # source netlist is newer than existing
                       # NGO file (default)
 -bm <design>.bmm     # Block RAM memory map file
 <userdesign>;         # User design - pick from xflow command line
@@ -79,5 +79,3 @@ Program post_par_trce
 <inputdir><design>.ncd;   # Input placed and routed ncd
 <inputdir><design>.pcf;   # Physical constraints file
 END Program post_par_trce
-
-

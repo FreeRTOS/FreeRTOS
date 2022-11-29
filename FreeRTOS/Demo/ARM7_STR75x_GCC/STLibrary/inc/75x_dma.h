@@ -1,19 +1,19 @@
 /******************** (C) COPYRIGHT 2006 STMicroelectronics ********************
 * File Name          : 75x_dma.h
 * Author             : MCD Application Team
-* Date First Issued  : 03/10/2006 
+* Date First Issued  : 03/10/2006
 * Description        : This file contains all the functions prototypes for the
 *                      DMA software library.
 ********************************************************************************
 * History:
 * 07/17/2006 : V1.0
-* 03/10/2006 : V0.1 
+* 03/10/2006 : V0.1
 ********************************************************************************
 * THE PRESENT SOFTWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
 * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME.
-* AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY DIRECT, 
+* AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY DIRECT,
 * INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING FROM THE
-* CONTENT OF SUCH SOFTWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING 
+* CONTENT OF SUCH SOFTWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING
 * INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 *******************************************************************************/
 
@@ -29,16 +29,16 @@
 typedef struct
 {
   u32 DMA_SRCBaseAddr;
-  u32 DMA_DSTBaseAddr;	
-  u16 DMA_BufferSize;	
-  u16 DMA_SRC;   
-  u16 DMA_DST; 
+  u32 DMA_DSTBaseAddr;
+  u16 DMA_BufferSize;
+  u16 DMA_SRC;
+  u16 DMA_DST;
   u16 DMA_SRCSize;
   u16 DMA_SRCBurst;
   u16 DMA_DSTSize;
-  u16 DMA_Mode;  
-  u16 DMA_M2M; 
-  u16 DMA_DIR; 
+  u16 DMA_Mode;
+  u16 DMA_M2M;
+  u16 DMA_DIR;
 }DMA_InitTypeDef;
 
 /* Exported constants --------------------------------------------------------*/

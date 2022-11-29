@@ -158,4 +158,3 @@ volatile uint32_t ulDummy;
 	unused. */
 	( void ) ulDummy;
 }
-

@@ -165,7 +165,7 @@ void PWR_WakeUpPinCmd(FunctionalState NewState)
 *                       - PWR_Regulator_ON: STOP mode with regulator ON
 *                       - PWR_Regulator_LowPower: STOP mode with
 *                         regulator in low power mode
-*                  - PWR_STOPEntry: specifies if STOP mode in entered with WFI or 
+*                  - PWR_STOPEntry: specifies if STOP mode in entered with WFI or
 *                    WFE instruction.
 *                    This parameter can be one of the following values:
 *                       - PWR_STOPEntry_WFI: enter STOP mode with WFI instruction
@@ -180,7 +180,7 @@ void PWR_EnterSTOPMode(u32 PWR_Regulator, u8 PWR_STOPEntry)
   /* Check the parameters */
   assert(IS_PWR_REGULATOR(PWR_Regulator));
   assert(IS_PWR_STOP_ENTRY(PWR_STOPEntry));
-  
+
   /* Select the regulator state in STOP mode ---------------------------------*/
   tmpreg = PWR->CR;
 
@@ -195,10 +195,10 @@ void PWR_EnterSTOPMode(u32 PWR_Regulator, u8 PWR_STOPEntry)
 
   /* Set SLEEPDEEP bit of Cortex System Control Register */
   *(vu32 *) SCB_SysCtrl |= SysCtrl_SLEEPDEEP_Set;
-  
+
   /* Select STOP mode entry --------------------------------------------------*/
   if(PWR_STOPEntry == PWR_STOPEntry_WFI)
-  {   
+  {
     /* Request Wait For Interrupt */
     __WFI();
   }
@@ -248,7 +248,7 @@ FlagStatus PWR_GetFlagStatus(u32 PWR_FLAG)
 
   /* Check the parameters */
   assert(IS_PWR_GET_FLAG(PWR_FLAG));
-  
+
   if ((PWR->CSR & PWR_FLAG) != (u32)RESET)
   {
     bitstatus = SET;
@@ -276,7 +276,7 @@ void PWR_ClearFlag(u32 PWR_FLAG)
 {
   /* Check the parameters */
   assert(IS_PWR_CLEAR_FLAG(PWR_FLAG));
-         
+
   PWR->CR |=  PWR_FLAG << 2;
 }
 

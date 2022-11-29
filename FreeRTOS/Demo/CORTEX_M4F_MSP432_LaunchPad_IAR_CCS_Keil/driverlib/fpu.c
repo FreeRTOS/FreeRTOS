@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -112,4 +112,3 @@ void FPU_setRoundingMode(uint32_t mode)
     //
     FPU->FPDSCR = (FPU->FPDSCR & ~(FPU_FPDSCR_RMode_Msk)) | mode;
 }
-

@@ -81,4 +81,3 @@ void AT91F_LowLevelInit( void) @ "ICODE"
 	AT91C_BASE_AIC->AIC_SPU  = (int) AT91F_Spurious_handler ;
 
 }
-

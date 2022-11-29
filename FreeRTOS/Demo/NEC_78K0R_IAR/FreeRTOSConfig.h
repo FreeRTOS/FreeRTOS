@@ -116,4 +116,3 @@
 	#endif /* __IAR_SYSTEMS_ICC__ */
 
 #endif /* FREERTOS_CONFIG_H */
-

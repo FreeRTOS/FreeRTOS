@@ -11,7 +11,7 @@ Virtual CPU File=wv911s1.dll
 Monitor Load=0
 Monitor Load Condition=Disable
 [Device]
-Communication=LAN   
+Communication=LAN
 ProductID=0
 Protocol=0
 [Target]

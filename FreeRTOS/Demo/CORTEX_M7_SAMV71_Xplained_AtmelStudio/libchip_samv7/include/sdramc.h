@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -66,5 +66,5 @@ typedef struct _SSdramc_Memory
 
 } SSdramc_Memory ;
 
-extern void SDRAMC_Configure( SSdramc_Memory* pMemory, 
+extern void SDRAMC_Configure( SSdramc_Memory* pMemory,
 		uint32_t dwClockFrequency ) ;

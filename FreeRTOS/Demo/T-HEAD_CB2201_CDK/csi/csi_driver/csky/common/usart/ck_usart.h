@@ -86,4 +86,3 @@ typedef struct {
 } dw_usart_reg_t;
 
 #endif /* __CK_USART_H */
-

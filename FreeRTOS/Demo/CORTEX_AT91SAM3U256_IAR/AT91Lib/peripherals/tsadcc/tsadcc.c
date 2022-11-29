@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -60,7 +60,7 @@ void TSADCC_SetOperatingMode(unsigned int mode)
 {
     SANITY_CHECK(  (mode == AT91C_TSADC_TSAMOD_ADC_ONLY_MODE)
                  | (mode == AT91C_TSADC_TSAMOD_TS_ONLY_MODE));
-                 
+
     AT91C_BASE_TSADC->TSADC_MR = (AT91C_BASE_TSADC->TSADC_MR
                                   & ~AT91C_TSADC_TSAMOD)
                                  | mode;
@@ -74,11 +74,11 @@ void TSADCC_SetOperatingMode(unsigned int mode)
 void TSADCC_SetLowResolution(unsigned char enable)
 {
     if (enable) {
-    
+
         AT91C_BASE_TSADC->TSADC_MR |= AT91C_TSADC_LOWRES;
     }
     else {
-    
+
         AT91C_BASE_TSADC->TSADC_MR &= ~AT91C_TSADC_LOWRES;
     }
 }
@@ -91,11 +91,11 @@ void TSADCC_SetLowResolution(unsigned char enable)
 void TSADCC_SetSleepMode(unsigned char enable)
 {
     if (enable) {
-    
+
         AT91C_BASE_TSADC->TSADC_MR |= AT91C_TSADC_SLEEP;
     }
     else {
-    
+
         AT91C_BASE_TSADC->TSADC_MR &= ~AT91C_TSADC_SLEEP;
     }
 }
@@ -107,11 +107,11 @@ void TSADCC_SetSleepMode(unsigned char enable)
 void TSADCC_SetPenDetect(unsigned char enable)
 {
     if (enable) {
-    
+
         AT91C_BASE_TSADC->TSADC_MR |= AT91C_TSADC_PENDET;
     }
     else {
-        
+
         AT91C_BASE_TSADC->TSADC_MR &= ~AT91C_TSADC_PENDET;
     }
 }
@@ -126,7 +126,7 @@ void TSADCC_SetPenDetect(unsigned char enable)
 void TSADCC_SetAdcFrequency(unsigned int adcclk, unsigned int mck)
 {
     unsigned int prescal;
-    
+
     // Formula for PRESCAL is:
     // PRESCAL = (MCK / (2 * ADCCLK)) + 1
     // First, we do the division, multiplied by 10 to get higher precision
@@ -134,20 +134,20 @@ void TSADCC_SetAdcFrequency(unsigned int adcclk, unsigned int mck)
     // than required frequency.
     prescal = (mck * 5) / adcclk;
     if ((prescal % 10) > 0) {
-    
+
         prescal = (prescal / 10);
     }
     else {
-    
+
         SANITY_CHECK((prescal / 10) != 0);
         prescal = (prescal / 10) - 1;
     }
     SANITY_CHECK((prescal & ~0x3F) == 0);
-    
+
     AT91C_BASE_TSADC->TSADC_MR = (  AT91C_BASE_TSADC->TSADC_MR
                                   & ~AT91C_TSADC_PRESCAL)
                                  | (prescal << 8);
-                                 
+
     // Save clock frequency for further timing calculations
     lAdcclk = adcclk;
 }
@@ -161,26 +161,26 @@ void TSADCC_SetAdcFrequency(unsigned int adcclk, unsigned int mck)
 void TSADCC_SetStartupTime(unsigned int time)
 {
     unsigned int startup;
-    
+
     SANITY_CHECK(lAdcclk != 0);
-        
+
     // Formula for STARTUP is:
     // STARTUP = (time x ADCCLK) / (1000000 x 8) - 1
     // Division multiplied by 10 for higher precision
     startup = (time * lAdcclk) / (800000);
     if ((startup % 10) > 0) {
-    
+
         startup /= 10;
     }
     else {
-    
+
         startup /= 10;
         if (startup > 0) {
-        
+
             startup--;
         }
     }
-    
+
     SANITY_CHECK((startup & ~0x7F) == 0);
     AT91C_BASE_TSADC->TSADC_MR = (  AT91C_BASE_TSADC->TSADC_MR
                                   & ~AT91C_TSADC_STARTUP)
@@ -197,24 +197,24 @@ void TSADCC_SetStartupTime(unsigned int time)
 void TSADCC_SetTrackAndHoldTime(unsigned int time)
 {
     unsigned int shtim;
-    
+
     SANITY_CHECK(lAdcclk != 0);
-    
+
     // Formula for SHTIM:
     // SHTIM = (time x ADCCLK) / 1000000000 - 1
     // Since 1 billion is close to the maximum value for an integer, we first
     // divide ADCCLK by 1000 to avoid an overflow
     shtim = (time * (lAdcclk / 1000)) / 100000;
     if ((shtim % 10) > 0) {
-    
+
         shtim /= 10;
     }
     else {
-    
+
         shtim /= 10;
         if (shtim > 0) shtim--;
     }
-    
+
     SANITY_CHECK((shtim & ~0xF) == 0);
     AT91C_BASE_TSADC->TSADC_MR = (  AT91C_BASE_TSADC->TSADC_MR
                                   & ~AT91C_TSADC_SHTIM)
@@ -235,31 +235,31 @@ void TSADCC_SetDebounceTime(unsigned int time)
     unsigned int pendbc = 0;
     unsigned int targetValue;
     unsigned int currentValue;
-    
+
     SANITY_CHECK(lAdcclk != 0);
     SANITY_CHECK(time != 0);
-    
+
     // Divide time & ADCCLK first to avoid overflows
     while ((divisor > 1) && ((time % 10) == 0)) {
-    
+
         time /= 10;
         divisor /= 10;
     }
     while ((divisor > 1) && ((clock % 10) == 0)) {
-    
+
         clock /= 10;
         divisor /= 10;
     }
-    
+
     // Compute PENDBC value
     targetValue = time * clock / divisor;
     currentValue = 1;
     while (currentValue < targetValue) {
-    
+
         pendbc++;
         currentValue *= 2;
     }
-    
+
     SANITY_CHECK((pendbc & ~0xF) == 0);
     AT91C_BASE_TSADC->TSADC_MR = (  AT91C_BASE_TSADC->TSADC_MR
                                   & ~AT91C_TSADC_PENDBC)
@@ -281,7 +281,7 @@ void TSADCC_SetTriggerMode(unsigned int mode)
 {
     SANITY_CHECK(((mode & ~AT91C_TSADC_TRGMOD) == 0)
                  | ((mode & AT91C_TSADC_TRGMOD) != 0x7));
-    
+
     AT91C_BASE_TSADC->TSADC_TRGR = (AT91C_BASE_TSADC->TSADC_TRGR
                                     & ~AT91C_TSADC_TRGMOD)
                                    | mode;
@@ -297,24 +297,24 @@ void TSADCC_SetTriggerPeriod(unsigned int period)
 {
     unsigned int trgper;
     unsigned int divisor = 100000000;
-    
+
     while ((period >= 10) && (divisor >= 10)) {
-    
+
         period /= 10;
         divisor /= 10;
     }
-    
+
     trgper = (period * lAdcclk) / divisor;
     if ((trgper % 10) > 0) {
-    
+
         trgper /= 10;
     }
     else {
-    
+
         trgper /= 10;
         if (trgper > 0) trgper--;
     }
-    
+
     SANITY_CHECK((trgper & ~0xFFFF) == 0);
     AT91C_BASE_TSADC->TSADC_TRGR = (AT91C_BASE_TSADC->TSADC_TRGR
                                     & ~AT91C_TSADC_TRGPER)

@@ -8,7 +8,7 @@
  *   2011.6.22  ver 1.00    Preliminary version, first Release
  *
 ******************************************************************************/
-#ifndef __CONFIG_H 
+#ifndef __CONFIG_H
 #define __CONFIG_H
 
 #include <stdint.h>

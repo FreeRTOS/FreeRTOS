@@ -27,7 +27,7 @@ traceResult xTraceInternalEventBufferInitialize(uint8_t* puiBuffer, uint32_t uiS
 	/* uiSize must be larger than sizeof(TraceMultiCoreEventBuffer_t) or there will be no room for any data */
 	/* This should never fail */
 	TRC_ASSERT(uiSize > sizeof(TraceMultiCoreEventBuffer_t));
-	
+
 	/* pxInternalBuffer will be placed at the beginning of the puiBuffer */
 	pxInternalEventBuffer = (TraceMultiCoreEventBuffer_t*)puiBuffer;
 
@@ -48,7 +48,7 @@ traceResult xTraceInternalEventBufferPush(void *pvData, uint32_t uiSize, int32_t
 {
 	/* This should never fail */
 	TRC_ASSERT(xTraceIsComponentInitialized(TRC_RECORDER_COMPONENT_INTERNAL_EVENT_BUFFER));
-	
+
 	return xTraceMultiCoreEventBufferPush(pxInternalEventBuffer, pvData, uiSize, piBytesWritten);
 }
 
@@ -56,7 +56,7 @@ traceResult xTraceInternalEventBufferTransfer(int32_t *piBytesWritten)
 {
 	/* This should never fail */
 	TRC_ASSERT(xTraceIsComponentInitialized(TRC_RECORDER_COMPONENT_INTERNAL_EVENT_BUFFER));
-	
+
 	return xTraceMultiCoreEventBufferTransfer(pxInternalEventBuffer, piBytesWritten);
 }
 
@@ -64,7 +64,7 @@ traceResult xTraceInternalEventBufferClear()
 {
 	/* This should never fail */
 	TRC_ASSERT(xTraceIsComponentInitialized(TRC_RECORDER_COMPONENT_INTERNAL_EVENT_BUFFER));
-	
+
 	return xTraceMultiCoreEventBufferClear(pxInternalEventBuffer);
 }
 

@@ -91,11 +91,11 @@ enum {
     PSEUDO_HDR_SZ      = 12,  /* TCP Pseudo Header size in bytes */
     FATAL_ERROR_STATE  = 1,   /* SnifferSession fatal error state */
     TICKET_HINT_LEN    = 4,   /* Session Ticket Hint length */
-    TICKET_HINT_AGE_LEN= 4,   /* Session Ticket Age add length */        
+    TICKET_HINT_AGE_LEN= 4,   /* Session Ticket Age add length */
     EXT_TYPE_SZ        = 2,   /* Extension type length */
     MAX_INPUT_SZ       = MAX_RECORD_SIZE + COMP_EXTRA + MAX_MSG_EXTRA +
                          MTU_EXTRA,  /* Max input sz of reassembly */
-    
+
     /* TLS Extensions */
     EXT_SERVER_NAME                = 0x0000, /* a.k.a. SNI  */
     EXT_MAX_FRAGMENT_LENGTH        = 0x0001,
@@ -1447,7 +1447,7 @@ static int LoadKeyFile(byte** keyBuf, word32* keyBufSz,
             return -1;
         }
         fileSz = keySz;
-        XMEMCPY(loadBuf, keyFile, fileSz);        
+        XMEMCPY(loadBuf, keyFile, fileSz);
     }
 
     if (typeKey == WOLFSSL_FILETYPE_PEM) {
@@ -1618,7 +1618,7 @@ static int SetNamedPrivateKey(const char* name, const char* address, int port,
         if (isEphemeralKey) {
             /* auto detect key type with WC_PK_TYPE_NONE */
             /* keySz == 0 mean load file */
-            ret = wolfSSL_CTX_set_ephemeral_key(sniffer->ctx, WC_PK_TYPE_NONE, 
+            ret = wolfSSL_CTX_set_ephemeral_key(sniffer->ctx, WC_PK_TYPE_NONE,
                 keyFile, 0, type);
             if (ret == 0)
                 ret = WOLFSSL_SUCCESS;
@@ -1688,7 +1688,7 @@ int ssl_SetNamedPrivateKey(const char* name,
 
 int ssl_SetNamedPrivateKeyBuffer(const char* name,
                                  const char* address, int port,
-                                 const char* keyBuf, int keySz, int typeKey, 
+                                 const char* keyBuf, int keySz, int typeKey,
                                  const char* password, char* error)
 {
     int ret;
@@ -1710,8 +1710,8 @@ int ssl_SetNamedPrivateKeyBuffer(const char* name,
 
 /* Sets the private key for a specific server and port  */
 /* returns 0 on success, -1 on error */
-int ssl_SetPrivateKey(const char* address, int port, 
-                      const char* keyFile, int typeKey, 
+int ssl_SetPrivateKey(const char* address, int port,
+                      const char* keyFile, int typeKey,
                       const char* password, char* error)
 {
     int ret;
@@ -1731,7 +1731,7 @@ int ssl_SetPrivateKey(const char* address, int port,
 }
 
 int ssl_SetPrivateKeyBuffer(const char* address, int port,
-                            const char* keyBuf, int keySz, int typeKey, 
+                            const char* keyBuf, int keySz, int typeKey,
                             const char* password, char* error)
 {
     int ret;
@@ -1760,82 +1760,82 @@ int ssl_SetNamedEphemeralKey(const char* name,
                              const char* password, char* error)
 {
     int ret;
-    
+
     TraceHeader();
     TraceSetNamedServer(name, address, port, keyFile);
-    
+
     wc_LockMutex(&ServerListMutex);
     ret = SetNamedPrivateKey(name, address, port, keyFile, 0,
                              typeKey, password, error, 1);
     wc_UnLockMutex(&ServerListMutex);
-    
+
     if (ret == 0)
         Trace(NEW_SERVER_STR);
-    
+
     return ret;
 }
 
 int ssl_SetNamedEphemeralKeyBuffer(const char* name,
                                    const char* address, int port,
-                                   const char* keyBuf, int keySz, int typeKey, 
+                                   const char* keyBuf, int keySz, int typeKey,
                                    const char* password, char* error)
 {
     int ret;
-    
+
     TraceHeader();
     TraceSetNamedServer(name, address, port, NULL);
-    
+
     wc_LockMutex(&ServerListMutex);
     ret = SetNamedPrivateKey(name, address, port, keyBuf, keySz,
                              typeKey, password, error, 1);
     wc_UnLockMutex(&ServerListMutex);
-    
+
     if (ret == 0)
         Trace(NEW_SERVER_STR);
-    
+
     return ret;
 }
 #endif /* HAVE_SNI */
 
 /* Sets the ephemeral key for a specific server and port  */
 /* returns 0 on success, -1 on error */
-int ssl_SetEphemeralKey(const char* address, int port, 
-                        const char* keyFile, int typeKey, 
+int ssl_SetEphemeralKey(const char* address, int port,
+                        const char* keyFile, int typeKey,
                         const char* password, char* error)
 {
     int ret;
-    
+
     TraceHeader();
     TraceSetServer(address, port, keyFile);
-    
+
     wc_LockMutex(&ServerListMutex);
     ret = SetNamedPrivateKey(NULL, address, port, keyFile, 0,
                              typeKey, password, error, 1);
     wc_UnLockMutex(&ServerListMutex);
-    
+
     if (ret == 0)
         Trace(NEW_SERVER_STR);
-    
+
     return ret;
 }
 
-int ssl_SetEphemeralKeyBuffer(const char* address, int port, 
-                              const char* keyBuf, int keySz, int typeKey, 
+int ssl_SetEphemeralKeyBuffer(const char* address, int port,
+                              const char* keyBuf, int keySz, int typeKey,
                               const char* password, char* error)
 {
     int ret;
-    
+
     TraceHeader();
     TraceSetServer(address, port, "from buffer");
-    
+
     wc_LockMutex(&ServerListMutex);
     ret = SetNamedPrivateKey(NULL, address, port, keyBuf, keySz,
                              typeKey, password, error, 1);
     wc_UnLockMutex(&ServerListMutex);
-    
+
     if (ret == 0)
         Trace(NEW_SERVER_STR);
-    
+
     return ret;
 }
 #endif /* WOLFSSL_STATIC_EPHEMERAL */
@@ -2050,7 +2050,7 @@ static void ShowTlsSecrets(SnifferSession* session)
 
 
 /* Process Keys */
-static int SetupKeys(const byte* input, int* sslBytes, SnifferSession* session, 
+static int SetupKeys(const byte* input, int* sslBytes, SnifferSession* session,
     char* error, KeyShareInfo* ksInfo, DerBuffer* keyBuf)
 {
     word32 idx = 0;
@@ -2173,11 +2173,11 @@ static int SetupKeys(const byte* input, int* sslBytes, SnifferSession* session,
                 (byte*)params->p, params->p_len,
                 (byte*)params->g, params->g_len);
             if (ret == 0) {
-                ret = wc_DhKeyDecode(keyBuf->buffer, &idx, &dhKey, 
+                ret = wc_DhKeyDecode(keyBuf->buffer, &idx, &dhKey,
                     keyBuf->length);
             }
             if (ret == 0) {
-                ret = wc_DhExportKeyPair(&dhKey, privKey, &privKeySz, NULL, 
+                ret = wc_DhExportKeyPair(&dhKey, privKey, &privKeySz, NULL,
                     NULL);
             }
 
@@ -2197,12 +2197,12 @@ static int SetupKeys(const byte* input, int* sslBytes, SnifferSession* session,
             } while (ret == WC_PENDING_E);
 
             wc_FreeDhKey(&dhKey);
-        
+
             /* left-padded with zeros up to the size of the prime */
             if (params->p_len > session->sslServer->arrays->preMasterSz) {
                 word32 diff = params->p_len - session->sslServer->arrays->preMasterSz;
                 XMEMMOVE(session->sslServer->arrays->preMasterSecret + diff,
-                        session->sslServer->arrays->preMasterSecret, 
+                        session->sslServer->arrays->preMasterSecret,
                         session->sslServer->arrays->preMasterSz);
                 XMEMSET(session->sslServer->arrays->preMasterSecret, 0, diff);
                 session->sslServer->arrays->preMasterSz = params->p_len;
@@ -2293,8 +2293,8 @@ static int SetupKeys(const byte* input, int* sslBytes, SnifferSession* session,
         session->sslServer->arrays->preMasterSz;
 
 #ifdef SHOW_SECRETS
-    PrintSecret("pre master secret", 
-                session->sslServer->arrays->preMasterSecret, 
+    PrintSecret("pre master secret",
+                session->sslServer->arrays->preMasterSecret,
                 session->sslServer->arrays->preMasterSz);
 #endif
 
@@ -2362,7 +2362,7 @@ static int ProcessClientKeyExchange(const byte* input, int* sslBytes,
         return -1;
     }
 
-    return SetupKeys(input, sslBytes, session, error, NULL, 
+    return SetupKeys(input, sslBytes, session, error, NULL,
         session->sslServer->buffers.key);
 }
 
@@ -2479,7 +2479,7 @@ static int ProcessServerKeyShare(SnifferSession* session, const byte* input, int
     }
 
     return ret;
-} 
+}
 #endif /* WOLFSSL_TLS13 */
 
 /* Process Session Ticket */
@@ -2582,7 +2582,7 @@ static int ProcessSessionTicket(const byte* input, int* sslBytes,
         }
         /* store session with macID as sessionID */
         session->sslServer->options.haveSessionId = 1;
-        XMEMCPY(session->sslServer->arrays->sessionID, 
+        XMEMCPY(session->sslServer->arrays->sessionID,
             input + len - ID_LEN, ID_LEN);
     }
 
@@ -2726,7 +2726,7 @@ static int ProcessServerHello(int msgSz, const byte* input, int* sslBytes,
             case EXT_KEY_SHARE:
                 ret = ProcessServerKeyShare(session, input, extLen, error);
                 if (ret != 0) {
-                    SetError(SERVER_HELLO_INPUT_STR, error, session, 
+                    SetError(SERVER_HELLO_INPUT_STR, error, session,
                         FATAL_ERROR_STATE);
                     return -1;
                 }
@@ -2774,8 +2774,8 @@ static int ProcessServerHello(int msgSz, const byte* input, int* sslBytes,
         if (XMEMCMP(session->sslServer->arrays->sessionID,
                 session->sslClient->arrays->sessionID, ID_LEN) == 0) {
             doResume = 1;
-        }    
-    }        
+        }
+    }
     else if (session->sslClient->options.haveSessionId == 0 &&
              session->sslServer->options.haveSessionId == 0 &&
              session->ticketID) {
@@ -2792,7 +2792,7 @@ static int ProcessServerHello(int msgSz, const byte* input, int* sslBytes,
     if (doResume) {
         WOLFSSL_SESSION* resume;
         if (IsAtLeastTLSv1_3(session->sslServer->version)) {
-            resume = GetSession(session->sslServer, 
+            resume = GetSession(session->sslServer,
                                 session->sslServer->session.masterSecret, 0);
         }
         else {
@@ -2839,10 +2839,10 @@ static int ProcessServerHello(int msgSz, const byte* input, int* sslBytes,
             /* Resumption PSK is resumption master secret. */
             session->sslServer->arrays->psk_keySz = session->sslServer->specs.hash_size;
             session->sslClient->arrays->psk_keySz = session->sslClient->specs.hash_size;
-            ret  = DeriveResumptionPSK(session->sslServer, session->sslServer->session.ticketNonce.data, 
+            ret  = DeriveResumptionPSK(session->sslServer, session->sslServer->session.ticketNonce.data,
                 session->sslServer->session.ticketNonce.len, session->sslServer->arrays->psk_key);
             /* Copy resumption PSK to client */
-            XMEMCPY(session->sslClient->arrays->psk_key, 
+            XMEMCPY(session->sslClient->arrays->psk_key,
                 session->sslServer->arrays->psk_key,
                 session->sslServer->arrays->psk_keySz);
         #endif
@@ -2887,7 +2887,7 @@ static int ProcessServerHello(int msgSz, const byte* input, int* sslBytes,
         if (session->sslServer->staticKE.key)
             key = session->sslServer->staticKE.key;
     #endif
-        ret = SetupKeys(session->cliKs.key, &session->cliKs.key_len, 
+        ret = SetupKeys(session->cliKs.key, &session->cliKs.key_len,
             session, error, &session->cliKs, key);
         if (ret != 0) {
             SetError(SERVER_HELLO_INPUT_STR, error, session, FATAL_ERROR_STATE);
@@ -2942,8 +2942,8 @@ static int ProcessClientHello(const byte* input, int* sslBytes,
                 #ifdef WOLFSSL_STATIC_EPHEMERAL
                     if (namedKey->isEphemeralKey) {
                         /* auto detect key type with WC_PK_TYPE_NONE */
-                        ret = wolfSSL_set_ephemeral_key(ssl, 
-                            WC_PK_TYPE_NONE, (const char*)namedKey->key, 
+                        ret = wolfSSL_set_ephemeral_key(ssl,
+                            WC_PK_TYPE_NONE, (const char*)namedKey->key,
                             namedKey->keySz, WOLFSSL_FILETYPE_ASN1);
                         if (ret == 0)
                             ret = WOLFSSL_SUCCESS;
@@ -2952,7 +2952,7 @@ static int ProcessClientHello(const byte* input, int* sslBytes,
                 #endif
                     {
                         ret = wolfSSL_use_PrivateKey_buffer(ssl,
-                            namedKey->key, namedKey->keySz, 
+                            namedKey->key, namedKey->keySz,
                             WOLFSSL_FILETYPE_ASN1);
                     }
                     if (ret != WOLFSSL_SUCCESS) {
@@ -3126,7 +3126,7 @@ static int ProcessClientHello(const byte* input, int* sslBytes,
             idx += idLen;
 
             /* Obfuscated Ticket Age 32-bits */
-            ticketAge = (word32)((input[idx] << 24) | (input[idx+1] << 16) | 
+            ticketAge = (word32)((input[idx] << 24) | (input[idx+1] << 16) |
                                  (input[idx+2] << 8) | input[idx+3]);
             (void)ticketAge; /* not used */
             idx += OPAQUE32_LEN;
@@ -3143,9 +3143,9 @@ static int ProcessClientHello(const byte* input, int* sslBytes,
             (void)binders; /* not used */
 
             /* Hash data up to binders for deriving binders in PSK extension. */
-            HashRaw(session->sslServer, inputHello - HANDSHAKE_HEADER_SZ, 
+            HashRaw(session->sslServer, inputHello - HANDSHAKE_HEADER_SZ,
                 inputHelloSz - bindersLen + HANDSHAKE_HEADER_SZ);
-            HashRaw(session->sslClient, inputHello - HANDSHAKE_HEADER_SZ, 
+            HashRaw(session->sslClient, inputHello - HANDSHAKE_HEADER_SZ,
                 inputHelloSz - bindersLen + HANDSHAKE_HEADER_SZ);
 
             /* call to decrypt session ticket */
@@ -3193,9 +3193,9 @@ static int ProcessClientHello(const byte* input, int* sslBytes,
     }
 
     if (!didHash) {
-        HashRaw(session->sslServer, inputHello - HANDSHAKE_HEADER_SZ, 
+        HashRaw(session->sslServer, inputHello - HANDSHAKE_HEADER_SZ,
             inputHelloSz + HANDSHAKE_HEADER_SZ);
-        HashRaw(session->sslClient, inputHello - HANDSHAKE_HEADER_SZ, 
+        HashRaw(session->sslClient, inputHello - HANDSHAKE_HEADER_SZ,
             inputHelloSz + HANDSHAKE_HEADER_SZ);
     }
 
@@ -3304,7 +3304,7 @@ static int ProcessFinished(const byte* input, int size, int* sslBytes,
 
 #ifdef WOLFSSL_TLS13
     if (IsAtLeastTLSv1_3(ssl->version)) {
-        ret = DoTls13Finished(ssl, input, &inOutIdx, (word32)size, 
+        ret = DoTls13Finished(ssl, input, &inOutIdx, (word32)size,
             (word32)*sslBytes, SNIFF);
 
         ssl->options.handShakeState = HANDSHAKE_DONE;
@@ -3313,7 +3313,7 @@ static int ProcessFinished(const byte* input, int size, int* sslBytes,
     else
 #endif
     {
-        ret = DoFinished(ssl, input, &inOutIdx, (word32)size, 
+        ret = DoFinished(ssl, input, &inOutIdx, (word32)size,
             (word32)*sslBytes, SNIFF);
     }
     *sslBytes -= (int)inOutIdx;
@@ -3358,7 +3358,7 @@ static int ProcessFinished(const byte* input, int size, int* sslBytes,
 
             session->flags.gotFinished = 1;
         #ifdef SHOW_SECRETS
-            ShowTlsSecrets(session);    
+            ShowTlsSecrets(session);
         #endif
         }
 
@@ -3452,7 +3452,7 @@ static int DoHandShake(const byte* input, int* sslBytes,
         /* For resumption the hash is before / after client_hello PSK binder */
         /* hash the packet including header */
         /* TLS v1.3 requires the hash for the handshake and transfer key derivation */
-        /* we hash even for non TLS v1.3, since we don't know if its actually 
+        /* we hash even for non TLS v1.3, since we don't know if its actually
             TLS v1.3 till later at EXT_SUPPORTED_VERSIONS in server_hello */
         HashRaw(session->sslServer, input - HANDSHAKE_HEADER_SZ, size + HANDSHAKE_HEADER_SZ);
         HashRaw(session->sslClient, input - HANDSHAKE_HEADER_SZ, size + HANDSHAKE_HEADER_SZ);
@@ -3670,7 +3670,7 @@ static const byte* DecryptMessage(WOLFSSL* ssl, const byte* input, word32 sz,
 {
     int ivExtra = 0;
     int ret;
-    
+
 #ifdef WOLFSSL_TLS13
     if (IsAtLeastTLSv1_3(ssl->version)) {
         ret = DecryptTls13(ssl, output, input, sz, (byte*)rh, RECORD_HEADER_SZ);

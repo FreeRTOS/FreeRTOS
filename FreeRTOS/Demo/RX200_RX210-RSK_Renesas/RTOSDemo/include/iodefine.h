@@ -4534,7 +4534,7 @@ struct st_rtc {
 			unsigned char RTCEN:1;
 		} BIT;
 	} RCR3;
-	
+
 	char           wk15[7];
 	union {
 		unsigned char BYTE;
@@ -5643,7 +5643,7 @@ struct st_system {
 			unsigned char :6;
 			unsigned char HCFRQ:2;
 		} BIT;
-	} HOCOCR2;	
+	} HOCOCR2;
 	char           wk7[8];
 	union {
 		unsigned char BYTE;

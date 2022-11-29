@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2009, Atmel Corporation
  *
@@ -26,7 +26,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 //------------------------------------------------------------------------------
 //         Headers
 //------------------------------------------------------------------------------
@@ -80,11 +80,11 @@ void EFC_TranslateAddress(
     AT91S_EFC *pEfc;
     unsigned short page;
     unsigned short offset;
-    
+
 #if defined(AT91C_BASE_EFC1)
     SANITY_CHECK(address >= AT91C_IFLASH);
     if (address >= AT91C_IFLASH1) {
-        SANITY_CHECK(address <= (AT91C_IFLASH1 + AT91C_IFLASH1_SIZE));    
+        SANITY_CHECK(address <= (AT91C_IFLASH1 + AT91C_IFLASH1_SIZE));
     }
     else {
         SANITY_CHECK(address <= (AT91C_IFLASH + AT91C_IFLASH_SIZE));
@@ -97,7 +97,7 @@ void EFC_TranslateAddress(
     pEfc = AT91C_BASE_EFC;
     page = (address - AT91C_IFLASH) / AT91C_IFLASH_PAGE_SIZE;
     offset = (address - AT91C_IFLASH) % AT91C_IFLASH_PAGE_SIZE;
-    
+
 #if defined(AT91C_BASE_EFC1)
     if (address >= AT91C_IFLASH1) {
         pEfc = AT91C_BASE_EFC1;
@@ -105,7 +105,7 @@ void EFC_TranslateAddress(
         offset = (address - AT91C_IFLASH1) % AT91C_IFLASH1_PAGE_SIZE;
     }
 #endif
-   
+
     TRACE_DEBUG("Translated 0x%08X to page=%d and offset=%d\n\r",
               address, page, offset);
 
@@ -147,7 +147,7 @@ void EFC_ComputeAddress(
     if (pEfc == AT91C_BASE_EFC1) {
         address = AT91C_IFLASH1 + page * AT91C_IFLASH1_PAGE_SIZE + offset;
     }
-#endif    
+#endif
 
     // Store result
     if (pAddress) {
@@ -177,7 +177,7 @@ void EFC_StartCommand(AT91S_EFC *pEfc, unsigned char command, unsigned short arg
 
         case AT91C_EFC_FCMD_WP:
         case AT91C_EFC_FCMD_WPL:
-        case AT91C_EFC_FCMD_EWP: 
+        case AT91C_EFC_FCMD_EWP:
         case AT91C_EFC_FCMD_EWPL:
         case AT91C_EFC_FCMD_EPL:
         case AT91C_EFC_FCMD_EPA:
@@ -206,7 +206,7 @@ void EFC_StartCommand(AT91S_EFC *pEfc, unsigned char command, unsigned short arg
         default: ASSERT(0, "-F- Unknown command %d\n\r", command);
     }
 
-    // Start commandEmbedded flash 
+    // Start commandEmbedded flash
     ASSERT((pEfc->EFC_FSR & AT91C_EFC_FRDY) == AT91C_EFC_FRDY, "-F- EEFC is not ready\n\r");
     pEfc->EFC_FCR = (0x5A << 24) | (argument << 8) | command;
 }
@@ -271,4 +271,3 @@ unsigned int EFC_GetResult(AT91S_EFC *pEfc) {
 
     return pEfc->EFC_FRR;
 }
-

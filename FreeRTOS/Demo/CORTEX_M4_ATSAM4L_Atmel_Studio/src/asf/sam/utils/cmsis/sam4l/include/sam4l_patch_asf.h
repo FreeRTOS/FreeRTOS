@@ -48,7 +48,7 @@
 #define   FLASHCALW_FCMD_CMD_HSEN    (0x10u <<  0)
 #define   FLASHCALW_FCMD_CMD_HSDIS   (0x11u <<  0)
 
-// These defines are used to keep compatibility with existing 
+// These defines are used to keep compatibility with existing
 // sam/drivers/usart implementation from SAM3/4 products with SAM4L product.
 #define US_MR_USART_MODE_HW_HANDSHAKING     US_MR_USART_MODE_HARDWARE
 #define US_MR_USART_MODE_IS07816_T_0        US_MR_USART_MODE_ISO7816_T0
@@ -83,15 +83,15 @@
 #define USBC_UPCFG0_PBK_Pos                                    2
 #define USBC_UPCFG0_PBK_Msk                     (0x1u << USBC_UPCFG0_PBK_Pos)
 
-// These defines are used to keep compatibility with existing 
-// sam/drivers/tc implementation from SAM3/4 products with SAM4L product. 
+// These defines are used to keep compatibility with existing
+// sam/drivers/tc implementation from SAM3/4 products with SAM4L product.
 #define	TC_SMMR                TC_SMC
 #define	TC_CMR_LDRA_RISING     TC_CMR_LDRA_POS_EDGE_TIOA
 #define	TC_CMR_LDRB_FALLING    TC_CMR_LDRB_NEG_EDGE_TIOA
 #define	TC_CMR_ETRGEDG_FALLING TC_CMR_ETRGEDG_NEG_EDGE
 
-// These defines are used to keep compatibility with existing 
-// sam/drivers/spi implementation from SAM3/4 products with SAM4L product. 
+// These defines are used to keep compatibility with existing
+// sam/drivers/spi implementation from SAM3/4 products with SAM4L product.
 #define SPI_CSR_BITS_8_BIT     SPI_CSR_BITS_8_BPT
 
 #define SPI_WPSR_WPVS_Pos      SPI_WPSR_SPIWPVS_Pos
@@ -99,8 +99,8 @@
 #define SPI_WPSR_WPVSRC_Pos    SPI_WPSR_SPIWPVSRC_Pos
 #define SPI_WPSR_WPVSRC_Msk    SPI_WPSR_SPIWPVSRC_Msk
 
-// These defines are used to keep compatibility with existing 
-// sam/drivers/crccu implementation from SAM3/4 products with SAM4L product. 
+// These defines are used to keep compatibility with existing
+// sam/drivers/crccu implementation from SAM3/4 products with SAM4L product.
 #define	CRCCU_DMA_EN 	          CRCCU_DMAEN
 #define	CRCCU_DMA_DIS             CRCCU_DMADIS
 #define	CRCCU_DMA_SR	          CRCCU_DMASR

@@ -314,4 +314,3 @@ void USBConfigurationDescriptor_Parse(
 }
 
 /**@}*/
-

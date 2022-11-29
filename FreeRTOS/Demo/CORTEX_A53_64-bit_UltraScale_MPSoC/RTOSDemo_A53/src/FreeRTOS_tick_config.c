@@ -121,6 +121,3 @@ const XScuGic_VectorTableEntry *pxVectorEntry;
 		pxVectorEntry->Handler( pxVectorEntry->CallBackRef );
 	}
 }
-
-
-

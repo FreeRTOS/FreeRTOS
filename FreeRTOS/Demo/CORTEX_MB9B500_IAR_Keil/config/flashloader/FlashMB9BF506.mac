@@ -6,11 +6,11 @@ setup()
   __writeMemory32(0x00000000, 0x40011008, "Memory"); //WDG_CTL = 0
   /*Clock from High Speed internal Oscilator*/
   __writeMemory32(__readMemory32(0x40010000, "Memory") & ~0xE0, 0x40010000, "Memory");
-  /*Wait*/ 
+  /*Wait*/
   __delay(5);
   __emulatorSpeed(0);
   /*Base Clock Prescaler Register*/
-  __writeMemory32(0, 0x40010010, "Memory"); 
+  __writeMemory32(0, 0x40010010, "Memory");
 
   /*Vectors at RAM*/
   __writeMemory32(0x1FFFC000, 0xE000ED08, "Memory"); //Vector table remap at 0x1FFFC000
@@ -26,4 +26,3 @@ execUserFlashInit()  // Called by debugger before loading flash loader in RAM.
   __message "----- Prepare hardware for Flashloader -----\n";
   setup();
 }
-

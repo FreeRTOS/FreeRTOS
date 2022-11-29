@@ -63,9 +63,9 @@ typedef enum
   BUTTON_MODE_EXTI = 1
 } ButtonMode_TypeDef;
 
-typedef enum 
+typedef enum
 {
-  PB_SET = 0, 
+  PB_SET = 0,
   PB_RESET = !PB_SET
 } ButtonValue_TypeDef;
 
@@ -82,9 +82,9 @@ typedef enum
 /** @defgroup STM32H745I_DISCOVERY_LOW_LEVEL_Exported_Constants Exported Constants
   * @{
   */
-/** 
+/**
   * @brief  Define for STM32H745I_DISCOVERY board
-  */ 
+  */
 #if !defined (USE_STM32H745I_DISCO)
  #define USE_STM32H745I_DISCO
 #endif
@@ -178,7 +178,7 @@ typedef enum
 /* I2C TIMING Register define when I2C clock source is SYSCLK */
 /* I2C TIMING is calculated from APB1 source clock = 200 MHz */
 /* 0x40912732 takes in account the big rising and aims a clock of 100khz */
-#ifndef DISCOVERY_I2Cx_TIMING  
+#ifndef DISCOVERY_I2Cx_TIMING
 #define DISCOVERY_I2Cx_TIMING                      ((uint32_t)0x40912732)
 #endif /* DISCOVERY_I2Cx_TIMING */
 /**

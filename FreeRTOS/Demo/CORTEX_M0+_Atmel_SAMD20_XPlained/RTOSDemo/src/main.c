@@ -266,4 +266,3 @@ long lHigherPriorityTaskWoken = pdFALSE;
 }
 
 #endif /* JUST_AN_EXAMPLE_ISR */
-

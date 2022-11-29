@@ -194,4 +194,3 @@ girq10_b23(void)
 /* end girq10.c */
 /**   @}
  */
-

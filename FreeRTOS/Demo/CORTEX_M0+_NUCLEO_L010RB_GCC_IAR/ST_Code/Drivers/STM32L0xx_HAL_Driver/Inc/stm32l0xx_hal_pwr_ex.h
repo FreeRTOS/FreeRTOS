@@ -42,14 +42,14 @@
 
 /** @brief  Macros to enable the Deep-sleep mode with Flash memory kept off.
   * @note   When entering low power mode (stop or standby only), if DS_EE_KOFF and RUN_PD of
-  *         FLASH_ACR register are both set , the Flash memory will not be woken up 
+  *         FLASH_ACR register are both set , the Flash memory will not be woken up
   *         when exiting from deep-sleep mode.
   */
 #define __HAL_PWR_FLASHWAKEUP_ENABLE()      CLEAR_BIT(PWR->CR, PWR_CR_DSEEKOFF)
 
 /** @brief  Macros to disable the Deep-sleep mode with Flash memory kept off.
   * @note   When entering low power mode (stop or standby only), if DS_EE_KOFF and RUN_PD of
-  *         FLASH_ACR register are both set , the Flash memory will not be woken up 
+  *         FLASH_ACR register are both set , the Flash memory will not be woken up
   *         when exiting from deep-sleep mode.
   */
 #define __HAL_PWR_FLASHWAKEUP_DISABLE()     SET_BIT(PWR->CR, PWR_CR_DSEEKOFF)
@@ -96,4 +96,3 @@ HAL_StatusTypeDef HAL_PWREx_DisableLowPowerRunMode(void);
 #endif /* __STM32L0xx_HAL_PWR_EX_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

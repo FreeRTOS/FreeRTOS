@@ -182,7 +182,7 @@ typedef struct {
   __I  uint32_t Reserved17[37];
   __IO uint32_t GMAC_ST2ER[4];          /**< \brief (Gmac Offset: 0x6E0) Screening Type 2 Ethertype Register (index = 0) */
   __I  uint32_t Reserved18[4];
-  __IO GmacSt2Compare GMAC_ST2COMP[GMACST2COMPARE_NUMBER];/**< \brief (Gmac Offset: 0x700) Screener Type 2 Compare Registers */    
+  __IO GmacSt2Compare GMAC_ST2COMP[GMACST2COMPARE_NUMBER];/**< \brief (Gmac Offset: 0x700) Screener Type 2 Compare Registers */
 } Gmac;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 /* -------- GMAC_NCR : (GMAC Offset: 0x000) Network Control Register -------- */
@@ -310,9 +310,9 @@ typedef struct {
 #define GMAC_ISR_PDRQFT (0x1u << 24) /**< \brief (GMAC_ISR) PDelay Request Frame Transmitted */
 #define GMAC_ISR_PDRSFT (0x1u << 25) /**< \brief (GMAC_ISR) PDelay Response Frame Transmitted */
 #define GMAC_ISR_SRI (0x1u << 26) /**< \brief (GMAC_ISR) TSU Seconds Register Increment */
-#define GMAC_ISR_LPI (0x1u << 27) /**< \brief (GMAC_ISR) RX LPI indication */  
+#define GMAC_ISR_LPI (0x1u << 27) /**< \brief (GMAC_ISR) RX LPI indication */
 #define GMAC_ISR_WOL (0x1u << 28) /**< \brief (GMAC_ISR) Wake On LAN */
-#define GMAC_ISR_TSU (0x1u << 29) /**< \brief (GMAC_ISR) TSU timer comparison interrupt */  
+#define GMAC_ISR_TSU (0x1u << 29) /**< \brief (GMAC_ISR) TSU timer comparison interrupt */
 /* -------- GMAC_IER : (GMAC Offset: 0x028) Interrupt Enable Register -------- */
 #define GMAC_IER_MFS (0x1u << 0) /**< \brief (GMAC_IER) Management Frame Sent */
 #define GMAC_IER_RCOMP (0x1u << 1) /**< \brief (GMAC_IER) Receive Complete */

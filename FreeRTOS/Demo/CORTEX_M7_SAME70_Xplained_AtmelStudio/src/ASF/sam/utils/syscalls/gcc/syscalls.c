@@ -84,7 +84,7 @@ extern caddr_t _sbrk(int incr)
 	prev_heap = heap;
 
 	if (((int)prev_heap + incr) > ramend) {
-		return (caddr_t) -1;	
+		return (caddr_t) -1;
 	}
 
 	heap += incr;

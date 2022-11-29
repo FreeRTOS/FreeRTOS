@@ -56,4 +56,3 @@ WOLFSSL_API void wolfSSL_RC4(WOLFSSL_RC4_KEY* key, size_t len,
 #endif
 
 #endif /* WOLFSSL_RC4_COMPAT_H_ */
-

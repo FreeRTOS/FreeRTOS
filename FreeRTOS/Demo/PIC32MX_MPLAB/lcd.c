@@ -227,7 +227,3 @@ unsigned short usRow = 0;
 		vTaskDelay( xMessage.xMinDisplayTime );
 	}
 }
-
-
-
-

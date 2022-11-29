@@ -85,9 +85,9 @@ extern void PMC_SetPllaClock(uint32_t mul, uint32_t div);
 extern void PMC_SetPllbClock(uint32_t mul, uint32_t div);
 extern void PMC_SetMckSelection(uint32_t clockSource, uint32_t prescaler);
 extern void PMC_DisableAllClocks(void);
-extern void PMC_ConfigureMckWithPlla(uint32_t mul, uint32_t div, 
+extern void PMC_ConfigureMckWithPlla(uint32_t mul, uint32_t div,
 		uint32_t prescaler);
-extern void PMC_ConfigureMckWithPllb(uint32_t mul, uint32_t div, 
+extern void PMC_ConfigureMckWithPllb(uint32_t mul, uint32_t div,
 		uint32_t prescaler);
 extern void PMC_EnableXT32KFME(void);
 extern void PMC_ConfigurePCK2(uint32_t MasterClk, uint32_t prescaler);
@@ -97,4 +97,3 @@ extern void PMC_ConfigurePCK2(uint32_t MasterClk, uint32_t prescaler);
 #endif
 
 #endif /* #ifndef _PMC_ */
-

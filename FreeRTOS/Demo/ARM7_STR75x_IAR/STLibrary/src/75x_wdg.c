@@ -40,7 +40,7 @@
 
 /******************************************************************************
 * Function Name  : WDG_DeInit
-* Description    : Deinitializes the WDG peripheral registers to their default 
+* Description    : Deinitializes the WDG peripheral registers to their default
 *                  reset values.
 * Input          : None
 * Output         : None
@@ -74,7 +74,7 @@ void WDG_Init(WDG_InitTypeDef* WDG_InitStruct)
 
   /* Configure WDG Pre-load register value */
   WDG->VR = WDG_InitStruct->WDG_Preload ;
-  
+
   if(WDG_InitStruct->WDG_Mode == WDG_Mode_WDG)
   {
     /* Select WDG mode */
@@ -83,7 +83,7 @@ void WDG_Init(WDG_InitTypeDef* WDG_InitStruct)
   else
   {
     /* Select Timer mode */
-    WDG->CR &= WDG_Mode_Timer;    
+    WDG->CR &= WDG_Mode_Timer;
   }
 }
 
@@ -110,7 +110,7 @@ void WDG_StructInit(WDG_InitTypeDef *WDG_InitStruct)
 /*******************************************************************************
 * Function Name  : WDG_Cmd
 * Description    : Enables or disables the WDG peripheral.
-* Input          : NewState: new state of the WDG peripheral. 
+* Input          : NewState: new state of the WDG peripheral.
 *                  This parameter can be: ENABLE or DISABLE.
 * Output         : None
 * Return         : None
@@ -125,7 +125,7 @@ void WDG_Cmd(FunctionalState NewState)
       /* Start timer by setting SC bit in Control register */
       WDG->CR |= WDG_Counter_Start_Mask;
     }
-    else 
+    else
     {
       /* Stop timer by clearing SC bit in Control register */
       WDG->CR &= WDG_Counter_Stop_Mask;
@@ -197,7 +197,7 @@ FlagStatus WDG_GetFlagStatus(void)
 
 /*******************************************************************************
 * Function Name  : WDG_ClearFlag
-* Description    : Clears the WDG’s End of Count(EC) pending flag. 
+* Description    : Clears the WDG’s End of Count(EC) pending flag.
 * Input          : None
 * Output         : None
 * Return         : None
@@ -210,7 +210,7 @@ void WDG_ClearFlag(void)
 
 /*******************************************************************************
 * Function Name  : WDG_GetITStatus
-* Description    : Checks whether the WDG End of Count(EC) interrupt has 
+* Description    : Checks whether the WDG End of Count(EC) interrupt has
 *                  occurred or not.
 * Input          : None
 * Output         : None

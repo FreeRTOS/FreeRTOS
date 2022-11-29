@@ -18,7 +18,7 @@
 ***********************************************************************************************************************/
 /***********************************************************************************************************************
 * File Name    : resetprg.c
-* Description  : Defines post-reset routines that are used to configure the MCU prior to the main program starting. 
+* Description  : Defines post-reset routines that are used to configure the MCU prior to the main program starting.
 *                This is where the program counter starts on power-up or reset.
 ***********************************************************************************************************************/
 /***********************************************************************************************************************
@@ -162,22 +162,22 @@ extern void R_BSP_MAIN_FUNCTION(void);
 * Function name: PowerON_Reset_PC
 * Description  : This function is the MCU's entry point from a power-on reset.
 *                The following steps are taken in the startup code:
-*                1. The User Stack Pointer (USP) and Interrupt Stack Pointer (ISP) are both set immediately after entry 
+*                1. The User Stack Pointer (USP) and Interrupt Stack Pointer (ISP) are both set immediately after entry
 *                   to this function. The USP and ISP stack sizes are set in the file bsp_config.h.
-*                2. The interrupt vector base register is set to point to the beginning of the relocatable interrupt 
+*                2. The interrupt vector base register is set to point to the beginning of the relocatable interrupt
 *                   vector table.
-*                3. The MCU is setup for floating point operations by setting the initial value of the Floating Point 
+*                3. The MCU is setup for floating point operations by setting the initial value of the Floating Point
 *                   Status Word (FPSW).
 *                4. The MCU operating frequency is set by configuring the Clock Generation Circuit (CGC) in
 *                   operating_frequency_set.
-*                5. Calls are made to functions to setup the C runtime environment which involves initializing all 
+*                5. Calls are made to functions to setup the C runtime environment which involves initializing all
 *                   initialed data, zeroing all uninitialized variables, and configuring STDIO if used
 *                   (calls to _INITSCT and init_iolib).
 *                6. Board-specific hardware setup, including configuring I/O pins on the MCU, in hardware_setup.
-*                7. Global interrupts are enabled by setting the I bit in the Program Status Word (PSW), and the stack 
-*                   is switched from the ISP to the USP.  The initial Interrupt Priority Level is set to zero, enabling 
+*                7. Global interrupts are enabled by setting the I bit in the Program Status Word (PSW), and the stack
+*                   is switched from the ISP to the USP.  The initial Interrupt Priority Level is set to zero, enabling
 *                   any interrupts with a priority greater than zero to be serviced.
-*                8. The processor is optionally switched to user mode.  To run in user mode, set the macro 
+*                8. The processor is optionally switched to user mode.  To run in user mode, set the macro
 *                   BSP_CFG_RUN_IN_USER_MODE above to a 1.
 *                9. The bus error interrupt is enabled to catch any accesses to invalid or reserved areas of memory.
 *
@@ -189,10 +189,10 @@ R_BSP_POR_FUNCTION(R_BSP_STARTUP_FUNCTION)
 {
     /* Stack pointers are setup prior to calling this function - see comments above */
 
-    /* You can use auto variables in this function but such variables other than register variables 
+    /* You can use auto variables in this function but such variables other than register variables
      * will be unavailable after you change the stack from the I stack to the U stack (if change). */
 
-    /* The bss sections have not been cleared and the data sections have not been initialized 
+    /* The bss sections have not been cleared and the data sections have not been initialized
      * and constructors of C++ objects have not been executed until the _INITSCT() is executed. */
 #if defined(__GNUC__)
 #if BSP_CFG_USER_STACK_ENABLE == 1
@@ -239,7 +239,7 @@ R_BSP_POR_FUNCTION(R_BSP_STARTUP_FUNCTION)
     vbatt_voltage_stability_wait();
 #endif
 
-    /* Switch to high-speed operation */ 
+    /* Switch to high-speed operation */
     mcu_clock_setup();
 
     /* If the warm start Pre C runtime callback is enabled, then call it. */
@@ -362,4 +362,3 @@ R_BSP_POR_FUNCTION(R_BSP_STARTUP_FUNCTION)
 #endif/* BSP_CFG_RTOS_USED */
 
 #endif /* BSP_CFG_STARTUP_DISABLE == 0 */
-

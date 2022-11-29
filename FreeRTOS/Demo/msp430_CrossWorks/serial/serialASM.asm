@@ -74,5 +74,3 @@ _vUARTTx_Wrapper
 #endif /* configINTERRUPT_EXAMPLE_METHOD */
 
 	END
-
-

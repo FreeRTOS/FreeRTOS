@@ -141,8 +141,8 @@ _reset:
 _startup:
 
         ##################################################################
-        # New - Set BEV=1 for the cases where M14K instruction pointer 
-        # is changed to force ROM to run again. CP0.BEV must be 1 to 
+        # New - Set BEV=1 for the cases where M14K instruction pointer
+        # is changed to force ROM to run again. CP0.BEV must be 1 to
         # safely write CP0.EBASE
         ##################################################################
         mfc0    k0, _CP0_STATUS
@@ -571,7 +571,7 @@ lfw2:
     ehb
 lfw3:
     nop
-    
+
     # turn off core timer
 lfw4:
     mfc0    t0, _CP0_CAUSE
@@ -599,7 +599,7 @@ lfw15:
     ehb
 lfw16:
     nop
-lfw17:    
+lfw17:
     JR.HB   a0
 lfw18:
     nop
@@ -613,4 +613,3 @@ lfw19:
 
     .end    rom_launch_fw
     .size   rom_launch_fw, .-rom_launch_fw
-    

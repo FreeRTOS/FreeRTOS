@@ -117,4 +117,3 @@ configINCLUDE_DEMO_DEBUG_STATS setting in FreeRTOSIPConfig.h. */
 
 
 #endif /* DEMO_IP_TRACE_MACROS_H */
-

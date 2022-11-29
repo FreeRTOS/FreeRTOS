@@ -38,4 +38,3 @@ xusbps_includes:
 
 clean:
 	rm -rf ${OBJECTS}
-

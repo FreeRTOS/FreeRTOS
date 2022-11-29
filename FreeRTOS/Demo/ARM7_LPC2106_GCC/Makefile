@@ -98,15 +98,3 @@ $(ARM_OBJ) : %.o : %.c $(LDSCRIPT) Makefile
 clean :
 	rm -rf $(ARM_OBJ) $(THUMB_OBJ)
 	touch Makefile
-
-
-
-
-
-
-
-
-
-
-
-

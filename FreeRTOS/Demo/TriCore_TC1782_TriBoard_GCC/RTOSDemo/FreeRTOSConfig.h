@@ -102,4 +102,3 @@ peripheral clock. */
 
 
 #endif /* FREERTOS_CONFIG_H */
-

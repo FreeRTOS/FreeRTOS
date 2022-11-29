@@ -126,4 +126,3 @@ R_BSP_ATTRIB_STATIC_INTERRUPT void prvIntQTimer_2_3_ISR( void )
 	portYIELD_FROM_ISR( xSecondTimerHandler() );
 }
 /*-----------------------------------------------------------*/
-

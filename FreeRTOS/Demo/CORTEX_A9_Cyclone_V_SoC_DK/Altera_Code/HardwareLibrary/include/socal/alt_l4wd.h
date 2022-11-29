@@ -41,51 +41,51 @@ extern "C"
 /*
  * Component : L4 Watchdog Module - ALT_L4WD
  * L4 Watchdog Module
- * 
+ *
  * Registers in the L4 Watchdog module
- * 
+ *
  */
 /*
  * Register : Control Register - wdt_cr
- * 
+ *
  * Contains fields that control operating functions.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------
- *  [0]    | RW     | 0x0   | Enable       
+ *  [0]    | RW     | 0x0   | Enable
  *  [1]    | RW     | 0x1   | Response Mode
- *  [31:2] | ???    | 0x0   | *UNDEFINED*  
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Enable - wdt_en
- * 
+ *
  * This bit is used to enable and disable the watchdog. When disabled, the counter
  * does not decrement. Thus, no interrupts or warm reset requests are generated.
  * Once this bit has been enabled, it can only be cleared only by resetting the
  * watchdog.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description      
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:------------------
  *  ALT_L4WD_CR_WDT_EN_E_DISD | 0x0   | Watchdog disabled
- *  ALT_L4WD_CR_WDT_EN_E_END  | 0x1   | Watchdog enabled 
- * 
+ *  ALT_L4WD_CR_WDT_EN_E_END  | 0x1   | Watchdog enabled
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L4WD_CR_WDT_EN
- * 
+ *
  * Watchdog disabled
  */
 #define ALT_L4WD_CR_WDT_EN_E_DISD   0x0
 /*
  * Enumerated value for register field ALT_L4WD_CR_WDT_EN
- * 
+ *
  * Watchdog enabled
  */
 #define ALT_L4WD_CR_WDT_EN_E_END    0x1
@@ -109,30 +109,30 @@ extern "C"
 
 /*
  * Field : Response Mode - rmod
- * 
+ *
  * Selects the output response generated to a timeout.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                      | Value | Description                                  
+ *
+ *  Enum                      | Value | Description
  * :--------------------------|:------|:----------------------------------------------
- *  ALT_L4WD_CR_RMOD_E_RST    | 0x0   | Generate a warm reset request                
+ *  ALT_L4WD_CR_RMOD_E_RST    | 0x0   | Generate a warm reset request
  *  ALT_L4WD_CR_RMOD_E_IRQRST | 0x1   | First generate an interrupt, and if it is not
- * :                          |       | cleared by the time a second timeout occurs, 
- * :                          |       | then generate a warm reset request.          
- * 
+ * :                          |       | cleared by the time a second timeout occurs,
+ * :                          |       | then generate a warm reset request.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L4WD_CR_RMOD
- * 
+ *
  * Generate a warm reset request
  */
 #define ALT_L4WD_CR_RMOD_E_RST      0x0
 /*
  * Enumerated value for register field ALT_L4WD_CR_RMOD
- * 
+ *
  * First generate an interrupt, and if it is not cleared by the time a second
  * timeout occurs, then generate a warm reset request.
  */
@@ -163,7 +163,7 @@ extern "C"
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L4WD_CR.
  */
 struct ALT_L4WD_CR_s
@@ -184,144 +184,144 @@ typedef volatile struct ALT_L4WD_CR_s  ALT_L4WD_CR_t;
 
 /*
  * Register : Timeout Range Register - wdt_torr
- * 
+ *
  * Contains fields that determine the watchdog timeout.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                      
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------
- *  [3:0]  | RW     | 0xf   | Timeout Period                   
+ *  [3:0]  | RW     | 0xf   | Timeout Period
  *  [7:4]  | RW     | 0xf   | Timeout Period for Initialization
- *  [31:8] | ???    | 0x0   | *UNDEFINED*                      
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Timeout Period - top
- * 
+ *
  * This field is used to select the timeout period from which the watchdog counter
  * restarts. A change of the timeout period takes effect only after the next
  * counter restart (kick). The timeout period (in clocks) is:
- * 
+ *
  * t = 2**(16 + top)
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description                  
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:------------------------------
- *  ALT_L4WD_TORR_TOP_E_TMO64K  | 0x0   | Timeout = 65536  osc1_clk    
- *  ALT_L4WD_TORR_TOP_E_TMO128K | 0x1   | Timeout = 131072 osc1_clk    
- *  ALT_L4WD_TORR_TOP_E_TMO256K | 0x2   | Timeout = 262144 osc1_clk    
- *  ALT_L4WD_TORR_TOP_E_TMO512K | 0x3   | Timeout = 524288 osc1_clk    
- *  ALT_L4WD_TORR_TOP_E_TMO1M   | 0x4   | Timeout = 1048576 osc1_clk   
- *  ALT_L4WD_TORR_TOP_E_TMO2M   | 0x5   | Timeout = 2097152 osc1_clk   
- *  ALT_L4WD_TORR_TOP_E_TMO4M   | 0x6   | Timeout = 4194304 osc1_clk   
- *  ALT_L4WD_TORR_TOP_E_TMO8M   | 0x7   | Timeout = 8388608 osc1_clk   
- *  ALT_L4WD_TORR_TOP_E_TMO16M  | 0x8   | Timeout = 16777216 osc1_clk  
- *  ALT_L4WD_TORR_TOP_E_TMO32M  | 0x9   | Timeout = 33554432 osc1_clk  
- *  ALT_L4WD_TORR_TOP_E_TMO64M  | 0xa   | Timeout = 67108864 osc1_clk  
- *  ALT_L4WD_TORR_TOP_E_TMO128M | 0xb   | Timeout = 134217728 osc1_clk 
- *  ALT_L4WD_TORR_TOP_E_TMO256M | 0xc   | Timeout = 268435456 osc1_clk 
- *  ALT_L4WD_TORR_TOP_E_TMO512M | 0xd   | Timeout = 536870912 osc1_clk 
+ *  ALT_L4WD_TORR_TOP_E_TMO64K  | 0x0   | Timeout = 65536  osc1_clk
+ *  ALT_L4WD_TORR_TOP_E_TMO128K | 0x1   | Timeout = 131072 osc1_clk
+ *  ALT_L4WD_TORR_TOP_E_TMO256K | 0x2   | Timeout = 262144 osc1_clk
+ *  ALT_L4WD_TORR_TOP_E_TMO512K | 0x3   | Timeout = 524288 osc1_clk
+ *  ALT_L4WD_TORR_TOP_E_TMO1M   | 0x4   | Timeout = 1048576 osc1_clk
+ *  ALT_L4WD_TORR_TOP_E_TMO2M   | 0x5   | Timeout = 2097152 osc1_clk
+ *  ALT_L4WD_TORR_TOP_E_TMO4M   | 0x6   | Timeout = 4194304 osc1_clk
+ *  ALT_L4WD_TORR_TOP_E_TMO8M   | 0x7   | Timeout = 8388608 osc1_clk
+ *  ALT_L4WD_TORR_TOP_E_TMO16M  | 0x8   | Timeout = 16777216 osc1_clk
+ *  ALT_L4WD_TORR_TOP_E_TMO32M  | 0x9   | Timeout = 33554432 osc1_clk
+ *  ALT_L4WD_TORR_TOP_E_TMO64M  | 0xa   | Timeout = 67108864 osc1_clk
+ *  ALT_L4WD_TORR_TOP_E_TMO128M | 0xb   | Timeout = 134217728 osc1_clk
+ *  ALT_L4WD_TORR_TOP_E_TMO256M | 0xc   | Timeout = 268435456 osc1_clk
+ *  ALT_L4WD_TORR_TOP_E_TMO512M | 0xd   | Timeout = 536870912 osc1_clk
  *  ALT_L4WD_TORR_TOP_E_TMO1G   | 0xe   | Timeout = 1073741824 osc1_clk
  *  ALT_L4WD_TORR_TOP_E_TMO2G   | 0xf   | Timeout = 2147483648 osc1_clk
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP
- * 
+ *
  * Timeout = 65536  osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_E_TMO64K  0x0
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP
- * 
+ *
  * Timeout = 131072 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_E_TMO128K 0x1
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP
- * 
+ *
  * Timeout = 262144 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_E_TMO256K 0x2
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP
- * 
+ *
  * Timeout = 524288 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_E_TMO512K 0x3
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP
- * 
+ *
  * Timeout = 1048576 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_E_TMO1M   0x4
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP
- * 
+ *
  * Timeout = 2097152 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_E_TMO2M   0x5
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP
- * 
+ *
  * Timeout = 4194304 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_E_TMO4M   0x6
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP
- * 
+ *
  * Timeout = 8388608 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_E_TMO8M   0x7
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP
- * 
+ *
  * Timeout = 16777216 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_E_TMO16M  0x8
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP
- * 
+ *
  * Timeout = 33554432 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_E_TMO32M  0x9
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP
- * 
+ *
  * Timeout = 67108864 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_E_TMO64M  0xa
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP
- * 
+ *
  * Timeout = 134217728 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_E_TMO128M 0xb
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP
- * 
+ *
  * Timeout = 268435456 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_E_TMO256M 0xc
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP
- * 
+ *
  * Timeout = 536870912 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_E_TMO512M 0xd
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP
- * 
+ *
  * Timeout = 1073741824 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_E_TMO1G   0xe
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP
- * 
+ *
  * Timeout = 2147483648 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_E_TMO2G   0xf
@@ -345,133 +345,133 @@ typedef volatile struct ALT_L4WD_CR_s  ALT_L4WD_CR_t;
 
 /*
  * Field : Timeout Period for Initialization - top_init
- * 
+ *
  * Used to select the timeout period that the watchdog counter restarts from for
  * the first counter restart (kick). This register should be written after reset
  * and before the watchdog is enabled. A change of the TOP_INIT is seen only once
  * the watchdog has been enabled, and any change after the first kick is not seen
  * as subsequent kicks use the period specified by the TOP bits. The timeout period
  * (in clocks) is:
- * 
+ *
  * t = 2**(16 + top_init)
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                             | Value | Description                  
+ *
+ *  Enum                             | Value | Description
  * :---------------------------------|:------|:------------------------------
- *  ALT_L4WD_TORR_TOP_INIT_E_TMO64K  | 0x0   | Timeout = 65536  osc1_clk    
- *  ALT_L4WD_TORR_TOP_INIT_E_TMO128K | 0x1   | Timeout = 131072 osc1_clk    
- *  ALT_L4WD_TORR_TOP_INIT_E_TMO256K | 0x2   | Timeout = 262144 osc1_clk    
- *  ALT_L4WD_TORR_TOP_INIT_E_TMO512K | 0x3   | Timeout = 524288 osc1_clk    
- *  ALT_L4WD_TORR_TOP_INIT_E_TMO1M   | 0x4   | Timeout = 1048576 osc1_clk   
- *  ALT_L4WD_TORR_TOP_INIT_E_TMO2M   | 0x5   | Timeout = 2097152 osc1_clk   
- *  ALT_L4WD_TORR_TOP_INIT_E_TMO4M   | 0x6   | Timeout = 4194304 osc1_clk   
- *  ALT_L4WD_TORR_TOP_INIT_E_TMO8M   | 0x7   | Timeout = 8388608 osc1_clk   
- *  ALT_L4WD_TORR_TOP_INIT_E_TMO16M  | 0x8   | Timeout = 16777216 osc1_clk  
- *  ALT_L4WD_TORR_TOP_INIT_E_TMO32M  | 0x9   | Timeout = 33554432 osc1_clk  
- *  ALT_L4WD_TORR_TOP_INIT_E_TMO64M  | 0xa   | Timeout = 67108864 osc1_clk  
- *  ALT_L4WD_TORR_TOP_INIT_E_TMO128M | 0xb   | Timeout = 134217728 osc1_clk 
- *  ALT_L4WD_TORR_TOP_INIT_E_TMO256M | 0xc   | Timeout = 268435456 osc1_clk 
- *  ALT_L4WD_TORR_TOP_INIT_E_TMO512M | 0xd   | Timeout = 536870912 osc1_clk 
+ *  ALT_L4WD_TORR_TOP_INIT_E_TMO64K  | 0x0   | Timeout = 65536  osc1_clk
+ *  ALT_L4WD_TORR_TOP_INIT_E_TMO128K | 0x1   | Timeout = 131072 osc1_clk
+ *  ALT_L4WD_TORR_TOP_INIT_E_TMO256K | 0x2   | Timeout = 262144 osc1_clk
+ *  ALT_L4WD_TORR_TOP_INIT_E_TMO512K | 0x3   | Timeout = 524288 osc1_clk
+ *  ALT_L4WD_TORR_TOP_INIT_E_TMO1M   | 0x4   | Timeout = 1048576 osc1_clk
+ *  ALT_L4WD_TORR_TOP_INIT_E_TMO2M   | 0x5   | Timeout = 2097152 osc1_clk
+ *  ALT_L4WD_TORR_TOP_INIT_E_TMO4M   | 0x6   | Timeout = 4194304 osc1_clk
+ *  ALT_L4WD_TORR_TOP_INIT_E_TMO8M   | 0x7   | Timeout = 8388608 osc1_clk
+ *  ALT_L4WD_TORR_TOP_INIT_E_TMO16M  | 0x8   | Timeout = 16777216 osc1_clk
+ *  ALT_L4WD_TORR_TOP_INIT_E_TMO32M  | 0x9   | Timeout = 33554432 osc1_clk
+ *  ALT_L4WD_TORR_TOP_INIT_E_TMO64M  | 0xa   | Timeout = 67108864 osc1_clk
+ *  ALT_L4WD_TORR_TOP_INIT_E_TMO128M | 0xb   | Timeout = 134217728 osc1_clk
+ *  ALT_L4WD_TORR_TOP_INIT_E_TMO256M | 0xc   | Timeout = 268435456 osc1_clk
+ *  ALT_L4WD_TORR_TOP_INIT_E_TMO512M | 0xd   | Timeout = 536870912 osc1_clk
  *  ALT_L4WD_TORR_TOP_INIT_E_TMO1G   | 0xe   | Timeout = 1073741824 osc1_clk
  *  ALT_L4WD_TORR_TOP_INIT_E_TMO2G   | 0xf   | Timeout = 2147483648 osc1_clk
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP_INIT
- * 
+ *
  * Timeout = 65536  osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_INIT_E_TMO64K     0x0
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP_INIT
- * 
+ *
  * Timeout = 131072 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_INIT_E_TMO128K    0x1
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP_INIT
- * 
+ *
  * Timeout = 262144 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_INIT_E_TMO256K    0x2
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP_INIT
- * 
+ *
  * Timeout = 524288 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_INIT_E_TMO512K    0x3
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP_INIT
- * 
+ *
  * Timeout = 1048576 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_INIT_E_TMO1M      0x4
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP_INIT
- * 
+ *
  * Timeout = 2097152 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_INIT_E_TMO2M      0x5
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP_INIT
- * 
+ *
  * Timeout = 4194304 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_INIT_E_TMO4M      0x6
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP_INIT
- * 
+ *
  * Timeout = 8388608 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_INIT_E_TMO8M      0x7
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP_INIT
- * 
+ *
  * Timeout = 16777216 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_INIT_E_TMO16M     0x8
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP_INIT
- * 
+ *
  * Timeout = 33554432 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_INIT_E_TMO32M     0x9
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP_INIT
- * 
+ *
  * Timeout = 67108864 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_INIT_E_TMO64M     0xa
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP_INIT
- * 
+ *
  * Timeout = 134217728 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_INIT_E_TMO128M    0xb
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP_INIT
- * 
+ *
  * Timeout = 268435456 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_INIT_E_TMO256M    0xc
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP_INIT
- * 
+ *
  * Timeout = 536870912 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_INIT_E_TMO512M    0xd
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP_INIT
- * 
+ *
  * Timeout = 1073741824 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_INIT_E_TMO1G      0xe
 /*
  * Enumerated value for register field ALT_L4WD_TORR_TOP_INIT
- * 
+ *
  * Timeout = 2147483648 osc1_clk
  */
 #define ALT_L4WD_TORR_TOP_INIT_E_TMO2G      0xf
@@ -501,7 +501,7 @@ typedef volatile struct ALT_L4WD_CR_s  ALT_L4WD_CR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L4WD_TORR.
  */
 struct ALT_L4WD_TORR_s
@@ -522,23 +522,23 @@ typedef volatile struct ALT_L4WD_TORR_s  ALT_L4WD_TORR_t;
 
 /*
  * Register : Current Counter Value Register - wdt_ccvr
- * 
+ *
  * See Field Description
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset      | Description          
+ *
+ *  Bits   | Access | Reset      | Description
  * :-------|:-------|:-----------|:----------------------
  *  [31:0] | R      | 0x7fffffff | Current Counter Value
- * 
+ *
  */
 /*
  * Field : Current Counter Value - wdt_ccvr
- * 
+ *
  * This register provides the current value of the internal counter.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L4WD_CCVR_WDT_CCVR register field. */
 #define ALT_L4WD_CCVR_WDT_CCVR_LSB        0
@@ -565,7 +565,7 @@ typedef volatile struct ALT_L4WD_TORR_s  ALT_L4WD_TORR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L4WD_CCVR.
  */
 struct ALT_L4WD_CCVR_s
@@ -584,36 +584,36 @@ typedef volatile struct ALT_L4WD_CCVR_s  ALT_L4WD_CCVR_t;
 
 /*
  * Register : Counter Restart Register - wdt_crr
- * 
+ *
  * Restarts the watchdog.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description             
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------
  *  [7:0]  | W      | 0x0   | Counter Restart Register
- *  [31:8] | ???    | 0x0   | *UNDEFINED*             
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Counter Restart Register - wdt_crr
- * 
+ *
  * This register is used to restart the watchdog counter. As a safety feature to
  * prevent accidental restarts, the kick value of 0x76 must be written. A restart
  * also clears the watchdog interrupt.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                        | Value | Description                             
+ *
+ *  Enum                        | Value | Description
  * :----------------------------|:------|:-----------------------------------------
  *  ALT_L4WD_CRR_WDT_CRR_E_KICK | 0x76  | Value to write to restart watchdog timer
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L4WD_CRR_WDT_CRR
- * 
+ *
  * Value to write to restart watchdog timer
  */
 #define ALT_L4WD_CRR_WDT_CRR_E_KICK 0x76
@@ -643,7 +643,7 @@ typedef volatile struct ALT_L4WD_CCVR_s  ALT_L4WD_CCVR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L4WD_CRR.
  */
 struct ALT_L4WD_CRR_s
@@ -663,41 +663,41 @@ typedef volatile struct ALT_L4WD_CRR_s  ALT_L4WD_CRR_t;
 
 /*
  * Register : Interrupt Status Register. - wdt_stat
- * 
+ *
  * Provides interrupt status
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description     
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------
  *  [0]    | R      | 0x0   | Interrupt Status
- *  [31:1] | ???    | 0x0   | *UNDEFINED*     
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Interrupt Status - wdt_stat
- * 
+ *
  * Provides the interrupt status of the watchdog.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                           | Value | Description          
+ *
+ *  Enum                           | Value | Description
  * :-------------------------------|:------|:----------------------
- *  ALT_L4WD_STAT_WDT_STAT_E_ACT   | 0x1   | Interrupt is active  
+ *  ALT_L4WD_STAT_WDT_STAT_E_ACT   | 0x1   | Interrupt is active
  *  ALT_L4WD_STAT_WDT_STAT_E_INACT | 0x0   | Interrupt is inactive
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L4WD_STAT_WDT_STAT
- * 
+ *
  * Interrupt is active
  */
 #define ALT_L4WD_STAT_WDT_STAT_E_ACT    0x1
 /*
  * Enumerated value for register field ALT_L4WD_STAT_WDT_STAT
- * 
+ *
  * Interrupt is inactive
  */
 #define ALT_L4WD_STAT_WDT_STAT_E_INACT  0x0
@@ -727,7 +727,7 @@ typedef volatile struct ALT_L4WD_CRR_s  ALT_L4WD_CRR_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L4WD_STAT.
  */
 struct ALT_L4WD_STAT_s
@@ -747,25 +747,25 @@ typedef volatile struct ALT_L4WD_STAT_s  ALT_L4WD_STAT_t;
 
 /*
  * Register : Interrupt Clear Register - wdt_eoi
- * 
+ *
  * Clears the watchdog interrupt when read.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------
  *  [0]    | R      | 0x0   | Interrupt Clear
- *  [31:1] | ???    | 0x0   | *UNDEFINED*    
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Interrupt Clear - wdt_eoi
- * 
+ *
  * Clears the watchdog interrupt. This can be used to clear the interrupt without
  * restarting the watchdog counter.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L4WD_EOI_WDT_EOI register field. */
 #define ALT_L4WD_EOI_WDT_EOI_LSB        0
@@ -792,7 +792,7 @@ typedef volatile struct ALT_L4WD_STAT_s  ALT_L4WD_STAT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L4WD_EOI.
  */
 struct ALT_L4WD_EOI_s
@@ -812,24 +812,24 @@ typedef volatile struct ALT_L4WD_EOI_s  ALT_L4WD_EOI_t;
 
 /*
  * Register : Component Parameters Register 5 - cp_wdt_user_top_max
- * 
+ *
  * This is a constant read-only register that contains encoded information about
  * the component's parameter settings.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description           
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------
  *  [31:0] | R      | 0x0   | Component Parameters 5
- * 
+ *
  */
 /*
  * Field : Component Parameters 5 - cp_wdt_user_top_max
- * 
+ *
  * Upper limit of Timeout Period parameters.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L4WD_CP_WDT_USER_TOP_MAX_VAL register field. */
 #define ALT_L4WD_CP_WDT_USER_TOP_MAX_VAL_LSB        0
@@ -856,7 +856,7 @@ typedef volatile struct ALT_L4WD_EOI_s  ALT_L4WD_EOI_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L4WD_CP_WDT_USER_TOP_MAX.
  */
 struct ALT_L4WD_CP_WDT_USER_TOP_MAX_s
@@ -875,24 +875,24 @@ typedef volatile struct ALT_L4WD_CP_WDT_USER_TOP_MAX_s  ALT_L4WD_CP_WDT_USER_TOP
 
 /*
  * Register : Component Parameters Register 4 - cp_wdt_user_top_init_max
- * 
+ *
  * This is a constant read-only register that contains encoded information about
  * the component's parameter settings
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description           
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------
  *  [31:0] | R      | 0x0   | Component Parameters 4
- * 
+ *
  */
 /*
  * Field : Component Parameters 4 - cp_wdt_user_top_init_max
- * 
+ *
  * Upper limit of Initial Timeout Period parameters.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L4WD_CP_WDT_USER_TOP_INIT_MAX_VAL register field. */
 #define ALT_L4WD_CP_WDT_USER_TOP_INIT_MAX_VAL_LSB        0
@@ -919,7 +919,7 @@ typedef volatile struct ALT_L4WD_CP_WDT_USER_TOP_MAX_s  ALT_L4WD_CP_WDT_USER_TOP
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L4WD_CP_WDT_USER_TOP_INIT_MAX.
  */
 struct ALT_L4WD_CP_WDT_USER_TOP_INIT_MAX_s
@@ -938,24 +938,24 @@ typedef volatile struct ALT_L4WD_CP_WDT_USER_TOP_INIT_MAX_s  ALT_L4WD_CP_WDT_USE
 
 /*
  * Register : Component Parameters Register 3 - cd_wdt_top_rst
- * 
+ *
  * This is a constant read-only register that contains encoded information about
  * the component's parameter settings.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------
  *  [31:0] | R      | 0xff  | Component Parameters  3
- * 
+ *
  */
 /*
  * Field : Component Parameters  3 - cd_wdt_top_rst
- * 
+ *
  * Contains the reset value of the WDT_TORR register.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L4WD_CD_WDT_TOP_RST_CD_WDT_TOP_RST register field. */
 #define ALT_L4WD_CD_WDT_TOP_RST_CD_WDT_TOP_RST_LSB        0
@@ -982,7 +982,7 @@ typedef volatile struct ALT_L4WD_CP_WDT_USER_TOP_INIT_MAX_s  ALT_L4WD_CP_WDT_USE
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L4WD_CD_WDT_TOP_RST.
  */
 struct ALT_L4WD_CD_WDT_TOP_RST_s
@@ -1001,25 +1001,25 @@ typedef volatile struct ALT_L4WD_CD_WDT_TOP_RST_s  ALT_L4WD_CD_WDT_TOP_RST_t;
 
 /*
  * Register : Component Parameters  Register 2 - cp_wdt_cnt_rst
- * 
+ *
  * This is a constant read-only register that contains encoded information about
  * the component's parameter settings.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset      | Description            
+ *
+ *  Bits   | Access | Reset      | Description
  * :-------|:-------|:-----------|:------------------------
  *  [31:0] | R      | 0x7fffffff | Component Parameters  2
- * 
+ *
  */
 /*
  * Field : Component Parameters  2 - cp_wdt_cnt_rst
- * 
+ *
  * The timeout period range is fixed. The range increments by the power of 2 from 2
  * to the 16 to 2 to the 31.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L4WD_CP_WDT_CNT_RST_CP_WDT_CNT_RST register field. */
 #define ALT_L4WD_CP_WDT_CNT_RST_CP_WDT_CNT_RST_LSB        0
@@ -1046,7 +1046,7 @@ typedef volatile struct ALT_L4WD_CD_WDT_TOP_RST_s  ALT_L4WD_CD_WDT_TOP_RST_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L4WD_CP_WDT_CNT_RST.
  */
 struct ALT_L4WD_CP_WDT_CNT_RST_s
@@ -1065,48 +1065,48 @@ typedef volatile struct ALT_L4WD_CP_WDT_CNT_RST_s  ALT_L4WD_CP_WDT_CNT_RST_t;
 
 /*
  * Register : Component Parameters Register 1 - wdt_comp_param_1
- * 
+ *
  * This is a constant read-only register that contains encoded information about
  * the component's parameter settings.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                           
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:---------------------------------------
- *  [0]     | R      | 0x0   | Always Enable                         
- *  [1]     | R      | 0x0   | Default Mode                          
- *  [2]     | R      | 0x1   | Dual Timeout Period                   
- *  [3]     | R      | 0x0   | Hardcode Response Mode                
- *  [4]     | R      | 0x1   | Hardcode Reset Pulse Length           
- *  [5]     | R      | 0x0   | Hardcode Timeout Period               
+ *  [0]     | R      | 0x0   | Always Enable
+ *  [1]     | R      | 0x0   | Default Mode
+ *  [2]     | R      | 0x1   | Dual Timeout Period
+ *  [3]     | R      | 0x0   | Hardcode Response Mode
+ *  [4]     | R      | 0x1   | Hardcode Reset Pulse Length
+ *  [5]     | R      | 0x0   | Hardcode Timeout Period
  *  [6]     | R      | 0x1   | Use Pre-defined (Fixed) Timeout Values
- *  [7]     | R      | 0x0   | Include Pause Input                   
- *  [9:8]   | R      | 0x2   | APB Data Width                        
- *  [12:10] | R      | 0x0   | Default Reset Pulse Length            
- *  [15:13] | ???    | 0x0   | *UNDEFINED*                           
- *  [19:16] | R      | 0xf   | Default Timeout Period                
- *  [23:20] | R      | 0xf   | Default Initial Timeout Period        
- *  [28:24] | R      | 0x10  | Counter Width in Bits                 
- *  [31:29] | ???    | 0x0   | *UNDEFINED*                           
- * 
+ *  [7]     | R      | 0x0   | Include Pause Input
+ *  [9:8]   | R      | 0x2   | APB Data Width
+ *  [12:10] | R      | 0x0   | Default Reset Pulse Length
+ *  [15:13] | ???    | 0x0   | *UNDEFINED*
+ *  [19:16] | R      | 0xf   | Default Timeout Period
+ *  [23:20] | R      | 0xf   | Default Initial Timeout Period
+ *  [28:24] | R      | 0x10  | Counter Width in Bits
+ *  [31:29] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Always Enable - cp_wdt_always_en
- * 
+ *
  * Specifies whether watchdog starts after reset or not.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                          | Value | Description               
+ *
+ *  Enum                                          | Value | Description
  * :----------------------------------------------|:------|:---------------------------
  *  ALT_L4WD_COMP_PARAM_1_CP_WDT_ALWAYS_EN_E_DISD | 0x0   | Watchdog disabled on reset
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L4WD_COMP_PARAM_1_CP_WDT_ALWAYS_EN
- * 
+ *
  * Watchdog disabled on reset
  */
 #define ALT_L4WD_COMP_PARAM_1_CP_WDT_ALWAYS_EN_E_DISD   0x0
@@ -1130,22 +1130,22 @@ typedef volatile struct ALT_L4WD_CP_WDT_CNT_RST_s  ALT_L4WD_CP_WDT_CNT_RST_t;
 
 /*
  * Field : Default Mode - cp_wdt_dflt_rmod
- * 
+ *
  * Specifies default output response mode after reset.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                            | Value | Description                                     
+ *
+ *  Enum                                            | Value | Description
  * :------------------------------------------------|:------|:-------------------------------------------------
  *  ALT_L4WD_COMP_PARAM_1_CP_WDT_DFLT_RMOD_E_RSTREQ | 0x0   | Generate a warm reset request (don't generate an
- * :                                                |       | interrupt first)                                
- * 
+ * :                                                |       | interrupt first)
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L4WD_COMP_PARAM_1_CP_WDT_DFLT_RMOD
- * 
+ *
  * Generate a warm reset request (don't generate an interrupt first)
  */
 #define ALT_L4WD_COMP_PARAM_1_CP_WDT_DFLT_RMOD_E_RSTREQ 0x0
@@ -1169,22 +1169,22 @@ typedef volatile struct ALT_L4WD_CP_WDT_CNT_RST_s  ALT_L4WD_CP_WDT_CNT_RST_t;
 
 /*
  * Field : Dual Timeout Period - cp_wdt_dual_top
- * 
+ *
  * Specifies whether a second timeout period that is used for initialization prior
  * to the first kick is present or not.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                            | Value | Description                     
+ *
+ *  Enum                                            | Value | Description
  * :------------------------------------------------|:------|:---------------------------------
  *  ALT_L4WD_COMP_PARAM_1_CP_WDT_DUAL_TOP_E_DUALTOP | 0x1   | Second timeout period is present
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L4WD_COMP_PARAM_1_CP_WDT_DUAL_TOP
- * 
+ *
  * Second timeout period is present
  */
 #define ALT_L4WD_COMP_PARAM_1_CP_WDT_DUAL_TOP_E_DUALTOP 0x1
@@ -1208,22 +1208,22 @@ typedef volatile struct ALT_L4WD_CP_WDT_CNT_RST_s  ALT_L4WD_CP_WDT_CNT_RST_t;
 
 /*
  * Field : Hardcode Response Mode - cp_wdt_hc_rmod
- * 
+ *
  * Specifies if response mode (when counter reaches 0) is programmable or
  * hardcoded.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                        | Value | Description                          
+ *
+ *  Enum                                        | Value | Description
  * :--------------------------------------------|:------|:--------------------------------------
  *  ALT_L4WD_COMP_PARAM_1_CP_WDT_HC_RMOD_E_PGML | 0x0   | Output response mode is programmable.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L4WD_COMP_PARAM_1_CP_WDT_HC_RMOD
- * 
+ *
  * Output response mode is programmable.
  */
 #define ALT_L4WD_COMP_PARAM_1_CP_WDT_HC_RMOD_E_PGML 0x0
@@ -1247,21 +1247,21 @@ typedef volatile struct ALT_L4WD_CP_WDT_CNT_RST_s  ALT_L4WD_CP_WDT_CNT_RST_t;
 
 /*
  * Field : Hardcode Reset Pulse Length - cp_wdt_hc_rpl
- * 
+ *
  * Specifies if the reset pulse length is programmable or hardcoded.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                            | Value | Description                     
+ *
+ *  Enum                                            | Value | Description
  * :------------------------------------------------|:------|:---------------------------------
  *  ALT_L4WD_COMP_PARAM_1_CP_WDT_HC_RPL_E_HARDCODED | 0x1   | Reset pulse length is hardcoded.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L4WD_COMP_PARAM_1_CP_WDT_HC_RPL
- * 
+ *
  * Reset pulse length is hardcoded.
  */
 #define ALT_L4WD_COMP_PARAM_1_CP_WDT_HC_RPL_E_HARDCODED 0x1
@@ -1285,21 +1285,21 @@ typedef volatile struct ALT_L4WD_CP_WDT_CNT_RST_s  ALT_L4WD_CP_WDT_CNT_RST_t;
 
 /*
  * Field : Hardcode Timeout Period - cp_wdt_hc_top
- * 
+ *
  * Specifies if the timeout period is programmable or hardcoded.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                       | Value | Description                    
+ *
+ *  Enum                                       | Value | Description
  * :-------------------------------------------|:------|:--------------------------------
  *  ALT_L4WD_COMP_PARAM_1_CP_WDT_HC_TOP_E_PGML | 0x0   | Timeout period is programmable.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L4WD_COMP_PARAM_1_CP_WDT_HC_TOP
- * 
+ *
  * Timeout period is programmable.
  */
 #define ALT_L4WD_COMP_PARAM_1_CP_WDT_HC_TOP_E_PGML  0x0
@@ -1323,23 +1323,23 @@ typedef volatile struct ALT_L4WD_CP_WDT_CNT_RST_s  ALT_L4WD_CP_WDT_CNT_RST_t;
 
 /*
  * Field : Use Pre-defined (Fixed) Timeout Values - cp_wdt_use_fix_top
- * 
+ *
  * Specifies if the watchdog uses the pre-defined timeout values or if these were
  * overriden with customer values when the watchdog was configured.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                                  | Value | Description                                  
+ *
+ *  Enum                                                  | Value | Description
  * :------------------------------------------------------|:------|:----------------------------------------------
  *  ALT_L4WD_COMP_PARAM_1_CP_WDT_USE_FIX_TOP_E_PREDEFINED | 0x1   | Use pre-defined (fixed) timeout values (range
- * :                                                      |       | from 2**16 to 2**31)                         
- * 
+ * :                                                      |       | from 2**16 to 2**31)
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L4WD_COMP_PARAM_1_CP_WDT_USE_FIX_TOP
- * 
+ *
  * Use pre-defined (fixed) timeout values (range from 2**16 to 2**31)
  */
 #define ALT_L4WD_COMP_PARAM_1_CP_WDT_USE_FIX_TOP_E_PREDEFINED   0x1
@@ -1363,14 +1363,14 @@ typedef volatile struct ALT_L4WD_CP_WDT_CNT_RST_s  ALT_L4WD_CP_WDT_CNT_RST_t;
 
 /*
  * Field : Include Pause Input - cp_wdt_pause
- * 
+ *
  * Should specify if the pause input is included or not. However, this field is
  * always hardwired to 0 so you can't figure this out by reading this field. The
  * pause input is included and can be used to pause the watchdog when the MPU is in
  * debug mode.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L4WD_COMP_PARAM_1_CP_WDT_PAUSE register field. */
 #define ALT_L4WD_COMP_PARAM_1_CP_WDT_PAUSE_LSB        7
@@ -1391,21 +1391,21 @@ typedef volatile struct ALT_L4WD_CP_WDT_CNT_RST_s  ALT_L4WD_CP_WDT_CNT_RST_t;
 
 /*
  * Field : APB Data Width - cp_wdt_apb_data_width
- * 
+ *
  * APB Bus Width
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                                      | Value | Description              
+ *
+ *  Enum                                                      | Value | Description
  * :----------------------------------------------------------|:------|:--------------------------
  *  ALT_L4WD_COMP_PARAM_1_CP_WDT_APB_DATA_WIDTH_E_WIDTH32BITS | 0x2   | APB Data Width is 32 Bits
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L4WD_COMP_PARAM_1_CP_WDT_APB_DATA_WIDTH
- * 
+ *
  * APB Data Width is 32 Bits
  */
 #define ALT_L4WD_COMP_PARAM_1_CP_WDT_APB_DATA_WIDTH_E_WIDTH32BITS   0x2
@@ -1429,21 +1429,21 @@ typedef volatile struct ALT_L4WD_CP_WDT_CNT_RST_s  ALT_L4WD_CP_WDT_CNT_RST_t;
 
 /*
  * Field : Default Reset Pulse Length - cp_wdt_dflt_rpl
- * 
+ *
  * Specifies the reset pulse length in cycles.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                                 | Value | Description                    
+ *
+ *  Enum                                                 | Value | Description
  * :-----------------------------------------------------|:------|:--------------------------------
  *  ALT_L4WD_COMP_PARAM_1_CP_WDT_DFLT_RPL_E_PULSE2CYCLES | 0x0   | Reset pulse length of 2 cycles.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L4WD_COMP_PARAM_1_CP_WDT_DFLT_RPL
- * 
+ *
  * Reset pulse length of 2 cycles.
  */
 #define ALT_L4WD_COMP_PARAM_1_CP_WDT_DFLT_RPL_E_PULSE2CYCLES    0x0
@@ -1467,21 +1467,21 @@ typedef volatile struct ALT_L4WD_CP_WDT_CNT_RST_s  ALT_L4WD_CP_WDT_CNT_RST_t;
 
 /*
  * Field : Default Timeout Period - cp_wdt_dflt_top
- * 
+ *
  * Specifies the timeout period that is available directly after reset.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                          | Value | Description                         
+ *
+ *  Enum                                          | Value | Description
  * :----------------------------------------------|:------|:-------------------------------------
  *  ALT_L4WD_COMP_PARAM_1_CP_WDT_DFLT_TOP_E_TMO15 | 0xf   | Timeout period is 15 (2**31 cycles).
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L4WD_COMP_PARAM_1_CP_WDT_DFLT_TOP
- * 
+ *
  * Timeout period is 15 (2**31 cycles).
  */
 #define ALT_L4WD_COMP_PARAM_1_CP_WDT_DFLT_TOP_E_TMO15   0xf
@@ -1505,21 +1505,21 @@ typedef volatile struct ALT_L4WD_CP_WDT_CNT_RST_s  ALT_L4WD_CP_WDT_CNT_RST_t;
 
 /*
  * Field : Default Initial Timeout Period - cp_wdt_dflt_top_init
- * 
+ *
  * Specifies the initial timeout period that is available directly after reset.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                               | Value | Description                                 
+ *
+ *  Enum                                               | Value | Description
  * :---------------------------------------------------|:------|:---------------------------------------------
  *  ALT_L4WD_COMP_PARAM_1_CP_WDT_DFLT_TOP_INIT_E_TMO15 | 0xf   | Initial timeout period is 15 (2**31 cycles).
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L4WD_COMP_PARAM_1_CP_WDT_DFLT_TOP_INIT
- * 
+ *
  * Initial timeout period is 15 (2**31 cycles).
  */
 #define ALT_L4WD_COMP_PARAM_1_CP_WDT_DFLT_TOP_INIT_E_TMO15  0xf
@@ -1543,21 +1543,21 @@ typedef volatile struct ALT_L4WD_CP_WDT_CNT_RST_s  ALT_L4WD_CP_WDT_CNT_RST_t;
 
 /*
  * Field : Counter Width in Bits - cp_wdt_cnt_width
- * 
+ *
  * Width of counter in bits less 16.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                                 | Value | Description             
+ *
+ *  Enum                                                 | Value | Description
  * :-----------------------------------------------------|:------|:-------------------------
  *  ALT_L4WD_COMP_PARAM_1_CP_WDT_CNT_WIDTH_E_WIDTH32BITS | 0x10  | Counter width is 32 bits
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_L4WD_COMP_PARAM_1_CP_WDT_CNT_WIDTH
- * 
+ *
  * Counter width is 32 bits
  */
 #define ALT_L4WD_COMP_PARAM_1_CP_WDT_CNT_WIDTH_E_WIDTH32BITS    0x10
@@ -1587,7 +1587,7 @@ typedef volatile struct ALT_L4WD_CP_WDT_CNT_RST_s  ALT_L4WD_CP_WDT_CNT_RST_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L4WD_COMP_PARAM_1.
  */
 struct ALT_L4WD_COMP_PARAM_1_s
@@ -1620,22 +1620,22 @@ typedef volatile struct ALT_L4WD_COMP_PARAM_1_s  ALT_L4WD_COMP_PARAM_1_t;
 
 /*
  * Register : Component Version Register - wdt_comp_version
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset      | Description      
+ *
+ *  Bits   | Access | Reset      | Description
  * :-------|:-------|:-----------|:------------------
  *  [31:0] | R      | 0x3130362a | Component Version
- * 
+ *
  */
 /*
  * Field : Component Version - wdt_comp_version
- * 
+ *
  * ASCII value for each number in the version, followed by *. For example,
  * 32_30_31_2A represents the version 2.01*.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L4WD_COMP_VER_WDT_COMP_VER register field. */
 #define ALT_L4WD_COMP_VER_WDT_COMP_VER_LSB        0
@@ -1662,7 +1662,7 @@ typedef volatile struct ALT_L4WD_COMP_PARAM_1_s  ALT_L4WD_COMP_PARAM_1_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L4WD_COMP_VER.
  */
 struct ALT_L4WD_COMP_VER_s
@@ -1681,21 +1681,21 @@ typedef volatile struct ALT_L4WD_COMP_VER_s  ALT_L4WD_COMP_VER_t;
 
 /*
  * Register : Component Type Register - wdt_comp_type
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset      | Description   
+ *
+ *  Bits   | Access | Reset      | Description
  * :-------|:-------|:-----------|:---------------
  *  [31:0] | R      | 0x44570120 | Component Type
- * 
+ *
  */
 /*
  * Field : Component Type - wdt_comp_type
- * 
+ *
  * Designware Component Type number = 0x44_57_01_20.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_L4WD_COMP_TYPE_WDT_COMP_TYPE register field. */
 #define ALT_L4WD_COMP_TYPE_WDT_COMP_TYPE_LSB        0
@@ -1722,7 +1722,7 @@ typedef volatile struct ALT_L4WD_COMP_VER_s  ALT_L4WD_COMP_VER_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_L4WD_COMP_TYPE.
  */
 struct ALT_L4WD_COMP_TYPE_s
@@ -1747,7 +1747,7 @@ typedef volatile struct ALT_L4WD_COMP_TYPE_s  ALT_L4WD_COMP_TYPE_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_L4WD.
  */
 struct ALT_L4WD_s
@@ -1798,4 +1798,3 @@ typedef volatile struct ALT_L4WD_raw_s  ALT_L4WD_raw_t;
 }
 #endif  /* __cplusplus */
 #endif  /* __ALTERA_ALT_L4WD_H__ */
-

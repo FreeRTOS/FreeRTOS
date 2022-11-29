@@ -27,9 +27,9 @@
  * ----------------------------------------------------------------------------
  */
 
- 
+
 /** \addtogroup fuse_module Working with FUSE
- * The Fuse driver provides the Interface for configuration the FUSE 
+ * The Fuse driver provides the Interface for configuration the FUSE
  * peripheral.
  *
  * For more accurate information, please look at the FUSE section of the
@@ -58,7 +58,7 @@
  *------------------------------------------------------------------------------*/
 
  /**
- * \brief Read fuse vlaue by given word position. 
+ * \brief Read fuse vlaue by given word position.
  *
  * \param wordPosition  select the 32-bit word 0 to 9.
  */
@@ -82,7 +82,7 @@ uint32_t FUSE_Read (uint8_t wordPosition )
 }
 
 /**
- * \brief Program fuse vlaue by given word position. 
+ * \brief Program fuse vlaue by given word position.
  *
  * \param data  word to be program.
  * \param wordPosition  select the 32-bit word 0 to 9.

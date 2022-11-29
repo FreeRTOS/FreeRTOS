@@ -189,4 +189,3 @@ void *_sbrk( ptrdiff_t incr )
 	configASSERT( ( void * ) incr == NULL );
 	return NULL;
 }
-

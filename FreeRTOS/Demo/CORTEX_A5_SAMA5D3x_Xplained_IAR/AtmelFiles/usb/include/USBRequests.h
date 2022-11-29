@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2010, Atmel Corporation
  *
@@ -29,12 +29,12 @@
 
 /** \file
  *  \section Purpose
- * 
+ *
  *    Definitions and methods for USB request structures described by the
  *    USB specification.
- * 
+ *
  *  \section Usage
- * 
+ *
  */
 
 #ifndef _USBREQUESTS_H_
@@ -63,7 +63,7 @@
 /** \addtogroup usb_request_define USB Generic Request definitions
  *      @{
  *  This section lists the codes of USB generic request.
- * 
+ *
  *  - \ref usb_request_code USB Request codes
  *     - \ref USBGenericRequest_GETSTATUS
  *     - \ref USBGenericRequest_CLEARFEATURE
@@ -76,18 +76,18 @@
  *     - \ref USBGenericRequest_GETINTERFACE
  *     - \ref USBGenericRequest_SETINTERFACE
  *     - \ref USBGenericRequest_SYNCHFRAME
- * 
+ *
  *  - \ref usb_request_recipient USB Request Recipients
  *     - \ref USBGenericRequest_DEVICE
  *     - \ref USBGenericRequest_INTERFACE
  *     - \ref USBGenericRequest_ENDPOINT
  *     - \ref USBGenericRequest_OTHER
- * 
+ *
  *  - \ref usb_request_type USB Request Types
  *     - \ref USBGenericRequest_STANDARD
  *     - \ref USBGenericRequest_CLASS
  *     - \ref USBGenericRequest_VENDOR
- * 
+ *
  *  - \ref usb_request_dir USB Request Directions
  *     - \ref USBGenericRequest_IN
  *     - \ref USBGenericRequest_OUT
@@ -253,11 +253,11 @@
  *      Types
  *---------------------------------------------------------------------------*/
 
-/* 
+/*
  *          Function types
  */
 
-/* 
+/*
  *          Descriptor structs types
  */
 #pragma pack(1)
@@ -351,4 +351,3 @@ extern uint8_t USBFeatureRequest_GetTestSelector(
 /** @}*/
 /**@}*/
 #endif /* #ifndef _USBREQUESTS_H_ */
-

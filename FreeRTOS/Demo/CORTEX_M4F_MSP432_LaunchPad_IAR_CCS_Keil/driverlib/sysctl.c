@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -172,20 +172,20 @@ void SysCtl_disableSRAMBank(uint_fast8_t sramBank)
     {
     case SYSCTL_SRAM_BANK7:
         sramBank = SYSCTL_SRAM_BANK6 +  SYSCTL_SRAM_BANK5 + SYSCTL_SRAM_BANK4
-                        + SYSCTL_SRAM_BANK3 + SYSCTL_SRAM_BANK2 
+                        + SYSCTL_SRAM_BANK3 + SYSCTL_SRAM_BANK2
                         + SYSCTL_SRAM_BANK1;
         break;
     case SYSCTL_SRAM_BANK6:
         sramBank =   SYSCTL_SRAM_BANK5 + SYSCTL_SRAM_BANK4
-                        + SYSCTL_SRAM_BANK3 + SYSCTL_SRAM_BANK2 
+                        + SYSCTL_SRAM_BANK3 + SYSCTL_SRAM_BANK2
                         + SYSCTL_SRAM_BANK1;
         break;
     case SYSCTL_SRAM_BANK5:
-        sramBank =   SYSCTL_SRAM_BANK4 + SYSCTL_SRAM_BANK3  
+        sramBank =   SYSCTL_SRAM_BANK4 + SYSCTL_SRAM_BANK3
                 + SYSCTL_SRAM_BANK2 + SYSCTL_SRAM_BANK1;
         break;
     case SYSCTL_SRAM_BANK4:
-        sramBank =   SYSCTL_SRAM_BANK3 + SYSCTL_SRAM_BANK2 
+        sramBank =   SYSCTL_SRAM_BANK3 + SYSCTL_SRAM_BANK2
                         + SYSCTL_SRAM_BANK1;
         break;
     case SYSCTL_SRAM_BANK3:

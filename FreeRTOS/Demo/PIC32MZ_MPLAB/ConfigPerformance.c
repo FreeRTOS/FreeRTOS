@@ -71,7 +71,3 @@ void vHardwareUseMultiVectoredInterrupts( void )
 	INTCONSET = _INTCON_MVEC_MASK;
 	__builtin_enable_interrupts();
 }
-
-
-
-

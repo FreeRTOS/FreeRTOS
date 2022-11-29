@@ -455,4 +455,3 @@ BEGIN xps_intc
  PORT Intr = fpga_0_Ethernet_MAC_MDINT_pin&RS232_Uart_1_Interrupt
  PORT Irq = ppc440_0_EICC440EXTIRQ
 END
-

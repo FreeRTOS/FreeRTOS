@@ -54,7 +54,7 @@
 /* Private Types -------------------------------------------------------------- */
 /** @defgroup I2C_Private_Types I2C Private Types
  * @{
- */		   
+ */
 #define SFSP2_3_CONFIGURE_I2C1_SDA					(0x00000001 | MD_ZI | MD_EZI)
 #define SFSP2_4_CONFIGURE_I2C1_SCL					(0x00000001 | MD_ZI | MD_EZI)
 #define SFSI2C0_CONFIGURE_STANDARD_FAST_MODE		(1<<3 | 1<<11)

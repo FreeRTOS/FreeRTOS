@@ -163,4 +163,3 @@ girq15_b18(void)
 /* end girq15.c */
 /**   @}
  */
-

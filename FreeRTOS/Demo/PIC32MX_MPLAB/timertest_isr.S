@@ -47,4 +47,3 @@ vT2InterruptWrapper:
 	portRESTORE_CONTEXT
 
 	.end	vT2InterruptWrapper
-

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -33,7 +33,7 @@
  * \section Purpose
  *
  *   Definitions and methods for USB composite device implement.
- * 
+ *
  */
 
 #ifndef DUALCDCDDRIVER_H
@@ -154,4 +154,3 @@ extern CDCDSerialPort* DUALCDCDDriver_GetSerialPort(uint32_t port);
 
 /**@}*/
 #endif /* #ifndef DUALCDCDDRIVER_H */
-

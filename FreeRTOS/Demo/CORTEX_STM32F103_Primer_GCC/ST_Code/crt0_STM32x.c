@@ -117,7 +117,7 @@ void (* const g_pfnVectors[])(void) =
   MemManageException,
   BusFaultException,
   UsageFaultException,
-  (void*)0, (void*)0, (void*)0, (void*)0,            /* Reserved */ 
+  (void*)0, (void*)0, (void*)0, (void*)0,            /* Reserved */
   vPortSVCHandler,
   DebugMonitor,
   (void*)0,                      /* Reserved */
@@ -180,7 +180,7 @@ void (* const g_pfnVectors[])(void) =
 * Function Name  : Reset_Handler
 * Description    : This is the code that gets called when the processor first starts execution
 *		       following a reset event.  Only the absolutely necessary set is performed,
-*		       after which the application supplied main() routine is called. 
+*		       after which the application supplied main() routine is called.
 * Input          :
 * Output         :
 * Return         :
@@ -214,5 +214,3 @@ void Reset_Handler(void)
 
 
 /********************* (C) COPYRIGHT 2007 STMicroelectronics  *****END OF FILE****/
-
-

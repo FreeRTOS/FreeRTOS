@@ -169,13 +169,13 @@ void init_iolib(void)
     stdin->_Bend = stdin->_Buf + 1;  /* Re-set pointer to the end of buffer */
 
     /* Standard Output File */
-    if( freopen( BSP_PRV_FPATH_STDOUT, "w", stdout ) == NULL ) 
+    if( freopen( BSP_PRV_FPATH_STDOUT, "w", stdout ) == NULL )
     {
         stdout->_Mode = 0xffff; /* Not allow the access if it fails to open */
     }
     stdout->_Mode |= BSP_PRV_MNBF;            /* Non-buffering for data */
     stdout->_Bend = stdout->_Buf + 1;  /* Re-set pointer to the end of buffer */
-    
+
     /* Standard Error File */
     if( freopen( BSP_PRV_FPATH_STDERR, "w", stderr ) == NULL )
     {
@@ -340,7 +340,7 @@ long read(long fileno, unsigned char *buf, long count)
              }
              return count;
        }
-       else 
+       else
        {
              return -1;
        }
@@ -568,4 +568,3 @@ void lseek (void)
 #endif /* defined(__GNUC__) */
 
 #endif /* BSP_CFG_STARTUP_DISABLE == 0 */
-

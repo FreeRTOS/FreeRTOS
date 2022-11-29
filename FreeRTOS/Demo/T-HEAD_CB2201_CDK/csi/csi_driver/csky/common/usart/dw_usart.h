@@ -113,4 +113,3 @@ typedef struct {
 } dw_usart_reg_t;
 
 #endif /* __DW_USART_H */
-

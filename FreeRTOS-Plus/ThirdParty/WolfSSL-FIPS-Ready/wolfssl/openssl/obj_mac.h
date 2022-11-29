@@ -47,4 +47,3 @@
 #endif
 
 #endif /* WOLFSSL_OBJ_MAC_H_ */
-

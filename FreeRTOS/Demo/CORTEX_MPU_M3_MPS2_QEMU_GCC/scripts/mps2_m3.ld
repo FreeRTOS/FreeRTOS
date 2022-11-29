@@ -128,7 +128,7 @@ SECTIONS
         PROVIDE_HIDDEN (__preinit_array_end = .);
         . = ALIGN(4);
     } >FLASH
-    
+
     .init_array :
     {
         . = ALIGN(4);
@@ -138,7 +138,7 @@ SECTIONS
         PROVIDE_HIDDEN (__init_array_end = .);
         . = ALIGN(4);
     } >FLASH
-    
+
     .fini_array :
     {
         . = ALIGN(4);
@@ -219,4 +219,3 @@ SECTIONS
   /* Check if data + heap + stack exceeds RAM limit */
   ASSERT(__StackLimit >= _heap_top, "region RAM overflowed with stack")
 }
-

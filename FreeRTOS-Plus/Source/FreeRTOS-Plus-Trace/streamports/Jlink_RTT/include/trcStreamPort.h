@@ -10,7 +10,7 @@
  *
  * Note that this stream port is more complex than the typical case, since
  * the J-Link interface uses a separate RAM buffer in SEGGER_RTT.c, instead
- * of the default buffer included in the recorder core. The other stream ports 
+ * of the default buffer included in the recorder core. The other stream ports
  * offer more typical examples of how to define a custom streaming interface.
  */
 
@@ -57,11 +57,11 @@ typedef struct TraceStreamPortBuffer
 
 /**
  * @internal Stream port initialize callback.
- * 
+ *
  * This function is called by the recorder as part of its initialization phase.
- * 
+ *
  * @param[in] pxBuffer Buffer
- * 
+ *
  * @retval TRC_FAIL Initialization failed
  * @retval TRC_SUCCESS Success
  */
@@ -69,10 +69,10 @@ traceResult xTraceStreamPortInitialize(TraceStreamPortBuffer_t* pxBuffer);
 
 /**
  * @brief Allocates data from the stream port.
- * 
+ *
  * @param[in] uiSize Allocation size
  * @param[out] ppvData Allocation data pointer
- * 
+ *
  * @retval TRC_FAIL Allocate failed
  * @retval TRC_SUCCESS Success
  */
@@ -82,11 +82,11 @@ traceResult xTraceStreamPortInitialize(TraceStreamPortBuffer_t* pxBuffer);
  * @brief Commits data to the stream port, depending on the implementation/configuration of the
  * stream port this data might be directly written to the stream port interface, buffered, or
  * something else.
- * 
+ *
  * @param[in] pvData Data to commit
  * @param[in] uiSize Data to commit size
  * @param[out] piBytesCommitted Bytes committed
- * 
+ *
  * @retval TRC_FAIL Commit failed
  * @retval TRC_SUCCESS Success
  */
@@ -98,11 +98,11 @@ traceResult xTraceStreamPortInitialize(TraceStreamPortBuffer_t* pxBuffer);
 
 /**
  * @brief Writes data through the stream port interface.
- * 
+ *
  * @param[in] pvData Data to write
  * @param[in] uiSize Data to write size
  * @param[out] piBytesWritten Bytes written
- * 
+ *
  * @retval TRC_FAIL Write failed
  * @retval TRC_SUCCESS Success
  */
@@ -114,11 +114,11 @@ traceResult xTraceStreamPortInitialize(TraceStreamPortBuffer_t* pxBuffer);
 
 /**
  * @brief Reads data through the stream port interface.
- * 
- * @param[in] pvData Destination data buffer 
+ *
+ * @param[in] pvData Destination data buffer
  * @param[in] uiSize Destination data buffer size
  * @param[out] piBytesRead Bytes read
- * 
+ *
  * @retval TRC_FAIL Read failed
  * @retval TRC_SUCCESS Success
  */

@@ -720,5 +720,3 @@ __attribute__((weak)) void copy_switch_code(void)
 
 #endif /* MPFS_HAL_HW_CONFIG */
 #endif
-
-

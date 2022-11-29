@@ -228,4 +228,3 @@ portBASE_TYPE xTaskWoken = pdFALSE;
 		sTHREEmpty = pdTRUE;
 	}
 }
-

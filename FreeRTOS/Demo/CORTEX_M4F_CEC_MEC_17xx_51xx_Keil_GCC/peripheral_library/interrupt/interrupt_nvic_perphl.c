@@ -20,16 +20,16 @@
 
 Version Control Information (Perforce)
 ******************************************************************************
-$Revision: #1 $ 
-$DateTime: 2016/09/22 08:03:49 $ 
+$Revision: #1 $
+$DateTime: 2016/09/22 08:03:49 $
 $Author: pramans $
 Last Change:	Initial Draft
 ******************************************************************************/
 /** @file interrupt_nvic_perphl.c
 * \brief Interrupt NVIC Peripheral Source File
 * \author jvasanth
-* 
-* This file implements the NVIC peripheral functions  
+*
+* This file implements the NVIC peripheral functions
 ******************************************************************************/
 
 /** @defgroup Interrupt
@@ -45,29 +45,29 @@ Last Change:	Initial Draft
 
 /**  Enable/Disable the NVIC IRQ in the NVIC interrupt controller
  * @param nvic_num : NVIC number (see enum IRQn_Type)
- * @param en_flag : 1 = Enable the NVIC IRQ, 0 = Disable the NVIC IRQ 
+ * @param en_flag : 1 = Enable the NVIC IRQ, 0 = Disable the NVIC IRQ
  */
 void p_interrupt_nvic_enable(IRQn_Type nvic_num, uint8_t en_flag)
-{	
+{
 	if (en_flag) {
         NVIC_EnableIRQ(nvic_num);
     } else {
         NVIC_DisableIRQ(nvic_num);
     }
-    __DSB();	
+    __DSB();
 }
 
-/**  ecia_nvic_clr_en - Clear all NVIC external enables */ 
+/**  ecia_nvic_clr_en - Clear all NVIC external enables */
 void p_interrupt_nvic_extEnables_clr(void)
 {
     uint32_t i, m;
-    
+
     m = (uint32_t)(MAX_IRQn) >> 5;
     if ( (uint32_t)(MAX_IRQn) & 0x1Ful ) { m++; }
-		
-    for ( i = 0ul; i < m ; i++ ) 
+
+    for ( i = 0ul; i < m ; i++ )
     {
-        NVIC->ICER[i] = 0xfffffffful;        
+        NVIC->ICER[i] = 0xfffffffful;
     }
 }
 
@@ -79,12 +79,12 @@ void p_interrupt_nvic_enpend_clr(void)
     // Clear NVIC enables & pending status
     m = (uint32_t)(MAX_IRQn) >> 5;
     if ( (uint32_t)(MAX_IRQn) & 0x1Ful ) { m++; }
-		
-    for ( i = 0ul; i < m ; i++ ) 
+
+    for ( i = 0ul; i < m ; i++ )
     {
         NVIC->ICER[i] = 0xfffffffful;
         NVIC->ICPR[i] = 0xfffffffful;
-    }    
+    }
 }
 
 /** Set NVIC external priorities to POR value */
@@ -100,14 +100,14 @@ void p_interrupt_nvic_priorities_default_set(void)
 /** Set NVIC external priorities to specified priority (0 - 7)
  * @param zero-based 3-bit priority value: 0=highest, 7=lowest.
  * @note NVIC highest priority is the value 0, lowest is all 1's.
- * Each external interrupt has an 8-bit register and the priority 
- * is left justified in the registers. MECxxx implements 8 priority 
+ * Each external interrupt has an 8-bit register and the priority
+ * is left justified in the registers. MECxxx implements 8 priority
  * levels or bits [7:5] in the register. Lowest priority = 0xE0
  */
 void p_interrupt_nvic_priorities_set(uint8_t new_pri)
 {
     uint16_t i;
-    
+
     for ( i = 0ul; i < MAX_IRQn; i++ ) {
         NVIC_SetPriority((IRQn_Type)i, new_pri);
     }

@@ -49,7 +49,7 @@
 
 
 #ifdef FREERTOS_USED
-  #include "FreeRTOS.h" 
+  #include "FreeRTOS.h"
   #include "task.h"
   #include "semphr.h"
 #endif
@@ -77,11 +77,11 @@ one not be immediately available when trying to transmit a frame. */
 #define BUFFER_WAIT_DELAY   ( 2 )
 
 #ifndef FREERTOS_USED
-#define portENTER_CRITICAL           Disable_global_interrupt 
+#define portENTER_CRITICAL           Disable_global_interrupt
 #define portEXIT_CRITICAL            Enable_global_interrupt
-#define portENTER_SWITCHING_ISR()  
-#define portEXIT_SWITCHING_ISR()  
-#endif 
+#define portENTER_SWITCHING_ISR()
+#define portEXIT_SWITCHING_ISR()
+#endif
 
 
 /* Buffer written to by the MACB DMA.  Must be aligned as described by the
@@ -160,7 +160,7 @@ static long prvPHY_ISR_NonNakedBehaviour( void );
 static void prvSetupDescriptors(volatile avr32_macb_t * macb);
 
 /*
- * Write our MAC address into the MACB.  
+ * Write our MAC address into the MACB.
  */
 static void prvSetupMACAddress( volatile avr32_macb_t * macb );
 
@@ -173,7 +173,7 @@ static void prvSetupMACBInterrupt( volatile avr32_macb_t * macb );
  * Some initialisation functions.
  */
 static Bool prvProbePHY( volatile avr32_macb_t * macb );
-static unsigned long ulReadMDIO(volatile avr32_macb_t * macb, unsigned short usAddress); 
+static unsigned long ulReadMDIO(volatile avr32_macb_t * macb, unsigned short usAddress);
 static void vWriteMDIO(volatile avr32_macb_t * macb, unsigned short usAddress, unsigned short usValue);
 
 
@@ -203,18 +203,18 @@ unsigned long ulLastBuffer, ulDataBuffered = 0, ulDataRemainingToSend, ulLengthT
     // Is a buffer available ?
     while( !( xTxDescriptors[ uxTxBufferIndex ].U_Status.status & AVR32_TRANSMIT_OK ) )
     {
-      // There is no room to write the Tx data to the Tx buffer.  
+      // There is no room to write the Tx data to the Tx buffer.
       // Wait a short while, then try again.
 #ifdef FREERTOS_USED
       vTaskDelay( BUFFER_WAIT_DELAY );
 #else
-      __asm__ __volatile__ ("nop");      
+      __asm__ __volatile__ ("nop");
 #endif
     }
-  
+
     portENTER_CRITICAL();
     {
-      // Get the address of the buffer from the descriptor, 
+      // Get the address of the buffer from the descriptor,
       // then copy the data into the buffer.
       pcBuffer = ( char * ) xTxDescriptors[ uxTxBufferIndex ].addr;
 
@@ -233,7 +233,7 @@ unsigned long ulLastBuffer, ulDataBuffered = 0, ulDataRemainingToSend, ulLengthT
       // Copy the data into the buffer.
       memcpy( ( void * ) pcBuffer, ( void * ) &( pcFrom[ ulDataBuffered ] ), ulLengthToSend );
       ulDataBuffered += ulLengthToSend;
-      // Is this the last data for the frame ? 
+      // Is this the last data for the frame ?
       if( lEndOfFrame && ( ulDataBuffered >= ulLength ) )
       {
         // No more data remains for this frame so we can start the transmission.
@@ -294,7 +294,7 @@ unsigned int uiTemp;
 
   // We are going to walk through the descriptors that make up this frame,
   // but don't want to alter ulNextRxBuffer as this would prevent vMACBRead()
-  // from finding the data.  Therefore use a copy of ulNextRxBuffer instead. 
+  // from finding the data.  Therefore use a copy of ulNextRxBuffer instead.
   ulIndex = ulNextRxBuffer;
 
   // Walk through the descriptors until we find the last buffer for this frame.
@@ -320,14 +320,14 @@ static char *pcSource;
 register unsigned long ulBytesRemainingInBuffer, ulRemainingSectionBytes;
 unsigned int uiTemp;
 
-  // Read ulSectionLength bytes from the Rx buffers. 
-  // This is not necessarily any correspondence between the length of our Rx buffers, 
+  // Read ulSectionLength bytes from the Rx buffers.
+  // This is not necessarily any correspondence between the length of our Rx buffers,
   // and the length of the data we are returning or the length of the data being requested.
   // Therefore, between calls  we have to remember not only which buffer we are currently
-  // processing, but our position within that buffer.  
-  // This would be greatly simplified if PBUF_POOL_BUFSIZE could be guaranteed to be greater 
+  // processing, but our position within that buffer.
+  // This would be greatly simplified if PBUF_POOL_BUFSIZE could be guaranteed to be greater
   // than the size of each Rx buffer, and that memory fragmentation did not occur.
-  
+
   // This function should only be called after a call to ulMACBInputLength().
   // This will ensure ulNextRxBuffer is set to the correct buffer. */
 
@@ -336,7 +336,7 @@ unsigned int uiTemp;
   // processing during the last call should be dropped.
   if( pcTo == NULL )
   {
-    // How many bytes are indicated as being in this buffer?  
+    // How many bytes are indicated as being in this buffer?
     // If none then the buffer is completely full and the frame is contained within more
     // than one buffer.
     // Reset our state variables ready for the next read from this buffer.
@@ -358,7 +358,7 @@ unsigned int uiTemp;
       // required amount of data?
       ulRemainingSectionBytes = ulSectionLength - ulSectionBytesReadSoFar;
 
-      // Do we want more data than remains in the buffer? 
+      // Do we want more data than remains in the buffer?
       if( ulRemainingSectionBytes > ulBytesRemainingInBuffer )
       {
         // We want more data than remains in the buffer so we can
@@ -373,12 +373,12 @@ unsigned int uiTemp;
         xRxDescriptors[ ulNextRxBuffer ].addr = uiTemp & ~( AVR32_OWNERSHIP_BIT );
         // Move onto the next buffer.
         ulNextRxBuffer++;
-       
+
         if( ulNextRxBuffer >= ETHERNET_CONF_NB_RX_BUFFERS )
         {
           ulNextRxBuffer = ( unsigned long ) 0;
         }
-      
+
         // Reset the variables for the new buffer.
         pcSource = ( char * )( xRxDescriptors[ ulNextRxBuffer ].addr & ADDRESS_MASK );
         ulBufferPosition = ( unsigned long ) 0;
@@ -403,12 +403,12 @@ unsigned int uiTemp;
           xRxDescriptors[ ulNextRxBuffer ].addr = uiTemp & ~( AVR32_OWNERSHIP_BIT );
           // Move onto the next buffer.
           ulNextRxBuffer++;
-         
+
           if( ulNextRxBuffer >= ETHERNET_CONF_NB_RX_BUFFERS )
           {
             ulNextRxBuffer = 0;
           }
-       
+
           pcSource = ( char * )( xRxDescriptors[ ulNextRxBuffer ].addr & ADDRESS_MASK );
           ulBufferPosition = 0;
         }
@@ -442,7 +442,7 @@ volatile unsigned long status;
   macb->usrio |= AVR32_MACB_RMII_MASK;
 #endif
 
-  // Load our MAC address into the MACB. 
+  // Load our MAC address into the MACB.
   prvSetupMACAddress(macb);
 
   // Setup the buffers and descriptors.
@@ -519,7 +519,7 @@ static unsigned long uxNextBufferToClear = 0;
     // Start with the next buffer the next time a Tx interrupt is called.
     uxNextBufferToClear++;
 
-    // Do we need to wrap back to the first buffer? 
+    // Do we need to wrap back to the first buffer?
     if( uxNextBufferToClear >= ETHERNET_CONF_NB_TX_BUFFERS )
     {
       uxNextBufferToClear = 0;
@@ -538,7 +538,7 @@ unsigned long ulAddress;
     // Calculate the address of the nth buffer within the array.
     ulAddress = ( unsigned long )( pcRxBuffer + ( xIndex * RX_BUFFER_SIZE ) );
 
-    // Write the buffer address into the descriptor.  
+    // Write the buffer address into the descriptor.
     // The DMA will place the data at this address when this descriptor is being used.
     // Mask off the bottom bits of the address as these have special meaning.
     xRxDescriptors[ xIndex ].addr = ulAddress & ADDRESS_MASK;
@@ -554,7 +554,7 @@ unsigned long ulAddress;
     // Calculate the address of the nth buffer within the array.
     ulAddress = ( unsigned long )( pcTxBuffer + ( xIndex * ETHERNET_CONF_TX_BUFFER_SIZE ) );
 
-    // Write the buffer address into the descriptor.  
+    // Write the buffer address into the descriptor.
     // The DMA will read data from here when the descriptor is being used.
     xTxDescriptors[ xIndex ].addr = ulAddress & ADDRESS_MASK;
     xTxDescriptors[ xIndex ].U_Status.status = AVR32_TRANSMIT_OK;
@@ -572,7 +572,7 @@ unsigned long ulAddress;
   // and don't copy FCS.
   macb->ncfgr |= (AVR32_MACB_CAF_MASK |  AVR32_MACB_NBC_MASK | AVR32_MACB_NCFGR_DRFCS_MASK);
 
-} 
+}
 
 static void prvSetupMACAddress( volatile avr32_macb_t * macb )
 {
@@ -589,13 +589,13 @@ static void prvSetupMACAddress( volatile avr32_macb_t * macb )
 static void prvSetupMACBInterrupt( volatile avr32_macb_t * macb )
 {
 #ifdef FREERTOS_USED
-  // Create the semaphore used to trigger the MACB task. 
+  // Create the semaphore used to trigger the MACB task.
   if (xSemaphore == NULL)
   {
     vSemaphoreCreateBinary( xSemaphore );
   }
-#else 
-  // Create the flag used to trigger the MACB polling task. 
+#else
+  // Create the flag used to trigger the MACB polling task.
   DataToRead = FALSE;
 #endif
 
@@ -837,7 +837,7 @@ void vMACBWaitForInput( unsigned long ulTimeOut )
 #else
 unsigned long i;
   gpio_clr_gpio_pin(LED0_GPIO);
-  i = ulTimeOut * 1000;  
+  i = ulTimeOut * 1000;
   // wait for an interrupt to occurs
   do
   {
@@ -845,14 +845,14 @@ unsigned long i;
     {
       // IT occurs, reset interrupt flag
       portENTER_CRITICAL();
-      DataToRead = FALSE;    
+      DataToRead = FALSE;
       portEXIT_CRITICAL();
-      break;	
+      break;
     }
     i--;
   }
   while(i != 0);
-  gpio_set_gpio_pin(LED0_GPIO);  
+  gpio_set_gpio_pin(LED0_GPIO);
 #endif
 }
 
@@ -877,11 +877,11 @@ void vMACB_ISR( void )
 {
   // This ISR can cause a context switch, so the first statement must be a
   // call to the portENTER_SWITCHING_ISR() macro.  This must be BEFORE any
-  // variable declarations. 
+  // variable declarations.
   portENTER_SWITCHING_ISR();
 
   // the return value is used by FreeRTOS to change the context if needed after rete instruction
-  // in standalone use, this value should be ignored 
+  // in standalone use, this value should be ignored
   prvMACB_ISR_NonNakedBehaviour();
 
   // Exit the ISR.  If a task was woken by either a character being received
@@ -914,8 +914,8 @@ static long prvMACB_ISR_NonNakedBehaviour( void )
 #ifdef FREERTOS_USED
     xSemaphoreGiveFromISR( xSemaphore, &xHigherPriorityTaskWoken );
 #else
-    DataToRead = TRUE;   
-#endif      
+    DataToRead = TRUE;
+#endif
     portEXIT_CRITICAL();
     AVR32_MACB.rsr =  AVR32_MACB_REC_MASK;
     AVR32_MACB.rsr;
@@ -956,11 +956,11 @@ void vPHY_ISR( void )
 {
   // This ISR can cause a context switch, so the first statement must be a
   // call to the portENTER_SWITCHING_ISR() macro.  This must be BEFORE any
-  // variable declarations. 
+  // variable declarations.
   portENTER_SWITCHING_ISR();
 
   // the return value is used by FreeRTOS to change the context if needed after rete instruction
-  // in standalone use, this value should be ignored 
+  // in standalone use, this value should be ignored
   prvPHY_ISR_NonNakedBehaviour();
 
   // Exit the ISR.  If a task was woken by either a character being received
@@ -985,7 +985,7 @@ static long prvPHY_ISR_NonNakedBehaviour( void )
 
   // read Phy Interrupt register Status
   ulIntStatus = ulReadMDIO(&AVR32_MACB, PHY_MISR);
-  
+
   // read Phy status register
   ulEventStatus = ulReadMDIO(&AVR32_MACB, PHY_BMSR);
   // dummy read
@@ -993,7 +993,7 @@ static long prvPHY_ISR_NonNakedBehaviour( void )
 
    // clear interrupt flag on GPIO
   gpio_port->ifrc =  1 << (MACB_INTERRUPT_PIN%32);
-  
+
   return ( xSwitchRequired );
 }
 #endif

@@ -106,4 +106,3 @@ uint64_t RedOsTimePassed(
 
     return ullMicrosecs;
 }
-

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -26,7 +26,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 /**
 *  \file
 *
@@ -69,53 +69,53 @@ typedef union _SmcStatus {
 
 
 /* -------- NFCADDR_CMD : NFC Address Command -------- */
-#define NFCADDR_CMD_CMD1      (0xFFu <<  2) 
+#define NFCADDR_CMD_CMD1      (0xFFu <<  2)
 /* Command Register Value for Cycle 1 */
-#define NFCADDR_CMD_CMD2      (0xFFu << 10) 
+#define NFCADDR_CMD_CMD2      (0xFFu << 10)
 /* Command Register Value for Cycle 2 */
-#define NFCADDR_CMD_VCMD2     (0x1u << 18)  
+#define NFCADDR_CMD_VCMD2     (0x1u << 18)
 /* Valid Cycle 2 Command */
-#define NFCADDR_CMD_ACYCLE    (0x7u << 19)  
+#define NFCADDR_CMD_ACYCLE    (0x7u << 19)
 /* Number of Address required for the current command */
-#define   NFCADDR_CMD_ACYCLE_NONE    (0x0u << 19) 
+#define   NFCADDR_CMD_ACYCLE_NONE    (0x0u << 19)
 /* No address cycle */
-#define   NFCADDR_CMD_ACYCLE_ONE     (0x1u << 19) 
+#define   NFCADDR_CMD_ACYCLE_ONE     (0x1u << 19)
 /* One address cycle */
-#define   NFCADDR_CMD_ACYCLE_TWO     (0x2u << 19) 
+#define   NFCADDR_CMD_ACYCLE_TWO     (0x2u << 19)
 /* Two address cycles */
-#define   NFCADDR_CMD_ACYCLE_THREE   (0x3u << 19) 
+#define   NFCADDR_CMD_ACYCLE_THREE   (0x3u << 19)
 /* Three address cycles */
-#define   NFCADDR_CMD_ACYCLE_FOUR    (0x4u << 19) 
+#define   NFCADDR_CMD_ACYCLE_FOUR    (0x4u << 19)
 /* Four address cycles */
-#define   NFCADDR_CMD_ACYCLE_FIVE    (0x5u << 19) 
+#define   NFCADDR_CMD_ACYCLE_FIVE    (0x5u << 19)
 /* Five address cycles */
-#define NFCADDR_CMD_CSID      (0x7u << 22)  
+#define NFCADDR_CMD_CSID      (0x7u << 22)
 /* Chip Select Identifier */
-#define   NFCADDR_CMD_CSID_0                    (0x0u << 22) 
+#define   NFCADDR_CMD_CSID_0                    (0x0u << 22)
 /* CS0 */
-#define   NFCADDR_CMD_CSID_1                    (0x1u << 22) 
+#define   NFCADDR_CMD_CSID_1                    (0x1u << 22)
 /* CS1 */
-#define   NFCADDR_CMD_CSID_2                    (0x2u << 22) 
+#define   NFCADDR_CMD_CSID_2                    (0x2u << 22)
 /* CS2 */
-#define   NFCADDR_CMD_CSID_3                    (0x3u << 22) 
+#define   NFCADDR_CMD_CSID_3                    (0x3u << 22)
 /* CS3 */
-#define   NFCADDR_CMD_CSID_4                    (0x4u << 22) 
+#define   NFCADDR_CMD_CSID_4                    (0x4u << 22)
 /* CS4 */
-#define   NFCADDR_CMD_CSID_5                    (0x5u << 22) 
+#define   NFCADDR_CMD_CSID_5                    (0x5u << 22)
 /* CS5 */
-#define   NFCADDR_CMD_CSID_6                    (0x6u << 22) 
+#define   NFCADDR_CMD_CSID_6                    (0x6u << 22)
 /* CS6 */
-#define   NFCADDR_CMD_CSID_7                    (0x7u << 22) 
+#define   NFCADDR_CMD_CSID_7                    (0x7u << 22)
 /* CS7 */
-#define NFCADDR_CMD_DATAEN   (0x1u << 25)  
+#define NFCADDR_CMD_DATAEN   (0x1u << 25)
 /* NFC Data Enable */
-#define NFCADDR_CMD_DATADIS  (0x0u << 25)  
+#define NFCADDR_CMD_DATADIS  (0x0u << 25)
 /* NFC Data disable */
-#define NFCADDR_CMD_NFCRD    (0x0u << 26)  
+#define NFCADDR_CMD_NFCRD    (0x0u << 26)
 /* NFC Read Enable */
-#define NFCADDR_CMD_NFCWR    (0x1u << 26)  
+#define NFCADDR_CMD_NFCWR    (0x1u << 26)
 /* NFC Write Enable */
-#define NFCADDR_CMD_NFCCMD   (0x1u << 27)  
+#define NFCADDR_CMD_NFCCMD   (0x1u << 27)
 /* NFC Command Enable */
 
 /*
@@ -153,7 +153,7 @@ extern uint8_t SMC_NFC_isReadyBusy(void);
 extern uint8_t SMC_NFC_isNfcBusy(void);
 extern uint32_t SMC_NFC_GetStatus(void);
 
-extern void SMC_NFC_SendCommand(uint32_t cmd, uint32_t addressCycle, 
+extern void SMC_NFC_SendCommand(uint32_t cmd, uint32_t addressCycle,
 		uint32_t cycle0);
 extern void SMC_NFC_Wait_CommandDone(void);
 extern void SMC_NFC_Wait_XfrDone(void);
@@ -165,10 +165,9 @@ extern uint32_t SMC_ECC_GetCorrectoinType(void);
 extern uint8_t SMC_ECC_GetStatus(uint8_t eccNumber);
 
 extern void SMC_ECC_GetValue(uint32_t *ecc);
-extern void SMC_ECC_GetEccParity(uint32_t pageDataSize, uint8_t *code, 
+extern void SMC_ECC_GetEccParity(uint32_t pageDataSize, uint8_t *code,
 		uint8_t busWidth);
-extern uint8_t SMC_ECC_VerifyHsiao(uint8_t *data, uint32_t size, 
+extern uint8_t SMC_ECC_VerifyHsiao(uint8_t *data, uint32_t size,
 		const uint8_t *originalCode, const uint8_t *verifyCode, uint8_t busWidth);
-	
-#endif /* #ifndef _SMC_ */
 
+#endif /* #ifndef _SMC_ */

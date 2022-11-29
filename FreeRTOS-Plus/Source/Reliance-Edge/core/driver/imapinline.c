@@ -130,4 +130,3 @@ REDSTATUS RedImapIBlockSet(
 #endif
 
 #endif /* REDCONF_IMAP_INLINE == 1 */
-

@@ -31,6 +31,3 @@
 void vSetupTimerTest( unsigned short usFrequencyHz );
 
 #endif /* TIMER_TEST_H */
-
-
-

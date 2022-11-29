@@ -119,4 +119,3 @@ int32_t pin_mux(pin_name_t pin, uint16_t function);
 #define IOMUX1L_FUNCTION_SEL          (0x00000000)
 
 #endif /* HOBBIT_PINMUX_H */
-

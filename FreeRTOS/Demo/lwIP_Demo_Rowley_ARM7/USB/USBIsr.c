@@ -167,5 +167,3 @@ void vUSB_ISR_Wrapper( void )
 	/* Restore the context of whichever task will execute next. */
 	portRESTORE_CONTEXT();
 }
-
-

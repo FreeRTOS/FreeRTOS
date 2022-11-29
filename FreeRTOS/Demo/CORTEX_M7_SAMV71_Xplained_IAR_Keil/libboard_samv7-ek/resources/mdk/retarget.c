@@ -84,4 +84,3 @@ void __assert_puts(const char *str)
 {
     printf("%s", str);
 }
-

@@ -134,4 +134,3 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 		taskEXIT_CRITICAL();
 	}
 }
-

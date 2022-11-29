@@ -194,4 +194,3 @@ const char pxConfigDescriptor[] = {
 	0x00,
 	0x00				/* bInterval							*/
 };
-

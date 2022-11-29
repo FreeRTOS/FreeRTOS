@@ -316,5 +316,3 @@ void _c_int00()
     main();
     exit(0);
 }
-
-

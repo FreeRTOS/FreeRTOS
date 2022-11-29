@@ -15,7 +15,7 @@
   *                       opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef STM32H7xx_HAL_SD_EX_H
@@ -35,7 +35,7 @@
 /** @addtogroup SDEx
   * @brief SD HAL extended module driver
   * @{
-  */ 
+  */
 
 /* Exported types ------------------------------------------------------------*/
 /** @defgroup SDEx_Exported_Types SDEx Exported Types
@@ -44,7 +44,7 @@
 
 /** @defgroup SDEx_Exported_Types_Group1 SD Card Internal DMA Buffer structure
   * @{
-  */ 
+  */
 typedef enum
 {
   SD_DMA_BUFFER0      = 0x00U,    /*!< selects SD internal DMA Buffer 0     */
@@ -53,11 +53,11 @@ typedef enum
 }HAL_SDEx_DMABuffer_MemoryTypeDef;
 
 
-/** 
+/**
   * @}
   */
 
-/** 
+/**
   * @}
   */
 /* Exported constants --------------------------------------------------------*/

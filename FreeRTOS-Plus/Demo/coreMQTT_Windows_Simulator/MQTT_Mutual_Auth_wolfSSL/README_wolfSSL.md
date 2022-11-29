@@ -6,7 +6,7 @@ A single FreeRTOS task acts as both an MQTT subscriber and an MQTT publisher, se
 
 # How to build and run the Demo application
 
-By double-clicking the solution file named "**mqtt_mutual_auth_demo_wolfSSL.sln**" included in this folder, Visual Studio starts and shows you a project in its solution explorer. It is named "RTOSDemo" and provides a console application program which runs on windows. 
+By double-clicking the solution file named "**mqtt_mutual_auth_demo_wolfSSL.sln**" included in this folder, Visual Studio starts and shows you a project in its solution explorer. It is named "RTOSDemo" and provides a console application program which runs on windows.
 
 All required settings for wolfSSL have been set in the user_settings.h header file included in the RTOSDemo folder in the solution explorer pane. For this demo to work, you need to set the following information:
 
@@ -15,7 +15,7 @@ All required settings for wolfSSL have been set in the user_settings.h header fi
 3. set client certificate
 4. set private key
 5. choose interface to use
- 
+
 If even one of the above 1 to 4 is not set, an error will occur at build time. You should open **demo_config.h** to set them.
 
 <br>
@@ -75,7 +75,7 @@ Second, activate following three macros:
 #define democonfigCLIENT_CERTIFICATE_PEM    "...insert here..."
 #define democonfigCLIENT_PRIVATE_KEY_PEM    "...insert here..."
 ```
-The "...insert here..." portion of each macro should be replaced with corrensponding credential file content data. 
+The "...insert here..." portion of each macro should be replaced with corrensponding credential file content data.
 For exsample, democonfigROOT_CA_PEM macro would be:
 
 ```
@@ -112,7 +112,7 @@ HALTING
 <br>
 
 This output provides guidance and a list of interfaces available on the system. Open the **FreeRTOSConfig.h** file in the same folder where this readme file located, and set the selected interface number to   ***configNETWORK_INTERFACE_TO_USE*** .
-Then rebuild and run the demo. This time you can see that the interface is set up and working. 
+Then rebuild and run the demo. This time you can see that the interface is set up and working.
 <br><br>
 
 ```
@@ -140,7 +140,7 @@ vAssertCalled( ***\FreeRTOS\FreeRTOS-Plus\Demo\coreMQTT_Windows_Simulator\MQTT_M
 <br>
 
 # Demo output
-Below is the output digest when a Aws MQTT IoT endpoint and appropriate credentials are set. You can find "**Hello World!**" message was published and received as a topic repeatedly. 
+Below is the output digest when a Aws MQTT IoT endpoint and appropriate credentials are set. You can find "**Hello World!**" message was published and received as a topic repeatedly.
 
 ```
 ...
@@ -179,5 +179,3 @@ Incoming Publish Message : Hello World!
 ...
 
 ```
-
-

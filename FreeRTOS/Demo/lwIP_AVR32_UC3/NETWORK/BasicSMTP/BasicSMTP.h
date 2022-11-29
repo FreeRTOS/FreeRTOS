@@ -52,4 +52,3 @@ portTASK_FUNCTION_PROTO( vBasicSMTPClient, pvParameters );
 
 
 #endif
-

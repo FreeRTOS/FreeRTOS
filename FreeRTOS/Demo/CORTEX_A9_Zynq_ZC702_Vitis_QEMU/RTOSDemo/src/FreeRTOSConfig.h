@@ -173,4 +173,3 @@ Zynq MPU. */
 #define configUNIQUE_INTERRUPT_PRIORITIES				32
 
 #endif /* FREERTOS_CONFIG_H */
-

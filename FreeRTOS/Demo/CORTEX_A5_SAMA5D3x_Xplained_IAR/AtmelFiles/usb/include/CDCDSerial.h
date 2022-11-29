@@ -103,4 +103,3 @@ extern void CDCDSerial_ControlLineStateChanged(
 /**@}*/
 
 #endif /*#ifndef CDCSERIAL_H*/
-

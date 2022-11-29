@@ -155,4 +155,3 @@ WOLFSSL_API void wc_Des3Free(Des3*);
 
 #endif /* NO_DES3 */
 #endif /* WOLF_CRYPT_DES3_H */
-

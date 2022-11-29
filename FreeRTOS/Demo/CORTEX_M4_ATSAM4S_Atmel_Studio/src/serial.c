@@ -252,9 +252,3 @@ uint32_t ulUSARTStatus, ulUSARTMask;
 	directly to the higher priority unblocked task. */
 	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
-
-
-
-
-
-

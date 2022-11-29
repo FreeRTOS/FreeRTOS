@@ -2,15 +2,15 @@
 * DISCLAIMER
 * This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products.
 * No other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
-* applicable laws, including copyright laws. 
+* applicable laws, including copyright laws.
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIESREGARDING THIS SOFTWARE, WHETHER EXPRESS, IMPLIED
 * OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 * NON-INFRINGEMENT.  ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED.TO THE MAXIMUM EXTENT PERMITTED NOT PROHIBITED BY
 * LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE FOR ANY DIRECT,
 * INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS SOFTWARE, EVEN IF RENESAS OR
 * ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability 
-* of this software. By using this software, you agree to the additional terms and conditions found by accessing the 
+* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability
+* of this software. By using this software, you agree to the additional terms and conditions found by accessing the
 * following link:
 * http://www.renesas.com/disclaimer
 *
@@ -133,7 +133,7 @@ Macro definitions (Register bit)
 #define _80_SCI_32_64_256_372_CLK                 (0x80U) /* 32, 64, 256, or 372 clock cycles */
 #define _72_SCI_SCMR_DEFAULT                      (0x72U) /* Write default value of SCMR */
 
-/* 
+/*
     Serial extended mode register (SEMR)
 */
 /* Asynchronous Mode Clock Source Select (ACS0) */
@@ -141,7 +141,7 @@ Macro definitions (Register bit)
 #define _01_SCI_ASYNC_SOURCE_TMR                  (0x01U) /* Logical AND of two clock cycles output from TMR */
 /* Asynchronous mode base clock select (ABCS) */
 #define _00_SCI_16_BASE_CLOCK                     (0x00U) /* Selects 16 base clock cycles for 1 bit period */
-#define _10_SCI_8_BASE_CLOCK                      (0x10U) /* Selects 8 base clock cycles for 1 bit period */ 
+#define _10_SCI_8_BASE_CLOCK                      (0x10U) /* Selects 8 base clock cycles for 1 bit period */
 /* Digital noise filter function enable (NFEN) */
 #define _00_SCI_NOISE_FILTER_DISABLE              (0x00U) /* Noise filter is disabled */
 #define _20_SCI_NOISE_FILTER_ENABLE               (0x20U) /* Noise filter is enabled */

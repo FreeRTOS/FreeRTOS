@@ -122,10 +122,3 @@ static uint32_t ulMaxDifference = 0, ulLastCount = 0;
 
 	ulLastCount = ulCurrentCount;
 }
-
-
-
-
-
-
-

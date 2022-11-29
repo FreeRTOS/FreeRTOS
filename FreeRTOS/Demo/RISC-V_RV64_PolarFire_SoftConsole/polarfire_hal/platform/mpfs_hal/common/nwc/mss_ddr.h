@@ -1129,5 +1129,3 @@ setup_ddr_segments
 #endif
 
 #endif /* __MSS_DDRC_H_ */
-
-

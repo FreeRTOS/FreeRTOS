@@ -7,7 +7,7 @@
  *
  * This stream port provides trace streaming using the Amazon FreeRTOS sockets
  * layer and is intended for streaming over Wifi directly to a computer on the
- * local Wifi network. 
+ * local Wifi network.
  *
  * Note that this does NOT use the TLS encryption available in Amazon
  * FreeRTOS, due to performance and memory usage concerns. However, it does not
@@ -88,7 +88,7 @@
  *   - TRC_CFG_CTRL_TASK_DELAY
  *     Decrease this to flush the trace buffer more frequently.
  *
- * See also http://percepio.com/2016/10/05/rtos-tracing 
+ * See also http://percepio.com/2016/10/05/rtos-tracing
  * and https://percepio.com/2018/10/11/tuning-your-custom-trace-streaming/
  */
 
@@ -115,7 +115,7 @@ int32_t prvWriteToSocket(void* ptrData, uint32_t size, int32_t* ptrBytesWritten)
 	prvInitSocket();
 
 #define TRC_STREAM_PORT_USE_INTERNAL_BUFFER 1
-  
+
 #define TRC_STREAM_PORT_WRITE_DATA(_ptrData, _size, _ptrBytesWritten) prvWriteToSocket(_ptrData, _size, _ptrBytesWritten)
 
 #define TRC_STREAM_PORT_READ_DATA(_ptrData, _size, _ptrBytesRead) prvReadFromSocket(_ptrData, _size, _ptrBytesRead)

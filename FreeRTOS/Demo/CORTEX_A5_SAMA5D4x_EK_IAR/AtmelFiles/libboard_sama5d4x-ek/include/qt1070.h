@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -55,7 +55,7 @@
 /** Detection status*/
 #define QT1070_REG_DETECTION_STATUS 2
 /** Key status*/
-#define QT1070_REG_KEY_STATUS       3 
+#define QT1070_REG_KEY_STATUS       3
 /** Key signal */
 #define QT1070_REG_KEY0_SIGNAL_MSB  4
 #define QT1070_REG_KEY0_SIGNAL_LSB  5
@@ -151,5 +151,3 @@ extern void QT1070_SetDetectionIntegrator(Twid *pTwid, uint8_t key, uint8_t di);
 extern void QT1070_StartCalibrate(Twid *pTwid);
 extern void QT1070_StartReset(Twid *pTwid);
 #endif // QT1070_H
-
-

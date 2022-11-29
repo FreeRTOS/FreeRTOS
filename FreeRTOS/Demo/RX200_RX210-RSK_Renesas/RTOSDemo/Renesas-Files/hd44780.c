@@ -144,7 +144,7 @@ void lcd_write (
 void lcd_init (void)
 {
 	uint8_t d;
-	
+
 	E1_HIGH();
 	DELAY_US(40000);
 	E1_LOW();
@@ -441,5 +441,3 @@ void lcd_put_point (
 	}
 }
 #endif
-
-

@@ -45,4 +45,3 @@ Exported global variables (to be accessed by other files)
 ***********************************************************************************************************************/
 /* Below are locks for controlling access to MCU resources. */
 BSP_CFG_USER_LOCKING_TYPE g_bsp_Locks[BSP_NUM_LOCKS];
-

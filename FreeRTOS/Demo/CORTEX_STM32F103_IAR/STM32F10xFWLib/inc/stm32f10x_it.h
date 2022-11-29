@@ -80,7 +80,7 @@ void USART3_IRQHandler(void);
 void EXTI15_10_IRQHandler(void);
 void RTCAlarm_IRQHandler(void);
 void USBWakeUp_IRQHandler(void);
-					 
+
 #endif /* __STM32F10x_IT_H */
 
 /******************* (C) COPYRIGHT 2007 STMicroelectronics *****END OF FILE****/

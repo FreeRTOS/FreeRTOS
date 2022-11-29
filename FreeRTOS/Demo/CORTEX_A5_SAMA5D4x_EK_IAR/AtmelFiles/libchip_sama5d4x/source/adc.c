@@ -114,7 +114,7 @@ extern void ADC_Initialize( Adc* pAdc, uint32_t dwID )
 //dwAdcClock = ADC_SetClock( ADC, 2, dwMaxAdcClock ) ;
 
 extern uint32_t ADC_SetClock( Adc* pAdc, uint32_t dwClk, uint32_t dwMck )
-{ 
+{
     uint32_t dwPres, dwMr;
     /* Formula for PRESCAL is:
        ADCClock = MCK / ( (PRESCAL+1) * 2 )
@@ -421,7 +421,7 @@ void ADC_SetStartupTime( Adc *pAdc, uint32_t dwUs )
     /* Formula for STARTUP is:
        STARTUP = (time x ADCCLK) / (1000000) - 1
        Division multiplied by 10 for higher precision */
-    
+
     dwStart = (dwUs * dwAdcClock) / (100000);
     if (dwStart % 10) dwStart /= 10;
     else

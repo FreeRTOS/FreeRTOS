@@ -79,4 +79,3 @@ extern void RTT_SetAlarm( Rtt *pRtt, uint32_t dwTime ) ;
 #endif
 
 #endif /* #ifndef RTT_H */
-

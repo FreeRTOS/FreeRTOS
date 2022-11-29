@@ -375,4 +375,3 @@ WOLFSSL_LOCAL int wc_RsaUnPad_ex(byte* pkcsBlock, word32 pkcsBlockLen, byte** ou
 
 #endif /* NO_RSA */
 #endif /* WOLF_CRYPT_RSA_H */
-

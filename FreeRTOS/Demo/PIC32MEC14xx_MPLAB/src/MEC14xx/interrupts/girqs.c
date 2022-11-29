@@ -222,4 +222,3 @@ const JTVIC_CFG dflt_ih_table[MEC14xx_NUM_JTVIC_INTS] = {
 /* end girqs.c */
 /**   @}
  */
-

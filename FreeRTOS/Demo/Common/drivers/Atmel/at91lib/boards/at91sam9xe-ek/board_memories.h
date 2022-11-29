@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -51,4 +51,3 @@ extern void BOARD_ConfigureNorFlash48MHz(unsigned char busWidth);
 extern void BOARD_ConfigureFlash48MHz(void);
 
 #endif //#ifndef BOARD_MEMORIES_H
-

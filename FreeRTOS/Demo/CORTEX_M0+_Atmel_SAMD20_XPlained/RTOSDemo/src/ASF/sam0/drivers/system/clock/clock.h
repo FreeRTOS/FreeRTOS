@@ -1200,7 +1200,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	     This driver will enable and configure the DFLL before the ONDEMAND bit is set.
  *	</td>
  *	</tr>
- *	
+ *
  *
  *
  * \section asfdoc_samd20_system_clock_extra_history Module History

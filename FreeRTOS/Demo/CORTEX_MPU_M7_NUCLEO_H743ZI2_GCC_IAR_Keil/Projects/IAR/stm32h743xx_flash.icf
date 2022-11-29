@@ -91,4 +91,4 @@ place in ROM_region_unprivileged    { readonly };
 
 place in RAM_region_privileged      { readwrite section privileged_data };
 place in RAM_region_unprivileged    { readwrite,
-                                      block CSTACK, block HEAP }; 
+                                      block CSTACK, block HEAP };

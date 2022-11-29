@@ -44,4 +44,3 @@ typedef enum  {
 } csi_power_stat_e;
 
 #endif /* _DRV_COMMON_H */
-

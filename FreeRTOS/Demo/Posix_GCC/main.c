@@ -499,4 +499,3 @@ uint32_t uiTraceTimerGetValue( void )
     }
     return result;
 }
-

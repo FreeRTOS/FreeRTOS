@@ -355,4 +355,3 @@ enum sleepmgr_mode xSleepMode;
 
 
 #endif /* configCREATE_LOW_POWER_DEMO == 1 */
-

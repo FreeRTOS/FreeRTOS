@@ -31,5 +31,3 @@ void vStartMathTasks( unsigned portBASE_TYPE uxPriority );
 portBASE_TYPE xAreMathsTaskStillRunning( void );
 
 #endif
-
-

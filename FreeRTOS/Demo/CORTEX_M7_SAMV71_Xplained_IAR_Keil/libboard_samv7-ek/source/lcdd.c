@@ -52,7 +52,7 @@
  */
 extern void LCDD_Initialize( void )
 {
-    
+
     /* Initialize LCD controller */
     ILI9488_Initialize() ;
 
@@ -86,7 +86,7 @@ void LCDD_Off(void)
  */
 void LCDD_SetBacklight (uint32_t level)
 {
-    
+
     /* Ensure valid level */
     level = (level < 1) ? 1 : level;
     level = (level > 16) ? 16 : level;

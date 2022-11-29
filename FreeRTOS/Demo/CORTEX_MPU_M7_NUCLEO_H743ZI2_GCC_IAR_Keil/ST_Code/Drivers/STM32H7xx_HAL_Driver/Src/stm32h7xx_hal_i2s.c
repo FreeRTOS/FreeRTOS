@@ -350,12 +350,12 @@ HAL_StatusTypeDef HAL_I2S_Init(I2S_HandleTypeDef *hi2s)
 
       /* Get the source clock value: based on System Clock value */
 #if defined (SPI_SPI6I2S_SUPPORT)
-      if (hi2s->Instance == SPI6) 
-      {        
-        /* SPI6 source clock */  
+      if (hi2s->Instance == SPI6)
+      {
+        /* SPI6 source clock */
         i2sclk = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_SPI6);
       }
-      else 
+      else
       {
         /* SPI1,SPI2 and SPI3 share the same source clock */
         i2sclk = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_SPI123);
@@ -1310,13 +1310,13 @@ HAL_StatusTypeDef HAL_I2S_DMAPause(I2S_HandleTypeDef *hi2s)
 {
   /* Process Locked */
   __HAL_LOCK(hi2s);
-  
+
   uint32_t tickstart;
 
   /* Get tick */
   tickstart = HAL_GetTick();
-  
-  
+
+
   /* Check if the I2S peripheral is in master mode */
   if (IS_I2S_MASTER(hi2s->Init.Mode))
   {
@@ -1330,7 +1330,7 @@ HAL_StatusTypeDef HAL_I2S_DMAPause(I2S_HandleTypeDef *hi2s)
       __HAL_UNLOCK(hi2s);
       return HAL_ERROR;
     }
-    
+
     SET_BIT(hi2s->Instance->CR1, SPI_CR1_CSUSP);
 
     while (HAL_IS_BIT_SET(hi2s->Instance->CR1, SPI_CR1_CSTART) != 0UL)
@@ -1339,35 +1339,35 @@ HAL_StatusTypeDef HAL_I2S_DMAPause(I2S_HandleTypeDef *hi2s)
       {
         /* Set the I2S State ready */
         hi2s->State = HAL_I2S_STATE_READY;
-        
+
         /* Process Unlocked */
         __HAL_UNLOCK(hi2s);
-         
+
         SET_BIT(hi2s->ErrorCode, HAL_I2S_ERROR_TIMEOUT);
         hi2s->State = HAL_I2S_STATE_READY;
         return HAL_TIMEOUT;
       }
     }
-    
+
     /* Disable I2S peripheral */
     __HAL_I2S_DISABLE(hi2s);
-      
+
     hi2s->State = HAL_I2S_STATE_READY;
-  
+
     /* Process Unlocked */
     __HAL_UNLOCK(hi2s);
 
     return HAL_OK;
   }
-  else 
+  else
   {
     /* Set error code to not supported */
     SET_BIT(hi2s->ErrorCode, HAL_I2S_ERROR_NOT_SUPPORTED);
     hi2s->State = HAL_I2S_STATE_READY;
-    
+
     /* Process Unlocked */
     __HAL_UNLOCK(hi2s);
-    
+
     return HAL_ERROR;
   }
 }
@@ -1390,14 +1390,14 @@ HAL_StatusTypeDef HAL_I2S_DMAResume(I2S_HandleTypeDef *hi2s)
     __HAL_UNLOCK(hi2s);
     return HAL_ERROR;
   }
-  
+
   /* Set state and reset error code */
   hi2s->State       = HAL_I2S_STATE_BUSY;
   hi2s->ErrorCode   = HAL_I2S_ERROR_NONE;
-  
+
   /* Enable I2S peripheral */
   __HAL_I2S_ENABLE(hi2s);
-  
+
   /* Start the transfer */
   SET_BIT(hi2s->Instance->CR1, SPI_CR1_CSTART);
 

@@ -1550,4 +1550,3 @@ static REDSTATUS DiskFlush(
 #error "Invalid BDEV_EXAMPLE_IMPLEMENTATION value"
 
 #endif /* BDEV_EXAMPLE_IMPLEMENTATION == ... */
-

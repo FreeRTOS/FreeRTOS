@@ -52,4 +52,3 @@ uint32_t SysTick_Config(uint32_t ticks);
 #endif
 
 #endif  /* RISCV_HAL_H */
-

@@ -28,4 +28,3 @@ Build.
 
 7) Select MicroZed_hw_platform as the hardware platform in the "Target Setup"
 tab of the debug configuration.
-

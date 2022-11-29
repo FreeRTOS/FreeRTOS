@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -128,4 +128,3 @@ extern uint8_t USART_GetChar( Usart *usart ) ;
 #endif
 
 #endif /* #ifndef _USART_ */
-

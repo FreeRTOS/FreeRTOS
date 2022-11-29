@@ -45,4 +45,3 @@ place in STA_region { section .cstartup };
 place in ROM_region { readonly };
 place in VEC_region { section .vectors };
 place in RAM_region { readwrite, block IRQ_STACK, block SVC_STACK, block CSTACK, block HEAP };
-

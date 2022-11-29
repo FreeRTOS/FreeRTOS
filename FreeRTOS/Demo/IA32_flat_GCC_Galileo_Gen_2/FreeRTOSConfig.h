@@ -201,4 +201,3 @@ header file. */
 #define fabs( x )			__builtin_fabs( ( x ) )
 
 #endif /* FREERTOS_CONFIG_H */
-

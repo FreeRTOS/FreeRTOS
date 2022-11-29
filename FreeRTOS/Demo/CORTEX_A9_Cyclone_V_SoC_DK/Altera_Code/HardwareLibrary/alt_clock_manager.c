@@ -5553,4 +5553,3 @@ ALT_STATUS_CODE alt_clk_clkmgr_init(void)
 
 	return ret;
 }
-

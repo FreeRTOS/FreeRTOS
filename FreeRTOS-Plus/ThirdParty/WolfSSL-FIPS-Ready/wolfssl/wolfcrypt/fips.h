@@ -521,4 +521,3 @@ WOLFSSL_API const char* wolfCrypt_GetVersion_fips(void);
 #endif
 
 #endif /* WOLF_CRYPT_FIPS_H */
-

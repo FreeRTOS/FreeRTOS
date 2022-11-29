@@ -43,7 +43,7 @@
  * <ul>
  * <li>Configuration of the clock generator.</li>
  * <li>Selection of the clock for each channel.</li>
- * <li>Configuration of output waveform characteristics, such as period, 
+ * <li>Configuration of output waveform characteristics, such as period,
  * duty-cycle etc.</li>
  * <li>Configuration for synchronous channels if needed.</li>
  *    - Selection of the synchronous channels.
@@ -133,7 +133,7 @@ static uint16_t FindClockConfiguration(
 /**
  * \brief Configures PWM a channel with the given parameters, basic configure
  * function.
- * 
+ *
  * The PWM controller must have been clocked in the PMC prior to calling this
  * function.
  * Beware: this function disables the channel. It waits until disable is effective.
@@ -167,7 +167,7 @@ void PWMC_ConfigureChannel(
 }
 
 /**
- * \brief Configures PWM a channel with the given parameters, extend configure 
+ * \brief Configures PWM a channel with the given parameters, extend configure
  * function.
  * The PWM controller must have been clocked in the PMC prior to calling this
  * function.

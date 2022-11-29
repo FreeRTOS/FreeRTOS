@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -31,10 +31,10 @@
 /// \unit
 ///
 /// !Purpose
-/// 
+///
 /// Methods and definitions for configuring interrupts using the Advanced
 /// Interrupt Controller (AIC).
-/// 
+///
 /// !Usage
 ///
 /// -# Configure an interrupt source using AIC_ConfigureIT
@@ -76,4 +76,3 @@ extern void AIC_EnableIT(unsigned int source);
 extern void AIC_DisableIT(unsigned int source);
 
 #endif //#ifndef AIC_H
-

@@ -4417,7 +4417,7 @@ int wc_RsaPublicKeyDecodeRaw(const byte* n, word32 nSz, const byte* e,
 
 #ifndef NO_DH
 /* Supports either:
- * - DH params G/P (PKCS#3 DH) file or 
+ * - DH params G/P (PKCS#3 DH) file or
  * - DH key file (if WOLFSSL_DH_EXTRA enabled) */
 /* The wc_DhParamsLoad function also loads DH params, but directly into buffers, not DhKey */
 int wc_DhKeyDecode(const byte* input, word32* inOutIdx, DhKey* key, word32 inSz)
@@ -9798,7 +9798,7 @@ void wc_FreeDer(DerBuffer** pDer)
 
 #if defined(WOLFSSL_PEM_TO_DER) || defined(WOLFSSL_DER_TO_PEM)
 
-/* Note: If items added make sure MAX_X509_HEADER_SZ is 
+/* Note: If items added make sure MAX_X509_HEADER_SZ is
     updated to reflect maximum length */
 wcchar BEGIN_CERT           = "-----BEGIN CERTIFICATE-----";
 wcchar END_CERT             = "-----END CERTIFICATE-----";
@@ -17009,7 +17009,7 @@ int CompareOcspReqResp(OcspRequest* req, OcspResponse* resp)
         WOLFSSL_MSG("\tReq missing");
         return -1;
     }
-    if (resp == NULL || resp->issuerHash == NULL || 
+    if (resp == NULL || resp->issuerHash == NULL ||
             resp->issuerKeyHash == NULL || resp->status == NULL) {
         WOLFSSL_MSG("\tResp missing");
         return 1;

@@ -17,7 +17,7 @@
 *******************************************************************************/
 
 /* Includes ------------------------------------------------------------------*/
-#include "75x_tim.h" 
+#include "75x_tim.h"
 #include "75x_mrcc.h"
 
 /* Private typedef -----------------------------------------------------------*/
@@ -152,7 +152,7 @@ static void OCM_ModuleConfig(TIM_TypeDef* TIMx, TIM_InitTypeDef* TIM_InitStruct)
 * Return         : None
 *******************************************************************************/
 void TIM_DeInit(TIM_TypeDef *TIMx)
-{ 
+{
   if(TIMx == TIM0)
   {
     MRCC_PeripheralSWResetConfig(MRCC_Peripheral_TIM0,ENABLE);
@@ -219,7 +219,7 @@ void TIM_Init(TIM_TypeDef* TIMx, TIM_InitTypeDef* TIM_InitStruct)
 
       /* Input module configuration */
       ICAP_ModuleConfig(TIMx, TIM_InitStruct);
-      
+
       /* Set the slave mode to trigger Mode */
       TIMx->SCR |= TIM_SynchroMode_Trigger;
 
@@ -244,7 +244,7 @@ void TIM_Init(TIM_TypeDef* TIMx, TIM_InitTypeDef* TIM_InitStruct)
 * Description    : Fills each TIM_InitStruct member with its default value.
 * Input          : TIM_InitStruct : pointer to a TIM_InitTypeDef structure
 *                  which will be initialized.
-* Output         : None                        
+* Output         : None
 * Return         : None.
 *******************************************************************************/
 void TIM_StructInit(TIM_InitTypeDef *TIM_InitStruct)
@@ -282,7 +282,7 @@ void TIM_StructInit(TIM_InitTypeDef *TIM_InitStruct)
 void TIM_Cmd(TIM_TypeDef *TIMx, FunctionalState Newstate)
 {
  if(Newstate == ENABLE)
-  { 
+  {
     TIMx->CR |= TIM_COUNTER_Start;
   }
   else
@@ -298,19 +298,19 @@ void TIM_Cmd(TIM_TypeDef *TIMx, FunctionalState Newstate)
 *                  - TIM_IT: specifies the TIM interrupts sources to be enabled
 *                    or disabled.
 *                    This parameter can be any combination of the following values:
-*                         - TIM_IT_IC1: Input Capture 1 Interrupt 
-*                         - TIM_IT_OC1: Output Compare 1 Interrupt 
-*                         - TIM_IT_Update: Timer update Interrupt 
-*                         - TIM_IT_GlobalUpdate: Timer global update Interrupt 
-*                         - TIM_IT_IC2: Input Capture 2 Interrupt 
-*                         - TIM_IT_OC2: Output Compare 2 Interrupt 
-*                  - Newstate: new state of the specified TIMx interrupts. 
+*                         - TIM_IT_IC1: Input Capture 1 Interrupt
+*                         - TIM_IT_OC1: Output Compare 1 Interrupt
+*                         - TIM_IT_Update: Timer update Interrupt
+*                         - TIM_IT_GlobalUpdate: Timer global update Interrupt
+*                         - TIM_IT_IC2: Input Capture 2 Interrupt
+*                         - TIM_IT_OC2: Output Compare 2 Interrupt
+*                  - Newstate: new state of the specified TIMx interrupts.
 *                    This parameter can be: ENABLE or DISABLE.
 * Output         : None
 * Return         : None
 *******************************************************************************/
 void TIM_ITConfig(TIM_TypeDef *TIMx, u16 TIM_IT, FunctionalState Newstate)
-{ 
+{
   u16 TIM_IT_Enable = 0;
 
   TIM_IT_Enable = TIM_IT & TIM_IT_Enable_Mask;
@@ -363,7 +363,7 @@ void TIM_PreloadConfig(TIM_TypeDef *TIMx, u16 TIM_Channel, FunctionalState Newst
       case TIM_Channel_1:
       TIMx->OMR1 |= TIM_PLD1_Set;
       break;
-   
+
       case TIM_Channel_2:
       TIMx->OMR1 |= TIM_PLD2_Set;
       break;
@@ -383,7 +383,7 @@ void TIM_PreloadConfig(TIM_TypeDef *TIMx, u16 TIM_Channel, FunctionalState Newst
       case TIM_Channel_1:
       TIMx->OMR1 &= TIM_PLD1_Reset;
       break;
-   
+
       case TIM_Channel_2:
       TIMx->OMR1 &= TIM_PLD2_Reset;
       break;
@@ -395,7 +395,7 @@ void TIM_PreloadConfig(TIM_TypeDef *TIMx, u16 TIM_Channel, FunctionalState Newst
       default:
       break;
     }
-  }  
+  }
 }
 
 /*******************************************************************************
@@ -410,14 +410,14 @@ void TIM_PreloadConfig(TIM_TypeDef *TIMx, u16 TIM_Channel, FunctionalState Newst
 *                         - TIM_DMASource_Update: Timer Update DMA source
 *                  - TIM_OCRMState: the state of output compare request mode.
 *                    This parameter can be one of the following values:
-*                         - TIM_OCRMState_Enable 
-*                         - TIM_OCRMState_Disable 
+*                         - TIM_OCRMState_Enable
+*                         - TIM_OCRMState_Disable
 *                  - TIM_DMABase:DMA Base address.
 *                    This parameter can be one of the following values:
 *                    TIM_DMABase_CR, TIM_DMABase_SCR, TIM_DMABase_IMCR,
 *                    TIM_DMABase_OMR1, TIM_DMABase_RSR,
-*                    TIM_DMABase_RER, TIM_DMABase_ISR, TIM_DMABase_CNT, 
-*                    TIM_DMABase_PSC, TIM_DMABase_ARR, TIM_DMABase_OCR1, 
+*                    TIM_DMABase_RER, TIM_DMABase_ISR, TIM_DMABase_CNT,
+*                    TIM_DMABase_PSC, TIM_DMABase_ARR, TIM_DMABase_OCR1,
 *                    TIM_DMABase_OCR2, TIM_DMABase_ICR1, TIM_DMABase_ICR2
 * Output         : None
 * Return         : None
@@ -473,11 +473,11 @@ void TIM_DMACmd(u16 TIM_DMASources, FunctionalState Newstate)
 * Function Name  : TIM_ClockSourceConfig
 * Description    : Configures the TIM clock source.
 * Input          : - TIMx: where x can be 0, 1 or 2 to select the TIM peripheral.
-*                  - TIM_ClockSource: specifies the TIM clock source to be 
+*                  - TIM_ClockSource: specifies the TIM clock source to be
 *                    selected.
 *                    This parameter can be one of the following values:
 *                         - TIM_ClockSource_Internal: CK_TIM internal clock
-*                         - TIM_ClockSource_TI11: External input pin TI1 
+*                         - TIM_ClockSource_TI11: External input pin TI1
 *                           connected to IC1 channel.
 *                         - TIM_ClockSource_TI12: External input pin TI1
 *                           connected to IC2 channel.
@@ -520,7 +520,7 @@ void TIM_ClockSourceConfig(TIM_TypeDef *TIMx, u16 TIM_ClockSource,
         TIMx->IMCR |= TIM_IC1P_Set;
       }
       else
-      {   
+      {
         TIMx->IMCR &= TIM_IC1P_Reset;
       }
       if(TIM_ClockSource == TIM_ClockSource_TI11)
@@ -625,7 +625,7 @@ void TIM_SetPulse(TIM_TypeDef* TIMx, u16 TIM_Channel, u16 Pulse)
 
 /*******************************************************************************
 * Function Name  : TIM_GetICAP1
-* Description    : Gets the Input Capture 1 value. 
+* Description    : Gets the Input Capture 1 value.
 * Input          : TIMx: where x can be 0, 1 or 2 to select the TIM peripheral
 * Output         : None
 * Return         : Input Capture 1 Register value.
@@ -726,7 +726,7 @@ void TIM_CounterModeConfig(TIM_TypeDef* TIMx, u16 TIM_CounterMode)
 *                  the output waveform.
 *                    This parameter can be one of the following values:
 *                       - TIM_ForcedAction_Active: Force active level on OCxREF
-*                       - TIM_ForcedAction_InActive: Force inactive level on 
+*                       - TIM_ForcedAction_InActive: Force inactive level on
 *                         OCxREF.
 * Output         : None
 * Return         : None
@@ -779,7 +779,7 @@ void TIM_ResetCounter(TIM_TypeDef* TIMx)
 *                  - Slave: specifies the peripheral slave.
 *                    This parameter can be one of the following values:
 *                    PWM_Slave, TIM0_Slave, TIM1_Slave or TIM2_Slave.
-*                  - TIM_SynchroAction: specifies the synchronization Action to 
+*                  - TIM_SynchroAction: specifies the synchronization Action to
 *                    be used.
 *                    This parameter can be one of the following values:
 *                         - TIM_SynchroAction_Enable: The CNT_EN bit is used as TRGO
@@ -788,13 +788,13 @@ void TIM_ResetCounter(TIM_TypeDef* TIMx)
 *                         - TIM_SynchroAction_OC: The OC1 signal is used as TRGO
 *                  - TIM_SynchroMode: specifies the synchronization Mode to be used.
 *                    This parameter can be one of the following values:
-*                         - TIM_SynchroMode_Gated: Both start and stop of the 
+*                         - TIM_SynchroMode_Gated: Both start and stop of the
 *                           counter is controlled.
-*                         - TIM_SynchroMode_Trigger: Only the start of the 
+*                         - TIM_SynchroMode_Trigger: Only the start of the
 *                           counter is controlled.
-*                         - TIM_SynchroMode_External: The rising edge of selected trigger 
+*                         - TIM_SynchroMode_External: The rising edge of selected trigger
 *                           clocks the counter.
-*                         - TIM_SynchroMode_Reset: The rising edge of the selected trigger 
+*                         - TIM_SynchroMode_Reset: The rising edge of the selected trigger
 *                           signal resets the counter and generates an update of the registers.
 * Output         : None
 * Return         : None
@@ -886,7 +886,7 @@ void TIM_SynchroConfig(Master_TypeDef Master, Slave_TypeDef Slave,
       TIM1->SCR &= TIM_SME_Reset & TIM_TriggerSelection_Mask & TIM_SlaveModeSelection_Mask &
                    TIM_InternalTriggerSelection_Mask;
       TIM1->SCR |= TIM_SynchroMode | TIM_SME_Set;
-     
+
       if(Master == PWM_Master)
       {
       	 /* Set the internal trigger */
@@ -920,7 +920,7 @@ void TIM_SynchroConfig(Master_TypeDef Master, Slave_TypeDef Slave,
 
     case TIM2_Slave:
     {
-     
+
       TIM2->SCR &= TIM_SME_Reset & TIM_TriggerSelection_Mask & TIM_SlaveModeSelection_Mask &
                    TIM_InternalTriggerSelection_Mask;
       TIM2->SCR |= TIM_SynchroMode | TIM_SME_Set;
@@ -966,7 +966,7 @@ void TIM_SynchroConfig(Master_TypeDef Master, Slave_TypeDef Slave,
 * Function Name  : TIM_GetFlagStatus
 * Description    : Checks whether the specified TIM flag is set or not.
 * Input          : - TIMx: where x can be 0, 1 or 2 to select the TIM peripheral.
-*                  - TIM_FLAG: specifies the flag to check. 
+*                  - TIM_FLAG: specifies the flag to check.
 *                    This parameter can be one of the following values:
 *                         - TIM_FLAG_IC1: Input Capture 1 Flag
 *                         - TIM_FLAG_OC1: Output Compare 1 Flag
@@ -1029,7 +1029,7 @@ ITStatus TIM_GetITStatus(TIM_TypeDef* TIMx, u16 TIM_IT)
 
   /* Calculates the pending bits to be checked */
   TIM_IT_Check = TIM_IT & TIM_IT_Clear_Mask;
-  
+
   if((TIMx->ISR & TIM_IT_Check) != RESET )
   {
     return SET;
@@ -1046,12 +1046,12 @@ ITStatus TIM_GetITStatus(TIM_TypeDef* TIMx, u16 TIM_IT)
 * Input          : - TIMx: where x can be 0, 1 or 2 to select the TIM peripheral.
 *                  - TIM_IT: specifies the interrupt pending bit to clear.
 *                    This parameter can be one of the following values:
-*                         - TIM_IT_IC1: Input Capture 1 Interrupt 
-*                         - TIM_IT_OC1: Output Compare 1 Interrupt 
-*                         - TIM_IT_Update: Timer update Interrupt 
-*                         - TIM_IT_GlobalUpdate: Timer global update Interrupt 
-*                         - TIM_IT_IC2: Input Capture 2 Interrupt 
-*                         - TIM_IT_OC2: Output Compare 2 Interrupt 
+*                         - TIM_IT_IC1: Input Capture 1 Interrupt
+*                         - TIM_IT_OC1: Output Compare 1 Interrupt
+*                         - TIM_IT_Update: Timer update Interrupt
+*                         - TIM_IT_GlobalUpdate: Timer global update Interrupt
+*                         - TIM_IT_IC2: Input Capture 2 Interrupt
+*                         - TIM_IT_OC2: Output Compare 2 Interrupt
 * Output         : None
 * Return         : None
 *******************************************************************************/
@@ -1086,7 +1086,7 @@ static void OCM_ModuleConfig(TIM_TypeDef* TIMx, TIM_InitTypeDef* TIM_InitStruct)
   }
   else
   {
-    if((TIM_InitStruct->TIM_Mode == TIM_Mode_OCActive) || 
+    if((TIM_InitStruct->TIM_Mode == TIM_Mode_OCActive) ||
        (TIM_InitStruct->TIM_Mode == TIM_Mode_OPM_Active))
     {
       TIM_OCControl = TIM_OCControl_OCActive;
@@ -1154,7 +1154,7 @@ static void OCM_ModuleConfig(TIM_TypeDef* TIMx, TIM_InitTypeDef* TIM_InitStruct)
      /* Configure Channel 1 and Channel 2 on Output Compare mode */
     else
     {
-      TIMx->OMR1 &= TIM_OC1C_Mask & TIM_OC2C_Mask; 
+      TIMx->OMR1 &= TIM_OC1C_Mask & TIM_OC2C_Mask;
       TIMx->OMR1 |= TIM_OCControl|(TIM_OCControl<<8)|TIM_OC1_Enable|TIM_OC2_Enable|
                    TIM_PLD1_Set|TIM_PLD2_Set;
 
@@ -1234,7 +1234,7 @@ static void ICAP_ModuleConfig(TIM_TypeDef* TIMx, TIM_InitTypeDef* TIM_InitStruct
       /* Input Capture 1 mode configuration */
       TIMx->SCR &= TIM_TriggerSelection_Mask & TIM_SlaveModeSelection_Mask;
       TIMx->SCR |= TIM_TS_IC1_Set|TIM_SMS_RESETCLK_Set|TIM_SME_Set;
-      
+
       /* Channel 1 input selection */
       if(TIM_InitStruct->TIM_IC1Selection == TIM_IC1Selection_TI1)
       {
@@ -1303,8 +1303,8 @@ static void Encoder_ModeConfig(TIM_TypeDef* TIMx, TIM_InitTypeDef* TIM_InitStruc
 {
   /* Set Encoder mode */
   TIMx->SCR &= TIM_Encoder_Mask;
-  
-  if(TIM_InitStruct->TIM_Mode == TIM_Mode_Encoder1) 
+
+  if(TIM_InitStruct->TIM_Mode == TIM_Mode_Encoder1)
   {
     TIMx->SCR |= TIM_Encoder1_Set;
   }
@@ -1312,7 +1312,7 @@ static void Encoder_ModeConfig(TIM_TypeDef* TIMx, TIM_InitTypeDef* TIM_InitStruc
   {
     TIMx->SCR |= TIM_Encoder2_Set;
   }
-  else 
+  else
   {
     TIMx->SCR |= TIM_Encoder3_Set;
   }

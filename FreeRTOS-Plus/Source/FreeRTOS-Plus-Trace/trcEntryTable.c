@@ -114,7 +114,7 @@ traceResult xTraceEntryCreate(TraceEntryHandle_t *pxEntryHandle)
 	}
 
 	pxEntry = &pxEntryTable->axEntries[xIndex];
-	
+
 	pxEntry->pvAddress = (void*)pxEntry; /* We set a temporary address */
 
 	for (i = 0; i < TRC_ENTRY_TABLE_STATE_COUNT; i++)
@@ -300,7 +300,7 @@ traceResult xTraceEntrySetOptions(TraceEntryHandle_t xEntryHandle, uint32_t uiMa
 	/* Does not need to be locked. */
 	/* This should never fail */
 	TRC_ASSERT(VALIDATE_ENTRY_HANDLE(xEntryHandle));
-	
+
 	return TRC_ENTRY_SET_OPTIONS(xEntryHandle, uiMask);
 }
 
@@ -312,7 +312,7 @@ traceResult xTraceEntryClearOptions(TraceEntryHandle_t xEntryHandle, uint32_t ui
 	/* Does not need to be locked. */
 	/* This should never fail */
 	TRC_ASSERT(VALIDATE_ENTRY_HANDLE(xEntryHandle));
-	
+
 	return TRC_ENTRY_CLEAR_OPTIONS(xEntryHandle, uiMask);
 }
 

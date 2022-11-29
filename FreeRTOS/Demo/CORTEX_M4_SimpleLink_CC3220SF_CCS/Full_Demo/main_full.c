@@ -392,8 +392,3 @@ static void prvRegTestTaskEntry2( void *pvParameters )
 
 #endif
 /*-----------------------------------------------------------*/
-
-
-
-
-

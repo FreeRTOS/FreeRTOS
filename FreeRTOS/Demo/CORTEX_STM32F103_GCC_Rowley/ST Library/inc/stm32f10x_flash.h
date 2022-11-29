@@ -25,7 +25,7 @@
 #ifdef _FLASH_PROG
 /* FLASH Status */
 typedef enum
-{ 
+{
   FLASH_BUSY = 1,
   FLASH_ERROR_PG,
   FLASH_ERROR_WRP,
@@ -48,7 +48,7 @@ typedef enum
 #define FLASH_HalfCycleAccess_Disable  ((u32)0x00000000)  /* FLASH Half Cycle Disable */
 
 #define IS_FLASH_HALFCYCLEACCESS_STATE(STATE) (((STATE) == FLASH_HalfCycleAccess_Enable) || \
-                                               ((STATE) == FLASH_HalfCycleAccess_Disable)) 
+                                               ((STATE) == FLASH_HalfCycleAccess_Disable))
 
 
 /* Prefetch Buffer Enable/Disable --------------------------------------------*/
@@ -56,7 +56,7 @@ typedef enum
 #define FLASH_PrefetchBuffer_Disable   ((u32)0x00000000)  /* FLASH Prefetch Buffer Disable */
 
 #define IS_FLASH_PREFETCHBUFFER_STATE(STATE) (((STATE) == FLASH_PrefetchBuffer_Enable) || \
-                                              ((STATE) == FLASH_PrefetchBuffer_Disable)) 
+                                              ((STATE) == FLASH_PrefetchBuffer_Disable))
 
 #ifdef _FLASH_PROG
 /* Option Bytes Write Protection ---------------------------------------------*/
@@ -165,14 +165,14 @@ typedef enum
 #define FLASH_FLAG_PGERR               ((u32)0x00000004)  /* FLASH Program error flag */
 #define FLASH_FLAG_WRPRTERR            ((u32)0x00000010)  /* FLASH Write protected error flag */
 #define FLASH_FLAG_OPTERR              ((u32)0x00000001)  /* FLASH Option Byte error flag */
- 
+
 #define IS_FLASH_CLEAR_FLAG(FLAG) ((((FLAG) & (u32)0xFFFFFFCA) == 0x00000000) && ((FLAG) != 0x00000000))
 
 #define IS_FLASH_GET_FLAG(FLAG)  (((FLAG) == FLASH_FLAG_BSY) || ((FLAG) == FLASH_FLAG_EOP) || \
                                   ((FLAG) == FLASH_FLAG_PGERR) || ((FLAG) == FLASH_FLAG_WRPRTERR) || \
                                   ((FLAG) == FLASH_FLAG_OPTERR))
 #endif
-								 
+
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */

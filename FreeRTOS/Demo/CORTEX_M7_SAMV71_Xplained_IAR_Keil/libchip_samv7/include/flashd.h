@@ -42,7 +42,7 @@
 #ifdef __cplusplus
  extern "C" {
 #endif
-   
+
 #define GPNVBit_SecurityBit     0
 #define GPNVBit_BootMode        1
 #define GPNVBit_TCMBit1         6
@@ -60,13 +60,13 @@ extern uint32_t FLASHD_EraseSector( uint32_t dwAddress ) ;
 
 extern uint32_t FLASHD_ErasePages( uint32_t dwAddress, uint32_t dwPageNum ) ;
 
-extern uint32_t FLASHD_Write( uint32_t dwAddress, const void *pvBuffer, 
+extern uint32_t FLASHD_Write( uint32_t dwAddress, const void *pvBuffer,
 		uint32_t dwSize ) ;
 
-extern uint32_t FLASHD_Lock( uint32_t dwStart, uint32_t dwEnd, 
+extern uint32_t FLASHD_Lock( uint32_t dwStart, uint32_t dwEnd,
 		uint32_t *pdwActualStart, uint32_t *pdwActualEnd ) ;
 
-extern uint32_t FLASHD_Unlock( uint32_t dwStart, uint32_t dwEnd, 
+extern uint32_t FLASHD_Unlock( uint32_t dwStart, uint32_t dwEnd,
 		uint32_t *pdwActualStart, uint32_t *pdwActualEnd ) ;
 
 extern uint32_t FLASHD_IsLocked( uint32_t dwStart, uint32_t dwEnd ) ;
@@ -88,4 +88,3 @@ extern uint32_t FLASHD_ReadUniqueID( uint32_t* pdwUniqueID ) ;
 #endif
 
 #endif /* #ifndef _FLASHD_ */
-

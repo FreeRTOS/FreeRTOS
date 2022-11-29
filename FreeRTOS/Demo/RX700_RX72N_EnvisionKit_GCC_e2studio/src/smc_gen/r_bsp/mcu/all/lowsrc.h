@@ -76,4 +76,3 @@ void lseek(void);
 #endif /* defined(__GNUC__) */
 
 #endif  /* End of multiple inclusion prevention macro */
-

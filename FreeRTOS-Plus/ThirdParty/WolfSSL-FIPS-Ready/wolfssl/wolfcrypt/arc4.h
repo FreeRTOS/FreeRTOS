@@ -65,4 +65,3 @@ WOLFSSL_API void wc_Arc4Free(Arc4*);
 
 
 #endif /* WOLF_CRYPT_ARC4_H */
-

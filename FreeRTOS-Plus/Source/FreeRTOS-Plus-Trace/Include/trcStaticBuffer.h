@@ -7,8 +7,8 @@
 */
 
 /**
- * @file 
- * 
+ * @file
+ *
  * @brief Public trace static buffer APIs.
  */
 
@@ -63,11 +63,11 @@ typedef struct TraceStaticBufferBuffer
 extern TraceStaticBufferTable_t* pxTraceStaticBufferTable;
 
 /**
- * @internal Initialize trace static buffer. 
- * 
+ * @internal Initialize trace static buffer.
+ *
  * @param[in] pxBuffer Pointer to memory that will be used by the
  * trace static buffer.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -77,9 +77,9 @@ traceResult xTraceStaticBufferInitialize(TraceStaticBufferBuffer_t* pxBuffer);
 
 /**
  * @brief Gets trace static buffer.
- * 
+ *
  * @param[out] ppvBuffer Buffer.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */
@@ -89,9 +89,9 @@ traceResult xTraceStaticBufferGet(void **ppvBuffer);
 
 /**
  * @brief Gets trace static buffer.
- * 
+ *
  * @param[out] ppvBuffer Buffer.
- * 
+ *
  * @retval TRC_FAIL Failure
  * @retval TRC_SUCCESS Success
  */

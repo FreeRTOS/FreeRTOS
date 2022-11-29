@@ -52,7 +52,7 @@
  * SPECIFY WHETHER TO INCLUDE CODE FOR API PARAMETER CHECKING
  *  0 : Compiles out parameter checking.
  *  1 : Includes parameter checking.
- * Default value is set to BSP_CFG_PARAM_CHECKING_ENABLE to 
+ * Default value is set to BSP_CFG_PARAM_CHECKING_ENABLE to
  * re-use the system default setting.
 */
 #define DTC_CFG_PARAM_CHECKING_ENABLE       (BSP_CFG_PARAM_CHECKING_ENABLE)
@@ -74,7 +74,7 @@
 /*
  * SPECIFY WHETHER THE TRANSFER DATA READ SKIP IS ENABLED
  * DTC_DISABLE : Disable Transfer Data Read Skip.
- * DTC_ENABLE  : Enable Transfer Data Read Skip. 
+ * DTC_ENABLE  : Enable Transfer Data Read Skip.
 */
 #define DTC_CFG_TRANSFER_DATA_READ_SKIP_EN  (DTC_ENABLE)
 
@@ -85,7 +85,7 @@
 */
 #define DTC_CFG_USE_DMAC_FIT_MODULE         (DTC_ENABLE)
 
-/* 
+/*
  * SPECIFY WHETHER THE SEQUENCE TRANSFER IS USED
  * Also, set DTC_DISABLE to DTC_CFG_SHORT_ADDRESS_MODE.
  * DTC_DISABLE : Not use sequence transfer.

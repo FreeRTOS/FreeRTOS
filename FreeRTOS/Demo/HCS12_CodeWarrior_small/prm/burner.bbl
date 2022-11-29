@@ -220,4 +220,3 @@ destination = 0x0FC000
 SENDBYTE 1 "%ABS_FILE%"
 
 CLOSE
-

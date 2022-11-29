@@ -50,4 +50,3 @@
            || (REDCONF_IMAGE_BUILDER == 1)))
 
 #endif
-

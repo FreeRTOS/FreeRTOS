@@ -63,5 +63,3 @@ extern const struct xWEB_COMMAND xWebCommands[WEB_CMD_COUNT];
 extern const char *webCodename (int aCode);
 
 #endif	/* FREERTOS_HTTP_COMMANDS_H */
-
-

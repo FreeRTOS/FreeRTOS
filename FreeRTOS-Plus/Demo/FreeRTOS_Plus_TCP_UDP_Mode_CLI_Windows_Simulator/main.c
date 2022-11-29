@@ -57,7 +57,7 @@
 #define mainECHO_CLIENT_TASK_STACK_SIZE 			( configMINIMAL_STACK_SIZE * 2 )
 #define mainECHO_CLIENT_TASK_PRIORITY				( tskIDLE_PRIORITY + 1 )
 
-/* Set the following constants to 1 or 0 to define which tasks to include and 
+/* Set the following constants to 1 or 0 to define which tasks to include and
 exclude. */
 #define mainCREATE_UDP_CLI_TASKS					1
 #define mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS	0
@@ -120,7 +120,7 @@ int main( void )
 {
 const uint32_t ulLongTime_ms = 250UL;
 
-	/* Create a mutex that is used to guard against the console being accessed 
+	/* Create a mutex that is used to guard against the console being accessed
 	by more than one task simultaniously. */
 	xConsoleMutex = xSemaphoreCreateMutex();
 
@@ -212,11 +212,11 @@ void vApplicationMallocFailedHook( void )
 	function that will get called if a call to pvPortMalloc() fails.
 	pvPortMalloc() is called internally by the kernel whenever a task, queue,
 	timer or semaphore is created.  It is also called by various parts of the
-	demo application.  If heap_1.c, heap_2.c or heap_4.c are used, then the 
-	size of the heap available to pvPortMalloc() is defined by 
-	configTOTAL_HEAP_SIZE in FreeRTOSConfig.h, and the xPortGetFreeHeapSize() 
-	API function can be used to query the size of free heap space that remains 
-	(although it does not provide information on how the remaining heap might 
+	demo application.  If heap_1.c, heap_2.c or heap_4.c are used, then the
+	size of the heap available to pvPortMalloc() is defined by
+	configTOTAL_HEAP_SIZE in FreeRTOSConfig.h, and the xPortGetFreeHeapSize()
+	API function can be used to query the size of free heap space that remains
+	(although it does not provide information on how the remaining heap might
 	be fragmented). */
 	taskDISABLE_INTERRUPTS();
 	for( ;; );
@@ -263,4 +263,3 @@ void vApplicationMallocFailedHook( void )
 
 #endif /* if ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 ) */
 /*-----------------------------------------------------------*/
-

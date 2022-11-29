@@ -53,7 +53,7 @@ Test complete
 
 ## Windows Visual Studio
 
-For building wolfCrypt test project in Visual Studio open the `test.sln`. For newer Visual Studio version it may prompt for a one-way upgrade. Then you may have to right-click on the solution and choose `Retarget solution` to update the project files for your Visual Studio version. 
+For building wolfCrypt test project in Visual Studio open the `test.sln`. For newer Visual Studio version it may prompt for a one-way upgrade. Then you may have to right-click on the solution and choose `Retarget solution` to update the project files for your Visual Studio version.
 
 If you see an error about `rc.exe` then you'll need to update the "Target Platform Version". You can do this by right-clicking on the test project -> General -> "Target Platform Version" and changing to 8.1 (needs to match the wolfssl library project).
 

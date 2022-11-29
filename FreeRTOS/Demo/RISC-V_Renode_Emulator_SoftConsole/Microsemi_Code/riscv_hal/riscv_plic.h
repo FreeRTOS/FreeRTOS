@@ -30,7 +30,7 @@ typedef enum
     NoInterrupt_IRQn = 0,
     External_1_IRQn  = 1,
     External_2_IRQn  = 2,
-    External_3_IRQn  = 3, 
+    External_3_IRQn  = 3,
     External_4_IRQn  = 4,
     External_5_IRQn  = 5,
     External_6_IRQn  = 6,
@@ -83,19 +83,19 @@ typedef struct
 {
     /*-------------------- Source Priority --------------------*/
     volatile uint32_t SOURCE_PRIORITY[1024];
-    
+
     /*-------------------- Pending array --------------------*/
     volatile const uint32_t PENDING_ARRAY[32];
     volatile uint32_t RESERVED1[992];
-    
+
     /*-------------------- Target enables --------------------*/
     volatile Target_Enables_Type TARGET_ENABLES[15808];
 
     volatile uint32_t RESERVED2[16384];
-    
+
     /*--- Target Priority threshold and claim/complete---------*/
     IRQ_Target_Type TARGET[15872];
-    
+
 } PLIC_Type;
 
 
@@ -114,10 +114,10 @@ typedef struct
     volatile const uint64_t MTIME;
 } PRCI_Type;
 
-#define PRCI    ((PRCI_Type *)PRCI_BASE) 
+#define PRCI    ((PRCI_Type *)PRCI_BASE)
 
 /*==============================================================================
- * The function PLIC_init() initializes the PLIC controller and enables the 
+ * The function PLIC_init() initializes the PLIC controller and enables the
  * global external interrupt bit.
  */
 static inline void PLIC_init(void)
@@ -181,16 +181,16 @@ static inline void PLIC_DisableIRQ(IRQn_Type IRQn)
 }
 
 /*==============================================================================
- * The function PLIC_SetPriority() sets the priority for the external interrupt 
+ * The function PLIC_SetPriority() sets the priority for the external interrupt
  * for the interrupt number indicated by the parameter IRQn.
  */
-static inline void PLIC_SetPriority(IRQn_Type IRQn, uint32_t priority) 
+static inline void PLIC_SetPriority(IRQn_Type IRQn, uint32_t priority)
 {
     PLIC->SOURCE_PRIORITY[IRQn] = priority;
 }
 
 /*==============================================================================
- * The function PLIC_GetPriority() returns the priority for the external interrupt 
+ * The function PLIC_GetPriority() returns the priority for the external interrupt
  * for the interrupt number indicated by the parameter IRQn.
  */
 static inline uint32_t PLIC_GetPriority(IRQn_Type IRQn)

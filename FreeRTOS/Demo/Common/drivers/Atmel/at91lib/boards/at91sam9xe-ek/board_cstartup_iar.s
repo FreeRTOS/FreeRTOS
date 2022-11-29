@@ -100,7 +100,7 @@ SWI_Addr:       DCD   vPortYieldProcessor
 Prefetch_Addr:  DCD   Prefetch_Handler
 Abort_Addr:     DCD   Abort_Handler
 FIQ_Addr:       DCD   FIQ_Handler
-	
+
 /*
    Handles incoming interrupt requests by branching to the corresponding
    handler, as defined in the AIC. Supports interrupt nesting.

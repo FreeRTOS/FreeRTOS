@@ -47,4 +47,3 @@ Exported global functions (to be accessed by other files)
 void R_BSP_StartupOpen(void);
 
 #endif  /* End of multiple inclusion prevention macro */
-

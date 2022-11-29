@@ -1,18 +1,18 @@
 /***********************************************************************************************************************
 * DISCLAIMER
-* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No 
-* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all 
-* applicable laws, including copyright laws. 
+* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No
+* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
+* applicable laws, including copyright laws.
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
-* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, 
-* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM 
-* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES 
-* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS 
+* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM
+* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES
+* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS
 * SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of 
-* this software. By using this software, you agree to the additional terms and conditions found by accessing the 
+* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of
+* this software. By using this software, you agree to the additional terms and conditions found by accessing the
 * following link:
-* http://www.renesas.com/disclaimer 
+* http://www.renesas.com/disclaimer
 *
 * Copyright (C) 2019 Renesas Electronics Corporation. All rights reserved.
 ***********************************************************************************************************************/
@@ -49,7 +49,7 @@ Private global variables and functions
 *                 (channel range, interrupt priority, etc...)
 * Arguments    : chan -
 *                    channel to check
-* Return Value : SCI_SUCCESS - 
+* Return Value : SCI_SUCCESS -
 *                    parameter check all successfully
 *                SCI_ERR_BAD_CHAN -
 *                    channel number invalid for part
@@ -102,7 +102,7 @@ void sci_init_register(sci_hdl_t const hdl)
 
     /* SCR register initialize */
     hdl->rom->regs->SCR.BYTE = 0x00;
-    
+
 #if SCI_CFG_FIFO_INCLUDED
     if (true == hdl->fifo_ctrl)
     {
@@ -206,18 +206,18 @@ void sci_init_register(sci_hdl_t const hdl)
 * Function Name: sci_init_bit_rate
 * Description  : This function determines the best possible settings for the
 *                baud rate registers for the specified peripheral clock speed
-*                and baud rate. Note that this does not guarantee a low bit 
+*                and baud rate. Note that this does not guarantee a low bit
 *                error rate, just the best possible one. The bit rate error is
 *                returned in .1% increments. If the hardware cannot support
 *                the specified combination, a value of 1000 (100% error) is
 *                returned.
 *
-* NOTE: The transmitter and receiver (TE and RE bits in SCR) must be disabled 
+* NOTE: The transmitter and receiver (TE and RE bits in SCR) must be disabled
 *       prior to calling this function.
 *
 *       The application must pause for 1 bit time after the BRR register
 *       is loaded before transmitting/receiving to allow time for the clock
-*       to settle. 
+*       to settle.
 *
 * Arguments    : hdl -
 *                    Handle for channel (ptr to chan control block)
@@ -279,7 +279,7 @@ int32_t sci_init_bit_rate(sci_hdl_t const  hdl,
     /* BRR = (PCLK/(divisor * baud)) - 1 */
     /* BRR = (ratio / divisor) - 1 */
     ratio = pclk/baud;
-    
+
     /* WAIT_LOOP */
     for(i = 0; i < num_divisors; i++)
     {
@@ -372,10 +372,10 @@ int32_t sci_init_bit_rate(sci_hdl_t const  hdl,
 
 /*****************************************************************************
 * Function Name: sci_initialize_ints
-* Description  : This function sets priority, clears flags, and sets 
-*                interrupts in both the ICU and SCI peripheral. These include 
+* Description  : This function sets priority, clears flags, and sets
+*                interrupts in both the ICU and SCI peripheral. These include
 *                RXI, TXI, TEI, and ERI/GROUP12 interrupts.
-* Arguments    : hdl - 
+* Arguments    : hdl -
 *                    handle for channel (ptr to chan control block)
 *                priority -
 *                    priority for interrupts
@@ -449,15 +449,15 @@ void sci_initialize_ints(sci_hdl_t const hdl,
     /* Note: Enable interrupts after xcvr or will get "extra" interrupt */
     hdl->rom->regs->SCR.BYTE |= SCI_EN_XCVR_MASK;    // enable TE, RE, TXI, and RXI/ERI
 
-    return;    
+    return;
 } /* End of function sci_initialize_ints() */
 
 /*****************************************************************************
 * Function Name: sci_disable_ints
-* Description  : This function disable interrupts in both the ICU and SCI 
+* Description  : This function disable interrupts in both the ICU and SCI
 *                peripheral. These include RXI, TXI, TEI, ERI, and group
 *                interrupts.
-* Arguments    : hdl - 
+* Arguments    : hdl -
 *                    handle for channel (ptr to chan control block)
 * Return Value : none
 ******************************************************************************/
@@ -476,7 +476,7 @@ void sci_disable_ints(sci_hdl_t const hdl)
 
     /* Disable ICU TEI interrupt */
     DISABLE_TEI_INT;
-    
+
     /* disable peripheral interrupts and xcvr (TE and RE) */
     hdl->rom->regs->SCR.BYTE = 0;
 

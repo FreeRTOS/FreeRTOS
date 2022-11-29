@@ -31,7 +31,7 @@ static TracePrintInfo_t *pxPrintInfo;
 traceResult xTracePrintInitialize(TracePrintBuffer_t *pxBuffer)
 {
 	TRC_ASSERT_EQUAL_SIZE(TracePrintBuffer_t, TracePrintInfo_t);
-	
+
 	/* This should never fail */
 	TRC_ASSERT(pxBuffer != 0);
 
@@ -40,7 +40,7 @@ traceResult xTracePrintInitialize(TracePrintBuffer_t *pxBuffer)
 	pxPrintInfo->consoleChannel = 0;
 
 	xTraceSetComponentInitialized(TRC_RECORDER_COMPONENT_PRINT);
-	
+
 	return TRC_SUCCESS;
 }
 
@@ -73,7 +73,7 @@ traceResult xTracePrint(TraceStringHandle_t xChannel, const char* szString)
 {
 	uint32_t uiLength = 0;
 	uint32_t i = 0;
-	
+
 	/* We need to check this */
 	if (!xTraceIsComponentInitialized(TRC_RECORDER_COMPONENT_PRINT))
 	{
@@ -84,7 +84,7 @@ traceResult xTracePrint(TraceStringHandle_t xChannel, const char* szString)
 	{
 		szString = "";
 	}
-	
+
 	while ((szString[i] != 0) && (i < 128))
 	{
 		i++;

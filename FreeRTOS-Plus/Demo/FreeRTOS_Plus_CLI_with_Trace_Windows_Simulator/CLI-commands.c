@@ -383,4 +383,3 @@ FILE* pxOutputFile;
 		printf( "\r\nFailed to create trace dump file\r\n" );
 	}
 }
-

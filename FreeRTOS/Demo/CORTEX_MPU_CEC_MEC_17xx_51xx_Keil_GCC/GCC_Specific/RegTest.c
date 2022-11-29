@@ -646,4 +646,3 @@ void MemManage_Handler( void )
 		" handler2_address_const: .word hard_fault_handler	\n"
 	);
 }/*-----------------------------------------------------------*/
-

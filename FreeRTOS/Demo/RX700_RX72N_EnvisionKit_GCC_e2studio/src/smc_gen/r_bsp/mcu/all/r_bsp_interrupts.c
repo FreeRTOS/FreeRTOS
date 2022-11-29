@@ -18,7 +18,7 @@
 ***********************************************************************************************************************/
 /***********************************************************************************************************************
 * File Name    : r_bsp_interrupts.c
-* Description  : This module allows for callbacks to be registered for certain interrupts. 
+* Description  : This module allows for callbacks to be registered for certain interrupts.
 *                And handle exception interrupts.
 ***********************************************************************************************************************/
 /**********************************************************************************************************************
@@ -76,10 +76,10 @@ static bsp_int_err_t bsp_gr_int_enable_disable (bsp_int_src_t vector, bool enabl
  ******************************************************************************************************************//**
  * @brief Enable the specified interrupt request.
  * @param[in] vector Interrupt vector number.
- * @details Enable the specified interrupt request. Calculate the corresponding IER [m].IEN [j] from the vector number 
- * of the argument, and set "1" to that bit. The macro defined in iodefine.h can be used to the setting of the 
+ * @details Enable the specified interrupt request. Calculate the corresponding IER [m].IEN [j] from the vector number
+ * of the argument, and set "1" to that bit. The macro defined in iodefine.h can be used to the setting of the
  * argument "vector". A description example is shown in Example.
- * @note When setting an immediate value for an argument "vector", the argument must be 0 to 255. Don't set the 
+ * @note When setting an immediate value for an argument "vector", the argument must be 0 to 255. Don't set the
  * vector number of the reserved interrupt source to the argument.
  */
 void R_BSP_InterruptRequestEnable (uint32_t vector)
@@ -106,10 +106,10 @@ void R_BSP_InterruptRequestEnable (uint32_t vector)
  ******************************************************************************************************************//**
  * @brief Disable the specified interrupt request.
  * @param[in] vector Interrupt vector number.
- * @details Disable the specified interrupt request. Calculate the corresponding IER [m].IEN [j] from the vector 
- * number of the argument, and clear "0" to that bit. The macro defined in iodefine.h can be used to the setting of 
+ * @details Disable the specified interrupt request. Calculate the corresponding IER [m].IEN [j] from the vector
+ * number of the argument, and clear "0" to that bit. The macro defined in iodefine.h can be used to the setting of
  * the argument "vector". A description example is shown in Example.
- * @note When setting an immediate value for an argument "vector", the argument must be 0 to 255. Don't set the 
+ * @note When setting an immediate value for an argument "vector", the argument must be 0 to 255. Don't set the
  * vector number of the reserved interrupt source to the argument.
  */
 void R_BSP_InterruptRequestDisable (uint32_t vector)
@@ -169,14 +169,14 @@ void bsp_interrupt_open (void)
  * @param[in] callback Pointer to function to call when interrupt occurs.
  * @retval BSP_INT_SUCCESS Successful, callback has been registered.
  * @retval BSP_INT_ERR_INVALID_ARG Invalid function address input, any previous function has been unregistered.
- * @details This function registers a callback function for an interrupt. If FIT_NO_FUNC, NULL, or any other invalid 
+ * @details This function registers a callback function for an interrupt. If FIT_NO_FUNC, NULL, or any other invalid
  * function address is passed for the callback argument then any previously registered callbacks are unregistered.
- * If one of the interrupts that is handled by this code is triggered then the interrupt handler will query this code 
+ * If one of the interrupts that is handled by this code is triggered then the interrupt handler will query this code
  * to see if a valid callback function is registered. If one is found then the callback function will be called.
- * If one is not found then the interrupt handler will clear the appropriate flag(s) and exit. If the user has a 
- * callback function registered and wishes to no longer handle the interrupt then the user should call this function 
+ * If one is not found then the interrupt handler will clear the appropriate flag(s) and exit. If the user has a
+ * callback function registered and wishes to no longer handle the interrupt then the user should call this function
  * again with FIT_NO_FUNC as the vector parameter.
- * @note Use of FIT_NO_FUNC is preferred over NULL since access to the address defined by FIT_NO_FUNC will cause a 
+ * @note Use of FIT_NO_FUNC is preferred over NULL since access to the address defined by FIT_NO_FUNC will cause a
  * bus error which is easy for the user to catch. NULL typically resolves to 0 which is a valid address on RX MCUs.
  */
 bsp_int_err_t R_BSP_InterruptWrite (bsp_int_src_t vector,  bsp_int_cb_t callback)
@@ -207,7 +207,7 @@ bsp_int_err_t R_BSP_InterruptWrite (bsp_int_src_t vector,  bsp_int_cb_t callback
  * @param[out] callback Pointer to where to store callback address.
  * @retval BSP_INT_SUCCESS Successful, callback address has been returned.
  * @retval BSP_INT_ERR_NO_REGISTERED_CALLBACK No valid callback has been registered for this interrupt source.
- * @details This function returns the callback function address for an interrupt if one has been registered. If a 
+ * @details This function returns the callback function address for an interrupt if one has been registered. If a
  * callback function has not been registered then an error is returned and nothing is stored to the callback address.
  */
 bsp_int_err_t R_BSP_InterruptRead (bsp_int_src_t vector, bsp_int_cb_t * callback)
@@ -234,16 +234,16 @@ bsp_int_err_t R_BSP_InterruptRead (bsp_int_src_t vector, bsp_int_cb_t * callback
  ******************************************************************************************************************//**
  * @brief Controls various interrupt operations.
  * @param[in] vector Which interrupt to control for.\n
- * If the interrupt control commands is the BSP_INT_CMD_FIT_INTERRUPT_ENABLE or the BSP_INT_CMD_FIT_INTERRUPT_DISABLE 
+ * If the interrupt control commands is the BSP_INT_CMD_FIT_INTERRUPT_ENABLE or the BSP_INT_CMD_FIT_INTERRUPT_DISABLE
  * commands, set BSP_INT_SRC_EMPTY to "vector" because no arguments are used.
  * @param[in] cmd Interrupt control command.
- * @param[in,out] pdata Pointer to the argument for each interrupt control command. Typecasted to void*. See typedef 
+ * @param[in,out] pdata Pointer to the argument for each interrupt control command. Typecasted to void*. See typedef
  * defines of bsp_int_ctrl_t. \n
- * Most of the interrupt control commands do not need the argument and take FIT_NO_PTR for 
- * this parameter. If the interrupt control command is the BSP_INT_CMD_GROUP_INTERRUPT_ENABLE command, set the 
- * interrupt priority level for group interrupts as the argument. If the interrupt control command is the 
- * BSP_INT_CMD_FIT_INTERRUPT_DISABLE command, set the address of a variable for saving the current processor interrupt 
- * priority level in the argument. If the interrupt control command is the BSP_INT_CMD_FIT_INTERRUPT_ENABLE command, 
+ * Most of the interrupt control commands do not need the argument and take FIT_NO_PTR for
+ * this parameter. If the interrupt control command is the BSP_INT_CMD_GROUP_INTERRUPT_ENABLE command, set the
+ * interrupt priority level for group interrupts as the argument. If the interrupt control command is the
+ * BSP_INT_CMD_FIT_INTERRUPT_DISABLE command, set the address of a variable for saving the current processor interrupt
+ * priority level in the argument. If the interrupt control command is the BSP_INT_CMD_FIT_INTERRUPT_ENABLE command,
  * set the address of a variable used in the BSP_INT_CMD_FIT_INTERRUPT_DISABLE command.
  * @retval BSP_INT_SUCCESS Successful.
  * @retval BSP_INT_ERR_NO_REGISTERED_CALLBACK No valid callback has been registered for this interrupt source.
@@ -251,23 +251,23 @@ bsp_int_err_t R_BSP_InterruptRead (bsp_int_src_t vector, bsp_int_cb_t * callback
  * @retval BSP_INT_ERR_UNSUPPORTED This processing is not supported.
  * @retval BSP_INT_ERR_GROUP_STILL_ENABLED Group interrupt request remains enabled.
  * @retval BSP_INT_ERR_INVALID_IPL Illegal IPL value input.
- * @details This function controls the interrupt callback function call and enabling/disabling interrupts such as bus 
- * error interrupt, floating-point exception, NMI pin interrupt, and group interrupts, and enabling/disabling 
- * interrupts by controlling the Processor Interrupt Priority Level. When BSP_INT_CMD_GROUP_INTERRUPT_ENABLE is set as 
- * the interrupt control command, the interrupt request (IER) for group interrupts is enabled and also the interrupt 
- * priority level is set. The interrupt priority level set must be higher than the current level. When 
- * BSP_INT_CMD_GROUP_INTERRUPT_DISABLE is set as the interrupt control command, the interrupt request (IER) for group 
- * interrupts is disabled. Note that the interrupt request (IER) for group interrupts cannot be disabled as long as 
- * all interrupt requests (GEN) caused by grouped interrupt sources are disabled. When 
- * BSP_INT_CMD_FIT_INTERRUPT_DISABLE is set as the interrupt control command, the current processor interrupt priority 
- * level (IPL) is saved to the address specified by pdata as an argument, and disables interrupts by controlling the 
- * IPL. The value of IPL to be set is the value of BSP_CFG_FIT_IPL_MAX. When BSP_INT_CMD_FIT_INTERRUPT_ENABLE is set 
- * as the interrupt control command, the interrupt is enabled by setting the value stored in the address specified by 
- * pdata to IPL. These two commands are valid only in supervisor mode. When BSP_INT_CMD_FIT_INTERRUPT_DISABLE and 
- * BSP_INT_CMD_FIT_INTERRUPT_ENABLE commands are executed in user mode, Controlling IPL is not executed and an error 
+ * @details This function controls the interrupt callback function call and enabling/disabling interrupts such as bus
+ * error interrupt, floating-point exception, NMI pin interrupt, and group interrupts, and enabling/disabling
+ * interrupts by controlling the Processor Interrupt Priority Level. When BSP_INT_CMD_GROUP_INTERRUPT_ENABLE is set as
+ * the interrupt control command, the interrupt request (IER) for group interrupts is enabled and also the interrupt
+ * priority level is set. The interrupt priority level set must be higher than the current level. When
+ * BSP_INT_CMD_GROUP_INTERRUPT_DISABLE is set as the interrupt control command, the interrupt request (IER) for group
+ * interrupts is disabled. Note that the interrupt request (IER) for group interrupts cannot be disabled as long as
+ * all interrupt requests (GEN) caused by grouped interrupt sources are disabled. When
+ * BSP_INT_CMD_FIT_INTERRUPT_DISABLE is set as the interrupt control command, the current processor interrupt priority
+ * level (IPL) is saved to the address specified by pdata as an argument, and disables interrupts by controlling the
+ * IPL. The value of IPL to be set is the value of BSP_CFG_FIT_IPL_MAX. When BSP_INT_CMD_FIT_INTERRUPT_ENABLE is set
+ * as the interrupt control command, the interrupt is enabled by setting the value stored in the address specified by
+ * pdata to IPL. These two commands are valid only in supervisor mode. When BSP_INT_CMD_FIT_INTERRUPT_DISABLE and
+ * BSP_INT_CMD_FIT_INTERRUPT_ENABLE commands are executed in user mode, Controlling IPL is not executed and an error
  * code BSP_INT_ERR_UNSUPPORTED is returned.
- * @note BSP_INT_CMD_FIT_INTERRUPT_DISABLE and BSP_INT_CMD_FIT_INTERRUPT_ENABLE commands can be used to secure 
- * atomicity of critical sections. However, these commands are valid only in supervisor mode. When these commands are 
+ * @note BSP_INT_CMD_FIT_INTERRUPT_DISABLE and BSP_INT_CMD_FIT_INTERRUPT_ENABLE commands can be used to secure
+ * atomicity of critical sections. However, these commands are valid only in supervisor mode. When these commands are
  * executed in user mode, atomicity is not to secure.\n
  * See Section 5.15 in the application note for more information.
  */
@@ -353,7 +353,7 @@ bsp_int_err_t R_BSP_InterruptControl (bsp_int_src_t vector, bsp_int_cmd_t cmd, v
 
 /***********************************************************************************************************************
 * Function Name: bsp_fit_interrupts_control
-* Description  : 
+* Description  :
 * Arguments    : enable -
 *                    Whether to enable or disable the interrupt.
 *                pdata -
@@ -1032,7 +1032,7 @@ R_BSP_ATTRIB_INTERRUPT void non_maskable_isr(void)
     while(1)
     {
         /* Infinite loop. Return from Non-maskable interrupt handlling routine is prohibited.
-           Never use the non-maskable interrupt with an attempt to return to the program that was being executed at 
+           Never use the non-maskable interrupt with an attempt to return to the program that was being executed at
            the time of interrupt generation after the exception handling routine is ended.
          */
          R_BSP_NOP();
@@ -1058,10 +1058,10 @@ R_BSP_ATTRIB_INTERRUPT void undefined_interrupt_source_isr(void)
 #ifdef BSP_MCU_BUS_ERROR_ISR
 /***********************************************************************************************************************
 * Function name: bus_error_isr
-* Description  : By default, this demo code enables the Bus Error Interrupt. This interrupt will fire if the user tries 
-*                to access code or data from one of the reserved areas in the memory map, including the areas covered 
-*                by disabled chip selects. A nop() statement is included here as a convenient place to set a breakpoint 
-*                during debugging and development, and further handling should be added by the user for their 
+* Description  : By default, this demo code enables the Bus Error Interrupt. This interrupt will fire if the user tries
+*                to access code or data from one of the reserved areas in the memory map, including the areas covered
+*                by disabled chip selects. A nop() statement is included here as a convenient place to set a breakpoint
+*                during debugging and development, and further handling should be added by the user for their
 *                application.
 * Arguments    : none
 * Return value : none
@@ -1071,7 +1071,7 @@ R_BSP_ATTRIB_INTERRUPT void bus_error_isr (void)
     /* Clear the bus error */
     BSC.BERCLR.BIT.STSCLR = 1;
 
-    /* 
+    /*
         To find the address that was accessed when the bus error occurred, read the register BSC.BERSR2.WORD.
         The upper 13 bits of this register contain the upper 13-bits of the offending address (in 512K byte units)
     */
@@ -1082,4 +1082,3 @@ R_BSP_ATTRIB_INTERRUPT void bus_error_isr (void)
 #endif
 
 #endif /* BSP_CFG_STARTUP_DISABLE == 0 */
-

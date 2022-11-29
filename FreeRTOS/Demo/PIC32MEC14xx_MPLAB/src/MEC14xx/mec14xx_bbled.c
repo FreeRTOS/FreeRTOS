@@ -37,7 +37,7 @@ extern "C" {
 #endif
 
 
-static uint32_t led_addr(uint8_t led_id) 
+static uint32_t led_addr(uint8_t led_id)
 {
     if (led_id < (LED_ID_MAX) )
     {
@@ -66,9 +66,9 @@ static uint8_t led_is_valid(uint8_t led_id) { ( void ) led_id; return (MEC14XX_T
 #endif
 
 
-/** 
-    @brief MEC1404 LED are alternate functions of GPIO pins. 
-    @note - 
+/**
+    @brief MEC1404 LED are alternate functions of GPIO pins.
+    @note -
         LED0 is GPIO157 Function 1
         LED1 is GPIO156 Function 1
         LED2 is GPIO104 Function 1
@@ -91,8 +91,8 @@ static const uint16_t led_gpio_tbl[LED_ID_MAX] = {
 
 /**
  * led_sleep_en - Enable/Disable gating of clocks on idle to the
- * BBLED block 
- *  
+ * BBLED block
+ *
  *
  * @param uint8_t sleep_en (1=Enable sleep on idle), (0=No sleep
  *                on idle).
@@ -103,7 +103,7 @@ void led_sleep_en(uint8_t led_id, uint8_t sleep_en)
 {
     uint32_t slp_mask;
     uint32_t laddr;
-    
+
     slp_mask = 0ul;
     if ( led_is_valid(led_id) ) {
         slp_mask = (1ul << led_pcr_slp2_bitpos[led_id]);
@@ -120,11 +120,11 @@ void led_sleep_en(uint8_t led_id, uint8_t sleep_en)
 
 /**
  * led_reset - Reset the specified LED hardware block.
- * 
- * @author sworley 
- * 
- * @param led_id 0-based LED ID 
- * @note Sets the LED's soft reset bit and waits for hardware to 
+ *
+ * @author sworley
+ *
+ * @param led_id 0-based LED ID
+ * @note Sets the LED's soft reset bit and waits for hardware to
  *       clear it. Will wait up to 0x10000 times.
  */
 void led_reset(uint8_t led_id)
@@ -143,7 +143,7 @@ void led_reset(uint8_t led_id)
             break;
         }
     }
-} 
+}
 
 
 uint8_t led_get_gpio_num(uint8_t led_id)
@@ -153,12 +153,12 @@ uint8_t led_get_gpio_num(uint8_t led_id)
 
 
 /**
- * led_init - Initialize the specified LED 
- * 
- * @author sworley 
- * 
- * @param led_id 0-based LED ID 
- * @note Configures the LED's GPIO pin for LED function and then 
+ * led_init - Initialize the specified LED
+ *
+ * @author sworley
+ *
+ * @param led_id 0-based LED ID
+ * @note Configures the LED's GPIO pin for LED function and then
  *       peforms a soft reset of the LED hardware.
  */
 void led_init(uint8_t led_id)
@@ -177,12 +177,12 @@ void led_init(uint8_t led_id)
 
 /**
  * led_mode_blink - Enable LED hardware blink
- * 
- * @author sworley 
- * 
+ *
+ * @author sworley
+ *
  * @param led_id 0-based LED ID
  * @param duty_cycle duty cycle (0x80 = 50%)
- * @param prescale sets the blink frequency 
+ * @param prescale sets the blink frequency
  * @note Blink frequency is (32768 * 255)/(prescale + 1) Hz
  */
 void led_mode_blink(uint8_t led_id,
@@ -206,9 +206,9 @@ void led_mode_blink(uint8_t led_id,
 
 /**
  * led_out_toggle - Toggle the LED output pin.
- * 
- * @author sworley 
- * 
+ *
+ * @author sworley
+ *
  * @param led_id 0-based LED ID.
  */
 void led_out_toggle(uint8_t led_id)
@@ -229,11 +229,11 @@ void led_out_toggle(uint8_t led_id)
 
 /**
  * led_out_high - Set the LED block to drive the pin High
- * 
- * @author sworley 
- * 
- * @param led_id 0-based LED ID 
- * @note The LED controller will drive the pin High. Depending 
+ *
+ * @author sworley
+ *
+ * @param led_id 0-based LED ID
+ * @note The LED controller will drive the pin High. Depending
  *       upon the external circuit the LED may be in ON or OFF
  *       state.
  */
@@ -250,11 +250,11 @@ void led_out_high(uint8_t led_id)
 
 /**
  * led_out_low - Set the LED block to drive the pin Low
- * 
- * @author sworley 
- * 
- * @param led_id 0-based LED ID 
- * @note The LED controller will drive the pin Low. Depending 
+ *
+ * @author sworley
+ *
+ * @param led_id 0-based LED ID
+ * @note The LED controller will drive the pin Low. Depending
  *       upon the external circuit the LED may be in ON or OFF
  *       state.
  */

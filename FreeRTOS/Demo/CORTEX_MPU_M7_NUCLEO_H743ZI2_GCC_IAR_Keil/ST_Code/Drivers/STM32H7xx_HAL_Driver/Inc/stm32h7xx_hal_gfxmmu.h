@@ -36,14 +36,14 @@
 
 /** @addtogroup GFXMMU
   * @{
-  */ 
+  */
 
 /* Exported types ------------------------------------------------------------*/
 /** @defgroup GFXMMU_Exported_Types GFXMMU Exported Types
   * @{
   */
 
-/** 
+/**
   * @brief  HAL GFXMMU states definition
   */
 typedef enum
@@ -52,7 +52,7 @@ typedef enum
   HAL_GFXMMU_STATE_READY = 0x01U, /*!< GFXMMU initialized and ready for use */
 }HAL_GFXMMU_StateTypeDef;
 
-/** 
+/**
   * @brief  GFXMMU buffers structure definition
   */
 typedef struct
@@ -63,7 +63,7 @@ typedef struct
   uint32_t Buf3Address; /*!< Physical address of buffer 3. */
 }GFXMMU_BuffersTypeDef;
 
-/** 
+/**
   * @brief  GFXMMU cache and pre-fetch structure definition
   */
 typedef struct
@@ -86,7 +86,7 @@ typedef struct
                                             This parameter can be a value of @ref GFXMMU_Prefetch. */
 }GFXMMU_CachePrefetchTypeDef;
 
-/** 
+/**
   * @brief  GFXMMU interrupts structure definition
   */
 typedef struct
@@ -97,7 +97,7 @@ typedef struct
                                        @note: Usefull only when interrupts are enabled. */
 }GFXMMU_InterruptsTypeDef;
 
-/** 
+/**
   * @brief  GFXMMU init structure definition
   */
 typedef struct
@@ -110,7 +110,7 @@ typedef struct
   GFXMMU_InterruptsTypeDef    Interrupts;    /*!< Interrupts parameters. */
 }GFXMMU_InitTypeDef;
 
-/** 
+/**
   * @brief  GFXMMU handle structure definition
   */
 #if (USE_HAL_GFXMMU_REGISTER_CALLBACKS == 1)
@@ -130,7 +130,7 @@ typedef struct
 #endif
 }GFXMMU_HandleTypeDef;
 
-/** 
+/**
   * @brief  GFXMMU LUT line structure definition
   */
 typedef struct
@@ -168,7 +168,7 @@ typedef void (*pGFXMMU_CallbackTypeDef)(GFXMMU_HandleTypeDef *hgfxmmu);
 
 /**
   * @}
-  */ 
+  */
 /* End of exported types -----------------------------------------------------*/
 
 /* Exported constants --------------------------------------------------------*/
@@ -289,7 +289,7 @@ typedef void (*pGFXMMU_CallbackTypeDef)(GFXMMU_HandleTypeDef *hgfxmmu);
 
 /**
   * @}
-  */ 
+  */
 /* End of exported constants -------------------------------------------------*/
 
 /* Exported macros -----------------------------------------------------------*/
@@ -433,12 +433,12 @@ uint32_t HAL_GFXMMU_GetError(GFXMMU_HandleTypeDef *hgfxmmu);
                                              ((VALUE) == (GFXMMU_CACHE_FORCE_FLUSH | GFXMMU_CACHE_FORCE_INVALIDATE)))
 /**
   * @}
-  */ 
+  */
 /* End of private macros -----------------------------------------------------*/
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}

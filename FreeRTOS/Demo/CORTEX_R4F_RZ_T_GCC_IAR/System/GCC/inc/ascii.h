@@ -45,5 +45,3 @@ extern const char g_ascii_table[][6];
 
 /* ASCII_H */
 #endif
-
-

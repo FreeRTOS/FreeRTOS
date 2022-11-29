@@ -427,9 +427,9 @@ unsigned char AT25D_Write(
 
             error = AT25_SendCommand(pAt25, AT25_SEQUENTIAL_PROGRAM_1, 4,
                                pData, 2, address, 0, 0);
-            
+
             assert(!error);
-    
+
             /* Wait for transfer to finish */
             AT25D_Wait(pAt25);
             /* Poll the Serial flash status register until the operation is achieved */
@@ -440,13 +440,13 @@ unsigned char AT25D_Write(
                                    pData + i, 2, 0, 0, 0);
 
                 assert(!error);
-        
+
                 /* Wait for transfer to finish */
                 AT25D_Wait(pAt25);
                 /* Poll the Serial flash status register until the operation is achieved */
                 AT25D_WaitReady(pAt25);
             }
-        
+
         }
         else {
         error = AT25_SendCommand(pAt25, AT25_BYTE_PAGE_PROGRAM, 4,
@@ -460,7 +460,7 @@ unsigned char AT25D_Write(
         AT25D_WaitReady(pAt25);
 
         }
-        
+
         /* Make sure that write was without error */
         status = AT25D_ReadStatus(pAt25);
         if ((status & AT25_STATUS_EPE) == AT25_STATUS_EPE_ERROR) {
@@ -506,4 +506,3 @@ unsigned char AT25D_Read(
 
     return error;
 }
-

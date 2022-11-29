@@ -89,4 +89,3 @@ void vT32_1_Handler( void )
     MAP_Timer32_clearInterruptFlag( (uint32_t)TIMER32_1_BASE );
 	portYIELD_FROM_ISR( xSecondTimerHandler() );
 }
-

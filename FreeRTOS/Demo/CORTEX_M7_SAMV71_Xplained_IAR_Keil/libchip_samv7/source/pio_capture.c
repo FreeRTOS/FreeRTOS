@@ -298,4 +298,3 @@ void PIO_CaptureInit( SpioCaptureInit *pInit )
 //    }
 
 }
-

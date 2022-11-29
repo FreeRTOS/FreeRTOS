@@ -467,4 +467,3 @@ CP15_flush_kern_dcache_for_dma:
         dsb
         bx      lr
         END
-

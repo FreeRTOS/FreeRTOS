@@ -241,8 +241,3 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	switch should occur now. */
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
-
-
-
-
-

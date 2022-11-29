@@ -1123,4 +1123,3 @@ void __attribute__((no_instrument_function))
     (void)caller;
 }
 #endif
-

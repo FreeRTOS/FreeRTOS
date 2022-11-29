@@ -66,7 +66,7 @@ static void LCDD_FillSolidRect(uint16_t *pCanvasBuffer, rect rc, uint32_t dwColo
 {
 	uint32_t row, col;
 	uint32_t w,h;
-	
+
 	//assert(gpCanvasBuffer!=NULL);
 	w = rc.x + rc.width;
 	w = w > gwCanvasMaxWidth ? gwCanvasMaxWidth : w;
@@ -74,7 +74,7 @@ static void LCDD_FillSolidRect(uint16_t *pCanvasBuffer, rect rc, uint32_t dwColo
 	h = h > gwCanvasMaxHeight ? gwCanvasMaxHeight : h;
 
 	if (ili9488_lcdMode == ILI9488_SPIMODE) {
-		sBGR *p_buf = gpCanvasBuffer; 
+		sBGR *p_buf = gpCanvasBuffer;
 		if(pCanvasBuffer != NULL) p_buf = (sBGR *)((uint8_t*)pCanvasBuffer);
 		//it'd better change to a DMA transfer
 		for(row = rc.y; row < h; row++) {
@@ -123,11 +123,11 @@ void LCDD_UpdateWindow(void)
 	uint32_t size = 0;
 	if (ili9488_lcdMode == ILI9488_SPIMODE) {
 		size = gwCanvasBufferSize / (sizeof(sBGR)) *3 ;
-		ILI9488_SpiSendCommand(ILI9488_CMD_MEMORY_WRITE, 
+		ILI9488_SpiSendCommand(ILI9488_CMD_MEMORY_WRITE,
 						(uint8_t*)gpCanvasBuffer, 0, AccessWrite, size);
 	} else {
 		 size = gwCanvasBufferSize / sizeof(uint16_t);
-		 ILI9488_EbiSendCommand(ILI9488_CMD_MEMORY_WRITE, 
+		 ILI9488_EbiSendCommand(ILI9488_CMD_MEMORY_WRITE,
 						(uint16_t*)gpCanvasBuffer, 0, AccessWrite, size);
 	}
  }
@@ -142,11 +142,11 @@ void LCDD_UpdatePartialWindow(uint8_t* pCanvasBuffer,uint32_t size)
 	uint32_t cnt = 0;
 	if (ili9488_lcdMode == ILI9488_SPIMODE) {
 		cnt = size/sizeof(sBGR) * 3;
-		ILI9488_SpiSendCommand(ILI9488_CMD_MEMORY_WRITE, 
+		ILI9488_SpiSendCommand(ILI9488_CMD_MEMORY_WRITE,
 						(uint8_t*)pCanvasBuffer, 0, AccessWrite, cnt);
 	} else {
 		 cnt = size/sizeof(uint16_t);
-		 ILI9488_EbiSendCommand(ILI9488_CMD_MEMORY_WRITE, 
+		 ILI9488_EbiSendCommand(ILI9488_CMD_MEMORY_WRITE,
 						(uint16_t*)pCanvasBuffer, 0, AccessWrite, cnt);
 	}
 }
@@ -160,7 +160,7 @@ void LCDD_UpdatePartialWindow(uint8_t* pCanvasBuffer,uint32_t size)
  * \param height  Rectangle height in pixels.
  * \param color  Rectangle color.
  */
-void LCDD_DrawRectangleWithFill(uint16_t *pCanvasBuffer, uint32_t dwX, uint32_t dwY, uint32_t dwWidth, 
+void LCDD_DrawRectangleWithFill(uint16_t *pCanvasBuffer, uint32_t dwX, uint32_t dwY, uint32_t dwWidth,
 				uint32_t dwHeight, uint32_t dwColor)
 {
 	rect rc;
@@ -220,7 +220,7 @@ uint32_t LCDD_DrawCircle(uint16_t *pCanvasBuffer, uint32_t x, uint32_t y, uint32
  * \param dwRadius  Radius.
  * \param color  Rectangle color.
  */
-uint32_t LCD_DrawFilledCircle(uint16_t *pCanvasBuffer, uint32_t dwX, uint32_t dwY, 
+uint32_t LCD_DrawFilledCircle(uint16_t *pCanvasBuffer, uint32_t dwX, uint32_t dwY,
 						uint32_t dwRadius, uint32_t color)
 {
 	signed int d; /* Decision Variable */
@@ -238,16 +238,16 @@ uint32_t LCD_DrawFilledCircle(uint16_t *pCanvasBuffer, uint32_t dwX, uint32_t dw
 	while ( dwCurX <= dwCurY ) {
 		dwXmin = (dwCurX > dwX) ? 0 : dwX-dwCurX;
 		dwYmin = (dwCurY > dwY) ? 0 : dwY-dwCurY;
-		LCDD_DrawRectangleWithFill(pCanvasBuffer, dwXmin, dwYmin, 
+		LCDD_DrawRectangleWithFill(pCanvasBuffer, dwXmin, dwYmin,
 									dwX + dwCurX - dwXmin, 1 ,color);
-		LCDD_DrawRectangleWithFill(pCanvasBuffer, dwXmin, 
+		LCDD_DrawRectangleWithFill(pCanvasBuffer, dwXmin,
 								dwY+dwCurY, dwX + dwCurX - dwXmin, 1,
 						color );
 		dwXmin = (dwCurY > dwX) ? 0 : dwX-dwCurY;
 		dwYmin = (dwCurX > dwY) ? 0 : dwY-dwCurX;
-		LCDD_DrawRectangleWithFill(pCanvasBuffer, dwXmin, dwYmin, 
+		LCDD_DrawRectangleWithFill(pCanvasBuffer, dwXmin, dwYmin,
 								dwX + dwCurY -dwXmin , 1, color );
-		LCDD_DrawRectangleWithFill(pCanvasBuffer, dwXmin, 
+		LCDD_DrawRectangleWithFill(pCanvasBuffer, dwXmin,
 								dwY + dwCurX, dwX+dwCurY - dwXmin, 1,
 						color  );
 		if ( d < 0 ) {
@@ -271,7 +271,7 @@ uint32_t LCD_DrawFilledCircle(uint16_t *pCanvasBuffer, uint32_t dwX, uint32_t dw
  * \param pString  String to display.
  * \param color    String color.
  */
-void LCDD_DrawString( uint16_t* pCanvasBuffer, uint32_t x, uint32_t y, 
+void LCDD_DrawString( uint16_t* pCanvasBuffer, uint32_t x, uint32_t y,
                      const uint8_t *pString, uint32_t color )
 {
 	uint32_t xorg = x;
@@ -289,7 +289,7 @@ void LCDD_DrawString( uint16_t* pCanvasBuffer, uint32_t x, uint32_t y,
 }
 
 /**
- * \brief Returns the width & height in pixels that a string will occupy on the 
+ * \brief Returns the width & height in pixels that a string will occupy on the
  * screen if drawn using LCDD_DrawString.
  *
  * \param pString  String.
@@ -328,7 +328,7 @@ void LCDD_GetStringSize( const uint8_t *pString, uint32_t *pWidth,
 
 
 /*
- * \brief Performs a bit-block transfer of the color data corresponding to a 
+ * \brief Performs a bit-block transfer of the color data corresponding to a
  * rectangle of pixels from the given source context into destination context.
  *
  * \param pCanvasBuffer Pointer to dedicate canvas buffer.
@@ -349,7 +349,7 @@ void LCDD_BitBlt( uint16_t* pCanvasBuffer, uint32_t dst_x,uint32_t dst_y,uint32_
 	uint32_t row,col;
 	uint32_t src_row,src_col;
 	//assert(gpCanvasBuffer!=NULL);
-	
+
 	src_h = src_h;
 	if (ili9488_lcdMode == ILI9488_SPIMODE) {
 		sBGR *p_buf = gpCanvasBuffer;
@@ -381,7 +381,7 @@ void LCDD_BitBlt( uint16_t* pCanvasBuffer, uint32_t dst_x,uint32_t dst_y,uint32_
 
 
 /*
- * \brief Performs a bit-block transfer of the color data corresponding to a 
+ * \brief Performs a bit-block transfer of the color data corresponding to a
  * rectangle of pixels from the given source context into destination context.
  *
  * \param pCanvasBuffer Pointer to dedicate canvas buffer.
@@ -413,7 +413,7 @@ void LCDD_BitBltAlphaBlend(uint16_t* pCanvasBuffer,
 	uint32_t w,h;
 	uint32_t dst_row;
 	uint32_t r,g,b;
-	
+
 	if (ili9488_lcdMode == ILI9488_SPIMODE) {
 		sBGR *p_buf = gpCanvasBuffer;
 		if(pCanvasBuffer != NULL) p_buf = (sBGR *)((uint8_t*)pCanvasBuffer);
@@ -439,15 +439,15 @@ void LCDD_BitBltAlphaBlend(uint16_t* pCanvasBuffer,
 		SCB_CleanInvalidateDCache();
 		for(src_row = src_y; src_row < h; src_row++,dst_row++) {
 			for(src_col = src_x; src_col < w; src_col++){
-				r = (p_buf[src_col] >> 11) * (255 - alpha) / 255 + 
+				r = (p_buf[src_col] >> 11) * (255 - alpha) / 255 +
 						(src[src_col] >> 11) * alpha / 255;
 				if(r > 0x1F) r = 0x1F;
-				g = ((p_buf[src_col] >> 5) & 0x3F) * (255 - alpha) / 255 + 
+				g = ((p_buf[src_col] >> 5) & 0x3F) * (255 - alpha) / 255 +
 						((src[src_col] >> 5) & 0x3f) * alpha / 255;
 				if(g > 0x3F) g = 0x3F;
-				b = ((p_buf[src_col]) & 0x1F) * (255 - alpha) / 255 
+				b = ((p_buf[src_col]) & 0x1F) * (255 - alpha) / 255
 						+ ((src[src_col]) & 0x1f) * alpha / 255;
-				if(b > 0x1F) b = 0x1F;   
+				if(b > 0x1F) b = 0x1F;
 				p_buf[src_col] = ((r & 0x1F) << 11)|((g & 0x3F) << 5)|( b & 0x1F);
 			}
 			p_buf += dst_w;
@@ -467,7 +467,7 @@ void LCDD_BitBltAlphaBlend(uint16_t* pCanvasBuffer,
  * \param width     Image width.
  * \param height    Image height.
  */
- void LCDD_DrawImage(uint16_t* pCanvasBuffer, uint32_t dwX, uint32_t dwY, 
+ void LCDD_DrawImage(uint16_t* pCanvasBuffer, uint32_t dwX, uint32_t dwY,
 					const LcdColor_t *pImage, uint32_t dwWidth, uint32_t dwHeight )
 {
 	/* Determine the refresh window area */
@@ -518,7 +518,7 @@ void LCDD_DrawPixel(uint16_t* pCanvasBuffer, uint32_t x, uint32_t y, uint32_t co
  * \param dwY2   Y-coordinate of line end.
  * \param color  Pixel color.
  */
-void LCDD_DrawLine(uint16_t* pCanvasBuffer, uint32_t dwX1, uint32_t dwY1, 
+void LCDD_DrawLine(uint16_t* pCanvasBuffer, uint32_t dwX1, uint32_t dwY1,
 				uint32_t dwX2, uint32_t dwY2 , uint32_t color )
 {
 	if (( dwY1 == dwY2 ) || (dwX1 == dwX2)) {
@@ -529,7 +529,7 @@ void LCDD_DrawLine(uint16_t* pCanvasBuffer, uint32_t dwX1, uint32_t dwY1,
 	}
 }
 
-void LCDD_DrawStraightLine(uint16_t* pCanvasBuffer, uint32_t dwX1, uint32_t dwY1, 
+void LCDD_DrawStraightLine(uint16_t* pCanvasBuffer, uint32_t dwX1, uint32_t dwY1,
 						uint32_t dwX2, uint32_t dwY2 , uint32_t color )
 {
 	uint32_t x,y;
@@ -566,7 +566,7 @@ void LCDD_DrawStraightLine(uint16_t* pCanvasBuffer, uint32_t dwX1, uint32_t dwY1
  * \param dwY2    Y-coordinate of line end.
  * \param color   pixel color.
  */
-uint32_t LCDD_DrawLineBresenham(uint16_t* pCanvasBuffer, uint32_t dwX1, 
+uint32_t LCDD_DrawLineBresenham(uint16_t* pCanvasBuffer, uint32_t dwX1,
 				uint32_t dwY1, uint32_t dwX2, uint32_t dwY2 , uint32_t color)
 {
 	int dx, dy;
@@ -625,7 +625,7 @@ uint32_t LCDD_DrawLineBresenham(uint16_t* pCanvasBuffer, uint32_t dwX1,
  * \param height Rectangle height in pixels.
  * \param color  Rectangle color.
  */
-void LCDD_DrawRectangle(uint16_t* pCanvasBuffer, uint32_t x, uint32_t y, 
+void LCDD_DrawRectangle(uint16_t* pCanvasBuffer, uint32_t x, uint32_t y,
 					uint32_t width, uint32_t height, uint32_t color )
 {
 	LCDD_DrawRectangleWithFill(pCanvasBuffer, x, y, width, 1, color);
@@ -651,5 +651,3 @@ void LCDD_SetCavasBuffer( void* pCanvasBuffer, uint32_t wBufferSize)
 		gwCanvasBufferSize = wBufferSize;
 	}
 }
-
-

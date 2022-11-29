@@ -1,7 +1,7 @@
 /*
  * Description : chip_name.h - Define the system configuration such as:
  * 1 CPU base config
- * 2 memory & IO base address 
+ * 2 memory & IO base address
  * 3 flash size & address
  * 4 interrupt resource for the soc.
  *

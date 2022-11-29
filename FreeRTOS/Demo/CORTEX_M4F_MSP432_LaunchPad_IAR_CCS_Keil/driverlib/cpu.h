@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -73,4 +73,3 @@ extern void CPU_basepriSet(uint32_t newBasepri);
 #endif
 
 #endif // __CPU_H__
-

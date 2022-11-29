@@ -44,5 +44,3 @@ typedef struct
 
 
 #endif /* LCD_INC_H */
-
-

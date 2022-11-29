@@ -223,12 +223,3 @@ BaseType_t xHigherPriorityTaskWoken = ( BaseType_t ) NULL;
 
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
-
-
-
-
-
-
-
-
-

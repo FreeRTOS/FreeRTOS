@@ -62,7 +62,7 @@ __INLINE static uint32_t StackUnwind(void)
 {
     uint32_t Fault_Add;
     asm volatile (" mrs r0, msp " );
-    asm volatile (" ldr %0, [r0,#28]" :"=r" (Fault_Add));  
+    asm volatile (" ldr %0, [r0,#28]" :"=r" (Fault_Add));
     return Fault_Add;
 }
 
@@ -78,18 +78,18 @@ static void HardFault_reason(void)
     }
 
     if ((SCB->HFSR & SCB_HFSR_VECTTBL_Msk)) {
-        printf("Fault was due to vector table read on exception processing\n\r");     
+        printf("Fault was due to vector table read on exception processing\n\r");
     }
 
     if ((SCB->HFSR & SCB_HFSR_FORCED_Msk)) {
         printf("Forced Hard Fault\n\r");
         printf("SCB->CFSR = 0x%08x\n\r", SCB->CFSR );
         // Usage Fault
-        if((SCB->CFSR & SCB_CFSR_USGFAULTSR_Msk)) 
+        if((SCB->CFSR & SCB_CFSR_USGFAULTSR_Msk))
         {
             CFSRValue = SCB->CFSR;
             printf("Usage fault: ");
-            CFSRValue >>= SCB_CFSR_USGFAULTSR_Pos;                  
+            CFSRValue >>= SCB_CFSR_USGFAULTSR_Pos;
             if((CFSRValue & (1 << 9))) {
                 printf("Divide by zero\n\r");
             }
@@ -105,11 +105,11 @@ static void HardFault_reason(void)
         }
 
         // Bus Fault
-        if((SCB->CFSR & SCB_CFSR_BUSFAULTSR_Msk)) 
+        if((SCB->CFSR & SCB_CFSR_BUSFAULTSR_Msk))
         {
             CFSRValue = SCB->CFSR;
             printf("Bus fault: ");
-            CFSRValue >>= SCB_CFSR_BUSFAULTSR_Pos;                 
+            CFSRValue >>= SCB_CFSR_BUSFAULTSR_Pos;
 
             if((CFSRValue & (1 << 7)) && (CFSRValue & (1 << 1))) {
                 BFAR = SCB->BFAR;
@@ -132,19 +132,19 @@ static void HardFault_reason(void)
         }
     }
 
-    // MemoryFault      
-    if((SCB->CFSR & SCB_CFSR_MEMFAULTSR_Msk)) 
+    // MemoryFault
+    if((SCB->CFSR & SCB_CFSR_MEMFAULTSR_Msk))
     {
         CFSRValue = SCB->CFSR;
         printf("Memory fault: ");
-        CFSRValue >>= SCB_CFSR_MEMFAULTSR_Pos;                 
+        CFSRValue >>= SCB_CFSR_MEMFAULTSR_Pos;
         if((CFSRValue & (1 << 9)) != 0) {
             printf("Divide by zero\n\r");
         }
     }
     __ISB();
     __DMB();
-    __ASM volatile("BKPT #01");  
+    __ASM volatile("BKPT #01");
 }
 /**
  * \brief Default HardFault interrupt handler.
@@ -170,7 +170,7 @@ void MemManage_Handler( void )
 
     __ISB();
     __DMB();
-    __ASM volatile("BKPT #01");  
+    __ASM volatile("BKPT #01");
 }
 
 /**
@@ -184,7 +184,7 @@ void BusFault_Handler( void )
 
     __ISB();
     __DMB();
-    __ASM volatile("BKPT #01");  
+    __ASM volatile("BKPT #01");
 }
 
 /**
@@ -196,7 +196,7 @@ void UsageFault_Handler( void )
 
     __ISB();
     __DMB();
-    __ASM volatile("BKPT #01");  
+    __ASM volatile("BKPT #01");
 }
 
 /**

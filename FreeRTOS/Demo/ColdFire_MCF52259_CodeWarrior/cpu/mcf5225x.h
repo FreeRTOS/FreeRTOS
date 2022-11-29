@@ -1,7 +1,7 @@
 /*
  * File:	mcf5225x.h
  * Purpose:	Register and bit definitions
- * 
+ *
  * License:     All software covered by license agreement in -
  *              docs/Freescale_Software_License.pdf
  */

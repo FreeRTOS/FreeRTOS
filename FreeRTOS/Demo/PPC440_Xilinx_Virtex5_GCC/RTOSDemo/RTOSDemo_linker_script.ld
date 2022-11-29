@@ -196,13 +196,13 @@ SECTIONS
    __boot0_start = .;
    *(.boot0)
    __boot0_end = .;
-} 
+}
 
 .boot 0xFFFFFFFC : {
    __boot_start = .;
    *(.boot)
    __boot_end = .;
-} 
+}
 
 /* Generate Stack and Heap Sections */
 
@@ -223,4 +223,3 @@ SECTIONS
 } > SRAM_C_MEM0_BASEADDR
 
 }
-

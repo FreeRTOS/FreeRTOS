@@ -123,4 +123,3 @@ char charget (void)
 } /* End of function charget() */
 
 #endif /* BSP_CFG_STARTUP_DISABLE == 0 */
-

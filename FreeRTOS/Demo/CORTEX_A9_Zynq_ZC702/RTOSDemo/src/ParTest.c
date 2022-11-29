@@ -85,6 +85,3 @@ BaseType_t xLEDState;
 	xLEDState = XGpioPs_ReadPin( &xGpio, partstLED_OUTPUT );
 	XGpioPs_WritePin( &xGpio, partstLED_OUTPUT, !xLEDState );
 }
-
-
-

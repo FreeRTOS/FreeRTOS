@@ -4,13 +4,13 @@
   * @author  MCD Application Team
   * @version V1.0.0RC1
   * @date    27-January-2012
-  * @brief   This file provides firmware functions to manage the following 
+  * @brief   This file provides firmware functions to manage the following
   *          functionalities of the Analog to Digital Convertor (ADC) peripheral:
   *           + Initialization and Configuration
   *           + Power saving
   *           + Analog Watchdog configuration
-  *           + Temperature Sensor, Vrefint (Internal Reference Voltage) and 
-  *             Vbat (Voltage battery) management 
+  *           + Temperature Sensor, Vrefint (Internal Reference Voltage) and
+  *             Vbat (Voltage battery) management
   *           + ADC Channels Configuration
   *           + ADC Channels DMA Configuration
   *           + Interrupts and flags management
@@ -20,12 +20,12 @@
                       ##### How to use this driver #####
 ================================================================================
     [..]
-    (#) Enable the ADC interface clock using 
-        RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE); 
+    (#) Enable the ADC interface clock using
+        RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
     (#) ADC pins configuration
        (++) Enable the clock for the ADC GPIOs using the following function:
-            RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOx, ENABLE);   
-       (++) Configure these ADC pins in analog mode using GPIO_Init();  
+            RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOx, ENABLE);
+       (++) Configure these ADC pins in analog mode using GPIO_Init();
     (#) Configure the ADC conversion resolution, data alignment, external
         trigger and edge, scan direction and Enable/Disable the continuous mode
         using the ADC_Init() function.
@@ -33,12 +33,12 @@
 
     *** ADC channels group configuration ***
     ============================================
-    [..] 
-    (+) To configure the ADC channels features, use ADC_Init() and 
+    [..]
+    (+) To configure the ADC channels features, use ADC_Init() and
         ADC_ChannelConfig() functions.
     (+) To activate the continuous mode, use the ADC_ContinuousModeCmd()
         function.
-    (+) To activate the Discontinuous mode, use the ADC_DiscModeCmd() functions. 
+    (+) To activate the Discontinuous mode, use the ADC_DiscModeCmd() functions.
     (+) To activate the overrun mode, use the ADC_OverrunModeCmd() functions.
     (+) To activate the calibration mode, use the ADC_GetCalibrationFactor() functions.
     (+) To read the ADC converted values, use the ADC_GetConversionValue()
@@ -46,7 +46,7 @@
 
     *** DMA for ADC channels features configuration ***
     =============================================================
-    [..] 
+    [..]
     (+) To enable the DMA mode for ADC channels group, use the ADC_DMACmd() function.
     (+) To configure the DMA transfer request, use ADC_DMARequestModeConfig() function.
 
@@ -77,7 +77,7 @@
   * @{
   */
 
-/** @defgroup ADC 
+/** @defgroup ADC
   * @brief ADC driver modules
   * @{
   */
@@ -100,7 +100,7 @@
   */
 
 /** @defgroup ADC_Group1 Initialization and Configuration functions
- *  @brief   Initialization and Configuration functions 
+ *  @brief   Initialization and Configuration functions
  *
 @verbatim
  ===============================================================================
@@ -110,11 +110,11 @@
         (+) Initialize and configure the ADC Prescaler
         (+) ADC Conversion Resolution (12bit..6bit)
         (+) ADC Continuous Conversion Mode (Continuous or Single conversion)
-        (+) External trigger Edge and source 
+        (+) External trigger Edge and source
         (+) Converted data alignment (left or right)
         (+) The direction in which the channels will be scanned in the sequence
         (+) Enable or disable the ADC peripheral
-   
+
 @endverbatim
   * @{
   */
@@ -142,11 +142,11 @@ void ADC_DeInit(ADC_TypeDef* ADCx)
 /**
   * @brief  Initializes the ADCx peripheral according to the specified parameters
   *         in the ADC_InitStruct.
-  * @note   This function is used to configure the global features of the ADC ( 
-  *         Resolution, Data Alignment, continuous mode activation, External 
-  *         trigger source and edge, Sequence Scan Direction).   
+  * @note   This function is used to configure the global features of the ADC (
+  *         Resolution, Data Alignment, continuous mode activation, External
+  *         trigger source and edge, Sequence Scan Direction).
   * @param  ADCx: where x can be 1 to select the ADC peripheral.
-  * @param  ADC_InitStruct: pointer to an ADC_InitTypeDef structure that contains 
+  * @param  ADC_InitStruct: pointer to an ADC_InitTypeDef structure that contains
   *         the configuration information for the specified ADC peripheral.
   * @retval None
   */
@@ -161,7 +161,7 @@ void ADC_Init(ADC_TypeDef* ADCx, ADC_InitTypeDef* ADC_InitStruct)
   assert_param(IS_ADC_EXT_TRIG_EDGE(ADC_InitStruct->ADC_ExternalTrigConvEdge));
   assert_param(IS_ADC_EXTERNAL_TRIG_CONV(ADC_InitStruct->ADC_ExternalTrigConv));
   assert_param(IS_ADC_DATA_ALIGN(ADC_InitStruct->ADC_DataAlign));
-  assert_param(IS_ADC_SCAN_DIRECTION(ADC_InitStruct->ADC_ScanDirection)); 
+  assert_param(IS_ADC_SCAN_DIRECTION(ADC_InitStruct->ADC_ScanDirection));
 
   /* Get the ADCx CFGR value */
   tmpreg = ADCx->CFGR1;
@@ -177,7 +177,7 @@ void ADC_Init(ADC_TypeDef* ADCx, ADC_InitTypeDef* ADC_InitStruct)
   /* Set EXTSEL[2:0] bits according to ADC_ExternalTrigConv value */
   /* Set ALIGN bit according to ADC_DataAlign value */
   /* Set SCANDIR bit according to ADC_ScanDirection value */
- 
+
   tmpreg  |= (uint32_t)(ADC_InitStruct->ADC_Resolution | ((uint32_t)(ADC_InitStruct->ADC_ContinuousConvMode) << 13) |
              ADC_InitStruct->ADC_ExternalTrigConvEdge | ADC_InitStruct->ADC_ExternalTrigConv |
              ADC_InitStruct->ADC_DataAlign | ADC_InitStruct->ADC_ScanDirection);
@@ -188,10 +188,10 @@ void ADC_Init(ADC_TypeDef* ADCx, ADC_InitTypeDef* ADC_InitStruct)
 
 /**
   * @brief  Fills each ADC_InitStruct member with its default value.
-  * @note   This function is used to initialize the global features of the ADC ( 
-  *         Resolution, Data Alignment, continuous mode activation, External 
+  * @note   This function is used to initialize the global features of the ADC (
+  *         Resolution, Data Alignment, continuous mode activation, External
   *         trigger source and edge, Sequence Scan Direction).
-  * @param  ADC_InitStruct: pointer to an ADC_InitTypeDef structure which will 
+  * @param  ADC_InitStruct: pointer to an ADC_InitTypeDef structure which will
   *         be initialized.
   * @retval None
   */
@@ -220,7 +220,7 @@ void ADC_StructInit(ADC_InitTypeDef* ADC_InitStruct)
 /**
   * @brief  Enables or disables the specified ADC peripheral.
   * @param  ADCx: where x can be 1 to select the ADC1 peripheral.
-  * @param  NewState: new state of the ADCx peripheral. 
+  * @param  NewState: new state of the ADCx peripheral.
   *         This parameter can be: ENABLE or DISABLE.
   * @retval None
   */
@@ -249,7 +249,7 @@ void ADC_Cmd(ADC_TypeDef* ADCx, FunctionalState NewState)
   * @param  ADC_JitterOff: This parameter can be :
   *     @arg ADC_JitterOff_PCLKDiv2: Remove jitter when ADC is clocked by PLCK divided by 2
   *     @arg ADC_JitterOff_PCLKDiv4: Remove jitter when ADC is clocked by PLCK divided by 4
-  * @param  NewState: new state of the ADCx jitter. 
+  * @param  NewState: new state of the ADCx jitter.
   *         This parameter can be: ENABLE or DISABLE.
   * @retval None
   */
@@ -277,7 +277,7 @@ void ADC_JitterCmd(ADC_TypeDef* ADCx, uint32_t ADC_JitterOff, FunctionalState Ne
   */
 
 /** @defgroup ADC_Group2 Power saving functions
- *  @brief   Power saving functions 
+ *  @brief   Power saving functions
  *
 @verbatim
  ===============================================================================
@@ -285,8 +285,8 @@ void ADC_JitterCmd(ADC_TypeDef* ADCx, uint32_t ADC_JitterOff, FunctionalState Ne
  ===============================================================================
     [..] This section provides functions allowing to reduce power consumption.
     [..] The two function must be combined to get the maximal benefits:
-         When the ADC frequency is higher than the CPU one, it is recommended to 
-         (#) Enable the Auto Delayed Conversion mode : 
+         When the ADC frequency is higher than the CPU one, it is recommended to
+         (#) Enable the Auto Delayed Conversion mode :
              ==> using ADC_AutoDelayConversionCmd(ADC_TypeDef* ADCx, FunctionalState NewState);
          (#) Enable the power off in Delay phases :
              ==> using ADC_AutoPowerOffCmd(ADC_TypeDef* ADCx, FunctionalState NewState);
@@ -297,17 +297,17 @@ void ADC_JitterCmd(ADC_TypeDef* ADCx, uint32_t ADC_JitterOff, FunctionalState Ne
 
 /**
   * @brief  Enables or disables the ADC Power Off.
-  * @note   ADC power-on and power-off can be managed by hardware to cut the 
-  *         consumption when the ADC is not converting. 
+  * @note   ADC power-on and power-off can be managed by hardware to cut the
+  *         consumption when the ADC is not converting.
   * @param  ADCx: where x can be 1 to select the ADC1 peripheral.
-  * @note   The ADC can be powered down: 
-  *         - During the Auto delay phase 
-  *           => The ADC is powered on again at the end of the delay (until the 
-  *              previous data is read from the ADC data register). 
-  *         - During the ADC is waiting for a trigger event 
-  *           => The ADC is powered up at the next trigger event (when the 
+  * @note   The ADC can be powered down:
+  *         - During the Auto delay phase
+  *           => The ADC is powered on again at the end of the delay (until the
+  *              previous data is read from the ADC data register).
+  *         - During the ADC is waiting for a trigger event
+  *           => The ADC is powered up at the next trigger event (when the
   *              conversion is started).
-  * @param  NewState: new state of the ADCx power Off. 
+  * @param  NewState: new state of the ADCx power Off.
   *         This parameter can be: ENABLE or DISABLE.
   * @retval None
   */
@@ -316,7 +316,7 @@ void ADC_AutoPowerOffCmd(ADC_TypeDef* ADCx, FunctionalState NewState)
   /* Check the parameters */
   assert_param(IS_ADC_ALL_PERIPH(ADCx));
   assert_param(IS_FUNCTIONAL_STATE(NewState));
-  
+
   if (NewState != DISABLE)
   {
     /* Enable the ADC Automatic Power-Off */
@@ -331,16 +331,16 @@ void ADC_AutoPowerOffCmd(ADC_TypeDef* ADCx, FunctionalState NewState)
 
 /**
   * @brief  Enables or disables the Auto delayed conversion mode.
-  * @note   When the CPU clock is not fast enough to manage the data rate, a 
-  *         Hardware delay can be introduced between ADC conversions to reduce 
-  *         this data rate. 
+  * @note   When the CPU clock is not fast enough to manage the data rate, a
+  *         Hardware delay can be introduced between ADC conversions to reduce
+  *         this data rate.
   * @note   The Hardware delay is inserted after :
-  *         - after each conversions and until the previous data is read from the 
+  *         - after each conversions and until the previous data is read from the
   *           ADC data register
-  * @note   This is a way to automatically adapt the speed of the ADC to the speed 
+  * @note   This is a way to automatically adapt the speed of the ADC to the speed
   *         of the system which will read the data.
-  * @note   Any hardware triggers wich occur while a conversion is on going or 
-  *         while the automatic Delay is applied are ignored 
+  * @note   Any hardware triggers wich occur while a conversion is on going or
+  *         while the automatic Delay is applied are ignored
   * @param  ADCx: where x can be 1 to select the ADC1 peripheral.
   * @param  NewState: new state of the ADCx Auto-Delay.
   *         This parameter can be: ENABLE or DISABLE.
@@ -351,7 +351,7 @@ void ADC_AutoDelayConversionCmd(ADC_TypeDef* ADCx, FunctionalState NewState)
   /* Check the parameters */
   assert_param(IS_ADC_ALL_PERIPH(ADCx));
   assert_param(IS_FUNCTIONAL_STATE(NewState));
-  
+
   if (NewState != DISABLE)
   {
     /* Enable the ADC Automatic Delayed conversion */
@@ -369,18 +369,18 @@ void ADC_AutoDelayConversionCmd(ADC_TypeDef* ADCx, FunctionalState NewState)
   */
 
 /** @defgroup ADC_Group3 Analog Watchdog configuration functions
- *  @brief   Analog Watchdog configuration functions 
+ *  @brief   Analog Watchdog configuration functions
  *
 @verbatim
  ===============================================================================
                    ##### Analog Watchdog configuration functions #####
- ===============================================================================  
+ ===============================================================================
     [..] This section provides functions allowing to configure the Analog Watchdog
          (AWD) feature in the ADC.
     [..] A typical configuration Analog Watchdog is done following these steps :
-         (#) the ADC guarded channel(s) is (are) selected using the 
+         (#) the ADC guarded channel(s) is (are) selected using the
              ADC_AnalogWatchdogSingleChannelConfig() function.
-         (#) The Analog watchdog lower and higher threshold are configured using the  
+         (#) The Analog watchdog lower and higher threshold are configured using the
              ADC_AnalogWatchdogThresholdsConfig() function.
          (#) The Analog watchdog is enabled and configured to enable the check, on one
              or more channels, using the  ADC_AnalogWatchdogCmd() function.
@@ -392,7 +392,7 @@ void ADC_AutoDelayConversionCmd(ADC_TypeDef* ADCx, FunctionalState NewState)
   */
 
 /**
-  * @brief  Enables or disables the analog watchdog 
+  * @brief  Enables or disables the analog watchdog
   * @param  ADCx: where x can be 1 to select the ADC1 peripheral.
   * @param  NewState: new state of the ADCx Analog Watchdog.
   *         This parameter can be: ENABLE or DISABLE.
@@ -403,7 +403,7 @@ void ADC_AnalogWatchdogCmd(ADC_TypeDef* ADCx, FunctionalState NewState)
   /* Check the parameters */
   assert_param(IS_ADC_ALL_PERIPH(ADCx));
   assert_param(IS_FUNCTIONAL_STATE(NewState));
-  
+
   if (NewState != DISABLE)
   {
     /* Enable the ADC Analog Watchdog */
@@ -417,7 +417,7 @@ void ADC_AnalogWatchdogCmd(ADC_TypeDef* ADCx, FunctionalState NewState)
 }
 
 /**
-  * @brief  Configures the high and low thresholds of the analog watchdog. 
+  * @brief  Configures the high and low thresholds of the analog watchdog.
   * @param  ADCx: where x can be 1 to select the ADC1 peripheral.
   * @param  HighThreshold: the ADC analog watchdog High threshold value.
   *         This parameter must be a 12bit value.
@@ -462,8 +462,8 @@ void ADC_AnalogWatchdogThresholdsConfig(ADC_TypeDef* ADCx, uint16_t HighThreshol
   *     @arg ADC_AnalogWatchdog_Channel_16: ADC Channel16 selected
   *     @arg ADC_AnalogWatchdog_Channel_17: ADC Channel17 selected
   *     @arg ADC_AnalogWatchdog_Channel_18: ADC Channel18 selected
-  * @note   The channel selected on the AWDCH must be also set into the CHSELR 
-  *         register 
+  * @note   The channel selected on the AWDCH must be also set into the CHSELR
+  *         register
   * @retval None
   */
 void ADC_AnalogWatchdogSingleChannelConfig(ADC_TypeDef* ADCx, uint32_t ADC_AnalogWatchdog_Channel)
@@ -523,17 +523,17 @@ void ADC_AnalogWatchdogSingleChannelCmd(ADC_TypeDef* ADCx, FunctionalState NewSt
  ===============================================================================
  ##### Temperature Sensor, Vrefint  and Vbat management function #####
  ===============================================================================
-    [..] This section provides a function allowing to enable/disable the internal 
+    [..] This section provides a function allowing to enable/disable the internal
          connections between the ADC and the Temperature Sensor, the Vrefint and
          Vbat source.
-     
-    [..] A typical configuration to get the Temperature sensor, Vrefint and Vbat channels 
+
+    [..] A typical configuration to get the Temperature sensor, Vrefint and Vbat channels
          voltages is done following these steps :
-         (#) Enable the internal connection of Temperature sensor, Vrefint or Vbat sources 
+         (#) Enable the internal connection of Temperature sensor, Vrefint or Vbat sources
              with the ADC channels using ADC_TempSensorCmd(), ADC_VrefintCmd() or ADC_VbatCmd()
-             functions. 
+             functions.
          (#) select the ADC_Channel_16(Temperature sensor), ADC_Channel_17(Vrefint)
-             or ADC_Channel_18(Voltage battery) using ADC_ChannelConfig() function 
+             or ADC_Channel_18(Voltage battery) using ADC_ChannelConfig() function
          (#) Get the voltage values, using ADC_GetConversionValue() function
 
 @endverbatim
@@ -614,7 +614,7 @@ void ADC_VbatCmd(FunctionalState NewState)
   */
 
 /** @defgroup ADC_Group5 Channels Configuration functions
- *  @brief    Channels Configuration functions 
+ *  @brief    Channels Configuration functions
  *
 @verbatim
  ===============================================================================
@@ -622,27 +622,27 @@ void ADC_VbatCmd(FunctionalState NewState)
  ===============================================================================
     [..] This section provides functions allowing to manage the ADC channels,
          it is composed of 3 sub sections :
-         (#) Configuration and management functions for ADC channels: This subsection 
-             provides functions allowing to configure the ADC channels :    
+         (#) Configuration and management functions for ADC channels: This subsection
+             provides functions allowing to configure the ADC channels :
              (++) Select the ADC channels
              (++) Activate ADC Calibration
              (++) Activate the Overrun Mode.
-             (++) Activate the Discontinuous Mode 
+             (++) Activate the Discontinuous Mode
              (++) Activate the Continuous Mode.
              (++) Configure the sampling time for each channel
              (++) Select the conversion Trigger and Edge for ADC channels
              (++) Select the scan direction.
              -@@- Please Note that the following features for ADC channels are configurated
-                  using the ADC_Init() function : 
+                  using the ADC_Init() function :
                   (+@@) Activate the Continuous Mode (can be also activated by ADC_OverrunModeCmd().
                   (+@@) Select the conversion Trigger and Edge for ADC channels
                   (+@@) Select the scan direction.
          (#) Control the ADC peripheral : This subsection permits to command the ADC:
              (++) Stop or discard an on-going conversion (ADSTP command)
              (++) Start the ADC conversion .
-         (#) Get the conversion data: This subsection provides an important function in 
-             the ADC peripheral since it returns the converted data of the current 
-             ADC channel. When the Conversion value is read, the EOC Flag is 
+         (#) Get the conversion data: This subsection provides an important function in
+             the ADC peripheral since it returns the converted data of the current
+             ADC channel. When the Conversion value is read, the EOC Flag is
              automatically cleared.
 
 @endverbatim
@@ -652,7 +652,7 @@ void ADC_VbatCmd(FunctionalState NewState)
 /**
   * @brief  Configures for the selected ADC and its sampling time.
   * @param  ADCx: where x can be 1 to select the ADC peripheral.
-  * @param  ADC_Channel: the ADC channel to configure. 
+  * @param  ADC_Channel: the ADC channel to configure.
   *   This parameter can be any combination of the following values:
   *     @arg ADC_Channel_0: ADC Channel0 selected
   *     @arg ADC_Channel_1: ADC Channel1 selected
@@ -672,11 +672,11 @@ void ADC_VbatCmd(FunctionalState NewState)
   *     @arg ADC_Channel_15: ADC Channel15 selected
   *     @arg ADC_Channel_16: ADC Channel16 selected
   *     @arg ADC_Channel_17: ADC Channel17 selected
-  *     @arg ADC_Channel_18: ADC Channel18 selected    
-  * @param  ADC_SampleTime: The sample time value to be set for the selected 
-  *         channel. 
+  *     @arg ADC_Channel_18: ADC Channel18 selected
+  * @param  ADC_SampleTime: The sample time value to be set for the selected
+  *         channel.
   *   This parameter can be one of the following values:
-  *     @arg ADC_SampleTime_1_5Cycles: Sample time equal to 1.5 cycles  
+  *     @arg ADC_SampleTime_1_5Cycles: Sample time equal to 1.5 cycles
   *     @arg ADC_SampleTime_7_5Cycles: Sample time equal to 7.5 cycles
   *     @arg ADC_SampleTime_13_5Cycles: Sample time equal to 13.5 cycles
   *     @arg ADC_SampleTime_28_5Cycles: Sample time equal to 28.5 cycles
@@ -714,7 +714,7 @@ void ADC_ChannelConfig(ADC_TypeDef* ADCx, uint32_t ADC_Channel, uint32_t ADC_Sam
   * @param  NewState: new state of the Continuous mode.
   *         This parameter can be: ENABLE or DISABLE.
   * @note   It is not possible to have both discontinuous mode and continuous mode
-  *         enabled. In this case (If DISCEN and CONT are Set), the ADC behaves 
+  *         enabled. In this case (If DISCEN and CONT are Set), the ADC behaves
   *         as if continuous mode was disabled
   * @retval None
   */
@@ -742,7 +742,7 @@ void ADC_ContinuousModeCmd(ADC_TypeDef* ADCx, FunctionalState NewState)
   * @param  NewState: new state of the discontinuous mode.
   *         This parameter can be: ENABLE or DISABLE.
   * @note   It is not possible to have both discontinuous mode and continuous mode
-  *         enabled. In this case (If DISCEN and CONT are Set), the ADC behaves 
+  *         enabled. In this case (If DISCEN and CONT are Set), the ADC behaves
   *         as if continuous mode was disabled
   * @retval None
   */
@@ -791,10 +791,10 @@ void ADC_OverrunModeCmd(ADC_TypeDef* ADCx, FunctionalState NewState)
 
 /**
   * @brief  Active the Calibration operation for the selected ADC.
-  * @note   The Calibration can be initiated only when ADC is still in the 
+  * @note   The Calibration can be initiated only when ADC is still in the
   *         reset configuration (ADEN must be equal to 0).
   * @param  ADCx: where x can be 1 to select the ADC1 peripheral.
-  * @retval ADC Calibration factor 
+  * @retval ADC Calibration factor
   */
 uint32_t ADC_GetCalibrationFactor(ADC_TypeDef* ADCx)
 {
@@ -802,17 +802,17 @@ uint32_t ADC_GetCalibrationFactor(ADC_TypeDef* ADCx)
 
   /* Check the parameters */
   assert_param(IS_ADC_ALL_PERIPH(ADCx));
-  
+
   /* Set the ADC calibartion */
   ADCx->CR |= (uint32_t)ADC_CR_ADCAL;
-  
+
   /* Wait until no ADC calibration is completed */
   do
   {
     calibrationstatus = ADCx->CR & ADC_CR_ADCAL;
-    calibrationcounter++;  
+    calibrationcounter++;
   } while((calibrationcounter != CALIBRATION_TIMEOUT) && (calibrationstatus != 0x00));
-    
+
   if((uint32_t)(ADCx->CR & ADC_CR_ADCAL) == RESET)
   {
     /*Get the calibration factor from the ADC data register */
@@ -828,8 +828,8 @@ uint32_t ADC_GetCalibrationFactor(ADC_TypeDef* ADCx)
 
 /**
   * @brief  Stop the on going conversions for the selected ADC.
-  * @note   When ADSTP is set, any on going conversion is aborted, and the ADC 
-  *         data register is not updated with current conversion. 
+  * @note   When ADSTP is set, any on going conversion is aborted, and the ADC
+  *         data register is not updated with current conversion.
   * @param  ADCx: where x can be 1 to select the ADC1 peripheral.
   * @retval None
   */
@@ -837,13 +837,13 @@ void ADC_StopOfConversion(ADC_TypeDef* ADCx)
 {
   /* Check the parameters */
   assert_param(IS_ADC_ALL_PERIPH(ADCx));
-  
+
   ADCx->CR |= (uint32_t)ADC_CR_ADSTP;
 }
 
 /**
   * @brief  Start Conversion for the selected ADC channels.
-  * @note   In continuous mode, ADSTART is not cleared by hardware with the 
+  * @note   In continuous mode, ADSTART is not cleared by hardware with the
   *         assertion of EOS because the sequence is automatic relaunched
   * @param  ADCx: where x can be 1 to select the ADC1 peripheral.
   * @retval None
@@ -852,12 +852,12 @@ void ADC_StartOfConversion(ADC_TypeDef* ADCx)
 {
   /* Check the parameters */
   assert_param(IS_ADC_ALL_PERIPH(ADCx));
-  
+
   ADCx->CR |= (uint32_t)ADC_CR_ADSTART;
 }
 
 /**
-  * @brief  Returns the last ADCx conversion result data for ADC channel.  
+  * @brief  Returns the last ADCx conversion result data for ADC channel.
   * @param  ADCx: where x can be 1 to select the ADC1 peripheral.
   * @retval The Data conversion value.
   */
@@ -875,23 +875,23 @@ uint16_t ADC_GetConversionValue(ADC_TypeDef* ADCx)
   */
 
 /** @defgroup ADC_Group6 DMA Configuration functions
- *  @brief   Regular Channels DMA Configuration functions 
+ *  @brief   Regular Channels DMA Configuration functions
  *
 @verbatim
  ===============================================================================
           ##### DMA Configuration functions #####
  ===============================================================================
     [..] This section provides functions allowing to configure the DMA for ADC hannels.
-         Since converted channel values are stored into a unique data register, 
-         it is useful to use DMA for conversion of more than one channel. This 
-         avoids the loss of the data already stored in the ADC Data register. 
+         Since converted channel values are stored into a unique data register,
+         it is useful to use DMA for conversion of more than one channel. This
+         avoids the loss of the data already stored in the ADC Data register.
          When the DMA mode is enabled (using the ADC_DMACmd() function), after each
          conversion of a channel, a DMA request is generated.
-  
-    [..] Depending on the "DMA disable selection" configuration (using the 
-         ADC_DMARequestModeConfig() function), at the end of the last DMA 
+
+    [..] Depending on the "DMA disable selection" configuration (using the
+         ADC_DMARequestModeConfig() function), at the end of the last DMA
          transfer, two possibilities are allowed:
-         (+) No new DMA request is issued to the DMA controller (One Shot Mode) 
+         (+) No new DMA request is issued to the DMA controller (One Shot Mode)
          (+) Requests can continue to be generated (Circular Mode).
 
 @endverbatim
@@ -926,10 +926,10 @@ void ADC_DMACmd(ADC_TypeDef* ADCx, FunctionalState NewState)
 /**
   * @brief  Enables or disables the ADC DMA request after last transfer (Single-ADC mode)
   * @param  ADCx: where x can be 1 to select the ADC1 peripheral.
-  * @param  ADC_DMARequestMode: the ADC channel to configure. 
+  * @param  ADC_DMARequestMode: the ADC channel to configure.
   *   This parameter can be one of the following values:
-  *     @arg ADC_DMAMode_OneShot  : DMA One Shot Mode 
-  *     @arg ADC_DMAMode_Circular : DMA Circular Mode  
+  *     @arg ADC_DMAMode_OneShot  : DMA One Shot Mode
+  *     @arg ADC_DMAMode_Circular : DMA Circular Mode
   *  @retval None
   */
 void ADC_DMARequestModeConfig(ADC_TypeDef* ADCx, uint32_t ADC_DMARequestMode)
@@ -948,14 +948,14 @@ void ADC_DMARequestModeConfig(ADC_TypeDef* ADCx, uint32_t ADC_DMARequestMode)
 /** @defgroup ADC_Group7 Interrupts and flags management functions
  *  @brief   Interrupts and flags management functions.
  *
-@verbatim   
+@verbatim
  ===============================================================================
             ##### Interrupts and flags management functions #####
  ===============================================================================
-    [..] This section provides functions allowing to configure the ADC Interrupts 
+    [..] This section provides functions allowing to configure the ADC Interrupts
          and get the status and clear flags and Interrupts pending bits.
-  
-    [..] The ADC provide 6 Interrupts sources and 11 Flags which can be divided into 
+
+    [..] The ADC provide 6 Interrupts sources and 11 Flags which can be divided into
          3 groups:
 
   *** Flags for ADC status ***
@@ -975,7 +975,7 @@ void ADC_DMARequestModeConfig(ADC_TypeDef* ADCx, uint32_t ADC_DMARequestMode)
                 is effectively discarded and the ADC is ready to accept a new start conversion
            (##) ADC_FLAG_ADCAL : This flag is set once the calibration is complete.
 
-        (+)Interrupts 
+        (+)Interrupts
            (##) ADC_IT_ADRDY : specifies the interrupt source for ADC ready event.
 
   *** Flags and Interrupts for ADC channel conversion ***
@@ -994,7 +994,7 @@ void ADC_DMARequestModeConfig(ADC_TypeDef* ADCx, uint32_t ADC_DMARequestMode)
            (##) ADC_IT_EOC : specifies the interrupt source for end of conversion event.
            (##) ADC_IT_EOS : specifies the interrupt source for end of sequence event.
            (##) ADC_IT_EOSMP : specifies the interrupt source for end of sampling event.
-           (##) ADC_IT_OVR : specifies the interrupt source for Overrun detection 
+           (##) ADC_IT_OVR : specifies the interrupt source for Overrun detection
                 event.
 
   *** Flags and Interrupts for the Analog Watchdog ***
@@ -1005,20 +1005,20 @@ void ADC_DMARequestModeConfig(ADC_TypeDef* ADCx, uint32_t ADC_DMARequestMode)
                 voltage crosses the values programmed thrsholds
 
         (+)Interrupts :
-           (##) ADC_IT_AWD : specifies the interrupt source for Analog watchdog 
+           (##) ADC_IT_AWD : specifies the interrupt source for Analog watchdog
                 event.
-  
-    [..] The user should identify which mode will be used in his application to 
+
+    [..] The user should identify which mode will be used in his application to
          manage the ADC controller events: Polling mode or Interrupt mode.
-  
+
     [..] In the Polling Mode it is advised to use the following functions:
          (+) ADC_GetFlagStatus() : to check if flags events occur.
          (+) ADC_ClearFlag()     : to clear the flags events.
-  
+
     [..] In the Interrupt Mode it is advised to use the following functions:
          (+) ADC_ITConfig()       : to enable or disable the interrupt source.
          (+) ADC_GetITStatus()    : to check if Interrupt occurs.
-         (+) ADC_ClearITPendingBit() : to clear the Interrupt pending Bit 
+         (+) ADC_ClearITPendingBit() : to clear the Interrupt pending Bit
              (corresponding Flag).
 
 @endverbatim
@@ -1030,9 +1030,9 @@ void ADC_DMARequestModeConfig(ADC_TypeDef* ADCx, uint32_t ADC_DMARequestMode)
   * @param  ADCx: where x can be 1 to select the ADC peripheral.
   * @param  ADC_IT: specifies the ADC interrupt sources to be enabled or disabled.
   *   This parameter can be one of the following values:
-  *     @arg ADC_IT_ADRDY: ADC ready interrupt 
+  *     @arg ADC_IT_ADRDY: ADC ready interrupt
   *     @arg ADC_IT_EOSMP: End of sampling interrupt
-  *     @arg ADC_IT_EOC: End of conversion interrupt 
+  *     @arg ADC_IT_EOC: End of conversion interrupt
   *     @arg ADC_IT_EOS: End of sequence of conversion interrupt
   *     @arg ADC_IT_OVR: overrun interrupt
   *     @arg ADC_IT_AWD: Analog watchdog interrupt
@@ -1045,7 +1045,7 @@ void ADC_ITConfig(ADC_TypeDef* ADCx, uint32_t ADC_IT, FunctionalState NewState)
   /* Check the parameters */
   assert_param(IS_ADC_ALL_PERIPH(ADCx));
   assert_param(IS_FUNCTIONAL_STATE(NewState));
-  assert_param(IS_ADC_CONFIG_IT(ADC_IT)); 
+  assert_param(IS_ADC_CONFIG_IT(ADC_IT));
 
   if (NewState != DISABLE)
   {
@@ -1062,17 +1062,17 @@ void ADC_ITConfig(ADC_TypeDef* ADCx, uint32_t ADC_IT, FunctionalState NewState)
 /**
   * @brief  Checks whether the specified ADC flag is set or not.
   * @param  ADCx: where x can be 1 to select the ADC1 peripheral.
-  * @param  ADC_FLAG: specifies the flag to check. 
+  * @param  ADC_FLAG: specifies the flag to check.
   *   This parameter can be one of the following values:
   *     @arg ADC_FLAG_AWD: Analog watchdog flag
-  *     @arg ADC_FLAG_OVR: Overrun flag 
+  *     @arg ADC_FLAG_OVR: Overrun flag
   *     @arg ADC_FLAG_EOS: End of Sequence flag
   *     @arg ADC_FLAG_EOC: End of conversion flag
   *     @arg ADC_FLAG_EOSMP: End of sampling flag
   *     @arg ADC_FLAG_ADRDY: ADC Ready flag
-  *     @arg ADC_FLAG_ADEN: ADC enable flag 
-  *     @arg ADC_FLAG_ADDIS: ADC disable flag 
-  *     @arg ADC_FLAG_ADSTART: ADC start flag 
+  *     @arg ADC_FLAG_ADEN: ADC enable flag
+  *     @arg ADC_FLAG_ADDIS: ADC disable flag
+  *     @arg ADC_FLAG_ADSTART: ADC start flag
   *     @arg ADC_FLAG_ADSTP: ADC stop flag
   *     @arg ADC_FLAG_ADCAL: ADC Calibration flag
   * @retval The new state of ADC_FLAG (SET or RESET).
@@ -1094,7 +1094,7 @@ FlagStatus ADC_GetFlagStatus(ADC_TypeDef* ADCx, uint32_t ADC_FLAG)
   {
     tmpreg = ADCx->ISR;
   }
-  
+
   /* Check the status of the specified ADC flag */
   if ((tmpreg & ADC_FLAG) != (uint32_t)RESET)
   {
@@ -1113,14 +1113,14 @@ FlagStatus ADC_GetFlagStatus(ADC_TypeDef* ADCx, uint32_t ADC_FLAG)
 /**
   * @brief  Clears the ADCx's pending flags.
   * @param  ADCx: where x can be 1 to select the ADC1 peripheral.
-  * @param  ADC_FLAG: specifies the flag to clear. 
+  * @param  ADC_FLAG: specifies the flag to clear.
   *   This parameter can be any combination of the following values:
   *     @arg ADC_FLAG_AWD: Analog watchdog flag
   *     @arg ADC_FLAG_EOC: End of conversion flag
   *     @arg ADC_FLAG_ADRDY: ADC Ready flag
   *     @arg ADC_FLAG_EOSMP: End of sampling flag
   *     @arg ADC_FLAG_EOS: End of Sequence flag
-  *     @arg ADC_FLAG_OVR: Overrun flag 
+  *     @arg ADC_FLAG_OVR: Overrun flag
   * @retval None
   */
 void ADC_ClearFlag(ADC_TypeDef* ADCx, uint32_t ADC_FLAG)
@@ -1138,9 +1138,9 @@ void ADC_ClearFlag(ADC_TypeDef* ADCx, uint32_t ADC_FLAG)
   * @param  ADCx: where x can be 1 to select the ADC1 peripheral
   * @param  ADC_IT: specifies the ADC interrupt source to check.
   *   This parameter can be one of the following values:
-  *     @arg ADC_IT_ADRDY: ADC ready interrupt 
+  *     @arg ADC_IT_ADRDY: ADC ready interrupt
   *     @arg ADC_IT_EOSMP: End of sampling interrupt
-  *     @arg ADC_IT_EOC: End of conversion interrupt 
+  *     @arg ADC_IT_EOC: End of conversion interrupt
   *     @arg ADC_IT_EOS: End of sequence of conversion interrupt
   *     @arg ADC_IT_OVR: overrun interrupt
   *     @arg ADC_IT_AWD: Analog watchdog interrupt
@@ -1156,7 +1156,7 @@ ITStatus ADC_GetITStatus(ADC_TypeDef* ADCx, uint32_t ADC_IT)
   assert_param(IS_ADC_GET_IT(ADC_IT));
 
   /* Get the ADC_IT enable bit status */
-  enablestatus = (uint32_t)(ADCx->IER & ADC_IT); 
+  enablestatus = (uint32_t)(ADCx->IER & ADC_IT);
 
   /* Check the status of the specified ADC interrupt */
   if (((uint32_t)(ADCx->ISR & ADC_IT) != (uint32_t)RESET) && (enablestatus != (uint32_t)RESET))
@@ -1193,7 +1193,7 @@ void ADC_ClearITPendingBit(ADC_TypeDef* ADCx, uint32_t ADC_IT)
   assert_param(IS_ADC_CLEAR_IT(ADC_IT));
 
   /* Clear the selected ADC interrupt pending bits */
-  ADCx->ISR = (uint32_t)ADC_IT; 
+  ADCx->ISR = (uint32_t)ADC_IT;
 }
 
 /**
@@ -1202,14 +1202,14 @@ void ADC_ClearITPendingBit(ADC_TypeDef* ADCx, uint32_t ADC_IT)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /******************* (C) COPYRIGHT 2012 STMicroelectronics *****END OF FILE****/

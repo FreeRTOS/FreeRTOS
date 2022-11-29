@@ -1,10 +1,10 @@
 /*
  * File:        uart_support.c
- * Purpose:     Implements UART basic support, Derivative Specific Interrupt handler and need function needed 
+ * Purpose:     Implements UART basic support, Derivative Specific Interrupt handler and need function needed
  *              for MSL Support (printf\cout to terminal), defined in <UART.h>
  *
- * Notes:       
- *              
+ * Notes:
+ *
  */
 #include "support_common.h"
 #include "uart_support.h"
@@ -18,7 +18,7 @@ void uart_init(int channel, unsigned long systemClockKHz, unsigned long baudRate
 {
 	register uint16 ubgs;
 
-	/* 
+	/*
 	 * On Verdi, only PSC 0 & 1 are brought out to RS232 transceivers
 	 */
 
@@ -27,7 +27,7 @@ void uart_init(int channel, unsigned long systemClockKHz, unsigned long baudRate
 
 	/* Rx and Tx baud rate from timers */
 	MCF_PSC_PSCCSR(channel) = (0
-		| MCF_PSC_PSCCSR_RCSEL_SYS_CLK 
+		| MCF_PSC_PSCCSR_RCSEL_SYS_CLK
 		| MCF_PSC_PSCCSR_TCSEL_SYS_CLK);
 
 	/*
@@ -57,7 +57,7 @@ void uart_init(int channel, unsigned long systemClockKHz, unsigned long baudRate
 	MCF_PSC_PSCMR(channel) = (0
 #ifdef UART_HARDWARE_FLOW_CONTROL
 		| MCF_PSC_PSCMR_TXCTS
-#endif 
+#endif
 		| MCF_PSC_PSCMR_CM_NORMAL
 		| MCF_PSC_PSCMR_SB_STOP_BITS_1);
 
@@ -89,7 +89,7 @@ char uart_getchar (int channel)
 	/* Wait until character has been received */
 	while (!(MCF_PSC_PSCSR(channel) & MCF_PSC_PSCSR_RXRDY))
 	{
-	
+
 	}
 	return (char)(*((uint8 *) &MCF_PSC_PSCRB_8BIT(channel)));
 }
@@ -97,7 +97,7 @@ char uart_getchar (int channel)
 /********************************************************************/
 /*
  * Wait for space in the UART Tx FIFO and then send a character
- */ 
+ */
 void uart_putchar (int channel, char ch)
 {
 	/* Wait until space is available in the FIFO */
@@ -111,8 +111,8 @@ void uart_putchar (int channel, char ch)
 
 #if UART_SUPPORT_TYPE == UART_5407
 /********************************************************************/
-/* 
- * 5407 derivative doesn't have macros to access URB/UTB by channel number 
+/*
+ * 5407 derivative doesn't have macros to access URB/UTB by channel number
  * because they have different sizes for UART0 & UART1
  * But in UART mode only 8 bits of UART1 URB/UTB is used, so define these macros here
  *  if they doesn't defined before
@@ -220,9 +220,9 @@ void uart_init(int channel, unsigned long systemClockKHz, unsigned long baudRate
 char uart_getchar (int channel)
 {
     /* Wait until character has been received */
-    while (!(MCF_UART_USR(channel) & MCF_UART_USR_RXRDY)) 
+    while (!(MCF_UART_USR(channel) & MCF_UART_USR_RXRDY))
     {
-    	
+
     };
 
     return (char)MCF_UART_URB(channel);
@@ -231,13 +231,13 @@ char uart_getchar (int channel)
 /********************************************************************/
 /*
  * Wait for space in the UART Tx FIFO and then send a character
- */ 
+ */
 void uart_putchar (int channel, char ch)
 {
     /* Wait until space is available in the FIFO */
-    while (!(MCF_UART_USR(channel) & MCF_UART_USR_TXRDY)) 
+    while (!(MCF_UART_USR(channel) & MCF_UART_USR_TXRDY))
     {
-    	
+
     };
 
     /* Send the character */
@@ -253,7 +253,7 @@ void uart_putchar (int channel, char ch)
 
 /****************************************************************************/
 /*
- * Implementation for CodeWarror MSL interface to serial device (UART.h). 
+ * Implementation for CodeWarror MSL interface to serial device (UART.h).
  * Needed for printf, etc...
  * Only InitializeUART, ReadUARTN, and WriteUARTN are implemented.
  *
@@ -270,9 +270,9 @@ UARTError InitializeUART(UARTBaudRate baudRate)
 /****************************************************************************/
 /*
 	ReadUARTN
-	
+
 	Read N bytes from the UART.
-	
+
 	bytes			pointer to result buffer
 	limit			size of buffer and # of bytes to read
 */

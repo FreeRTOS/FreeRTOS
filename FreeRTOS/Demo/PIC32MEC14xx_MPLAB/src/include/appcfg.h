@@ -65,7 +65,7 @@
 #define PCR_CLOCK_DIVIDER      (1)
 
 
-// GPIO_0102/KSO9 0102(octal)=0x42. 
+// GPIO_0102/KSO9 0102(octal)=0x42.
 #define CR_STRAP_GPIO       (0x42ul)
 #define CR_STRAP_GPIO_BANK  (2u)
 #define CR_STRAP_BITPOS     (2u)
@@ -80,7 +80,7 @@
 #define SPI1_CS0_BITPOS     (13u)
 
 
-/* 
+/*
  * ASIC at full speed (48MHz)
  * M14K CP0 Counter increments at 1/2 CPU core clock.
  */
@@ -112,12 +112,12 @@
 #define MEC14XX_BTIMER_CHECK_ID
 
 /*
- * Enable GPIO Pin Debug 
+ * Enable GPIO Pin Debug
  */
 //#define DEBUG_GPIO_PIN
 
-/* 
- * Enable TFDP TRACE 
+/*
+ * Enable TFDP TRACE
  */
 #define ENABLE_TFDP_TRACE
 

@@ -41,40 +41,40 @@ extern "C"
 /*
  * Component : System Manager Module - ALT_SYSMGR
  * System Manager Module
- * 
+ *
  * Registers in the System Manager module
- * 
+ *
  */
 /*
  * Register : Silicon ID1 Register - siliconid1
- * 
+ *
  * Specifies Silicon ID and revision number.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description     
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-----------------
  *  [15:0]  | R      | 0x1   | Silicon Revision
- *  [31:16] | R      | 0x0   | Silicon ID      
- * 
+ *  [31:16] | R      | 0x0   | Silicon ID
+ *
  */
 /*
  * Field : Silicon Revision - rev
- * 
+ *
  * Silicon revision number.
- * 
+ *
  * Field Enumeration Values:
- * 
+ *
  *  Enum                             | Value | Description
  * :---------------------------------|:------|:------------
- *  ALT_SYSMGR_SILICONID1_REV_E_REV1 | 0x1   | Revision 1 
- * 
+ *  ALT_SYSMGR_SILICONID1_REV_E_REV1 | 0x1   | Revision 1
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_SILICONID1_REV
- * 
+ *
  * Revision 1
  */
 #define ALT_SYSMGR_SILICONID1_REV_E_REV1    0x1
@@ -98,21 +98,21 @@ extern "C"
 
 /*
  * Field : Silicon ID - id
- * 
+ *
  * Silicon ID
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                       | Value | Description                                  
+ *
+ *  Enum                                       | Value | Description
  * :-------------------------------------------|:------|:----------------------------------------------
  *  ALT_SYSMGR_SILICONID1_ID_E_CYCLONEV_ARRIAV | 0x0   | HPS in Cyclone V and Arria V SoC FPGA devices
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_SILICONID1_ID
- * 
+ *
  * HPS in Cyclone V and Arria V SoC FPGA devices
  */
 #define ALT_SYSMGR_SILICONID1_ID_E_CYCLONEV_ARRIAV  0x0
@@ -142,7 +142,7 @@ extern "C"
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_SILICONID1.
  */
 struct ALT_SYSMGR_SILICONID1_s
@@ -160,23 +160,23 @@ typedef volatile struct ALT_SYSMGR_SILICONID1_s  ALT_SYSMGR_SILICONID1_t;
 
 /*
  * Register : Silicon ID2 Register - siliconid2
- * 
+ *
  * Reserved for future use.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [31:0] | R      | 0x0   | Reserved   
- * 
+ *  [31:0] | R      | 0x0   | Reserved
+ *
  */
 /*
  * Field : Reserved - rsv
- * 
+ *
  * Reserved for future use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_SILICONID2_RSV register field. */
 #define ALT_SYSMGR_SILICONID2_RSV_LSB        0
@@ -203,7 +203,7 @@ typedef volatile struct ALT_SYSMGR_SILICONID1_s  ALT_SYSMGR_SILICONID1_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_SILICONID2.
  */
 struct ALT_SYSMGR_SILICONID2_s
@@ -220,64 +220,64 @@ typedef volatile struct ALT_SYSMGR_SILICONID2_s  ALT_SYSMGR_SILICONID2_t;
 
 /*
  * Register : L4 Watchdog Debug Register - wddbg
- * 
+ *
  * Controls the behavior of the L4 watchdogs when the CPUs are in debug mode. These
  * control registers are used to drive the pause input signal of the L4 watchdogs.
  * Note that the watchdogs built into the MPU automatically are paused when their
  * associated CPU enters debug mode. Only reset by a cold reset.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [1:0]  | RW     | 0x3   | Debug Mode 
- *  [3:2]  | RW     | 0x3   | Debug Mode 
+ *  [1:0]  | RW     | 0x3   | Debug Mode
+ *  [3:2]  | RW     | 0x3   | Debug Mode
  *  [31:4] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Debug Mode - mode_0
- * 
+ *
  * Controls behavior of L4 watchdog when CPUs in debug mode. Field array index
  * matches L4 watchdog index.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                 | Value | Description                                     
+ *
+ *  Enum                                 | Value | Description
  * :-------------------------------------|:------|:-------------------------------------------------
  *  ALT_SYSMGR_WDDBG_MOD_0_E_CONTINUE    | 0x0   | Continue normal operation ignoring debug mode of
- * :                                     |       | CPUs                                            
- *  ALT_SYSMGR_WDDBG_MOD_0_E_PAUSECPU0   | 0x1   | Pause normal operation only if CPU0 is in debug 
- * :                                     |       | mode                                            
- *  ALT_SYSMGR_WDDBG_MOD_0_E_PAUSECPU1   | 0x2   | Pause normal operation only if CPU1 is in debug 
- * :                                     |       | mode                                            
- *  ALT_SYSMGR_WDDBG_MOD_0_E_PAUSEEITHER | 0x3   | Pause normal operation if CPU0 or CPU1 is in    
- * :                                     |       | debug mode                                      
- * 
+ * :                                     |       | CPUs
+ *  ALT_SYSMGR_WDDBG_MOD_0_E_PAUSECPU0   | 0x1   | Pause normal operation only if CPU0 is in debug
+ * :                                     |       | mode
+ *  ALT_SYSMGR_WDDBG_MOD_0_E_PAUSECPU1   | 0x2   | Pause normal operation only if CPU1 is in debug
+ * :                                     |       | mode
+ *  ALT_SYSMGR_WDDBG_MOD_0_E_PAUSEEITHER | 0x3   | Pause normal operation if CPU0 or CPU1 is in
+ * :                                     |       | debug mode
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_WDDBG_MOD_0
- * 
+ *
  * Continue normal operation ignoring debug mode of CPUs
  */
 #define ALT_SYSMGR_WDDBG_MOD_0_E_CONTINUE       0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_WDDBG_MOD_0
- * 
+ *
  * Pause normal operation only if CPU0 is in debug mode
  */
 #define ALT_SYSMGR_WDDBG_MOD_0_E_PAUSECPU0      0x1
 /*
  * Enumerated value for register field ALT_SYSMGR_WDDBG_MOD_0
- * 
+ *
  * Pause normal operation only if CPU1 is in debug mode
  */
 #define ALT_SYSMGR_WDDBG_MOD_0_E_PAUSECPU1      0x2
 /*
  * Enumerated value for register field ALT_SYSMGR_WDDBG_MOD_0
- * 
+ *
  * Pause normal operation if CPU0 or CPU1 is in debug mode
  */
 #define ALT_SYSMGR_WDDBG_MOD_0_E_PAUSEEITHER    0x3
@@ -301,47 +301,47 @@ typedef volatile struct ALT_SYSMGR_SILICONID2_s  ALT_SYSMGR_SILICONID2_t;
 
 /*
  * Field : Debug Mode - mode_1
- * 
+ *
  * Controls behavior of L4 watchdog when CPUs in debug mode. Field array index
  * matches L4 watchdog index.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                 | Value | Description                                     
+ *
+ *  Enum                                 | Value | Description
  * :-------------------------------------|:------|:-------------------------------------------------
  *  ALT_SYSMGR_WDDBG_MOD_1_E_CONTINUE    | 0x0   | Continue normal operation ignoring debug mode of
- * :                                     |       | CPUs                                            
- *  ALT_SYSMGR_WDDBG_MOD_1_E_PAUSECPU0   | 0x1   | Pause normal operation only if CPU0 is in debug 
- * :                                     |       | mode                                            
- *  ALT_SYSMGR_WDDBG_MOD_1_E_PAUSECPU1   | 0x2   | Pause normal operation only if CPU1 is in debug 
- * :                                     |       | mode                                            
- *  ALT_SYSMGR_WDDBG_MOD_1_E_PAUSEEITHER | 0x3   | Pause normal operation if CPU0 or CPU1 is in    
- * :                                     |       | debug mode                                      
- * 
+ * :                                     |       | CPUs
+ *  ALT_SYSMGR_WDDBG_MOD_1_E_PAUSECPU0   | 0x1   | Pause normal operation only if CPU0 is in debug
+ * :                                     |       | mode
+ *  ALT_SYSMGR_WDDBG_MOD_1_E_PAUSECPU1   | 0x2   | Pause normal operation only if CPU1 is in debug
+ * :                                     |       | mode
+ *  ALT_SYSMGR_WDDBG_MOD_1_E_PAUSEEITHER | 0x3   | Pause normal operation if CPU0 or CPU1 is in
+ * :                                     |       | debug mode
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_WDDBG_MOD_1
- * 
+ *
  * Continue normal operation ignoring debug mode of CPUs
  */
 #define ALT_SYSMGR_WDDBG_MOD_1_E_CONTINUE       0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_WDDBG_MOD_1
- * 
+ *
  * Pause normal operation only if CPU0 is in debug mode
  */
 #define ALT_SYSMGR_WDDBG_MOD_1_E_PAUSECPU0      0x1
 /*
  * Enumerated value for register field ALT_SYSMGR_WDDBG_MOD_1
- * 
+ *
  * Pause normal operation only if CPU1 is in debug mode
  */
 #define ALT_SYSMGR_WDDBG_MOD_1_E_PAUSECPU1      0x2
 /*
  * Enumerated value for register field ALT_SYSMGR_WDDBG_MOD_1
- * 
+ *
  * Pause normal operation if CPU0 or CPU1 is in debug mode
  */
 #define ALT_SYSMGR_WDDBG_MOD_1_E_PAUSEEITHER    0x3
@@ -371,7 +371,7 @@ typedef volatile struct ALT_SYSMGR_SILICONID2_s  ALT_SYSMGR_SILICONID2_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_WDDBG.
  */
 struct ALT_SYSMGR_WDDBG_s
@@ -390,89 +390,89 @@ typedef volatile struct ALT_SYSMGR_WDDBG_s  ALT_SYSMGR_WDDBG_t;
 
 /*
  * Register : Boot Info Register - bootinfo
- * 
+ *
  * Provides access to boot configuration information.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset   | Description         
+ *
+ *  Bits    | Access | Reset   | Description
  * :--------|:-------|:--------|:---------------------
- *  [2:0]   | R      | Unknown | Boot Select         
- *  [4:3]   | R      | Unknown | Clock Select        
- *  [7:5]   | R      | Unknown | HPS Pin Boot Select 
+ *  [2:0]   | R      | Unknown | Boot Select
+ *  [4:3]   | R      | Unknown | Clock Select
+ *  [7:5]   | R      | Unknown | HPS Pin Boot Select
  *  [9:8]   | R      | Unknown | HPS Pin Clock Select
- *  [31:10] | ???    | Unknown | *UNDEFINED*         
- * 
+ *  [31:10] | ???    | Unknown | *UNDEFINED*
+ *
  */
 /*
  * Field : Boot Select - bsel
- * 
+ *
  * The boot select field specifies the boot source. It is read by the Boot ROM code
  * on a cold or warm reset to determine the boot source.
- * 
+ *
  * The HPS BSEL pins value are sampled upon deassertion of cold reset.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                                    | Value | Description                       
+ *
+ *  Enum                                                    | Value | Description
  * :--------------------------------------------------------|:------|:-----------------------------------
- *  ALT_SYSMGR_BOOT_BSEL_E_RSVD                             | 0x0   | Reserved                          
- *  ALT_SYSMGR_BOOT_BSEL_E_FPGA                             | 0x1   | FPGA (HPS2FPGA Bridge)            
- *  ALT_SYSMGR_BOOT_BSEL_E_NAND_FLSH_1_8V                   | 0x2   | NAND Flash (1.8v)                 
- *  ALT_SYSMGR_BOOT_BSEL_E_NAND_FLSH_3_0V                   | 0x3   | NAND Flash (3.0v)                 
+ *  ALT_SYSMGR_BOOT_BSEL_E_RSVD                             | 0x0   | Reserved
+ *  ALT_SYSMGR_BOOT_BSEL_E_FPGA                             | 0x1   | FPGA (HPS2FPGA Bridge)
+ *  ALT_SYSMGR_BOOT_BSEL_E_NAND_FLSH_1_8V                   | 0x2   | NAND Flash (1.8v)
+ *  ALT_SYSMGR_BOOT_BSEL_E_NAND_FLSH_3_0V                   | 0x3   | NAND Flash (3.0v)
  *  ALT_SYSMGR_BOOT_BSEL_E_SD_MMC_EXTERNAL_TRANSCEIVER_1_8V | 0x4   | SD/MMC External Transceiver (1.8v)
  *  ALT_SYSMGR_BOOT_BSEL_E_SD_MMC_INTERNAL_TRANSCEIVER_3_0V | 0x5   | SD/MMC Internal Transceiver (3.0v)
- *  ALT_SYSMGR_BOOT_BSEL_E_QSPI_FLSH_1_8V                   | 0x6   | QSPI Flash (1.8v)                 
- *  ALT_SYSMGR_BOOT_BSEL_E_QSPI_FLSH_3_0V                   | 0x7   | QSPI Flash (3.0v)                 
- * 
+ *  ALT_SYSMGR_BOOT_BSEL_E_QSPI_FLSH_1_8V                   | 0x6   | QSPI Flash (1.8v)
+ *  ALT_SYSMGR_BOOT_BSEL_E_QSPI_FLSH_3_0V                   | 0x7   | QSPI Flash (3.0v)
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_BOOT_BSEL
- * 
+ *
  * Reserved
  */
 #define ALT_SYSMGR_BOOT_BSEL_E_RSVD                             0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_BOOT_BSEL
- * 
+ *
  * FPGA (HPS2FPGA Bridge)
  */
 #define ALT_SYSMGR_BOOT_BSEL_E_FPGA                             0x1
 /*
  * Enumerated value for register field ALT_SYSMGR_BOOT_BSEL
- * 
+ *
  * NAND Flash (1.8v)
  */
 #define ALT_SYSMGR_BOOT_BSEL_E_NAND_FLSH_1_8V                   0x2
 /*
  * Enumerated value for register field ALT_SYSMGR_BOOT_BSEL
- * 
+ *
  * NAND Flash (3.0v)
  */
 #define ALT_SYSMGR_BOOT_BSEL_E_NAND_FLSH_3_0V                   0x3
 /*
  * Enumerated value for register field ALT_SYSMGR_BOOT_BSEL
- * 
+ *
  * SD/MMC External Transceiver (1.8v)
  */
 #define ALT_SYSMGR_BOOT_BSEL_E_SD_MMC_EXTERNAL_TRANSCEIVER_1_8V 0x4
 /*
  * Enumerated value for register field ALT_SYSMGR_BOOT_BSEL
- * 
+ *
  * SD/MMC Internal Transceiver (3.0v)
  */
 #define ALT_SYSMGR_BOOT_BSEL_E_SD_MMC_INTERNAL_TRANSCEIVER_3_0V 0x5
 /*
  * Enumerated value for register field ALT_SYSMGR_BOOT_BSEL
- * 
+ *
  * QSPI Flash (1.8v)
  */
 #define ALT_SYSMGR_BOOT_BSEL_E_QSPI_FLSH_1_8V                   0x6
 /*
  * Enumerated value for register field ALT_SYSMGR_BOOT_BSEL
- * 
+ *
  * QSPI Flash (3.0v)
  */
 #define ALT_SYSMGR_BOOT_BSEL_E_QSPI_FLSH_3_0V                   0x7
@@ -496,65 +496,65 @@ typedef volatile struct ALT_SYSMGR_WDDBG_s  ALT_SYSMGR_WDDBG_t;
 
 /*
  * Field : Clock Select - csel
- * 
+ *
  * The clock select field specifies clock information for booting. The clock select
  * encoding is a function of the CSEL value. The clock select field is read by the
  * Boot ROM code on a cold or warm reset when booting from a flash device to get
  * information about how to setup the HPS clocking to boot from the specified clock
  * device.
- * 
+ *
  * The encoding of the clock select field is specified by the enum associated with
  * this field.
- * 
+ *
  * The HPS CSEL pins value are sampled upon deassertion of cold reset.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                          | Value | Description                                    
+ *
+ *  Enum                          | Value | Description
  * :------------------------------|:------|:------------------------------------------------
- *  ALT_SYSMGR_BOOT_CSEL_E_CSEL_0 | 0x0   | QSPI device clock is osc1_clk divided by 4,    
- * :                              |       | SD/MMC device clock is osc1_clk divided by 4,  
+ *  ALT_SYSMGR_BOOT_CSEL_E_CSEL_0 | 0x0   | QSPI device clock is osc1_clk divided by 4,
+ * :                              |       | SD/MMC device clock is osc1_clk divided by 4,
  * :                              |       | NAND device operation is osc1_clk divided by 25
- *  ALT_SYSMGR_BOOT_CSEL_E_CSEL_1 | 0x1   | QSPI device clock is osc1_clk divided by 2,    
- * :                              |       | SD/MMC device clock is osc1_clk divided by 1,  
+ *  ALT_SYSMGR_BOOT_CSEL_E_CSEL_1 | 0x1   | QSPI device clock is osc1_clk divided by 2,
+ * :                              |       | SD/MMC device clock is osc1_clk divided by 1,
  * :                              |       | NAND device operation is osc1_clk multiplied by
- * :                              |       | 20/25                                          
- *  ALT_SYSMGR_BOOT_CSEL_E_CSEL_2 | 0x2   | QSPI device clock is osc1_clk divided by 1,    
- * :                              |       | SD/MMC device clock is osc1_clk divided by 2,  
+ * :                              |       | 20/25
+ *  ALT_SYSMGR_BOOT_CSEL_E_CSEL_2 | 0x2   | QSPI device clock is osc1_clk divided by 1,
+ * :                              |       | SD/MMC device clock is osc1_clk divided by 2,
  * :                              |       | NAND device operation is osc1_clk multiplied by
- * :                              |       | 10/25                                          
- *  ALT_SYSMGR_BOOT_CSEL_E_CSEL_3 | 0x3   | QSPI device clock is osc1_clk multiplied by 2, 
- * :                              |       | SD/MMC device clock is osc1_clk divided by 4,  
+ * :                              |       | 10/25
+ *  ALT_SYSMGR_BOOT_CSEL_E_CSEL_3 | 0x3   | QSPI device clock is osc1_clk multiplied by 2,
+ * :                              |       | SD/MMC device clock is osc1_clk divided by 4,
  * :                              |       | NAND device operation is osc1_clk multiplied by
- * :                              |       | 5/25                                           
- * 
+ * :                              |       | 5/25
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_BOOT_CSEL
- * 
+ *
  * QSPI device clock is osc1_clk divided by 4, SD/MMC device clock is osc1_clk
  * divided by 4, NAND device operation is osc1_clk divided by 25
  */
 #define ALT_SYSMGR_BOOT_CSEL_E_CSEL_0   0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_BOOT_CSEL
- * 
+ *
  * QSPI device clock is osc1_clk divided by 2, SD/MMC device clock is osc1_clk
  * divided by 1, NAND device operation is osc1_clk multiplied by 20/25
  */
 #define ALT_SYSMGR_BOOT_CSEL_E_CSEL_1   0x1
 /*
  * Enumerated value for register field ALT_SYSMGR_BOOT_CSEL
- * 
+ *
  * QSPI device clock is osc1_clk divided by 1, SD/MMC device clock is osc1_clk
  * divided by 2, NAND device operation is osc1_clk multiplied by 10/25
  */
 #define ALT_SYSMGR_BOOT_CSEL_E_CSEL_2   0x2
 /*
  * Enumerated value for register field ALT_SYSMGR_BOOT_CSEL
- * 
+ *
  * QSPI device clock is osc1_clk multiplied by 2, SD/MMC device clock is osc1_clk
  * divided by 4, NAND device operation is osc1_clk multiplied by 5/25
  */
@@ -579,12 +579,12 @@ typedef volatile struct ALT_SYSMGR_WDDBG_s  ALT_SYSMGR_WDDBG_t;
 
 /*
  * Field : HPS Pin Boot Select - pinbsel
- * 
+ *
  * Specifies the sampled value of the HPS BSEL pins. The value of HPS BSEL pins are
  * sampled upon deassertion of cold reset.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_BOOT_PINBSEL register field. */
 #define ALT_SYSMGR_BOOT_PINBSEL_LSB        5
@@ -605,12 +605,12 @@ typedef volatile struct ALT_SYSMGR_WDDBG_s  ALT_SYSMGR_WDDBG_t;
 
 /*
  * Field : HPS Pin Clock Select - pincsel
- * 
+ *
  * Specifies the sampled value of the HPS CSEL pins. The value of HPS CSEL pins are
  * sampled upon deassertion of cold reset.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_BOOT_PINCSEL register field. */
 #define ALT_SYSMGR_BOOT_PINCSEL_LSB        8
@@ -637,7 +637,7 @@ typedef volatile struct ALT_SYSMGR_WDDBG_s  ALT_SYSMGR_WDDBG_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_BOOT.
  */
 struct ALT_SYSMGR_BOOT_s
@@ -658,42 +658,42 @@ typedef volatile struct ALT_SYSMGR_BOOT_s  ALT_SYSMGR_BOOT_t;
 
 /*
  * Register : HPS Info Register - hpsinfo
- * 
+ *
  * Provides information about the HPS capabilities.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset   | Description
  * :-------|:-------|:--------|:------------
- *  [0]    | R      | Unknown | Dual Core  
- *  [1]    | R      | Unknown | CAN        
+ *  [0]    | R      | Unknown | Dual Core
+ *  [1]    | R      | Unknown | CAN
  *  [31:2] | ???    | 0x0     | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Dual Core - dualcore
- * 
+ *
  * Indicates if CPU1 is available in MPU or not.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                     | Value | Description                                 
+ *
+ *  Enum                                     | Value | Description
  * :-----------------------------------------|:------|:---------------------------------------------
- *  ALT_SYSMGR_HPSINFO_DUALCORE_E_SINGLECORE | 0x0   | Not dual-core (only CPU0 available).        
+ *  ALT_SYSMGR_HPSINFO_DUALCORE_E_SINGLECORE | 0x0   | Not dual-core (only CPU0 available).
  *  ALT_SYSMGR_HPSINFO_DUALCORE_E_DUALCORE   | 0x1   | Is dual-core (CPU0 and CPU1 both available).
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_HPSINFO_DUALCORE
- * 
+ *
  * Not dual-core (only CPU0 available).
  */
 #define ALT_SYSMGR_HPSINFO_DUALCORE_E_SINGLECORE    0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_HPSINFO_DUALCORE
- * 
+ *
  * Is dual-core (CPU0 and CPU1 both available).
  */
 #define ALT_SYSMGR_HPSINFO_DUALCORE_E_DUALCORE      0x1
@@ -717,28 +717,28 @@ typedef volatile struct ALT_SYSMGR_BOOT_s  ALT_SYSMGR_BOOT_t;
 
 /*
  * Field : CAN - can
- * 
+ *
  * Indicates if CAN0 and CAN1 controllers are available or not.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                     | Value | Description                     
+ *
+ *  Enum                                     | Value | Description
  * :-----------------------------------------|:------|:---------------------------------
  *  ALT_SYSMGR_HPSINFO_CAN_E_CAN_UNAVAILABLE | 0x0   | CAN0 and CAN1 are not available.
- *  ALT_SYSMGR_HPSINFO_CAN_E_CAN_AVAILABLE   | 0x1   | CAN0 and CAN1 are available.    
- * 
+ *  ALT_SYSMGR_HPSINFO_CAN_E_CAN_AVAILABLE   | 0x1   | CAN0 and CAN1 are available.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_HPSINFO_CAN
- * 
+ *
  * CAN0 and CAN1 are not available.
  */
 #define ALT_SYSMGR_HPSINFO_CAN_E_CAN_UNAVAILABLE    0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_HPSINFO_CAN
- * 
+ *
  * CAN0 and CAN1 are available.
  */
 #define ALT_SYSMGR_HPSINFO_CAN_E_CAN_AVAILABLE      0x1
@@ -768,7 +768,7 @@ typedef volatile struct ALT_SYSMGR_BOOT_s  ALT_SYSMGR_BOOT_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_HPSINFO.
  */
 struct ALT_SYSMGR_HPSINFO_s
@@ -787,44 +787,44 @@ typedef volatile struct ALT_SYSMGR_HPSINFO_s  ALT_SYSMGR_HPSINFO_t;
 
 /*
  * Register : Parity Fail Injection Register - parityinj
- * 
+ *
  * Inject parity failures into the parity-protected RAMs in the MPU. Allows
  * software to test the parity failure interrupt handler. The field array index
  * corresponds to the CPU index.
- * 
+ *
  * All fields are reset by a cold or warm reset.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                                         
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-----------------------------------------------------
- *  [0]     | RW     | 0x0   | Parity Fail Injection for Data Cache Data RAM       
- *  [1]     | RW     | 0x0   | Parity Fail Injection for Data Cache Data RAM       
- *  [2]     | RW     | 0x0   | Parity Fail Injection for Data Cache Tag RAM        
- *  [3]     | RW     | 0x0   | Parity Fail Injection for Data Cache Tag RAM        
- *  [4]     | RW     | 0x0   | Parity Fail Injection for Data Cache Outer RAM      
- *  [5]     | RW     | 0x0   | Parity Fail Injection for Data Cache Outer RAM      
- *  [6]     | RW     | 0x0   | Parity Fail Injection for Main TLB RAM              
- *  [7]     | RW     | 0x0   | Parity Fail Injection for Main TLB RAM              
+ *  [0]     | RW     | 0x0   | Parity Fail Injection for Data Cache Data RAM
+ *  [1]     | RW     | 0x0   | Parity Fail Injection for Data Cache Data RAM
+ *  [2]     | RW     | 0x0   | Parity Fail Injection for Data Cache Tag RAM
+ *  [3]     | RW     | 0x0   | Parity Fail Injection for Data Cache Tag RAM
+ *  [4]     | RW     | 0x0   | Parity Fail Injection for Data Cache Outer RAM
+ *  [5]     | RW     | 0x0   | Parity Fail Injection for Data Cache Outer RAM
+ *  [6]     | RW     | 0x0   | Parity Fail Injection for Main TLB RAM
+ *  [7]     | RW     | 0x0   | Parity Fail Injection for Main TLB RAM
  *  [8]     | RW     | 0x0   | Parity Fail Injection for Instruction Cache Data RAM
  *  [9]     | RW     | 0x0   | Parity Fail Injection for Instruction Cache Data RAM
- *  [10]    | RW     | 0x0   | Parity Fail Injection for Instruction Cache Tag RAM 
- *  [11]    | RW     | 0x0   | Parity Fail Injection for Instruction Cache Tag RAM 
- *  [12]    | RW     | 0x0   | Parity Fail Injection for GHB RAM                   
- *  [13]    | RW     | 0x0   | Parity Fail Injection for GHB RAM                   
- *  [14]    | RW     | 0x0   | Parity Fail Injection for BTAC RAM                  
- *  [15]    | RW     | 0x0   | Parity Fail Injection for BTAC RAM                  
- *  [31:16] | ???    | 0x0   | *UNDEFINED*                                         
- * 
+ *  [10]    | RW     | 0x0   | Parity Fail Injection for Instruction Cache Tag RAM
+ *  [11]    | RW     | 0x0   | Parity Fail Injection for Instruction Cache Tag RAM
+ *  [12]    | RW     | 0x0   | Parity Fail Injection for GHB RAM
+ *  [13]    | RW     | 0x0   | Parity Fail Injection for GHB RAM
+ *  [14]    | RW     | 0x0   | Parity Fail Injection for BTAC RAM
+ *  [15]    | RW     | 0x0   | Parity Fail Injection for BTAC RAM
+ *  [31:16] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Parity Fail Injection for Data Cache Data RAM - dcdata_0
- * 
+ *
  * If 1, injecting parity error to Data Cache Data RAM.The field array index
  * corresponds to the CPU index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PARITYINJ_DCDATA_0 register field. */
 #define ALT_SYSMGR_PARITYINJ_DCDATA_0_LSB        0
@@ -845,12 +845,12 @@ typedef volatile struct ALT_SYSMGR_HPSINFO_s  ALT_SYSMGR_HPSINFO_t;
 
 /*
  * Field : Parity Fail Injection for Data Cache Data RAM - dcdata_1
- * 
+ *
  * If 1, injecting parity error to Data Cache Data RAM.The field array index
  * corresponds to the CPU index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PARITYINJ_DCDATA_1 register field. */
 #define ALT_SYSMGR_PARITYINJ_DCDATA_1_LSB        1
@@ -871,12 +871,12 @@ typedef volatile struct ALT_SYSMGR_HPSINFO_s  ALT_SYSMGR_HPSINFO_t;
 
 /*
  * Field : Parity Fail Injection for Data Cache Tag RAM - dctag_0
- * 
+ *
  * If 1, injecting parity error to Data Cache Tag RAM.The field array index
  * corresponds to the CPU index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PARITYINJ_DCTAG_0 register field. */
 #define ALT_SYSMGR_PARITYINJ_DCTAG_0_LSB        2
@@ -897,12 +897,12 @@ typedef volatile struct ALT_SYSMGR_HPSINFO_s  ALT_SYSMGR_HPSINFO_t;
 
 /*
  * Field : Parity Fail Injection for Data Cache Tag RAM - dctag_1
- * 
+ *
  * If 1, injecting parity error to Data Cache Tag RAM.The field array index
  * corresponds to the CPU index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PARITYINJ_DCTAG_1 register field. */
 #define ALT_SYSMGR_PARITYINJ_DCTAG_1_LSB        3
@@ -923,12 +923,12 @@ typedef volatile struct ALT_SYSMGR_HPSINFO_s  ALT_SYSMGR_HPSINFO_t;
 
 /*
  * Field : Parity Fail Injection for Data Cache Outer RAM - dcouter_0
- * 
+ *
  * If 1, injecting parity error to Data Cache Outer RAM.The field array index
  * corresponds to the CPU index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PARITYINJ_DCOUTER_0 register field. */
 #define ALT_SYSMGR_PARITYINJ_DCOUTER_0_LSB        4
@@ -949,12 +949,12 @@ typedef volatile struct ALT_SYSMGR_HPSINFO_s  ALT_SYSMGR_HPSINFO_t;
 
 /*
  * Field : Parity Fail Injection for Data Cache Outer RAM - dcouter_1
- * 
+ *
  * If 1, injecting parity error to Data Cache Outer RAM.The field array index
  * corresponds to the CPU index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PARITYINJ_DCOUTER_1 register field. */
 #define ALT_SYSMGR_PARITYINJ_DCOUTER_1_LSB        5
@@ -975,12 +975,12 @@ typedef volatile struct ALT_SYSMGR_HPSINFO_s  ALT_SYSMGR_HPSINFO_t;
 
 /*
  * Field : Parity Fail Injection for Main TLB RAM - maintlb_0
- * 
+ *
  * If 1, injecting parity error to Main TLB RAM.The field array index corresponds
  * to the CPU index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PARITYINJ_MAINTLB_0 register field. */
 #define ALT_SYSMGR_PARITYINJ_MAINTLB_0_LSB        6
@@ -1001,12 +1001,12 @@ typedef volatile struct ALT_SYSMGR_HPSINFO_s  ALT_SYSMGR_HPSINFO_t;
 
 /*
  * Field : Parity Fail Injection for Main TLB RAM - maintlb_1
- * 
+ *
  * If 1, injecting parity error to Main TLB RAM.The field array index corresponds
  * to the CPU index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PARITYINJ_MAINTLB_1 register field. */
 #define ALT_SYSMGR_PARITYINJ_MAINTLB_1_LSB        7
@@ -1027,12 +1027,12 @@ typedef volatile struct ALT_SYSMGR_HPSINFO_s  ALT_SYSMGR_HPSINFO_t;
 
 /*
  * Field : Parity Fail Injection for Instruction Cache Data RAM - icdata_0
- * 
+ *
  * If 1, injecting parity error to Instruction Cache Data RAM.The field array index
  * corresponds to the CPU index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PARITYINJ_ICDATA_0 register field. */
 #define ALT_SYSMGR_PARITYINJ_ICDATA_0_LSB        8
@@ -1053,12 +1053,12 @@ typedef volatile struct ALT_SYSMGR_HPSINFO_s  ALT_SYSMGR_HPSINFO_t;
 
 /*
  * Field : Parity Fail Injection for Instruction Cache Data RAM - icdata_1
- * 
+ *
  * If 1, injecting parity error to Instruction Cache Data RAM.The field array index
  * corresponds to the CPU index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PARITYINJ_ICDATA_1 register field. */
 #define ALT_SYSMGR_PARITYINJ_ICDATA_1_LSB        9
@@ -1079,12 +1079,12 @@ typedef volatile struct ALT_SYSMGR_HPSINFO_s  ALT_SYSMGR_HPSINFO_t;
 
 /*
  * Field : Parity Fail Injection for Instruction Cache Tag RAM - ictag_0
- * 
+ *
  * If 1, injecting parity error to Instruction Cache Tag RAM.The field array index
  * corresponds to the CPU index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PARITYINJ_ICTAG_0 register field. */
 #define ALT_SYSMGR_PARITYINJ_ICTAG_0_LSB        10
@@ -1105,12 +1105,12 @@ typedef volatile struct ALT_SYSMGR_HPSINFO_s  ALT_SYSMGR_HPSINFO_t;
 
 /*
  * Field : Parity Fail Injection for Instruction Cache Tag RAM - ictag_1
- * 
+ *
  * If 1, injecting parity error to Instruction Cache Tag RAM.The field array index
  * corresponds to the CPU index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PARITYINJ_ICTAG_1 register field. */
 #define ALT_SYSMGR_PARITYINJ_ICTAG_1_LSB        11
@@ -1131,12 +1131,12 @@ typedef volatile struct ALT_SYSMGR_HPSINFO_s  ALT_SYSMGR_HPSINFO_t;
 
 /*
  * Field : Parity Fail Injection for GHB RAM - ghb_0
- * 
+ *
  * If 1, injecting parity error to GHB RAM.The field array index corresponds to the
  * CPU index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PARITYINJ_GHB_0 register field. */
 #define ALT_SYSMGR_PARITYINJ_GHB_0_LSB        12
@@ -1157,12 +1157,12 @@ typedef volatile struct ALT_SYSMGR_HPSINFO_s  ALT_SYSMGR_HPSINFO_t;
 
 /*
  * Field : Parity Fail Injection for GHB RAM - ghb_1
- * 
+ *
  * If 1, injecting parity error to GHB RAM.The field array index corresponds to the
  * CPU index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PARITYINJ_GHB_1 register field. */
 #define ALT_SYSMGR_PARITYINJ_GHB_1_LSB        13
@@ -1183,12 +1183,12 @@ typedef volatile struct ALT_SYSMGR_HPSINFO_s  ALT_SYSMGR_HPSINFO_t;
 
 /*
  * Field : Parity Fail Injection for BTAC RAM - btac_0
- * 
+ *
  * If 1, injecting parity error to BTAC RAM.The field array index corresponds to
  * the CPU index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PARITYINJ_BTAC_0 register field. */
 #define ALT_SYSMGR_PARITYINJ_BTAC_0_LSB        14
@@ -1209,12 +1209,12 @@ typedef volatile struct ALT_SYSMGR_HPSINFO_s  ALT_SYSMGR_HPSINFO_t;
 
 /*
  * Field : Parity Fail Injection for BTAC RAM - btac_1
- * 
+ *
  * If 1, injecting parity error to BTAC RAM.The field array index corresponds to
  * the CPU index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PARITYINJ_BTAC_1 register field. */
 #define ALT_SYSMGR_PARITYINJ_BTAC_1_LSB        15
@@ -1241,7 +1241,7 @@ typedef volatile struct ALT_SYSMGR_HPSINFO_s  ALT_SYSMGR_HPSINFO_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PARITYINJ.
  */
 struct ALT_SYSMGR_PARITYINJ_s
@@ -1275,61 +1275,61 @@ typedef volatile struct ALT_SYSMGR_PARITYINJ_s  ALT_SYSMGR_PARITYINJ_t;
 /*
  * Register Group : FPGA Interface Group - ALT_SYSMGR_FPGAINTF
  * FPGA Interface Group
- * 
+ *
  * Registers used to enable/disable interfaces between the FPGA and HPS. Required
  * for either of the following situations:[list][*]Interfaces that cannot be
  * disabled by putting an HPS module associated with the interface into
  * reset.[*]HPS modules that accept signals from the FPGA fabric and those signals
  * might interfere with the normal operation of the module.[/list].
- * 
+ *
  * All registers are only reset by a cold reset (ignore warm reset).
- * 
+ *
  */
 /*
  * Register : Global Disable Register - gbl
- * 
+ *
  * Used to disable all interfaces between the FPGA and HPS.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description     
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------
  *  [0]    | RW     | 0x1   | Global Interface
- *  [31:1] | ???    | 0x0   | *UNDEFINED*     
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Global Interface - intf
- * 
+ *
  * Used to disable all interfaces between the FPGA and HPS. Software must ensure
  * that all interfaces between the FPGA and HPS are inactive before disabling them.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                                     
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:-------------------------------------------------
- *  ALT_SYSMGR_FPGAINTF_GBL_INTF_E_DIS | 0x0   | All interfaces between FPGA and HPS are         
- * :                                   |       | disabled.                                       
- *  ALT_SYSMGR_FPGAINTF_GBL_INTF_E_EN  | 0x1   | Interfaces between FPGA and HPS are not all     
+ *  ALT_SYSMGR_FPGAINTF_GBL_INTF_E_DIS | 0x0   | All interfaces between FPGA and HPS are
+ * :                                   |       | disabled.
+ *  ALT_SYSMGR_FPGAINTF_GBL_INTF_E_EN  | 0x1   | Interfaces between FPGA and HPS are not all
  * :                                   |       | disabled. Interfaces can be indivdually disabled
- * :                                   |       | by putting the HPS module associated with the   
- * :                                   |       | interface in reset using registers in the Reset 
- * :                                   |       | Manager or by using registers in this register  
- * :                                   |       | group of the System Manager for interfaces      
- * :                                   |       | without an associated module.                   
- * 
+ * :                                   |       | by putting the HPS module associated with the
+ * :                                   |       | interface in reset using registers in the Reset
+ * :                                   |       | Manager or by using registers in this register
+ * :                                   |       | group of the System Manager for interfaces
+ * :                                   |       | without an associated module.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FPGAINTF_GBL_INTF
- * 
+ *
  * All interfaces between FPGA and HPS are disabled.
  */
 #define ALT_SYSMGR_FPGAINTF_GBL_INTF_E_DIS  0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FPGAINTF_GBL_INTF
- * 
+ *
  * Interfaces between FPGA and HPS are not all disabled. Interfaces can be
  * indivdually disabled by putting the HPS module associated with the interface in
  * reset using registers in the Reset Manager or by using registers in this
@@ -1363,7 +1363,7 @@ typedef volatile struct ALT_SYSMGR_PARITYINJ_s  ALT_SYSMGR_PARITYINJ_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_FPGAINTF_GBL.
  */
 struct ALT_SYSMGR_FPGAINTF_GBL_s
@@ -1381,55 +1381,55 @@ typedef volatile struct ALT_SYSMGR_FPGAINTF_GBL_s  ALT_SYSMGR_FPGAINTF_GBL_t;
 
 /*
  * Register : Individual Disable Register - indiv
- * 
+ *
  * Used to disable individual interfaces between the FPGA and HPS.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------
- *  [0]    | RW     | 0x1   | Reset Request Interface      
- *  [1]    | RW     | 0x1   | JTAG Enable Interface        
- *  [2]    | RW     | 0x1   | CONFIG_IO Interface          
- *  [3]    | RW     | 0x1   | Boundary-Scan Interface      
- *  [4]    | RW     | 0x1   | Trace Interface              
- *  [5]    | ???    | 0x1   | *UNDEFINED*                  
- *  [6]    | RW     | 0x1   | STM Event Interface          
+ *  [0]    | RW     | 0x1   | Reset Request Interface
+ *  [1]    | RW     | 0x1   | JTAG Enable Interface
+ *  [2]    | RW     | 0x1   | CONFIG_IO Interface
+ *  [3]    | RW     | 0x1   | Boundary-Scan Interface
+ *  [4]    | RW     | 0x1   | Trace Interface
+ *  [5]    | ???    | 0x1   | *UNDEFINED*
+ *  [6]    | RW     | 0x1   | STM Event Interface
  *  [7]    | RW     | 0x1   | Cross Trigger Interface (CTI)
- *  [31:8] | ???    | 0x0   | *UNDEFINED*                  
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Reset Request Interface - rstreqintf
- * 
+ *
  * Used to disable the reset request interface. This interface allows logic in the
  * FPGA fabric to request HPS resets. This field disables the following reset
  * request signals from the FPGA fabric to HPS:[list][*]f2h_cold_rst_req_n -
  * Triggers a cold reset of the HPS[*]f2h_warm_rst_req_n - Triggers a warm reset of
  * the HPS[*]f2h_dbg_rst_req_n - Triggers a debug reset of the HPS[/list]
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                       | Value | Description                                     
+ *
+ *  Enum                                       | Value | Description
  * :-------------------------------------------|:------|:-------------------------------------------------
- *  ALT_SYSMGR_FPGAINTF_INDIV_RSTREQINTF_E_DIS | 0x0   | Reset request interface is disabled. Logic in   
- * :                                           |       | the FPGA fabric cannot reset the HPS.           
+ *  ALT_SYSMGR_FPGAINTF_INDIV_RSTREQINTF_E_DIS | 0x0   | Reset request interface is disabled. Logic in
+ * :                                           |       | the FPGA fabric cannot reset the HPS.
  *  ALT_SYSMGR_FPGAINTF_INDIV_RSTREQINTF_E_EN  | 0x1   | Reset request interface is enabled. Logic in the
- * :                                           |       | FPGA fabric can reset the HPS.                  
- * 
+ * :                                           |       | FPGA fabric can reset the HPS.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FPGAINTF_INDIV_RSTREQINTF
- * 
+ *
  * Reset request interface is disabled. Logic in the FPGA fabric cannot reset the
  * HPS.
  */
 #define ALT_SYSMGR_FPGAINTF_INDIV_RSTREQINTF_E_DIS  0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FPGAINTF_INDIV_RSTREQINTF
- * 
+ *
  * Reset request interface is enabled. Logic in the FPGA fabric can reset the HPS.
  */
 #define ALT_SYSMGR_FPGAINTF_INDIV_RSTREQINTF_E_EN   0x1
@@ -1453,32 +1453,32 @@ typedef volatile struct ALT_SYSMGR_FPGAINTF_GBL_s  ALT_SYSMGR_FPGAINTF_GBL_t;
 
 /*
  * Field : JTAG Enable Interface - jtagenintf
- * 
+ *
  * Used to disable the JTAG enable interface. This interface allows logic in the
  * FPGA fabric to disable the HPS JTAG operation.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                       | Value | Description                                    
+ *
+ *  Enum                                       | Value | Description
  * :-------------------------------------------|:------|:------------------------------------------------
  *  ALT_SYSMGR_FPGAINTF_INDIV_JTAGENINTF_E_DIS | 0x0   | JTAG enable interface is disabled. Logic in the
- * :                                           |       | FPGA fabric cannot disable the HPS JTAG.       
- *  ALT_SYSMGR_FPGAINTF_INDIV_JTAGENINTF_E_EN  | 0x1   | JTAG enable interface is enabled. Logic in the 
- * :                                           |       | FPGA fabric can disable the HPS JTAG.          
- * 
+ * :                                           |       | FPGA fabric cannot disable the HPS JTAG.
+ *  ALT_SYSMGR_FPGAINTF_INDIV_JTAGENINTF_E_EN  | 0x1   | JTAG enable interface is enabled. Logic in the
+ * :                                           |       | FPGA fabric can disable the HPS JTAG.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FPGAINTF_INDIV_JTAGENINTF
- * 
+ *
  * JTAG enable interface is disabled. Logic in the FPGA fabric cannot disable the
  * HPS JTAG.
  */
 #define ALT_SYSMGR_FPGAINTF_INDIV_JTAGENINTF_E_DIS  0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FPGAINTF_INDIV_JTAGENINTF
- * 
+ *
  * JTAG enable interface is enabled. Logic in the FPGA fabric can disable the HPS
  * JTAG.
  */
@@ -1503,38 +1503,38 @@ typedef volatile struct ALT_SYSMGR_FPGAINTF_GBL_s  ALT_SYSMGR_FPGAINTF_GBL_t;
 
 /*
  * Field : CONFIG_IO Interface - configiointf
- * 
+ *
  * Used to disable the CONFIG_IO interface. This interface allows the FPGA JTAG TAP
  * controller to execute the CONFIG_IO instruction and configure all device I/Os
  * (FPGA and HPS). This is typically done before executing boundary-scan
  * instructions. The CONFIG_IO interface must be enabled before attempting to send
  * the CONFIG_IO instruction to the FPGA JTAG TAP controller.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                      | Value | Description                                     
+ *
+ *  Enum                                      | Value | Description
  * :------------------------------------------|:------|:-------------------------------------------------
- *  ALT_SYSMGR_FPGAINTF_INDIV_CFGIOINTF_E_DIS | 0x0   | CONFIG_IO interface is disabled. Execution of   
- * :                                          |       | the CONFIG_IO instruction in the FPGA JTAG TAP  
+ *  ALT_SYSMGR_FPGAINTF_INDIV_CFGIOINTF_E_DIS | 0x0   | CONFIG_IO interface is disabled. Execution of
+ * :                                          |       | the CONFIG_IO instruction in the FPGA JTAG TAP
  * :                                          |       | controller is unsupported and produces undefined
- * :                                          |       | results.                                        
+ * :                                          |       | results.
  *  ALT_SYSMGR_FPGAINTF_INDIV_CFGIOINTF_E_EN  | 0x1   | CONFIG_IO interface is enabled. Execution of the
- * :                                          |       | CONFIG_IO instruction in the FPGA JTAG TAP      
- * :                                          |       | controller is supported.                        
- * 
+ * :                                          |       | CONFIG_IO instruction in the FPGA JTAG TAP
+ * :                                          |       | controller is supported.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FPGAINTF_INDIV_CFGIOINTF
- * 
+ *
  * CONFIG_IO interface is disabled. Execution of the CONFIG_IO instruction in the
  * FPGA JTAG TAP controller is unsupported and produces undefined results.
  */
 #define ALT_SYSMGR_FPGAINTF_INDIV_CFGIOINTF_E_DIS   0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FPGAINTF_INDIV_CFGIOINTF
- * 
+ *
  * CONFIG_IO interface is enabled. Execution of the CONFIG_IO instruction in the
  * FPGA JTAG TAP controller is supported.
  */
@@ -1559,37 +1559,37 @@ typedef volatile struct ALT_SYSMGR_FPGAINTF_GBL_s  ALT_SYSMGR_FPGAINTF_GBL_t;
 
 /*
  * Field : Boundary-Scan Interface - bscanintf
- * 
+ *
  * Used to disable the boundary-scan interface. This interface allows the FPGA JTAG
  * TAP controller to execute boundary-scan instructions such as SAMPLE/PRELOAD,
  * EXTEST, and HIGHZ. The boundary-scan interface must be enabled before attempting
  * to send the boundary-scan instructions to the FPGA JTAG TAP controller.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                      | Value | Description                                     
+ *
+ *  Enum                                      | Value | Description
  * :------------------------------------------|:------|:-------------------------------------------------
- *  ALT_SYSMGR_FPGAINTF_INDIV_BSCANINTF_E_DIS | 0x0   | Boundary-scan interface is disabled. Execution  
- * :                                          |       | of boundary-scan instructions in the FPGA JTAG  
- * :                                          |       | TAP controller is unsupported and produces      
- * :                                          |       | undefined results.                              
+ *  ALT_SYSMGR_FPGAINTF_INDIV_BSCANINTF_E_DIS | 0x0   | Boundary-scan interface is disabled. Execution
+ * :                                          |       | of boundary-scan instructions in the FPGA JTAG
+ * :                                          |       | TAP controller is unsupported and produces
+ * :                                          |       | undefined results.
  *  ALT_SYSMGR_FPGAINTF_INDIV_BSCANINTF_E_EN  | 0x1   | Boundary-scan interface is enabled. Execution of
- * :                                          |       | the boundary-scan instructions in the FPGA JTAG 
- * :                                          |       | TAP controller is supported.                    
- * 
+ * :                                          |       | the boundary-scan instructions in the FPGA JTAG
+ * :                                          |       | TAP controller is supported.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FPGAINTF_INDIV_BSCANINTF
- * 
+ *
  * Boundary-scan interface is disabled. Execution of boundary-scan instructions in
  * the FPGA JTAG TAP controller is unsupported and produces undefined results.
  */
 #define ALT_SYSMGR_FPGAINTF_INDIV_BSCANINTF_E_DIS   0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FPGAINTF_INDIV_BSCANINTF
- * 
+ *
  * Boundary-scan interface is enabled. Execution of the boundary-scan instructions
  * in the FPGA JTAG TAP controller is supported.
  */
@@ -1614,33 +1614,33 @@ typedef volatile struct ALT_SYSMGR_FPGAINTF_GBL_s  ALT_SYSMGR_FPGAINTF_GBL_t;
 
 /*
  * Field : Trace Interface - traceintf
- * 
+ *
  * Used to disable the trace interface. This interface allows the HPS debug logic
  * to send trace data to logic in the FPGA fabric.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                      | Value | Description                                   
+ *
+ *  Enum                                      | Value | Description
  * :------------------------------------------|:------|:-----------------------------------------------
- *  ALT_SYSMGR_FPGAINTF_INDIV_TRACEINTF_E_DIS | 0x0   | Trace interface is disabled.  HPS debug logic 
- * :                                          |       | cannot send trace data to the FPGA fabric.    
+ *  ALT_SYSMGR_FPGAINTF_INDIV_TRACEINTF_E_DIS | 0x0   | Trace interface is disabled.  HPS debug logic
+ * :                                          |       | cannot send trace data to the FPGA fabric.
  *  ALT_SYSMGR_FPGAINTF_INDIV_TRACEINTF_E_EN  | 0x1   | Trace interface is enabled. Other registers in
- * :                                          |       | the HPS debug logic must be programmmed to    
- * :                                          |       | actually send trace data to the FPGA fabric.  
- * 
+ * :                                          |       | the HPS debug logic must be programmmed to
+ * :                                          |       | actually send trace data to the FPGA fabric.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FPGAINTF_INDIV_TRACEINTF
- * 
+ *
  * Trace interface is disabled.  HPS debug logic cannot send trace data to the FPGA
  * fabric.
  */
 #define ALT_SYSMGR_FPGAINTF_INDIV_TRACEINTF_E_DIS   0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FPGAINTF_INDIV_TRACEINTF
- * 
+ *
  * Trace interface is enabled. Other registers in the HPS debug logic must be
  * programmmed to actually send trace data to the FPGA fabric.
  */
@@ -1665,32 +1665,32 @@ typedef volatile struct ALT_SYSMGR_FPGAINTF_GBL_s  ALT_SYSMGR_FPGAINTF_GBL_t;
 
 /*
  * Field : STM Event Interface - stmeventintf
- * 
+ *
  * Used to disable the STM event interface. This interface allows logic in the FPGA
  * fabric to trigger events to the STM debug module in the HPS.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                         | Value | Description                                   
+ *
+ *  Enum                                         | Value | Description
  * :---------------------------------------------|:------|:-----------------------------------------------
  *  ALT_SYSMGR_FPGAINTF_INDIV_STMEVENTINTF_E_DIS | 0x0   | STM event interface is disabled.  Logic in the
- * :                                             |       | FPGA fabric cannot trigger STM events.        
- *  ALT_SYSMGR_FPGAINTF_INDIV_STMEVENTINTF_E_EN  | 0x1   | STM event interface is enabled.  Logic in the 
- * :                                             |       | FPGA fabric can trigger STM events.           
- * 
+ * :                                             |       | FPGA fabric cannot trigger STM events.
+ *  ALT_SYSMGR_FPGAINTF_INDIV_STMEVENTINTF_E_EN  | 0x1   | STM event interface is enabled.  Logic in the
+ * :                                             |       | FPGA fabric can trigger STM events.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FPGAINTF_INDIV_STMEVENTINTF
- * 
+ *
  * STM event interface is disabled.  Logic in the FPGA fabric cannot trigger STM
  * events.
  */
 #define ALT_SYSMGR_FPGAINTF_INDIV_STMEVENTINTF_E_DIS    0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FPGAINTF_INDIV_STMEVENTINTF
- * 
+ *
  * STM event interface is enabled.  Logic in the FPGA fabric can trigger STM
  * events.
  */
@@ -1715,30 +1715,30 @@ typedef volatile struct ALT_SYSMGR_FPGAINTF_GBL_s  ALT_SYSMGR_FPGAINTF_GBL_t;
 
 /*
  * Field : Cross Trigger Interface (CTI) - crosstrigintf
- * 
+ *
  * Used to disable the FPGA Fabric from sending triggers to HPS debug logic.  Note
  * that this doesn't prevent the HPS debug logic from sending triggers to the FPGA
  * Fabric.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                          | Value | Description                      
+ *
+ *  Enum                                          | Value | Description
  * :----------------------------------------------|:------|:----------------------------------
  *  ALT_SYSMGR_FPGAINTF_INDIV_CROSSTRIGINTF_E_DIS | 0x0   | FPGA Fabric cannot send triggers.
- *  ALT_SYSMGR_FPGAINTF_INDIV_CROSSTRIGINTF_E_EN  | 0x1   | FPGA Fabric can send triggers.   
- * 
+ *  ALT_SYSMGR_FPGAINTF_INDIV_CROSSTRIGINTF_E_EN  | 0x1   | FPGA Fabric can send triggers.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FPGAINTF_INDIV_CROSSTRIGINTF
- * 
+ *
  * FPGA Fabric cannot send triggers.
  */
 #define ALT_SYSMGR_FPGAINTF_INDIV_CROSSTRIGINTF_E_DIS   0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FPGAINTF_INDIV_CROSSTRIGINTF
- * 
+ *
  * FPGA Fabric can send triggers.
  */
 #define ALT_SYSMGR_FPGAINTF_INDIV_CROSSTRIGINTF_E_EN    0x1
@@ -1768,7 +1768,7 @@ typedef volatile struct ALT_SYSMGR_FPGAINTF_GBL_s  ALT_SYSMGR_FPGAINTF_GBL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_FPGAINTF_INDIV.
  */
 struct ALT_SYSMGR_FPGAINTF_INDIV_s
@@ -1793,48 +1793,48 @@ typedef volatile struct ALT_SYSMGR_FPGAINTF_INDIV_s  ALT_SYSMGR_FPGAINTF_INDIV_t
 
 /*
  * Register : Module Disable Register - module
- * 
+ *
  * Used to disable signals from the FPGA fabric to individual HPS modules.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
  *  [1:0]  | ???    | 0x0   | *UNDEFINED*
  *  [2]    | RW     | 0x0   | EMAC Module
  *  [3]    | RW     | 0x0   | EMAC Module
  *  [31:4] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : EMAC Module - emac_0
- * 
+ *
  * Used to disable signals from the FPGA fabric to the EMAC modules that could
  * potentially interfere with their normal operation.
- * 
+ *
  * The array index corresponds to the EMAC module instance.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                    | Value | Description                                     
+ *
+ *  Enum                                    | Value | Description
  * :----------------------------------------|:------|:-------------------------------------------------
  *  ALT_SYSMGR_FPGAINTF_MODULE_EMAC_0_E_DIS | 0x0   | Signals from FPGA fabric cannot affect operation
- * :                                        |       | of the EMAC module.                             
- *  ALT_SYSMGR_FPGAINTF_MODULE_EMAC_0_E_EN  | 0x1   | Signals from FPGA fabric can potentially affect 
- * :                                        |       | operation of the EMAC module.                   
- * 
+ * :                                        |       | of the EMAC module.
+ *  ALT_SYSMGR_FPGAINTF_MODULE_EMAC_0_E_EN  | 0x1   | Signals from FPGA fabric can potentially affect
+ * :                                        |       | operation of the EMAC module.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FPGAINTF_MODULE_EMAC_0
- * 
+ *
  * Signals from FPGA fabric cannot affect operation of the EMAC module.
  */
 #define ALT_SYSMGR_FPGAINTF_MODULE_EMAC_0_E_DIS 0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FPGAINTF_MODULE_EMAC_0
- * 
+ *
  * Signals from FPGA fabric can potentially affect operation of the EMAC module.
  */
 #define ALT_SYSMGR_FPGAINTF_MODULE_EMAC_0_E_EN  0x1
@@ -1858,33 +1858,33 @@ typedef volatile struct ALT_SYSMGR_FPGAINTF_INDIV_s  ALT_SYSMGR_FPGAINTF_INDIV_t
 
 /*
  * Field : EMAC Module - emac_1
- * 
+ *
  * Used to disable signals from the FPGA fabric to the EMAC modules that could
  * potentially interfere with their normal operation.
- * 
+ *
  * The array index corresponds to the EMAC module instance.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                    | Value | Description                                     
+ *
+ *  Enum                                    | Value | Description
  * :----------------------------------------|:------|:-------------------------------------------------
  *  ALT_SYSMGR_FPGAINTF_MODULE_EMAC_1_E_DIS | 0x0   | Signals from FPGA fabric cannot affect operation
- * :                                        |       | of the EMAC module.                             
- *  ALT_SYSMGR_FPGAINTF_MODULE_EMAC_1_E_EN  | 0x1   | Signals from FPGA fabric can potentially affect 
- * :                                        |       | operation of the EMAC module.                   
- * 
+ * :                                        |       | of the EMAC module.
+ *  ALT_SYSMGR_FPGAINTF_MODULE_EMAC_1_E_EN  | 0x1   | Signals from FPGA fabric can potentially affect
+ * :                                        |       | operation of the EMAC module.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FPGAINTF_MODULE_EMAC_1
- * 
+ *
  * Signals from FPGA fabric cannot affect operation of the EMAC module.
  */
 #define ALT_SYSMGR_FPGAINTF_MODULE_EMAC_1_E_DIS 0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FPGAINTF_MODULE_EMAC_1
- * 
+ *
  * Signals from FPGA fabric can potentially affect operation of the EMAC module.
  */
 #define ALT_SYSMGR_FPGAINTF_MODULE_EMAC_1_E_EN  0x1
@@ -1914,7 +1914,7 @@ typedef volatile struct ALT_SYSMGR_FPGAINTF_INDIV_s  ALT_SYSMGR_FPGAINTF_INDIV_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_FPGAINTF_MODULE.
  */
 struct ALT_SYSMGR_FPGAINTF_MODULE_s
@@ -1940,7 +1940,7 @@ typedef volatile struct ALT_SYSMGR_FPGAINTF_MODULE_s  ALT_SYSMGR_FPGAINTF_MODULE
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_SYSMGR_FPGAINTF.
  */
 struct ALT_SYSMGR_FPGAINTF_s
@@ -1970,51 +1970,51 @@ typedef volatile struct ALT_SYSMGR_FPGAINTF_raw_s  ALT_SYSMGR_FPGAINTF_raw_t;
 /*
  * Register Group : Scan Manager Group - ALT_SYSMGR_SCANMGR
  * Scan Manager Group
- * 
+ *
  * Registers related to the Scan Manager that aren't located inside the Scan
  * Manager itself.
- * 
+ *
  */
 /*
  * Register : Scan Manager Control Register - ctrl
- * 
+ *
  * Controls behaviors of Scan Manager not controlled by registers in the Scan
  * Manager itself.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description     
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------
  *  [0]    | RW     | 0x0   | FPGA JTAG Enable
- *  [31:1] | ???    | 0x0   | *UNDEFINED*     
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : FPGA JTAG Enable - fpgajtagen
- * 
+ *
  * Controls whether FPGA JTAG pins or Scan Manager drives JTAG signals to the FPGA.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                         | Value | Description                              
+ *
+ *  Enum                                         | Value | Description
  * :---------------------------------------------|:------|:------------------------------------------
  *  ALT_SYSMGR_SCANMGR_CTL_FPGAJTAGEN_E_FPGAPINS | 0x0   | FPGA JTAG pins drive JTAG signals to FPGA
- *  ALT_SYSMGR_SCANMGR_CTL_FPGAJTAGEN_E_SCANMGR  | 0x1   | Scan Manager drives JTAG signals to FPGA 
- * 
+ *  ALT_SYSMGR_SCANMGR_CTL_FPGAJTAGEN_E_SCANMGR  | 0x1   | Scan Manager drives JTAG signals to FPGA
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_SCANMGR_CTL_FPGAJTAGEN
- * 
+ *
  * FPGA JTAG pins drive JTAG signals to FPGA
  */
 #define ALT_SYSMGR_SCANMGR_CTL_FPGAJTAGEN_E_FPGAPINS    0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_SCANMGR_CTL_FPGAJTAGEN
- * 
+ *
  * Scan Manager drives JTAG signals to FPGA
  */
 #define ALT_SYSMGR_SCANMGR_CTL_FPGAJTAGEN_E_SCANMGR     0x1
@@ -2044,7 +2044,7 @@ typedef volatile struct ALT_SYSMGR_FPGAINTF_raw_s  ALT_SYSMGR_FPGAINTF_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_SCANMGR_CTL.
  */
 struct ALT_SYSMGR_SCANMGR_CTL_s
@@ -2068,7 +2068,7 @@ typedef volatile struct ALT_SYSMGR_SCANMGR_CTL_s  ALT_SYSMGR_SCANMGR_CTL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_SYSMGR_SCANMGR.
  */
 struct ALT_SYSMGR_SCANMGR_s
@@ -2092,72 +2092,72 @@ typedef volatile struct ALT_SYSMGR_SCANMGR_raw_s  ALT_SYSMGR_SCANMGR_raw_t;
 /*
  * Register Group : Freeze Control Group - ALT_SYSMGR_FRZCTL
  * Freeze Control Group
- * 
+ *
  * Registers used to generate HPS IO freeze signals.
- * 
+ *
  * All registers are only reset by a cold reset (ignore warm reset).
- * 
+ *
  */
 /*
  * Register : VIO Control Register - vioctrl
- * 
+ *
  * Used to drive freeze signals to HPS VIO banks.
- * 
+ *
  * The register array index corresponds to the freeze channel.
- * 
+ *
  * Freeze channel 0 provides freeze signals to VIO bank 0 and 1.
- * 
+ *
  * Freeze channel 1 provides freeze signals to VIO bank 2 and 3. Only drives freeze
  * signals when SRC.VIO1 is set to SW.
- * 
+ *
  * Freeze channel 2 provides freeze signals to VIO bank 4.
- * 
+ *
  * All fields are only reset by a cold reset (ignore warm reset).
- * 
+ *
  * The following equation determines when the weak pullup resistor is enabled:
- * 
+ *
  * enabled = ~wkpullup | (CFF & cfg & tristate)
- * 
+ *
  * where CFF is the value of weak pullup as set by IO configuration
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description     
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------
  *  [0]    | RW     | 0x0   | IO Configuration
- *  [1]    | RW     | 0x0   | IO Bus Hold     
- *  [2]    | RW     | 0x0   | IO Tri-State    
- *  [3]    | RW     | 0x0   | IO Weak Pullup  
- *  [4]    | RW     | 0x0   | IO Slew-rate    
- *  [31:5] | ???    | 0x0   | *UNDEFINED*     
- * 
+ *  [1]    | RW     | 0x0   | IO Bus Hold
+ *  [2]    | RW     | 0x0   | IO Tri-State
+ *  [3]    | RW     | 0x0   | IO Weak Pullup
+ *  [4]    | RW     | 0x0   | IO Slew-rate
+ *  [31:5] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : IO Configuration - cfg
- * 
+ *
  * Controls IO configuration
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                                   
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:-----------------------------------------------
- *  ALT_SYSMGR_FRZCTL_VIOCTL_CFG_E_DIS | 0x0   | Disable IO configuration (forced to a safe    
- * :                                   |       | value).                                       
- *  ALT_SYSMGR_FRZCTL_VIOCTL_CFG_E_CFG | 0x1   | Enables IO configuration as previously        
+ *  ALT_SYSMGR_FRZCTL_VIOCTL_CFG_E_DIS | 0x0   | Disable IO configuration (forced to a safe
+ * :                                   |       | value).
+ *  ALT_SYSMGR_FRZCTL_VIOCTL_CFG_E_CFG | 0x1   | Enables IO configuration as previously
  * :                                   |       | configured by software using the Scan Manager.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_VIOCTL_CFG
- * 
+ *
  * Disable IO configuration (forced to a safe value).
  */
 #define ALT_SYSMGR_FRZCTL_VIOCTL_CFG_E_DIS  0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_VIOCTL_CFG
- * 
+ *
  * Enables IO configuration as previously configured by software using the Scan
  * Manager.
  */
@@ -2182,28 +2182,28 @@ typedef volatile struct ALT_SYSMGR_SCANMGR_raw_s  ALT_SYSMGR_SCANMGR_raw_t;
 
 /*
  * Field : IO Bus Hold - bushold
- * 
+ *
  * Controls bus hold circuit
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                   | Value | Description                                     
+ *
+ *  Enum                                   | Value | Description
  * :---------------------------------------|:------|:-------------------------------------------------
- *  ALT_SYSMGR_FRZCTL_VIOCTL_BUSHOLD_E_DIS | 0x0   | Disable bus hold circuit.                       
+ *  ALT_SYSMGR_FRZCTL_VIOCTL_BUSHOLD_E_DIS | 0x0   | Disable bus hold circuit.
  *  ALT_SYSMGR_FRZCTL_VIOCTL_BUSHOLD_E_CFG | 0x1   | Bus hold circuit controlled by IO configuration.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_VIOCTL_BUSHOLD
- * 
+ *
  * Disable bus hold circuit.
  */
 #define ALT_SYSMGR_FRZCTL_VIOCTL_BUSHOLD_E_DIS  0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_VIOCTL_BUSHOLD
- * 
+ *
  * Bus hold circuit controlled by IO configuration.
  */
 #define ALT_SYSMGR_FRZCTL_VIOCTL_BUSHOLD_E_CFG  0x1
@@ -2227,28 +2227,28 @@ typedef volatile struct ALT_SYSMGR_SCANMGR_raw_s  ALT_SYSMGR_SCANMGR_raw_t;
 
 /*
  * Field : IO Tri-State - tristate
- * 
+ *
  * Controls IO tri-state
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                    | Value | Description                                 
+ *
+ *  Enum                                    | Value | Description
  * :----------------------------------------|:------|:---------------------------------------------
- *  ALT_SYSMGR_FRZCTL_VIOCTL_TRISTATE_E_EN  | 0x0   | IO tri-state enabled.                       
+ *  ALT_SYSMGR_FRZCTL_VIOCTL_TRISTATE_E_EN  | 0x0   | IO tri-state enabled.
  *  ALT_SYSMGR_FRZCTL_VIOCTL_TRISTATE_E_CFG | 0x1   | IO tri-state controlled by IO configuration.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_VIOCTL_TRISTATE
- * 
+ *
  * IO tri-state enabled.
  */
 #define ALT_SYSMGR_FRZCTL_VIOCTL_TRISTATE_E_EN  0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_VIOCTL_TRISTATE
- * 
+ *
  * IO tri-state controlled by IO configuration.
  */
 #define ALT_SYSMGR_FRZCTL_VIOCTL_TRISTATE_E_CFG 0x1
@@ -2272,29 +2272,29 @@ typedef volatile struct ALT_SYSMGR_SCANMGR_raw_s  ALT_SYSMGR_SCANMGR_raw_t;
 
 /*
  * Field : IO Weak Pullup - wkpullup
- * 
+ *
  * Controls weak pullup resistor
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                    | Value | Description                                 
+ *
+ *  Enum                                    | Value | Description
  * :----------------------------------------|:------|:---------------------------------------------
- *  ALT_SYSMGR_FRZCTL_VIOCTL_WKPULLUP_E_EN  | 0x0   | Weak pullup resistor enabled.               
+ *  ALT_SYSMGR_FRZCTL_VIOCTL_WKPULLUP_E_EN  | 0x0   | Weak pullup resistor enabled.
  *  ALT_SYSMGR_FRZCTL_VIOCTL_WKPULLUP_E_CFG | 0x1   | Weak pullup resistor enable controlled by IO
- * :                                        |       | configuration.                              
- * 
+ * :                                        |       | configuration.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_VIOCTL_WKPULLUP
- * 
+ *
  * Weak pullup resistor enabled.
  */
 #define ALT_SYSMGR_FRZCTL_VIOCTL_WKPULLUP_E_EN  0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_VIOCTL_WKPULLUP
- * 
+ *
  * Weak pullup resistor enable controlled by IO configuration.
  */
 #define ALT_SYSMGR_FRZCTL_VIOCTL_WKPULLUP_E_CFG 0x1
@@ -2318,28 +2318,28 @@ typedef volatile struct ALT_SYSMGR_SCANMGR_raw_s  ALT_SYSMGR_SCANMGR_raw_t;
 
 /*
  * Field : IO Slew-rate - slew
- * 
+ *
  * Controls IO slew-rate
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                 | Value | Description                              
+ *
+ *  Enum                                 | Value | Description
  * :-------------------------------------|:------|:------------------------------------------
- *  ALT_SYSMGR_FRZCTL_VIOCTL_SLEW_E_SLOW | 0x0   | Slew-rate forced to slow.                
+ *  ALT_SYSMGR_FRZCTL_VIOCTL_SLEW_E_SLOW | 0x0   | Slew-rate forced to slow.
  *  ALT_SYSMGR_FRZCTL_VIOCTL_SLEW_E_CFG  | 0x1   | Slew-rate controlled by IO configuration.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_VIOCTL_SLEW
- * 
+ *
  * Slew-rate forced to slow.
  */
 #define ALT_SYSMGR_FRZCTL_VIOCTL_SLEW_E_SLOW    0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_VIOCTL_SLEW
- * 
+ *
  * Slew-rate controlled by IO configuration.
  */
 #define ALT_SYSMGR_FRZCTL_VIOCTL_SLEW_E_CFG     0x1
@@ -2369,7 +2369,7 @@ typedef volatile struct ALT_SYSMGR_SCANMGR_raw_s  ALT_SYSMGR_SCANMGR_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_FRZCTL_VIOCTL.
  */
 struct ALT_SYSMGR_FRZCTL_VIOCTL_s
@@ -2391,59 +2391,59 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_VIOCTL_s  ALT_SYSMGR_FRZCTL_VIOCTL_t;
 
 /*
  * Register : HIO Control Register - hioctrl
- * 
+ *
  * Used to drive freeze signals to HPS HIO bank (DDR SDRAM).
- * 
+ *
  * All fields are only reset by a cold reset (ignore warm reset).
- * 
+ *
  * The following equation determines when the weak pullup resistor is enabled:
- * 
+ *
  * enabled = ~wkpullup | (CFF & cfg & tristate)
- * 
+ *
  * where CFF is the value of weak pullup as set by IO configuration
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                             
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------------------
- *  [0]    | RW     | 0x0   | IO Configuration                        
- *  [1]    | RW     | 0x0   | IO Bus Hold                             
- *  [2]    | RW     | 0x0   | IO Tri-State                            
- *  [3]    | RW     | 0x0   | IO Weak Pullup                          
- *  [4]    | RW     | 0x0   | IO Slew-rate                            
- *  [5]    | RW     | 0x1   | DLL Reset                               
- *  [6]    | RW     | 0x1   | OCT Reset                               
- *  [7]    | RW     | 0x1   | IO and DQS Reset                        
+ *  [0]    | RW     | 0x0   | IO Configuration
+ *  [1]    | RW     | 0x0   | IO Bus Hold
+ *  [2]    | RW     | 0x0   | IO Tri-State
+ *  [3]    | RW     | 0x0   | IO Weak Pullup
+ *  [4]    | RW     | 0x0   | IO Slew-rate
+ *  [5]    | RW     | 0x1   | DLL Reset
+ *  [6]    | RW     | 0x1   | OCT Reset
+ *  [7]    | RW     | 0x1   | IO and DQS Reset
  *  [8]    | RW     | 0x0   | OCT Calibration and Configuration Enable
- *  [31:9] | ???    | 0x0   | *UNDEFINED*                             
- * 
+ *  [31:9] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : IO Configuration - cfg
- * 
+ *
  * Controls IO configuration
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                               | Value | Description                                   
+ *
+ *  Enum                               | Value | Description
  * :-----------------------------------|:------|:-----------------------------------------------
- *  ALT_SYSMGR_FRZCTL_HIOCTL_CFG_E_DIS | 0x0   | Disable IO configuration (forced to a safe    
- * :                                   |       | value).                                       
- *  ALT_SYSMGR_FRZCTL_HIOCTL_CFG_E_CFG | 0x1   | Enables IO configuration as previously        
+ *  ALT_SYSMGR_FRZCTL_HIOCTL_CFG_E_DIS | 0x0   | Disable IO configuration (forced to a safe
+ * :                                   |       | value).
+ *  ALT_SYSMGR_FRZCTL_HIOCTL_CFG_E_CFG | 0x1   | Enables IO configuration as previously
  * :                                   |       | configured by software using the Scan Manager.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HIOCTL_CFG
- * 
+ *
  * Disable IO configuration (forced to a safe value).
  */
 #define ALT_SYSMGR_FRZCTL_HIOCTL_CFG_E_DIS  0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HIOCTL_CFG
- * 
+ *
  * Enables IO configuration as previously configured by software using the Scan
  * Manager.
  */
@@ -2468,28 +2468,28 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_VIOCTL_s  ALT_SYSMGR_FRZCTL_VIOCTL_t;
 
 /*
  * Field : IO Bus Hold - bushold
- * 
+ *
  * Controls bus hold circuit
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                   | Value | Description                                     
+ *
+ *  Enum                                   | Value | Description
  * :---------------------------------------|:------|:-------------------------------------------------
- *  ALT_SYSMGR_FRZCTL_HIOCTL_BUSHOLD_E_DIS | 0x0   | Disable bus hold circuit.                       
+ *  ALT_SYSMGR_FRZCTL_HIOCTL_BUSHOLD_E_DIS | 0x0   | Disable bus hold circuit.
  *  ALT_SYSMGR_FRZCTL_HIOCTL_BUSHOLD_E_CFG | 0x1   | Bus hold circuit controlled by IO configuration.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HIOCTL_BUSHOLD
- * 
+ *
  * Disable bus hold circuit.
  */
 #define ALT_SYSMGR_FRZCTL_HIOCTL_BUSHOLD_E_DIS  0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HIOCTL_BUSHOLD
- * 
+ *
  * Bus hold circuit controlled by IO configuration.
  */
 #define ALT_SYSMGR_FRZCTL_HIOCTL_BUSHOLD_E_CFG  0x1
@@ -2513,28 +2513,28 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_VIOCTL_s  ALT_SYSMGR_FRZCTL_VIOCTL_t;
 
 /*
  * Field : IO Tri-State - tristate
- * 
+ *
  * Controls IO tri-state
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                    | Value | Description                                 
+ *
+ *  Enum                                    | Value | Description
  * :----------------------------------------|:------|:---------------------------------------------
- *  ALT_SYSMGR_FRZCTL_HIOCTL_TRISTATE_E_EN  | 0x0   | IO tri-state enabled.                       
+ *  ALT_SYSMGR_FRZCTL_HIOCTL_TRISTATE_E_EN  | 0x0   | IO tri-state enabled.
  *  ALT_SYSMGR_FRZCTL_HIOCTL_TRISTATE_E_CFG | 0x1   | IO tri-state controlled by IO configuration.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HIOCTL_TRISTATE
- * 
+ *
  * IO tri-state enabled.
  */
 #define ALT_SYSMGR_FRZCTL_HIOCTL_TRISTATE_E_EN  0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HIOCTL_TRISTATE
- * 
+ *
  * IO tri-state controlled by IO configuration.
  */
 #define ALT_SYSMGR_FRZCTL_HIOCTL_TRISTATE_E_CFG 0x1
@@ -2558,29 +2558,29 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_VIOCTL_s  ALT_SYSMGR_FRZCTL_VIOCTL_t;
 
 /*
  * Field : IO Weak Pullup - wkpullup
- * 
+ *
  * Controls weak pullup resistor
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                    | Value | Description                                 
+ *
+ *  Enum                                    | Value | Description
  * :----------------------------------------|:------|:---------------------------------------------
- *  ALT_SYSMGR_FRZCTL_HIOCTL_WKPULLUP_E_EN  | 0x0   | Weak pullup resistor enabled.               
+ *  ALT_SYSMGR_FRZCTL_HIOCTL_WKPULLUP_E_EN  | 0x0   | Weak pullup resistor enabled.
  *  ALT_SYSMGR_FRZCTL_HIOCTL_WKPULLUP_E_CFG | 0x1   | Weak pullup resistor enable controlled by IO
- * :                                        |       | configuration.                              
- * 
+ * :                                        |       | configuration.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HIOCTL_WKPULLUP
- * 
+ *
  * Weak pullup resistor enabled.
  */
 #define ALT_SYSMGR_FRZCTL_HIOCTL_WKPULLUP_E_EN  0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HIOCTL_WKPULLUP
- * 
+ *
  * Weak pullup resistor enable controlled by IO configuration.
  */
 #define ALT_SYSMGR_FRZCTL_HIOCTL_WKPULLUP_E_CFG 0x1
@@ -2604,28 +2604,28 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_VIOCTL_s  ALT_SYSMGR_FRZCTL_VIOCTL_t;
 
 /*
  * Field : IO Slew-rate - slew
- * 
+ *
  * Controls IO slew-rate
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                 | Value | Description                              
+ *
+ *  Enum                                 | Value | Description
  * :-------------------------------------|:------|:------------------------------------------
- *  ALT_SYSMGR_FRZCTL_HIOCTL_SLEW_E_SLOW | 0x0   | Slew-rate forced to slow.                
+ *  ALT_SYSMGR_FRZCTL_HIOCTL_SLEW_E_SLOW | 0x0   | Slew-rate forced to slow.
  *  ALT_SYSMGR_FRZCTL_HIOCTL_SLEW_E_CFG  | 0x1   | Slew-rate controlled by IO configuration.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HIOCTL_SLEW
- * 
+ *
  * Slew-rate forced to slow.
  */
 #define ALT_SYSMGR_FRZCTL_HIOCTL_SLEW_E_SLOW    0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HIOCTL_SLEW
- * 
+ *
  * Slew-rate controlled by IO configuration.
  */
 #define ALT_SYSMGR_FRZCTL_HIOCTL_SLEW_E_CFG     0x1
@@ -2649,29 +2649,29 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_VIOCTL_s  ALT_SYSMGR_FRZCTL_VIOCTL_t;
 
 /*
  * Field : DLL Reset - dllrst
- * 
+ *
  * Controls DLL (Delay-Locked Loop) reset.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                  | Value | Description                                  
+ *
+ *  Enum                                  | Value | Description
  * :--------------------------------------|:------|:----------------------------------------------
- *  ALT_SYSMGR_FRZCTL_HIOCTL_DLLRST_E_DIS | 0x0   | No reset or clock gating.                    
+ *  ALT_SYSMGR_FRZCTL_HIOCTL_DLLRST_E_DIS | 0x0   | No reset or clock gating.
  *  ALT_SYSMGR_FRZCTL_HIOCTL_DLLRST_E_EN  | 0x1   | Resets registers in the DLL and gates off DLL
- * :                                      |       | clock.                                       
- * 
+ * :                                      |       | clock.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HIOCTL_DLLRST
- * 
+ *
  * No reset or clock gating.
  */
 #define ALT_SYSMGR_FRZCTL_HIOCTL_DLLRST_E_DIS   0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HIOCTL_DLLRST
- * 
+ *
  * Resets registers in the DLL and gates off DLL clock.
  */
 #define ALT_SYSMGR_FRZCTL_HIOCTL_DLLRST_E_EN    0x1
@@ -2695,28 +2695,28 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_VIOCTL_s  ALT_SYSMGR_FRZCTL_VIOCTL_t;
 
 /*
  * Field : OCT Reset - octrst
- * 
+ *
  * Controls OCT reset.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                  | Value | Description                 
+ *
+ *  Enum                                  | Value | Description
  * :--------------------------------------|:------|:-----------------------------
- *  ALT_SYSMGR_FRZCTL_HIOCTL_OCTRST_E_DIS | 0x0   | No reset.                   
+ *  ALT_SYSMGR_FRZCTL_HIOCTL_OCTRST_E_DIS | 0x0   | No reset.
  *  ALT_SYSMGR_FRZCTL_HIOCTL_OCTRST_E_EN  | 0x1   | Resets registers in the OCT.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HIOCTL_OCTRST
- * 
+ *
  * No reset.
  */
 #define ALT_SYSMGR_FRZCTL_HIOCTL_OCTRST_E_DIS   0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HIOCTL_OCTRST
- * 
+ *
  * Resets registers in the OCT.
  */
 #define ALT_SYSMGR_FRZCTL_HIOCTL_OCTRST_E_EN    0x1
@@ -2740,28 +2740,28 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_VIOCTL_s  ALT_SYSMGR_FRZCTL_VIOCTL_t;
 
 /*
  * Field : IO and DQS Reset - regrst
- * 
+ *
  * Controls IO and DQS reset.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                  | Value | Description                               
+ *
+ *  Enum                                  | Value | Description
  * :--------------------------------------|:------|:-------------------------------------------
- *  ALT_SYSMGR_FRZCTL_HIOCTL_REGRST_E_DIS | 0x0   | No reset.                                 
+ *  ALT_SYSMGR_FRZCTL_HIOCTL_REGRST_E_DIS | 0x0   | No reset.
  *  ALT_SYSMGR_FRZCTL_HIOCTL_REGRST_E_EN  | 0x1   | Resets all IO registers and DQS registers.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HIOCTL_REGRST
- * 
+ *
  * No reset.
  */
 #define ALT_SYSMGR_FRZCTL_HIOCTL_REGRST_E_DIS   0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HIOCTL_REGRST
- * 
+ *
  * Resets all IO registers and DQS registers.
  */
 #define ALT_SYSMGR_FRZCTL_HIOCTL_REGRST_E_EN    0x1
@@ -2785,30 +2785,30 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_VIOCTL_s  ALT_SYSMGR_FRZCTL_VIOCTL_t;
 
 /*
  * Field : OCT Calibration and Configuration Enable - oct_cfgen_calstart
- * 
+ *
  * Controls OCT calibration and OCT IO configuration enable.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                              | Value | Description                                     
+ *
+ *  Enum                                              | Value | Description
  * :--------------------------------------------------|:------|:-------------------------------------------------
- *  ALT_SYSMGR_FRZCTL_HIOCTL_OCT_CFGEN_CALSTART_E_DIS | 0x0   | Disables IO configuration (forced to a safe     
- * :                                                  |       | value) in OCT calibration block.                
+ *  ALT_SYSMGR_FRZCTL_HIOCTL_OCT_CFGEN_CALSTART_E_DIS | 0x0   | Disables IO configuration (forced to a safe
+ * :                                                  |       | value) in OCT calibration block.
  *  ALT_SYSMGR_FRZCTL_HIOCTL_OCT_CFGEN_CALSTART_E_EN  | 0x1   | Starts OCT calibration state machine and enables
- * :                                                  |       | IO configuration in OCT calibration block.      
- * 
+ * :                                                  |       | IO configuration in OCT calibration block.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HIOCTL_OCT_CFGEN_CALSTART
- * 
+ *
  * Disables IO configuration (forced to a safe value) in OCT calibration block.
  */
 #define ALT_SYSMGR_FRZCTL_HIOCTL_OCT_CFGEN_CALSTART_E_DIS   0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HIOCTL_OCT_CFGEN_CALSTART
- * 
+ *
  * Starts OCT calibration state machine and enables IO configuration in OCT
  * calibration block.
  */
@@ -2839,7 +2839,7 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_VIOCTL_s  ALT_SYSMGR_FRZCTL_VIOCTL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_FRZCTL_HIOCTL.
  */
 struct ALT_SYSMGR_FRZCTL_HIOCTL_s
@@ -2865,45 +2865,45 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_HIOCTL_s  ALT_SYSMGR_FRZCTL_HIOCTL_t;
 
 /*
  * Register : Source Register - src
- * 
+ *
  * Contains register field to choose between software state machine (vioctrl array
  * index [1] register) or hardware state machine in the Freeze Controller as the
  * freeze signal source for VIO channel 1.
- * 
+ *
  * All fields are only reset by a cold reset (ignore warm reset).
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description              
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------
  *  [0]    | RW     | 0x0   | VIO1 Freeze Signal Source
- *  [31:1] | ???    | 0x0   | *UNDEFINED*              
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : VIO1 Freeze Signal Source - vio1
- * 
+ *
  * The freeze signal source for VIO channel 1 (VIO bank 2 and bank 3).
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                            | Value | Description                                     
+ *
+ *  Enum                            | Value | Description
  * :--------------------------------|:------|:-------------------------------------------------
- *  ALT_SYSMGR_FRZCTL_SRC_VIO1_E_SW | 0x0   | VIO1 freeze signals are driven by software      
- * :                                |       | writing to the VIOCTRL[1] register. The         
- * :                                |       | VIO1-related fields in the hwctrl register are  
+ *  ALT_SYSMGR_FRZCTL_SRC_VIO1_E_SW | 0x0   | VIO1 freeze signals are driven by software
+ * :                                |       | writing to the VIOCTRL[1] register. The
+ * :                                |       | VIO1-related fields in the hwctrl register are
  * :                                |       | active but don't effect the VIO1 freeze signals.
- *  ALT_SYSMGR_FRZCTL_SRC_VIO1_E_HW | 0x1   | VIO1 freeze signals are driven by the hardware  
- * :                                |       | state machine in the Freeze Controller. The     
- * :                                |       | VIO1-related fields in the hwctrl register are  
- * :                                |       | active and effect the VIO1 freeze signals.      
- * 
+ *  ALT_SYSMGR_FRZCTL_SRC_VIO1_E_HW | 0x1   | VIO1 freeze signals are driven by the hardware
+ * :                                |       | state machine in the Freeze Controller. The
+ * :                                |       | VIO1-related fields in the hwctrl register are
+ * :                                |       | active and effect the VIO1 freeze signals.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_SRC_VIO1
- * 
+ *
  * VIO1 freeze signals are driven by software writing to the VIOCTRL[1] register.
  * The VIO1-related fields in the hwctrl register are active but don't effect the
  * VIO1 freeze signals.
@@ -2911,7 +2911,7 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_HIOCTL_s  ALT_SYSMGR_FRZCTL_HIOCTL_t;
 #define ALT_SYSMGR_FRZCTL_SRC_VIO1_E_SW 0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_SRC_VIO1
- * 
+ *
  * VIO1 freeze signals are driven by the hardware state machine in the Freeze
  * Controller. The VIO1-related fields in the hwctrl register are active and effect
  * the VIO1 freeze signals.
@@ -2943,7 +2943,7 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_HIOCTL_s  ALT_SYSMGR_FRZCTL_HIOCTL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_FRZCTL_SRC.
  */
 struct ALT_SYSMGR_FRZCTL_SRC_s
@@ -2961,54 +2961,54 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_SRC_s  ALT_SYSMGR_FRZCTL_SRC_t;
 
 /*
  * Register : Hardware Control Register - hwctrl
- * 
+ *
  * Activate freeze or thaw operations on VIO channel 1 (HPS IO bank 2 and bank 3)
  * and monitor for completeness and the current state.
- * 
+ *
  * These fields interact with the hardware state machine in the Freeze Controller.
  * These fields can be accessed independent of the value of SRC1.VIO1 although they
  * only have an effect on the VIO channel 1 freeze signals when SRC1.VIO1 is setup
  * to have the hardware state machine be the freeze signal source.
- * 
+ *
  * All fields are only reset by a cold reset (ignore warm reset).
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                      
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------
  *  [0]    | RW     | 0x1   | VIO channel 1 Freeze/Thaw request
- *  [2:1]  | R      | 0x2   | VIO channel 1 State              
- *  [31:3] | ???    | 0x0   | *UNDEFINED*                      
- * 
+ *  [2:1]  | R      | 0x2   | VIO channel 1 State
+ *  [31:3] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : VIO channel 1 Freeze/Thaw request - vio1req
- * 
+ *
  * Requests hardware state machine to generate freeze signal sequence to transition
  * between frozen and thawed states.
- * 
+ *
  * If this field is read by software, it contains the value previously written by
  * software (i.e. this field is not written by hardware).
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                      | Value | Description                          
+ *
+ *  Enum                                      | Value | Description
  * :------------------------------------------|:------|:--------------------------------------
  *  ALT_SYSMGR_FRZCTL_HWCTL_VIO1REQ_E_REQTHAW | 0x0   | Requests a thaw (unfreeze) operation.
- *  ALT_SYSMGR_FRZCTL_HWCTL_VIO1REQ_E_REQFRZ  | 0x1   | Requests a freeze operation.         
- * 
+ *  ALT_SYSMGR_FRZCTL_HWCTL_VIO1REQ_E_REQFRZ  | 0x1   | Requests a freeze operation.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HWCTL_VIO1REQ
- * 
+ *
  * Requests a thaw (unfreeze) operation.
  */
 #define ALT_SYSMGR_FRZCTL_HWCTL_VIO1REQ_E_REQTHAW   0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HWCTL_VIO1REQ
- * 
+ *
  * Requests a freeze operation.
  */
 #define ALT_SYSMGR_FRZCTL_HWCTL_VIO1REQ_E_REQFRZ    0x1
@@ -3032,46 +3032,46 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_SRC_s  ALT_SYSMGR_FRZCTL_SRC_t;
 
 /*
  * Field : VIO channel 1 State - vio1state
- * 
+ *
  * Software reads this field to determine the current frozen/thawed state of the
  * VIO channel 1 or to determine when a freeze/thaw request is made by writing the
  * corresponding *REQ field in this register has completed.
- * 
+ *
  * Reset by a cold reset (ignores warm reset).
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                              | Value | Description                                     
+ *
+ *  Enum                                              | Value | Description
  * :--------------------------------------------------|:------|:-------------------------------------------------
  *  ALT_SYSMGR_FRZCTL_HWCTL_VIO1STATE_E_THAWED2FROZEN | 0x0   | Transitioning from thawed state to frozen state.
- *  ALT_SYSMGR_FRZCTL_HWCTL_VIO1STATE_E_THAWED        | 0x1   | Thawed state. I/Os behave as configured. I/Os   
- * :                                                  |       | must be configured by the Scan Manager before   
- * :                                                  |       | entering this state.                            
- *  ALT_SYSMGR_FRZCTL_HWCTL_VIO1STATE_E_FROZEN        | 0x2   | Frozen state. I/O configuration is ignored.     
- * :                                                  |       | Instead, I/Os are in tri-state mode with a weak 
- * :                                                  |       | pull-up. Scan Manager can be used to configure  
- * :                                                  |       | the I/Os while they are frozen.                 
+ *  ALT_SYSMGR_FRZCTL_HWCTL_VIO1STATE_E_THAWED        | 0x1   | Thawed state. I/Os behave as configured. I/Os
+ * :                                                  |       | must be configured by the Scan Manager before
+ * :                                                  |       | entering this state.
+ *  ALT_SYSMGR_FRZCTL_HWCTL_VIO1STATE_E_FROZEN        | 0x2   | Frozen state. I/O configuration is ignored.
+ * :                                                  |       | Instead, I/Os are in tri-state mode with a weak
+ * :                                                  |       | pull-up. Scan Manager can be used to configure
+ * :                                                  |       | the I/Os while they are frozen.
  *  ALT_SYSMGR_FRZCTL_HWCTL_VIO1STATE_E_FROZEN2THAWED | 0x3   | Transitioning from frozen state to thawed state.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HWCTL_VIO1STATE
- * 
+ *
  * Transitioning from thawed state to frozen state.
  */
 #define ALT_SYSMGR_FRZCTL_HWCTL_VIO1STATE_E_THAWED2FROZEN   0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HWCTL_VIO1STATE
- * 
+ *
  * Thawed state. I/Os behave as configured. I/Os must be configured by the Scan
  * Manager before entering this state.
  */
 #define ALT_SYSMGR_FRZCTL_HWCTL_VIO1STATE_E_THAWED          0x1
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HWCTL_VIO1STATE
- * 
+ *
  * Frozen state. I/O configuration is ignored. Instead, I/Os are in tri-state mode
  * with a weak pull-up. Scan Manager can be used to configure the I/Os while they
  * are frozen.
@@ -3079,7 +3079,7 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_SRC_s  ALT_SYSMGR_FRZCTL_SRC_t;
 #define ALT_SYSMGR_FRZCTL_HWCTL_VIO1STATE_E_FROZEN          0x2
 /*
  * Enumerated value for register field ALT_SYSMGR_FRZCTL_HWCTL_VIO1STATE
- * 
+ *
  * Transitioning from frozen state to thawed state.
  */
 #define ALT_SYSMGR_FRZCTL_HWCTL_VIO1STATE_E_FROZEN2THAWED   0x3
@@ -3109,7 +3109,7 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_SRC_s  ALT_SYSMGR_FRZCTL_SRC_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_FRZCTL_HWCTL.
  */
 struct ALT_SYSMGR_FRZCTL_HWCTL_s
@@ -3134,7 +3134,7 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_HWCTL_s  ALT_SYSMGR_FRZCTL_HWCTL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_SYSMGR_FRZCTL.
  */
 struct ALT_SYSMGR_FRZCTL_s
@@ -3168,59 +3168,59 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_raw_s  ALT_SYSMGR_FRZCTL_raw_t;
 /*
  * Register Group : EMAC Group - ALT_SYSMGR_EMAC
  * EMAC Group
- * 
+ *
  * External control registers for the EMACs
- * 
+ *
  */
 /*
  * Register : Control Register - ctrl
- * 
+ *
  * Registers used by the EMACs. All fields are reset by a cold or warm reset.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description         
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------
  *  [1:0]  | RW     | 0x2   | PHY Interface Select
  *  [3:2]  | RW     | 0x2   | PHY Interface Select
- *  [4]    | RW     | 0x0   | PTP Clock Select    
- *  [5]    | RW     | 0x0   | PTP Clock Select    
- *  [31:6] | ???    | 0x0   | *UNDEFINED*         
- * 
+ *  [4]    | RW     | 0x0   | PTP Clock Select
+ *  [5]    | RW     | 0x0   | PTP Clock Select
+ *  [31:6] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : PHY Interface Select - physel_0
- * 
+ *
  * Controls the PHY interface selection of the EMACs. This is sampled by an EMAC
  * module when it exits from reset. The associated enum defines the allowed values.
  * The field array index corresponds to the EMAC index.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                    | Value | Description                  
+ *
+ *  Enum                                    | Value | Description
  * :----------------------------------------|:------|:------------------------------
  *  ALT_SYSMGR_EMAC_CTL_PHYSEL_0_E_GMII_MII | 0x0   | Select GMII/MII PHY interface
- *  ALT_SYSMGR_EMAC_CTL_PHYSEL_0_E_RGMII    | 0x1   | Select RGMII PHY interface   
- *  ALT_SYSMGR_EMAC_CTL_PHYSEL_0_E_RMII     | 0x2   | Select RMII PHY interface    
- * 
+ *  ALT_SYSMGR_EMAC_CTL_PHYSEL_0_E_RGMII    | 0x1   | Select RGMII PHY interface
+ *  ALT_SYSMGR_EMAC_CTL_PHYSEL_0_E_RMII     | 0x2   | Select RMII PHY interface
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_CTL_PHYSEL_0
- * 
+ *
  * Select GMII/MII PHY interface
  */
 #define ALT_SYSMGR_EMAC_CTL_PHYSEL_0_E_GMII_MII 0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_CTL_PHYSEL_0
- * 
+ *
  * Select RGMII PHY interface
  */
 #define ALT_SYSMGR_EMAC_CTL_PHYSEL_0_E_RGMII    0x1
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_CTL_PHYSEL_0
- * 
+ *
  * Select RMII PHY interface
  */
 #define ALT_SYSMGR_EMAC_CTL_PHYSEL_0_E_RMII     0x2
@@ -3244,37 +3244,37 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_raw_s  ALT_SYSMGR_FRZCTL_raw_t;
 
 /*
  * Field : PHY Interface Select - physel_1
- * 
+ *
  * Controls the PHY interface selection of the EMACs. This is sampled by an EMAC
  * module when it exits from reset. The associated enum defines the allowed values.
  * The field array index corresponds to the EMAC index.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                    | Value | Description                  
+ *
+ *  Enum                                    | Value | Description
  * :----------------------------------------|:------|:------------------------------
  *  ALT_SYSMGR_EMAC_CTL_PHYSEL_1_E_GMII_MII | 0x0   | Select GMII/MII PHY interface
- *  ALT_SYSMGR_EMAC_CTL_PHYSEL_1_E_RGMII    | 0x1   | Select RGMII PHY interface   
- *  ALT_SYSMGR_EMAC_CTL_PHYSEL_1_E_RMII     | 0x2   | Select RMII PHY interface    
- * 
+ *  ALT_SYSMGR_EMAC_CTL_PHYSEL_1_E_RGMII    | 0x1   | Select RGMII PHY interface
+ *  ALT_SYSMGR_EMAC_CTL_PHYSEL_1_E_RMII     | 0x2   | Select RMII PHY interface
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_CTL_PHYSEL_1
- * 
+ *
  * Select GMII/MII PHY interface
  */
 #define ALT_SYSMGR_EMAC_CTL_PHYSEL_1_E_GMII_MII 0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_CTL_PHYSEL_1
- * 
+ *
  * Select RGMII PHY interface
  */
 #define ALT_SYSMGR_EMAC_CTL_PHYSEL_1_E_RGMII    0x1
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_CTL_PHYSEL_1
- * 
+ *
  * Select RMII PHY interface
  */
 #define ALT_SYSMGR_EMAC_CTL_PHYSEL_1_E_RMII     0x2
@@ -3298,30 +3298,30 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_raw_s  ALT_SYSMGR_FRZCTL_raw_t;
 
 /*
  * Field : PTP Clock Select - ptpclksel_0
- * 
+ *
  * Selects the source of the 1588 PTP reference clock. This is sampled by an EMAC
  * module when it exits from reset. The field array index corresponds to the EMAC
  * index.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                               | Value | Description             
+ *
+ *  Enum                                               | Value | Description
  * :---------------------------------------------------|:------|:-------------------------
- *  ALT_SYSMGR_EMAC_CTL_PTPCLKSEL_0_E_OSC1_CLK         | 0x0   | Selects osc1_clk        
+ *  ALT_SYSMGR_EMAC_CTL_PTPCLKSEL_0_E_OSC1_CLK         | 0x0   | Selects osc1_clk
  *  ALT_SYSMGR_EMAC_CTL_PTPCLKSEL_0_E_FPGA_PTP_REF_CLK | 0x1   | Selects fpga_ptp_ref_clk
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_CTL_PTPCLKSEL_0
- * 
+ *
  * Selects osc1_clk
  */
 #define ALT_SYSMGR_EMAC_CTL_PTPCLKSEL_0_E_OSC1_CLK          0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_CTL_PTPCLKSEL_0
- * 
+ *
  * Selects fpga_ptp_ref_clk
  */
 #define ALT_SYSMGR_EMAC_CTL_PTPCLKSEL_0_E_FPGA_PTP_REF_CLK  0x1
@@ -3345,30 +3345,30 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_raw_s  ALT_SYSMGR_FRZCTL_raw_t;
 
 /*
  * Field : PTP Clock Select - ptpclksel_1
- * 
+ *
  * Selects the source of the 1588 PTP reference clock. This is sampled by an EMAC
  * module when it exits from reset. The field array index corresponds to the EMAC
  * index.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                               | Value | Description             
+ *
+ *  Enum                                               | Value | Description
  * :---------------------------------------------------|:------|:-------------------------
- *  ALT_SYSMGR_EMAC_CTL_PTPCLKSEL_1_E_OSC1_CLK         | 0x0   | Selects osc1_clk        
+ *  ALT_SYSMGR_EMAC_CTL_PTPCLKSEL_1_E_OSC1_CLK         | 0x0   | Selects osc1_clk
  *  ALT_SYSMGR_EMAC_CTL_PTPCLKSEL_1_E_FPGA_PTP_REF_CLK | 0x1   | Selects fpga_ptp_ref_clk
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_CTL_PTPCLKSEL_1
- * 
+ *
  * Selects osc1_clk
  */
 #define ALT_SYSMGR_EMAC_CTL_PTPCLKSEL_1_E_OSC1_CLK          0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_CTL_PTPCLKSEL_1
- * 
+ *
  * Selects fpga_ptp_ref_clk
  */
 #define ALT_SYSMGR_EMAC_CTL_PTPCLKSEL_1_E_FPGA_PTP_REF_CLK  0x1
@@ -3398,7 +3398,7 @@ typedef volatile struct ALT_SYSMGR_FRZCTL_raw_s  ALT_SYSMGR_FRZCTL_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_EMAC_CTL.
  */
 struct ALT_SYSMGR_EMAC_CTL_s
@@ -3419,153 +3419,153 @@ typedef volatile struct ALT_SYSMGR_EMAC_CTL_s  ALT_SYSMGR_EMAC_CTL_t;
 
 /*
  * Register : EMAC L3 Master AxCACHE Register - l3master
- * 
+ *
  * Controls the L3 master ARCACHE and AWCACHE AXI signals.
- * 
+ *
  * These register bits should be updated only during system initialization prior to
  * removing the peripheral from reset. They may not be changed dynamically during
  * peripheral operation
- * 
+ *
  * All fields are reset by a cold or warm reset.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description 
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-------------
  *  [3:0]   | RW     | 0x0   | EMAC ARCACHE
  *  [7:4]   | RW     | 0x0   | EMAC ARCACHE
  *  [11:8]  | RW     | 0x0   | EMAC AWCACHE
  *  [15:12] | RW     | 0x0   | EMAC AWCACHE
- *  [31:16] | ???    | 0x0   | *UNDEFINED* 
- * 
+ *  [31:16] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : EMAC ARCACHE - arcache_0
- * 
+ *
  * Specifies the values of the 2 EMAC ARCACHE signals.
- * 
+ *
  * The field array index corresponds to the EMAC index.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                                   | Value | Description                                     
+ *
+ *  Enum                                                   | Value | Description
  * :-------------------------------------------------------|:------|:-------------------------------------------------
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_NONCACHE_NONBUFF     | 0x0   | Noncacheable and nonbufferable.                 
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_BUFF                 | 0x1   | Bufferable only.                                
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_NONALLOC       | 0x2   | Cacheable, but do not allocate.                 
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_BUFF_NONALLOC  | 0x3   | Cacheable and bufferable, but do not allocate.  
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_RSVD1                | 0x4   | Reserved.                                       
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_RSVD2                | 0x5   | Reserved.                                       
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_NONCACHE_NONBUFF     | 0x0   | Noncacheable and nonbufferable.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_BUFF                 | 0x1   | Bufferable only.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_NONALLOC       | 0x2   | Cacheable, but do not allocate.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_BUFF_NONALLOC  | 0x3   | Cacheable and bufferable, but do not allocate.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_RSVD1                | 0x4   | Reserved.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_RSVD2                | 0x5   | Reserved.
  *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_WRTHRU_RDALLOC | 0x6   | Cacheable write-through, allocate on reads only.
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_WRBACK_RDALLOC | 0x7   | Cacheable write-back, allocate on reads only.   
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_RSVD3                | 0x8   | Reserved.                                       
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_RSVD4                | 0x9   | Reserved.                                       
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_WRTHRU_WRALLOC | 0xa   | Cacheable write-through, allocate on writes     
- * :                                                       |       | only.                                           
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_WRBACK_WRALLOC | 0xb   | Cacheable write-back, allocate on writes only.  
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_RSVD5                | 0xc   | Reserved.                                       
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_RSVD6                | 0xd   | Reserved.                                       
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_WRTHRU_ALLOC   | 0xe   | Cacheable write-through, allocate on both reads 
- * :                                                       |       | and writes.                                     
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_WRBACK_RDALLOC | 0x7   | Cacheable write-back, allocate on reads only.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_RSVD3                | 0x8   | Reserved.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_RSVD4                | 0x9   | Reserved.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_WRTHRU_WRALLOC | 0xa   | Cacheable write-through, allocate on writes
+ * :                                                       |       | only.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_WRBACK_WRALLOC | 0xb   | Cacheable write-back, allocate on writes only.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_RSVD5                | 0xc   | Reserved.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_RSVD6                | 0xd   | Reserved.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_WRTHRU_ALLOC   | 0xe   | Cacheable write-through, allocate on both reads
+ * :                                                       |       | and writes.
  *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_WRBACK_ALLOC   | 0xf   | Cacheable write-back, allocate on both reads and
- * :                                                       |       | writes.                                         
- * 
+ * :                                                       |       | writes.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_0
- * 
+ *
  * Noncacheable and nonbufferable.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_NONCACHE_NONBUFF      0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_0
- * 
+ *
  * Bufferable only.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_BUFF                  0x1
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_0
- * 
+ *
  * Cacheable, but do not allocate.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_NONALLOC        0x2
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_0
- * 
+ *
  * Cacheable and bufferable, but do not allocate.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_BUFF_NONALLOC   0x3
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_RSVD1                 0x4
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_RSVD2                 0x5
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_0
- * 
+ *
  * Cacheable write-through, allocate on reads only.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_WRTHRU_RDALLOC  0x6
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_0
- * 
+ *
  * Cacheable write-back, allocate on reads only.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_WRBACK_RDALLOC  0x7
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_RSVD3                 0x8
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_RSVD4                 0x9
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_0
- * 
+ *
  * Cacheable write-through, allocate on writes only.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_WRTHRU_WRALLOC  0xa
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_0
- * 
+ *
  * Cacheable write-back, allocate on writes only.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_WRBACK_WRALLOC  0xb
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_RSVD5                 0xc
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_RSVD6                 0xd
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_0
- * 
+ *
  * Cacheable write-through, allocate on both reads and writes.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_WRTHRU_ALLOC    0xe
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_0
- * 
+ *
  * Cacheable write-back, allocate on both reads and writes.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_0_E_CACHE_WRBACK_ALLOC    0xf
@@ -3589,131 +3589,131 @@ typedef volatile struct ALT_SYSMGR_EMAC_CTL_s  ALT_SYSMGR_EMAC_CTL_t;
 
 /*
  * Field : EMAC ARCACHE - arcache_1
- * 
+ *
  * Specifies the values of the 2 EMAC ARCACHE signals.
- * 
+ *
  * The field array index corresponds to the EMAC index.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                                   | Value | Description                                     
+ *
+ *  Enum                                                   | Value | Description
  * :-------------------------------------------------------|:------|:-------------------------------------------------
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_NONCACHE_NONBUFF     | 0x0   | Noncacheable and nonbufferable.                 
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_BUFF                 | 0x1   | Bufferable only.                                
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_NONALLOC       | 0x2   | Cacheable, but do not allocate.                 
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_BUFF_NONALLOC  | 0x3   | Cacheable and bufferable, but do not allocate.  
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_RSVD1                | 0x4   | Reserved.                                       
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_RSVD2                | 0x5   | Reserved.                                       
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_NONCACHE_NONBUFF     | 0x0   | Noncacheable and nonbufferable.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_BUFF                 | 0x1   | Bufferable only.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_NONALLOC       | 0x2   | Cacheable, but do not allocate.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_BUFF_NONALLOC  | 0x3   | Cacheable and bufferable, but do not allocate.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_RSVD1                | 0x4   | Reserved.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_RSVD2                | 0x5   | Reserved.
  *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_WRTHRU_RDALLOC | 0x6   | Cacheable write-through, allocate on reads only.
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_WRBACK_RDALLOC | 0x7   | Cacheable write-back, allocate on reads only.   
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_RSVD3                | 0x8   | Reserved.                                       
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_RSVD4                | 0x9   | Reserved.                                       
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_WRTHRU_WRALLOC | 0xa   | Cacheable write-through, allocate on writes     
- * :                                                       |       | only.                                           
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_WRBACK_WRALLOC | 0xb   | Cacheable write-back, allocate on writes only.  
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_RSVD5                | 0xc   | Reserved.                                       
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_RSVD6                | 0xd   | Reserved.                                       
- *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_WRTHRU_ALLOC   | 0xe   | Cacheable write-through, allocate on both reads 
- * :                                                       |       | and writes.                                     
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_WRBACK_RDALLOC | 0x7   | Cacheable write-back, allocate on reads only.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_RSVD3                | 0x8   | Reserved.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_RSVD4                | 0x9   | Reserved.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_WRTHRU_WRALLOC | 0xa   | Cacheable write-through, allocate on writes
+ * :                                                       |       | only.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_WRBACK_WRALLOC | 0xb   | Cacheable write-back, allocate on writes only.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_RSVD5                | 0xc   | Reserved.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_RSVD6                | 0xd   | Reserved.
+ *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_WRTHRU_ALLOC   | 0xe   | Cacheable write-through, allocate on both reads
+ * :                                                       |       | and writes.
  *  ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_WRBACK_ALLOC   | 0xf   | Cacheable write-back, allocate on both reads and
- * :                                                       |       | writes.                                         
- * 
+ * :                                                       |       | writes.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_1
- * 
+ *
  * Noncacheable and nonbufferable.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_NONCACHE_NONBUFF      0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_1
- * 
+ *
  * Bufferable only.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_BUFF                  0x1
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_1
- * 
+ *
  * Cacheable, but do not allocate.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_NONALLOC        0x2
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_1
- * 
+ *
  * Cacheable and bufferable, but do not allocate.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_BUFF_NONALLOC   0x3
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_1
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_RSVD1                 0x4
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_1
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_RSVD2                 0x5
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_1
- * 
+ *
  * Cacheable write-through, allocate on reads only.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_WRTHRU_RDALLOC  0x6
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_1
- * 
+ *
  * Cacheable write-back, allocate on reads only.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_WRBACK_RDALLOC  0x7
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_1
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_RSVD3                 0x8
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_1
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_RSVD4                 0x9
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_1
- * 
+ *
  * Cacheable write-through, allocate on writes only.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_WRTHRU_WRALLOC  0xa
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_1
- * 
+ *
  * Cacheable write-back, allocate on writes only.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_WRBACK_WRALLOC  0xb
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_1
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_RSVD5                 0xc
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_1
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_RSVD6                 0xd
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_1
- * 
+ *
  * Cacheable write-through, allocate on both reads and writes.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_WRTHRU_ALLOC    0xe
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_ARCACHE_1
- * 
+ *
  * Cacheable write-back, allocate on both reads and writes.
  */
 #define ALT_SYSMGR_EMAC_L3MST_ARCACHE_1_E_CACHE_WRBACK_ALLOC    0xf
@@ -3737,131 +3737,131 @@ typedef volatile struct ALT_SYSMGR_EMAC_CTL_s  ALT_SYSMGR_EMAC_CTL_t;
 
 /*
  * Field : EMAC AWCACHE - awcache_0
- * 
+ *
  * Specifies the values of the 2 EMAC AWCACHE signals.
- * 
+ *
  * The field array index corresponds to the EMAC index.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                                   | Value | Description                                     
+ *
+ *  Enum                                                   | Value | Description
  * :-------------------------------------------------------|:------|:-------------------------------------------------
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_NONCACHE_NONBUFF     | 0x0   | Noncacheable and nonbufferable.                 
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_BUFF                 | 0x1   | Bufferable only.                                
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_NONALLOC       | 0x2   | Cacheable, but do not allocate.                 
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_BUFF_NONALLOC  | 0x3   | Cacheable and bufferable, but do not allocate.  
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_RSVD1                | 0x4   | Reserved.                                       
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_RSVD2                | 0x5   | Reserved.                                       
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_NONCACHE_NONBUFF     | 0x0   | Noncacheable and nonbufferable.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_BUFF                 | 0x1   | Bufferable only.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_NONALLOC       | 0x2   | Cacheable, but do not allocate.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_BUFF_NONALLOC  | 0x3   | Cacheable and bufferable, but do not allocate.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_RSVD1                | 0x4   | Reserved.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_RSVD2                | 0x5   | Reserved.
  *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_WRTHRU_RDALLOC | 0x6   | Cacheable write-through, allocate on reads only.
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_WRBACK_RDALLOC | 0x7   | Cacheable write-back, allocate on reads only.   
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_RSVD3                | 0x8   | Reserved.                                       
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_RSVD4                | 0x9   | Reserved.                                       
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_WRTHRU_WRALLOC | 0xa   | Cacheable write-through, allocate on writes     
- * :                                                       |       | only.                                           
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_WRBACK_WRALLOC | 0xb   | Cacheable write-back, allocate on writes only.  
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_RSVD5                | 0xc   | Reserved.                                       
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_RSVD6                | 0xd   | Reserved.                                       
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_WRTHRU_ALLOC   | 0xe   | Cacheable write-through, allocate on both reads 
- * :                                                       |       | and writes.                                     
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_WRBACK_RDALLOC | 0x7   | Cacheable write-back, allocate on reads only.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_RSVD3                | 0x8   | Reserved.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_RSVD4                | 0x9   | Reserved.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_WRTHRU_WRALLOC | 0xa   | Cacheable write-through, allocate on writes
+ * :                                                       |       | only.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_WRBACK_WRALLOC | 0xb   | Cacheable write-back, allocate on writes only.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_RSVD5                | 0xc   | Reserved.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_RSVD6                | 0xd   | Reserved.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_WRTHRU_ALLOC   | 0xe   | Cacheable write-through, allocate on both reads
+ * :                                                       |       | and writes.
  *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_WRBACK_ALLOC   | 0xf   | Cacheable write-back, allocate on both reads and
- * :                                                       |       | writes.                                         
- * 
+ * :                                                       |       | writes.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_0
- * 
+ *
  * Noncacheable and nonbufferable.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_NONCACHE_NONBUFF      0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_0
- * 
+ *
  * Bufferable only.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_BUFF                  0x1
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_0
- * 
+ *
  * Cacheable, but do not allocate.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_NONALLOC        0x2
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_0
- * 
+ *
  * Cacheable and bufferable, but do not allocate.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_BUFF_NONALLOC   0x3
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_RSVD1                 0x4
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_RSVD2                 0x5
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_0
- * 
+ *
  * Cacheable write-through, allocate on reads only.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_WRTHRU_RDALLOC  0x6
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_0
- * 
+ *
  * Cacheable write-back, allocate on reads only.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_WRBACK_RDALLOC  0x7
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_RSVD3                 0x8
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_RSVD4                 0x9
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_0
- * 
+ *
  * Cacheable write-through, allocate on writes only.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_WRTHRU_WRALLOC  0xa
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_0
- * 
+ *
  * Cacheable write-back, allocate on writes only.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_WRBACK_WRALLOC  0xb
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_RSVD5                 0xc
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_RSVD6                 0xd
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_0
- * 
+ *
  * Cacheable write-through, allocate on both reads and writes.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_WRTHRU_ALLOC    0xe
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_0
- * 
+ *
  * Cacheable write-back, allocate on both reads and writes.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_0_E_CACHE_WRBACK_ALLOC    0xf
@@ -3885,131 +3885,131 @@ typedef volatile struct ALT_SYSMGR_EMAC_CTL_s  ALT_SYSMGR_EMAC_CTL_t;
 
 /*
  * Field : EMAC AWCACHE - awcache_1
- * 
+ *
  * Specifies the values of the 2 EMAC AWCACHE signals.
- * 
+ *
  * The field array index corresponds to the EMAC index.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                                   | Value | Description                                     
+ *
+ *  Enum                                                   | Value | Description
  * :-------------------------------------------------------|:------|:-------------------------------------------------
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_NONCACHE_NONBUFF     | 0x0   | Noncacheable and nonbufferable.                 
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_BUFF                 | 0x1   | Bufferable only.                                
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_NONALLOC       | 0x2   | Cacheable, but do not allocate.                 
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_BUFF_NONALLOC  | 0x3   | Cacheable and bufferable, but do not allocate.  
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_RSVD1                | 0x4   | Reserved.                                       
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_RSVD2                | 0x5   | Reserved.                                       
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_NONCACHE_NONBUFF     | 0x0   | Noncacheable and nonbufferable.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_BUFF                 | 0x1   | Bufferable only.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_NONALLOC       | 0x2   | Cacheable, but do not allocate.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_BUFF_NONALLOC  | 0x3   | Cacheable and bufferable, but do not allocate.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_RSVD1                | 0x4   | Reserved.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_RSVD2                | 0x5   | Reserved.
  *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_WRTHRU_RDALLOC | 0x6   | Cacheable write-through, allocate on reads only.
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_WRBACK_RDALLOC | 0x7   | Cacheable write-back, allocate on reads only.   
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_RSVD3                | 0x8   | Reserved.                                       
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_RSVD4                | 0x9   | Reserved.                                       
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_WRTHRU_WRALLOC | 0xa   | Cacheable write-through, allocate on writes     
- * :                                                       |       | only.                                           
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_WRBACK_WRALLOC | 0xb   | Cacheable write-back, allocate on writes only.  
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_RSVD5                | 0xc   | Reserved.                                       
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_RSVD6                | 0xd   | Reserved.                                       
- *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_WRTHRU_ALLOC   | 0xe   | Cacheable write-through, allocate on both reads 
- * :                                                       |       | and writes.                                     
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_WRBACK_RDALLOC | 0x7   | Cacheable write-back, allocate on reads only.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_RSVD3                | 0x8   | Reserved.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_RSVD4                | 0x9   | Reserved.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_WRTHRU_WRALLOC | 0xa   | Cacheable write-through, allocate on writes
+ * :                                                       |       | only.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_WRBACK_WRALLOC | 0xb   | Cacheable write-back, allocate on writes only.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_RSVD5                | 0xc   | Reserved.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_RSVD6                | 0xd   | Reserved.
+ *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_WRTHRU_ALLOC   | 0xe   | Cacheable write-through, allocate on both reads
+ * :                                                       |       | and writes.
  *  ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_WRBACK_ALLOC   | 0xf   | Cacheable write-back, allocate on both reads and
- * :                                                       |       | writes.                                         
- * 
+ * :                                                       |       | writes.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_1
- * 
+ *
  * Noncacheable and nonbufferable.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_NONCACHE_NONBUFF      0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_1
- * 
+ *
  * Bufferable only.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_BUFF                  0x1
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_1
- * 
+ *
  * Cacheable, but do not allocate.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_NONALLOC        0x2
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_1
- * 
+ *
  * Cacheable and bufferable, but do not allocate.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_BUFF_NONALLOC   0x3
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_1
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_RSVD1                 0x4
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_1
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_RSVD2                 0x5
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_1
- * 
+ *
  * Cacheable write-through, allocate on reads only.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_WRTHRU_RDALLOC  0x6
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_1
- * 
+ *
  * Cacheable write-back, allocate on reads only.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_WRBACK_RDALLOC  0x7
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_1
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_RSVD3                 0x8
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_1
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_RSVD4                 0x9
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_1
- * 
+ *
  * Cacheable write-through, allocate on writes only.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_WRTHRU_WRALLOC  0xa
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_1
- * 
+ *
  * Cacheable write-back, allocate on writes only.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_WRBACK_WRALLOC  0xb
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_1
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_RSVD5                 0xc
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_1
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_RSVD6                 0xd
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_1
- * 
+ *
  * Cacheable write-through, allocate on both reads and writes.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_WRTHRU_ALLOC    0xe
 /*
  * Enumerated value for register field ALT_SYSMGR_EMAC_L3MST_AWCACHE_1
- * 
+ *
  * Cacheable write-back, allocate on both reads and writes.
  */
 #define ALT_SYSMGR_EMAC_L3MST_AWCACHE_1_E_CACHE_WRBACK_ALLOC    0xf
@@ -4039,7 +4039,7 @@ typedef volatile struct ALT_SYSMGR_EMAC_CTL_s  ALT_SYSMGR_EMAC_CTL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_EMAC_L3MST.
  */
 struct ALT_SYSMGR_EMAC_L3MST_s
@@ -4066,7 +4066,7 @@ typedef volatile struct ALT_SYSMGR_EMAC_L3MST_s  ALT_SYSMGR_EMAC_L3MST_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_SYSMGR_EMAC.
  */
 struct ALT_SYSMGR_EMAC_s
@@ -4094,60 +4094,60 @@ typedef volatile struct ALT_SYSMGR_EMAC_raw_s  ALT_SYSMGR_EMAC_raw_t;
 /*
  * Register Group : DMA Controller Group - ALT_SYSMGR_DMA
  * DMA Controller Group
- * 
+ *
  * Registers used by the DMA Controller to enable secured system support and select
  * DMA channels.
- * 
+ *
  */
 /*
  * Register : Control Register - ctrl
- * 
+ *
  * Registers used by the DMA Controller. All fields are reset by a cold or warm
  * reset.
- * 
+ *
  * These register bits should be updated during system initialization prior to
  * removing the DMA controller from reset. They may not be changed dynamically
  * during DMA operation.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description            
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:------------------------
- *  [0]     | RW     | 0x0   | Channel Select         
- *  [1]     | RW     | 0x0   | Channel Select         
- *  [2]     | RW     | 0x0   | Channel Select         
- *  [3]     | RW     | 0x0   | Channel Select         
+ *  [0]     | RW     | 0x0   | Channel Select
+ *  [1]     | RW     | 0x0   | Channel Select
+ *  [2]     | RW     | 0x0   | Channel Select
+ *  [3]     | RW     | 0x0   | Channel Select
  *  [4]     | RW     | 0x0   | Manager Thread Security
- *  [12:5]  | RW     | 0x0   | IRQ Security           
- *  [31:13] | ???    | 0x0   | *UNDEFINED*            
- * 
+ *  [12:5]  | RW     | 0x0   | IRQ Security
+ *  [31:13] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Channel Select - chansel_0
- * 
+ *
  * Controls mux that selects whether FPGA or CAN connects to one of the DMA
  * peripheral request interfaces.The peripheral request interface index equals the
  * array index + 4. For example, array index 0 is for peripheral request index 4.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description                             
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:-----------------------------------------
  *  ALT_SYSMGR_DMA_CTL_CHANSEL_0_E_FPGA | 0x0   | FPGA drives peripheral request interface
- *  ALT_SYSMGR_DMA_CTL_CHANSEL_0_E_CAN  | 0x1   | CAN drives peripheral request interface 
- * 
+ *  ALT_SYSMGR_DMA_CTL_CHANSEL_0_E_CAN  | 0x1   | CAN drives peripheral request interface
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_DMA_CTL_CHANSEL_0
- * 
+ *
  * FPGA drives peripheral request interface
  */
 #define ALT_SYSMGR_DMA_CTL_CHANSEL_0_E_FPGA 0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_DMA_CTL_CHANSEL_0
- * 
+ *
  * CAN drives peripheral request interface
  */
 #define ALT_SYSMGR_DMA_CTL_CHANSEL_0_E_CAN  0x1
@@ -4171,30 +4171,30 @@ typedef volatile struct ALT_SYSMGR_EMAC_raw_s  ALT_SYSMGR_EMAC_raw_t;
 
 /*
  * Field : Channel Select - chansel_1
- * 
+ *
  * Controls mux that selects whether FPGA or CAN connects to one of the DMA
  * peripheral request interfaces.The peripheral request interface index equals the
  * array index + 4. For example, array index 0 is for peripheral request index 4.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description                             
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:-----------------------------------------
  *  ALT_SYSMGR_DMA_CTL_CHANSEL_1_E_FPGA | 0x0   | FPGA drives peripheral request interface
- *  ALT_SYSMGR_DMA_CTL_CHANSEL_1_E_CAN  | 0x1   | CAN drives peripheral request interface 
- * 
+ *  ALT_SYSMGR_DMA_CTL_CHANSEL_1_E_CAN  | 0x1   | CAN drives peripheral request interface
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_DMA_CTL_CHANSEL_1
- * 
+ *
  * FPGA drives peripheral request interface
  */
 #define ALT_SYSMGR_DMA_CTL_CHANSEL_1_E_FPGA 0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_DMA_CTL_CHANSEL_1
- * 
+ *
  * CAN drives peripheral request interface
  */
 #define ALT_SYSMGR_DMA_CTL_CHANSEL_1_E_CAN  0x1
@@ -4218,30 +4218,30 @@ typedef volatile struct ALT_SYSMGR_EMAC_raw_s  ALT_SYSMGR_EMAC_raw_t;
 
 /*
  * Field : Channel Select - chansel_2
- * 
+ *
  * Controls mux that selects whether FPGA or CAN connects to one of the DMA
  * peripheral request interfaces.The peripheral request interface index equals the
  * array index + 4. For example, array index 0 is for peripheral request index 4.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description                             
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:-----------------------------------------
  *  ALT_SYSMGR_DMA_CTL_CHANSEL_2_E_FPGA | 0x0   | FPGA drives peripheral request interface
- *  ALT_SYSMGR_DMA_CTL_CHANSEL_2_E_CAN  | 0x1   | CAN drives peripheral request interface 
- * 
+ *  ALT_SYSMGR_DMA_CTL_CHANSEL_2_E_CAN  | 0x1   | CAN drives peripheral request interface
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_DMA_CTL_CHANSEL_2
- * 
+ *
  * FPGA drives peripheral request interface
  */
 #define ALT_SYSMGR_DMA_CTL_CHANSEL_2_E_FPGA 0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_DMA_CTL_CHANSEL_2
- * 
+ *
  * CAN drives peripheral request interface
  */
 #define ALT_SYSMGR_DMA_CTL_CHANSEL_2_E_CAN  0x1
@@ -4265,30 +4265,30 @@ typedef volatile struct ALT_SYSMGR_EMAC_raw_s  ALT_SYSMGR_EMAC_raw_t;
 
 /*
  * Field : Channel Select - chansel_3
- * 
+ *
  * Controls mux that selects whether FPGA or CAN connects to one of the DMA
  * peripheral request interfaces.The peripheral request interface index equals the
  * array index + 4. For example, array index 0 is for peripheral request index 4.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                | Value | Description                             
+ *
+ *  Enum                                | Value | Description
  * :------------------------------------|:------|:-----------------------------------------
  *  ALT_SYSMGR_DMA_CTL_CHANSEL_3_E_FPGA | 0x0   | FPGA drives peripheral request interface
- *  ALT_SYSMGR_DMA_CTL_CHANSEL_3_E_CAN  | 0x1   | CAN drives peripheral request interface 
- * 
+ *  ALT_SYSMGR_DMA_CTL_CHANSEL_3_E_CAN  | 0x1   | CAN drives peripheral request interface
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_DMA_CTL_CHANSEL_3
- * 
+ *
  * FPGA drives peripheral request interface
  */
 #define ALT_SYSMGR_DMA_CTL_CHANSEL_3_E_FPGA 0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_DMA_CTL_CHANSEL_3
- * 
+ *
  * CAN drives peripheral request interface
  */
 #define ALT_SYSMGR_DMA_CTL_CHANSEL_3_E_CAN  0x1
@@ -4312,17 +4312,17 @@ typedef volatile struct ALT_SYSMGR_EMAC_raw_s  ALT_SYSMGR_EMAC_raw_t;
 
 /*
  * Field : Manager Thread Security - mgrnonsecure
- * 
+ *
  * Specifies the security state of the DMA manager thread.
- * 
+ *
  * 0 = assigns DMA manager to the Secure state.
- * 
+ *
  * 1 = assigns DMA manager to the Non-secure state.
- * 
+ *
  * Sampled by the DMA controller when it exits from reset.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_DMA_CTL_MGRNONSECURE register field. */
 #define ALT_SYSMGR_DMA_CTL_MGRNONSECURE_LSB        4
@@ -4343,16 +4343,16 @@ typedef volatile struct ALT_SYSMGR_EMAC_raw_s  ALT_SYSMGR_EMAC_raw_t;
 
 /*
  * Field : IRQ Security - irqnonsecure
- * 
+ *
  * Specifies the security state of an event-interrupt resource.
- * 
+ *
  * If bit index [x] is 0, the DMAC assigns event<x> or irq[x] to the Secure state.
- * 
+ *
  * If bit index [x] is 1, the DMAC assigns event<x> or irq[x] to the Non-secure
  * state.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_DMA_CTL_IRQNONSECURE register field. */
 #define ALT_SYSMGR_DMA_CTL_IRQNONSECURE_LSB        5
@@ -4379,7 +4379,7 @@ typedef volatile struct ALT_SYSMGR_EMAC_raw_s  ALT_SYSMGR_EMAC_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_DMA_CTL.
  */
 struct ALT_SYSMGR_DMA_CTL_s
@@ -4402,34 +4402,34 @@ typedef volatile struct ALT_SYSMGR_DMA_CTL_s  ALT_SYSMGR_DMA_CTL_t;
 
 /*
  * Register : Peripheral Security Register - persecurity
- * 
+ *
  * Controls the security state of a peripheral request interface. Sampled by the
  * DMA controller when it exits from reset.
- * 
+ *
  * These register bits should be updated during system initialization prior to
  * removing the DMA controller from reset. They may not be changed dynamically
  * during DMA operation.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description          
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------
  *  [31:0] | RW     | 0x0   | Peripheral Non-Secure
- * 
+ *
  */
 /*
  * Field : Peripheral Non-Secure - nonsecure
- * 
+ *
  * If bit index [x] is 0, the DMA controller assigns peripheral request interface x
  * to the Secure state.
- * 
+ *
  * If bit index [x] is 1, the DMA controller assigns peripheral request interface x
  * to the Non-secure state.
- * 
+ *
  * Reset by a cold or warm reset.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_DMA_PERSECURITY_NONSECURE register field. */
 #define ALT_SYSMGR_DMA_PERSECURITY_NONSECURE_LSB        0
@@ -4456,7 +4456,7 @@ typedef volatile struct ALT_SYSMGR_DMA_CTL_s  ALT_SYSMGR_DMA_CTL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_DMA_PERSECURITY.
  */
 struct ALT_SYSMGR_DMA_PERSECURITY_s
@@ -4479,7 +4479,7 @@ typedef volatile struct ALT_SYSMGR_DMA_PERSECURITY_s  ALT_SYSMGR_DMA_PERSECURITY
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_SYSMGR_DMA.
  */
 struct ALT_SYSMGR_DMA_s
@@ -4505,33 +4505,33 @@ typedef volatile struct ALT_SYSMGR_DMA_raw_s  ALT_SYSMGR_DMA_raw_t;
 /*
  * Register Group : Preloader (initial software) Group - ALT_SYSMGR_ISW
  * Preloader (initial software) Group
- * 
+ *
  * Registers used by preloader code and the OS.
- * 
+ *
  * All registers are only reset by a cold reset (ignore warm reset).
- * 
+ *
  */
 /*
  * Register : Preloader to OS Handoff Information - handoff
- * 
+ *
  * These registers are used to store handoff infomation between the preloader and
  * the OS. These 8 registers can be used to store any information. The contents of
  * these registers have no impact on the state of the HPS hardware.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------
  *  [31:0] | RW     | 0x0   | Preloader Handoff Information
- * 
+ *
  */
 /*
  * Field : Preloader Handoff Information - value
- * 
+ *
  * Preloader Handoff Information.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ISW_HANDOFF_VALUE register field. */
 #define ALT_SYSMGR_ISW_HANDOFF_VALUE_LSB        0
@@ -4558,7 +4558,7 @@ typedef volatile struct ALT_SYSMGR_DMA_raw_s  ALT_SYSMGR_DMA_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ISW_HANDOFF.
  */
 struct ALT_SYSMGR_ISW_HANDOFF_s
@@ -4581,7 +4581,7 @@ typedef volatile struct ALT_SYSMGR_ISW_HANDOFF_s  ALT_SYSMGR_ISW_HANDOFF_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_SYSMGR_ISW.
  */
 struct ALT_SYSMGR_ISW_s
@@ -4605,55 +4605,55 @@ typedef volatile struct ALT_SYSMGR_ISW_raw_s  ALT_SYSMGR_ISW_raw_t;
 /*
  * Register Group : Boot ROM Code Register Group - ALT_SYSMGR_ROMCODE
  * Boot ROM Code Register Group
- * 
+ *
  * Registers used by the Boot ROM code. All fields are only reset by a cold reset
  * (ignore warm reset).
- * 
+ *
  */
 /*
  * Register : Control Register - ctrl
- * 
+ *
  * Contains information used to control Boot ROM code.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                               
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------------------------
  *  [0]    | RW     | 0x0   | Warm Reset Configure Pin Mux for Boot Pins
- *  [1]    | RW     | 0x0   | Warm Reset Configure IOs for Boot Pins    
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                               
- * 
+ *  [1]    | RW     | 0x0   | Warm Reset Configure IOs for Boot Pins
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Warm Reset Configure Pin Mux for Boot Pins - warmrstcfgpinmux
- * 
+ *
  * Specifies whether the Boot ROM code configures the pin mux for boot pins after a
  * warm reset. Note that the Boot ROM code always configures the pin mux for boot
  * pins after a cold reset. After the Boot ROM code configures the pin mux for boot
  * pins, it always disables this field. It is up to user software to enable this
  * field if it wants a different behavior.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                           | Value | Description                                  
+ *
+ *  Enum                                           | Value | Description
  * :-----------------------------------------------|:------|:----------------------------------------------
- *  ALT_SYSMGR_ROMCODE_CTL_WARMRSTCFGPINMUX_E_DISD | 0x0   | Boot ROM code will not configure pin mux for 
- * :                                               |       | boot pins after a warm reset                 
+ *  ALT_SYSMGR_ROMCODE_CTL_WARMRSTCFGPINMUX_E_DISD | 0x0   | Boot ROM code will not configure pin mux for
+ * :                                               |       | boot pins after a warm reset
  *  ALT_SYSMGR_ROMCODE_CTL_WARMRSTCFGPINMUX_E_END  | 0x1   | Boot ROM code will configure pin mux for boot
- * :                                               |       | pins after a warm reset                      
- * 
+ * :                                               |       | pins after a warm reset
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_ROMCODE_CTL_WARMRSTCFGPINMUX
- * 
+ *
  * Boot ROM code will not configure pin mux for boot pins after a warm reset
  */
 #define ALT_SYSMGR_ROMCODE_CTL_WARMRSTCFGPINMUX_E_DISD  0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_ROMCODE_CTL_WARMRSTCFGPINMUX
- * 
+ *
  * Boot ROM code will configure pin mux for boot pins after a warm reset
  */
 #define ALT_SYSMGR_ROMCODE_CTL_WARMRSTCFGPINMUX_E_END   0x1
@@ -4677,34 +4677,34 @@ typedef volatile struct ALT_SYSMGR_ISW_raw_s  ALT_SYSMGR_ISW_raw_t;
 
 /*
  * Field : Warm Reset Configure IOs for Boot Pins - warmrstcfgio
- * 
+ *
  * Specifies whether the Boot ROM code configures the IOs used by boot after a warm
  * reset. Note that the Boot ROM code always configures the IOs used by boot after
  * a cold reset. After the Boot ROM code configures the IOs used by boot, it always
  * disables this field. It is up to user software to enable this field if it wants
  * a different behavior.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                       | Value | Description                                  
+ *
+ *  Enum                                       | Value | Description
  * :-------------------------------------------|:------|:----------------------------------------------
- *  ALT_SYSMGR_ROMCODE_CTL_WARMRSTCFGIO_E_DISD | 0x0   | Boot ROM code will not configure IOs used by 
- * :                                           |       | boot after a warm reset                      
+ *  ALT_SYSMGR_ROMCODE_CTL_WARMRSTCFGIO_E_DISD | 0x0   | Boot ROM code will not configure IOs used by
+ * :                                           |       | boot after a warm reset
  *  ALT_SYSMGR_ROMCODE_CTL_WARMRSTCFGIO_E_END  | 0x1   | Boot ROM code will configure IOs used by boot
- * :                                           |       | after a warm reset                           
- * 
+ * :                                           |       | after a warm reset
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_ROMCODE_CTL_WARMRSTCFGIO
- * 
+ *
  * Boot ROM code will not configure IOs used by boot after a warm reset
  */
 #define ALT_SYSMGR_ROMCODE_CTL_WARMRSTCFGIO_E_DISD  0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_ROMCODE_CTL_WARMRSTCFGIO
- * 
+ *
  * Boot ROM code will configure IOs used by boot after a warm reset
  */
 #define ALT_SYSMGR_ROMCODE_CTL_WARMRSTCFGIO_E_END   0x1
@@ -4734,7 +4734,7 @@ typedef volatile struct ALT_SYSMGR_ISW_raw_s  ALT_SYSMGR_ISW_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ROMCODE_CTL.
  */
 struct ALT_SYSMGR_ROMCODE_CTL_s
@@ -4753,26 +4753,26 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_CTL_s  ALT_SYSMGR_ROMCODE_CTL_t;
 
 /*
  * Register : CPU1 Start Address Register - cpu1startaddr
- * 
+ *
  * When CPU1 is released from reset and the Boot ROM is located at the CPU1 reset
  * exception address (the typical case), the Boot ROM reset handler code reads the
  * address stored in this register and jumps it to hand off execution to user
  * software.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [31:0] | RW     | 0x0   | Address    
- * 
+ *  [31:0] | RW     | 0x0   | Address
+ *
  */
 /*
  * Field : Address - value
- * 
+ *
  * Address for CPU1 to start executing at after coming out of reset.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ROMCODE_CPU1STARTADDR_VALUE register field. */
 #define ALT_SYSMGR_ROMCODE_CPU1STARTADDR_VALUE_LSB        0
@@ -4799,7 +4799,7 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_CTL_s  ALT_SYSMGR_ROMCODE_CTL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ROMCODE_CPU1STARTADDR.
  */
 struct ALT_SYSMGR_ROMCODE_CPU1STARTADDR_s
@@ -4816,40 +4816,40 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_CPU1STARTADDR_s  ALT_SYSMGR_ROMCODE_C
 
 /*
  * Register : Preloader (initial software) State Register - initswstate
- * 
+ *
  * The preloader software (loaded by the Boot ROM) writes the magic value
  * 0x49535756 (ISWV in ASCII) to this register when it has reached a valid state.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [31:0] | RW     | 0x0   | Value      
- * 
+ *  [31:0] | RW     | 0x0   | Value
+ *
  */
 /*
  * Field : Value - value
- * 
+ *
  * Written with magic value.
- * 
+ *
  * Field Enumeration Values:
- * 
+ *
  *  Enum                                           | Value      | Description
  * :-----------------------------------------------|:-----------|:------------
- *  ALT_SYSMGR_ROMCODE_INITSWSTATE_VALUE_E_INVALID | 0x0        |            
- *  ALT_SYSMGR_ROMCODE_INITSWSTATE_VALUE_E_VALID   | 0x49535756 |            
- * 
+ *  ALT_SYSMGR_ROMCODE_INITSWSTATE_VALUE_E_INVALID | 0x0        |
+ *  ALT_SYSMGR_ROMCODE_INITSWSTATE_VALUE_E_VALID   | 0x49535756 |
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_ROMCODE_INITSWSTATE_VALUE
- * 
+ *
  */
 #define ALT_SYSMGR_ROMCODE_INITSWSTATE_VALUE_E_INVALID  0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_ROMCODE_INITSWSTATE_VALUE
- * 
+ *
  */
 #define ALT_SYSMGR_ROMCODE_INITSWSTATE_VALUE_E_VALID    0x49535756
 
@@ -4878,7 +4878,7 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_CPU1STARTADDR_s  ALT_SYSMGR_ROMCODE_C
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ROMCODE_INITSWSTATE.
  */
 struct ALT_SYSMGR_ROMCODE_INITSWSTATE_s
@@ -4895,25 +4895,25 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_INITSWSTATE_s  ALT_SYSMGR_ROMCODE_INI
 
 /*
  * Register : Preloader (initial software) Last Image Loaded Register - initswlastld
- * 
+ *
  * Contains the index of the last preloader software image loaded by the Boot ROM
  * from the boot device.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------
- *  [1:0]  | RW     | 0x0   | Index      
+ *  [1:0]  | RW     | 0x0   | Index
  *  [31:2] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Index - index
- * 
+ *
  * Index of last image loaded.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ROMCODE_INITSWLASTLD_INDEX register field. */
 #define ALT_SYSMGR_ROMCODE_INITSWLASTLD_INDEX_LSB        0
@@ -4940,7 +4940,7 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_INITSWSTATE_s  ALT_SYSMGR_ROMCODE_INI
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ROMCODE_INITSWLASTLD.
  */
 struct ALT_SYSMGR_ROMCODE_INITSWLASTLD_s
@@ -4958,24 +4958,24 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_INITSWLASTLD_s  ALT_SYSMGR_ROMCODE_IN
 
 /*
  * Register : Boot ROM Software State Register - bootromswstate
- * 
+ *
  * 32-bits general purpose register used by the Boot ROM code. Actual usage is
  * defined in the Boot ROM source code.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------
  *  [31:0] | RW     | 0x0   | Boot ROM Software State
- * 
+ *
  */
 /*
  * Field : Boot ROM Software State - value
- * 
+ *
  * Reserved for Boot ROM use.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ROMCODE_BOOTROMSWSTATE_VALUE register field. */
 #define ALT_SYSMGR_ROMCODE_BOOTROMSWSTATE_VALUE_LSB        0
@@ -5002,7 +5002,7 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_INITSWLASTLD_s  ALT_SYSMGR_ROMCODE_IN
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ROMCODE_BOOTROMSWSTATE.
  */
 struct ALT_SYSMGR_ROMCODE_BOOTROMSWSTATE_s
@@ -5020,54 +5020,54 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_BOOTROMSWSTATE_s  ALT_SYSMGR_ROMCODE_
 /*
  * Register Group : Warm Boot from On-Chip RAM Group - ALT_SYSMGR_ROMCODE_WARMRAM
  * Warm Boot from On-Chip RAM Group
- * 
+ *
  * Registers used by the Boot ROM code to support booting from the On-chip RAM on a
  * warm reset.  All these registers must be written by user software before a warm
  * reset occurs to make use of this feature.
- * 
+ *
  */
 /*
  * Register : Enable Register - enable
- * 
+ *
  * Enables or disables the warm reset from On-chip RAM feature.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------
  *  [31:0] | RW     | 0x0   | Warm Reset from On-chip RAM
- * 
+ *
  */
 /*
  * Field : Warm Reset from On-chip RAM - magic
- * 
+ *
  * Controls whether Boot ROM will attempt to boot from the contents of the On-chip
  * RAM on a warm reset. When this feature is enabled, the Boot ROM code will not
  * configure boot IOs, the pin mux, or clocks.
- * 
+ *
  * Note that the enable value is a 32-bit magic value (provided by the enum).
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                       | Value      | Description                                    
+ *
+ *  Enum                                       | Value      | Description
  * :-------------------------------------------|:-----------|:------------------------------------------------
  *  ALT_SYSMGR_ROMCODE_WARMRAM_EN_MAGIC_E_DISD | 0x0        | Boot ROM code will not attempt to boot from On-
- * :                                           |            | chip RAM on a warm reset                       
+ * :                                           |            | chip RAM on a warm reset
  *  ALT_SYSMGR_ROMCODE_WARMRAM_EN_MAGIC_E_END  | 0xae9efebc | Boot ROM code will attempt to boot from On-chip
- * :                                           |            | RAM on a warm reset                            
- * 
+ * :                                           |            | RAM on a warm reset
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_ROMCODE_WARMRAM_EN_MAGIC
- * 
+ *
  * Boot ROM code will not attempt to boot from On-chip RAM on a warm reset
  */
 #define ALT_SYSMGR_ROMCODE_WARMRAM_EN_MAGIC_E_DISD  0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_ROMCODE_WARMRAM_EN_MAGIC
- * 
+ *
  * Boot ROM code will attempt to boot from On-chip RAM on a warm reset
  */
 #define ALT_SYSMGR_ROMCODE_WARMRAM_EN_MAGIC_E_END   0xae9efebc
@@ -5097,7 +5097,7 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_BOOTROMSWSTATE_s  ALT_SYSMGR_ROMCODE_
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ROMCODE_WARMRAM_EN.
  */
 struct ALT_SYSMGR_ROMCODE_WARMRAM_EN_s
@@ -5116,27 +5116,27 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_WARMRAM_EN_s  ALT_SYSMGR_ROMCODE_WARM
 
 /*
  * Register : Data Start Register - datastart
- * 
+ *
  * Offset into On-chip RAM of the start of the region for CRC validation
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description      
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:------------------
  *  [15:0]  | RW     | 0x0   | Data Start Offset
- *  [31:16] | ???    | 0x0   | *UNDEFINED*      
- * 
+ *  [31:16] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Data Start Offset - offset
- * 
+ *
  * Contains the byte offset into the On-chip RAM of the start of the On-chip RAM
  * region for the warm boot CRC validation. The offset must be an integer multiple
  * of 4 (i.e. aligned to a word). The Boot ROM code will set the top 16 bits to
  * 0xFFFF and clear the bottom 2 bits.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ROMCODE_WARMRAM_DATASTART_OFFSET register field. */
 #define ALT_SYSMGR_ROMCODE_WARMRAM_DATASTART_OFFSET_LSB        0
@@ -5163,7 +5163,7 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_WARMRAM_EN_s  ALT_SYSMGR_ROMCODE_WARM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ROMCODE_WARMRAM_DATASTART.
  */
 struct ALT_SYSMGR_ROMCODE_WARMRAM_DATASTART_s
@@ -5183,35 +5183,35 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_WARMRAM_DATASTART_s  ALT_SYSMGR_ROMCO
 
 /*
  * Register : Length Register - length
- * 
+ *
  * Length of region in On-chip RAM for CRC validation.
- * 
+ *
  * Register Layout
- * 
+ *
  *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:------------
- *  [15:0]  | RW     | 0x0   | Size       
+ *  [15:0]  | RW     | 0x0   | Size
  *  [31:16] | ???    | 0x0   | *UNDEFINED*
- * 
+ *
  */
 /*
  * Field : Size - size
- * 
+ *
  * Contains the length (in bytes) of the region in the On-chip RAM for the warm
  * boot CRC validation.
- * 
+ *
  * If the length is 0, the Boot ROM won't perform CRC calculation and CRC check to
  * avoid overhead caused by CRC validation.
- * 
+ *
  * If the START + LENGTH exceeds the maximum offset into the On-chip RAM, the Boot
  * ROM won't boot from the On-chip RAM.
- * 
+ *
  * The length must be an integer multiple of 4.
- * 
+ *
  * The Boot ROM code will clear the top 16 bits and the bottom 2 bits.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ROMCODE_WARMRAM_LEN_SIZE register field. */
 #define ALT_SYSMGR_ROMCODE_WARMRAM_LEN_SIZE_LSB        0
@@ -5238,7 +5238,7 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_WARMRAM_DATASTART_s  ALT_SYSMGR_ROMCO
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ROMCODE_WARMRAM_LEN.
  */
 struct ALT_SYSMGR_ROMCODE_WARMRAM_LEN_s
@@ -5258,27 +5258,27 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_WARMRAM_LEN_s  ALT_SYSMGR_ROMCODE_WAR
 
 /*
  * Register : Execution Register - execution
- * 
+ *
  * Offset into On-chip RAM to enter to on a warm boot.
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description     
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:-----------------
  *  [15:0]  | RW     | 0x0   | Execution Offset
- *  [31:16] | ???    | 0x0   | *UNDEFINED*     
- * 
+ *  [31:16] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Execution Offset - offset
- * 
+ *
  * Contains the byte offset into the On-chip RAM that the Boot ROM will jump to if
  * the CRC validation succeeds.
- * 
+ *
  * The Boot ROM code will set the top 16 bits to 0xFFFF.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ROMCODE_WARMRAM_EXECUTION_OFFSET register field. */
 #define ALT_SYSMGR_ROMCODE_WARMRAM_EXECUTION_OFFSET_LSB        0
@@ -5305,7 +5305,7 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_WARMRAM_LEN_s  ALT_SYSMGR_ROMCODE_WAR
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ROMCODE_WARMRAM_EXECUTION.
  */
 struct ALT_SYSMGR_ROMCODE_WARMRAM_EXECUTION_s
@@ -5325,19 +5325,19 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_WARMRAM_EXECUTION_s  ALT_SYSMGR_ROMCO
 
 /*
  * Register : Expected CRC Register - crc
- * 
+ *
  * Length of region in On-chip RAM for CRC validation.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset      | Description 
+ *
+ *  Bits   | Access | Reset      | Description
  * :-------|:-------|:-----------|:-------------
  *  [31:0] | RW     | 0xe763552a | Expected CRC
- * 
+ *
  */
 /*
  * Field : Expected CRC - expected
- * 
+ *
  * Contains the expected CRC of the region in the On-chip RAM.The Boot ROM code
  * calculates the actual CRC for all bytes in the region specified by the DATA
  * START an LENGTH registers. The contents of the EXECUTION register (after it has
@@ -5346,17 +5346,17 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_WARMRAM_EXECUTION_s  ALT_SYSMGR_ROMCO
  * accumulator a byte at a time starting with the least significant byte. If the
  * actual CRC doesn't match the expected CRC value in this register, the Boot ROM
  * won't boot from the On-chip RAM.
- * 
+ *
  * The CRC is a standard CRC32 with the polynomial:
- * 
+ *
  * x^32 + x^26 + x^23 + x^22 + x^16 + x^12 + x^11 + x^10 + x^8 + x^7 + x^5 + x^4 +
  * x^2 + x + 1
- * 
+ *
  * There is no reflection of the bits and the initial value of the remainder is
  * 0xFFFFFFFF and the final value is exclusive ORed with 0xFFFFFFFF.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ROMCODE_WARMRAM_CRC_EXPECTED register field. */
 #define ALT_SYSMGR_ROMCODE_WARMRAM_CRC_EXPECTED_LSB        0
@@ -5383,7 +5383,7 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_WARMRAM_EXECUTION_s  ALT_SYSMGR_ROMCO
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ROMCODE_WARMRAM_CRC.
  */
 struct ALT_SYSMGR_ROMCODE_WARMRAM_CRC_s
@@ -5408,7 +5408,7 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_WARMRAM_CRC_s  ALT_SYSMGR_ROMCODE_WAR
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_SYSMGR_ROMCODE_WARMRAM.
  */
 struct ALT_SYSMGR_ROMCODE_WARMRAM_s
@@ -5447,7 +5447,7 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_WARMRAM_raw_s  ALT_SYSMGR_ROMCODE_WAR
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_SYSMGR_ROMCODE.
  */
 struct ALT_SYSMGR_ROMCODE_s
@@ -5483,55 +5483,55 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_raw_s  ALT_SYSMGR_ROMCODE_raw_t;
 /*
  * Register Group : Boot ROM Hardware Register Group - ALT_SYSMGR_ROMHW
  * Boot ROM Hardware Register Group
- * 
+ *
  * Registers used by the Boot ROM hardware, not the code within it.
- * 
+ *
  */
 /*
  * Register : Boot ROM Hardware Control Register - ctrl
- * 
+ *
  * Controls behavior of Boot ROM hardware.
- * 
+ *
  * All fields are only reset by a cold reset (ignore warm reset).
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                       
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------------
- *  [0]    | RW     | 0x0   | Wait State                        
+ *  [0]    | RW     | 0x0   | Wait State
  *  [1]    | RW     | 0x1   | Enable Safe Mode Warm Reset Update
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                       
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Wait State - waitstate
- * 
+ *
  * Controls the number of wait states applied to the Boot ROM's read operation.
- * 
+ *
  * This field is cleared on a cold reset and optionally updated by hardware upon
  * deassertion of warm reset.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                 | Value | Description                                     
+ *
+ *  Enum                                 | Value | Description
  * :-------------------------------------|:------|:-------------------------------------------------
- *  ALT_SYSMGR_ROMHW_CTL_WAITSTATE_E_DIS | 0x0   | No wait states are applied to the Boom ROM's    
- * :                                     |       | read operation.                                 
+ *  ALT_SYSMGR_ROMHW_CTL_WAITSTATE_E_DIS | 0x0   | No wait states are applied to the Boom ROM's
+ * :                                     |       | read operation.
  *  ALT_SYSMGR_ROMHW_CTL_WAITSTATE_E_EN  | 0x1   | A single wait state is applied to the Boot ROM's
- * :                                     |       | read operation.                                 
- * 
+ * :                                     |       | read operation.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_ROMHW_CTL_WAITSTATE
- * 
+ *
  * No wait states are applied to the Boom ROM's read operation.
  */
 #define ALT_SYSMGR_ROMHW_CTL_WAITSTATE_E_DIS    0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_ROMHW_CTL_WAITSTATE
- * 
+ *
  * A single wait state is applied to the Boot ROM's read operation.
  */
 #define ALT_SYSMGR_ROMHW_CTL_WAITSTATE_E_EN     0x1
@@ -5555,37 +5555,37 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_raw_s  ALT_SYSMGR_ROMCODE_raw_t;
 
 /*
  * Field : Enable Safe Mode Warm Reset Update - ensfmdwru
- * 
+ *
  * Controls whether the wait state bit is updated upon deassertion of warm reset.
- * 
+ *
  * This field is set on a cold reset.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                 | Value | Description                                   
+ *
+ *  Enum                                 | Value | Description
  * :-------------------------------------|:------|:-----------------------------------------------
  *  ALT_SYSMGR_ROMHW_CTL_ENSFMDWRU_E_DIS | 0x0   | Wait state bit is not updated upon deassertion
- * :                                     |       | of warm reset.                                
- *  ALT_SYSMGR_ROMHW_CTL_ENSFMDWRU_E_EN  | 0x1   | Wait state bit is updated upon deassertion of 
+ * :                                     |       | of warm reset.
+ *  ALT_SYSMGR_ROMHW_CTL_ENSFMDWRU_E_EN  | 0x1   | Wait state bit is updated upon deassertion of
  * :                                     |       | warm reset. It's value is updated based on the
  * :                                     |       | control bit from clock manager which specifies
- * :                                     |       | whether clock manager will be in safe mode or 
- * :                                     |       | not after warm reset.                         
- * 
+ * :                                     |       | whether clock manager will be in safe mode or
+ * :                                     |       | not after warm reset.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_ROMHW_CTL_ENSFMDWRU
- * 
+ *
  * Wait state bit is not updated upon deassertion of warm reset.
  */
 #define ALT_SYSMGR_ROMHW_CTL_ENSFMDWRU_E_DIS    0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_ROMHW_CTL_ENSFMDWRU
- * 
+ *
  * Wait state bit is updated upon deassertion of warm reset.
- * 
+ *
  * It's value is updated based on the control bit from clock manager which
  * specifies whether clock manager will be in safe mode or not after warm reset.
  */
@@ -5616,7 +5616,7 @@ typedef volatile struct ALT_SYSMGR_ROMCODE_raw_s  ALT_SYSMGR_ROMCODE_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ROMHW_CTL.
  */
 struct ALT_SYSMGR_ROMHW_CTL_s
@@ -5641,7 +5641,7 @@ typedef volatile struct ALT_SYSMGR_ROMHW_CTL_s  ALT_SYSMGR_ROMHW_CTL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_SYSMGR_ROMHW.
  */
 struct ALT_SYSMGR_ROMHW_s
@@ -5665,93 +5665,93 @@ typedef volatile struct ALT_SYSMGR_ROMHW_raw_s  ALT_SYSMGR_ROMHW_raw_t;
 /*
  * Register Group : SDMMC Controller Group - ALT_SYSMGR_SDMMC
  * SDMMC Controller Group
- * 
+ *
  * Registers related to SDMMC Controller which aren't located inside the SDMMC
  * itself.
- * 
+ *
  */
 /*
  * Register : Control Register - ctrl
- * 
+ *
  * Registers used by the SDMMC Controller. All fields are reset by a cold or warm
  * reset.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
- *  [2:0]  | RW     | 0x0   | Drive Clock Phase Shift Select 
+ *  [2:0]  | RW     | 0x0   | Drive Clock Phase Shift Select
  *  [5:3]  | RW     | 0x0   | Sample Clock Phase Shift Select
- *  [6]    | RW     | 0x0   | Feedback Clock Select          
- *  [31:7] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [6]    | RW     | 0x0   | Feedback Clock Select
+ *  [31:7] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Drive Clock Phase Shift Select - drvsel
- * 
+ *
  * Select which phase shift of the clock for cclk_in_drv.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                     | Value | Description                                
+ *
+ *  Enum                                     | Value | Description
  * :-----------------------------------------|:------|:--------------------------------------------
- *  ALT_SYSMGR_SDMMC_CTL_DRVSEL_E_DEGREES0   | 0x0   | 0 degrees phase shifted clock is selected  
- *  ALT_SYSMGR_SDMMC_CTL_DRVSEL_E_DEGREES45  | 0x1   | 45 degrees phase shifted clock is selected 
- *  ALT_SYSMGR_SDMMC_CTL_DRVSEL_E_DEGREES90  | 0x2   | 90 degrees phase shifted clock is selected 
+ *  ALT_SYSMGR_SDMMC_CTL_DRVSEL_E_DEGREES0   | 0x0   | 0 degrees phase shifted clock is selected
+ *  ALT_SYSMGR_SDMMC_CTL_DRVSEL_E_DEGREES45  | 0x1   | 45 degrees phase shifted clock is selected
+ *  ALT_SYSMGR_SDMMC_CTL_DRVSEL_E_DEGREES90  | 0x2   | 90 degrees phase shifted clock is selected
  *  ALT_SYSMGR_SDMMC_CTL_DRVSEL_E_DEGREES135 | 0x3   | 135 degrees phase shifted clock is selected
  *  ALT_SYSMGR_SDMMC_CTL_DRVSEL_E_DEGREES180 | 0x4   | 180 degrees phase shifted clock is selected
  *  ALT_SYSMGR_SDMMC_CTL_DRVSEL_E_DEGREES225 | 0x5   | 225 degrees phase shifted clock is selected
  *  ALT_SYSMGR_SDMMC_CTL_DRVSEL_E_DEGREES270 | 0x6   | 270 degrees phase shifted clock is selected
  *  ALT_SYSMGR_SDMMC_CTL_DRVSEL_E_DEGREES315 | 0x7   | 315 degrees phase shifted clock is selected
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_SDMMC_CTL_DRVSEL
- * 
+ *
  * 0 degrees phase shifted clock is selected
  */
 #define ALT_SYSMGR_SDMMC_CTL_DRVSEL_E_DEGREES0      0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_SDMMC_CTL_DRVSEL
- * 
+ *
  * 45 degrees phase shifted clock is selected
  */
 #define ALT_SYSMGR_SDMMC_CTL_DRVSEL_E_DEGREES45     0x1
 /*
  * Enumerated value for register field ALT_SYSMGR_SDMMC_CTL_DRVSEL
- * 
+ *
  * 90 degrees phase shifted clock is selected
  */
 #define ALT_SYSMGR_SDMMC_CTL_DRVSEL_E_DEGREES90     0x2
 /*
  * Enumerated value for register field ALT_SYSMGR_SDMMC_CTL_DRVSEL
- * 
+ *
  * 135 degrees phase shifted clock is selected
  */
 #define ALT_SYSMGR_SDMMC_CTL_DRVSEL_E_DEGREES135    0x3
 /*
  * Enumerated value for register field ALT_SYSMGR_SDMMC_CTL_DRVSEL
- * 
+ *
  * 180 degrees phase shifted clock is selected
  */
 #define ALT_SYSMGR_SDMMC_CTL_DRVSEL_E_DEGREES180    0x4
 /*
  * Enumerated value for register field ALT_SYSMGR_SDMMC_CTL_DRVSEL
- * 
+ *
  * 225 degrees phase shifted clock is selected
  */
 #define ALT_SYSMGR_SDMMC_CTL_DRVSEL_E_DEGREES225    0x5
 /*
  * Enumerated value for register field ALT_SYSMGR_SDMMC_CTL_DRVSEL
- * 
+ *
  * 270 degrees phase shifted clock is selected
  */
 #define ALT_SYSMGR_SDMMC_CTL_DRVSEL_E_DEGREES270    0x6
 /*
  * Enumerated value for register field ALT_SYSMGR_SDMMC_CTL_DRVSEL
- * 
+ *
  * 315 degrees phase shifted clock is selected
  */
 #define ALT_SYSMGR_SDMMC_CTL_DRVSEL_E_DEGREES315    0x7
@@ -5775,70 +5775,70 @@ typedef volatile struct ALT_SYSMGR_ROMHW_raw_s  ALT_SYSMGR_ROMHW_raw_t;
 
 /*
  * Field : Sample Clock Phase Shift Select - smplsel
- * 
+ *
  * Select which phase shift of the clock for cclk_in_sample.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                      | Value | Description                                
+ *
+ *  Enum                                      | Value | Description
  * :------------------------------------------|:------|:--------------------------------------------
- *  ALT_SYSMGR_SDMMC_CTL_SMPLSEL_E_DEGREES0   | 0x0   | 0 degrees phase shifted clock is selected  
- *  ALT_SYSMGR_SDMMC_CTL_SMPLSEL_E_DEGREES45  | 0x1   | 45 degrees phase shifted clock is selected 
- *  ALT_SYSMGR_SDMMC_CTL_SMPLSEL_E_DEGREES90  | 0x2   | 90 degrees phase shifted clock is selected 
+ *  ALT_SYSMGR_SDMMC_CTL_SMPLSEL_E_DEGREES0   | 0x0   | 0 degrees phase shifted clock is selected
+ *  ALT_SYSMGR_SDMMC_CTL_SMPLSEL_E_DEGREES45  | 0x1   | 45 degrees phase shifted clock is selected
+ *  ALT_SYSMGR_SDMMC_CTL_SMPLSEL_E_DEGREES90  | 0x2   | 90 degrees phase shifted clock is selected
  *  ALT_SYSMGR_SDMMC_CTL_SMPLSEL_E_DEGREES135 | 0x3   | 135 degrees phase shifted clock is selected
  *  ALT_SYSMGR_SDMMC_CTL_SMPLSEL_E_DEGREES180 | 0x4   | 180 degrees phase shifted clock is selected
  *  ALT_SYSMGR_SDMMC_CTL_SMPLSEL_E_DEGREES225 | 0x5   | 225 degrees phase shifted clock is selected
  *  ALT_SYSMGR_SDMMC_CTL_SMPLSEL_E_DEGREES270 | 0x6   | 270 degrees phase shifted clock is selected
  *  ALT_SYSMGR_SDMMC_CTL_SMPLSEL_E_DEGREES315 | 0x7   | 315 degrees phase shifted clock is selected
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_SDMMC_CTL_SMPLSEL
- * 
+ *
  * 0 degrees phase shifted clock is selected
  */
 #define ALT_SYSMGR_SDMMC_CTL_SMPLSEL_E_DEGREES0     0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_SDMMC_CTL_SMPLSEL
- * 
+ *
  * 45 degrees phase shifted clock is selected
  */
 #define ALT_SYSMGR_SDMMC_CTL_SMPLSEL_E_DEGREES45    0x1
 /*
  * Enumerated value for register field ALT_SYSMGR_SDMMC_CTL_SMPLSEL
- * 
+ *
  * 90 degrees phase shifted clock is selected
  */
 #define ALT_SYSMGR_SDMMC_CTL_SMPLSEL_E_DEGREES90    0x2
 /*
  * Enumerated value for register field ALT_SYSMGR_SDMMC_CTL_SMPLSEL
- * 
+ *
  * 135 degrees phase shifted clock is selected
  */
 #define ALT_SYSMGR_SDMMC_CTL_SMPLSEL_E_DEGREES135   0x3
 /*
  * Enumerated value for register field ALT_SYSMGR_SDMMC_CTL_SMPLSEL
- * 
+ *
  * 180 degrees phase shifted clock is selected
  */
 #define ALT_SYSMGR_SDMMC_CTL_SMPLSEL_E_DEGREES180   0x4
 /*
  * Enumerated value for register field ALT_SYSMGR_SDMMC_CTL_SMPLSEL
- * 
+ *
  * 225 degrees phase shifted clock is selected
  */
 #define ALT_SYSMGR_SDMMC_CTL_SMPLSEL_E_DEGREES225   0x5
 /*
  * Enumerated value for register field ALT_SYSMGR_SDMMC_CTL_SMPLSEL
- * 
+ *
  * 270 degrees phase shifted clock is selected
  */
 #define ALT_SYSMGR_SDMMC_CTL_SMPLSEL_E_DEGREES270   0x6
 /*
  * Enumerated value for register field ALT_SYSMGR_SDMMC_CTL_SMPLSEL
- * 
+ *
  * 315 degrees phase shifted clock is selected
  */
 #define ALT_SYSMGR_SDMMC_CTL_SMPLSEL_E_DEGREES315   0x7
@@ -5862,19 +5862,19 @@ typedef volatile struct ALT_SYSMGR_ROMHW_raw_s  ALT_SYSMGR_ROMHW_raw_t;
 
 /*
  * Field : Feedback Clock Select - fbclksel
- * 
+ *
  * Select which fb_clk to be used as cclk_in_sample.
- * 
+ *
  * If 0, cclk_in_sample is driven by internal phase shifted cclk_in.
- * 
+ *
  * If 1, cclk_in_sample is driven by fb_clk_in. No phase shifting is provided
  * internally on cclk_in_sample.
- * 
+ *
  * Note: Using the feedback clock (setting this bit to 1) is not a supported use
  * model.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_SDMMC_CTL_FBCLKSEL register field. */
 #define ALT_SYSMGR_SDMMC_CTL_FBCLKSEL_LSB        6
@@ -5901,7 +5901,7 @@ typedef volatile struct ALT_SYSMGR_ROMHW_raw_s  ALT_SYSMGR_ROMHW_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_SDMMC_CTL.
  */
 struct ALT_SYSMGR_SDMMC_CTL_s
@@ -5921,50 +5921,50 @@ typedef volatile struct ALT_SYSMGR_SDMMC_CTL_s  ALT_SYSMGR_SDMMC_CTL_t;
 
 /*
  * Register : SD/MMC L3 Master HPROT Register - l3master
- * 
+ *
  * Controls the L3 master HPROT AHB-Lite signal.
- * 
+ *
  * These register bits should be updated only during system initialization prior to
  * removing the peripheral from reset. They may not be changed dynamically during
  * peripheral operation
- * 
+ *
  * All fields are reset by a cold or warm reset.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description             
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------
  *  [0]    | RW     | 0x1   | SD/MMC HPROT Data/Opcode
- *  [1]    | RW     | 0x1   | SD/MMC HPROT Privileged 
- *  [2]    | RW     | 0x0   | SD/MMC HPROT Bufferable 
- *  [3]    | RW     | 0x0   | SD/MMC HPROT Cacheable  
- *  [31:4] | ???    | 0x0   | *UNDEFINED*             
- * 
+ *  [1]    | RW     | 0x1   | SD/MMC HPROT Privileged
+ *  [2]    | RW     | 0x0   | SD/MMC HPROT Bufferable
+ *  [3]    | RW     | 0x0   | SD/MMC HPROT Cacheable
+ *  [31:4] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : SD/MMC HPROT Data/Opcode - hprotdata_0
- * 
+ *
  * Specifies if the L3 master access is for data or opcode for the SD/MMC module.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                        | Value | Description 
+ *
+ *  Enum                                        | Value | Description
  * :--------------------------------------------|:------|:-------------
  *  ALT_SYSMGR_SDMMC_L3MST_HPROTDATA_0_E_OPCODE | 0x0   | Opcode fetch
- *  ALT_SYSMGR_SDMMC_L3MST_HPROTDATA_0_E_DATA   | 0x1   | Data access 
- * 
+ *  ALT_SYSMGR_SDMMC_L3MST_HPROTDATA_0_E_DATA   | 0x1   | Data access
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_SDMMC_L3MST_HPROTDATA_0
- * 
+ *
  * Opcode fetch
  */
 #define ALT_SYSMGR_SDMMC_L3MST_HPROTDATA_0_E_OPCODE 0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_SDMMC_L3MST_HPROTDATA_0
- * 
+ *
  * Data access
  */
 #define ALT_SYSMGR_SDMMC_L3MST_HPROTDATA_0_E_DATA   0x1
@@ -5988,11 +5988,11 @@ typedef volatile struct ALT_SYSMGR_SDMMC_CTL_s  ALT_SYSMGR_SDMMC_CTL_t;
 
 /*
  * Field : SD/MMC HPROT Privileged - hprotpriv_0
- * 
+ *
  * If 1, L3 master accesses for the SD/MMC module are privileged.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_SDMMC_L3MST_HPROTPRIV_0 register field. */
 #define ALT_SYSMGR_SDMMC_L3MST_HPROTPRIV_0_LSB        1
@@ -6013,11 +6013,11 @@ typedef volatile struct ALT_SYSMGR_SDMMC_CTL_s  ALT_SYSMGR_SDMMC_CTL_t;
 
 /*
  * Field : SD/MMC HPROT Bufferable - hprotbuff_0
- * 
+ *
  * If 1, L3 master accesses for the SD/MMC module are bufferable.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_SDMMC_L3MST_HPROTBUFF_0 register field. */
 #define ALT_SYSMGR_SDMMC_L3MST_HPROTBUFF_0_LSB        2
@@ -6038,11 +6038,11 @@ typedef volatile struct ALT_SYSMGR_SDMMC_CTL_s  ALT_SYSMGR_SDMMC_CTL_t;
 
 /*
  * Field : SD/MMC HPROT Cacheable - hprotcache_0
- * 
+ *
  * If 1, L3 master accesses for the SD/MMC module are cacheable.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_SDMMC_L3MST_HPROTCACHE_0 register field. */
 #define ALT_SYSMGR_SDMMC_L3MST_HPROTCACHE_0_LSB        3
@@ -6069,7 +6069,7 @@ typedef volatile struct ALT_SYSMGR_SDMMC_CTL_s  ALT_SYSMGR_SDMMC_CTL_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_SDMMC_L3MST.
  */
 struct ALT_SYSMGR_SDMMC_L3MST_s
@@ -6096,7 +6096,7 @@ typedef volatile struct ALT_SYSMGR_SDMMC_L3MST_s  ALT_SYSMGR_SDMMC_L3MST_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_SYSMGR_SDMMC.
  */
 struct ALT_SYSMGR_SDMMC_s
@@ -6122,38 +6122,38 @@ typedef volatile struct ALT_SYSMGR_SDMMC_raw_s  ALT_SYSMGR_SDMMC_raw_t;
 /*
  * Register Group : NAND Flash Controller Register Group - ALT_SYSMGR_NAND
  * NAND Flash Controller Register Group
- * 
+ *
  * Registers related to NAND Flash Controller which aren't located in the NAND
  * Flash Controller itself.
- * 
+ *
  */
 /*
  * Register : Bootstrap Control Register - bootstrap
- * 
+ *
  * Bootstrap fields sampled by NAND Flash Controller when released from reset.
- * 
+ *
  * All fields are reset by a cold or warm reset.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                          
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------------
- *  [0]    | RW     | 0x0   | Bootstrap Inhibit Initialization     
- *  [1]    | RW     | 0x0   | Bootstrap 512 Byte Device            
+ *  [0]    | RW     | 0x0   | Bootstrap Inhibit Initialization
+ *  [1]    | RW     | 0x0   | Bootstrap 512 Byte Device
  *  [2]    | RW     | 0x0   | Bootstrap Inhibit Load Block 0 Page 0
- *  [3]    | RW     | 0x0   | Bootstrap Two Row Address Cycles     
- *  [31:4] | ???    | 0x0   | *UNDEFINED*                          
- * 
+ *  [3]    | RW     | 0x0   | Bootstrap Two Row Address Cycles
+ *  [31:4] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Bootstrap Inhibit Initialization - noinit
- * 
+ *
  * If 1, inhibits NAND Flash Controller from performing initialization when coming
  * out of reset. Instead, software must program all registers pertaining to device
  * parameters like page size, width, etc.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_NAND_BOOTSTRAP_NOINIT register field. */
 #define ALT_SYSMGR_NAND_BOOTSTRAP_NOINIT_LSB        0
@@ -6174,11 +6174,11 @@ typedef volatile struct ALT_SYSMGR_SDMMC_raw_s  ALT_SYSMGR_SDMMC_raw_t;
 
 /*
  * Field : Bootstrap 512 Byte Device - page512
- * 
+ *
  * If 1, NAND device has a 512 byte page size.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_NAND_BOOTSTRAP_PAGE512 register field. */
 #define ALT_SYSMGR_NAND_BOOTSTRAP_PAGE512_LSB        1
@@ -6199,12 +6199,12 @@ typedef volatile struct ALT_SYSMGR_SDMMC_raw_s  ALT_SYSMGR_SDMMC_raw_t;
 
 /*
  * Field : Bootstrap Inhibit Load Block 0 Page 0 - noloadb0p0
- * 
+ *
  * If 1, inhibits NAND Flash Controller from loading page 0 of block 0 of the NAND
  * device as part of the initialization procedure.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_NAND_BOOTSTRAP_NOLDB0P0 register field. */
 #define ALT_SYSMGR_NAND_BOOTSTRAP_NOLDB0P0_LSB        2
@@ -6225,12 +6225,12 @@ typedef volatile struct ALT_SYSMGR_SDMMC_raw_s  ALT_SYSMGR_SDMMC_raw_t;
 
 /*
  * Field : Bootstrap Two Row Address Cycles - tworowaddr
- * 
+ *
  * If 1, NAND device requires only 2 row address cycles instead of the normal 3 row
  * address cycles.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_NAND_BOOTSTRAP_TWOROWADDR register field. */
 #define ALT_SYSMGR_NAND_BOOTSTRAP_TWOROWADDR_LSB        3
@@ -6257,7 +6257,7 @@ typedef volatile struct ALT_SYSMGR_SDMMC_raw_s  ALT_SYSMGR_SDMMC_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_NAND_BOOTSTRAP.
  */
 struct ALT_SYSMGR_NAND_BOOTSTRAP_s
@@ -6278,149 +6278,149 @@ typedef volatile struct ALT_SYSMGR_NAND_BOOTSTRAP_s  ALT_SYSMGR_NAND_BOOTSTRAP_t
 
 /*
  * Register : NAND L3 Master AxCACHE Register - l3master
- * 
+ *
  * Controls the L3 master ARCACHE and AWCACHE AXI signals.
- * 
+ *
  * These register bits should be updated only during system initialization prior to
  * removing the peripheral from reset. They may not be changed dynamically during
  * peripheral operation
- * 
+ *
  * All fields are reset by a cold or warm reset.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------
  *  [3:0]  | RW     | 0x0   | NAND ARCACHE
  *  [7:4]  | RW     | 0x0   | NAND AWCACHE
- *  [31:8] | ???    | 0x0   | *UNDEFINED* 
- * 
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : NAND ARCACHE - arcache_0
- * 
+ *
  * Specifies the value of the module ARCACHE signal.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                                   | Value | Description                                     
+ *
+ *  Enum                                                   | Value | Description
  * :-------------------------------------------------------|:------|:-------------------------------------------------
- *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_NONCACHE_NONBUFF     | 0x0   | Noncacheable and nonbufferable.                 
- *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_BUFF                 | 0x1   | Bufferable only.                                
- *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_NONALLOC       | 0x2   | Cacheable, but do not allocate.                 
- *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_BUFF_NONALLOC  | 0x3   | Cacheable and bufferable, but do not allocate.  
- *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_RSVD1                | 0x4   | Reserved.                                       
- *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_RSVD2                | 0x5   | Reserved.                                       
+ *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_NONCACHE_NONBUFF     | 0x0   | Noncacheable and nonbufferable.
+ *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_BUFF                 | 0x1   | Bufferable only.
+ *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_NONALLOC       | 0x2   | Cacheable, but do not allocate.
+ *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_BUFF_NONALLOC  | 0x3   | Cacheable and bufferable, but do not allocate.
+ *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_RSVD1                | 0x4   | Reserved.
+ *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_RSVD2                | 0x5   | Reserved.
  *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_WRTHRU_RDALLOC | 0x6   | Cacheable write-through, allocate on reads only.
- *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_WRBACK_RDALLOC | 0x7   | Cacheable write-back, allocate on reads only.   
- *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_RSVD3                | 0x8   | Reserved.                                       
- *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_RSVD4                | 0x9   | Reserved.                                       
- *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_WRTHRU_WRALLOC | 0xa   | Cacheable write-through, allocate on writes     
- * :                                                       |       | only.                                           
- *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_WRBACK_WRALLOC | 0xb   | Cacheable write-back, allocate on writes only.  
- *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_RSVD5                | 0xc   | Reserved.                                       
- *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_RSVD6                | 0xd   | Reserved.                                       
- *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_WRTHRU_ALLOC   | 0xe   | Cacheable write-through, allocate on both reads 
- * :                                                       |       | and writes.                                     
+ *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_WRBACK_RDALLOC | 0x7   | Cacheable write-back, allocate on reads only.
+ *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_RSVD3                | 0x8   | Reserved.
+ *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_RSVD4                | 0x9   | Reserved.
+ *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_WRTHRU_WRALLOC | 0xa   | Cacheable write-through, allocate on writes
+ * :                                                       |       | only.
+ *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_WRBACK_WRALLOC | 0xb   | Cacheable write-back, allocate on writes only.
+ *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_RSVD5                | 0xc   | Reserved.
+ *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_RSVD6                | 0xd   | Reserved.
+ *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_WRTHRU_ALLOC   | 0xe   | Cacheable write-through, allocate on both reads
+ * :                                                       |       | and writes.
  *  ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_WRBACK_ALLOC   | 0xf   | Cacheable write-back, allocate on both reads and
- * :                                                       |       | writes.                                         
- * 
+ * :                                                       |       | writes.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_ARCACHE_0
- * 
+ *
  * Noncacheable and nonbufferable.
  */
 #define ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_NONCACHE_NONBUFF      0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_ARCACHE_0
- * 
+ *
  * Bufferable only.
  */
 #define ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_BUFF                  0x1
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_ARCACHE_0
- * 
+ *
  * Cacheable, but do not allocate.
  */
 #define ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_NONALLOC        0x2
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_ARCACHE_0
- * 
+ *
  * Cacheable and bufferable, but do not allocate.
  */
 #define ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_BUFF_NONALLOC   0x3
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_ARCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_RSVD1                 0x4
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_ARCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_RSVD2                 0x5
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_ARCACHE_0
- * 
+ *
  * Cacheable write-through, allocate on reads only.
  */
 #define ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_WRTHRU_RDALLOC  0x6
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_ARCACHE_0
- * 
+ *
  * Cacheable write-back, allocate on reads only.
  */
 #define ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_WRBACK_RDALLOC  0x7
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_ARCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_RSVD3                 0x8
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_ARCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_RSVD4                 0x9
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_ARCACHE_0
- * 
+ *
  * Cacheable write-through, allocate on writes only.
  */
 #define ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_WRTHRU_WRALLOC  0xa
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_ARCACHE_0
- * 
+ *
  * Cacheable write-back, allocate on writes only.
  */
 #define ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_WRBACK_WRALLOC  0xb
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_ARCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_RSVD5                 0xc
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_ARCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_RSVD6                 0xd
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_ARCACHE_0
- * 
+ *
  * Cacheable write-through, allocate on both reads and writes.
  */
 #define ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_WRTHRU_ALLOC    0xe
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_ARCACHE_0
- * 
+ *
  * Cacheable write-back, allocate on both reads and writes.
  */
 #define ALT_SYSMGR_NAND_L3MST_ARCACHE_0_E_CACHE_WRBACK_ALLOC    0xf
@@ -6444,129 +6444,129 @@ typedef volatile struct ALT_SYSMGR_NAND_BOOTSTRAP_s  ALT_SYSMGR_NAND_BOOTSTRAP_t
 
 /*
  * Field : NAND AWCACHE - awcache_0
- * 
+ *
  * Specifies the value of the module AWCACHE signal.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                                   | Value | Description                                     
+ *
+ *  Enum                                                   | Value | Description
  * :-------------------------------------------------------|:------|:-------------------------------------------------
- *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_NONCACHE_NONBUFF     | 0x0   | Noncacheable and nonbufferable.                 
- *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_BUFF                 | 0x1   | Bufferable only.                                
- *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_NONALLOC       | 0x2   | Cacheable, but do not allocate.                 
- *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_BUFF_NONALLOC  | 0x3   | Cacheable and bufferable, but do not allocate.  
- *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_RSVD1                | 0x4   | Reserved.                                       
- *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_RSVD2                | 0x5   | Reserved.                                       
+ *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_NONCACHE_NONBUFF     | 0x0   | Noncacheable and nonbufferable.
+ *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_BUFF                 | 0x1   | Bufferable only.
+ *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_NONALLOC       | 0x2   | Cacheable, but do not allocate.
+ *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_BUFF_NONALLOC  | 0x3   | Cacheable and bufferable, but do not allocate.
+ *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_RSVD1                | 0x4   | Reserved.
+ *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_RSVD2                | 0x5   | Reserved.
  *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_WRTHRU_RDALLOC | 0x6   | Cacheable write-through, allocate on reads only.
- *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_WRBACK_RDALLOC | 0x7   | Cacheable write-back, allocate on reads only.   
- *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_RSVD3                | 0x8   | Reserved.                                       
- *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_RSVD4                | 0x9   | Reserved.                                       
- *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_WRTHRU_WRALLOC | 0xa   | Cacheable write-through, allocate on writes     
- * :                                                       |       | only.                                           
- *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_WRBACK_WRALLOC | 0xb   | Cacheable write-back, allocate on writes only.  
- *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_RSVD5                | 0xc   | Reserved.                                       
- *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_RSVD6                | 0xd   | Reserved.                                       
- *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_WRTHRU_ALLOC   | 0xe   | Cacheable write-through, allocate on both reads 
- * :                                                       |       | and writes.                                     
+ *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_WRBACK_RDALLOC | 0x7   | Cacheable write-back, allocate on reads only.
+ *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_RSVD3                | 0x8   | Reserved.
+ *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_RSVD4                | 0x9   | Reserved.
+ *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_WRTHRU_WRALLOC | 0xa   | Cacheable write-through, allocate on writes
+ * :                                                       |       | only.
+ *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_WRBACK_WRALLOC | 0xb   | Cacheable write-back, allocate on writes only.
+ *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_RSVD5                | 0xc   | Reserved.
+ *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_RSVD6                | 0xd   | Reserved.
+ *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_WRTHRU_ALLOC   | 0xe   | Cacheable write-through, allocate on both reads
+ * :                                                       |       | and writes.
  *  ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_WRBACK_ALLOC   | 0xf   | Cacheable write-back, allocate on both reads and
- * :                                                       |       | writes.                                         
- * 
+ * :                                                       |       | writes.
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_AWCACHE_0
- * 
+ *
  * Noncacheable and nonbufferable.
  */
 #define ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_NONCACHE_NONBUFF      0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_AWCACHE_0
- * 
+ *
  * Bufferable only.
  */
 #define ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_BUFF                  0x1
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_AWCACHE_0
- * 
+ *
  * Cacheable, but do not allocate.
  */
 #define ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_NONALLOC        0x2
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_AWCACHE_0
- * 
+ *
  * Cacheable and bufferable, but do not allocate.
  */
 #define ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_BUFF_NONALLOC   0x3
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_AWCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_RSVD1                 0x4
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_AWCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_RSVD2                 0x5
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_AWCACHE_0
- * 
+ *
  * Cacheable write-through, allocate on reads only.
  */
 #define ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_WRTHRU_RDALLOC  0x6
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_AWCACHE_0
- * 
+ *
  * Cacheable write-back, allocate on reads only.
  */
 #define ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_WRBACK_RDALLOC  0x7
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_AWCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_RSVD3                 0x8
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_AWCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_RSVD4                 0x9
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_AWCACHE_0
- * 
+ *
  * Cacheable write-through, allocate on writes only.
  */
 #define ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_WRTHRU_WRALLOC  0xa
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_AWCACHE_0
- * 
+ *
  * Cacheable write-back, allocate on writes only.
  */
 #define ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_WRBACK_WRALLOC  0xb
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_AWCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_RSVD5                 0xc
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_AWCACHE_0
- * 
+ *
  * Reserved.
  */
 #define ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_RSVD6                 0xd
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_AWCACHE_0
- * 
+ *
  * Cacheable write-through, allocate on both reads and writes.
  */
 #define ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_WRTHRU_ALLOC    0xe
 /*
  * Enumerated value for register field ALT_SYSMGR_NAND_L3MST_AWCACHE_0
- * 
+ *
  * Cacheable write-back, allocate on both reads and writes.
  */
 #define ALT_SYSMGR_NAND_L3MST_AWCACHE_0_E_CACHE_WRBACK_ALLOC    0xf
@@ -6596,7 +6596,7 @@ typedef volatile struct ALT_SYSMGR_NAND_BOOTSTRAP_s  ALT_SYSMGR_NAND_BOOTSTRAP_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_NAND_L3MST.
  */
 struct ALT_SYSMGR_NAND_L3MST_s
@@ -6621,7 +6621,7 @@ typedef volatile struct ALT_SYSMGR_NAND_L3MST_s  ALT_SYSMGR_NAND_L3MST_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_SYSMGR_NAND.
  */
 struct ALT_SYSMGR_NAND_s
@@ -6647,63 +6647,63 @@ typedef volatile struct ALT_SYSMGR_NAND_raw_s  ALT_SYSMGR_NAND_raw_t;
 /*
  * Register Group : USB Controller Group - ALT_SYSMGR_USB
  * USB Controller Group
- * 
+ *
  * Registers related to USB Controllers which aren't located inside the USB
  * controllers themselves.
- * 
+ *
  */
 /*
  * Register : USB L3 Master HPROT Register - l3master
- * 
+ *
  * Controls the L3 master HPROT AHB-Lite signal.
- * 
+ *
  * These register bits should be updated only during system initialization prior to
  * removing the peripheral from reset. They may not be changed dynamically during
  * peripheral operation
- * 
+ *
  * All fields are reset by a cold or warm reset.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description          
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------
  *  [0]    | RW     | 0x1   | USB HPROT Data/Opcode
  *  [1]    | RW     | 0x1   | USB HPROT Data/Opcode
- *  [2]    | RW     | 0x1   | USB HPROT Privileged 
- *  [3]    | RW     | 0x1   | USB HPROT Privileged 
- *  [4]    | RW     | 0x0   | USB HPROT Bufferable 
- *  [5]    | RW     | 0x0   | USB HPROT Bufferable 
- *  [6]    | RW     | 0x0   | USB HPROT Cacheable  
- *  [7]    | RW     | 0x0   | USB HPROT Cacheable  
- *  [31:8] | ???    | 0x0   | *UNDEFINED*          
- * 
+ *  [2]    | RW     | 0x1   | USB HPROT Privileged
+ *  [3]    | RW     | 0x1   | USB HPROT Privileged
+ *  [4]    | RW     | 0x0   | USB HPROT Bufferable
+ *  [5]    | RW     | 0x0   | USB HPROT Bufferable
+ *  [6]    | RW     | 0x0   | USB HPROT Cacheable
+ *  [7]    | RW     | 0x0   | USB HPROT Cacheable
+ *  [31:8] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : USB HPROT Data/Opcode - hprotdata_0
- * 
+ *
  * Specifies if the L3 master access is for data or opcode for the USB modules.
- * 
+ *
  * The field array index corresponds to the USB index.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                      | Value | Description 
+ *
+ *  Enum                                      | Value | Description
  * :------------------------------------------|:------|:-------------
  *  ALT_SYSMGR_USB_L3MST_HPROTDATA_0_E_OPCODE | 0x0   | Opcode fetch
- *  ALT_SYSMGR_USB_L3MST_HPROTDATA_0_E_DATA   | 0x1   | Data access 
- * 
+ *  ALT_SYSMGR_USB_L3MST_HPROTDATA_0_E_DATA   | 0x1   | Data access
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_USB_L3MST_HPROTDATA_0
- * 
+ *
  * Opcode fetch
  */
 #define ALT_SYSMGR_USB_L3MST_HPROTDATA_0_E_OPCODE   0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_USB_L3MST_HPROTDATA_0
- * 
+ *
  * Data access
  */
 #define ALT_SYSMGR_USB_L3MST_HPROTDATA_0_E_DATA     0x1
@@ -6727,30 +6727,30 @@ typedef volatile struct ALT_SYSMGR_NAND_raw_s  ALT_SYSMGR_NAND_raw_t;
 
 /*
  * Field : USB HPROT Data/Opcode - hprotdata_1
- * 
+ *
  * Specifies if the L3 master access is for data or opcode for the USB modules.
- * 
+ *
  * The field array index corresponds to the USB index.
- * 
+ *
  * Field Enumeration Values:
- * 
- *  Enum                                      | Value | Description 
+ *
+ *  Enum                                      | Value | Description
  * :------------------------------------------|:------|:-------------
  *  ALT_SYSMGR_USB_L3MST_HPROTDATA_1_E_OPCODE | 0x0   | Opcode fetch
- *  ALT_SYSMGR_USB_L3MST_HPROTDATA_1_E_DATA   | 0x1   | Data access 
- * 
+ *  ALT_SYSMGR_USB_L3MST_HPROTDATA_1_E_DATA   | 0x1   | Data access
+ *
  * Field Access Macros:
- * 
+ *
  */
 /*
  * Enumerated value for register field ALT_SYSMGR_USB_L3MST_HPROTDATA_1
- * 
+ *
  * Opcode fetch
  */
 #define ALT_SYSMGR_USB_L3MST_HPROTDATA_1_E_OPCODE   0x0
 /*
  * Enumerated value for register field ALT_SYSMGR_USB_L3MST_HPROTDATA_1
- * 
+ *
  * Data access
  */
 #define ALT_SYSMGR_USB_L3MST_HPROTDATA_1_E_DATA     0x1
@@ -6774,13 +6774,13 @@ typedef volatile struct ALT_SYSMGR_NAND_raw_s  ALT_SYSMGR_NAND_raw_t;
 
 /*
  * Field : USB HPROT Privileged - hprotpriv_0
- * 
+ *
  * If 1, L3 master accesses for the USB modules are privileged.
- * 
+ *
  * The field array index corresponds to the USB index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_USB_L3MST_HPROTPRIV_0 register field. */
 #define ALT_SYSMGR_USB_L3MST_HPROTPRIV_0_LSB        2
@@ -6801,13 +6801,13 @@ typedef volatile struct ALT_SYSMGR_NAND_raw_s  ALT_SYSMGR_NAND_raw_t;
 
 /*
  * Field : USB HPROT Privileged - hprotpriv_1
- * 
+ *
  * If 1, L3 master accesses for the USB modules are privileged.
- * 
+ *
  * The field array index corresponds to the USB index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_USB_L3MST_HPROTPRIV_1 register field. */
 #define ALT_SYSMGR_USB_L3MST_HPROTPRIV_1_LSB        3
@@ -6828,13 +6828,13 @@ typedef volatile struct ALT_SYSMGR_NAND_raw_s  ALT_SYSMGR_NAND_raw_t;
 
 /*
  * Field : USB HPROT Bufferable - hprotbuff_0
- * 
+ *
  * If 1, L3 master accesses for the USB modules are bufferable.
- * 
+ *
  * The field array index corresponds to the USB index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_USB_L3MST_HPROTBUFF_0 register field. */
 #define ALT_SYSMGR_USB_L3MST_HPROTBUFF_0_LSB        4
@@ -6855,13 +6855,13 @@ typedef volatile struct ALT_SYSMGR_NAND_raw_s  ALT_SYSMGR_NAND_raw_t;
 
 /*
  * Field : USB HPROT Bufferable - hprotbuff_1
- * 
+ *
  * If 1, L3 master accesses for the USB modules are bufferable.
- * 
+ *
  * The field array index corresponds to the USB index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_USB_L3MST_HPROTBUFF_1 register field. */
 #define ALT_SYSMGR_USB_L3MST_HPROTBUFF_1_LSB        5
@@ -6882,13 +6882,13 @@ typedef volatile struct ALT_SYSMGR_NAND_raw_s  ALT_SYSMGR_NAND_raw_t;
 
 /*
  * Field : USB HPROT Cacheable - hprotcache_0
- * 
+ *
  * If 1, L3 master accesses for the USB modules are cacheable.
- * 
+ *
  * The field array index corresponds to the USB index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_USB_L3MST_HPROTCACHE_0 register field. */
 #define ALT_SYSMGR_USB_L3MST_HPROTCACHE_0_LSB        6
@@ -6909,13 +6909,13 @@ typedef volatile struct ALT_SYSMGR_NAND_raw_s  ALT_SYSMGR_NAND_raw_t;
 
 /*
  * Field : USB HPROT Cacheable - hprotcache_1
- * 
+ *
  * If 1, L3 master accesses for the USB modules are cacheable.
- * 
+ *
  * The field array index corresponds to the USB index.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_USB_L3MST_HPROTCACHE_1 register field. */
 #define ALT_SYSMGR_USB_L3MST_HPROTCACHE_1_LSB        7
@@ -6942,7 +6942,7 @@ typedef volatile struct ALT_SYSMGR_NAND_raw_s  ALT_SYSMGR_NAND_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_USB_L3MST.
  */
 struct ALT_SYSMGR_USB_L3MST_s
@@ -6973,7 +6973,7 @@ typedef volatile struct ALT_SYSMGR_USB_L3MST_s  ALT_SYSMGR_USB_L3MST_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_SYSMGR_USB.
  */
 struct ALT_SYSMGR_USB_s
@@ -6997,36 +6997,36 @@ typedef volatile struct ALT_SYSMGR_USB_raw_s  ALT_SYSMGR_USB_raw_t;
 /*
  * Register Group : ECC Management Register Group - ALT_SYSMGR_ECC
  * ECC Management Register Group
- * 
+ *
  * ECC error status and control for all ECC-protected HPS RAM blocks.
- * 
+ *
  */
 /*
  * Register : L2 Data RAM ECC Enable Register - l2
- * 
+ *
  * This register is used to enable ECC on the L2 Data RAM. ECC errors can be
  * injected into the write path using bits in this register. This register contains
  * interrupt status of the ECC single/double bit error.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                                             
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------------------------------
- *  [0]    | RW     | 0x0   | L2 Data RAM ECC Enable                                  
- *  [1]    | RW     | 0x0   | L2 Data RAM ECC inject single, correctable Error        
+ *  [0]    | RW     | 0x0   | L2 Data RAM ECC Enable
+ *  [1]    | RW     | 0x0   | L2 Data RAM ECC inject single, correctable Error
  *  [2]    | RW     | 0x0   | L2 Data RAM ECC inject double bit, non-correctable error
- *  [31:3] | ???    | 0x0   | *UNDEFINED*                                             
- * 
+ *  [31:3] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : L2 Data RAM ECC Enable - en
- * 
+ *
  * Enable ECC for L2 Data RAM
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_L2_EN register field. */
 #define ALT_SYSMGR_ECC_L2_EN_LSB        0
@@ -7047,12 +7047,12 @@ typedef volatile struct ALT_SYSMGR_USB_raw_s  ALT_SYSMGR_USB_raw_t;
 
 /*
  * Field : L2 Data RAM ECC inject single, correctable Error - injs
- * 
+ *
  * Changing this bit from zero to one injects a single, correctable error into the
  * L2 Data RAM. This only injects one error into the L2 Data RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_L2_INJS register field. */
 #define ALT_SYSMGR_ECC_L2_INJS_LSB        1
@@ -7073,12 +7073,12 @@ typedef volatile struct ALT_SYSMGR_USB_raw_s  ALT_SYSMGR_USB_raw_t;
 
 /*
  * Field : L2 Data RAM ECC inject double bit, non-correctable error - injd
- * 
+ *
  * Changing this bit from zero to one injects a double, non-correctable error into
  * the L2 Data RAM. This only injects one double bit error into the L2 Data RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_L2_INJD register field. */
 #define ALT_SYSMGR_ECC_L2_INJD_LSB        2
@@ -7105,7 +7105,7 @@ typedef volatile struct ALT_SYSMGR_USB_raw_s  ALT_SYSMGR_USB_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ECC_L2.
  */
 struct ALT_SYSMGR_ECC_L2_s
@@ -7125,32 +7125,32 @@ typedef volatile struct ALT_SYSMGR_ECC_L2_s  ALT_SYSMGR_ECC_L2_t;
 
 /*
  * Register : On-chip RAM ECC Enable Register - ocram
- * 
+ *
  * This register is used to enable ECC on the On-chip RAM. ECC errors can be
  * injected into the write path using bits in this register. This register contains
  * interrupt status of the ECC single/double bit error.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                                                       
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------------------------------------------------
- *  [0]    | RW     | 0x0   | On-chip RAM ECC Enable                                            
- *  [1]    | RW     | 0x0   | On-chip RAM ECC inject single, correctable Error                  
- *  [2]    | RW     | 0x0   | On-chip RAM ECC inject double bit, non-correctable error          
- *  [3]    | RW     | 0x0   | On-chip RAM ECC single, correctable error interrupt status        
+ *  [0]    | RW     | 0x0   | On-chip RAM ECC Enable
+ *  [1]    | RW     | 0x0   | On-chip RAM ECC inject single, correctable Error
+ *  [2]    | RW     | 0x0   | On-chip RAM ECC inject double bit, non-correctable error
+ *  [3]    | RW     | 0x0   | On-chip RAM ECC single, correctable error interrupt status
  *  [4]    | RW     | 0x0   | On-chip RAM ECC double bit, non-correctable error interrupt status
- *  [31:5] | ???    | 0x0   | *UNDEFINED*                                                       
- * 
+ *  [31:5] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : On-chip RAM ECC Enable - en
- * 
+ *
  * Enable ECC for On-chip RAM
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_OCRAM_EN register field. */
 #define ALT_SYSMGR_ECC_OCRAM_EN_LSB        0
@@ -7171,12 +7171,12 @@ typedef volatile struct ALT_SYSMGR_ECC_L2_s  ALT_SYSMGR_ECC_L2_t;
 
 /*
  * Field : On-chip RAM ECC inject single, correctable Error - injs
- * 
+ *
  * Changing this bit from zero to one injects a single, correctable error into the
  * On-chip RAM. This only injects one error into the On-chip RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_OCRAM_INJS register field. */
 #define ALT_SYSMGR_ECC_OCRAM_INJS_LSB        1
@@ -7197,12 +7197,12 @@ typedef volatile struct ALT_SYSMGR_ECC_L2_s  ALT_SYSMGR_ECC_L2_t;
 
 /*
  * Field : On-chip RAM ECC inject double bit, non-correctable error - injd
- * 
+ *
  * Changing this bit from zero to one injects a double, non-correctable error into
  * the On-chip RAM. This only injects one double bit error into the On-chip RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_OCRAM_INJD register field. */
 #define ALT_SYSMGR_ECC_OCRAM_INJD_LSB        2
@@ -7223,13 +7223,13 @@ typedef volatile struct ALT_SYSMGR_ECC_L2_s  ALT_SYSMGR_ECC_L2_t;
 
 /*
  * Field : On-chip RAM ECC single, correctable error interrupt status - serr
- * 
+ *
  * This bit is an interrupt status bit for On-chip RAM ECC single, correctable
  * error. It is set by hardware when single, correctable error occurs in On-chip
  * RAM. Software needs to write 1 into this bit to clear the interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_OCRAM_SERR register field. */
 #define ALT_SYSMGR_ECC_OCRAM_SERR_LSB        3
@@ -7250,14 +7250,14 @@ typedef volatile struct ALT_SYSMGR_ECC_L2_s  ALT_SYSMGR_ECC_L2_t;
 
 /*
  * Field : On-chip RAM ECC double bit, non-correctable error interrupt status - derr
- * 
+ *
  * This bit is an interrupt status bit for On-chip RAM ECC double bit, non-
  * correctable error. It is set by hardware when double bit, non-correctable error
  * occurs in On-chip RAM. Software needs to write 1 into this bit to clear the
  * interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_OCRAM_DERR register field. */
 #define ALT_SYSMGR_ECC_OCRAM_DERR_LSB        4
@@ -7284,7 +7284,7 @@ typedef volatile struct ALT_SYSMGR_ECC_L2_s  ALT_SYSMGR_ECC_L2_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ECC_OCRAM.
  */
 struct ALT_SYSMGR_ECC_OCRAM_s
@@ -7306,32 +7306,32 @@ typedef volatile struct ALT_SYSMGR_ECC_OCRAM_s  ALT_SYSMGR_ECC_OCRAM_t;
 
 /*
  * Register : USB0 RAM ECC Enable Register - usb0
- * 
+ *
  * This register is used to enable ECC on the USB0 RAM. ECC errors can be injected
  * into the write path using bits in this register. This register contains
  * interrupt status of the ECC single/double bit error.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                                                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------------------------------
- *  [0]    | RW     | 0x0   | USB0 RAM ECC Enable                                            
- *  [1]    | RW     | 0x0   | USB0 RAM ECC inject single, correctable Error                  
- *  [2]    | RW     | 0x0   | USB0 RAM ECC inject double bit, non-correctable error          
- *  [3]    | RW     | 0x0   | USB0 RAM ECC single, correctable error interrupt status        
+ *  [0]    | RW     | 0x0   | USB0 RAM ECC Enable
+ *  [1]    | RW     | 0x0   | USB0 RAM ECC inject single, correctable Error
+ *  [2]    | RW     | 0x0   | USB0 RAM ECC inject double bit, non-correctable error
+ *  [3]    | RW     | 0x0   | USB0 RAM ECC single, correctable error interrupt status
  *  [4]    | RW     | 0x0   | USB0 RAM ECC double bit, non-correctable error interrupt status
- *  [31:5] | ???    | 0x0   | *UNDEFINED*                                                    
- * 
+ *  [31:5] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : USB0 RAM ECC Enable - en
- * 
+ *
  * Enable ECC for USB0 RAM
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_USB0_EN register field. */
 #define ALT_SYSMGR_ECC_USB0_EN_LSB        0
@@ -7352,12 +7352,12 @@ typedef volatile struct ALT_SYSMGR_ECC_OCRAM_s  ALT_SYSMGR_ECC_OCRAM_t;
 
 /*
  * Field : USB0 RAM ECC inject single, correctable Error - injs
- * 
+ *
  * Changing this bit from zero to one injects a single, correctable error into the
  * USB0 RAM. This only injects one error into the USB0 RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_USB0_INJS register field. */
 #define ALT_SYSMGR_ECC_USB0_INJS_LSB        1
@@ -7378,12 +7378,12 @@ typedef volatile struct ALT_SYSMGR_ECC_OCRAM_s  ALT_SYSMGR_ECC_OCRAM_t;
 
 /*
  * Field : USB0 RAM ECC inject double bit, non-correctable error - injd
- * 
+ *
  * Changing this bit from zero to one injects a double, non-correctable error into
  * the USB0 RAM. This only injects one double bit error into the USB0 RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_USB0_INJD register field. */
 #define ALT_SYSMGR_ECC_USB0_INJD_LSB        2
@@ -7404,13 +7404,13 @@ typedef volatile struct ALT_SYSMGR_ECC_OCRAM_s  ALT_SYSMGR_ECC_OCRAM_t;
 
 /*
  * Field : USB0 RAM ECC single, correctable error interrupt status - serr
- * 
+ *
  * This bit is an interrupt status bit for USB0 RAM ECC single, correctable error.
  * It is set by hardware when single, correctable error occurs in USB0 RAM.
  * Software needs to write 1 into this bit to clear the interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_USB0_SERR register field. */
 #define ALT_SYSMGR_ECC_USB0_SERR_LSB        3
@@ -7431,13 +7431,13 @@ typedef volatile struct ALT_SYSMGR_ECC_OCRAM_s  ALT_SYSMGR_ECC_OCRAM_t;
 
 /*
  * Field : USB0 RAM ECC double bit, non-correctable error interrupt status - derr
- * 
+ *
  * This bit is an interrupt status bit for USB0 RAM ECC double bit, non-correctable
  * error. It is set by hardware when double bit, non-correctable error occurs in
  * USB0 RAM. Software needs to write 1 into this bit to clear the interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_USB0_DERR register field. */
 #define ALT_SYSMGR_ECC_USB0_DERR_LSB        4
@@ -7464,7 +7464,7 @@ typedef volatile struct ALT_SYSMGR_ECC_OCRAM_s  ALT_SYSMGR_ECC_OCRAM_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ECC_USB0.
  */
 struct ALT_SYSMGR_ECC_USB0_s
@@ -7486,32 +7486,32 @@ typedef volatile struct ALT_SYSMGR_ECC_USB0_s  ALT_SYSMGR_ECC_USB0_t;
 
 /*
  * Register : USB1 RAM ECC Enable Register - usb1
- * 
+ *
  * This register is used to enable ECC on the USB1 RAM. ECC errors can be injected
  * into the write path using bits in this register. This register contains
  * interrupt status of the ECC single/double bit error.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                                                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------------------------------
- *  [0]    | RW     | 0x0   | USB1 RAM ECC Enable                                            
- *  [1]    | RW     | 0x0   | USB1 RAM ECC inject single, correctable Error                  
- *  [2]    | RW     | 0x0   | USB1 RAM ECC inject double bit, non-correctable error          
- *  [3]    | RW     | 0x0   | USB1 RAM ECC single, correctable error interrupt status        
+ *  [0]    | RW     | 0x0   | USB1 RAM ECC Enable
+ *  [1]    | RW     | 0x0   | USB1 RAM ECC inject single, correctable Error
+ *  [2]    | RW     | 0x0   | USB1 RAM ECC inject double bit, non-correctable error
+ *  [3]    | RW     | 0x0   | USB1 RAM ECC single, correctable error interrupt status
  *  [4]    | RW     | 0x0   | USB1 RAM ECC double bit, non-correctable error interrupt status
- *  [31:5] | ???    | 0x0   | *UNDEFINED*                                                    
- * 
+ *  [31:5] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : USB1 RAM ECC Enable - en
- * 
+ *
  * Enable ECC for USB1 RAM
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_USB1_EN register field. */
 #define ALT_SYSMGR_ECC_USB1_EN_LSB        0
@@ -7532,12 +7532,12 @@ typedef volatile struct ALT_SYSMGR_ECC_USB0_s  ALT_SYSMGR_ECC_USB0_t;
 
 /*
  * Field : USB1 RAM ECC inject single, correctable Error - injs
- * 
+ *
  * Changing this bit from zero to one injects a single, correctable error into the
  * USB1 RAM. This only injects one error into the USB1 RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_USB1_INJS register field. */
 #define ALT_SYSMGR_ECC_USB1_INJS_LSB        1
@@ -7558,12 +7558,12 @@ typedef volatile struct ALT_SYSMGR_ECC_USB0_s  ALT_SYSMGR_ECC_USB0_t;
 
 /*
  * Field : USB1 RAM ECC inject double bit, non-correctable error - injd
- * 
+ *
  * Changing this bit from zero to one injects a double, non-correctable error into
  * the USB1 RAM. This only injects one double bit error into the USB1 RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_USB1_INJD register field. */
 #define ALT_SYSMGR_ECC_USB1_INJD_LSB        2
@@ -7584,13 +7584,13 @@ typedef volatile struct ALT_SYSMGR_ECC_USB0_s  ALT_SYSMGR_ECC_USB0_t;
 
 /*
  * Field : USB1 RAM ECC single, correctable error interrupt status - serr
- * 
+ *
  * This bit is an interrupt status bit for USB1 RAM ECC single, correctable error.
  * It is set by hardware when single, correctable error occurs in USB1 RAM.
  * Software needs to write 1 into this bit to clear the interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_USB1_SERR register field. */
 #define ALT_SYSMGR_ECC_USB1_SERR_LSB        3
@@ -7611,13 +7611,13 @@ typedef volatile struct ALT_SYSMGR_ECC_USB0_s  ALT_SYSMGR_ECC_USB0_t;
 
 /*
  * Field : USB1 RAM ECC double bit, non-correctable error interrupt status - derr
- * 
+ *
  * This bit is an interrupt status bit for USB1 RAM ECC double bit, non-correctable
  * error. It is set by hardware when double bit, non-correctable error occurs in
  * USB1 RAM. Software needs to write 1 into this bit to clear the interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_USB1_DERR register field. */
 #define ALT_SYSMGR_ECC_USB1_DERR_LSB        4
@@ -7644,7 +7644,7 @@ typedef volatile struct ALT_SYSMGR_ECC_USB0_s  ALT_SYSMGR_ECC_USB0_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ECC_USB1.
  */
 struct ALT_SYSMGR_ECC_USB1_s
@@ -7666,36 +7666,36 @@ typedef volatile struct ALT_SYSMGR_ECC_USB1_s  ALT_SYSMGR_ECC_USB1_t;
 
 /*
  * Register : EMAC0 RAM ECC Enable Register - emac0
- * 
+ *
  * This register is used to enable ECC on the EMAC0 RAM. ECC errors can be injected
  * into the write path using bits in this register. This register contains
  * interrupt status of the ECC single/double bit error.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                                                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------------------------------------------------
- *  [0]    | RW     | 0x0   | EMAC0 RAM ECC Enable                                                   
- *  [1]    | RW     | 0x0   | EMAC0 TXFIFO RAM ECC inject single, correctable Error                  
- *  [2]    | RW     | 0x0   | EMAC0 TXFIFO RAM ECC inject double bit, non-correctable error          
- *  [3]    | RW     | 0x0   | EMAC0 RXFIFO RAM ECC inject single, correctable Error                  
- *  [4]    | RW     | 0x0   | EMAC0 RXFIFO RAM ECC inject double bit, non-correctable error          
- *  [5]    | RW     | 0x0   | EMAC0 TXFIFO RAM ECC single, correctable error interrupt status        
+ *  [0]    | RW     | 0x0   | EMAC0 RAM ECC Enable
+ *  [1]    | RW     | 0x0   | EMAC0 TXFIFO RAM ECC inject single, correctable Error
+ *  [2]    | RW     | 0x0   | EMAC0 TXFIFO RAM ECC inject double bit, non-correctable error
+ *  [3]    | RW     | 0x0   | EMAC0 RXFIFO RAM ECC inject single, correctable Error
+ *  [4]    | RW     | 0x0   | EMAC0 RXFIFO RAM ECC inject double bit, non-correctable error
+ *  [5]    | RW     | 0x0   | EMAC0 TXFIFO RAM ECC single, correctable error interrupt status
  *  [6]    | RW     | 0x0   | EMAC0 TXFIFO RAM ECC double bit, non-correctable error interrupt status
- *  [7]    | RW     | 0x0   | EMAC0 RXFIFO RAM ECC single, correctable error interrupt status        
+ *  [7]    | RW     | 0x0   | EMAC0 RXFIFO RAM ECC single, correctable error interrupt status
  *  [8]    | RW     | 0x0   | EMAC0 RXFIFO RAM ECC double bit, non-correctable error interrupt status
- *  [31:9] | ???    | 0x0   | *UNDEFINED*                                                            
- * 
+ *  [31:9] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : EMAC0 RAM ECC Enable - en
- * 
+ *
  * Enable ECC for EMAC0 RAM
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_EMAC0_EN register field. */
 #define ALT_SYSMGR_ECC_EMAC0_EN_LSB        0
@@ -7716,12 +7716,12 @@ typedef volatile struct ALT_SYSMGR_ECC_USB1_s  ALT_SYSMGR_ECC_USB1_t;
 
 /*
  * Field : EMAC0 TXFIFO RAM ECC inject single, correctable Error - txfifoinjs
- * 
+ *
  * Changing this bit from zero to one injects a single, correctable error into the
  * EMAC0 TXFIFO RAM. This only injects one error into the EMAC0 TXFIFO RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_EMAC0_TXFIFOINJS register field. */
 #define ALT_SYSMGR_ECC_EMAC0_TXFIFOINJS_LSB        1
@@ -7742,13 +7742,13 @@ typedef volatile struct ALT_SYSMGR_ECC_USB1_s  ALT_SYSMGR_ECC_USB1_t;
 
 /*
  * Field : EMAC0 TXFIFO RAM ECC inject double bit, non-correctable error - txfifoinjd
- * 
+ *
  * Changing this bit from zero to one injects a double, non-correctable error into
  * the EMAC0 TXFIFO RAM. This only injects one double bit error into the EMAC0
  * TXFIFO RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_EMAC0_TXFIFOINJD register field. */
 #define ALT_SYSMGR_ECC_EMAC0_TXFIFOINJD_LSB        2
@@ -7769,12 +7769,12 @@ typedef volatile struct ALT_SYSMGR_ECC_USB1_s  ALT_SYSMGR_ECC_USB1_t;
 
 /*
  * Field : EMAC0 RXFIFO RAM ECC inject single, correctable Error - rxfifoinjs
- * 
+ *
  * Changing this bit from zero to one injects a single, correctable error into the
  * EMAC0 RXFIFO RAM. This only injects one error into the EMAC0 RXFIFO RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_EMAC0_RXFIFOINJS register field. */
 #define ALT_SYSMGR_ECC_EMAC0_RXFIFOINJS_LSB        3
@@ -7795,13 +7795,13 @@ typedef volatile struct ALT_SYSMGR_ECC_USB1_s  ALT_SYSMGR_ECC_USB1_t;
 
 /*
  * Field : EMAC0 RXFIFO RAM ECC inject double bit, non-correctable error - rxfifoinjd
- * 
+ *
  * Changing this bit from zero to one injects a double, non-correctable error into
  * the EMAC0 RXFIFO RAM. This only injects one double bit error into the EMAC0
  * RXFIFO RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_EMAC0_RXFIFOINJD register field. */
 #define ALT_SYSMGR_ECC_EMAC0_RXFIFOINJD_LSB        4
@@ -7822,14 +7822,14 @@ typedef volatile struct ALT_SYSMGR_ECC_USB1_s  ALT_SYSMGR_ECC_USB1_t;
 
 /*
  * Field : EMAC0 TXFIFO RAM ECC single, correctable error interrupt status - txfifoserr
- * 
+ *
  * This bit is an interrupt status bit for EMAC0 TXFIFO RAM ECC single, correctable
  * error. It is set by hardware when single, correctable error occurs in EMAC0
  * TXFIFO RAM. Software needs to write 1 into this bit to clear the interrupt
  * status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_EMAC0_TXFIFOSERR register field. */
 #define ALT_SYSMGR_ECC_EMAC0_TXFIFOSERR_LSB        5
@@ -7850,14 +7850,14 @@ typedef volatile struct ALT_SYSMGR_ECC_USB1_s  ALT_SYSMGR_ECC_USB1_t;
 
 /*
  * Field : EMAC0 TXFIFO RAM ECC double bit, non-correctable error interrupt status - txfifoderr
- * 
+ *
  * This bit is an interrupt status bit for EMAC0 TXFIFO RAM ECC double bit, non-
  * correctable error. It is set by hardware when double bit, non-correctable error
  * occurs in EMAC0 TXFIFO RAM. Software needs to write 1 into this bit to clear the
  * interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_EMAC0_TXFIFODERR register field. */
 #define ALT_SYSMGR_ECC_EMAC0_TXFIFODERR_LSB        6
@@ -7878,14 +7878,14 @@ typedef volatile struct ALT_SYSMGR_ECC_USB1_s  ALT_SYSMGR_ECC_USB1_t;
 
 /*
  * Field : EMAC0 RXFIFO RAM ECC single, correctable error interrupt status - rxfifoserr
- * 
+ *
  * This bit is an interrupt status bit for EMAC0 RXFIFO RAM ECC single, correctable
  * error. It is set by hardware when single, correctable error occurs in EMAC0
  * RXFIFO RAM. Software needs to write 1 into this bit to clear the interrupt
  * status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_EMAC0_RXFIFOSERR register field. */
 #define ALT_SYSMGR_ECC_EMAC0_RXFIFOSERR_LSB        7
@@ -7906,14 +7906,14 @@ typedef volatile struct ALT_SYSMGR_ECC_USB1_s  ALT_SYSMGR_ECC_USB1_t;
 
 /*
  * Field : EMAC0 RXFIFO RAM ECC double bit, non-correctable error interrupt status - rxfifoderr
- * 
+ *
  * This bit is an interrupt status bit for EMAC0 RXFIFO RAM ECC double bit, non-
  * correctable error. It is set by hardware when double bit, non-correctable error
  * occurs in EMAC0 RXFIFO RAM. Software needs to write 1 into this bit to clear the
  * interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_EMAC0_RXFIFODERR register field. */
 #define ALT_SYSMGR_ECC_EMAC0_RXFIFODERR_LSB        8
@@ -7940,7 +7940,7 @@ typedef volatile struct ALT_SYSMGR_ECC_USB1_s  ALT_SYSMGR_ECC_USB1_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ECC_EMAC0.
  */
 struct ALT_SYSMGR_ECC_EMAC0_s
@@ -7966,36 +7966,36 @@ typedef volatile struct ALT_SYSMGR_ECC_EMAC0_s  ALT_SYSMGR_ECC_EMAC0_t;
 
 /*
  * Register : EMAC1 RAM ECC Enable Register - emac1
- * 
+ *
  * This register is used to enable ECC on the EMAC1 RAM. ECC errors can be injected
  * into the write path using bits in this register. This register contains
  * interrupt status of the ECC single/double bit error.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                                                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------------------------------------------------
- *  [0]    | RW     | 0x0   | EMAC1 RAM ECC Enable                                                   
- *  [1]    | RW     | 0x0   | EMAC1 TXFIFO RAM ECC inject single, correctable Error                  
- *  [2]    | RW     | 0x0   | EMAC1 TXFIFO RAM ECC inject double bit, non-correctable error          
- *  [3]    | RW     | 0x0   | EMAC1 RXFIFO RAM ECC inject single, correctable Error                  
- *  [4]    | RW     | 0x0   | EMAC1 RXFIFO RAM ECC inject double bit, non-correctable error          
- *  [5]    | RW     | 0x0   | EMAC1 TXFIFO RAM ECC single, correctable error interrupt status        
+ *  [0]    | RW     | 0x0   | EMAC1 RAM ECC Enable
+ *  [1]    | RW     | 0x0   | EMAC1 TXFIFO RAM ECC inject single, correctable Error
+ *  [2]    | RW     | 0x0   | EMAC1 TXFIFO RAM ECC inject double bit, non-correctable error
+ *  [3]    | RW     | 0x0   | EMAC1 RXFIFO RAM ECC inject single, correctable Error
+ *  [4]    | RW     | 0x0   | EMAC1 RXFIFO RAM ECC inject double bit, non-correctable error
+ *  [5]    | RW     | 0x0   | EMAC1 TXFIFO RAM ECC single, correctable error interrupt status
  *  [6]    | RW     | 0x0   | EMAC1 TXFIFO RAM ECC double bit, non-correctable error interrupt status
- *  [7]    | RW     | 0x0   | EMAC1 RXFIFO RAM ECC single, correctable error interrupt status        
+ *  [7]    | RW     | 0x0   | EMAC1 RXFIFO RAM ECC single, correctable error interrupt status
  *  [8]    | RW     | 0x0   | EMAC1 RXFIFO RAM ECC double bit, non-correctable error interrupt status
- *  [31:9] | ???    | 0x0   | *UNDEFINED*                                                            
- * 
+ *  [31:9] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : EMAC1 RAM ECC Enable - en
- * 
+ *
  * Enable ECC for EMAC1 RAM
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_EMAC1_EN register field. */
 #define ALT_SYSMGR_ECC_EMAC1_EN_LSB        0
@@ -8016,12 +8016,12 @@ typedef volatile struct ALT_SYSMGR_ECC_EMAC0_s  ALT_SYSMGR_ECC_EMAC0_t;
 
 /*
  * Field : EMAC1 TXFIFO RAM ECC inject single, correctable Error - txfifoinjs
- * 
+ *
  * Changing this bit from zero to one injects a single, correctable error into the
  * EMAC1 TXFIFO RAM. This only injects one error into the EMAC1 TXFIFO RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_EMAC1_TXFIFOINJS register field. */
 #define ALT_SYSMGR_ECC_EMAC1_TXFIFOINJS_LSB        1
@@ -8042,13 +8042,13 @@ typedef volatile struct ALT_SYSMGR_ECC_EMAC0_s  ALT_SYSMGR_ECC_EMAC0_t;
 
 /*
  * Field : EMAC1 TXFIFO RAM ECC inject double bit, non-correctable error - txfifoinjd
- * 
+ *
  * Changing this bit from zero to one injects a double, non-correctable error into
  * the EMAC1 TXFIFO RAM. This only injects one double bit error into the EMAC1
  * TXFIFO RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_EMAC1_TXFIFOINJD register field. */
 #define ALT_SYSMGR_ECC_EMAC1_TXFIFOINJD_LSB        2
@@ -8069,12 +8069,12 @@ typedef volatile struct ALT_SYSMGR_ECC_EMAC0_s  ALT_SYSMGR_ECC_EMAC0_t;
 
 /*
  * Field : EMAC1 RXFIFO RAM ECC inject single, correctable Error - rxfifoinjs
- * 
+ *
  * Changing this bit from zero to one injects a single, correctable error into the
  * EMAC1 RXFIFO RAM. This only injects one error into the EMAC1 RXFIFO RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_EMAC1_RXFIFOINJS register field. */
 #define ALT_SYSMGR_ECC_EMAC1_RXFIFOINJS_LSB        3
@@ -8095,13 +8095,13 @@ typedef volatile struct ALT_SYSMGR_ECC_EMAC0_s  ALT_SYSMGR_ECC_EMAC0_t;
 
 /*
  * Field : EMAC1 RXFIFO RAM ECC inject double bit, non-correctable error - rxfifoinjd
- * 
+ *
  * Changing this bit from zero to one injects a double, non-correctable error into
  * the EMAC1 RXFIFO RAM. This only injects one double bit error into the EMAC1
  * RXFIFO RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_EMAC1_RXFIFOINJD register field. */
 #define ALT_SYSMGR_ECC_EMAC1_RXFIFOINJD_LSB        4
@@ -8122,14 +8122,14 @@ typedef volatile struct ALT_SYSMGR_ECC_EMAC0_s  ALT_SYSMGR_ECC_EMAC0_t;
 
 /*
  * Field : EMAC1 TXFIFO RAM ECC single, correctable error interrupt status - txfifoserr
- * 
+ *
  * This bit is an interrupt status bit for EMAC1 TXFIFO RAM ECC single, correctable
  * error. It is set by hardware when single, correctable error occurs in EMAC1
  * TXFIFO RAM. Software needs to write 1 into this bit to clear the interrupt
  * status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_EMAC1_TXFIFOSERR register field. */
 #define ALT_SYSMGR_ECC_EMAC1_TXFIFOSERR_LSB        5
@@ -8150,14 +8150,14 @@ typedef volatile struct ALT_SYSMGR_ECC_EMAC0_s  ALT_SYSMGR_ECC_EMAC0_t;
 
 /*
  * Field : EMAC1 TXFIFO RAM ECC double bit, non-correctable error interrupt status - txfifoderr
- * 
+ *
  * This bit is an interrupt status bit for EMAC1 TXFIFO RAM ECC double bit, non-
  * correctable error. It is set by hardware when double bit, non-correctable error
  * occurs in EMAC1 TXFIFO RAM. Software needs to write 1 into this bit to clear the
  * interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_EMAC1_TXFIFODERR register field. */
 #define ALT_SYSMGR_ECC_EMAC1_TXFIFODERR_LSB        6
@@ -8178,14 +8178,14 @@ typedef volatile struct ALT_SYSMGR_ECC_EMAC0_s  ALT_SYSMGR_ECC_EMAC0_t;
 
 /*
  * Field : EMAC1 RXFIFO RAM ECC single, correctable error interrupt status - rxfifoserr
- * 
+ *
  * This bit is an interrupt status bit for EMAC1 RXFIFO RAM ECC single, correctable
  * error. It is set by hardware when single, correctable error occurs in EMAC1
  * RXFIFO RAM. Software needs to write 1 into this bit to clear the interrupt
  * status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_EMAC1_RXFIFOSERR register field. */
 #define ALT_SYSMGR_ECC_EMAC1_RXFIFOSERR_LSB        7
@@ -8206,14 +8206,14 @@ typedef volatile struct ALT_SYSMGR_ECC_EMAC0_s  ALT_SYSMGR_ECC_EMAC0_t;
 
 /*
  * Field : EMAC1 RXFIFO RAM ECC double bit, non-correctable error interrupt status - rxfifoderr
- * 
+ *
  * This bit is an interrupt status bit for EMAC1 RXFIFO RAM ECC double bit, non-
  * correctable error. It is set by hardware when double bit, non-correctable error
  * occurs in EMAC1 RXFIFO RAM. Software needs to write 1 into this bit to clear the
  * interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_EMAC1_RXFIFODERR register field. */
 #define ALT_SYSMGR_ECC_EMAC1_RXFIFODERR_LSB        8
@@ -8240,7 +8240,7 @@ typedef volatile struct ALT_SYSMGR_ECC_EMAC0_s  ALT_SYSMGR_ECC_EMAC0_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ECC_EMAC1.
  */
 struct ALT_SYSMGR_ECC_EMAC1_s
@@ -8266,32 +8266,32 @@ typedef volatile struct ALT_SYSMGR_ECC_EMAC1_s  ALT_SYSMGR_ECC_EMAC1_t;
 
 /*
  * Register : DMA RAM ECC Enable Register - dma
- * 
+ *
  * This register is used to enable ECC on the DMA RAM. ECC errors can be injected
  * into the write path using bits in this register. This register contains
  * interrupt status of the ECC single/double bit error.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                                                   
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------------------------------------
- *  [0]    | RW     | 0x0   | DMA RAM ECC Enable                                            
- *  [1]    | RW     | 0x0   | DMA RAM ECC inject single, correctable Error                  
- *  [2]    | RW     | 0x0   | DMA RAM ECC inject double bit, non-correctable error          
- *  [3]    | RW     | 0x0   | DMA RAM ECC single, correctable error interrupt status        
+ *  [0]    | RW     | 0x0   | DMA RAM ECC Enable
+ *  [1]    | RW     | 0x0   | DMA RAM ECC inject single, correctable Error
+ *  [2]    | RW     | 0x0   | DMA RAM ECC inject double bit, non-correctable error
+ *  [3]    | RW     | 0x0   | DMA RAM ECC single, correctable error interrupt status
  *  [4]    | RW     | 0x0   | DMA RAM ECC double bit, non-correctable error interrupt status
- *  [31:5] | ???    | 0x0   | *UNDEFINED*                                                   
- * 
+ *  [31:5] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : DMA RAM ECC Enable - en
- * 
+ *
  * Enable ECC for DMA RAM
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_DMA_EN register field. */
 #define ALT_SYSMGR_ECC_DMA_EN_LSB        0
@@ -8312,12 +8312,12 @@ typedef volatile struct ALT_SYSMGR_ECC_EMAC1_s  ALT_SYSMGR_ECC_EMAC1_t;
 
 /*
  * Field : DMA RAM ECC inject single, correctable Error - injs
- * 
+ *
  * Changing this bit from zero to one injects a single, correctable error into the
  * DMA RAM. This only injects one error into the DMA RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_DMA_INJS register field. */
 #define ALT_SYSMGR_ECC_DMA_INJS_LSB        1
@@ -8338,12 +8338,12 @@ typedef volatile struct ALT_SYSMGR_ECC_EMAC1_s  ALT_SYSMGR_ECC_EMAC1_t;
 
 /*
  * Field : DMA RAM ECC inject double bit, non-correctable error - injd
- * 
+ *
  * Changing this bit from zero to one injects a double, non-correctable error into
  * the DMA RAM. This only injects one double bit error into the DMA RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_DMA_INJD register field. */
 #define ALT_SYSMGR_ECC_DMA_INJD_LSB        2
@@ -8364,13 +8364,13 @@ typedef volatile struct ALT_SYSMGR_ECC_EMAC1_s  ALT_SYSMGR_ECC_EMAC1_t;
 
 /*
  * Field : DMA RAM ECC single, correctable error interrupt status - serr
- * 
+ *
  * This bit is an interrupt status bit for DMA RAM ECC single, correctable error.
  * It is set by hardware when single, correctable error occurs in DMA RAM. Software
  * needs to write 1 into this bit to clear the interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_DMA_SERR register field. */
 #define ALT_SYSMGR_ECC_DMA_SERR_LSB        3
@@ -8391,13 +8391,13 @@ typedef volatile struct ALT_SYSMGR_ECC_EMAC1_s  ALT_SYSMGR_ECC_EMAC1_t;
 
 /*
  * Field : DMA RAM ECC double bit, non-correctable error interrupt status - derr
- * 
+ *
  * This bit is an interrupt status bit for DMA RAM ECC double bit, non-correctable
  * error. It is set by hardware when double bit, non-correctable error occurs in
  * DMA RAM. Software needs to write 1 into this bit to clear the interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_DMA_DERR register field. */
 #define ALT_SYSMGR_ECC_DMA_DERR_LSB        4
@@ -8424,7 +8424,7 @@ typedef volatile struct ALT_SYSMGR_ECC_EMAC1_s  ALT_SYSMGR_ECC_EMAC1_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ECC_DMA.
  */
 struct ALT_SYSMGR_ECC_DMA_s
@@ -8446,32 +8446,32 @@ typedef volatile struct ALT_SYSMGR_ECC_DMA_s  ALT_SYSMGR_ECC_DMA_t;
 
 /*
  * Register : CAN0 RAM ECC Enable Register - can0
- * 
+ *
  * This register is used to enable ECC on the CAN0 RAM. ECC errors can be injected
  * into the write path using bits in this register. This register contains
  * interrupt status of the ECC single/double bit error.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                                                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------------------------------
- *  [0]    | RW     | 0x0   | CAN0 RAM ECC Enable                                            
- *  [1]    | RW     | 0x0   | CAN0 RAM ECC inject single, correctable Error                  
- *  [2]    | RW     | 0x0   | CAN0 RAM ECC inject double bit, non-correctable error          
- *  [3]    | RW     | 0x0   | CAN0 RAM ECC single, correctable error interrupt status        
+ *  [0]    | RW     | 0x0   | CAN0 RAM ECC Enable
+ *  [1]    | RW     | 0x0   | CAN0 RAM ECC inject single, correctable Error
+ *  [2]    | RW     | 0x0   | CAN0 RAM ECC inject double bit, non-correctable error
+ *  [3]    | RW     | 0x0   | CAN0 RAM ECC single, correctable error interrupt status
  *  [4]    | RW     | 0x0   | CAN0 RAM ECC double bit, non-correctable error interrupt status
- *  [31:5] | ???    | 0x0   | *UNDEFINED*                                                    
- * 
+ *  [31:5] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : CAN0 RAM ECC Enable - en
- * 
+ *
  * Enable ECC for CAN0 RAM
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_CAN0_EN register field. */
 #define ALT_SYSMGR_ECC_CAN0_EN_LSB        0
@@ -8492,12 +8492,12 @@ typedef volatile struct ALT_SYSMGR_ECC_DMA_s  ALT_SYSMGR_ECC_DMA_t;
 
 /*
  * Field : CAN0 RAM ECC inject single, correctable Error - injs
- * 
+ *
  * Changing this bit from zero to one injects a single, correctable error into the
  * CAN0 RAM. This only injects one error into the CAN0 RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_CAN0_INJS register field. */
 #define ALT_SYSMGR_ECC_CAN0_INJS_LSB        1
@@ -8518,12 +8518,12 @@ typedef volatile struct ALT_SYSMGR_ECC_DMA_s  ALT_SYSMGR_ECC_DMA_t;
 
 /*
  * Field : CAN0 RAM ECC inject double bit, non-correctable error - injd
- * 
+ *
  * Changing this bit from zero to one injects a double, non-correctable error into
  * the CAN0 RAM. This only injects one double bit error into the CAN0 RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_CAN0_INJD register field. */
 #define ALT_SYSMGR_ECC_CAN0_INJD_LSB        2
@@ -8544,13 +8544,13 @@ typedef volatile struct ALT_SYSMGR_ECC_DMA_s  ALT_SYSMGR_ECC_DMA_t;
 
 /*
  * Field : CAN0 RAM ECC single, correctable error interrupt status - serr
- * 
+ *
  * This bit is an interrupt status bit for CAN0 RAM ECC single, correctable error.
  * It is set by hardware when single, correctable error occurs in CAN0 RAM.
  * Software needs to write 1 into this bit to clear the interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_CAN0_SERR register field. */
 #define ALT_SYSMGR_ECC_CAN0_SERR_LSB        3
@@ -8571,13 +8571,13 @@ typedef volatile struct ALT_SYSMGR_ECC_DMA_s  ALT_SYSMGR_ECC_DMA_t;
 
 /*
  * Field : CAN0 RAM ECC double bit, non-correctable error interrupt status - derr
- * 
+ *
  * This bit is an interrupt status bit for CAN0 RAM ECC double bit, non-correctable
  * error. It is set by hardware when double bit, non-correctable error occurs in
  * CAN0 RAM. Software needs to write 1 into this bit to clear the interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_CAN0_DERR register field. */
 #define ALT_SYSMGR_ECC_CAN0_DERR_LSB        4
@@ -8604,7 +8604,7 @@ typedef volatile struct ALT_SYSMGR_ECC_DMA_s  ALT_SYSMGR_ECC_DMA_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ECC_CAN0.
  */
 struct ALT_SYSMGR_ECC_CAN0_s
@@ -8626,32 +8626,32 @@ typedef volatile struct ALT_SYSMGR_ECC_CAN0_s  ALT_SYSMGR_ECC_CAN0_t;
 
 /*
  * Register : CAN1 RAM ECC Enable Register - can1
- * 
+ *
  * This register is used to enable ECC on the CAN1 RAM. ECC errors can be injected
  * into the write path using bits in this register. This register contains
  * interrupt status of the ECC single/double bit error.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                                                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------------------------------
- *  [0]    | RW     | 0x0   | CAN1 RAM ECC Enable                                            
- *  [1]    | RW     | 0x0   | CAN1 RAM ECC inject single, correctable Error                  
- *  [2]    | RW     | 0x0   | CAN1 RAM ECC inject double bit, non-correctable error          
- *  [3]    | RW     | 0x0   | CAN1 RAM ECC single, correctable error interrupt status        
+ *  [0]    | RW     | 0x0   | CAN1 RAM ECC Enable
+ *  [1]    | RW     | 0x0   | CAN1 RAM ECC inject single, correctable Error
+ *  [2]    | RW     | 0x0   | CAN1 RAM ECC inject double bit, non-correctable error
+ *  [3]    | RW     | 0x0   | CAN1 RAM ECC single, correctable error interrupt status
  *  [4]    | RW     | 0x0   | CAN1 RAM ECC double bit, non-correctable error interrupt status
- *  [31:5] | ???    | 0x0   | *UNDEFINED*                                                    
- * 
+ *  [31:5] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : CAN1 RAM ECC Enable - en
- * 
+ *
  * Enable ECC for CAN1 RAM
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_CAN1_EN register field. */
 #define ALT_SYSMGR_ECC_CAN1_EN_LSB        0
@@ -8672,12 +8672,12 @@ typedef volatile struct ALT_SYSMGR_ECC_CAN0_s  ALT_SYSMGR_ECC_CAN0_t;
 
 /*
  * Field : CAN1 RAM ECC inject single, correctable Error - injs
- * 
+ *
  * Changing this bit from zero to one injects a single, correctable error into the
  * CAN1 RAM. This only injects one error into the CAN1 RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_CAN1_INJS register field. */
 #define ALT_SYSMGR_ECC_CAN1_INJS_LSB        1
@@ -8698,12 +8698,12 @@ typedef volatile struct ALT_SYSMGR_ECC_CAN0_s  ALT_SYSMGR_ECC_CAN0_t;
 
 /*
  * Field : CAN1 RAM ECC inject double bit, non-correctable error - injd
- * 
+ *
  * Changing this bit from zero to one injects a double, non-correctable error into
  * the CAN1 RAM. This only injects one double bit error into the CAN1 RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_CAN1_INJD register field. */
 #define ALT_SYSMGR_ECC_CAN1_INJD_LSB        2
@@ -8724,13 +8724,13 @@ typedef volatile struct ALT_SYSMGR_ECC_CAN0_s  ALT_SYSMGR_ECC_CAN0_t;
 
 /*
  * Field : CAN1 RAM ECC single, correctable error interrupt status - serr
- * 
+ *
  * This bit is an interrupt status bit for CAN1 RAM ECC single, correctable error.
  * It is set by hardware when single, correctable error occurs in CAN1 RAM.
  * Software needs to write 1 into this bit to clear the interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_CAN1_SERR register field. */
 #define ALT_SYSMGR_ECC_CAN1_SERR_LSB        3
@@ -8751,13 +8751,13 @@ typedef volatile struct ALT_SYSMGR_ECC_CAN0_s  ALT_SYSMGR_ECC_CAN0_t;
 
 /*
  * Field : CAN1 RAM ECC double bit, non-correctable error interrupt status - derr
- * 
+ *
  * This bit is an interrupt status bit for CAN1 RAM ECC double bit, non-correctable
  * error. It is set by hardware when double bit, non-correctable error occurs in
  * CAN1 RAM. Software needs to write 1 into this bit to clear the interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_CAN1_DERR register field. */
 #define ALT_SYSMGR_ECC_CAN1_DERR_LSB        4
@@ -8784,7 +8784,7 @@ typedef volatile struct ALT_SYSMGR_ECC_CAN0_s  ALT_SYSMGR_ECC_CAN0_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ECC_CAN1.
  */
 struct ALT_SYSMGR_ECC_CAN1_s
@@ -8806,40 +8806,40 @@ typedef volatile struct ALT_SYSMGR_ECC_CAN1_s  ALT_SYSMGR_ECC_CAN1_t;
 
 /*
  * Register : NAND RAM ECC Enable Register - nand
- * 
+ *
  * This register is used to enable ECC on the NAND RAM. ECC errors can be injected
  * into the write path using bits in this register. This register contains
  * interrupt status of the ECC single/double bit error.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * Register Layout
- * 
- *  Bits    | Access | Reset | Description                                                              
+ *
+ *  Bits    | Access | Reset | Description
  * :--------|:-------|:------|:--------------------------------------------------------------------------
- *  [0]     | RW     | 0x0   | NAND RAM ECC Enable                                                      
- *  [1]     | RW     | 0x0   | NAND ECCBUFFER RAM ECC inject single, correctable Error                  
- *  [2]     | RW     | 0x0   | NAND ECCBUFFER RAM ECC inject double bit, non-correctable error          
- *  [3]     | RW     | 0x0   | NAND WRFIFO RAM ECC inject single, correctable Error                     
- *  [4]     | RW     | 0x0   | NAND WRFIFO RAM ECC inject double bit, non-correctable error             
- *  [5]     | RW     | 0x0   | NAND RDFIFO RAM ECC inject single, correctable Error                     
- *  [6]     | RW     | 0x0   | NAND RDFIFO RAM ECC inject double bit, non-correctable error             
- *  [7]     | RW     | 0x0   | NAND ECCBUFFER RAM ECC single, correctable error interrupt status        
+ *  [0]     | RW     | 0x0   | NAND RAM ECC Enable
+ *  [1]     | RW     | 0x0   | NAND ECCBUFFER RAM ECC inject single, correctable Error
+ *  [2]     | RW     | 0x0   | NAND ECCBUFFER RAM ECC inject double bit, non-correctable error
+ *  [3]     | RW     | 0x0   | NAND WRFIFO RAM ECC inject single, correctable Error
+ *  [4]     | RW     | 0x0   | NAND WRFIFO RAM ECC inject double bit, non-correctable error
+ *  [5]     | RW     | 0x0   | NAND RDFIFO RAM ECC inject single, correctable Error
+ *  [6]     | RW     | 0x0   | NAND RDFIFO RAM ECC inject double bit, non-correctable error
+ *  [7]     | RW     | 0x0   | NAND ECCBUFFER RAM ECC single, correctable error interrupt status
  *  [8]     | RW     | 0x0   | NAND ECCBUFFER RAM ECC double bit, non-correctable error interrupt status
- *  [9]     | RW     | 0x0   | NAND WRFIFO RAM ECC single, correctable error interrupt status           
- *  [10]    | RW     | 0x0   | NAND WRFIFO RAM ECC double bit, non-correctable error interrupt status   
- *  [11]    | RW     | 0x0   | NAND RDFIFO RAM ECC single, correctable error interrupt status           
- *  [12]    | RW     | 0x0   | NAND RDFIFO RAM ECC double bit, non-correctable error interrupt status   
- *  [31:13] | ???    | 0x0   | *UNDEFINED*                                                              
- * 
+ *  [9]     | RW     | 0x0   | NAND WRFIFO RAM ECC single, correctable error interrupt status
+ *  [10]    | RW     | 0x0   | NAND WRFIFO RAM ECC double bit, non-correctable error interrupt status
+ *  [11]    | RW     | 0x0   | NAND RDFIFO RAM ECC single, correctable error interrupt status
+ *  [12]    | RW     | 0x0   | NAND RDFIFO RAM ECC double bit, non-correctable error interrupt status
+ *  [31:13] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : NAND RAM ECC Enable - en
- * 
+ *
  * Enable ECC for NAND RAM
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_NAND_EN register field. */
 #define ALT_SYSMGR_ECC_NAND_EN_LSB        0
@@ -8860,12 +8860,12 @@ typedef volatile struct ALT_SYSMGR_ECC_CAN1_s  ALT_SYSMGR_ECC_CAN1_t;
 
 /*
  * Field : NAND ECCBUFFER RAM ECC inject single, correctable Error - eccbufinjs
- * 
+ *
  * Changing this bit from zero to one injects a single, correctable error into the
  * NAND ECCBUFFER RAM. This only injects one error into the NAND ECCBUFFER RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_NAND_ECCBUFINJS register field. */
 #define ALT_SYSMGR_ECC_NAND_ECCBUFINJS_LSB        1
@@ -8886,13 +8886,13 @@ typedef volatile struct ALT_SYSMGR_ECC_CAN1_s  ALT_SYSMGR_ECC_CAN1_t;
 
 /*
  * Field : NAND ECCBUFFER RAM ECC inject double bit, non-correctable error - eccbufinjd
- * 
+ *
  * Changing this bit from zero to one injects a double, non-correctable error into
  * the NAND ECCBUFFER RAM. This only injects one double bit error into the NAND
  * ECCBUFFER RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_NAND_ECCBUFINJD register field. */
 #define ALT_SYSMGR_ECC_NAND_ECCBUFINJD_LSB        2
@@ -8913,12 +8913,12 @@ typedef volatile struct ALT_SYSMGR_ECC_CAN1_s  ALT_SYSMGR_ECC_CAN1_t;
 
 /*
  * Field : NAND WRFIFO RAM ECC inject single, correctable Error - wrfifoinjs
- * 
+ *
  * Changing this bit from zero to one injects a single, correctable error into the
  * NAND WRFIFO RAM. This only injects one error into the NAND WRFIFO RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_NAND_WRFIFOINJS register field. */
 #define ALT_SYSMGR_ECC_NAND_WRFIFOINJS_LSB        3
@@ -8939,13 +8939,13 @@ typedef volatile struct ALT_SYSMGR_ECC_CAN1_s  ALT_SYSMGR_ECC_CAN1_t;
 
 /*
  * Field : NAND WRFIFO RAM ECC inject double bit, non-correctable error - wrfifoinjd
- * 
+ *
  * Changing this bit from zero to one injects a double, non-correctable error into
  * the NAND WRFIFO RAM. This only injects one double bit error into the NAND WRFIFO
  * RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_NAND_WRFIFOINJD register field. */
 #define ALT_SYSMGR_ECC_NAND_WRFIFOINJD_LSB        4
@@ -8966,12 +8966,12 @@ typedef volatile struct ALT_SYSMGR_ECC_CAN1_s  ALT_SYSMGR_ECC_CAN1_t;
 
 /*
  * Field : NAND RDFIFO RAM ECC inject single, correctable Error - rdfifoinjs
- * 
+ *
  * Changing this bit from zero to one injects a single, correctable error into the
  * NAND RDFIFO RAM. This only injects one error into the NAND RDFIFO RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_NAND_RDFIFOINJS register field. */
 #define ALT_SYSMGR_ECC_NAND_RDFIFOINJS_LSB        5
@@ -8992,13 +8992,13 @@ typedef volatile struct ALT_SYSMGR_ECC_CAN1_s  ALT_SYSMGR_ECC_CAN1_t;
 
 /*
  * Field : NAND RDFIFO RAM ECC inject double bit, non-correctable error - rdfifoinjd
- * 
+ *
  * Changing this bit from zero to one injects a double, non-correctable error into
  * the NAND RDFIFO RAM. This only injects one double bit error into the NAND RDFIFO
  * RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_NAND_RDFIFOINJD register field. */
 #define ALT_SYSMGR_ECC_NAND_RDFIFOINJD_LSB        6
@@ -9019,14 +9019,14 @@ typedef volatile struct ALT_SYSMGR_ECC_CAN1_s  ALT_SYSMGR_ECC_CAN1_t;
 
 /*
  * Field : NAND ECCBUFFER RAM ECC single, correctable error interrupt status - eccbufserr
- * 
+ *
  * This bit is an interrupt status bit for NAND ECCBUFFER RAM ECC single,
  * correctable error. It is set by hardware when single, correctable error occurs
  * in NAND ECCBUFFER RAM. Software needs to write 1 into this bit to clear the
  * interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_NAND_ECCBUFSERR register field. */
 #define ALT_SYSMGR_ECC_NAND_ECCBUFSERR_LSB        7
@@ -9047,14 +9047,14 @@ typedef volatile struct ALT_SYSMGR_ECC_CAN1_s  ALT_SYSMGR_ECC_CAN1_t;
 
 /*
  * Field : NAND ECCBUFFER RAM ECC double bit, non-correctable error interrupt status - eccbufderr
- * 
+ *
  * This bit is an interrupt status bit for NAND ECCBUFFER RAM ECC double bit, non-
  * correctable error. It is set by hardware when double bit, non-correctable error
  * occurs in NAND ECCBUFFER RAM. Software needs to write 1 into this bit to clear
  * the interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_NAND_ECCBUFDERR register field. */
 #define ALT_SYSMGR_ECC_NAND_ECCBUFDERR_LSB        8
@@ -9075,14 +9075,14 @@ typedef volatile struct ALT_SYSMGR_ECC_CAN1_s  ALT_SYSMGR_ECC_CAN1_t;
 
 /*
  * Field : NAND WRFIFO RAM ECC single, correctable error interrupt status - wrfifoserr
- * 
+ *
  * This bit is an interrupt status bit for NAND WRFIFO RAM ECC single, correctable
  * error. It is set by hardware when single, correctable error occurs in NAND
  * WRFIFO RAM. Software needs to write 1 into this bit to clear the interrupt
  * status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_NAND_WRFIFOSERR register field. */
 #define ALT_SYSMGR_ECC_NAND_WRFIFOSERR_LSB        9
@@ -9103,14 +9103,14 @@ typedef volatile struct ALT_SYSMGR_ECC_CAN1_s  ALT_SYSMGR_ECC_CAN1_t;
 
 /*
  * Field : NAND WRFIFO RAM ECC double bit, non-correctable error interrupt status - wrfifoderr
- * 
+ *
  * This bit is an interrupt status bit for NAND WRFIFO RAM ECC double bit, non-
  * correctable error. It is set by hardware when double bit, non-correctable error
  * occurs in NAND WRFIFO RAM. Software needs to write 1 into this bit to clear the
  * interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_NAND_WRFIFODERR register field. */
 #define ALT_SYSMGR_ECC_NAND_WRFIFODERR_LSB        10
@@ -9131,14 +9131,14 @@ typedef volatile struct ALT_SYSMGR_ECC_CAN1_s  ALT_SYSMGR_ECC_CAN1_t;
 
 /*
  * Field : NAND RDFIFO RAM ECC single, correctable error interrupt status - rdfifoserr
- * 
+ *
  * This bit is an interrupt status bit for NAND RDFIFO RAM ECC single, correctable
  * error. It is set by hardware when single, correctable error occurs in NAND
  * RDFIFO RAM. Software needs to write 1 into this bit to clear the interrupt
  * status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_NAND_RDFIFOSERR register field. */
 #define ALT_SYSMGR_ECC_NAND_RDFIFOSERR_LSB        11
@@ -9159,14 +9159,14 @@ typedef volatile struct ALT_SYSMGR_ECC_CAN1_s  ALT_SYSMGR_ECC_CAN1_t;
 
 /*
  * Field : NAND RDFIFO RAM ECC double bit, non-correctable error interrupt status - rdfifoderr
- * 
+ *
  * This bit is an interrupt status bit for NAND RDFIFO RAM ECC double bit, non-
  * correctable error. It is set by hardware when double bit, non-correctable error
  * occurs in NAND RDFIFO RAM. Software needs to write 1 into this bit to clear the
  * interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_NAND_RDFIFODERR register field. */
 #define ALT_SYSMGR_ECC_NAND_RDFIFODERR_LSB        12
@@ -9193,7 +9193,7 @@ typedef volatile struct ALT_SYSMGR_ECC_CAN1_s  ALT_SYSMGR_ECC_CAN1_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ECC_NAND.
  */
 struct ALT_SYSMGR_ECC_NAND_s
@@ -9223,32 +9223,32 @@ typedef volatile struct ALT_SYSMGR_ECC_NAND_s  ALT_SYSMGR_ECC_NAND_t;
 
 /*
  * Register : QSPI RAM ECC Enable Register - qspi
- * 
+ *
  * This register is used to enable ECC on the QSPI RAM. ECC errors can be injected
  * into the write path using bits in this register. This register contains
  * interrupt status of the ECC single/double bit error.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                                                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------------------------------
- *  [0]    | RW     | 0x0   | QSPI RAM ECC Enable                                            
- *  [1]    | RW     | 0x0   | QSPI RAM ECC inject single, correctable Error                  
- *  [2]    | RW     | 0x0   | QSPI RAM ECC inject double bit, non-correctable error          
- *  [3]    | RW     | 0x0   | QSPI RAM ECC single, correctable error interrupt status        
+ *  [0]    | RW     | 0x0   | QSPI RAM ECC Enable
+ *  [1]    | RW     | 0x0   | QSPI RAM ECC inject single, correctable Error
+ *  [2]    | RW     | 0x0   | QSPI RAM ECC inject double bit, non-correctable error
+ *  [3]    | RW     | 0x0   | QSPI RAM ECC single, correctable error interrupt status
  *  [4]    | RW     | 0x0   | QSPI RAM ECC double bit, non-correctable error interrupt status
- *  [31:5] | ???    | 0x0   | *UNDEFINED*                                                    
- * 
+ *  [31:5] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : QSPI RAM ECC Enable - en
- * 
+ *
  * Enable ECC for QSPI RAM
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_QSPI_EN register field. */
 #define ALT_SYSMGR_ECC_QSPI_EN_LSB        0
@@ -9269,12 +9269,12 @@ typedef volatile struct ALT_SYSMGR_ECC_NAND_s  ALT_SYSMGR_ECC_NAND_t;
 
 /*
  * Field : QSPI RAM ECC inject single, correctable Error - injs
- * 
+ *
  * Changing this bit from zero to one injects a single, correctable error into the
  * QSPI RAM. This only injects one error into the QSPI RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_QSPI_INJS register field. */
 #define ALT_SYSMGR_ECC_QSPI_INJS_LSB        1
@@ -9295,12 +9295,12 @@ typedef volatile struct ALT_SYSMGR_ECC_NAND_s  ALT_SYSMGR_ECC_NAND_t;
 
 /*
  * Field : QSPI RAM ECC inject double bit, non-correctable error - injd
- * 
+ *
  * Changing this bit from zero to one injects a double, non-correctable error into
  * the QSPI RAM. This only injects one double bit error into the QSPI RAM.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_QSPI_INJD register field. */
 #define ALT_SYSMGR_ECC_QSPI_INJD_LSB        2
@@ -9321,13 +9321,13 @@ typedef volatile struct ALT_SYSMGR_ECC_NAND_s  ALT_SYSMGR_ECC_NAND_t;
 
 /*
  * Field : QSPI RAM ECC single, correctable error interrupt status - serr
- * 
+ *
  * This bit is an interrupt status bit for QSPI RAM ECC single, correctable error.
  * It is set by hardware when single, correctable error occurs in QSPI RAM.
  * Software needs to write 1 into this bit to clear the interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_QSPI_SERR register field. */
 #define ALT_SYSMGR_ECC_QSPI_SERR_LSB        3
@@ -9348,13 +9348,13 @@ typedef volatile struct ALT_SYSMGR_ECC_NAND_s  ALT_SYSMGR_ECC_NAND_t;
 
 /*
  * Field : QSPI RAM ECC double bit, non-correctable error interrupt status - derr
- * 
+ *
  * This bit is an interrupt status bit for QSPI RAM ECC double bit, non-correctable
  * error. It is set by hardware when double bit, non-correctable error occurs in
  * QSPI RAM. Software needs to write 1 into this bit to clear the interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_QSPI_DERR register field. */
 #define ALT_SYSMGR_ECC_QSPI_DERR_LSB        4
@@ -9381,7 +9381,7 @@ typedef volatile struct ALT_SYSMGR_ECC_NAND_s  ALT_SYSMGR_ECC_NAND_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ECC_QSPI.
  */
 struct ALT_SYSMGR_ECC_QSPI_s
@@ -9403,35 +9403,35 @@ typedef volatile struct ALT_SYSMGR_ECC_QSPI_s  ALT_SYSMGR_ECC_QSPI_t;
 
 /*
  * Register : SDMMC RAM ECC Enable Register - sdmmc
- * 
+ *
  * This register is used to enable ECC on the SDMMC RAM.ECC errors can be injected
  * into the write path using bits in this register.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                                                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------------------------------------------------
- *  [0]    | RW     | 0x0   | SDMMC RAM ECC Enable                                                   
- *  [1]    | RW     | 0x0   | SDMMC Port A RAM ECC inject single, correctable Error at Port A        
+ *  [0]    | RW     | 0x0   | SDMMC RAM ECC Enable
+ *  [1]    | RW     | 0x0   | SDMMC Port A RAM ECC inject single, correctable Error at Port A
  *  [2]    | RW     | 0x0   | SDMMC Port A RAM ECC inject double bit, non-correctable error at Port A
- *  [3]    | RW     | 0x0   | SDMMC Port B RAM ECC inject single, correctable Error at Port B        
+ *  [3]    | RW     | 0x0   | SDMMC Port B RAM ECC inject single, correctable Error at Port B
  *  [4]    | RW     | 0x0   | SDMMC Port B RAM ECC inject double bit, non-correctable error at Port B
- *  [5]    | RW     | 0x0   | SDMMC Port A RAM ECC single, correctable error interrupt status        
+ *  [5]    | RW     | 0x0   | SDMMC Port A RAM ECC single, correctable error interrupt status
  *  [6]    | RW     | 0x0   | SDMMC Port A RAM ECC double bit, non-correctable error interrupt status
- *  [7]    | RW     | 0x0   | SDMMC Port B RAM ECC single, correctable error interrupt status        
+ *  [7]    | RW     | 0x0   | SDMMC Port B RAM ECC single, correctable error interrupt status
  *  [8]    | RW     | 0x0   | SDMMC Port B RAM ECC double bit, non-correctable error interrupt status
- *  [31:9] | ???    | 0x0   | *UNDEFINED*                                                            
- * 
+ *  [31:9] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : SDMMC RAM ECC Enable - en
- * 
+ *
  * Enable ECC for SDMMC RAM
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_SDMMC_EN register field. */
 #define ALT_SYSMGR_ECC_SDMMC_EN_LSB        0
@@ -9452,12 +9452,12 @@ typedef volatile struct ALT_SYSMGR_ECC_QSPI_s  ALT_SYSMGR_ECC_QSPI_t;
 
 /*
  * Field : SDMMC Port A RAM ECC inject single, correctable Error at Port A - injsporta
- * 
+ *
  * Changing this bit from zero to one injects a single, correctable error into the
  * SDMMC RAM at Port A. This only injects one error into the SDMMC RAM at Port A.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_SDMMC_INJSPORTA register field. */
 #define ALT_SYSMGR_ECC_SDMMC_INJSPORTA_LSB        1
@@ -9478,13 +9478,13 @@ typedef volatile struct ALT_SYSMGR_ECC_QSPI_s  ALT_SYSMGR_ECC_QSPI_t;
 
 /*
  * Field : SDMMC Port A RAM ECC inject double bit, non-correctable error at Port A - injdporta
- * 
+ *
  * Changing this bit from zero to one injects a double, non-correctable error into
  * the SDMMC RAM at Port A. This only injects one double bit error into the SDMMC
  * RAM at Port A.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_SDMMC_INJDPORTA register field. */
 #define ALT_SYSMGR_ECC_SDMMC_INJDPORTA_LSB        2
@@ -9505,12 +9505,12 @@ typedef volatile struct ALT_SYSMGR_ECC_QSPI_s  ALT_SYSMGR_ECC_QSPI_t;
 
 /*
  * Field : SDMMC Port B RAM ECC inject single, correctable Error at Port B - injsportb
- * 
+ *
  * Changing this bit from zero to one injects a single, correctable error into the
  * SDMMC RAM at Port B. This only injects one error into the SDMMC RAM at Port B.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_SDMMC_INJSPORTB register field. */
 #define ALT_SYSMGR_ECC_SDMMC_INJSPORTB_LSB        3
@@ -9531,13 +9531,13 @@ typedef volatile struct ALT_SYSMGR_ECC_QSPI_s  ALT_SYSMGR_ECC_QSPI_t;
 
 /*
  * Field : SDMMC Port B RAM ECC inject double bit, non-correctable error at Port B - injdportb
- * 
+ *
  * Changing this bit from zero to one injects a double, non-correctable error into
  * the SDMMC RAM at Port B. This only injects one double bit error into the SDMMC
  * RAM at Port B.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_SDMMC_INJDPORTB register field. */
 #define ALT_SYSMGR_ECC_SDMMC_INJDPORTB_LSB        4
@@ -9558,13 +9558,13 @@ typedef volatile struct ALT_SYSMGR_ECC_QSPI_s  ALT_SYSMGR_ECC_QSPI_t;
 
 /*
  * Field : SDMMC Port A RAM ECC single, correctable error interrupt status - serrporta
- * 
+ *
  * This bit is an interrupt status bit for SDMMC Port A RAM ECC single, correctable
  * error. It is set by hardware when single, correctable error occurs in SDMMC Port
  * A RAM. Software needs to write 1 into this bit to clear the interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_SDMMC_SERRPORTA register field. */
 #define ALT_SYSMGR_ECC_SDMMC_SERRPORTA_LSB        5
@@ -9585,14 +9585,14 @@ typedef volatile struct ALT_SYSMGR_ECC_QSPI_s  ALT_SYSMGR_ECC_QSPI_t;
 
 /*
  * Field : SDMMC Port A RAM ECC double bit, non-correctable error interrupt status - derrporta
- * 
+ *
  * This bit is an interrupt status bit for SDMMC Port A RAM ECC double bit, non-
  * correctable error. It is set by hardware when double bit, non-correctable error
  * occurs in SDMMC Port A RAM. Software needs to write 1 into this bit to clear the
  * interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_SDMMC_DERRPORTA register field. */
 #define ALT_SYSMGR_ECC_SDMMC_DERRPORTA_LSB        6
@@ -9613,13 +9613,13 @@ typedef volatile struct ALT_SYSMGR_ECC_QSPI_s  ALT_SYSMGR_ECC_QSPI_t;
 
 /*
  * Field : SDMMC Port B RAM ECC single, correctable error interrupt status - serrportb
- * 
+ *
  * This bit is an interrupt status bit for SDMMC Port B RAM ECC single, correctable
  * error. It is set by hardware when single, correctable error occurs in SDMMC Port
  * B RAM. Software needs to write 1 into this bit to clear the interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_SDMMC_SERRPORTB register field. */
 #define ALT_SYSMGR_ECC_SDMMC_SERRPORTB_LSB        7
@@ -9640,14 +9640,14 @@ typedef volatile struct ALT_SYSMGR_ECC_QSPI_s  ALT_SYSMGR_ECC_QSPI_t;
 
 /*
  * Field : SDMMC Port B RAM ECC double bit, non-correctable error interrupt status - derrportb
- * 
+ *
  * This bit is an interrupt status bit for SDMMC Port B RAM ECC double bit, non-
  * correctable error. It is set by hardware when double bit, non-correctable error
  * occurs in SDMMC Port B RAM. Software needs to write 1 into this bit to clear the
  * interrupt status.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_ECC_SDMMC_DERRPORTB register field. */
 #define ALT_SYSMGR_ECC_SDMMC_DERRPORTB_LSB        8
@@ -9674,7 +9674,7 @@ typedef volatile struct ALT_SYSMGR_ECC_QSPI_s  ALT_SYSMGR_ECC_QSPI_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_ECC_SDMMC.
  */
 struct ALT_SYSMGR_ECC_SDMMC_s
@@ -9706,7 +9706,7 @@ typedef volatile struct ALT_SYSMGR_ECC_SDMMC_s  ALT_SYSMGR_ECC_SDMMC_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_SYSMGR_ECC.
  */
 struct ALT_SYSMGR_ECC_s
@@ -9754,46 +9754,46 @@ typedef volatile struct ALT_SYSMGR_ECC_raw_s  ALT_SYSMGR_ECC_raw_t;
 /*
  * Register Group : Pin Mux Control Group - ALT_SYSMGR_PINMUX
  * Pin Mux Control Group
- * 
+ *
  * Controls Pin Mux selections
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  */
 /*
  * Register : emac0_tx_clk Mux Selection Register - EMACIO0
- * 
+ *
  * This register is used to control the peripherals connected to emac0_tx_clk
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                     
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------
  *  [1:0]  | RW     | 0x0   | emac0_tx_clk Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                     
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac0_tx_clk Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac0_tx_clk.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 0.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII0.TX_CLK.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_EMACIO0_SEL register field. */
 #define ALT_SYSMGR_PINMUX_EMACIO0_SEL_LSB        0
@@ -9820,7 +9820,7 @@ typedef volatile struct ALT_SYSMGR_ECC_raw_s  ALT_SYSMGR_ECC_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_EMACIO0.
  */
 struct ALT_SYSMGR_PINMUX_EMACIO0_s
@@ -9838,37 +9838,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO0_s  ALT_SYSMGR_PINMUX_EMACIO0_t
 
 /*
  * Register : emac0_tx_d0 Mux Selection Register - EMACIO1
- * 
+ *
  * This register is used to control the peripherals connected to emac0_tx_d0
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
  *  [1:0]  | RW     | 0x0   | emac0_tx_d0 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac0_tx_d0 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac0_tx_d0.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 1.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB1.D0.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII0.TXD0.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_EMACIO1_SEL register field. */
 #define ALT_SYSMGR_PINMUX_EMACIO1_SEL_LSB        0
@@ -9895,7 +9895,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO0_s  ALT_SYSMGR_PINMUX_EMACIO0_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_EMACIO1.
  */
 struct ALT_SYSMGR_PINMUX_EMACIO1_s
@@ -9913,37 +9913,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO1_s  ALT_SYSMGR_PINMUX_EMACIO1_t
 
 /*
  * Register : emac0_tx_d1 Mux Selection Register - EMACIO2
- * 
+ *
  * This register is used to control the peripherals connected to emac0_tx_d1
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
  *  [1:0]  | RW     | 0x0   | emac0_tx_d1 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac0_tx_d1 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac0_tx_d1.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 2.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB1.D1.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII0.TXD1.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_EMACIO2_SEL register field. */
 #define ALT_SYSMGR_PINMUX_EMACIO2_SEL_LSB        0
@@ -9970,7 +9970,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO1_s  ALT_SYSMGR_PINMUX_EMACIO1_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_EMACIO2.
  */
 struct ALT_SYSMGR_PINMUX_EMACIO2_s
@@ -9988,37 +9988,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO2_s  ALT_SYSMGR_PINMUX_EMACIO2_t
 
 /*
  * Register : emac0_tx_d2 Mux Selection Register - EMACIO3
- * 
+ *
  * This register is used to control the peripherals connected to emac0_tx_d2
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
  *  [1:0]  | RW     | 0x0   | emac0_tx_d2 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac0_tx_d2 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac0_tx_d2.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 3.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB1.D2.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII0.TXD2.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_EMACIO3_SEL register field. */
 #define ALT_SYSMGR_PINMUX_EMACIO3_SEL_LSB        0
@@ -10045,7 +10045,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO2_s  ALT_SYSMGR_PINMUX_EMACIO2_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_EMACIO3.
  */
 struct ALT_SYSMGR_PINMUX_EMACIO3_s
@@ -10063,37 +10063,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO3_s  ALT_SYSMGR_PINMUX_EMACIO3_t
 
 /*
  * Register : emac0_tx_d3 Mux Selection Register - EMACIO4
- * 
+ *
  * This register is used to control the peripherals connected to emac0_tx_d3
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
  *  [1:0]  | RW     | 0x0   | emac0_tx_d3 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac0_tx_d3 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac0_tx_d3.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 4.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB1.D3.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII0.TXD3.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_EMACIO4_SEL register field. */
 #define ALT_SYSMGR_PINMUX_EMACIO4_SEL_LSB        0
@@ -10120,7 +10120,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO3_s  ALT_SYSMGR_PINMUX_EMACIO3_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_EMACIO4.
  */
 struct ALT_SYSMGR_PINMUX_EMACIO4_s
@@ -10138,37 +10138,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO4_s  ALT_SYSMGR_PINMUX_EMACIO4_t
 
 /*
  * Register : emac0_rx_d0 Mux Selection Register - EMACIO5
- * 
+ *
  * This register is used to control the peripherals connected to emac0_rx_d0
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
  *  [1:0]  | RW     | 0x0   | emac0_rx_d0 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac0_rx_d0 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac0_rx_d0.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 5.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB1.D4.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII0.RXD0.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_EMACIO5_SEL register field. */
 #define ALT_SYSMGR_PINMUX_EMACIO5_SEL_LSB        0
@@ -10195,7 +10195,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO4_s  ALT_SYSMGR_PINMUX_EMACIO4_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_EMACIO5.
  */
 struct ALT_SYSMGR_PINMUX_EMACIO5_s
@@ -10213,37 +10213,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO5_s  ALT_SYSMGR_PINMUX_EMACIO5_t
 
 /*
  * Register : emac0_mdio Mux Selection Register - EMACIO6
- * 
+ *
  * This register is used to control the peripherals connected to emac0_mdio
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                   
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------------
  *  [1:0]  | RW     | 0x0   | emac0_mdio Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                   
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac0_mdio Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac0_mdio.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 6.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal I2C2.SDA.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB1.D5.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII0.MDIO.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_EMACIO6_SEL register field. */
 #define ALT_SYSMGR_PINMUX_EMACIO6_SEL_LSB        0
@@ -10270,7 +10270,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO5_s  ALT_SYSMGR_PINMUX_EMACIO5_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_EMACIO6.
  */
 struct ALT_SYSMGR_PINMUX_EMACIO6_s
@@ -10288,37 +10288,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO6_s  ALT_SYSMGR_PINMUX_EMACIO6_t
 
 /*
  * Register : emac0_mdc Mux Selection Register - EMACIO7
- * 
+ *
  * This register is used to control the peripherals connected to emac0_mdc
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------
  *  [1:0]  | RW     | 0x0   | emac0_mdc Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                  
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac0_mdc Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac0_mdc.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 7.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal I2C2.SCL.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB1.D6.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII0.MDC.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_EMACIO7_SEL register field. */
 #define ALT_SYSMGR_PINMUX_EMACIO7_SEL_LSB        0
@@ -10345,7 +10345,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO6_s  ALT_SYSMGR_PINMUX_EMACIO6_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_EMACIO7.
  */
 struct ALT_SYSMGR_PINMUX_EMACIO7_s
@@ -10363,37 +10363,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO7_s  ALT_SYSMGR_PINMUX_EMACIO7_t
 
 /*
  * Register : emac0_rx_ctl Mux Selection Register - EMACIO8
- * 
+ *
  * This register is used to control the peripherals connected to emac0_rx_ctl
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                     
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------
  *  [1:0]  | RW     | 0x0   | emac0_rx_ctl Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                     
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac0_rx_ctl Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac0_rx_ctl.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 8.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB1.D7.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII0.RX_CTL.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_EMACIO8_SEL register field. */
 #define ALT_SYSMGR_PINMUX_EMACIO8_SEL_LSB        0
@@ -10420,7 +10420,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO7_s  ALT_SYSMGR_PINMUX_EMACIO7_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_EMACIO8.
  */
 struct ALT_SYSMGR_PINMUX_EMACIO8_s
@@ -10438,37 +10438,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO8_s  ALT_SYSMGR_PINMUX_EMACIO8_t
 
 /*
  * Register : emac0_tx_ctl Mux Selection Register - EMACIO9
- * 
+ *
  * This register is used to control the peripherals connected to emac0_tx_ctl
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                     
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------
  *  [1:0]  | RW     | 0x0   | emac0_tx_ctl Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                     
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac0_tx_ctl Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac0_tx_ctl.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 9.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII0.TX_CTL.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_EMACIO9_SEL register field. */
 #define ALT_SYSMGR_PINMUX_EMACIO9_SEL_LSB        0
@@ -10495,7 +10495,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO8_s  ALT_SYSMGR_PINMUX_EMACIO8_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_EMACIO9.
  */
 struct ALT_SYSMGR_PINMUX_EMACIO9_s
@@ -10513,37 +10513,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO9_s  ALT_SYSMGR_PINMUX_EMACIO9_t
 
 /*
  * Register : emac0_rx_clk Mux Selection Register - EMACIO10
- * 
+ *
  * This register is used to control the peripherals connected to emac0_rx_clk
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                     
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------
  *  [1:0]  | RW     | 0x0   | emac0_rx_clk Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                     
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac0_rx_clk Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac0_rx_clk.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 10.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB1.CLK.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII0.RX_CLK.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_EMACIO10_SEL register field. */
 #define ALT_SYSMGR_PINMUX_EMACIO10_SEL_LSB        0
@@ -10570,7 +10570,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO9_s  ALT_SYSMGR_PINMUX_EMACIO9_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_EMACIO10.
  */
 struct ALT_SYSMGR_PINMUX_EMACIO10_s
@@ -10588,37 +10588,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO10_s  ALT_SYSMGR_PINMUX_EMACIO10
 
 /*
  * Register : emac0_rx_d1 Mux Selection Register - EMACIO11
- * 
+ *
  * This register is used to control the peripherals connected to emac0_rx_d1
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
  *  [1:0]  | RW     | 0x0   | emac0_rx_d1 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac0_rx_d1 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac0_rx_d1.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 11.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB1.STP.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII0.RXD1.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_EMACIO11_SEL register field. */
 #define ALT_SYSMGR_PINMUX_EMACIO11_SEL_LSB        0
@@ -10645,7 +10645,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO10_s  ALT_SYSMGR_PINMUX_EMACIO10
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_EMACIO11.
  */
 struct ALT_SYSMGR_PINMUX_EMACIO11_s
@@ -10663,37 +10663,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO11_s  ALT_SYSMGR_PINMUX_EMACIO11
 
 /*
  * Register : emac0_rx_d2 Mux Selection Register - EMACIO12
- * 
+ *
  * This register is used to control the peripherals connected to emac0_rx_d2
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
  *  [1:0]  | RW     | 0x0   | emac0_rx_d2 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac0_rx_d2 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac0_rx_d2.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 12.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB1.DIR.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII0.RXD2.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_EMACIO12_SEL register field. */
 #define ALT_SYSMGR_PINMUX_EMACIO12_SEL_LSB        0
@@ -10720,7 +10720,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO11_s  ALT_SYSMGR_PINMUX_EMACIO11
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_EMACIO12.
  */
 struct ALT_SYSMGR_PINMUX_EMACIO12_s
@@ -10738,37 +10738,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO12_s  ALT_SYSMGR_PINMUX_EMACIO12
 
 /*
  * Register : emac0_rx_d3 Mux Selection Register - EMACIO13
- * 
+ *
  * This register is used to control the peripherals connected to emac0_rx_d3
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
  *  [1:0]  | RW     | 0x0   | emac0_rx_d3 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac0_rx_d3 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac0_rx_d3.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 13.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB1.NXT.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII0.RXD3.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_EMACIO13_SEL register field. */
 #define ALT_SYSMGR_PINMUX_EMACIO13_SEL_LSB        0
@@ -10795,7 +10795,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO12_s  ALT_SYSMGR_PINMUX_EMACIO12
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_EMACIO13.
  */
 struct ALT_SYSMGR_PINMUX_EMACIO13_s
@@ -10813,37 +10813,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO13_s  ALT_SYSMGR_PINMUX_EMACIO13
 
 /*
  * Register : emac1_tx_clk Mux Selection Register - EMACIO14
- * 
+ *
  * This register is used to control the peripherals connected to emac1_tx_clk
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                     
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------
  *  [1:0]  | RW     | 0x0   | emac1_tx_clk Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                     
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac1_tx_clk Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac1_tx_clk.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 48.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII1.TX_CLK.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_EMACIO14_SEL register field. */
 #define ALT_SYSMGR_PINMUX_EMACIO14_SEL_LSB        0
@@ -10870,7 +10870,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO13_s  ALT_SYSMGR_PINMUX_EMACIO13
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_EMACIO14.
  */
 struct ALT_SYSMGR_PINMUX_EMACIO14_s
@@ -10888,37 +10888,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO14_s  ALT_SYSMGR_PINMUX_EMACIO14
 
 /*
  * Register : emac1_tx_d0 Mux Selection Register - EMACIO15
- * 
+ *
  * This register is used to control the peripherals connected to emac1_tx_d0
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
  *  [1:0]  | RW     | 0x0   | emac1_tx_d0 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac1_tx_d0 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac1_tx_d0.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 49.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII1.TXD0.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_EMACIO15_SEL register field. */
 #define ALT_SYSMGR_PINMUX_EMACIO15_SEL_LSB        0
@@ -10945,7 +10945,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO14_s  ALT_SYSMGR_PINMUX_EMACIO14
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_EMACIO15.
  */
 struct ALT_SYSMGR_PINMUX_EMACIO15_s
@@ -10963,37 +10963,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO15_s  ALT_SYSMGR_PINMUX_EMACIO15
 
 /*
  * Register : emac1_tx_d1 Mux Selection Register - EMACIO16
- * 
+ *
  * This register is used to control the peripherals connected to emac1_tx_d1
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
  *  [1:0]  | RW     | 0x0   | emac1_tx_d1 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac1_tx_d1 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac1_tx_d1.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 50.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII1.TXD1.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_EMACIO16_SEL register field. */
 #define ALT_SYSMGR_PINMUX_EMACIO16_SEL_LSB        0
@@ -11020,7 +11020,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO15_s  ALT_SYSMGR_PINMUX_EMACIO15
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_EMACIO16.
  */
 struct ALT_SYSMGR_PINMUX_EMACIO16_s
@@ -11038,37 +11038,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO16_s  ALT_SYSMGR_PINMUX_EMACIO16
 
 /*
  * Register : emac1_tx_ctl Mux Selection Register - EMACIO17
- * 
+ *
  * This register is used to control the peripherals connected to emac1_tx_ctl
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                     
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------
  *  [1:0]  | RW     | 0x0   | emac1_tx_ctl Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                     
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac1_tx_ctl Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac1_tx_ctl.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 51.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII1.TX_CTL.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_EMACIO17_SEL register field. */
 #define ALT_SYSMGR_PINMUX_EMACIO17_SEL_LSB        0
@@ -11095,7 +11095,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO16_s  ALT_SYSMGR_PINMUX_EMACIO16
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_EMACIO17.
  */
 struct ALT_SYSMGR_PINMUX_EMACIO17_s
@@ -11113,37 +11113,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO17_s  ALT_SYSMGR_PINMUX_EMACIO17
 
 /*
  * Register : emac1_rx_d0 Mux Selection Register - EMACIO18
- * 
+ *
  * This register is used to control the peripherals connected to emac1_rx_d0
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
  *  [1:0]  | RW     | 0x0   | emac1_rx_d0 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac1_rx_d0 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac1_rx_d0.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 52.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII1.RXD0.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_EMACIO18_SEL register field. */
 #define ALT_SYSMGR_PINMUX_EMACIO18_SEL_LSB        0
@@ -11170,7 +11170,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO17_s  ALT_SYSMGR_PINMUX_EMACIO17
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_EMACIO18.
  */
 struct ALT_SYSMGR_PINMUX_EMACIO18_s
@@ -11188,37 +11188,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO18_s  ALT_SYSMGR_PINMUX_EMACIO18
 
 /*
  * Register : emac1_rx_d1 Mux Selection Register - EMACIO19
- * 
+ *
  * This register is used to control the peripherals connected to emac1_rx_d1
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
  *  [1:0]  | RW     | 0x0   | emac1_rx_d1 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac1_rx_d1 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac1_rx_d1.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 53.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII1.RXD1.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_EMACIO19_SEL register field. */
 #define ALT_SYSMGR_PINMUX_EMACIO19_SEL_LSB        0
@@ -11245,7 +11245,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO18_s  ALT_SYSMGR_PINMUX_EMACIO18
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_EMACIO19.
  */
 struct ALT_SYSMGR_PINMUX_EMACIO19_s
@@ -11263,37 +11263,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO19_s  ALT_SYSMGR_PINMUX_EMACIO19
 
 /*
  * Register : sdmmc_cmd Mux Selection Register - FLASHIO0
- * 
+ *
  * This register is used to control the peripherals connected to sdmmc_cmd
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------
  *  [1:0]  | RW     | 0x0   | sdmmc_cmd Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                  
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : sdmmc_cmd Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected sdmmc_cmd.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 36.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB0.D0.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SDMMC.CMD.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_FLSHIO0_SEL register field. */
 #define ALT_SYSMGR_PINMUX_FLSHIO0_SEL_LSB        0
@@ -11320,7 +11320,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_EMACIO19_s  ALT_SYSMGR_PINMUX_EMACIO19
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_FLSHIO0.
  */
 struct ALT_SYSMGR_PINMUX_FLSHIO0_s
@@ -11338,37 +11338,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO0_s  ALT_SYSMGR_PINMUX_FLSHIO0_t
 
 /*
  * Register : sdmmc_pwren Mux Selection Register - FLASHIO1
- * 
+ *
  * This register is used to control the peripherals connected to sdmmc_pwren
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
  *  [1:0]  | RW     | 0x0   | sdmmc_pwren Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : sdmmc_pwren Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected sdmmc_pwren.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 37.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB0.D1.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SDMMC.PWREN.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_FLSHIO1_SEL register field. */
 #define ALT_SYSMGR_PINMUX_FLSHIO1_SEL_LSB        0
@@ -11395,7 +11395,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO0_s  ALT_SYSMGR_PINMUX_FLSHIO0_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_FLSHIO1.
  */
 struct ALT_SYSMGR_PINMUX_FLSHIO1_s
@@ -11413,37 +11413,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO1_s  ALT_SYSMGR_PINMUX_FLSHIO1_t
 
 /*
  * Register : sdmmc_d0 Mux Selection Register - FLASHIO2
- * 
+ *
  * This register is used to control the peripherals connected to sdmmc_d0
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | sdmmc_d0 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : sdmmc_d0 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected sdmmc_d0.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 38.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB0.D2.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SDMMC.D0.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_FLSHIO2_SEL register field. */
 #define ALT_SYSMGR_PINMUX_FLSHIO2_SEL_LSB        0
@@ -11470,7 +11470,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO1_s  ALT_SYSMGR_PINMUX_FLSHIO1_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_FLSHIO2.
  */
 struct ALT_SYSMGR_PINMUX_FLSHIO2_s
@@ -11488,37 +11488,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO2_s  ALT_SYSMGR_PINMUX_FLSHIO2_t
 
 /*
  * Register : sdmmc_d1 Mux Selection Register - FLASHIO3
- * 
+ *
  * This register is used to control the peripherals connected to sdmmc_d1
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | sdmmc_d1 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : sdmmc_d1 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected sdmmc_d1.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 39.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB0.D3.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SDMMC.D1.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_FLSHIO3_SEL register field. */
 #define ALT_SYSMGR_PINMUX_FLSHIO3_SEL_LSB        0
@@ -11545,7 +11545,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO2_s  ALT_SYSMGR_PINMUX_FLSHIO2_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_FLSHIO3.
  */
 struct ALT_SYSMGR_PINMUX_FLSHIO3_s
@@ -11563,37 +11563,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO3_s  ALT_SYSMGR_PINMUX_FLSHIO3_t
 
 /*
  * Register : sdmmc_d4 Mux Selection Register - FLASHIO4
- * 
+ *
  * This register is used to control the peripherals connected to sdmmc_d4
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | sdmmc_d4 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : sdmmc_d4 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected sdmmc_d4.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 40.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB0.D4.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SDMMC.D4.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_FLSHIO4_SEL register field. */
 #define ALT_SYSMGR_PINMUX_FLSHIO4_SEL_LSB        0
@@ -11620,7 +11620,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO3_s  ALT_SYSMGR_PINMUX_FLSHIO3_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_FLSHIO4.
  */
 struct ALT_SYSMGR_PINMUX_FLSHIO4_s
@@ -11638,37 +11638,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO4_s  ALT_SYSMGR_PINMUX_FLSHIO4_t
 
 /*
  * Register : sdmmc_d5 Mux Selection Register - FLASHIO5
- * 
+ *
  * This register is used to control the peripherals connected to sdmmc_d5
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | sdmmc_d5 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : sdmmc_d5 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected sdmmc_d5.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 41.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB0.D5.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SDMMC.D5.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_FLSHIO5_SEL register field. */
 #define ALT_SYSMGR_PINMUX_FLSHIO5_SEL_LSB        0
@@ -11695,7 +11695,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO4_s  ALT_SYSMGR_PINMUX_FLSHIO4_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_FLSHIO5.
  */
 struct ALT_SYSMGR_PINMUX_FLSHIO5_s
@@ -11713,37 +11713,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO5_s  ALT_SYSMGR_PINMUX_FLSHIO5_t
 
 /*
  * Register : sdmmc_d6 Mux Selection Register - FLASHIO6
- * 
+ *
  * This register is used to control the peripherals connected to sdmmc_d6
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | sdmmc_d6 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : sdmmc_d6 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected sdmmc_d6.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 42.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB0.D6.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SDMMC.D6.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_FLSHIO6_SEL register field. */
 #define ALT_SYSMGR_PINMUX_FLSHIO6_SEL_LSB        0
@@ -11770,7 +11770,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO5_s  ALT_SYSMGR_PINMUX_FLSHIO5_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_FLSHIO6.
  */
 struct ALT_SYSMGR_PINMUX_FLSHIO6_s
@@ -11788,37 +11788,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO6_s  ALT_SYSMGR_PINMUX_FLSHIO6_t
 
 /*
  * Register : sdmmc_d7 Mux Selection Register - FLASHIO7
- * 
+ *
  * This register is used to control the peripherals connected to sdmmc_d7
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | sdmmc_d7 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : sdmmc_d7 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected sdmmc_d7.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 43.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB0.D7.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SDMMC.D7.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_FLSHIO7_SEL register field. */
 #define ALT_SYSMGR_PINMUX_FLSHIO7_SEL_LSB        0
@@ -11845,7 +11845,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO6_s  ALT_SYSMGR_PINMUX_FLSHIO6_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_FLSHIO7.
  */
 struct ALT_SYSMGR_PINMUX_FLSHIO7_s
@@ -11863,37 +11863,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO7_s  ALT_SYSMGR_PINMUX_FLSHIO7_t
 
 /*
  * Register : sdmmc_clk_in Mux Selection Register - FLASHIO8
- * 
+ *
  * This register is used to control the peripherals connected to sdmmc_clk_in
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                     
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------
  *  [1:0]  | RW     | 0x0   | sdmmc_clk_in Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                     
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : sdmmc_clk_in Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected sdmmc_clk_in.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 44.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB0.CLK.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SDMMC.CLK_IN.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_FLSHIO8_SEL register field. */
 #define ALT_SYSMGR_PINMUX_FLSHIO8_SEL_LSB        0
@@ -11920,7 +11920,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO7_s  ALT_SYSMGR_PINMUX_FLSHIO7_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_FLSHIO8.
  */
 struct ALT_SYSMGR_PINMUX_FLSHIO8_s
@@ -11938,37 +11938,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO8_s  ALT_SYSMGR_PINMUX_FLSHIO8_t
 
 /*
  * Register : sdmmc_clk Mux Selection Register - FLASHIO9
- * 
+ *
  * This register is used to control the peripherals connected to sdmmc_clk
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------
  *  [1:0]  | RW     | 0x0   | sdmmc_clk Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                  
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : sdmmc_clk Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected sdmmc_clk.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 45.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB0.STP.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SDMMC.CLK.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_FLSHIO9_SEL register field. */
 #define ALT_SYSMGR_PINMUX_FLSHIO9_SEL_LSB        0
@@ -11995,7 +11995,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO8_s  ALT_SYSMGR_PINMUX_FLSHIO8_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_FLSHIO9.
  */
 struct ALT_SYSMGR_PINMUX_FLSHIO9_s
@@ -12013,37 +12013,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO9_s  ALT_SYSMGR_PINMUX_FLSHIO9_t
 
 /*
  * Register : sdmmc_d2 Mux Selection Register - FLASHIO10
- * 
+ *
  * This register is used to control the peripherals connected to sdmmc_d2
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | sdmmc_d2 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : sdmmc_d2 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected sdmmc_d2.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 46.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB0.DIR.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SDMMC.D2.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_FLSHIO10_SEL register field. */
 #define ALT_SYSMGR_PINMUX_FLSHIO10_SEL_LSB        0
@@ -12070,7 +12070,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO9_s  ALT_SYSMGR_PINMUX_FLSHIO9_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_FLSHIO10.
  */
 struct ALT_SYSMGR_PINMUX_FLSHIO10_s
@@ -12088,37 +12088,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO10_s  ALT_SYSMGR_PINMUX_FLSHIO10
 
 /*
  * Register : sdmmc_d3 Mux Selection Register - FLASHIO11
- * 
+ *
  * This register is used to control the peripherals connected to sdmmc_d3
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | sdmmc_d3 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : sdmmc_d3 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected sdmmc_d3.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 47.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal USB0.NXT.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SDMMC.D3.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_FLSHIO11_SEL register field. */
 #define ALT_SYSMGR_PINMUX_FLSHIO11_SEL_LSB        0
@@ -12145,7 +12145,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO10_s  ALT_SYSMGR_PINMUX_FLSHIO10
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_FLSHIO11.
  */
 struct ALT_SYSMGR_PINMUX_FLSHIO11_s
@@ -12163,37 +12163,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO11_s  ALT_SYSMGR_PINMUX_FLSHIO11
 
 /*
  * Register : trace_clk Mux Selection Register - GENERALIO0
- * 
+ *
  * This register is used to control the peripherals connected to trace_clk
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------
  *  [1:0]  | RW     | 0x0   | trace_clk Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                  
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : trace_clk Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected trace_clk.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 48.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal TRACE.CLK.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO0_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO0_SEL_LSB        0
@@ -12220,7 +12220,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_FLSHIO11_s  ALT_SYSMGR_PINMUX_FLSHIO11
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO0.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO0_s
@@ -12238,37 +12238,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO0_s  ALT_SYSMGR_PINMUX_GENERA
 
 /*
  * Register : trace_d0 Mux Selection Register - GENERALIO1
- * 
+ *
  * This register is used to control the peripherals connected to trace_d0
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | trace_d0 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : trace_d0 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected trace_d0.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 49.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal UART0.RX.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIS0.CLK.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal TRACE.D0.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO1_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO1_SEL_LSB        0
@@ -12295,7 +12295,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO0_s  ALT_SYSMGR_PINMUX_GENERA
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO1.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO1_s
@@ -12313,37 +12313,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO1_s  ALT_SYSMGR_PINMUX_GENERA
 
 /*
  * Register : trace_d1 Mux Selection Register - GENERALIO2
- * 
+ *
  * This register is used to control the peripherals connected to trace_d1
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | trace_d1 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : trace_d1 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected trace_d1.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 50.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal UART0.TX.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIS0.MOSI.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal TRACE.D1.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO2_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO2_SEL_LSB        0
@@ -12370,7 +12370,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO1_s  ALT_SYSMGR_PINMUX_GENERA
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO2.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO2_s
@@ -12388,37 +12388,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO2_s  ALT_SYSMGR_PINMUX_GENERA
 
 /*
  * Register : trace_d2 Mux Selection Register - GENERALIO3
- * 
+ *
  * This register is used to control the peripherals connected to trace_d2
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | trace_d2 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : trace_d2 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected trace_d2.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 51.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal I2C1.SDA.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIS0.MISO.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal TRACE.D2.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO3_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO3_SEL_LSB        0
@@ -12445,7 +12445,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO2_s  ALT_SYSMGR_PINMUX_GENERA
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO3.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO3_s
@@ -12463,37 +12463,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO3_s  ALT_SYSMGR_PINMUX_GENERA
 
 /*
  * Register : trace_d3 Mux Selection Register - GENERALIO4
- * 
+ *
  * This register is used to control the peripherals connected to trace_d3
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | trace_d3 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : trace_d3 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected trace_d3.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 52.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal I2C1.SCL.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIS0.SS0.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal TRACE.D3.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO4_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO4_SEL_LSB        0
@@ -12520,7 +12520,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO3_s  ALT_SYSMGR_PINMUX_GENERA
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO4.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO4_s
@@ -12538,37 +12538,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO4_s  ALT_SYSMGR_PINMUX_GENERA
 
 /*
  * Register : trace_d4 Mux Selection Register - GENERALIO5
- * 
+ *
  * This register is used to control the peripherals connected to trace_d4
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | trace_d4 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : trace_d4 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected trace_d4.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 53.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal CAN1.RX.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIS1.CLK.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal TRACE.D4.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO5_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO5_SEL_LSB        0
@@ -12595,7 +12595,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO4_s  ALT_SYSMGR_PINMUX_GENERA
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO5.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO5_s
@@ -12613,37 +12613,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO5_s  ALT_SYSMGR_PINMUX_GENERA
 
 /*
  * Register : trace_d5 Mux Selection Register - GENERALIO6
- * 
+ *
  * This register is used to control the peripherals connected to trace_d5
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | trace_d5 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : trace_d5 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected trace_d5.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 54.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal CAN1.TX.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIS1.MOSI.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal TRACE.D5.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO6_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO6_SEL_LSB        0
@@ -12670,7 +12670,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO5_s  ALT_SYSMGR_PINMUX_GENERA
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO6.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO6_s
@@ -12688,37 +12688,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO6_s  ALT_SYSMGR_PINMUX_GENERA
 
 /*
  * Register : trace_d6 Mux Selection Register - GENERALIO7
- * 
+ *
  * This register is used to control the peripherals connected to trace_d6
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | trace_d6 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : trace_d6 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected trace_d6.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 55.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal I2C0.SDA.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIS1.SS0.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal TRACE.D6.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO7_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO7_SEL_LSB        0
@@ -12745,7 +12745,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO6_s  ALT_SYSMGR_PINMUX_GENERA
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO7.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO7_s
@@ -12763,37 +12763,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO7_s  ALT_SYSMGR_PINMUX_GENERA
 
 /*
  * Register : trace_d7 Mux Selection Register - GENERALIO8
- * 
+ *
  * This register is used to control the peripherals connected to trace_d7
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | trace_d7 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : trace_d7 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected trace_d7.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 56.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal I2C0.SCL.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIS1.MISO.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal TRACE.D7.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO8_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO8_SEL_LSB        0
@@ -12820,7 +12820,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO7_s  ALT_SYSMGR_PINMUX_GENERA
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO8.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO8_s
@@ -12838,37 +12838,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO8_s  ALT_SYSMGR_PINMUX_GENERA
 
 /*
  * Register : spim0_clk Mux Selection Register - GENERALIO9
- * 
+ *
  * This register is used to control the peripherals connected to spim0_clk
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------
  *  [1:0]  | RW     | 0x0   | spim0_clk Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                  
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : spim0_clk Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected spim0_clk.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 57.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal UART0.CTS.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal I2C1.SDA.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SPIM0.CLK.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO9_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO9_SEL_LSB        0
@@ -12895,7 +12895,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO8_s  ALT_SYSMGR_PINMUX_GENERA
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO9.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO9_s
@@ -12913,37 +12913,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO9_s  ALT_SYSMGR_PINMUX_GENERA
 
 /*
  * Register : spim0_mosi Mux Selection Register - GENERALIO10
- * 
+ *
  * This register is used to control the peripherals connected to spim0_mosi
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                   
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------------
  *  [1:0]  | RW     | 0x0   | spim0_mosi Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                   
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : spim0_mosi Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected spim0_mosi.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 58.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal UART0.RTS.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal I2C1.SCL.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SPIM0.MOSI.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO10_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO10_SEL_LSB        0
@@ -12970,7 +12970,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO9_s  ALT_SYSMGR_PINMUX_GENERA
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO10.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO10_s
@@ -12988,37 +12988,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO10_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : spim0_miso Mux Selection Register - GENERALIO11
- * 
+ *
  * This register is used to control the peripherals connected to spim0_miso
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                   
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------------
  *  [1:0]  | RW     | 0x0   | spim0_miso Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                   
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : spim0_miso Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected spim0_miso.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 59.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal UART1.CTS.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal CAN1.RX.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SPIM0.MISO.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO11_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO11_SEL_LSB        0
@@ -13045,7 +13045,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO10_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO11.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO11_s
@@ -13063,37 +13063,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO11_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : spim0_ss0 Mux Selection Register - GENERALIO12
- * 
+ *
  * This register is used to control the peripherals connected to spim0_ss0
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------
  *  [1:0]  | RW     | 0x0   | spim0_ss0 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                  
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : spim0_ss0 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected spim0_ss0.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 60.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal UART1.RTS.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal CAN1.TX.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SPIM0.SS0.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO12_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO12_SEL_LSB        0
@@ -13120,7 +13120,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO11_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO12.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO12_s
@@ -13138,37 +13138,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO12_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : uart0_rx Mux Selection Register - GENERALIO13
- * 
+ *
  * This register is used to control the peripherals connected to uart0_rx
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | uart0_rx Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : uart0_rx Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected uart0_rx.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 61.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal SPIM0.SS1.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal CAN0.RX.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal UART0.RX.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO13_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO13_SEL_LSB        0
@@ -13195,7 +13195,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO12_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO13.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO13_s
@@ -13213,37 +13213,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO13_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : uart0_tx Mux Selection Register - GENERALIO14
- * 
+ *
  * This register is used to control the peripherals connected to uart0_tx
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | uart0_tx Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : uart0_tx Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected uart0_tx.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 62.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal SPIM1.SS1.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal CAN0.TX.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal UART0.TX.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO14_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO14_SEL_LSB        0
@@ -13270,7 +13270,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO13_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO14.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO14_s
@@ -13288,37 +13288,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO14_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : i2c0_sda Mux Selection Register - GENERALIO15
- * 
+ *
  * This register is used to control the peripherals connected to i2c0_sda
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | i2c0_sda Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : i2c0_sda Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected i2c0_sda.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 63.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal SPIM1.CLK.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal UART1.RX.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal I2C0.SDA.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO15_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO15_SEL_LSB        0
@@ -13345,7 +13345,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO14_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO15.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO15_s
@@ -13363,37 +13363,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO15_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : i2c0_scl Mux Selection Register - GENERALIO16
- * 
+ *
  * This register is used to control the peripherals connected to i2c0_scl
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | i2c0_scl Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : i2c0_scl Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected i2c0_scl.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 64.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal SPIM1.MOSI.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal UART1.TX.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal I2C0.SCL.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO16_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO16_SEL_LSB        0
@@ -13420,7 +13420,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO15_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO16.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO16_s
@@ -13438,37 +13438,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO16_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : can0_rx Mux Selection Register - GENERALIO17
- * 
+ *
  * This register is used to control the peripherals connected to can0_rx
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------
  *  [1:0]  | RW     | 0x0   | can0_rx Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : can0_rx Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected can0_rx.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 65.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal SPIM1.MISO.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal UART0.RX.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal CAN0.RX.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO17_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO17_SEL_LSB        0
@@ -13495,7 +13495,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO16_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO17.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO17_s
@@ -13513,37 +13513,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO17_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : can0_tx Mux Selection Register - GENERALIO18
- * 
+ *
  * This register is used to control the peripherals connected to can0_tx
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------
  *  [1:0]  | RW     | 0x0   | can0_tx Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : can0_tx Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected can0_tx.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 66.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal SPIM1.SS0.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal UART0.TX.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal CAN0.TX.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO18_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO18_SEL_LSB        0
@@ -13570,7 +13570,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO17_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO18.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO18_s
@@ -13588,37 +13588,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO18_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : spis1_clk Mux Selection Register - GENERALIO19
- * 
+ *
  * This register is used to control the peripherals connected to spis1_clk
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------
  *  [1:0]  | RW     | 0x0   | spis1_clk Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                  
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : spis1_clk Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected spis1_clk.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 67.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIM1.CLK.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SPIS1.CLK.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO19_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO19_SEL_LSB        0
@@ -13645,7 +13645,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO18_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO19.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO19_s
@@ -13663,37 +13663,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO19_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : spis1_mosi Mux Selection Register - GENERALIO20
- * 
+ *
  * This register is used to control the peripherals connected to spis1_mosi
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                   
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------------
  *  [1:0]  | RW     | 0x0   | spis1_mosi Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                   
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : spis1_mosi Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected spis1_mosi.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 68.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIM1.MOSI.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SPIS1.MOSI.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO20_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO20_SEL_LSB        0
@@ -13720,7 +13720,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO19_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO20.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO20_s
@@ -13738,37 +13738,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO20_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : spis1_miso Mux Selection Register - GENERALIO21
- * 
+ *
  * This register is used to control the peripherals connected to spis1_miso
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                   
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------------
  *  [1:0]  | RW     | 0x0   | spis1_miso Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                   
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : spis1_miso Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected spis1_miso.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 69.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIM1.MISO.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SPIS1.MISO.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO21_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO21_SEL_LSB        0
@@ -13795,7 +13795,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO20_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO21.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO21_s
@@ -13813,37 +13813,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO21_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : spis1_ss0 Mux Selection Register - GENERALIO22
- * 
+ *
  * This register is used to control the peripherals connected to spis1_ss0
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------
  *  [1:0]  | RW     | 0x0   | spis1_ss0 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                  
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : spis1_ss0 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected spis1_ss0.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 70.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIM1.SS0.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SPIS1.SS0.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO22_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO22_SEL_LSB        0
@@ -13870,7 +13870,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO21_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO22.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO22_s
@@ -13888,37 +13888,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO22_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : uart1_rx Mux Selection Register - GENERALIO23
- * 
+ *
  * This register is used to control the peripherals connected to uart1_rx
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | uart1_rx Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : uart1_rx Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected uart1_rx.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 62.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIM1.SS1.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal UART1.RX.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO23_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO23_SEL_LSB        0
@@ -13945,7 +13945,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO22_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO23.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO23_s
@@ -13963,37 +13963,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO23_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : uart1_tx Mux Selection Register - GENERALIO24
- * 
+ *
  * This register is used to control the peripherals connected to uart1_tx
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | uart1_tx Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : uart1_tx Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected uart1_tx.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 63.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIM0.CLK.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal UART1.TX.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO24_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO24_SEL_LSB        0
@@ -14020,7 +14020,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO23_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO24.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO24_s
@@ -14038,37 +14038,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO24_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : i2c1_sda Mux Selection Register - GENERALIO25
- * 
+ *
  * This register is used to control the peripherals connected to i2c1_sda
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | i2c1_sda Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : i2c1_sda Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected i2c1_sda.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 64.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIM0.MOSI.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal I2C1.SDA.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO25_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO25_SEL_LSB        0
@@ -14095,7 +14095,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO24_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO25.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO25_s
@@ -14113,37 +14113,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO25_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : i2c1_scl Mux Selection Register - GENERALIO26
- * 
+ *
  * This register is used to control the peripherals connected to i2c1_scl
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | i2c1_scl Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : i2c1_scl Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected i2c1_scl.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 65.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIM0.MISO.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal I2C1.SCL.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO26_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO26_SEL_LSB        0
@@ -14170,7 +14170,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO25_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO26.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO26_s
@@ -14188,37 +14188,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO26_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : spim0_ss0_alt Mux Selection Register - GENERALIO27
- * 
+ *
  * This register is used to control the peripherals connected to spim0_ss0_alt
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                      
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------
  *  [1:0]  | RW     | 0x0   | spim0_ss0_alt Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                      
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : spim0_ss0_alt Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected spim0_ss0_alt.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 66.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIM0.SS0.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO27_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO27_SEL_LSB        0
@@ -14245,7 +14245,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO26_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO27.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO27_s
@@ -14263,37 +14263,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO27_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : spis0_clk Mux Selection Register - GENERALIO28
- * 
+ *
  * This register is used to control the peripherals connected to spis0_clk
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------
  *  [1:0]  | RW     | 0x0   | spis0_clk Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                  
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : spis0_clk Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected spis0_clk.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 67.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIM0.SS1.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SPIS0.CLK.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO28_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO28_SEL_LSB        0
@@ -14320,7 +14320,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO27_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO28.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO28_s
@@ -14338,37 +14338,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO28_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : spis0_mosi Mux Selection Register - GENERALIO29
- * 
+ *
  * This register is used to control the peripherals connected to spis0_mosi
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                   
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------------
  *  [1:0]  | RW     | 0x0   | spis0_mosi Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                   
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : spis0_mosi Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected spis0_mosi.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 68.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SPIS0.MOSI.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO29_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO29_SEL_LSB        0
@@ -14395,7 +14395,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO28_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO29.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO29_s
@@ -14413,37 +14413,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO29_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : spis0_miso Mux Selection Register - GENERALIO30
- * 
+ *
  * This register is used to control the peripherals connected to spis0_miso
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                   
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------------
  *  [1:0]  | RW     | 0x0   | spis0_miso Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                   
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : spis0_miso Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected spis0_miso.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 69.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SPIS0.MISO.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO30_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO30_SEL_LSB        0
@@ -14470,7 +14470,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO29_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO30.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO30_s
@@ -14488,37 +14488,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO30_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : spis0_ss0 Mux Selection Register - GENERALIO31
- * 
+ *
  * This register is used to control the peripherals connected to spis0_ss0
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------
  *  [1:0]  | RW     | 0x0   | spis0_ss0 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                  
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : spis0_ss0 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected spis0_ss0.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 70.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal SPIS0.SS0.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GENERALIO31_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GENERALIO31_SEL_LSB        0
@@ -14545,7 +14545,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO30_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GENERALIO31.
  */
 struct ALT_SYSMGR_PINMUX_GENERALIO31_s
@@ -14563,37 +14563,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO31_s  ALT_SYSMGR_PINMUX_GENER
 
 /*
  * Register : nand_ale Mux Selection Register - MIXED1IO0
- * 
+ *
  * This register is used to control the peripherals connected to nand_ale
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | nand_ale Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : nand_ale Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected nand_ale.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 14.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal QSPI.SS3.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal RGMII1.TX_CLK.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal NAND.ale.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO0_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO0_SEL_LSB        0
@@ -14620,7 +14620,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GENERALIO31_s  ALT_SYSMGR_PINMUX_GENER
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO0.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO0_s
@@ -14638,37 +14638,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO0_s  ALT_SYSMGR_PINMUX_MIXED1I
 
 /*
  * Register : nand_ce Mux Selection Register - MIXED1IO1
- * 
+ *
  * This register is used to control the peripherals connected to nand_ce
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------
  *  [1:0]  | RW     | 0x0   | nand_ce Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : nand_ce Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected nand_ce.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 15.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal USB1.D0.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal RGMII1.TXD0.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal NAND.ce.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO1_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO1_SEL_LSB        0
@@ -14695,7 +14695,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO0_s  ALT_SYSMGR_PINMUX_MIXED1I
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO1.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO1_s
@@ -14713,37 +14713,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO1_s  ALT_SYSMGR_PINMUX_MIXED1I
 
 /*
  * Register : nand_cle Mux Selection Register - MIXED1IO2
- * 
+ *
  * This register is used to control the peripherals connected to nand_cle
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | nand_cle Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : nand_cle Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected nand_cle.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 16.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal USB1.D1.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal RGMII1.TXD1.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal NAND.cle.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO2_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO2_SEL_LSB        0
@@ -14770,7 +14770,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO1_s  ALT_SYSMGR_PINMUX_MIXED1I
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO2.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO2_s
@@ -14788,37 +14788,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO2_s  ALT_SYSMGR_PINMUX_MIXED1I
 
 /*
  * Register : nand_re Mux Selection Register - MIXED1IO3
- * 
+ *
  * This register is used to control the peripherals connected to nand_re
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------
  *  [1:0]  | RW     | 0x0   | nand_re Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : nand_re Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected nand_re.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 17.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal USB1.D2.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal RGMII1.TXD2.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal NAND.re.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO3_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO3_SEL_LSB        0
@@ -14845,7 +14845,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO2_s  ALT_SYSMGR_PINMUX_MIXED1I
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO3.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO3_s
@@ -14863,37 +14863,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO3_s  ALT_SYSMGR_PINMUX_MIXED1I
 
 /*
  * Register : nand_rb Mux Selection Register - MIXED1IO4
- * 
+ *
  * This register is used to control the peripherals connected to nand_rb
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------
  *  [1:0]  | RW     | 0x0   | nand_rb Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : nand_rb Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected nand_rb.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 18.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal USB1.D3.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal RGMII1.TXD3.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal NAND.rb.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO4_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO4_SEL_LSB        0
@@ -14920,7 +14920,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO3_s  ALT_SYSMGR_PINMUX_MIXED1I
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO4.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO4_s
@@ -14938,37 +14938,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO4_s  ALT_SYSMGR_PINMUX_MIXED1I
 
 /*
  * Register : nand_dq0 Mux Selection Register - MIXED1IO5
- * 
+ *
  * This register is used to control the peripherals connected to nand_dq0
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | nand_dq0 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : nand_dq0 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected nand_dq0.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 19.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal RGMII1.RXD0.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal NAND.dq0.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO5_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO5_SEL_LSB        0
@@ -14995,7 +14995,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO4_s  ALT_SYSMGR_PINMUX_MIXED1I
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO5.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO5_s
@@ -15013,37 +15013,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO5_s  ALT_SYSMGR_PINMUX_MIXED1I
 
 /*
  * Register : nand_dq1 Mux Selection Register - MIXED1IO6
- * 
+ *
  * This register is used to control the peripherals connected to nand_dq1
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | nand_dq1 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : nand_dq1 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected nand_dq1.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 20.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal I2C3.SDA.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal RGMII1.MDIO.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal NAND.dq1.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO6_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO6_SEL_LSB        0
@@ -15070,7 +15070,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO5_s  ALT_SYSMGR_PINMUX_MIXED1I
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO6.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO6_s
@@ -15088,37 +15088,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO6_s  ALT_SYSMGR_PINMUX_MIXED1I
 
 /*
  * Register : nand_dq2 Mux Selection Register - MIXED1IO7
- * 
+ *
  * This register is used to control the peripherals connected to nand_dq2
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | nand_dq2 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : nand_dq2 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected nand_dq2.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 21.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal I2C3.SCL.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal RGMII1.MDC.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal NAND.dq2.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO7_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO7_SEL_LSB        0
@@ -15145,7 +15145,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO6_s  ALT_SYSMGR_PINMUX_MIXED1I
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO7.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO7_s
@@ -15163,37 +15163,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO7_s  ALT_SYSMGR_PINMUX_MIXED1I
 
 /*
  * Register : nand_dq3 Mux Selection Register - MIXED1IO8
- * 
+ *
  * This register is used to control the peripherals connected to nand_dq3
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | nand_dq3 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : nand_dq3 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected nand_dq3.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 22.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal USB1.D4.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal RGMII1.RX_CTL.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal NAND.dq3.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO8_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO8_SEL_LSB        0
@@ -15220,7 +15220,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO7_s  ALT_SYSMGR_PINMUX_MIXED1I
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO8.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO8_s
@@ -15238,37 +15238,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO8_s  ALT_SYSMGR_PINMUX_MIXED1I
 
 /*
  * Register : nand_dq4 Mux Selection Register - MIXED1IO9
- * 
+ *
  * This register is used to control the peripherals connected to nand_dq4
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | nand_dq4 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : nand_dq4 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected nand_dq4.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 23.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal USB1.D5.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal RGMII1.TX_CTL.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal NAND.dq4.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO9_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO9_SEL_LSB        0
@@ -15295,7 +15295,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO8_s  ALT_SYSMGR_PINMUX_MIXED1I
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO9.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO9_s
@@ -15313,37 +15313,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO9_s  ALT_SYSMGR_PINMUX_MIXED1I
 
 /*
  * Register : nand_dq5 Mux Selection Register - MIXED1IO10
- * 
+ *
  * This register is used to control the peripherals connected to nand_dq5
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | nand_dq5 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : nand_dq5 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected nand_dq5.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 24.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal USB1.D6.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal RGMII1.RX_CLK.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal NAND.dq5.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO10_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO10_SEL_LSB        0
@@ -15370,7 +15370,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO9_s  ALT_SYSMGR_PINMUX_MIXED1I
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO10.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO10_s
@@ -15388,37 +15388,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO10_s  ALT_SYSMGR_PINMUX_MIXED1
 
 /*
  * Register : nand_dq6 Mux Selection Register - MIXED1IO11
- * 
+ *
  * This register is used to control the peripherals connected to nand_dq6
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | nand_dq6 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : nand_dq6 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected nand_dq6.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 25.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal USB1.D7.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal RGMII1.RXD1.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal NAND.dq6.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO11_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO11_SEL_LSB        0
@@ -15445,7 +15445,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO10_s  ALT_SYSMGR_PINMUX_MIXED1
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO11.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO11_s
@@ -15463,37 +15463,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO11_s  ALT_SYSMGR_PINMUX_MIXED1
 
 /*
  * Register : nand_dq7 Mux Selection Register - MIXED1IO12
- * 
+ *
  * This register is used to control the peripherals connected to nand_dq7
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | nand_dq7 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : nand_dq7 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected nand_dq7.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 26.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal RGMII1.RXD2.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal NAND.dq7.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO12_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO12_SEL_LSB        0
@@ -15520,7 +15520,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO11_s  ALT_SYSMGR_PINMUX_MIXED1
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO12.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO12_s
@@ -15538,37 +15538,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO12_s  ALT_SYSMGR_PINMUX_MIXED1
 
 /*
  * Register : nand_wp Mux Selection Register - MIXED1IO13
- * 
+ *
  * This register is used to control the peripherals connected to nand_wp
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------
  *  [1:0]  | RW     | 0x0   | nand_wp Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : nand_wp Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected nand_wp.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 27.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal QSPI.SS2.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal RGMII1.RXD3.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal NAND.wp.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO13_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO13_SEL_LSB        0
@@ -15595,7 +15595,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO12_s  ALT_SYSMGR_PINMUX_MIXED1
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO13.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO13_s
@@ -15613,37 +15613,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO13_s  ALT_SYSMGR_PINMUX_MIXED1
 
 /*
  * Register : nand_we Mux Selection Register - MIXED1IO14
- * 
+ *
  * This register is used to control the peripherals connected to nand_we
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------
  *  [1:0]  | RW     | 0x0   | nand_we Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : nand_we Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected nand_we.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 28.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal QSPI.SS1.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal NAND.we.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO14_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO14_SEL_LSB        0
@@ -15670,7 +15670,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO13_s  ALT_SYSMGR_PINMUX_MIXED1
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO14.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO14_s
@@ -15688,37 +15688,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO14_s  ALT_SYSMGR_PINMUX_MIXED1
 
 /*
  * Register : qspi_io0 Mux Selection Register - MIXED1IO15
- * 
+ *
  * This register is used to control the peripherals connected to qspi_io0
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | qspi_io0 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : qspi_io0 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected qspi_io0.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 29.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal USB1.CLK.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal QSPI.IO0.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO15_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO15_SEL_LSB        0
@@ -15745,7 +15745,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO14_s  ALT_SYSMGR_PINMUX_MIXED1
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO15.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO15_s
@@ -15763,37 +15763,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO15_s  ALT_SYSMGR_PINMUX_MIXED1
 
 /*
  * Register : qspi_io1 Mux Selection Register - MIXED1IO16
- * 
+ *
  * This register is used to control the peripherals connected to qspi_io1
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | qspi_io1 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : qspi_io1 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected qspi_io1.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 30.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal USB1.STP.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal QSPI.IO1.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO16_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO16_SEL_LSB        0
@@ -15820,7 +15820,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO15_s  ALT_SYSMGR_PINMUX_MIXED1
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO16.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO16_s
@@ -15838,37 +15838,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO16_s  ALT_SYSMGR_PINMUX_MIXED1
 
 /*
  * Register : qspi_io2 Mux Selection Register - MIXED1IO17
- * 
+ *
  * This register is used to control the peripherals connected to qspi_io2
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | qspi_io2 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : qspi_io2 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected qspi_io2.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 31.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal USB1.DIR.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal QSPI.IO2.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO17_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO17_SEL_LSB        0
@@ -15895,7 +15895,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO16_s  ALT_SYSMGR_PINMUX_MIXED1
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO17.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO17_s
@@ -15913,37 +15913,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO17_s  ALT_SYSMGR_PINMUX_MIXED1
 
 /*
  * Register : qspi_io3 Mux Selection Register - MIXED1IO18
- * 
+ *
  * This register is used to control the peripherals connected to qspi_io3
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | qspi_io3 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : qspi_io3 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected qspi_io3.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 32.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal USB1.NXT.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal QSPI.IO3.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO18_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO18_SEL_LSB        0
@@ -15970,7 +15970,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO17_s  ALT_SYSMGR_PINMUX_MIXED1
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO18.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO18_s
@@ -15988,37 +15988,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO18_s  ALT_SYSMGR_PINMUX_MIXED1
 
 /*
  * Register : qspi_ss0 Mux Selection Register - MIXED1IO19
- * 
+ *
  * This register is used to control the peripherals connected to qspi_ss0
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | qspi_ss0 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : qspi_ss0 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected qspi_ss0.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 33.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal QSPI.SS0.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO19_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO19_SEL_LSB        0
@@ -16045,7 +16045,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO18_s  ALT_SYSMGR_PINMUX_MIXED1
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO19.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO19_s
@@ -16063,37 +16063,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO19_s  ALT_SYSMGR_PINMUX_MIXED1
 
 /*
  * Register : qpsi_clk Mux Selection Register - MIXED1IO20
- * 
+ *
  * This register is used to control the peripherals connected to qpsi_clk
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | qpsi_clk Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : qpsi_clk Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected qpsi_clk.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 34.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal QSPI.CLK.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO20_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO20_SEL_LSB        0
@@ -16120,7 +16120,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO19_s  ALT_SYSMGR_PINMUX_MIXED1
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO20.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO20_s
@@ -16138,37 +16138,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO20_s  ALT_SYSMGR_PINMUX_MIXED1
 
 /*
  * Register : qspi_ss1 Mux Selection Register - MIXED1IO21
- * 
+ *
  * This register is used to control the peripherals connected to qspi_ss1
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [1:0]  | RW     | 0x0   | qspi_ss1 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : qspi_ss1 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected qspi_ss1.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 35.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal not applicable.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal QSPI.SS1.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED1IO21_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED1IO21_SEL_LSB        0
@@ -16195,7 +16195,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO20_s  ALT_SYSMGR_PINMUX_MIXED1
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED1IO21.
  */
 struct ALT_SYSMGR_PINMUX_MIXED1IO21_s
@@ -16213,37 +16213,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO21_s  ALT_SYSMGR_PINMUX_MIXED1
 
 /*
  * Register : emac1_mdio Mux Selection Register - MIXED2IO0
- * 
+ *
  * This register is used to control the peripherals connected to emac1_mdio
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                   
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-------------------------------
  *  [1:0]  | RW     | 0x0   | emac1_mdio Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                   
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac1_mdio Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac1_mdio.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 54.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal SPIS0.CLK.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIM0.CLK.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII1.MDIO.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED2IO0_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED2IO0_SEL_LSB        0
@@ -16270,7 +16270,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED1IO21_s  ALT_SYSMGR_PINMUX_MIXED1
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED2IO0.
  */
 struct ALT_SYSMGR_PINMUX_MIXED2IO0_s
@@ -16288,37 +16288,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED2IO0_s  ALT_SYSMGR_PINMUX_MIXED2I
 
 /*
  * Register : emac1_mdc Mux Selection Register - MIXED2IO1
- * 
+ *
  * This register is used to control the peripherals connected to emac1_mdc
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                  
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:------------------------------
  *  [1:0]  | RW     | 0x0   | emac1_mdc Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                  
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac1_mdc Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac1_mdc.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 55.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal SPIS0.MOSI.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIM0.MOSI.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII1.MDC.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED2IO1_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED2IO1_SEL_LSB        0
@@ -16345,7 +16345,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED2IO0_s  ALT_SYSMGR_PINMUX_MIXED2I
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED2IO1.
  */
 struct ALT_SYSMGR_PINMUX_MIXED2IO1_s
@@ -16363,37 +16363,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED2IO1_s  ALT_SYSMGR_PINMUX_MIXED2I
 
 /*
  * Register : emac1_tx_d2 Mux Selection Register - MIXED2IO2
- * 
+ *
  * This register is used to control the peripherals connected to emac1_tx_d2
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
  *  [1:0]  | RW     | 0x0   | emac1_tx_d2 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac1_tx_d2 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac1_tx_d2.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 56.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal SPIS0.MISO.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIM0.MISO.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII1.TXD2.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED2IO2_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED2IO2_SEL_LSB        0
@@ -16420,7 +16420,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED2IO1_s  ALT_SYSMGR_PINMUX_MIXED2I
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED2IO2.
  */
 struct ALT_SYSMGR_PINMUX_MIXED2IO2_s
@@ -16438,37 +16438,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED2IO2_s  ALT_SYSMGR_PINMUX_MIXED2I
 
 /*
  * Register : emac1_tx_d3 Mux Selection Register - MIXED2IO3
- * 
+ *
  * This register is used to control the peripherals connected to emac1_tx_d3
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
  *  [1:0]  | RW     | 0x0   | emac1_tx_d3 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac1_tx_d3 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac1_tx_d3.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 57.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal SPIS0.SS0.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIM0.SS0.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII1.TXD3.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED2IO3_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED2IO3_SEL_LSB        0
@@ -16495,7 +16495,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED2IO2_s  ALT_SYSMGR_PINMUX_MIXED2I
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED2IO3.
  */
 struct ALT_SYSMGR_PINMUX_MIXED2IO3_s
@@ -16513,37 +16513,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED2IO3_s  ALT_SYSMGR_PINMUX_MIXED2I
 
 /*
  * Register : emac1_rx_clk Mux Selection Register - MIXED2IO4
- * 
+ *
  * This register is used to control the peripherals connected to emac1_rx_clk
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                     
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------
  *  [1:0]  | RW     | 0x0   | emac1_rx_clk Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                     
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac1_rx_clk Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac1_rx_clk.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 58.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal SPIM1.CLK.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIS1.CLK.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII1.RX_CLK.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED2IO4_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED2IO4_SEL_LSB        0
@@ -16570,7 +16570,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED2IO3_s  ALT_SYSMGR_PINMUX_MIXED2I
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED2IO4.
  */
 struct ALT_SYSMGR_PINMUX_MIXED2IO4_s
@@ -16588,37 +16588,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED2IO4_s  ALT_SYSMGR_PINMUX_MIXED2I
 
 /*
  * Register : emac1_rx_ctl Mux Selection Register - MIXED2IO5
- * 
+ *
  * This register is used to control the peripherals connected to emac1_rx_ctl
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                     
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------
  *  [1:0]  | RW     | 0x0   | emac1_rx_ctl Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                     
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac1_rx_ctl Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac1_rx_ctl.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 59.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal SPIM1.MOSI.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIS1.MOSI.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII1.RX_CTL.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED2IO5_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED2IO5_SEL_LSB        0
@@ -16645,7 +16645,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED2IO4_s  ALT_SYSMGR_PINMUX_MIXED2I
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED2IO5.
  */
 struct ALT_SYSMGR_PINMUX_MIXED2IO5_s
@@ -16663,37 +16663,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED2IO5_s  ALT_SYSMGR_PINMUX_MIXED2I
 
 /*
  * Register : emac1_rx_d2 Mux Selection Register - MIXED2IO6
- * 
+ *
  * This register is used to control the peripherals connected to emac1_rx_d2
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
  *  [1:0]  | RW     | 0x0   | emac1_rx_d2 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac1_rx_d2 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac1_rx_d2.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 60.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal SPIM1.MISO.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIS1.MISO.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII1.RXD2.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED2IO6_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED2IO6_SEL_LSB        0
@@ -16720,7 +16720,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED2IO5_s  ALT_SYSMGR_PINMUX_MIXED2I
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED2IO6.
  */
 struct ALT_SYSMGR_PINMUX_MIXED2IO6_s
@@ -16738,37 +16738,37 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED2IO6_s  ALT_SYSMGR_PINMUX_MIXED2I
 
 /*
  * Register : emac1_rx_d3 Mux Selection Register - MIXED2IO7
- * 
+ *
  * This register is used to control the peripherals connected to emac1_rx_d3
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                    
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:--------------------------------
  *  [1:0]  | RW     | 0x0   | emac1_rx_d3 Mux Selection Field
- *  [31:2] | ???    | 0x0   | *UNDEFINED*                    
- * 
+ *  [31:2] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : emac1_rx_d3 Mux Selection Field - sel
- * 
+ *
  * Select peripheral signals connected emac1_rx_d3.
- * 
+ *
  * 0 : Pin is connected to GPIO/LoanIO number 61.
- * 
+ *
  * 1 : Pin is connected to Peripheral signal SPIM1.SS0.
- * 
+ *
  * 2 : Pin is connected to Peripheral signal SPIS1.SS0.
- * 
+ *
  * 3 : Pin is connected to Peripheral signal RGMII1.RXD3.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_MIXED2IO7_SEL register field. */
 #define ALT_SYSMGR_PINMUX_MIXED2IO7_SEL_LSB        0
@@ -16795,7 +16795,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED2IO6_s  ALT_SYSMGR_PINMUX_MIXED2I
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_MIXED2IO7.
  */
 struct ALT_SYSMGR_PINMUX_MIXED2IO7_s
@@ -16813,34 +16813,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED2IO7_s  ALT_SYSMGR_PINMUX_MIXED2I
 
 /*
  * Register : GPIO/LoanIO 48 Input Mux Selection Register - GPLINMUX48
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 48.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO48Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO48Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 48.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 48 is GENERALIO0.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 48 is EMACIO14.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX48_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX48_SEL_LSB        0
@@ -16867,7 +16867,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_MIXED2IO7_s  ALT_SYSMGR_PINMUX_MIXED2I
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX48.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX48_s
@@ -16885,34 +16885,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX48_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 49 Input Mux Selection Register - GPLINMUX49
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 49.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO49Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO49Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 49.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 49 is GENERALIO1.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 49 is EMACIO15.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX49_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX49_SEL_LSB        0
@@ -16939,7 +16939,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX48_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX49.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX49_s
@@ -16957,34 +16957,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX49_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 50 Input Mux Selection Register - GPLINMUX50
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 50.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO50Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO50Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 50.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 50 is GENERALIO2.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 50 is EMACIO16.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX50_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX50_SEL_LSB        0
@@ -17011,7 +17011,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX49_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX50.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX50_s
@@ -17029,34 +17029,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX50_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 51 Input Mux Selection Register - GPLINMUX51
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 51.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO51Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO51Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 51.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 51 is GENERALIO3.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 51 is EMACIO17.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX51_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX51_SEL_LSB        0
@@ -17083,7 +17083,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX50_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX51.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX51_s
@@ -17101,34 +17101,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX51_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 52 Input Mux Selection Register - GPLINMUX52
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 52.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO52Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO52Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 52.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 52 is GENERALIO4.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 52 is EMACIO18.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX52_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX52_SEL_LSB        0
@@ -17155,7 +17155,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX51_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX52.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX52_s
@@ -17173,34 +17173,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX52_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 53 Input Mux Selection Register - GPLINMUX53
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 53.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO53Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO53Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 53.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 53 is GENERALIO5.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 53 is EMACIO19.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX53_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX53_SEL_LSB        0
@@ -17227,7 +17227,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX52_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX53.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX53_s
@@ -17245,34 +17245,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX53_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 54 Input Mux Selection Register - GPLINMUX54
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 54.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO54Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO54Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 54.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 54 is GENERALIO6.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 54 is MIXED2IO0.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX54_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX54_SEL_LSB        0
@@ -17299,7 +17299,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX53_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX54.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX54_s
@@ -17317,34 +17317,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX54_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 55 Input Mux Selection Register - GPLINMUX55
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 55.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO55Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO55Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 55.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 55 is GENERALIO7.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 55 is MIXED2IO1.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX55_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX55_SEL_LSB        0
@@ -17371,7 +17371,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX54_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX55.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX55_s
@@ -17389,34 +17389,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX55_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 56 Input Mux Selection Register - GPLINMUX56
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 56.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO56Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO56Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 56.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 56 is GENERALIO8.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 56 is MIXED2IO2.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX56_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX56_SEL_LSB        0
@@ -17443,7 +17443,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX55_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX56.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX56_s
@@ -17461,34 +17461,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX56_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 57 Input Mux Selection Register - GPLINMUX57
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 57.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO57Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO57Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 57.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 57 is GENERALIO9.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 57 is MIXED2IO3.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX57_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX57_SEL_LSB        0
@@ -17515,7 +17515,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX56_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX57.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX57_s
@@ -17533,34 +17533,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX57_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 58 Input Mux Selection Register - GPLINMUX58
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 58.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO58Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO58Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 58.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 58 is GENERALIO10.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 58 is MIXED2IO4.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX58_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX58_SEL_LSB        0
@@ -17587,7 +17587,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX57_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX58.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX58_s
@@ -17605,34 +17605,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX58_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 59 Input Mux Selection Register - GPLINMUX59
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 59.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO59Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO59Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 59.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 59 is GENERALIO11.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 59 is MIXED2IO5.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX59_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX59_SEL_LSB        0
@@ -17659,7 +17659,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX58_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX59.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX59_s
@@ -17677,34 +17677,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX59_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 60 Input Mux Selection Register - GPLINMUX60
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 60.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO60Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO60Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 60.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 60 is GENERALIO12.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 60 is MIXED2IO6.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX60_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX60_SEL_LSB        0
@@ -17731,7 +17731,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX59_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX60.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX60_s
@@ -17749,34 +17749,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX60_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 61 Input Mux Selection Register - GPLINMUX61
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 61.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO61Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO61Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 61.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 61 is GENERALIO13.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 61 is MIXED2IO7.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX61_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX61_SEL_LSB        0
@@ -17803,7 +17803,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX60_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX61.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX61_s
@@ -17821,34 +17821,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX61_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 62 Input Mux Selection Register - GPLINMUX62
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 62.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO62Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO62Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 62.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 62 is GENERALIO14.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 62 is GENERALIO23.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX62_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX62_SEL_LSB        0
@@ -17875,7 +17875,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX61_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX62.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX62_s
@@ -17893,34 +17893,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX62_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 63 Input Mux Selection Register - GPLINMUX63
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 63.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO63Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO63Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 63.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 63 is GENERALIO15.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 63 is GENERALIO24.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX63_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX63_SEL_LSB        0
@@ -17947,7 +17947,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX62_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX63.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX63_s
@@ -17965,34 +17965,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX63_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 64 Input Mux Selection Register - GPLINMUX64
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 64.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO64Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO64Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 64.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 64 is GENERALIO16.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 64 is GENERALIO25.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX64_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX64_SEL_LSB        0
@@ -18019,7 +18019,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX63_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX64.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX64_s
@@ -18037,34 +18037,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX64_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 65 Input Mux Selection Register - GPLINMUX65
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 65.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO65Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO65Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 65.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 65 is GENERALIO17.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 65 is GENERALIO26.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX65_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX65_SEL_LSB        0
@@ -18091,7 +18091,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX64_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX65.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX65_s
@@ -18109,34 +18109,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX65_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 66 Input Mux Selection Register - GPLINMUX66
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 66.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO66Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO66Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 66.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 66 is GENERALIO18.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 66 is GENERALIO27.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX66_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX66_SEL_LSB        0
@@ -18163,7 +18163,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX65_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX66.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX66_s
@@ -18181,34 +18181,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX66_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 67 Input Mux Selection Register - GPLINMUX67
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 67.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO67Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO67Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 67.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 67 is GENERALIO19.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 67 is GENERALIO28.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX67_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX67_SEL_LSB        0
@@ -18235,7 +18235,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX66_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX67.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX67_s
@@ -18253,34 +18253,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX67_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 68 Input Mux Selection Register - GPLINMUX68
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 68.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO68Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO68Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 68.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 68 is GENERALIO20.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 68 is GENERALIO29.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX68_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX68_SEL_LSB        0
@@ -18307,7 +18307,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX67_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX68.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX68_s
@@ -18325,34 +18325,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX68_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 69 Input Mux Selection Register - GPLINMUX69
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 69.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO69Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO69Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 69.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 69 is GENERALIO21.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 69 is GENERALIO30.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX69_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX69_SEL_LSB        0
@@ -18379,7 +18379,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX68_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX69.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX69_s
@@ -18397,34 +18397,34 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX69_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 70 Input Mux Selection Register - GPLINMUX70
- * 
+ *
  * Some GPIO/LoanIO inputs can be driven by multiple pins. This register selects
  * the input signal for GPIO/LoanIO 70.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO70Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO70Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 70.
- * 
+ *
  * 0 : Source for GPIO/LoanIO 70 is GENERALIO22.
- * 
+ *
  * 1 : Source for GPIO/LoanIO 70 is GENERALIO31.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLINMUX70_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLINMUX70_SEL_LSB        0
@@ -18451,7 +18451,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX69_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLINMUX70.
  */
 struct ALT_SYSMGR_PINMUX_GPLINMUX70_s
@@ -18469,35 +18469,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX70_s  ALT_SYSMGR_PINMUX_GPLINM
 
 /*
  * Register : GPIO/LoanIO 0 Output/Output Enable Mux Selection Register - GPLMUX0
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO0 and
  * LoanIO0. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                           
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO0Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                           
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO0Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 0.
- * 
+ *
  * 0 : LoanIO 0 controls GPIO/LOANIO[0] output and output enable signals.
- * 
+ *
  * 1 : GPIO 0 controls GPIO/LOANI[0] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX0_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX0_SEL_LSB        0
@@ -18524,7 +18524,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLINMUX70_s  ALT_SYSMGR_PINMUX_GPLINM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX0.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX0_s
@@ -18542,35 +18542,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX0_s  ALT_SYSMGR_PINMUX_GPLMUX0_t
 
 /*
  * Register : GPIO/LoanIO 1 Output/Output Enable Mux Selection Register - GPLMUX1
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO1 and
  * LoanIO1. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                           
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO1Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                           
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO1Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 1.
- * 
+ *
  * 0 : LoanIO 1 controls GPIO/LOANIO[1] output and output enable signals.
- * 
+ *
  * 1 : GPIO 1 controls GPIO/LOANI[1] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX1_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX1_SEL_LSB        0
@@ -18597,7 +18597,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX0_s  ALT_SYSMGR_PINMUX_GPLMUX0_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX1.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX1_s
@@ -18615,35 +18615,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX1_s  ALT_SYSMGR_PINMUX_GPLMUX1_t
 
 /*
  * Register : GPIO/LoanIO 2 Output/Output Enable Mux Selection Register - GPLMUX2
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO2 and
  * LoanIO2. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                           
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO2Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                           
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO2Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 2.
- * 
+ *
  * 0 : LoanIO 2 controls GPIO/LOANIO[2] output and output enable signals.
- * 
+ *
  * 1 : GPIO 2 controls GPIO/LOANI[2] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX2_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX2_SEL_LSB        0
@@ -18670,7 +18670,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX1_s  ALT_SYSMGR_PINMUX_GPLMUX1_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX2.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX2_s
@@ -18688,35 +18688,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX2_s  ALT_SYSMGR_PINMUX_GPLMUX2_t
 
 /*
  * Register : GPIO/LoanIO 3 Output/Output Enable Mux Selection Register - GPLMUX3
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO3 and
  * LoanIO3. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                           
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO3Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                           
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO3Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 3.
- * 
+ *
  * 0 : LoanIO 3 controls GPIO/LOANIO[3] output and output enable signals.
- * 
+ *
  * 1 : GPIO 3 controls GPIO/LOANI[3] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX3_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX3_SEL_LSB        0
@@ -18743,7 +18743,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX2_s  ALT_SYSMGR_PINMUX_GPLMUX2_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX3.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX3_s
@@ -18761,35 +18761,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX3_s  ALT_SYSMGR_PINMUX_GPLMUX3_t
 
 /*
  * Register : GPIO/LoanIO 4 Output/Output Enable Mux Selection Register - GPLMUX4
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO4 and
  * LoanIO4. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                           
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO4Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                           
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO4Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 4.
- * 
+ *
  * 0 : LoanIO 4 controls GPIO/LOANIO[4] output and output enable signals.
- * 
+ *
  * 1 : GPIO 4 controls GPIO/LOANI[4] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX4_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX4_SEL_LSB        0
@@ -18816,7 +18816,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX3_s  ALT_SYSMGR_PINMUX_GPLMUX3_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX4.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX4_s
@@ -18834,35 +18834,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX4_s  ALT_SYSMGR_PINMUX_GPLMUX4_t
 
 /*
  * Register : GPIO/LoanIO 5 Output/Output Enable Mux Selection Register - GPLMUX5
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO5 and
  * LoanIO5. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                           
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO5Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                           
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO5Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 5.
- * 
+ *
  * 0 : LoanIO 5 controls GPIO/LOANIO[5] output and output enable signals.
- * 
+ *
  * 1 : GPIO 5 controls GPIO/LOANI[5] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX5_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX5_SEL_LSB        0
@@ -18889,7 +18889,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX4_s  ALT_SYSMGR_PINMUX_GPLMUX4_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX5.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX5_s
@@ -18907,35 +18907,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX5_s  ALT_SYSMGR_PINMUX_GPLMUX5_t
 
 /*
  * Register : GPIO/LoanIO 6 Output/Output Enable Mux Selection Register - GPLMUX6
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO6 and
  * LoanIO6. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                           
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO6Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                           
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO6Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 6.
- * 
+ *
  * 0 : LoanIO 6 controls GPIO/LOANIO[6] output and output enable signals.
- * 
+ *
  * 1 : GPIO 6 controls GPIO/LOANI[6] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX6_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX6_SEL_LSB        0
@@ -18962,7 +18962,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX5_s  ALT_SYSMGR_PINMUX_GPLMUX5_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX6.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX6_s
@@ -18980,35 +18980,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX6_s  ALT_SYSMGR_PINMUX_GPLMUX6_t
 
 /*
  * Register : GPIO/LoanIO 7 Output/Output Enable Mux Selection Register - GPLMUX7
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO7 and
  * LoanIO7. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                           
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO7Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                           
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO7Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 7.
- * 
+ *
  * 0 : LoanIO 7 controls GPIO/LOANIO[7] output and output enable signals.
- * 
+ *
  * 1 : GPIO 7 controls GPIO/LOANI[7] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX7_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX7_SEL_LSB        0
@@ -19035,7 +19035,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX6_s  ALT_SYSMGR_PINMUX_GPLMUX6_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX7.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX7_s
@@ -19053,35 +19053,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX7_s  ALT_SYSMGR_PINMUX_GPLMUX7_t
 
 /*
  * Register : GPIO/LoanIO 8 Output/Output Enable Mux Selection Register - GPLMUX8
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO8 and
  * LoanIO8. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                           
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO8Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                           
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO8Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 8.
- * 
+ *
  * 0 : LoanIO 8 controls GPIO/LOANIO[8] output and output enable signals.
- * 
+ *
  * 1 : GPIO 8 controls GPIO/LOANI[8] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX8_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX8_SEL_LSB        0
@@ -19108,7 +19108,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX7_s  ALT_SYSMGR_PINMUX_GPLMUX7_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX8.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX8_s
@@ -19126,35 +19126,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX8_s  ALT_SYSMGR_PINMUX_GPLMUX8_t
 
 /*
  * Register : GPIO/LoanIO 9 Output/Output Enable Mux Selection Register - GPLMUX9
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO9 and
  * LoanIO9. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                           
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO9Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                           
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO9Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 9.
- * 
+ *
  * 0 : LoanIO 9 controls GPIO/LOANIO[9] output and output enable signals.
- * 
+ *
  * 1 : GPIO 9 controls GPIO/LOANI[9] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX9_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX9_SEL_LSB        0
@@ -19181,7 +19181,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX8_s  ALT_SYSMGR_PINMUX_GPLMUX8_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX9.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX9_s
@@ -19199,35 +19199,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX9_s  ALT_SYSMGR_PINMUX_GPLMUX9_t
 
 /*
  * Register : GPIO/LoanIO 10 Output/Output Enable Mux Selection Register - GPLMUX10
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO10 and
  * LoanIO10. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO10Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO10Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 10.
- * 
+ *
  * 0 : LoanIO 10 controls GPIO/LOANIO[10] output and output enable signals.
- * 
+ *
  * 1 : GPIO 10 controls GPIO/LOANI[10] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX10_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX10_SEL_LSB        0
@@ -19254,7 +19254,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX9_s  ALT_SYSMGR_PINMUX_GPLMUX9_t
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX10.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX10_s
@@ -19272,35 +19272,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX10_s  ALT_SYSMGR_PINMUX_GPLMUX10
 
 /*
  * Register : GPIO/LoanIO 11 Output/Output Enable Mux Selection Register - GPLMUX11
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO11 and
  * LoanIO11. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO11Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO11Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 11.
- * 
+ *
  * 0 : LoanIO 11 controls GPIO/LOANIO[11] output and output enable signals.
- * 
+ *
  * 1 : GPIO 11 controls GPIO/LOANI[11] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX11_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX11_SEL_LSB        0
@@ -19327,7 +19327,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX10_s  ALT_SYSMGR_PINMUX_GPLMUX10
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX11.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX11_s
@@ -19345,35 +19345,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX11_s  ALT_SYSMGR_PINMUX_GPLMUX11
 
 /*
  * Register : GPIO/LoanIO 12 Output/Output Enable Mux Selection Register - GPLMUX12
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO12 and
  * LoanIO12. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO12Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO12Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 12.
- * 
+ *
  * 0 : LoanIO 12 controls GPIO/LOANIO[12] output and output enable signals.
- * 
+ *
  * 1 : GPIO 12 controls GPIO/LOANI[12] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX12_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX12_SEL_LSB        0
@@ -19400,7 +19400,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX11_s  ALT_SYSMGR_PINMUX_GPLMUX11
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX12.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX12_s
@@ -19418,35 +19418,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX12_s  ALT_SYSMGR_PINMUX_GPLMUX12
 
 /*
  * Register : GPIO/LoanIO 13 Output/Output Enable Mux Selection Register - GPLMUX13
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO13 and
  * LoanIO13. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO13Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO13Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 13.
- * 
+ *
  * 0 : LoanIO 13 controls GPIO/LOANIO[13] output and output enable signals.
- * 
+ *
  * 1 : GPIO 13 controls GPIO/LOANI[13] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX13_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX13_SEL_LSB        0
@@ -19473,7 +19473,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX12_s  ALT_SYSMGR_PINMUX_GPLMUX12
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX13.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX13_s
@@ -19491,35 +19491,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX13_s  ALT_SYSMGR_PINMUX_GPLMUX13
 
 /*
  * Register : GPIO/LoanIO 14 Output/Output Enable Mux Selection Register - GPLMUX14
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO14 and
  * LoanIO14. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO14Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO14Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 14.
- * 
+ *
  * 0 : LoanIO 14 controls GPIO/LOANIO[14] output and output enable signals.
- * 
+ *
  * 1 : GPIO 14 controls GPIO/LOANI[14] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX14_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX14_SEL_LSB        0
@@ -19546,7 +19546,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX13_s  ALT_SYSMGR_PINMUX_GPLMUX13
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX14.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX14_s
@@ -19564,35 +19564,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX14_s  ALT_SYSMGR_PINMUX_GPLMUX14
 
 /*
  * Register : GPIO/LoanIO 15 Output/Output Enable Mux Selection Register - GPLMUX15
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO15 and
  * LoanIO15. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO15Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO15Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 15.
- * 
+ *
  * 0 : LoanIO 15 controls GPIO/LOANIO[15] output and output enable signals.
- * 
+ *
  * 1 : GPIO 15 controls GPIO/LOANI[15] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX15_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX15_SEL_LSB        0
@@ -19619,7 +19619,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX14_s  ALT_SYSMGR_PINMUX_GPLMUX14
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX15.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX15_s
@@ -19637,35 +19637,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX15_s  ALT_SYSMGR_PINMUX_GPLMUX15
 
 /*
  * Register : GPIO/LoanIO 16 Output/Output Enable Mux Selection Register - GPLMUX16
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO16 and
  * LoanIO16. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO16Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO16Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 16.
- * 
+ *
  * 0 : LoanIO 16 controls GPIO/LOANIO[16] output and output enable signals.
- * 
+ *
  * 1 : GPIO 16 controls GPIO/LOANI[16] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX16_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX16_SEL_LSB        0
@@ -19692,7 +19692,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX15_s  ALT_SYSMGR_PINMUX_GPLMUX15
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX16.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX16_s
@@ -19710,35 +19710,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX16_s  ALT_SYSMGR_PINMUX_GPLMUX16
 
 /*
  * Register : GPIO/LoanIO 17 Output/Output Enable Mux Selection Register - GPLMUX17
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO17 and
  * LoanIO17. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO17Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO17Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 17.
- * 
+ *
  * 0 : LoanIO 17 controls GPIO/LOANIO[17] output and output enable signals.
- * 
+ *
  * 1 : GPIO 17 controls GPIO/LOANI[17] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX17_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX17_SEL_LSB        0
@@ -19765,7 +19765,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX16_s  ALT_SYSMGR_PINMUX_GPLMUX16
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX17.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX17_s
@@ -19783,35 +19783,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX17_s  ALT_SYSMGR_PINMUX_GPLMUX17
 
 /*
  * Register : GPIO/LoanIO 18 Output/Output Enable Mux Selection Register - GPLMUX18
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO18 and
  * LoanIO18. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO18Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO18Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 18.
- * 
+ *
  * 0 : LoanIO 18 controls GPIO/LOANIO[18] output and output enable signals.
- * 
+ *
  * 1 : GPIO 18 controls GPIO/LOANI[18] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX18_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX18_SEL_LSB        0
@@ -19838,7 +19838,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX17_s  ALT_SYSMGR_PINMUX_GPLMUX17
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX18.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX18_s
@@ -19856,35 +19856,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX18_s  ALT_SYSMGR_PINMUX_GPLMUX18
 
 /*
  * Register : GPIO/LoanIO 19 Output/Output Enable Mux Selection Register - GPLMUX19
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO19 and
  * LoanIO19. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO19Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO19Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 19.
- * 
+ *
  * 0 : LoanIO 19 controls GPIO/LOANIO[19] output and output enable signals.
- * 
+ *
  * 1 : GPIO 19 controls GPIO/LOANI[19] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX19_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX19_SEL_LSB        0
@@ -19911,7 +19911,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX18_s  ALT_SYSMGR_PINMUX_GPLMUX18
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX19.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX19_s
@@ -19929,35 +19929,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX19_s  ALT_SYSMGR_PINMUX_GPLMUX19
 
 /*
  * Register : GPIO/LoanIO 20 Output/Output Enable Mux Selection Register - GPLMUX20
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO20 and
  * LoanIO20. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO20Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO20Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 20.
- * 
+ *
  * 0 : LoanIO 20 controls GPIO/LOANIO[20] output and output enable signals.
- * 
+ *
  * 1 : GPIO 20 controls GPIO/LOANI[20] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX20_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX20_SEL_LSB        0
@@ -19984,7 +19984,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX19_s  ALT_SYSMGR_PINMUX_GPLMUX19
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX20.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX20_s
@@ -20002,35 +20002,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX20_s  ALT_SYSMGR_PINMUX_GPLMUX20
 
 /*
  * Register : GPIO/LoanIO 21 Output/Output Enable Mux Selection Register - GPLMUX21
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO21 and
  * LoanIO21. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO21Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO21Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 21.
- * 
+ *
  * 0 : LoanIO 21 controls GPIO/LOANIO[21] output and output enable signals.
- * 
+ *
  * 1 : GPIO 21 controls GPIO/LOANI[21] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX21_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX21_SEL_LSB        0
@@ -20057,7 +20057,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX20_s  ALT_SYSMGR_PINMUX_GPLMUX20
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX21.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX21_s
@@ -20075,35 +20075,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX21_s  ALT_SYSMGR_PINMUX_GPLMUX21
 
 /*
  * Register : GPIO/LoanIO 22 Output/Output Enable Mux Selection Register - GPLMUX22
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO22 and
  * LoanIO22. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO22Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO22Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 22.
- * 
+ *
  * 0 : LoanIO 22 controls GPIO/LOANIO[22] output and output enable signals.
- * 
+ *
  * 1 : GPIO 22 controls GPIO/LOANI[22] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX22_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX22_SEL_LSB        0
@@ -20130,7 +20130,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX21_s  ALT_SYSMGR_PINMUX_GPLMUX21
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX22.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX22_s
@@ -20148,35 +20148,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX22_s  ALT_SYSMGR_PINMUX_GPLMUX22
 
 /*
  * Register : GPIO/LoanIO 23 Output/Output Enable Mux Selection Register - GPLMUX23
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO23 and
  * LoanIO23. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO23Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO23Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 23.
- * 
+ *
  * 0 : LoanIO 23 controls GPIO/LOANIO[23] output and output enable signals.
- * 
+ *
  * 1 : GPIO 23 controls GPIO/LOANI[23] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX23_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX23_SEL_LSB        0
@@ -20203,7 +20203,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX22_s  ALT_SYSMGR_PINMUX_GPLMUX22
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX23.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX23_s
@@ -20221,35 +20221,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX23_s  ALT_SYSMGR_PINMUX_GPLMUX23
 
 /*
  * Register : GPIO/LoanIO 24 Output/Output Enable Mux Selection Register - GPLMUX24
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO24 and
  * LoanIO24. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO24Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO24Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 24.
- * 
+ *
  * 0 : LoanIO 24 controls GPIO/LOANIO[24] output and output enable signals.
- * 
+ *
  * 1 : GPIO 24 controls GPIO/LOANI[24] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX24_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX24_SEL_LSB        0
@@ -20276,7 +20276,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX23_s  ALT_SYSMGR_PINMUX_GPLMUX23
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX24.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX24_s
@@ -20294,35 +20294,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX24_s  ALT_SYSMGR_PINMUX_GPLMUX24
 
 /*
  * Register : GPIO/LoanIO 25 Output/Output Enable Mux Selection Register - GPLMUX25
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO25 and
  * LoanIO25. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO25Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO25Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 25.
- * 
+ *
  * 0 : LoanIO 25 controls GPIO/LOANIO[25] output and output enable signals.
- * 
+ *
  * 1 : GPIO 25 controls GPIO/LOANI[25] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX25_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX25_SEL_LSB        0
@@ -20349,7 +20349,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX24_s  ALT_SYSMGR_PINMUX_GPLMUX24
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX25.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX25_s
@@ -20367,35 +20367,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX25_s  ALT_SYSMGR_PINMUX_GPLMUX25
 
 /*
  * Register : GPIO/LoanIO 26 Output/Output Enable Mux Selection Register - GPLMUX26
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO26 and
  * LoanIO26. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO26Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO26Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 26.
- * 
+ *
  * 0 : LoanIO 26 controls GPIO/LOANIO[26] output and output enable signals.
- * 
+ *
  * 1 : GPIO 26 controls GPIO/LOANI[26] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX26_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX26_SEL_LSB        0
@@ -20422,7 +20422,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX25_s  ALT_SYSMGR_PINMUX_GPLMUX25
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX26.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX26_s
@@ -20440,35 +20440,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX26_s  ALT_SYSMGR_PINMUX_GPLMUX26
 
 /*
  * Register : GPIO/LoanIO 27 Output/Output Enable Mux Selection Register - GPLMUX27
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO27 and
  * LoanIO27. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO27Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO27Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 27.
- * 
+ *
  * 0 : LoanIO 27 controls GPIO/LOANIO[27] output and output enable signals.
- * 
+ *
  * 1 : GPIO 27 controls GPIO/LOANI[27] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX27_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX27_SEL_LSB        0
@@ -20495,7 +20495,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX26_s  ALT_SYSMGR_PINMUX_GPLMUX26
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX27.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX27_s
@@ -20513,35 +20513,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX27_s  ALT_SYSMGR_PINMUX_GPLMUX27
 
 /*
  * Register : GPIO/LoanIO 28 Output/Output Enable Mux Selection Register - GPLMUX28
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO28 and
  * LoanIO28. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO28Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO28Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 28.
- * 
+ *
  * 0 : LoanIO 28 controls GPIO/LOANIO[28] output and output enable signals.
- * 
+ *
  * 1 : GPIO 28 controls GPIO/LOANI[28] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX28_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX28_SEL_LSB        0
@@ -20568,7 +20568,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX27_s  ALT_SYSMGR_PINMUX_GPLMUX27
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX28.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX28_s
@@ -20586,35 +20586,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX28_s  ALT_SYSMGR_PINMUX_GPLMUX28
 
 /*
  * Register : GPIO/LoanIO 29 Output/Output Enable Mux Selection Register - GPLMUX29
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO29 and
  * LoanIO29. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO29Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO29Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 29.
- * 
+ *
  * 0 : LoanIO 29 controls GPIO/LOANIO[29] output and output enable signals.
- * 
+ *
  * 1 : GPIO 29 controls GPIO/LOANI[29] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX29_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX29_SEL_LSB        0
@@ -20641,7 +20641,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX28_s  ALT_SYSMGR_PINMUX_GPLMUX28
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX29.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX29_s
@@ -20659,35 +20659,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX29_s  ALT_SYSMGR_PINMUX_GPLMUX29
 
 /*
  * Register : GPIO/LoanIO 30 Output/Output Enable Mux Selection Register - GPLMUX30
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO30 and
  * LoanIO30. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO30Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO30Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 30.
- * 
+ *
  * 0 : LoanIO 30 controls GPIO/LOANIO[30] output and output enable signals.
- * 
+ *
  * 1 : GPIO 30 controls GPIO/LOANI[30] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX30_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX30_SEL_LSB        0
@@ -20714,7 +20714,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX29_s  ALT_SYSMGR_PINMUX_GPLMUX29
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX30.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX30_s
@@ -20732,35 +20732,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX30_s  ALT_SYSMGR_PINMUX_GPLMUX30
 
 /*
  * Register : GPIO/LoanIO 31 Output/Output Enable Mux Selection Register - GPLMUX31
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO31 and
  * LoanIO31. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO31Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO31Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 31.
- * 
+ *
  * 0 : LoanIO 31 controls GPIO/LOANIO[31] output and output enable signals.
- * 
+ *
  * 1 : GPIO 31 controls GPIO/LOANI[31] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX31_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX31_SEL_LSB        0
@@ -20787,7 +20787,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX30_s  ALT_SYSMGR_PINMUX_GPLMUX30
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX31.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX31_s
@@ -20805,35 +20805,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX31_s  ALT_SYSMGR_PINMUX_GPLMUX31
 
 /*
  * Register : GPIO/LoanIO 32 Output/Output Enable Mux Selection Register - GPLMUX32
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO32 and
  * LoanIO32. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO32Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO32Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 32.
- * 
+ *
  * 0 : LoanIO 32 controls GPIO/LOANIO[32] output and output enable signals.
- * 
+ *
  * 1 : GPIO 32 controls GPIO/LOANI[32] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX32_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX32_SEL_LSB        0
@@ -20860,7 +20860,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX31_s  ALT_SYSMGR_PINMUX_GPLMUX31
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX32.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX32_s
@@ -20878,35 +20878,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX32_s  ALT_SYSMGR_PINMUX_GPLMUX32
 
 /*
  * Register : GPIO/LoanIO 33 Output/Output Enable Mux Selection Register - GPLMUX33
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO33 and
  * LoanIO33. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO33Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO33Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 33.
- * 
+ *
  * 0 : LoanIO 33 controls GPIO/LOANIO[33] output and output enable signals.
- * 
+ *
  * 1 : GPIO 33 controls GPIO/LOANI[33] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX33_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX33_SEL_LSB        0
@@ -20933,7 +20933,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX32_s  ALT_SYSMGR_PINMUX_GPLMUX32
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX33.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX33_s
@@ -20951,35 +20951,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX33_s  ALT_SYSMGR_PINMUX_GPLMUX33
 
 /*
  * Register : GPIO/LoanIO 34 Output/Output Enable Mux Selection Register - GPLMUX34
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO34 and
  * LoanIO34. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO34Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO34Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 34.
- * 
+ *
  * 0 : LoanIO 34 controls GPIO/LOANIO[34] output and output enable signals.
- * 
+ *
  * 1 : GPIO 34 controls GPIO/LOANI[34] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX34_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX34_SEL_LSB        0
@@ -21006,7 +21006,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX33_s  ALT_SYSMGR_PINMUX_GPLMUX33
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX34.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX34_s
@@ -21024,35 +21024,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX34_s  ALT_SYSMGR_PINMUX_GPLMUX34
 
 /*
  * Register : GPIO/LoanIO 35 Output/Output Enable Mux Selection Register - GPLMUX35
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO35 and
  * LoanIO35. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO35Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO35Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 35.
- * 
+ *
  * 0 : LoanIO 35 controls GPIO/LOANIO[35] output and output enable signals.
- * 
+ *
  * 1 : GPIO 35 controls GPIO/LOANI[35] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX35_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX35_SEL_LSB        0
@@ -21079,7 +21079,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX34_s  ALT_SYSMGR_PINMUX_GPLMUX34
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX35.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX35_s
@@ -21097,35 +21097,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX35_s  ALT_SYSMGR_PINMUX_GPLMUX35
 
 /*
  * Register : GPIO/LoanIO 36 Output/Output Enable Mux Selection Register - GPLMUX36
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO36 and
  * LoanIO36. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO36Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO36Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 36.
- * 
+ *
  * 0 : LoanIO 36 controls GPIO/LOANIO[36] output and output enable signals.
- * 
+ *
  * 1 : GPIO 36 controls GPIO/LOANI[36] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX36_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX36_SEL_LSB        0
@@ -21152,7 +21152,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX35_s  ALT_SYSMGR_PINMUX_GPLMUX35
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX36.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX36_s
@@ -21170,35 +21170,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX36_s  ALT_SYSMGR_PINMUX_GPLMUX36
 
 /*
  * Register : GPIO/LoanIO 37 Output/Output Enable Mux Selection Register - GPLMUX37
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO37 and
  * LoanIO37. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO37Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO37Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 37.
- * 
+ *
  * 0 : LoanIO 37 controls GPIO/LOANIO[37] output and output enable signals.
- * 
+ *
  * 1 : GPIO 37 controls GPIO/LOANI[37] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX37_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX37_SEL_LSB        0
@@ -21225,7 +21225,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX36_s  ALT_SYSMGR_PINMUX_GPLMUX36
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX37.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX37_s
@@ -21243,35 +21243,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX37_s  ALT_SYSMGR_PINMUX_GPLMUX37
 
 /*
  * Register : GPIO/LoanIO 38 Output/Output Enable Mux Selection Register - GPLMUX38
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO38 and
  * LoanIO38. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO38Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO38Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 38.
- * 
+ *
  * 0 : LoanIO 38 controls GPIO/LOANIO[38] output and output enable signals.
- * 
+ *
  * 1 : GPIO 38 controls GPIO/LOANI[38] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX38_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX38_SEL_LSB        0
@@ -21298,7 +21298,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX37_s  ALT_SYSMGR_PINMUX_GPLMUX37
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX38.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX38_s
@@ -21316,35 +21316,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX38_s  ALT_SYSMGR_PINMUX_GPLMUX38
 
 /*
  * Register : GPIO/LoanIO 39 Output/Output Enable Mux Selection Register - GPLMUX39
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO39 and
  * LoanIO39. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO39Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO39Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 39.
- * 
+ *
  * 0 : LoanIO 39 controls GPIO/LOANIO[39] output and output enable signals.
- * 
+ *
  * 1 : GPIO 39 controls GPIO/LOANI[39] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX39_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX39_SEL_LSB        0
@@ -21371,7 +21371,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX38_s  ALT_SYSMGR_PINMUX_GPLMUX38
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX39.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX39_s
@@ -21389,35 +21389,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX39_s  ALT_SYSMGR_PINMUX_GPLMUX39
 
 /*
  * Register : GPIO/LoanIO 40 Output/Output Enable Mux Selection Register - GPLMUX40
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO40 and
  * LoanIO40. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO40Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO40Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 40.
- * 
+ *
  * 0 : LoanIO 40 controls GPIO/LOANIO[40] output and output enable signals.
- * 
+ *
  * 1 : GPIO 40 controls GPIO/LOANI[40] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX40_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX40_SEL_LSB        0
@@ -21444,7 +21444,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX39_s  ALT_SYSMGR_PINMUX_GPLMUX39
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX40.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX40_s
@@ -21462,35 +21462,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX40_s  ALT_SYSMGR_PINMUX_GPLMUX40
 
 /*
  * Register : GPIO/LoanIO 41 Output/Output Enable Mux Selection Register - GPLMUX41
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO41 and
  * LoanIO41. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO41Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO41Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 41.
- * 
+ *
  * 0 : LoanIO 41 controls GPIO/LOANIO[41] output and output enable signals.
- * 
+ *
  * 1 : GPIO 41 controls GPIO/LOANI[41] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX41_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX41_SEL_LSB        0
@@ -21517,7 +21517,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX40_s  ALT_SYSMGR_PINMUX_GPLMUX40
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX41.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX41_s
@@ -21535,35 +21535,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX41_s  ALT_SYSMGR_PINMUX_GPLMUX41
 
 /*
  * Register : GPIO/LoanIO 42 Output/Output Enable Mux Selection Register - GPLMUX42
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO42 and
  * LoanIO42. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO42Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO42Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 42.
- * 
+ *
  * 0 : LoanIO 42 controls GPIO/LOANIO[42] output and output enable signals.
- * 
+ *
  * 1 : GPIO 42 controls GPIO/LOANI[42] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX42_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX42_SEL_LSB        0
@@ -21590,7 +21590,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX41_s  ALT_SYSMGR_PINMUX_GPLMUX41
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX42.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX42_s
@@ -21608,35 +21608,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX42_s  ALT_SYSMGR_PINMUX_GPLMUX42
 
 /*
  * Register : GPIO/LoanIO 43 Output/Output Enable Mux Selection Register - GPLMUX43
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO43 and
  * LoanIO43. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO43Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO43Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 43.
- * 
+ *
  * 0 : LoanIO 43 controls GPIO/LOANIO[43] output and output enable signals.
- * 
+ *
  * 1 : GPIO 43 controls GPIO/LOANI[43] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX43_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX43_SEL_LSB        0
@@ -21663,7 +21663,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX42_s  ALT_SYSMGR_PINMUX_GPLMUX42
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX43.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX43_s
@@ -21681,35 +21681,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX43_s  ALT_SYSMGR_PINMUX_GPLMUX43
 
 /*
  * Register : GPIO/LoanIO 44 Output/Output Enable Mux Selection Register - GPLMUX44
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO44 and
  * LoanIO44. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO44Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO44Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 44.
- * 
+ *
  * 0 : LoanIO 44 controls GPIO/LOANIO[44] output and output enable signals.
- * 
+ *
  * 1 : GPIO 44 controls GPIO/LOANI[44] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX44_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX44_SEL_LSB        0
@@ -21736,7 +21736,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX43_s  ALT_SYSMGR_PINMUX_GPLMUX43
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX44.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX44_s
@@ -21754,35 +21754,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX44_s  ALT_SYSMGR_PINMUX_GPLMUX44
 
 /*
  * Register : GPIO/LoanIO 45 Output/Output Enable Mux Selection Register - GPLMUX45
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO45 and
  * LoanIO45. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO45Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO45Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 45.
- * 
+ *
  * 0 : LoanIO 45 controls GPIO/LOANIO[45] output and output enable signals.
- * 
+ *
  * 1 : GPIO 45 controls GPIO/LOANI[45] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX45_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX45_SEL_LSB        0
@@ -21809,7 +21809,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX44_s  ALT_SYSMGR_PINMUX_GPLMUX44
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX45.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX45_s
@@ -21827,35 +21827,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX45_s  ALT_SYSMGR_PINMUX_GPLMUX45
 
 /*
  * Register : GPIO/LoanIO 46 Output/Output Enable Mux Selection Register - GPLMUX46
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO46 and
  * LoanIO46. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO46Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO46Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 46.
- * 
+ *
  * 0 : LoanIO 46 controls GPIO/LOANIO[46] output and output enable signals.
- * 
+ *
  * 1 : GPIO 46 controls GPIO/LOANI[46] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX46_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX46_SEL_LSB        0
@@ -21882,7 +21882,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX45_s  ALT_SYSMGR_PINMUX_GPLMUX45
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX46.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX46_s
@@ -21900,35 +21900,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX46_s  ALT_SYSMGR_PINMUX_GPLMUX46
 
 /*
  * Register : GPIO/LoanIO 47 Output/Output Enable Mux Selection Register - GPLMUX47
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO47 and
  * LoanIO47. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO47Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO47Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 47.
- * 
+ *
  * 0 : LoanIO 47 controls GPIO/LOANIO[47] output and output enable signals.
- * 
+ *
  * 1 : GPIO 47 controls GPIO/LOANI[47] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX47_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX47_SEL_LSB        0
@@ -21955,7 +21955,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX46_s  ALT_SYSMGR_PINMUX_GPLMUX46
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX47.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX47_s
@@ -21973,35 +21973,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX47_s  ALT_SYSMGR_PINMUX_GPLMUX47
 
 /*
  * Register : GPIO/LoanIO 48 Output/Output Enable Mux Selection Register - GPLMUX48
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO48 and
  * LoanIO48. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO48Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO48Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 48.
- * 
+ *
  * 0 : LoanIO 48 controls GPIO/LOANIO[48] output and output enable signals.
- * 
+ *
  * 1 : GPIO 48 controls GPIO/LOANI[48] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX48_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX48_SEL_LSB        0
@@ -22028,7 +22028,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX47_s  ALT_SYSMGR_PINMUX_GPLMUX47
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX48.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX48_s
@@ -22046,35 +22046,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX48_s  ALT_SYSMGR_PINMUX_GPLMUX48
 
 /*
  * Register : GPIO/LoanIO 49 Output/Output Enable Mux Selection Register - GPLMUX49
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO49 and
  * LoanIO49. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO49Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO49Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 49.
- * 
+ *
  * 0 : LoanIO 49 controls GPIO/LOANIO[49] output and output enable signals.
- * 
+ *
  * 1 : GPIO 49 controls GPIO/LOANI[49] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX49_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX49_SEL_LSB        0
@@ -22101,7 +22101,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX48_s  ALT_SYSMGR_PINMUX_GPLMUX48
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX49.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX49_s
@@ -22119,35 +22119,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX49_s  ALT_SYSMGR_PINMUX_GPLMUX49
 
 /*
  * Register : GPIO/LoanIO 50 Output/Output Enable Mux Selection Register - GPLMUX50
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO50 and
  * LoanIO50. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO50Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO50Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 50.
- * 
+ *
  * 0 : LoanIO 50 controls GPIO/LOANIO[50] output and output enable signals.
- * 
+ *
  * 1 : GPIO 50 controls GPIO/LOANI[50] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX50_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX50_SEL_LSB        0
@@ -22174,7 +22174,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX49_s  ALT_SYSMGR_PINMUX_GPLMUX49
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX50.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX50_s
@@ -22192,35 +22192,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX50_s  ALT_SYSMGR_PINMUX_GPLMUX50
 
 /*
  * Register : GPIO/LoanIO 51 Output/Output Enable Mux Selection Register - GPLMUX51
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO51 and
  * LoanIO51. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO51Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO51Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 51.
- * 
+ *
  * 0 : LoanIO 51 controls GPIO/LOANIO[51] output and output enable signals.
- * 
+ *
  * 1 : GPIO 51 controls GPIO/LOANI[51] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX51_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX51_SEL_LSB        0
@@ -22247,7 +22247,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX50_s  ALT_SYSMGR_PINMUX_GPLMUX50
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX51.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX51_s
@@ -22265,35 +22265,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX51_s  ALT_SYSMGR_PINMUX_GPLMUX51
 
 /*
  * Register : GPIO/LoanIO 52 Output/Output Enable Mux Selection Register - GPLMUX52
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO52 and
  * LoanIO52. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO52Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO52Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 52.
- * 
+ *
  * 0 : LoanIO 52 controls GPIO/LOANIO[52] output and output enable signals.
- * 
+ *
  * 1 : GPIO 52 controls GPIO/LOANI[52] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX52_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX52_SEL_LSB        0
@@ -22320,7 +22320,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX51_s  ALT_SYSMGR_PINMUX_GPLMUX51
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX52.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX52_s
@@ -22338,35 +22338,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX52_s  ALT_SYSMGR_PINMUX_GPLMUX52
 
 /*
  * Register : GPIO/LoanIO 53 Output/Output Enable Mux Selection Register - GPLMUX53
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO53 and
  * LoanIO53. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO53Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO53Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 53.
- * 
+ *
  * 0 : LoanIO 53 controls GPIO/LOANIO[53] output and output enable signals.
- * 
+ *
  * 1 : GPIO 53 controls GPIO/LOANI[53] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX53_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX53_SEL_LSB        0
@@ -22393,7 +22393,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX52_s  ALT_SYSMGR_PINMUX_GPLMUX52
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX53.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX53_s
@@ -22411,35 +22411,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX53_s  ALT_SYSMGR_PINMUX_GPLMUX53
 
 /*
  * Register : GPIO/LoanIO 54 Output/Output Enable Mux Selection Register - GPLMUX54
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO54 and
  * LoanIO54. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO54Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO54Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 54.
- * 
+ *
  * 0 : LoanIO 54 controls GPIO/LOANIO[54] output and output enable signals.
- * 
+ *
  * 1 : GPIO 54 controls GPIO/LOANI[54] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX54_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX54_SEL_LSB        0
@@ -22466,7 +22466,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX53_s  ALT_SYSMGR_PINMUX_GPLMUX53
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX54.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX54_s
@@ -22484,35 +22484,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX54_s  ALT_SYSMGR_PINMUX_GPLMUX54
 
 /*
  * Register : GPIO/LoanIO 55 Output/Output Enable Mux Selection Register - GPLMUX55
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO55 and
  * LoanIO55. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO55Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO55Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 55.
- * 
+ *
  * 0 : LoanIO 55 controls GPIO/LOANIO[55] output and output enable signals.
- * 
+ *
  * 1 : GPIO 55 controls GPIO/LOANI[55] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX55_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX55_SEL_LSB        0
@@ -22539,7 +22539,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX54_s  ALT_SYSMGR_PINMUX_GPLMUX54
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX55.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX55_s
@@ -22557,35 +22557,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX55_s  ALT_SYSMGR_PINMUX_GPLMUX55
 
 /*
  * Register : GPIO/LoanIO 56 Output/Output Enable Mux Selection Register - GPLMUX56
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO56 and
  * LoanIO56. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO56Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO56Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 56.
- * 
+ *
  * 0 : LoanIO 56 controls GPIO/LOANIO[56] output and output enable signals.
- * 
+ *
  * 1 : GPIO 56 controls GPIO/LOANI[56] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX56_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX56_SEL_LSB        0
@@ -22612,7 +22612,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX55_s  ALT_SYSMGR_PINMUX_GPLMUX55
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX56.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX56_s
@@ -22630,35 +22630,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX56_s  ALT_SYSMGR_PINMUX_GPLMUX56
 
 /*
  * Register : GPIO/LoanIO 57 Output/Output Enable Mux Selection Register - GPLMUX57
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO57 and
  * LoanIO57. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO57Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO57Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 57.
- * 
+ *
  * 0 : LoanIO 57 controls GPIO/LOANIO[57] output and output enable signals.
- * 
+ *
  * 1 : GPIO 57 controls GPIO/LOANI[57] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX57_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX57_SEL_LSB        0
@@ -22685,7 +22685,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX56_s  ALT_SYSMGR_PINMUX_GPLMUX56
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX57.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX57_s
@@ -22703,35 +22703,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX57_s  ALT_SYSMGR_PINMUX_GPLMUX57
 
 /*
  * Register : GPIO/LoanIO 58 Output/Output Enable Mux Selection Register - GPLMUX58
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO58 and
  * LoanIO58. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO58Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO58Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 58.
- * 
+ *
  * 0 : LoanIO 58 controls GPIO/LOANIO[58] output and output enable signals.
- * 
+ *
  * 1 : GPIO 58 controls GPIO/LOANI[58] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX58_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX58_SEL_LSB        0
@@ -22758,7 +22758,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX57_s  ALT_SYSMGR_PINMUX_GPLMUX57
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX58.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX58_s
@@ -22776,35 +22776,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX58_s  ALT_SYSMGR_PINMUX_GPLMUX58
 
 /*
  * Register : GPIO/LoanIO 59 Output/Output Enable Mux Selection Register - GPLMUX59
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO59 and
  * LoanIO59. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO59Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO59Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 59.
- * 
+ *
  * 0 : LoanIO 59 controls GPIO/LOANIO[59] output and output enable signals.
- * 
+ *
  * 1 : GPIO 59 controls GPIO/LOANI[59] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX59_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX59_SEL_LSB        0
@@ -22831,7 +22831,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX58_s  ALT_SYSMGR_PINMUX_GPLMUX58
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX59.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX59_s
@@ -22849,35 +22849,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX59_s  ALT_SYSMGR_PINMUX_GPLMUX59
 
 /*
  * Register : GPIO/LoanIO 60 Output/Output Enable Mux Selection Register - GPLMUX60
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO60 and
  * LoanIO60. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO60Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO60Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 60.
- * 
+ *
  * 0 : LoanIO 60 controls GPIO/LOANIO[60] output and output enable signals.
- * 
+ *
  * 1 : GPIO 60 controls GPIO/LOANI[60] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX60_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX60_SEL_LSB        0
@@ -22904,7 +22904,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX59_s  ALT_SYSMGR_PINMUX_GPLMUX59
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX60.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX60_s
@@ -22922,35 +22922,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX60_s  ALT_SYSMGR_PINMUX_GPLMUX60
 
 /*
  * Register : GPIO/LoanIO 61 Output/Output Enable Mux Selection Register - GPLMUX61
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO61 and
  * LoanIO61. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO61Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO61Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 61.
- * 
+ *
  * 0 : LoanIO 61 controls GPIO/LOANIO[61] output and output enable signals.
- * 
+ *
  * 1 : GPIO 61 controls GPIO/LOANI[61] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX61_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX61_SEL_LSB        0
@@ -22977,7 +22977,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX60_s  ALT_SYSMGR_PINMUX_GPLMUX60
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX61.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX61_s
@@ -22995,35 +22995,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX61_s  ALT_SYSMGR_PINMUX_GPLMUX61
 
 /*
  * Register : GPIO/LoanIO 62 Output/Output Enable Mux Selection Register - GPLMUX62
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO62 and
  * LoanIO62. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO62Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO62Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 62.
- * 
+ *
  * 0 : LoanIO 62 controls GPIO/LOANIO[62] output and output enable signals.
- * 
+ *
  * 1 : GPIO 62 controls GPIO/LOANI[62] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX62_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX62_SEL_LSB        0
@@ -23050,7 +23050,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX61_s  ALT_SYSMGR_PINMUX_GPLMUX61
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX62.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX62_s
@@ -23068,35 +23068,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX62_s  ALT_SYSMGR_PINMUX_GPLMUX62
 
 /*
  * Register : GPIO/LoanIO 63 Output/Output Enable Mux Selection Register - GPLMUX63
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO63 and
  * LoanIO63. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO63Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO63Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 63.
- * 
+ *
  * 0 : LoanIO 63 controls GPIO/LOANIO[63] output and output enable signals.
- * 
+ *
  * 1 : GPIO 63 controls GPIO/LOANI[63] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX63_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX63_SEL_LSB        0
@@ -23123,7 +23123,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX62_s  ALT_SYSMGR_PINMUX_GPLMUX62
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX63.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX63_s
@@ -23141,35 +23141,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX63_s  ALT_SYSMGR_PINMUX_GPLMUX63
 
 /*
  * Register : GPIO/LoanIO 64 Output/Output Enable Mux Selection Register - GPLMUX64
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO64 and
  * LoanIO64. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO64Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO64Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 64.
- * 
+ *
  * 0 : LoanIO 64 controls GPIO/LOANIO[64] output and output enable signals.
- * 
+ *
  * 1 : GPIO 64 controls GPIO/LOANI[64] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX64_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX64_SEL_LSB        0
@@ -23196,7 +23196,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX63_s  ALT_SYSMGR_PINMUX_GPLMUX63
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX64.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX64_s
@@ -23214,35 +23214,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX64_s  ALT_SYSMGR_PINMUX_GPLMUX64
 
 /*
  * Register : GPIO/LoanIO 65 Output/Output Enable Mux Selection Register - GPLMUX65
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO65 and
  * LoanIO65. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO65Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO65Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 65.
- * 
+ *
  * 0 : LoanIO 65 controls GPIO/LOANIO[65] output and output enable signals.
- * 
+ *
  * 1 : GPIO 65 controls GPIO/LOANI[65] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX65_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX65_SEL_LSB        0
@@ -23269,7 +23269,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX64_s  ALT_SYSMGR_PINMUX_GPLMUX64
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX65.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX65_s
@@ -23287,35 +23287,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX65_s  ALT_SYSMGR_PINMUX_GPLMUX65
 
 /*
  * Register : GPIO/LoanIO 66 Output/Output Enable Mux Selection Register - GPLMUX66
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO66 and
  * LoanIO66. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO66Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO66Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 66.
- * 
+ *
  * 0 : LoanIO 66 controls GPIO/LOANIO[66] output and output enable signals.
- * 
+ *
  * 1 : GPIO 66 controls GPIO/LOANI[66] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX66_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX66_SEL_LSB        0
@@ -23342,7 +23342,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX65_s  ALT_SYSMGR_PINMUX_GPLMUX65
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX66.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX66_s
@@ -23360,35 +23360,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX66_s  ALT_SYSMGR_PINMUX_GPLMUX66
 
 /*
  * Register : GPIO/LoanIO 67 Output/Output Enable Mux Selection Register - GPLMUX67
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO67 and
  * LoanIO67. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO67Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO67Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 67.
- * 
+ *
  * 0 : LoanIO 67 controls GPIO/LOANIO[67] output and output enable signals.
- * 
+ *
  * 1 : GPIO 67 controls GPIO/LOANI[67] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX67_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX67_SEL_LSB        0
@@ -23415,7 +23415,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX66_s  ALT_SYSMGR_PINMUX_GPLMUX66
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX67.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX67_s
@@ -23433,35 +23433,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX67_s  ALT_SYSMGR_PINMUX_GPLMUX67
 
 /*
  * Register : GPIO/LoanIO 68 Output/Output Enable Mux Selection Register - GPLMUX68
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO68 and
  * LoanIO68. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO68Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO68Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 68.
- * 
+ *
  * 0 : LoanIO 68 controls GPIO/LOANIO[68] output and output enable signals.
- * 
+ *
  * 1 : GPIO 68 controls GPIO/LOANI[68] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX68_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX68_SEL_LSB        0
@@ -23488,7 +23488,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX67_s  ALT_SYSMGR_PINMUX_GPLMUX67
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX68.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX68_s
@@ -23506,35 +23506,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX68_s  ALT_SYSMGR_PINMUX_GPLMUX68
 
 /*
  * Register : GPIO/LoanIO 69 Output/Output Enable Mux Selection Register - GPLMUX69
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO69 and
  * LoanIO69. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO69Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO69Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 69.
- * 
+ *
  * 0 : LoanIO 69 controls GPIO/LOANIO[69] output and output enable signals.
- * 
+ *
  * 1 : GPIO 69 controls GPIO/LOANI[69] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX69_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX69_SEL_LSB        0
@@ -23561,7 +23561,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX68_s  ALT_SYSMGR_PINMUX_GPLMUX68
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX69.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX69_s
@@ -23579,35 +23579,35 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX69_s  ALT_SYSMGR_PINMUX_GPLMUX69
 
 /*
  * Register : GPIO/LoanIO 70 Output/Output Enable Mux Selection Register - GPLMUX70
- * 
+ *
  * Selection between GPIO and LoanIO output and output enable for GPIO70 and
  * LoanIO70. These signals drive the Pin Mux. The Pin Mux must be configured to use
  * GPIO/LoanIO in addition to these settings
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                            
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------------------
  *  [0]    | RW     | 0x0   | GPIO/Loan IO70Input Mux Selection Field
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                            
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : GPIO/Loan IO70Input Mux Selection Field - sel
- * 
+ *
  * Select source for GPIO/LoanIO 70.
- * 
+ *
  * 0 : LoanIO 70 controls GPIO/LOANIO[70] output and output enable signals.
- * 
+ *
  * 1 : GPIO 70 controls GPIO/LOANI[70] output and output enable signals.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_GPLMUX70_SEL register field. */
 #define ALT_SYSMGR_PINMUX_GPLMUX70_SEL_LSB        0
@@ -23634,7 +23634,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX69_s  ALT_SYSMGR_PINMUX_GPLMUX69
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_GPLMUX70.
  */
 struct ALT_SYSMGR_PINMUX_GPLMUX70_s
@@ -23652,33 +23652,33 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX70_s  ALT_SYSMGR_PINMUX_GPLMUX70
 
 /*
  * Register : Select source for NAND signals (HPS Pins or FPGA Interface) - NANDUSEFPGA
- * 
+ *
  * Selection between HPS Pins and FPGA Interface for NAND signals.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description               
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------
  *  [0]    | RW     | 0x0   | Selection for NAND signals
- *  [31:1] | ???    | 0x0   | *UNDEFINED*               
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Selection for NAND signals - sel
- * 
+ *
  * Select connection for NAND.
- * 
+ *
  * 0 : NAND uses HPS Pins.
- * 
+ *
  * 1 : NAND uses the FPGA Inteface.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_NANDUSEFPGA_SEL register field. */
 #define ALT_SYSMGR_PINMUX_NANDUSEFPGA_SEL_LSB        0
@@ -23705,7 +23705,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_GPLMUX70_s  ALT_SYSMGR_PINMUX_GPLMUX70
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_NANDUSEFPGA.
  */
 struct ALT_SYSMGR_PINMUX_NANDUSEFPGA_s
@@ -23723,33 +23723,33 @@ typedef volatile struct ALT_SYSMGR_PINMUX_NANDUSEFPGA_s  ALT_SYSMGR_PINMUX_NANDU
 
 /*
  * Register : Select source for RGMII1 signals (HPS Pins or FPGA Interface) - RGMII1USEFPGA
- * 
+ *
  * Selection between HPS Pins and FPGA Interface for RGMII1 signals.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [0]    | RW     | 0x0   | Selection for RGMII1 signals
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Selection for RGMII1 signals - sel
- * 
+ *
  * Select connection for RGMII1.
- * 
+ *
  * 0 : RGMII1 uses HPS Pins.
- * 
+ *
  * 1 : RGMII1 uses the FPGA Inteface.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_RGMII1USEFPGA_SEL register field. */
 #define ALT_SYSMGR_PINMUX_RGMII1USEFPGA_SEL_LSB        0
@@ -23776,7 +23776,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_NANDUSEFPGA_s  ALT_SYSMGR_PINMUX_NANDU
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_RGMII1USEFPGA.
  */
 struct ALT_SYSMGR_PINMUX_RGMII1USEFPGA_s
@@ -23794,33 +23794,33 @@ typedef volatile struct ALT_SYSMGR_PINMUX_RGMII1USEFPGA_s  ALT_SYSMGR_PINMUX_RGM
 
 /*
  * Register : Select source for I2C0 signals (HPS Pins or FPGA Interface) - I2C0USEFPGA
- * 
+ *
  * Selection between HPS Pins and FPGA Interface for I2C0 signals.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description               
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------
  *  [0]    | RW     | 0x0   | Selection for I2C0 signals
- *  [31:1] | ???    | 0x0   | *UNDEFINED*               
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Selection for I2C0 signals - sel
- * 
+ *
  * Select connection for I2C0.
- * 
+ *
  * 0 : I2C0 uses HPS Pins.
- * 
+ *
  * 1 : I2C0 uses the FPGA Inteface.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_I2C0USEFPGA_SEL register field. */
 #define ALT_SYSMGR_PINMUX_I2C0USEFPGA_SEL_LSB        0
@@ -23847,7 +23847,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_RGMII1USEFPGA_s  ALT_SYSMGR_PINMUX_RGM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_I2C0USEFPGA.
  */
 struct ALT_SYSMGR_PINMUX_I2C0USEFPGA_s
@@ -23865,33 +23865,33 @@ typedef volatile struct ALT_SYSMGR_PINMUX_I2C0USEFPGA_s  ALT_SYSMGR_PINMUX_I2C0U
 
 /*
  * Register : Select source for RGMII0 signals (HPS Pins or FPGA Interface) - RGMII0USEFPGA
- * 
+ *
  * Selection between HPS Pins and FPGA Interface for RGMII0 signals.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                 
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:-----------------------------
  *  [0]    | RW     | 0x0   | Selection for RGMII0 signals
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                 
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Selection for RGMII0 signals - sel
- * 
+ *
  * Select connection for RGMII0.
- * 
+ *
  * 0 : RGMII0 uses HPS Pins.
- * 
+ *
  * 1 : RGMII0 uses the FPGA Inteface.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_RGMII0USEFPGA_SEL register field. */
 #define ALT_SYSMGR_PINMUX_RGMII0USEFPGA_SEL_LSB        0
@@ -23918,7 +23918,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_I2C0USEFPGA_s  ALT_SYSMGR_PINMUX_I2C0U
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_RGMII0USEFPGA.
  */
 struct ALT_SYSMGR_PINMUX_RGMII0USEFPGA_s
@@ -23936,33 +23936,33 @@ typedef volatile struct ALT_SYSMGR_PINMUX_RGMII0USEFPGA_s  ALT_SYSMGR_PINMUX_RGM
 
 /*
  * Register : Select source for I2C3 signals (HPS Pins or FPGA Interface) - I2C3USEFPGA
- * 
+ *
  * Selection between HPS Pins and FPGA Interface for I2C3 signals.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description               
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------
  *  [0]    | RW     | 0x0   | Selection for I2C3 signals
- *  [31:1] | ???    | 0x0   | *UNDEFINED*               
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Selection for I2C3 signals - sel
- * 
+ *
  * Select connection for I2C3.
- * 
+ *
  * 0 : I2C3 uses HPS Pins.
- * 
+ *
  * 1 : I2C3 uses the FPGA Inteface.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_I2C3USEFPGA_SEL register field. */
 #define ALT_SYSMGR_PINMUX_I2C3USEFPGA_SEL_LSB        0
@@ -23989,7 +23989,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_RGMII0USEFPGA_s  ALT_SYSMGR_PINMUX_RGM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_I2C3USEFPGA.
  */
 struct ALT_SYSMGR_PINMUX_I2C3USEFPGA_s
@@ -24007,33 +24007,33 @@ typedef volatile struct ALT_SYSMGR_PINMUX_I2C3USEFPGA_s  ALT_SYSMGR_PINMUX_I2C3U
 
 /*
  * Register : Select source for I2C2 signals (HPS Pins or FPGA Interface) - I2C2USEFPGA
- * 
+ *
  * Selection between HPS Pins and FPGA Interface for I2C2 signals.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description               
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------
  *  [0]    | RW     | 0x0   | Selection for I2C2 signals
- *  [31:1] | ???    | 0x0   | *UNDEFINED*               
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Selection for I2C2 signals - sel
- * 
+ *
  * Select connection for I2C2.
- * 
+ *
  * 0 : I2C2 uses HPS Pins.
- * 
+ *
  * 1 : I2C2 uses the FPGA Inteface.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_I2C2USEFPGA_SEL register field. */
 #define ALT_SYSMGR_PINMUX_I2C2USEFPGA_SEL_LSB        0
@@ -24060,7 +24060,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_I2C3USEFPGA_s  ALT_SYSMGR_PINMUX_I2C3U
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_I2C2USEFPGA.
  */
 struct ALT_SYSMGR_PINMUX_I2C2USEFPGA_s
@@ -24078,33 +24078,33 @@ typedef volatile struct ALT_SYSMGR_PINMUX_I2C2USEFPGA_s  ALT_SYSMGR_PINMUX_I2C2U
 
 /*
  * Register : Select source for I2C1 signals (HPS Pins or FPGA Interface) - I2C1USEFPGA
- * 
+ *
  * Selection between HPS Pins and FPGA Interface for I2C1 signals.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description               
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:---------------------------
  *  [0]    | RW     | 0x0   | Selection for I2C1 signals
- *  [31:1] | ???    | 0x0   | *UNDEFINED*               
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Selection for I2C1 signals - sel
- * 
+ *
  * Select connection for I2C1.
- * 
+ *
  * 0 : I2C1 uses HPS Pins.
- * 
+ *
  * 1 : I2C1 uses the FPGA Inteface.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_I2C1USEFPGA_SEL register field. */
 #define ALT_SYSMGR_PINMUX_I2C1USEFPGA_SEL_LSB        0
@@ -24131,7 +24131,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_I2C2USEFPGA_s  ALT_SYSMGR_PINMUX_I2C2U
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_I2C1USEFPGA.
  */
 struct ALT_SYSMGR_PINMUX_I2C1USEFPGA_s
@@ -24149,33 +24149,33 @@ typedef volatile struct ALT_SYSMGR_PINMUX_I2C1USEFPGA_s  ALT_SYSMGR_PINMUX_I2C1U
 
 /*
  * Register : Select source for SPIM1 signals (HPS Pins or FPGA Interface) - SPIM1USEFPGA
- * 
+ *
  * Selection between HPS Pins and FPGA Interface for SPIM1 signals.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------
  *  [0]    | RW     | 0x0   | Selection for SPIM1 signals
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Selection for SPIM1 signals - sel
- * 
+ *
  * Select connection for SPIM1.
- * 
+ *
  * 0 : SPIM1 uses HPS Pins.
- * 
+ *
  * 1 : SPIM1 uses the FPGA Inteface.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_SPIM1USEFPGA_SEL register field. */
 #define ALT_SYSMGR_PINMUX_SPIM1USEFPGA_SEL_LSB        0
@@ -24202,7 +24202,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_I2C1USEFPGA_s  ALT_SYSMGR_PINMUX_I2C1U
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_SPIM1USEFPGA.
  */
 struct ALT_SYSMGR_PINMUX_SPIM1USEFPGA_s
@@ -24220,33 +24220,33 @@ typedef volatile struct ALT_SYSMGR_PINMUX_SPIM1USEFPGA_s  ALT_SYSMGR_PINMUX_SPIM
 
 /*
  * Register : Select source for SPIM0 signals (HPS Pins or FPGA Interface) - SPIM0USEFPGA
- * 
+ *
  * Selection between HPS Pins and FPGA Interface for SPIM0 signals.
- * 
+ *
  * Only reset by a cold reset (ignores warm reset).
- * 
+ *
  * NOTE: These registers should not be modified after IO configuration.There is no
  * support for dynamically changing the Pin Mux selections.
- * 
+ *
  * Register Layout
- * 
- *  Bits   | Access | Reset | Description                
+ *
+ *  Bits   | Access | Reset | Description
  * :-------|:-------|:------|:----------------------------
  *  [0]    | RW     | 0x0   | Selection for SPIM0 signals
- *  [31:1] | ???    | 0x0   | *UNDEFINED*                
- * 
+ *  [31:1] | ???    | 0x0   | *UNDEFINED*
+ *
  */
 /*
  * Field : Selection for SPIM0 signals - sel
- * 
+ *
  * Select connection for SPIM0.
- * 
+ *
  * 0 : SPIM0 uses HPS Pins.
- * 
+ *
  * 1 : SPIM0 uses the FPGA Inteface.
- * 
+ *
  * Field Access Macros:
- * 
+ *
  */
 /* The Least Significant Bit (LSB) position of the ALT_SYSMGR_PINMUX_SPIM0USEFPGA_SEL register field. */
 #define ALT_SYSMGR_PINMUX_SPIM0USEFPGA_SEL_LSB        0
@@ -24273,7 +24273,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_SPIM1USEFPGA_s  ALT_SYSMGR_PINMUX_SPIM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register ALT_SYSMGR_PINMUX_SPIM0USEFPGA.
  */
 struct ALT_SYSMGR_PINMUX_SPIM0USEFPGA_s
@@ -24297,7 +24297,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_SPIM0USEFPGA_s  ALT_SYSMGR_PINMUX_SPIM
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_SYSMGR_PINMUX.
  */
 struct ALT_SYSMGR_PINMUX_s
@@ -24730,7 +24730,7 @@ typedef volatile struct ALT_SYSMGR_PINMUX_raw_s  ALT_SYSMGR_PINMUX_raw_t;
  * atomicity of device memory accesses. The recommended practice for writing
  * hardware drivers is to use the SoCAL access macros and alt_read_word() and
  * alt_write_word() functions.
- * 
+ *
  * The struct declaration for register group ALT_SYSMGR.
  */
 struct ALT_SYSMGR_s
@@ -24807,4 +24807,3 @@ typedef volatile struct ALT_SYSMGR_raw_s  ALT_SYSMGR_raw_t;
 }
 #endif  /* __cplusplus */
 #endif  /* __ALTERA_ALT_SYSMGR_H__ */
-

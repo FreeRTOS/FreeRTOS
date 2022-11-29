@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -39,9 +39,9 @@
 /// -# Decode the RGB file to designated buffer using LCD_DecodeRGB().
 /// -# Sets the address of the frame buffer in the LCD controller DMA using
 /// LCD_SetFrameBufferAddress().
-/// -# LCD Configuration functions prefixed with "LCD_Set" refer to 
+/// -# LCD Configuration functions prefixed with "LCD_Set" refer to
 /// the functions in the #Overview# tab.
-/// 
+///
 /// Please refer to the list of functions in the #Overview# tab of this unit
 /// for more detailed information.
 //------------------------------------------------------------------------------
@@ -121,4 +121,3 @@ extern void LCD_DecodeRGB(
     unsigned char bpp);
 
 #endif //#ifndef LCD_H
-

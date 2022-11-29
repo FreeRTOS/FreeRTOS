@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -26,7 +26,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 /** \file */
 
 /*----------------------------------------------------------------------------
@@ -36,7 +36,7 @@
 /** \addtogroup tsd_module
  *@{
  */
-     
+
 
 #include <board.h>
 #include <string.h>
@@ -350,7 +350,7 @@ uint8_t TSDCom_Calibrate(void)
 void TSDCom_ReadCalibrateData(void *pBuffer, uint32_t size)
 {
     uint8_t *pDest = (uint8_t *)pBuffer;
-    
+
     memcpy(pDest, (void const *)&bCalibrationOk, sizeof(bCalibrationOk));
     pDest += sizeof(bCalibrationOk);
     memcpy(pDest, &xSlope, sizeof(xSlope));
@@ -381,4 +381,3 @@ void TSDCom_RestoreCalibrateData(void *pBuffer, uint32_t size)
 }
 
 /**@}*/
-

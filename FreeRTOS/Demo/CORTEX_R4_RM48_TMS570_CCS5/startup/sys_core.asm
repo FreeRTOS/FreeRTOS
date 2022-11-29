@@ -27,7 +27,7 @@ _coreInitRegisters:
         mov   r11,        #0x0000
         mov   r12,        #0x0000
         mov   r13,        #0x0000
-        cps   #0x11  
+        cps   #0x11
         mov   lr,         r0
         mov   r8,         #0x0000
         mov   r9,         #0x0000
@@ -35,7 +35,7 @@ _coreInitRegisters:
         mov   r11,        #0x0000
         mov   r12,        #0x0000
         mov   r13,        #0x0000
-        cps   #0x12  
+        cps   #0x12
         mov   r13,        #0x0000
         mov   lr,         r0
         cps   #0x17
@@ -160,6 +160,5 @@ _coreEnableIrqVicOffset:
         orr   r0,  r0, #0x01000000
         mcr   p15, #0, r0, c1, c0,  #0
         bx    lr
-    
-;-------------------------------------------------------------------------------
 
+;-------------------------------------------------------------------------------

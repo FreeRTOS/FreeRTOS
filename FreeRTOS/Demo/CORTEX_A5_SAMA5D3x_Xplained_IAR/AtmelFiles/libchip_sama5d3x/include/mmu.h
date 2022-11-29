@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -42,4 +42,3 @@
 extern void MMU_Initialize(uint32_t *pTB);
 
 #endif /* #ifndef _MMU_ */
-

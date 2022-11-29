@@ -109,13 +109,13 @@ static XV_VidC_PicAspectRatio xv_vidc_getPicAspectRatio(u16 hres, u16 vres) {
 
 
 void XV_VidC_EdidCtrlParamInit (XV_VidC_EdidCntrlParam *EdidCtrlParam) {
-	
+
 	/* Verify arguments. */
 	Xil_AssertVoid(EdidCtrlParam != NULL);
 
 	(void)memset((void *)EdidCtrlParam,  0,
 			sizeof(XV_VidC_EdidCntrlParam));
-			
+
 	EdidCtrlParam->IsHdmi                = XVIDC_ISDVI;
     EdidCtrlParam->IsYCbCr444Supp        = XVIDC_NOT_SUPPORTED;
     EdidCtrlParam->IsYCbCr420Supp        = XVIDC_NOT_SUPPORTED;

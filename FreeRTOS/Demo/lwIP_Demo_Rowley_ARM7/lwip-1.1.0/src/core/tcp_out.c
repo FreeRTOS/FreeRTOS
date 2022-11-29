@@ -75,9 +75,9 @@ tcp_send_ctrl(struct tcp_pcb *pcb, u8_t flags)
  * it can send them more efficiently by combining them together).
  * To prompt the system to send data now, call tcp_output() after
  * calling tcp_write().
- * 
- * @arg pcb Protocol control block of the TCP connection to enqueue data for. 
- * 
+ *
+ * @arg pcb Protocol control block of the TCP connection to enqueue data for.
+ *
  * @see tcp_write()
  */
 
@@ -103,9 +103,9 @@ tcp_write(struct tcp_pcb *pcb, const void *arg, u16_t len, u8_t copy)
 
 /**
  * Enqueue either data or TCP options (but not both) for tranmission
- * 
- * 
- * 
+ *
+ *
+ *
  * @arg pcb Protocol control block for the TCP connection to enqueue data for.
  * @arg arg Pointer to the data to be enqueued for sending.
  * @arg len Data length in bytes
@@ -200,7 +200,7 @@ tcp_enqueue(struct tcp_pcb *pcb, void *arg, u16_t len,
      * and data copied into pbuf, otherwise data comes from
      * ROM or other static memory, and need not be copied. If
      * optdata is != NULL, we have options instead of data. */
-     
+
     /* options? */
     if (optdata != NULL) {
       if ((seg->p = pbuf_alloc(PBUF_TRANSPORT, optlen, PBUF_RAM)) == NULL) {
@@ -400,8 +400,8 @@ tcp_output(struct tcp_pcb *pcb)
   useg = pcb->unacked;
   if (useg != NULL) {
     for (; useg->next != NULL; useg = useg->next);
-  }                                                                             
-   
+  }
+
   /* If the TF_ACK_NOW flag is set and no data will be sent (either
    * because the ->unsent queue is empty or because the window does
    * not allow it), construct an empty ACK segment and send it.
@@ -681,7 +681,7 @@ tcp_keepalive(struct tcp_pcb *pcb)
                            ip4_addr3(&pcb->remote_ip), ip4_addr4(&pcb->remote_ip)));
 
    LWIP_DEBUGF(TCP_DEBUG, ("tcp_keepalive: tcp_ticks %lu   pcb->tmr %lu  pcb->keep_cnt %u\n", tcp_ticks, pcb->tmr, pcb->keep_cnt));
-   
+
    p = pbuf_alloc(PBUF_IP, TCP_HLEN, PBUF_RAM);
 
    if(p == NULL) {
@@ -697,7 +697,7 @@ tcp_keepalive(struct tcp_pcb *pcb)
    tcphdr->wnd = htons(pcb->rcv_wnd);
    tcphdr->urgp = 0;
    TCPH_HDRLEN_SET(tcphdr, 5);
-   
+
    tcphdr->chksum = 0;
 #if CHECKSUM_GEN_TCP
    tcphdr->chksum = inet_chksum_pseudo(p, &pcb->local_ip, &pcb->remote_ip, IP_PROTO_TCP, p->tot_len);
@@ -713,12 +713,3 @@ tcp_keepalive(struct tcp_pcb *pcb)
 }
 
 #endif /* LWIP_TCP */
-
-
-
-
-
-
-
-
-

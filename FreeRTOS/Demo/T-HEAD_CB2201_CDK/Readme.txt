@@ -1,8 +1,8 @@
 # T-HEAD CB2201 Demo Project
 
-The demo shows inter-task communication using a queue. 
-The sender periodically sends a constant value to the queue. The receiver blocks until 
-the next value is received and validates it. Receiver prints evaluation result to output. 
+The demo shows inter-task communication using a queue.
+The sender periodically sends a constant value to the queue. The receiver blocks until
+the next value is received and validates it. Receiver prints evaluation result to output.
 
 
 ## References
@@ -11,9 +11,9 @@ The latest version of CDK: https://occ.t-head.cn/community/download_detail?spm=a
 
 
 ## Getting started
-1. Download the latest version of CDK and follow CDK installation wizard to intall. 
+1. Download the latest version of CDK and follow CDK installation wizard to intall.
 2. Open RTOSDemo.cdkproj under ./RTOSDemo_CDK/RTOSDemo/
 3. Build project.
 4. Connect to T-HEAD Cb2201 board. (Make sure serial cable is connected correctly.)
-5. Run. 
-6. Check messages in serial window. 
+5. Run.
+6. Check messages in serial window.

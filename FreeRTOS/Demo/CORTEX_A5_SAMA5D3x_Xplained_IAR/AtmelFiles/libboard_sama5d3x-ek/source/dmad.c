@@ -27,7 +27,7 @@
  * ----------------------------------------------------------------------------
  */
 
-/** \addtogroup dmad_module 
+/** \addtogroup dmad_module
  *
  * \section DmaConfig Dma Configuration Usage
  *
@@ -35,8 +35,8 @@
  * <ul>
  * <li> Initialize a DMA driver instance by DMAD_Initialize().</li>
  * <li> choose an available (disabled) channel using DMAD_AllocateChannel().</li>
- * <li> After the DMAC selected channel has been programmed, DMAD_PrepareChannel() is to enable 
- * clock and dma peripheral of the DMA, and set Configuration register to set up the transfer type 
+ * <li> After the DMAC selected channel has been programmed, DMAD_PrepareChannel() is to enable
+ * clock and dma peripheral of the DMA, and set Configuration register to set up the transfer type
  * (memory or non-memory peripheral for source and destination) and flow control device.</li>
  * <li> Configure DMA multi-buffer transfers using DMAD_PrepareMultiTransfer() to set up the chain of Linked List Items,
  * single-buffer transfers using DMAD_PrepareSingleTransfer().</li>
@@ -55,7 +55,7 @@
 
 /** \addtogroup dmad_functions
   @{*/
- 
+
 /*----------------------------------------------------------------------------
  *        Includes
  *----------------------------------------------------------------------------*/
@@ -73,18 +73,18 @@
  * \param bDmac  DMA controller ID (0 ~ 1).
  * \param bSrcID Source peripheral ID, 0xFF for memory.
  * \param bDstID Destination peripheral ID, 0xFF for memory.
- * \return Channel number if allocation sucessful, return 
+ * \return Channel number if allocation sucessful, return
  * DMAD_ALLOC_FAILED if allocation failed.
  */
 static uint32_t DMAD_AllocateDmacChannel( sDmad *pDmad,
                                           uint8_t bDmac,
-                                          uint8_t bSrcID, 
+                                          uint8_t bSrcID,
                                           uint8_t bDstID)
 {
     uint32_t i;
 
     /* Can't support peripheral to peripheral */
-    if ((( bSrcID != DMAD_TRANSFER_MEMORY ) && ( bDstID != DMAD_TRANSFER_MEMORY ))) 
+    if ((( bSrcID != DMAD_TRANSFER_MEMORY ) && ( bDstID != DMAD_TRANSFER_MEMORY )))
     {
         return DMAD_ALLOC_FAILED;
     }
@@ -106,7 +106,7 @@ static uint32_t DMAD_AllocateDmacChannel( sDmad *pDmad,
     }
     for (i = 0; i < pDmad->numChannels; i ++)
     {
-        if ( pDmad->dmaChannels[bDmac][i].state == DMAD_FREE ) 
+        if ( pDmad->dmaChannels[bDmac][i].state == DMAD_FREE )
         {
             /* Allocate the channel */
             pDmad->dmaChannels[bDmac][i].state = DMAD_IN_USE;
@@ -143,15 +143,15 @@ void DMAD_Initialize( sDmad *pDmad,
                       uint8_t bPollingMode )
 {
     uint32_t i, j;
-    
+
     assert( pDmad != NULL ) ;
-    
+
     pDmad->pDmacs[0] = DMAC0;
     pDmad->pDmacs[1] = DMAC1;
     pDmad->pollingMode = bPollingMode;
     pDmad->numControllers = 2;
     pDmad->numChannels    = 8;
-    
+
     for (i = 0; i < pDmad->numControllers; i ++)
     {
         for (j = 0; j < pDmad->numChannels; j ++)
@@ -166,7 +166,7 @@ void DMAD_Initialize( sDmad *pDmad,
             pDmad->dmaChannels[i][j].bSrcRxIfID   = 0;
             pDmad->dmaChannels[i][j].bDstTxIfID   = 0;
             pDmad->dmaChannels[i][j].bDstRxIfID   = 0;
-            
+
             pDmad->dmaChannels[i][j].state = DMAD_FREE;
         }
     }
@@ -185,7 +185,7 @@ void DMAD_Handler( sDmad *pDmad )
     uint32_t dmaRc = DMAD_OK;
 
     assert( pDmad != NULL ) ;
-    
+
     for (_iController = 0; _iController < pDmad->numControllers; _iController ++)
     {
         pDmac = pDmad->pDmacs[_iController];
@@ -215,7 +215,7 @@ void DMAD_Handler( sDmad *pDmad )
                 DMAC_DisableChannel( pDmac, iChannel );
                 if (pCh->state > DMAD_IN_USE)   pCh->state = DMAD_IN_USE;
                 dmaRc = DMAD_OK;
-                
+
             }
             /* Buffer complete */
             else if (dmaSr & (DMAC_EBCIDR_BTC0 << iChannel))
@@ -245,11 +245,11 @@ void DMAD_Handler( sDmad *pDmad )
  * \param pDmad  Pointer to DMA driver instance.
  * \param bSrcID Source peripheral ID, 0xFF for memory.
  * \param bDstID Destination peripheral ID, 0xFF for memory.
- * \return Channel number if allocation sucessful, return 
+ * \return Channel number if allocation sucessful, return
  * DMAD_ALLOC_FAILED if allocation failed.
  */
 uint32_t DMAD_AllocateChannel( sDmad *pDmad,
-                               uint8_t bSrcID, 
+                               uint8_t bSrcID,
                                uint8_t bDstID)
 {
     uint32_t _iController;
@@ -274,7 +274,7 @@ eDmadRC DMAD_FreeChannel( sDmad *pDmad, uint32_t _dwChannel )
 {
     uint8_t _iController = (_dwChannel >> 8);
     uint8_t iChannel    = (_dwChannel) & 0xFF;
-    
+
     assert( pDmad != NULL ) ;
     switch ( pDmad->dmaChannels[_iController][iChannel].state )
     {
@@ -285,7 +285,7 @@ eDmadRC DMAD_FreeChannel( sDmad *pDmad, uint32_t _dwChannel )
     case DMAD_IN_USE:
         pDmad->dmaChannels[_iController][iChannel].state = DMAD_FREE;
         break;
-    }   
+    }
 	return DMAD_OK;
 }
 
@@ -301,16 +301,16 @@ eDmadRC DMAD_SetCallback( sDmad *pDmad, uint32_t _dwChannel,
 {
     uint8_t _iController = (_dwChannel >> 8);
     uint8_t iChannel    = (_dwChannel) & 0xFF;
-    
+
     assert( pDmad != NULL ) ;
     if ( pDmad->dmaChannels[_iController][iChannel].state == DMAD_FREE )
         return DMAD_ERROR;
     else if ( pDmad->dmaChannels[_iController][iChannel].state == DMAD_IN_XFR )
         return DMAD_BUSY;
-    
+
     pDmad->dmaChannels[_iController][iChannel].fCallback = fCallback;
     pDmad->dmaChannels[_iController][iChannel].pArg = pArg;
-    
+
     return DMAD_OK;
 }
 
@@ -321,14 +321,14 @@ eDmadRC DMAD_SetCallback( sDmad *pDmad, uint32_t _dwChannel,
  * \param srcPIP    Source PIP setting.
  * \param dstPIP    Destination PIP setting.
  */
-eDmadRC DMAD_ConfigurePIP( sDmad *pDmad, 
+eDmadRC DMAD_ConfigurePIP( sDmad *pDmad,
                            uint32_t _dwChannel,
-                           uint32_t dwSrcPIP, 
+                           uint32_t dwSrcPIP,
                            uint32_t dwDstPIP )
 {
     uint8_t _iController = (_dwChannel >> 8);
     uint8_t iChannel    = (_dwChannel) & 0xFF;
-    
+
     assert( pDmad != NULL ) ;
     Dmac *pDmac = pDmad->pDmacs[_iController];
     if ( pDmad->dmaChannels[_iController][iChannel].state == DMAD_FREE )
@@ -341,13 +341,13 @@ eDmadRC DMAD_ConfigurePIP( sDmad *pDmad,
 }
 
 /**
- * \brief Enable clock of the DMA peripheral, Enable the dma peripheral, 
+ * \brief Enable clock of the DMA peripheral, Enable the dma peripheral,
  * configure configuration register for DMA transfer.
  * \param pDmad     Pointer to DMA driver instance.
  * \param _dwChannel ControllerNumber << 8 | ChannelNumber.
  * \param dwCfg     Configuration value.
  */
-eDmadRC DMAD_PrepareChannel( sDmad *pDmad, 
+eDmadRC DMAD_PrepareChannel( sDmad *pDmad,
                              uint32_t _dwChannel,
                              uint32_t dwCfg )
 {
@@ -373,7 +373,7 @@ eDmadRC DMAD_PrepareChannel( sDmad *pDmad,
     /* Enables the DMAC peripheral. */
     DMAC_Enable( pDmac );
     /* Disables DMAC interrupt for the given channel. */
-    DMAC_DisableIt (pDmac, 
+    DMAC_DisableIt (pDmac,
                     (DMAC_EBCIDR_BTC0 << iChannel)
                    |(DMAC_EBCIDR_CBTC0 << iChannel)
                    |(DMAC_EBCIDR_ERR0 << iChannel) );
@@ -408,7 +408,7 @@ eDmadRC DMAD_IsTransferDone( sDmad *pDmad, uint32_t _dwChannel )
 }
 
 /**
- * \brief Clear the automatic mode that services the next-to-last 
+ * \brief Clear the automatic mode that services the next-to-last
     buffer transfer.
  * \param pDmad     Pointer to DMA driver instance.
  * \param _dwChannel ControllerNumber << 8 | ChannelNumber.
@@ -419,9 +419,9 @@ void DMAD_ClearAuto( sDmad *pDmad, uint32_t _dwChannel )
     uint8_t iChannel    = (_dwChannel) & 0xFF;
     Dmac *pDmac;
     assert( pDmad != NULL ) ;
-    
+
     pDmac = pDmad->pDmacs[_iController];
-    DMAC_DisableAutoMode( pDmac, iChannel );   
+    DMAC_DisableAutoMode( pDmac, iChannel );
 }
 
 /**
@@ -433,7 +433,7 @@ eDmadRC DMAD_StartTransfer( sDmad *pDmad, uint32_t _dwChannel )
 {
     uint8_t _iController = (_dwChannel >> 8);
     uint8_t iChannel    = (_dwChannel) & 0xFF;
-    
+
     assert( pDmad != NULL ) ;
     Dmac *pDmac = pDmad->pDmacs[_iController];
 
@@ -458,7 +458,7 @@ eDmadRC DMAD_StartTransfer( sDmad *pDmad, uint32_t _dwChannel )
 /**
  * \brief Start DMA transfers on the same controller.
  * \param pDmad      Pointer to DMA driver instance.
- * \param bDmac      DMA Controller number. 
+ * \param bDmac      DMA Controller number.
  * \param bmChannels Channels bitmap.
  */
 eDmadRC DMAD_StartTransfers( sDmad *pDmad, uint8_t bDmac, uint32_t bmChannels )
@@ -496,7 +496,7 @@ eDmadRC DMAD_StartTransfers( sDmad *pDmad, uint8_t bDmac, uint32_t bmChannels )
         /* Monitor status in interrupt handler */
         DMAC_EnableIt( pDmac, bmIts );
     }
-    
+
     return DMAD_OK;
 }
 
@@ -509,7 +509,7 @@ eDmadRC DMAD_StopTransfer( sDmad *pDmad, uint32_t _dwChannel )
 {
     uint8_t _iController = (_dwChannel >> 8);
     uint8_t iChannel    = (_dwChannel) & 0xFF;
-    
+
     assert( pDmad != NULL ) ;
     Dmac *pDmac = pDmad->pDmacs[_iController];
     sDmadChannel *pCh = &pDmad->dmaChannels[_iController][iChannel];
@@ -557,7 +557,7 @@ eDmadRC DMAD_StopTransfer( sDmad *pDmad, uint32_t _dwChannel )
  * \param pDmad     Pointer to DMA driver instance.
  * \param _dwChannel ControllerNumber << 8 | ChannelNumber.
  */
-eDmadRC DMAD_PrepareSingleTransfer( sDmad *pDmad, 
+eDmadRC DMAD_PrepareSingleTransfer( sDmad *pDmad,
                                     uint32_t _dwChannel,
                                     sDmaTransferDescriptor *pXfrDesc )
 {
@@ -569,7 +569,7 @@ eDmadRC DMAD_PrepareSingleTransfer( sDmad *pDmad,
         return DMAD_ERROR;
     if ( pDmad->dmaChannels[_iController][iChannel].state == DMAD_IN_XFR )
         return DMAD_BUSY;
-    
+
     DMAC_SetSourceAddr(pDmac, iChannel, pXfrDesc->dwSrcAddr);
     DMAC_SetDestinationAddr(pDmac, iChannel, pXfrDesc->dwDstAddr);
     DMAC_SetDescriptorAddr(pDmac, iChannel, 0, 0);
@@ -585,13 +585,13 @@ eDmadRC DMAD_PrepareSingleTransfer( sDmad *pDmad,
  * \param _dwChannel ControllerNumber << 8 | ChannelNumber.
  * \param pXfrDesc  Pointer to DMA Linked List.
  */
-eDmadRC DMAD_PrepareMultiTransfer( sDmad *pDmad, 
+eDmadRC DMAD_PrepareMultiTransfer( sDmad *pDmad,
                                    uint32_t _dwChannel,
                                    sDmaTransferDescriptor *pXfrDesc )
 {
     uint8_t _iController = (_dwChannel >> 8);
     uint8_t iChannel    = (_dwChannel) & 0xFF;
-    
+
     assert( pDmad != NULL ) ;
     Dmac *pDmac = pDmad->pDmacs[_iController];
 
@@ -599,7 +599,7 @@ eDmadRC DMAD_PrepareMultiTransfer( sDmad *pDmad,
         return DMAD_ERROR;
     if ( pDmad->dmaChannels[_iController][iChannel].state == DMAD_IN_XFR )
         return DMAD_BUSY;
-    
+
     DMAC_SetDescriptorAddr( pDmac, iChannel, (uint32_t)pXfrDesc, 0 );
     DMAC_SetControlB( pDmac, iChannel, 0);
 
@@ -607,4 +607,3 @@ eDmadRC DMAD_PrepareMultiTransfer( sDmad *pDmad,
 }
 
 /**@}*/
-

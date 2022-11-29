@@ -16,7 +16,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x_i2c.h"
 #include "stm32f10x_rcc.h"
-	 
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* I2C SPE mask */
@@ -134,7 +134,7 @@ void I2C_DeInit(I2C_TypeDef* I2Cx)
 
 /*******************************************************************************
 * Function Name  : I2C_Init
-* Description    : Initializes the I2Cx peripheral according to the specified 
+* Description    : Initializes the I2Cx peripheral according to the specified
 *                  parameters in the I2C_InitStruct.
 * Input          : - I2Cx: where x can be 1 or 2 to select the I2C peripheral.
 *                  - I2C_InitStruct: pointer to a I2C_InitTypeDef structure that
@@ -190,12 +190,12 @@ void I2C_Init(I2C_TypeDef* I2Cx, I2C_InitTypeDef* I2C_InitStruct)
     if (result < 0x04)
     {
       /* Set minimum allowed value */
-      result = 0x04;  
+      result = 0x04;
     }
     /* Set speed value for standard mode */
-    tmpreg |= result;	  
+    tmpreg |= result;
     /* Set Maximum Rise Time for standard mode */
-    I2Cx->TRISE = freqrange + 1; 
+    I2Cx->TRISE = freqrange + 1;
   }
   /* Configure speed in fast mode */
   else /*(I2C_InitStruct->I2C_ClockSpeed <= 400000)*/
@@ -216,12 +216,12 @@ void I2C_Init(I2C_TypeDef* I2Cx, I2C_InitTypeDef* I2C_InitStruct)
     if ((result & CCR_CCR_Set) == 0)
     {
       /* Set minimum allowed value */
-      result |= (u16)0x0001;  
+      result |= (u16)0x0001;
     }
     /* Set speed value and set F/S bit for fast mode */
     tmpreg |= result | CCR_FS_Set;
     /* Set Maximum Rise Time for fast mode */
-    I2Cx->TRISE = (u16)(((freqrange * 300) / 1000) + 1);  
+    I2Cx->TRISE = (u16)(((freqrange * 300) / 1000) + 1);
   }
   /* Write to I2Cx CCR */
   I2Cx->CCR = tmpreg;
@@ -522,7 +522,7 @@ void I2C_GeneralCallCmd(I2C_TypeDef* I2Cx, FunctionalState NewState)
 * Description    : Enables or disables the specified I2C interrupts.
 * Input          : - I2Cx: where x can be 1 or 2 to select the I2C peripheral.
 *                  - I2C_IT: specifies the I2C interrupts sources to be enabled
-*                    or disabled. 
+*                    or disabled.
 *                    This parameter can be any combination of the following values:
 *                       - I2C_IT_BUF: Buffer interrupt mask
 *                       - I2C_IT_EVT: Event interrupt mask
@@ -538,7 +538,7 @@ void I2C_ITConfig(I2C_TypeDef* I2Cx, u16 I2C_IT, FunctionalState NewState)
   assert_param(IS_I2C_ALL_PERIPH(I2Cx));
   assert_param(IS_FUNCTIONAL_STATE(NewState));
   assert_param(IS_I2C_CONFIG_IT(I2C_IT));
-  
+
   if (NewState != DISABLE)
   {
     /* Enable the selected I2C interrupts */
@@ -590,7 +590,7 @@ u8 I2C_ReceiveData(I2C_TypeDef* I2Cx)
 * Input          : - I2Cx: where x can be 1 or 2 to select the I2C peripheral.
 *                  - Address: specifies the slave address which will be transmitted
 *                  - I2C_Direction: specifies whether the I2C device will be a
-*                    Transmitter or a Receiver. 
+*                    Transmitter or a Receiver.
 *                    This parameter can be one of the following values
 *                       - I2C_Direction_Transmitter: Transmitter mode
 *                       - I2C_Direction_Receiver: Receiver mode
@@ -676,7 +676,7 @@ void I2C_SoftwareResetCmd(I2C_TypeDef* I2Cx, FunctionalState NewState)
 * Function Name  : I2C_SMBusAlertConfig
 * Description    : Drives the SMBusAlert pin high or low for the specified I2C.
 * Input          : - I2Cx: where x can be 1 or 2 to select the I2C peripheral.
-*                  - I2C_SMBusAlert: specifies SMBAlert pin level. 
+*                  - I2C_SMBusAlert: specifies SMBAlert pin level.
 *                    This parameter can be one of the following values:
 *                       - I2C_SMBusAlert_Low: SMBAlert pin driven low
 *                       - I2C_SMBusAlert_High: SMBAlert pin driven high
@@ -732,7 +732,7 @@ void I2C_TransmitPEC(I2C_TypeDef* I2Cx, FunctionalState NewState)
 * Function Name  : I2C_PECPositionConfig
 * Description    : Selects the specified I2C PEC position.
 * Input          : - I2Cx: where x can be 1 or 2 to select the I2C peripheral.
-*                  - I2C_PECPosition: specifies the PEC position. 
+*                  - I2C_PECPosition: specifies the PEC position.
 *                    This parameter can be one of the following values:
 *                       - I2C_PECPosition_Next: indicates that the next
 *                         byte is PEC
@@ -807,7 +807,7 @@ u8 I2C_GetPEC(I2C_TypeDef* I2Cx)
 * Function Name  : I2C_ARPCmd
 * Description    : Enables or disables the specified I2C ARP.
 * Input          : - I2Cx: where x can be 1 or 2 to select the I2C peripheral.
-*                  - NewState: new state of the I2Cx ARP. 
+*                  - NewState: new state of the I2Cx ARP.
 *                    This parameter can be: ENABLE or DISABLE.
 * Output         : None
 * Return         : None
@@ -918,7 +918,7 @@ u32 I2C_GetLastEvent(I2C_TypeDef* I2Cx)
 * Description    : Checks whether the last I2Cx Event is equal to the one passed
 *                  as parameter.
 * Input          : - I2Cx: where x can be 1 or 2 to select the I2C peripheral.
-*                  - I2C_EVENT: specifies the event to be checked. 
+*                  - I2C_EVENT: specifies the event to be checked.
 *                    This parameter can be one of the following values:
 *                       - I2C_EVENT_SLAVE_ADDRESS_MATCHED   : EV1
 *                       - I2C_EVENT_SLAVE_BYTE_RECEIVED     : EV2
@@ -973,7 +973,7 @@ ErrorStatus I2C_CheckEvent(I2C_TypeDef* I2Cx, u32 I2C_EVENT)
 * Function Name  : I2C_GetFlagStatus
 * Description    : Checks whether the specified I2C flag is set or not.
 * Input          : - I2Cx: where x can be 1 or 2 to select the I2C peripheral.
-*                  - I2C_FLAG: specifies the flag to check. 
+*                  - I2C_FLAG: specifies the flag to check.
 *                    This parameter can be one of the following values:
 *                       - I2C_FLAG_DUALF: Dual flag (Slave mode)
 *                       - I2C_FLAG_SMBHOST: SMBus host header (Slave mode)
@@ -1040,7 +1040,7 @@ FlagStatus I2C_GetFlagStatus(I2C_TypeDef* I2Cx, u32 I2C_FLAG)
 * Function Name  : I2C_ClearFlag
 * Description    : Clears the I2Cx's pending flags.
 * Input          : - I2Cx: where x can be 1 or 2 to select the I2C peripheral.
-*                  - I2C_FLAG: specifies the flag to clear. 
+*                  - I2C_FLAG: specifies the flag to clear.
 *                    This parameter can be one of the following values:
 *                       - I2C_FLAG_SMBALERT: SMBus Alert flag
 *                       - I2C_FLAG_TIMEOUT: Timeout or Tlow error flag
@@ -1109,7 +1109,7 @@ void I2C_ClearFlag(I2C_TypeDef* I2Cx, u32 I2C_FLAG)
 * Function Name  : I2C_GetITStatus
 * Description    : Checks whether the specified I2C interrupt has occurred or not.
 * Input          : - I2Cx: where x can be 1 or 2 to select the I2C peripheral.
-*                  - I2C_IT: specifies the interrupt source to check. 
+*                  - I2C_IT: specifies the interrupt source to check.
 *                    This parameter can be one of the following values:
 *                       - I2C_IT_SMBALERT: SMBus Alert flag
 *                       - I2C_IT_TIMEOUT: Timeout or Tlow error flag
@@ -1169,7 +1169,7 @@ ITStatus I2C_GetITStatus(I2C_TypeDef* I2Cx, u32 I2C_IT)
 * Function Name  : I2C_ClearITPendingBit
 * Description    : Clears the I2Cx’s interrupt pending bits.
 * Input          : - I2Cx: where x can be 1 or 2 to select the I2C peripheral.
-*                  - I2C_IT: specifies the interrupt pending bit to clear. 
+*                  - I2C_IT: specifies the interrupt pending bit to clear.
 *                    This parameter can be one of the following values:
 *                       - I2C_IT_SMBALERT: SMBus Alert flag
 *                       - I2C_IT_TIMEOUT: Timeout or Tlow error flag

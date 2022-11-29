@@ -314,6 +314,3 @@ void disable_h2f_int_output(uint32_t source_int)
 #endif
 
 #endif
-
-
-

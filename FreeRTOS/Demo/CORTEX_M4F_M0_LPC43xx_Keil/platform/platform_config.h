@@ -1,4 +1,4 @@
-#ifndef __PLATFORM_CONFIG_H 
+#ifndef __PLATFORM_CONFIG_H
 #define __PLATFORM_CONFIG_H
 
 #include "stdint.h"
@@ -22,13 +22,13 @@
 /****************************************************/
 
 /* choose the platform you want to build against 	*/
-// #define PLATFORM NXP_VALIDATION_BOARD 
+// #define PLATFORM NXP_VALIDATION_BOARD
 #define PLATFORM HITEX_A2_BOARD
 
 /* these definitions are being taken from the build rule */
 #ifdef EXT_FLASH
 #define	USE_EXT_FLASH	(YES)
-#else 
+#else
 #define USE_EXT_FLASH	(NO)
 #endif
 
@@ -123,7 +123,7 @@
 #define M0_MBX_START	0x2000A000
 #define M0_MBX_LEN		0x2000
 
-#else 
+#else
 
 /*******************************/
 /* this is for the ram version */
@@ -208,12 +208,12 @@
 #if(USE_MAILBOX_PARAMETER == YES)
 	#define MBX_PARAM_DEFAULT ,0x0
 #else
-	#define MBX_PARAM_DEFAULT 
+	#define MBX_PARAM_DEFAULT
 #endif
 
 #define DUMMY_CALLBACK ,(mbxCallback_t) &dummyCallback
 
-#if (USE_MAILBOX_CALLBACK == YES)	
+#if (USE_MAILBOX_CALLBACK == YES)
 	#define MBX_CALLBACK_DEFAULT DUMMY_CALLBACK
 #else
 	#define MBX_CALLBACK_DEFAULT
@@ -227,4 +227,3 @@ void platformInit(void);
 
 
 #endif /* __PLATFORM_CONFIG_H */
-

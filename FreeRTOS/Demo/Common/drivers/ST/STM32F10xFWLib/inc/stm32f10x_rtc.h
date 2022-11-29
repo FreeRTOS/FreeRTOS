@@ -36,7 +36,7 @@
 
 #define IS_RTC_GET_IT(IT) ((IT == RTC_IT_OW) || (IT == RTC_IT_ALR) || \
                            (IT == RTC_IT_SEC))
-                                                                     
+
 /* RTC interrupts flags ------------------------------------------------------*/
 #define RTC_FLAG_RTOFF       ((u16)0x0020)  /* RTC Operation OFF flag */
 #define RTC_FLAG_RSF         ((u16)0x0008)  /* Registers Synchronized flag */
@@ -51,7 +51,7 @@
                                (FLAG == RTC_FLAG_SEC))
 
 #define IS_RTC_PRESCALER(PRESCALER) (PRESCALER <= 0xFFFFF)
-                           
+
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 void RTC_ITConfig(u16 RTC_IT, FunctionalState NewState);

@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -314,4 +314,3 @@ void COMP_E_unregisterInterrupt(uint32_t comparator)
         ASSERT(false);
     }
 }
-

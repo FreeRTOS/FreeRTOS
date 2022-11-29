@@ -5139,4 +5139,3 @@ IPR_SCI5_=222
 #define	SYSTEM	(*(volatile struct st_system  *)0x80000)
 #define	USB0	(*(volatile struct st_usb     *)0xA0000)
 #endif
-

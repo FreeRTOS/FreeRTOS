@@ -296,8 +296,3 @@ volatile signed portBASE_TYPE *pxTaskHasExecuted;
         LPM3;
 	}
 }
-
-
-
-
-

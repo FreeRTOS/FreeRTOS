@@ -55,4 +55,3 @@ WOLFSSL_API int wc_DeCompress_ex(byte* out, word32 outSz, const byte* in,
 
 #endif /* HAVE_LIBZ */
 #endif /* WOLF_CRYPT_COMPRESS_H */
-

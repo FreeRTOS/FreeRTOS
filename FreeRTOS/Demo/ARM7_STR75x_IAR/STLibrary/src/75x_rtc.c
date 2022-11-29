@@ -110,7 +110,7 @@ u32 RTC_GetCounter(void)
 {
   u16 Tmp = 0;
   Tmp = RTC->CNTL;
-  
+
   return (((u32)RTC->CNTH << 16 ) |Tmp) ;
 }
 
@@ -124,13 +124,13 @@ u32 RTC_GetCounter(void)
 void RTC_SetCounter(u32 CounterValue)
 {
   RTC_EnterConfigMode();
-  
+
 /* COUNTER Config ------------------------------------------------------------*/
   /* Set RTC COUNTER MSB word */
   RTC->CNTH =(CounterValue & RTC_MSB_Mask) >> 16;
   /* Set RTC COUNTER LSB word */
   RTC->CNTL =(CounterValue & RTC_LSB_Mask);
-  
+
   RTC_ExitConfigMode();
 }
 
@@ -144,13 +144,13 @@ void RTC_SetCounter(u32 CounterValue)
 void RTC_SetPrescaler(u32 PrescalerValue)
 {
   RTC_EnterConfigMode();
-  
+
 /* PRESCALER Config ----------------------------------------------------------*/
   /* Set RTC PRESCALER MSB word */
   RTC->PRLH = (PrescalerValue & RTC_Prescaler_MSB_Mask) >> 16;
   /* Set RTC PRESCALER LSB word */
   RTC->PRLL = (PrescalerValue & RTC_LSB_Mask);
-  
+
   RTC_ExitConfigMode();
 }
 
@@ -165,7 +165,7 @@ u32 RTC_GetPrescaler(void)
 {
   u16 Tmp = 0;
   Tmp = RTC->PRLL;
-  
+
   return (((u32)(RTC->PRLH & 0x000F) << 16 ) | Tmp);
 }
 
@@ -179,13 +179,13 @@ u32 RTC_GetPrescaler(void)
 void RTC_SetAlarm(u32 AlarmValue)
 {
   RTC_EnterConfigMode();
-  
+
 /* ALARM Config --------------------------------------------------------------*/
   /* Set the ALARM MSB word */
   RTC->ALRH = (AlarmValue & RTC_MSB_Mask) >> 16;
   /* Set the ALARM LSB word */
   RTC->ALRL = (AlarmValue & RTC_LSB_Mask);
-  
+
   RTC_ExitConfigMode();
 }
 
@@ -219,9 +219,9 @@ void RTC_WaitForLastTask(void)
 
 /*******************************************************************************
 * Function Name  : RTC_WaitForSynchro
-* Description    : Waits until the RTC registers (RTC_CNT, RTC_ALR and RTC_PRL) 
+* Description    : Waits until the RTC registers (RTC_CNT, RTC_ALR and RTC_PRL)
 *                  are synchronized with RTC APB clock.
-*                  This function must be called before any read operation after 
+*                  This function must be called before any read operation after
 *                  an APB reset or an APB clock stop.
 * Input          : None
 * Output         : None
@@ -231,7 +231,7 @@ void RTC_WaitForSynchro(void)
 {
   /* Clear RSF flag */
   RTC->CRL &= ~RTC_FLAG_RSF;
-  
+
   /* Loop until RSF flag is set */
   while((RTC->CRL & RTC_FLAG_RSF)== RESET);
 }
@@ -308,7 +308,7 @@ ITStatus RTC_GetITStatus(u16 RTC_IT)
 /*******************************************************************************
 * Function Name  : RTC_ClearITPendingBit
 * Description    : Clears the RTC’s interrupt pending bits.
-* Input          : RTC_IT: specifies the interrupt pending bit to clear. 
+* Input          : RTC_IT: specifies the interrupt pending bit to clear.
 *                   This parameter can be any combination of one or more of
 *                   the following values:
 *                       - RTC_IT_Overflow: Overflow interrupt

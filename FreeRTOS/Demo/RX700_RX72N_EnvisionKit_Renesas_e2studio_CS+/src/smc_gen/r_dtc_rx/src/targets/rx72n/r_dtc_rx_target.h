@@ -66,4 +66,3 @@ Exported global variables and functions (to be accessed by other files)
 #endif /* DTC_RX_TARGET_H */
 
 /* End of File */
-

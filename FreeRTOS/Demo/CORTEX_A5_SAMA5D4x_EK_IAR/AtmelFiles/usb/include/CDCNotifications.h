@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2010, Atmel Corporation
  *
@@ -108,4 +108,3 @@ typedef struct _CDCSerialState {
 
 /**@}*/
 #endif /* #ifndef _CDCNOTIFICATIONS_H_ */
-

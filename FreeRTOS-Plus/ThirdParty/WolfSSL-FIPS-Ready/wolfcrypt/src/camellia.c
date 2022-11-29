@@ -1641,4 +1641,3 @@ int wc_CamelliaCbcDecrypt(Camellia* cam, byte* out, const byte* in, word32 sz)
 
 
 #endif /* HAVE_CAMELLIA */
-

@@ -134,7 +134,7 @@
    * <hr>
    * CMSIS-DSP in ARM::CMSIS Pack
    * -----------------------------
-   * 
+   *
    * The following files relevant to CMSIS-DSP are present in the <b>ARM::CMSIS</b> Pack directories:
    * |File/Folder                   |Content                                                                 |
    * |------------------------------|------------------------------------------------------------------------|
@@ -142,7 +142,7 @@
    * |\b CMSIS\\DSP_Lib             | Software license agreement (license.txt)                               |
    * |\b CMSIS\\DSP_Lib\\Examples   | Example projects demonstrating the usage of the library functions      |
    * |\b CMSIS\\DSP_Lib\\Source     | Source files for rebuilding the library                                |
-   * 
+   *
    * <hr>
    * Revision History of CMSIS-DSP
    * ------------
@@ -2214,11 +2214,11 @@ extern "C"
     uint16_t bitRevLength;             /**< bit reversal table length. */
   } arm_cfft_instance_q15;
 
-void arm_cfft_q15( 
-    const arm_cfft_instance_q15 * S, 
+void arm_cfft_q15(
+    const arm_cfft_instance_q15 * S,
     q15_t * p1,
     uint8_t ifftFlag,
-    uint8_t bitReverseFlag);  
+    uint8_t bitReverseFlag);
 
   /**
    * @brief Instance structure for the fixed-point CFFT/CIFFT function.
@@ -2232,12 +2232,12 @@ void arm_cfft_q15(
     uint16_t bitRevLength;             /**< bit reversal table length. */
   } arm_cfft_instance_q31;
 
-void arm_cfft_q31( 
-    const arm_cfft_instance_q31 * S, 
+void arm_cfft_q31(
+    const arm_cfft_instance_q31 * S,
     q31_t * p1,
     uint8_t ifftFlag,
-    uint8_t bitReverseFlag);  
-  
+    uint8_t bitReverseFlag);
+
   /**
    * @brief Instance structure for the floating-point CFFT/CIFFT function.
    */
@@ -7429,7 +7429,7 @@ void arm_rfft_fast_f32(
   /**
    * @} end of BilinearInterpolate group
    */
-   
+
 
 //SMMLAR
 #define multAcc_32x32_keep32_R(a, x, y) \
@@ -7464,7 +7464,7 @@ void arm_rfft_fast_f32(
          _Pragma ("push")         \
          _Pragma ("O1")
     #else
-      #define LOW_OPTIMIZATION_ENTER 
+      #define LOW_OPTIMIZATION_ENTER
     #endif
 
 //Exit low optimization region - place directly after end of function definition
@@ -7472,7 +7472,7 @@ void arm_rfft_fast_f32(
       #define LOW_OPTIMIZATION_EXIT \
          _Pragma ("pop")
     #else
-      #define LOW_OPTIMIZATION_EXIT  
+      #define LOW_OPTIMIZATION_EXIT
     #endif
 
 //Enter low optimization region - place directly above function definition
@@ -7488,7 +7488,7 @@ void arm_rfft_fast_f32(
       #define LOW_OPTIMIZATION_ENTER \
          _Pragma ("optimize=low")
     #else
-      #define LOW_OPTIMIZATION_ENTER   
+      #define LOW_OPTIMIZATION_ENTER
     #endif
 
 //Exit low optimization region - place directly after end of function definition
@@ -7499,7 +7499,7 @@ void arm_rfft_fast_f32(
       #define IAR_ONLY_LOW_OPTIMIZATION_ENTER \
          _Pragma ("optimize=low")
     #else
-      #define IAR_ONLY_LOW_OPTIMIZATION_ENTER   
+      #define IAR_ONLY_LOW_OPTIMIZATION_ENTER
     #endif
 
 //Exit low optimization region - place directly after end of function definition

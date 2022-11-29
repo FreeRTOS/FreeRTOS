@@ -176,15 +176,3 @@ void vPrintDisplayMessage( const char * const * ppcMessageToSend )
 {
 	( void ) ppcMessageToSend;
 }
-
-
-
-
-
-
-
-
-
-
-
-

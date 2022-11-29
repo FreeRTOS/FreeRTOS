@@ -363,5 +363,3 @@ static void clock_source_select (void)
     #error "ERROR - Valid clock source must be chosen in r_bsp_config.h using CLOCK_SOURCE macro."
 #endif
 }
-
-

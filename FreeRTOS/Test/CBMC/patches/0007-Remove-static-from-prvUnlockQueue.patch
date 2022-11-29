@@ -19,4 +19,3 @@ index 17a6964e..60ea3e69 100644
 +void prvUnlockQueue( Queue_t * const pxQueue )
  {
  	/* THIS FUNCTION MUST BE CALLED WITH THE SCHEDULER SUSPENDED. */
-

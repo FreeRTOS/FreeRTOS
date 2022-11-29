@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Provides the low-level initialization functions that called 
+ * \brief Provides the low-level initialization functions that called
  * on chip startup.
  *
  * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
@@ -84,7 +84,7 @@ void SystemInit(void)
 	}
 
 	/* Switch to 3-20MHz Xtal oscillator */
-	PMC->CKGR_MOR = SYS_CKGR_MOR_KEY_VALUE | SYS_BOARD_OSCOUNT | CKGR_MOR_MOSCRCEN | 
+	PMC->CKGR_MOR = SYS_CKGR_MOR_KEY_VALUE | SYS_BOARD_OSCOUNT | CKGR_MOR_MOSCRCEN |
 	                           CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCSEL;
 
 	while (!(PMC->PMC_SR & PMC_SR_MOSCSELS)) {
@@ -163,14 +163,14 @@ void SystemCoreClockUpdate(void)
 			}
 		}
 		if ((PMC->PMC_MCKR & PMC_MCKR_CSS_Msk) == PMC_MCKR_CSS_PLLA_CLK) {
-			SystemCoreClock *= ((((PMC->CKGR_PLLAR) & CKGR_PLLAR_MULA_Msk) >> 
+			SystemCoreClock *= ((((PMC->CKGR_PLLAR) & CKGR_PLLAR_MULA_Msk) >>
 				                         CKGR_PLLAR_MULA_Pos) + 1U);
-			SystemCoreClock /= ((((PMC->CKGR_PLLAR) & CKGR_PLLAR_DIVA_Msk) >> 
+			SystemCoreClock /= ((((PMC->CKGR_PLLAR) & CKGR_PLLAR_DIVA_Msk) >>
 				                          CKGR_PLLAR_DIVA_Pos));
 		} else {
 			SystemCoreClock *= ((((PMC->CKGR_PLLBR) & CKGR_PLLBR_MULB_Msk) >>
 				                         CKGR_PLLBR_MULB_Pos) + 1U);
-			SystemCoreClock /= ((((PMC->CKGR_PLLBR) & CKGR_PLLBR_DIVB_Msk) >> 
+			SystemCoreClock /= ((((PMC->CKGR_PLLBR) & CKGR_PLLBR_DIVB_Msk) >>
 				                           CKGR_PLLBR_DIVB_Pos));
 		}
 		break;
@@ -179,12 +179,12 @@ void SystemCoreClockUpdate(void)
 	if ((PMC->PMC_MCKR & PMC_MCKR_PRES_Msk) == PMC_MCKR_PRES_CLK_3) {
 		SystemCoreClock /= 3U;
 	} else {
-		SystemCoreClock >>= ((PMC->PMC_MCKR & PMC_MCKR_PRES_Msk) >> 
+		SystemCoreClock >>= ((PMC->PMC_MCKR & PMC_MCKR_PRES_Msk) >>
 			                           PMC_MCKR_PRES_Pos);
 	}
 }
 
-/** 
+/**
  * Initialize flash.
  */
 void system_init_flash(uint32_t ul_clk)

@@ -210,4 +210,3 @@ ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
 #define strcmpi _strcmpi
 
 #endif /* FREERTOS_CONFIG_H */
-

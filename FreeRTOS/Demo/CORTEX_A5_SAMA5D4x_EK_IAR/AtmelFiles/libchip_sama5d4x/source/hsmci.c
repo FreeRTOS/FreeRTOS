@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -313,7 +313,7 @@ extern uint32_t HSMCI_GetItMask(Hsmci *pRMci)
 
 /**
  * \brief Set block len & count for transfer
- * 
+ *
  * \param pRMci     Pointer to an Hsmci instance.
  * \param wBlkLen   Block size.
  * \param wCnt      Block(byte) count.
@@ -493,9 +493,9 @@ extern uint32_t HSMCI_GetStatus(Hsmci *pRMci)
 
 /**
  * \brief Configure the HSMCI DMA
- *  
+ *
  * \param pRMci Pointer to an Hsmci instance.
- * \param dwConfigure Configure value. 
+ * \param dwConfigure Configure value.
  */
 extern void HSMCI_ConfigureDma(Hsmci *pRMci, uint32_t dwConfigure)
 {
@@ -504,7 +504,7 @@ extern void HSMCI_ConfigureDma(Hsmci *pRMci, uint32_t dwConfigure)
 
 /**
  * \brief Enable the HSMCI DMA
- *  
+ *
  * \param pRMci Pointer to an Hsmci instance.
  * \param bEnable 1 to enable, 0 to disable.
  */
@@ -522,9 +522,9 @@ extern void HSMCI_EnableDma(Hsmci *pRMci, uint8_t bEnable)
 
 /**
  * \brief Configure the HSMCI
- *  
+ *
  * \param pRMci   Pointer to an Hsmci instance.
- * \param dwConfigure Configure value. 
+ * \param dwConfigure Configure value.
  */
 extern void HSMCI_Configure(Hsmci *pRMci, uint32_t dwConfigure)
 {
@@ -533,7 +533,7 @@ extern void HSMCI_Configure(Hsmci *pRMci, uint32_t dwConfigure)
 
 /**
  * \brief Enable/Disable High-Speed mode for MCI
- * 
+ *
  * \param pRMci Pointer to an Hsmci instance.
  * \param bHsEnable Enable/Disable high-speed.
  */
@@ -552,7 +552,7 @@ extern void HSMCI_HsEnable(Hsmci *pRMci, uint8_t bHsEnable)
 /**
  * \brief Check if High-speed mode is enabled on MCI
  * \param pRMci Pointer to an Hsmci instance.
- * \return 1 
+ * \return 1
  */
 extern uint8_t HSMCI_IsHsEnabled(Hsmci * pRMci)
 {
@@ -561,9 +561,9 @@ extern uint8_t HSMCI_IsHsEnabled(Hsmci * pRMci)
 
 /**
  * \brief Configure the Write Protection Mode
- *  
+ *
  * \param pRMci   Pointer to an Hsmci instance.
- * \param dwConfigure WP mode configure value. 
+ * \param dwConfigure WP mode configure value.
  */
 extern void HSMCI_ConfigureWP(Hsmci *pRMci, uint32_t dwConfigure)
 {
@@ -582,4 +582,3 @@ extern uint32_t HSMCI_GetWPStatus(Hsmci *pRMci)
 }
 
 /**@}*/
-

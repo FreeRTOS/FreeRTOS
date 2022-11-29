@@ -12607,35 +12607,35 @@ typedef struct {
 /*@{*/
 
 /* ========== Register definition for IISC peripheral ========== */
-#define REG_IISC_CR               REG_ACCESS(WoReg  , 0x40004000U) /**< \brief (IISC) Control Register */ 
-#define REG_IISC_MR               REG_ACCESS(RwReg  , 0x40004004U) /**< \brief (IISC) Mode Register */ 
-#define REG_IISC_SR               REG_ACCESS(RoReg  , 0x40004008U) /**< \brief (IISC) Status Register */ 
-#define REG_IISC_SCR              REG_ACCESS(WoReg  , 0x4000400CU) /**< \brief (IISC) Status Clear Register */ 
-#define REG_IISC_SSR              REG_ACCESS(WoReg  , 0x40004010U) /**< \brief (IISC) Status Set Register */ 
-#define REG_IISC_IER              REG_ACCESS(WoReg  , 0x40004014U) /**< \brief (IISC) Interrupt Enable Register */ 
-#define REG_IISC_IDR              REG_ACCESS(WoReg  , 0x40004018U) /**< \brief (IISC) Interrupt Disable Register */ 
-#define REG_IISC_IMR              REG_ACCESS(RoReg  , 0x4000401CU) /**< \brief (IISC) Interrupt Mask Register */ 
-#define REG_IISC_RHR              REG_ACCESS(RoReg  , 0x40004020U) /**< \brief (IISC) Receive Holding Register */ 
-#define REG_IISC_THR              REG_ACCESS(WoReg  , 0x40004024U) /**< \brief (IISC) Transmit Holding Register */ 
-#define REG_IISC_VERSION          REG_ACCESS(RoReg  , 0x40004028U) /**< \brief (IISC) Version Register */ 
-#define REG_IISC_PARAMETER        REG_ACCESS(RoReg  , 0x4000402CU) /**< \brief (IISC) Parameter Register */ 
+#define REG_IISC_CR               REG_ACCESS(WoReg  , 0x40004000U) /**< \brief (IISC) Control Register */
+#define REG_IISC_MR               REG_ACCESS(RwReg  , 0x40004004U) /**< \brief (IISC) Mode Register */
+#define REG_IISC_SR               REG_ACCESS(RoReg  , 0x40004008U) /**< \brief (IISC) Status Register */
+#define REG_IISC_SCR              REG_ACCESS(WoReg  , 0x4000400CU) /**< \brief (IISC) Status Clear Register */
+#define REG_IISC_SSR              REG_ACCESS(WoReg  , 0x40004010U) /**< \brief (IISC) Status Set Register */
+#define REG_IISC_IER              REG_ACCESS(WoReg  , 0x40004014U) /**< \brief (IISC) Interrupt Enable Register */
+#define REG_IISC_IDR              REG_ACCESS(WoReg  , 0x40004018U) /**< \brief (IISC) Interrupt Disable Register */
+#define REG_IISC_IMR              REG_ACCESS(RoReg  , 0x4000401CU) /**< \brief (IISC) Interrupt Mask Register */
+#define REG_IISC_RHR              REG_ACCESS(RoReg  , 0x40004020U) /**< \brief (IISC) Receive Holding Register */
+#define REG_IISC_THR              REG_ACCESS(WoReg  , 0x40004024U) /**< \brief (IISC) Transmit Holding Register */
+#define REG_IISC_VERSION          REG_ACCESS(RoReg  , 0x40004028U) /**< \brief (IISC) Version Register */
+#define REG_IISC_PARAMETER        REG_ACCESS(RoReg  , 0x4000402CU) /**< \brief (IISC) Parameter Register */
 /* ========== Register definition for SPI peripheral ========== */
-#define REG_SPI_CR                REG_ACCESS(WoReg  , 0x40008000U) /**< \brief (SPI) Control Register */ 
-#define REG_SPI_MR                REG_ACCESS(RwReg  , 0x40008004U) /**< \brief (SPI) Mode Register */ 
-#define REG_SPI_RDR               REG_ACCESS(RoReg  , 0x40008008U) /**< \brief (SPI) Receive Data Register */ 
-#define REG_SPI_TDR               REG_ACCESS(WoReg  , 0x4000800CU) /**< \brief (SPI) Transmit Data Register */ 
-#define REG_SPI_SR                REG_ACCESS(RoReg  , 0x40008010U) /**< \brief (SPI) Status Register */ 
-#define REG_SPI_IER               REG_ACCESS(WoReg  , 0x40008014U) /**< \brief (SPI) Interrupt Enable Register */ 
-#define REG_SPI_IDR               REG_ACCESS(WoReg  , 0x40008018U) /**< \brief (SPI) Interrupt Disable Register */ 
-#define REG_SPI_IMR               REG_ACCESS(RoReg  , 0x4000801CU) /**< \brief (SPI) Interrupt Mask Register */ 
-#define REG_SPI_CSR0              REG_ACCESS(RwReg  , 0x40008030U) /**< \brief (SPI) Chip Select Register 0 */ 
-#define REG_SPI_CSR1              REG_ACCESS(RwReg  , 0x40008034U) /**< \brief (SPI) Chip Select Register 1 */ 
-#define REG_SPI_CSR2              REG_ACCESS(RwReg  , 0x40008038U) /**< \brief (SPI) Chip Select Register 2 */ 
-#define REG_SPI_CSR3              REG_ACCESS(RwReg  , 0x4000803CU) /**< \brief (SPI) Chip Select Register 3 */ 
-#define REG_SPI_WPCR              REG_ACCESS(RwReg  , 0x400080E4U) /**< \brief (SPI) Write Protection control Register */ 
-#define REG_SPI_WPSR              REG_ACCESS(RoReg  , 0x400080E8U) /**< \brief (SPI) Write Protection status Register */ 
-#define REG_SPI_FEATURES          REG_ACCESS(RoReg  , 0x400080F8U) /**< \brief (SPI) Features Register */ 
-#define REG_SPI_VERSION           REG_ACCESS(RoReg  , 0x400080FCU) /**< \brief (SPI) Version Register */ 
+#define REG_SPI_CR                REG_ACCESS(WoReg  , 0x40008000U) /**< \brief (SPI) Control Register */
+#define REG_SPI_MR                REG_ACCESS(RwReg  , 0x40008004U) /**< \brief (SPI) Mode Register */
+#define REG_SPI_RDR               REG_ACCESS(RoReg  , 0x40008008U) /**< \brief (SPI) Receive Data Register */
+#define REG_SPI_TDR               REG_ACCESS(WoReg  , 0x4000800CU) /**< \brief (SPI) Transmit Data Register */
+#define REG_SPI_SR                REG_ACCESS(RoReg  , 0x40008010U) /**< \brief (SPI) Status Register */
+#define REG_SPI_IER               REG_ACCESS(WoReg  , 0x40008014U) /**< \brief (SPI) Interrupt Enable Register */
+#define REG_SPI_IDR               REG_ACCESS(WoReg  , 0x40008018U) /**< \brief (SPI) Interrupt Disable Register */
+#define REG_SPI_IMR               REG_ACCESS(RoReg  , 0x4000801CU) /**< \brief (SPI) Interrupt Mask Register */
+#define REG_SPI_CSR0              REG_ACCESS(RwReg  , 0x40008030U) /**< \brief (SPI) Chip Select Register 0 */
+#define REG_SPI_CSR1              REG_ACCESS(RwReg  , 0x40008034U) /**< \brief (SPI) Chip Select Register 1 */
+#define REG_SPI_CSR2              REG_ACCESS(RwReg  , 0x40008038U) /**< \brief (SPI) Chip Select Register 2 */
+#define REG_SPI_CSR3              REG_ACCESS(RwReg  , 0x4000803CU) /**< \brief (SPI) Chip Select Register 3 */
+#define REG_SPI_WPCR              REG_ACCESS(RwReg  , 0x400080E4U) /**< \brief (SPI) Write Protection control Register */
+#define REG_SPI_WPSR              REG_ACCESS(RoReg  , 0x400080E8U) /**< \brief (SPI) Write Protection status Register */
+#define REG_SPI_FEATURES          REG_ACCESS(RoReg  , 0x400080F8U) /**< \brief (SPI) Features Register */
+#define REG_SPI_VERSION           REG_ACCESS(RoReg  , 0x400080FCU) /**< \brief (SPI) Version Register */
 /* ========== Register definition for TC0 peripheral ========== */
 #define REG_TC0_CCR0              REG_ACCESS(WoReg  , 0x40010000U) /**< \brief (TC0) Channel Control Register Channel 0 0 */
 #define REG_TC0_CMR0              REG_ACCESS(RwReg  , 0x40010004U) /**< \brief (TC0) Channel Mode Register Channel 0 0 */
@@ -12670,11 +12670,11 @@ typedef struct {
 #define REG_TC0_IER2              REG_ACCESS(WoReg  , 0x400100A4U) /**< \brief (TC0) Interrupt Enable Register Channel 0 2 */
 #define REG_TC0_IDR2              REG_ACCESS(WoReg  , 0x400100A8U) /**< \brief (TC0) Interrupt Disable Register Channel 0 2 */
 #define REG_TC0_IMR2              REG_ACCESS(RoReg  , 0x400100ACU) /**< \brief (TC0) Interrupt Mask Register Channel 0 2 */
-#define REG_TC0_BCR               REG_ACCESS(WoReg  , 0x400100C0U) /**< \brief (TC0) TC Block Control Register */ 
-#define REG_TC0_BMR               REG_ACCESS(RwReg  , 0x400100C4U) /**< \brief (TC0) TC Block Mode Register */ 
-#define REG_TC0_WPMR              REG_ACCESS(RwReg  , 0x400100E4U) /**< \brief (TC0) Write Protect Mode Register */ 
-#define REG_TC0_FEATURES          REG_ACCESS(RoReg  , 0x400100F8U) /**< \brief (TC0) Features Register */ 
-#define REG_TC0_VERSION           REG_ACCESS(RoReg  , 0x400100FCU) /**< \brief (TC0) Version Register */ 
+#define REG_TC0_BCR               REG_ACCESS(WoReg  , 0x400100C0U) /**< \brief (TC0) TC Block Control Register */
+#define REG_TC0_BMR               REG_ACCESS(RwReg  , 0x400100C4U) /**< \brief (TC0) TC Block Mode Register */
+#define REG_TC0_WPMR              REG_ACCESS(RwReg  , 0x400100E4U) /**< \brief (TC0) Write Protect Mode Register */
+#define REG_TC0_FEATURES          REG_ACCESS(RoReg  , 0x400100F8U) /**< \brief (TC0) Features Register */
+#define REG_TC0_VERSION           REG_ACCESS(RoReg  , 0x400100FCU) /**< \brief (TC0) Version Register */
 /* ========== Register definition for TC1 peripheral ========== */
 #define REG_TC1_CCR0              REG_ACCESS(WoReg  , 0x40014000U) /**< \brief (TC1) Channel Control Register Channel 0 0 */
 #define REG_TC1_CMR0              REG_ACCESS(RwReg  , 0x40014004U) /**< \brief (TC1) Channel Mode Register Channel 0 0 */
@@ -12709,210 +12709,210 @@ typedef struct {
 #define REG_TC1_IER2              REG_ACCESS(WoReg  , 0x400140A4U) /**< \brief (TC1) Interrupt Enable Register Channel 0 2 */
 #define REG_TC1_IDR2              REG_ACCESS(WoReg  , 0x400140A8U) /**< \brief (TC1) Interrupt Disable Register Channel 0 2 */
 #define REG_TC1_IMR2              REG_ACCESS(RoReg  , 0x400140ACU) /**< \brief (TC1) Interrupt Mask Register Channel 0 2 */
-#define REG_TC1_BCR               REG_ACCESS(WoReg  , 0x400140C0U) /**< \brief (TC1) TC Block Control Register */ 
-#define REG_TC1_BMR               REG_ACCESS(RwReg  , 0x400140C4U) /**< \brief (TC1) TC Block Mode Register */ 
-#define REG_TC1_WPMR              REG_ACCESS(RwReg  , 0x400140E4U) /**< \brief (TC1) Write Protect Mode Register */ 
-#define REG_TC1_FEATURES          REG_ACCESS(RoReg  , 0x400140F8U) /**< \brief (TC1) Features Register */ 
-#define REG_TC1_VERSION           REG_ACCESS(RoReg  , 0x400140FCU) /**< \brief (TC1) Version Register */ 
+#define REG_TC1_BCR               REG_ACCESS(WoReg  , 0x400140C0U) /**< \brief (TC1) TC Block Control Register */
+#define REG_TC1_BMR               REG_ACCESS(RwReg  , 0x400140C4U) /**< \brief (TC1) TC Block Mode Register */
+#define REG_TC1_WPMR              REG_ACCESS(RwReg  , 0x400140E4U) /**< \brief (TC1) Write Protect Mode Register */
+#define REG_TC1_FEATURES          REG_ACCESS(RoReg  , 0x400140F8U) /**< \brief (TC1) Features Register */
+#define REG_TC1_VERSION           REG_ACCESS(RoReg  , 0x400140FCU) /**< \brief (TC1) Version Register */
 /* ========== Register definition for TWIM0 peripheral ========== */
-#define REG_TWIM0_CR              REG_ACCESS(WoReg  , 0x40018000U) /**< \brief (TWIM0) Control Register */ 
-#define REG_TWIM0_CWGR            REG_ACCESS(RwReg  , 0x40018004U) /**< \brief (TWIM0) Clock Waveform Generator Register */ 
-#define REG_TWIM0_SMBTR           REG_ACCESS(RwReg  , 0x40018008U) /**< \brief (TWIM0) SMBus Timing Register */ 
-#define REG_TWIM0_CMDR            REG_ACCESS(RwReg  , 0x4001800CU) /**< \brief (TWIM0) Command Register */ 
-#define REG_TWIM0_NCMDR           REG_ACCESS(RwReg  , 0x40018010U) /**< \brief (TWIM0) Next Command Register */ 
-#define REG_TWIM0_RHR             REG_ACCESS(RoReg  , 0x40018014U) /**< \brief (TWIM0) Receive Holding Register */ 
-#define REG_TWIM0_THR             REG_ACCESS(WoReg  , 0x40018018U) /**< \brief (TWIM0) Transmit Holding Register */ 
-#define REG_TWIM0_SR              REG_ACCESS(RoReg  , 0x4001801CU) /**< \brief (TWIM0) Status Register */ 
-#define REG_TWIM0_IER             REG_ACCESS(WoReg  , 0x40018020U) /**< \brief (TWIM0) Interrupt Enable Register */ 
-#define REG_TWIM0_IDR             REG_ACCESS(WoReg  , 0x40018024U) /**< \brief (TWIM0) Interrupt Disable Register */ 
-#define REG_TWIM0_IMR             REG_ACCESS(RoReg  , 0x40018028U) /**< \brief (TWIM0) Interrupt Mask Register */ 
-#define REG_TWIM0_SCR             REG_ACCESS(WoReg  , 0x4001802CU) /**< \brief (TWIM0) Status Clear Register */ 
-#define REG_TWIM0_PR              REG_ACCESS(RoReg  , 0x40018030U) /**< \brief (TWIM0) Parameter Register */ 
-#define REG_TWIM0_VR              REG_ACCESS(RoReg  , 0x40018034U) /**< \brief (TWIM0) Version Register */ 
-#define REG_TWIM0_HSCWGR          REG_ACCESS(RwReg  , 0x40018038U) /**< \brief (TWIM0) HS-mode Clock Waveform Generator */ 
-#define REG_TWIM0_SRR             REG_ACCESS(RwReg  , 0x4001803CU) /**< \brief (TWIM0) Slew Rate Register */ 
-#define REG_TWIM0_HSSRR           REG_ACCESS(RwReg  , 0x40018040U) /**< \brief (TWIM0) HS-mode Slew Rate Register */ 
+#define REG_TWIM0_CR              REG_ACCESS(WoReg  , 0x40018000U) /**< \brief (TWIM0) Control Register */
+#define REG_TWIM0_CWGR            REG_ACCESS(RwReg  , 0x40018004U) /**< \brief (TWIM0) Clock Waveform Generator Register */
+#define REG_TWIM0_SMBTR           REG_ACCESS(RwReg  , 0x40018008U) /**< \brief (TWIM0) SMBus Timing Register */
+#define REG_TWIM0_CMDR            REG_ACCESS(RwReg  , 0x4001800CU) /**< \brief (TWIM0) Command Register */
+#define REG_TWIM0_NCMDR           REG_ACCESS(RwReg  , 0x40018010U) /**< \brief (TWIM0) Next Command Register */
+#define REG_TWIM0_RHR             REG_ACCESS(RoReg  , 0x40018014U) /**< \brief (TWIM0) Receive Holding Register */
+#define REG_TWIM0_THR             REG_ACCESS(WoReg  , 0x40018018U) /**< \brief (TWIM0) Transmit Holding Register */
+#define REG_TWIM0_SR              REG_ACCESS(RoReg  , 0x4001801CU) /**< \brief (TWIM0) Status Register */
+#define REG_TWIM0_IER             REG_ACCESS(WoReg  , 0x40018020U) /**< \brief (TWIM0) Interrupt Enable Register */
+#define REG_TWIM0_IDR             REG_ACCESS(WoReg  , 0x40018024U) /**< \brief (TWIM0) Interrupt Disable Register */
+#define REG_TWIM0_IMR             REG_ACCESS(RoReg  , 0x40018028U) /**< \brief (TWIM0) Interrupt Mask Register */
+#define REG_TWIM0_SCR             REG_ACCESS(WoReg  , 0x4001802CU) /**< \brief (TWIM0) Status Clear Register */
+#define REG_TWIM0_PR              REG_ACCESS(RoReg  , 0x40018030U) /**< \brief (TWIM0) Parameter Register */
+#define REG_TWIM0_VR              REG_ACCESS(RoReg  , 0x40018034U) /**< \brief (TWIM0) Version Register */
+#define REG_TWIM0_HSCWGR          REG_ACCESS(RwReg  , 0x40018038U) /**< \brief (TWIM0) HS-mode Clock Waveform Generator */
+#define REG_TWIM0_SRR             REG_ACCESS(RwReg  , 0x4001803CU) /**< \brief (TWIM0) Slew Rate Register */
+#define REG_TWIM0_HSSRR           REG_ACCESS(RwReg  , 0x40018040U) /**< \brief (TWIM0) HS-mode Slew Rate Register */
 /* ========== Register definition for TWIS0 peripheral ========== */
-#define REG_TWIS0_CR              REG_ACCESS(RwReg  , 0x40018400U) /**< \brief (TWIS0) Control Register */ 
-#define REG_TWIS0_NBYTES          REG_ACCESS(RwReg  , 0x40018404U) /**< \brief (TWIS0) NBYTES Register */ 
-#define REG_TWIS0_TR              REG_ACCESS(RwReg  , 0x40018408U) /**< \brief (TWIS0) Timing Register */ 
-#define REG_TWIS0_RHR             REG_ACCESS(RoReg  , 0x4001840CU) /**< \brief (TWIS0) Receive Holding Register */ 
-#define REG_TWIS0_THR             REG_ACCESS(WoReg  , 0x40018410U) /**< \brief (TWIS0) Transmit Holding Register */ 
-#define REG_TWIS0_PECR            REG_ACCESS(RoReg  , 0x40018414U) /**< \brief (TWIS0) Packet Error Check Register */ 
-#define REG_TWIS0_SR              REG_ACCESS(RoReg  , 0x40018418U) /**< \brief (TWIS0) Status Register */ 
-#define REG_TWIS0_IER             REG_ACCESS(WoReg  , 0x4001841CU) /**< \brief (TWIS0) Interrupt Enable Register */ 
-#define REG_TWIS0_IDR             REG_ACCESS(WoReg  , 0x40018420U) /**< \brief (TWIS0) Interrupt Disable Register */ 
-#define REG_TWIS0_IMR             REG_ACCESS(RoReg  , 0x40018424U) /**< \brief (TWIS0) Interrupt Mask Register */ 
-#define REG_TWIS0_SCR             REG_ACCESS(WoReg  , 0x40018428U) /**< \brief (TWIS0) Status Clear Register */ 
-#define REG_TWIS0_PR              REG_ACCESS(RoReg  , 0x4001842CU) /**< \brief (TWIS0) Parameter Register */ 
-#define REG_TWIS0_VR              REG_ACCESS(RoReg  , 0x40018430U) /**< \brief (TWIS0) Version Register */ 
-#define REG_TWIS0_HSTR            REG_ACCESS(RwReg  , 0x40018434U) /**< \brief (TWIS0) HS-mode Timing Register */ 
-#define REG_TWIS0_SRR             REG_ACCESS(RwReg  , 0x40018438U) /**< \brief (TWIS0) Slew Rate Register */ 
-#define REG_TWIS0_HSSRR           REG_ACCESS(RwReg  , 0x4001843CU) /**< \brief (TWIS0) HS-mode Slew Rate Register */ 
+#define REG_TWIS0_CR              REG_ACCESS(RwReg  , 0x40018400U) /**< \brief (TWIS0) Control Register */
+#define REG_TWIS0_NBYTES          REG_ACCESS(RwReg  , 0x40018404U) /**< \brief (TWIS0) NBYTES Register */
+#define REG_TWIS0_TR              REG_ACCESS(RwReg  , 0x40018408U) /**< \brief (TWIS0) Timing Register */
+#define REG_TWIS0_RHR             REG_ACCESS(RoReg  , 0x4001840CU) /**< \brief (TWIS0) Receive Holding Register */
+#define REG_TWIS0_THR             REG_ACCESS(WoReg  , 0x40018410U) /**< \brief (TWIS0) Transmit Holding Register */
+#define REG_TWIS0_PECR            REG_ACCESS(RoReg  , 0x40018414U) /**< \brief (TWIS0) Packet Error Check Register */
+#define REG_TWIS0_SR              REG_ACCESS(RoReg  , 0x40018418U) /**< \brief (TWIS0) Status Register */
+#define REG_TWIS0_IER             REG_ACCESS(WoReg  , 0x4001841CU) /**< \brief (TWIS0) Interrupt Enable Register */
+#define REG_TWIS0_IDR             REG_ACCESS(WoReg  , 0x40018420U) /**< \brief (TWIS0) Interrupt Disable Register */
+#define REG_TWIS0_IMR             REG_ACCESS(RoReg  , 0x40018424U) /**< \brief (TWIS0) Interrupt Mask Register */
+#define REG_TWIS0_SCR             REG_ACCESS(WoReg  , 0x40018428U) /**< \brief (TWIS0) Status Clear Register */
+#define REG_TWIS0_PR              REG_ACCESS(RoReg  , 0x4001842CU) /**< \brief (TWIS0) Parameter Register */
+#define REG_TWIS0_VR              REG_ACCESS(RoReg  , 0x40018430U) /**< \brief (TWIS0) Version Register */
+#define REG_TWIS0_HSTR            REG_ACCESS(RwReg  , 0x40018434U) /**< \brief (TWIS0) HS-mode Timing Register */
+#define REG_TWIS0_SRR             REG_ACCESS(RwReg  , 0x40018438U) /**< \brief (TWIS0) Slew Rate Register */
+#define REG_TWIS0_HSSRR           REG_ACCESS(RwReg  , 0x4001843CU) /**< \brief (TWIS0) HS-mode Slew Rate Register */
 /* ========== Register definition for TWIM1 peripheral ========== */
-#define REG_TWIM1_CR              REG_ACCESS(WoReg  , 0x4001C000U) /**< \brief (TWIM1) Control Register */ 
-#define REG_TWIM1_CWGR            REG_ACCESS(RwReg  , 0x4001C004U) /**< \brief (TWIM1) Clock Waveform Generator Register */ 
-#define REG_TWIM1_SMBTR           REG_ACCESS(RwReg  , 0x4001C008U) /**< \brief (TWIM1) SMBus Timing Register */ 
-#define REG_TWIM1_CMDR            REG_ACCESS(RwReg  , 0x4001C00CU) /**< \brief (TWIM1) Command Register */ 
-#define REG_TWIM1_NCMDR           REG_ACCESS(RwReg  , 0x4001C010U) /**< \brief (TWIM1) Next Command Register */ 
-#define REG_TWIM1_RHR             REG_ACCESS(RoReg  , 0x4001C014U) /**< \brief (TWIM1) Receive Holding Register */ 
-#define REG_TWIM1_THR             REG_ACCESS(WoReg  , 0x4001C018U) /**< \brief (TWIM1) Transmit Holding Register */ 
-#define REG_TWIM1_SR              REG_ACCESS(RoReg  , 0x4001C01CU) /**< \brief (TWIM1) Status Register */ 
-#define REG_TWIM1_IER             REG_ACCESS(WoReg  , 0x4001C020U) /**< \brief (TWIM1) Interrupt Enable Register */ 
-#define REG_TWIM1_IDR             REG_ACCESS(WoReg  , 0x4001C024U) /**< \brief (TWIM1) Interrupt Disable Register */ 
-#define REG_TWIM1_IMR             REG_ACCESS(RoReg  , 0x4001C028U) /**< \brief (TWIM1) Interrupt Mask Register */ 
-#define REG_TWIM1_SCR             REG_ACCESS(WoReg  , 0x4001C02CU) /**< \brief (TWIM1) Status Clear Register */ 
-#define REG_TWIM1_PR              REG_ACCESS(RoReg  , 0x4001C030U) /**< \brief (TWIM1) Parameter Register */ 
-#define REG_TWIM1_VR              REG_ACCESS(RoReg  , 0x4001C034U) /**< \brief (TWIM1) Version Register */ 
-#define REG_TWIM1_HSCWGR          REG_ACCESS(RwReg  , 0x4001C038U) /**< \brief (TWIM1) HS-mode Clock Waveform Generator */ 
-#define REG_TWIM1_SRR             REG_ACCESS(RwReg  , 0x4001C03CU) /**< \brief (TWIM1) Slew Rate Register */ 
-#define REG_TWIM1_HSSRR           REG_ACCESS(RwReg  , 0x4001C040U) /**< \brief (TWIM1) HS-mode Slew Rate Register */ 
+#define REG_TWIM1_CR              REG_ACCESS(WoReg  , 0x4001C000U) /**< \brief (TWIM1) Control Register */
+#define REG_TWIM1_CWGR            REG_ACCESS(RwReg  , 0x4001C004U) /**< \brief (TWIM1) Clock Waveform Generator Register */
+#define REG_TWIM1_SMBTR           REG_ACCESS(RwReg  , 0x4001C008U) /**< \brief (TWIM1) SMBus Timing Register */
+#define REG_TWIM1_CMDR            REG_ACCESS(RwReg  , 0x4001C00CU) /**< \brief (TWIM1) Command Register */
+#define REG_TWIM1_NCMDR           REG_ACCESS(RwReg  , 0x4001C010U) /**< \brief (TWIM1) Next Command Register */
+#define REG_TWIM1_RHR             REG_ACCESS(RoReg  , 0x4001C014U) /**< \brief (TWIM1) Receive Holding Register */
+#define REG_TWIM1_THR             REG_ACCESS(WoReg  , 0x4001C018U) /**< \brief (TWIM1) Transmit Holding Register */
+#define REG_TWIM1_SR              REG_ACCESS(RoReg  , 0x4001C01CU) /**< \brief (TWIM1) Status Register */
+#define REG_TWIM1_IER             REG_ACCESS(WoReg  , 0x4001C020U) /**< \brief (TWIM1) Interrupt Enable Register */
+#define REG_TWIM1_IDR             REG_ACCESS(WoReg  , 0x4001C024U) /**< \brief (TWIM1) Interrupt Disable Register */
+#define REG_TWIM1_IMR             REG_ACCESS(RoReg  , 0x4001C028U) /**< \brief (TWIM1) Interrupt Mask Register */
+#define REG_TWIM1_SCR             REG_ACCESS(WoReg  , 0x4001C02CU) /**< \brief (TWIM1) Status Clear Register */
+#define REG_TWIM1_PR              REG_ACCESS(RoReg  , 0x4001C030U) /**< \brief (TWIM1) Parameter Register */
+#define REG_TWIM1_VR              REG_ACCESS(RoReg  , 0x4001C034U) /**< \brief (TWIM1) Version Register */
+#define REG_TWIM1_HSCWGR          REG_ACCESS(RwReg  , 0x4001C038U) /**< \brief (TWIM1) HS-mode Clock Waveform Generator */
+#define REG_TWIM1_SRR             REG_ACCESS(RwReg  , 0x4001C03CU) /**< \brief (TWIM1) Slew Rate Register */
+#define REG_TWIM1_HSSRR           REG_ACCESS(RwReg  , 0x4001C040U) /**< \brief (TWIM1) HS-mode Slew Rate Register */
 /* ========== Register definition for TWIS1 peripheral ========== */
-#define REG_TWIS1_CR              REG_ACCESS(RwReg  , 0x4001C400U) /**< \brief (TWIS1) Control Register */ 
-#define REG_TWIS1_NBYTES          REG_ACCESS(RwReg  , 0x4001C404U) /**< \brief (TWIS1) NBYTES Register */ 
-#define REG_TWIS1_TR              REG_ACCESS(RwReg  , 0x4001C408U) /**< \brief (TWIS1) Timing Register */ 
-#define REG_TWIS1_RHR             REG_ACCESS(RoReg  , 0x4001C40CU) /**< \brief (TWIS1) Receive Holding Register */ 
-#define REG_TWIS1_THR             REG_ACCESS(WoReg  , 0x4001C410U) /**< \brief (TWIS1) Transmit Holding Register */ 
-#define REG_TWIS1_PECR            REG_ACCESS(RoReg  , 0x4001C414U) /**< \brief (TWIS1) Packet Error Check Register */ 
-#define REG_TWIS1_SR              REG_ACCESS(RoReg  , 0x4001C418U) /**< \brief (TWIS1) Status Register */ 
-#define REG_TWIS1_IER             REG_ACCESS(WoReg  , 0x4001C41CU) /**< \brief (TWIS1) Interrupt Enable Register */ 
-#define REG_TWIS1_IDR             REG_ACCESS(WoReg  , 0x4001C420U) /**< \brief (TWIS1) Interrupt Disable Register */ 
-#define REG_TWIS1_IMR             REG_ACCESS(RoReg  , 0x4001C424U) /**< \brief (TWIS1) Interrupt Mask Register */ 
-#define REG_TWIS1_SCR             REG_ACCESS(WoReg  , 0x4001C428U) /**< \brief (TWIS1) Status Clear Register */ 
-#define REG_TWIS1_PR              REG_ACCESS(RoReg  , 0x4001C42CU) /**< \brief (TWIS1) Parameter Register */ 
-#define REG_TWIS1_VR              REG_ACCESS(RoReg  , 0x4001C430U) /**< \brief (TWIS1) Version Register */ 
-#define REG_TWIS1_HSTR            REG_ACCESS(RwReg  , 0x4001C434U) /**< \brief (TWIS1) HS-mode Timing Register */ 
-#define REG_TWIS1_SRR             REG_ACCESS(RwReg  , 0x4001C438U) /**< \brief (TWIS1) Slew Rate Register */ 
-#define REG_TWIS1_HSSRR           REG_ACCESS(RwReg  , 0x4001C43CU) /**< \brief (TWIS1) HS-mode Slew Rate Register */ 
+#define REG_TWIS1_CR              REG_ACCESS(RwReg  , 0x4001C400U) /**< \brief (TWIS1) Control Register */
+#define REG_TWIS1_NBYTES          REG_ACCESS(RwReg  , 0x4001C404U) /**< \brief (TWIS1) NBYTES Register */
+#define REG_TWIS1_TR              REG_ACCESS(RwReg  , 0x4001C408U) /**< \brief (TWIS1) Timing Register */
+#define REG_TWIS1_RHR             REG_ACCESS(RoReg  , 0x4001C40CU) /**< \brief (TWIS1) Receive Holding Register */
+#define REG_TWIS1_THR             REG_ACCESS(WoReg  , 0x4001C410U) /**< \brief (TWIS1) Transmit Holding Register */
+#define REG_TWIS1_PECR            REG_ACCESS(RoReg  , 0x4001C414U) /**< \brief (TWIS1) Packet Error Check Register */
+#define REG_TWIS1_SR              REG_ACCESS(RoReg  , 0x4001C418U) /**< \brief (TWIS1) Status Register */
+#define REG_TWIS1_IER             REG_ACCESS(WoReg  , 0x4001C41CU) /**< \brief (TWIS1) Interrupt Enable Register */
+#define REG_TWIS1_IDR             REG_ACCESS(WoReg  , 0x4001C420U) /**< \brief (TWIS1) Interrupt Disable Register */
+#define REG_TWIS1_IMR             REG_ACCESS(RoReg  , 0x4001C424U) /**< \brief (TWIS1) Interrupt Mask Register */
+#define REG_TWIS1_SCR             REG_ACCESS(WoReg  , 0x4001C428U) /**< \brief (TWIS1) Status Clear Register */
+#define REG_TWIS1_PR              REG_ACCESS(RoReg  , 0x4001C42CU) /**< \brief (TWIS1) Parameter Register */
+#define REG_TWIS1_VR              REG_ACCESS(RoReg  , 0x4001C430U) /**< \brief (TWIS1) Version Register */
+#define REG_TWIS1_HSTR            REG_ACCESS(RwReg  , 0x4001C434U) /**< \brief (TWIS1) HS-mode Timing Register */
+#define REG_TWIS1_SRR             REG_ACCESS(RwReg  , 0x4001C438U) /**< \brief (TWIS1) Slew Rate Register */
+#define REG_TWIS1_HSSRR           REG_ACCESS(RwReg  , 0x4001C43CU) /**< \brief (TWIS1) HS-mode Slew Rate Register */
 /* ========== Register definition for USART0 peripheral ========== */
-#define REG_USART0_CR             REG_ACCESS(WoReg  , 0x40024000U) /**< \brief (USART0) Control Register */ 
-#define REG_USART0_MR             REG_ACCESS(RwReg  , 0x40024004U) /**< \brief (USART0) Mode Register */ 
-#define REG_USART0_IER            REG_ACCESS(WoReg  , 0x40024008U) /**< \brief (USART0) Interrupt Enable Register */ 
-#define REG_USART0_IDR            REG_ACCESS(WoReg  , 0x4002400CU) /**< \brief (USART0) Interrupt Disable Register */ 
-#define REG_USART0_IMR            REG_ACCESS(RoReg  , 0x40024010U) /**< \brief (USART0) Interrupt Mask Register */ 
-#define REG_USART0_CSR            REG_ACCESS(RoReg  , 0x40024014U) /**< \brief (USART0) Channel Status Register */ 
-#define REG_USART0_RHR            REG_ACCESS(RoReg  , 0x40024018U) /**< \brief (USART0) Receiver Holding Register */ 
-#define REG_USART0_THR            REG_ACCESS(WoReg  , 0x4002401CU) /**< \brief (USART0) Transmitter Holding Register */ 
-#define REG_USART0_BRGR           REG_ACCESS(RwReg  , 0x40024020U) /**< \brief (USART0) Baud Rate Generator Register */ 
-#define REG_USART0_RTOR           REG_ACCESS(RwReg  , 0x40024024U) /**< \brief (USART0) Receiver Time-out Register */ 
-#define REG_USART0_TTGR           REG_ACCESS(RwReg  , 0x40024028U) /**< \brief (USART0) Transmitter Timeguard Register */ 
-#define REG_USART0_FIDI           REG_ACCESS(RwReg  , 0x40024040U) /**< \brief (USART0) FI DI Ratio Register */ 
-#define REG_USART0_NER            REG_ACCESS(RoReg  , 0x40024044U) /**< \brief (USART0) Number of Errors Register */ 
-#define REG_USART0_IFR            REG_ACCESS(RwReg  , 0x4002404CU) /**< \brief (USART0) IrDA Filter Register */ 
-#define REG_USART0_MAN            REG_ACCESS(RwReg  , 0x40024050U) /**< \brief (USART0) Manchester Configuration Register */ 
-#define REG_USART0_LINMR          REG_ACCESS(RwReg  , 0x40024054U) /**< \brief (USART0) LIN Mode Register */ 
-#define REG_USART0_LINIR          REG_ACCESS(RwReg  , 0x40024058U) /**< \brief (USART0) LIN Identifier Register */ 
-#define REG_USART0_LINBRR         REG_ACCESS(RoReg  , 0x4002405CU) /**< \brief (USART0) LIN Baud Rate Register */ 
-#define REG_USART0_WPMR           REG_ACCESS(RwReg  , 0x400240E4U) /**< \brief (USART0) Write Protect Mode Register */ 
-#define REG_USART0_WPSR           REG_ACCESS(RoReg  , 0x400240E8U) /**< \brief (USART0) Write Protect Status Register */ 
-#define REG_USART0_VERSION        REG_ACCESS(RoReg  , 0x400240FCU) /**< \brief (USART0) Version Register */ 
+#define REG_USART0_CR             REG_ACCESS(WoReg  , 0x40024000U) /**< \brief (USART0) Control Register */
+#define REG_USART0_MR             REG_ACCESS(RwReg  , 0x40024004U) /**< \brief (USART0) Mode Register */
+#define REG_USART0_IER            REG_ACCESS(WoReg  , 0x40024008U) /**< \brief (USART0) Interrupt Enable Register */
+#define REG_USART0_IDR            REG_ACCESS(WoReg  , 0x4002400CU) /**< \brief (USART0) Interrupt Disable Register */
+#define REG_USART0_IMR            REG_ACCESS(RoReg  , 0x40024010U) /**< \brief (USART0) Interrupt Mask Register */
+#define REG_USART0_CSR            REG_ACCESS(RoReg  , 0x40024014U) /**< \brief (USART0) Channel Status Register */
+#define REG_USART0_RHR            REG_ACCESS(RoReg  , 0x40024018U) /**< \brief (USART0) Receiver Holding Register */
+#define REG_USART0_THR            REG_ACCESS(WoReg  , 0x4002401CU) /**< \brief (USART0) Transmitter Holding Register */
+#define REG_USART0_BRGR           REG_ACCESS(RwReg  , 0x40024020U) /**< \brief (USART0) Baud Rate Generator Register */
+#define REG_USART0_RTOR           REG_ACCESS(RwReg  , 0x40024024U) /**< \brief (USART0) Receiver Time-out Register */
+#define REG_USART0_TTGR           REG_ACCESS(RwReg  , 0x40024028U) /**< \brief (USART0) Transmitter Timeguard Register */
+#define REG_USART0_FIDI           REG_ACCESS(RwReg  , 0x40024040U) /**< \brief (USART0) FI DI Ratio Register */
+#define REG_USART0_NER            REG_ACCESS(RoReg  , 0x40024044U) /**< \brief (USART0) Number of Errors Register */
+#define REG_USART0_IFR            REG_ACCESS(RwReg  , 0x4002404CU) /**< \brief (USART0) IrDA Filter Register */
+#define REG_USART0_MAN            REG_ACCESS(RwReg  , 0x40024050U) /**< \brief (USART0) Manchester Configuration Register */
+#define REG_USART0_LINMR          REG_ACCESS(RwReg  , 0x40024054U) /**< \brief (USART0) LIN Mode Register */
+#define REG_USART0_LINIR          REG_ACCESS(RwReg  , 0x40024058U) /**< \brief (USART0) LIN Identifier Register */
+#define REG_USART0_LINBRR         REG_ACCESS(RoReg  , 0x4002405CU) /**< \brief (USART0) LIN Baud Rate Register */
+#define REG_USART0_WPMR           REG_ACCESS(RwReg  , 0x400240E4U) /**< \brief (USART0) Write Protect Mode Register */
+#define REG_USART0_WPSR           REG_ACCESS(RoReg  , 0x400240E8U) /**< \brief (USART0) Write Protect Status Register */
+#define REG_USART0_VERSION        REG_ACCESS(RoReg  , 0x400240FCU) /**< \brief (USART0) Version Register */
 /* ========== Register definition for USART1 peripheral ========== */
-#define REG_USART1_CR             REG_ACCESS(WoReg  , 0x40028000U) /**< \brief (USART1) Control Register */ 
-#define REG_USART1_MR             REG_ACCESS(RwReg  , 0x40028004U) /**< \brief (USART1) Mode Register */ 
-#define REG_USART1_IER            REG_ACCESS(WoReg  , 0x40028008U) /**< \brief (USART1) Interrupt Enable Register */ 
-#define REG_USART1_IDR            REG_ACCESS(WoReg  , 0x4002800CU) /**< \brief (USART1) Interrupt Disable Register */ 
-#define REG_USART1_IMR            REG_ACCESS(RoReg  , 0x40028010U) /**< \brief (USART1) Interrupt Mask Register */ 
-#define REG_USART1_CSR            REG_ACCESS(RoReg  , 0x40028014U) /**< \brief (USART1) Channel Status Register */ 
-#define REG_USART1_RHR            REG_ACCESS(RoReg  , 0x40028018U) /**< \brief (USART1) Receiver Holding Register */ 
-#define REG_USART1_THR            REG_ACCESS(WoReg  , 0x4002801CU) /**< \brief (USART1) Transmitter Holding Register */ 
-#define REG_USART1_BRGR           REG_ACCESS(RwReg  , 0x40028020U) /**< \brief (USART1) Baud Rate Generator Register */ 
-#define REG_USART1_RTOR           REG_ACCESS(RwReg  , 0x40028024U) /**< \brief (USART1) Receiver Time-out Register */ 
-#define REG_USART1_TTGR           REG_ACCESS(RwReg  , 0x40028028U) /**< \brief (USART1) Transmitter Timeguard Register */ 
-#define REG_USART1_FIDI           REG_ACCESS(RwReg  , 0x40028040U) /**< \brief (USART1) FI DI Ratio Register */ 
-#define REG_USART1_NER            REG_ACCESS(RoReg  , 0x40028044U) /**< \brief (USART1) Number of Errors Register */ 
-#define REG_USART1_IFR            REG_ACCESS(RwReg  , 0x4002804CU) /**< \brief (USART1) IrDA Filter Register */ 
-#define REG_USART1_MAN            REG_ACCESS(RwReg  , 0x40028050U) /**< \brief (USART1) Manchester Configuration Register */ 
-#define REG_USART1_LINMR          REG_ACCESS(RwReg  , 0x40028054U) /**< \brief (USART1) LIN Mode Register */ 
-#define REG_USART1_LINIR          REG_ACCESS(RwReg  , 0x40028058U) /**< \brief (USART1) LIN Identifier Register */ 
-#define REG_USART1_LINBRR         REG_ACCESS(RoReg  , 0x4002805CU) /**< \brief (USART1) LIN Baud Rate Register */ 
-#define REG_USART1_WPMR           REG_ACCESS(RwReg  , 0x400280E4U) /**< \brief (USART1) Write Protect Mode Register */ 
-#define REG_USART1_WPSR           REG_ACCESS(RoReg  , 0x400280E8U) /**< \brief (USART1) Write Protect Status Register */ 
-#define REG_USART1_VERSION        REG_ACCESS(RoReg  , 0x400280FCU) /**< \brief (USART1) Version Register */ 
+#define REG_USART1_CR             REG_ACCESS(WoReg  , 0x40028000U) /**< \brief (USART1) Control Register */
+#define REG_USART1_MR             REG_ACCESS(RwReg  , 0x40028004U) /**< \brief (USART1) Mode Register */
+#define REG_USART1_IER            REG_ACCESS(WoReg  , 0x40028008U) /**< \brief (USART1) Interrupt Enable Register */
+#define REG_USART1_IDR            REG_ACCESS(WoReg  , 0x4002800CU) /**< \brief (USART1) Interrupt Disable Register */
+#define REG_USART1_IMR            REG_ACCESS(RoReg  , 0x40028010U) /**< \brief (USART1) Interrupt Mask Register */
+#define REG_USART1_CSR            REG_ACCESS(RoReg  , 0x40028014U) /**< \brief (USART1) Channel Status Register */
+#define REG_USART1_RHR            REG_ACCESS(RoReg  , 0x40028018U) /**< \brief (USART1) Receiver Holding Register */
+#define REG_USART1_THR            REG_ACCESS(WoReg  , 0x4002801CU) /**< \brief (USART1) Transmitter Holding Register */
+#define REG_USART1_BRGR           REG_ACCESS(RwReg  , 0x40028020U) /**< \brief (USART1) Baud Rate Generator Register */
+#define REG_USART1_RTOR           REG_ACCESS(RwReg  , 0x40028024U) /**< \brief (USART1) Receiver Time-out Register */
+#define REG_USART1_TTGR           REG_ACCESS(RwReg  , 0x40028028U) /**< \brief (USART1) Transmitter Timeguard Register */
+#define REG_USART1_FIDI           REG_ACCESS(RwReg  , 0x40028040U) /**< \brief (USART1) FI DI Ratio Register */
+#define REG_USART1_NER            REG_ACCESS(RoReg  , 0x40028044U) /**< \brief (USART1) Number of Errors Register */
+#define REG_USART1_IFR            REG_ACCESS(RwReg  , 0x4002804CU) /**< \brief (USART1) IrDA Filter Register */
+#define REG_USART1_MAN            REG_ACCESS(RwReg  , 0x40028050U) /**< \brief (USART1) Manchester Configuration Register */
+#define REG_USART1_LINMR          REG_ACCESS(RwReg  , 0x40028054U) /**< \brief (USART1) LIN Mode Register */
+#define REG_USART1_LINIR          REG_ACCESS(RwReg  , 0x40028058U) /**< \brief (USART1) LIN Identifier Register */
+#define REG_USART1_LINBRR         REG_ACCESS(RoReg  , 0x4002805CU) /**< \brief (USART1) LIN Baud Rate Register */
+#define REG_USART1_WPMR           REG_ACCESS(RwReg  , 0x400280E4U) /**< \brief (USART1) Write Protect Mode Register */
+#define REG_USART1_WPSR           REG_ACCESS(RoReg  , 0x400280E8U) /**< \brief (USART1) Write Protect Status Register */
+#define REG_USART1_VERSION        REG_ACCESS(RoReg  , 0x400280FCU) /**< \brief (USART1) Version Register */
 /* ========== Register definition for USART2 peripheral ========== */
-#define REG_USART2_CR             REG_ACCESS(WoReg  , 0x4002C000U) /**< \brief (USART2) Control Register */ 
-#define REG_USART2_MR             REG_ACCESS(RwReg  , 0x4002C004U) /**< \brief (USART2) Mode Register */ 
-#define REG_USART2_IER            REG_ACCESS(WoReg  , 0x4002C008U) /**< \brief (USART2) Interrupt Enable Register */ 
-#define REG_USART2_IDR            REG_ACCESS(WoReg  , 0x4002C00CU) /**< \brief (USART2) Interrupt Disable Register */ 
-#define REG_USART2_IMR            REG_ACCESS(RoReg  , 0x4002C010U) /**< \brief (USART2) Interrupt Mask Register */ 
-#define REG_USART2_CSR            REG_ACCESS(RoReg  , 0x4002C014U) /**< \brief (USART2) Channel Status Register */ 
-#define REG_USART2_RHR            REG_ACCESS(RoReg  , 0x4002C018U) /**< \brief (USART2) Receiver Holding Register */ 
-#define REG_USART2_THR            REG_ACCESS(WoReg  , 0x4002C01CU) /**< \brief (USART2) Transmitter Holding Register */ 
-#define REG_USART2_BRGR           REG_ACCESS(RwReg  , 0x4002C020U) /**< \brief (USART2) Baud Rate Generator Register */ 
-#define REG_USART2_RTOR           REG_ACCESS(RwReg  , 0x4002C024U) /**< \brief (USART2) Receiver Time-out Register */ 
-#define REG_USART2_TTGR           REG_ACCESS(RwReg  , 0x4002C028U) /**< \brief (USART2) Transmitter Timeguard Register */ 
-#define REG_USART2_FIDI           REG_ACCESS(RwReg  , 0x4002C040U) /**< \brief (USART2) FI DI Ratio Register */ 
-#define REG_USART2_NER            REG_ACCESS(RoReg  , 0x4002C044U) /**< \brief (USART2) Number of Errors Register */ 
-#define REG_USART2_IFR            REG_ACCESS(RwReg  , 0x4002C04CU) /**< \brief (USART2) IrDA Filter Register */ 
-#define REG_USART2_MAN            REG_ACCESS(RwReg  , 0x4002C050U) /**< \brief (USART2) Manchester Configuration Register */ 
-#define REG_USART2_LINMR          REG_ACCESS(RwReg  , 0x4002C054U) /**< \brief (USART2) LIN Mode Register */ 
-#define REG_USART2_LINIR          REG_ACCESS(RwReg  , 0x4002C058U) /**< \brief (USART2) LIN Identifier Register */ 
-#define REG_USART2_LINBRR         REG_ACCESS(RoReg  , 0x4002C05CU) /**< \brief (USART2) LIN Baud Rate Register */ 
-#define REG_USART2_WPMR           REG_ACCESS(RwReg  , 0x4002C0E4U) /**< \brief (USART2) Write Protect Mode Register */ 
-#define REG_USART2_WPSR           REG_ACCESS(RoReg  , 0x4002C0E8U) /**< \brief (USART2) Write Protect Status Register */ 
-#define REG_USART2_VERSION        REG_ACCESS(RoReg  , 0x4002C0FCU) /**< \brief (USART2) Version Register */ 
+#define REG_USART2_CR             REG_ACCESS(WoReg  , 0x4002C000U) /**< \brief (USART2) Control Register */
+#define REG_USART2_MR             REG_ACCESS(RwReg  , 0x4002C004U) /**< \brief (USART2) Mode Register */
+#define REG_USART2_IER            REG_ACCESS(WoReg  , 0x4002C008U) /**< \brief (USART2) Interrupt Enable Register */
+#define REG_USART2_IDR            REG_ACCESS(WoReg  , 0x4002C00CU) /**< \brief (USART2) Interrupt Disable Register */
+#define REG_USART2_IMR            REG_ACCESS(RoReg  , 0x4002C010U) /**< \brief (USART2) Interrupt Mask Register */
+#define REG_USART2_CSR            REG_ACCESS(RoReg  , 0x4002C014U) /**< \brief (USART2) Channel Status Register */
+#define REG_USART2_RHR            REG_ACCESS(RoReg  , 0x4002C018U) /**< \brief (USART2) Receiver Holding Register */
+#define REG_USART2_THR            REG_ACCESS(WoReg  , 0x4002C01CU) /**< \brief (USART2) Transmitter Holding Register */
+#define REG_USART2_BRGR           REG_ACCESS(RwReg  , 0x4002C020U) /**< \brief (USART2) Baud Rate Generator Register */
+#define REG_USART2_RTOR           REG_ACCESS(RwReg  , 0x4002C024U) /**< \brief (USART2) Receiver Time-out Register */
+#define REG_USART2_TTGR           REG_ACCESS(RwReg  , 0x4002C028U) /**< \brief (USART2) Transmitter Timeguard Register */
+#define REG_USART2_FIDI           REG_ACCESS(RwReg  , 0x4002C040U) /**< \brief (USART2) FI DI Ratio Register */
+#define REG_USART2_NER            REG_ACCESS(RoReg  , 0x4002C044U) /**< \brief (USART2) Number of Errors Register */
+#define REG_USART2_IFR            REG_ACCESS(RwReg  , 0x4002C04CU) /**< \brief (USART2) IrDA Filter Register */
+#define REG_USART2_MAN            REG_ACCESS(RwReg  , 0x4002C050U) /**< \brief (USART2) Manchester Configuration Register */
+#define REG_USART2_LINMR          REG_ACCESS(RwReg  , 0x4002C054U) /**< \brief (USART2) LIN Mode Register */
+#define REG_USART2_LINIR          REG_ACCESS(RwReg  , 0x4002C058U) /**< \brief (USART2) LIN Identifier Register */
+#define REG_USART2_LINBRR         REG_ACCESS(RoReg  , 0x4002C05CU) /**< \brief (USART2) LIN Baud Rate Register */
+#define REG_USART2_WPMR           REG_ACCESS(RwReg  , 0x4002C0E4U) /**< \brief (USART2) Write Protect Mode Register */
+#define REG_USART2_WPSR           REG_ACCESS(RoReg  , 0x4002C0E8U) /**< \brief (USART2) Write Protect Status Register */
+#define REG_USART2_VERSION        REG_ACCESS(RoReg  , 0x4002C0FCU) /**< \brief (USART2) Version Register */
 /* ========== Register definition for USART3 peripheral ========== */
-#define REG_USART3_CR             REG_ACCESS(WoReg  , 0x40030000U) /**< \brief (USART3) Control Register */ 
-#define REG_USART3_MR             REG_ACCESS(RwReg  , 0x40030004U) /**< \brief (USART3) Mode Register */ 
-#define REG_USART3_IER            REG_ACCESS(WoReg  , 0x40030008U) /**< \brief (USART3) Interrupt Enable Register */ 
-#define REG_USART3_IDR            REG_ACCESS(WoReg  , 0x4003000CU) /**< \brief (USART3) Interrupt Disable Register */ 
-#define REG_USART3_IMR            REG_ACCESS(RoReg  , 0x40030010U) /**< \brief (USART3) Interrupt Mask Register */ 
-#define REG_USART3_CSR            REG_ACCESS(RoReg  , 0x40030014U) /**< \brief (USART3) Channel Status Register */ 
-#define REG_USART3_RHR            REG_ACCESS(RoReg  , 0x40030018U) /**< \brief (USART3) Receiver Holding Register */ 
-#define REG_USART3_THR            REG_ACCESS(WoReg  , 0x4003001CU) /**< \brief (USART3) Transmitter Holding Register */ 
-#define REG_USART3_BRGR           REG_ACCESS(RwReg  , 0x40030020U) /**< \brief (USART3) Baud Rate Generator Register */ 
-#define REG_USART3_RTOR           REG_ACCESS(RwReg  , 0x40030024U) /**< \brief (USART3) Receiver Time-out Register */ 
-#define REG_USART3_TTGR           REG_ACCESS(RwReg  , 0x40030028U) /**< \brief (USART3) Transmitter Timeguard Register */ 
-#define REG_USART3_FIDI           REG_ACCESS(RwReg  , 0x40030040U) /**< \brief (USART3) FI DI Ratio Register */ 
-#define REG_USART3_NER            REG_ACCESS(RoReg  , 0x40030044U) /**< \brief (USART3) Number of Errors Register */ 
-#define REG_USART3_IFR            REG_ACCESS(RwReg  , 0x4003004CU) /**< \brief (USART3) IrDA Filter Register */ 
-#define REG_USART3_MAN            REG_ACCESS(RwReg  , 0x40030050U) /**< \brief (USART3) Manchester Configuration Register */ 
-#define REG_USART3_LINMR          REG_ACCESS(RwReg  , 0x40030054U) /**< \brief (USART3) LIN Mode Register */ 
-#define REG_USART3_LINIR          REG_ACCESS(RwReg  , 0x40030058U) /**< \brief (USART3) LIN Identifier Register */ 
-#define REG_USART3_LINBRR         REG_ACCESS(RoReg  , 0x4003005CU) /**< \brief (USART3) LIN Baud Rate Register */ 
-#define REG_USART3_WPMR           REG_ACCESS(RwReg  , 0x400300E4U) /**< \brief (USART3) Write Protect Mode Register */ 
-#define REG_USART3_WPSR           REG_ACCESS(RoReg  , 0x400300E8U) /**< \brief (USART3) Write Protect Status Register */ 
-#define REG_USART3_VERSION        REG_ACCESS(RoReg  , 0x400300FCU) /**< \brief (USART3) Version Register */ 
+#define REG_USART3_CR             REG_ACCESS(WoReg  , 0x40030000U) /**< \brief (USART3) Control Register */
+#define REG_USART3_MR             REG_ACCESS(RwReg  , 0x40030004U) /**< \brief (USART3) Mode Register */
+#define REG_USART3_IER            REG_ACCESS(WoReg  , 0x40030008U) /**< \brief (USART3) Interrupt Enable Register */
+#define REG_USART3_IDR            REG_ACCESS(WoReg  , 0x4003000CU) /**< \brief (USART3) Interrupt Disable Register */
+#define REG_USART3_IMR            REG_ACCESS(RoReg  , 0x40030010U) /**< \brief (USART3) Interrupt Mask Register */
+#define REG_USART3_CSR            REG_ACCESS(RoReg  , 0x40030014U) /**< \brief (USART3) Channel Status Register */
+#define REG_USART3_RHR            REG_ACCESS(RoReg  , 0x40030018U) /**< \brief (USART3) Receiver Holding Register */
+#define REG_USART3_THR            REG_ACCESS(WoReg  , 0x4003001CU) /**< \brief (USART3) Transmitter Holding Register */
+#define REG_USART3_BRGR           REG_ACCESS(RwReg  , 0x40030020U) /**< \brief (USART3) Baud Rate Generator Register */
+#define REG_USART3_RTOR           REG_ACCESS(RwReg  , 0x40030024U) /**< \brief (USART3) Receiver Time-out Register */
+#define REG_USART3_TTGR           REG_ACCESS(RwReg  , 0x40030028U) /**< \brief (USART3) Transmitter Timeguard Register */
+#define REG_USART3_FIDI           REG_ACCESS(RwReg  , 0x40030040U) /**< \brief (USART3) FI DI Ratio Register */
+#define REG_USART3_NER            REG_ACCESS(RoReg  , 0x40030044U) /**< \brief (USART3) Number of Errors Register */
+#define REG_USART3_IFR            REG_ACCESS(RwReg  , 0x4003004CU) /**< \brief (USART3) IrDA Filter Register */
+#define REG_USART3_MAN            REG_ACCESS(RwReg  , 0x40030050U) /**< \brief (USART3) Manchester Configuration Register */
+#define REG_USART3_LINMR          REG_ACCESS(RwReg  , 0x40030054U) /**< \brief (USART3) LIN Mode Register */
+#define REG_USART3_LINIR          REG_ACCESS(RwReg  , 0x40030058U) /**< \brief (USART3) LIN Identifier Register */
+#define REG_USART3_LINBRR         REG_ACCESS(RoReg  , 0x4003005CU) /**< \brief (USART3) LIN Baud Rate Register */
+#define REG_USART3_WPMR           REG_ACCESS(RwReg  , 0x400300E4U) /**< \brief (USART3) Write Protect Mode Register */
+#define REG_USART3_WPSR           REG_ACCESS(RoReg  , 0x400300E8U) /**< \brief (USART3) Write Protect Status Register */
+#define REG_USART3_VERSION        REG_ACCESS(RoReg  , 0x400300FCU) /**< \brief (USART3) Version Register */
 /* ========== Register definition for ADCIFE peripheral ========== */
-#define REG_ADCIFE_CR             REG_ACCESS(WoReg  , 0x40038000U) /**< \brief (ADCIFE) Control Register */ 
-#define REG_ADCIFE_CFG            REG_ACCESS(RwReg  , 0x40038004U) /**< \brief (ADCIFE) Configuration Register */ 
-#define REG_ADCIFE_SR             REG_ACCESS(RoReg  , 0x40038008U) /**< \brief (ADCIFE) Status Register */ 
-#define REG_ADCIFE_SCR            REG_ACCESS(WoReg  , 0x4003800CU) /**< \brief (ADCIFE) Status Clear Register */ 
-#define REG_ADCIFE_RTS            REG_ACCESS(RwReg  , 0x40038010U) /**< \brief (ADCIFE) Resistive Touch Screen Register */ 
-#define REG_ADCIFE_SEQCFG         REG_ACCESS(RwReg  , 0x40038014U) /**< \brief (ADCIFE) Sequencer Configuration Register */ 
-#define REG_ADCIFE_CDMA           REG_ACCESS(WoReg  , 0x40038018U) /**< \brief (ADCIFE) Configuration Direct Memory Access Register */ 
-#define REG_ADCIFE_TIM            REG_ACCESS(RwReg  , 0x4003801CU) /**< \brief (ADCIFE) Timing Configuration Register */ 
-#define REG_ADCIFE_ITIMER         REG_ACCESS(RwReg  , 0x40038020U) /**< \brief (ADCIFE) Internal Timer Register */ 
-#define REG_ADCIFE_WCFG           REG_ACCESS(RwReg  , 0x40038024U) /**< \brief (ADCIFE) Window Monitor Configuration Register */ 
-#define REG_ADCIFE_WTH            REG_ACCESS(RwReg  , 0x40038028U) /**< \brief (ADCIFE) Window Monitor Threshold Configuration Register */ 
-#define REG_ADCIFE_LCV            REG_ACCESS(RoReg  , 0x4003802CU) /**< \brief (ADCIFE) Sequencer Last Converted Value Register */ 
-#define REG_ADCIFE_IER            REG_ACCESS(WoReg  , 0x40038030U) /**< \brief (ADCIFE) Interrupt Enable Register */ 
-#define REG_ADCIFE_IDR            REG_ACCESS(WoReg  , 0x40038034U) /**< \brief (ADCIFE) Interrupt Disable Register */ 
-#define REG_ADCIFE_IMR            REG_ACCESS(RoReg  , 0x40038038U) /**< \brief (ADCIFE) Interrupt Mask Register */ 
-#define REG_ADCIFE_CALIB          REG_ACCESS(RwReg  , 0x4003803CU) /**< \brief (ADCIFE) Calibration Register */ 
-#define REG_ADCIFE_VERSION        REG_ACCESS(RoReg  , 0x40038040U) /**< \brief (ADCIFE) Version Register */ 
-#define REG_ADCIFE_PARAMETER      REG_ACCESS(RoReg  , 0x40038044U) /**< \brief (ADCIFE) Parameter Register */ 
+#define REG_ADCIFE_CR             REG_ACCESS(WoReg  , 0x40038000U) /**< \brief (ADCIFE) Control Register */
+#define REG_ADCIFE_CFG            REG_ACCESS(RwReg  , 0x40038004U) /**< \brief (ADCIFE) Configuration Register */
+#define REG_ADCIFE_SR             REG_ACCESS(RoReg  , 0x40038008U) /**< \brief (ADCIFE) Status Register */
+#define REG_ADCIFE_SCR            REG_ACCESS(WoReg  , 0x4003800CU) /**< \brief (ADCIFE) Status Clear Register */
+#define REG_ADCIFE_RTS            REG_ACCESS(RwReg  , 0x40038010U) /**< \brief (ADCIFE) Resistive Touch Screen Register */
+#define REG_ADCIFE_SEQCFG         REG_ACCESS(RwReg  , 0x40038014U) /**< \brief (ADCIFE) Sequencer Configuration Register */
+#define REG_ADCIFE_CDMA           REG_ACCESS(WoReg  , 0x40038018U) /**< \brief (ADCIFE) Configuration Direct Memory Access Register */
+#define REG_ADCIFE_TIM            REG_ACCESS(RwReg  , 0x4003801CU) /**< \brief (ADCIFE) Timing Configuration Register */
+#define REG_ADCIFE_ITIMER         REG_ACCESS(RwReg  , 0x40038020U) /**< \brief (ADCIFE) Internal Timer Register */
+#define REG_ADCIFE_WCFG           REG_ACCESS(RwReg  , 0x40038024U) /**< \brief (ADCIFE) Window Monitor Configuration Register */
+#define REG_ADCIFE_WTH            REG_ACCESS(RwReg  , 0x40038028U) /**< \brief (ADCIFE) Window Monitor Threshold Configuration Register */
+#define REG_ADCIFE_LCV            REG_ACCESS(RoReg  , 0x4003802CU) /**< \brief (ADCIFE) Sequencer Last Converted Value Register */
+#define REG_ADCIFE_IER            REG_ACCESS(WoReg  , 0x40038030U) /**< \brief (ADCIFE) Interrupt Enable Register */
+#define REG_ADCIFE_IDR            REG_ACCESS(WoReg  , 0x40038034U) /**< \brief (ADCIFE) Interrupt Disable Register */
+#define REG_ADCIFE_IMR            REG_ACCESS(RoReg  , 0x40038038U) /**< \brief (ADCIFE) Interrupt Mask Register */
+#define REG_ADCIFE_CALIB          REG_ACCESS(RwReg  , 0x4003803CU) /**< \brief (ADCIFE) Calibration Register */
+#define REG_ADCIFE_VERSION        REG_ACCESS(RoReg  , 0x40038040U) /**< \brief (ADCIFE) Version Register */
+#define REG_ADCIFE_PARAMETER      REG_ACCESS(RoReg  , 0x40038044U) /**< \brief (ADCIFE) Parameter Register */
 /* ========== Register definition for DACC peripheral ========== */
-#define REG_DACC_CR               REG_ACCESS(WoReg  , 0x4003C000U) /**< \brief (DACC) Control Register */ 
-#define REG_DACC_MR               REG_ACCESS(RwReg  , 0x4003C004U) /**< \brief (DACC) Mode Register */ 
-#define REG_DACC_CDR              REG_ACCESS(WoReg  , 0x4003C008U) /**< \brief (DACC) Conversion Data Register */ 
-#define REG_DACC_IER              REG_ACCESS(WoReg  , 0x4003C00CU) /**< \brief (DACC) Interrupt Enable Register */ 
-#define REG_DACC_IDR              REG_ACCESS(WoReg  , 0x4003C010U) /**< \brief (DACC) Interrupt Disable Register */ 
-#define REG_DACC_IMR              REG_ACCESS(RoReg  , 0x4003C014U) /**< \brief (DACC) Interrupt Mask Register */ 
-#define REG_DACC_ISR              REG_ACCESS(RoReg  , 0x4003C018U) /**< \brief (DACC) Interrupt Status Register */ 
-#define REG_DACC_WPMR             REG_ACCESS(RwReg  , 0x4003C0E4U) /**< \brief (DACC) Write Protect Mode Register */ 
-#define REG_DACC_WPSR             REG_ACCESS(RoReg  , 0x4003C0E8U) /**< \brief (DACC) Write Protect Status Register */ 
-#define REG_DACC_VERSION          REG_ACCESS(RoReg  , 0x4003C0FCU) /**< \brief (DACC) Version Register */ 
+#define REG_DACC_CR               REG_ACCESS(WoReg  , 0x4003C000U) /**< \brief (DACC) Control Register */
+#define REG_DACC_MR               REG_ACCESS(RwReg  , 0x4003C004U) /**< \brief (DACC) Mode Register */
+#define REG_DACC_CDR              REG_ACCESS(WoReg  , 0x4003C008U) /**< \brief (DACC) Conversion Data Register */
+#define REG_DACC_IER              REG_ACCESS(WoReg  , 0x4003C00CU) /**< \brief (DACC) Interrupt Enable Register */
+#define REG_DACC_IDR              REG_ACCESS(WoReg  , 0x4003C010U) /**< \brief (DACC) Interrupt Disable Register */
+#define REG_DACC_IMR              REG_ACCESS(RoReg  , 0x4003C014U) /**< \brief (DACC) Interrupt Mask Register */
+#define REG_DACC_ISR              REG_ACCESS(RoReg  , 0x4003C018U) /**< \brief (DACC) Interrupt Status Register */
+#define REG_DACC_WPMR             REG_ACCESS(RwReg  , 0x4003C0E4U) /**< \brief (DACC) Write Protect Mode Register */
+#define REG_DACC_WPSR             REG_ACCESS(RoReg  , 0x4003C0E8U) /**< \brief (DACC) Write Protect Status Register */
+#define REG_DACC_VERSION          REG_ACCESS(RoReg  , 0x4003C0FCU) /**< \brief (DACC) Version Register */
 /* ========== Register definition for ACIFC peripheral ========== */
-#define REG_ACIFC_CTRL            REG_ACCESS(RwReg  , 0x40040000U) /**< \brief (ACIFC) Control Register */ 
-#define REG_ACIFC_SR              REG_ACCESS(RoReg  , 0x40040004U) /**< \brief (ACIFC) Status Register */ 
-#define REG_ACIFC_IER             REG_ACCESS(WoReg  , 0x40040010U) /**< \brief (ACIFC) Interrupt Enable Register */ 
-#define REG_ACIFC_IDR             REG_ACCESS(WoReg  , 0x40040014U) /**< \brief (ACIFC) Interrupt Disable Register */ 
-#define REG_ACIFC_IMR             REG_ACCESS(RoReg  , 0x40040018U) /**< \brief (ACIFC) Interrupt Mask Register */ 
-#define REG_ACIFC_ISR             REG_ACCESS(RoReg  , 0x4004001CU) /**< \brief (ACIFC) Interrupt Status Register */ 
-#define REG_ACIFC_ICR             REG_ACCESS(WoReg  , 0x40040020U) /**< \brief (ACIFC) Interrupt Status Clear Register */ 
-#define REG_ACIFC_TR              REG_ACCESS(RwReg  , 0x40040024U) /**< \brief (ACIFC) Test Register */ 
-#define REG_ACIFC_PARAMETER       REG_ACCESS(RoReg  , 0x40040030U) /**< \brief (ACIFC) Parameter Register */ 
-#define REG_ACIFC_VERSION         REG_ACCESS(RoReg  , 0x40040034U) /**< \brief (ACIFC) Version Register */ 
+#define REG_ACIFC_CTRL            REG_ACCESS(RwReg  , 0x40040000U) /**< \brief (ACIFC) Control Register */
+#define REG_ACIFC_SR              REG_ACCESS(RoReg  , 0x40040004U) /**< \brief (ACIFC) Status Register */
+#define REG_ACIFC_IER             REG_ACCESS(WoReg  , 0x40040010U) /**< \brief (ACIFC) Interrupt Enable Register */
+#define REG_ACIFC_IDR             REG_ACCESS(WoReg  , 0x40040014U) /**< \brief (ACIFC) Interrupt Disable Register */
+#define REG_ACIFC_IMR             REG_ACCESS(RoReg  , 0x40040018U) /**< \brief (ACIFC) Interrupt Mask Register */
+#define REG_ACIFC_ISR             REG_ACCESS(RoReg  , 0x4004001CU) /**< \brief (ACIFC) Interrupt Status Register */
+#define REG_ACIFC_ICR             REG_ACCESS(WoReg  , 0x40040020U) /**< \brief (ACIFC) Interrupt Status Clear Register */
+#define REG_ACIFC_TR              REG_ACCESS(RwReg  , 0x40040024U) /**< \brief (ACIFC) Test Register */
+#define REG_ACIFC_PARAMETER       REG_ACCESS(RoReg  , 0x40040030U) /**< \brief (ACIFC) Parameter Register */
+#define REG_ACIFC_VERSION         REG_ACCESS(RoReg  , 0x40040034U) /**< \brief (ACIFC) Version Register */
 #define REG_ACIFC_CONFW0          REG_ACCESS(RwReg  , 0x40040080U) /**< \brief (ACIFC) Window configuration Register 0 */
 #define REG_ACIFC_CONFW1          REG_ACCESS(RwReg  , 0x40040084U) /**< \brief (ACIFC) Window configuration Register 1 */
 #define REG_ACIFC_CONFW2          REG_ACCESS(RwReg  , 0x40040088U) /**< \brief (ACIFC) Window configuration Register 2 */
@@ -12930,141 +12930,141 @@ typedef struct {
 #define REG_GLOC_TRUTH0           REG_ACCESS(RwReg  , 0x40060004U) /**< \brief (GLOC) Truth Register 0 */
 #define REG_GLOC_CR1              REG_ACCESS(RwReg  , 0x40060008U) /**< \brief (GLOC) Control Register 1 */
 #define REG_GLOC_TRUTH1           REG_ACCESS(RwReg  , 0x4006000CU) /**< \brief (GLOC) Truth Register 1 */
-#define REG_GLOC_PARAMETER        REG_ACCESS(RoReg  , 0x40060038U) /**< \brief (GLOC) Parameter Register */ 
-#define REG_GLOC_VERSION          REG_ACCESS(RoReg  , 0x4006003CU) /**< \brief (GLOC) Version Register */ 
+#define REG_GLOC_PARAMETER        REG_ACCESS(RoReg  , 0x40060038U) /**< \brief (GLOC) Parameter Register */
+#define REG_GLOC_VERSION          REG_ACCESS(RoReg  , 0x4006003CU) /**< \brief (GLOC) Version Register */
 /* ========== Register definition for ABDACB peripheral ========== */
-#define REG_ABDACB_CR             REG_ACCESS(RwReg  , 0x40064000U) /**< \brief (ABDACB) Control Register */ 
-#define REG_ABDACB_SDR0           REG_ACCESS(RwReg  , 0x40064004U) /**< \brief (ABDACB) Sample Data Register 0 */ 
-#define REG_ABDACB_SDR1           REG_ACCESS(RwReg  , 0x40064008U) /**< \brief (ABDACB) Sample Data Register 1 */ 
-#define REG_ABDACB_VCR0           REG_ACCESS(RwReg  , 0x4006400CU) /**< \brief (ABDACB) Volume Control Register 0 */ 
-#define REG_ABDACB_VCR1           REG_ACCESS(RwReg  , 0x40064010U) /**< \brief (ABDACB) Volume Control Register 1 */ 
-#define REG_ABDACB_IER            REG_ACCESS(WoReg  , 0x40064014U) /**< \brief (ABDACB) Interrupt Enable Register */ 
-#define REG_ABDACB_IDR            REG_ACCESS(WoReg  , 0x40064018U) /**< \brief (ABDACB) Interupt Disable Register */ 
-#define REG_ABDACB_IMR            REG_ACCESS(RoReg  , 0x4006401CU) /**< \brief (ABDACB) Interrupt Mask Register */ 
-#define REG_ABDACB_SR             REG_ACCESS(RoReg  , 0x40064020U) /**< \brief (ABDACB) Status Register */ 
-#define REG_ABDACB_SCR            REG_ACCESS(WoReg  , 0x40064024U) /**< \brief (ABDACB) Status Clear Register */ 
-#define REG_ABDACB_PARAMETER      REG_ACCESS(RoReg  , 0x40064028U) /**< \brief (ABDACB) Parameter Register */ 
-#define REG_ABDACB_VERSION        REG_ACCESS(RoReg  , 0x4006402CU) /**< \brief (ABDACB) Version Register */ 
+#define REG_ABDACB_CR             REG_ACCESS(RwReg  , 0x40064000U) /**< \brief (ABDACB) Control Register */
+#define REG_ABDACB_SDR0           REG_ACCESS(RwReg  , 0x40064004U) /**< \brief (ABDACB) Sample Data Register 0 */
+#define REG_ABDACB_SDR1           REG_ACCESS(RwReg  , 0x40064008U) /**< \brief (ABDACB) Sample Data Register 1 */
+#define REG_ABDACB_VCR0           REG_ACCESS(RwReg  , 0x4006400CU) /**< \brief (ABDACB) Volume Control Register 0 */
+#define REG_ABDACB_VCR1           REG_ACCESS(RwReg  , 0x40064010U) /**< \brief (ABDACB) Volume Control Register 1 */
+#define REG_ABDACB_IER            REG_ACCESS(WoReg  , 0x40064014U) /**< \brief (ABDACB) Interrupt Enable Register */
+#define REG_ABDACB_IDR            REG_ACCESS(WoReg  , 0x40064018U) /**< \brief (ABDACB) Interupt Disable Register */
+#define REG_ABDACB_IMR            REG_ACCESS(RoReg  , 0x4006401CU) /**< \brief (ABDACB) Interrupt Mask Register */
+#define REG_ABDACB_SR             REG_ACCESS(RoReg  , 0x40064020U) /**< \brief (ABDACB) Status Register */
+#define REG_ABDACB_SCR            REG_ACCESS(WoReg  , 0x40064024U) /**< \brief (ABDACB) Status Clear Register */
+#define REG_ABDACB_PARAMETER      REG_ACCESS(RoReg  , 0x40064028U) /**< \brief (ABDACB) Parameter Register */
+#define REG_ABDACB_VERSION        REG_ACCESS(RoReg  , 0x4006402CU) /**< \brief (ABDACB) Version Register */
 /* ========== Register definition for TRNG peripheral ========== */
-#define REG_TRNG_CR               REG_ACCESS(WoReg  , 0x40068000U) /**< \brief (TRNG) Control Register */ 
-#define REG_TRNG_IER              REG_ACCESS(WoReg  , 0x40068010U) /**< \brief (TRNG) Interrupt Enable Register */ 
-#define REG_TRNG_IDR              REG_ACCESS(WoReg  , 0x40068014U) /**< \brief (TRNG) Interrupt Disable Register */ 
-#define REG_TRNG_IMR              REG_ACCESS(RoReg  , 0x40068018U) /**< \brief (TRNG) Interrupt Mask Register */ 
-#define REG_TRNG_ISR              REG_ACCESS(RoReg  , 0x4006801CU) /**< \brief (TRNG) Interrupt Status Register */ 
-#define REG_TRNG_ODATA            REG_ACCESS(RoReg  , 0x40068050U) /**< \brief (TRNG) Output Data Register */ 
-#define REG_TRNG_VERSION          REG_ACCESS(RoReg  , 0x400680FCU) /**< \brief (TRNG) Version Register */ 
+#define REG_TRNG_CR               REG_ACCESS(WoReg  , 0x40068000U) /**< \brief (TRNG) Control Register */
+#define REG_TRNG_IER              REG_ACCESS(WoReg  , 0x40068010U) /**< \brief (TRNG) Interrupt Enable Register */
+#define REG_TRNG_IDR              REG_ACCESS(WoReg  , 0x40068014U) /**< \brief (TRNG) Interrupt Disable Register */
+#define REG_TRNG_IMR              REG_ACCESS(RoReg  , 0x40068018U) /**< \brief (TRNG) Interrupt Mask Register */
+#define REG_TRNG_ISR              REG_ACCESS(RoReg  , 0x4006801CU) /**< \brief (TRNG) Interrupt Status Register */
+#define REG_TRNG_ODATA            REG_ACCESS(RoReg  , 0x40068050U) /**< \brief (TRNG) Output Data Register */
+#define REG_TRNG_VERSION          REG_ACCESS(RoReg  , 0x400680FCU) /**< \brief (TRNG) Version Register */
 /* ========== Register definition for PARC peripheral ========== */
-#define REG_PARC_CFG              REG_ACCESS(RwReg  , 0x4006C000U) /**< \brief (PARC) Configuration Register */ 
-#define REG_PARC_CR               REG_ACCESS(RwReg  , 0x4006C004U) /**< \brief (PARC) Control Register */ 
-#define REG_PARC_IER              REG_ACCESS(WoReg  , 0x4006C008U) /**< \brief (PARC) Interrupt Enable Register */ 
-#define REG_PARC_IDR              REG_ACCESS(WoReg  , 0x4006C00CU) /**< \brief (PARC) Interrupt Disable Register */ 
-#define REG_PARC_IMR              REG_ACCESS(RoReg  , 0x4006C010U) /**< \brief (PARC) Interrupt Mask Register */ 
-#define REG_PARC_SR               REG_ACCESS(RoReg  , 0x4006C014U) /**< \brief (PARC) Status Register */ 
-#define REG_PARC_ICR              REG_ACCESS(WoReg  , 0x4006C018U) /**< \brief (PARC) Interrupt Status Clear Register */ 
-#define REG_PARC_RHR              REG_ACCESS(RoReg  , 0x4006C01CU) /**< \brief (PARC) Receive Holding Register */ 
-#define REG_PARC_VERSION          REG_ACCESS(RoReg  , 0x4006C020U) /**< \brief (PARC) Version Register */ 
+#define REG_PARC_CFG              REG_ACCESS(RwReg  , 0x4006C000U) /**< \brief (PARC) Configuration Register */
+#define REG_PARC_CR               REG_ACCESS(RwReg  , 0x4006C004U) /**< \brief (PARC) Control Register */
+#define REG_PARC_IER              REG_ACCESS(WoReg  , 0x4006C008U) /**< \brief (PARC) Interrupt Enable Register */
+#define REG_PARC_IDR              REG_ACCESS(WoReg  , 0x4006C00CU) /**< \brief (PARC) Interrupt Disable Register */
+#define REG_PARC_IMR              REG_ACCESS(RoReg  , 0x4006C010U) /**< \brief (PARC) Interrupt Mask Register */
+#define REG_PARC_SR               REG_ACCESS(RoReg  , 0x4006C014U) /**< \brief (PARC) Status Register */
+#define REG_PARC_ICR              REG_ACCESS(WoReg  , 0x4006C018U) /**< \brief (PARC) Interrupt Status Clear Register */
+#define REG_PARC_RHR              REG_ACCESS(RoReg  , 0x4006C01CU) /**< \brief (PARC) Receive Holding Register */
+#define REG_PARC_VERSION          REG_ACCESS(RoReg  , 0x4006C020U) /**< \brief (PARC) Version Register */
 /* ========== Register definition for CATB peripheral ========== */
-#define REG_CATB_CR               REG_ACCESS(RwReg  , 0x40070000U) /**< \brief (CATB) Control Register */ 
-#define REG_CATB_CNTCR            REG_ACCESS(RwReg  , 0x40070004U) /**< \brief (CATB) Counter Control Register */ 
-#define REG_CATB_IDLE             REG_ACCESS(RwReg  , 0x40070008U) /**< \brief (CATB) Sensor Idle Level */ 
-#define REG_CATB_LEVEL            REG_ACCESS(RoReg  , 0x4007000CU) /**< \brief (CATB) Sensor Relative Level */ 
-#define REG_CATB_RAW              REG_ACCESS(RoReg  , 0x40070010U) /**< \brief (CATB) Sensor Raw Value */ 
-#define REG_CATB_TIMING           REG_ACCESS(RwReg  , 0x40070014U) /**< \brief (CATB) Filter Timing Register */ 
-#define REG_CATB_THRESH           REG_ACCESS(RwReg  , 0x40070018U) /**< \brief (CATB) Threshold Register */ 
-#define REG_CATB_PINSEL           REG_ACCESS(RwReg  , 0x4007001CU) /**< \brief (CATB) Pin Selection Register */ 
-#define REG_CATB_DMA              REG_ACCESS(RwReg  , 0x40070020U) /**< \brief (CATB) Direct Memory Access Register */ 
-#define REG_CATB_ISR              REG_ACCESS(RoReg  , 0x40070024U) /**< \brief (CATB) Interrupt Status Register */ 
-#define REG_CATB_IER              REG_ACCESS(WoReg  , 0x40070028U) /**< \brief (CATB) Interrupt Enable Register */ 
-#define REG_CATB_IDR              REG_ACCESS(WoReg  , 0x4007002CU) /**< \brief (CATB) Interrupt Disable Register */ 
-#define REG_CATB_IMR              REG_ACCESS(RoReg  , 0x40070030U) /**< \brief (CATB) Interrupt Mask Register */ 
-#define REG_CATB_SCR              REG_ACCESS(WoReg  , 0x40070034U) /**< \brief (CATB) Status Clear Register */ 
+#define REG_CATB_CR               REG_ACCESS(RwReg  , 0x40070000U) /**< \brief (CATB) Control Register */
+#define REG_CATB_CNTCR            REG_ACCESS(RwReg  , 0x40070004U) /**< \brief (CATB) Counter Control Register */
+#define REG_CATB_IDLE             REG_ACCESS(RwReg  , 0x40070008U) /**< \brief (CATB) Sensor Idle Level */
+#define REG_CATB_LEVEL            REG_ACCESS(RoReg  , 0x4007000CU) /**< \brief (CATB) Sensor Relative Level */
+#define REG_CATB_RAW              REG_ACCESS(RoReg  , 0x40070010U) /**< \brief (CATB) Sensor Raw Value */
+#define REG_CATB_TIMING           REG_ACCESS(RwReg  , 0x40070014U) /**< \brief (CATB) Filter Timing Register */
+#define REG_CATB_THRESH           REG_ACCESS(RwReg  , 0x40070018U) /**< \brief (CATB) Threshold Register */
+#define REG_CATB_PINSEL           REG_ACCESS(RwReg  , 0x4007001CU) /**< \brief (CATB) Pin Selection Register */
+#define REG_CATB_DMA              REG_ACCESS(RwReg  , 0x40070020U) /**< \brief (CATB) Direct Memory Access Register */
+#define REG_CATB_ISR              REG_ACCESS(RoReg  , 0x40070024U) /**< \brief (CATB) Interrupt Status Register */
+#define REG_CATB_IER              REG_ACCESS(WoReg  , 0x40070028U) /**< \brief (CATB) Interrupt Enable Register */
+#define REG_CATB_IDR              REG_ACCESS(WoReg  , 0x4007002CU) /**< \brief (CATB) Interrupt Disable Register */
+#define REG_CATB_IMR              REG_ACCESS(RoReg  , 0x40070030U) /**< \brief (CATB) Interrupt Mask Register */
+#define REG_CATB_SCR              REG_ACCESS(WoReg  , 0x40070034U) /**< \brief (CATB) Status Clear Register */
 #define REG_CATB_INTCH0           REG_ACCESS(RoReg  , 0x40070040U) /**< \brief (CATB) In-Touch Status Register 0 0 */
 #define REG_CATB_INTCHCLR0        REG_ACCESS(WoReg  , 0x40070050U) /**< \brief (CATB) In-Touch Status Clear Register 0 0 */
 #define REG_CATB_OUTTCH0          REG_ACCESS(RoReg  , 0x40070060U) /**< \brief (CATB) Out-of-Touch Status Register 0 0 */
 #define REG_CATB_OUTTCHCLR0       REG_ACCESS(WoReg  , 0x40070070U) /**< \brief (CATB) Out-of-Touch Status Clear Register 0 0 */
-#define REG_CATB_PARAMETER        REG_ACCESS(RoReg  , 0x400700F8U) /**< \brief (CATB) Parameter Register */ 
-#define REG_CATB_VERSION          REG_ACCESS(RoReg  , 0x400700FCU) /**< \brief (CATB) Version Register */ 
+#define REG_CATB_PARAMETER        REG_ACCESS(RoReg  , 0x400700F8U) /**< \brief (CATB) Parameter Register */
+#define REG_CATB_VERSION          REG_ACCESS(RoReg  , 0x400700FCU) /**< \brief (CATB) Version Register */
 /* ========== Register definition for TWIM2 peripheral ========== */
-#define REG_TWIM2_CR              REG_ACCESS(WoReg  , 0x40078000U) /**< \brief (TWIM2) Control Register */ 
-#define REG_TWIM2_CWGR            REG_ACCESS(RwReg  , 0x40078004U) /**< \brief (TWIM2) Clock Waveform Generator Register */ 
-#define REG_TWIM2_SMBTR           REG_ACCESS(RwReg  , 0x40078008U) /**< \brief (TWIM2) SMBus Timing Register */ 
-#define REG_TWIM2_CMDR            REG_ACCESS(RwReg  , 0x4007800CU) /**< \brief (TWIM2) Command Register */ 
-#define REG_TWIM2_NCMDR           REG_ACCESS(RwReg  , 0x40078010U) /**< \brief (TWIM2) Next Command Register */ 
-#define REG_TWIM2_RHR             REG_ACCESS(RoReg  , 0x40078014U) /**< \brief (TWIM2) Receive Holding Register */ 
-#define REG_TWIM2_THR             REG_ACCESS(WoReg  , 0x40078018U) /**< \brief (TWIM2) Transmit Holding Register */ 
-#define REG_TWIM2_SR              REG_ACCESS(RoReg  , 0x4007801CU) /**< \brief (TWIM2) Status Register */ 
-#define REG_TWIM2_IER             REG_ACCESS(WoReg  , 0x40078020U) /**< \brief (TWIM2) Interrupt Enable Register */ 
-#define REG_TWIM2_IDR             REG_ACCESS(WoReg  , 0x40078024U) /**< \brief (TWIM2) Interrupt Disable Register */ 
-#define REG_TWIM2_IMR             REG_ACCESS(RoReg  , 0x40078028U) /**< \brief (TWIM2) Interrupt Mask Register */ 
-#define REG_TWIM2_SCR             REG_ACCESS(WoReg  , 0x4007802CU) /**< \brief (TWIM2) Status Clear Register */ 
-#define REG_TWIM2_PR              REG_ACCESS(RoReg  , 0x40078030U) /**< \brief (TWIM2) Parameter Register */ 
-#define REG_TWIM2_VR              REG_ACCESS(RoReg  , 0x40078034U) /**< \brief (TWIM2) Version Register */ 
-#define REG_TWIM2_HSCWGR          REG_ACCESS(RwReg  , 0x40078038U) /**< \brief (TWIM2) HS-mode Clock Waveform Generator */ 
-#define REG_TWIM2_SRR             REG_ACCESS(RwReg  , 0x4007803CU) /**< \brief (TWIM2) Slew Rate Register */ 
-#define REG_TWIM2_HSSRR           REG_ACCESS(RwReg  , 0x40078040U) /**< \brief (TWIM2) HS-mode Slew Rate Register */ 
+#define REG_TWIM2_CR              REG_ACCESS(WoReg  , 0x40078000U) /**< \brief (TWIM2) Control Register */
+#define REG_TWIM2_CWGR            REG_ACCESS(RwReg  , 0x40078004U) /**< \brief (TWIM2) Clock Waveform Generator Register */
+#define REG_TWIM2_SMBTR           REG_ACCESS(RwReg  , 0x40078008U) /**< \brief (TWIM2) SMBus Timing Register */
+#define REG_TWIM2_CMDR            REG_ACCESS(RwReg  , 0x4007800CU) /**< \brief (TWIM2) Command Register */
+#define REG_TWIM2_NCMDR           REG_ACCESS(RwReg  , 0x40078010U) /**< \brief (TWIM2) Next Command Register */
+#define REG_TWIM2_RHR             REG_ACCESS(RoReg  , 0x40078014U) /**< \brief (TWIM2) Receive Holding Register */
+#define REG_TWIM2_THR             REG_ACCESS(WoReg  , 0x40078018U) /**< \brief (TWIM2) Transmit Holding Register */
+#define REG_TWIM2_SR              REG_ACCESS(RoReg  , 0x4007801CU) /**< \brief (TWIM2) Status Register */
+#define REG_TWIM2_IER             REG_ACCESS(WoReg  , 0x40078020U) /**< \brief (TWIM2) Interrupt Enable Register */
+#define REG_TWIM2_IDR             REG_ACCESS(WoReg  , 0x40078024U) /**< \brief (TWIM2) Interrupt Disable Register */
+#define REG_TWIM2_IMR             REG_ACCESS(RoReg  , 0x40078028U) /**< \brief (TWIM2) Interrupt Mask Register */
+#define REG_TWIM2_SCR             REG_ACCESS(WoReg  , 0x4007802CU) /**< \brief (TWIM2) Status Clear Register */
+#define REG_TWIM2_PR              REG_ACCESS(RoReg  , 0x40078030U) /**< \brief (TWIM2) Parameter Register */
+#define REG_TWIM2_VR              REG_ACCESS(RoReg  , 0x40078034U) /**< \brief (TWIM2) Version Register */
+#define REG_TWIM2_HSCWGR          REG_ACCESS(RwReg  , 0x40078038U) /**< \brief (TWIM2) HS-mode Clock Waveform Generator */
+#define REG_TWIM2_SRR             REG_ACCESS(RwReg  , 0x4007803CU) /**< \brief (TWIM2) Slew Rate Register */
+#define REG_TWIM2_HSSRR           REG_ACCESS(RwReg  , 0x40078040U) /**< \brief (TWIM2) HS-mode Slew Rate Register */
 /* ========== Register definition for TWIM3 peripheral ========== */
-#define REG_TWIM3_CR              REG_ACCESS(WoReg  , 0x4007C000U) /**< \brief (TWIM3) Control Register */ 
-#define REG_TWIM3_CWGR            REG_ACCESS(RwReg  , 0x4007C004U) /**< \brief (TWIM3) Clock Waveform Generator Register */ 
-#define REG_TWIM3_SMBTR           REG_ACCESS(RwReg  , 0x4007C008U) /**< \brief (TWIM3) SMBus Timing Register */ 
-#define REG_TWIM3_CMDR            REG_ACCESS(RwReg  , 0x4007C00CU) /**< \brief (TWIM3) Command Register */ 
-#define REG_TWIM3_NCMDR           REG_ACCESS(RwReg  , 0x4007C010U) /**< \brief (TWIM3) Next Command Register */ 
-#define REG_TWIM3_RHR             REG_ACCESS(RoReg  , 0x4007C014U) /**< \brief (TWIM3) Receive Holding Register */ 
-#define REG_TWIM3_THR             REG_ACCESS(WoReg  , 0x4007C018U) /**< \brief (TWIM3) Transmit Holding Register */ 
-#define REG_TWIM3_SR              REG_ACCESS(RoReg  , 0x4007C01CU) /**< \brief (TWIM3) Status Register */ 
-#define REG_TWIM3_IER             REG_ACCESS(WoReg  , 0x4007C020U) /**< \brief (TWIM3) Interrupt Enable Register */ 
-#define REG_TWIM3_IDR             REG_ACCESS(WoReg  , 0x4007C024U) /**< \brief (TWIM3) Interrupt Disable Register */ 
-#define REG_TWIM3_IMR             REG_ACCESS(RoReg  , 0x4007C028U) /**< \brief (TWIM3) Interrupt Mask Register */ 
-#define REG_TWIM3_SCR             REG_ACCESS(WoReg  , 0x4007C02CU) /**< \brief (TWIM3) Status Clear Register */ 
-#define REG_TWIM3_PR              REG_ACCESS(RoReg  , 0x4007C030U) /**< \brief (TWIM3) Parameter Register */ 
-#define REG_TWIM3_VR              REG_ACCESS(RoReg  , 0x4007C034U) /**< \brief (TWIM3) Version Register */ 
-#define REG_TWIM3_HSCWGR          REG_ACCESS(RwReg  , 0x4007C038U) /**< \brief (TWIM3) HS-mode Clock Waveform Generator */ 
-#define REG_TWIM3_SRR             REG_ACCESS(RwReg  , 0x4007C03CU) /**< \brief (TWIM3) Slew Rate Register */ 
-#define REG_TWIM3_HSSRR           REG_ACCESS(RwReg  , 0x4007C040U) /**< \brief (TWIM3) HS-mode Slew Rate Register */ 
+#define REG_TWIM3_CR              REG_ACCESS(WoReg  , 0x4007C000U) /**< \brief (TWIM3) Control Register */
+#define REG_TWIM3_CWGR            REG_ACCESS(RwReg  , 0x4007C004U) /**< \brief (TWIM3) Clock Waveform Generator Register */
+#define REG_TWIM3_SMBTR           REG_ACCESS(RwReg  , 0x4007C008U) /**< \brief (TWIM3) SMBus Timing Register */
+#define REG_TWIM3_CMDR            REG_ACCESS(RwReg  , 0x4007C00CU) /**< \brief (TWIM3) Command Register */
+#define REG_TWIM3_NCMDR           REG_ACCESS(RwReg  , 0x4007C010U) /**< \brief (TWIM3) Next Command Register */
+#define REG_TWIM3_RHR             REG_ACCESS(RoReg  , 0x4007C014U) /**< \brief (TWIM3) Receive Holding Register */
+#define REG_TWIM3_THR             REG_ACCESS(WoReg  , 0x4007C018U) /**< \brief (TWIM3) Transmit Holding Register */
+#define REG_TWIM3_SR              REG_ACCESS(RoReg  , 0x4007C01CU) /**< \brief (TWIM3) Status Register */
+#define REG_TWIM3_IER             REG_ACCESS(WoReg  , 0x4007C020U) /**< \brief (TWIM3) Interrupt Enable Register */
+#define REG_TWIM3_IDR             REG_ACCESS(WoReg  , 0x4007C024U) /**< \brief (TWIM3) Interrupt Disable Register */
+#define REG_TWIM3_IMR             REG_ACCESS(RoReg  , 0x4007C028U) /**< \brief (TWIM3) Interrupt Mask Register */
+#define REG_TWIM3_SCR             REG_ACCESS(WoReg  , 0x4007C02CU) /**< \brief (TWIM3) Status Clear Register */
+#define REG_TWIM3_PR              REG_ACCESS(RoReg  , 0x4007C030U) /**< \brief (TWIM3) Parameter Register */
+#define REG_TWIM3_VR              REG_ACCESS(RoReg  , 0x4007C034U) /**< \brief (TWIM3) Version Register */
+#define REG_TWIM3_HSCWGR          REG_ACCESS(RwReg  , 0x4007C038U) /**< \brief (TWIM3) HS-mode Clock Waveform Generator */
+#define REG_TWIM3_SRR             REG_ACCESS(RwReg  , 0x4007C03CU) /**< \brief (TWIM3) Slew Rate Register */
+#define REG_TWIM3_HSSRR           REG_ACCESS(RwReg  , 0x4007C040U) /**< \brief (TWIM3) HS-mode Slew Rate Register */
 /* ========== Register definition for LCDCA peripheral ========== */
-#define REG_LCDCA_CR              REG_ACCESS(WoReg  , 0x40080000U) /**< \brief (LCDCA) Control Register */ 
-#define REG_LCDCA_CFG             REG_ACCESS(RwReg  , 0x40080004U) /**< \brief (LCDCA) Configuration Register */ 
-#define REG_LCDCA_TIM             REG_ACCESS(RwReg  , 0x40080008U) /**< \brief (LCDCA) Timing Register */ 
-#define REG_LCDCA_SR              REG_ACCESS(RoReg  , 0x4008000CU) /**< \brief (LCDCA) Status Register */ 
-#define REG_LCDCA_SCR             REG_ACCESS(WoReg  , 0x40080010U) /**< \brief (LCDCA) Status Clear Register */ 
-#define REG_LCDCA_DRL0            REG_ACCESS(RwReg  , 0x40080014U) /**< \brief (LCDCA) Data Register Low 0 */ 
-#define REG_LCDCA_DRH0            REG_ACCESS(RwReg  , 0x40080018U) /**< \brief (LCDCA) Data Register High 0 */ 
-#define REG_LCDCA_DRL1            REG_ACCESS(RwReg  , 0x4008001CU) /**< \brief (LCDCA) Data Register Low 1 */ 
-#define REG_LCDCA_DRH1            REG_ACCESS(RwReg  , 0x40080020U) /**< \brief (LCDCA) Data Register High 1 */ 
-#define REG_LCDCA_DRL2            REG_ACCESS(RwReg  , 0x40080024U) /**< \brief (LCDCA) Data Register Low 2 */ 
-#define REG_LCDCA_DRH2            REG_ACCESS(RwReg  , 0x40080028U) /**< \brief (LCDCA) Data Register High 2 */ 
-#define REG_LCDCA_DRL3            REG_ACCESS(RwReg  , 0x4008002CU) /**< \brief (LCDCA) Data Register Low 3 */ 
-#define REG_LCDCA_DRH3            REG_ACCESS(RwReg  , 0x40080030U) /**< \brief (LCDCA) Data Register High 3 */ 
-#define REG_LCDCA_IADR            REG_ACCESS(WoReg  , 0x40080034U) /**< \brief (LCDCA) Indirect Access Data Register */ 
-#define REG_LCDCA_BCFG            REG_ACCESS(RwReg  , 0x40080038U) /**< \brief (LCDCA) Blink Configuration Register */ 
-#define REG_LCDCA_CSRCFG          REG_ACCESS(RwReg  , 0x4008003CU) /**< \brief (LCDCA) Circular Shift Register Configuration */ 
-#define REG_LCDCA_CMCFG           REG_ACCESS(RwReg  , 0x40080040U) /**< \brief (LCDCA) Character Mapping Configuration Register */ 
-#define REG_LCDCA_CMDR            REG_ACCESS(WoReg  , 0x40080044U) /**< \brief (LCDCA) Character Mapping Data Register */ 
-#define REG_LCDCA_ACMCFG          REG_ACCESS(RwReg  , 0x40080048U) /**< \brief (LCDCA) Automated Character Mapping Configuration Register */ 
-#define REG_LCDCA_ACMDR           REG_ACCESS(WoReg  , 0x4008004CU) /**< \brief (LCDCA) Automated Character Mapping Data Register */ 
-#define REG_LCDCA_ABMCFG          REG_ACCESS(RwReg  , 0x40080050U) /**< \brief (LCDCA) Automated Bit Mapping Configuration Register */ 
-#define REG_LCDCA_ABMDR           REG_ACCESS(WoReg  , 0x40080054U) /**< \brief (LCDCA) Automated Bit Mapping Data Register */ 
-#define REG_LCDCA_IER             REG_ACCESS(WoReg  , 0x40080058U) /**< \brief (LCDCA) Interrupt Enable Register */ 
-#define REG_LCDCA_IDR             REG_ACCESS(WoReg  , 0x4008005CU) /**< \brief (LCDCA) Interrupt Disable Register */ 
-#define REG_LCDCA_IMR             REG_ACCESS(RoReg  , 0x40080060U) /**< \brief (LCDCA) Interrupt Mask Register */ 
-#define REG_LCDCA_VERSION         REG_ACCESS(RoReg  , 0x40080064U) /**< \brief (LCDCA) Version Register */ 
+#define REG_LCDCA_CR              REG_ACCESS(WoReg  , 0x40080000U) /**< \brief (LCDCA) Control Register */
+#define REG_LCDCA_CFG             REG_ACCESS(RwReg  , 0x40080004U) /**< \brief (LCDCA) Configuration Register */
+#define REG_LCDCA_TIM             REG_ACCESS(RwReg  , 0x40080008U) /**< \brief (LCDCA) Timing Register */
+#define REG_LCDCA_SR              REG_ACCESS(RoReg  , 0x4008000CU) /**< \brief (LCDCA) Status Register */
+#define REG_LCDCA_SCR             REG_ACCESS(WoReg  , 0x40080010U) /**< \brief (LCDCA) Status Clear Register */
+#define REG_LCDCA_DRL0            REG_ACCESS(RwReg  , 0x40080014U) /**< \brief (LCDCA) Data Register Low 0 */
+#define REG_LCDCA_DRH0            REG_ACCESS(RwReg  , 0x40080018U) /**< \brief (LCDCA) Data Register High 0 */
+#define REG_LCDCA_DRL1            REG_ACCESS(RwReg  , 0x4008001CU) /**< \brief (LCDCA) Data Register Low 1 */
+#define REG_LCDCA_DRH1            REG_ACCESS(RwReg  , 0x40080020U) /**< \brief (LCDCA) Data Register High 1 */
+#define REG_LCDCA_DRL2            REG_ACCESS(RwReg  , 0x40080024U) /**< \brief (LCDCA) Data Register Low 2 */
+#define REG_LCDCA_DRH2            REG_ACCESS(RwReg  , 0x40080028U) /**< \brief (LCDCA) Data Register High 2 */
+#define REG_LCDCA_DRL3            REG_ACCESS(RwReg  , 0x4008002CU) /**< \brief (LCDCA) Data Register Low 3 */
+#define REG_LCDCA_DRH3            REG_ACCESS(RwReg  , 0x40080030U) /**< \brief (LCDCA) Data Register High 3 */
+#define REG_LCDCA_IADR            REG_ACCESS(WoReg  , 0x40080034U) /**< \brief (LCDCA) Indirect Access Data Register */
+#define REG_LCDCA_BCFG            REG_ACCESS(RwReg  , 0x40080038U) /**< \brief (LCDCA) Blink Configuration Register */
+#define REG_LCDCA_CSRCFG          REG_ACCESS(RwReg  , 0x4008003CU) /**< \brief (LCDCA) Circular Shift Register Configuration */
+#define REG_LCDCA_CMCFG           REG_ACCESS(RwReg  , 0x40080040U) /**< \brief (LCDCA) Character Mapping Configuration Register */
+#define REG_LCDCA_CMDR            REG_ACCESS(WoReg  , 0x40080044U) /**< \brief (LCDCA) Character Mapping Data Register */
+#define REG_LCDCA_ACMCFG          REG_ACCESS(RwReg  , 0x40080048U) /**< \brief (LCDCA) Automated Character Mapping Configuration Register */
+#define REG_LCDCA_ACMDR           REG_ACCESS(WoReg  , 0x4008004CU) /**< \brief (LCDCA) Automated Character Mapping Data Register */
+#define REG_LCDCA_ABMCFG          REG_ACCESS(RwReg  , 0x40080050U) /**< \brief (LCDCA) Automated Bit Mapping Configuration Register */
+#define REG_LCDCA_ABMDR           REG_ACCESS(WoReg  , 0x40080054U) /**< \brief (LCDCA) Automated Bit Mapping Data Register */
+#define REG_LCDCA_IER             REG_ACCESS(WoReg  , 0x40080058U) /**< \brief (LCDCA) Interrupt Enable Register */
+#define REG_LCDCA_IDR             REG_ACCESS(WoReg  , 0x4008005CU) /**< \brief (LCDCA) Interrupt Disable Register */
+#define REG_LCDCA_IMR             REG_ACCESS(RoReg  , 0x40080060U) /**< \brief (LCDCA) Interrupt Mask Register */
+#define REG_LCDCA_VERSION         REG_ACCESS(RoReg  , 0x40080064U) /**< \brief (LCDCA) Version Register */
 /* ========== Register definition for HFLASHC peripheral ========== */
-#define REG_HFLASHC_FCR           REG_ACCESS(RwReg  , 0x400A0000U) /**< \brief (HFLASHC) Flash Controller Control Register */ 
-#define REG_HFLASHC_FCMD          REG_ACCESS(RwReg  , 0x400A0004U) /**< \brief (HFLASHC) Flash Controller Command Register */ 
-#define REG_HFLASHC_FSR           REG_ACCESS(RwReg  , 0x400A0008U) /**< \brief (HFLASHC) Flash Controller Status Register */ 
-#define REG_HFLASHC_FPR           REG_ACCESS(RoReg  , 0x400A000CU) /**< \brief (HFLASHC) Flash Controller Parameter Register */ 
-#define REG_HFLASHC_VERSION       REG_ACCESS(RoReg  , 0x400A0010U) /**< \brief (HFLASHC) Flash Controller Version Register */ 
-#define REG_HFLASHC_FGPFRHI       REG_ACCESS(RwReg  , 0x400A0014U) /**< \brief (HFLASHC) Flash Controller General Purpose Fuse Register High */ 
-#define REG_HFLASHC_FGPFRLO       REG_ACCESS(RwReg  , 0x400A0018U) /**< \brief (HFLASHC) Flash Controller General Purpose Fuse Register Low */ 
+#define REG_HFLASHC_FCR           REG_ACCESS(RwReg  , 0x400A0000U) /**< \brief (HFLASHC) Flash Controller Control Register */
+#define REG_HFLASHC_FCMD          REG_ACCESS(RwReg  , 0x400A0004U) /**< \brief (HFLASHC) Flash Controller Command Register */
+#define REG_HFLASHC_FSR           REG_ACCESS(RwReg  , 0x400A0008U) /**< \brief (HFLASHC) Flash Controller Status Register */
+#define REG_HFLASHC_FPR           REG_ACCESS(RoReg  , 0x400A000CU) /**< \brief (HFLASHC) Flash Controller Parameter Register */
+#define REG_HFLASHC_VERSION       REG_ACCESS(RoReg  , 0x400A0010U) /**< \brief (HFLASHC) Flash Controller Version Register */
+#define REG_HFLASHC_FGPFRHI       REG_ACCESS(RwReg  , 0x400A0014U) /**< \brief (HFLASHC) Flash Controller General Purpose Fuse Register High */
+#define REG_HFLASHC_FGPFRLO       REG_ACCESS(RwReg  , 0x400A0018U) /**< \brief (HFLASHC) Flash Controller General Purpose Fuse Register Low */
 /* ========== Register definition for HCACHE peripheral ========== */
-#define REG_HCACHE_CTRL           REG_ACCESS(WoReg  , 0x400A0408U) /**< \brief (HCACHE) Control Register */ 
-#define REG_HCACHE_SR             REG_ACCESS(RwReg  , 0x400A040CU) /**< \brief (HCACHE) Status Register */ 
-#define REG_HCACHE_MAINT0         REG_ACCESS(WoReg  , 0x400A0420U) /**< \brief (HCACHE) Maintenance Register 0 */ 
-#define REG_HCACHE_MAINT1         REG_ACCESS(WoReg  , 0x400A0424U) /**< \brief (HCACHE) Maintenance Register 1 */ 
-#define REG_HCACHE_MCFG           REG_ACCESS(RwReg  , 0x400A0428U) /**< \brief (HCACHE) Monitor Configuration Register */ 
-#define REG_HCACHE_MEN            REG_ACCESS(RwReg  , 0x400A042CU) /**< \brief (HCACHE) Monitor Enable Register */ 
-#define REG_HCACHE_MCTRL          REG_ACCESS(WoReg  , 0x400A0430U) /**< \brief (HCACHE) Monitor Control Register */ 
-#define REG_HCACHE_MSR            REG_ACCESS(RoReg  , 0x400A0434U) /**< \brief (HCACHE) Monitor Status Register */ 
-#define REG_HCACHE_VERSION        REG_ACCESS(RoReg  , 0x400A04FCU) /**< \brief (HCACHE) Version Register */ 
+#define REG_HCACHE_CTRL           REG_ACCESS(WoReg  , 0x400A0408U) /**< \brief (HCACHE) Control Register */
+#define REG_HCACHE_SR             REG_ACCESS(RwReg  , 0x400A040CU) /**< \brief (HCACHE) Status Register */
+#define REG_HCACHE_MAINT0         REG_ACCESS(WoReg  , 0x400A0420U) /**< \brief (HCACHE) Maintenance Register 0 */
+#define REG_HCACHE_MAINT1         REG_ACCESS(WoReg  , 0x400A0424U) /**< \brief (HCACHE) Maintenance Register 1 */
+#define REG_HCACHE_MCFG           REG_ACCESS(RwReg  , 0x400A0428U) /**< \brief (HCACHE) Monitor Configuration Register */
+#define REG_HCACHE_MEN            REG_ACCESS(RwReg  , 0x400A042CU) /**< \brief (HCACHE) Monitor Enable Register */
+#define REG_HCACHE_MCTRL          REG_ACCESS(WoReg  , 0x400A0430U) /**< \brief (HCACHE) Monitor Control Register */
+#define REG_HCACHE_MSR            REG_ACCESS(RoReg  , 0x400A0434U) /**< \brief (HCACHE) Monitor Status Register */
+#define REG_HCACHE_VERSION        REG_ACCESS(RoReg  , 0x400A04FCU) /**< \brief (HCACHE) Version Register */
 /* ========== Register definition for HMATRIX peripheral ========== */
 #define REG_HMATRIX_MCFG0         REG_ACCESS(RwReg  , 0x400A1000U) /**< \brief (HMATRIX) Master Configuration Register 0 0 */
 #define REG_HMATRIX_MCFG1         REG_ACCESS(RwReg  , 0x400A1004U) /**< \brief (HMATRIX) Master Configuration Register 0 1 */
@@ -13130,7 +13130,7 @@ typedef struct {
 #define REG_HMATRIX_PRBS14        REG_ACCESS(RwReg  , 0x400A10F4U) /**< \brief (HMATRIX) Priority Register B for Slave 0 14 */
 #define REG_HMATRIX_PRAS15        REG_ACCESS(RwReg  , 0x400A10F8U) /**< \brief (HMATRIX) Priority Register A for Slave 0 15 */
 #define REG_HMATRIX_PRBS15        REG_ACCESS(RwReg  , 0x400A10FCU) /**< \brief (HMATRIX) Priority Register B for Slave 0 15 */
-#define REG_HMATRIX_MRCR          REG_ACCESS(RwReg  , 0x400A1100U) /**< \brief (HMATRIX) Master Remap Control Register */ 
+#define REG_HMATRIX_MRCR          REG_ACCESS(RwReg  , 0x400A1100U) /**< \brief (HMATRIX) Master Remap Control Register */
 #define REG_HMATRIX_SFR0          REG_ACCESS(RwReg  , 0x400A1110U) /**< \brief (HMATRIX) Special Function Register 0 0 */
 #define REG_HMATRIX_SFR1          REG_ACCESS(RwReg  , 0x400A1114U) /**< \brief (HMATRIX) Special Function Register 0 1 */
 #define REG_HMATRIX_SFR2          REG_ACCESS(RwReg  , 0x400A1118U) /**< \brief (HMATRIX) Special Function Register 0 2 */
@@ -13340,215 +13340,215 @@ typedef struct {
 #define REG_PDCA_IDR15            REG_ACCESS(WoReg  , 0x400A23E4U) /**< \brief (PDCA) Interrupt Disable Register 15 */
 #define REG_PDCA_IMR15            REG_ACCESS(RoReg  , 0x400A23E8U) /**< \brief (PDCA) Interrupt Mask Register 15 */
 #define REG_PDCA_ISR15            REG_ACCESS(RoReg  , 0x400A23ECU) /**< \brief (PDCA) Interrupt Status Register 15 */
-#define REG_PDCA_PCONTROL         REG_ACCESS(RwReg  , 0x400A2800U) /**< \brief (PDCA) Performance Control Register */ 
-#define REG_PDCA_PRDATA0          REG_ACCESS(RoReg  , 0x400A2804U) /**< \brief (PDCA) Channel 0 Read Data Cycles */ 
-#define REG_PDCA_PRSTALL0         REG_ACCESS(RoReg  , 0x400A2808U) /**< \brief (PDCA) Channel 0 Read Stall Cycles */ 
-#define REG_PDCA_PRLAT0           REG_ACCESS(RoReg  , 0x400A280CU) /**< \brief (PDCA) Channel 0 Read Max Latency */ 
-#define REG_PDCA_PWDATA0          REG_ACCESS(RoReg  , 0x400A2810U) /**< \brief (PDCA) Channel 0 Write Data Cycles */ 
-#define REG_PDCA_PWSTALL0         REG_ACCESS(RoReg  , 0x400A2814U) /**< \brief (PDCA) Channel 0 Write Stall Cycles */ 
-#define REG_PDCA_PWLAT0           REG_ACCESS(RoReg  , 0x400A2818U) /**< \brief (PDCA) Channel0 Write Max Latency */ 
-#define REG_PDCA_PRDATA1          REG_ACCESS(RoReg  , 0x400A281CU) /**< \brief (PDCA) Channel 1 Read Data Cycles */ 
-#define REG_PDCA_PRSTALL1         REG_ACCESS(RoReg  , 0x400A2820U) /**< \brief (PDCA) Channel Read Stall Cycles */ 
-#define REG_PDCA_PRLAT1           REG_ACCESS(RoReg  , 0x400A2824U) /**< \brief (PDCA) Channel 1 Read Max Latency */ 
-#define REG_PDCA_PWDATA1          REG_ACCESS(RoReg  , 0x400A2828U) /**< \brief (PDCA) Channel 1 Write Data Cycles */ 
-#define REG_PDCA_PWSTALL1         REG_ACCESS(RoReg  , 0x400A282CU) /**< \brief (PDCA) Channel 1 Write stall Cycles */ 
-#define REG_PDCA_PWLAT1           REG_ACCESS(RoReg  , 0x400A2830U) /**< \brief (PDCA) Channel 1 Read Max Latency */ 
-#define REG_PDCA_VERSION          REG_ACCESS(RoReg  , 0x400A2834U) /**< \brief (PDCA) Version Register */ 
+#define REG_PDCA_PCONTROL         REG_ACCESS(RwReg  , 0x400A2800U) /**< \brief (PDCA) Performance Control Register */
+#define REG_PDCA_PRDATA0          REG_ACCESS(RoReg  , 0x400A2804U) /**< \brief (PDCA) Channel 0 Read Data Cycles */
+#define REG_PDCA_PRSTALL0         REG_ACCESS(RoReg  , 0x400A2808U) /**< \brief (PDCA) Channel 0 Read Stall Cycles */
+#define REG_PDCA_PRLAT0           REG_ACCESS(RoReg  , 0x400A280CU) /**< \brief (PDCA) Channel 0 Read Max Latency */
+#define REG_PDCA_PWDATA0          REG_ACCESS(RoReg  , 0x400A2810U) /**< \brief (PDCA) Channel 0 Write Data Cycles */
+#define REG_PDCA_PWSTALL0         REG_ACCESS(RoReg  , 0x400A2814U) /**< \brief (PDCA) Channel 0 Write Stall Cycles */
+#define REG_PDCA_PWLAT0           REG_ACCESS(RoReg  , 0x400A2818U) /**< \brief (PDCA) Channel0 Write Max Latency */
+#define REG_PDCA_PRDATA1          REG_ACCESS(RoReg  , 0x400A281CU) /**< \brief (PDCA) Channel 1 Read Data Cycles */
+#define REG_PDCA_PRSTALL1         REG_ACCESS(RoReg  , 0x400A2820U) /**< \brief (PDCA) Channel Read Stall Cycles */
+#define REG_PDCA_PRLAT1           REG_ACCESS(RoReg  , 0x400A2824U) /**< \brief (PDCA) Channel 1 Read Max Latency */
+#define REG_PDCA_PWDATA1          REG_ACCESS(RoReg  , 0x400A2828U) /**< \brief (PDCA) Channel 1 Write Data Cycles */
+#define REG_PDCA_PWSTALL1         REG_ACCESS(RoReg  , 0x400A282CU) /**< \brief (PDCA) Channel 1 Write stall Cycles */
+#define REG_PDCA_PWLAT1           REG_ACCESS(RoReg  , 0x400A2830U) /**< \brief (PDCA) Channel 1 Read Max Latency */
+#define REG_PDCA_VERSION          REG_ACCESS(RoReg  , 0x400A2834U) /**< \brief (PDCA) Version Register */
 /* ========== Register definition for SMAP peripheral ========== */
-#define REG_SMAP_CR               REG_ACCESS(WoReg  , 0x400A3000U) /**< \brief (SMAP) Control Register */ 
-#define REG_SMAP_SR               REG_ACCESS(RoReg  , 0x400A3004U) /**< \brief (SMAP) Status Register */ 
-#define REG_SMAP_SCR              REG_ACCESS(WoReg  , 0x400A3008U) /**< \brief (SMAP) Status Clear Register */ 
-#define REG_SMAP_ADDR             REG_ACCESS(RwReg  , 0x400A300CU) /**< \brief (SMAP) Address Register */ 
-#define REG_SMAP_LENGTH           REG_ACCESS(RwReg  , 0x400A3010U) /**< \brief (SMAP) Length Register */ 
-#define REG_SMAP_DATA             REG_ACCESS(RwReg  , 0x400A3014U) /**< \brief (SMAP) Data Register */ 
-#define REG_SMAP_VERSION          REG_ACCESS(RoReg  , 0x400A3028U) /**< \brief (SMAP) VERSION register */ 
-#define REG_SMAP_CIDR             REG_ACCESS(RoReg  , 0x400A30F0U) /**< \brief (SMAP) Chip ID Register */ 
-#define REG_SMAP_EXID             REG_ACCESS(RoReg  , 0x400A30F4U) /**< \brief (SMAP) Chip ID Extension Register */ 
-#define REG_SMAP_IDR              REG_ACCESS(RoReg  , 0x400A30FCU) /**< \brief (SMAP) AP Identification register */ 
+#define REG_SMAP_CR               REG_ACCESS(WoReg  , 0x400A3000U) /**< \brief (SMAP) Control Register */
+#define REG_SMAP_SR               REG_ACCESS(RoReg  , 0x400A3004U) /**< \brief (SMAP) Status Register */
+#define REG_SMAP_SCR              REG_ACCESS(WoReg  , 0x400A3008U) /**< \brief (SMAP) Status Clear Register */
+#define REG_SMAP_ADDR             REG_ACCESS(RwReg  , 0x400A300CU) /**< \brief (SMAP) Address Register */
+#define REG_SMAP_LENGTH           REG_ACCESS(RwReg  , 0x400A3010U) /**< \brief (SMAP) Length Register */
+#define REG_SMAP_DATA             REG_ACCESS(RwReg  , 0x400A3014U) /**< \brief (SMAP) Data Register */
+#define REG_SMAP_VERSION          REG_ACCESS(RoReg  , 0x400A3028U) /**< \brief (SMAP) VERSION register */
+#define REG_SMAP_CIDR             REG_ACCESS(RoReg  , 0x400A30F0U) /**< \brief (SMAP) Chip ID Register */
+#define REG_SMAP_EXID             REG_ACCESS(RoReg  , 0x400A30F4U) /**< \brief (SMAP) Chip ID Extension Register */
+#define REG_SMAP_IDR              REG_ACCESS(RoReg  , 0x400A30FCU) /**< \brief (SMAP) AP Identification register */
 /* ========== Register definition for CRCCU peripheral ========== */
-#define REG_CRCCU_DSCR            REG_ACCESS(RwReg  , 0x400A4000U) /**< \brief (CRCCU) Descriptor Base Register */ 
-#define REG_CRCCU_DMAEN           REG_ACCESS(WoReg  , 0x400A4008U) /**< \brief (CRCCU) DMA Enable Register */ 
-#define REG_CRCCU_DMADIS          REG_ACCESS(WoReg  , 0x400A400CU) /**< \brief (CRCCU) DMA Disable Register */ 
-#define REG_CRCCU_DMASR           REG_ACCESS(RoReg  , 0x400A4010U) /**< \brief (CRCCU) DMA Status Register */ 
-#define REG_CRCCU_DMAIER          REG_ACCESS(WoReg  , 0x400A4014U) /**< \brief (CRCCU) DMA Interrupt Enable Register */ 
-#define REG_CRCCU_DMAIDR          REG_ACCESS(WoReg  , 0x400A4018U) /**< \brief (CRCCU) DMA Interrupt Disable Register */ 
-#define REG_CRCCU_DMAIMR          REG_ACCESS(RoReg  , 0x400A401CU) /**< \brief (CRCCU) DMA Interrupt Mask Register */ 
-#define REG_CRCCU_DMAISR          REG_ACCESS(RoReg  , 0x400A4020U) /**< \brief (CRCCU) DMA Interrupt Status Register */ 
-#define REG_CRCCU_CR              REG_ACCESS(WoReg  , 0x400A4034U) /**< \brief (CRCCU) Control Register */ 
-#define REG_CRCCU_MR              REG_ACCESS(RwReg  , 0x400A4038U) /**< \brief (CRCCU) Mode Register */ 
-#define REG_CRCCU_SR              REG_ACCESS(RoReg  , 0x400A403CU) /**< \brief (CRCCU) Status Register */ 
-#define REG_CRCCU_IER             REG_ACCESS(WoReg  , 0x400A4040U) /**< \brief (CRCCU) Interrupt Enable Register */ 
-#define REG_CRCCU_IDR             REG_ACCESS(WoReg  , 0x400A4044U) /**< \brief (CRCCU) Interrupt Disable Register */ 
-#define REG_CRCCU_IMR             REG_ACCESS(RoReg  , 0x400A4048U) /**< \brief (CRCCU) Interrupt Mask Register */ 
-#define REG_CRCCU_ISR             REG_ACCESS(RoReg  , 0x400A404CU) /**< \brief (CRCCU) Interrupt Status Register */ 
-#define REG_CRCCU_VERSION         REG_ACCESS(RoReg  , 0x400A40FCU) /**< \brief (CRCCU) Version Register */ 
+#define REG_CRCCU_DSCR            REG_ACCESS(RwReg  , 0x400A4000U) /**< \brief (CRCCU) Descriptor Base Register */
+#define REG_CRCCU_DMAEN           REG_ACCESS(WoReg  , 0x400A4008U) /**< \brief (CRCCU) DMA Enable Register */
+#define REG_CRCCU_DMADIS          REG_ACCESS(WoReg  , 0x400A400CU) /**< \brief (CRCCU) DMA Disable Register */
+#define REG_CRCCU_DMASR           REG_ACCESS(RoReg  , 0x400A4010U) /**< \brief (CRCCU) DMA Status Register */
+#define REG_CRCCU_DMAIER          REG_ACCESS(WoReg  , 0x400A4014U) /**< \brief (CRCCU) DMA Interrupt Enable Register */
+#define REG_CRCCU_DMAIDR          REG_ACCESS(WoReg  , 0x400A4018U) /**< \brief (CRCCU) DMA Interrupt Disable Register */
+#define REG_CRCCU_DMAIMR          REG_ACCESS(RoReg  , 0x400A401CU) /**< \brief (CRCCU) DMA Interrupt Mask Register */
+#define REG_CRCCU_DMAISR          REG_ACCESS(RoReg  , 0x400A4020U) /**< \brief (CRCCU) DMA Interrupt Status Register */
+#define REG_CRCCU_CR              REG_ACCESS(WoReg  , 0x400A4034U) /**< \brief (CRCCU) Control Register */
+#define REG_CRCCU_MR              REG_ACCESS(RwReg  , 0x400A4038U) /**< \brief (CRCCU) Mode Register */
+#define REG_CRCCU_SR              REG_ACCESS(RoReg  , 0x400A403CU) /**< \brief (CRCCU) Status Register */
+#define REG_CRCCU_IER             REG_ACCESS(WoReg  , 0x400A4040U) /**< \brief (CRCCU) Interrupt Enable Register */
+#define REG_CRCCU_IDR             REG_ACCESS(WoReg  , 0x400A4044U) /**< \brief (CRCCU) Interrupt Disable Register */
+#define REG_CRCCU_IMR             REG_ACCESS(RoReg  , 0x400A4048U) /**< \brief (CRCCU) Interrupt Mask Register */
+#define REG_CRCCU_ISR             REG_ACCESS(RoReg  , 0x400A404CU) /**< \brief (CRCCU) Interrupt Status Register */
+#define REG_CRCCU_VERSION         REG_ACCESS(RoReg  , 0x400A40FCU) /**< \brief (CRCCU) Version Register */
 /* ========== Register definition for USBC peripheral ========== */
-#define REG_USBC_UDCON            REG_ACCESS(RwReg  , 0x400A5000U) /**< \brief (USBC) Device General Control Register */ 
-#define REG_USBC_UDINT            REG_ACCESS(RoReg  , 0x400A5004U) /**< \brief (USBC) Device Global Interupt Register */ 
-#define REG_USBC_UDINTCLR         REG_ACCESS(WoReg  , 0x400A5008U) /**< \brief (USBC) Device Global Interrupt Clear Register */ 
-#define REG_USBC_UDINTSET         REG_ACCESS(WoReg  , 0x400A500CU) /**< \brief (USBC) Device Global Interrupt Set Regsiter */ 
-#define REG_USBC_UDINTE           REG_ACCESS(RoReg  , 0x400A5010U) /**< \brief (USBC) Device Global Interrupt Enable Register */ 
-#define REG_USBC_UDINTECLR        REG_ACCESS(WoReg  , 0x400A5014U) /**< \brief (USBC) Device Global Interrupt Enable Clear Register */ 
-#define REG_USBC_UDINTESET        REG_ACCESS(WoReg  , 0x400A5018U) /**< \brief (USBC) Device Global Interrupt Enable Set Register */ 
-#define REG_USBC_UERST            REG_ACCESS(RwReg  , 0x400A501CU) /**< \brief (USBC) Endpoint Enable/Reset Register */ 
-#define REG_USBC_UDFNUM           REG_ACCESS(RoReg  , 0x400A5020U) /**< \brief (USBC) Device Frame Number Register */ 
-#define REG_USBC_UECFG0           REG_ACCESS(RwReg  , 0x400A5100U) /**< \brief (USBC) Endpoint Configuration Register */ 
-#define REG_USBC_UECFG1           REG_ACCESS(RwReg  , 0x400A5104U) /**< \brief (USBC) Endpoint Configuration Register */ 
-#define REG_USBC_UECFG2           REG_ACCESS(RwReg  , 0x400A5108U) /**< \brief (USBC) Endpoint Configuration Register */ 
-#define REG_USBC_UECFG3           REG_ACCESS(RwReg  , 0x400A510CU) /**< \brief (USBC) Endpoint Configuration Register */ 
-#define REG_USBC_UECFG4           REG_ACCESS(RwReg  , 0x400A5110U) /**< \brief (USBC) Endpoint Configuration Register */ 
-#define REG_USBC_UECFG5           REG_ACCESS(RwReg  , 0x400A5114U) /**< \brief (USBC) Endpoint Configuration Register */ 
-#define REG_USBC_UECFG6           REG_ACCESS(RwReg  , 0x400A5118U) /**< \brief (USBC) Endpoint Configuration Register */ 
-#define REG_USBC_UECFG7           REG_ACCESS(RwReg  , 0x400A511CU) /**< \brief (USBC) Endpoint Configuration Register */ 
-#define REG_USBC_UESTA0           REG_ACCESS(RoReg  , 0x400A5130U) /**< \brief (USBC) Endpoint Status Register */ 
-#define REG_USBC_UESTA1           REG_ACCESS(RoReg  , 0x400A5134U) /**< \brief (USBC) Endpoint Status Register */ 
-#define REG_USBC_UESTA2           REG_ACCESS(RoReg  , 0x400A5138U) /**< \brief (USBC) Endpoint Status Register */ 
-#define REG_USBC_UESTA3           REG_ACCESS(RoReg  , 0x400A513CU) /**< \brief (USBC) Endpoint Status Register */ 
-#define REG_USBC_UESTA4           REG_ACCESS(RoReg  , 0x400A5140U) /**< \brief (USBC) Endpoint Status Register */ 
-#define REG_USBC_UESTA5           REG_ACCESS(RoReg  , 0x400A5144U) /**< \brief (USBC) Endpoint Status Register */ 
-#define REG_USBC_UESTA6           REG_ACCESS(RoReg  , 0x400A5148U) /**< \brief (USBC) Endpoint Status Register */ 
-#define REG_USBC_UESTA7           REG_ACCESS(RoReg  , 0x400A514CU) /**< \brief (USBC) Endpoint Status Register */ 
-#define REG_USBC_UESTA0CLR        REG_ACCESS(WoReg  , 0x400A5160U) /**< \brief (USBC) Endpoint Status Clear Register */ 
-#define REG_USBC_UESTA1CLR        REG_ACCESS(WoReg  , 0x400A5164U) /**< \brief (USBC) Endpoint Status Clear Register */ 
-#define REG_USBC_UESTA2CLR        REG_ACCESS(WoReg  , 0x400A5168U) /**< \brief (USBC) Endpoint Status Clear Register */ 
-#define REG_USBC_UESTA3CLR        REG_ACCESS(WoReg  , 0x400A516CU) /**< \brief (USBC) Endpoint Status Clear Register */ 
-#define REG_USBC_UESTA4CLR        REG_ACCESS(WoReg  , 0x400A5170U) /**< \brief (USBC) Endpoint Status Clear Register */ 
-#define REG_USBC_UESTA5CLR        REG_ACCESS(WoReg  , 0x400A5174U) /**< \brief (USBC) Endpoint Status Clear Register */ 
-#define REG_USBC_UESTA6CLR        REG_ACCESS(WoReg  , 0x400A5178U) /**< \brief (USBC) Endpoint Status Clear Register */ 
-#define REG_USBC_UESTA7CLR        REG_ACCESS(WoReg  , 0x400A517CU) /**< \brief (USBC) Endpoint Status Clear Register */ 
-#define REG_USBC_UESTA0SET        REG_ACCESS(WoReg  , 0x400A5190U) /**< \brief (USBC) Endpoint Status Set Register */ 
-#define REG_USBC_UESTA1SET        REG_ACCESS(WoReg  , 0x400A5194U) /**< \brief (USBC) Endpoint Status Set Register */ 
-#define REG_USBC_UESTA2SET        REG_ACCESS(WoReg  , 0x400A5198U) /**< \brief (USBC) Endpoint Status Set Register */ 
-#define REG_USBC_UESTA3SET        REG_ACCESS(WoReg  , 0x400A519CU) /**< \brief (USBC) Endpoint Status Set Register */ 
-#define REG_USBC_UESTA4SET        REG_ACCESS(WoReg  , 0x400A51A0U) /**< \brief (USBC) Endpoint Status Set Register */ 
-#define REG_USBC_UESTA5SET        REG_ACCESS(WoReg  , 0x400A51A4U) /**< \brief (USBC) Endpoint Status Set Register */ 
-#define REG_USBC_UESTA6SET        REG_ACCESS(WoReg  , 0x400A51A8U) /**< \brief (USBC) Endpoint Status Set Register */ 
-#define REG_USBC_UESTA7SET        REG_ACCESS(WoReg  , 0x400A51ACU) /**< \brief (USBC) Endpoint Status Set Register */ 
-#define REG_USBC_UECON0           REG_ACCESS(RoReg  , 0x400A51C0U) /**< \brief (USBC) Endpoint Control Register */ 
-#define REG_USBC_UECON1           REG_ACCESS(RoReg  , 0x400A51C4U) /**< \brief (USBC) Endpoint Control Register */ 
-#define REG_USBC_UECON2           REG_ACCESS(RoReg  , 0x400A51C8U) /**< \brief (USBC) Endpoint Control Register */ 
-#define REG_USBC_UECON3           REG_ACCESS(RoReg  , 0x400A51CCU) /**< \brief (USBC) Endpoint Control Register */ 
-#define REG_USBC_UECON4           REG_ACCESS(RoReg  , 0x400A51D0U) /**< \brief (USBC) Endpoint Control Register */ 
-#define REG_USBC_UECON5           REG_ACCESS(RoReg  , 0x400A51D4U) /**< \brief (USBC) Endpoint Control Register */ 
-#define REG_USBC_UECON6           REG_ACCESS(RoReg  , 0x400A51D8U) /**< \brief (USBC) Endpoint Control Register */ 
-#define REG_USBC_UECON7           REG_ACCESS(RoReg  , 0x400A51DCU) /**< \brief (USBC) Endpoint Control Register */ 
-#define REG_USBC_UECON0SET        REG_ACCESS(WoReg  , 0x400A51F0U) /**< \brief (USBC) Endpoint Control Set Register */ 
-#define REG_USBC_UECON1SET        REG_ACCESS(WoReg  , 0x400A51F4U) /**< \brief (USBC) Endpoint Control Set Register */ 
-#define REG_USBC_UECON2SET        REG_ACCESS(WoReg  , 0x400A51F8U) /**< \brief (USBC) Endpoint Control Set Register */ 
-#define REG_USBC_UECON3SET        REG_ACCESS(WoReg  , 0x400A51FCU) /**< \brief (USBC) Endpoint Control Set Register */ 
-#define REG_USBC_UECON4SET        REG_ACCESS(WoReg  , 0x400A5200U) /**< \brief (USBC) Endpoint Control Set Register */ 
-#define REG_USBC_UECON5SET        REG_ACCESS(WoReg  , 0x400A5204U) /**< \brief (USBC) Endpoint Control Set Register */ 
-#define REG_USBC_UECON6SET        REG_ACCESS(WoReg  , 0x400A5208U) /**< \brief (USBC) Endpoint Control Set Register */ 
-#define REG_USBC_UECON7SET        REG_ACCESS(WoReg  , 0x400A520CU) /**< \brief (USBC) Endpoint Control Set Register */ 
-#define REG_USBC_UECON0CLR        REG_ACCESS(WoReg  , 0x400A5220U) /**< \brief (USBC) Endpoint Control Clear Register */ 
-#define REG_USBC_UECON1CLR        REG_ACCESS(WoReg  , 0x400A5224U) /**< \brief (USBC) TXINE Clear */ 
-#define REG_USBC_UECON2CLR        REG_ACCESS(WoReg  , 0x400A5228U) /**< \brief (USBC) TXINE Clear */ 
-#define REG_USBC_UECON3CLR        REG_ACCESS(WoReg  , 0x400A522CU) /**< \brief (USBC) TXINE Clear */ 
-#define REG_USBC_UECON4CLR        REG_ACCESS(WoReg  , 0x400A5230U) /**< \brief (USBC) TXINE Clear */ 
-#define REG_USBC_UECON5CLR        REG_ACCESS(WoReg  , 0x400A5234U) /**< \brief (USBC) TXINE Clear */ 
-#define REG_USBC_UECON6CLR        REG_ACCESS(WoReg  , 0x400A5238U) /**< \brief (USBC) TXINE Clear */ 
-#define REG_USBC_UECON7CLR        REG_ACCESS(WoReg  , 0x400A523CU) /**< \brief (USBC) TXINE Clear */ 
-#define REG_USBC_UHCON            REG_ACCESS(RwReg  , 0x400A5400U) /**< \brief (USBC) Host General Control Register */ 
-#define REG_USBC_UHINT            REG_ACCESS(RoReg  , 0x400A5404U) /**< \brief (USBC) Host Global Interrupt Register */ 
-#define REG_USBC_UHINTCLR         REG_ACCESS(WoReg  , 0x400A5408U) /**< \brief (USBC) Host Global Interrrupt Clear Register */ 
-#define REG_USBC_UHINTSET         REG_ACCESS(WoReg  , 0x400A540CU) /**< \brief (USBC) Host Global Interrupt Set Register */ 
-#define REG_USBC_UHINTE           REG_ACCESS(RoReg  , 0x400A5410U) /**< \brief (USBC) Host Global Interrupt Enable Register */ 
-#define REG_USBC_UHINTECLR        REG_ACCESS(WoReg  , 0x400A5414U) /**< \brief (USBC) Host Global Interrupt Enable Clear Register */ 
-#define REG_USBC_UHINTESET        REG_ACCESS(WoReg  , 0x400A5418U) /**< \brief (USBC) Host Global Interrupt Enable Set Register */ 
-#define REG_USBC_UPRST            REG_ACCESS(RwReg  , 0x400A541CU) /**< \brief (USBC) Pipe Reset Register */ 
-#define REG_USBC_UHFNUM           REG_ACCESS(RwReg  , 0x400A5420U) /**< \brief (USBC) Host Frame Number Register */ 
-#define REG_USBC_UHSOFC           REG_ACCESS(RwReg  , 0x400A5424U) /**< \brief (USBC) Host Start of Frame Control Register */ 
-#define REG_USBC_UPCFG0           REG_ACCESS(RwReg  , 0x400A5500U) /**< \brief (USBC) Pipe Configuration Register */ 
-#define REG_USBC_UPCFG1           REG_ACCESS(RwReg  , 0x400A5504U) /**< \brief (USBC) Pipe Configuration Register */ 
-#define REG_USBC_UPCFG2           REG_ACCESS(RwReg  , 0x400A5508U) /**< \brief (USBC) Pipe Configuration Register */ 
-#define REG_USBC_UPCFG3           REG_ACCESS(RwReg  , 0x400A550CU) /**< \brief (USBC) Pipe Configuration Register */ 
-#define REG_USBC_UPCFG4           REG_ACCESS(RwReg  , 0x400A5510U) /**< \brief (USBC) Pipe Configuration Register */ 
-#define REG_USBC_UPCFG5           REG_ACCESS(RwReg  , 0x400A5514U) /**< \brief (USBC) Pipe Configuration Register */ 
-#define REG_USBC_UPCFG6           REG_ACCESS(RwReg  , 0x400A5518U) /**< \brief (USBC) Pipe Configuration Register */ 
-#define REG_USBC_UPCFG7           REG_ACCESS(RwReg  , 0x400A551CU) /**< \brief (USBC) Pipe Configuration Register */ 
-#define REG_USBC_UPSTA0           REG_ACCESS(RoReg  , 0x400A5530U) /**< \brief (USBC) Pipe Status Register */ 
-#define REG_USBC_UPSTA1           REG_ACCESS(RoReg  , 0x400A5534U) /**< \brief (USBC) Pipe Status Register */ 
-#define REG_USBC_UPSTA2           REG_ACCESS(RoReg  , 0x400A5538U) /**< \brief (USBC) Pipe Status Register */ 
-#define REG_USBC_UPSTA3           REG_ACCESS(RoReg  , 0x400A553CU) /**< \brief (USBC) Pipe Status Register */ 
-#define REG_USBC_UPSTA4           REG_ACCESS(RoReg  , 0x400A5540U) /**< \brief (USBC) Pipe Status Register */ 
-#define REG_USBC_UPSTA5           REG_ACCESS(RoReg  , 0x400A5544U) /**< \brief (USBC) Pipe Status Register */ 
-#define REG_USBC_UPSTA6           REG_ACCESS(RoReg  , 0x400A5548U) /**< \brief (USBC) Pipe Status Register */ 
-#define REG_USBC_UPSTA7           REG_ACCESS(RoReg  , 0x400A554CU) /**< \brief (USBC) Pipe Status Register */ 
-#define REG_USBC_UPSTA0CLR        REG_ACCESS(WoReg  , 0x400A5560U) /**< \brief (USBC) Pipe Status Clear Register */ 
-#define REG_USBC_UPSTA1CLR        REG_ACCESS(WoReg  , 0x400A5564U) /**< \brief (USBC) Pipe Status Clear Register */ 
-#define REG_USBC_UPSTA2CLR        REG_ACCESS(WoReg  , 0x400A5568U) /**< \brief (USBC) Pipe Status Clear Register */ 
-#define REG_USBC_UPSTA3CLR        REG_ACCESS(WoReg  , 0x400A556CU) /**< \brief (USBC) Pipe Status Clear Register */ 
-#define REG_USBC_UPSTA4CLR        REG_ACCESS(WoReg  , 0x400A5570U) /**< \brief (USBC) Pipe Status Clear Register */ 
-#define REG_USBC_UPSTA5CLR        REG_ACCESS(WoReg  , 0x400A5574U) /**< \brief (USBC) Pipe Status Clear Register */ 
-#define REG_USBC_UPSTA6CLR        REG_ACCESS(WoReg  , 0x400A5578U) /**< \brief (USBC) Pipe Status Clear Register */ 
-#define REG_USBC_UPSTA7CLR        REG_ACCESS(WoReg  , 0x400A557CU) /**< \brief (USBC) Pipe Status Clear Register */ 
-#define REG_USBC_UPSTA0SET        REG_ACCESS(WoReg  , 0x400A5590U) /**< \brief (USBC) Pipe Status Set Register */ 
-#define REG_USBC_UPSTA1SET        REG_ACCESS(WoReg  , 0x400A5594U) /**< \brief (USBC) Pipe Status Set Register */ 
-#define REG_USBC_UPSTA2SET        REG_ACCESS(WoReg  , 0x400A5598U) /**< \brief (USBC) Pipe Status Set Register */ 
-#define REG_USBC_UPSTA3SET        REG_ACCESS(WoReg  , 0x400A559CU) /**< \brief (USBC) Pipe Status Set Register */ 
-#define REG_USBC_UPSTA4SET        REG_ACCESS(WoReg  , 0x400A55A0U) /**< \brief (USBC) Pipe Status Set Register */ 
-#define REG_USBC_UPSTA5SET        REG_ACCESS(WoReg  , 0x400A55A4U) /**< \brief (USBC) Pipe Status Set Register */ 
-#define REG_USBC_UPSTA6SET        REG_ACCESS(WoReg  , 0x400A55A8U) /**< \brief (USBC) Pipe Status Set Register */ 
-#define REG_USBC_UPSTA7SET        REG_ACCESS(WoReg  , 0x400A55ACU) /**< \brief (USBC) Pipe Status Set Register */ 
-#define REG_USBC_UPCON0           REG_ACCESS(RoReg  , 0x400A55C0U) /**< \brief (USBC) Pipe Control Register */ 
-#define REG_USBC_UPCON1           REG_ACCESS(RoReg  , 0x400A55C4U) /**< \brief (USBC) Pipe Control Register */ 
-#define REG_USBC_UPCON2           REG_ACCESS(RoReg  , 0x400A55C8U) /**< \brief (USBC) Pipe Control Register */ 
-#define REG_USBC_UPCON3           REG_ACCESS(RoReg  , 0x400A55CCU) /**< \brief (USBC) Pipe Control Register */ 
-#define REG_USBC_UPCON4           REG_ACCESS(RoReg  , 0x400A55D0U) /**< \brief (USBC) Pipe Control Register */ 
-#define REG_USBC_UPCON5           REG_ACCESS(RoReg  , 0x400A55D4U) /**< \brief (USBC) Pipe Control Register */ 
-#define REG_USBC_UPCON6           REG_ACCESS(RoReg  , 0x400A55D8U) /**< \brief (USBC) Pipe Control Register */ 
-#define REG_USBC_UPCON7           REG_ACCESS(RoReg  , 0x400A55DCU) /**< \brief (USBC) Pipe Control Register */ 
-#define REG_USBC_UPCON0SET        REG_ACCESS(WoReg  , 0x400A55F0U) /**< \brief (USBC) Pipe Control Set Register */ 
-#define REG_USBC_UPCON1SET        REG_ACCESS(WoReg  , 0x400A55F4U) /**< \brief (USBC) Pipe Control Set Register */ 
-#define REG_USBC_UPCON2SET        REG_ACCESS(WoReg  , 0x400A55F8U) /**< \brief (USBC) Pipe Control Set Register */ 
-#define REG_USBC_UPCON3SET        REG_ACCESS(WoReg  , 0x400A55FCU) /**< \brief (USBC) Pipe Control Set Register */ 
-#define REG_USBC_UPCON4SET        REG_ACCESS(WoReg  , 0x400A5600U) /**< \brief (USBC) Pipe Control Set Register */ 
-#define REG_USBC_UPCON5SET        REG_ACCESS(WoReg  , 0x400A5604U) /**< \brief (USBC) Pipe Control Set Register */ 
-#define REG_USBC_UPCON6SET        REG_ACCESS(WoReg  , 0x400A5608U) /**< \brief (USBC) Pipe Control Set Register */ 
-#define REG_USBC_UPCON7SET        REG_ACCESS(WoReg  , 0x400A560CU) /**< \brief (USBC) Pipe Control Set Register */ 
-#define REG_USBC_UPCON0CLR        REG_ACCESS(WoReg  , 0x400A5620U) /**< \brief (USBC) Pipe Control Clear Register */ 
-#define REG_USBC_UPCON1CLR        REG_ACCESS(WoReg  , 0x400A5624U) /**< \brief (USBC) Pipe Control Clear Register */ 
-#define REG_USBC_UPCON2CLR        REG_ACCESS(WoReg  , 0x400A5628U) /**< \brief (USBC) Pipe Control Clear Register */ 
-#define REG_USBC_UPCON3CLR        REG_ACCESS(WoReg  , 0x400A562CU) /**< \brief (USBC) Pipe Control Clear Register */ 
-#define REG_USBC_UPCON4CLR        REG_ACCESS(WoReg  , 0x400A5630U) /**< \brief (USBC) Pipe Control Clear Register */ 
-#define REG_USBC_UPCON5CLR        REG_ACCESS(WoReg  , 0x400A5634U) /**< \brief (USBC) Pipe Control Clear Register */ 
-#define REG_USBC_UPCON6CLR        REG_ACCESS(WoReg  , 0x400A5638U) /**< \brief (USBC) Pipe Control Clear Register */ 
-#define REG_USBC_UPCON7CLR        REG_ACCESS(WoReg  , 0x400A563CU) /**< \brief (USBC) Pipe Control Clear Register */ 
-#define REG_USBC_UPINRQ0          REG_ACCESS(RwReg  , 0x400A5650U) /**< \brief (USBC) Pipe In Request */ 
-#define REG_USBC_UPINRQ1          REG_ACCESS(RwReg  , 0x400A5654U) /**< \brief (USBC) Pipe In Request */ 
-#define REG_USBC_UPINRQ2          REG_ACCESS(RwReg  , 0x400A5658U) /**< \brief (USBC) Pipe In Request */ 
-#define REG_USBC_UPINRQ3          REG_ACCESS(RwReg  , 0x400A565CU) /**< \brief (USBC) Pipe In Request */ 
-#define REG_USBC_UPINRQ4          REG_ACCESS(RwReg  , 0x400A5660U) /**< \brief (USBC) Pipe In Request */ 
-#define REG_USBC_UPINRQ5          REG_ACCESS(RwReg  , 0x400A5664U) /**< \brief (USBC) Pipe In Request */ 
-#define REG_USBC_UPINRQ6          REG_ACCESS(RwReg  , 0x400A5668U) /**< \brief (USBC) Pipe In Request */ 
-#define REG_USBC_UPINRQ7          REG_ACCESS(RwReg  , 0x400A566CU) /**< \brief (USBC) Pipe In Request */ 
-#define REG_USBC_USBCON           REG_ACCESS(RwReg  , 0x400A5800U) /**< \brief (USBC) General Control Register */ 
-#define REG_USBC_USBSTA           REG_ACCESS(RoReg  , 0x400A5804U) /**< \brief (USBC) General Status Register */ 
-#define REG_USBC_USBSTACLR        REG_ACCESS(WoReg  , 0x400A5808U) /**< \brief (USBC) General Status Clear Register */ 
-#define REG_USBC_USBSTASET        REG_ACCESS(WoReg  , 0x400A580CU) /**< \brief (USBC) General Status Set Register */ 
-#define REG_USBC_UVERS            REG_ACCESS(RoReg  , 0x400A5818U) /**< \brief (USBC) IP Version Register */ 
-#define REG_USBC_UFEATURES        REG_ACCESS(RoReg  , 0x400A581CU) /**< \brief (USBC) IP Features Register */ 
-#define REG_USBC_UADDRSIZE        REG_ACCESS(RoReg  , 0x400A5820U) /**< \brief (USBC) IP PB address size Register */ 
-#define REG_USBC_UNAME1           REG_ACCESS(RoReg  , 0x400A5824U) /**< \brief (USBC) IP Name Part One: HUSB */ 
-#define REG_USBC_UNAME2           REG_ACCESS(RoReg  , 0x400A5828U) /**< \brief (USBC) IP Name Part Two: HOST */ 
-#define REG_USBC_USBFSM           REG_ACCESS(RoReg  , 0x400A582CU) /**< \brief (USBC) USB internal finite state machine */ 
-#define REG_USBC_UDESC            REG_ACCESS(RwReg  , 0x400A5830U) /**< \brief (USBC) Endpoint descriptor table */ 
+#define REG_USBC_UDCON            REG_ACCESS(RwReg  , 0x400A5000U) /**< \brief (USBC) Device General Control Register */
+#define REG_USBC_UDINT            REG_ACCESS(RoReg  , 0x400A5004U) /**< \brief (USBC) Device Global Interupt Register */
+#define REG_USBC_UDINTCLR         REG_ACCESS(WoReg  , 0x400A5008U) /**< \brief (USBC) Device Global Interrupt Clear Register */
+#define REG_USBC_UDINTSET         REG_ACCESS(WoReg  , 0x400A500CU) /**< \brief (USBC) Device Global Interrupt Set Regsiter */
+#define REG_USBC_UDINTE           REG_ACCESS(RoReg  , 0x400A5010U) /**< \brief (USBC) Device Global Interrupt Enable Register */
+#define REG_USBC_UDINTECLR        REG_ACCESS(WoReg  , 0x400A5014U) /**< \brief (USBC) Device Global Interrupt Enable Clear Register */
+#define REG_USBC_UDINTESET        REG_ACCESS(WoReg  , 0x400A5018U) /**< \brief (USBC) Device Global Interrupt Enable Set Register */
+#define REG_USBC_UERST            REG_ACCESS(RwReg  , 0x400A501CU) /**< \brief (USBC) Endpoint Enable/Reset Register */
+#define REG_USBC_UDFNUM           REG_ACCESS(RoReg  , 0x400A5020U) /**< \brief (USBC) Device Frame Number Register */
+#define REG_USBC_UECFG0           REG_ACCESS(RwReg  , 0x400A5100U) /**< \brief (USBC) Endpoint Configuration Register */
+#define REG_USBC_UECFG1           REG_ACCESS(RwReg  , 0x400A5104U) /**< \brief (USBC) Endpoint Configuration Register */
+#define REG_USBC_UECFG2           REG_ACCESS(RwReg  , 0x400A5108U) /**< \brief (USBC) Endpoint Configuration Register */
+#define REG_USBC_UECFG3           REG_ACCESS(RwReg  , 0x400A510CU) /**< \brief (USBC) Endpoint Configuration Register */
+#define REG_USBC_UECFG4           REG_ACCESS(RwReg  , 0x400A5110U) /**< \brief (USBC) Endpoint Configuration Register */
+#define REG_USBC_UECFG5           REG_ACCESS(RwReg  , 0x400A5114U) /**< \brief (USBC) Endpoint Configuration Register */
+#define REG_USBC_UECFG6           REG_ACCESS(RwReg  , 0x400A5118U) /**< \brief (USBC) Endpoint Configuration Register */
+#define REG_USBC_UECFG7           REG_ACCESS(RwReg  , 0x400A511CU) /**< \brief (USBC) Endpoint Configuration Register */
+#define REG_USBC_UESTA0           REG_ACCESS(RoReg  , 0x400A5130U) /**< \brief (USBC) Endpoint Status Register */
+#define REG_USBC_UESTA1           REG_ACCESS(RoReg  , 0x400A5134U) /**< \brief (USBC) Endpoint Status Register */
+#define REG_USBC_UESTA2           REG_ACCESS(RoReg  , 0x400A5138U) /**< \brief (USBC) Endpoint Status Register */
+#define REG_USBC_UESTA3           REG_ACCESS(RoReg  , 0x400A513CU) /**< \brief (USBC) Endpoint Status Register */
+#define REG_USBC_UESTA4           REG_ACCESS(RoReg  , 0x400A5140U) /**< \brief (USBC) Endpoint Status Register */
+#define REG_USBC_UESTA5           REG_ACCESS(RoReg  , 0x400A5144U) /**< \brief (USBC) Endpoint Status Register */
+#define REG_USBC_UESTA6           REG_ACCESS(RoReg  , 0x400A5148U) /**< \brief (USBC) Endpoint Status Register */
+#define REG_USBC_UESTA7           REG_ACCESS(RoReg  , 0x400A514CU) /**< \brief (USBC) Endpoint Status Register */
+#define REG_USBC_UESTA0CLR        REG_ACCESS(WoReg  , 0x400A5160U) /**< \brief (USBC) Endpoint Status Clear Register */
+#define REG_USBC_UESTA1CLR        REG_ACCESS(WoReg  , 0x400A5164U) /**< \brief (USBC) Endpoint Status Clear Register */
+#define REG_USBC_UESTA2CLR        REG_ACCESS(WoReg  , 0x400A5168U) /**< \brief (USBC) Endpoint Status Clear Register */
+#define REG_USBC_UESTA3CLR        REG_ACCESS(WoReg  , 0x400A516CU) /**< \brief (USBC) Endpoint Status Clear Register */
+#define REG_USBC_UESTA4CLR        REG_ACCESS(WoReg  , 0x400A5170U) /**< \brief (USBC) Endpoint Status Clear Register */
+#define REG_USBC_UESTA5CLR        REG_ACCESS(WoReg  , 0x400A5174U) /**< \brief (USBC) Endpoint Status Clear Register */
+#define REG_USBC_UESTA6CLR        REG_ACCESS(WoReg  , 0x400A5178U) /**< \brief (USBC) Endpoint Status Clear Register */
+#define REG_USBC_UESTA7CLR        REG_ACCESS(WoReg  , 0x400A517CU) /**< \brief (USBC) Endpoint Status Clear Register */
+#define REG_USBC_UESTA0SET        REG_ACCESS(WoReg  , 0x400A5190U) /**< \brief (USBC) Endpoint Status Set Register */
+#define REG_USBC_UESTA1SET        REG_ACCESS(WoReg  , 0x400A5194U) /**< \brief (USBC) Endpoint Status Set Register */
+#define REG_USBC_UESTA2SET        REG_ACCESS(WoReg  , 0x400A5198U) /**< \brief (USBC) Endpoint Status Set Register */
+#define REG_USBC_UESTA3SET        REG_ACCESS(WoReg  , 0x400A519CU) /**< \brief (USBC) Endpoint Status Set Register */
+#define REG_USBC_UESTA4SET        REG_ACCESS(WoReg  , 0x400A51A0U) /**< \brief (USBC) Endpoint Status Set Register */
+#define REG_USBC_UESTA5SET        REG_ACCESS(WoReg  , 0x400A51A4U) /**< \brief (USBC) Endpoint Status Set Register */
+#define REG_USBC_UESTA6SET        REG_ACCESS(WoReg  , 0x400A51A8U) /**< \brief (USBC) Endpoint Status Set Register */
+#define REG_USBC_UESTA7SET        REG_ACCESS(WoReg  , 0x400A51ACU) /**< \brief (USBC) Endpoint Status Set Register */
+#define REG_USBC_UECON0           REG_ACCESS(RoReg  , 0x400A51C0U) /**< \brief (USBC) Endpoint Control Register */
+#define REG_USBC_UECON1           REG_ACCESS(RoReg  , 0x400A51C4U) /**< \brief (USBC) Endpoint Control Register */
+#define REG_USBC_UECON2           REG_ACCESS(RoReg  , 0x400A51C8U) /**< \brief (USBC) Endpoint Control Register */
+#define REG_USBC_UECON3           REG_ACCESS(RoReg  , 0x400A51CCU) /**< \brief (USBC) Endpoint Control Register */
+#define REG_USBC_UECON4           REG_ACCESS(RoReg  , 0x400A51D0U) /**< \brief (USBC) Endpoint Control Register */
+#define REG_USBC_UECON5           REG_ACCESS(RoReg  , 0x400A51D4U) /**< \brief (USBC) Endpoint Control Register */
+#define REG_USBC_UECON6           REG_ACCESS(RoReg  , 0x400A51D8U) /**< \brief (USBC) Endpoint Control Register */
+#define REG_USBC_UECON7           REG_ACCESS(RoReg  , 0x400A51DCU) /**< \brief (USBC) Endpoint Control Register */
+#define REG_USBC_UECON0SET        REG_ACCESS(WoReg  , 0x400A51F0U) /**< \brief (USBC) Endpoint Control Set Register */
+#define REG_USBC_UECON1SET        REG_ACCESS(WoReg  , 0x400A51F4U) /**< \brief (USBC) Endpoint Control Set Register */
+#define REG_USBC_UECON2SET        REG_ACCESS(WoReg  , 0x400A51F8U) /**< \brief (USBC) Endpoint Control Set Register */
+#define REG_USBC_UECON3SET        REG_ACCESS(WoReg  , 0x400A51FCU) /**< \brief (USBC) Endpoint Control Set Register */
+#define REG_USBC_UECON4SET        REG_ACCESS(WoReg  , 0x400A5200U) /**< \brief (USBC) Endpoint Control Set Register */
+#define REG_USBC_UECON5SET        REG_ACCESS(WoReg  , 0x400A5204U) /**< \brief (USBC) Endpoint Control Set Register */
+#define REG_USBC_UECON6SET        REG_ACCESS(WoReg  , 0x400A5208U) /**< \brief (USBC) Endpoint Control Set Register */
+#define REG_USBC_UECON7SET        REG_ACCESS(WoReg  , 0x400A520CU) /**< \brief (USBC) Endpoint Control Set Register */
+#define REG_USBC_UECON0CLR        REG_ACCESS(WoReg  , 0x400A5220U) /**< \brief (USBC) Endpoint Control Clear Register */
+#define REG_USBC_UECON1CLR        REG_ACCESS(WoReg  , 0x400A5224U) /**< \brief (USBC) TXINE Clear */
+#define REG_USBC_UECON2CLR        REG_ACCESS(WoReg  , 0x400A5228U) /**< \brief (USBC) TXINE Clear */
+#define REG_USBC_UECON3CLR        REG_ACCESS(WoReg  , 0x400A522CU) /**< \brief (USBC) TXINE Clear */
+#define REG_USBC_UECON4CLR        REG_ACCESS(WoReg  , 0x400A5230U) /**< \brief (USBC) TXINE Clear */
+#define REG_USBC_UECON5CLR        REG_ACCESS(WoReg  , 0x400A5234U) /**< \brief (USBC) TXINE Clear */
+#define REG_USBC_UECON6CLR        REG_ACCESS(WoReg  , 0x400A5238U) /**< \brief (USBC) TXINE Clear */
+#define REG_USBC_UECON7CLR        REG_ACCESS(WoReg  , 0x400A523CU) /**< \brief (USBC) TXINE Clear */
+#define REG_USBC_UHCON            REG_ACCESS(RwReg  , 0x400A5400U) /**< \brief (USBC) Host General Control Register */
+#define REG_USBC_UHINT            REG_ACCESS(RoReg  , 0x400A5404U) /**< \brief (USBC) Host Global Interrupt Register */
+#define REG_USBC_UHINTCLR         REG_ACCESS(WoReg  , 0x400A5408U) /**< \brief (USBC) Host Global Interrrupt Clear Register */
+#define REG_USBC_UHINTSET         REG_ACCESS(WoReg  , 0x400A540CU) /**< \brief (USBC) Host Global Interrupt Set Register */
+#define REG_USBC_UHINTE           REG_ACCESS(RoReg  , 0x400A5410U) /**< \brief (USBC) Host Global Interrupt Enable Register */
+#define REG_USBC_UHINTECLR        REG_ACCESS(WoReg  , 0x400A5414U) /**< \brief (USBC) Host Global Interrupt Enable Clear Register */
+#define REG_USBC_UHINTESET        REG_ACCESS(WoReg  , 0x400A5418U) /**< \brief (USBC) Host Global Interrupt Enable Set Register */
+#define REG_USBC_UPRST            REG_ACCESS(RwReg  , 0x400A541CU) /**< \brief (USBC) Pipe Reset Register */
+#define REG_USBC_UHFNUM           REG_ACCESS(RwReg  , 0x400A5420U) /**< \brief (USBC) Host Frame Number Register */
+#define REG_USBC_UHSOFC           REG_ACCESS(RwReg  , 0x400A5424U) /**< \brief (USBC) Host Start of Frame Control Register */
+#define REG_USBC_UPCFG0           REG_ACCESS(RwReg  , 0x400A5500U) /**< \brief (USBC) Pipe Configuration Register */
+#define REG_USBC_UPCFG1           REG_ACCESS(RwReg  , 0x400A5504U) /**< \brief (USBC) Pipe Configuration Register */
+#define REG_USBC_UPCFG2           REG_ACCESS(RwReg  , 0x400A5508U) /**< \brief (USBC) Pipe Configuration Register */
+#define REG_USBC_UPCFG3           REG_ACCESS(RwReg  , 0x400A550CU) /**< \brief (USBC) Pipe Configuration Register */
+#define REG_USBC_UPCFG4           REG_ACCESS(RwReg  , 0x400A5510U) /**< \brief (USBC) Pipe Configuration Register */
+#define REG_USBC_UPCFG5           REG_ACCESS(RwReg  , 0x400A5514U) /**< \brief (USBC) Pipe Configuration Register */
+#define REG_USBC_UPCFG6           REG_ACCESS(RwReg  , 0x400A5518U) /**< \brief (USBC) Pipe Configuration Register */
+#define REG_USBC_UPCFG7           REG_ACCESS(RwReg  , 0x400A551CU) /**< \brief (USBC) Pipe Configuration Register */
+#define REG_USBC_UPSTA0           REG_ACCESS(RoReg  , 0x400A5530U) /**< \brief (USBC) Pipe Status Register */
+#define REG_USBC_UPSTA1           REG_ACCESS(RoReg  , 0x400A5534U) /**< \brief (USBC) Pipe Status Register */
+#define REG_USBC_UPSTA2           REG_ACCESS(RoReg  , 0x400A5538U) /**< \brief (USBC) Pipe Status Register */
+#define REG_USBC_UPSTA3           REG_ACCESS(RoReg  , 0x400A553CU) /**< \brief (USBC) Pipe Status Register */
+#define REG_USBC_UPSTA4           REG_ACCESS(RoReg  , 0x400A5540U) /**< \brief (USBC) Pipe Status Register */
+#define REG_USBC_UPSTA5           REG_ACCESS(RoReg  , 0x400A5544U) /**< \brief (USBC) Pipe Status Register */
+#define REG_USBC_UPSTA6           REG_ACCESS(RoReg  , 0x400A5548U) /**< \brief (USBC) Pipe Status Register */
+#define REG_USBC_UPSTA7           REG_ACCESS(RoReg  , 0x400A554CU) /**< \brief (USBC) Pipe Status Register */
+#define REG_USBC_UPSTA0CLR        REG_ACCESS(WoReg  , 0x400A5560U) /**< \brief (USBC) Pipe Status Clear Register */
+#define REG_USBC_UPSTA1CLR        REG_ACCESS(WoReg  , 0x400A5564U) /**< \brief (USBC) Pipe Status Clear Register */
+#define REG_USBC_UPSTA2CLR        REG_ACCESS(WoReg  , 0x400A5568U) /**< \brief (USBC) Pipe Status Clear Register */
+#define REG_USBC_UPSTA3CLR        REG_ACCESS(WoReg  , 0x400A556CU) /**< \brief (USBC) Pipe Status Clear Register */
+#define REG_USBC_UPSTA4CLR        REG_ACCESS(WoReg  , 0x400A5570U) /**< \brief (USBC) Pipe Status Clear Register */
+#define REG_USBC_UPSTA5CLR        REG_ACCESS(WoReg  , 0x400A5574U) /**< \brief (USBC) Pipe Status Clear Register */
+#define REG_USBC_UPSTA6CLR        REG_ACCESS(WoReg  , 0x400A5578U) /**< \brief (USBC) Pipe Status Clear Register */
+#define REG_USBC_UPSTA7CLR        REG_ACCESS(WoReg  , 0x400A557CU) /**< \brief (USBC) Pipe Status Clear Register */
+#define REG_USBC_UPSTA0SET        REG_ACCESS(WoReg  , 0x400A5590U) /**< \brief (USBC) Pipe Status Set Register */
+#define REG_USBC_UPSTA1SET        REG_ACCESS(WoReg  , 0x400A5594U) /**< \brief (USBC) Pipe Status Set Register */
+#define REG_USBC_UPSTA2SET        REG_ACCESS(WoReg  , 0x400A5598U) /**< \brief (USBC) Pipe Status Set Register */
+#define REG_USBC_UPSTA3SET        REG_ACCESS(WoReg  , 0x400A559CU) /**< \brief (USBC) Pipe Status Set Register */
+#define REG_USBC_UPSTA4SET        REG_ACCESS(WoReg  , 0x400A55A0U) /**< \brief (USBC) Pipe Status Set Register */
+#define REG_USBC_UPSTA5SET        REG_ACCESS(WoReg  , 0x400A55A4U) /**< \brief (USBC) Pipe Status Set Register */
+#define REG_USBC_UPSTA6SET        REG_ACCESS(WoReg  , 0x400A55A8U) /**< \brief (USBC) Pipe Status Set Register */
+#define REG_USBC_UPSTA7SET        REG_ACCESS(WoReg  , 0x400A55ACU) /**< \brief (USBC) Pipe Status Set Register */
+#define REG_USBC_UPCON0           REG_ACCESS(RoReg  , 0x400A55C0U) /**< \brief (USBC) Pipe Control Register */
+#define REG_USBC_UPCON1           REG_ACCESS(RoReg  , 0x400A55C4U) /**< \brief (USBC) Pipe Control Register */
+#define REG_USBC_UPCON2           REG_ACCESS(RoReg  , 0x400A55C8U) /**< \brief (USBC) Pipe Control Register */
+#define REG_USBC_UPCON3           REG_ACCESS(RoReg  , 0x400A55CCU) /**< \brief (USBC) Pipe Control Register */
+#define REG_USBC_UPCON4           REG_ACCESS(RoReg  , 0x400A55D0U) /**< \brief (USBC) Pipe Control Register */
+#define REG_USBC_UPCON5           REG_ACCESS(RoReg  , 0x400A55D4U) /**< \brief (USBC) Pipe Control Register */
+#define REG_USBC_UPCON6           REG_ACCESS(RoReg  , 0x400A55D8U) /**< \brief (USBC) Pipe Control Register */
+#define REG_USBC_UPCON7           REG_ACCESS(RoReg  , 0x400A55DCU) /**< \brief (USBC) Pipe Control Register */
+#define REG_USBC_UPCON0SET        REG_ACCESS(WoReg  , 0x400A55F0U) /**< \brief (USBC) Pipe Control Set Register */
+#define REG_USBC_UPCON1SET        REG_ACCESS(WoReg  , 0x400A55F4U) /**< \brief (USBC) Pipe Control Set Register */
+#define REG_USBC_UPCON2SET        REG_ACCESS(WoReg  , 0x400A55F8U) /**< \brief (USBC) Pipe Control Set Register */
+#define REG_USBC_UPCON3SET        REG_ACCESS(WoReg  , 0x400A55FCU) /**< \brief (USBC) Pipe Control Set Register */
+#define REG_USBC_UPCON4SET        REG_ACCESS(WoReg  , 0x400A5600U) /**< \brief (USBC) Pipe Control Set Register */
+#define REG_USBC_UPCON5SET        REG_ACCESS(WoReg  , 0x400A5604U) /**< \brief (USBC) Pipe Control Set Register */
+#define REG_USBC_UPCON6SET        REG_ACCESS(WoReg  , 0x400A5608U) /**< \brief (USBC) Pipe Control Set Register */
+#define REG_USBC_UPCON7SET        REG_ACCESS(WoReg  , 0x400A560CU) /**< \brief (USBC) Pipe Control Set Register */
+#define REG_USBC_UPCON0CLR        REG_ACCESS(WoReg  , 0x400A5620U) /**< \brief (USBC) Pipe Control Clear Register */
+#define REG_USBC_UPCON1CLR        REG_ACCESS(WoReg  , 0x400A5624U) /**< \brief (USBC) Pipe Control Clear Register */
+#define REG_USBC_UPCON2CLR        REG_ACCESS(WoReg  , 0x400A5628U) /**< \brief (USBC) Pipe Control Clear Register */
+#define REG_USBC_UPCON3CLR        REG_ACCESS(WoReg  , 0x400A562CU) /**< \brief (USBC) Pipe Control Clear Register */
+#define REG_USBC_UPCON4CLR        REG_ACCESS(WoReg  , 0x400A5630U) /**< \brief (USBC) Pipe Control Clear Register */
+#define REG_USBC_UPCON5CLR        REG_ACCESS(WoReg  , 0x400A5634U) /**< \brief (USBC) Pipe Control Clear Register */
+#define REG_USBC_UPCON6CLR        REG_ACCESS(WoReg  , 0x400A5638U) /**< \brief (USBC) Pipe Control Clear Register */
+#define REG_USBC_UPCON7CLR        REG_ACCESS(WoReg  , 0x400A563CU) /**< \brief (USBC) Pipe Control Clear Register */
+#define REG_USBC_UPINRQ0          REG_ACCESS(RwReg  , 0x400A5650U) /**< \brief (USBC) Pipe In Request */
+#define REG_USBC_UPINRQ1          REG_ACCESS(RwReg  , 0x400A5654U) /**< \brief (USBC) Pipe In Request */
+#define REG_USBC_UPINRQ2          REG_ACCESS(RwReg  , 0x400A5658U) /**< \brief (USBC) Pipe In Request */
+#define REG_USBC_UPINRQ3          REG_ACCESS(RwReg  , 0x400A565CU) /**< \brief (USBC) Pipe In Request */
+#define REG_USBC_UPINRQ4          REG_ACCESS(RwReg  , 0x400A5660U) /**< \brief (USBC) Pipe In Request */
+#define REG_USBC_UPINRQ5          REG_ACCESS(RwReg  , 0x400A5664U) /**< \brief (USBC) Pipe In Request */
+#define REG_USBC_UPINRQ6          REG_ACCESS(RwReg  , 0x400A5668U) /**< \brief (USBC) Pipe In Request */
+#define REG_USBC_UPINRQ7          REG_ACCESS(RwReg  , 0x400A566CU) /**< \brief (USBC) Pipe In Request */
+#define REG_USBC_USBCON           REG_ACCESS(RwReg  , 0x400A5800U) /**< \brief (USBC) General Control Register */
+#define REG_USBC_USBSTA           REG_ACCESS(RoReg  , 0x400A5804U) /**< \brief (USBC) General Status Register */
+#define REG_USBC_USBSTACLR        REG_ACCESS(WoReg  , 0x400A5808U) /**< \brief (USBC) General Status Clear Register */
+#define REG_USBC_USBSTASET        REG_ACCESS(WoReg  , 0x400A580CU) /**< \brief (USBC) General Status Set Register */
+#define REG_USBC_UVERS            REG_ACCESS(RoReg  , 0x400A5818U) /**< \brief (USBC) IP Version Register */
+#define REG_USBC_UFEATURES        REG_ACCESS(RoReg  , 0x400A581CU) /**< \brief (USBC) IP Features Register */
+#define REG_USBC_UADDRSIZE        REG_ACCESS(RoReg  , 0x400A5820U) /**< \brief (USBC) IP PB address size Register */
+#define REG_USBC_UNAME1           REG_ACCESS(RoReg  , 0x400A5824U) /**< \brief (USBC) IP Name Part One: HUSB */
+#define REG_USBC_UNAME2           REG_ACCESS(RoReg  , 0x400A5828U) /**< \brief (USBC) IP Name Part Two: HOST */
+#define REG_USBC_USBFSM           REG_ACCESS(RoReg  , 0x400A582CU) /**< \brief (USBC) USB internal finite state machine */
+#define REG_USBC_UDESC            REG_ACCESS(RwReg  , 0x400A5830U) /**< \brief (USBC) Endpoint descriptor table */
 /* ========== Register definition for PEVC peripheral ========== */
-#define REG_PEVC_CHSR             REG_ACCESS(RoReg  , 0x400A6000U) /**< \brief (PEVC) Channel Status Register */ 
-#define REG_PEVC_CHER             REG_ACCESS(WoReg  , 0x400A6004U) /**< \brief (PEVC) Channel Enable Register */ 
-#define REG_PEVC_CHDR             REG_ACCESS(WoReg  , 0x400A6008U) /**< \brief (PEVC) Channel Disable Register */ 
-#define REG_PEVC_SEV              REG_ACCESS(WoReg  , 0x400A6010U) /**< \brief (PEVC) Software Event */ 
-#define REG_PEVC_BUSY             REG_ACCESS(RoReg  , 0x400A6014U) /**< \brief (PEVC) Channel / User Busy */ 
-#define REG_PEVC_TRIER            REG_ACCESS(WoReg  , 0x400A6020U) /**< \brief (PEVC) Trigger Interrupt Mask Enable Register */ 
-#define REG_PEVC_TRIDR            REG_ACCESS(WoReg  , 0x400A6024U) /**< \brief (PEVC) Trigger Interrupt Mask Disable Register */ 
-#define REG_PEVC_TRIMR            REG_ACCESS(RoReg  , 0x400A6028U) /**< \brief (PEVC) Trigger Interrupt Mask Register */ 
-#define REG_PEVC_TRSR             REG_ACCESS(RoReg  , 0x400A6030U) /**< \brief (PEVC) Trigger Status Register */ 
-#define REG_PEVC_TRSCR            REG_ACCESS(WoReg  , 0x400A6034U) /**< \brief (PEVC) Trigger Status Clear Register */ 
-#define REG_PEVC_OVIER            REG_ACCESS(WoReg  , 0x400A6040U) /**< \brief (PEVC) Overrun Interrupt Mask Enable Register */ 
-#define REG_PEVC_OVIDR            REG_ACCESS(WoReg  , 0x400A6044U) /**< \brief (PEVC) Overrun Interrupt Mask Disable Register */ 
-#define REG_PEVC_OVIMR            REG_ACCESS(RoReg  , 0x400A6048U) /**< \brief (PEVC) Overrun Interrupt Mask Register */ 
-#define REG_PEVC_OVSR             REG_ACCESS(RoReg  , 0x400A6050U) /**< \brief (PEVC) Overrun Status Register */ 
-#define REG_PEVC_OVSCR            REG_ACCESS(WoReg  , 0x400A6054U) /**< \brief (PEVC) Overrun Status Clear Register */ 
+#define REG_PEVC_CHSR             REG_ACCESS(RoReg  , 0x400A6000U) /**< \brief (PEVC) Channel Status Register */
+#define REG_PEVC_CHER             REG_ACCESS(WoReg  , 0x400A6004U) /**< \brief (PEVC) Channel Enable Register */
+#define REG_PEVC_CHDR             REG_ACCESS(WoReg  , 0x400A6008U) /**< \brief (PEVC) Channel Disable Register */
+#define REG_PEVC_SEV              REG_ACCESS(WoReg  , 0x400A6010U) /**< \brief (PEVC) Software Event */
+#define REG_PEVC_BUSY             REG_ACCESS(RoReg  , 0x400A6014U) /**< \brief (PEVC) Channel / User Busy */
+#define REG_PEVC_TRIER            REG_ACCESS(WoReg  , 0x400A6020U) /**< \brief (PEVC) Trigger Interrupt Mask Enable Register */
+#define REG_PEVC_TRIDR            REG_ACCESS(WoReg  , 0x400A6024U) /**< \brief (PEVC) Trigger Interrupt Mask Disable Register */
+#define REG_PEVC_TRIMR            REG_ACCESS(RoReg  , 0x400A6028U) /**< \brief (PEVC) Trigger Interrupt Mask Register */
+#define REG_PEVC_TRSR             REG_ACCESS(RoReg  , 0x400A6030U) /**< \brief (PEVC) Trigger Status Register */
+#define REG_PEVC_TRSCR            REG_ACCESS(WoReg  , 0x400A6034U) /**< \brief (PEVC) Trigger Status Clear Register */
+#define REG_PEVC_OVIER            REG_ACCESS(WoReg  , 0x400A6040U) /**< \brief (PEVC) Overrun Interrupt Mask Enable Register */
+#define REG_PEVC_OVIDR            REG_ACCESS(WoReg  , 0x400A6044U) /**< \brief (PEVC) Overrun Interrupt Mask Disable Register */
+#define REG_PEVC_OVIMR            REG_ACCESS(RoReg  , 0x400A6048U) /**< \brief (PEVC) Overrun Interrupt Mask Register */
+#define REG_PEVC_OVSR             REG_ACCESS(RoReg  , 0x400A6050U) /**< \brief (PEVC) Overrun Status Register */
+#define REG_PEVC_OVSCR            REG_ACCESS(WoReg  , 0x400A6054U) /**< \brief (PEVC) Overrun Status Clear Register */
 #define REG_PEVC_CHMX0            REG_ACCESS(RwReg  , 0x400A6100U) /**< \brief (PEVC) Channel Multiplexer 0 0 */
 #define REG_PEVC_CHMX1            REG_ACCESS(RwReg  , 0x400A6104U) /**< \brief (PEVC) Channel Multiplexer 0 1 */
 #define REG_PEVC_CHMX2            REG_ACCESS(RwReg  , 0x400A6108U) /**< \brief (PEVC) Channel Multiplexer 0 2 */
@@ -13599,17 +13599,17 @@ typedef struct {
 #define REG_PEVC_EVS28            REG_ACCESS(RwReg  , 0x400A6270U) /**< \brief (PEVC) Event Shaper 0 28 */
 #define REG_PEVC_EVS29            REG_ACCESS(RwReg  , 0x400A6274U) /**< \brief (PEVC) Event Shaper 0 29 */
 #define REG_PEVC_EVS30            REG_ACCESS(RwReg  , 0x400A6278U) /**< \brief (PEVC) Event Shaper 0 30 */
-#define REG_PEVC_IGFDR            REG_ACCESS(RwReg  , 0x400A6300U) /**< \brief (PEVC) Input Glitch Filter Divider Register */ 
-#define REG_PEVC_PARAMETER        REG_ACCESS(RoReg  , 0x400A63F8U) /**< \brief (PEVC) Parameter */ 
-#define REG_PEVC_VERSION          REG_ACCESS(RoReg  , 0x400A63FCU) /**< \brief (PEVC) Version */ 
+#define REG_PEVC_IGFDR            REG_ACCESS(RwReg  , 0x400A6300U) /**< \brief (PEVC) Input Glitch Filter Divider Register */
+#define REG_PEVC_PARAMETER        REG_ACCESS(RoReg  , 0x400A63F8U) /**< \brief (PEVC) Parameter */
+#define REG_PEVC_VERSION          REG_ACCESS(RoReg  , 0x400A63FCU) /**< \brief (PEVC) Version */
 /* ========== Register definition for AESA peripheral ========== */
-#define REG_AESA_CTRL             REG_ACCESS(RwReg  , 0x400B0000U) /**< \brief (AESA) Control Register */ 
-#define REG_AESA_MODE             REG_ACCESS(RwReg  , 0x400B0004U) /**< \brief (AESA) Mode Register */ 
-#define REG_AESA_DATABUFPTR       REG_ACCESS(RwReg  , 0x400B0008U) /**< \brief (AESA) Data Buffer Pointer Register */ 
-#define REG_AESA_SR               REG_ACCESS(RoReg  , 0x400B000CU) /**< \brief (AESA) Status Register */ 
-#define REG_AESA_IER              REG_ACCESS(WoReg  , 0x400B0010U) /**< \brief (AESA) Interrupt Enable Register */ 
-#define REG_AESA_IDR              REG_ACCESS(WoReg  , 0x400B0014U) /**< \brief (AESA) Interrupt Disable Register */ 
-#define REG_AESA_IMR              REG_ACCESS(RoReg  , 0x400B0018U) /**< \brief (AESA) Interrupt Mask Register */ 
+#define REG_AESA_CTRL             REG_ACCESS(RwReg  , 0x400B0000U) /**< \brief (AESA) Control Register */
+#define REG_AESA_MODE             REG_ACCESS(RwReg  , 0x400B0004U) /**< \brief (AESA) Mode Register */
+#define REG_AESA_DATABUFPTR       REG_ACCESS(RwReg  , 0x400B0008U) /**< \brief (AESA) Data Buffer Pointer Register */
+#define REG_AESA_SR               REG_ACCESS(RoReg  , 0x400B000CU) /**< \brief (AESA) Status Register */
+#define REG_AESA_IER              REG_ACCESS(WoReg  , 0x400B0010U) /**< \brief (AESA) Interrupt Enable Register */
+#define REG_AESA_IDR              REG_ACCESS(WoReg  , 0x400B0014U) /**< \brief (AESA) Interrupt Disable Register */
+#define REG_AESA_IMR              REG_ACCESS(RoReg  , 0x400B0018U) /**< \brief (AESA) Interrupt Mask Register */
 #define REG_AESA_KEY0             REG_ACCESS(WoReg  , 0x400B0020U) /**< \brief (AESA) Key Register 0 0 */
 #define REG_AESA_KEY1             REG_ACCESS(WoReg  , 0x400B0024U) /**< \brief (AESA) Key Register 0 1 */
 #define REG_AESA_KEY2             REG_ACCESS(WoReg  , 0x400B0028U) /**< \brief (AESA) Key Register 0 2 */
@@ -13622,71 +13622,71 @@ typedef struct {
 #define REG_AESA_INITVECT1        REG_ACCESS(WoReg  , 0x400B0044U) /**< \brief (AESA) Initialization Vector Register 0 1 */
 #define REG_AESA_INITVECT2        REG_ACCESS(WoReg  , 0x400B0048U) /**< \brief (AESA) Initialization Vector Register 0 2 */
 #define REG_AESA_INITVECT3        REG_ACCESS(WoReg  , 0x400B004CU) /**< \brief (AESA) Initialization Vector Register 0 3 */
-#define REG_AESA_IDATA            REG_ACCESS(WoReg  , 0x400B0050U) /**< \brief (AESA) Input Data Register */ 
-#define REG_AESA_ODATA            REG_ACCESS(RoReg  , 0x400B0060U) /**< \brief (AESA) Output Data Register */ 
-#define REG_AESA_DRNGSEED         REG_ACCESS(WoReg  , 0x400B0070U) /**< \brief (AESA) DRNG Seed Register */ 
-#define REG_AESA_PARAMETER        REG_ACCESS(RoReg  , 0x400B00F8U) /**< \brief (AESA) Parameter Register */ 
-#define REG_AESA_VERSION          REG_ACCESS(RoReg  , 0x400B00FCU) /**< \brief (AESA) Version Register */ 
+#define REG_AESA_IDATA            REG_ACCESS(WoReg  , 0x400B0050U) /**< \brief (AESA) Input Data Register */
+#define REG_AESA_ODATA            REG_ACCESS(RoReg  , 0x400B0060U) /**< \brief (AESA) Output Data Register */
+#define REG_AESA_DRNGSEED         REG_ACCESS(WoReg  , 0x400B0070U) /**< \brief (AESA) DRNG Seed Register */
+#define REG_AESA_PARAMETER        REG_ACCESS(RoReg  , 0x400B00F8U) /**< \brief (AESA) Parameter Register */
+#define REG_AESA_VERSION          REG_ACCESS(RoReg  , 0x400B00FCU) /**< \brief (AESA) Version Register */
 /* ========== Register definition for PM peripheral ========== */
-#define REG_PM_MCCTRL             REG_ACCESS(RwReg  , 0x400E0000U) /**< \brief (PM) Main Clock Control */ 
-#define REG_PM_CPUSEL             REG_ACCESS(RwReg  , 0x400E0004U) /**< \brief (PM) CPU Clock Select */ 
-#define REG_PM_PBASEL             REG_ACCESS(RwReg  , 0x400E000CU) /**< \brief (PM) PBA Clock Select */ 
-#define REG_PM_PBBSEL             REG_ACCESS(RwReg  , 0x400E0010U) /**< \brief (PM) PBB Clock Select */ 
-#define REG_PM_PBCSEL             REG_ACCESS(RwReg  , 0x400E0014U) /**< \brief (PM) PBC Clock Select */ 
-#define REG_PM_PBDSEL             REG_ACCESS(RwReg  , 0x400E0018U) /**< \brief (PM) PBD Clock Select */ 
-#define REG_PM_CPUMASK            REG_ACCESS(RwReg  , 0x400E0020U) /**< \brief (PM) CPU Mask */ 
-#define REG_PM_HSBMASK            REG_ACCESS(RwReg  , 0x400E0024U) /**< \brief (PM) HSB Mask */ 
-#define REG_PM_PBAMASK            REG_ACCESS(RwReg  , 0x400E0028U) /**< \brief (PM) PBA Mask */ 
-#define REG_PM_PBBMASK            REG_ACCESS(RwReg  , 0x400E002CU) /**< \brief (PM) PBB Mask */ 
-#define REG_PM_PBCMASK            REG_ACCESS(RwReg  , 0x400E0030U) /**< \brief (PM) PBC Mask */ 
-#define REG_PM_PBDMASK            REG_ACCESS(RwReg  , 0x400E0034U) /**< \brief (PM) PBD Mask */ 
-#define REG_PM_PBADIVMASK         REG_ACCESS(RwReg  , 0x400E0040U) /**< \brief (PM) PBA Divided Clock Mask */ 
-#define REG_PM_CFDCTRL            REG_ACCESS(RwReg  , 0x400E0054U) /**< \brief (PM) Clock Failure Detector Control */ 
-#define REG_PM_UNLOCK             REG_ACCESS(WoReg  , 0x400E0058U) /**< \brief (PM) Unlock Register */ 
-#define REG_PM_IER                REG_ACCESS(WoReg  , 0x400E00C0U) /**< \brief (PM) Interrupt Enable Register */ 
-#define REG_PM_IDR                REG_ACCESS(WoReg  , 0x400E00C4U) /**< \brief (PM) Interrupt Disable Register */ 
-#define REG_PM_IMR                REG_ACCESS(RoReg  , 0x400E00C8U) /**< \brief (PM) Interrupt Mask Register */ 
-#define REG_PM_ISR                REG_ACCESS(RoReg  , 0x400E00CCU) /**< \brief (PM) Interrupt Status Register */ 
-#define REG_PM_ICR                REG_ACCESS(WoReg  , 0x400E00D0U) /**< \brief (PM) Interrupt Clear Register */ 
-#define REG_PM_SR                 REG_ACCESS(RoReg  , 0x400E00D4U) /**< \brief (PM) Status Register */ 
-#define REG_PM_PPCR               REG_ACCESS(RwReg  , 0x400E0160U) /**< \brief (PM) Peripheral Power Control Register */ 
-#define REG_PM_RCAUSE             REG_ACCESS(RoReg  , 0x400E0180U) /**< \brief (PM) Reset Cause Register */ 
-#define REG_PM_WCAUSE             REG_ACCESS(RoReg  , 0x400E0184U) /**< \brief (PM) Wake Cause Register */ 
-#define REG_PM_AWEN               REG_ACCESS(RwReg  , 0x400E0188U) /**< \brief (PM) Asynchronous Wake Enable */ 
-#define REG_PM_OBS                REG_ACCESS(RwReg  , 0x400E0190U) /**< \brief (PM) Obsvervability */ 
-#define REG_PM_FASTSLEEP          REG_ACCESS(RwReg  , 0x400E0194U) /**< \brief (PM) Fast Sleep Register */ 
-#define REG_PM_CONFIG             REG_ACCESS(RoReg  , 0x400E03F8U) /**< \brief (PM) Configuration Register */ 
-#define REG_PM_VERSION            REG_ACCESS(RoReg  , 0x400E03FCU) /**< \brief (PM) Version Register */ 
+#define REG_PM_MCCTRL             REG_ACCESS(RwReg  , 0x400E0000U) /**< \brief (PM) Main Clock Control */
+#define REG_PM_CPUSEL             REG_ACCESS(RwReg  , 0x400E0004U) /**< \brief (PM) CPU Clock Select */
+#define REG_PM_PBASEL             REG_ACCESS(RwReg  , 0x400E000CU) /**< \brief (PM) PBA Clock Select */
+#define REG_PM_PBBSEL             REG_ACCESS(RwReg  , 0x400E0010U) /**< \brief (PM) PBB Clock Select */
+#define REG_PM_PBCSEL             REG_ACCESS(RwReg  , 0x400E0014U) /**< \brief (PM) PBC Clock Select */
+#define REG_PM_PBDSEL             REG_ACCESS(RwReg  , 0x400E0018U) /**< \brief (PM) PBD Clock Select */
+#define REG_PM_CPUMASK            REG_ACCESS(RwReg  , 0x400E0020U) /**< \brief (PM) CPU Mask */
+#define REG_PM_HSBMASK            REG_ACCESS(RwReg  , 0x400E0024U) /**< \brief (PM) HSB Mask */
+#define REG_PM_PBAMASK            REG_ACCESS(RwReg  , 0x400E0028U) /**< \brief (PM) PBA Mask */
+#define REG_PM_PBBMASK            REG_ACCESS(RwReg  , 0x400E002CU) /**< \brief (PM) PBB Mask */
+#define REG_PM_PBCMASK            REG_ACCESS(RwReg  , 0x400E0030U) /**< \brief (PM) PBC Mask */
+#define REG_PM_PBDMASK            REG_ACCESS(RwReg  , 0x400E0034U) /**< \brief (PM) PBD Mask */
+#define REG_PM_PBADIVMASK         REG_ACCESS(RwReg  , 0x400E0040U) /**< \brief (PM) PBA Divided Clock Mask */
+#define REG_PM_CFDCTRL            REG_ACCESS(RwReg  , 0x400E0054U) /**< \brief (PM) Clock Failure Detector Control */
+#define REG_PM_UNLOCK             REG_ACCESS(WoReg  , 0x400E0058U) /**< \brief (PM) Unlock Register */
+#define REG_PM_IER                REG_ACCESS(WoReg  , 0x400E00C0U) /**< \brief (PM) Interrupt Enable Register */
+#define REG_PM_IDR                REG_ACCESS(WoReg  , 0x400E00C4U) /**< \brief (PM) Interrupt Disable Register */
+#define REG_PM_IMR                REG_ACCESS(RoReg  , 0x400E00C8U) /**< \brief (PM) Interrupt Mask Register */
+#define REG_PM_ISR                REG_ACCESS(RoReg  , 0x400E00CCU) /**< \brief (PM) Interrupt Status Register */
+#define REG_PM_ICR                REG_ACCESS(WoReg  , 0x400E00D0U) /**< \brief (PM) Interrupt Clear Register */
+#define REG_PM_SR                 REG_ACCESS(RoReg  , 0x400E00D4U) /**< \brief (PM) Status Register */
+#define REG_PM_PPCR               REG_ACCESS(RwReg  , 0x400E0160U) /**< \brief (PM) Peripheral Power Control Register */
+#define REG_PM_RCAUSE             REG_ACCESS(RoReg  , 0x400E0180U) /**< \brief (PM) Reset Cause Register */
+#define REG_PM_WCAUSE             REG_ACCESS(RoReg  , 0x400E0184U) /**< \brief (PM) Wake Cause Register */
+#define REG_PM_AWEN               REG_ACCESS(RwReg  , 0x400E0188U) /**< \brief (PM) Asynchronous Wake Enable */
+#define REG_PM_OBS                REG_ACCESS(RwReg  , 0x400E0190U) /**< \brief (PM) Obsvervability */
+#define REG_PM_FASTSLEEP          REG_ACCESS(RwReg  , 0x400E0194U) /**< \brief (PM) Fast Sleep Register */
+#define REG_PM_CONFIG             REG_ACCESS(RoReg  , 0x400E03F8U) /**< \brief (PM) Configuration Register */
+#define REG_PM_VERSION            REG_ACCESS(RoReg  , 0x400E03FCU) /**< \brief (PM) Version Register */
 /* ========== Register definition for CHIPID peripheral ========== */
-#define REG_CHIPID_CIDR           REG_ACCESS(RoReg  , 0x400E0740U) /**< \brief (CHIPID) Chip ID Register */ 
-#define REG_CHIPID_EXID           REG_ACCESS(RoReg  , 0x400E0744U) /**< \brief (CHIPID) Chip ID Extension Register */ 
+#define REG_CHIPID_CIDR           REG_ACCESS(RoReg  , 0x400E0740U) /**< \brief (CHIPID) Chip ID Register */
+#define REG_CHIPID_EXID           REG_ACCESS(RoReg  , 0x400E0744U) /**< \brief (CHIPID) Chip ID Extension Register */
 /* ========== Register definition for SCIF peripheral ========== */
-#define REG_SCIF_IER              REG_ACCESS(WoReg  , 0x400E0800U) /**< \brief (SCIF) Interrupt Enable Register */ 
-#define REG_SCIF_IDR              REG_ACCESS(WoReg  , 0x400E0804U) /**< \brief (SCIF) Interrupt Disable Register */ 
-#define REG_SCIF_IMR              REG_ACCESS(RoReg  , 0x400E0808U) /**< \brief (SCIF) Interrupt Mask Register */ 
-#define REG_SCIF_ISR              REG_ACCESS(RoReg  , 0x400E080CU) /**< \brief (SCIF) Interrupt Status Register */ 
-#define REG_SCIF_ICR              REG_ACCESS(WoReg  , 0x400E0810U) /**< \brief (SCIF) Interrupt Clear Register */ 
-#define REG_SCIF_PCLKSR           REG_ACCESS(RoReg  , 0x400E0814U) /**< \brief (SCIF) Power and Clocks Status Register */ 
-#define REG_SCIF_UNLOCK           REG_ACCESS(WoReg  , 0x400E0818U) /**< \brief (SCIF) Unlock Register */ 
-#define REG_SCIF_CSCR             REG_ACCESS(RwReg  , 0x400E081CU) /**< \brief (SCIF) Chip Specific Configuration Register */ 
-#define REG_SCIF_OSCCTRL0         REG_ACCESS(RwReg  , 0x400E0820U) /**< \brief (SCIF) Oscillator Control Register */ 
+#define REG_SCIF_IER              REG_ACCESS(WoReg  , 0x400E0800U) /**< \brief (SCIF) Interrupt Enable Register */
+#define REG_SCIF_IDR              REG_ACCESS(WoReg  , 0x400E0804U) /**< \brief (SCIF) Interrupt Disable Register */
+#define REG_SCIF_IMR              REG_ACCESS(RoReg  , 0x400E0808U) /**< \brief (SCIF) Interrupt Mask Register */
+#define REG_SCIF_ISR              REG_ACCESS(RoReg  , 0x400E080CU) /**< \brief (SCIF) Interrupt Status Register */
+#define REG_SCIF_ICR              REG_ACCESS(WoReg  , 0x400E0810U) /**< \brief (SCIF) Interrupt Clear Register */
+#define REG_SCIF_PCLKSR           REG_ACCESS(RoReg  , 0x400E0814U) /**< \brief (SCIF) Power and Clocks Status Register */
+#define REG_SCIF_UNLOCK           REG_ACCESS(WoReg  , 0x400E0818U) /**< \brief (SCIF) Unlock Register */
+#define REG_SCIF_CSCR             REG_ACCESS(RwReg  , 0x400E081CU) /**< \brief (SCIF) Chip Specific Configuration Register */
+#define REG_SCIF_OSCCTRL0         REG_ACCESS(RwReg  , 0x400E0820U) /**< \brief (SCIF) Oscillator Control Register */
 #define REG_SCIF_PLL0             REG_ACCESS(RwReg  , 0x400E0824U) /**< \brief (SCIF) PLL0 Control Register 0 */
-#define REG_SCIF_DFLL0CONF        REG_ACCESS(RwReg  , 0x400E0828U) /**< \brief (SCIF) DFLL0 Config Register */ 
-#define REG_SCIF_DFLL0VAL         REG_ACCESS(RwReg  , 0x400E082CU) /**< \brief (SCIF) DFLL Value Register */ 
-#define REG_SCIF_DFLL0MUL         REG_ACCESS(RwReg  , 0x400E0830U) /**< \brief (SCIF) DFLL0 Multiplier Register */ 
-#define REG_SCIF_DFLL0STEP        REG_ACCESS(RwReg  , 0x400E0834U) /**< \brief (SCIF) DFLL0 Step Register */ 
-#define REG_SCIF_DFLL0SSG         REG_ACCESS(RwReg  , 0x400E0838U) /**< \brief (SCIF) DFLL0 Spread Spectrum Generator Control Register */ 
-#define REG_SCIF_DFLL0RATIO       REG_ACCESS(RoReg  , 0x400E083CU) /**< \brief (SCIF) DFLL0 Ratio Registe */ 
-#define REG_SCIF_DFLL0SYNC        REG_ACCESS(WoReg  , 0x400E0840U) /**< \brief (SCIF) DFLL0 Synchronization Register */ 
-#define REG_SCIF_RCCR             REG_ACCESS(RwReg  , 0x400E0844U) /**< \brief (SCIF) System RC Oscillator Calibration Register */ 
+#define REG_SCIF_DFLL0CONF        REG_ACCESS(RwReg  , 0x400E0828U) /**< \brief (SCIF) DFLL0 Config Register */
+#define REG_SCIF_DFLL0VAL         REG_ACCESS(RwReg  , 0x400E082CU) /**< \brief (SCIF) DFLL Value Register */
+#define REG_SCIF_DFLL0MUL         REG_ACCESS(RwReg  , 0x400E0830U) /**< \brief (SCIF) DFLL0 Multiplier Register */
+#define REG_SCIF_DFLL0STEP        REG_ACCESS(RwReg  , 0x400E0834U) /**< \brief (SCIF) DFLL0 Step Register */
+#define REG_SCIF_DFLL0SSG         REG_ACCESS(RwReg  , 0x400E0838U) /**< \brief (SCIF) DFLL0 Spread Spectrum Generator Control Register */
+#define REG_SCIF_DFLL0RATIO       REG_ACCESS(RoReg  , 0x400E083CU) /**< \brief (SCIF) DFLL0 Ratio Registe */
+#define REG_SCIF_DFLL0SYNC        REG_ACCESS(WoReg  , 0x400E0840U) /**< \brief (SCIF) DFLL0 Synchronization Register */
+#define REG_SCIF_RCCR             REG_ACCESS(RwReg  , 0x400E0844U) /**< \brief (SCIF) System RC Oscillator Calibration Register */
 #define REG_SCIF_RCFASTCFG        REG_ACCESS(RwReg  , 0x400E0848U) /**< \brief (SCIF) 4/8/12 MHz RC Oscillator Configuration
-Register */ 
-#define REG_SCIF_RCFASTSR         REG_ACCESS(RwReg  , 0x400E084CU) /**< \brief (SCIF) 4/8/12 MHz RC Oscillator Status Register */ 
-#define REG_SCIF_RC80MCR          REG_ACCESS(RwReg  , 0x400E0850U) /**< \brief (SCIF) 80 MHz RC Oscillator Register */ 
-#define REG_SCIF_HRPCR            REG_ACCESS(RwReg  , 0x400E0864U) /**< \brief (SCIF) High Resolution Prescaler Control Register */ 
-#define REG_SCIF_FPCR             REG_ACCESS(RwReg  , 0x400E0868U) /**< \brief (SCIF) Fractional Prescaler Control Register */ 
-#define REG_SCIF_FPMUL            REG_ACCESS(RwReg  , 0x400E086CU) /**< \brief (SCIF) Fractional Prescaler Multiplier Register */ 
-#define REG_SCIF_FPDIV            REG_ACCESS(RwReg  , 0x400E0870U) /**< \brief (SCIF) Fractional Prescaler DIVIDER Register */ 
+Register */
+#define REG_SCIF_RCFASTSR         REG_ACCESS(RwReg  , 0x400E084CU) /**< \brief (SCIF) 4/8/12 MHz RC Oscillator Status Register */
+#define REG_SCIF_RC80MCR          REG_ACCESS(RwReg  , 0x400E0850U) /**< \brief (SCIF) 80 MHz RC Oscillator Register */
+#define REG_SCIF_HRPCR            REG_ACCESS(RwReg  , 0x400E0864U) /**< \brief (SCIF) High Resolution Prescaler Control Register */
+#define REG_SCIF_FPCR             REG_ACCESS(RwReg  , 0x400E0868U) /**< \brief (SCIF) Fractional Prescaler Control Register */
+#define REG_SCIF_FPMUL            REG_ACCESS(RwReg  , 0x400E086CU) /**< \brief (SCIF) Fractional Prescaler Multiplier Register */
+#define REG_SCIF_FPDIV            REG_ACCESS(RwReg  , 0x400E0870U) /**< \brief (SCIF) Fractional Prescaler DIVIDER Register */
 #define REG_SCIF_GCCTRL0          REG_ACCESS(RwReg  , 0x400E0874U) /**< \brief (SCIF) Generic Clock Control 0 */
 #define REG_SCIF_GCCTRL1          REG_ACCESS(RwReg  , 0x400E0878U) /**< \brief (SCIF) Generic Clock Control 1 */
 #define REG_SCIF_GCCTRL2          REG_ACCESS(RwReg  , 0x400E087CU) /**< \brief (SCIF) Generic Clock Control 2 */
@@ -13699,27 +13699,27 @@ Register */
 #define REG_SCIF_GCCTRL9          REG_ACCESS(RwReg  , 0x400E0898U) /**< \brief (SCIF) Generic Clock Control 9 */
 #define REG_SCIF_GCCTRL10         REG_ACCESS(RwReg  , 0x400E089CU) /**< \brief (SCIF) Generic Clock Control 10 */
 #define REG_SCIF_GCCTRL11         REG_ACCESS(RwReg  , 0x400E08A0U) /**< \brief (SCIF) Generic Clock Control 11 */
-#define REG_SCIF_RCFASTVERSION    REG_ACCESS(RoReg  , 0x400E0BD8U) /**< \brief (SCIF) 4/8/12 MHz RC Oscillator Version Register */ 
-#define REG_SCIF_GCLKPRESCVERSION REG_ACCESS(RoReg  , 0x400E0BDCU) /**< \brief (SCIF) Generic Clock Prescaler Version Register */ 
-#define REG_SCIF_PLLIFAVERSION    REG_ACCESS(RoReg  , 0x400E0BE0U) /**< \brief (SCIF) PLL Version Register */ 
-#define REG_SCIF_OSCIFAVERSION    REG_ACCESS(RoReg  , 0x400E0BE4U) /**< \brief (SCIF) Oscillator 0 Version Register */ 
-#define REG_SCIF_DFLLIFBVERSION   REG_ACCESS(RoReg  , 0x400E0BE8U) /**< \brief (SCIF) DFLL Version Register */ 
-#define REG_SCIF_RCOSCIFAVERSION  REG_ACCESS(RoReg  , 0x400E0BECU) /**< \brief (SCIF) System RC Oscillator Version Register */ 
-#define REG_SCIF_FLOVERSION       REG_ACCESS(RoReg  , 0x400E0BF0U) /**< \brief (SCIF) Frequency Locked Oscillator Version Register */ 
-#define REG_SCIF_RC80MVERSION     REG_ACCESS(RoReg  , 0x400E0BF4U) /**< \brief (SCIF) 80MHz RC Oscillator Version Register */ 
-#define REG_SCIF_GCLKIFVERSION    REG_ACCESS(RoReg  , 0x400E0BF8U) /**< \brief (SCIF) Generic Clock Version Register */ 
-#define REG_SCIF_VERSION          REG_ACCESS(RoReg  , 0x400E0BFCU) /**< \brief (SCIF) SCIF Version Register */ 
+#define REG_SCIF_RCFASTVERSION    REG_ACCESS(RoReg  , 0x400E0BD8U) /**< \brief (SCIF) 4/8/12 MHz RC Oscillator Version Register */
+#define REG_SCIF_GCLKPRESCVERSION REG_ACCESS(RoReg  , 0x400E0BDCU) /**< \brief (SCIF) Generic Clock Prescaler Version Register */
+#define REG_SCIF_PLLIFAVERSION    REG_ACCESS(RoReg  , 0x400E0BE0U) /**< \brief (SCIF) PLL Version Register */
+#define REG_SCIF_OSCIFAVERSION    REG_ACCESS(RoReg  , 0x400E0BE4U) /**< \brief (SCIF) Oscillator 0 Version Register */
+#define REG_SCIF_DFLLIFBVERSION   REG_ACCESS(RoReg  , 0x400E0BE8U) /**< \brief (SCIF) DFLL Version Register */
+#define REG_SCIF_RCOSCIFAVERSION  REG_ACCESS(RoReg  , 0x400E0BECU) /**< \brief (SCIF) System RC Oscillator Version Register */
+#define REG_SCIF_FLOVERSION       REG_ACCESS(RoReg  , 0x400E0BF0U) /**< \brief (SCIF) Frequency Locked Oscillator Version Register */
+#define REG_SCIF_RC80MVERSION     REG_ACCESS(RoReg  , 0x400E0BF4U) /**< \brief (SCIF) 80MHz RC Oscillator Version Register */
+#define REG_SCIF_GCLKIFVERSION    REG_ACCESS(RoReg  , 0x400E0BF8U) /**< \brief (SCIF) Generic Clock Version Register */
+#define REG_SCIF_VERSION          REG_ACCESS(RoReg  , 0x400E0BFCU) /**< \brief (SCIF) SCIF Version Register */
 /* ========== Register definition for FREQM peripheral ========== */
-#define REG_FREQM_CTRL            REG_ACCESS(WoReg  , 0x400E0C00U) /**< \brief (FREQM) Control register */ 
-#define REG_FREQM_MODE            REG_ACCESS(RwReg  , 0x400E0C04U) /**< \brief (FREQM) Mode  register */ 
-#define REG_FREQM_STATUS          REG_ACCESS(RoReg  , 0x400E0C08U) /**< \brief (FREQM) Status  register */ 
-#define REG_FREQM_VALUE           REG_ACCESS(RoReg  , 0x400E0C0CU) /**< \brief (FREQM) Value register */ 
-#define REG_FREQM_IER             REG_ACCESS(WoReg  , 0x400E0C10U) /**< \brief (FREQM) Interrupt Enable Register */ 
-#define REG_FREQM_IDR             REG_ACCESS(WoReg  , 0x400E0C14U) /**< \brief (FREQM) Interrupt Diable Register */ 
-#define REG_FREQM_IMR             REG_ACCESS(RoReg  , 0x400E0C18U) /**< \brief (FREQM) Interrupt Mask Register */ 
-#define REG_FREQM_ISR             REG_ACCESS(RoReg  , 0x400E0C1CU) /**< \brief (FREQM) Interrupt Status Register */ 
-#define REG_FREQM_ICR             REG_ACCESS(WoReg  , 0x400E0C20U) /**< \brief (FREQM) Interrupt Clear Register */ 
-#define REG_FREQM_VERSION         REG_ACCESS(RoReg  , 0x400E0FFCU) /**< \brief (FREQM) Version Register */ 
+#define REG_FREQM_CTRL            REG_ACCESS(WoReg  , 0x400E0C00U) /**< \brief (FREQM) Control register */
+#define REG_FREQM_MODE            REG_ACCESS(RwReg  , 0x400E0C04U) /**< \brief (FREQM) Mode  register */
+#define REG_FREQM_STATUS          REG_ACCESS(RoReg  , 0x400E0C08U) /**< \brief (FREQM) Status  register */
+#define REG_FREQM_VALUE           REG_ACCESS(RoReg  , 0x400E0C0CU) /**< \brief (FREQM) Value register */
+#define REG_FREQM_IER             REG_ACCESS(WoReg  , 0x400E0C10U) /**< \brief (FREQM) Interrupt Enable Register */
+#define REG_FREQM_IDR             REG_ACCESS(WoReg  , 0x400E0C14U) /**< \brief (FREQM) Interrupt Diable Register */
+#define REG_FREQM_IMR             REG_ACCESS(RoReg  , 0x400E0C18U) /**< \brief (FREQM) Interrupt Mask Register */
+#define REG_FREQM_ISR             REG_ACCESS(RoReg  , 0x400E0C1CU) /**< \brief (FREQM) Interrupt Status Register */
+#define REG_FREQM_ICR             REG_ACCESS(WoReg  , 0x400E0C20U) /**< \brief (FREQM) Interrupt Clear Register */
+#define REG_FREQM_VERSION         REG_ACCESS(RoReg  , 0x400E0FFCU) /**< \brief (FREQM) Version Register */
 /* ========== Register definition for GPIO peripheral ========== */
 #define REG_GPIO_GPER0            REG_ACCESS(RwReg  , 0x400E1000U) /**< \brief (GPIO) GPIO Enable Register 0 */
 #define REG_GPIO_GPERS0           REG_ACCESS(WoReg  , 0x400E1004U) /**< \brief (GPIO) GPIO Enable Register - Set 0 */
@@ -13971,109 +13971,109 @@ Register */
 #define REG_GPIO_PARAMETER2       REG_ACCESS(RoReg  , 0x400E15F8U) /**< \brief (GPIO) Parameter Register 2 */
 #define REG_GPIO_VERSION2         REG_ACCESS(RoReg  , 0x400E15FCU) /**< \brief (GPIO) Version Register 2 */
 /* ========== Register definition for BPM peripheral ========== */
-#define REG_BPM_IER               REG_ACCESS(WoReg  , 0x400F0000U) /**< \brief (BPM) Interrupt Enable Register */ 
-#define REG_BPM_IDR               REG_ACCESS(WoReg  , 0x400F0004U) /**< \brief (BPM) Interrupt Disable Register */ 
-#define REG_BPM_IMR               REG_ACCESS(RoReg  , 0x400F0008U) /**< \brief (BPM) Interrupt Mask Register */ 
-#define REG_BPM_ISR               REG_ACCESS(RoReg  , 0x400F000CU) /**< \brief (BPM) Interrupt Status Register */ 
-#define REG_BPM_ICR               REG_ACCESS(WoReg  , 0x400F0010U) /**< \brief (BPM) Interrupt Clear Register */ 
-#define REG_BPM_SR                REG_ACCESS(RoReg  , 0x400F0014U) /**< \brief (BPM) Status Register */ 
-#define REG_BPM_UNLOCK            REG_ACCESS(WoReg  , 0x400F0018U) /**< \brief (BPM) Unlock Register */ 
-#define REG_BPM_PMCON             REG_ACCESS(RwReg  , 0x400F001CU) /**< \brief (BPM) Power Mode Control Register */ 
-#define REG_BPM_BKUPWCAUSE        REG_ACCESS(RoReg  , 0x400F0028U) /**< \brief (BPM) Backup Wake up Cause Register */ 
-#define REG_BPM_BKUPWEN           REG_ACCESS(RwReg  , 0x400F002CU) /**< \brief (BPM) Backup Wake up Enable Register */ 
-#define REG_BPM_BKUPPMUX          REG_ACCESS(RwReg  , 0x400F0030U) /**< \brief (BPM) Backup Pin Muxing Register */ 
-#define REG_BPM_IORET             REG_ACCESS(RwReg  , 0x400F0034U) /**< \brief (BPM) Input Output Retention Register */ 
-#define REG_BPM_BPR               REG_ACCESS(RwReg  , 0x400F0040U) /**< \brief (BPM) Bypass Register */ 
-#define REG_BPM_FWRUNPS           REG_ACCESS(RoReg  , 0x400F0044U) /**< \brief (BPM) Factory Word Run PS Register */ 
-#define REG_BPM_FWPSAVEPS         REG_ACCESS(RoReg  , 0x400F0048U) /**< \brief (BPM) Factory Word Power Save PS Register */ 
-#define REG_BPM_VERSION           REG_ACCESS(RoReg  , 0x400F00FCU) /**< \brief (BPM) Version Register */ 
+#define REG_BPM_IER               REG_ACCESS(WoReg  , 0x400F0000U) /**< \brief (BPM) Interrupt Enable Register */
+#define REG_BPM_IDR               REG_ACCESS(WoReg  , 0x400F0004U) /**< \brief (BPM) Interrupt Disable Register */
+#define REG_BPM_IMR               REG_ACCESS(RoReg  , 0x400F0008U) /**< \brief (BPM) Interrupt Mask Register */
+#define REG_BPM_ISR               REG_ACCESS(RoReg  , 0x400F000CU) /**< \brief (BPM) Interrupt Status Register */
+#define REG_BPM_ICR               REG_ACCESS(WoReg  , 0x400F0010U) /**< \brief (BPM) Interrupt Clear Register */
+#define REG_BPM_SR                REG_ACCESS(RoReg  , 0x400F0014U) /**< \brief (BPM) Status Register */
+#define REG_BPM_UNLOCK            REG_ACCESS(WoReg  , 0x400F0018U) /**< \brief (BPM) Unlock Register */
+#define REG_BPM_PMCON             REG_ACCESS(RwReg  , 0x400F001CU) /**< \brief (BPM) Power Mode Control Register */
+#define REG_BPM_BKUPWCAUSE        REG_ACCESS(RoReg  , 0x400F0028U) /**< \brief (BPM) Backup Wake up Cause Register */
+#define REG_BPM_BKUPWEN           REG_ACCESS(RwReg  , 0x400F002CU) /**< \brief (BPM) Backup Wake up Enable Register */
+#define REG_BPM_BKUPPMUX          REG_ACCESS(RwReg  , 0x400F0030U) /**< \brief (BPM) Backup Pin Muxing Register */
+#define REG_BPM_IORET             REG_ACCESS(RwReg  , 0x400F0034U) /**< \brief (BPM) Input Output Retention Register */
+#define REG_BPM_BPR               REG_ACCESS(RwReg  , 0x400F0040U) /**< \brief (BPM) Bypass Register */
+#define REG_BPM_FWRUNPS           REG_ACCESS(RoReg  , 0x400F0044U) /**< \brief (BPM) Factory Word Run PS Register */
+#define REG_BPM_FWPSAVEPS         REG_ACCESS(RoReg  , 0x400F0048U) /**< \brief (BPM) Factory Word Power Save PS Register */
+#define REG_BPM_VERSION           REG_ACCESS(RoReg  , 0x400F00FCU) /**< \brief (BPM) Version Register */
 /* ========== Register definition for BSCIF peripheral ========== */
-#define REG_BSCIF_IER             REG_ACCESS(WoReg  , 0x400F0400U) /**< \brief (BSCIF) Interrupt Enable Register */ 
-#define REG_BSCIF_IDR             REG_ACCESS(WoReg  , 0x400F0404U) /**< \brief (BSCIF) Interrupt Disable Register */ 
-#define REG_BSCIF_IMR             REG_ACCESS(RoReg  , 0x400F0408U) /**< \brief (BSCIF) Interrupt Mask Register */ 
-#define REG_BSCIF_ISR             REG_ACCESS(RoReg  , 0x400F040CU) /**< \brief (BSCIF) Interrupt Status Register */ 
-#define REG_BSCIF_ICR             REG_ACCESS(WoReg  , 0x400F0410U) /**< \brief (BSCIF) Interrupt Clear Register */ 
-#define REG_BSCIF_PCLKSR          REG_ACCESS(RoReg  , 0x400F0414U) /**< \brief (BSCIF) Power and Clocks Status Register */ 
-#define REG_BSCIF_UNLOCK          REG_ACCESS(WoReg  , 0x400F0418U) /**< \brief (BSCIF) Unlock Register */ 
-#define REG_BSCIF_CSCR            REG_ACCESS(RwReg  , 0x400F041CU) /**< \brief (BSCIF) Chip Specific Configuration Register */ 
-#define REG_BSCIF_OSCCTRL32       REG_ACCESS(RwReg  , 0x400F0420U) /**< \brief (BSCIF) Oscillator 32 Control Register */ 
-#define REG_BSCIF_RC32KCR         REG_ACCESS(RwReg  , 0x400F0424U) /**< \brief (BSCIF) 32 kHz RC Oscillator Control Register */ 
-#define REG_BSCIF_RC32KTUNE       REG_ACCESS(RwReg  , 0x400F0428U) /**< \brief (BSCIF) 32kHz RC Oscillator Tuning Register */ 
-#define REG_BSCIF_BOD33CTRL       REG_ACCESS(RwReg  , 0x400F042CU) /**< \brief (BSCIF) BOD33 Control Register */ 
-#define REG_BSCIF_BOD33LEVEL      REG_ACCESS(RwReg  , 0x400F0430U) /**< \brief (BSCIF) BOD33 Level Register */ 
-#define REG_BSCIF_BOD33SAMPLING   REG_ACCESS(RwReg  , 0x400F0434U) /**< \brief (BSCIF) BOD33 Sampling Control Register */ 
-#define REG_BSCIF_BOD18CTRL       REG_ACCESS(RwReg  , 0x400F0438U) /**< \brief (BSCIF) BOD18 Control Register */ 
-#define REG_BSCIF_BOD18LEVEL      REG_ACCESS(RwReg  , 0x400F043CU) /**< \brief (BSCIF) BOD18 Level Register */ 
-#define REG_BSCIF_VREGCR          REG_ACCESS(RwReg  , 0x400F0444U) /**< \brief (BSCIF) Voltage Regulator Configuration Register */ 
-#define REG_BSCIF_VREGNCSR        REG_ACCESS(RwReg  , 0x400F044CU) /**< \brief (BSCIF) Normal Mode Control and Status Register */ 
-#define REG_BSCIF_VREGLPCSR       REG_ACCESS(RwReg  , 0x400F0450U) /**< \brief (BSCIF) LP Mode Control and Status Register */ 
-#define REG_BSCIF_RC1MCR          REG_ACCESS(RwReg  , 0x400F0458U) /**< \brief (BSCIF) 1MHz RC Clock Configuration Register */ 
-#define REG_BSCIF_BGCR            REG_ACCESS(RwReg  , 0x400F045CU) /**< \brief (BSCIF) Bandgap Calibration Register */ 
-#define REG_BSCIF_BGCTRL          REG_ACCESS(RwReg  , 0x400F0460U) /**< \brief (BSCIF) Bandgap Control Register */ 
-#define REG_BSCIF_BGSR            REG_ACCESS(RoReg  , 0x400F0464U) /**< \brief (BSCIF) Bandgap Status Register */ 
+#define REG_BSCIF_IER             REG_ACCESS(WoReg  , 0x400F0400U) /**< \brief (BSCIF) Interrupt Enable Register */
+#define REG_BSCIF_IDR             REG_ACCESS(WoReg  , 0x400F0404U) /**< \brief (BSCIF) Interrupt Disable Register */
+#define REG_BSCIF_IMR             REG_ACCESS(RoReg  , 0x400F0408U) /**< \brief (BSCIF) Interrupt Mask Register */
+#define REG_BSCIF_ISR             REG_ACCESS(RoReg  , 0x400F040CU) /**< \brief (BSCIF) Interrupt Status Register */
+#define REG_BSCIF_ICR             REG_ACCESS(WoReg  , 0x400F0410U) /**< \brief (BSCIF) Interrupt Clear Register */
+#define REG_BSCIF_PCLKSR          REG_ACCESS(RoReg  , 0x400F0414U) /**< \brief (BSCIF) Power and Clocks Status Register */
+#define REG_BSCIF_UNLOCK          REG_ACCESS(WoReg  , 0x400F0418U) /**< \brief (BSCIF) Unlock Register */
+#define REG_BSCIF_CSCR            REG_ACCESS(RwReg  , 0x400F041CU) /**< \brief (BSCIF) Chip Specific Configuration Register */
+#define REG_BSCIF_OSCCTRL32       REG_ACCESS(RwReg  , 0x400F0420U) /**< \brief (BSCIF) Oscillator 32 Control Register */
+#define REG_BSCIF_RC32KCR         REG_ACCESS(RwReg  , 0x400F0424U) /**< \brief (BSCIF) 32 kHz RC Oscillator Control Register */
+#define REG_BSCIF_RC32KTUNE       REG_ACCESS(RwReg  , 0x400F0428U) /**< \brief (BSCIF) 32kHz RC Oscillator Tuning Register */
+#define REG_BSCIF_BOD33CTRL       REG_ACCESS(RwReg  , 0x400F042CU) /**< \brief (BSCIF) BOD33 Control Register */
+#define REG_BSCIF_BOD33LEVEL      REG_ACCESS(RwReg  , 0x400F0430U) /**< \brief (BSCIF) BOD33 Level Register */
+#define REG_BSCIF_BOD33SAMPLING   REG_ACCESS(RwReg  , 0x400F0434U) /**< \brief (BSCIF) BOD33 Sampling Control Register */
+#define REG_BSCIF_BOD18CTRL       REG_ACCESS(RwReg  , 0x400F0438U) /**< \brief (BSCIF) BOD18 Control Register */
+#define REG_BSCIF_BOD18LEVEL      REG_ACCESS(RwReg  , 0x400F043CU) /**< \brief (BSCIF) BOD18 Level Register */
+#define REG_BSCIF_VREGCR          REG_ACCESS(RwReg  , 0x400F0444U) /**< \brief (BSCIF) Voltage Regulator Configuration Register */
+#define REG_BSCIF_VREGNCSR        REG_ACCESS(RwReg  , 0x400F044CU) /**< \brief (BSCIF) Normal Mode Control and Status Register */
+#define REG_BSCIF_VREGLPCSR       REG_ACCESS(RwReg  , 0x400F0450U) /**< \brief (BSCIF) LP Mode Control and Status Register */
+#define REG_BSCIF_RC1MCR          REG_ACCESS(RwReg  , 0x400F0458U) /**< \brief (BSCIF) 1MHz RC Clock Configuration Register */
+#define REG_BSCIF_BGCR            REG_ACCESS(RwReg  , 0x400F045CU) /**< \brief (BSCIF) Bandgap Calibration Register */
+#define REG_BSCIF_BGCTRL          REG_ACCESS(RwReg  , 0x400F0460U) /**< \brief (BSCIF) Bandgap Control Register */
+#define REG_BSCIF_BGSR            REG_ACCESS(RoReg  , 0x400F0464U) /**< \brief (BSCIF) Bandgap Status Register */
 #define REG_BSCIF_BR0             REG_ACCESS(RwReg  , 0x400F0478U) /**< \brief (BSCIF) Backup Register 0 */
 #define REG_BSCIF_BR1             REG_ACCESS(RwReg  , 0x400F047CU) /**< \brief (BSCIF) Backup Register 1 */
 #define REG_BSCIF_BR2             REG_ACCESS(RwReg  , 0x400F0480U) /**< \brief (BSCIF) Backup Register 2 */
 #define REG_BSCIF_BR3             REG_ACCESS(RwReg  , 0x400F0484U) /**< \brief (BSCIF) Backup Register 3 */
-#define REG_BSCIF_BRIFBVERSION    REG_ACCESS(RoReg  , 0x400F07E4U) /**< \brief (BSCIF) Backup Register Interface Version Register */ 
-#define REG_BSCIF_BGREFIFBVERSION REG_ACCESS(RoReg  , 0x400F07E8U) /**< \brief (BSCIF) BGREFIFB Version Register */ 
-#define REG_BSCIF_VREGIFGVERSION  REG_ACCESS(RoReg  , 0x400F07ECU) /**< \brief (BSCIF) VREGIFA Version Register */ 
-#define REG_BSCIF_BODIFCVERSION   REG_ACCESS(RoReg  , 0x400F07F0U) /**< \brief (BSCIF) BODIFC Version Register */ 
-#define REG_BSCIF_RC32KIFBVERSION REG_ACCESS(RoReg  , 0x400F07F4U) /**< \brief (BSCIF) 32 kHz RC Oscillator Version Register */ 
-#define REG_BSCIF_OSC32IFAVERSION REG_ACCESS(RoReg  , 0x400F07F8U) /**< \brief (BSCIF) 32 KHz Oscillator Version Register */ 
-#define REG_BSCIF_VERSION         REG_ACCESS(RoReg  , 0x400F07FCU) /**< \brief (BSCIF) BSCIF Version Register */ 
+#define REG_BSCIF_BRIFBVERSION    REG_ACCESS(RoReg  , 0x400F07E4U) /**< \brief (BSCIF) Backup Register Interface Version Register */
+#define REG_BSCIF_BGREFIFBVERSION REG_ACCESS(RoReg  , 0x400F07E8U) /**< \brief (BSCIF) BGREFIFB Version Register */
+#define REG_BSCIF_VREGIFGVERSION  REG_ACCESS(RoReg  , 0x400F07ECU) /**< \brief (BSCIF) VREGIFA Version Register */
+#define REG_BSCIF_BODIFCVERSION   REG_ACCESS(RoReg  , 0x400F07F0U) /**< \brief (BSCIF) BODIFC Version Register */
+#define REG_BSCIF_RC32KIFBVERSION REG_ACCESS(RoReg  , 0x400F07F4U) /**< \brief (BSCIF) 32 kHz RC Oscillator Version Register */
+#define REG_BSCIF_OSC32IFAVERSION REG_ACCESS(RoReg  , 0x400F07F8U) /**< \brief (BSCIF) 32 KHz Oscillator Version Register */
+#define REG_BSCIF_VERSION         REG_ACCESS(RoReg  , 0x400F07FCU) /**< \brief (BSCIF) BSCIF Version Register */
 /* ========== Register definition for AST peripheral ========== */
-#define REG_AST_CR                REG_ACCESS(RwReg  , 0x400F0800U) /**< \brief (AST) Control Register */ 
-#define REG_AST_CV                REG_ACCESS(RwReg  , 0x400F0804U) /**< \brief (AST) Counter Value */ 
-#define REG_AST_SR                REG_ACCESS(RoReg  , 0x400F0808U) /**< \brief (AST) Status Register */ 
-#define REG_AST_SCR               REG_ACCESS(WoReg  , 0x400F080CU) /**< \brief (AST) Status Clear Register */ 
-#define REG_AST_IER               REG_ACCESS(WoReg  , 0x400F0810U) /**< \brief (AST) Interrupt Enable Register */ 
-#define REG_AST_IDR               REG_ACCESS(WoReg  , 0x400F0814U) /**< \brief (AST) Interrupt Disable Register */ 
-#define REG_AST_IMR               REG_ACCESS(RoReg  , 0x400F0818U) /**< \brief (AST) Interrupt Mask Register */ 
-#define REG_AST_WER               REG_ACCESS(RwReg  , 0x400F081CU) /**< \brief (AST) Wake Enable Register */ 
-#define REG_AST_AR0               REG_ACCESS(RwReg  , 0x400F0820U) /**< \brief (AST) Alarm Register 0 */ 
-#define REG_AST_AR1               REG_ACCESS(RwReg  , 0x400F0824U) /**< \brief (AST) Alarm Register 1 */ 
-#define REG_AST_PIR0              REG_ACCESS(RwReg  , 0x400F0830U) /**< \brief (AST) Periodic Interval Register 0 */ 
-#define REG_AST_PIR1              REG_ACCESS(RwReg  , 0x400F0834U) /**< \brief (AST) Periodic Interval Register 1 */ 
-#define REG_AST_CLOCK             REG_ACCESS(RwReg  , 0x400F0840U) /**< \brief (AST) Clock Control Register */ 
-#define REG_AST_DTR               REG_ACCESS(RwReg  , 0x400F0844U) /**< \brief (AST) Digital Tuner Register */ 
-#define REG_AST_EVE               REG_ACCESS(WoReg  , 0x400F0848U) /**< \brief (AST) Event Enable Register */ 
-#define REG_AST_EVD               REG_ACCESS(WoReg  , 0x400F084CU) /**< \brief (AST) Event Disable Register */ 
-#define REG_AST_EVM               REG_ACCESS(RoReg  , 0x400F0850U) /**< \brief (AST) Event Mask Register */ 
-#define REG_AST_CALV              REG_ACCESS(RwReg  , 0x400F0854U) /**< \brief (AST) Calendar Value */ 
-#define REG_AST_PARAMETER         REG_ACCESS(RoReg  , 0x400F08F0U) /**< \brief (AST) Parameter Register */ 
-#define REG_AST_VERSION           REG_ACCESS(RoReg  , 0x400F08FCU) /**< \brief (AST) Version Register */ 
+#define REG_AST_CR                REG_ACCESS(RwReg  , 0x400F0800U) /**< \brief (AST) Control Register */
+#define REG_AST_CV                REG_ACCESS(RwReg  , 0x400F0804U) /**< \brief (AST) Counter Value */
+#define REG_AST_SR                REG_ACCESS(RoReg  , 0x400F0808U) /**< \brief (AST) Status Register */
+#define REG_AST_SCR               REG_ACCESS(WoReg  , 0x400F080CU) /**< \brief (AST) Status Clear Register */
+#define REG_AST_IER               REG_ACCESS(WoReg  , 0x400F0810U) /**< \brief (AST) Interrupt Enable Register */
+#define REG_AST_IDR               REG_ACCESS(WoReg  , 0x400F0814U) /**< \brief (AST) Interrupt Disable Register */
+#define REG_AST_IMR               REG_ACCESS(RoReg  , 0x400F0818U) /**< \brief (AST) Interrupt Mask Register */
+#define REG_AST_WER               REG_ACCESS(RwReg  , 0x400F081CU) /**< \brief (AST) Wake Enable Register */
+#define REG_AST_AR0               REG_ACCESS(RwReg  , 0x400F0820U) /**< \brief (AST) Alarm Register 0 */
+#define REG_AST_AR1               REG_ACCESS(RwReg  , 0x400F0824U) /**< \brief (AST) Alarm Register 1 */
+#define REG_AST_PIR0              REG_ACCESS(RwReg  , 0x400F0830U) /**< \brief (AST) Periodic Interval Register 0 */
+#define REG_AST_PIR1              REG_ACCESS(RwReg  , 0x400F0834U) /**< \brief (AST) Periodic Interval Register 1 */
+#define REG_AST_CLOCK             REG_ACCESS(RwReg  , 0x400F0840U) /**< \brief (AST) Clock Control Register */
+#define REG_AST_DTR               REG_ACCESS(RwReg  , 0x400F0844U) /**< \brief (AST) Digital Tuner Register */
+#define REG_AST_EVE               REG_ACCESS(WoReg  , 0x400F0848U) /**< \brief (AST) Event Enable Register */
+#define REG_AST_EVD               REG_ACCESS(WoReg  , 0x400F084CU) /**< \brief (AST) Event Disable Register */
+#define REG_AST_EVM               REG_ACCESS(RoReg  , 0x400F0850U) /**< \brief (AST) Event Mask Register */
+#define REG_AST_CALV              REG_ACCESS(RwReg  , 0x400F0854U) /**< \brief (AST) Calendar Value */
+#define REG_AST_PARAMETER         REG_ACCESS(RoReg  , 0x400F08F0U) /**< \brief (AST) Parameter Register */
+#define REG_AST_VERSION           REG_ACCESS(RoReg  , 0x400F08FCU) /**< \brief (AST) Version Register */
 /* ========== Register definition for WDT peripheral ========== */
-#define REG_WDT_CTRL              REG_ACCESS(RwReg  , 0x400F0C00U) /**< \brief (WDT) Control Register */ 
-#define REG_WDT_CLR               REG_ACCESS(WoReg  , 0x400F0C04U) /**< \brief (WDT) Clear Register */ 
-#define REG_WDT_SR                REG_ACCESS(RoReg  , 0x400F0C08U) /**< \brief (WDT) Status Register */ 
-#define REG_WDT_IER               REG_ACCESS(WoReg  , 0x400F0C0CU) /**< \brief (WDT) Interrupt Enable Register */ 
-#define REG_WDT_IDR               REG_ACCESS(WoReg  , 0x400F0C10U) /**< \brief (WDT) Interrupt Disable Register */ 
-#define REG_WDT_IMR               REG_ACCESS(RoReg  , 0x400F0C14U) /**< \brief (WDT) Interrupt Mask Register */ 
-#define REG_WDT_ISR               REG_ACCESS(RoReg  , 0x400F0C18U) /**< \brief (WDT) Interrupt Status Register */ 
-#define REG_WDT_ICR               REG_ACCESS(WoReg  , 0x400F0C1CU) /**< \brief (WDT) Interrupt Clear Register */ 
-#define REG_WDT_VERSION           REG_ACCESS(RoReg  , 0x400F0FFCU) /**< \brief (WDT) Version Register */ 
+#define REG_WDT_CTRL              REG_ACCESS(RwReg  , 0x400F0C00U) /**< \brief (WDT) Control Register */
+#define REG_WDT_CLR               REG_ACCESS(WoReg  , 0x400F0C04U) /**< \brief (WDT) Clear Register */
+#define REG_WDT_SR                REG_ACCESS(RoReg  , 0x400F0C08U) /**< \brief (WDT) Status Register */
+#define REG_WDT_IER               REG_ACCESS(WoReg  , 0x400F0C0CU) /**< \brief (WDT) Interrupt Enable Register */
+#define REG_WDT_IDR               REG_ACCESS(WoReg  , 0x400F0C10U) /**< \brief (WDT) Interrupt Disable Register */
+#define REG_WDT_IMR               REG_ACCESS(RoReg  , 0x400F0C14U) /**< \brief (WDT) Interrupt Mask Register */
+#define REG_WDT_ISR               REG_ACCESS(RoReg  , 0x400F0C18U) /**< \brief (WDT) Interrupt Status Register */
+#define REG_WDT_ICR               REG_ACCESS(WoReg  , 0x400F0C1CU) /**< \brief (WDT) Interrupt Clear Register */
+#define REG_WDT_VERSION           REG_ACCESS(RoReg  , 0x400F0FFCU) /**< \brief (WDT) Version Register */
 /* ========== Register definition for EIC peripheral ========== */
-#define REG_EIC_IER               REG_ACCESS(WoReg  , 0x400F1000U) /**< \brief (EIC) Interrupt Enable Register */ 
-#define REG_EIC_IDR               REG_ACCESS(WoReg  , 0x400F1004U) /**< \brief (EIC) Interrupt Disable Register */ 
-#define REG_EIC_IMR               REG_ACCESS(RoReg  , 0x400F1008U) /**< \brief (EIC) Interrupt Mask Register */ 
-#define REG_EIC_ISR               REG_ACCESS(RoReg  , 0x400F100CU) /**< \brief (EIC) Interrupt Status Register */ 
-#define REG_EIC_ICR               REG_ACCESS(WoReg  , 0x400F1010U) /**< \brief (EIC) Interrupt Clear Register */ 
-#define REG_EIC_MODE              REG_ACCESS(RwReg  , 0x400F1014U) /**< \brief (EIC) Mode Register */ 
-#define REG_EIC_EDGE              REG_ACCESS(RwReg  , 0x400F1018U) /**< \brief (EIC) Edge Register */ 
-#define REG_EIC_LEVEL             REG_ACCESS(RwReg  , 0x400F101CU) /**< \brief (EIC) Level Register */ 
-#define REG_EIC_FILTER            REG_ACCESS(RwReg  , 0x400F1020U) /**< \brief (EIC) Filter Register */ 
-#define REG_EIC_ASYNC             REG_ACCESS(RwReg  , 0x400F1028U) /**< \brief (EIC) Asynchronous Register */ 
-#define REG_EIC_EN                REG_ACCESS(WoReg  , 0x400F1030U) /**< \brief (EIC) Enable Register */ 
-#define REG_EIC_DIS               REG_ACCESS(WoReg  , 0x400F1034U) /**< \brief (EIC) Disable Register */ 
-#define REG_EIC_CTRL              REG_ACCESS(RoReg  , 0x400F1038U) /**< \brief (EIC) Control Register */ 
-#define REG_EIC_VERSION           REG_ACCESS(RoReg  , 0x400F13FCU) /**< \brief (EIC) Version Register */ 
+#define REG_EIC_IER               REG_ACCESS(WoReg  , 0x400F1000U) /**< \brief (EIC) Interrupt Enable Register */
+#define REG_EIC_IDR               REG_ACCESS(WoReg  , 0x400F1004U) /**< \brief (EIC) Interrupt Disable Register */
+#define REG_EIC_IMR               REG_ACCESS(RoReg  , 0x400F1008U) /**< \brief (EIC) Interrupt Mask Register */
+#define REG_EIC_ISR               REG_ACCESS(RoReg  , 0x400F100CU) /**< \brief (EIC) Interrupt Status Register */
+#define REG_EIC_ICR               REG_ACCESS(WoReg  , 0x400F1010U) /**< \brief (EIC) Interrupt Clear Register */
+#define REG_EIC_MODE              REG_ACCESS(RwReg  , 0x400F1014U) /**< \brief (EIC) Mode Register */
+#define REG_EIC_EDGE              REG_ACCESS(RwReg  , 0x400F1018U) /**< \brief (EIC) Edge Register */
+#define REG_EIC_LEVEL             REG_ACCESS(RwReg  , 0x400F101CU) /**< \brief (EIC) Level Register */
+#define REG_EIC_FILTER            REG_ACCESS(RwReg  , 0x400F1020U) /**< \brief (EIC) Filter Register */
+#define REG_EIC_ASYNC             REG_ACCESS(RwReg  , 0x400F1028U) /**< \brief (EIC) Asynchronous Register */
+#define REG_EIC_EN                REG_ACCESS(WoReg  , 0x400F1030U) /**< \brief (EIC) Enable Register */
+#define REG_EIC_DIS               REG_ACCESS(WoReg  , 0x400F1034U) /**< \brief (EIC) Disable Register */
+#define REG_EIC_CTRL              REG_ACCESS(RoReg  , 0x400F1038U) /**< \brief (EIC) Control Register */
+#define REG_EIC_VERSION           REG_ACCESS(RoReg  , 0x400F13FCU) /**< \brief (EIC) Version Register */
 /* ========== Register definition for PICOUART peripheral ========== */
-#define REG_PICOUART_CR           REG_ACCESS(WoReg  , 0x400F1400U) /**< \brief (PICOUART) Control Register */ 
-#define REG_PICOUART_CFG          REG_ACCESS(RwReg  , 0x400F1404U) /**< \brief (PICOUART) Configuration Register */ 
-#define REG_PICOUART_SR           REG_ACCESS(RoReg  , 0x400F1408U) /**< \brief (PICOUART) Status Register */ 
-#define REG_PICOUART_RHR          REG_ACCESS(RoReg  , 0x400F140CU) /**< \brief (PICOUART) Receive Holding Register */ 
-#define REG_PICOUART_VERSION      REG_ACCESS(RoReg  , 0x400F1420U) /**< \brief (PICOUART) Version Register */ 
+#define REG_PICOUART_CR           REG_ACCESS(WoReg  , 0x400F1400U) /**< \brief (PICOUART) Control Register */
+#define REG_PICOUART_CFG          REG_ACCESS(RwReg  , 0x400F1404U) /**< \brief (PICOUART) Configuration Register */
+#define REG_PICOUART_SR           REG_ACCESS(RoReg  , 0x400F1408U) /**< \brief (PICOUART) Status Register */
+#define REG_PICOUART_RHR          REG_ACCESS(RoReg  , 0x400F140CU) /**< \brief (PICOUART) Receive Holding Register */
+#define REG_PICOUART_VERSION      REG_ACCESS(RoReg  , 0x400F1420U) /**< \brief (PICOUART) Version Register */
 /*@}*/
 
 /* ************************************************************************** */
@@ -14177,91 +14177,91 @@ Register */
 /*@{*/
 
 #define ABDACB_ADDR     (0x40064000U)                    /**< \brief (ABDACB) Base Address */
-#define ABDACB          CAST(Abdacb,    ABDACB_ADDR)    
+#define ABDACB          CAST(Abdacb,    ABDACB_ADDR)
 #define ACIFC_ADDR      (0x40040000U)                    /**< \brief (ACIFC) Base Address */
-#define ACIFC           CAST(Acifc,     ACIFC_ADDR)     
+#define ACIFC           CAST(Acifc,     ACIFC_ADDR)
 #define ADCIFE_ADDR     (0x40038000U)                    /**< \brief (ADCIFE) Base Address */
-#define ADCIFE          CAST(Adcife,    ADCIFE_ADDR)    
+#define ADCIFE          CAST(Adcife,    ADCIFE_ADDR)
 #define AESA_ADDR       (0x400B0000U)                    /**< \brief (AESA) Base Address */
-#define AESA            CAST(Aesa,      AESA_ADDR)      
+#define AESA            CAST(Aesa,      AESA_ADDR)
 #define AST_ADDR        (0x400F0800U)                    /**< \brief (AST) Base Address */
-#define AST             CAST(Ast,       AST_ADDR)       
+#define AST             CAST(Ast,       AST_ADDR)
 #define BPM_ADDR        (0x400F0000U)                    /**< \brief (BPM) Base Address */
-#define BPM             CAST(Bpm,       BPM_ADDR)       
+#define BPM             CAST(Bpm,       BPM_ADDR)
 #define BSCIF_ADDR      (0x400F0400U)                    /**< \brief (BSCIF) Base Address */
-#define BSCIF           CAST(Bscif,     BSCIF_ADDR)     
+#define BSCIF           CAST(Bscif,     BSCIF_ADDR)
 #define CATB_ADDR       (0x40070000U)                    /**< \brief (CATB) Base Address */
-#define CATB            CAST(Catb,      CATB_ADDR)      
+#define CATB            CAST(Catb,      CATB_ADDR)
 #define CHIPID_ADDR     (0x400E0400U)                    /**< \brief (CHIPID) Base Address */
-#define CHIPID          CAST(Chipid,    CHIPID_ADDR)    
+#define CHIPID          CAST(Chipid,    CHIPID_ADDR)
 #define CRCCU_ADDR      (0x400A4000U)                    /**< \brief (CRCCU) Base Address */
-#define CRCCU           CAST(Crccu,     CRCCU_ADDR)     
+#define CRCCU           CAST(Crccu,     CRCCU_ADDR)
 #define DACC_ADDR       (0x4003C000U)                    /**< \brief (DACC) Base Address */
-#define DACC            CAST(Dacc,      DACC_ADDR)      
+#define DACC            CAST(Dacc,      DACC_ADDR)
 #define EIC_ADDR        (0x400F1000U)                    /**< \brief (EIC) Base Address */
-#define EIC             CAST(Eic,       EIC_ADDR)       
+#define EIC             CAST(Eic,       EIC_ADDR)
 #define HFLASHC_ADDR    (0x400A0000U)                    /**< \brief (HFLASHC) Base Address */
-#define HFLASHC         CAST(Flashcalw, HFLASHC_ADDR)   
+#define HFLASHC         CAST(Flashcalw, HFLASHC_ADDR)
 #define FREQM_ADDR      (0x400E0C00U)                    /**< \brief (FREQM) Base Address */
-#define FREQM           CAST(Freqm,     FREQM_ADDR)     
+#define FREQM           CAST(Freqm,     FREQM_ADDR)
 #define GLOC_ADDR       (0x40060000U)                    /**< \brief (GLOC) Base Address */
-#define GLOC            CAST(Gloc,      GLOC_ADDR)      
+#define GLOC            CAST(Gloc,      GLOC_ADDR)
 #define GPIO_ADDR       (0x400E1000U)                    /**< \brief (GPIO) Base Address */
-#define GPIO            CAST(Gpio,      GPIO_ADDR)      
+#define GPIO            CAST(Gpio,      GPIO_ADDR)
 #define HCACHE_ADDR     (0x400A0400U)                    /**< \brief (HCACHE) Base Address */
-#define HCACHE          CAST(Hcache,    HCACHE_ADDR)    
+#define HCACHE          CAST(Hcache,    HCACHE_ADDR)
 #define HMATRIX_ADDR    (0x400A1000U)                    /**< \brief (HMATRIX) Base Address */
-#define HMATRIX         CAST(Hmatrixb,  HMATRIX_ADDR)   
+#define HMATRIX         CAST(Hmatrixb,  HMATRIX_ADDR)
 #define IISC_ADDR       (0x40004000U)                    /**< \brief (IISC) Base Address */
-#define IISC            CAST(Iisc,      IISC_ADDR)      
+#define IISC            CAST(Iisc,      IISC_ADDR)
 #define LCDCA_ADDR      (0x40080000U)                    /**< \brief (LCDCA) Base Address */
-#define LCDCA           CAST(Lcdca,     LCDCA_ADDR)     
+#define LCDCA           CAST(Lcdca,     LCDCA_ADDR)
 #define PARC_ADDR       (0x4006C000U)                    /**< \brief (PARC) Base Address */
-#define PARC            CAST(Parc,      PARC_ADDR)      
+#define PARC            CAST(Parc,      PARC_ADDR)
 #define PDCA_ADDR       (0x400A2000U)                    /**< \brief (PDCA) Base Address */
-#define PDCA            CAST(Pdca,      PDCA_ADDR)      
+#define PDCA            CAST(Pdca,      PDCA_ADDR)
 #define PEVC_ADDR       (0x400A6000U)                    /**< \brief (PEVC) Base Address */
-#define PEVC            CAST(Pevc,      PEVC_ADDR)      
+#define PEVC            CAST(Pevc,      PEVC_ADDR)
 #define PICOUART_ADDR   (0x400F1400U)                    /**< \brief (PICOUART) Base Address */
-#define PICOUART        CAST(Picouart,  PICOUART_ADDR)  
+#define PICOUART        CAST(Picouart,  PICOUART_ADDR)
 #define PM_ADDR         (0x400E0000U)                    /**< \brief (PM) Base Address */
-#define PM              CAST(Pm,        PM_ADDR)        
+#define PM              CAST(Pm,        PM_ADDR)
 #define SCIF_ADDR       (0x400E0800U)                    /**< \brief (SCIF) Base Address */
-#define SCIF            CAST(Scif,      SCIF_ADDR)      
+#define SCIF            CAST(Scif,      SCIF_ADDR)
 #define SMAP_ADDR       (0x400A3000U)                    /**< \brief (SMAP) Base Address */
-#define SMAP            CAST(Smap,      SMAP_ADDR)      
+#define SMAP            CAST(Smap,      SMAP_ADDR)
 #define SPI_ADDR        (0x40008000U)                    /**< \brief (SPI) Base Address */
-#define SPI             CAST(Spi,       SPI_ADDR)       
+#define SPI             CAST(Spi,       SPI_ADDR)
 #define TC0_ADDR        (0x40010000U)                    /**< \brief (TC0) Base Address */
-#define TC0             CAST(Tc,        TC0_ADDR)       
+#define TC0             CAST(Tc,        TC0_ADDR)
 #define TC1_ADDR        (0x40014000U)                    /**< \brief (TC1) Base Address */
-#define TC1             CAST(Tc,        TC1_ADDR)       
+#define TC1             CAST(Tc,        TC1_ADDR)
 #define TRNG_ADDR       (0x40068000U)                    /**< \brief (TRNG) Base Address */
-#define TRNG            CAST(Trng,      TRNG_ADDR)      
+#define TRNG            CAST(Trng,      TRNG_ADDR)
 #define TWIM0_ADDR      (0x40018000U)                    /**< \brief (TWIM0) Base Address */
-#define TWIM0           CAST(Twim,      TWIM0_ADDR)     
+#define TWIM0           CAST(Twim,      TWIM0_ADDR)
 #define TWIM1_ADDR      (0x4001C000U)                    /**< \brief (TWIM1) Base Address */
-#define TWIM1           CAST(Twim,      TWIM1_ADDR)     
+#define TWIM1           CAST(Twim,      TWIM1_ADDR)
 #define TWIM2_ADDR      (0x40078000U)                    /**< \brief (TWIM2) Base Address */
-#define TWIM2           CAST(Twim,      TWIM2_ADDR)     
+#define TWIM2           CAST(Twim,      TWIM2_ADDR)
 #define TWIM3_ADDR      (0x4007C000U)                    /**< \brief (TWIM3) Base Address */
-#define TWIM3           CAST(Twim,      TWIM3_ADDR)     
+#define TWIM3           CAST(Twim,      TWIM3_ADDR)
 #define TWIS0_ADDR      (0x40018400U)                    /**< \brief (TWIS0) Base Address */
-#define TWIS0           CAST(Twis,      TWIS0_ADDR)     
+#define TWIS0           CAST(Twis,      TWIS0_ADDR)
 #define TWIS1_ADDR      (0x4001C400U)                    /**< \brief (TWIS1) Base Address */
-#define TWIS1           CAST(Twis,      TWIS1_ADDR)     
+#define TWIS1           CAST(Twis,      TWIS1_ADDR)
 #define USART0_ADDR     (0x40024000U)                    /**< \brief (USART0) Base Address */
-#define USART0          CAST(Usart,     USART0_ADDR)    
+#define USART0          CAST(Usart,     USART0_ADDR)
 #define USART1_ADDR     (0x40028000U)                    /**< \brief (USART1) Base Address */
-#define USART1          CAST(Usart,     USART1_ADDR)    
+#define USART1          CAST(Usart,     USART1_ADDR)
 #define USART2_ADDR     (0x4002C000U)                    /**< \brief (USART2) Base Address */
-#define USART2          CAST(Usart,     USART2_ADDR)    
+#define USART2          CAST(Usart,     USART2_ADDR)
 #define USART3_ADDR     (0x40030000U)                    /**< \brief (USART3) Base Address */
-#define USART3          CAST(Usart,     USART3_ADDR)    
+#define USART3          CAST(Usart,     USART3_ADDR)
 #define USBC_ADDR       (0x400A5000U)                    /**< \brief (USBC) Base Address */
-#define USBC            CAST(Usbc,      USBC_ADDR)      
+#define USBC            CAST(Usbc,      USBC_ADDR)
 #define WDT_ADDR        (0x400F0C00U)                    /**< \brief (WDT) Base Address */
-#define WDT             CAST(Wdt,       WDT_ADDR)       
+#define WDT             CAST(Wdt,       WDT_ADDR)
 /*@}*/
 
 /* ************************************************************************** */
@@ -14284,8 +14284,8 @@ Register */
 #define ADCIFE_REG_RX               LCV
 #define ADCIFE_REG_TX               CDMA
 /* ========== Instance parameters for AESA peripheral ========== */
-#define AESA_DMAC_ID_RX             
-#define AESA_DMAC_ID_TX             
+#define AESA_DMAC_ID_RX
+#define AESA_DMAC_ID_TX
 #define AESA_GCLK_NUM               4
 #define AESA_PDCA_ID_RX             17
 #define AESA_PDCA_ID_TX             36
@@ -14597,8 +14597,8 @@ Register */
 #define USBC_EPT_NBR                7
 #define USBC_GCLK_NUM               7
 #define USBC_HOST_IMPLEMENTED       1
-#define USBC_OTG_IMPLEMENTED        
-#define USBC_USB_UTMI_IMPLEMENTED   
+#define USBC_OTG_IMPLEMENTED
+#define USBC_USB_UTMI_IMPLEMENTED
 /*@}*/
 
 /* ************************************************************************** */

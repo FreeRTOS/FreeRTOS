@@ -4212,4 +4212,3 @@ static const int sizeof_client_ed25519_key = sizeof(client_ed25519_key);
 #endif /* HAVE_ED25519 */
 
 #endif /* WOLFSSL_CERTS_TEST_H */
-

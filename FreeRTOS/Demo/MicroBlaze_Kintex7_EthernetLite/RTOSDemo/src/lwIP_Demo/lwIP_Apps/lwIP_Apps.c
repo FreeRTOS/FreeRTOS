@@ -233,6 +233,3 @@ void vLwipAppsReleaseTxBuffer( void )
 	/* Finished with the Tx buffer.  Return the mutex. */
 	xSemaphoreGiveRecursive( xTxBufferMutex );
 }
-
-
-

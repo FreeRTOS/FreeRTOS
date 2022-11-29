@@ -16,25 +16,25 @@
 @REM                     session afterwards.
 @REM   --silent          Omits the sign-on message.
 @REM   --timeout         Limits the maximum allowed execution time.
-@REM 
+@REM
 
 
-@echo off 
+@echo off
 
-if not "%~1" == "" goto debugFile 
+if not "%~1" == "" goto debugFile
 
-@echo on 
+@echo on
 
-"C:\DevTools\IAR Systems\Embedded Workbench 7.4\common\bin\cspybat" -f "C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_STM32F7_STM32756G-EVAL_IAR_Keil\settings\RTOSDemo.Debug.general.xcl" --backend -f "C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_STM32F7_STM32756G-EVAL_IAR_Keil\settings\RTOSDemo.Debug.driver.xcl" 
+"C:\DevTools\IAR Systems\Embedded Workbench 7.4\common\bin\cspybat" -f "C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_STM32F7_STM32756G-EVAL_IAR_Keil\settings\RTOSDemo.Debug.general.xcl" --backend -f "C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_STM32F7_STM32756G-EVAL_IAR_Keil\settings\RTOSDemo.Debug.driver.xcl"
 
-@echo off 
-goto end 
+@echo off
+goto end
 
-:debugFile 
+:debugFile
 
-@echo on 
+@echo on
 
-"C:\DevTools\IAR Systems\Embedded Workbench 7.4\common\bin\cspybat" -f "C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_STM32F7_STM32756G-EVAL_IAR_Keil\settings\RTOSDemo.Debug.general.xcl" "--debug_file=%~1" --backend -f "C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_STM32F7_STM32756G-EVAL_IAR_Keil\settings\RTOSDemo.Debug.driver.xcl" 
+"C:\DevTools\IAR Systems\Embedded Workbench 7.4\common\bin\cspybat" -f "C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_STM32F7_STM32756G-EVAL_IAR_Keil\settings\RTOSDemo.Debug.general.xcl" "--debug_file=%~1" --backend -f "C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_STM32F7_STM32756G-EVAL_IAR_Keil\settings\RTOSDemo.Debug.driver.xcl"
 
-@echo off 
+@echo off
 :end

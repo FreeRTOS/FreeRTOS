@@ -90,4 +90,3 @@ girq13_b6(void)
 /* end girq13.c */
 /**   @}
  */
-

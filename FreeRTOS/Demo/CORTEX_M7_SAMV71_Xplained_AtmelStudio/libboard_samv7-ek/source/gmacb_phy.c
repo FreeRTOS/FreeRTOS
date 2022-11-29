@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -155,7 +155,7 @@ static uint8_t GMACB_FindValidPhy(GMacb *pMacb)
 		rc = 0xFF;
 		for(cnt = 0; cnt < 32; cnt ++) {
 			phyAddress = (phyAddress + 1) & 0x1F;
-			if( GMACB_ReadPhy(pHw, phyAddress, GMII_PHYID1R, &value, retryMax) 
+			if( GMACB_ReadPhy(pHw, phyAddress, GMII_PHYID1R, &value, retryMax)
 						== 0 ){
 				TRACE_ERROR("MACB PROBLEM\n\r");
 			}
@@ -407,7 +407,7 @@ uint8_t GMACB_AutoNegotiate(GMacb *pMacb)
 		TRACE_ERROR("Problem OUI value\n\r");
 	}
 
-	/** Set the Auto_negotiation Advertisement Register, MII advertising for 
+	/** Set the Auto_negotiation Advertisement Register, MII advertising for
 	Next page 100BaseTxFD and HD, 10BaseTFD and HD, IEEE 802.3 */
 	rc  = GMACB_ReadPhy(pHw, phyAddress, GMII_ANAR, &phyAnar, retryMax);
 	if (rc == 0) {
@@ -452,7 +452,7 @@ uint8_t GMACB_AutoNegotiate(GMacb *pMacb)
 				GMACB_DumpRegisters(pMacb);
 				TRACE_ERROR("TimeOut\n\r");
 				rc = 0;
-				goto AutoNegotiateExit; 
+				goto AutoNegotiateExit;
 			}
 		}
 	}

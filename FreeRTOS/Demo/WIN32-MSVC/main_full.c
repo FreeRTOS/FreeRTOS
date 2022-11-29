@@ -811,6 +811,3 @@ static void prvPermanentlyBlockingNotificationTask( void *pvParameters )
 	configASSERT( pvParameters != NULL );
 	vTaskDelete( NULL );
 }
-
-
-

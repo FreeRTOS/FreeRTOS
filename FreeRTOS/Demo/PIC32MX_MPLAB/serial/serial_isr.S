@@ -4,7 +4,7 @@
 
 	.set	nomips16
 	.set 	noreorder
- 	
+
 	.extern vU2InterruptHandler
 	.extern xISRStackTop
 	.global	vU2InterruptWrapper
@@ -21,4 +21,3 @@ vU2InterruptWrapper:
 	portRESTORE_CONTEXT
 
 	.end	vU2InterruptWrapper
-

@@ -163,4 +163,3 @@ WOLFSSL_API int wc_Shake256_Copy(wc_Shake* src, wc_Sha3* dst);
 
 #endif /* WOLFSSL_SHA3 */
 #endif /* WOLF_CRYPT_SHA3_H */
-

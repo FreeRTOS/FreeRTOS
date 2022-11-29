@@ -36,10 +36,10 @@
  *
  * To Enable a ACC Comparison,the user has to follow these few steps:
  * <ul>
- * <li> Enable ACC peripheral clock by setting the corresponding bit in 
+ * <li> Enable ACC peripheral clock by setting the corresponding bit in
  *     PMC_PCER1 (PMC Peripheral Clock Enable Register 1)
  * </li>
- * <li> Reset the controller by asserting ACC_CR_SWRST in ACC_CR(ACC Control 
+ * <li> Reset the controller by asserting ACC_CR_SWRST in ACC_CR(ACC Control
  * Register) </li>
  * <li> Configure the mode as following steps:  </li>
  * -#   Select inputs for SELMINUS and SELPLUS in ACC_MR (ACC Mode Register).
@@ -84,10 +84,10 @@
  * \param ucSelminus input connected to inm,0~7
  * \param wAc_en Analog comparator enabled/disabled
  * \param wEdge CF flag triggering mode
- * \param wInvert INVert comparator output,use pattern defined in the device 
+ * \param wInvert INVert comparator output,use pattern defined in the device
  * header file
  */
-extern void ACC_Configure( Acc *pAcc, uint8_t idAcc, uint8_t ucSelplus, 
+extern void ACC_Configure( Acc *pAcc, uint8_t idAcc, uint8_t ucSelplus,
 		uint8_t ucSelminus, uint16_t wAc_en, uint16_t wEdge, uint16_t wInvert )
 {
 	/* Enable peripheral clock*/
@@ -104,7 +104,7 @@ extern void ACC_Configure( Acc *pAcc, uint8_t idAcc, uint8_t ucSelplus,
 			( (wEdge<<ACC_MR_EDGETYP_Pos) & ACC_MR_EDGETYP_Msk ) |
 			( (wInvert<<12) & ACC_MR_INV ) ) ;
 	/* set hysteresis and current option*/
-	pAcc->ACC_ACR = (ACC_ACR_ISEL_HISP 
+	pAcc->ACC_ACR = (ACC_ACR_ISEL_HISP
 			| ((0x01 << ACC_ACR_HYST_Pos) & ACC_ACR_HYST_Msk));
 
 	/* Automatic Output Masking Period*/
@@ -124,7 +124,7 @@ extern void ACC_SetComparisonPair( Acc *pAcc, uint8_t ucSelplus, uint8_t ucSelmi
 	assert( ucSelplus < 8 && ucSelminus < 8 ) ;
 
 	dwTemp = pAcc->ACC_MR ;
-	pAcc->ACC_MR = 
+	pAcc->ACC_MR =
 		dwTemp & (uint32_t) ((~ACC_MR_SELMINUS_Msk) & (~ACC_MR_SELPLUS_Msk));
 
 	pAcc->ACC_MR |= ( ((ucSelplus << ACC_MR_SELPLUS_Pos) & ACC_MR_SELPLUS_Msk) |
@@ -154,4 +154,3 @@ extern uint32_t ACC_GetComparisonResult( Acc *pAcc, uint32_t dwStatus )
 		}
 	}
 }
-

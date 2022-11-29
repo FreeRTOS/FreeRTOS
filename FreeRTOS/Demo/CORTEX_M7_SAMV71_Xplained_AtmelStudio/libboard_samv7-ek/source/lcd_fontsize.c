@@ -38,7 +38,7 @@
 
 /**
  * \var const uint8_t pCharset10x14;
- * \brief Char set of font 10x14 
+ * \brief Char set of font 10x14
  */
 const uint8_t pCharset10x14[] = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -237,7 +237,7 @@ const uint8_t pCharset10x14[] = {
 
 /**
  * \var const uint8_t FONT6x8;
- * \brief Char set of font 6x8 
+ * \brief Char set of font 6x8
  */
 const uint8_t FONT6x8[97][8] = {
 	{0x06,0x08,0x08,0x00,0x00,0x00,0x00,0x00}, // columns, rows, num_bytes_per_char
@@ -341,7 +341,7 @@ const uint8_t FONT6x8[97][8] = {
 
 /**
  * \var const uint8_t FONT8x8;
- * \brief Char set of font 8x8 
+ * \brief Char set of font 8x8
  */
 
 const uint8_t FONT8x8[97][8] = {
@@ -446,9 +446,9 @@ const uint8_t FONT8x8[97][8] = {
 
 /**
  * \var const uint8_t FONT8x16;
- * \brief Char set of font 8x16 
+ * \brief Char set of font 8x16
  */
- 
+
 const uint8_t FONT8x16[97][16] = {
 	{0x08,0x10,0x10,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}, // columns, rows, num_bytes_per_char
 	{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}, // space 0x20

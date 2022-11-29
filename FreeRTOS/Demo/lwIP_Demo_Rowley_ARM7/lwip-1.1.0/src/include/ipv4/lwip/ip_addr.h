@@ -151,9 +151,3 @@ u8_t ip_addr_isbroadcast(struct ip_addr *, struct netif *);
 #define ip4_addr3(ipaddr) ((unsigned int)(ntohl((ipaddr)->addr) >> 8) & 0xff)
 #define ip4_addr4(ipaddr) ((unsigned int)(ntohl((ipaddr)->addr)) & 0xff)
 #endif /* __LWIP_IP_ADDR_H__ */
-
-
-
-
-
-

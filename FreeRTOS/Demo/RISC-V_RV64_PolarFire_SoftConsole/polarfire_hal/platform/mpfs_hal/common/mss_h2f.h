@@ -69,9 +69,9 @@ typedef struct
 
 #ifndef H2F_BASE_ADDRESS
 #if (LIBERO_SETTING_APBBUS_CR & (1U<<23U))
-#define H2F_BASE_ADDRESS 0x28126000     
+#define H2F_BASE_ADDRESS 0x28126000
 #else
-#define H2F_BASE_ADDRESS 0x20126000     
+#define H2F_BASE_ADDRESS 0x20126000
 #endif
 #endif
 

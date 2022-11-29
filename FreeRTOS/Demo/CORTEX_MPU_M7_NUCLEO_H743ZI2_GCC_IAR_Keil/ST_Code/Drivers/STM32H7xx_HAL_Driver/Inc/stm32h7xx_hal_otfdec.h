@@ -441,4 +441,3 @@ HAL_StatusTypeDef HAL_OTFDEC_RegionGetConfig(OTFDEC_HandleTypeDef *hotfdec, uint
 #endif /* __STM32H7xx_HAL_OTFDEC_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

@@ -108,7 +108,7 @@ void sysclk_set_source(uint32_t ul_src)
 		pmc_mck_set_source(PMC_MCKR_CSS_PLLB_CLK);
 		break;
 	}
-	
+
 	SystemCoreClockUpdate();
 }
 
@@ -179,48 +179,48 @@ void sysclk_init(void)
 	switch (CONFIG_SYSCLK_SOURCE) {
 	case SYSCLK_SRC_SLCK_RC:
 		osc_enable(OSC_SLCK_32K_RC);
-		osc_wait_ready(OSC_SLCK_32K_RC);		
+		osc_wait_ready(OSC_SLCK_32K_RC);
 		pmc_switch_mck_to_sclk(CONFIG_SYSCLK_PRES);
 		break;
-	
+
 	case SYSCLK_SRC_SLCK_XTAL:
 		osc_enable(OSC_SLCK_32K_XTAL);
-		osc_wait_ready(OSC_SLCK_32K_XTAL);		
+		osc_wait_ready(OSC_SLCK_32K_XTAL);
 		pmc_switch_mck_to_sclk(CONFIG_SYSCLK_PRES);
 		break;
-		
+
 	case SYSCLK_SRC_SLCK_BYPASS:
 		osc_enable(OSC_SLCK_32K_BYPASS);
-		osc_wait_ready(OSC_SLCK_32K_BYPASS);		
+		osc_wait_ready(OSC_SLCK_32K_BYPASS);
 		pmc_switch_mck_to_sclk(CONFIG_SYSCLK_PRES);
 		break;
-	
+
     case SYSCLK_SRC_MAINCK_4M_RC:
 		/* Already running from SYSCLK_SRC_MAINCK_4M_RC */
 		break;
 
     case SYSCLK_SRC_MAINCK_8M_RC:
 		osc_enable(OSC_MAINCK_8M_RC);
-		osc_wait_ready(OSC_MAINCK_8M_RC);		
+		osc_wait_ready(OSC_MAINCK_8M_RC);
 		pmc_switch_mck_to_mainck(CONFIG_SYSCLK_PRES);
 		break;
 
     case SYSCLK_SRC_MAINCK_12M_RC:
 		osc_enable(OSC_MAINCK_12M_RC);
-		osc_wait_ready(OSC_MAINCK_12M_RC);		
+		osc_wait_ready(OSC_MAINCK_12M_RC);
 		pmc_switch_mck_to_mainck(CONFIG_SYSCLK_PRES);
 		break;
 
 
     case SYSCLK_SRC_MAINCK_XTAL:
 		osc_enable(OSC_MAINCK_XTAL);
-		osc_wait_ready(OSC_MAINCK_XTAL);		
+		osc_wait_ready(OSC_MAINCK_XTAL);
 		pmc_switch_mck_to_mainck(CONFIG_SYSCLK_PRES);
 		break;
 
     case SYSCLK_SRC_MAINCK_BYPASS:
 		osc_enable(OSC_MAINCK_BYPASS);
-		osc_wait_ready(OSC_MAINCK_BYPASS);		
+		osc_wait_ready(OSC_MAINCK_BYPASS);
 		pmc_switch_mck_to_mainck(CONFIG_SYSCLK_PRES);
 		break;
 
@@ -231,8 +231,8 @@ void sysclk_init(void)
 		pll_enable(&pllcfg, 0);
 		pll_wait_for_lock(0);
 		pmc_switch_mck_to_pllack(CONFIG_SYSCLK_PRES);
-		break;	
-#endif		
+		break;
+#endif
 
 #ifdef CONFIG_PLL1_SOURCE
 	case SYSCLK_SRC_PLLBCK:
@@ -242,12 +242,12 @@ void sysclk_init(void)
 		pll_wait_for_lock(1);
 		pmc_switch_mck_to_pllbck(CONFIG_SYSCLK_PRES);
 		break;
-#endif	
+#endif
 	}
 
 	/* Update the SystemFrequency variable */
 	SystemCoreClockUpdate();
-	
+
 #if (defined CONFIG_SYSCLK_DEFAULT_RETURNS_SLOW_OSC)
 	/* Signal that the internal frequencies are setup */
 	sysclk_initialized = 1;

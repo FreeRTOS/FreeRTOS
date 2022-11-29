@@ -292,4 +292,3 @@ extern void PIO_DisableIt( const Pin *pPin )
 
     pPin->pio->PIO_IDR = pPin->mask;
 }
-

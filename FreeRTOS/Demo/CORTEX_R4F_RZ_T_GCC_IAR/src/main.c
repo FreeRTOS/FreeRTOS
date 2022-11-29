@@ -193,6 +193,3 @@ static void prvClearBSS( void )
 	memset( ( void * ) __bss_start__, 0x00, xSize );
 #endif /* __GNUC__ */
 }
-
-
-

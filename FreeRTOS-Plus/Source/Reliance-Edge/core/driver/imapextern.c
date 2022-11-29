@@ -313,4 +313,3 @@ uint32_t RedImapNodeBlock(
 }
 
 #endif /* REDCONF_IMAP_EXTERNAL == 1 */
-

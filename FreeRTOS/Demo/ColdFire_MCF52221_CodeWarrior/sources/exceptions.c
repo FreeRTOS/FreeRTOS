@@ -19,8 +19,8 @@ extern void vFECISRHandler( void );
 /***********************************************************************/
 /*
  *  Set NO_PRINTF to 0 in order the exceptions.c interrupt handler
- *  to output messages to the standard io. 
- * 
+ *  to output messages to the standard io.
+ *
  */
 #define NO_PRINTF    1
 
@@ -43,18 +43,18 @@ extern unsigned long far _SP_INIT[];
 
 /***********************************************************************/
 /*
- * Handling of the TRK ColdFire libs (printf support in Debugger Terminal) 
- * 
+ * Handling of the TRK ColdFire libs (printf support in Debugger Terminal)
+ *
  * To enable this support (setup by default in CONSOLE_RAM build target
- * if available):  
- * - Set CONSOLE_IO_SUPPORT to 1 in this file; this will enable 
+ * if available):
+ * - Set CONSOLE_IO_SUPPORT to 1 in this file; this will enable
  *   TrapHandler_printf for the trap #14 exception.
  *   (this is set by default to 1 in the ColdFire Pre-Processor panel for
  *   the CONSOLE_RAM build target)
  *
  * - Make sure the file:
  *   {Compiler}ColdFire_Support\msl\MSL_C\MSL_ColdFire\Src\console_io_cf.c
- *   is referenced from your project. 
+ *   is referenced from your project.
  *
  * - Make sure that in the CF Exceptions panel the check box
  *   "46 TRAP #14 for Console I/O", in the "User Application Exceptions"
@@ -62,7 +62,7 @@ extern unsigned long far _SP_INIT[];
  *
  */
 #ifndef CONSOLE_IO_SUPPORT
-#define CONSOLE_IO_SUPPORT  0 
+#define CONSOLE_IO_SUPPORT  0
 #endif
 
 #if CONSOLE_IO_SUPPORT
@@ -70,15 +70,15 @@ asm void TrapHandler_printf(void) {
    HALT
    RTE
 }
-#endif                                                   
+#endif
 
 /***********************************************************************/
 /*
- * This is the handler for all exceptions which are not common to all 
- * ColdFire Chips.  
+ * This is the handler for all exceptions which are not common to all
+ * ColdFire Chips.
  *
  * Called by mcf_exception_handler
- * 
+ *
  */
 void derivative_interrupt(unsigned long vector)
 {
@@ -89,11 +89,11 @@ void derivative_interrupt(unsigned long vector)
 
 /***********************************************************************
  *
- * This is the exception handler for all  exceptions common to all 
- * chips ColdFire.  Most exceptions do nothing, but some of the more 
+ * This is the exception handler for all  exceptions common to all
+ * chips ColdFire.  Most exceptions do nothing, but some of the more
  * important ones are handled to some extent.
  *
- * Called by asm_exception_handler 
+ * Called by asm_exception_handler
  *
  * The ColdFire family of processors has a simplified exception stack
  * frame that looks like the following:
@@ -113,7 +113,7 @@ void derivative_interrupt(unsigned long vector)
  *           4 +---------------------------------------+------------------------------------+
  *             | Format | FS[3..2] | Vector | FS[1..0] |                 SR                 |
  *   SP -->  0 +---------------------------------------+------------------------------------+
- */ 
+ */
 #define MCF5XXX_RD_SF_FORMAT(PTR)   \
    ((*((unsigned short *)(PTR)) >> 12) & 0x00FF)
 
@@ -130,11 +130,11 @@ void derivative_interrupt(unsigned long vector)
 #define MCF5XXX_EXCEPTFMT     "%s -- PC = %#08X\n"
 
 
-void mcf_exception_handler(void *framepointer) 
+void mcf_exception_handler(void *framepointer)
 {
-   volatile unsigned long exceptionStackFrame = (*(unsigned long *)(framepointer)); 
-   volatile unsigned short stackFrameSR       = MCF5XXX_SF_SR(framepointer);  
-   volatile unsigned short stackFrameWord     = (*(unsigned short *)(framepointer));  
+   volatile unsigned long exceptionStackFrame = (*(unsigned long *)(framepointer));
+   volatile unsigned short stackFrameSR       = MCF5XXX_SF_SR(framepointer);
+   volatile unsigned short stackFrameWord     = (*(unsigned short *)(framepointer));
    volatile unsigned long  stackFrameFormat   = (unsigned long)MCF5XXX_RD_SF_FORMAT(&stackFrameWord);
    volatile unsigned long  stackFrameFS       = (unsigned long)MCF5XXX_RD_SF_FS(&stackFrameWord);
    volatile unsigned long  stackFrameVector   = (unsigned long)MCF5XXX_RD_SF_VECTOR(&stackFrameWord);
@@ -289,7 +289,7 @@ void mcf_exception_handler(void *framepointer)
 #if REGISTER_ABI
 asm void asm_exception_handler(void)
 {
-   link     a6,#0 
+   link     a6,#0
    lea     -20(sp), sp
    movem.l d0-d2/a0-a1, (sp)
    lea     24(sp),a0   /* A0 point to exception stack frame on the stack */
@@ -302,7 +302,7 @@ asm void asm_exception_handler(void)
 #else
 asm void asm_exception_handler(void)
 {
-   link     a6,#0 
+   link     a6,#0
    lea     -20(sp), sp
    movem.l d0-d2/a0-a1, (sp)
    pea     24(sp)   /* push exception frame address */
@@ -319,7 +319,7 @@ typedef void (* vectorTableEntryType)(void);
 #pragma define_section vectortable ".vectortable" far_absolute R
 
 /* CF have 255 vector + SP_INIT in the vector table (256 entries)
-*/  
+*/
 __declspec(vectortable) vectorTableEntryType _vect[256] = {   /* Interrupt vector table */
    (vectorTableEntryType)__SP_AFTER_RESET,  /*   0 (0x000) Initial supervisor SP      */
    _startup,                        /*   1 (0x004) Initial PC                 */
@@ -367,11 +367,11 @@ __declspec(vectortable) vectorTableEntryType _vect[256] = {   /* Interrupt vecto
    asm_exception_handler,           /*  43 (0x0AC) TRAP #11                   */
    asm_exception_handler,           /*  44 (0x0B0) TRAP #12                   */
    asm_exception_handler,           /*  45 (0x0B4) TRAP #13                   */
-#if CONSOLE_IO_SUPPORT   
+#if CONSOLE_IO_SUPPORT
    TrapHandler_printf,              /*  46 (0x0B8) TRAP #14                   */
 #else
    asm_exception_handler,           /*  46 (0x0B8) TRAP #14                   */
-#endif   
+#endif
    asm_exception_handler,           /*  47 (0x0BC) TRAP #15                   */
    asm_exception_handler,           /*  48 (0x0C0) Reserved                   */
    asm_exception_handler,           /*  49 (0x0C4) Reserved                   */
@@ -580,7 +580,7 @@ __declspec(vectortable) vectorTableEntryType _vect[256] = {   /* Interrupt vecto
    asm_exception_handler,           /* 252 (0x___) Reserved                   */
    asm_exception_handler,           /* 253 (0x___) Reserved                   */
    asm_exception_handler,           /* 254 (0x___) Reserved                   */
-   asm_exception_handler,           /* 255 (0x___) Reserved                   */ 
+   asm_exception_handler,           /* 255 (0x___) Reserved                   */
 };
 
 /********************************************************************
@@ -588,10 +588,10 @@ __declspec(vectortable) vectorTableEntryType _vect[256] = {   /* Interrupt vecto
  */
 asm void mcf5xxx_wr_vbr(unsigned long) { /* Set VBR */
 	move.l	4(SP),D0
-    movec d0,VBR 
+    movec d0,VBR
 	nop
-	rts	
-}	
+	rts
+}
 
 /********************************************************************
  * MCF5xxx startup copy functions:
@@ -604,7 +604,7 @@ asm void mcf5xxx_wr_vbr(unsigned long) { /* Set VBR */
  * In case _vect address is different from __VECTOR_RAM,
  * the vector table is copied from _vect to __VECTOR_RAM.
  * In any case VBR is set to __VECTOR_RAM.
- */ 
+ */
 void initialize_exceptions(void)
 {
 #if 0
@@ -613,9 +613,9 @@ void initialize_exceptions(void)
 	 */
 
 	register uint32 n;
-    
-	/* 
-     * Copy the vector table to RAM 
+
+	/*
+     * Copy the vector table to RAM
      */
 	if (__VECTOR_RAM != (unsigned long*)_vect)
 	{

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -88,9 +88,9 @@ uint16_t GMAC_PHYData(Gmac *pGmac)
 }
 
 /**
- *  \brief Set MDC clock according to current board clock. Per 802.3, MDC should be 
+ *  \brief Set MDC clock according to current board clock. Per 802.3, MDC should be
  *  less then 2.5MHz.
- *  \param pGmac Pointer to an Gmac instance. 
+ *  \param pGmac Pointer to an Gmac instance.
  *  \param mck Mdc clock
  *  \return 1 if successfully, 0 if MDC clock not found.
  */
@@ -172,7 +172,7 @@ void GMAC_EnableGMII( Gmac *pGmac )
  *  \brief Enable RGMII mode for GMAC, called once after autonegotiate
  *  \param pGmac Pointer to an Gmac instance.
  *  \param duplex: 1 full duplex 0 half duplex
- *  \param speed:   0 10M 1 100M 
+ *  \param speed:   0 10M 1 100M
  */
 void GMAC_EnableRGMII(Gmac *pGmac, uint32_t duplex, uint32_t speed)
 {
@@ -181,7 +181,7 @@ void GMAC_EnableRGMII(Gmac *pGmac, uint32_t duplex, uint32_t speed)
     {
         pGmac->GMAC_NCFGR &= ~GMAC_NCFGR_FD;
     }
-    else 
+    else
     {
         pGmac->GMAC_NCFGR |= GMAC_NCFGR_FD;
     }
@@ -191,7 +191,7 @@ void GMAC_EnableRGMII(Gmac *pGmac, uint32_t duplex, uint32_t speed)
     {
         pGmac->GMAC_NCFGR &= ~GMAC_NCFGR_SPD;
     }
-    else if(speed == GMAC_SPEED_100M) 
+    else if(speed == GMAC_SPEED_100M)
     {
         pGmac->GMAC_NCFGR |= GMAC_NCFGR_SPD;
     }
@@ -262,7 +262,7 @@ uint32_t GMAC_GetItMask(Gmac *pGmac, gmacQueList_t queueIdx)
  */
 uint32_t GMAC_GetTxStatus(Gmac *pGmac)
 {
-    return pGmac->GMAC_TSR;    
+    return pGmac->GMAC_TSR;
 }
 
 /**
@@ -336,7 +336,7 @@ uint32_t GMAC_GetRxQueue(Gmac *pGmac, gmacQueList_t queueIdx)
     else
     {
         return pGmac->GMAC_RBQBAPQ[queueIdx - 1];
-    }    
+    }
 }
 
 /**
@@ -447,7 +447,7 @@ void GMAC_DisableIt(Gmac *pGmac, uint32_t dwSources, gmacQueList_t queueIdx)
  * Return interrupt status.
  */
 uint32_t GMAC_GetItStatus(Gmac *pGmac, gmacQueList_t queueIdx)
-{    
+{
     if(!queueIdx)
     {
         return pGmac->GMAC_ISR;

@@ -8,11 +8,11 @@
  *
  *
  * Note 1: This file should not be edited. If you need to modify a parameter
- * without going through regenerating using the MSS Configurator Libero flow 
+ * without going through regenerating using the MSS Configurator Libero flow
  * or editing the associated xml file
- * the following method is recommended: 
+ * the following method is recommended:
 
- * 1. edit the following file 
+ * 1. edit the following file
  * boards/your_board/platform_config/mpfs_hal_config/mss_sw_config.h
 
  * 2. define the value you want to override there.
@@ -63,4 +63,3 @@ e.g. 7 will generate a 40ns period 25MHz clock if the AHB clock is 200MHz */
 
 
 #endif /* #ifdef HW_CLK_SYSREG_H_ */
-

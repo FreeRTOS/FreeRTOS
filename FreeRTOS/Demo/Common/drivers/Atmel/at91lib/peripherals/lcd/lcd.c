@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -359,4 +359,3 @@ void LCD_EnableContrast()
 {
     AT91C_BASE_LCDC->LCDC_CTRSTCON |= AT91C_LCDC_ENA_PWMGEMENABLED;
 }
-

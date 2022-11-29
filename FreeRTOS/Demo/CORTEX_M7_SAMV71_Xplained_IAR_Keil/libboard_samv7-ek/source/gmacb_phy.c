@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -391,14 +391,14 @@ uint8_t GMACB_AutoNegotiate(GMacb *pMacb)
 
     GMAC_EnableMdio(pHw);
 
-    if (!GMACB_ReadPhy(pHw,phyAddress, GMII_PHYID1R, &value, retryMax)) 
+    if (!GMACB_ReadPhy(pHw,phyAddress, GMII_PHYID1R, &value, retryMax))
     {
         TRACE_ERROR("Pb GEMAC_ReadPhy Id1\n\r");
         rc = 0;
         goto AutoNegotiateExit;
     }
     TRACE_DEBUG("ReadPhy Id1 0x%X, addresse: %d\n\r", value, phyAddress);
-    if (!GMACB_ReadPhy(pHw,phyAddress, GMII_PHYID2R, &phyAnar, retryMax)) 
+    if (!GMACB_ReadPhy(pHw,phyAddress, GMII_PHYID2R, &phyAnar, retryMax))
     {
         TRACE_ERROR("Pb GMACB_ReadPhy Id2\n\r");
         rc = 0;
@@ -412,7 +412,7 @@ uint8_t GMACB_AutoNegotiate(GMacb *pMacb)
         TRACE_DEBUG("Vendor Number Model = 0x%X\n\r", ((phyAnar>>4)&0x3F));
         TRACE_DEBUG("Model Revision Number = 0x%X\n\r", (phyAnar&0xF));
     }
-    else 
+    else
     {
         TRACE_ERROR("Problem OUI value\n\r");
     }
@@ -420,21 +420,21 @@ uint8_t GMACB_AutoNegotiate(GMacb *pMacb)
     /* Set the Auto_negotiation Advertisement Register, MII advertising for Next page
        100BaseTxFD and HD, 10BaseTFD and HD, IEEE 802.3 */
     rc  = GMACB_ReadPhy(pHw, phyAddress, GMII_ANAR, &phyAnar, retryMax);
-    if (rc == 0) 
+    if (rc == 0)
     {
         goto AutoNegotiateExit;
     }
     phyAnar = GMII_TX_FDX | GMII_TX_HDX |
         GMII_10_FDX | GMII_10_HDX | GMII_AN_IEEE_802_3;
     rc = GMACB_WritePhy(pHw,phyAddress, GMII_ANAR, phyAnar, retryMax);
-    if (rc == 0) 
+    if (rc == 0)
     {
         goto AutoNegotiateExit;
     }
 
     /* Read & modify control register */
     rc  = GMACB_ReadPhy(pHw, phyAddress, GMII_BMCR, &value, retryMax);
-    if (rc == 0) 
+    if (rc == 0)
     {
         goto AutoNegotiateExit;
     }
@@ -442,14 +442,14 @@ uint8_t GMACB_AutoNegotiate(GMacb *pMacb)
     /* Check AutoNegotiate complete */
     value |=  GMII_AUTONEG | GMII_RESTART_AUTONEG;
     rc = GMACB_WritePhy(pHw, phyAddress, GMII_BMCR, value, retryMax);
-    if (rc == 0) 
+    if (rc == 0)
     {
         goto AutoNegotiateExit;
     }
     TRACE_DEBUG(" _BMCR: 0x%X\n\r", value);
 
     // Check AutoNegotiate complete
-    while (1) 
+    while (1)
     {
         rc  = GMACB_ReadPhy(pHw, phyAddress, GMII_BMSR, &value, retryMax);
         if (rc == 0)
@@ -458,7 +458,7 @@ uint8_t GMACB_AutoNegotiate(GMacb *pMacb)
             goto AutoNegotiateExit;
         }
         /* Done successfully */
-        if (value & GMII_AUTONEG_COMP) 
+        if (value & GMII_AUTONEG_COMP)
         {
             printf("AutoNegotiate complete\n\r");
             break;
@@ -471,7 +471,7 @@ uint8_t GMACB_AutoNegotiate(GMacb *pMacb)
                 GMACB_DumpRegisters(pMacb);
                 TRACE_ERROR("TimeOut\n\r");
                 rc = 0;
-                goto AutoNegotiateExit; 
+                goto AutoNegotiateExit;
             }
         }
     }
@@ -480,33 +480,33 @@ uint8_t GMACB_AutoNegotiate(GMacb *pMacb)
     while(1)
     {
         rc  = GMACB_ReadPhy(pHw, phyAddress, GMII_ANLPAR, &phyAnalpar, retryMax);
-        if (rc == 0) 
+        if (rc == 0)
         {
             goto AutoNegotiateExit;
         }
         /* Setup the GMAC link speed */
-        if ((phyAnar & phyAnalpar) & GMII_TX_FDX) 
+        if ((phyAnar & phyAnalpar) & GMII_TX_FDX)
         {
             /* set RGMII for 1000BaseTX and Full Duplex */
             duplex = GMAC_DUPLEX_FULL;
             speed = GMAC_SPEED_100M;
             break;
         }
-        else if ((phyAnar & phyAnalpar) & GMII_10_FDX) 
+        else if ((phyAnar & phyAnalpar) & GMII_10_FDX)
         {
             /* set RGMII for 1000BaseT and Half Duplex*/
             duplex = GMAC_DUPLEX_FULL;
             speed = GMAC_SPEED_10M;
             break;
         }
-        else if ((phyAnar & phyAnalpar) & GMII_TX_HDX) 
+        else if ((phyAnar & phyAnalpar) & GMII_TX_HDX)
         {
             /* set RGMII for 100BaseTX and half Duplex */
             duplex = GMAC_DUPLEX_HALF;
             speed = GMAC_SPEED_100M;
             break;
         }
-        else if ((phyAnar & phyAnalpar) & GMII_10_HDX) 
+        else if ((phyAnar & phyAnalpar) & GMII_10_HDX)
         {
             // set RGMII for 10BaseT and half Duplex
             duplex = GMAC_DUPLEX_HALF;

@@ -215,4 +215,3 @@ extern uint32_t PIO_GetWriteProtectViolationInfo( const Pin * pin );
 #endif
 
 #endif /* #ifndef _PIO_ */
-

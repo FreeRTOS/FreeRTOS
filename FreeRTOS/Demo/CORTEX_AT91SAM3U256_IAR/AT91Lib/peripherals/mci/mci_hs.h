@@ -31,7 +31,7 @@
 /// \page "mci"
 ///
 /// !Purpose
-///  
+///
 /// mci-interface driver
 ///
 /// !Usage
@@ -202,4 +202,3 @@ extern void MCI_SetBusWidth(Mci *pMci, unsigned char busWidth);
 extern unsigned int MCI_FifoTransfer(Mci * pMci, MciCmd * pCommand);
 
 #endif //#ifndef MCI_HS_H
-

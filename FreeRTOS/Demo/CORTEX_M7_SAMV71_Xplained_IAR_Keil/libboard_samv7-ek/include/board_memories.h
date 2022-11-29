@@ -47,4 +47,3 @@ extern void BOARD_ConfigurePSRAM( Smc* pSmc ) ;
 extern void BOARD_ConfigureSdram( void );
 extern uint32_t ExtRAM_Validation(uint32_t baseAddr, uint32_t size);
 #endif /* #ifndef BOARD_MEMORIES_H */
-

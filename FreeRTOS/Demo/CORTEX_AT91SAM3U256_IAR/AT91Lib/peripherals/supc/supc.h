@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -77,4 +77,3 @@ extern void SUPC_SetWakeUpSources(unsigned int sources);
 extern void SUPC_SetWakeUpInputs(unsigned int inputs);
 
 #endif //#ifndef SUPC_H
-

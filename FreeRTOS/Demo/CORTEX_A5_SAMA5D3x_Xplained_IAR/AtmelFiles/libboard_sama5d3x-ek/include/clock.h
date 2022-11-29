@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -51,4 +51,3 @@ extern uint16_t CLOCK_GetCurrMCK( void ) ;
 extern uint16_t CLOCK_GetCurrPCK( void ) ;
 
 #endif /* #ifndef _CLOCK_ */
-

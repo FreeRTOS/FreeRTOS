@@ -3530,4 +3530,3 @@
 #endif /* STM32_HAL_LEGACY */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

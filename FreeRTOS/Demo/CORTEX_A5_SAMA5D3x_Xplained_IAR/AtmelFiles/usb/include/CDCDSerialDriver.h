@@ -246,4 +246,3 @@ static inline void CDCDSerialDriver_SetSerialState(uint16_t serialState)
 /**@}*/
 
 #endif /*#ifndef CDCSERIALDRIVER_H*/
-

@@ -131,4 +131,3 @@ creates an interrupt in the M7 core.  See the comments at the top of main.c. */
 #define sbRECEIVE_COMPLETED( pxStreamBuffer ) vGenerateM4ToM7Interrupt( pxStreamBuffer )
 
 #endif /* FREERTOS_CONFIG_H */
-

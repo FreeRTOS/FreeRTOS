@@ -113,4 +113,3 @@ void CDCDSerialDriver_RequestHandler(const USBGenericRequest *request)
 }
 
 /**@}*/
-

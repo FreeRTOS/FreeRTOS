@@ -130,4 +130,3 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #define configNET_MASK3		0
 
 #endif /* FREERTOS_CONFIG_H */
-

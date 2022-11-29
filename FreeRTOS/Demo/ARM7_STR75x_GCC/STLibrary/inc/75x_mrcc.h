@@ -58,10 +58,10 @@ typedef struct
   CLKSourceTypeDef OSC4M_Status;  /* ON, OFF */
   CLKSourceTypeDef LPOSC_Status;  /* ON, OFF */
   CLKSourceTypeDef OSC32K_Status; /* ON, OFF */
-  u32 CKSYS_Frequency;  
-  u32 HCLK_Frequency;   
-  u32 CKTIM_Frequency;  
-  u32 PCLK_Frequency;   
+  u32 CKSYS_Frequency;
+  u32 HCLK_Frequency;
+  u32 CKTIM_Frequency;
+  u32 PCLK_Frequency;
 }MRCC_ClocksTypeDef;
 
 /* Exported constants --------------------------------------------------------*/

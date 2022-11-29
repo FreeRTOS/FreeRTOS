@@ -8,13 +8,13 @@
  * SVN $Date: 2018-04-30 20:26:55 +0530 (Mon, 30 Apr 2018) $
  */
  /*=========================================================================*//**
-  @mainpage Sample file detailing how hw_platform.h should be constructed for 
+  @mainpage Sample file detailing how hw_platform.h should be constructed for
     the Mi-V processors.
 
     @section intro_sec Introduction
     The hw_platform.h is to be located in the project root directory.
     Currently this file must be hand crafted when using the Mi-V Soft Processor.
-    
+
     You can use this file as sample.
     Rename this file from sample_hw_platform.h to hw_platform.h and store it in
     the root folder of your project. Then customize it per your HW design.
@@ -69,7 +69,7 @@
     .
     External_31_IRQn = 31
 } IRQn_Type;
- 
+
  The interrupt 0 on RISC-V processor is not used. The pin IRQ[0] should map to
  External_1_IRQn likewise IRQ[30] should map to External_31_IRQn
  * Format of define is:
@@ -117,5 +117,3 @@
  * End of user edit section
  */
 #endif /* HW_PLATFORM_H */
-
-

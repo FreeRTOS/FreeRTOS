@@ -70,4 +70,3 @@ WOLFSSL_LOCAL int wc_Rabbit_SetHeap(Rabbit* ctx, void* heap);
 
 #endif /* NO_RABBIT */
 #endif /* WOLF_CRYPT_RABBIT_H */
-

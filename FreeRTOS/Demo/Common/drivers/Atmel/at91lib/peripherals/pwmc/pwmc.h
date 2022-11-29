@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -58,4 +58,3 @@ extern void PWMC_EnableChannelIt(unsigned char channel);
 extern void PWMC_DisableChannelIt(unsigned char channel);
 
 #endif //#ifndef PWMC_H
-

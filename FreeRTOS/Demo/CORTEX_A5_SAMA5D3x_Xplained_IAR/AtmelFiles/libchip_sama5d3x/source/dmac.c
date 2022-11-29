@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -33,7 +33,7 @@
  * Implementation of DMA controller (DMAC).
  *
  */
- 
+
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
@@ -427,7 +427,7 @@ void DMAC_SetControlB( Dmac *pDmac,
 }
 
 /**
- * \brief Enables DMAC automatic multiple buffer transfer 
+ * \brief Enables DMAC automatic multiple buffer transfer
  *        mode used by a DMAC channel.
  *
  * \param pDmac Pointer to the DMAC peripheral.
@@ -441,7 +441,7 @@ void DMAC_EnableAutoMode( Dmac *pDmac, uint8_t channel )
 }
 
 /**
- * \brief Disable DMAC automatic multiple buffer transfer 
+ * \brief Disable DMAC automatic multiple buffer transfer
  *        mode used by a DMAC channel.
  *
  * \param pDmac Pointer to the DMAC peripheral.
@@ -569,12 +569,12 @@ void DMAC_SetReloadMode( Dmac *pDmac,
 }
 
 /**
- * \brief Set DMAC SW/HW handshaking interface used to 
+ * \brief Set DMAC SW/HW handshaking interface used to
  *        trigger a transfer request.
  *
  * \param pDmac Pointer to the DMAC peripheral.
  * \param channel Particular channel number.
- * \param srcH2sel Source handshaking interface. 
+ * \param srcH2sel Source handshaking interface.
  * \param dstH2sel Destination handshaking interface.
  */
 void DMAC_SethandshakeInterface( Dmac *pDmac,
@@ -635,4 +635,3 @@ void DMAC_SetDestPip( Dmac *pDmac,
 }
 
 /**@}*/
-

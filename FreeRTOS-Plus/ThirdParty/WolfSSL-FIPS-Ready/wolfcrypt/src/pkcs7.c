@@ -12534,4 +12534,3 @@ int wc_PKCS7_DecodeCompressedData(PKCS7* pkcs7, byte* pkiMsg, word32 pkiMsgSz,
 
 
 #endif /* HAVE_PKCS7 */
-

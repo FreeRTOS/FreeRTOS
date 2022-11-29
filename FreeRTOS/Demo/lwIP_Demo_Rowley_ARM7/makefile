@@ -153,4 +153,3 @@ $(ARM_OBJ) : %.o : %.c $(LDSCRIPT) Makefile FreeRTOSConfig.h
 
 clean :
 	touch Makefile
-

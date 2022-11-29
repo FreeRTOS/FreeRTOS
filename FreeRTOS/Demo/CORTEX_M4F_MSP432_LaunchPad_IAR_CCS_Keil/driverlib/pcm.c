@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------
- *    MSP432 DriverLib - v3_10_00_09 
+ *    MSP432 DriverLib - v3_10_00_09
  * -------------------------------------------
  *
  * --COPYRIGHT--,BSD,BSD
@@ -440,7 +440,7 @@ bool PCM_gotoLPM4InterruptSafe(void)
 {
     bool slHappenedCorrect;
 
-    /* Disabling master interrupts. In Cortex M, if an interrupt is enabled but 
+    /* Disabling master interrupts. In Cortex M, if an interrupt is enabled but
      master interrupts are disabled and a WFI happens the WFI will
      immediately exit. */
     Interrupt_disableMaster();
@@ -472,7 +472,7 @@ bool PCM_gotoLPM0InterruptSafe(void)
 {
     bool slHappenedCorrect;
 
-    /* Disabling master interrupts. In Cortex M, if an interrupt is enabled but 
+    /* Disabling master interrupts. In Cortex M, if an interrupt is enabled but
      master interrupts are disabled and a WFI happens the WFI will
      immediately exit. */
     Interrupt_disableMaster();
@@ -524,7 +524,7 @@ bool PCM_gotoLPM3InterruptSafe(void)
 {
     bool lpmHappenedCorrect;
 
-    /* Disabling master interrupts. In Cortex M, if an interrupt is enabled but 
+    /* Disabling master interrupts. In Cortex M, if an interrupt is enabled but
      master interrupts are disabled and a WFI happens the WFI will
      immediately exit. */
     Interrupt_disableMaster();

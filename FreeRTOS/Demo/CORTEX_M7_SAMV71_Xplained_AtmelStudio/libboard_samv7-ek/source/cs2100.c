@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2014, Atmel Corporation
  *
@@ -104,10 +104,8 @@ uint8_t CS2100_Init(Twid *pTwid, uint32_t device,  uint32_t PCK)
 	CS2100_Write(pTwid, device, 0, 0xFFFF);
 
 	for(data = 0; data < 1000; data++);
-	//wait ready    
+	//wait ready
 	while(data!=0x8904)
 		data = CS2100_Read(pTwid, device, 0);
 	return 0;
 }
-
-

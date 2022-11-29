@@ -76,4 +76,3 @@ extern void PIO_CaptureDisable( void ) ;
 extern void PIO_CaptureInit( SpioCaptureInit* pInit ) ;
 
 #endif /* #ifndef PIO_CAPTURE_H */
-

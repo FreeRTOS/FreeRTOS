@@ -7,16 +7,16 @@
  *
  */
 /*******************************************************************************
- * 
+ *
  * file name : mpfs_lim.ld
  * Used when debugging code. The debugger loads the code to LIM.
- * 
+ *
  * You can find details on the PolarFireSoC Memory map in the mpfs-memory-hierarchy.md
  * which can be found under the link below:
  * https://github.com/polarfire-soc/polarfire-soc-documentation
- * 
+ *
  */
- 
+
 OUTPUT_ARCH( "riscv" )
 ENTRY(_start)
 
@@ -27,16 +27,16 @@ ENTRY(_start)
 The MSS reset vector for each hart is stored securely in the MPFS.
 The most common usage will be where the reset vector for each hart will be set
 to the start of the envm at address 0x2022_0100, giving 128K-256B of contiguous
-non-volatile storage. Normally this is where the initial boot-loader will 
-reside. (Note: The first 256B page of envm is used for metadata associated with 
-secure boot. When not using secure boot (mode 0,1), this area is still reserved 
+non-volatile storage. Normally this is where the initial boot-loader will
+reside. (Note: The first 256B page of envm is used for metadata associated with
+secure boot. When not using secure boot (mode 0,1), this area is still reserved
 by convention. It allows easier transition from non-secure to secure boot flow
 during the development process.
-When debugging a bare metal program that is run out of reset from envm, a linker 
+When debugging a bare metal program that is run out of reset from envm, a linker
 script will be used whereby the program will run from LIM instead of envm.
-In this case, the reset vector in the linker script is normally set to the 
+In this case, the reset vector in the linker script is normally set to the
 start of LIM, 0x0800_0000.
-This means you are not continually programming the envm each time you load a 
+This means you are not continually programming the envm each time you load a
 program and there is no limitation with break points when debugging.
 See the mpfs-lim.ld example linker script when runing from LIM.
 
@@ -78,7 +78,7 @@ HEAP_SIZE           = 8k;               /* needs to be calculated for your appli
 /* TLS hart 1   */
 /* etc */
 /* note: HLS_DEBUG_AREA_SIZE is defined in mss_sw_config.h */
-/* STACK_SIZE_PER_HART = 8k; */                     
+/* STACK_SIZE_PER_HART = 8k; */
 
 /*
  * Stack size for each hart's application.
@@ -126,7 +126,7 @@ SECTIONS
     .text : ALIGN(0x10)
     {
         __text_load = LOADADDR(.text);
-        __text_start = .; 
+        __text_start = .;
          *(.text.init)
         . = ALIGN(0x10);
         *(.text .text.* .gnu.linkonce.t.*)
@@ -144,7 +144,7 @@ SECTIONS
 
         *(.rodata .rodata.* .gnu.linkonce.r.*)
         *(.sdata2 .sdata2.* .gnu.linkonce.s2.*)
-        *(.gcc_except_table) 
+        *(.gcc_except_table)
         *(.eh_frame_hdr)
         *(.eh_frame)
 
@@ -170,20 +170,20 @@ SECTIONS
         __text_end = .;
         . = ALIGN(0x10);
     } > l2lim
- 
+
     .l2_scratchpad : ALIGN(0x10)
-    { 
+    {
         . = ALIGN (0x10);
         __l2_scratchpad_load = LOADADDR(.l2_scratchpad);
         __l2_scratchpad_start = .;
-        __l2_scratchpad_vma_start = .; 
+        __l2_scratchpad_vma_start = .;
         *(.l2_scratchpad)
         . = ALIGN(0x10);
         __l2_scratchpad_end = .;
         __l2_scratchpad_vma_end = .;
     } >scratchpad AT> l2lim
-  
-    /* 
+
+    /*
     *   The .ram_code section will contain the code That is run from RAM.
     *   We are using this code to switch the clocks including eNVM clock.
     *   This can not be done when running from eNVM
@@ -206,7 +206,7 @@ SECTIONS
     .sdata : ALIGN(0x10)
     {
         __sdata_load = LOADADDR(.sdata);
-        __sdata_start = .; 
+        __sdata_start = .;
         /* offset used with gp(gloabl pointer) are +/- 12 bits, so set point to middle of expected sdata range */
         /* If sdata more than 4K, linker used direct addressing. Perhaps we should add check/warning to linker script if sdata is > 4k */
         __global_pointer$ = . + 0x800;
@@ -217,9 +217,9 @@ SECTIONS
 
     /* data section */
     .data : ALIGN(0x10)
-    { 
+    {
         __data_load = LOADADDR(.data);
-        __data_start = .; 
+        __data_start = .;
         *(.got.plt) *(.got)
         *(.shdata)
         *(.data .data.* .gnu.linkonce.d.*)
@@ -236,10 +236,10 @@ SECTIONS
         . = ALIGN(0x10);
         __sbss_end = .;
     } > l2lim
-  
+
     /* sbss section */
     .bss : ALIGN(0x10)
-    { 
+    {
         __bss_start = .;
         *(.shbss)
         *(.bss .bss.* .gnu.linkonce.b.*)
@@ -259,7 +259,7 @@ SECTIONS
         . = ALIGN(0x10);
         _heap_end = __heap_end;
     } > l2lim
-  
+
     /* must be on 4k boundary- corresponds to page size */
     .stack : ALIGN(0x1000)
     {
@@ -295,4 +295,3 @@ SECTIONS
 
     } > l2lim
 }
-

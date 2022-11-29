@@ -21079,4 +21079,3 @@ static inline uint32_t Chip_GetVersion(void)
 
 
 #endif  /* _LPC54018_H_ */
-

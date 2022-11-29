@@ -22,13 +22,13 @@
 #define NB_RX_BUFFERS			20
 
 /* Size of each receive buffer - DO NOT CHANGE. */
-#define ETH_RX_BUFFER_SIZE		128         
+#define ETH_RX_BUFFER_SIZE		128
 
 /* Number of Transmit buffers */
-#define NB_TX_BUFFERS			( MEMP_NUM_PBUF / 2 )	
+#define NB_TX_BUFFERS			( MEMP_NUM_PBUF / 2 )
 
 /* Size of each Transmit buffer. */
-#define ETH_TX_BUFFER_SIZE		( PBUF_POOL_BUFSIZE  )   
+#define ETH_TX_BUFFER_SIZE		( PBUF_POOL_BUFSIZE  )
 
 /* Receive Transfer descriptor structure */
 typedef struct  _AT91S_RxTdDescriptor {
@@ -56,7 +56,7 @@ typedef struct  _AT91S_RxTdDescriptor {
 			unsigned int UniCast:1;
 			unsigned int MultiCast:1;
 			unsigned int BroadCast:1;
-		}S_Status;		
+		}S_Status;
 	}U_Status;
 }AT91S_RxTdDescriptor, *AT91PS_RxTdDescriptor;
 
@@ -78,7 +78,7 @@ typedef struct _AT91S_TxTdDescriptor {
 			unsigned int TransmitError:1;
 			unsigned int Wrap:1;
 			unsigned int BuffUsed:1;
-		}S_Status;		
+		}S_Status;
 	}U_Status;
 }AT91S_TxTdDescriptor, *AT91PS_TxTdDescriptor;
 

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -342,7 +342,7 @@ uint8_t MACB_InitPhy(Macb         *pMacb,
 
     /* Perform RESET */
     TRACE_DEBUG("RESET PHY\n\r");
-    
+
     if (pResetPins)
     {
         /* Configure PINS */
@@ -438,7 +438,7 @@ uint8_t MACB_AutoNegotiate(Macb *pMacb, uint8_t rmiiMode)
     else
     {
         TRACE_ERROR("Problem OUI value\n\r");
-    }        
+    }
 
     /* Setup control register */
     rc  = EMAC_ReadPhy(pHw, phyAddress, MII_BMCR, &value, retryMax);
@@ -576,7 +576,7 @@ uint8_t MACB_GetLinkSpeed(Macb *pMacb, uint8_t applySetting)
     uint32_t stat2;
     uint8_t phyAddress, bSP, bFD;
     uint8_t rc = 1;
-       
+
     TRACE_DEBUG("MACB_GetLinkSpeed\n\r");
     bSP = 0; bFD = 0;
     EMAC_ManagementEnable(pHw, 1);
@@ -645,4 +645,3 @@ GetLinkSpeedExit:
     EMAC_ManagementEnable(pHw, 0);
     return rc;
 }
-

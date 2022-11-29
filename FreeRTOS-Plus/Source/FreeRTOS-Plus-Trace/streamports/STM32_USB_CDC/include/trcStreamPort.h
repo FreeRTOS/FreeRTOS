@@ -40,7 +40,7 @@ traceResult prvTraceCDCTransmit(void* pvData, uint32_t uiSize, int32_t* piBytesS
  * This function is called by the recorder as part of its initialization phase.
  *
  * @param[in] pxBuffer Buffer
- * 
+ *
  * @retval TRC_FAIL Initialization failed
  * @retval TRC_SUCCESS Success
  */
@@ -51,7 +51,7 @@ traceResult xTraceStreamPortInitialize(TraceStreamPortBuffer_t* pxBuffer);
  *
  * @param[in] uiSize Allocation size
  * @param[out] ppvData Allocation data pointer
- * 
+ *
  * @retval TRC_FAIL Allocate failed
  * @retval TRC_SUCCESS Success
  */
@@ -65,7 +65,7 @@ traceResult xTraceStreamPortInitialize(TraceStreamPortBuffer_t* pxBuffer);
  * @param[in] pvData Data to commit
  * @param[in] uiSize Data to commit size
  * @param[out] piBytesCommitted Bytes committed
- * 
+ *
  * @retval TRC_FAIL Commit failed
  * @retval TRC_SUCCESS Success
  */
@@ -77,7 +77,7 @@ traceResult xTraceStreamPortInitialize(TraceStreamPortBuffer_t* pxBuffer);
  * @param[in] pvData Data to write
  * @param[in] uiSize Data to write size
  * @param[out] piBytesWritten Bytes written
- * 
+ *
  * @retval TRC_FAIL Write failed
  * @retval TRC_SUCCESS Success
  */
@@ -89,7 +89,7 @@ traceResult xTraceStreamPortInitialize(TraceStreamPortBuffer_t* pxBuffer);
  * @param[in] pvData Destination data buffer
  * @param[in] uiSize Destination data buffer size
  * @param[out] piBytesRead Bytes read
- * 
+ *
  * @retval TRC_FAIL Read failed
  * @retval TRC_SUCCESS Success
  */

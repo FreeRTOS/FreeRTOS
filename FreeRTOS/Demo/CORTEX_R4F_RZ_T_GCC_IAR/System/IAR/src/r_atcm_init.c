@@ -31,7 +31,7 @@
 * OS           : not use
 * H/W Platform : Renesas Starter Kit for RZ/T1(Preliminary)
 * Description  : ATCM access wait setting API of RZ/T1
-* Limitation   : This wait setting could not be executed in ATCM program area. 
+* Limitation   : This wait setting could not be executed in ATCM program area.
 *******************************************************************************/
 /*******************************************************************************
 * History      : DD.MM.YYYY Version  Description
@@ -77,26 +77,26 @@ Private variables and functions
 
 /*******************************************************************************
 * Function Name : R_ATCM_WaitSet
-* Description   : Sets ATCM access wait.           
+* Description   : Sets ATCM access wait.
 * Arguments    : atcm_wait
 *                    Wait settings for ATCM access
 * Return Value : none
 *******************************************************************************/
 void R_ATCM_WaitSet(uint32_t atcm_wait)
 {
-    volatile uint32_t dummy; 
-  
+    volatile uint32_t dummy;
+
     /* Enables writing to the ATCM register */
     SYSTEM.PRCR.LONG = ATCM_WRITE_ENABLE;
     dummy = SYSTEM.PRCR.LONG;
-    
+
     /* Sets ATCM access wait to atcm_wait value */
     SYSTEM.SYTATCMWAIT.LONG = atcm_wait;
-    
+
     /* Disables writing to the ATCM register */
     SYSTEM.PRCR.LONG = ATCM_WRITE_DISABLE;
     dummy = SYSTEM.PRCR.LONG;
-    
+
 }
 
 /*******************************************************************************
@@ -104,5 +104,3 @@ void R_ATCM_WaitSet(uint32_t atcm_wait)
 *******************************************************************************/
 
 /* End of File */
-
-

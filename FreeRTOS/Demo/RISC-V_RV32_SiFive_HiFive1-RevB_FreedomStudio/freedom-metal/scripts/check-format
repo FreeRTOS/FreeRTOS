@@ -16,4 +16,3 @@ if [ "${DIFF}" != "" ] ; then
     echo "${DIFF}"
     exit 1
 fi
-

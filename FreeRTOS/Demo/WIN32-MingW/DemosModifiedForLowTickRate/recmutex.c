@@ -380,7 +380,3 @@ static unsigned portBASE_TYPE uxLastControllingCycles = 0, uxLastBlockingCycles 
 
 	return xReturn;
 }
-
-
-
-

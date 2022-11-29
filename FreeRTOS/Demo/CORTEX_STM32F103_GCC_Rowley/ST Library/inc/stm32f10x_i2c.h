@@ -15,7 +15,7 @@
 *******************************************************************************/
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __STM32F10x_I2C_H    
+#ifndef __STM32F10x_I2C_H
 #define __STM32F10x_I2C_H
 
 /* Includes ------------------------------------------------------------------*/
@@ -198,7 +198,7 @@ typedef struct
 
 /* EV2 */
 #define  I2C_EVENT_SLAVE_BYTE_RECEIVED                     ((u32)0x00020040)  /* BUSY and RXNE flags */
-     
+
 /* EV3 */
 #define  I2C_EVENT_SLAVE_BYTE_TRANSMITTED                  ((u32)0x00060084)  /* TRA, BUSY, TXE and BTF flags */
 
@@ -217,10 +217,10 @@ typedef struct
 
 /* EV8 */
 #define  I2C_EVENT_MASTER_BYTE_TRANSMITTED                 ((u32)0x00070084)  /* TRA, BUSY, MSL, TXE and BTF flags */
-      
+
 /* EV9 */
 #define  I2C_EVENT_MASTER_MODE_ADDRESS10                   ((u32)0x00030008)  /* BUSY, MSL and ADD10 flags */
-                                          
+
 /* EV3_2 */
 #define  I2C_EVENT_SLAVE_ACK_FAILURE                       ((u32)0x00000400)  /* AF flag */
 

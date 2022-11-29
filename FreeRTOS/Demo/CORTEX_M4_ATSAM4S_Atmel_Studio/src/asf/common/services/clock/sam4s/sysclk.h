@@ -97,7 +97,7 @@
  *  -# Configure the PLL module to multiply the external fast crystal oscillator frequency up to 120MHz:
  *   \code
  *   #define CONFIG_PLL0_MUL             (120000000UL / BOARD_FREQ_MAINCK_XTAL)
- *   #define CONFIG_PLL0_DIV             1 
+ *   #define CONFIG_PLL0_DIV             1
  *   \endcode
  *   \note For user boards, \c BOARD_FREQ_MAINCK_XTAL should be defined in the board \c conf_board.h configuration
  *         file as the frequency of the fast crystal attached to the microcontroller.
@@ -163,7 +163,7 @@
  *  -# Configure the PLL0 module to multiply the external fast crystal oscillator frequency up to 120MHz:
  *   \code
  *   #define CONFIG_PLL0_MUL             (120000000UL / BOARD_FREQ_MAINCK_XTAL)
- *   #define CONFIG_PLL0_DIV             1 
+ *   #define CONFIG_PLL0_DIV             1
  *   \endcode
  *   \note For user boards, \c BOARD_FREQ_MAINCK_XTAL should be defined in the board \c conf_board.h configuration
  *         file as the frequency of the fast crystal attached to the microcontroller.
@@ -180,7 +180,7 @@
  *  -# Configure the PLL1 module to multiply the external fast crystal oscillator frequency up to 48MHz:
  *   \code
  *   #define CONFIG_PLL1_MUL             (48000000UL / BOARD_FREQ_MAINCK_XTAL)
- *   #define CONFIG_PLL1_DIV             1 
+ *   #define CONFIG_PLL1_DIV             1
  *   \endcode
  */
 
@@ -196,7 +196,7 @@ extern "C" {
  * \weakgroup sysclk_group
  * @{
  */
- 
+
 //! \name Configuration Symbols
 //@{
 /**
@@ -320,10 +320,10 @@ static inline uint32_t sysclk_get_main_hz(void)
 	switch (CONFIG_SYSCLK_SOURCE) {
 	case SYSCLK_SRC_SLCK_RC:
 		return OSC_SLCK_32K_RC_HZ;
-	
+
 	case SYSCLK_SRC_SLCK_XTAL:
 		return OSC_SLCK_32K_XTAL_HZ;
-		
+
 	case SYSCLK_SRC_SLCK_BYPASS:
 		return OSC_SLCK_32K_BYPASS_HZ;
 
@@ -345,14 +345,14 @@ static inline uint32_t sysclk_get_main_hz(void)
 
 #ifdef CONFIG_PLL0_SOURCE
 	case SYSCLK_SRC_PLLACK:
-		return pll_get_default_rate(0);	
+		return pll_get_default_rate(0);
 #endif
 
 #ifdef CONFIG_PLL1_SOURCE
 	case SYSCLK_SRC_PLLBCK:
-		return pll_get_default_rate(1);	
+		return pll_get_default_rate(1);
 #endif
-	
+
 	default:
 		/* unhandled_case(CONFIG_SYSCLK_SOURCE); */
 		return 0;

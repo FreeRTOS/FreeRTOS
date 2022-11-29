@@ -18,7 +18,7 @@ Monitor Connect Condition0=4
 Monitor Combination0=8/1/2:RealTimeMemory:,8/9/10:RAM Checker:C:48&1
 Core ID=0
 [Device]
-Communication=USB              
+Communication=USB
 ProductID=2002
 Protocol=3
 [Target]
@@ -243,7 +243,7 @@ OnTheFlyBreakAdmit=1
 Flag=Enable
 EventCodeMode=0
 EventDataMode=0
-Code0=00040302 1 1 1 0 0 MAIN.c$162  
+Code0=00040302 1 1 1 0 0 MAIN.c$162
 Debug File=C:\Fujitsu\FreeRTOS\FreeRTOS_Port_FR\91467d_FreeRTOS\STANDALONE\ABS\91467d_FreeRTOS.abs
 [Emulation Environment]
 Flag=Enable

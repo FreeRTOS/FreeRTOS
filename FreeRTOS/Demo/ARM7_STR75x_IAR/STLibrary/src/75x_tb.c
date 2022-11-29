@@ -100,7 +100,7 @@ void TB_Init(TB_InitTypeDef* TB_InitStruct)
 
   /* Set the corresponding clock source */
   if(TB_InitStruct->TB_ClockSource == TB_ClockSource_CKRTC)
-  {  
+  {
     TB->SCR &= TB_SME_Reset & TB_SlaveModeSelection_Mask & TB_TriggerSelection_Mask;
     TB->SCR |= TB_SMS_EXTCLK_Set | TB_SME_Set | TB_TS_IC1_Set;
   }
@@ -283,13 +283,13 @@ void TB_CounterModeConfig(u16 TB_CounterMode)
 * Description    : Configures the TB slave Mode.
 * Input          : TB_SMSMode: specifies the TB slave mode to be used.
 *                  This parameter can be one of the following values:
-*                         - TB_SMSMode_Trigger: The counter starts at a rising 
-*                           edge of the trigger 
-*                         - TB_SMSMode_Gated: The counter clock is enabled when 
+*                         - TB_SMSMode_Trigger: The counter starts at a rising
+*                           edge of the trigger
+*                         - TB_SMSMode_Gated: The counter clock is enabled when
 *                           trigger signal is high
 *                         - TB_SMSMode_External: The rising edge of selected trigger
 *                           clocks the counter
-*                         - TB_SMSMode_Reset: The rising edge of the selected 
+*                         - TB_SMSMode_Reset: The rising edge of the selected
 *                           trigger signal resets the counter
 * Output         : None
 * Return         : None
@@ -297,7 +297,7 @@ void TB_CounterModeConfig(u16 TB_CounterMode)
 void TB_SLaveModeConfig(u16 TB_SMSMode)
 {
   TB->SCR &= TB_SME_Reset & TB_SlaveModeSelection_Mask & TB_TriggerSelection_Mask;
-  TB->SCR |= TB_SME_Set | TB_SMSMode | TB_TS_IC1_Set; 
+  TB->SCR |= TB_SME_Set | TB_SMSMode | TB_TS_IC1_Set;
 }
 /*******************************************************************************
 * Function Name  : TB_GetCounter
@@ -390,7 +390,7 @@ ITStatus TB_GetITStatus(u16 TB_IT)
 
   /* Calculates the pending bits to be checked */
   TB_IT_Check = TB_IT & TB_IT_Clear_Mask;
-  
+
   if((TB->ISR & TB_IT_Check) != RESET )
   {
    return SET;

@@ -78,7 +78,7 @@ Private variables and functions
 /*******************************************************************************
 * Function Name : r_rst_write_enable
 * Description   : Enables writing to the registers related to RESET and Low-
-*                 Power function. And dummy read the register in order to fix 
+*                 Power function. And dummy read the register in order to fix
 *                 the register value.
 * Arguments    : none
 * Return Value : none
@@ -88,11 +88,11 @@ void r_rst_write_enable(void)
     volatile uint32_t dummy=0;
 
     UNUSED_VARIABLE(dummy);
-  
+
     /* Enables writing to the Reset and Low-Power register */
     SYSTEM.PRCR.LONG = RST_WRITE_ENABLE;
     dummy = SYSTEM.PRCR.LONG;
-    
+
 }
 
 /*******************************************************************************
@@ -102,7 +102,7 @@ void r_rst_write_enable(void)
 /*******************************************************************************
 * Function Name : r_rst_write_disable
 * Description   : Disables writing to the registers related to RESET and Low-
-*                 Power function. And dummy read the register in order to fix 
+*                 Power function. And dummy read the register in order to fix
 *                 the register value.
 * Arguments    : none
 * Return Value : none
@@ -112,11 +112,11 @@ void r_rst_write_disable(void)
     volatile uint32_t dummy=0;
 
     UNUSED_VARIABLE(dummy);
-  
+
     /* Disables writing to the Reset and Low-Power register */
     SYSTEM.PRCR.LONG = RST_WRITE_DISABLE;
     dummy = SYSTEM.PRCR.LONG;
-    
+
 }
 
 /***********************************************************************************************************************
@@ -124,5 +124,3 @@ void r_rst_write_disable(void)
 ***********************************************************************************************************************/
 
 /* End of File */
-
-

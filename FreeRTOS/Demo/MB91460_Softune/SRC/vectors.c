@@ -9,7 +9,7 @@
 
   31.04.05  1.00   UMa	Initial Version
   08.11.05  1.01   MSt	SWB Mondeb switch for ICR00 Register added
-  27.02.06  1.02   UMa	added comment in DefaultIRQHandler 
+  27.02.06  1.02   UMa	added comment in DefaultIRQHandler
   17.03.06  1.03   UMa	comment out ICR01
   28.07.06  1.04   UMa	changed comment
   06.10.06  1.05   UMa	changed DefaultIRQHandler
@@ -32,10 +32,10 @@
 -------------------------------------------------------------------------*/
 void InitIrqLevels(void)
 {
-	/*  ICRxx */ 
+	/*  ICRxx */
 	/* Softune Workbench Monitor Debugger is using ext int0 for abort function */
 	/*  ICR00 = 31;  *//* External Interrupt 0		 */
-												/* External Interrupt 1		*/				 
+												/* External Interrupt 1		*/
 	ICR01 = 31;									/* External Interrupt 2		*/
 												/* External Interrupt 3		*/
 	ICR02 = 31;									/* External Interrupt 4		*/
@@ -167,7 +167,7 @@ void InitIrqLevels(void)
 
 /*------------------------------------------------------------------------
   Prototypes
-  
+
   Add your own prototypes here. Each vector definition needs is proto-
   type. Either do it here or include a header file containing them.
 -------------------------------------------------------------------------*/
@@ -336,9 +336,9 @@ extern __interrupt void UART5_RxISR(void);
   DefaultIRQHandler()
 
   This function is a placeholder for all vector definitions. Either use
-  your own placeholder or add necessary code here. 
+  your own placeholder or add necessary code here.
 -------------------------------------------------------------------------*/
-__interrupt 
+__interrupt
 void DefaultIRQHandler (void)
 {
 	/* RB_SYNC; */						/* Synchronisation with R-Bus   */

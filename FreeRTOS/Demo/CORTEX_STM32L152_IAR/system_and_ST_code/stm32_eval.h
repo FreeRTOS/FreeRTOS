@@ -16,44 +16,44 @@
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
   * <h2><center>&copy; COPYRIGHT 2010 STMicroelectronics</center></h2>
-  */ 
-  
+  */
+
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32_EVAL_H
 #define __STM32_EVAL_H
 
 #ifdef __cplusplus
  extern "C" {
-#endif 
+#endif
 
 /* Includes ------------------------------------------------------------------*/
 
 /** @addtogroup Utilities
   * @{
-  */ 
-  
+  */
+
 /** @addtogroup STM32_EVAL
   * @{
-  */ 
+  */
 
 /** @defgroup STM32_EVAL_Abstraction_Layer
   * @{
   */
-  
+
 /** @defgroup STM32_EVAL_HARDWARE_RESOURCES
   * @{
   */
 
 /**
-@code  
- The table below gives an overview of the hardware resources supported by each 
+@code
+ The table below gives an overview of the hardware resources supported by each
  STM32 EVAL board.
      - LCD: TFT Color LCD (Parallel (FSMC) and Serial (SPI))
      - IOE: IO Expander on I2C
      - sFLASH: serial SPI FLASH (M25Pxxx)
      - sEE: serial I2C EEPROM (M24C08, M24C32, M24C64)
      - TSENSOR: Temperature Sensor (LM75)
-     - SD: SD Card memory (SPI and SDIO (SD Card MODE)) 
+     - SD: SD Card memory (SPI and SDIO (SD Card MODE))
   =================================================================================================================+
     STM32 EVAL     | LED | Buttons  | Com Ports |    LCD    | IOE  | sFLASH | sEE | TSENSOR | SD (SPI) | SD(SDIO)  |
   =================================================================================================================+
@@ -73,11 +73,11 @@
 /**
   * @}
   */
-  
+
 /** @defgroup STM32_EVAL_Exported_Types
   * @{
   */
-typedef enum 
+typedef enum
 {
   LED1 = 0,
   LED2 = 1,
@@ -85,8 +85,8 @@ typedef enum
   LED4 = 3
 } Led_TypeDef;
 
-typedef enum 
-{  
+typedef enum
+{
   BUTTON_WAKEUP = 0,
   BUTTON_TAMPER = 1,
   BUTTON_KEY = 2,
@@ -97,14 +97,14 @@ typedef enum
   BUTTON_SEL = 7
 } Button_TypeDef;
 
-typedef enum 
-{  
+typedef enum
+{
   BUTTON_MODE_GPIO = 0,
   BUTTON_MODE_EXTI = 1
 } ButtonMode_TypeDef;
 
-typedef enum 
-{ 
+typedef enum
+{
   JOY_NONE = 0,
   JOY_SEL = 1,
   JOY_DOWN = 2,
@@ -114,26 +114,26 @@ typedef enum
 } JOYState_TypeDef
 ;
 
-typedef enum 
+typedef enum
 {
   COM1 = 0,
   COM2 = 1
-} COM_TypeDef;   
+} COM_TypeDef;
 /**
   * @}
-  */ 
-  
+  */
+
 /** @defgroup STM32_EVAL_Exported_Constants
   * @{
-  */ 
+  */
 
-/** 
+/**
   * @brief  Uncomment the line corresponding to the STMicroelectronics evaluation
   *   board used in your application.
-  *   
+  *
   *  Tip: To avoid modifying this file each time you need to switch between these
-  *       boards, you can define the board in your toolchain compiler preprocessor.    
-  */ 
+  *       boards, you can define the board in your toolchain compiler preprocessor.
+  */
 #if !defined (USE_STM32100B_EVAL) && !defined (USE_STM3210B_EVAL) &&  !defined (USE_STM3210E_EVAL)\
    &&  !defined (USE_STM3210C_EVAL) &&  !defined (USE_STM32L152_EVAL)
  //#define USE_STM32100B_EVAL
@@ -148,7 +148,7 @@ typedef enum
  #include "stm32100b_eval/stm32100b_eval.h"
 #elif defined USE_STM3210B_EVAL
  #include "stm32f10x.h"
- #include "stm3210b_eval/stm3210b_eval.h" 
+ #include "stm3210b_eval/stm3210b_eval.h"
 #elif defined USE_STM3210E_EVAL
  #include "stm32f10x.h"
  #include "stm3210e_eval/stm3210e_eval.h"
@@ -157,15 +157,15 @@ typedef enum
  #include "stm3210c_eval/stm3210c_eval.h"
 #elif defined USE_STM32L152_EVAL
  #include "stm32l1xx.h"
- #include "stm32l152_eval/stm32l152_eval.h" 
-#else 
+ #include "stm32l152_eval/stm32l152_eval.h"
+#else
  #error "Please select first the STM32 EVAL board to be used (in stm32_eval.h)"
-#endif                      
+#endif
 
 
-/** 
-  * @brief  STM32 Button Defines Legacy  
-  */ 
+/**
+  * @brief  STM32 Button Defines Legacy
+  */
 #define Button_WAKEUP        BUTTON_WAKEUP
 #define Button_TAMPER        BUTTON_TAMPER
 #define Button_KEY           BUTTON_KEY
@@ -178,11 +178,11 @@ typedef enum
 #define Mode_EXTI            BUTTON_MODE_EXTI
 #define Button_Mode_TypeDef  ButtonMode_TypeDef
 #define JOY_CENTER           JOY_SEL
-#define JOY_State_TypeDef    JOYState_TypeDef 
+#define JOY_State_TypeDef    JOYState_TypeDef
 
-/** 
-  * @brief  LCD Defines Legacy  
-  */ 
+/**
+  * @brief  LCD Defines Legacy
+  */
 #define LCD_RSNWR_GPIO_CLK  LCD_NWR_GPIO_CLK
 #define LCD_SPI_GPIO_PORT   LCD_SPI_SCK_GPIO_PORT
 #define LCD_SPI_GPIO_CLK    LCD_SPI_SCK_GPIO_CLK
@@ -322,21 +322,21 @@ typedef enum
 
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup STM32_EVAL_Exported_Macros
   * @{
-  */ 
+  */
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup STM32_EVAL_Exported_Functions
   * @{
-  */ 
+  */
 /**
   * @}
-  */ 
+  */
 
 #ifdef __cplusplus
 }
@@ -347,14 +347,14 @@ typedef enum
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */   
+  */
 
 /******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE****/

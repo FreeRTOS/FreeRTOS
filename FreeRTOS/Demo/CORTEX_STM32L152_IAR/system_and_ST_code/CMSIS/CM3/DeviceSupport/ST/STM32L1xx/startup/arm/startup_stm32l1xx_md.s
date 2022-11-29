@@ -3,7 +3,7 @@
 ;* Author             : MCD Application Team
 ;* Version            : V1.0.0RC1
 ;* Date               : 07/02/2010
-;* Description        : STM32L15x Low Power Devices vector table for RVMDK 
+;* Description        : STM32L15x Low Power Devices vector table for RVMDK
 ;*                      toolchain.
 ;*                      This module performs:
 ;*                      - Set the initial SP
@@ -13,7 +13,7 @@
 ;*                        calls main()).
 ;*                      After Reset the CortexM3 processor is in Thread mode,
 ;*                      priority is Privileged, and the Stack is set to Main.
-;* <<< Use Configuration Wizard in Context Menu >>>   
+;* <<< Use Configuration Wizard in Context Menu >>>
 ;*******************************************************************************
 ; THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
 ; WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME.
@@ -130,9 +130,9 @@ __Vectors_Size  EQU  __Vectors_End - __Vectors
 Reset_Handler    PROC
                  EXPORT  Reset_Handler             [WEAK]
         IMPORT  __main
-        IMPORT  SystemInit  
+        IMPORT  SystemInit
                  LDR     R0, =SystemInit
-                 BLX     R0              
+                 BLX     R0
                  LDR     R0, =__main
                  BX      R0
                  ENDP
@@ -284,17 +284,17 @@ TIM7_IRQHandler
 ;*******************************************************************************
 ; User Stack and Heap initialization
 ;*******************************************************************************
-                 IF      :DEF:__MICROLIB           
-                
+                 IF      :DEF:__MICROLIB
+
                  EXPORT  __initial_sp
                  EXPORT  __heap_base
                  EXPORT  __heap_limit
-                
+
                  ELSE
-                
+
                  IMPORT  __use_two_region_memory
                  EXPORT  __user_initial_stackheap
-                 
+
 __user_initial_stackheap
 
                  LDR     R0, =  Heap_Mem

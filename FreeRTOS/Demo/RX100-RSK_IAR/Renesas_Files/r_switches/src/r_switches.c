@@ -227,6 +227,3 @@ void R_SWITCHES_Update (void)
     }
 #endif /* SWITCHES_DETECTION_MODE */
 }
-
-
-

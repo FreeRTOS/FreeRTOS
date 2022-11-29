@@ -181,4 +181,3 @@ extern uint32_t DACC_WriteBuffer( Dacc* pDACC, uint16_t *pwBuffer, uint32_t dwSi
     }
 
 }
-

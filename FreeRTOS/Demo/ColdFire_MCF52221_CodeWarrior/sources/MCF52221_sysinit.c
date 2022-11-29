@@ -2,7 +2,7 @@
  * File:		mcf52221_sysinit.c
  * Purpose:		Power-on Reset configuration of the MCF52221.
  *
- * Notes: 
+ * Notes:
  *
  */
 #include "support_common.h"
@@ -14,9 +14,9 @@
 static void pll_init(void)
 {
 
-   MCF_CLOCK_CCHR =0x05; // The PLL pre divider - 48MHz / 6 = 8MHz 
+   MCF_CLOCK_CCHR =0x05; // The PLL pre divider - 48MHz / 6 = 8MHz
 
-	/* The PLL pre-divider affects this!!! 
+	/* The PLL pre-divider affects this!!!
 	 * Multiply 8Mhz reference crystal /CCHR by 10 to acheive system clock of 80Mhz
 	 */
 
@@ -48,13 +48,13 @@ static void scm_init(void)
 void __initialize_hardware(void)
 {
 	/*******************************************************
-	*	Out of reset, the low-level assembly code calls this 
-	*	routine to initialize the MCF52221 modules for the  
-	*	M522223EVB board. 
+	*	Out of reset, the low-level assembly code calls this
+	*	routine to initialize the MCF52221 modules for the
+	*	M522223EVB board.
 	********************************************************/
 
 
-	asm 
+	asm
 	{
 	    /* Initialize IPSBAR */
 	    move.l  #__IPSBAR,d0
@@ -62,7 +62,7 @@ void __initialize_hardware(void)
 	    add.l   #0x1,d0
 	    move.l  d0,0x40000000
 
-	    
+
 
 	    /* Initialize FLASHBAR */
 	    move.l  #__FLASHBAR,d0
@@ -72,15 +72,12 @@ void __initialize_hardware(void)
 
 	}
 
-	
+
 	/* Set real time clock freq */
 	MCF_CLOCK_RTCDR = 48000000;
-	
+
 	pll_init();
 	scm_init();
 
 	initialize_exceptions();
 }
-
-
-

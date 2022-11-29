@@ -67,9 +67,9 @@
  * to remove the DHCP client.
  *
  */
- 
+
 #include <string.h>
- 
+
 #include "lwip/stats.h"
 #include "lwip/mem.h"
 #include "lwip/udp.h"
@@ -299,7 +299,7 @@ void dhcp_coarse_tmr()
  *
  * A DHCP server is expected to respond within a short period of time.
  * This timer checks whether an outstanding DHCP request is timed out.
- * 
+ *
  */
 void dhcp_fine_tmr()
 {
@@ -485,7 +485,7 @@ static void dhcp_handle_ack(struct netif *netif)
   if (option_ptr != NULL) {
     dhcp->offered_bc_addr.addr = htonl(dhcp_get_option_long(&option_ptr[2]));
   }
-  
+
   /* DNS servers */
   option_ptr = dhcp_get_option_ptr(dhcp, DHCP_OPTION_DNS_SERVER);
   if (option_ptr != NULL) {
@@ -537,7 +537,7 @@ err_t dhcp_start(struct netif *netif)
   } else {
     LWIP_DEBUGF(DHCP_DEBUG | DBG_TRACE | DBG_STATE | 3, ("dhcp_start(): restarting DHCP configuration\n"));
   }
-  	
+
 	/* clear data structure */
 	memset(dhcp, 0, sizeof(struct dhcp));
   /* allocate UDP PCB */
@@ -941,7 +941,7 @@ err_t dhcp_release(struct netif *netif)
   dhcp->offered_gw_addr.addr = dhcp->offered_bc_addr.addr = 0;
   dhcp->offered_t0_lease = dhcp->offered_t1_renew = dhcp->offered_t2_rebind = 0;
   dhcp->dns_count = 0;
-  
+
   /* create and initialize the DHCP message header */
   result = dhcp_create_request(netif);
   if (result == ERR_OK) {
@@ -970,7 +970,7 @@ err_t dhcp_release(struct netif *netif)
   netif_set_ipaddr(netif, IP_ADDR_ANY);
   netif_set_gw(netif, IP_ADDR_ANY);
   netif_set_netmask(netif, IP_ADDR_ANY);
-  
+
   /* TODO: netif_down(netif); */
   return result;
 }

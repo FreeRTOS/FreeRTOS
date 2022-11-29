@@ -218,4 +218,3 @@ line interface. */
 #define configNET_MASK3		0
 
 #endif /* FREERTOS_CONFIG_H */
-

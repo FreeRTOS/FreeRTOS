@@ -64,4 +64,3 @@ WOLFSSL_API void wc_Md4Final(Md4*, byte*);
 
 #endif /* NO_MD4 */
 #endif /* WOLF_CRYPT_MD4_H */
-

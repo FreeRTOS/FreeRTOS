@@ -163,4 +163,3 @@ extern void AFEC_SetAnalogControl( Afec *pAFE, uint32_t control);
 #endif
 
 #endif /* #ifndef _AFEC_ */
-

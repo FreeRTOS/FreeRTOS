@@ -33,7 +33,7 @@
  * \n
  *
  * The Secure Hash Algorithm (SHA) module requires a padded message according to FIPS180-2
- * specification. The first block of the message must be indicated to the module by a specific 
+ * specification. The first block of the message must be indicated to the module by a specific
  * command. The SHA module produces a N-bit message digest each time a block is written and
  * processing period ends. N is 160 for SHA1, 224 for SHA224, 256 for SHA256, 384 for SHA384,
  * 512 for SHA512.
@@ -75,7 +75,7 @@
 /*----------------------------------------------------------------------------
  *        Local functions
  *----------------------------------------------------------------------------*/
- 
+
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
@@ -110,7 +110,7 @@ void SHA_FirstBlock(void)
  */
 void SHA_Configure(uint32_t mode)
 {
-    SHA->SHA_MR = mode; 
+    SHA->SHA_MR = mode;
 }
 
 /**
@@ -165,6 +165,6 @@ void SHA_SetInput(uint32_t *data, uint8_t len)
 void SHA_GetOutput(uint32_t *data)
 {
     uint8_t i;
-    for (i = 0; i < 16; i++) 
+    for (i = 0; i < 16; i++)
         data[i] = SHA->SHA_IODATAR[i];
 }

@@ -44,5 +44,3 @@
 #endif
 
 #endif /* WOLFCRYPT_SELF_TEST_H */
-
-

@@ -7,7 +7,7 @@
 * (c) Copyright 2002, Wiznet, Seoul, Korea
 *
 * Filename : types.h
-* Programmer(s): 
+* Programmer(s):
 * Created : 2002/01/
 * Modified :
 * Description : Define of data type.
@@ -61,4 +61,3 @@ typedef union un_i2cval
   };
 
 #endif		// _TYPES_H_
-

@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         ATMEL Microcontroller Software Support 
+ *         ATMEL Microcontroller Software Support
  * ----------------------------------------------------------------------------
  * Copyright (c) 2008, Atmel Corporation
  *
@@ -64,7 +64,7 @@ void SLCDC_Configure(
     SANITY_CHECK((commons > 0) && (commons <= 10));
     SANITY_CHECK((segments > 0) && (segments <= 40));
     SANITY_CHECK((bias & ~AT91C_SLCDC_BIAS) == 0);
-    SANITY_CHECK((timeSetting & ~(0xF << 16)) == 0);  
+    SANITY_CHECK((timeSetting & ~(0xF << 16)) == 0);
     SANITY_CHECK((timeSetting >> 16) < 0x0A);
 
     // Enable peripheral clock
@@ -109,7 +109,7 @@ void SLCDC_EnableLowPowerMode(void)
     value |=AT91C_SLCDC_LPMODE;
     AT91C_BASE_SLCDC->SLCDC_MR = value;
 }
- 
+
 //------------------------------------------------------------------------------
 /// Disables the SLCD low power mode
 //------------------------------------------------------------------------------
@@ -144,7 +144,7 @@ void SLCDC_SetDisplayMode(unsigned int mode)
     unsigned int value;
 
     SANITY_CHECK(mode < 8);
-           
+
     value = AT91C_BASE_SLCDC->SLCDC_DR;
     value &= ~AT91C_SLCDC_DISPMODE;
     value |= mode;
@@ -164,7 +164,7 @@ void SLCDC_SetBlinkFreq(unsigned int frequency)
 
     value = AT91C_BASE_SLCDC->SLCDC_DR;
     value &= ~AT91C_SLCDC_BLKFREQ;
-    value |= frequency;           
+    value |= frequency;
     AT91C_BASE_SLCDC->SLCDC_DR = frequency;
 }
 
@@ -189,4 +189,3 @@ void SLCDC_DisableInterrupts(unsigned int sources)
 
     AT91C_BASE_SLCDC->SLCDC_IDR = sources;
 }
-

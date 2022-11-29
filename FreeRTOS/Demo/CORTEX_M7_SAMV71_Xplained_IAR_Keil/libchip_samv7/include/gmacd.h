@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -150,7 +150,7 @@ typedef struct _GmacQueueDriver {
 
     /** Number of free TD before wakeup callback is invoked */
     uint8_t  bWakeupThreshold;
-    
+
 } sGmacQd;
 
 /**
@@ -163,7 +163,7 @@ typedef struct _GmacDriver {
     /** HW ID */
     uint8_t bId;
     /** Base Queue list params **/
-    sGmacQd     queueList[NUM_GMAC_QUEUES];    
+    sGmacQd     queueList[NUM_GMAC_QUEUES];
 } sGmacd;
 
 /** @}*/
@@ -179,16 +179,16 @@ extern void GMACD_Handler(sGmacd *pGmacd , gmacQueList_t queIdx);
 
 extern void GMACD_Init(sGmacd *pGmacd,
                        Gmac *pHw,
-                       uint8_t bID, 
-                       uint8_t enableCAF, 
+                       uint8_t bID,
+                       uint8_t enableCAF,
                        uint8_t enableNBC );
 
 extern uint8_t GMACD_InitTransfer( sGmacd *pGmacd,
-                                   uint8_t *pRxBuffer, 
+                                   uint8_t *pRxBuffer,
                                    sGmacRxDescriptor *pRxD,
                                    uint16_t wRxSize,
-                                   uint8_t *pTxBuffer, 
-                                   sGmacTxDescriptor *pTxD, 
+                                   uint8_t *pTxBuffer,
+                                   sGmacTxDescriptor *pTxD,
                                    fGmacdTransferCallback *pTxCb,
                                    uint16_t wTxSize,
                                    gmacQueList_t queIdx);
@@ -197,28 +197,28 @@ extern void GMACD_Reset(sGmacd *pGmacd);
 
 extern uint8_t GMACD_SendSG(sGmacd *pGmacd,
                             const sGmacSGList *sgl,
-                            fGmacdTransferCallback fTxCb, 
+                            fGmacdTransferCallback fTxCb,
                             gmacQueList_t queIdx);
 
 extern uint8_t GMACD_Send(sGmacd *pGmacd,
                          void *pBuffer,
                          uint32_t size,
-                         fGmacdTransferCallback fTxCb, 
+                         fGmacdTransferCallback fTxCb,
                          gmacQueList_t queIdx );
 
 extern  uint32_t GMACD_TxLoad(sGmacd *pGmacd, gmacQueList_t queIdx);
 
-extern  uint8_t GMACD_Poll(sGmacd * pGmacd, 
-                          uint8_t *pFrame, 
-                          uint32_t frameSize, 
-                          uint32_t *pRcvSize, 
+extern  uint8_t GMACD_Poll(sGmacd * pGmacd,
+                          uint8_t *pFrame,
+                          uint32_t frameSize,
+                          uint32_t *pRcvSize,
                           gmacQueList_t queIdx);
 
 extern void GMACD_SetRxCallback(sGmacd * pGmacd, fGmacdTransferCallback fRxCb, gmacQueList_t queIdx);
 
 extern uint8_t GMACD_SetTxWakeupCallback(sGmacd * pGmacd,
                                          fGmacdWakeupCallback fWakeup,
-                                         uint8_t bThreshold, 
+                                         uint8_t bThreshold,
                                          gmacQueList_t queIdx);
 
 /** @}*/

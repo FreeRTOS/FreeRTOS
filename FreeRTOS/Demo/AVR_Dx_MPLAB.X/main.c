@@ -51,7 +51,7 @@ int main( void )
 #elif ( mainSELECTED_APPLICATION == 2 )
     main_full();
 #endif
-    
+
     return 0;
 }
 

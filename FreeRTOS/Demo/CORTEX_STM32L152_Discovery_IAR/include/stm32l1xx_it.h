@@ -1,6 +1,6 @@
  /**
   ******************************************************************************
-  * @file    Project/STM32L1xx_StdPeriph_Template/stm32l1xx_it.h 
+  * @file    Project/STM32L1xx_StdPeriph_Template/stm32l1xx_it.h
   * @author  MCD Application Team
   * @version V1.0.3
   * @date    May-2013
@@ -16,7 +16,7 @@
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
   * <h2><center>&copy; COPYRIGHT 2010 STMicroelectronics</center></h2>
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32L1xx_IT_H
@@ -24,7 +24,7 @@
 
 #ifdef __cplusplus
  extern "C" {
-#endif 
+#endif
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l1xx.h"

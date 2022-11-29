@@ -370,4 +370,3 @@ void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName )
 	Inspect pxCurrentTCB to see which was the offending task. */
 	for( ;; );
 }
-

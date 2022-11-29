@@ -59,7 +59,7 @@ void LCDD_On( void)
 		ILI9488_SpiOn();
 	} else {
 		ILI9488_EbiOn();
-	} 
+	}
 }
 
 /**
@@ -113,4 +113,3 @@ void LCDD_Initialize( uint8_t lcdMode, sXdmad * dmad, uint8_t cRotate)
 #endif
 
 }
-

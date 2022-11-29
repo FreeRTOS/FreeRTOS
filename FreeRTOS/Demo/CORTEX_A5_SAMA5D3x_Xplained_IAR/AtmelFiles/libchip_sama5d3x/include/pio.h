@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2011, Atmel Corporation
  *
@@ -218,4 +218,3 @@ extern void PIO_Output_Low (Pio * pio, uint32_t pioId);
 #endif
 
 #endif /* #ifndef _PIO_ */
-

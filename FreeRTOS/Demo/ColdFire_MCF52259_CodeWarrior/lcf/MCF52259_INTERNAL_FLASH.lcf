@@ -2,9 +2,9 @@
 #  A small subroutine is written at the location VBR+0x408-VBR+0x40B
 #  to handle the exception.  The Illegal Instruction Vector in
 #  the the vector table at VBR+0x10 is then pointed to it.  When the
-#  debugger encounters an illegal instruction, it jumps to this 
+#  debugger encounters an illegal instruction, it jumps to this
 #  subroutine, which ends with an RTE, then exits.
-#  Do not overwrite this area of memory otherwise the debugger may not 
+#  Do not overwrite this area of memory otherwise the debugger may not
 #  exit properly.
 # */
 
@@ -18,15 +18,15 @@ MEMORY
 	ipsbar  (RWX)  : ORIGIN = 0x40000000, LENGTH = 0x0
 }
 
-SECTIONS 
+SECTIONS
 {
 	.ipsbar	 : {} > ipsbar
-    
+
 	.vectorflash :
 	{
 		mcf5225x_vectors.s (.text)
     } > vectorflash
-    
+
 	.flash :
 	{
 		*(.text)
@@ -35,13 +35,13 @@ SECTIONS
 
 		___DATA_ROM	   = .;
     } > flash
-    
-    .data : AT(___DATA_ROM) 
+
+    .data : AT(___DATA_ROM)
 	{
 		___DATA_RAM    = . ;
 
-        *(.exception)	
-		.              = ALIGN(0x10);	
+        *(.exception)
+		.              = ALIGN(0x10);
 		__exception_table_start__ = .;
 	    EXCEPTION
 		__exception_table_end__   = .;
@@ -76,7 +76,7 @@ SECTIONS
 		__START_BSS  = .;
 		*(.bss)
 		*(COMMON)
-		__END_BSS    = .;	
+		__END_BSS    = .;
         ___BSS_START = __START_SBSS;
         ___BSS_END   = __END_BSS;
         . = ALIGN(0x10);
@@ -96,7 +96,7 @@ SECTIONS
 	___HEAP_END		= ___SRAM + ___SRAM_SIZE - ___SP_SIZE;
 	___SP_END		= ___HEAP_END;
 	___SP_INIT		= ___SP_END + ___SP_SIZE;
-	
+
   	___heap_addr 	= ___HEAP_START;
 	___heap_size 	= ___HEAP_END - ___HEAP_START ;
 	__SP_INIT 		= ___SP_INIT;

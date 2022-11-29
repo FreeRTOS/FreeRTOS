@@ -41,12 +41,11 @@ extern "C"
 /*
  * Component : NAND Controller Module Data (AXI Slave) - ALT_NANDDATA
  * NAND Controller Module Data (AXI Slave)
- * 
- * 
+ *
+ *
  */
 
 #ifdef __cplusplus
 }
 #endif  /* __cplusplus */
 #endif  /* __ALTERA_ALT_NANDDATA_H__ */
-

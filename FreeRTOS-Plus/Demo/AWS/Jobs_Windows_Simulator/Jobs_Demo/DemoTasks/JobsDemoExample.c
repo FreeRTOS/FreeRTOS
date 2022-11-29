@@ -68,6 +68,7 @@
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "queue.h"
 
 /* Jobs library header. */
 #include "jobs.h"
@@ -224,6 +225,11 @@
  */
 #define DELAY_BETWEEN_DEMO_RETRY_ITERATIONS_TICKS    ( pdMS_TO_TICKS( 5000U ) )
 
+/**
+ * @brief Length of the queue to pass Jobs messages to the job handling task.
+ */
+#define JOBS_MESSAGE_QUEUE_LEN                       ( 10U )
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -310,6 +316,11 @@ static BaseType_t xExitActionJobReceived = pdFALSE;
  * @note When this flag is set, the demo terminates execution.
  */
 static BaseType_t xDemoEncounteredError = pdFALSE;
+
+/**
+ * @brief Queue used to pass incoming Jobs messages to a task to handle them.
+ */
+static QueueHandle_t xJobMessageQueue;
 
 /*-----------------------------------------------------------*/
 
@@ -715,8 +726,52 @@ static void prvEventCallback( MQTTContext_t * pxMqttContext,
             /* Upon successful return, the messageType has been filled in. */
             if( ( topicType == JobsDescribeSuccess ) || ( topicType == JobsNextJobChanged ) )
             {
-                /* Handler function to process payload. */
-                prvNextJobHandler( pxDeserializedInfo->pPublishInfo );
+                MQTTPublishInfo_t * pxJobMessagePublishInfo = NULL;
+                char * pcTopicName = NULL;
+                char * pcPayload = NULL;
+
+                /* Copy message to pass into queue. */
+                pxJobMessagePublishInfo = ( MQTTPublishInfo_t * ) pvPortMalloc( sizeof( MQTTPublishInfo_t ) );
+                pcTopicName = ( char * ) pvPortMalloc( pxDeserializedInfo->pPublishInfo->topicNameLength );
+                pcPayload = ( char * ) pvPortMalloc( pxDeserializedInfo->pPublishInfo->payloadLength );
+
+                if( ( pxJobMessagePublishInfo == NULL ) || ( pcTopicName == NULL ) || ( pcPayload == NULL ) )
+                {
+                    LogError( ( "Malloc failed for copying job publish info." ) );
+
+                    if( pxJobMessagePublishInfo != NULL )
+                    {
+                        vPortFree( pxJobMessagePublishInfo );
+                    }
+
+                    if( pcTopicName != NULL )
+                    {
+                        vPortFree( pcTopicName );
+                    }
+
+                    if( pcPayload != NULL )
+                    {
+                        vPortFree( pcPayload );
+                    }
+                }
+                else
+                {
+                    memcpy( pxJobMessagePublishInfo, pxDeserializedInfo->pPublishInfo, sizeof( MQTTPublishInfo_t ) );
+                    memcpy( pcTopicName, pxDeserializedInfo->pPublishInfo->pTopicName, pxDeserializedInfo->pPublishInfo->topicNameLength );
+                    memcpy( pcPayload, pxDeserializedInfo->pPublishInfo->pPayload, pxDeserializedInfo->pPublishInfo->payloadLength );
+
+                    pxJobMessagePublishInfo->pTopicName = pcTopicName;
+                    pxJobMessagePublishInfo->pPayload = pcPayload;
+
+                    if( xQueueSend( xJobMessageQueue, &pxJobMessagePublishInfo, 0 ) == errQUEUE_FULL )
+                    {
+                        LogError( ( "Could not enqueue Jobs message." ) );
+
+                        vPortFree( pxJobMessagePublishInfo );
+                        vPortFree( pcTopicName );
+                        vPortFree( pcPayload );
+                    }
+                }
             }
             else if( topicType == JobsUpdateSuccess )
             {
@@ -796,6 +851,10 @@ void prvJobsDemoTask( void * pvParameters )
 
     /* Set the pParams member of the network context with desired transport. */
     xNetworkContext.pParams = &xTlsTransportParams;
+
+    /* Initialize Jobs message queue. */
+    xJobMessageQueue = xQueueCreate( JOBS_MESSAGE_QUEUE_LEN, sizeof( MQTTPublishInfo_t * ) );
+    configASSERT( xJobMessageQueue != NULL );
 
     /* This demo runs a single loop unless there are failures in the demo execution.
      * In case of failures in the demo execution, demo loop will be retried for up to
@@ -897,11 +956,22 @@ void prvJobsDemoTask( void * pvParameters )
                ( xDemoEncounteredError == pdFALSE ) &&
                ( xDemoStatus == pdPASS ) )
         {
+            MQTTPublishInfo_t * pxJobMessagePublishInfo;
             MQTTStatus_t xMqttStatus = MQTTSuccess;
 
             /* Check if we have notification for the next pending job in the queue from the
              * NextJobExecutionChanged API of the AWS IoT Jobs service. */
-            xMqttStatus = MQTT_ProcessLoop( &xMqttContext, 300U );
+            xMqttStatus = MQTT_ProcessLoop( &xMqttContext );
+
+            /* Receive any incoming Jobs message. */
+            if( xQueueReceive( xJobMessageQueue, &pxJobMessagePublishInfo, 0 ) == pdTRUE )
+            {
+                /* Handler function to process Jobs message payload. */
+                prvNextJobHandler( pxJobMessagePublishInfo );
+                vPortFree( pxJobMessagePublishInfo->pTopicName );
+                vPortFree( pxJobMessagePublishInfo->pPayload );
+                vPortFree( pxJobMessagePublishInfo );
+            }
 
             if( xMqttStatus != MQTTSuccess )
             {

@@ -1560,6 +1560,7 @@ pbasetime
 pbclk
 pbe
 pbuf
+pbuff
 pbuffer
 pbufs
 pc
@@ -2001,6 +2002,7 @@ prvstatcommand
 prvstatfscommand
 prvstaticallyallocatedcreator
 prvstaticallyallocatedtask
+prvstreambufferadd
 prvsubscribetodefendertopics
 prvsynctask
 prvtaskstatscommand
@@ -2027,6 +2029,8 @@ prvunlockqueue
 prvupdateacceptedhandler
 prvupdatedeltahandler
 prvwin
+prvwinpcaprecvthread
+prvwinpcapsendthread
 prvzerocopyechoclienttask
 ps
 psa
@@ -2086,6 +2090,7 @@ pucethernetbufferpointeres
 pucethernetbufferpointers
 puchash
 pucindex
+pucinterfacename
 pucmessage
 pucpayloadbuffer
 pucqueuestorage
@@ -3072,6 +3077,7 @@ uxsecs
 uxsemaphoregetcount
 uxstackbuffer
 uxstate
+uxstreambufferadd
 uxstringlength
 uxsynchronisationbit
 uxtaskgetnumberoftasks
@@ -3200,6 +3206,7 @@ vqueueunregisterqueue
 vqueuewaitformessagerestricted
 vregistercheck
 vregtest
+vrxfaultinjection
 vsecondregistertesttask
 vsemaphorecreatebinary
 vsemaphoredelete
@@ -3586,6 +3593,7 @@ xreadblocktime
 xreceived
 xreceivedbytes
 xreceivelength
+xrecvbuffer
 xrecvloop
 xregions
 xregionssettings

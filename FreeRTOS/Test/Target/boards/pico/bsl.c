@@ -123,6 +123,7 @@ int AMPLaunchOnCore(int coreNum, void (*function)(void)) {
 
 int registerSoftwareInterruptHandler(softwareInterruptHandler handler) {
   irq_add_shared_handler(26, (irq_handler_t)handler, 0);
+  irq_set_enabled(26, true);
   return 26;
 }
 

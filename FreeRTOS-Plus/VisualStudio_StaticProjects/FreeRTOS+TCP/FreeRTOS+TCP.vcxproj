@@ -192,10 +192,10 @@
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_Tiny_TCP.c" />
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\FreeRTOS_UDP_IP.c" />
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\portable\BufferManagement\BufferAllocation_2.c" />
-    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\portable\NetworkInterface\WinPCap\NetworkInterface.c" />
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\tcp_dump_packets.c" />
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\tcp_mem_stats.c" />
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\tcp_netstat.c" />
+    <ClCompile Include="NetworkInterface_WinPCap.c" />
     <ClCompile Include="plus_tcp_hooks_winsim.c" />
   </ItemGroup>
   <ItemGroup>

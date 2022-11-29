@@ -102,13 +102,11 @@
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\tools\tcp_utilities\tcp_netstat.c">
       <Filter>tcp_utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\portable\NetworkInterface\WinPCap\NetworkInterface.c">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-TCP\source\portable\BufferManagement\BufferAllocation_2.c">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="plus_tcp_hooks_winsim.c" />
+    <ClCompile Include="NetworkInterface_WinPCap.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\source\include\FreeRTOS_Sockets.h">

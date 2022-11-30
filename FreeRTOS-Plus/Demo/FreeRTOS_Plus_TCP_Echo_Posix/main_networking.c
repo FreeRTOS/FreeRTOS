@@ -296,7 +296,7 @@ void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
     }
     else
     {
-        FreeRTOS_printf( "Application idle hook network down\n" );
+        FreeRTOS_printf( ("Application idle hook network down\n") );
     }
 }
 /*-----------------------------------------------------------*/

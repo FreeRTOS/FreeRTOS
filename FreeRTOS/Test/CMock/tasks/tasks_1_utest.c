@@ -65,11 +65,21 @@ extern volatile TickType_t xTickCount;
 extern volatile UBaseType_t uxTopReadyPriority;
 extern volatile BaseType_t xSchedulerRunning;
 extern volatile TickType_t xPendedTicks;
-extern volatile BaseType_t xYieldPending;
+#if ( defined( configNUMBER_OF_CORES ) && ( configNUMBER_OF_CORES == 1 ) )
+    extern volatile BaseType_t xYieldPendings[];
+    #define xYieldPending    xYieldPendings[ 0 ]
+#else /* #if ( defined( configNUMBER_OF_CORES ) && ( configNUMBER_OF_CORES == 1 ) ) */
+    extern volatile BaseType_t xYieldPending;
+#endif /* #if ( defined( configNUMBER_OF_CORES ) && ( configNUMBER_OF_CORES == 1 ) ) */
 extern volatile BaseType_t xNumOfOverflows;
 extern UBaseType_t uxTaskNumber;
 extern volatile TickType_t xNextTaskUnblockTime;
-extern TaskHandle_t xIdleTaskHandle;
+#if ( defined( configNUMBER_OF_CORES ) && ( configNUMBER_OF_CORES == 1 ) )
+    extern TaskHandle_t xIdleTaskHandles[];
+    #define xIdleTaskHandle    xIdleTaskHandles[ 0 ]
+#else /* #if ( defined( configNUMBER_OF_CORES ) && ( configNUMBER_OF_CORES == 1 ) ) */
+    extern TaskHandle_t xIdleTaskHandle;
+#endif /* #if ( defined( configNUMBER_OF_CORES ) && ( configNUMBER_OF_CORES == 1 ) ) */
 extern volatile UBaseType_t uxSchedulerSuspended;
 
 /* =============================  DEFINES  ================================== */

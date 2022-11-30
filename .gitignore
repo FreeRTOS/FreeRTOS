@@ -42,6 +42,10 @@ __pycache__/
 *.pem
 *.crt
 
+# Ignore Visual Studio user files
+*.suo
+*.vcxproj.user
+
 # Atmel Studio user files
 *.atsuo
 

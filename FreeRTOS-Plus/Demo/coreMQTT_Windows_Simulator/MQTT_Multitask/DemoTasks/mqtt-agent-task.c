@@ -87,9 +87,9 @@
 
 /* Transport interface include. */
 #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
-    #include "using_mbedtls.h"
+    #include "transport_mbedtls.h"
 #else
-    #include "using_plaintext.h"
+    #include "transport_plaintext.h"
 #endif
 
 /* This demo uses compile time options to select the demo tasks to created.
@@ -103,32 +103,32 @@
     #error Please define democonfigSIMPLE_SUB_PUB_TASK_STACK_SIZE in demo_config.h to set the stack size (in words, not bytes) for the tasks created by vStartSimpleSubscribePublishTask().
 #endif
 
- /* Compile time error for some undefined configs, and provide default values
-  * for others. */
+/* Compile time error for some undefined configs, and provide default values
+ * for others. */
 #ifndef democonfigMQTT_BROKER_ENDPOINT
-#error "Please define democonfigMQTT_BROKER_ENDPOINT in demo_config.h."
+    #error "Please define democonfigMQTT_BROKER_ENDPOINT in demo_config.h."
 #endif
 
 #ifndef democonfigCLIENT_IDENTIFIER
 
-  /**
-   * @brief The MQTT client identifier used in this example.  Each client identifier
-   * must be unique so edit as required to ensure no two clients connecting to the
-   * same broker use the same client identifier.  Using a #define is for convenience
-   * of demonstration only - production devices should use something unique to the
-   * device that can be read from software - such as a production serial number.
-   */
-#error  "Please define democonfigCLIENT_IDENTIFIER in demo_config.h to something unique for this device."
+    /**
+     * @brief The MQTT client identifier used in this example.  Each client identifier
+     * must be unique so edit as required to ensure no two clients connecting to the
+     * same broker use the same client identifier.  Using a #define is for convenience
+     * of demonstration only - production devices should use something unique to the
+     * device that can be read from software - such as a production serial number.
+     */
+    #error  "Please define democonfigCLIENT_IDENTIFIER in demo_config.h to something unique for this device."
 #endif
 
 
 #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
-#ifndef democonfigROOT_CA_PEM
-#error "Please define Root CA certificate of the MQTT broker(democonfigROOT_CA_PEM) in demo_config.h."
-#endif
+    #ifndef democonfigROOT_CA_PEM
+        #error "Please define Root CA certificate of the MQTT broker(democonfigROOT_CA_PEM) in demo_config.h."
+    #endif
 
-   /* If no username is defined, then a client certificate/key is required. */
-#ifndef democonfigCLIENT_USERNAME
+    /* If no username is defined, then a client certificate/key is required. */
+    #ifndef democonfigCLIENT_USERNAME
 
 /*
  *!!! Please note democonfigCLIENT_PRIVATE_KEY_PEM in used for
@@ -136,34 +136,34 @@
  *!!! store keys securely, such as within a secure element.
  */
 
-#ifndef democonfigCLIENT_CERTIFICATE_PEM
-#error "Please define client certificate(democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h."
-#endif
-#ifndef democonfigCLIENT_PRIVATE_KEY_PEM
-#error "Please define client private key(democonfigCLIENT_PRIVATE_KEY_PEM) in demo_config.h."
-#endif
-#else
+        #ifndef democonfigCLIENT_CERTIFICATE_PEM
+            #error "Please define client certificate(democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h."
+        #endif
+        #ifndef democonfigCLIENT_PRIVATE_KEY_PEM
+            #error "Please define client private key(democonfigCLIENT_PRIVATE_KEY_PEM) in demo_config.h."
+        #endif
+    #else
 
 /* If a username is defined, a client password also would need to be defined for
  * client authentication. */
-#ifndef democonfigCLIENT_PASSWORD
-#error "Please define client password(democonfigCLIENT_PASSWORD) in demo_config.h for client authentication based on username/password."
-#endif
+        #ifndef democonfigCLIENT_PASSWORD
+            #error "Please define client password(democonfigCLIENT_PASSWORD) in demo_config.h for client authentication based on username/password."
+        #endif
 
- /* AWS IoT MQTT broker port needs to be 443 for client authentication based on
-  * username/password. */
-#if defined( democonfigUSE_AWS_IOT_CORE_BROKER ) && democonfigMQTT_BROKER_PORT != 443
-#error "Broker port(democonfigMQTT_BROKER_PORT) should be defined as 443 in demo_config.h for client authentication based on username/password in AWS IoT Core."
-#endif
-#endif /* ifndef democonfigCLIENT_USERNAME */
+        /* AWS IoT MQTT broker port needs to be 443 for client authentication based on
+         * username/password. */
+        #if defined( democonfigUSE_AWS_IOT_CORE_BROKER ) && democonfigMQTT_BROKER_PORT != 443
+            #error "Broker port(democonfigMQTT_BROKER_PORT) should be defined as 443 in demo_config.h for client authentication based on username/password in AWS IoT Core."
+        #endif
+    #endif /* ifndef democonfigCLIENT_USERNAME */
 
-#ifndef democonfigMQTT_BROKER_PORT
-#define democonfigMQTT_BROKER_PORT    ( 8883 )
-#endif
+    #ifndef democonfigMQTT_BROKER_PORT
+        #define democonfigMQTT_BROKER_PORT    ( 8883 )
+    #endif
 #else /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
-#ifndef democonfigMQTT_BROKER_PORT
-#define democonfigMQTT_BROKER_PORT    ( 1883 )
-#endif
+    #ifndef democonfigMQTT_BROKER_PORT
+        #define democonfigMQTT_BROKER_PORT    ( 1883 )
+    #endif
 #endif /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
 
 
@@ -233,9 +233,9 @@
 #define mqttexampleMILLISECONDS_PER_SECOND           ( 1000U )
 #define mqttexampleMILLISECONDS_PER_TICK             ( mqttexampleMILLISECONDS_PER_SECOND / configTICK_RATE_HZ )
 
- /**
-  * @brief The MQTT metrics string expected by AWS IoT.
-  */
+/**
+ * @brief The MQTT metrics string expected by AWS IoT.
+ */
 #define AWS_IOT_METRICS_STRING                                 \
     "?SDK=" democonfigOS_NAME "&Version=" democonfigOS_VERSION \
     "&Platform=" democonfigHARDWARE_PLATFORM_NAME "&MQTTLib=" democonfigMQTT_LIB
@@ -244,20 +244,20 @@
  * Provide default values for undefined configuration settings.
  */
 #ifndef democonfigOS_NAME
-#define democonfigOS_NAME    "FreeRTOS"
+    #define democonfigOS_NAME    "FreeRTOS"
 #endif
 
 #ifndef democonfigOS_VERSION
-#define democonfigOS_VERSION    tskKERNEL_VERSION_NUMBER
+    #define democonfigOS_VERSION    tskKERNEL_VERSION_NUMBER
 #endif
 
 #ifndef democonfigHARDWARE_PLATFORM_NAME
-#define democonfigHARDWARE_PLATFORM_NAME    "WinSim"
+    #define democonfigHARDWARE_PLATFORM_NAME    "WinSim"
 #endif
 
 #ifndef democonfigMQTT_LIB
-#include "core_mqtt.h" /* Include coreMQTT header for MQTT_LIBRARY_VERSION macro. */
-#define democonfigMQTT_LIB    "core-mqtt@"MQTT_LIBRARY_VERSION
+    #include "core_mqtt.h" /* Include coreMQTT header for MQTT_LIBRARY_VERSION macro. */
+    #define democonfigMQTT_LIB    "core-mqtt@"MQTT_LIBRARY_VERSION
 #endif
 
 /*-----------------------------------------------------------*/
@@ -501,10 +501,8 @@ static MQTTStatus_t prvMQTTInit( void )
     };
 
     LogDebug( ( "Creating command queue." ) );
-    xCommandQueue.queue = xQueueCreateStatic( MQTT_AGENT_COMMAND_QUEUE_LENGTH,
-                                              sizeof( MQTTAgentCommand_t * ),
-                                              staticQueueStorageArea,
-                                              &staticQueueStructure );
+    xCommandQueue.queue = xQueueCreate( MQTT_AGENT_COMMAND_QUEUE_LENGTH,
+                                        sizeof( MQTTAgentCommand_t * ) );
     configASSERT( xCommandQueue.queue );
     messageInterface.pMsgCtx = &xCommandQueue;
 
@@ -516,9 +514,11 @@ static MQTTStatus_t prvMQTTInit( void )
     #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
         xTransport.send = TLS_FreeRTOS_send;
         xTransport.recv = TLS_FreeRTOS_recv;
+        xTransport.writev = NULL;
     #else
         xTransport.send = Plaintext_FreeRTOS_send;
         xTransport.recv = Plaintext_FreeRTOS_recv;
+        xTransport.writev = NULL;
     #endif
 
     /* Initialize MQTT library. */
@@ -722,41 +722,39 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
         #if defined( democonfigUSE_AWS_IOT_CORE_BROKER )
             #if defined( democonfigCLIENT_USERNAME )
                 /*
-                * When democonfigCLIENT_USERNAME is defined, use the "mqtt" alpn to connect
-                * to AWS IoT Core with Custom Authentication on port 443.
-                *
-                * Custom Authentication uses the contents of the username and password
-                * fields of the MQTT CONNECT packet to authenticate the client.
-                *
-                * For more information, refer to the documentation at:
-                * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
-                */
+                 * When democonfigCLIENT_USERNAME is defined, use the "mqtt" alpn to connect
+                 * to AWS IoT Core with Custom Authentication on port 443.
+                 *
+                 * Custom Authentication uses the contents of the username and password
+                 * fields of the MQTT CONNECT packet to authenticate the client.
+                 *
+                 * For more information, refer to the documentation at:
+                 * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
+                 */
                 static const char * ppcAlpnProtocols[] = { "mqtt", NULL };
                 #if democonfigMQTT_BROKER_PORT != 443U
-                    #error "Connections to AWS IoT Core with custom authentication must connect to TCP port 443 with the \"mqtt\" alpn."
+                #error "Connections to AWS IoT Core with custom authentication must connect to TCP port 443 with the \"mqtt\" alpn."
                 #endif /* democonfigMQTT_BROKER_PORT != 443U */
             #else /* if !defined( democonfigCLIENT_USERNAME ) */
                 /*
-                * Otherwise, use the "x-amzn-mqtt-ca" alpn to connect to AWS IoT Core using
-                * x509 Certificate Authentication.
-                */
+                 * Otherwise, use the "x-amzn-mqtt-ca" alpn to connect to AWS IoT Core using
+                 * x509 Certificate Authentication.
+                 */
                 static const char * ppcAlpnProtocols[] = { "x-amzn-mqtt-ca", NULL };
-
             #endif /* !defined( democonfigCLIENT_USERNAME ) */
 
             /*
-            * An ALPN identifier is only required when connecting to AWS IoT core on port 443.
-            * https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html
-            */
+             * An ALPN identifier is only required when connecting to AWS IoT core on port 443.
+             * https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html
+             */
             #if democonfigMQTT_BROKER_PORT == 443U
                 xNetworkCredentials.pAlpnProtos = ppcAlpnProtocols;
             #elif democonfigMQTT_BROKER_PORT == 8883U
                 xNetworkCredentials.pAlpnProtos = NULL;
             #else /* democonfigMQTT_BROKER_PORT != 8883U */
                 xNetworkCredentials.pAlpnProtos = NULL;
-                #error "MQTT connections to AWS IoT Core are only allowed on ports 443 and 8883."
+            #error "MQTT connections to AWS IoT Core are only allowed on ports 443 and 8883."
             #endif /* democonfigMQTT_BROKER_PORT != 443U */
-
         #else /* !defined( democonfigUSE_AWS_IOT_CORE_BROKER ) */
             xNetworkCredentials.pAlpnProtos = NULL;
         #endif /* !defined( democonfigUSE_AWS_IOT_CORE_BROKER ) */
@@ -787,34 +785,34 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
     if( xConnected == pdPASS )
     {
         /* Attempt to connect to MQTT broker. If connection fails, retry after a
-        * timeout. Timeout value will exponentially increase until the maximum
-        * number of attempts are reached.
-        */
+         * timeout. Timeout value will exponentially increase until the maximum
+         * number of attempts are reached.
+         */
         do
         {
             /* Establish a TCP connection with the MQTT broker. This example connects to
-            * the MQTT broker as specified in democonfigMQTT_BROKER_ENDPOINT and
-            * democonfigMQTT_BROKER_PORT at the top of this file. */
+             * the MQTT broker as specified in democonfigMQTT_BROKER_ENDPOINT and
+             * democonfigMQTT_BROKER_PORT at the top of this file. */
             #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
                 LogInfo( ( "Creating a TLS connection to %s:%d.",
-                        democonfigMQTT_BROKER_ENDPOINT,
-                        democonfigMQTT_BROKER_PORT ) );
+                           democonfigMQTT_BROKER_ENDPOINT,
+                           democonfigMQTT_BROKER_PORT ) );
                 xNetworkStatus = TLS_FreeRTOS_Connect( pxNetworkContext,
-                                                    democonfigMQTT_BROKER_ENDPOINT,
-                                                    democonfigMQTT_BROKER_PORT,
-                                                    &xNetworkCredentials,
-                                                    mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS,
-                                                    mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS );
+                                                       democonfigMQTT_BROKER_ENDPOINT,
+                                                       democonfigMQTT_BROKER_PORT,
+                                                       &xNetworkCredentials,
+                                                       mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS,
+                                                       mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS );
                 xConnected = ( xNetworkStatus == TLS_TRANSPORT_SUCCESS ) ? pdPASS : pdFAIL;
             #else /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
                 LogInfo( ( "Creating a TCP connection to %s:%d.",
-                        democonfigMQTT_BROKER_ENDPOINT,
-                        democonfigMQTT_BROKER_PORT ) );
+                           democonfigMQTT_BROKER_ENDPOINT,
+                           democonfigMQTT_BROKER_PORT ) );
                 xNetworkStatus = Plaintext_FreeRTOS_Connect( pxNetworkContext,
-                                                            democonfigMQTT_BROKER_ENDPOINT,
-                                                            democonfigMQTT_BROKER_PORT,
-                                                            mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS,
-                                                            mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS );
+                                                             democonfigMQTT_BROKER_ENDPOINT,
+                                                             democonfigMQTT_BROKER_PORT,
+                                                             mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS,
+                                                             mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS );
                 xConnected = ( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS ) ? pdPASS : pdFAIL;
             #endif /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
 
@@ -826,8 +824,8 @@ static BaseType_t prvSocketConnect( NetworkContext_t * pxNetworkContext )
                 if( xBackoffAlgStatus == BackoffAlgorithmSuccess )
                 {
                     LogWarn( ( "Connection to the broker failed. "
-                            "Retrying connection in %hu ms.",
-                            usNextRetryBackOff ) );
+                               "Retrying connection in %hu ms.",
+                               usNextRetryBackOff ) );
                     vTaskDelay( pdMS_TO_TICKS( usNextRetryBackOff ) );
                 }
             }
@@ -1019,6 +1017,17 @@ static void prvConnectAndCreateDemoTasks( void * pvParameters )
     #else
         xNetworkContext.pParams = &xPlaintextTransportParams;
     #endif
+
+    /* Wait for Networking */
+    if( xPlatformIsNetworkUp() == pdFALSE )
+    {
+        LogInfo( ( "Waiting for the network link up event..." ) );
+
+        while( xPlatformIsNetworkUp() == pdFALSE )
+        {
+            vTaskDelay( pdMS_TO_TICKS( 1000U ) );
+        }
+    }
 
     /* Create the TCP connection to the broker, then the MQTT connection to the
      * same. */

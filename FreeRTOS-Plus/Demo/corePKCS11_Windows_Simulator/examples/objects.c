@@ -50,7 +50,7 @@
  */
 #define pkcs11demo_RSA_CERTIFICATE                                       \
     ""                                                                   \
-    "-----BEGIN CERTIFICATE-----\n" \
+    "-----BEGIN CERTIFICATE-----\n"                                      \
     "MIIFgTCCA2mgAwIBAgIUPsOLvI1VI8EtdIZi1s2vp7sGhy8wDQYJKoZIhvcNAQEL\n" \
     "BQAwTzELMAkGA1UEBhMCVVMxCzAJBgNVBAgMAldBMRAwDgYDVQQHDAdTZWF0dGxl\n" \
     "MSEwHwYDVQQKDBhJbnRlcm5ldCBXaWRnaXRzIFB0eSBMdGQwIBcNMjAwNzEzMTY0\n" \
@@ -80,12 +80,12 @@
     "97LLfATEYy5ajjlWoJ8qF/in8jzsYxq9OZ2/ObchZsU9ybzLRuE1Cv7v4Mx1sgH3\n" \
     "EoWYZK1j3WytKmbaWYDR6INYklT/d+14OyIflUfBGiSXNKMITWVRZYjTHKUeAPdb\n" \
     "1bsyMu+g4y1PVOrp/d9AyZTZrDW81zuYpO5Ah0DgF4EYiz2fWnz2ITVUmq35znIQ\n" \
-    "xg07nhvDeydwB48xXrPQ1KutrRyh\n" \
+    "xg07nhvDeydwB48xXrPQ1KutrRyh\n"                                     \
     "-----END CERTIFICATE-----"
 
-/* This function can be found in 
+/* This function can be found in
  * FreeRTOS/FreeRTOS-Plus/Source/FreeRTOS-Plus-PKCS11/3rdparty/mbedtls_utils/mbedtls_utils.c.
- * It will be used to convert the RSA certificate from PEM format 
+ * It will be used to convert the RSA certificate from PEM format
  * to DER format. */
 extern int convert_pem_to_der( const unsigned char * pucInput,
                                size_t xLen,
@@ -160,11 +160,11 @@ static void prvObjectImporting( void )
     PKCS11_CertificateTemplate_t xCertificateTemplate;
 
     /* The object class is specified as a certificate to help the Cryptoki library
-     * parse the arguments. 
+     * parse the arguments.
      */
     CK_OBJECT_CLASS xCertificateClass = CKO_CERTIFICATE;
-    
-    /* The certificate type is an x509 certificate, which is the only type 
+
+    /* The certificate type is an x509 certificate, which is the only type
      * supported by this stack. To read more about x509 certificates one can
      * read the following:
      *
@@ -174,7 +174,7 @@ static void prvObjectImporting( void )
      */
     CK_CERTIFICATE_TYPE xCertificateType = CKC_X_509;
 
-    /* The label will help the application identify which object it would like 
+    /* The label will help the application identify which object it would like
      * to access.
      */
     CK_BYTE pucLabel[] = pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS;
@@ -193,12 +193,12 @@ static void prvObjectImporting( void )
     xCertificateTemplate.xValue.type = CKA_VALUE;
     xCertificateTemplate.xValue.pValue = ( CK_VOID_PTR ) pkcs11demo_RSA_CERTIFICATE;
     xCertificateTemplate.xValue.ulValueLen = ( CK_ULONG ) sizeof( pkcs11demo_RSA_CERTIFICATE ) - 1UL;
-    
+
     /* Specify certificate label. */
     xCertificateTemplate.xLabel.type = CKA_LABEL;
     xCertificateTemplate.xLabel.pValue = ( CK_VOID_PTR ) pucLabel;
     xCertificateTemplate.xLabel.ulValueLen = sizeof( pucLabel ) - 1UL;
-    
+
     /* Specify certificate type as x509. */
     xCertificateTemplate.xCertificateType.type = CKA_CERTIFICATE_TYPE;
     xCertificateTemplate.xCertificateType.pValue = &xCertificateType;
@@ -236,7 +236,7 @@ static void prvObjectImporting( void )
 
     /* Create an object using the encoded client certificate. */
     configPRINTF( ( "Creating x509 certificate with label: %s \r\n",
-                pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS ) );
+                    pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS ) );
 
     /* Once the Cryptoki library has finished importing the new x509 certificate
      * a CK_OBJECT_HANDLE is associated with it. The application can now use this
@@ -332,10 +332,10 @@ static void prvObjectGeneration( void )
      */
     CK_ATTRIBUTE xPublicKeyTemplate[] =
     {
-        { CKA_KEY_TYPE,  &xKeyType, sizeof( xKeyType )              },
-        { CKA_VERIFY,    &xTrue,    sizeof( xTrue )                 },
-        { CKA_EC_PARAMS, xEcParams, sizeof( xEcParams )             },
-        { CKA_LABEL,     pucPublicKeyLabel,    sizeof( pucPublicKeyLabel ) - 1 }
+        { CKA_KEY_TYPE,  &xKeyType,         sizeof( xKeyType )              },
+        { CKA_VERIFY,    &xTrue,            sizeof( xTrue )                 },
+        { CKA_EC_PARAMS, xEcParams,         sizeof( xEcParams )             },
+        { CKA_LABEL,     pucPublicKeyLabel, sizeof( pucPublicKeyLabel ) - 1 }
     };
 
     /* In the below template we are creating a private key:

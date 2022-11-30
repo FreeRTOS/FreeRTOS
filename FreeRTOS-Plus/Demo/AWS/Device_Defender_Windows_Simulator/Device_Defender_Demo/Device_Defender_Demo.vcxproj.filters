@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Additional Network Transport Files">
+      <UniqueIdentifier>{dd51d59e-5364-4754-8bf8-9d28b504b06d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries">
+      <UniqueIdentifier>{2860744a-0818-43ed-823e-814141580842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\AWS IoT Device Defender">
+      <UniqueIdentifier>{f9d9acc8-facf-4594-848f-c86e8d4448ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\AWS IoT Device Defender\include">
+      <UniqueIdentifier>{c9e66dd3-1d31-4e7f-91f8-044acb1d500c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\coreMQTT">
+      <UniqueIdentifier>{df5ee1fa-4f3a-47a2-b3f6-5b78ad7b8c90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\coreMQTT\include">
+      <UniqueIdentifier>{69eea975-6c9c-40bc-b0af-4fb5133106c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\coreMQTT\interface">
+      <UniqueIdentifier>{432ee803-f901-47d9-94cc-5ca2f95211ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\coreJSON">
+      <UniqueIdentifier>{ad937432-b2b1-4c00-81ab-2f89f93fab5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\coreJSON\include">
+      <UniqueIdentifier>{aae732f5-763c-4654-907f-a3b8d3ac59b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\Backoff Algorithm">
+      <UniqueIdentifier>{4a9d6aa8-5941-465f-9b9c-4ea26cd54f45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Libraries\Backoff Algorithm\include">
+      <UniqueIdentifier>{402f543a-4604-4007-a33e-88a612b1bccd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{2bc92365-ac9c-4c19-9f72-fb69e25d2b57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport">
+      <UniqueIdentifier>{65d207cd-19f3-4660-9f1a-a8d91a5b4389}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include">
+      <UniqueIdentifier>{5f612844-a9d1-495d-9945-78b7502c17eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper">
+      <UniqueIdentifier>{8d8cb4b4-13f9-4ff1-9465-e1fc9f293fc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\include">
+      <UniqueIdentifier>{bc47cbaf-951c-4b67-8400-2e7d7efe5bf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\ports">
+      <UniqueIdentifier>{528452a5-23b0-41fe-b45e-0bb78c435d75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Additional Network Transport Files\TCP Sockets Wrapper\ports\freertos_plus_tcp">
+      <UniqueIdentifier>{a1785447-203d-46e5-aa81-d3e2c5c257be}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DemoTasks\DefenderDemoExample.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="metrics_collector.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="report_builder.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Mqtt_Demo_Helpers\mqtt_demo_helpers.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\AWS\device-defender\source\defender.c">
+      <Filter>Additional Libraries\AWS IoT Device Defender</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Utilities\backoff_algorithm\source\backoff_algorithm.c">
+      <Filter>Additional Libraries\Backoff Algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c">
+      <Filter>Additional Libraries\coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c">
+      <Filter>Additional Libraries\coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c">
+      <Filter>Additional Libraries\coreMQTT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\coreJSON\source\core_json.c">
+      <Filter>Additional Libraries\coreJSON</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\ports\freertos_plus_tcp\tcp_sockets_wrapper.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper\ports\freertos_plus_tcp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.c">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Mqtt_Demo_Helpers\mqtt_demo_helpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metrics_collector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="report_builder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\AWS\device-defender\source\include\defender.h">
+      <Filter>Additional Libraries\AWS IoT Device Defender\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\AWS\device-defender\source\include\defender_config_defaults.h">
+      <Filter>Additional Libraries\AWS IoT Device Defender\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Utilities\backoff_algorithm\source\include\backoff_algorithm.h">
+      <Filter>Additional Libraries\Backoff Algorithm\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt.h">
+      <Filter>Additional Libraries\coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_config_defaults.h">
+      <Filter>Additional Libraries\coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_serializer.h">
+      <Filter>Additional Libraries\coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_state.h">
+      <Filter>Additional Libraries\coreMQTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\coreMQTT\source\interface\transport_interface.h">
+      <Filter>Additional Libraries\coreMQTT\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\coreJSON\source\include\core_json.h">
+      <Filter>Additional Libraries\coreJSON\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\transport_mbedtls.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="core_mqtt_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="defender_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="demo_config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\tcp_sockets_wrapper\include\tcp_sockets_wrapper.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\Application-Protocols\network_transport\mbedtls_bio_tcp_sockets_wrapper.h">
+      <Filter>Additional Network Transport Files\TCP Sockets Wrapper + MbedTLS Transport\include</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

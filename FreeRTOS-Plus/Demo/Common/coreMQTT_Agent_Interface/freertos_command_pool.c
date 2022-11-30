@@ -79,10 +79,8 @@ void Agent_InitializePool( void )
     if( initStatus == QUEUE_NOT_INITIALIZED )
     {
         memset( ( void * ) commandStructurePool, 0x00, sizeof( commandStructurePool ) );
-        commandStructMessageCtx.queue = xQueueCreateStatic( MQTT_COMMAND_CONTEXTS_POOL_SIZE,
-                                                       sizeof( MQTTAgentCommand_t * ),
-                                                       staticQueueStorageArea,
-                                                       &staticQueueStructure );
+        commandStructMessageCtx.queue = xQueueCreate( MQTT_COMMAND_CONTEXTS_POOL_SIZE,
+                                                       sizeof( MQTTAgentCommand_t * ) );
         configASSERT( commandStructMessageCtx.queue );
 
         /* Populate the queue. */

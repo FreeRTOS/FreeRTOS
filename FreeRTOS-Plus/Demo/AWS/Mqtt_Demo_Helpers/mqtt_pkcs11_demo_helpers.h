@@ -31,7 +31,7 @@
 #include "core_mqtt.h"
 
 /* Transport interface implementation include header for TLS. */
-#include "using_mbedtls_pkcs11.h"
+#include "transport_mbedtls_pkcs11.h"
 
 /**
  * @brief Establish a MQTT connection.

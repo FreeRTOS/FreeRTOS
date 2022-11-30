@@ -78,6 +78,10 @@
 #include "task.h"
 #include "queue.h"
 
+/* FreeRTOS+Trace includes. */
+#include "trcDefines.h"
+#include "trcRecorder.h"
+
 /* Priorities at which the tasks are created. */
 #define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
@@ -227,18 +231,6 @@ const unsigned long ulMSToSleep = 5;
 	configUSE_IDLE_HOOK is set to 1 in FreeRTOSConfig.h.  Sleep to reduce CPU
 	load. */
 	Sleep( ulMSToSleep );
-}
-/*-----------------------------------------------------------*/
-
-void vAssertCalled( void )
-{
-const unsigned long ulLongSleep = 1000UL;
-
-	taskDISABLE_INTERRUPTS();
-	for( ;; )
-	{
-		Sleep( ulLongSleep );
-	}
 }
 /*-----------------------------------------------------------*/
 

@@ -102,4 +102,7 @@
 
 /*#define DEBUG_WOLFSSL*/
 
+/* The TCP port used by both the secure client and the secure server. */
+#define configTCP_PORT_NUMBER	5001
+
 #endif /* ifndef USER_SETTINGS_H_ */

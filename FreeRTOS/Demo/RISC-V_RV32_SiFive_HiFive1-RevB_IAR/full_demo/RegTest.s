@@ -149,13 +149,13 @@ reg1_loop:
     jal reg1_loop
 
 reg1_error:
-	/* Jump here if a register contains an uxpected value.  This stops the loop
-	counter being incremented so the check task knows an error was found. */
+    /* Jump here if a register contains an uxpected value.  This stops the loop
+    counter being incremented so the check task knows an error was found. */
     ebreak
     jal reg1_error_loop
 
 reg1_error_loop:
-	/* Busy loop which holds the task. */
+    /* Busy loop which holds the task. */
     jal reg1_error_loop
 
 /*-----------------------------------------------------------*/
@@ -272,7 +272,7 @@ reg2_error:
     jal reg2_error_loop
 
 reg2_error_loop:
-	/* Busy loop which holds the task. */
+    /* Busy loop which holds the task. */
     jal reg2_error_loop
 
 /*-----------------------------------------------------------*/
